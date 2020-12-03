@@ -1,0 +1,107 @@
+name: Symfony UX
+
+on: push
+
+jobs:
+    coding-style-php:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - name: php-cs-fixer
+              run: |
+                  wget https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.16.1/php-cs-fixer.phar -q
+                  php php-cs-fixer.phar fix --dry-run --diff
+
+    coding-style-js:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - name: Prettier
+              run: |
+                  yarn global add prettier@^2.2.0
+                  ~/.yarn/bin/prettier --check src/*/Resources/assets/{src,test}/*.js --config .prettierrc.json
+
+    tests-php-low-deps:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '7.2'
+            - name: Chartjs
+              run: |
+                  cd src/Chartjs
+                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/phpunit
+            - name: Cropperjs
+              run: |
+                  cd src/Cropperjs
+                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/phpunit
+            - name: Dropzone
+              run: |
+                  cd src/Dropzone
+                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/phpunit
+            - name: LazyImage
+              run: |
+                  cd src/LazyImage
+                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/phpunit
+
+    tests-php-high-deps:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.0'
+            - name: Chartjs
+              run: |
+                  cd src/Chartjs
+                  composer config platform.php 7.4.99
+                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/phpunit
+            - name: Cropperjs
+              run: |
+                  cd src/Cropperjs
+                  composer config platform.php 7.4.99
+                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/phpunit
+            - name: Dropzone
+              run: |
+                  cd src/Dropzone
+                  composer config platform.php 7.4.99
+                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/phpunit
+            - name: LazyImage
+              run: |
+                  cd src/LazyImage
+                  composer config platform.php 7.4.99
+                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/phpunit
+
+    tests-js:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - name: Chartjs
+              run: |
+                  cd src/Chartjs/Resources/assets
+                  yarn
+                  yarn test
+            - name: Cropperjs
+              run: |
+                  cd src/Cropperjs/Resources/assets
+                  yarn
+                  yarn test
+            - name: Dropzone
+              run: |
+                  cd src/Dropzone/Resources/assets
+                  yarn
+                  yarn test
+            - name: LazyImage
+              run: |
+                  cd src/LazyImage/Resources/assets
+                  yarn
+                  yarn test

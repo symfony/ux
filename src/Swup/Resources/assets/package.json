@@ -1,0 +1,43 @@
+{
+    "name": "@symfony/ux-swup",
+    "description": "Swup integration for Symfony",
+    "license": "MIT",
+    "version": "1.0.0",
+    "symfony": {
+        "controllers": {
+            "swup": {
+                "main": "dist/controller.js",
+                "webpackMode": "eager",
+                "enabled": true
+            }
+        }
+    },
+    "scripts": {
+        "build": "babel src -d dist",
+        "test": "babel src -d dist && jest"
+    },
+    "dependencies": {
+        "@swup/fade-theme": "^1.0",
+        "@swup/slide-theme": "^1.0",
+        "@swup/forms-plugin": "^1.0",
+        "@swup/debug-plugin": "^1.0",
+        "swup": "^2.0"
+    },
+    "peerDependencies": {
+        "stimulus": "^1.0.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.12.1",
+        "@babel/core": "^7.12.3",
+        "@babel/plugin-proposal-class-properties": "^7.12.1",
+        "@babel/preset-env": "^7.12.7",
+        "@symfony/stimulus-testing": "^1.0.0",
+        "stimulus": "^1.0.0"
+    },
+    "jest": {
+        "testRegex": "test/.*\\.test.js",
+        "setupFilesAfterEnv": [
+            "./test/setup.js"
+        ]
+    }
+}

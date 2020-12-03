@@ -1,0 +1,48 @@
+{
+    "name": "symfony/ux-lazy-image",
+    "type": "symfony-bundle",
+    "description": "Lazy image loader and utilities for Symfony",
+    "keywords": ["symfony", "ux", "dropzone"],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Titouan Galopin",
+            "email": "galopintitouan@gmail.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\LazyImage\\": "."
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Symfony\\UX\\LazyImage\\": "./Tests"
+        }
+    },
+    "require": {
+        "php": ">=7.2.5",
+        "kornrunner/blurhash": "^1.1",
+        "symfony/config": "^4.4.17|^5.0",
+        "symfony/http-kernel": "^4.4.17|^5.0",
+        "symfony/dependency-injection": "^4.4.17|^5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.5",
+        "intervention/image": "^2.5",
+        "symfony/framework-bundle": "^4.4.17|^5.0",
+        "symfony/twig-bundle": "^4.4.17|^5.0",
+        "symfony/var-dumper": "^4.4.17|^5.0"
+    },
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    }
+}

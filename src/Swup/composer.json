@@ -1,0 +1,24 @@
+{
+    "name": "symfony/ux-swup",
+    "type": "symfony-bundle",
+    "description": "Swup integration for Symfony",
+    "keywords": ["symfony", "ux", "swup"],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Titouan Galopin",
+            "email": "galopintitouan@gmail.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "config": {
+        "preferred-install": {
+            "*": "dist"
+        },
+        "sort-packages": true
+    }
+}
