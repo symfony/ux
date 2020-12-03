@@ -26,7 +26,7 @@ build amazing User Experiences as quickly as we can now setup
 
 [Read all the details about the Symfony UX initiative](https://symfony.com/ux)
 
-## Packages
+# Packages
 
 * [UX Chart.js](https://github.com/symfony/ux-chartjs): 
   [Chart.js](https://www.chartjs.org/) chart library integration for Symfony
