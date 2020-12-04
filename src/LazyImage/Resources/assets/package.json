@@ -2,7 +2,7 @@
     "name": "@symfony/ux-lazy-image",
     "description": "Lazy image loader and utilities for Symfony",
     "license": "MIT",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "symfony": {
         "controllers": {
             "lazy-image": {
@@ -17,15 +17,15 @@
         "test": "babel src -d dist && jest"
     },
     "peerDependencies": {
-        "stimulus": "^1.0.0"
+        "stimulus": "^2.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.1",
         "@babel/core": "^7.12.3",
         "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@babel/preset-env": "^7.12.7",
-        "@symfony/stimulus-testing": "^1.0.0",
-        "stimulus": "^1.0.0"
+        "@symfony/stimulus-testing": "^1.1.0",
+        "stimulus": "^2.0.0"
     },
     "jest": {
         "testRegex": "test/.*\\.test.js",
