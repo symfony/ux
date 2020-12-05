@@ -55,7 +55,7 @@ var _default = /*#__PURE__*/function (_Controller) {
     value: function connect() {
       var payload = JSON.parse(this.element.getAttribute('data-view'));
 
-      if (!payload.options.length) {
+      if (Array.isArray(payload.options) && 0 === payload.options.length) {
         payload.options = {};
       }
 
