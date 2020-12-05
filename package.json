@@ -1,8 +1,49 @@
 {
     "private": true,
-    "workspaces": ["src/*/Resources/assets"],
+    "workspaces": [
+        "src/*/Resources/assets"
+    ],
     "scripts": {
         "build": "yarn workspaces run build",
-        "test": "yarn workspaces run test"
+        "test": "yarn workspaces run test",
+        "lint": "yarn workspaces run lint --fix",
+        "format": "prettier src/*/Resources/assets/{src,test}/*.js {,src/*/}*.{json,md} --write",
+        "check-lint": "yarn lint --no-fix",
+        "check-format": "yarn format --no-write --check"
+    },
+    "devDependencies": {
+        "@babel/eslint-parser": "^7.12.1",
+        "eslint": "^7.15.0",
+        "eslint-config-prettier": "^6.15.0",
+        "eslint-plugin-jest": "^24.1.3",
+        "prettier": "^2.2.1"
+    },
+    "eslintConfig": {
+        "root": true,
+        "parser": "@babel/eslint-parser",
+        "extends": [
+            "eslint:recommended",
+            "prettier"
+        ],
+        "env": {
+            "browser": true
+        },
+        "overrides": [
+            {
+                "files": [
+                    "src/*/Resources/assets/test/*.js"
+                ],
+                "extends": [
+                    "plugin:jest/recommended"
+                ]
+            }
+        ]
+    },
+    "prettier": {
+        "printWidth": 120,
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "jsxBracketSameLine": true,
+        "singleQuote": true
     }
 }

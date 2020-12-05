@@ -92,8 +92,12 @@ export default class extends Controller {
         console.log(event.detail.chart); // You can access the chart instance using the event details
 
         // For instance you can listen to additional events
-        event.detail.chart.options.onHover = (mouseEvent) => { /* ... */ };
-        event.detail.chart.options.onClick = (mouseEvent) => { /* ... */ };
+        event.detail.chart.options.onHover = (mouseEvent) => {
+            /* ... */
+        };
+        event.detail.chart.options.onClick = (mouseEvent) => {
+            /* ... */
+        };
     }
 }
 ```

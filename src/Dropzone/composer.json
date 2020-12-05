@@ -2,7 +2,11 @@
     "name": "symfony/ux-dropzone",
     "type": "symfony-bundle",
     "description": "File input dropzones for Symfony Forms",
-    "keywords": ["symfony", "ux", "dropzone"],
+    "keywords": [
+        "symfony",
+        "ux",
+        "dropzone"
+    ],
     "homepage": "https://symfony.com",
     "license": "MIT",
     "authors": [
