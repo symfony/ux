@@ -85,23 +85,5 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
-            - name: Chartjs
-              run: |
-                  cd src/Chartjs/Resources/assets
-                  yarn
-                  yarn test
-            - name: Cropperjs
-              run: |
-                  cd src/Cropperjs/Resources/assets
-                  yarn
-                  yarn test
-            - name: Dropzone
-              run: |
-                  cd src/Dropzone/Resources/assets
-                  yarn
-                  yarn test
-            - name: LazyImage
-              run: |
-                  cd src/LazyImage/Resources/assets
-                  yarn
-                  yarn test
+            - run: yarn
+            - run: yarn test
