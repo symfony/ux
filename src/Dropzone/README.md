@@ -22,7 +22,7 @@ yarn encore dev
 
 ## Usage
 
-The most common usage of Symfony UX Dropzone is to use it as a drop-in replacement of 
+The most common usage of Symfony UX Dropzone is to use it as a drop-in replacement of
 the native FileType class:
 
 ```php
@@ -49,7 +49,7 @@ class CommentFormType extends AbstractType
 Symfony UX Dropzone provides a default stylesheet in order to ease usage. You can
 disable it to add your own design if you wish.
 
-In `assets/controllers.json`, disable the default stylesheet by switching 
+In `assets/controllers.json`, disable the default stylesheet by switching
 the `@symfony/ux-dropzone/src/style.css` autoimport to `false`:
 
 ```json

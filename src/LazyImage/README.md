@@ -33,7 +33,7 @@ page has been rendered:
     src="{{ asset('image/small.png') }}"
     data-controller="@symfony/ux-lazy-image/lazy-image"
     data-hd-src="{{ asset('image/large.png') }}"
-    
+
     {# Optional but avoids having a page jump when the image is loaded #}
     width="200"
     height="150"
@@ -48,7 +48,7 @@ the BlurHash algorithm to create a light, blurred, data-uri thumbnail of the ima
     src="{{ data_uri_thumbnail('public/image/large.png', 100, 75) }}"
     data-controller="@symfony/ux-lazy-image/lazy-image"
     data-hd-src="{{ asset('image/large.png') }}"
-    
+
     {# Using BlurHash, the size is required #}
     width="200"
     height="150"
@@ -103,7 +103,7 @@ Then in your template, add your controller to the HTML attribute:
     src="{{ data_uri_thumbnail('public/image/large.png', 100, 75) }}"
     data-controller="mylazyimage @symfony/ux-lazy-image/lazy-image"
     data-hd-src="{{ asset('image/large.png') }}"
-    
+
     {# Using BlurHash, the size is required #}
     width="200"
     height="150"

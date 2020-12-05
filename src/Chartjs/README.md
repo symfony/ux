@@ -46,7 +46,7 @@ class HomeController extends AbstractController
                 ],
             ],
         ]);
-        
+
         $chart->setOptions([/* ... */]);
 
         return $this->render('home/index.html.twig', [
@@ -56,7 +56,7 @@ class HomeController extends AbstractController
 }
 ```
 
-All options and data are provided as-is to Chart.js. You can read 
+All options and data are provided as-is to Chart.js. You can read
 [Chart.js documentation](https://www.chartjs.org/docs/latest/) to discover them all.
 
 Once created in PHP, a chart can be displayed using Twig:

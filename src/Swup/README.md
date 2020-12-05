@@ -38,7 +38,7 @@ The main usage of Symfony UX Swup is to use its Stimulus controller to initializ
     </head>
     <body data-controller="@symfony/ux-swup/swup">
         {# ... #}
-       
+
         <main id="swup">
             {# ... #}
         </main>
@@ -61,16 +61,16 @@ additional containers, for instance to have a navigation menu that updates when 
     <head>
         <title>Swup</title>
     </head>
-    <body 
+    <body
         data-controller="@symfony/ux-swup/swup"
         data-containers="#swup #nav" {# list of selectors separated by spaces #}
     >
         {# ... #}
-        
+
         <nav id="nav">
             {# ... #}
         </nav>
-        
+
         <main id="swup">
             {# ... #}
         </main>
@@ -89,7 +89,7 @@ You can configure several other options using data-attributes on the `body` tag:
     <head>
         <title>Swup</title>
     </head>
-    <body 
+    <body
         data-controller="@symfony/ux-swup/swup"
         data-containers="#swup #nav"
         data-theme="slide" {# or "fade", the default #}
