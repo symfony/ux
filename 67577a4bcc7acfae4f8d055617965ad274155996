@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by tgalopin at 2020-12-05T09:45:57Z
+
+Hi @Kocal!
+
+We had a look at how workspaces could be useful for the feature of Symfony UX itself, but didn't consider it for the mono repo indeed. I don't use workspaces personally, but they would seem to make sense.
+
+Do you know of other mono repos in JS using them? My main concern would be to rely too much on them if at some point yarn disappear.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-12-05T10:21:27Z
+
+Here are some monorepos that I know. They either use [Lerna](https://github.com/lerna/lerna), Yarn workspaces, or both at the same time:
+- https://github.com/facebook/jest
+- https://github.com/babel/babel
+- https://github.com/vuejs/vue-cli
+- https://github.com/vuejs/vue-next
+
+Also note that npm 7 implemented workspaces support (https://docs.npmjs.com/cli/v7/using-npm/workspaces) ([RFC](https://github.com/npm/rfcs/blob/latest/implemented/0026-workspaces.md)), so if something is going wrong with Yarn we could easily migrate to npm workspaces instead.
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2020-12-05T10:39:15Z
+
+Awesome, thanks! Let's do it then :) .
+
+Could you rebase your PR on main to run the CI (I added the CI run on PR)?
