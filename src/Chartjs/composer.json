@@ -2,7 +2,13 @@
     "name": "symfony/ux-chartjs",
     "type": "symfony-bundle",
     "description": "Chart.js integration for Symfony",
-    "keywords": ["symfony", "ux", "chart", "chart.js", "chartjs"],
+    "keywords": [
+        "symfony",
+        "ux",
+        "chart",
+        "chart.js",
+        "chartjs"
+    ],
     "homepage": "https://symfony.com",
     "license": "MIT",
     "authors": [

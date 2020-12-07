@@ -20,10 +20,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
-            - name: Prettier
-              run: |
-                  yarn global add prettier@^2.2.0
-                  ~/.yarn/bin/prettier --check src/*/Resources/assets/{src,test}/*.js --config .prettierrc.json
+            - run: yarn
+            - run: yarn check-lint
+            - run: yarn check-format
 
     tests-php-low-deps:
         runs-on: ubuntu-latest

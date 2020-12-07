@@ -2,7 +2,13 @@
     "name": "symfony/ux-cropperjs",
     "type": "symfony-bundle",
     "description": "Cropper.js integration for Symfony",
-    "keywords": ["symfony", "ux", "cropper", "cropper.js", "cropperjs"],
+    "keywords": [
+        "symfony",
+        "ux",
+        "cropper",
+        "cropper.js",
+        "cropperjs"
+    ],
     "homepage": "https://symfony.com",
     "license": "MIT",
     "authors": [

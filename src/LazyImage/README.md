@@ -5,8 +5,8 @@ image loading performance. It is part of [the Symfony UX initiative](https://sym
 
 It provides two key features:
 
-* a Stimulus controller to load lazily heavy images, with a placeholder
-* a [BlurHash implementation](https://blurha.sh/) to create data-uri thumbnails for images
+-   a Stimulus controller to load lazily heavy images, with a placeholder
+-   a [BlurHash implementation](https://blurha.sh/) to create data-uri thumbnails for images
 
 ## Installation
 
@@ -57,9 +57,9 @@ the BlurHash algorithm to create a light, blurred, data-uri thumbnail of the ima
 
 The `data_uri_thumbnail` function receives 3 arguments:
 
-* the server path to the image to generate the data-uri thumbnail for ;
-* the width of the BlurHash to generate
-* the height of the BlurHash to generate
+-   the server path to the image to generate the data-uri thumbnail for ;
+-   the width of the BlurHash to generate
+-   the height of the BlurHash to generate
 
 You should try to generate small BlurHash images as generating the image can be CPU-intensive.
 Instead, you can rely on the browser scaling abilities by generating a small image and using the

@@ -69,7 +69,7 @@ the `@symfony/ux-dropzone/src/style.css` autoimport to `false`:
 }
 ```
 
-> *Note*: you should put the value to `false` and not remove the line so that Symfony Flex
+> _Note_: you should put the value to `false` and not remove the line so that Symfony Flex
 > won't try to add the line again in the future.
 
 Once done, the default stylesheet won't be used anymore and you can implement your own CSS on

@@ -2,7 +2,11 @@
     "name": "symfony/ux-lazy-image",
     "type": "symfony-bundle",
     "description": "Lazy image loader and utilities for Symfony",
-    "keywords": ["symfony", "ux", "dropzone"],
+    "keywords": [
+        "symfony",
+        "ux",
+        "dropzone"
+    ],
     "homepage": "https://symfony.com",
     "license": "MIT",
     "authors": [
