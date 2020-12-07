@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Symfony\UX\Cropperjs\Kernel;
+namespace Symfony\UX\Cropperjs\Tests\Kernel;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>

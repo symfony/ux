@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Symfony\UX\Cropperjs;
+namespace Symfony\UX\Cropperjs\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\UX\Cropperjs\Form\CropperType;
-use Tests\Symfony\UX\Cropperjs\Kernel\TwigAppKernel;
+use Symfony\UX\Cropperjs\Tests\Kernel\TwigAppKernel;
 use Twig\Environment;
 
 /**
