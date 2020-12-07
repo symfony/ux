@@ -12,8 +12,10 @@
 namespace Tests\Symfony\UX\Cropperjs;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\UX\Cropperjs\Form\CropperType;
 use Tests\Symfony\UX\Cropperjs\Kernel\TwigAppKernel;
+use Twig\Environment;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -28,7 +30,7 @@ class CropperTypeTest extends TestCase
         $kernel->boot();
         $container = $kernel->getContainer()->get('test.service_container');
 
-        $form = $container->get('form.factory')->createBuilder()
+        $form = $container->get(FormFactoryInterface::class)->createBuilder()
             ->add('photo', CropperType::class, [
                 'public_url' => '/public/url.jpg',
                 'attr' => ['data-controller' => 'mycropper'],
@@ -67,7 +69,7 @@ class CropperTypeTest extends TestCase
             ->getForm()
         ;
 
-        $rendered = $container->get('twig')->render('cropper_form.html.twig', ['form' => $form->createView()]);
+        $rendered = $container->get(Environment::class)->render('cropper_form.html.twig', ['form' => $form->createView()]);
 
         $this->assertSame(
             '<form name="form" method="post">'.
@@ -113,7 +115,7 @@ class CropperTypeTest extends TestCase
                 '</div>'.
             '</form>
 ',
-            $rendered
+            str_replace(' >', '>', $rendered)
         );
     }
 
@@ -123,7 +125,7 @@ class CropperTypeTest extends TestCase
         $kernel->boot();
         $container = $kernel->getContainer()->get('test.service_container');
 
-        $form = $container->get('form.factory')->createBuilder()
+        $form = $container->get(FormFactoryInterface::class)->createBuilder()
             ->add('photo', CropperType::class, [
                 'public_url' => '/public/url.jpg',
                 'attr' => ['data-controller' => 'mycropper'],
@@ -131,7 +133,7 @@ class CropperTypeTest extends TestCase
             ->getForm()
         ;
 
-        $rendered = $container->get('twig')->render('cropper_form.html.twig', ['form' => $form->createView()]);
+        $rendered = $container->get(Environment::class)->render('cropper_form.html.twig', ['form' => $form->createView()]);
 
         $this->assertSame(
             '<form name="form" method="post">'.
@@ -172,7 +174,7 @@ class CropperTypeTest extends TestCase
                 '</div>'.
             '</form>
 ',
-            $rendered
+            str_replace(' >', '>', $rendered)
         );
     }
 }

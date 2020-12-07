@@ -2,6 +2,10 @@ name: Symfony UX
 
 on: [push, pull_request]
 
+env:
+    SYMFONY_PHPUNIT_DIR: '/tmp/.phpunit'
+    SYMFONY_PHPUNIT_VERSION: '8.5'
+
 jobs:
     coding-style-php:
         runs-on: ubuntu-latest
@@ -32,22 +36,22 @@ jobs:
               run: |
                   cd src/Chartjs
                   composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/phpunit
+                  php vendor/bin/simple-phpunit
             - name: Cropperjs
               run: |
                   cd src/Cropperjs
                   composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/phpunit
+                  php vendor/bin/simple-phpunit
             - name: Dropzone
               run: |
                   cd src/Dropzone
                   composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/phpunit
+                  php vendor/bin/simple-phpunit
             - name: LazyImage
               run: |
                   cd src/LazyImage
                   composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/phpunit
+                  php vendor/bin/simple-phpunit
 
     tests-php-high-deps:
         runs-on: ubuntu-latest
@@ -61,25 +65,25 @@ jobs:
                   cd src/Chartjs
                   composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/phpunit
+                  php vendor/bin/simple-phpunit
             - name: Cropperjs
               run: |
                   cd src/Cropperjs
                   composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/phpunit
+                  php vendor/bin/simple-phpunit
             - name: Dropzone
               run: |
                   cd src/Dropzone
                   composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/phpunit
+                  php vendor/bin/simple-phpunit
             - name: LazyImage
               run: |
                   cd src/LazyImage
                   composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/phpunit
+                  php vendor/bin/simple-phpunit
 
     tests-js:
         runs-on: ubuntu-latest

@@ -36,7 +36,7 @@ class TwigAppKernel extends Kernel
     {
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', ['secret' => '$ecret', 'test' => true]);
-            $container->loadFromExtension('twig', ['default_path' => __DIR__.'/templates']);
+            $container->loadFromExtension('twig', ['default_path' => __DIR__.'/templates', 'strict_variables' => true, 'exception_controller' => null]);
 
             $container->setAlias('test.chartjs.builder', 'chartjs.builder')->setPublic(true);
             $container->setAlias('test.chartjs.twig_extension', 'chartjs.twig_extension')->setPublic(true);

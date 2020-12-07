@@ -36,7 +36,7 @@ class TwigAppKernel extends Kernel
     {
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', ['secret' => '$ecret', 'test' => true]);
-            $container->loadFromExtension('twig', ['default_path' => __DIR__.'/templates']);
+            $container->loadFromExtension('twig', ['default_path' => __DIR__.'/templates', 'strict_variables' => true, 'exception_controller' => null]);
 
             $container->setAlias('test.lazy_image.blur_hash', 'lazy_image.blur_hash')->setPublic(true);
         });
