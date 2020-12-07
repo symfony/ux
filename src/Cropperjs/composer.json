@@ -3,6 +3,7 @@
     "type": "symfony-bundle",
     "description": "Cropper.js integration for Symfony",
     "keywords": [
+        "symfony/ux",
         "symfony",
         "ux",
         "cropper",
