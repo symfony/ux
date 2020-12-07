@@ -26,13 +26,14 @@ class DropzoneTypeTest extends TestCase
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
 
-        $form = $kernel->getContainer()->get('form.factory')->createBuilder()
+        $form = $container->get('form.factory')->createBuilder()
             ->add('photo', DropzoneType::class, ['attr' => ['data-controller' => 'mydropzone']])
             ->getForm()
         ;
 
-        $rendered = $kernel->getContainer()->get('twig')->render('dropzone_form.html.twig', ['form' => $form->createView()]);
+        $rendered = $container->get('twig')->render('dropzone_form.html.twig', ['form' => $form->createView()]);
 
         $this->assertSame(
             '<form name="form" method="post" enctype="multipart/form-data"><div id="form"><div><label for="form_photo" class="required">Photo</label><div class="dropzone-container" data-controller="mydropzone @symfony/ux-dropzone/dropzone">
