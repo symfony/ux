@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by tgalopin at 2020-12-06T14:54:51Z
+
+Is that the same ESLint config as Webpack Encore? My most important concern is to be consistent regarding linting and formatting across the Symfony JS tools
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-12-06T15:45:01Z
+
+That's not the same config, here I've just keep it very simple by extendind the recommended config by ESLint, where the Webpack Encore ESLint config is kind of big (see [.eslintrc.js](https://github.com/symfony/webpack-encore/blob/main/.eslintrc.js)).
+
+If we want to keep the exact same config than Encore and accross the Symfony JS Tools, the best thing to do is to create a Symfony ESLint configuration that we could use like this:
+```js
+module.exports = {
+  extends: ['@symfony/symfony'] // will resolve to @symfony/eslint-config-symfony package
+}
+```
+
+But there are a lot of formatting rules that will surely conflict with Prettier.
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2020-12-06T16:25:47Z
+
+Is it possible to use ESLint only for actual linting (ie potential errors) and not coding style (which is already provided by prettier)?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2020-12-06T16:29:31Z
+
+Yes, by using [`eslint-config-prettier`](https://github.com/prettier/eslint-config-prettier) I think (I've used it in this PR).
+
+So even if we have a Symfony ESLint config that contains coding styles rules, they will be disabled if we extends the Prettier config too:
+```js
+module.exports = {
+  extends: ['@symfony/symfony', 'prettier']
+}
+```
