@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Symfony\UX\Dropzone;
+namespace Symfony\UX\Dropzone\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
-use Tests\Symfony\UX\Dropzone\Kernel\EmptyAppKernel;
-use Tests\Symfony\UX\Dropzone\Kernel\FrameworkAppKernel;
-use Tests\Symfony\UX\Dropzone\Kernel\TwigAppKernel;
+use Symfony\UX\Dropzone\Tests\Kernel\EmptyAppKernel;
+use Symfony\UX\Dropzone\Tests\Kernel\FrameworkAppKernel;
+use Symfony\UX\Dropzone\Tests\Kernel\TwigAppKernel;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>

@@ -9,11 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Symfony\UX\LazyImage;
+namespace Symfony\UX\LazyImage\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\LazyImage\BlurHash\BlurHashInterface;
-use Tests\Symfony\UX\LazyImage\Kernel\TwigAppKernel;
+use Symfony\UX\LazyImage\Tests\Kernel\TwigAppKernel;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Symfony\UX\Chartjs\Kernel;
+namespace Symfony\UX\Chartjs\Tests\Kernel;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Symfony\UX\LazyImage\Kernel;
+namespace Symfony\UX\LazyImage\Tests\Kernel;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>

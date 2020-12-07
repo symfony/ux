@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Symfony\UX\Cropperjs;
+namespace Symfony\UX\Cropperjs\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\HttpKernel\Kernel;
-use Tests\Symfony\UX\Cropperjs\Kernel\EmptyAppKernel;
-use Tests\Symfony\UX\Cropperjs\Kernel\FrameworkAppKernel;
-use Tests\Symfony\UX\Cropperjs\Kernel\TwigAppKernel;
+use Symfony\UX\Cropperjs\Tests\Kernel\EmptyAppKernel;
+use Symfony\UX\Cropperjs\Tests\Kernel\FrameworkAppKernel;
+use Symfony\UX\Cropperjs\Tests\Kernel\TwigAppKernel;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>

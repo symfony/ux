@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Symfony\UX\Dropzone\Kernel;
+namespace Symfony\UX\Dropzone\Tests\Kernel;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>

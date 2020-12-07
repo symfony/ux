@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Tests\Symfony\UX\Dropzone;
+namespace Symfony\UX\Dropzone\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\UX\Dropzone\Form\DropzoneType;
-use Tests\Symfony\UX\Dropzone\Kernel\TwigAppKernel;
+use Symfony\UX\Dropzone\Tests\Kernel\TwigAppKernel;
 use Twig\Environment;
 
 /**
