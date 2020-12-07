@@ -39,10 +39,14 @@
         "symfony/twig-bundle": "^4.4.17|^5.0",
         "symfony/var-dumper": "^4.4.17|^5.0"
     },
-    "config": {
-        "preferred-install": {
-            "*": "dist"
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.1-dev"
         },
-        "sort-packages": true
-    }
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
 }

@@ -15,10 +15,14 @@
             "homepage": "https://symfony.com/contributors"
         }
     ],
-    "config": {
-        "preferred-install": {
-            "*": "dist"
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.1-dev"
         },
-        "sort-packages": true
-    }
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
 }
