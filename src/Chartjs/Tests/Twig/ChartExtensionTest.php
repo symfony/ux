@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
 use Symfony\UX\Chartjs\Model\Chart;
 use Tests\Symfony\UX\Chartjs\Kernel\TwigAppKernel;
+use Twig\Environment;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -51,7 +52,7 @@ class ChartExtensionTest extends TestCase
         ]);
 
         $rendered = $container->get('test.chartjs.twig_extension')->renderChart(
-            $container->get('twig'),
+            $container->get(Environment::class),
             $chart,
             ['data-controller' => 'mycontroller', 'class' => 'myclass']
         );

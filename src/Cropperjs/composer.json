@@ -35,10 +35,9 @@
         "symfony/validator": "^4.4.17|^5.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^8.5",
         "symfony/framework-bundle": "^4.4.17|^5.0",
+        "symfony/phpunit-bridge": "^5.2",
         "symfony/twig-bundle": "^4.4.17|^5.0",
-        "symfony/twig-bridge": "^4.4.17|^5.0",
         "symfony/var-dumper": "^4.4.17|^5.0"
     },
     "config": {

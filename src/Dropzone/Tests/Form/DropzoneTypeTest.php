@@ -12,8 +12,10 @@
 namespace Tests\Symfony\UX\Dropzone;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\UX\Dropzone\Form\DropzoneType;
 use Tests\Symfony\UX\Dropzone\Kernel\TwigAppKernel;
+use Twig\Environment;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -28,12 +30,12 @@ class DropzoneTypeTest extends TestCase
         $kernel->boot();
         $container = $kernel->getContainer()->get('test.service_container');
 
-        $form = $container->get('form.factory')->createBuilder()
+        $form = $container->get(FormFactoryInterface::class)->createBuilder()
             ->add('photo', DropzoneType::class, ['attr' => ['data-controller' => 'mydropzone']])
             ->getForm()
         ;
 
-        $rendered = $container->get('twig')->render('dropzone_form.html.twig', ['form' => $form->createView()]);
+        $rendered = $container->get(Environment::class)->render('dropzone_form.html.twig', ['form' => $form->createView()]);
 
         $this->assertSame(
             '<form name="form" method="post" enctype="multipart/form-data"><div id="form"><div><label for="form_photo" class="required">Photo</label><div class="dropzone-container" data-controller="mydropzone @symfony/ux-dropzone/dropzone">
@@ -52,7 +54,7 @@ class DropzoneTypeTest extends TestCase
         </div>
     </div></div></div></form>
 ',
-            $rendered
+            str_replace(' >', '>', $rendered)
         );
     }
 }
