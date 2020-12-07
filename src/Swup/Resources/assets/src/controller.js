@@ -23,7 +23,7 @@ export default class extends Controller {
             cache: this.element.hasAttribute('data-cache'),
             animateHistoryBrowsing: this.element.hasAttribute('data-animate-history-browsing'),
             plugins: [
-                'slide' === this.element.hasAttribute('data-theme') ? new SwupSlideTheme() : new SwupFadeTheme(),
+                'slide' === this.element.getAttribute('data-theme') ? new SwupSlideTheme() : new SwupFadeTheme(),
                 new SwupFormsPlugin(),
             ],
         };
