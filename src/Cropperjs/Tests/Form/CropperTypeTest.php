@@ -26,8 +26,9 @@ class CropperTypeTest extends TestCase
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
 
-        $form = $kernel->getContainer()->get('form.factory')->createBuilder()
+        $form = $container->get('form.factory')->createBuilder()
             ->add('photo', CropperType::class, [
                 'public_url' => '/public/url.jpg',
                 'attr' => ['data-controller' => 'mycropper'],
@@ -66,7 +67,7 @@ class CropperTypeTest extends TestCase
             ->getForm()
         ;
 
-        $rendered = $kernel->getContainer()->get('twig')->render('cropper_form.html.twig', ['form' => $form->createView()]);
+        $rendered = $container->get('twig')->render('cropper_form.html.twig', ['form' => $form->createView()]);
 
         $this->assertSame(
             '<form name="form" method="post">'.
@@ -120,8 +121,9 @@ class CropperTypeTest extends TestCase
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
 
-        $form = $kernel->getContainer()->get('form.factory')->createBuilder()
+        $form = $container->get('form.factory')->createBuilder()
             ->add('photo', CropperType::class, [
                 'public_url' => '/public/url.jpg',
                 'attr' => ['data-controller' => 'mycropper'],
@@ -129,7 +131,7 @@ class CropperTypeTest extends TestCase
             ->getForm()
         ;
 
-        $rendered = $kernel->getContainer()->get('twig')->render('cropper_form.html.twig', ['form' => $form->createView()]);
+        $rendered = $container->get('twig')->render('cropper_form.html.twig', ['form' => $form->createView()]);
 
         $this->assertSame(
             '<form name="form" method="post">'.

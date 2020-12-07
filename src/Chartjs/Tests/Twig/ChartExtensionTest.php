@@ -27,9 +27,10 @@ class ChartExtensionTest extends TestCase
     {
         $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
 
         /** @var ChartBuilderInterface $builder */
-        $builder = $kernel->getContainer()->get('test.chartjs.builder');
+        $builder = $container->get('test.chartjs.builder');
 
         $chart = $builder->createChart(Chart::TYPE_LINE);
 
@@ -49,8 +50,8 @@ class ChartExtensionTest extends TestCase
             'showLines' => false,
         ]);
 
-        $rendered = $kernel->getContainer()->get('test.chartjs.twig_extension')->renderChart(
-            $kernel->getContainer()->get('twig'),
+        $rendered = $container->get('test.chartjs.twig_extension')->renderChart(
+            $container->get('twig'),
             $chart,
             ['data-controller' => 'mycontroller', 'class' => 'myclass']
         );
