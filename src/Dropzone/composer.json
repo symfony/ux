@@ -3,6 +3,7 @@
     "type": "symfony-bundle",
     "description": "File input dropzones for Symfony Forms",
     "keywords": [
+        "symfony/ux",
         "symfony",
         "ux",
         "dropzone"

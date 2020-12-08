@@ -3,6 +3,7 @@
     "type": "symfony-bundle",
     "description": "Chart.js integration for Symfony",
     "keywords": [
+        "symfony/ux",
         "symfony",
         "ux",
         "chart",

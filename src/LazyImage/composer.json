@@ -3,9 +3,11 @@
     "type": "symfony-bundle",
     "description": "Lazy image loader and utilities for Symfony",
     "keywords": [
+        "symfony/ux",
         "symfony",
         "ux",
-        "dropzone"
+        "lazy-image",
+        "image"
     ],
     "homepage": "https://symfony.com",
     "license": "MIT",
