@@ -54,6 +54,11 @@ jobs:
                   cd src/LazyImage
                   composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
+            - name: Notify
+              run: |
+                  cd src/Notify
+                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/simple-phpunit
 
     tests-php-high-deps:
         runs-on: ubuntu-latest
@@ -83,6 +88,12 @@ jobs:
             - name: LazyImage
               run: |
                   cd src/LazyImage
+                  composer config platform.php 7.4.99
+                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/simple-phpunit
+            - name: Notify
+              run: |
+                  cd src/Notify
                   composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
