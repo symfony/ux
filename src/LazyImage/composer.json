@@ -3,10 +3,7 @@
     "type": "symfony-bundle",
     "description": "Lazy image loader and utilities for Symfony",
     "keywords": [
-        "symfony/ux",
-        "ux",
-        "lazy-image",
-        "image"
+        "symfony-ux"
     ],
     "homepage": "https://symfony.com",
     "license": "MIT",

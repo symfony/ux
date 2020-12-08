@@ -3,9 +3,7 @@
     "type": "symfony-bundle",
     "description": "File input dropzones for Symfony Forms",
     "keywords": [
-        "symfony/ux",
-        "ux",
-        "dropzone"
+        "symfony-ux"
     ],
     "homepage": "https://symfony.com",
     "license": "MIT",
