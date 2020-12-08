@@ -4,7 +4,6 @@
     "description": "Lazy image loader and utilities for Symfony",
     "keywords": [
         "symfony/ux",
-        "symfony",
         "ux",
         "lazy-image",
         "image"

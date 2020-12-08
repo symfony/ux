@@ -4,7 +4,6 @@
     "description": "Swup integration for Symfony",
     "keywords": [
         "symfony/ux",
-        "symfony",
         "ux",
         "swup"
     ],
