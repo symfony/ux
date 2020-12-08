@@ -184,6 +184,23 @@ jobs:
               working-directory: src/LiveComponent
               run: php vendor/bin/simple-phpunit
 
+    tests-php81-high-deps:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.1'
+            - run: php .github/build-packages.php
+
+            - name: Notify Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/Notify
+            - name: Notify Tests
+              working-directory: src/Notify
+              run: php vendor/bin/simple-phpunit
+
     tests-js:
         runs-on: ubuntu-latest
         steps:
