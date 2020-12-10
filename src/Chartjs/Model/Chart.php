@@ -71,4 +71,19 @@ class Chart
     {
         return $this->attributes;
     }
+
+    public function getType(): string
+    {
+        return $this->type;
+    }
+
+    public function getData(): array
+    {
+        return $this->data;
+    }
+
+    public function getOptions(): array
+    {
+        return $this->options;
+    }
 }
