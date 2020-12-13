@@ -38,12 +38,12 @@ class LeafletExtension extends AbstractExtension
 
         $html = '
             <div
-                data-controller="' . trim($map->getDataController() . ' @symfony/ux-leafletjs/map') . '"
+                data-controller="'.trim($map->getDataController().' @symfony/ux-leafletjs/map').'"
                 data-leafletjs-target="placeholder"
                 data-leafletjs-longitude="'.$map->getLon().'"
                 data-leafletjs-latitude="'.$map->getLat().'"
                 data-leafletjs-zoom="'.$map->getZoom().'"
-                data-leafletjs-map-options="' . twig_escape_filter($env, json_encode($map->getMapOptions()), 'html_attr') . '"
+                data-leafletjs-map-options="'.twig_escape_filter($env, json_encode($map->getMapOptions()), 'html_attr').'"
         ';
 
         foreach ($map->getAttributes() as $name => $value) {
@@ -52,12 +52,12 @@ class LeafletExtension extends AbstractExtension
             }
 
             if (true === $value) {
-                $html .= $name . '="' . $name . '" ';
+                $html .= $name.'="'.$name.'" ';
             } elseif (false !== $value) {
-                $html .= $name . '="' . $value . '" ';
+                $html .= $name.'="'.$value.'" ';
             }
         }
 
-        return trim($html) . '></div>';
+        return trim($html).'></div>';
     }
 }
