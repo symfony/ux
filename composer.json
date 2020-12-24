@@ -1,0 +1,59 @@
+{
+    "name": "symfony/ux-turbo",
+    "type": "symfony-bundle",
+    "description": "Hotwire Turbo integration for Symfony",
+    "keywords": ["symfony-ux", "turbo", "hotwire", "javascript", "turbo-stream", "mercure"],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kévin Dunglas",
+            "email": "kevin@dunglas.fr"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=8.0",
+        "symfony/config": "^4.4|^5.2",
+        "symfony/dependency-injection": "^4.4|^5.2",
+        "symfony/http-kernel": "^4.4|^5.2"
+    },
+    "autoload": {
+        "psr-4": { "Symfony\\UX\\Turbo\\": "src/" }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Turbo\\Tests\\": "tests/",
+            "App\\": "tests/app/"
+        }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "0.1.x-dev"
+        }
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require-dev": {
+        "doctrine/doctrine-bundle": "^2.2",
+        "doctrine/orm": "^2.8",
+        "phpstan/phpstan": "^0.12",
+        "symfony/debug-bundle": "^4.4|^5.2",
+        "symfony/expression-language": "^4.4|^5.2",
+        "symfony/form": "^4.4|^5.2",
+        "symfony/framework-bundle": "^4.4|^5.2",
+        "symfony/mercure-bundle": "^0.2.6",
+        "symfony/messenger": "^4.4|^5.2",
+        "symfony/phpunit-bridge": "^4.4|^5.2",
+        "symfony/security-core": "5.x-dev",
+        "symfony/stopwatch": "^4.4|^5.2",
+        "symfony/twig-bundle": "^4.4|^5.2",
+        "symfony/web-profiler-bundle": "^4.4|^5.2",
+        "symfony/webpack-encore-bundle": "^1.8"
+    },
+    "minimum-stability": "dev"
+}

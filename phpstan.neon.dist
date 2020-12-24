@@ -1,0 +1,8 @@
+parameters:
+	level: 8
+	paths:
+		- src
+		- tests
+	inferPrivatePropertyTypeFromConstructor: true
+	bootstrapFiles:
+		- vendor/bin/.phpunit/phpunit/vendor/autoload.php

@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Symfony UX Turbo</title>
+        {% block stylesheets %}{% endblock %}
+        {{ encore_entry_script_tags('app') }}
+    </head>
+    <body>
+        <div id="navigation">Links targeting the entire page</div>
+
+        {% block body %}{% endblock %}
+    </body>
+</html>

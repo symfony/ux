@@ -1,0 +1,17 @@
+{% set id = 'book_' ~ entity.id %}
+
+{% if action == 'create' %}
+    {{ turbo_stream_start('append', 'App\\Entity\\Book') }}
+        <div id="{{ id }}">{{ entity.title }} (#{{ entity.id }})</div>
+    {{ turbo_stream_end() }}
+{% endif %}
+
+{% if action == 'update' %}
+    {{ turbo_stream_start('update', id) }}
+        {{ entity.title }} (#{{ entity.id }}, updated)
+    {{ turbo_stream_end() }}
+{% endif %}
+
+{% if action == 'remove' %}
+    {{ turbo_stream_start('remove', id) }}{{ turbo_stream_end() }}
+{% endif %}

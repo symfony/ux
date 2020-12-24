@@ -1,0 +1,9 @@
+{{ turbo_stream_start('replace', 'form') }}
+<div id="form">
+    This div replace the existing element with the DOM ID "form".
+</div>
+{{ turbo_stream_end() }}
+
+{{ turbo_stream_start('append', 'another_block') }}
+<div>Appended!</div>
+{{ turbo_stream_end() }}
