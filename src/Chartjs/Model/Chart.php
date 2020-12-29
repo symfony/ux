@@ -49,6 +49,20 @@ class Chart
     }
 
     /**
+     * Sets Chart.js options.
+     *
+     * @see https://www.chartjs.org/docs/latest/
+     *
+     * <code>
+     *    $chart->setOptions([
+     *        'scales' => [
+     *            'yAxes' => [
+     *                ['ticks' => ['min' => 0, 'max' => 100]],
+     *            ]
+     *        ]
+     *    ]);
+     * </code>
+     *
      * @return $this
      */
     public function setOptions(array $options): self
