@@ -37,7 +37,7 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('broadcast')
                 ->addDefaultsIfNotSet()
                 ->children()
-                    ->arrayNode('strip_prefixes')->prototype('scalar')->end()->info('Prefixes to strip when looking for broadcast templates')->defaultValue(['App\\Entity\\'])->end()
+                    ->scalarNode('entity_namespace')->info('Prefix to strip when looking for broadcast templates')->defaultValue('App\\Entity\\')->end()
                 ->end()
             ->end()
         ;

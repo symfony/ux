@@ -69,7 +69,7 @@ final class StreamExtension extends AbstractExtension
     public function turboStreamFrom(string $id, array $attrs = []): string
     {
         if (null === $this->mercureHub) {
-            throw new \RuntimeException('The "turbo.mercure.subscribe_url" configuration key must be set to use "turbo_stream_from()"');
+            throw new \RuntimeException('The "turbo.mercure.subscribe_url" configuration key must be set to use "turbo_stream_from()".');
         }
 
         $a = [];

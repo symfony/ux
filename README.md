@@ -285,7 +285,7 @@ Keep in mind that you can use all features provided by Symfony Mercure, includin
 
 Symfony UX Turbo also comes with a convenient integration with Doctrine ORM.
 
-With a single attribute, your clients can subscribe to creation, update and deletion of entities.
+With a single attribute, your clients can subscribe to creation, update and deletion of entities:
 
 ```php
 // src/Entity/Book.php
@@ -314,7 +314,7 @@ class Book
 }
 ```
 
-To subscribe to the updates, use the `turbo_stream_from()` Twig helper and pass the Fully Qualified Class Name of the entity as parameter:
+To subscribe to updates, use the `turbo_stream_from()` Twig helper and pass the Fully Qualified Class Name of the entity as parameter:
 
 ```twig
 {{ turbo_stream_from('App\\Entity\\Book') }}
@@ -322,63 +322,75 @@ To subscribe to the updates, use the `turbo_stream_from()` Twig helper and pass 
 {{ turbo_stream_from_end() }}
 ```
 
-Every time an entity marked with the `Broadcast` attribute changes, Symfony UX Turbo uses Mercure to publish an HTML update.
+Finally, create the template that will be rendered when an entity is created, modified or deleted:
 
-By convention, Symfony UX Turbo will look for templates rendering the HTML fragment to broadcast in the following directories:
+```twig
+{# templates/broadcast/Book.stream.html.twig #}
+{% block create %}
+    {{ turbo_stream_start('append', 'books') }}
+        <div id="{{ 'book_' ~ entity.id }}">{{ entity.title }} (#{{ entity.id }})</div>
+    {{ turbo_stream_end() }}
+{% endblock %}
 
-* entities in the `App\Entity` namespace: `templates/broadcast/{ClassName}/` (ex: `templates/broadcast/Book/`)
-* other classes: `templates/broadcast/{Fully}/{Qualified}/{ClassName}/`  (ex: `templates/broadcast/An/Other/Class/`)
+{% block update %}
+    {{ turbo_stream_start('update', 'book_' ~ entity.id) }}
+        {{ entity.title }} (#{{ entity.id }}, updated)
+    {{ turbo_stream_end() }}
+{% endblock %}
 
-Tip: if your entities aren't in the `App\Entity` namespace, you can configure change the list of prefixes to strip with
-the `turbo.broadcast.strip_prefixes` configuration parameter.
+{% block remove %}
+    {{ turbo_stream_start('remove', 'book_' ~ entity.id) }}{{ turbo_stream_end() }}
+{% endblock %}
+```
 
-In this directory, Symfony UX Turbo will render the following templates:
+By convention, Symfony UX Turbo will look for a template named `templates/broadcast/{ClassName}.stream.html.twig`.
+This template **must** contain at least 3 blocks: `create`, `update` and `remove` (they can be empty, but they must exist).
 
-* `create.html.twig`: HTML fragment to send when an entity is created 
-* `update.html.twig`: HTML fragment to send when an entity is updated 
-* `remove.html.twig`: HTML fragment to send when an entity is removed 
+Every time an entity marked with the `Broadcast` attribute changes, Symfony UX Turbo will render the associated template
+and will use Mercure to broadcast the changes to all connected clients.
+
+Each block must contain a list of Turbo Stream actions. These actions will be automatically applied by Turbo to the DOM
+tree of every connected client. Each template can contain as many actions as needed.
+
+For instance, if the same entity is displayed on different pages, you can include all actions updating these different places
+in the template.
+Actions applying to non-existing DOM elements will simply be ignored.
 
 The current entity, the action (`create`, `update` or `remove`) and options set on the `Broadcast` attribute
-are passed to the template respectively as `entity`, `action` and `options` variables.
+are passed to the template as variables: `entity`, `action` and `options`.
 
-The template must render a list of Turbo Stream actions. These actions will be sent to all connected clients and applied
-to their DOM trees. Each template can contain as many actions as needed.
-For instance, if the same entity is displayed in different pages or blocks, you can include all actions updating these
-different places. Actions applying to non-existing DOM will simply be ignored.
+### Broadcast Template Conventions and Configuration
 
-Example for our entity:
+If your entities aren't in the `App\Entity` namespace, Symfony UX Turbo will look for a template in a directory named after
+their Fully Qualified Class Names. For instance, if a class marked with the `Broadcast` attribute is named `\App\Foo\Bar`,
+the corresponding template will be `templates/broadcast/App/Foo/Bar.stream.html.twig`.
 
-```twig
-{# templates/broadcast/Book/create.stream.html.twig #}
-{{ turbo_stream_start('append', 'books') }}
-    {# You'll probably prefer to use an include here #}
-    <div id="{{ 'book_' ~ entity.id }}">{{ entity.title }} (#{{ entity.id }})</div>
-{{ turbo_stream_end() }}
+It's possible to use the `turbo.broadcast.entity_namespace` configuration parameter to change the default entity namespace:
+
+```yaml
+# config/packages/turbo.yaml
+turbo:
+    broadcast:
+        entity_namespace: App\Foo
 ```
 
-```twig
-{# templates/broadcast/Book/update.stream.html.twig #}
-{{ turbo_stream_start('update', 'book_' ~ entity.id) }}
-    {# You'll probably prefer to use an include here #}
-    {{ entity.title }} (#{{ entity.id }}, updated)
-{{ turbo_stream_end() }}
+Finally, it's also possible to explicitly set the template to use with the `template` parameter of the `Broadcast` attribute:
+
+```php
+#[Broadcast(template: 'my-template.stream.html.twig')]
+class Book { /* ... */ }
 ```
 
-```twig
-{# templates/broadcast/Book/remove.stream.html.twig #}
-{{ turbo_stream_start('remove', 'book_' ~ entity.id) }}{{ turbo_stream_end() }}
-```
+### Broadcast Options
 
 The `Broadcast` attribute comes with a set of handy options:
 
-* `topics` (`string[]` Mercure topics to use, defaults to an array containing the Fully Qualified Class Name with "\" characters replaced by ":" characters
-* `createTemplate` (`string`) The Twig template to render when a new object is created
-* `updateTemplate` (`string`) The Twig template to render when a new object is updated
-* `removeTemplate` (`string`) The Twig template to render when a new object is removed
-* `private` (`bool`) Marks Mercure updates as private
-* `id` (`string`) ID field of the SSE
-* `type` (`string`) type field of the SSE
-* `retry` (`int`) retry field of the SSE
+* `template` (`string`): Twig template to render (see above)
+* `topics` (`string[]`): Mercure topics to use, defaults to an array containing the Fully Qualified Class Name
+* `private` (`bool`): marks Mercure updates as private
+* `id` (`string`): `id` field of the SSE
+* `type` (`string`): `type` field of the SSE
+* `retry` (`int`): `retry` field of the SSE
 
 Example:
 
@@ -395,9 +407,10 @@ class Book
 }
 ```
 
+### Using an Expression to Generate The Options
+
 If the [Symfony ExpressionLanguage Component](https://symfony.com/doc/current/components/expression_language.html) is installed,
 you can also pass an *expression* generating the options as parameter of the `Broadcast` attribute:
-
 
 ```php
 // src/Entity/Book.php

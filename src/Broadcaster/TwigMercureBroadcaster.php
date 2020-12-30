@@ -42,9 +42,7 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
 {
     private const OPTIONS = [
         // Twig options
-        'createTemplate',
-        'updateTemplate',
-        'removeTemplate',
+        'template',
         // Mercure options
         'topics',
         'private',
@@ -58,7 +56,7 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
         private ?MessageBusInterface $messageBus = null,
         private ?PublisherInterface $publisher = null,
         private ?ExpressionLanguage $expressionLanguage = null,
-        private $prefixesToStrip = ['App\\Entity\\'],
+        private ?string $entityNamespace = null,
     ) {
         if (null === $this->messageBus && null === $this->publisher) {
             throw new \InvalidArgumentException('A message bus or a publisher must be provided.');
@@ -79,12 +77,14 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
          * @var Broadcast $broadcast
          */
         $broadcast = $attribute->newInstance();
-        $tplKey = sprintf('template%s', ucfirst(ucfirst($action)));
-        $options = $this->normalizeOptions($entity, $action, $broadcast->options, $tplKey);
+        $options = $this->normalizeOptions($entity, $action, $broadcast->options);
+
+        // What must we do if the template or the block doesn't exist? Throwing for now.
+        $data = $this->twig->load($options['template'])->renderBlock($action, ['entity' => $entity, 'action' => $action, 'options' => $options]);
 
         $update = new Update(
             $options['topics'],
-            $this->twig->render($options[$tplKey], ['entity' => $entity, 'action' => $action, 'options' => $options]),
+            $data,
             $options['private'] ?? false,
             $options['id'] ?? null,
             $options['type'] ?? null,
@@ -94,7 +94,7 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
         $this->messageBus ? $this->messageBus->dispatch($update) : ($this->publisher)($update);
     }
 
-    private function normalizeOptions(object $entity, string $action, mixed $options, string $tplKey): array
+    private function normalizeOptions(object $entity, string $action, mixed $options): array
     {
         if (is_string($options)) {
             if (null === $this->expressionLanguage) {
@@ -109,15 +109,13 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
         }
 
         $options['topics'] = (array) ($options['topics'] ?? $entity::class);
-        if (!isset($options[$tplKey])) {
+        if (!isset($options['template'])) {
             $dir = $entity::class;
-            foreach ($this->prefixesToStrip as $prefix) {
-                if (str_starts_with($entity::class, $prefix)) {
-                    $dir = substr($entity::class, strlen($prefix));
-                }
+            if (null !== $this->entityNamespace && str_starts_with($entity::class, $this->entityNamespace)) {
+                $dir = substr($entity::class, strlen($this->entityNamespace));
             }
 
-            $options[$tplKey] = sprintf('broadcast/%s/%s.stream.html.twig', str_replace('\\', '/', $dir), $action);
+            $options['template'] = sprintf('broadcast/%s.stream.html.twig', str_replace('\\', '/', $dir));
         }
 
         return $options;

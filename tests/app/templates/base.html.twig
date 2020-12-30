@@ -7,7 +7,13 @@
         {{ encore_entry_script_tags('app') }}
     </head>
     <body>
-        <div id="navigation">Links targeting the entire page</div>
+        <nav id="navigation">
+            <ul>
+                <li><a href="{{ path('home') }}">Home</a></li>
+                <li><a href="{{ path('chat') }}">Chat</a></li>
+                <li><a href="{{ path('books') }}">Books (broadcast)</a></li>
+            </ul>
+        </nav>
 
         {% block body %}{% endblock %}
     </body>

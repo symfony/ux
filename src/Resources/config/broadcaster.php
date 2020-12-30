@@ -27,8 +27,6 @@ return static function (ContainerConfigurator $container): void {
                 service('twig'),
                 service('messenger.default_bus')->nullOnInvalid(),
                 service('mercure.hub.default.publisher')->nullOnInvalid(),
-                null,
-                param('turbo.broadcast.strip_prefixes'),
             ])
             ->alias(BroadcasterInterface::class, 'turbo.broadcaster.twig_mercure')
     ;
