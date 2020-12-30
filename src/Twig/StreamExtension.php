@@ -23,8 +23,6 @@ use Twig\TwigFunction;
  */
 final class StreamExtension extends AbstractExtension
 {
-    use Utils;
-
     private const ACTIONS = [
         'append' => true,
         'prepend' => true,
@@ -34,7 +32,7 @@ final class StreamExtension extends AbstractExtension
     ];
 
     public function __construct(
-        private string $mercureHub
+        private ?string $mercureHub = null
     ) {}
 
     public function getFunctions(): iterable
@@ -56,7 +54,7 @@ final class StreamExtension extends AbstractExtension
         }
 
         $a = [];
-        foreach ($attrs + ['action' => $action, 'target' => $this->escapeId($target)] as $k => $v) {
+        foreach ($attrs + ['action' => $action, 'target' => $target] as $k => $v) {
             $a[] = sprintf('%s="%s"', htmlspecialchars($k, ENT_QUOTES), htmlspecialchars($v, ENT_QUOTES));
         }
 
@@ -70,12 +68,16 @@ final class StreamExtension extends AbstractExtension
 
     public function turboStreamFrom(string $id, array $attrs = []): string
     {
+        if (null === $this->mercureHub) {
+            throw new \RuntimeException('The "turbo.mercure.subscribe_url" configuration key must be set to use "turbo_stream_from()"');
+        }
+
         $a = [];
-        foreach ($attrs + ['id' => $this->escapeId($id), 'data-hub' => $this->mercureHub] as $k => $v) {
+        foreach ($attrs + ['data-topic' => $id, 'data-hub' => $this->mercureHub, 'data-controller' => 'turbo-stream'] as $k => $v) {
             $a[] = sprintf('%s="%s"', htmlspecialchars($k, ENT_QUOTES), htmlspecialchars($v, ENT_QUOTES));
         }
 
-        return sprintf('<div data-controller="turbo-stream" %s>', implode(' ', $a));
+        return sprintf('<div %s>', implode(' ', $a));
     }
 
     public function turboStreamFromEnd(): string

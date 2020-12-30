@@ -23,8 +23,6 @@ use Twig\TwigFunction;
  */
 final class FrameExtension extends AbstractExtension
 {
-    use Utils;
-
     public function getFunctions(): iterable
     {
         // TODO: remove this one? Is it really useful?
@@ -38,7 +36,7 @@ final class FrameExtension extends AbstractExtension
     public function turboFrameStart(string $id, array $attrs = []): string
     {
         $a = [];
-        foreach ($attrs + ['id' => $this->escapeId($id)] as $k => $v) {
+        foreach ($attrs + ['id' => $id] as $k => $v) {
             $a[] = sprintf('%s="%s"', htmlspecialchars($k, ENT_QUOTES), htmlspecialchars($v, ENT_QUOTES));
         }
 

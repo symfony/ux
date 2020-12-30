@@ -26,7 +26,7 @@ return static function (ContainerConfigurator $container): void {
             ->tag('twig.extension')
 
             ->set('turbo.twig.extension.stream', StreamExtension::class)
-            ->args([param('turbo.mercure_subscribe_url')])
+            ->args([param('turbo.mercure.subscribe_url')])
             ->tag('twig.extension')
     ;
 };

@@ -1,0 +1,3 @@
+{{ turbo_stream_start('update', 'book_' ~ entity.id) }}
+    {{ entity.title }} (#{{ entity.id }}, updated)
+{{ turbo_stream_end() }}

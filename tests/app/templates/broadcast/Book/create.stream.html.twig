@@ -1,0 +1,3 @@
+{{ turbo_stream_start('append', 'books') }}
+    <div id="{{ 'book_' ~ entity.id }}">{{ entity.title }} (#{{ entity.id }})</div>
+{{ turbo_stream_end() }}

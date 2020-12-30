@@ -4,13 +4,13 @@
     {{ render_turbo_frame('lazy', path('lazy')) }}
 
     {{ turbo_frame_start('the_frame_id') }}
-    <a href="{{ path('block') }}">This block is scoped, the rest of the page will not change if you click here!</a>
+        <a href="{{ path('block') }}">This block is scoped, the rest of the page will not change if you click here!</a>
     {{ turbo_frame_end() }}
 
     {{ turbo_frame_start('form') }}
-    <form method="POST" action="{{ path('form') }}">
-        <button>Trigger Turbo Stream!</button>
-    </form>
+        <form method="POST" action="{{ path('form') }}">
+            <button>Trigger Turbo Stream!</button>
+        </form>
     {{ turbo_frame_end() }}
 
     <div id="another_block">initial content</div>

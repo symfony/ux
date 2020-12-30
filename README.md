@@ -6,10 +6,11 @@ library in Symfony applications. It is part of [the Symfony UX initiative](https
 Symfony UX Turbo allow having the same user experience as with [Single Page Apps](https://en.wikipedia.org/wiki/Single-page_application)
 but without having to write a single line of JavaScript!
 
-Symfony UX Turbo also integrates with [Symfony Mercure](https://symfony.com/doc/current/mercure.html) to DOM changes to
-all currently connected users!
+Symfony UX Turbo also integrates with [Symfony Mercure](https://symfony.com/doc/current/mercure.html) to broadcast DOM changes
+to  all currently connected users!
 
-You're in a hurry? Take a look to [the chat example](#sending-async-changes-using-mercure-a-chat) to discover the full potential of Symfony UX Turbo.
+You're in a hurry? Take a look to [the chat example](#sending-async-changes-using-mercure-a-chat) to discover the full potential
+of Symfony UX Turbo.
 
 ## Installation
 
@@ -27,7 +28,17 @@ yarn encore dev
 
 ## Usage
 
-### Decompose Complex Pages with Turbo Frames
+### Accelerating Navigation with Turbo Drive
+
+Turbo Drive enhances page-level navigation. It watches for link clicks and form submissions,
+performs them in the background, and updates the page without doing a full reload.
+
+Turbo Drive is automatically enabled when you install Symfony UX Turbo.
+
+[Read the Turbo Drive documentation](https://turbo.hotwire.dev/handbook/drive) to learn about the advanced features offered
+by Turbo Drive.
+
+### Decomposing Complex Pages with Turbo Frames
 
 Symfony UX Turbo contains convenient helpers to create [Turbo Frames](https://turbo.hotwire.dev/handbook/introduction#turbo-frames-decompose-complex-pages).
 
@@ -96,7 +107,7 @@ class MyController
 
 [Read the Turbo Frames documentation](https://turbo.hotwire.dev/handbook/frames) to learn everything you can do using Turbo Frames.
 
-### Come Alive with Turbo Streams
+### Coming Alive with Turbo Streams
 
 Turbo Streams are a way for the server to send partial page updates to clients.
 There are two main way to receive the updates:
@@ -174,6 +185,20 @@ Start by installing [the Mercure support](https://symfony.com/doc/current/mercur
 The easiest way to have a working development (and production-ready) environment is to use [Symfony Docker](https://github.com/dunglas/symfony-docker/),
 which comes with a Mercure hub integrated in the web server.
 
+If you use Symfony Flex, the configuration has been generated for you, be sure to update the `MERCURE_SUBSCRIBE_URL` in
+the `.env` file to point a Mercure Hub (it's not necessary if you are using Symfony Docker).
+
+Otherwise, configure the URL of the Mercure Hub:
+
+```yaml
+# config/packages/turbo.yaml
+turbo:
+    mercure:
+        subscribe_url: https://localhost/.well-known/mercure
+```
+
+Let's create our chat:
+
 ```php
 // src/Controller/ChatController.php
 namespace App\Controller;
@@ -222,13 +247,15 @@ class ChatController extends AbstractController
     <h1>Chat</h1>
 
     {{ turbo_stream_from('chat') }}
-    {#
-        The messages will be displayed here.
-        "turbo_stream_from" automatically registers a Stimulus controller that subscribes to the Mercure topic using EventSource.
-        The connection to the Mercure Hub is automatically closed when this HTML block is removed.
-
-        All connected users will receive the new messages!
-     #}
+        <div id="messages">
+            {#
+                The messages will be displayed here.
+                "turbo_stream_from()" automatically registers a Stimulus controller that subscribes to the "chat" Mercure topic using EventSource.
+                The connection to the Mercure Hub is automatically closed when this HTML block is removed.
+        
+                All connected users will receive the new messages!
+             #}
+        </div>
     {{ turbo_stream_from_end() }}
 
     {{ turbo_frame_start('message_form') }}
@@ -245,14 +272,14 @@ class ChatController extends AbstractController
 ```twig
 {# chat/message.stream.html.twig #}
 
-{# New messages received through the Mercure connection are appended to the "tubo_stream_from" block having the "chat" ID. #}
-{{ turbo_stream_start('append', 'chat') }}
-<div>{{ message }}</div>
+{# New messages received through the Mercure connection are appended to the div with the "messages" ID in the "turbo_stream_from" block. #}
+{{ turbo_stream_start('append', 'messages') }}
+    <div>{{ message }}</div>
 {{ turbo_stream_end() }}
 ```
 
-And keep in mind that you can use all features provided by Symfony Mercure, including [private updates](https://symfony.com/doc/current/mercure.html#authorization) (to ensure that only
-authorized users will receive the updates) and [async dispatching with Symfony Messenger](https://symfony.com/doc/current/mercure.html#async-dispatching).
+Keep in mind that you can use all features provided by Symfony Mercure, including [private updates](https://symfony.com/doc/current/mercure.html#authorization)
+(to ensure that only  authorized users will receive the updates) and [async dispatching with Symfony Messenger](https://symfony.com/doc/current/mercure.html#async-dispatching).
 
 #### Broadcast Doctrine Entities Update
 
@@ -287,42 +314,111 @@ class Book
 }
 ```
 
-To subscribe to the updates, use this Twig helper:
+To subscribe to the updates, use the `turbo_stream_from()` Twig helper and pass the Fully Qualified Class Name of the entity as parameter:
 
 ```twig
 {{ turbo_stream_from('App\\Entity\\Book') }}
+    <div id="books"></div>
 {{ turbo_stream_from_end() }}
 ```
 
 Every time an entity marked with the `Broadcast` attribute changes, Symfony UX Turbo uses Mercure to publish an HTML update.
-By convention, Symfony UX Turbo will renders a template named `broadcast/{Fully:Qualified:Class:Name}.stream.html.twig`.
-It passes the entity as well as the action (`create`, `update` or `remove`) to the template.
+
+By convention, Symfony UX Turbo will look for templates rendering the HTML fragment to broadcast in the following directories:
+
+* entities in the `App\Entity` namespace: `templates/broadcast/{ClassName}/` (ex: `templates/broadcast/Book/`)
+* other classes: `templates/broadcast/{Fully}/{Qualified}/{ClassName}/`  (ex: `templates/broadcast/An/Other/Class/`)
+
+Tip: if your entities aren't in the `App\Entity` namespace, you can configure change the list of prefixes to strip with
+the `turbo.broadcast.strip_prefixes` configuration parameter.
+
+In this directory, Symfony UX Turbo will render the following templates:
+
+* `create.html.twig`: HTML fragment to send when an entity is created 
+* `update.html.twig`: HTML fragment to send when an entity is updated 
+* `remove.html.twig`: HTML fragment to send when an entity is removed 
+
+The current entity, the action (`create`, `update` or `remove`) and options set on the `Broadcast` attribute
+are passed to the template respectively as `entity`, `action` and `options` variables.
+
+The template must render a list of Turbo Stream actions. These actions will be sent to all connected clients and applied
+to their DOM trees. Each template can contain as many actions as needed.
+For instance, if the same entity is displayed in different pages or blocks, you can include all actions updating these
+different places. Actions applying to non-existing DOM will simply be ignored.
 
 Example for our entity:
 
 ```twig
-{# templats/broadcast/App:Entity:Book.stream.html.twig #}
-
-{% set id = 'book_' ~ entity.id %}
-
-{% if action == 'create' %}
-    {{ turbo_stream_start('append', 'App\\Entity\\Book') }}
-        <div id="{{ id }}">{{ entity.title }} (#{{ entity.id }})</div>
-    {{ turbo_stream_end() }}
-{% endif %}
-
-{% if action == 'update' %}
-    {{ turbo_stream_start('update', id) }}
-        {{ entity.title }} (#{{ entity.id }}, updated)
-    {{ turbo_stream_end() }}
-{% endif %}
-
-{% if action == 'remove' %}
-    {{ turbo_stream_start('remove', id) }}{{ turbo_stream_end() }}
-{% endif %}
+{# templates/broadcast/Book/create.stream.html.twig #}
+{{ turbo_stream_start('append', 'books') }}
+    {# You'll probably prefer to use an include here #}
+    <div id="{{ 'book_' ~ entity.id }}">{{ entity.title }} (#{{ entity.id }})</div>
+{{ turbo_stream_end() }}
 ```
 
-TODO: document all options of this feature
+```twig
+{# templates/broadcast/Book/update.stream.html.twig #}
+{{ turbo_stream_start('update', 'book_' ~ entity.id) }}
+    {# You'll probably prefer to use an include here #}
+    {{ entity.title }} (#{{ entity.id }}, updated)
+{{ turbo_stream_end() }}
+```
+
+```twig
+{# templates/broadcast/Book/remove.stream.html.twig #}
+{{ turbo_stream_start('remove', 'book_' ~ entity.id) }}{{ turbo_stream_end() }}
+```
+
+The `Broadcast` attribute comes with a set of handy options:
+
+* `topics` (`string[]` Mercure topics to use, defaults to an array containing the Fully Qualified Class Name with "\" characters replaced by ":" characters
+* `createTemplate` (`string`) The Twig template to render when a new object is created
+* `updateTemplate` (`string`) The Twig template to render when a new object is updated
+* `removeTemplate` (`string`) The Twig template to render when a new object is removed
+* `private` (`bool`) Marks Mercure updates as private
+* `id` (`string`) ID field of the SSE
+* `type` (`string`) type field of the SSE
+* `retry` (`int`) retry field of the SSE
+
+Example:
+
+```php
+// src/Entity/Book.php
+namespace App\Entity;
+
+use Symfony\UX\Turbo\Broadcast;
+
+#[Broadcast(createTemplate: 'foo.stream.html.twig', private: true)]
+class Book
+{
+    // ...
+}
+```
+
+If the [Symfony ExpressionLanguage Component](https://symfony.com/doc/current/components/expression_language.html) is installed,
+you can also pass an *expression* generating the options as parameter of the `Broadcast` attribute:
+
+
+```php
+// src/Entity/Book.php
+namespace App\Entity;
+
+use Symfony\UX\Turbo\Broadcast;
+
+#[Broadcast('entity.getOptions()')]
+class Book
+{
+    // ...
+
+    public function getOptions(): array
+    {
+        return [
+            'topics' => [$this->id],
+            'private' => $this->private,
+        ];
+    }
+}
+```
 
 ## Backward Compatibility promise
 

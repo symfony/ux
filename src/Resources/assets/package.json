@@ -5,8 +5,8 @@
     "version": "0.1.0",
     "symfony": {
         "controllers": {
-            "turbo": {
-                "main": "dist/controller.js",
+            "turbo-stream": {
+                "main": "dist/stream_controller.js",
                 "webpackMode": "eager",
                 "enabled": true
             }

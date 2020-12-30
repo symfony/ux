@@ -14,7 +14,6 @@ declare(strict_types=1);
 use App\Entity\Book;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ObjectManager;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -109,7 +108,9 @@ class MyTurboApp extends Kernel
 
         $container->parameters()->set('env(MERCURE_SUBSCRIBE_URL)', 'http://localhost:3000/.well-known/mercure');
         $container->extension('turbo', [
-            'mercure_subscribe_url' => '%env(MERCURE_SUBSCRIBE_URL)%'
+            'mercure' => [
+                'subscribe_url' => '%env(MERCURE_SUBSCRIBE_URL)%',
+            ],
         ]);
     }
 
