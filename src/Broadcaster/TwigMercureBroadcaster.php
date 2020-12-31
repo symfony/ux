@@ -91,17 +91,21 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
             $options['retry'] ?? null,
         );
 
-        $this->messageBus ? $this->messageBus->dispatch($update) : ($this->publisher)($update);
+        $this->messageBus ? $this->messageBus->dispatch($update) : ($this->publisher)($update); // @phpstan-ignore-line
     }
 
-    private function normalizeOptions(object $entity, string $action, mixed $options): array
+    /**
+     * @param mixed[] $options
+     * @return mixed[]
+     */
+    private function normalizeOptions(object $entity, string $action, array $options): array
     {
-        if (is_string($options)) {
+        if (is_string($options[0] ?? null)) {
             if (null === $this->expressionLanguage) {
                 throw new \RuntimeException('The Expression Language component is not installed. Try running "composer require symfony/expression-language".');
             }
 
-            $options = $this->expressionLanguage->evaluate($options, ['entity' => $entity, 'action' => $action]);
+            $options = $this->expressionLanguage->evaluate($options[0], ['entity' => $entity, 'action' => $action]);
         }
 
         if ($extraKeys = array_diff(array_keys($options), self::OPTIONS)) {

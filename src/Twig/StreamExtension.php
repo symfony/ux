@@ -44,6 +44,8 @@ final class StreamExtension extends AbstractExtension
     }
 
     /**
+     * @param array<string, string> $attrs
+     *
      * @throws \InvalidArgumentException
      */
     public function turboStreamStart(string $action, string $target, array $attrs = []): string
@@ -65,6 +67,9 @@ final class StreamExtension extends AbstractExtension
         return '</template></turbo-stream>';
     }
 
+    /**
+     * @param array<string, string> $attrs
+     */
     public function turboStreamFrom(string $id, array $attrs = []): string
     {
         if (null === $this->mercureHub) {

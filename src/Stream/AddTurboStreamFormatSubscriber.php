@@ -58,6 +58,8 @@ final class AddTurboStreamFormatSubscriber implements EventSubscriberInterface
 
     /**
      * Executed before AddRequestFormatsListener and ResponseListener.
+     *
+     * @return array<string, array>
      */
     public static function getSubscribedEvents(): array
     {

@@ -30,8 +30,17 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
  */
 final class BroadcastListener implements ResetInterface
 {
+    /**
+     * @var \SplObjectStorage<object, object>
+     */
     private \SplObjectStorage $createdEntities;
+    /**
+     * @var \SplObjectStorage<object, object>
+     */
     private \SplObjectStorage $updatedEntities;
+    /**
+     * @var \SplObjectStorage<object, object>
+     */
     private \SplObjectStorage $removedEntities;
 
     public function __construct(
