@@ -24,7 +24,8 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
  *
- * @link https://github.com/api-platform/core/blob/master/src/Bridge/Doctrine/EventListener/PublishMercureUpdatesListener.php Adapted from API Platform.
+ * @see https://github.com/api-platform/core/blob/master/src/Bridge/Doctrine/EventListener/PublishMercureUpdatesListener.php Adapted from API Platform.
+ *
  * @todo backport MongoDB support
  */
 final class BroadcastListener implements ResetInterface
@@ -35,8 +36,7 @@ final class BroadcastListener implements ResetInterface
 
     public function __construct(
         private BroadcasterInterface $broadcaster,
-    )
-    {
+    ) {
         $this->reset();
     }
 

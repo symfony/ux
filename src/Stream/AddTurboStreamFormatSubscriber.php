@@ -27,7 +27,7 @@ use Symfony\UX\Turbo\TurboBundle;
 final class AddTurboStreamFormatSubscriber implements EventSubscriberInterface
 {
     /**
-     * @link https://github.com/hotwired/turbo/issues/24 Explanation of why this hack is necessary
+     * @see https://github.com/hotwired/turbo/issues/24 Explanation of why this hack is necessary
      */
     public function onKernelRequest(RequestEvent $event): void
     {

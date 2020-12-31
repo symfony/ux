@@ -41,6 +41,7 @@
     "require-dev": {
         "doctrine/doctrine-bundle": "^2.2",
         "doctrine/orm": "^2.8",
+        "friendsofphp/php-cs-fixer": "^2.17",
         "phpstan/phpstan": "^0.12",
         "symfony/debug-bundle": "^4.4|^5.2",
         "symfony/expression-language": "^4.4|^5.2",

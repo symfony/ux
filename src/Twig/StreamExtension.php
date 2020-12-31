@@ -32,12 +32,11 @@ final class StreamExtension extends AbstractExtension
     ];
 
     public function __construct(
-        private ?string $mercureHub = null
+        private ?string $mercureHub = null,
     ) {}
 
     public function getFunctions(): iterable
     {
-        // TODO: add specific helpers such as turbo_stream_update_start?
         yield new TwigFunction('turbo_stream_start', [$this, 'turboStreamStart'], ['is_safe' => ['html']]);
         yield new TwigFunction('turbo_stream_end', [$this, 'turboStreamEnd'], ['is_safe' => ['html']]);
         yield new TwigFunction('turbo_stream_from', [$this, 'turboStreamFrom'], ['is_safe' => ['html']]);
