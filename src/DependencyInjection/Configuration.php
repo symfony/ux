@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Mercure Component project.
+ * This file is part of the Symfony UX Turbo package.
  *
  * (c) Kévin Dunglas <kevin@dunglas.fr>
  *

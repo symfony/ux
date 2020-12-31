@@ -25,14 +25,13 @@ final class FrameExtension extends AbstractExtension
 {
     public function getFunctions(): iterable
     {
-        // TODO: remove this one? Is it really useful?
-        yield new TwigFunction('render_turbo_frame', function (string $id, string $src, array $attrs = []): string {
-           return $this->turboFrameStart($id, $attrs + ['src' => $src]) . $this->turboFrameEnd();
-        }, ['is_safe' => ['html']]);
         yield new TwigFunction('turbo_frame_start', [$this, 'turboFrameStart'], ['is_safe' => ['html']]);
         yield new TwigFunction('turbo_frame_end', [$this, 'turboFrameEnd'], ['is_safe' => ['html']]);
     }
 
+    /**
+     * @param array<string, string> $attrs
+     */
     public function turboFrameStart(string $id, array $attrs = []): string
     {
         $a = [];

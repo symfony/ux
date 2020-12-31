@@ -15,7 +15,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Turbo\Stream\AddTurboStreamFormatSubscriber;
 
-/**
+/*
  * @author Kévin Dunglas <kevin@dunglas.fr>
  */
 return static function (ContainerConfigurator $container): void {

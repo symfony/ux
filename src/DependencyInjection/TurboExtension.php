@@ -27,6 +27,9 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  */
 final class TurboExtension extends Extension
 {
+    /**
+     * @param array<string, array> $configs
+     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();

@@ -3,9 +3,9 @@
 Start the test app:
 
     $ composer install
+    $ php tests/app/public/index.php doctrine:schema:create
     $ php -S localhost:8000 -t tests/app/public
     $ cd tests/app
-    $ php public/index.php doctrine:schema:create
     $ yarn encore dev --watch
 
 Convenient endpoints:

@@ -16,7 +16,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 use Symfony\UX\Turbo\Doctrine\BroadcastListener;
 
-/**
+/*
  * @author Kévin Dunglas <kevin@dunglas.fr>
  */
 return static function (ContainerConfigurator $container): void {

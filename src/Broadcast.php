@@ -27,6 +27,9 @@ final class Broadcast
     public const ACTION_UPDATE = 'update';
     public const ACTION_REMOVE = 'remove';
 
+    /**
+     * @var mixed[]
+     */
     public array $options;
 
     /**

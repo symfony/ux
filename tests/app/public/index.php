@@ -43,7 +43,7 @@ require __DIR__.'/../../../vendor/autoload.php';
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
  */
-class MyTurboApp extends Kernel
+class index extends Kernel
 {
     use MicroKernelTrait;
 
@@ -64,9 +64,7 @@ class MyTurboApp extends Kernel
             'profiler' => [
                 'only_exceptions' => false,
             ],
-            'request' => ['formats' => ['turbo-stream' => 'text/html; turbo-stream']]
         ]);
-
         $container
             ->extension('doctrine', [
                 'dbal' => [
@@ -86,9 +84,7 @@ class MyTurboApp extends Kernel
                     ],
                 ],
             ]);
-
         $container->extension('webpack_encore', ['output_path' => 'build']);
-
         $container->extension('web_profiler', [
             'toolbar' => true,
             'intercept_redirects' => false,
@@ -189,7 +185,7 @@ class MyTurboApp extends Kernel
     }
 }
 
-$app = new MyTurboApp('dev', true);
+$app = new index('dev', true);
 
 if (PHP_SAPI === 'cli') {
     $application = new Application($app);
