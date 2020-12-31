@@ -1,5 +1,6 @@
 {
     "devDependencies": {
+        "@hotwired/turbo": "^7.0.0-beta.1",
         "@symfony/ux-turbo": "file:../../src/Resources/assets",
         "@symfony/webpack-encore": "^0.32.0",
         "core-js": "^3.0.0",
@@ -14,8 +15,5 @@
         "dev": "encore dev",
         "watch": "encore dev --watch",
         "build": "encore production --progress"
-    },
-    "dependencies": {
-        "@hotwired/turbo": "^7.0.0-beta.1"
     }
 }

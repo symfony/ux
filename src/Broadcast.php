@@ -13,35 +13,29 @@ declare(strict_types=1);
 
 namespace Symfony\UX\Turbo;
 
+use Symfony\UX\Turbo\Broadcast\TwigMercureBroadcaster;
+
 /**
  * Marks the entity as broadcastable.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
- * @todo add support for advanced SSE options such as ID and retry
  */
-#[\Attribute(\Attribute::TARGET_CLASS|\Attribute::IS_REPEATABLE)]
+#[\Attribute(\Attribute::TARGET_CLASS)]
 final class Broadcast
 {
     public const ACTION_CREATE = 'create';
     public const ACTION_UPDATE = 'update';
     public const ACTION_REMOVE = 'remove';
 
-    public function __construct(
-        /**
-         * Mercure topic, defaults to the Fully Qualified Class Name with "\" characters replaced by ":" characters.
-         */
-        public ?string $topic = null,
-        /**
-         * An expression to generate the topic evaluated using the Expression Language component.
-         */
-        public ?string $topicExpression = null,
-        /**
-         * The Twig template to use. Defaults to "broadcast/{fully-qualified-class-name}.stream.html.twig) with the "\" characters replaced by ":" characters (subdirectories). Ex: templates/broadcast/App:Entity:Book.stream.html.twig
-         */
-        public ?string $template = null,
-        /**
-         * Marks Mercure updates as private.
-         */
-        public bool $private = false,
-    ) {}
+    public array $options;
+
+    /**
+     * Options can be any option supported by the broadcaster.
+     *
+     * @see TwigMercureBroadcaster for the default options
+     */
+    public function __construct(mixed ...$options)
+    {
+        $this->options = $options;
+    }
 }

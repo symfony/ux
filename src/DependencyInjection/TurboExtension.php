@@ -15,6 +15,7 @@ namespace Symfony\UX\Turbo\DependencyInjection;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\MercureBundle\MercureBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -30,13 +31,24 @@ final class TurboExtension extends Extension
     {
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
-        $container->setParameter('turbo.mercure_subscribe_url', $config['mercure_subscribe_url']);
 
         $loader = (new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config')));
         $loader->load('services.php');
 
         if (class_exists(TwigBundle::class)) {
             $loader->load('twig.php');
+            if (isset($config['mercure']['subscribe_url'])) {
+                $container->getDefinition('turbo.twig.extension.stream')->addArgument($config['mercure']['subscribe_url']);
+            }
+
+            if (class_exists(MercureBundle::class)) {
+                $loader->load('broadcaster.php');
+                $container
+                    ->getDefinition('turbo.broadcaster.twig_mercure')
+                    ->addArgument(null)
+                    ->addArgument($config['broadcast']['entity_namespace'])
+                ;
+            }
         }
 
         if (class_exists(DoctrineBundle::class) && interface_exists(EntityManagerInterface::class)) {

@@ -3,7 +3,13 @@
 Start the test app:
 
     $ composer install
-    $ php -S localhost:8001 -t tests/app/public
+    $ php -S localhost:8000 -t tests/app/public
     $ cd tests/app
     $ php public/index.php doctrine:schema:create
     $ yarn encore dev --watch
+
+Convenient endpoints:
+
+* `http://localhost:8000`: basic features
+* `http://localhost:8000/chat`: chat using Turbo Streams
+* `http://localhost:8000/books`: broadcast

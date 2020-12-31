@@ -31,6 +31,9 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+/**
+ * @author Kévin Dunglas <kevin@dunglas.fr>
+ */
 var _default = /*#__PURE__*/function (_Controller) {
   _inherits(_default, _Controller);
 
@@ -45,17 +48,28 @@ var _default = /*#__PURE__*/function (_Controller) {
   _createClass(_default, [{
     key: "initialize",
     value: function initialize() {
-      console.log('es');
+      var topic = this.element.getAttribute("data-topic");
 
-      if (!this.element.id) {
-        console.error("The element must have an \"id\" attribute");
+      if (!topic) {
+        console.error("The element must have a \"data-topic\" attribute.");
+        return;
       }
+
+      var hub = this.element.getAttribute("data-hub");
+
+      if (!hub) {
+        console.error("The element must have a \"data-hub\" attribute pointing to the Mercure hub.");
+        return;
+      }
+
+      var u = new URL(hub);
+      u.searchParams.append("topic", topic);
+      this.url = u.toString();
     }
   }, {
     key: "connect",
     value: function connect() {
-      this.es = new EventSource(this.id); // TODO: allow to use a polyfill
-
+      this.es = new EventSource(this.url);
       (0, _turbo.connectStreamSource)(this.es);
     }
   }, {

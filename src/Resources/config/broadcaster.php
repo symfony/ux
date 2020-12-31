@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
-use Symfony\UX\Turbo\Doctrine\BroadcastListener;
+use Symfony\UX\Turbo\Broadcaster\TwigMercureBroadcaster;
 
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
@@ -22,9 +22,12 @@ use Symfony\UX\Turbo\Doctrine\BroadcastListener;
 return static function (ContainerConfigurator $container): void {
     $container
         ->services()
-            ->set('turbo.doctrine.listener.broadcast', BroadcastListener::class)
-            ->args([service(BroadcasterInterface::class)])
-            ->tag('doctrine.event_listener', ['event' => 'onFlush'])
-            ->tag('doctrine.event_listener', ['event' => 'postFlush'])
+            ->set('turbo.broadcaster.twig_mercure', TwigMercureBroadcaster::class)
+            ->args([
+                service('twig'),
+                service('messenger.default_bus')->nullOnInvalid(),
+                service('mercure.hub.default.publisher')->nullOnInvalid(),
+            ])
+            ->alias(BroadcasterInterface::class, 'turbo.broadcaster.twig_mercure')
     ;
 };

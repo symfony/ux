@@ -12,22 +12,23 @@ import { connectStreamSource, disconnectStreamSource } from "@hotwired/turbo";
 
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
- *
- * @todo Allow to use polyfills for URL and EventSource.
  */
 export default class extends Controller {
   initialize() {
-    if (!this.element.id) {
-      console.error(`The element must have an "id" attribute.`);
+    const topic = this.element.getAttribute("data-topic");
+    if (!topic) {
+      console.error(`The element must have a "data-topic" attribute.`);
+      return;
     }
 
-    this.hub = this.element.getAttribute("data-hub");
-    if (!this.hub) {
+    const hub = this.element.getAttribute("data-hub");
+    if (!hub) {
       console.error(`The element must have a "data-hub" attribute pointing to the Mercure hub.`);
+      return;
     }
 
-    const u = new URL(this.hub);
-    u.searchParams.append("topic", this.element.id);
+    const u = new URL(hub);
+    u.searchParams.append("topic", topic);
 
     this.url = u.toString();
   }

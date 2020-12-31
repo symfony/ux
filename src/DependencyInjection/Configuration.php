@@ -28,8 +28,16 @@ final class Configuration implements ConfigurationInterface
         $treeBuilder = new TreeBuilder('turbo');
         $rootNode = $treeBuilder->getRootNode();
         $rootNode
+            ->children()
+                ->arrayNode('mercure')
+                    ->children()
+                        ->scalarNode('subscribe_url')->info('URL of the Mercure Hub to use for subscriptions')->example('https://example.com/.well-known/mercure')->end()
+                    ->end()
+                ->end()
+                ->arrayNode('broadcast')
+                ->addDefaultsIfNotSet()
                 ->children()
-                    ->scalarNode('mercure_subscribe_url')->info('URL of the Mercure Hub to use for subscriptions')->example('https://example.com/.well-known/mercure')->end()
+                    ->scalarNode('entity_namespace')->info('Prefix to strip when looking for broadcast templates')->defaultValue('App\\Entity\\')->end()
                 ->end()
             ->end()
         ;

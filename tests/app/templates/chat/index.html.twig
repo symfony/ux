@@ -4,10 +4,10 @@
     <h1>Chat</h1>
 
     {{ turbo_stream_from('chat') }}
-    {# Initial content (optional) #}
+        <div id="messages"></div>
     {{ turbo_stream_from_end() }}
 
     {{ turbo_frame_start('message_form') }}
-    {{ form(form) }}
+        {{ form(form) }}
     {{ turbo_frame_end() }}
 {% endblock %}
