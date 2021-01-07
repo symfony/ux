@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by lyrixx at 2020-12-31T15:24:05Z
+
+Should we document such BC break somewhere, to help people upgrading?
+
+Not related: IMHO you should use .gitattribute to do not display compiled file in diff
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2020-12-31T15:52:07Z
+
+Yes, I planned to add it to the release, but it's true we don't have a CHANGELOG yet and it may be useful. I'll have a look next year ;) .
+
+---------------------------------------------------------------------------
+
+by konshensx16 at 2021-01-01T20:41:48Z
+
+Happy new year everyone and thank you for the great package.
+Any idea when this PR will be merged ? :)
