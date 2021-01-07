@@ -107,23 +107,38 @@ class Crop
         return json_encode($this->options);
     }
 
-    public function setOptions(string $options)
+    /**
+     * @return $this
+     */
+    public function setOptions(string $options): self
     {
         $this->options = json_decode($options, true);
+
+        return $this;
     }
 
-    public function setDefaultOptions(array $options)
+    /**
+     * @return $this
+     */
+    public function setDefaultOptions(array $options): self
     {
         foreach ($this->options as $key => $defaultValue) {
             if (isset($options[$key])) {
                 $this->options[$key] = $options[$key];
             }
         }
+
+        return $this;
     }
 
-    public function setCroppedMaxSize(int $maxWidth, int $maxHeight)
+    /**
+     * @return $this
+     */
+    public function setCroppedMaxSize(int $maxWidth, int $maxHeight): self
     {
         $this->maxWidth = $maxWidth;
         $this->maxHeight = $maxHeight;
+
+        return $this;
     }
 }

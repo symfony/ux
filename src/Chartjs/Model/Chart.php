@@ -38,19 +38,34 @@ class Chart
         $this->type = $type;
     }
 
-    public function setData(array $data)
+    /**
+     * @return $this
+     */
+    public function setData(array $data): self
     {
         $this->data = $data;
+
+        return $this;
     }
 
-    public function setOptions(array $options)
+    /**
+     * @return $this
+     */
+    public function setOptions(array $options): self
     {
         $this->options = $options;
+
+        return $this;
     }
 
-    public function setAttributes(array $attributes)
+    /**
+     * @return $this
+     */
+    public function setAttributes(array $attributes): self
     {
         $this->attributes = $attributes;
+
+        return $this;
     }
 
     public function createView(): array
