@@ -49,6 +49,7 @@
         "symfony/framework-bundle": "^4.4|^5.2",
         "symfony/mercure-bundle": "^0.2.6",
         "symfony/messenger": "^4.4|^5.2",
+        "symfony/panther": "^0.9",
         "symfony/phpunit-bridge": "^4.4|^5.2",
         "symfony/security-core": "5.x-dev",
         "symfony/stopwatch": "^4.4|^5.2",

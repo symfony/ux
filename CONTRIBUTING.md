@@ -8,8 +8,19 @@ Start the test app:
     $ cd tests/app
     $ yarn encore dev --watch
 
-Convenient endpoints:
+## Convenient endpoints:
 
 * `http://localhost:8000`: basic features
 * `http://localhost:8000/chat`: chat using Turbo Streams
 * `http://localhost:8000/books`: broadcast
+
+## Run tests
+
+### PHP tests
+
+    php vendor/bin/simple-phpunit
+
+### JavaScript tests
+
+    cd Resources/assets
+    yarn test

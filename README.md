@@ -1,6 +1,6 @@
 # Symfony UX Turbo
 
-Symfony UX Turbo a Symfony bundle integrating the [Hotwire Turbo](https://turbo.hotwire.dev)
+Symfony UX Turbo is a Symfony bundle integrating the [Hotwire Turbo](https://turbo.hotwire.dev)
 library in Symfony applications. It is part of [the Symfony UX initiative](https://symfony.com/ux).
 
 Symfony UX Turbo allow having the same user experience as with [Single Page Apps](https://en.wikipedia.org/wiki/Single-page_application)
@@ -104,6 +104,40 @@ class MyController
     }
 }
 ```
+
+#### Writing Tests
+
+Under the hood, Symfony UX Turbo relies on JavaScript to update the HTML page.
+To test if your website works properly, you will have to write [UI tests](https://martinfowler.com/articles/practical-test-pyramid.html#UiTests).
+
+Fortunately, we've got you covered! [Symfony Panther](https://github.com/symfony/panther) is a convenient testing tool
+using real browsers to test your Symfony application. It shares the same API as BrowserKit, the functional testing tool shipped with Symfony.
+
+[Install Symfony Panther](https://github.com/symfony/panther#installing-panther), and write a test for our Turbo Frame:
+
+```php
+// tests/TurboFrameTest.php
+namespace App\Tests;
+
+use Symfony\Component\Panther\PantherTestCase;
+
+class TurboFrameTest extends PantherTestCase
+{
+    public function testFrame(): void
+    {
+        $client = self::createPantherClient();
+        $client->request('GET', '/');
+
+        $client->clickLink('This block is scoped, the rest of the page will not change if you click here!');
+        $this->assertSelectorTextContains('body', 'This will replace the content of the Turbo Frame!');
+    }
+}
+```
+
+Run `bin/phpunit` to execute the test! Symfony Panther automatically started your application with a web server
+and tested it using Google Chrome (Firefox is also supported)!
+
+You can even let Panther open Chrome, and see what happens: `PANTHER_NO_HEADLESS=1 bin/phpunit --debug`
 
 [Read the Turbo Frames documentation](https://turbo.hotwire.dev/handbook/frames) to learn everything you can do using Turbo Frames.
 
@@ -442,17 +476,9 @@ However, it is currently considered
 [**experimental**](https://symfony.com/doc/current/contributing/code/experimental.html),
 meaning it is not bound to Symfony's BC policy for the moment.
 
-## Run tests
+## Credits
 
-### PHP tests
+Created by [Kévin Dunglas](https://dunglas.fr). Sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
 
-```sh
-php vendor/bin/simple-phpunit
-```
-
-### JavaScript tests
-
-```sh
-cd Resources/assets
-yarn test
-```
+Symfony UX Turbo has been inspired by [hotwired/turbo-rails](https://github.com/hotwired/turbo-rails)
+and [sroze/live-twig](https://github.com/sroze/live-twig).
