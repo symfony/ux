@@ -33,7 +33,7 @@ class CropperType extends AbstractType
             ->add('options', HiddenType::class, [
                 'error_bubbling' => true,
                 'attr' => [
-                    'data-controller' => trim(($options['attr']['data-controller'] ?? '').' @symfony/ux-cropperjs/cropper'),
+                    'data-controller' => trim(($options['attr']['data-controller'] ?? '').' symfony--ux-cropperjs--cropper'),
                     'data-public-url' => $options['public_url'],
                     'data-view-mode' => $options['view_mode'],
                     'data-drag-mode' => $options['drag_mode'],

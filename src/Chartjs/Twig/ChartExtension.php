@@ -37,7 +37,7 @@ class ChartExtension extends AbstractExtension
 
         $html = '
             <canvas
-                data-controller="'.trim($chart->getDataController().' @symfony/ux-chartjs/chart').'"
+                data-controller="'.trim($chart->getDataController().' symfony--ux-chartjs--chart').'"
                 data-view="'.twig_escape_filter($env, json_encode($chart->createView()), 'html_attr').'"
         ';
 
