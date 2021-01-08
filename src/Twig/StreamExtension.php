@@ -39,7 +39,7 @@ final class StreamExtension extends AbstractExtension
     {
         yield new TwigFunction('turbo_stream_start', [$this, 'turboStreamStart'], ['is_safe' => ['html']]);
         yield new TwigFunction('turbo_stream_end', [$this, 'turboStreamEnd'], ['is_safe' => ['html']]);
-        yield new TwigFunction('turbo_stream_from', [$this, 'turboStreamFrom'], ['is_safe' => ['html']]);
+        yield new TwigFunction('turbo_stream_from_start', [$this, 'turboStreamFromStart'], ['is_safe' => ['html']]);
         yield new TwigFunction('turbo_stream_from_end', [$this, 'turboStreamFromEnd'], ['is_safe' => ['html']]);
     }
 
@@ -70,14 +70,14 @@ final class StreamExtension extends AbstractExtension
     /**
      * @param array<string, string> $attrs
      */
-    public function turboStreamFrom(string $id, array $attrs = []): string
+    public function turboStreamFromStart(string $id, array $attrs = []): string
     {
         if (null === $this->mercureHub) {
-            throw new \RuntimeException('The "turbo.mercure.subscribe_url" configuration key must be set to use "turbo_stream_from()".');
+            throw new \RuntimeException('The "turbo.mercure.subscribe_url" configuration key must be set to use "turbo_stream_from_start()".');
         }
 
         $a = [];
-        foreach ($attrs + ['data-topic' => $id, 'data-hub' => $this->mercureHub, 'data-controller' => 'turbo-stream'] as $k => $v) {
+        foreach ($attrs + ['data-turbo-stream-topic-value' => $id, 'data-turbo-stream-hub-value' => $this->mercureHub, 'data-controller' => 'turbo-stream'] as $k => $v) {
             $a[] = sprintf('%s="%s"', htmlspecialchars($k, ENT_QUOTES), htmlspecialchars($v, ENT_QUOTES));
         }
 

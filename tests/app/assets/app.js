@@ -8,7 +8,7 @@
  */
 
 import { Application } from "stimulus";
-import TurboStreamController from "@symfony/ux-turbo/src/stream_controller";
+import TurboStreamController from "@symfony/ux-turbo/dist/turbo_stream_controller";
 
 const application = Application.start();
 application.register("turbo-stream", TurboStreamController);

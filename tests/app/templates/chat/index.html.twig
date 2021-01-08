@@ -3,7 +3,7 @@
 {% block body %}
     <h1>Chat</h1>
 
-    {{ turbo_stream_from('chat') }}
+    {{ turbo_stream_from_start('chat') }}
         <div id="messages"></div>
     {{ turbo_stream_from_end() }}
 

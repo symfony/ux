@@ -42,14 +42,14 @@ by Turbo Drive.
 
 Symfony UX Turbo contains convenient helpers to create [Turbo Frames](https://turbo.hotwire.dev/handbook/introduction#turbo-frames-decompose-complex-pages).
 
-To wrap some content in a Turbo Frame, use the `turbo_frame_start()` and `turbo_frame_stop()` helper functions:
+To wrap some content in a Turbo Frame, use the `turbo_frame_start()` and `turbo_frame_end()` helper functions:
 
 ```twig
 {# home.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ turbo_frame_start('the_frame_id }}
+    {{ turbo_frame_start('the_frame_id') }}
         <a href="{{ path('another-page') }}">This block is scoped, the rest of the page will not change if you click here!</a>
     {{ turbo_frame_end() }}
 {% endblock %}
@@ -76,7 +76,7 @@ You can also lazy load the content of a frame:
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ turbo_frame_start('the_frame_id , { src: path('block') }}} {# you can set extra attributes using this map #}
+    {{ turbo_frame_start('the_frame_id', { src: path('block') })}} {# you can set extra attributes using this map #}
         A placeholder.
     {{ turbo_frame_end() }}
 {% endblock %}
@@ -162,7 +162,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\UX\Turbo\Stream\TurboStreamResponse;
-use Symfony\UX\Turbo\TurboBundle;
 
 class TaskController extends AbstractController
 {
@@ -178,7 +177,7 @@ class TaskController extends AbstractController
             // ... perform some action, such as saving the task to the database
 
             // 🔥 The magic happens here! 🔥
-            if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+            if (TurboStreamResponse::STREAM_FORMAT === $request->getPreferredFormat()) {
                 // If the request comes from Turbo, only send the HTML to update using a TurboStreamResponse
                 return $this->render('task/success.stream.html.twig', ['task' => $task], new TurboStreamResponse());
             }
@@ -274,17 +273,17 @@ class ChatController extends AbstractController
 ```
 
 ```twig
-{# chat/chat.html.twig #}
+{# chat/index.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block body %}
     <h1>Chat</h1>
 
-    {{ turbo_stream_from('chat') }}
+    {{ turbo_stream_from_start('chat') }}
         <div id="messages">
             {#
                 The messages will be displayed here.
-                "turbo_stream_from()" automatically registers a Stimulus controller that subscribes to the "chat" Mercure topic using EventSource.
+                "turbo_stream_from_start()" automatically registers a Stimulus controller that subscribes to the "chat" Mercure topic using EventSource.
                 The connection to the Mercure Hub is automatically closed when this HTML block is removed.
         
                 All connected users will receive the new messages!
@@ -348,10 +347,10 @@ class Book
 }
 ```
 
-To subscribe to updates, use the `turbo_stream_from()` Twig helper and pass the Fully Qualified Class Name of the entity as parameter:
+To subscribe to updates, use the `turbo_stream_from_start()` Twig helper and pass the Fully Qualified Class Name of the entity as parameter:
 
 ```twig
-{{ turbo_stream_from('App\\Entity\\Book') }}
+{{ turbo_stream_from_start('App\\Entity\\Book') }}
     <div id="books"></div>
 {{ turbo_stream_from_end() }}
 ```
@@ -434,7 +433,7 @@ namespace App\Entity;
 
 use Symfony\UX\Turbo\Broadcast;
 
-#[Broadcast(createTemplate: 'foo.stream.html.twig', private: true)]
+#[Broadcast(template: 'foo.stream.html.twig', private: true)]
 class Book
 {
     // ...

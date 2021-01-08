@@ -130,7 +130,7 @@ class Kernel extends BaseKernel
 
     public function form(Request $request, Environment $twig): Response
     {
-        if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+        if (TurboStreamResponse::STREAM_FORMAT === $request->getPreferredFormat()) {
             return new TurboStreamResponse($twig->render('form.stream.html.twig'));
         }
 

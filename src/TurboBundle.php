@@ -20,6 +20,4 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 final class TurboBundle extends Bundle
 {
-    public const STREAM_FORMAT = 'turbo_stream';
-    public const STREAM_MEDIA_TYPE = 'text/html; turbo-stream';
 }

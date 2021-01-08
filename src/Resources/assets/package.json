@@ -2,11 +2,12 @@
     "name": "@symfony/ux-turbo",
     "description": "Hotwire Turbo integration for Symfony",
     "license": "MIT",
+    "private": true,
     "version": "0.1.0",
     "symfony": {
         "controllers": {
             "turbo-stream": {
-                "main": "dist/stream_controller.js",
+                "main": "dist/turbo_stream_controller.js",
                 "webpackMode": "eager",
                 "enabled": true
             }
@@ -15,7 +16,8 @@
     "scripts": {
         "build": "babel src -d dist",
         "test": "babel src -d dist && jest",
-        "lint": "eslint src test"
+        "format": "prettier src/*.js --write",
+        "check-format": "yarn format --no-write --check"
     },
     "dependencies": {
         "@hotwired/turbo": "^7.0.0-beta.1"
@@ -30,6 +32,7 @@
         "@babel/preset-env": "^7.12.7",
         "@symfony/stimulus-testing": "^1.1.0",
         "jest-canvas-mock": "^2.3.0",
+        "prettier": "2.2.1",
         "stimulus": "^2.0.0"
     },
     "jest": {
@@ -37,5 +40,12 @@
         "setupFilesAfterEnv": [
             "./test/setup.js"
         ]
+    },
+    "prettier": {
+        "printWidth": 120,
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "jsxBracketSameLine": true,
+        "singleQuote": true
     }
 }

@@ -22,4 +22,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 final class TurboStreamResponse extends Response
 {
+    public const STREAM_FORMAT = 'turbo_stream';
+    public const STREAM_MEDIA_TYPE = 'text/html; turbo-stream';
 }

@@ -17,7 +17,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
-use Symfony\UX\Turbo\TurboBundle;
 
 /**
  * Detects if it's a Turbo Stream request and set the format accordingly.
@@ -32,12 +31,12 @@ final class AddTurboStreamFormatSubscriber implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        if (!($accept = $request->headers->get('Accept')) || !str_starts_with($accept, TurboBundle::STREAM_MEDIA_TYPE)) {
+        if (!($accept = $request->headers->get('Accept')) || !str_starts_with($accept, TurboStreamResponse::STREAM_MEDIA_TYPE)) {
             return;
         }
 
-        $request->setFormat(TurboBundle::STREAM_FORMAT, TurboBundle::STREAM_MEDIA_TYPE);
-        $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+        $request->setFormat(TurboStreamResponse::STREAM_FORMAT, TurboStreamResponse::STREAM_MEDIA_TYPE);
+        $request->setRequestFormat(TurboStreamResponse::STREAM_FORMAT);
     }
 
     /**
@@ -51,7 +50,7 @@ final class AddTurboStreamFormatSubscriber implements EventSubscriberInterface
         }
 
         $request = $event->getRequest();
-        if (TurboBundle::STREAM_FORMAT === $request->getRequestFormat(null)) {
+        if (TurboStreamResponse::STREAM_FORMAT === $request->getRequestFormat(null)) {
             $request->setRequestFormat(null);
         }
     }

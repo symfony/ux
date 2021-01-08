@@ -1,12 +1,25 @@
 # Contributing
 
-Start the test app:
+Start a Mercure Hub:
+
+    $ docker run \
+        -e SERVER_NAME=:3000 \
+        -e MERCURE_PUBLISHER_JWT_KEY='!ChangeMe!' \
+        -e MERCURE_SUBSCRIBER_JWT_KEY='!ChangeMe!' \
+        -p 3000:3000 \
+        dunglas/mercure caddy run -config /etc/caddy/Caddyfile.dev
+
+Install the test app:
 
     $ composer install
-    $ php tests/app/public/index.php doctrine:schema:create
-    $ php -S localhost:8000 -t tests/app/public
     $ cd tests/app
-    $ yarn encore dev --watch
+    $ yarn install
+    $ yarn build
+    $ php tests/app/public/index.php doctrine:schema:create
+
+Start the test app:
+
+    $ php -S localhost:8000 -t tests/app/public
 
 ## Convenient endpoints:
 
@@ -16,11 +29,4 @@ Start the test app:
 
 ## Run tests
 
-### PHP tests
-
-    php vendor/bin/simple-phpunit
-
-### JavaScript tests
-
-    cd Resources/assets
-    yarn test
+    $ php vendor/bin/simple-phpunit

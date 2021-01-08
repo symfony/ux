@@ -3,7 +3,7 @@
 {% block body %}
     <h1>Books</h1>
 
-    {{ turbo_stream_from('App\\Entity\\Book') }}
+    {{ turbo_stream_from_start('App\\Entity\\Book') }}
         <div id="books"></div>
     {{ turbo_stream_from_end() }}
 

@@ -31,6 +31,8 @@ function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Re
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
  */
@@ -48,22 +50,12 @@ var _default = /*#__PURE__*/function (_Controller) {
   _createClass(_default, [{
     key: "initialize",
     value: function initialize() {
-      var topic = this.element.getAttribute("data-topic");
-
-      if (!topic) {
-        console.error("The element must have a \"data-topic\" attribute.");
-        return;
-      }
-
-      var hub = this.element.getAttribute("data-hub");
-
-      if (!hub) {
-        console.error("The element must have a \"data-hub\" attribute pointing to the Mercure hub.");
-        return;
-      }
-
-      var u = new URL(hub);
-      u.searchParams.append("topic", topic);
+      var errorMessages = [];
+      if (!this.hasHubValue) errorMessages.push("The element must have a \"data-turbo-stream-hub-value\" attribute pointing to the Mercure hub.");
+      if (!this.hasTopicValue) errorMessages.push("The element must have a \"data-turbo-stream-topic-value\" attribute.");
+      if (errorMessages.length) throw new Error(errorMessages.join(" "));
+      var u = new URL(this.hubValue);
+      u.searchParams.append('topic', this.topicValue);
       this.url = u.toString();
     }
   }, {
@@ -84,3 +76,8 @@ var _default = /*#__PURE__*/function (_Controller) {
 }(_stimulus.Controller);
 
 exports["default"] = _default;
+
+_defineProperty(_default, "values", {
+  topic: String,
+  hub: String
+});
