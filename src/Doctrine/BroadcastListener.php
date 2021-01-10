@@ -50,6 +50,8 @@ final class BroadcastListener implements ResetInterface
         }
 
         $this->reset();
+
+        $this->broadcaster = $broadcaster;
     }
 
     /**

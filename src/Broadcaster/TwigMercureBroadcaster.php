@@ -40,8 +40,9 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
 {
     private $twig;
     private $messageBus;
-    private $publisher = null;
-    private $expressionLanguage = null;
+    private $publisher;
+    private $expressionLanguage;
+    private $entityNamespace;
 
     private const OPTIONS = [
         // Twig options
@@ -65,13 +66,15 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
             throw new \LogicException('The broadcast feature requires PHP 8.0 or greater, you must either upgrade to PHP 8 or disable it.');
         }
 
-        if (null === $this->messageBus && null === $this->publisher) {
+        if (null === $messageBus && null === $publisher) {
             throw new \InvalidArgumentException('A message bus or a publisher must be provided.');
         }
 
-        if (null === $this->expressionLanguage) {
-            $this->expressionLanguage = new ExpressionLanguage();
-        }
+        $this->twig = $twig;
+        $this->messageBus = $messageBus;
+        $this->publisher = $publisher;
+        $this->expressionLanguage = $expressionLanguage ?? new ExpressionLanguage();
+        $this->entityNamespace = $entityNamespace;
     }
 
     public function broadcast(object $entity, string $action): void
@@ -124,7 +127,7 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
         $options['topics'] = (array) ($options['topics'] ?? $entityClass);
         if (!isset($options['template'])) {
             $dir = $entityClass;
-            if (null !== $this->entityNamespace && 0 !== strpos($entityClass, $this->entityNamespace)) {
+            if (null !== $this->entityNamespace && 0 === strpos($entityClass, $this->entityNamespace)) {
                 $dir = substr($entityClass, strlen($this->entityNamespace));
             }
 
