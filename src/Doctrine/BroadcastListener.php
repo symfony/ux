@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Symfony\UX\Turbo\Doctrine;
 
 use Doctrine\Common\EventArgs;
@@ -30,6 +28,8 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
  */
 final class BroadcastListener implements ResetInterface
 {
+    private $broadcaster;
+
     /**
      * @var \SplObjectStorage<object, object>
      */
@@ -43,9 +43,12 @@ final class BroadcastListener implements ResetInterface
      */
     private \SplObjectStorage $removedEntities;
 
-    public function __construct(
-        private BroadcasterInterface $broadcaster,
-    ) {
+    public function __construct(BroadcasterInterface $broadcaster)
+    {
+        if (80000 > \PHP_VERSION_ID) {
+            throw new \LogicException('The broadcast feature requires PHP 8.0 or greater, you must either upgrade to PHP 8 or disable it.');
+        }
+
         $this->reset();
     }
 

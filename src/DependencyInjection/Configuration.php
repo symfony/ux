@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Symfony\UX\Turbo\DependencyInjection;
 
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
@@ -35,7 +33,7 @@ final class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->arrayNode('broadcast')
-                ->addDefaultsIfNotSet()
+                ->{80000 <= \PHP_VERSION_ID ? 'canBeDisabled' : 'canBeEnabled'}()
                 ->children()
                     ->scalarNode('entity_namespace')->info('Prefix to strip when looking for broadcast templates')->defaultValue('App\\Entity\\')->end()
                 ->end()

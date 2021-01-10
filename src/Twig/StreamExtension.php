@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Symfony\UX\Turbo\Twig;
 
 use Twig\Extension\AbstractExtension;
@@ -31,9 +29,12 @@ final class StreamExtension extends AbstractExtension
         'remove' => true,
     ];
 
-    public function __construct(
-        private ?string $mercureHub = null,
-    ) {}
+    private $mercureHub;
+
+    public function __construct(?string $mercureHub = null)
+    {
+        $this->mercureHub = $mercureHub;
+    }
 
     public function getFunctions(): iterable
     {

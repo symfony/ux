@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Symfony\UX\Turbo\Broadcaster;
 
 use Symfony\Component\Mercure\PublisherInterface;
@@ -40,6 +38,11 @@ use Twig\Environment;
  */
 final class TwigMercureBroadcaster implements BroadcasterInterface
 {
+    private $twig;
+    private $messageBus;
+    private $publisher = null;
+    private $expressionLanguage = null;
+
     private const OPTIONS = [
         // Twig options
         'template',
@@ -52,12 +55,16 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
     ];
 
     public function __construct(
-        private Environment $twig,
-        private ?MessageBusInterface $messageBus = null,
-        private ?PublisherInterface $publisher = null,
-        private ?ExpressionLanguage $expressionLanguage = null,
-        private ?string $entityNamespace = null,
+        Environment $twig,
+        ?MessageBusInterface $messageBus = null,
+        ?PublisherInterface $publisher = null,
+        ?ExpressionLanguage $expressionLanguage = null,
+        ?string $entityNamespace = null
     ) {
+        if (80000 > \PHP_VERSION_ID) {
+            throw new \LogicException('The broadcast feature requires PHP 8.0 or greater, you must either upgrade to PHP 8 or disable it.');
+        }
+
         if (null === $this->messageBus && null === $this->publisher) {
             throw new \InvalidArgumentException('A message bus or a publisher must be provided.');
         }
@@ -108,15 +115,17 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
             $options = $this->expressionLanguage->evaluate($options[0], ['entity' => $entity, 'action' => $action]);
         }
 
+        $entityClass = get_class($entity);
+
         if ($extraKeys = array_diff(array_keys($options), self::OPTIONS)) {
-            throw new \InvalidArgumentException(sprintf('Unknown broadcast options "%s" on class "%s". Valid options are: "%s"', implode('", "', $extraKeys), $entity::class, implode('", "', self::OPTIONS)));
+            throw new \InvalidArgumentException(sprintf('Unknown broadcast options "%s" on class "%s". Valid options are: "%s"', implode('", "', $extraKeys), $entityClass, implode('", "', self::OPTIONS)));
         }
 
-        $options['topics'] = (array) ($options['topics'] ?? $entity::class);
+        $options['topics'] = (array) ($options['topics'] ?? $entityClass);
         if (!isset($options['template'])) {
-            $dir = $entity::class;
-            if (null !== $this->entityNamespace && str_starts_with($entity::class, $this->entityNamespace)) {
-                $dir = substr($entity::class, strlen($this->entityNamespace));
+            $dir = $entityClass;
+            if (null !== $this->entityNamespace && 0 !== strpos($entityClass, $this->entityNamespace)) {
+                $dir = substr($entityClass, strlen($this->entityNamespace));
             }
 
             $options['template'] = sprintf('broadcast/%s.stream.html.twig', str_replace('\\', '/', $dir));

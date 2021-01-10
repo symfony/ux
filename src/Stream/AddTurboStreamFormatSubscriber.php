@@ -9,8 +9,6 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Symfony\UX\Turbo\Stream;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -31,7 +29,7 @@ final class AddTurboStreamFormatSubscriber implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
-        if (!($accept = $request->headers->get('Accept')) || !str_starts_with($accept, TurboStreamResponse::STREAM_MEDIA_TYPE)) {
+        if (!($accept = $request->headers->get('Accept')) || 0 !== strpos($accept, TurboStreamResponse::STREAM_MEDIA_TYPE)) {
             return;
         }
 

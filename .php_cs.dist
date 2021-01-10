@@ -21,7 +21,6 @@ return PhpCsFixer\Config::create()
     ->setRules([
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        'declare_strict_types' => true,
         'header_comment' => [
             'header' => $header,
             'location' => 'after_open',
