@@ -17,9 +17,9 @@
     ],
     "require": {
         "php": ">=7.2.5",
-        "symfony/config": "^4.4|^5.2",
-        "symfony/dependency-injection": "^4.4|^5.2",
-        "symfony/http-kernel": "^4.4|^5.2"
+        "symfony/config": "^5.2",
+        "symfony/dependency-injection": "^5.2",
+        "symfony/http-kernel": "^5.2"
     },
     "autoload": {
         "psr-4": { "Symfony\\UX\\Turbo\\": "src/" }
@@ -43,18 +43,18 @@
         "doctrine/orm": "^2.8",
         "friendsofphp/php-cs-fixer": "^2.17",
         "phpstan/phpstan": "^0.12",
-        "symfony/debug-bundle": "^4.4|^5.2",
-        "symfony/expression-language": "^4.4|^5.2",
-        "symfony/form": "^4.4|^5.2",
-        "symfony/framework-bundle": "^4.4|^5.2",
+        "symfony/debug-bundle": "^5.2",
+        "symfony/expression-language": "^5.2",
+        "symfony/form": "^5.2",
+        "symfony/framework-bundle": "^5.2",
         "symfony/mercure-bundle": "^0.2.6",
-        "symfony/messenger": "^4.4|^5.2",
+        "symfony/messenger": "^5.2",
         "symfony/panther": "^0.9",
-        "symfony/phpunit-bridge": "^4.4|^5.2",
+        "symfony/phpunit-bridge": "^5.2.1",
         "symfony/security-core": "5.x-dev",
-        "symfony/stopwatch": "^4.4|^5.2",
-        "symfony/twig-bundle": "^4.4|^5.2",
-        "symfony/web-profiler-bundle": "^4.4|^5.2",
+        "symfony/stopwatch": "^5.2",
+        "symfony/twig-bundle": "^5.2",
+        "symfony/web-profiler-bundle": "^5.2",
         "symfony/webpack-encore-bundle": "^1.8"
     },
     "minimum-stability": "dev"

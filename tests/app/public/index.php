@@ -15,7 +15,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 require __DIR__.'/../../../vendor/autoload.php';
 
-$app = new Kernel('dev', true);
+$app = new Kernel($_SERVER['APP_ENV'] ?? 'dev', $_SERVER['APP_DEBUG'] ?? true);
 
 if (PHP_SAPI === 'cli') {
     $application = new Application($app);

@@ -29,11 +29,11 @@ class BroadcastTest extends PantherTestCase
     public function testBroadcast(): void
     {
         ($client = self::createPantherClient())->request('GET', '/books');
+
         $crawler = $client->submitForm('Submit', ['title' => self::BOOK_TITLE]);
 
         $client->waitForElementToContain('#books', self::BOOK_TITLE);
-
-        if (!preg_match('/\(#([0-9]+)\)/', $crawler->filter('#books div')->text(), $matches)) {
+        if (!preg_match('/\(#(\d+)\)/', $crawler->filter('#books div')->text(), $matches)) {
             $this->fail('ID not found');
         }
 

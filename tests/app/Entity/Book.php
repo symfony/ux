@@ -26,11 +26,15 @@ class Book
      * @ORM\Column(type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     *
+     * @var int|null
      */
-    public ?int $id = null;
+    public $id;
 
     /**
      * @ORM\Column
+     *
+     * @var string
      */
-    public string $title = '';
+    public $title = '';
 }

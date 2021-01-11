@@ -98,7 +98,7 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
             $options['private'] ?? false,
             $options['id'] ?? null,
             $options['type'] ?? null,
-            $options['retry'] ?? null,
+            $options['retry'] ?? null
         );
 
         $this->messageBus ? $this->messageBus->dispatch($update) : ($this->publisher)($update); // @phpstan-ignore-line

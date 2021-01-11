@@ -2,7 +2,6 @@
 
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/bin/.phpunit/phpunit.xsd"
-         backupGlobals="false"
          colors="true"
          bootstrap="vendor/autoload.php"
          failOnRisky="true"
@@ -11,6 +10,7 @@
     <php>
         <ini name="error_reporting" value="-1" />
         <server name="APP_ENV" value="test" force="true" />
+        <server name="APP_DEBUG" value="false" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="KERNEL_CLASS" value="App\Kernel" />
         <server name="PANTHER_WEB_SERVER_DIR" value="./tests/app/public" />

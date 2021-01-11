@@ -97,7 +97,7 @@ class Kernel extends BaseKernel
             'enable_profiler' => '%kernel.debug%',
             'hubs' => [
                 'default' => [
-                    'url' => $_SERVER['MERCURE_PUBLISH_URL'] ?? 'http://localhost:3000/.well-known/mercure',
+                    'url' => $_SERVER['MERCURE_PUBLISH_URL'] ?? 'http://127.0.0.1:3000/.well-known/mercure',
                     'jwt' => $_SERVER['MERCURE_JWT_TOKEN'] ?? 'eyJhbGciOiJIUzI1NiJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdfX0.vhMwOaN5K68BTIhWokMLOeOJO4EPfT64brd8euJOA4M',
                 ],
             ],
@@ -105,7 +105,7 @@ class Kernel extends BaseKernel
 
         $container->extension('turbo', [
             'mercure' => [
-                'subscribe_url' => $_SERVER['MERCURE_SUBSCRIBE_URL'] ?? 'http://localhost:3000/.well-known/mercure',
+                'subscribe_url' => $_SERVER['MERCURE_SUBSCRIBE_URL'] ?? 'http://127.0.0.1:3000/.well-known/mercure',
             ],
         ]);
     }

@@ -12,3 +12,5 @@ import TurboStreamController from "@symfony/ux-turbo/dist/turbo_stream_controlle
 
 const application = Application.start();
 application.register("turbo-stream", TurboStreamController);
+
+console.log('test app initialized');
