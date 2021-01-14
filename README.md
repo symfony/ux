@@ -250,7 +250,7 @@ class ChatController extends AbstractController
             ->add('send', SubmitType::class)
             ->getForm();
 
-        $newForm = clone $form; // Used display an empty message box after a post
+        $emptyForm = clone $form; // Used display an empty form after a post
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -263,10 +263,14 @@ class ChatController extends AbstractController
                 'chat',
                 $this->renderView('chat/message.stream.html.twig', ['message' => $data['message']])
             ));
+
+            // Force an empty form to be rendered below
+            // It will replace the content of the Turbo Frame after a post
+            $form = $emptyForm;
         }
 
         return $this->render('chat/index.html.twig', 
-            ['form' => $newForm->createView() // Always display an empty form, it will replace the content of the Turbo Frame after a post
+            ['form' => $form->createView()
          ]);
     }
 }
