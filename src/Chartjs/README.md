@@ -47,7 +47,13 @@ class HomeController extends AbstractController
             ],
         ]);
 
-        $chart->setOptions([/* ... */]);
+        $chart->setOptions([
+            'scales' => [
+                'yAxes' => [
+                    ['ticks' => ['min' => 0, 'max' => 100]],
+                ],
+            ],
+        ]);
 
         return $this->render('home/index.html.twig', [
             'chart' => $chart,
