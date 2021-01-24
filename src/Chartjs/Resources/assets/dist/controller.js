@@ -59,6 +59,10 @@ var _default = /*#__PURE__*/function (_Controller) {
         payload.options = {};
       }
 
+      this._dispatchEvent('chartjs:pre-connect', {
+        options: payload.options
+      });
+
       var chart = new _chart.Chart(this.element.getContext('2d'), payload);
 
       this._dispatchEvent('chartjs:connect', {

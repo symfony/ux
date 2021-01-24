@@ -17,6 +17,10 @@ import ChartjsController from '../dist/controller';
 // Controller used to check the actual controller was properly booted
 class CheckController extends Controller {
     connect() {
+        this.element.addEventListener('chartjs:pre-connect', () => {
+            this.element.classList.add('pre-connected');
+        });
+
         this.element.addEventListener('chartjs:connect', (event) => {
             this.element.classList.add('connected');
             this.element.chart = event.detail.chart;
@@ -46,10 +50,14 @@ describe('ChartjsController', () => {
             ></canvas>
         `);
 
+        expect(getByTestId(container, 'canvas')).not.toHaveClass('pre-connected');
         expect(getByTestId(container, 'canvas')).not.toHaveClass('connected');
 
         startStimulus();
-        await waitFor(() => expect(getByTestId(container, 'canvas')).toHaveClass('connected'));
+        await waitFor(() => {
+            expect(getByTestId(container, 'canvas')).toHaveClass('pre-connected');
+            expect(getByTestId(container, 'canvas')).toHaveClass('connected');
+        });
 
         const chart = getByTestId(container, 'canvas').chart;
         expect(chart.options.showLines).toBe(true);
@@ -64,10 +72,14 @@ describe('ChartjsController', () => {
             ></canvas>
         `);
 
+        expect(getByTestId(container, 'canvas')).not.toHaveClass('pre-connected');
         expect(getByTestId(container, 'canvas')).not.toHaveClass('connected');
 
         startStimulus();
-        await waitFor(() => expect(getByTestId(container, 'canvas')).toHaveClass('connected'));
+        await waitFor(() => {
+            expect(getByTestId(container, 'canvas')).toHaveClass('pre-connected');
+            expect(getByTestId(container, 'canvas')).toHaveClass('connected');
+        });
 
         const chart = getByTestId(container, 'canvas').chart;
         expect(chart.options.showLines).toBe(false);

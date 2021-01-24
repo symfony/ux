@@ -19,6 +19,8 @@ export default class extends Controller {
             payload.options = {};
         }
 
+        this._dispatchEvent('chartjs:pre-connect', { options: payload.options });
+
         const chart = new Chart(this.element.getContext('2d'), payload);
 
         this._dispatchEvent('chartjs:connect', { chart });
