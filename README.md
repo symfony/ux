@@ -6,27 +6,23 @@
     Symfony UX: a new JavaScript ecosystem for Symfony
 </h3>
 
-Since its creation, JavaScript has always been focused on creating innovative User
-Experiences. It lets developers create the **most intuitive and usable** User
-Experience possible for a specific problem.
-
-In practice however, building great User Experiences with JavaScript is difficult.
-It takes time to choose reliable packages, to configure them, to integrate them
-in your pages, and to make your front-end code interact with the rest of your
-infrastructure.
-
-This problem is not new: it looks a whole lot like the state of Symfony in PHP
-before Symfony Flex. We need a Symfony Flex equivalent for JavaScript: a tool to
-build amazing User Experiences as quickly as we can now setup
-[an HTTP client](https://symfony.com/doc/current/http_client.html),
-[a Mailer](https://symfony.com/doc/current/mailer.html) or
-[an administration panel](https://symfony.com/doc/current/bundles/EasyAdminBundle/index.html).
+Symfony UX is an initiative and set of libraries to seamlessly
+integrate JavaScript tools into your application. For example,
+want to render a chart with [Chart.js](https://www.chartjs.org/)? Use
+[UX Chart.js](https://github.com/symfony/ux-chartjs)
+to build the chart in PHP. The JavaScript is handled for your automatically.
 
 **That's Symfony UX.**
 
 [Read all the details about the Symfony UX initiative](https://symfony.com/ux)
 
-# Packages
+## Components of UX
+
+Symfony UX leverages [Stimulus](https://stimulus.hotwire.dev/) for JavaScript
+and the [Stimulus Bridge](https://github.com/symfony/stimulus-bridge) for
+integrating it into Webpack Encore.
+
+## Packages
 
 -   [UX Chart.js](https://github.com/symfony/ux-chartjs):
     [Chart.js](https://www.chartjs.org/) chart library integration for Symfony
@@ -39,7 +35,24 @@ build amazing User Experiences as quickly as we can now setup
 -   [UX Swup](https://github.com/symfony/ux-swup):
     [Swup](https://swup.js.org/) page transition library integration for Symfony
 
-# Let's build an amazing ecosystem together
+## Stimulus Tools around the World
+
+Because Stimulus is used by developers outside of Symfony, many tools
+exist beyond the UX packages:
+
+-   [stimulus-use](https://github.com/stimulus-use/stimulus-use): Add composable
+    behaviors to your Stimulus controllers, like [debouncing](https://stimulus-use.github.io/stimulus-use/#/use-debounce),
+    [detecting outside clicks](https://stimulus-use.github.io/stimulus-use/#/use-click-outside)
+    and many other things. See: https://stimulus-use.github.io/stimulus-use/#/
+
+-   [stimulus-components](https://stimulus-components.netlify.app/docs/components/index/): A
+    large number of pre-made Stimulus controllers, like for
+    [Copying to clipboard](https://stimulus-components.netlify.app/docs/components/stimulus-clipboard/),
+    [Sortable](https://stimulus-components.netlify.app/docs/components/stimulus-sortable/),
+    [Popover](https://stimulus-components.netlify.app/docs/components/stimulus-popover/) (similar to tooltips)
+    and much more.
+
+## Let's build an amazing ecosystem together
 
 Symfony UX is an **initiative**: its aim is to build an ecosystem. To achieve this,
 we need your help: what other packages could we create in Symfony UX? What about a
