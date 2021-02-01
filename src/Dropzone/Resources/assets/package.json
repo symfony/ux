@@ -8,6 +8,7 @@
             "dropzone": {
                 "main": "dist/controller.js",
                 "webpackMode": "eager",
+                "fetch": "eager",
                 "enabled": true,
                 "autoimport": {
                     "@symfony/ux-dropzone/src/style.css": true
