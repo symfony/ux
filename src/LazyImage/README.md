@@ -22,6 +22,9 @@ yarn install --force
 yarn encore dev
 ```
 
+Also make sure you have at least version 2.0 of [@symfony/stimulus-bridge](https://github.com/symfony/stimulus-bridge)
+in your `package.json` file.
+
 ## Usage
 
 The default usage of Symfony UX LazyImage is to use its Stimulus controller to first load
