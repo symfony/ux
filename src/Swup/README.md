@@ -38,6 +38,10 @@ The main usage of Symfony UX Swup is to use its Stimulus controller to initializ
 <html lang="en">
     <head>
         <title>Swup</title>
+        
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
     </head>
     <body data-controller="symfony--ux-swup--swup">
         {# ... #}
@@ -45,10 +49,6 @@ The main usage of Symfony UX Swup is to use its Stimulus controller to initializ
         <main id="swup">
             {# ... #}
         </main>
-
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
     </body>
 </html>
 ```
@@ -63,6 +63,10 @@ additional containers, for instance to have a navigation menu that updates when 
 <html lang="en">
     <head>
         <title>Swup</title>
+        
+        {% block javascripts %}
+            {{ encore_entry_script_tags('app') }}
+        {% endblock %}
     </head>
     <body
         data-controller="symfony--ux-swup--swup"
@@ -77,10 +81,6 @@ additional containers, for instance to have a navigation menu that updates when 
         <main id="swup">
             {# ... #}
         </main>
-
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
     </body>
 </html>
 ```
@@ -110,7 +110,7 @@ You can configure several other options using data-attributes on the `body` tag:
 Symfony UX Swup allows you to extend its default behavior using a custom Stimulus controller:
 
 ```js
-// myswup_controller.js
+// assets/controllers/myswup_controller.js
 
 import { Controller } from 'stimulus';
 
@@ -138,6 +138,7 @@ Then in your template, add your controller to the HTML attribute:
 <html lang="en">
     <head>
         <title>Swup</title>
+        {# ... #}
     </head>
     <body data-controller="myswup symfony--ux-swup--swup">
         {# ... #}
