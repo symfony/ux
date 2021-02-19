@@ -34,6 +34,7 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '7.2'
+                  extensions: gd
             - name: Chartjs
               run: |
                   cd src/Chartjs
@@ -52,6 +53,11 @@ jobs:
             - name: LazyImage
               run: |
                   cd src/LazyImage
+                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/simple-phpunit
+            - name: Turbo
+              run: |
+                  cd src/Turbo
                   composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
 
@@ -62,6 +68,7 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
+                  extensions: gd
             - name: Chartjs
               run: |
                   cd src/Chartjs
@@ -83,6 +90,12 @@ jobs:
             - name: LazyImage
               run: |
                   cd src/LazyImage
+                  composer config platform.php 7.4.99
+                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/simple-phpunit
+            - name: Turbo
+              run: |
+                  cd src/Turbo
                   composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit

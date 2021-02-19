@@ -1,0 +1,51 @@
+{
+    "name": "symfony/ux-turbo",
+    "type": "symfony-bundle",
+    "description": "Tubor integration for Symfony",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Titouan Galopin",
+            "email": "galopintitouan@gmail.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Turbo\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "require": {
+        "php": ">=7.2.5",
+        "symfony/config": "^4.4.17|^5.0",
+        "symfony/dependency-injection": "^4.4.17|^5.0",
+        "symfony/http-kernel": "^4.4.17|^5.0",
+        "symfony/webpack-encore-bundle": "^v1.10.0"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "^4.4.17|^5.0",
+        "symfony/phpunit-bridge": "^5.2",
+        "symfony/twig-bundle": "^4.4.17|^5.0",
+        "symfony/var-dumper": "^4.4.17|^5.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.1-dev"
+        },
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}

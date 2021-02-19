@@ -1,0 +1,47 @@
+{
+    "name": "@symfony/ux-turbo",
+    "description": "Turbo integration for Symfony",
+    "license": "MIT",
+    "version": "1.0.0",
+    "symfony": {
+        "controllers": {
+            "mercure": {
+                "main": "dist/adapters/mercure-controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            },
+            "core": {
+                "main": "dist/core-controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        }
+    },
+    "scripts": {
+        "build": "babel src -d dist",
+        "test": "babel src -d dist && jest",
+        "lint": "eslint src test"
+    },
+    "dependencies": {
+        "@hotwired/turbo": "^7.0.0-beta.4"
+    },
+    "peerDependencies": {
+        "stimulus": "^2.0.0"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.12.1",
+        "@babel/core": "^7.12.3",
+        "@babel/plugin-proposal-class-properties": "^7.12.1",
+        "@babel/preset-env": "^7.12.7",
+        "@symfony/stimulus-testing": "^1.1.0",
+        "stimulus": "^2.0.0"
+    },
+    "jest": {
+        "testRegex": "test/.*\\.test.js",
+        "setupFilesAfterEnv": [
+            "./test/setup.js"
+        ]
+    }
+}

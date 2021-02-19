@@ -34,6 +34,8 @@ integrating it into Webpack Encore.
     Improve image loading performances through lazy-loading and data-uri thumbnails
 -   [UX Swup](https://github.com/symfony/ux-swup):
     [Swup](https://swup.js.org/) page transition library integration for Symfony
+-   [UX Turbo](https://github.com/symfony/ux-turbo):
+    [Turbo](https://turbo.hotwire.dev) interactive and real-time UI library integration for Symfony
 
 ## Stimulus Tools around the World
 
