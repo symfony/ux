@@ -31,7 +31,7 @@
         "overrides": [
             {
                 "files": [
-                    "src/*/Resources/assets/test/*.js"
+                    "src/*/Resources/assets/test/**/*.js"
                 ],
                 "extends": [
                     "plugin:jest/recommended"
