@@ -14,7 +14,7 @@ namespace Symfony\UX\Turbo\Streams;
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *
- * @internal
+ * @experimental
  */
 interface StreamAdapterInterface
 {
