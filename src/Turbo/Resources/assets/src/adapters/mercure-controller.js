@@ -22,8 +22,12 @@ export default class extends Controller {
             const url = new URL(this.hubValue);
             url.searchParams.append('topic', this.topicValue);
 
+            let eventSource;
+
             event.detail.createSource = () => {
-                return new EventSource(url);
+                eventSource = new EventSource(url);
+
+                return eventSource;
             };
 
             event.detail.disconnect = (eventSource) => {

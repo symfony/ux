@@ -24,8 +24,6 @@ export default class extends Controller {
             throw new Error(
                 'No adapter has been configured to receive Turbo Streams. You should enable one in assets/controllers.json and configure it in config/packages/turbo.yaml.'
             );
-
-            return;
         }
 
         if (factory.disconnect) {
