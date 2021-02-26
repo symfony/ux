@@ -30,7 +30,7 @@
         "symfony/config": "^4.4.17|^5.0",
         "symfony/dependency-injection": "^4.4.17|^5.0",
         "symfony/http-kernel": "^4.4.17|^5.0",
-        "symfony/webpack-encore-bundle": "^v1.10.0"
+        "symfony/webpack-encore-bundle": "^1.10"
     },
     "require-dev": {
         "symfony/framework-bundle": "^4.4.17|^5.0",

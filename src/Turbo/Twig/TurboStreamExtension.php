@@ -23,7 +23,7 @@ use Twig\TwigFunction;
  * @final
  * @experimental
  */
-class StreamTwigExtension extends AbstractExtension
+class TurboStreamExtension extends AbstractExtension
 {
     /**
      * @var StimulusTwigExtension

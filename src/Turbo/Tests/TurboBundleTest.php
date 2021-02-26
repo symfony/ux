@@ -18,8 +18,8 @@ use Symfony\UX\Turbo\Tests\Kernel\EmptyAppKernel;
 use Symfony\UX\Turbo\Tests\Kernel\FrameworkAppKernel;
 use Symfony\UX\Turbo\Tests\Kernel\FullAppKernel;
 use Symfony\UX\Turbo\Tests\Kernel\TwigAppKernel;
-use Symfony\UX\Turbo\Twig\FrameTwigExtension;
-use Symfony\UX\Turbo\Twig\StreamTwigExtension;
+use Symfony\UX\Turbo\Twig\TurboFrameExtension;
+use Symfony\UX\Turbo\Twig\TurboStreamExtension;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -58,7 +58,7 @@ class TurboBundleTest extends TestCase
 
         // Check Twig extensions were loaded
         $twig = $container->get('twig');
-        $this->assertNotNull($twig->getExtension(FrameTwigExtension::class));
-        $this->assertNotNull($twig->getExtension(StreamTwigExtension::class));
+        $this->assertNotNull($twig->getExtension(TurboFrameExtension::class));
+        $this->assertNotNull($twig->getExtension(TurboStreamExtension::class));
     }
 }

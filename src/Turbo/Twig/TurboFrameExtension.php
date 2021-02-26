@@ -21,7 +21,7 @@ use Twig\TwigFunction;
  * @final
  * @experimental
  */
-class FrameTwigExtension extends AbstractExtension
+class TurboFrameExtension extends AbstractExtension
 {
     public function getFunctions(): array
     {

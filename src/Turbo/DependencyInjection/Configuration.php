@@ -39,6 +39,7 @@ class Configuration implements ConfigurationInterface
                             ->info('Key/value options passed to the adapter to create Turbo Streams')
                             ->normalizeKeys(false)
                             ->variablePrototype()
+                            ->end()
                         ->end()
                     ->end()
                 ->end()
