@@ -22,17 +22,23 @@
         "symfony/http-kernel": "^5.2"
     },
     "autoload": {
-        "psr-4": { "Symfony\\UX\\Turbo\\": "src/" }
+        "psr-4": { "Symfony\\UX\\Turbo\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Symfony\\UX\\Turbo\\Tests\\": "tests/",
-            "App\\": "tests/app/"
+            "App\\": "Tests/app/"
         }
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "0.1.x-dev"
+            "dev-main": "1.1-dev"
+        },
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
         }
     },
     "config": {

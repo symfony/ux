@@ -15,11 +15,11 @@ Install the test app:
     $ cd tests/app
     $ yarn install
     $ yarn build
-    $ php tests/app/public/index.php doctrine:schema:create
+    $ php public/index.php doctrine:schema:create
 
 Start the test app:
 
-    $ php -S localhost:8000 -t tests/app/public
+    $ php -S localhost:8000 -t public
 
 ## Convenient endpoints:
 

@@ -30,9 +30,11 @@ jobs:
                   restore-keys: ${{ runner.os }}-composer-
 
             - name: Install dependencies
+              working-directory: src/Turbo
               run: composer install --prefer-dist
 
             - name: PHP Coding Standards Fixer
+              working-directory: src/Turbo
               run: vendor/bin/php-cs-fixer fix --dry-run --format checkstyle | cs2pr
 
     phpstan:
@@ -59,12 +61,15 @@ jobs:
                   restore-keys: ${{ runner.os }}-composer-
 
             - name: Install dependencies
+              working-directory: src/Turbo
               run: composer install --prefer-dist
 
             - name: Install PHPUnit dependencies
+              working-directory: src/Turbo
               run: vendor/bin/simple-phpunit --version
 
             - name: PHPStan
+              working-directory: src/Turbo
               run: vendor/bin/phpstan analyse --no-progress
 
     phpunit:
@@ -109,6 +114,7 @@ jobs:
                   restore-keys: ${{ runner.os }}-composer-
 
             - name: Install PHP dependencies
+              working-directory: src/Turbo
               run: composer install --prefer-dist
 
             - name: Get yarn cache directory path
@@ -124,17 +130,19 @@ jobs:
                       ${{ runner.os }}-yarn-
 
             - name: Install JavaScript dependencies
+              working-directory: src/Turbo/Tests/app
               run: yarn install
-              working-directory: tests/app
 
             - name: Build JavaScript
+              working-directory: src/Turbo/Tests/app
               run: yarn build
-              working-directory: tests/app
 
             - name: Create DB
-              run: php tests/app/public/index.php doctrine:schema:create
+              working-directory: src/Turbo/Tests/app
+              run: php public/index.php doctrine:schema:create
 
             - name: Run tests
+              working-directory: src/Turbo
               run: vendor/bin/simple-phpunit
 
     phpunit-lowest:
@@ -175,6 +183,7 @@ jobs:
                   restore-keys: ${{ runner.os }}-composer-
 
             - name: Install PHP dependencies
+              working-directory: src/Turbo/Tests/app
               run: composer update --prefer-dist --prefer-lowest
 
             - name: Get yarn cache directory path
@@ -190,17 +199,19 @@ jobs:
                       ${{ runner.os }}-yarn-
 
             - name: Install JavaScript dependencies
+              working-directory: src/Turbo/Tests/app
               run: yarn install
-              working-directory: tests/app
 
             - name: Build JavaScript
+              working-directory: src/Turbo/Tests/app
               run: yarn build
-              working-directory: tests/app
 
             - name: Create DB
-              run: php tests/app/public/index.php doctrine:schema:create
+              working-directory: src/Turbo/Tests/app
+              run: php public/index.php doctrine:schema:create
 
             - name: Run tests
+              working-directory: src/Turbo
               env:
                   SYMFONY_DEPRECATIONS_HELPER: max[total]=9223372036854775807 # PHP_INT_MAX
               run: vendor/bin/simple-phpunit

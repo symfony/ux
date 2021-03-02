@@ -20,7 +20,7 @@
         "check-format": "yarn format --no-write --check"
     },
     "dependencies": {
-        "@hotwired/turbo": "^7.0.0-beta.1"
+        "@hotwired/turbo": "^7.0.0-beta.4"
     },
     "peerDependencies": {
         "stimulus": "^2.0.0"
