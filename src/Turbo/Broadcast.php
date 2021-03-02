@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the Symfony UX Turbo package.
+ * This file is part of the Symfony package.
  *
  * (c) Kévin Dunglas <kevin@dunglas.fr>
  *
@@ -9,11 +9,9 @@
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace Symfony\UX\Turbo;
 
-use Symfony\UX\Turbo\Broadcast\TwigMercureBroadcaster;
+use Symfony\UX\Turbo\Broadcaster\TwigMercureBroadcaster;
 
 /**
  * Marks the entity as broadcastable.
