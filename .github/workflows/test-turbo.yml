@@ -1,4 +1,4 @@
-name: CI
+name: Symfony UX Turbo
 
 on:
     push:
@@ -183,7 +183,7 @@ jobs:
                   restore-keys: ${{ runner.os }}-composer-
 
             - name: Install PHP dependencies
-              working-directory: src/Turbo/Tests/app
+              working-directory: src/Turbo
               run: composer update --prefer-dist --prefer-lowest
 
             - name: Get yarn cache directory path
