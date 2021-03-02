@@ -1,0 +1,7 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ turbo_frame_start('lazy') }}
+        <div>This block is lazy loaded!</div>
+    {{ turbo_frame_end() }}
+{% endblock %}

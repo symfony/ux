@@ -1,0 +1,30 @@
+<?php
+
+$header = <<<'HEADER'
+This file is part of the Symfony UX Turbo package.
+
+(c) Kévin Dunglas <kevin@dunglas.fr>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+HEADER;
+
+$finder = PhpCsFixer\Finder::create()
+    ->in(__DIR__)
+    ->exclude('tests/app/var')
+    ->notPath(['src/Broadcast.php', 'tests/app/Entity/Book.php']) // Need https://github.com/FriendsOfPHP/PHP-CS-Fixer/pull/5406
+    ->notPath(['src/Broadcaster/TwigMercureBroadcaster.php', 'src/Twig/StreamExtension.php']) // Need https://github.com/FriendsOfPHP/PHP-CS-Fixer/pull/5400 to be fixed
+;
+
+return PhpCsFixer\Config::create()
+    ->setRiskyAllowed(true)
+    ->setRules([
+        '@Symfony' => true,
+        '@Symfony:risky' => true,
+        'header_comment' => [
+            'header' => $header,
+            'location' => 'after_open',
+        ],
+    ])
+    ->setFinder($finder)
+;

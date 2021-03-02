@@ -1,0 +1,217 @@
+name: CI
+
+on:
+    push:
+    pull_request:
+
+jobs:
+    php-cs-fixer:
+        runs-on: ubuntu-latest
+        name: Coding Standards
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '7.4' # PHP CS Fixer isn't compatible with PHP 8 yet https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues/4702
+                  tools: cs2pr
+
+            - name: Get composer cache directory
+              id: composercache
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache dependencies
+              uses: actions/cache@v2
+              with:
+                  path: ${{ steps.composercache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            - name: Install dependencies
+              working-directory: src/Turbo
+              run: composer install --prefer-dist
+
+            - name: PHP Coding Standards Fixer
+              working-directory: src/Turbo
+              run: vendor/bin/php-cs-fixer fix --dry-run --format checkstyle | cs2pr
+
+    phpstan:
+        runs-on: ubuntu-latest
+        name: Static Analysis
+        steps:
+            -   name: Checkout
+                uses: actions/checkout@v2
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.0'
+
+            - name: Get composer cache directory
+              id: composercache
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache dependencies
+              uses: actions/cache@v2
+              with:
+                  path: ${{ steps.composercache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            - name: Install dependencies
+              working-directory: src/Turbo
+              run: composer install --prefer-dist
+
+            - name: Install PHPUnit dependencies
+              working-directory: src/Turbo
+              run: vendor/bin/simple-phpunit --version
+
+            - name: PHPStan
+              working-directory: src/Turbo
+              run: vendor/bin/phpstan analyse --no-progress
+
+    phpunit:
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                php-versions: ['7.2', '7.3', '7.4', '8.0']
+            fail-fast: false
+        name: PHP ${{ matrix.php-versions }} Test on ubuntu-latest
+
+        services:
+            mercure:
+                image: dunglas/mercure
+                env:
+                    SERVER_NAME: :3000
+                    MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
+                    MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!'
+                    MERCURE_EXTRA_DIRECTIVES: |
+                        anonymous
+                        cors_origins *
+                ports:
+                    - 3000:3000
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php-versions }}
+
+            - name: Get composer cache directory
+              id: composercache
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache PHP dependencies
+              uses: actions/cache@v2
+              with:
+                  path: ${{ steps.composercache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            - name: Install PHP dependencies
+              working-directory: src/Turbo
+              run: composer install --prefer-dist
+
+            - name: Get yarn cache directory path
+              id: yarn-cache-dir-path
+              run: echo "::set-output name=dir::$(yarn cache dir)"
+
+            - uses: actions/cache@v2
+              id: yarn-cache
+              with:
+                  path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
+
+            - name: Install JavaScript dependencies
+              working-directory: src/Turbo/Tests/app
+              run: yarn install
+
+            - name: Build JavaScript
+              working-directory: src/Turbo/Tests/app
+              run: yarn build
+
+            - name: Create DB
+              working-directory: src/Turbo/Tests/app
+              run: php public/index.php doctrine:schema:create
+
+            - name: Run tests
+              working-directory: src/Turbo
+              run: vendor/bin/simple-phpunit
+
+    phpunit-lowest:
+        runs-on: ubuntu-latest
+        name: PHP 8.0 (lowest) Test on ubuntu-latest
+
+        services:
+            mercure:
+                image: dunglas/mercure
+                env:
+                    SERVER_NAME: :3000
+                    MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
+                    MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!'
+                    MERCURE_EXTRA_DIRECTIVES: |
+                        anonymous
+                        cors_origins *
+                ports:
+                    - 3000:3000
+
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '8.0'
+
+            - name: Get composer cache directory
+              id: composercache
+              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache PHP dependencies
+              uses: actions/cache@v2
+              with:
+                  path: ${{ steps.composercache.outputs.dir }}
+                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
+                  restore-keys: ${{ runner.os }}-composer-
+
+            - name: Install PHP dependencies
+              working-directory: src/Turbo/Tests/app
+              run: composer update --prefer-dist --prefer-lowest
+
+            - name: Get yarn cache directory path
+              id: yarn-cache-dir-path
+              run: echo "::set-output name=dir::$(yarn cache dir)"
+
+            - uses: actions/cache@v2
+              id: yarn-cache
+              with:
+                  path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
+
+            - name: Install JavaScript dependencies
+              working-directory: src/Turbo/Tests/app
+              run: yarn install
+
+            - name: Build JavaScript
+              working-directory: src/Turbo/Tests/app
+              run: yarn build
+
+            - name: Create DB
+              working-directory: src/Turbo/Tests/app
+              run: php public/index.php doctrine:schema:create
+
+            - name: Run tests
+              working-directory: src/Turbo
+              env:
+                  SYMFONY_DEPRECATIONS_HELPER: max[total]=9223372036854775807 # PHP_INT_MAX
+              run: vendor/bin/simple-phpunit

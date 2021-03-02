@@ -1,0 +1,12 @@
+/.php_cs.cache
+/.php_cs
+/.phpunit.result.cache
+/composer.phar
+/composer.lock
+/phpunit.xml
+/vendor/
+/tests/app/var
+/tests/app/public/build/
+node_modules/
+package-lock.json
+yarn.lock
