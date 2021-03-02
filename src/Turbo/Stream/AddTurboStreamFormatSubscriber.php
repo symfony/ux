@@ -20,6 +20,8 @@ use Symfony\Component\HttpKernel\KernelEvents;
  * Detects if it's a Turbo Stream request and set the format accordingly.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
+ *
+ * @experimental
  */
 final class AddTurboStreamFormatSubscriber implements EventSubscriberInterface
 {

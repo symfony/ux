@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
  * A response in the Turbo Stream format.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
+ *
+ * @experimental
  */
 final class TurboStreamResponse extends Response
 {

@@ -25,6 +25,8 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
  * @see https://github.com/api-platform/core/blob/master/src/Bridge/Doctrine/EventListener/PublishMercureUpdatesListener.php Adapted from API Platform.
  *
  * @todo backport MongoDB support
+ *
+ * @experimental
  */
 final class BroadcastListener implements ResetInterface
 {

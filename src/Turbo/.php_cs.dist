@@ -11,9 +11,8 @@ HEADER;
 
 $finder = PhpCsFixer\Finder::create()
     ->in(__DIR__)
-    ->exclude('tests/app/var')
-    ->notPath(['src/Broadcast.php', 'tests/app/Entity/Book.php']) // Need https://github.com/FriendsOfPHP/PHP-CS-Fixer/pull/5406
-    ->notPath(['src/Broadcaster/TwigMercureBroadcaster.php', 'src/Twig/StreamExtension.php']) // Need https://github.com/FriendsOfPHP/PHP-CS-Fixer/pull/5400 to be fixed
+    ->exclude('Tests/app/var')
+    ->notPath(['Broadcast.php']) // Need https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues/4702
 ;
 
 return PhpCsFixer\Config::create()

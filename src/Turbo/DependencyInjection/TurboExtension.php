@@ -23,6 +23,8 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
+ *
+ * @experimental
  */
 final class TurboExtension extends Extension
 {

@@ -18,6 +18,8 @@ use Twig\TwigFunction;
  * Twig helpers to generated the Turbo Frame elements.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
+ *
+ * @experimental
  */
 final class FrameExtension extends AbstractExtension
 {
@@ -37,7 +39,7 @@ final class FrameExtension extends AbstractExtension
     {
         $a = [];
         foreach ($attrs + ['id' => $id] as $k => $v) {
-            $a[] = sprintf('%s="%s"', htmlspecialchars($k, ENT_QUOTES), htmlspecialchars($v, ENT_QUOTES));
+            $a[] = sprintf('%s="%s"', htmlspecialchars($k, \ENT_QUOTES), htmlspecialchars($v, \ENT_QUOTES));
         }
 
         return sprintf('<turbo-frame %s>', implode(' ', $a));

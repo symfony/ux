@@ -18,6 +18,8 @@ use Twig\TwigFunction;
  * Twig helpers to generated the Turbo Stream elements.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
+ *
+ * @experimental
  */
 final class StreamExtension extends AbstractExtension
 {
@@ -57,7 +59,7 @@ final class StreamExtension extends AbstractExtension
 
         $a = [];
         foreach ($attrs + ['action' => $action, 'target' => $target] as $k => $v) {
-            $a[] = sprintf('%s="%s"', htmlspecialchars($k, ENT_QUOTES), htmlspecialchars($v, ENT_QUOTES));
+            $a[] = sprintf('%s="%s"', htmlspecialchars($k, \ENT_QUOTES), htmlspecialchars($v, \ENT_QUOTES));
         }
 
         return sprintf('<turbo-stream %s><template>', implode(' ', $a));
@@ -79,7 +81,7 @@ final class StreamExtension extends AbstractExtension
 
         $a = [];
         foreach ($attrs + ['data-turbo-stream-topic-value' => $id, 'data-turbo-stream-hub-value' => $this->mercureHub, 'data-controller' => 'turbo-stream'] as $k => $v) {
-            $a[] = sprintf('%s="%s"', htmlspecialchars($k, ENT_QUOTES), htmlspecialchars($v, ENT_QUOTES));
+            $a[] = sprintf('%s="%s"', htmlspecialchars($k, \ENT_QUOTES), htmlspecialchars($v, \ENT_QUOTES));
         }
 
         return sprintf('<div %s>', implode(' ', $a));

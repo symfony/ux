@@ -17,7 +17,7 @@ require __DIR__.'/../../../vendor/autoload.php';
 
 $app = new Kernel($_SERVER['APP_ENV'] ?? 'dev', $_SERVER['APP_DEBUG'] ?? true);
 
-if (PHP_SAPI === 'cli') {
+if (\PHP_SAPI === 'cli') {
     $application = new Application($app);
     exit($application->run());
 }

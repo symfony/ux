@@ -17,6 +17,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
+ *
+ * @experimental
  */
 final class TurboBundle extends Bundle
 {

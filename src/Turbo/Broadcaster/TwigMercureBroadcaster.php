@@ -35,6 +35,8 @@ use Twig\Environment;
  * The options can also be generated using the ExpressionLanguage language: if the option is a string, it is evaluated as an expression that must return an array.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
+ *
+ * @experimental
  */
 final class TwigMercureBroadcaster implements BroadcasterInterface
 {
@@ -106,11 +108,12 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
 
     /**
      * @param mixed[] $options
+     *
      * @return mixed[]
      */
     private function normalizeOptions(object $entity, string $action, array $options): array
     {
-        if (is_string($options[0] ?? null)) {
+        if (\is_string($options[0] ?? null)) {
             if (null === $this->expressionLanguage) {
                 throw new \RuntimeException('The Expression Language component is not installed. Try running "composer require symfony/expression-language".');
             }
@@ -118,7 +121,7 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
             $options = $this->expressionLanguage->evaluate($options[0], ['entity' => $entity, 'action' => $action]);
         }
 
-        $entityClass = get_class($entity);
+        $entityClass = \get_class($entity);
 
         if ($extraKeys = array_diff(array_keys($options), self::OPTIONS)) {
             throw new \InvalidArgumentException(sprintf('Unknown broadcast options "%s" on class "%s". Valid options are: "%s"', implode('", "', $extraKeys), $entityClass, implode('", "', self::OPTIONS)));
@@ -128,7 +131,7 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
         if (!isset($options['template'])) {
             $dir = $entityClass;
             if (null !== $this->entityNamespace && 0 === strpos($entityClass, $this->entityNamespace)) {
-                $dir = substr($entityClass, strlen($this->entityNamespace));
+                $dir = substr($entityClass, \strlen($this->entityNamespace));
             }
 
             $options['template'] = sprintf('broadcast/%s.stream.html.twig', str_replace('\\', '/', $dir));

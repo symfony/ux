@@ -19,6 +19,8 @@ use Symfony\UX\Turbo\Broadcast\TwigMercureBroadcaster;
  * Marks the entity as broadcastable.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
+ *
+ * @experimental
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class Broadcast
