@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\Dropzone\DependencyInjection;
 
-use Symfony\Bundle\TwigBundle\DependencyInjection\Configuration;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -34,10 +33,7 @@ class DropzoneExtension extends Extension implements PrependExtensionInterface
             return;
         }
 
-        $config = $this->processConfiguration(new Configuration(), $container->getExtensionConfig('twig'));
-        $config['form_themes'][] = '@Dropzone/form_theme.html.twig';
-
-        $container->prependExtensionConfig('twig', $config);
+        $container->prependExtensionConfig('twig', ['form_themes' => ['@Dropzone/form_theme.html.twig']]);
     }
 
     public function load(array $configs, ContainerBuilder $container)
