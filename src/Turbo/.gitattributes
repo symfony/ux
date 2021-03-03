@@ -1,10 +1,5 @@
-/.github export-ignore
-/.php_cs.dist export-ignore
-/assets/test export-ignore
-/tests/ export-ignore
-/phpstan.neon export-ignore
-/phpunit.xml.dist export-ignore
-/.gitignore export-ignore
 /.gitattributes export-ignore
-src/Resources/assets/package-lock.json
-src/Resources/assets/node_modules/
+/.gitignore export-ignore
+/phpunit.xml.dist export-ignore
+/Resources/assets/test export-ignore
+/Tests export-ignore

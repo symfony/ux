@@ -7,7 +7,7 @@ Symfony UX Turbo allow having the same user experience as with [Single Page Apps
 but without having to write a single line of JavaScript!
 
 Symfony UX Turbo also integrates with [Symfony Mercure](https://symfony.com/doc/current/mercure.html) to broadcast DOM changes
-to  all currently connected users!
+to all currently connected users!
 
 You're in a hurry? Take a look to [the chat example](#sending-async-changes-using-mercure-a-chat) to discover the full potential
 of Symfony UX Turbo.
@@ -146,8 +146,8 @@ You can even let Panther open Chrome, and see what happens: `PANTHER_NO_HEADLESS
 Turbo Streams are a way for the server to send partial page updates to clients.
 There are two main way to receive the updates:
 
-* in response to a user action, for instance when the user submits a form
-* asynchronously, by sending updates to the clients using [Mercure](https://mercure.rocks), [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) and similar protocols
+-   in response to a user action, for instance when the user submits a form
+-   asynchronously, by sending updates to the clients using [Mercure](https://mercure.rocks), [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) and similar protocols
 
 #### Forms
 
@@ -204,7 +204,7 @@ class TaskController extends AbstractController
 {{ turbo_stream_end() }}
 ```
 
-Supported actions are `append`, `prepend`, `replace`,  `update` and `remove`.
+Supported actions are `append`, `prepend`, `replace`, `update` and `remove`.
 [Read the Turbo Streams documentation for more details](https://turbo.hotwire.dev/handbook/streams).
 
 #### Sending Async Changes using Mercure: a Chat
@@ -269,7 +269,7 @@ class ChatController extends AbstractController
             $form = $emptyForm;
         }
 
-        return $this->render('chat/index.html.twig', 
+        return $this->render('chat/index.html.twig',
             ['form' => $form->createView()
          ]);
     }
@@ -289,7 +289,7 @@ class ChatController extends AbstractController
                 The messages will be displayed here.
                 "turbo_stream_from_start()" automatically registers a Stimulus controller that subscribes to the "chat" Mercure topic using EventSource.
                 The connection to the Mercure Hub is automatically closed when this HTML block is removed.
-        
+
                 All connected users will receive the new messages!
              #}
         </div>
@@ -298,7 +298,7 @@ class ChatController extends AbstractController
     {{ turbo_frame_start('message_form') }}
         {{ form(form) }}
 
-        {# 
+        {#
             The form is displayed in a Turbo Frame, with this trick a new empty form is displayed after every post,
             but the rest of the page will not change.
         #}
@@ -316,7 +316,7 @@ class ChatController extends AbstractController
 ```
 
 Keep in mind that you can use all features provided by Symfony Mercure, including [private updates](https://symfony.com/doc/current/mercure.html#authorization)
-(to ensure that only  authorized users will receive the updates) and [async dispatching with Symfony Messenger](https://symfony.com/doc/current/mercure.html#async-dispatching).
+(to ensure that only authorized users will receive the updates) and [async dispatching with Symfony Messenger](https://symfony.com/doc/current/mercure.html#async-dispatching).
 
 #### Broadcast Doctrine Entities Update
 
@@ -422,12 +422,12 @@ class Book { /* ... */ }
 
 The `Broadcast` attribute comes with a set of handy options:
 
-* `template` (`string`): Twig template to render (see above)
-* `topics` (`string[]`): Mercure topics to use, defaults to an array containing the Fully Qualified Class Name
-* `private` (`bool`): marks Mercure updates as private
-* `id` (`string`): `id` field of the SSE
-* `type` (`string`): `type` field of the SSE
-* `retry` (`int`): `retry` field of the SSE
+-   `template` (`string`): Twig template to render (see above)
+-   `topics` (`string[]`): Mercure topics to use, defaults to an array containing the Fully Qualified Class Name
+-   `private` (`bool`): marks Mercure updates as private
+-   `id` (`string`): `id` field of the SSE
+-   `type` (`string`): `type` field of the SSE
+-   `retry` (`int`): `retry` field of the SSE
 
 Example:
 
@@ -447,7 +447,7 @@ class Book
 ### Using an Expression to Generate The Options
 
 If the [Symfony ExpressionLanguage Component](https://symfony.com/doc/current/components/expression_language.html) is installed,
-you can also pass an *expression* generating the options as parameter of the `Broadcast` attribute:
+you can also pass an _expression_ generating the options as parameter of the `Broadcast` attribute:
 
 ```php
 // src/Entity/Book.php

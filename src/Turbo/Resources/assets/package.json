@@ -16,8 +16,7 @@
     "scripts": {
         "build": "babel src -d dist",
         "test": "babel src -d dist && jest",
-        "format": "prettier src/*.js --write",
-        "check-format": "yarn format --no-write --check"
+        "lint": "eslint src test"
     },
     "dependencies": {
         "@hotwired/turbo": "^7.0.0-beta.4"
@@ -32,7 +31,6 @@
         "@babel/preset-env": "^7.12.7",
         "@symfony/stimulus-testing": "^1.1.0",
         "jest-canvas-mock": "^2.3.0",
-        "prettier": "2.2.1",
         "stimulus": "^2.0.0"
     },
     "jest": {
@@ -40,12 +38,5 @@
         "setupFilesAfterEnv": [
             "./test/setup.js"
         ]
-    },
-    "prettier": {
-        "printWidth": 120,
-        "trailingComma": "es5",
-        "tabWidth": 4,
-        "jsxBracketSameLine": true,
-        "singleQuote": true
     }
 }

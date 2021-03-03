@@ -2,7 +2,14 @@
     "name": "symfony/ux-turbo",
     "type": "symfony-bundle",
     "description": "Hotwire Turbo integration for Symfony",
-    "keywords": ["symfony-ux", "turbo", "hotwire", "javascript", "turbo-stream", "mercure"],
+    "keywords": [
+        "symfony-ux",
+        "turbo",
+        "hotwire",
+        "javascript",
+        "turbo-stream",
+        "mercure"
+    ],
     "homepage": "https://symfony.com",
     "license": "MIT",
     "authors": [
@@ -22,7 +29,9 @@
         "symfony/http-kernel": "^5.2"
     },
     "autoload": {
-        "psr-4": { "Symfony\\UX\\Turbo\\": "" },
+        "psr-4": {
+            "Symfony\\UX\\Turbo\\": ""
+        },
         "exclude-from-classmap": [
             "/Tests/"
         ]
@@ -47,7 +56,6 @@
     "require-dev": {
         "doctrine/doctrine-bundle": "^2.2",
         "doctrine/orm": "^2.8",
-        "friendsofphp/php-cs-fixer": "^2.17",
         "phpstan/phpstan": "^0.12",
         "symfony/debug-bundle": "^5.2",
         "symfony/expression-language": "^5.2",
@@ -55,9 +63,9 @@
         "symfony/framework-bundle": "^5.2",
         "symfony/mercure-bundle": "^0.2.6",
         "symfony/messenger": "^5.2",
-        "symfony/panther": "^0.9",
+        "symfony/panther": "^1.0",
         "symfony/phpunit-bridge": "^5.2.1",
-        "symfony/security-core": "5.x-dev",
+        "symfony/security-core": "^5.2",
         "symfony/stopwatch": "^5.2",
         "symfony/twig-bundle": "^5.2",
         "symfony/web-profiler-bundle": "^5.2",

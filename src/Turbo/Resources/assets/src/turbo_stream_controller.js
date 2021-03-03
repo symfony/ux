@@ -1,5 +1,5 @@
 /*
- * This file is part of the Symfony UX Turbo package.
+ * This file is part of the Symfony package.
  *
  * (c) Kévin Dunglas <kevin@dunglas.fr>
  *
