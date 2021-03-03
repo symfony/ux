@@ -63,7 +63,7 @@
         "symfony/framework-bundle": "^5.2",
         "symfony/mercure-bundle": "^0.2.6",
         "symfony/messenger": "^5.2",
-        "symfony/panther": "^0.9 || ^1.0",
+        "symfony/panther": "^1.0",
         "symfony/phpunit-bridge": "^5.2.1",
         "symfony/security-core": "^5.2",
         "symfony/stopwatch": "^5.2",

@@ -43,6 +43,6 @@ describe('TurboStreamController', () => {
         startStimulus();
 
         // smoke test
-        expect(getByTestId(container, 'turbo-stream')).toHaveAttribute("data-turbo-stream-topic-value", "foo");
+        expect(getByTestId(container, 'turbo-stream')).toHaveAttribute('data-turbo-stream-topic-value', 'foo');
     });
 });
