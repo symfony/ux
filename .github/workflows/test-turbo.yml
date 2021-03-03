@@ -7,7 +7,6 @@ on:
 jobs:
     phpstan:
         runs-on: ubuntu-latest
-        name: Static Analysis
         steps:
             -   name: Checkout
                 uses: actions/checkout@v2
@@ -41,7 +40,7 @@ jobs:
               working-directory: src/Turbo
               run: vendor/bin/phpstan analyse --no-progress
 
-    phpunit:
+    tests-php-high-deps:
         runs-on: ubuntu-latest
         strategy:
             matrix:
@@ -70,7 +69,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php-versions }}
-                  extensions: zip
+                  extensions: zip, pdo_sqlite
 
             - name: Get composer cache directory
               id: composercache
@@ -115,7 +114,7 @@ jobs:
               working-directory: src/Turbo
               run: vendor/bin/simple-phpunit
 
-    phpunit-lowest:
+    tests-php-low-deps:
         runs-on: ubuntu-latest
         name: PHP 8.0 (lowest) Test on ubuntu-latest
 
@@ -140,7 +139,7 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
-                  extensions: zip
+                  extensions: zip, pdo_sqlite
 
             - name: Get composer cache directory
               id: composercache
