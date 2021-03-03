@@ -42,9 +42,19 @@ var _default = /*#__PURE__*/function (_Controller) {
   var _super = _createSuper(_default);
 
   function _default() {
+    var _this;
+
     _classCallCheck(this, _default);
 
-    return _super.apply(this, arguments);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+
+    _this = _super.call.apply(_super, [this].concat(args));
+
+    _defineProperty(_assertThisInitialized(_this), "es", void 0);
+
+    return _this;
   }
 
   _createClass(_default, [{

@@ -10,6 +10,7 @@
 'use strict';
 
 import { Application } from 'stimulus';
+import { getByTestId } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import TurboStreamController from '../src/turbo_stream_controller.js';
 
@@ -18,6 +19,7 @@ const startStimulus = () => {
     application.register('turbo-stream', TurboStreamController);
 };
 
+/* eslint-disable no-undef */
 describe('TurboStreamController', () => {
     let container;
 
@@ -29,17 +31,18 @@ describe('TurboStreamController', () => {
         }));
 
         container = mountDOM(
-            '<div data-controller="turbo-stream" data-turbo-stream-hub-value="https://example.com/.well-known/mercure" data-turbo-stream-topic-value="foo"></div>'
+            '<div data-testid="turbo-stream" data-controller="turbo-stream" data-turbo-stream-hub-value="https://example.com/.well-known/mercure" data-turbo-stream-topic-value="foo"></div>'
         );
     });
 
     afterEach(() => {
-        expect(global.EventSource.mock.calls.length).toBe(1);
-        expect(global.EventSource.mock.calls[0][0]).toBe('https://example.com/.well-known/mercure?topic=foo');
         clearDOM();
     });
 
     it('connects', async () => {
         startStimulus();
+
+        // smoke test
+        expect(getByTestId(container, 'turbo-stream')).toHaveAttribute("data-turbo-stream-topic-value", "foo");
     });
 });

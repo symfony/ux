@@ -18,6 +18,7 @@ export default class extends Controller {
         topic: String,
         hub: String,
     };
+    es;
 
     initialize() {
         const errorMessages = [];
