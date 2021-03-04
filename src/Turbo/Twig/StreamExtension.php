@@ -56,7 +56,7 @@ final class StreamExtension extends AbstractExtension
         if (\is_object($topic)) {
             $topic = sprintf(TwigMercureBroadcaster::TOPIC_PATTERN, rawurlencode(\get_class($topic)), rawurlencode($this->propertyAccessor->getValue($topic, 'id')));
         } elseif (class_exists($topic)) {
-            // Generate an URI template to subscribe to updates for all objects of this class
+            // Generate a URI template to subscribe to updates for all objects of this class
             $topic = sprintf(TwigMercureBroadcaster::TOPIC_PATTERN, rawurlencode($topic), '{id}');
         }
 
