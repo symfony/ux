@@ -212,7 +212,7 @@ Supported actions are `append`, `prepend`, `replace`, `update` and `remove`.
 Symfony UX Turbo also supports the [Mercure](https://mercure.rocks) protocol. With this feature you can broadcast HTML
 updates to all currently connected clients.
 
-To illustrate this, let's build a chat system in **0 lines of JavaScript**!
+To illustrate this, let's build a chat system with **0 lines of JavaScript**!
 
 Start by installing [the Mercure support](https://symfony.com/doc/current/mercure.html) on your project.
 The easiest way to have a working development (and production-ready) environment is to use [Symfony Docker](https://github.com/dunglas/symfony-docker/),
