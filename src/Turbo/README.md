@@ -144,7 +144,7 @@ You can even watch changes happening in Chrome by using: `PANTHER_NO_HEADLESS=1 
 ### Coming Alive with Turbo Streams
 
 Turbo Streams are a way for the server to send partial page updates to clients.
-There are two main way to receive the updates:
+There are two main ways to receive the updates:
 
 -   in response to a user action, for instance when the user submits a form
 -   asynchronously, by sending updates to clients using [Mercure](https://mercure.rocks), [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) and similar protocols
