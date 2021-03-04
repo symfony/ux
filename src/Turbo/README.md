@@ -219,7 +219,7 @@ The easiest way to have a working development (and production-ready) environment
 which comes with a Mercure hub integrated in the web server.
 
 If you use Symfony Flex, the configuration has been generated for you, be sure to update the `MERCURE_SUBSCRIBE_URL` in
-the `.env` file to point a Mercure Hub (it's not necessary if you are using Symfony Docker).
+the `.env` file to point to a Mercure Hub (it's not necessary if you are using Symfony Docker).
 
 Otherwise, configure the URL of the Mercure Hub:
 
