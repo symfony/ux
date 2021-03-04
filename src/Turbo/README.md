@@ -252,7 +252,7 @@ class ChatController extends AbstractController
             ->add('send', SubmitType::class)
             ->getForm();
 
-        $emptyForm = clone $form; // Used display an empty form after a post
+        $emptyForm = clone $form; // Used to display an empty form after a POST request
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
