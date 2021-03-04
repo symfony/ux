@@ -147,7 +147,7 @@ Turbo Streams are a way for the server to send partial page updates to clients.
 There are two main way to receive the updates:
 
 -   in response to a user action, for instance when the user submits a form
--   asynchronously, by sending updates to the clients using [Mercure](https://mercure.rocks), [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) and similar protocols
+-   asynchronously, by sending updates to clients using [Mercure](https://mercure.rocks), [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) and similar protocols
 
 #### Forms
 
