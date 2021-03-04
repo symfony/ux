@@ -14,6 +14,8 @@ namespace Symfony\UX\Turbo\Broadcaster;
 use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Messenger\MessageBusInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Security\Core\Authorization\ExpressionLanguage;
 use Symfony\UX\Turbo\Broadcast;
 use Twig\Environment;
@@ -40,7 +42,10 @@ use Twig\Environment;
  */
 final class TwigMercureBroadcaster implements BroadcasterInterface
 {
+    public const TOPIC_PATTERN = 'https://symfony.com/ux-turbo/%s/%s';
+
     private $twig;
+    private $propertyAccessor;
     private $messageBus;
     private $publisher;
     private $expressionLanguage;
@@ -59,6 +64,7 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
 
     public function __construct(
         Environment $twig,
+        ?PropertyAccessorInterface $propertyAccessor,
         ?MessageBusInterface $messageBus = null,
         ?PublisherInterface $publisher = null,
         ?ExpressionLanguage $expressionLanguage = null,
@@ -73,6 +79,7 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
         }
 
         $this->twig = $twig;
+        $this->propertyAccessor = $propertyAccessor ?? PropertyAccess::createPropertyAccessor();
         $this->messageBus = $messageBus;
         $this->publisher = $publisher;
         $this->expressionLanguage = $expressionLanguage ?? new ExpressionLanguage();
@@ -127,7 +134,7 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
             throw new \InvalidArgumentException(sprintf('Unknown broadcast options "%s" on class "%s". Valid options are: "%s"', implode('", "', $extraKeys), $entityClass, implode('", "', self::OPTIONS)));
         }
 
-        $options['topics'] = (array) ($options['topics'] ?? $entityClass);
+        $options['topics'] = (array) ($options['topics'] ?? sprintf(self::TOPIC_PATTERN, rawurlencode($entityClass), rawurlencode($this->propertyAccessor->getValue($entity, 'id'))));
         if (isset($options['template'])) {
             return $options;
         }

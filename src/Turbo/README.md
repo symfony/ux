@@ -353,7 +353,13 @@ class Book
 }
 ```
 
-To subscribe to updates, use the `turbo_stream_listen()` Twig helper and pass the Fully Qualified Class Name of the entity as parameter:
+To subscribe to updates of an entity, pass it as parameter of the `turbo_stream_listen()` Twig helper:
+
+```twig
+<div id="book_{{ book.id }}" {{ turbo_stream_listen(book) }}></div>
+```
+
+Alternatively, you can subscribe to updates made to all entities of a given class by using its Fully Qualified Class Name:
 
 ```twig
 <div id="books" {{ turbo_stream_listen('App\\Entity\\Book') }}></div>
@@ -401,7 +407,9 @@ Actions applying to non-existing DOM elements will simply be ignored.
 The current entity, the action (`create`, `update` or `remove`) and options set on the `Broadcast` attribute
 are passed to the template as variables: `entity`, `action` and `options`.
 
-### Broadcast Template Conventions and Configuration
+### Broadcast Conventions and Configuration
+
+The entity class **must** have a public property named `id` or a public method named `getId()`.
 
 If your entities aren't in the `App\Entity` namespace, Symfony UX Turbo will look for a template in a directory named after
 their Fully Qualified Class Names. For instance, if a class marked with the `Broadcast` attribute is named `\App\Foo\Bar`,

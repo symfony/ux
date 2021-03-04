@@ -20,7 +20,10 @@ return static function (ContainerConfigurator $container): void {
     $container
         ->services()
             ->set('turbo.twig.extension.stream', StreamExtension::class)
-            ->args([service('webpack_encore.twig_stimulus_extension')])
+            ->args([
+                service('webpack_encore.twig_stimulus_extension'),
+                service('property_accessor'),
+            ])
             ->tag('twig.extension')
     ;
 };

@@ -23,6 +23,7 @@ return static function (ContainerConfigurator $container): void {
             ->set('turbo.broadcaster.twig_mercure', TwigMercureBroadcaster::class)
             ->args([
                 service('twig'),
+                service('property_accessor'),
                 service('messenger.default_bus')->nullOnInvalid(),
                 service('mercure.hub.default.publisher')->nullOnInvalid(),
             ])

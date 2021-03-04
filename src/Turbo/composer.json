@@ -27,6 +27,7 @@
         "symfony/config": "^5.2",
         "symfony/dependency-injection": "^5.2",
         "symfony/http-kernel": "^5.2",
+        "symfony/property-access": "^5.2",
         "symfony/webpack-encore-bundle": "^1.11"
     },
     "autoload": {
