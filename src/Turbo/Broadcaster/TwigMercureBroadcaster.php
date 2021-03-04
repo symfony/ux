@@ -128,14 +128,16 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
         }
 
         $options['topics'] = (array) ($options['topics'] ?? $entityClass);
-        if (!isset($options['template'])) {
-            $dir = $entityClass;
-            if (null !== $this->entityNamespace && 0 === strpos($entityClass, $this->entityNamespace)) {
-                $dir = substr($entityClass, \strlen($this->entityNamespace));
-            }
-
-            $options['template'] = sprintf('broadcast/%s.stream.html.twig', str_replace('\\', '/', $dir));
+        if (isset($options['template'])) {
+            return $options;
         }
+        
+        $dir = $entityClass;
+        if ($this->entityNamespace && 0 === strpos($entityClass, $this->entityNamespace)) {
+            $dir = substr($entityClass, \strlen($this->entityNamespace));
+        }
+
+        $options['template'] = sprintf('broadcast/%s.stream.html.twig', str_replace('\\', '/', $dir));
 
         return $options;
     }
