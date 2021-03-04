@@ -19,7 +19,7 @@ use Symfony\UX\Turbo\Broadcast;
 use Twig\Environment;
 
 /**
- * Broadcasts updates rendered using Twig with with Mercure.
+ * Broadcasts updates rendered using Twig with Mercure.
  *
  * Supported options are:
  *
