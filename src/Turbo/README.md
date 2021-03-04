@@ -137,7 +137,7 @@ class TurboFrameTest extends PantherTestCase
 Run `bin/phpunit` to execute the test! Symfony Panther automatically starts your application with a web server
 and test it using Google Chrome (Firefox is also supported)!
 
-You can even let Panther open Chrome, and see what happens: `PANTHER_NO_HEADLESS=1 bin/phpunit --debug`
+You can even watch changes happening in Chrome by using: `PANTHER_NO_HEADLESS=1 bin/phpunit --debug`
 
 [Read the Turbo Frames documentation](https://turbo.hotwire.dev/handbook/frames) to learn everything you can do using Turbo Frames.
 
