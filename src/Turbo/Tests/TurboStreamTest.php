@@ -26,7 +26,7 @@ final class TurboStreamTest extends PantherTestCase
 
         $client->submitForm('Trigger Turbo Stream!');
         $client->waitForElementToContain('body', 'This div replaces the existing element with the DOM ID "form".');
-        $this->assertSelectorTextContains('body', 'This div replace the existing element with the DOM ID "form".');
+        $this->assertSelectorTextContains('body', 'This div replaces the existing element with the DOM ID "form".');
 
         $this->assertTrue(true);
     }
