@@ -156,7 +156,7 @@ jobs:
 
             - name: Install PHP dependencies
               working-directory: src/Turbo
-              run: composer update --prefer-dist --prefer-lowest
+              run: composer update --prefer-dist --prefer-lowest --prefer-stable
 
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
