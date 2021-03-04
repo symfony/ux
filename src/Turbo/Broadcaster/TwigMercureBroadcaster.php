@@ -131,7 +131,7 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
         if (isset($options['template'])) {
             return $options;
         }
-        
+
         $dir = $entityClass;
         if ($this->entityNamespace && 0 === strpos($entityClass, $this->entityNamespace)) {
             $dir = substr($entityClass, \strlen($this->entityNamespace));
