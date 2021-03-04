@@ -271,8 +271,8 @@ class ChatController extends AbstractController
             $form = $emptyForm;
         }
 
-        return $this->render('chat/index.html.twig',
-            ['form' => $form->createView()
+        return $this->render('chat/index.html.twig', [
+            'form' => $form->createView(),
          ]);
     }
 }
