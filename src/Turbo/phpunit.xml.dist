@@ -13,7 +13,7 @@
         <server name="APP_DEBUG" value="false" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="KERNEL_CLASS" value="App\Kernel" />
-        <server name="PANTHER_WEB_SERVER_DIR" value="./tests/app/public" />
+        <server name="PANTHER_WEB_SERVER_DIR" value="./Tests/app/public" />
     </php>
 
     <testsuites>

@@ -25,8 +25,6 @@ class TurboFrameTest extends PantherTestCase
         ($client = self::createPantherClient())->request('GET', '/');
 
         $client->clickLink('This block is scoped, the rest of the page will not change if you click here!');
-        $client->waitForElementToContain('body', 'This will replace the content of the Turbo Frame!');
-
-        $this->assertTrue(true);
+        $this->assertSelectorWillContain('body', 'This will replace the content of the Turbo Frame!');
     }
 }

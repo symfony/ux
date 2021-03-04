@@ -5,8 +5,8 @@
 /composer.lock
 /phpunit.xml
 /vendor/
-/tests/app/var
-/tests/app/public/build/
+/Tests/app/var
+/Tests/app/public/build/
 node_modules/
 package-lock.json
 yarn.lock

@@ -32,17 +32,15 @@ class BroadcastTest extends PantherTestCase
 
         $crawler = $client->submitForm('Submit', ['title' => self::BOOK_TITLE]);
 
-        $client->waitForElementToContain('#books', self::BOOK_TITLE);
+        $this->assertSelectorWillContain('#books', self::BOOK_TITLE);
         if (!preg_match('/\(#(\d+)\)/', $crawler->filter('#books div')->text(), $matches)) {
             $this->fail('ID not found');
         }
 
         $client->submitForm('Submit', ['id' => $matches[1], 'title' => 'updated']);
-        $client->waitForElementToContain('#books', 'updated');
+        $this->assertSelectorWillContain('#books', 'updated');
 
         $client->submitForm('Submit', ['id' => $matches[1], 'remove' => 'remove']);
-        $client->waitForElementToNotContain('#books', $matches[1]);
-
-        $this->assertTrue(true);
+        $this->assertSelectorWillNotContain('#books', $matches[1]);
     }
 }
