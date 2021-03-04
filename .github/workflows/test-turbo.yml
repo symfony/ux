@@ -112,6 +112,8 @@ jobs:
 
             - name: Run tests
               working-directory: src/Turbo
+              env:
+                  SYMFONY_DEPRECATIONS_HELPER: max[direct]=0
               run: vendor/bin/simple-phpunit
 
     tests-php-low-deps:
