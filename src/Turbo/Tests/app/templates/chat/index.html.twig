@@ -3,11 +3,9 @@
 {% block body %}
     <h1>Chat</h1>
 
-    {{ turbo_stream_from_start('chat') }}
-        <div id="messages"></div>
-    {{ turbo_stream_from_end() }}
+    <div id="messages" {{ turbo_stream_listen('chat') }}></div>
 
-    {{ turbo_frame_start('message_form') }}
+    <turbo-frame id="message_form">
         {{ form(form) }}
-    {{ turbo_frame_end() }}
+    </turbo-frame>
 {% endblock %}

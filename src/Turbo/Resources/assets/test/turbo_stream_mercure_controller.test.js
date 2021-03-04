@@ -12,15 +12,15 @@
 import { Application } from 'stimulus';
 import { getByTestId } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
-import TurboStreamController from '../src/turbo_stream_controller.js';
+import TurboStreamController from '../src/turbo_stream_mercure_controller.js';
 
 const startStimulus = () => {
     const application = Application.start();
-    application.register('turbo-stream', TurboStreamController);
+    application.register('symfony--ux-turbo--turbo-stream-mercure', TurboStreamController);
 };
 
 /* eslint-disable no-undef */
-describe('TurboStreamController', () => {
+describe('TurboStreamMercureController', () => {
     let container;
 
     beforeEach(() => {
@@ -31,7 +31,7 @@ describe('TurboStreamController', () => {
         }));
 
         container = mountDOM(
-            '<div data-testid="turbo-stream" data-controller="turbo-stream" data-turbo-stream-hub-value="https://example.com/.well-known/mercure" data-turbo-stream-topic-value="foo"></div>'
+            '<div data-testid="turbo-stream-mercure" data-controller="symfony--ux-turbo--turbo-stream-mercure" data-symfony--ux-turbo--turbo-stream-mercure-hub-value="https://example.com/.well-known/mercure" data-symfony--ux-turbo--turbo-stream-mercure-topic-value="foo"></div>'
         );
     });
 
@@ -43,6 +43,9 @@ describe('TurboStreamController', () => {
         startStimulus();
 
         // smoke test
-        expect(getByTestId(container, 'turbo-stream')).toHaveAttribute('data-turbo-stream-topic-value', 'foo');
+        expect(getByTestId(container, 'turbo-stream-mercure')).toHaveAttribute(
+            'data-symfony--ux-turbo--turbo-stream-mercure-topic-value',
+            'foo'
+        );
     });
 });

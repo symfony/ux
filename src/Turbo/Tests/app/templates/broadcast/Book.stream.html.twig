@@ -1,15 +1,19 @@
 {% block create %}
-    {{ turbo_stream_start('append', 'books') }}
-        <div id="{{ 'book_' ~ entity.id }}">{{ entity.title }} (#{{ entity.id }})</div>
-    {{ turbo_stream_end() }}
+    <turbo-stream action="append" target="books">
+        <template>
+            <div id="{{ 'book_' ~ entity.id }}">{{ entity.title }} (#{{ entity.id }})</div>
+        </template>
+    </turbo-stream>
 {% endblock %}
 
 {% block update %}
-    {{ turbo_stream_start('update', 'book_' ~ entity.id) }}
-        {{ entity.title }} (#{{ entity.id }}, updated)
-    {{ turbo_stream_end() }}
+    <turbo-stream action="update" target="book_{{ entity.id }}">
+        <template>
+            {{ entity.title }} (#{{ entity.id }}, updated)
+        </template>
+    </turbo-stream>
 {% endblock %}
 
 {% block remove %}
-    {{ turbo_stream_start('remove', 'book_' ~ entity.id) }}{{ turbo_stream_end() }}
+    <turbo-stream action="remove" target="book_{{ entity.id }}"></turbo-stream>
 {% endblock %}

@@ -61,8 +61,8 @@ var _default = /*#__PURE__*/function (_Controller) {
     key: "initialize",
     value: function initialize() {
       var errorMessages = [];
-      if (!this.hasHubValue) errorMessages.push("The element must have a \"data-turbo-stream-hub-value\" attribute pointing to the Mercure hub.");
-      if (!this.hasTopicValue) errorMessages.push("The element must have a \"data-turbo-stream-topic-value\" attribute.");
+      if (!this.hasHubValue) errorMessages.push("A \"hub\" value pointing to the Mercure hub must be provided.");
+      if (!this.hasTopicValue) errorMessages.push("A \"topic\" value must be provided.");
       if (errorMessages.length) throw new Error(errorMessages.join(' '));
       var u = new URL(this.hubValue);
       u.searchParams.append('topic', this.topicValue);

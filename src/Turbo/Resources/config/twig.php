@@ -11,7 +11,6 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Symfony\UX\Turbo\Twig\FrameExtension;
 use Symfony\UX\Turbo\Twig\StreamExtension;
 
 /*
@@ -20,10 +19,8 @@ use Symfony\UX\Turbo\Twig\StreamExtension;
 return static function (ContainerConfigurator $container): void {
     $container
         ->services()
-            ->set('turbo.twig.extension.frame', FrameExtension::class)
-            ->tag('twig.extension')
-
             ->set('turbo.twig.extension.stream', StreamExtension::class)
+            ->args([service('webpack_encore.twig_stimulus_extension')])
             ->tag('twig.extension')
     ;
 };

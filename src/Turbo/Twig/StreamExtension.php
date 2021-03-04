@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Turbo\Twig;
 
+use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -23,72 +25,26 @@ use Twig\TwigFunction;
  */
 final class StreamExtension extends AbstractExtension
 {
-    private const ACTIONS = [
-        'append' => true,
-        'prepend' => true,
-        'replace' => true,
-        'update' => true,
-        'remove' => true,
-    ];
-
+    private $stimulusTwigExtension;
     private $mercureHub;
 
-    public function __construct(?string $mercureHub = null)
+    public function __construct(StimulusTwigExtension $stimulusTwigExtension, ?string $mercureHub = null)
     {
+        $this->stimulusTwigExtension = $stimulusTwigExtension;
         $this->mercureHub = $mercureHub;
     }
 
     public function getFunctions(): iterable
     {
-        yield new TwigFunction('turbo_stream_start', [$this, 'turboStreamStart'], ['is_safe' => ['html']]);
-        yield new TwigFunction('turbo_stream_end', [$this, 'turboStreamEnd'], ['is_safe' => ['html']]);
-        yield new TwigFunction('turbo_stream_from_start', [$this, 'turboStreamFromStart'], ['is_safe' => ['html']]);
-        yield new TwigFunction('turbo_stream_from_end', [$this, 'turboStreamFromEnd'], ['is_safe' => ['html']]);
+        yield new TwigFunction('turbo_stream_listen', [$this, 'turboStreamListen'], ['needs_environment' => true, 'is_safe' => ['html']]);
     }
 
-    /**
-     * @param array<string, string> $attrs
-     *
-     * @throws \InvalidArgumentException
-     */
-    public function turboStreamStart(string $action, string $target, array $attrs = []): string
-    {
-        if (!isset(self::ACTIONS[$action])) {
-            throw new \InvalidArgumentException(sprintf('The action "%s" doesn\'t exist. Supported actions are: "%s".', $action, implode('", "', array_keys(self::ACTIONS))));
-        }
-
-        $a = [];
-        foreach ($attrs + ['action' => $action, 'target' => $target] as $k => $v) {
-            $a[] = sprintf('%s="%s"', htmlspecialchars($k, \ENT_QUOTES), htmlspecialchars($v, \ENT_QUOTES));
-        }
-
-        return sprintf('<turbo-stream %s><template>', implode(' ', $a));
-    }
-
-    public function turboStreamEnd(): string
-    {
-        return '</template></turbo-stream>';
-    }
-
-    /**
-     * @param array<string, string> $attrs
-     */
-    public function turboStreamFromStart(string $id, array $attrs = []): string
+    public function turboStreamListen(Environment $env, string $topic): string
     {
         if (null === $this->mercureHub) {
-            throw new \RuntimeException('The "turbo.mercure.subscribe_url" configuration key must be set to use "turbo_stream_from_start()".');
+            throw new \RuntimeException('The "turbo.mercure.subscribe_url" configuration key must be set to use "turbo_stream_listen()".');
         }
 
-        $a = [];
-        foreach ($attrs + ['data-turbo-stream-topic-value' => $id, 'data-turbo-stream-hub-value' => $this->mercureHub, 'data-controller' => 'turbo-stream'] as $k => $v) {
-            $a[] = sprintf('%s="%s"', htmlspecialchars($k, \ENT_QUOTES), htmlspecialchars($v, \ENT_QUOTES));
-        }
-
-        return sprintf('<div %s>', implode(' ', $a));
-    }
-
-    public function turboStreamFromEnd(): string
-    {
-        return '</div>';
+        return $this->stimulusTwigExtension->renderStimulusController($env, 'symfony/ux-turbo/turbo-stream-mercure', ['topic' => $topic, 'hub' => $this->mercureHub]);
     }
 }

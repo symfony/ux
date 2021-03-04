@@ -9,6 +9,7 @@
             "turbo-stream": {
                 "main": "dist/turbo_stream_controller.js",
                 "webpackMode": "eager",
+                "fetch": "eager",
                 "enabled": true
             }
         }

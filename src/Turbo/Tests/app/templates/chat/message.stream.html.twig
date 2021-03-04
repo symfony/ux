@@ -1,3 +1,5 @@
-{{ turbo_stream_start('append', 'messages') }}
-    <div>{{ message }}</div>
-{{ turbo_stream_end() }}
+<turbo-stream action="append" target="messages">
+    <template>
+        <div>{{ message }}</div>
+    </template>
+</turbo-stream>
