@@ -61,7 +61,7 @@ the `@symfony/ux-dropzone/src/style.css` autoimport to `false`:
         "@symfony/ux-dropzone": {
             "dropzone": {
                 "enabled": true,
-                "webpackMode": "eager",
+                "fetch": "eager",
                 "autoimport": {
                     "@symfony/ux-dropzone/src/style.css": false
                 }
