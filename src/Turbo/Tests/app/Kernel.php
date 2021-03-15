@@ -148,7 +148,7 @@ class Kernel extends BaseKernel
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $mercure(new Update('chat', $twig->render('chat/message.stream.html.twig', ['message' => $data['message']])));
+            $mercure->publish(new Update('chat', $twig->render('chat/message.stream.html.twig', ['message' => $data['message']])));
         }
 
         return new Response(

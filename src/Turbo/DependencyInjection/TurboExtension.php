@@ -52,7 +52,7 @@ final class TurboExtension extends Extension
 
         $this->registerTwig($container);
         $this->registerBroadcast($config, $container, $loader);
-        $this->registerTransports($config, $container, $loader);
+        $this->registerMercureTransports($config, $container, $loader);
     }
 
     private function registerTwig(ContainerBuilder $container): void
@@ -102,7 +102,7 @@ final class TurboExtension extends Extension
     /**
      * @param array<string, mixed> $config
      */
-    private function registerTransports(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    private function registerMercureTransports(array $config, ContainerBuilder $container, LoaderInterface $loader): void
     {
         if (!$config['mercure']) {
             return;
@@ -135,14 +135,16 @@ final class TurboExtension extends Extension
      */
     private function registerMercureTransport(ContainerBuilder $container, array $config, string $name, string $hubId, string $publisherId): void
     {
-        $broadcaster = $container->setDefinition("turbo.mercure.{$name}.broadcaster", new ChildDefinition(Broadcaster::class));
-        $broadcaster->replaceArgument(0, $name);
-        $broadcaster->replaceArgument(2, new Reference($publisherId));
-        $broadcaster->replaceArgument(5, $config['broadcast']['entity_namespace']);
-        $broadcaster->addTag('turbo.broadcaster');
-
         $renderer = $container->setDefinition("turbo.mercure.{$name}.renderer", new ChildDefinition(TurboStreamListenRenderer::class));
         $renderer->replaceArgument(0, new Reference($hubId));
         $renderer->addTag('turbo.renderer.stream_listen', ['key' => $name]);
+
+        if ($config['broadcast']['enabled']) {
+            $broadcaster = $container->setDefinition("turbo.mercure.{$name}.broadcaster", new ChildDefinition(Broadcaster::class));
+            $broadcaster->replaceArgument(0, $name);
+            $broadcaster->replaceArgument(2, new Reference($publisherId));
+            $broadcaster->replaceArgument(5, $config['broadcast']['entity_namespace']);
+            $broadcaster->addTag('turbo.broadcaster');
+        }
     }
 }
