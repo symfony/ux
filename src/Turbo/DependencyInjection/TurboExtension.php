@@ -17,9 +17,19 @@ use Symfony\Bundle\MercureBundle\MercureBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\Mercure\Hub;
+use Symfony\Component\Mercure\PublisherInterface;
+use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
+use Symfony\UX\Turbo\Mercure\Broadcaster;
+use Symfony\UX\Turbo\Mercure\TurboStreamListenRenderer;
+use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
+use Symfony\UX\Turbo\Twig\TwigExtension;
 
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
@@ -38,29 +48,101 @@ final class TurboExtension extends Extension
 
         $loader = (new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config')));
         $loader->load('services.php');
+        $container->getDefinition(TwigExtension::class)->replaceArgument(1, $config['default_transport']);
 
-        if ($config['broadcast']['enabled'] && 80000 > \PHP_VERSION_ID) {
-            throw new InvalidConfigurationException('Enabling the "broadcast" config option requires PHP 8 or higher.');
+        $this->registerTwig($container);
+        $this->registerBroadcast($config, $container, $loader);
+        $this->registerTransports($config, $container, $loader);
+    }
+
+    private function registerTwig(ContainerBuilder $container): void
+    {
+        if (!class_exists(TwigBundle::class)) {
+            $container->removeDefinition(TwigExtension::class);
+
+            return;
         }
 
-        if (class_exists(TwigBundle::class)) {
-            $loader->load('twig.php');
-            if (isset($config['mercure']['subscribe_url'])) {
-                $container->getDefinition('turbo.twig.extension.stream')->addArgument($config['mercure']['subscribe_url']);
-            }
+        $container
+            ->registerForAutoconfiguration(TurboStreamListenRendererInterface::class)
+            ->addTag('turbo.renderer.stream_listen');
+    }
 
-            if (class_exists(MercureBundle::class)) {
-                $loader->load('broadcaster.php');
-                $container
-                    ->getDefinition('turbo.broadcaster.twig_mercure')
-                    ->addArgument(null)
-                    ->addArgument($config['broadcast']['entity_namespace'])
-                ;
-            }
+    /**
+     * @param array<string, mixed> $config
+     */
+    private function registerBroadcast(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        if (!$config['broadcast']['enabled']) {
+            $container->removeDefinition(BroadcasterInterface::class);
+
+            return;
         }
 
-        if (class_exists(DoctrineBundle::class) && interface_exists(EntityManagerInterface::class) && 80000 <= \PHP_VERSION_ID) {
-            $loader->load('doctrine.php');
+        if (\PHP_VERSION_ID < 80000) {
+            throw new InvalidConfigurationException('Enabling the "broadcast" configuration option requires PHP 8 or higher.');
         }
+
+        $container
+            ->registerForAutoconfiguration(BroadcasterInterface::class)
+            ->addTag('turbo.broadcaster')
+        ;
+
+        if (!$config['broadcast']['doctrine_orm']['enabled']) {
+            return;
+        }
+
+        if (!class_exists(DoctrineBundle::class) || !interface_exists(EntityManagerInterface::class)) {
+            throw new InvalidConfigurationException('You cannot use the Doctrine ORM integration as the "doctrine/doctrine-bundle" package is not installed. Try running "composer require symfony/orm-pack".');
+        }
+
+        $loader->load('doctrine_orm.php');
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     */
+    private function registerTransports(array $config, ContainerBuilder $container, LoaderInterface $loader): void
+    {
+        if (!$config['mercure']) {
+            return;
+        }
+
+        if (!class_exists(MercureBundle::class)) {
+            throw new InvalidConfigurationException('You cannot use the Mercure integration as the "symfony/mercure-bundle" package is not installed. Try running "composer require symfony/mercure-bundle".');
+        }
+
+        if (!class_exists(TwigBundle::class)) {
+            throw new InvalidConfigurationException('You cannot use the Mercure integration as the "symfony/twig-bundle" package is not installed. Try running "composer require symfony/twig-pack".');
+        }
+
+        $loader->load('mercure.php');
+
+        if (!$config['mercure']['hubs']) {
+            // Wire the default Mercure hub
+            $this->registerMercureTransport($container, $config, $config['default_transport'], Hub::class, PublisherInterface::class);
+
+            return;
+        }
+
+        foreach ($config['mercure']['hubs'] as $hub) {
+            $this->registerMercureTransport($container, $config, $hub, "mercure.hub.{$hub}", "mercure.hub.{$hub}.publisher");
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $config
+     */
+    private function registerMercureTransport(ContainerBuilder $container, array $config, string $name, string $hubId, string $publisherId): void
+    {
+        $broadcaster = $container->setDefinition("turbo.mercure.{$name}.broadcaster", new ChildDefinition(Broadcaster::class));
+        $broadcaster->replaceArgument(0, $name);
+        $broadcaster->replaceArgument(2, new Reference($publisherId));
+        $broadcaster->replaceArgument(5, $config['broadcast']['entity_namespace']);
+        $broadcaster->addTag('turbo.broadcaster');
+
+        $renderer = $container->setDefinition("turbo.mercure.{$name}.renderer", new ChildDefinition(TurboStreamListenRenderer::class));
+        $renderer->replaceArgument(0, new Reference($hubId));
+        $renderer->addTag('turbo.renderer.stream_listen', ['key' => $name]);
     }
 }

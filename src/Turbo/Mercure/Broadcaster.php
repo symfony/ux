@@ -9,15 +9,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Turbo\Broadcaster;
+namespace Symfony\UX\Turbo\Mercure;
 
 use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
-use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Security\Core\Authorization\ExpressionLanguage;
 use Symfony\UX\Turbo\Broadcast;
+use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 use Twig\Environment;
 
 /**
@@ -40,18 +40,23 @@ use Twig\Environment;
  *
  * @experimental
  */
-final class TwigMercureBroadcaster implements BroadcasterInterface
+final class Broadcaster implements BroadcasterInterface
 {
+    /**
+     * @internal
+     */
     public const TOPIC_PATTERN = 'https://symfony.com/ux-turbo/%s/%s';
 
+    private $name;
     private $twig;
-    private $propertyAccessor;
-    private $messageBus;
     private $publisher;
+    private $propertyAccessor;
     private $expressionLanguage;
     private $entityNamespace;
 
     private const OPTIONS = [
+        // Generic options
+        'transports',
         // Twig options
         'template',
         // Mercure options
@@ -63,10 +68,10 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
     ];
 
     public function __construct(
+        string $name,
         Environment $twig,
+        PublisherInterface $publisher,
         ?PropertyAccessorInterface $propertyAccessor,
-        ?MessageBusInterface $messageBus = null,
-        ?PublisherInterface $publisher = null,
         ?ExpressionLanguage $expressionLanguage = null,
         ?string $entityNamespace = null
     ) {
@@ -74,13 +79,9 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
             throw new \LogicException('The broadcast feature requires PHP 8.0 or greater, you must either upgrade to PHP 8 or disable it.');
         }
 
-        if (null === $messageBus && null === $publisher) {
-            throw new \InvalidArgumentException('A message bus or a publisher must be provided.');
-        }
-
+        $this->name = $name;
         $this->twig = $twig;
         $this->propertyAccessor = $propertyAccessor ?? PropertyAccess::createPropertyAccessor();
-        $this->messageBus = $messageBus;
         $this->publisher = $publisher;
         $this->expressionLanguage = $expressionLanguage ?? new ExpressionLanguage();
         $this->entityNamespace = $entityNamespace;
@@ -98,6 +99,10 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
         $broadcast = $attribute->newInstance();
         $options = $this->normalizeOptions($entity, $action, $broadcast->options);
 
+        if (isset($options['transports']) && !\in_array($this->name, $options['transports'], false)) {
+            return;
+        }
+
         // What must we do if the template or the block doesn't exist? Throwing for now.
         $data = $this->twig->load($options['template'])->renderBlock($action, ['entity' => $entity, 'action' => $action, 'options' => $options]);
 
@@ -110,7 +115,7 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
             $options['retry'] ?? null
         );
 
-        $this->messageBus ? $this->messageBus->dispatch($update) : ($this->publisher)($update); // @phpstan-ignore-line
+        $this->publisher->publish($update);
     }
 
     /**
@@ -120,6 +125,10 @@ final class TwigMercureBroadcaster implements BroadcasterInterface
      */
     private function normalizeOptions(object $entity, string $action, array $options): array
     {
+        if (isset($options['transports'])) {
+            $options['transports'] = (array) $options['transports'];
+        }
+
         if (\is_string($options[0] ?? null)) {
             if (null === $this->expressionLanguage) {
                 throw new \RuntimeException('The Expression Language component is not installed. Try running "composer require symfony/expression-language".');

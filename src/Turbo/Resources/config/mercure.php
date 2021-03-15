@@ -11,8 +11,8 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
-use Symfony\UX\Turbo\Broadcaster\TwigMercureBroadcaster;
+use Symfony\UX\Turbo\Mercure\Broadcaster;
+use Symfony\UX\Turbo\Mercure\TurboStreamListenRenderer;
 
 /*
  * @author Kévin Dunglas <kevin@dunglas.fr>
@@ -20,13 +20,23 @@ use Symfony\UX\Turbo\Broadcaster\TwigMercureBroadcaster;
 return static function (ContainerConfigurator $container): void {
     $container
         ->services()
-            ->set('turbo.broadcaster.twig_mercure', TwigMercureBroadcaster::class)
+            ->set(Broadcaster::class)
+            ->abstract()
             ->args([
+                abstract_arg('name'),
                 service('twig'),
+                abstract_arg('publisher'),
                 service('property_accessor'),
-                service('messenger.default_bus')->nullOnInvalid(),
-                service('mercure.hub.default.publisher')->nullOnInvalid(),
+                null,
+                abstract_arg('entity namespace'),
             ])
-            ->alias(BroadcasterInterface::class, 'turbo.broadcaster.twig_mercure')
+
+            ->set(TurboStreamListenRenderer::class)
+            ->abstract()
+            ->args([
+                abstract_arg('hub'),
+                service('webpack_encore.twig_stimulus_extension'),
+                service('property_accessor'),
+            ])
     ;
 };

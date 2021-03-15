@@ -483,6 +483,133 @@ class Book
 }
 ```
 
+### Using Multiple Transports
+
+Symfony UX Turbo allows sending Turbo Streams updates using multiple transports.
+For instance, it's possible to use several Mercure hubs with the following configuration:
+
+```yaml
+# config/packages/mercure.yaml
+mercure:
+  hubs:
+    hub1:
+      url: https://hub1.example.net/.well-known/mercure
+      token: snip
+    hub2:
+      url: https://hub2.example.net/.well-known/mercure
+      token: snip
+```
+
+```yaml
+# config/packages/turbo.yaml
+turbo:
+  mercure:
+    hubs: [ hub1, hub2 ]
+```
+
+Use the appropriate Mercure `Publisher` service to send a change using a specific transport:
+
+```php
+<?php
+
+namespace App\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mercure\PublisherInterface;use Symfony\Component\Mercure\Update;
+
+class MyController extends AbstractController
+{
+    public function publish(PublisherInterface $hub1): Response
+    {
+        $id = $hub1->publish(new Update('topic', 'content'));
+        
+        return new Response("Update #{$id} published.");
+    }
+}
+```
+
+
+Changes made to entities marked with the `#[Broadcast]` attribute will be sent using all configured transport by default.
+You can specify the list of transports to use for a specific entity class using the `transports` parameter:
+
+```php
+<?php
+
+namespace App\Entity;
+
+use Symfony\UX\Turbo\Broadcast;
+
+#[Broadcast(transports: ['hub1', 'hub2'])]
+/** ... */
+class Book
+{
+    // ...
+}
+```
+
+Finally, generate the HTML attributes registering the Stimulus controller
+corresponding to your transport by passing an extra argument to `turbo_stream_listen()`:
+
+```twig
+<div id="messages" {{ turbo_stream_listen('App\Entity\Book', 'hub2') }}></div>
+```
+
+### Registering a Custom Transport
+
+If you prefer using another protocol than Mercure, you can create your custom transports:
+
+```php
+<?php
+
+namespace App\Turbo;
+
+use Symfony\UX\Turbo\Broadcast;
+use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
+
+class Broadcaster implements BroadcasterInterface
+{
+    public function broadcast(object $entity, string $action): void
+    {
+        // This method will be called everytime an object marked with the #[Broadcast] attribute is changed
+        $attribute = (new \ReflectionClass($entity))->getAttributes(Broadcast::class)[0] ?? null;
+        // ...
+    }
+}
+```
+
+```php
+<?php
+
+namespace App\Turbo;
+
+use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;use Twig\Environment;
+
+class TurboStreamListenRenderer implements TurboStreamListenRendererInterface
+{
+    public function __construct(
+        private StimulusTwigExtension $stimulusTwigExtension,
+    ) {}
+
+    /**
+     * @param string|object $topic
+     */
+    public function renderTurboStreamListen(Environment $env, $topic) : string{
+        $this->stimulusTwigExtension->renderStimulusController($env, 'your_stimulus_controller', [/* controller values such as topic */]);
+    }
+
+    public static function getDefaultIndexName(): string
+    {
+        // The transport name, used as key in the service locator
+        // Alternatively, configure it using the other supported methods: https://symfony.com/doc/current/service_container/service_subscribers_locators.html#indexing-the-collection-of-services
+        return 'my-transport';
+    }
+}
+```
+
+Because these classes implement the `BroadcasterInterface` and `TurboStreamListenRendererInterface` interfaces,
+the related services will be [autoconfigured](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option).
+
 ## Backward Compatibility promise
 
 This bundle aims at following the same Backward Compatibility promise as the Symfony framework:

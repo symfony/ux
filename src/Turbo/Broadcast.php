@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Turbo;
 
-use Symfony\UX\Turbo\Broadcaster\TwigMercureBroadcaster;
+use Symfony\UX\Turbo\Mercure\Broadcaster;
 
 /**
  * Marks the entity as broadcastable.
@@ -35,7 +35,7 @@ final class Broadcast
     /**
      * Options can be any option supported by the broadcaster.
      *
-     * @see TwigMercureBroadcaster for the default options
+     * @see Broadcaster for the default options
      */
     public function __construct(mixed ...$options)
     {

@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Symfony\Component\Mercure\Hub;
 use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
@@ -103,11 +104,7 @@ class Kernel extends BaseKernel
             ],
         ]);
 
-        $container->extension('turbo', [
-            'mercure' => [
-                'subscribe_url' => $_SERVER['MERCURE_SUBSCRIBE_URL'] ?? 'http://127.0.0.1:3000/.well-known/mercure',
-            ],
-        ]);
+        $container->services()->alias(Hub::class, 'mercure.hub.default'); // FIXME: temporary fix for a bug in https://github.com/symfony/mercure-bundle/pull/42
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void

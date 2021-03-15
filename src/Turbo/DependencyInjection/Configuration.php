@@ -11,6 +11,9 @@
 
 namespace Symfony\UX\Turbo\DependencyInjection;
 
+use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\MercureBundle\MercureBundle;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -29,15 +32,23 @@ final class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
         $rootNode
             ->children()
-                ->arrayNode('mercure')
+                ->arrayNode('broadcast')
+                    ->{\PHP_VERSION_ID >= 80000 ? 'canBeDisabled' : 'canBeEnabled'}()
                     ->children()
-                        ->scalarNode('subscribe_url')->info('URL of the Mercure Hub to use for subscriptions')->example('https://example.com/.well-known/mercure')->end()
+                        ->scalarNode('entity_namespace')->info('Prefix to strip when looking for broadcast templates')->defaultValue('App\\Entity\\')->end()
+                        ->arrayNode('doctrine_orm')
+                            ->info('Enable the Doctrine ORM integration')
+                            ->{class_exists(DoctrineBundle::class) && interface_exists(EntityManagerInterface::class) ? 'canBeDisabled' : 'canBeEnabled'}()
+                        ->end()
                     ->end()
                 ->end()
-                ->arrayNode('broadcast')
-                ->{80000 <= \PHP_VERSION_ID ? 'canBeDisabled' : 'canBeEnabled'}()
-                ->children()
-                    ->scalarNode('entity_namespace')->info('Prefix to strip when looking for broadcast templates')->defaultValue('App\\Entity\\')->end()
+                ->scalarNode('default_transport')->defaultValue('default')->end()
+                ->arrayNode('mercure')
+                    ->{class_exists(MercureBundle::class) ? 'canBeDisabled' : 'canBeEnabled'}()
+                    ->info('If the Mercure hubs to use as transports aren\'t configured explicitly, a transport named "default" using the default Mercure hub will be automatically created.')
+                    ->children()
+                        ->arrayNode('hubs')->scalarPrototype()->info('The name of the Mercure hubs  (configured in MercureBundle) to use as transports')->end()
+                    ->end()
                 ->end()
             ->end()
         ;

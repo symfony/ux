@@ -12,7 +12,7 @@
 namespace Symfony\UX\Turbo\Broadcaster;
 
 /**
- * Broadcast an update of an entity.
+ * Broadcasts an update of an entity.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
  *
