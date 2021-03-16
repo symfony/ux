@@ -491,20 +491,20 @@ For instance, it's possible to use several Mercure hubs with the following confi
 ```yaml
 # config/packages/mercure.yaml
 mercure:
-  hubs:
-    hub1:
-      url: https://hub1.example.net/.well-known/mercure
-      jwt: snip
-    hub2:
-      url: https://hub2.example.net/.well-known/mercure
-      jwt: snip
+    hubs:
+        hub1:
+            url: https://hub1.example.net/.well-known/mercure
+            jwt: snip
+        hub2:
+            url: https://hub2.example.net/.well-known/mercure
+            jwt: snip
 ```
 
 ```yaml
 # config/packages/turbo.yaml
 turbo:
-  mercure:
-    hubs: [ hub1, hub2 ]
+    mercure:
+        hubs: [hub1, hub2]
 ```
 
 Use the appropriate Mercure `Publisher` service to send a change using a specific transport:
@@ -523,12 +523,11 @@ class MyController extends AbstractController
     public function publish(PublisherInterface $hub1): Response
     {
         $id = $hub1->publish(new Update('topic', 'content'));
-        
+
         return new Response("Update #{$id} published.");
     }
 }
 ```
-
 
 Changes made to entities marked with the `#[Broadcast]` attribute will be sent using all configured transport by default.
 You can specify the list of transports to use for a specific entity class using the `transports` parameter:

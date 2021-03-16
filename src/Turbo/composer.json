@@ -5,7 +5,6 @@
             "url": "https://github.com/azjezz/mercure-bundle"
         }
     ],
-
     "name": "symfony/ux-turbo",
     "type": "symfony-bundle",
     "description": "Hotwire Turbo integration for Symfony",
