@@ -582,7 +582,9 @@ class Broadcaster implements BroadcasterInterface
 
 namespace App\Turbo;
 
-use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;use Twig\Environment;
+use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
+use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
+use Twig\Environment;
 
 class TurboStreamListenRenderer implements TurboStreamListenRendererInterface
 {
@@ -606,8 +608,9 @@ class TurboStreamListenRenderer implements TurboStreamListenRendererInterface
 }
 ```
 
-Because these classes implement the `BroadcasterInterface` and `TurboStreamListenRendererInterface` interfaces,
-the related services will be [autoconfigured](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option).
+The broadcaster must be registered as a service tagged with `turbo.broadcaster` and the renderer must be tagged with `turbo.renderer.stream_listen`.
+If you enabled [autoconfigure option](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option) (it's the case by default), these tags will be added automatically because these classes implement the `BroadcasterInterface` and `TurboStreamListenRendererInterface` interfaces,
+the related services will be .
 
 ## Backward Compatibility promise
 
