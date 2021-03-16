@@ -261,7 +261,7 @@ class ChatController extends AbstractController
             // 🔥 The magic happens here! 🔥
             // The HTML update is pushed to the client using Mercure
             // The Mercure topic (here "chat") MUST be the ID of the block that will display the received updates
-            $mercure(new Update(
+            $mercure->publish(new Update(
                 'chat',
                 $this->renderView('chat/message.stream.html.twig', ['message' => $data['message']])
             ));
