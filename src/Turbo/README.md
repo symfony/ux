@@ -494,10 +494,10 @@ mercure:
   hubs:
     hub1:
       url: https://hub1.example.net/.well-known/mercure
-      token: snip
+      jwt: snip
     hub2:
       url: https://hub2.example.net/.well-known/mercure
-      token: snip
+      jwt: snip
 ```
 
 ```yaml
