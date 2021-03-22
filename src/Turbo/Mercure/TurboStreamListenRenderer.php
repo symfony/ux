@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Symfony\UX\Turbo\Mercure;
 
-use Symfony\Component\Mercure\Hub;
+use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
@@ -22,7 +22,7 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
     private $stimulusTwigExtension;
     private $propertyAccessor;
 
-    public function __construct(Hub $hub, StimulusTwigExtension $stimulusTwigExtension, ?PropertyAccessorInterface $propertyAccessor)
+    public function __construct(HubInterface $hub, StimulusTwigExtension $stimulusTwigExtension, ?PropertyAccessorInterface $propertyAccessor)
     {
         $this->hub = $hub;
         $this->stimulusTwigExtension = $stimulusTwigExtension;

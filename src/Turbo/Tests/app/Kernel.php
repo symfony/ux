@@ -32,7 +32,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Mercure\Hub;
-use Symfony\Component\Mercure\PublisherInterface;
+use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\Turbo\Stream\TurboStreamResponse;
@@ -134,7 +134,7 @@ class Kernel extends BaseKernel
         return new Response('Turbo not installed, default to plain HTML.');
     }
 
-    public function chat(Request $request, FormFactoryInterface $formFactory, PublisherInterface $mercure, Environment $twig): Response
+    public function chat(Request $request, FormFactoryInterface $formFactory, HubInterface $mercureHub, Environment $twig): Response
     {
         $form = $formFactory
             ->createBuilder(FormType::class)
@@ -148,7 +148,7 @@ class Kernel extends BaseKernel
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
 
-            $mercure->publish(new Update('chat', $twig->render('chat/message.stream.html.twig', ['message' => $data['message']])));
+            $mercureHub->publish(new Update('chat', $twig->render('chat/message.stream.html.twig', ['message' => $data['message']])));
         }
 
         return new Response(

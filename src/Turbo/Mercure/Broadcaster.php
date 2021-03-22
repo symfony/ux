@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Turbo\Mercure;
 
-use Symfony\Component\Mercure\PublisherInterface;
+use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -49,7 +49,7 @@ final class Broadcaster implements BroadcasterInterface
 
     private $name;
     private $twig;
-    private $publisher;
+    private $hub;
     private $propertyAccessor;
     private $expressionLanguage;
     private $entityNamespace;
@@ -70,7 +70,7 @@ final class Broadcaster implements BroadcasterInterface
     public function __construct(
         string $name,
         Environment $twig,
-        PublisherInterface $publisher,
+        HubInterface $hub,
         ?PropertyAccessorInterface $propertyAccessor,
         ?ExpressionLanguage $expressionLanguage = null,
         ?string $entityNamespace = null
@@ -82,7 +82,7 @@ final class Broadcaster implements BroadcasterInterface
         $this->name = $name;
         $this->twig = $twig;
         $this->propertyAccessor = $propertyAccessor ?? PropertyAccess::createPropertyAccessor();
-        $this->publisher = $publisher;
+        $this->hub = $hub;
         $this->expressionLanguage = $expressionLanguage ?? new ExpressionLanguage();
         $this->entityNamespace = $entityNamespace;
     }
@@ -115,7 +115,7 @@ final class Broadcaster implements BroadcasterInterface
             $options['retry'] ?? null
         );
 
-        $this->publisher->publish($update);
+        $this->hub->publish($update);
     }
 
     /**

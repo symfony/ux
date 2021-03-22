@@ -24,6 +24,7 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Mercure\Hub;
+use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\PublisherInterface;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 use Symfony\UX\Turbo\Mercure\Broadcaster;
@@ -120,31 +121,35 @@ final class TurboExtension extends Extension
 
         if (!$config['mercure']['hubs']) {
             // Wire the default Mercure hub
-            $this->registerMercureTransport($container, $config, $config['default_transport'], Hub::class, PublisherInterface::class);
+            $this->registerMercureTransport($container, $config, $config['default_transport'], HubInterface::class);
 
             return;
         }
 
         foreach ($config['mercure']['hubs'] as $hub) {
-            $this->registerMercureTransport($container, $config, $hub, "mercure.hub.{$hub}", "mercure.hub.{$hub}.publisher");
+            $this->registerMercureTransport($container, $config, $hub, "mercure.hub.{$hub}");
         }
     }
 
     /**
      * @param array<string, mixed> $config
      */
-    private function registerMercureTransport(ContainerBuilder $container, array $config, string $name, string $hubId, string $publisherId): void
+    private function registerMercureTransport(ContainerBuilder $container, array $config, string $name, string $hubId): void
     {
+        $hubService = new Reference($hubId);
+
         $renderer = $container->setDefinition("turbo.mercure.{$name}.renderer", new ChildDefinition(TurboStreamListenRenderer::class));
-        $renderer->replaceArgument(0, new Reference($hubId));
+        $renderer->replaceArgument(0, $hubService);
         $renderer->addTag('turbo.renderer.stream_listen', ['key' => $name]);
 
-        if ($config['broadcast']['enabled']) {
-            $broadcaster = $container->setDefinition("turbo.mercure.{$name}.broadcaster", new ChildDefinition(Broadcaster::class));
-            $broadcaster->replaceArgument(0, $name);
-            $broadcaster->replaceArgument(2, new Reference($publisherId));
-            $broadcaster->replaceArgument(5, $config['broadcast']['entity_namespace']);
-            $broadcaster->addTag('turbo.broadcaster');
+        if (!$config['broadcast']['enabled']) {
+            return;
         }
+
+        $broadcaster = $container->setDefinition("turbo.mercure.{$name}.broadcaster", new ChildDefinition(Broadcaster::class));
+        $broadcaster->replaceArgument(0, $name);
+        $broadcaster->replaceArgument(2, $hubService);
+        $broadcaster->replaceArgument(5, $config['broadcast']['entity_namespace']);
+        $broadcaster->addTag('turbo.broadcaster');
     }
 }
