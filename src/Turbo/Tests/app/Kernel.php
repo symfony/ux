@@ -73,6 +73,7 @@ class Kernel extends BaseKernel
             ->extension('doctrine', [
                 'dbal' => [
                     'url' => 'sqlite:///%kernel.project_dir%/var/turbo.db',
+                    'override_url' => true,
                 ],
                 'orm' => [
                     'auto_generate_proxy_classes' => true,
