@@ -139,3 +139,64 @@ php vendor/bin/phpunit
 cd Resources/assets
 yarn test
 ```
+
+## Want to implement a cache ?
+
+Use symfony/cache
+
+```
+composer require symfony/cache
+```
+
+And create your twig extension :
+
+```php
+<?php
+
+namespace App\Twig;
+
+use Symfony\Component\String\Slugger\AsciiSlugger;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
+use Symfony\UX\LazyImage\BlurHash\BlurHashInterface;
+use Twig\Extension\AbstractExtension;
+use Twig\TwigFilter;
+use Twig\TwigFunction;
+
+class BlurHashExtension extends AbstractExtension
+{
+    public function __construct(private BlurHashInterface $blurHash, private CacheInterface $cache)
+    {}
+
+    public function getFunctions(): array
+    {
+        return [
+            new TwigFunction('data_uri_thumbnail_cached', [$this, 'createDataUriThumbnailCached']),
+        ];
+    }
+
+    public function createDataUriThumbnailCached(string $filename, int $width, int $height, int $encodingWidth = 75, int $encodingHeight = 75): string
+    {
+        $slugger = new AsciiSlugger();
+        $cacheKey = $slugger->slug(implode('-', func_get_args()));
+
+        $value = $this->cache->get($cacheKey, function (ItemInterface $item) use ($filename, $width, $height, $encodingWidth, $encodingHeight) {
+            return $this->blurHash->createDataUriThumbnail($filename, $width, $height, $encodingWidth, $encodingHeight);
+        });
+
+        return $value;
+    }
+}
+```
+
+And now in your images :
+
+```twig
+<img
+    src="{{ data_uri_thumbnail_cached('https://placeimg.com/970/550', 100, 75) }}"
+    data-controller="symfony--ux-lazy-image--lazy-image"
+    data-hd-src="https://placeimg.com/970/550?q={{ i }}"
+    width="970"
+    height="550"
+    alt="Image-Descrition">
+```
