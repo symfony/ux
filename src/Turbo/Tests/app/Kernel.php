@@ -3,18 +3,17 @@
 /*
  * This file is part of the Symfony package.
  *
- * (c) Kévin Dunglas <kevin@dunglas.fr>
+ * (c) Fabien Potencier <fabien@symfony.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
 
-declare(strict_types=1);
-
 namespace App;
 
 use App\Entity\Book;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\Bundle\DoctrineBundle\Mapping\MappingDriver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -69,26 +68,33 @@ class Kernel extends BaseKernel
                 'only_exceptions' => false,
             ],
         ]);
-        $container
-            ->extension('doctrine', [
-                'dbal' => [
-                    'url' => 'sqlite:///%kernel.project_dir%/var/turbo.db',
-                    'override_url' => true,
-                ],
-                'orm' => [
-                    'auto_generate_proxy_classes' => true,
-                    'auto_mapping' => true,
-                    'mappings' => [
-                        'App' => [
-                            'is_bundle' => false,
-                            'type' => 'annotation',
-                            'dir' => '%kernel.project_dir%/Entity',
-                            'prefix' => 'App\Entity',
-                            'alias' => 'App',
-                        ],
+
+        $doctrineConfig = [
+            'dbal' => [
+                'url' => 'sqlite:///%kernel.project_dir%/var/turbo.db',
+            ],
+            'orm' => [
+                'auto_generate_proxy_classes' => true,
+                'auto_mapping' => true,
+                'mappings' => [
+                    'App' => [
+                        'is_bundle' => false,
+                        'type' => 'annotation',
+                        'dir' => '%kernel.project_dir%/Entity',
+                        'prefix' => 'App\Entity',
+                        'alias' => 'App',
                     ],
                 ],
-            ]);
+            ],
+        ];
+
+        if (class_exists(MappingDriver::class)) {
+            $doctrineConfig['dbal']['override_url'] = true;
+        }
+
+        $container
+            ->extension('doctrine', $doctrineConfig);
+
         $container->extension('webpack_encore', ['output_path' => 'build']);
         $container->extension('web_profiler', [
             'toolbar' => true,

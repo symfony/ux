@@ -623,7 +623,6 @@ meaning it is not bound to Symfony's BC policy for the moment.
 
 ## Credits
 
-Created by [Kévin Dunglas](https://dunglas.fr). Sponsored by [Les-Tilleuls.coop](https://les-tilleuls.coop).
-
-Symfony UX Turbo has been inspired by [hotwired/turbo-rails](https://github.com/hotwired/turbo-rails)
+Symfony UX Turbo has been created by [Kévin Dunglas](https://dunglas.fr).
+It has been inspired by [hotwired/turbo-rails](https://github.com/hotwired/turbo-rails)
 and [sroze/live-twig](https://github.com/sroze/live-twig).

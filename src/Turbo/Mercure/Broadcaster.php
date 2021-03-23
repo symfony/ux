@@ -3,7 +3,7 @@
 /*
  * This file is part of the Symfony package.
  *
- * (c) Kévin Dunglas <kevin@dunglas.fr>
+ * (c) Fabien Potencier <fabien@symfony.com>
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -51,8 +51,12 @@ final class Broadcaster implements BroadcasterInterface
     private $twig;
     private $hub;
     private $propertyAccessor;
-    private $expressionLanguage;
     private $entityNamespace;
+
+    /**
+     * @var ExpressionLanguage|null
+     */
+    private $expressionLanguage;
 
     private const OPTIONS = [
         // Generic options
@@ -83,8 +87,13 @@ final class Broadcaster implements BroadcasterInterface
         $this->twig = $twig;
         $this->propertyAccessor = $propertyAccessor ?? PropertyAccess::createPropertyAccessor();
         $this->hub = $hub;
-        $this->expressionLanguage = $expressionLanguage ?? new ExpressionLanguage();
         $this->entityNamespace = $entityNamespace;
+
+        if ($expressionLanguage) {
+            $this->expressionLanguage = $expressionLanguage;
+        } elseif (class_exists(ExpressionLanguage::class)) {
+            $this->expressionLanguage = new ExpressionLanguage();
+        }
     }
 
     public function broadcast(object $entity, string $action): void
