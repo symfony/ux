@@ -6,15 +6,15 @@ library in Symfony applications. It is part of [the Symfony UX initiative](https
 Symfony UX Turbo allows having the same user experience as with [Single Page Apps](https://en.wikipedia.org/wiki/Single-page_application)
 but without having to write a single line of JavaScript!
 
-Symfony UX Turbo also integrates with [Symfony Mercure](https://symfony.com/doc/current/mercure.html) to broadcast DOM changes
-to all currently connected users!
+Symfony UX Turbo also integrates with [Symfony Mercure](https://symfony.com/doc/current/mercure.html)
+or any other transports to broadcast DOM changes to all currently connected users!
 
-You're in a hurry? Take a look to [the chat example](#sending-async-changes-using-mercure-a-chat) to discover the full potential
-of Symfony UX Turbo.
+You're in a hurry? Take a look at [the chat example](#sending-async-changes-using-mercure-a-chat)
+to discover the full potential of Symfony UX Turbo.
 
 ## Installation
 
-Symfony UX Turbo requires PHP 8+ and Symfony 4.4+.
+Symfony UX Turbo requires PHP 7.2+ and Symfony 5.2+.
 
 Install this bundle using Composer and Symfony Flex:
 
@@ -23,7 +23,7 @@ composer require symfony/ux-turbo
 
 # Don't forget to install the JavaScript dependencies as well and compile
 yarn install --force
-yarn encore dev
+yarn encore dev // "./node_modules/@symfony/stimulus-bridge/dist/webpack/loader.js!./assets/controllers.json" contains a reference to the file "@symfony/ux-turbo/dist/turbo_stream_controller.js".
 ```
 
 ## Usage
@@ -74,7 +74,7 @@ The content of a frame can be lazy loaded:
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <turbo-frame id="the_frame_id" src="{{ path('block') }}">
+    <turbo-frame id="the_frame_id" src="{{ path('block') }}"> // can we make it clearer what "block" is?
         A placeholder.
     </turbo-frame>
 {% endblock %}
@@ -133,9 +133,9 @@ class TurboFrameTest extends PantherTestCase
 ```
 
 Run `bin/phpunit` to execute the test! Symfony Panther automatically starts your application with a web server
-and test it using Google Chrome (Firefox is also supported)!
+and tests it using Google Chrome or Firefox!
 
-You can even watch changes happening in Chrome by using: `PANTHER_NO_HEADLESS=1 bin/phpunit --debug`
+You can even watch changes happening in the browser by using: `PANTHER_NO_HEADLESS=1 bin/phpunit --debug`
 
 [Read the Turbo Frames documentation](https://turbo.hotwire.dev/handbook/frames) to learn everything you can do using Turbo Frames.
 
@@ -144,8 +144,9 @@ You can even watch changes happening in Chrome by using: `PANTHER_NO_HEADLESS=1 
 Turbo Streams are a way for the server to send partial page updates to clients.
 There are two main ways to receive the updates:
 
--   in response to a user action, for instance when the user submits a form
--   asynchronously, by sending updates to clients using [Mercure](https://mercure.rocks), [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) and similar protocols
+ - in response to a user action, for instance when the user submits a form;
+ - asynchronously, by sending updates to clients using [Mercure](https://mercure.rocks),
+   [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) and similar protocols.
 
 #### Forms
 
@@ -168,8 +169,8 @@ class TaskController extends AbstractController
         $task = new Task();
 
         $form = $this->createForm(TaskType::class, $task);
-
         $form->handleRequest($request);
+
         if ($form->isSubmitted() && $form->isValid()) {
             $task = $form->getData();
             // ... perform some action, such as saving the task to the database
@@ -209,8 +210,8 @@ Supported actions are `append`, `prepend`, `replace`, `update` and `remove`.
 
 #### Sending Async Changes using Mercure: a Chat
 
-Symfony UX Turbo also supports the [Mercure](https://mercure.rocks) protocol. With this feature you can broadcast HTML
-updates to all currently connected clients.
+Symfony UX Turbo also supports broadcasting HTML updates to all currently connected clients,
+using the [Mercure](https://mercure.rocks) protocol or any other.
 
 To illustrate this, let's build a chat system with **0 lines of JavaScript**!
 
@@ -227,7 +228,7 @@ Otherwise, configure the URL of the Mercure Hub:
 # config/packages/turbo.yaml
 turbo:
     mercure:
-        subscribe_url: https://localhost/.well-known/mercure
+        subscribe_url: https://localhost/.well-known/mercure // config option doesn't exist
 ```
 
 Let's create our chat:
@@ -260,7 +261,7 @@ class ChatController extends AbstractController
 
             // 🔥 The magic happens here! 🔥
             // The HTML update is pushed to the client using Mercure
-            // The Mercure topic (here "chat") MUST be the ID of the block that will display the received updates
+            // The Mercure topic (here "chat") MUST be the ID of the block that will display the received updates // in the twig below; we never see any id="chat", this might be confusing
             $mercure->publish(new Update(
                 'chat',
                 $this->renderView('chat/message.stream.html.twig', ['message' => $data['message']])
@@ -288,8 +289,8 @@ class ChatController extends AbstractController
     <div id="messages" {{ turbo_stream_listen('chat') }}>
         {#
             The messages will be displayed here.
-            "turbo_stream_listen()" automatically registers a Stimulus controller that subscribes to the "chat" Mercure topic using EventSource.
-            The connection to the Mercure Hub is automatically closed when this HTML block is removed.
+            "turbo_stream_listen()" automatically registers a Stimulus controller that subscribes to the "chat" topic of the transport.
+            The transport connection is automatically closed when this HTML block is removed.
 
             All connected users will receive the new messages!
          #}
@@ -324,14 +325,14 @@ Keep in mind that you can use all features provided by Symfony Mercure, includin
 
 Symfony UX Turbo also comes with a convenient integration with Doctrine ORM.
 
-With a single attribute, your clients can subscribe to creation, update and deletion of entities:
+With a single attribute, your clients can subscribe to creations, updates and deletions of entities:
 
 ```php
 // src/Entity/Book.php
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Broadcast;
+use Symfony\UX\Turbo\Attribute\Broadcast;
 
 /**
  * @ORM\Entity
@@ -395,7 +396,7 @@ By convention, Symfony UX Turbo will look for a template named `templates/broadc
 This template **must** contain at least 3 blocks: `create`, `update` and `remove` (they can be empty, but they must exist).
 
 Every time an entity marked with the `Broadcast` attribute changes, Symfony UX Turbo will render the associated template
-and will use Mercure to broadcast the changes to all connected clients.
+and will broadcast the changes to all connected clients.
 
 Each block must contain a list of Turbo Stream actions. These actions will be automatically applied by Turbo to the DOM
 tree of every connected client. Each template can contain as many actions as needed.
@@ -409,11 +410,14 @@ are passed to the template as variables: `entity`, `action` and `options`.
 
 ### Broadcast Conventions and Configuration
 
-The entity class **must** have a public property named `id` or a public method named `getId()`.
+When using the Mercure transport, the entity class **must** have a public property named `id` or a public method named `getId()`.
 
 If your entities aren't in the `App\Entity` namespace, Symfony UX Turbo will look for a template in a directory named after
 their Fully Qualified Class Names. For instance, if a class marked with the `Broadcast` attribute is named `\App\Foo\Bar`,
 the corresponding template will be `templates/broadcast/App/Foo/Bar.stream.html.twig`.
+// do we really need the above convention? Can't we force such entities to have a template attribute instead?
+// The less conventions the better, remember the @Template annotation...
+// Here is another convention highlighted in the example config, mapping entities to template directories:
 
 It's possible to use the `turbo.broadcast.entity_namespace` configuration parameter to change the default entity namespace:
 
@@ -421,7 +425,8 @@ It's possible to use the `turbo.broadcast.entity_namespace` configuration parame
 # config/packages/turbo.yaml
 turbo:
     broadcast:
-        entity_namespace: App\Foo
+        entity_template_dirs:
+            App\Entity\: broadcast/
 ```
 
 Finally, it's also possible to explicitly set the template to use with the `template` parameter of the `Broadcast` attribute:
@@ -434,13 +439,15 @@ class Book { /* ... */ }
 ### Broadcast Options
 
 The `Broadcast` attribute comes with a set of handy options:
+// These are tightly coupled to Mercure currently: the Broadcast attribute is variadic. Can't we make this more generic and discoverable, with actual named arguments, at least for some of them?
 
--   `template` (`string`): Twig template to render (see above)
--   `topics` (`string[]`): Mercure topics to use, defaults to an array containing the Fully Qualified Class Name
--   `private` (`bool`): marks Mercure updates as private
--   `id` (`string`): `id` field of the SSE
--   `type` (`string`): `type` field of the SSE
--   `retry` (`int`): `retry` field of the SSE
+ - `template` (`string`): Twig template to render (see above)
+ - `topics` (`string[]`): Mercure topics to use, defaults to an array containing the Fully Qualified Class Name
+ - `private` (`bool`): marks Mercure updates as private
+ - `id` (`string`): `id` field of the SSE
+ - `type` (`string`): `type` field of the SSE
+ - `retry` (`int`): `retry` field of the SSE // what's the use case for these 3 SSE elements? Can't we remove them to keep this generic?
+ - `transports` is missing
 
 Example:
 
@@ -448,7 +455,7 @@ Example:
 // src/Entity/Book.php
 namespace App\Entity;
 
-use Symfony\UX\Turbo\Broadcast;
+use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[Broadcast(template: 'foo.stream.html.twig', private: true)]
 class Book
@@ -457,7 +464,7 @@ class Book
 }
 ```
 
-### Using an Expression to Generate The Options
+### Using an Expression to Generate the Options
 
 If the [Symfony ExpressionLanguage Component](https://symfony.com/doc/current/components/expression_language.html) is installed,
 you can also pass an _expression_ generating the options as parameter of the `Broadcast` attribute:
@@ -466,7 +473,7 @@ you can also pass an _expression_ generating the options as parameter of the `Br
 // src/Entity/Book.php
 namespace App\Entity;
 
-use Symfony\UX\Turbo\Broadcast;
+use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[Broadcast('entity.getOptions()')]
 class Book
@@ -489,18 +496,6 @@ Symfony UX Turbo allows sending Turbo Streams updates using multiple transports.
 For instance, it's possible to use several Mercure hubs with the following configuration:
 
 ```yaml
-# config/packages/mercure.yaml
-mercure:
-    hubs:
-        hub1:
-            url: https://hub1.example.net/.well-known/mercure
-            jwt: snip
-        hub2:
-            url: https://hub2.example.net/.well-known/mercure
-            jwt: snip
-```
-
-```yaml
 # config/packages/turbo.yaml
 turbo:
     mercure:
@@ -510,13 +505,13 @@ turbo:
 Use the appropriate Mercure `Publisher` service to send a change using a specific transport:
 
 ```php
-<?php
-
+// src/Controller/MyController.php
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mercure\PublisherInterface;use Symfony\Component\Mercure\Update;
+use Symfony\Component\Mercure\PublisherInterface;
+use Symfony\Component\Mercure\Update;
 
 class MyController extends AbstractController
 {
@@ -533,11 +528,10 @@ Changes made to entities marked with the `#[Broadcast]` attribute will be sent u
 You can specify the list of transports to use for a specific entity class using the `transports` parameter:
 
 ```php
-<?php
-
+// src/Entity/Book.php
 namespace App\Entity;
 
-use Symfony\UX\Turbo\Broadcast;
+use Symfony\UX\Turbo\Attribute\Broadcast;
 
 #[Broadcast(transports: ['hub1', 'hub2'])]
 /** ... */
@@ -556,14 +550,13 @@ corresponding to your transport by passing an extra argument to `turbo_stream_li
 
 ### Registering a Custom Transport
 
-If you prefer using another protocol than Mercure, you can create your custom transports:
+If you prefer using another protocol than Mercure, you can create custom transports:
 
 ```php
-<?php
-
+// src/Turbo/Broadcaster.php
 namespace App\Turbo;
 
-use Symfony\UX\Turbo\Broadcast;
+use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 
 class Broadcaster implements BroadcasterInterface
@@ -578,14 +571,15 @@ class Broadcaster implements BroadcasterInterface
 ```
 
 ```php
-<?php
-
+// src/Turbo/TurboStreamListenRenderer.php
 namespace App\Turbo;
 
+use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
 use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
 use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Twig\Environment;
 
+#[AsTaggedItem(index: 'my-transport')]
 class TurboStreamListenRenderer implements TurboStreamListenRendererInterface
 {
     public function __construct(
@@ -595,22 +589,20 @@ class TurboStreamListenRenderer implements TurboStreamListenRendererInterface
     /**
      * @param string|object $topic
      */
-    public function renderTurboStreamListen(Environment $env, $topic) : string{
-        $this->stimulusTwigExtension->renderStimulusController($env, 'your_stimulus_controller', [/* controller values such as topic */]);
-    }
-
-    public static function getDefaultIndexName(): string
+    public function renderTurboStreamListen(Environment $env, $topic): string
     {
-        // The transport name, used as key in the service locator
-        // Alternatively, configure it using the other supported methods: https://symfony.com/doc/current/service_container/service_subscribers_locators.html#indexing-the-collection-of-services
-        return 'my-transport';
+        return $this->stimulusTwigExtension->renderStimulusController(
+            $env,
+            'your_stimulus_controller',
+            [/* controller values such as topic */]
+        );
     }
 }
 ```
 
 The broadcaster must be registered as a service tagged with `turbo.broadcaster` and the renderer must be tagged with `turbo.renderer.stream_listen`.
 If you enabled [autoconfigure option](https://symfony.com/doc/current/service_container.html#the-autoconfigure-option) (it's the case by default), these tags will be added automatically because these classes implement the `BroadcasterInterface` and `TurboStreamListenRendererInterface` interfaces,
-the related services will be .
+the related services will be.
 
 ## Backward Compatibility promise
 

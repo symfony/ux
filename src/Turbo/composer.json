@@ -22,14 +22,6 @@
             "homepage": "https://symfony.com/contributors"
         }
     ],
-    "require": {
-        "php": ">=7.2.5",
-        "symfony/config": "^5.2",
-        "symfony/dependency-injection": "^5.2",
-        "symfony/http-kernel": "^5.2",
-        "symfony/property-access": "^5.2",
-        "symfony/webpack-encore-bundle": "^1.11"
-    },
     "autoload": {
         "psr-4": {
             "Symfony\\UX\\Turbo\\": ""
@@ -43,17 +35,9 @@
             "App\\": "Tests/app/"
         }
     },
-    "extra": {
-        "branch-alias": {
-            "dev-main": "1.1-dev"
-        },
-        "thanks": {
-            "name": "symfony/ux",
-            "url": "https://github.com/symfony/ux"
-        }
-    },
-    "config": {
-        "sort-packages": true
+    "require": {
+        "php": ">=7.2.5",
+        "symfony/webpack-encore-bundle": "^1.11"
     },
     "require-dev": {
         "doctrine/doctrine-bundle": "^2.2",
@@ -67,10 +51,20 @@
         "symfony/messenger": "^5.2",
         "symfony/panther": "^1.0",
         "symfony/phpunit-bridge": "^5.2.1",
+        "symfony/property-access": "^5.2",
         "symfony/security-core": "^5.2",
         "symfony/stopwatch": "^5.2",
         "symfony/twig-bundle": "^5.2",
         "symfony/web-profiler-bundle": "^5.2"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.1-dev"
+        },
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
     },
     "minimum-stability": "dev"
 }

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Turbo;
+namespace Symfony\UX\Turbo\Attribute;
 
 use Symfony\UX\Turbo\Mercure\Broadcaster;
 
@@ -35,7 +35,7 @@ final class Broadcast
     /**
      * Options can be any option supported by the broadcaster.
      *
-     * @see Broadcaster for the default options
+     * @see Broadcaster for the default options // there is some coupling with Mercure here - can't we extract some options as named (generic) arguments?
      */
     public function __construct(mixed ...$options)
     {

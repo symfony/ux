@@ -18,7 +18,7 @@ use Symfony\Component\Panther\PantherTestCase;
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
  *
- * @requires PHP >= 8.0
+ * @requires PHP 8.0
  */
 class BroadcastTest extends PantherTestCase
 {

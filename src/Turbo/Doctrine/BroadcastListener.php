@@ -14,7 +14,7 @@ namespace Symfony\UX\Turbo\Doctrine;
 use Doctrine\Common\EventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Symfony\Contracts\Service\ResetInterface;
-use Symfony\UX\Turbo\Broadcast;
+use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 
 /**
@@ -22,15 +22,12 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
  *
- * @see https://github.com/api-platform/core/blob/master/src/Bridge/Doctrine/EventListener/PublishMercureUpdatesListener.php Adapted from API Platform.
- *
- * @todo backport MongoDB support
- *
  * @experimental
  */
 final class BroadcastListener implements ResetInterface
 {
     private $broadcaster;
+    private $broadcastedClasses;
 
     /**
      * @var \SplObjectStorage<object, object>
@@ -110,7 +107,10 @@ final class BroadcastListener implements ResetInterface
 
     private function storeEntitiesToPublish(object $entity, string $property): void
     {
-        if ((new \ReflectionClass($entity))->getAttributes(Broadcast::class)) {
+        $class = \get_class($entity);
+
+        if ($this->broadcastedClasses[$class] ?? $this->broadcastedClasses[$class] = (bool) (new \ReflectionClass($class))->getAttributes(Broadcast::class)) {
+            // what happens if we don't clone removed entities here?
             $this->{$property}->attach('removedEntities' === $property ? clone $entity : $entity);
         }
     }
