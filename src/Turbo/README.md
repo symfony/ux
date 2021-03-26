@@ -144,9 +144,9 @@ You can even watch changes happening in the browser by using: `PANTHER_NO_HEADLE
 Turbo Streams are a way for the server to send partial page updates to clients.
 There are two main ways to receive the updates:
 
- - in response to a user action, for instance when the user submits a form;
- - asynchronously, by sending updates to clients using [Mercure](https://mercure.rocks),
-   [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) and similar protocols.
+-   in response to a user action, for instance when the user submits a form;
+-   asynchronously, by sending updates to clients using [Mercure](https://mercure.rocks),
+    [WebSocket](https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API) and similar protocols.
 
 #### Forms
 
@@ -436,17 +436,17 @@ class Book { /* ... */ }
 
 The `Broadcast` attribute comes with a set of handy options:
 
- - `transports` (`string[]`): a list of transports to broadcast to
- - `topics` (`string[]`): a list of topics to use, the default topic is derived from the FQCN of the entity and from its id
- - `template` (`string`): Twig template to render (see above)
+-   `transports` (`string[]`): a list of transports to broadcast to
+-   `topics` (`string[]`): a list of topics to use, the default topic is derived from the FQCN of the entity and from its id
+-   `template` (`string`): Twig template to render (see above)
 
 Options are transport-sepcific.
 When using Mercure, some extra options are supported:
 
- - `private` (`bool`): marks Mercure updates as private
- - `sse_id` (`string`): `id` field of the SSE
- - `sse_type` (`string`): `type` field of the SSE
- - `sse_retry` (`int`): `retry` field of the SSE
+-   `private` (`bool`): marks Mercure updates as private
+-   `sse_id` (`string`): `id` field of the SSE
+-   `sse_type` (`string`): `type` field of the SSE
+-   `sse_retry` (`int`): `retry` field of the SSE
 
 Example:
 
