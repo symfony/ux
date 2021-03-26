@@ -218,16 +218,16 @@ Start by installing [the Mercure support](https://symfony.com/doc/current/mercur
 The easiest way to have a working development (and production-ready) environment is to use [Symfony Docker](https://github.com/dunglas/symfony-docker/),
 which comes with a Mercure hub integrated in the web server.
 
-If you use Symfony Flex, the configuration has been generated for you, be sure to update the `MERCURE_SUBSCRIBE_URL` in
+If you use Symfony Flex, the configuration has been generated for you, be sure to update the `MERCURE_URL` in
 the `.env` file to point to a Mercure Hub (it's not necessary if you are using Symfony Docker).
 
-Otherwise, configure the URL of the Mercure Hub:
+Otherwise, configure Mercure Hub(s) to use:
 
 ```yaml
 # config/packages/turbo.yaml
 turbo:
     mercure:
-        subscribe_url: https://localhost/.well-known/mercure
+        hubs: [default]
 ```
 
 Let's create our chat:
