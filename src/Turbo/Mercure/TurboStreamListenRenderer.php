@@ -40,7 +40,7 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
     {
         if (\is_object($topic)) {
             $topic = sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode(\get_class($topic)), rawurlencode($this->propertyAccessor->getValue($topic, 'id')));
-        } elseif (!preg_match('[^a-zA-Z0-9_\x7f-\xff\\\\]') && class_exists($topic)) {
+        } elseif (!preg_match('/[^a-zA-Z0-9_\x7f-\xff\\\\]/', $topic) && class_exists($topic)) {
             // Generate a URI template to subscribe to updates for all objects of this class
             $topic = sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($topic), '{id}');
         }

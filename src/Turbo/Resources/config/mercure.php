@@ -27,8 +27,7 @@ return static function (ContainerConfigurator $container): void {
                 service('twig'),
                 abstract_arg('publisher'),
                 service('property_accessor'),
-                null,
-                abstract_arg('entity namespace'),
+                abstract_arg('entity template prefixes'),
             ])
 
         ->set(TurboStreamListenRenderer::class)

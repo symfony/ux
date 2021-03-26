@@ -44,7 +44,6 @@
         "doctrine/orm": "^2.8",
         "phpstan/phpstan": "^0.12",
         "symfony/debug-bundle": "^5.2",
-        "symfony/expression-language": "^5.2",
         "symfony/form": "^5.2",
         "symfony/framework-bundle": "^5.2",
         "symfony/mercure-bundle": "^0.3",

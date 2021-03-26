@@ -15,7 +15,6 @@ use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Symfony\Component\Security\Core\Authorization\ExpressionLanguage;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 use Twig\Environment;
@@ -25,17 +24,13 @@ use Twig\Environment;
  *
  * Supported options are:
  *
- *  * topics (string[]) Mercure topics to use, defaults to an array containing the Fully Qualified Class Name with "\" characters replaced by ":" characters.
- *  * createTemplate (string) The Twig template to render when a new object is created
- *  * updateTemplate (string) The Twig template to render when a new object is updated
- *  * removeTemplate (string) The Twig template to render when a new object is removed
+ *  * transports (string[]) The name of the transports to broadcast to
+ *  * topics (string[]) The topics to use; the default topic is derived from the FQCN of the entity and from its id
+ *  * template (string) The Twig template to render when a new object is created, updated or removed
  *  * private (bool) Marks Mercure updates as private
  *  * id (string) ID field of the SSE
  *  * type (string) type field of the SSE
  *  * retry (int) retry field of the SSE
- *  * transports (string[])
- *
- * The options can also be generated using the ExpressionLanguage language: if the option is a string, it is evaluated as an expression that must return an array.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
  *
@@ -52,8 +47,7 @@ final class Broadcaster implements BroadcasterInterface
     private $twig;
     private $hub;
     private $propertyAccessor;
-    private $expressionLanguage;
-    private $entityNamespace;
+    private $templatePrefixes;
 
     private const OPTIONS = [
         // Generic options
@@ -68,7 +62,10 @@ final class Broadcaster implements BroadcasterInterface
         'retry',
     ];
 
-    public function __construct(string $name, Environment $twig, HubInterface $hub, ?PropertyAccessorInterface $propertyAccessor, ExpressionLanguage $expressionLanguage = null, string $entityNamespace = null)
+    /**
+     * @param array<string, string> $templatePrefixes
+     */
+    public function __construct(string $name, Environment $twig, HubInterface $hub, ?PropertyAccessorInterface $propertyAccessor, array $templatePrefixes = [])
     {
         if (80000 > \PHP_VERSION_ID) {
             throw new \LogicException('The broadcast feature requires PHP 8.0 or greater, you must either upgrade to PHP 8 or disable it.');
@@ -78,13 +75,7 @@ final class Broadcaster implements BroadcasterInterface
         $this->twig = $twig;
         $this->propertyAccessor = $propertyAccessor ?? PropertyAccess::createPropertyAccessor();
         $this->hub = $hub;
-        $this->entityNamespace = $entityNamespace;
-
-        if ($expressionLanguage) {
-            $this->expressionLanguage = $expressionLanguage;
-        } elseif (class_exists(ExpressionLanguage::class)) {
-            $this->expressionLanguage = new ExpressionLanguage();
-        }
+        $this->templatePrefixes = $templatePrefixes;
     }
 
     public function broadcast(object $entity, string $action): void
@@ -125,14 +116,6 @@ final class Broadcaster implements BroadcasterInterface
      */
     private function normalizeOptions(object $entity, string $action, array $options): array
     {
-        if ([0] === array_keys($options) && \is_string($options[0])) {
-            if (null === $this->expressionLanguage) {
-                throw new \RuntimeException('The Expression Language component is not installed. Try running "composer require symfony/expression-language".');
-            }
-
-            $options = $this->expressionLanguage->evaluate($options[0], ['entity' => $entity, 'action' => $action]);
-        }
-
         if (isset($options['transports'])) {
             $options['transports'] = (array) $options['transports'];
         }
@@ -148,12 +131,15 @@ final class Broadcaster implements BroadcasterInterface
             return $options;
         }
 
-        $dir = $entityClass;
-        if ($this->entityNamespace && 0 === strpos($entityClass, $this->entityNamespace)) {
-            $dir = substr($entityClass, \strlen($this->entityNamespace));
+        $file = $entityClass;
+        foreach ($this->templatePrefixes as $namespace => $prefix) {
+            if (0 === strpos($entityClass, $namespace)) {
+                $file = substr_replace($entityClass, $prefix, 0, \strlen($namespace));
+                break;
+            }
         }
 
-        $options['template'] = sprintf('broadcast/%s.stream.html.twig', str_replace('\\', '/', $dir));
+        $options['template'] = str_replace('\\', '/', $file).'.stream.html.twig';
 
         return $options;
     }

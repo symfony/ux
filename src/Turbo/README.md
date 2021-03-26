@@ -23,7 +23,7 @@ composer require symfony/ux-turbo
 
 # Don't forget to install the JavaScript dependencies as well and compile
 yarn install --force
-yarn encore dev // "./node_modules/@symfony/stimulus-bridge/dist/webpack/loader.js!./assets/controllers.json" contains a reference to the file "@symfony/ux-turbo/dist/turbo_stream_controller.js".
+yarn encore dev
 ```
 
 ## Usage
@@ -74,7 +74,7 @@ The content of a frame can be lazy loaded:
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    <turbo-frame id="the_frame_id" src="{{ path('block') }}"> // can we make it clearer what "block" is?
+    <turbo-frame id="the_frame_id" src="{{ path('block') }}">
         A placeholder.
     </turbo-frame>
 {% endblock %}
@@ -222,15 +222,6 @@ which comes with a Mercure hub integrated in the web server.
 If you use Symfony Flex, the configuration has been generated for you, be sure to update the `MERCURE_SUBSCRIBE_URL` in
 the `.env` file to point to a Mercure Hub (it's not necessary if you are using Symfony Docker).
 
-Otherwise, configure the URL of the Mercure Hub:
-
-```yaml
-# config/packages/turbo.yaml
-turbo:
-    mercure:
-        subscribe_url: https://localhost/.well-known/mercure // config option doesn't exist
-```
-
 Let's create our chat:
 
 ```php
@@ -261,7 +252,6 @@ class ChatController extends AbstractController
 
             // 🔥 The magic happens here! 🔥
             // The HTML update is pushed to the client using Mercure
-            // The Mercure topic (here "chat") MUST be the ID of the block that will display the received updates // in the twig below; we never see any id="chat", this might be confusing
             $mercure->publish(new Update(
                 'chat',
                 $this->renderView('chat/message.stream.html.twig', ['message' => $data['message']])
@@ -289,9 +279,7 @@ class ChatController extends AbstractController
     <div id="messages" {{ turbo_stream_listen('chat') }}>
         {#
             The messages will be displayed here.
-            "turbo_stream_listen()" automatically registers a Stimulus controller that subscribes to the "chat" topic of the transport.
-            The transport connection is automatically closed when this HTML block is removed.
-
+            "turbo_stream_listen()" automatically registers a Stimulus controller that subscribes to the "chat" topic as managed by the transport.
             All connected users will receive the new messages!
          #}
     </div>
@@ -412,20 +400,18 @@ are passed to the template as variables: `entity`, `action` and `options`.
 
 When using the Mercure transport, the entity class **must** have a public property named `id` or a public method named `getId()`.
 
-If your entities aren't in the `App\Entity` namespace, Symfony UX Turbo will look for a template in a directory named after
-their Fully Qualified Class Names. For instance, if a class marked with the `Broadcast` attribute is named `\App\Foo\Bar`,
-the corresponding template will be `templates/broadcast/App/Foo/Bar.stream.html.twig`.
-// do we really need the above convention? Can't we force such entities to have a template attribute instead?
-// The less conventions the better, remember the @Template annotation...
-// Here is another convention highlighted in the example config, mapping entities to template directories:
+Symfony UX Turbo will look for a template named after mapping their Fully Qualified Class Names.
+For example and by default, if a class marked with the `Broadcast` attribute is named `App\Entity\Foo`,
+the corresponding template will be found in `templates/broadcast/Foo.stream.html.twig`.
 
-It's possible to use the `turbo.broadcast.entity_namespace` configuration parameter to change the default entity namespace:
+It's possible to configure own namespaces are mapped to templates by using the `turbo.broadcast.entity_template_prefixes` configuration options.
+The default is defined as such:
 
 ```yaml
 # config/packages/turbo.yaml
 turbo:
     broadcast:
-        entity_template_dirs:
+        entity_template_prefixes:
             App\Entity\: broadcast/
 ```
 
@@ -439,15 +425,18 @@ class Book { /* ... */ }
 ### Broadcast Options
 
 The `Broadcast` attribute comes with a set of handy options:
-// These are tightly coupled to Mercure currently: the Broadcast attribute is variadic. Can't we make this more generic and discoverable, with actual named arguments, at least for some of them?
 
+ - `transports` (`string[]`): a list of transports to broadcast to
+ - `topics` (`string[]`): a list of topics to use, the default topic is derived from the FQCN of the entity and from its id
  - `template` (`string`): Twig template to render (see above)
- - `topics` (`string[]`): Mercure topics to use, defaults to an array containing the Fully Qualified Class Name
+
+Options are transport-sepcific.
+When using Mercure, some extra options are supported:
+
  - `private` (`bool`): marks Mercure updates as private
  - `id` (`string`): `id` field of the SSE
  - `type` (`string`): `type` field of the SSE
- - `retry` (`int`): `retry` field of the SSE // what's the use case for these 3 SSE elements? Can't we remove them to keep this generic?
- - `transports` is missing
+ - `retry` (`int`): `retry` field of the SSE
 
 Example:
 
@@ -464,36 +453,22 @@ class Book
 }
 ```
 
-### Using an Expression to Generate the Options
-
-If the [Symfony ExpressionLanguage Component](https://symfony.com/doc/current/components/expression_language.html) is installed,
-you can also pass an _expression_ generating the options as parameter of the `Broadcast` attribute:
-
-```php
-// src/Entity/Book.php
-namespace App\Entity;
-
-use Symfony\UX\Turbo\Attribute\Broadcast;
-
-#[Broadcast('entity.getOptions()')]
-class Book
-{
-    // ...
-
-    public function getOptions(): array
-    {
-        return [
-            'topics' => [$this->id],
-            'private' => $this->private,
-        ];
-    }
-}
-```
-
 ### Using Multiple Transports
 
 Symfony UX Turbo allows sending Turbo Streams updates using multiple transports.
 For instance, it's possible to use several Mercure hubs with the following configuration:
+
+```yaml
+# config/packages/mercure.yaml
+mercure:
+    hubs:
+        hub1:
+            url: https://hub1.example.net/.well-known/mercure
+            jwt: snip
+        hub2:
+            url: https://hub2.example.net/.well-known/mercure
+            jwt: snip
+```
 
 ```yaml
 # config/packages/turbo.yaml

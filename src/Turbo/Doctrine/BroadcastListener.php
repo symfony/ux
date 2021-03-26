@@ -27,20 +27,24 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 final class BroadcastListener implements ResetInterface
 {
     private $broadcaster;
+
+    /**
+     * @var array<class-string, \ReflectionAttribute[]>
+     */
     private $broadcastedClasses;
 
     /**
      * @var \SplObjectStorage<object, object>
      */
-    private \SplObjectStorage $createdEntities;
+    private $createdEntities;
     /**
      * @var \SplObjectStorage<object, object>
      */
-    private \SplObjectStorage $updatedEntities;
+    private $updatedEntities;
     /**
      * @var \SplObjectStorage<object, object>
      */
-    private \SplObjectStorage $removedEntities;
+    private $removedEntities;
 
     public function __construct(BroadcasterInterface $broadcaster)
     {
@@ -109,8 +113,9 @@ final class BroadcastListener implements ResetInterface
     {
         $class = \get_class($entity);
 
-        if ($this->broadcastedClasses[$class] ?? $this->broadcastedClasses[$class] = (bool) (new \ReflectionClass($class))->getAttributes(Broadcast::class)) {
-            // what happens if we don't clone removed entities here?
+        $this->broadcastedClasses[$class] ?? $this->broadcastedClasses[$class] = (new \ReflectionClass($class))->getAttributes(Broadcast::class);
+
+        if ($this->broadcastedClasses[$class]) {
             $this->{$property}->attach('removedEntities' === $property ? clone $entity : $entity);
         }
     }

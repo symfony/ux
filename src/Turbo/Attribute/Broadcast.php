@@ -35,7 +35,7 @@ final class Broadcast
     /**
      * Options can be any option supported by the broadcaster.
      *
-     * @see Broadcaster for the default options // there is some coupling with Mercure here - can't we extract some options as named (generic) arguments?
+     * @see Broadcaster for the default options when using Mercure
      */
     public function __construct(mixed ...$options)
     {

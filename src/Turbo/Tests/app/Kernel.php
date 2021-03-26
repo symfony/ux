@@ -122,9 +122,9 @@ class Kernel extends BaseKernel
         $routes->add('home', '/')->controller(TemplateController::class)->defaults(['template' => 'home.html.twig']);
         $routes->add('block', '/block')->controller(TemplateController::class)->defaults(['template' => 'block.html.twig']);
         $routes->add('lazy', '/lazy')->controller(TemplateController::class)->defaults(['template' => 'lazy.html.twig']);
-        $routes->add('form', '/form')->controller('kernel:form');
-        $routes->add('chat', '/chat')->controller('kernel:chat');
-        $routes->add('books', '/books')->controller('kernel:books');
+        $routes->add('form', '/form')->controller('kernel::form');
+        $routes->add('chat', '/chat')->controller('kernel::chat');
+        $routes->add('books', '/books')->controller('kernel::books');
     }
 
     public function getProjectDir(): string

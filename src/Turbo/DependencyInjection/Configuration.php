@@ -12,6 +12,7 @@
 namespace Symfony\UX\Turbo\DependencyInjection;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\MercureBundle\MercureBundle;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -34,13 +35,14 @@ final class Configuration implements ConfigurationInterface
                 ->arrayNode('broadcast')
                     ->{\PHP_VERSION_ID >= 80000 ? 'canBeDisabled' : 'canBeEnabled'}()
                     ->children()
-                        ->scalarNode('entity_namespace')
-                            ->info('Prefix to strip when looking for broadcast templates')
-                            ->defaultValue('App\\Entity\\') // we should remove the default and ship it with a recipe instead
+                        ->arrayNode('entity_template_prefixes')
+                            ->fixXmlConfig('entity_template_prefix')
+                            ->defaultValue(['App\Entity\\' => 'broadcast/'])
+                            ->scalarPrototype()->end()
                         ->end()
                         ->arrayNode('doctrine_orm')
                             ->info('Enable the Doctrine ORM integration')
-                            ->{class_exists(DoctrineBundle::class) ? 'canBeDisabled' : 'canBeEnabled'}()
+                            ->{class_exists(DoctrineBundle::class) && interface_exists(EntityManagerInterface::class) ? 'canBeDisabled' : 'canBeEnabled'}()
                         ->end()
                     ->end()
                 ->end()
@@ -51,8 +53,8 @@ final class Configuration implements ConfigurationInterface
                     ->children()
                         ->arrayNode('hubs')
                             ->fixXmlConfig('hub')
-                            ->scalarPrototype()
                             ->info('The name of the Mercure hubs (configured in MercureBundle) to use as transports')
+                            ->scalarPrototype()->end()
                         ->end()
                     ->end()
                 ->end()
