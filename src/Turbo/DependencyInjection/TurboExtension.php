@@ -25,7 +25,9 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Mercure\Hub;
 use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
+use Symfony\UX\Turbo\Doctrine\BroadcastListener;
 use Symfony\UX\Turbo\Mercure\Broadcaster;
 use Symfony\UX\Turbo\Mercure\TurboStreamListenRenderer;
 use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
@@ -46,7 +48,7 @@ final class TurboExtension extends Extension
         $configuration = new Configuration();
         $config = $this->processConfiguration($configuration, $configs);
 
-        $loader = (new PhpFileLoader($container, new FileLocator(__DIR__.'/../Resources/config')));
+        $loader = (new PhpFileLoader($container, new FileLocator(\dirname(__DIR__).'/Resources/config')));
         $loader->load('services.php');
         $container->getDefinition(TwigExtension::class)->replaceArgument(1, $config['default_transport']);
 
@@ -80,7 +82,7 @@ final class TurboExtension extends Extension
         }
 
         if (\PHP_VERSION_ID < 80000) {
-            throw new InvalidConfigurationException('Enabling the "broadcast" configuration option requires PHP 8 or higher.');
+            throw new InvalidConfigurationException('Enabling the "turbo.broadcast" configuration option requires PHP 8 or higher.');
         }
 
         $container
@@ -89,14 +91,14 @@ final class TurboExtension extends Extension
         ;
 
         if (!$config['broadcast']['doctrine_orm']['enabled']) {
+            $container->removeDefinition(BroadcastListener::class);
+
             return;
         }
 
         if (!class_exists(DoctrineBundle::class) || !interface_exists(EntityManagerInterface::class)) {
-            throw new InvalidConfigurationException('You cannot use the Doctrine ORM integration as the "doctrine/doctrine-bundle" package is not installed. Try running "composer require symfony/orm-pack".');
+            throw new InvalidConfigurationException('You cannot use the Doctrine ORM integration as the Doctrine bundle is not installed. Try running "composer require symfony/orm-pack".');
         }
-
-        $loader->load('doctrine_orm.php');
     }
 
     /**
@@ -104,16 +106,18 @@ final class TurboExtension extends Extension
      */
     private function registerMercureTransports(array $config, ContainerBuilder $container, LoaderInterface $loader): void
     {
-        if (!$config['mercure']) {
+        if (!$config['mercure']['enabled']) {
             return;
         }
 
-        if (!class_exists(MercureBundle::class)) {
-            throw new InvalidConfigurationException('You cannot use the Mercure integration as the "symfony/mercure-bundle" package is not installed. Try running "composer require symfony/mercure-bundle".');
-        }
+        $missingDeps = array_filter([
+            'symfony/mercure-bundle' => !class_exists(MercureBundle::class),
+            'symfony/twig-pack' => !class_exists(TwigBundle::class),
+            'symfony/property-access' => !interface_exists(PropertyAccessorInterface::class),
+        ]);
 
-        if (!class_exists(TwigBundle::class)) {
-            throw new InvalidConfigurationException('You cannot use the Mercure integration as the "symfony/twig-bundle" package is not installed. Try running "composer require symfony/twig-pack".');
+        if ($missingDeps) {
+            throw new InvalidConfigurationException(sprintf('You cannot use the Mercure integration as some required dependencies are missing. Try running "composer require %s".', implode(' ', $missingDeps)));
         }
 
         $loader->load('mercure.php');
@@ -135,11 +139,9 @@ final class TurboExtension extends Extension
      */
     private function registerMercureTransport(ContainerBuilder $container, array $config, string $name, string $hubId): void
     {
-        $hubService = new Reference($hubId);
-
         $renderer = $container->setDefinition("turbo.mercure.{$name}.renderer", new ChildDefinition(TurboStreamListenRenderer::class));
-        $renderer->replaceArgument(0, $hubService);
-        $renderer->addTag('turbo.renderer.stream_listen', ['key' => $name]);
+        $renderer->replaceArgument(0, new Reference($hubId));
+        $renderer->addTag('turbo.renderer.stream_listen', ['index' => $name]);
 
         if (!$config['broadcast']['enabled']) {
             return;
@@ -147,8 +149,8 @@ final class TurboExtension extends Extension
 
         $broadcaster = $container->setDefinition("turbo.mercure.{$name}.broadcaster", new ChildDefinition(Broadcaster::class));
         $broadcaster->replaceArgument(0, $name);
-        $broadcaster->replaceArgument(2, $hubService);
-        $broadcaster->replaceArgument(5, $config['broadcast']['entity_namespace']);
+        $broadcaster->replaceArgument(2, new Reference($hubId));
+        $broadcaster->replaceArgument(4, $config['broadcast']['entity_template_prefixes']);
         $broadcaster->addTag('turbo.broadcaster');
     }
 }

@@ -14,17 +14,13 @@ namespace Symfony\UX\Turbo\Doctrine;
 use Doctrine\Common\EventArgs;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Symfony\Contracts\Service\ResetInterface;
-use Symfony\UX\Turbo\Broadcast;
+use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 
 /**
  * Detects changes made from Doctrine entities and broadcasts updates to the Mercure hub.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
- *
- * @see https://github.com/api-platform/core/blob/master/src/Bridge/Doctrine/EventListener/PublishMercureUpdatesListener.php Adapted from API Platform.
- *
- * @todo backport MongoDB support
  *
  * @experimental
  */
@@ -33,17 +29,22 @@ final class BroadcastListener implements ResetInterface
     private $broadcaster;
 
     /**
-     * @var \SplObjectStorage<object, object>
+     * @var array<class-string, \ReflectionAttribute[]>
      */
-    private \SplObjectStorage $createdEntities;
+    private $broadcastedClasses;
+
     /**
      * @var \SplObjectStorage<object, object>
      */
-    private \SplObjectStorage $updatedEntities;
+    private $createdEntities;
     /**
      * @var \SplObjectStorage<object, object>
      */
-    private \SplObjectStorage $removedEntities;
+    private $updatedEntities;
+    /**
+     * @var \SplObjectStorage<object, object>
+     */
+    private $removedEntities;
 
     public function __construct(BroadcasterInterface $broadcaster)
     {
@@ -110,7 +111,11 @@ final class BroadcastListener implements ResetInterface
 
     private function storeEntitiesToPublish(object $entity, string $property): void
     {
-        if ((new \ReflectionClass($entity))->getAttributes(Broadcast::class)) {
+        $class = \get_class($entity);
+
+        $this->broadcastedClasses[$class] ?? $this->broadcastedClasses[$class] = (new \ReflectionClass($class))->getAttributes(Broadcast::class);
+
+        if ($this->broadcastedClasses[$class]) {
             $this->{$property}->attach('removedEntities' === $property ? clone $entity : $entity);
         }
     }

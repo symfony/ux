@@ -18,20 +18,19 @@ use Symfony\UX\Turbo\Mercure\TurboStreamListenRenderer;
  * @author Kévin Dunglas <kevin@dunglas.fr>
  */
 return static function (ContainerConfigurator $container): void {
-    $container
-        ->services()
-            ->set(Broadcaster::class)
+    $container->services()
+
+        ->set(Broadcaster::class)
             ->abstract()
             ->args([
                 abstract_arg('name'),
                 service('twig'),
                 abstract_arg('publisher'),
                 service('property_accessor'),
-                null,
-                abstract_arg('entity namespace'),
+                abstract_arg('entity template prefixes'),
             ])
 
-            ->set(TurboStreamListenRenderer::class)
+        ->set(TurboStreamListenRenderer::class)
             ->abstract()
             ->args([
                 abstract_arg('hub'),
