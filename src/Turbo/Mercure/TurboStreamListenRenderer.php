@@ -11,10 +11,8 @@
 
 namespace Symfony\UX\Turbo\Mercure;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Mercure\HubInterface;
-use Symfony\Component\PropertyAccess\PropertyAccess;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
 use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Twig\Environment;
@@ -28,15 +26,13 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
 {
     private $hub;
     private $stimulusTwigExtension;
-    private $propertyAccessor;
-    private $doctrine;
+    private $idAccessor;
 
-    public function __construct(HubInterface $hub, StimulusTwigExtension $stimulusTwigExtension, PropertyAccessorInterface $propertyAccessor = null, ManagerRegistry $doctrine = null)
+    public function __construct(HubInterface $hub, StimulusTwigExtension $stimulusTwigExtension, IdAccessor $idAccessor)
     {
         $this->hub = $hub;
         $this->stimulusTwigExtension = $stimulusTwigExtension;
-        $this->propertyAccessor = $propertyAccessor ?? (class_exists(PropertyAccess::class) ? PropertyAccess::createPropertyAccessor() : null);
-        $this->doctrine = $doctrine;
+        $this->idAccessor = $idAccessor;
     }
 
     public function renderTurboStreamListen(Environment $env, $topic): string
@@ -44,15 +40,11 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
         if (\is_object($topic)) {
             $class = \get_class($topic);
 
-            if ($this->doctrine && $em = $this->doctrine->getManagerForClass($class)) {
-                $id = implode('-', $em->getClassMetadata($class)->getIdentifierValues($topic));
-            } elseif ($this->propertyAccessor) {
-                $id = $this->propertyAccessor->getValue($topic, 'id');
-            } else {
+            if (!$id = $this->idAccessor->getEntityId($topic)) {
                 throw new \LogicException(sprintf('Cannot listen to entity of class "%s" as the PropertyAccess component is not installed. Try running "composer require symfony/property-access".', $class));
             }
 
-            $topic = sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($class), rawurlencode($id));
+            $topic = sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($class), rawurlencode(implode('-', $id)));
         } elseif (!preg_match('/[^a-zA-Z0-9_\x7f-\xff\\\\]/', $topic) && class_exists($topic)) {
             // Generate a URI template to subscribe to updates for all objects of this class
             $topic = sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($topic), '{id}');
