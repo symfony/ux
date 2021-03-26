@@ -12,7 +12,9 @@
 namespace Symfony\UX\Turbo\Doctrine;
 
 use Doctrine\Common\EventArgs;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Event\PostFlushEventArgs;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
@@ -34,15 +36,15 @@ final class BroadcastListener implements ResetInterface
     private $broadcastedClasses;
 
     /**
-     * @var \SplObjectStorage<object, object>
+     * @var \SplObjectStorage<object, array>
      */
     private $createdEntities;
     /**
-     * @var \SplObjectStorage<object, object>
+     * @var \SplObjectStorage<object, array>
      */
     private $updatedEntities;
     /**
-     * @var \SplObjectStorage<object, object>
+     * @var \SplObjectStorage<object, array>
      */
     private $removedEntities;
 
@@ -66,36 +68,45 @@ final class BroadcastListener implements ResetInterface
             return;
         }
 
-        $uow = $eventArgs->getEntityManager()->getUnitOfWork();
+        $em = $eventArgs->getEntityManager();
+        $uow = $em->getUnitOfWork();
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
-            $this->storeEntitiesToPublish($entity, 'createdEntities');
+            $this->storeEntitiesToPublish($em, $entity, 'createdEntities');
         }
 
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
-            $this->storeEntitiesToPublish($entity, 'updatedEntities');
+            $this->storeEntitiesToPublish($em, $entity, 'updatedEntities');
         }
 
         foreach ($uow->getScheduledEntityDeletions() as $entity) {
-            $this->storeEntitiesToPublish($entity, 'removedEntities');
+            $this->storeEntitiesToPublish($em, $entity, 'removedEntities');
         }
     }
 
     /**
      * Publishes updates for changes collected on flush, and resets the store.
      */
-    public function postFlush(): void
+    public function postFlush(EventArgs $eventArgs): void
     {
+        if (!$eventArgs instanceof PostFlushEventArgs) {
+            return;
+        }
+
+        $em = $eventArgs->getEntityManager();
+
         try {
             foreach ($this->createdEntities as $entity) {
-                $this->broadcaster->broadcast($entity, Broadcast::ACTION_CREATE);
+                $options = $this->createdEntities[$entity];
+                $options['id'] = $em->getClassMetadata(\get_class($entity))->getIdentifierValues($entity);
+                $this->broadcaster->broadcast($entity, Broadcast::ACTION_CREATE, $options);
             }
 
             foreach ($this->updatedEntities as $entity) {
-                $this->broadcaster->broadcast($entity, Broadcast::ACTION_UPDATE);
+                $this->broadcaster->broadcast($entity, Broadcast::ACTION_UPDATE, $this->updatedEntities[$entity]);
             }
 
             foreach ($this->removedEntities as $entity) {
-                $this->broadcaster->broadcast($entity, Broadcast::ACTION_REMOVE);
+                $this->broadcaster->broadcast($entity, Broadcast::ACTION_REMOVE, $this->removedEntities[$entity]);
             }
         } finally {
             $this->reset();
@@ -109,14 +120,20 @@ final class BroadcastListener implements ResetInterface
         $this->removedEntities = new \SplObjectStorage();
     }
 
-    private function storeEntitiesToPublish(object $entity, string $property): void
+    private function storeEntitiesToPublish(EntityManagerInterface $em, object $entity, string $property): void
     {
         $class = \get_class($entity);
-
         $this->broadcastedClasses[$class] ?? $this->broadcastedClasses[$class] = (new \ReflectionClass($class))->getAttributes(Broadcast::class);
 
-        if ($this->broadcastedClasses[$class]) {
-            $this->{$property}->attach('removedEntities' === $property ? clone $entity : $entity);
+        if ($attribute = $this->broadcastedClasses[$class][0] ?? false) {
+            /**
+             * @var Broadcast $options
+             */
+            $options = $attribute->newInstance();
+            if ('createdEntities' !== $property) {
+                $options->options['id'] = $em->getClassMetadata($class)->getIdentifierValues($entity);
+            }
+            $this->{$property}->attach($entity, $options->options);
         }
     }
 }
