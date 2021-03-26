@@ -25,7 +25,6 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Mercure\Hub;
 use Symfony\Component\Mercure\HubInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 use Symfony\UX\Turbo\Doctrine\BroadcastListener;
 use Symfony\UX\Turbo\Mercure\Broadcaster;
@@ -113,7 +112,6 @@ final class TurboExtension extends Extension
         $missingDeps = array_filter([
             'symfony/mercure-bundle' => !class_exists(MercureBundle::class),
             'symfony/twig-pack' => !class_exists(TwigBundle::class),
-            'symfony/property-access' => !interface_exists(PropertyAccessorInterface::class),
         ]);
 
         if ($missingDeps) {
@@ -150,7 +148,7 @@ final class TurboExtension extends Extension
         $broadcaster = $container->setDefinition("turbo.mercure.{$name}.broadcaster", new ChildDefinition(Broadcaster::class));
         $broadcaster->replaceArgument(0, $name);
         $broadcaster->replaceArgument(2, new Reference($hubId));
-        $broadcaster->replaceArgument(4, $config['broadcast']['entity_template_prefixes']);
+        $broadcaster->replaceArgument(3, $config['broadcast']['entity_template_prefixes']);
         $broadcaster->addTag('turbo.broadcaster');
     }
 }

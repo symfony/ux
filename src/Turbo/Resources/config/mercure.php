@@ -26,8 +26,8 @@ return static function (ContainerConfigurator $container): void {
                 abstract_arg('name'),
                 service('twig'),
                 abstract_arg('publisher'),
-                service('property_accessor'),
                 abstract_arg('entity template prefixes'),
+                service('property_accessor')->nullOnInvalid(),
             ])
 
         ->set(TurboStreamListenRenderer::class)
@@ -35,7 +35,8 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 abstract_arg('hub'),
                 service('webpack_encore.twig_stimulus_extension'),
-                service('property_accessor'),
+                service('property_accessor')->nullOnInvalid(),
+                service('doctrine')->nullOnInvalid(),
             ])
     ;
 };

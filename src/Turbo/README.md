@@ -398,7 +398,8 @@ are passed to the template as variables: `entity`, `action` and `options`.
 
 ### Broadcast Conventions and Configuration
 
-When using the Mercure transport, the entity class **must** have a public property named `id` or a public method named `getId()`.
+When using the Mercure transport, entities have to either be managed by Doctrine ORM,
+have a public property named `id`, or have a public method named `getId()`.
 
 Symfony UX Turbo will look for a template named after mapping their Fully Qualified Class Names.
 For example and by default, if a class marked with the `Broadcast` attribute is named `App\Entity\Foo`,
@@ -434,9 +435,9 @@ Options are transport-sepcific.
 When using Mercure, some extra options are supported:
 
  - `private` (`bool`): marks Mercure updates as private
- - `id` (`string`): `id` field of the SSE
- - `type` (`string`): `type` field of the SSE
- - `retry` (`int`): `retry` field of the SSE
+ - `sse_id` (`string`): `id` field of the SSE
+ - `sse_type` (`string`): `type` field of the SSE
+ - `sse_retry` (`int`): `retry` field of the SSE
 
 Example:
 
