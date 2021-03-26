@@ -7,7 +7,7 @@
     "symfony": {
         "controllers": {
             "turbo-stream": {
-                "main": "dist/turbo_stream_controller.js",
+                "main": "dist/turbo_stream_mercure_controller.js",
                 "webpackMode": "eager",
                 "fetch": "eager",
                 "enabled": true
