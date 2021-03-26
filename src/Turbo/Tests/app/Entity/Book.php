@@ -12,7 +12,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Broadcast;
+use Symfony\UX\Turbo\Attribute\Broadcast;
 
 /**
  * @ORM\Entity

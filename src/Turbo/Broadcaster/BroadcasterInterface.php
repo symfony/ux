@@ -20,5 +20,8 @@ namespace Symfony\UX\Turbo\Broadcaster;
  */
 interface BroadcasterInterface
 {
-    public function broadcast(object $entity, string $action): void;
+    /**
+     * @param array{id?: string|string[], transports?: string[], topics?: string[], template?: string} $options
+     */
+    public function broadcast(object $entity, string $action, array $options): void;
 }

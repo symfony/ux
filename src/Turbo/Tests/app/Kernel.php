@@ -15,6 +15,7 @@ use App\Entity\Book;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\Bundle\DoctrineBundle\Mapping\MappingDriver;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -55,6 +56,7 @@ class Kernel extends BaseKernel
         yield new TurboBundle();
         yield new WebpackEncoreBundle();
         yield new WebProfilerBundle();
+        yield new DebugBundle();
     }
 
     protected function configureContainer(ContainerConfigurator $container): void
@@ -122,9 +124,9 @@ class Kernel extends BaseKernel
         $routes->add('home', '/')->controller(TemplateController::class)->defaults(['template' => 'home.html.twig']);
         $routes->add('block', '/block')->controller(TemplateController::class)->defaults(['template' => 'block.html.twig']);
         $routes->add('lazy', '/lazy')->controller(TemplateController::class)->defaults(['template' => 'lazy.html.twig']);
-        $routes->add('form', '/form')->controller('kernel:form');
-        $routes->add('chat', '/chat')->controller('kernel:chat');
-        $routes->add('books', '/books')->controller('kernel:books');
+        $routes->add('form', '/form')->controller('kernel::form');
+        $routes->add('chat', '/chat')->controller('kernel::chat');
+        $routes->add('books', '/books')->controller('kernel::books');
     }
 
     public function getProjectDir(): string
