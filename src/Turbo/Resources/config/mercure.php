@@ -20,23 +20,19 @@ use Symfony\UX\Turbo\Mercure\TurboStreamListenRenderer;
 return static function (ContainerConfigurator $container): void {
     $container->services()
 
-        ->set(Broadcaster::class)
+        ->set('turbo.broadcaster.mercure', Broadcaster::class)
             ->abstract()
             ->args([
                 abstract_arg('name'),
-                service('twig'),
                 abstract_arg('publisher'),
-                abstract_arg('entity template prefixes'),
-                service('property_accessor')->nullOnInvalid(),
             ])
 
-        ->set(TurboStreamListenRenderer::class)
+        ->set('turbo.stream_listen_renderer.mercure', TurboStreamListenRenderer::class)
             ->abstract()
             ->args([
                 abstract_arg('hub'),
                 service('webpack_encore.twig_stimulus_extension'),
-                service('property_accessor')->nullOnInvalid(),
-                service('doctrine')->nullOnInvalid(),
+                service('turbo.id_accessor'),
             ])
     ;
 };

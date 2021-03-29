@@ -407,8 +407,8 @@ are passed to the template as variables: `entity`, `action` and `options`.
 
 ### Broadcast Conventions and Configuration
 
-When using the Mercure transport, entities have to either be managed by Doctrine ORM,
-have a public property named `id`, or have a public method named `getId()`.
+Because Symfony UX Turbo needs acces to their identifier, entities have to either be managed
+by Doctrine ORM, have a public property named `id`, or have a public method named `getId()`.
 
 Symfony UX Turbo will look for a template named after mapping their Fully Qualified Class Names.
 For example and by default, if a class marked with the `Broadcast` attribute is named `App\Entity\Foo`,

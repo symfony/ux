@@ -25,11 +25,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
-use Symfony\UX\Turbo\Doctrine\BroadcastListener;
-use Symfony\UX\Turbo\Mercure\Broadcaster;
-use Symfony\UX\Turbo\Mercure\TurboStreamListenRenderer;
 use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
-use Symfony\UX\Turbo\Twig\TwigExtension;
 
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
@@ -48,20 +44,24 @@ final class TurboExtension extends Extension
 
         $loader = (new PhpFileLoader($container, new FileLocator(\dirname(__DIR__).'/Resources/config')));
         $loader->load('services.php');
-        $container->getDefinition(TwigExtension::class)->replaceArgument(1, $config['default_transport']);
+        $container->getDefinition('turbo.twig.extension')->replaceArgument(1, $config['default_transport']);
 
-        $this->registerTwig($container);
+        $this->registerTwig($config, $container);
         $this->registerBroadcast($config, $container, $loader);
         $this->registerMercureTransports($config, $container, $loader);
     }
 
-    private function registerTwig(ContainerBuilder $container): void
+    /**
+     * @param array<string, mixed> $config
+     */
+    private function registerTwig(array $config, ContainerBuilder $container): void
     {
         if (!class_exists(TwigBundle::class)) {
-            $container->removeDefinition(TwigExtension::class);
-
             return;
         }
+
+        $container->getDefinition('turbo.broadcaster.action_renderer')
+            ->replaceArgument(2, $config['broadcast']['entity_template_prefixes']);
 
         $container
             ->registerForAutoconfiguration(TurboStreamListenRendererInterface::class)
@@ -74,7 +74,8 @@ final class TurboExtension extends Extension
     private function registerBroadcast(array $config, ContainerBuilder $container, LoaderInterface $loader): void
     {
         if (!$config['broadcast']['enabled']) {
-            $container->removeDefinition(BroadcasterInterface::class);
+            $container->removeDefinition('turbo.twig.extension');
+            $container->removeDefinition('turbo.doctrine.event_listener');
 
             return;
         }
@@ -89,7 +90,7 @@ final class TurboExtension extends Extension
         ;
 
         if (!$config['broadcast']['doctrine_orm']['enabled']) {
-            $container->removeDefinition(BroadcastListener::class);
+            $container->removeDefinition('turbo.doctrine.event_listener');
 
             return;
         }
@@ -136,18 +137,17 @@ final class TurboExtension extends Extension
      */
     private function registerMercureTransport(ContainerBuilder $container, array $config, string $name, string $hubId): void
     {
-        $renderer = $container->setDefinition("turbo.mercure.{$name}.renderer", new ChildDefinition(TurboStreamListenRenderer::class));
+        $renderer = $container->setDefinition("turbo.mercure.{$name}.renderer", new ChildDefinition('turbo.stream_listen_renderer.mercure'));
         $renderer->replaceArgument(0, new Reference($hubId));
-        $renderer->addTag('turbo.renderer.stream_listen', ['index' => $name]);
+        $renderer->addTag('turbo.renderer.stream_listen', ['transport' => $name]);
 
         if (!$config['broadcast']['enabled']) {
             return;
         }
 
-        $broadcaster = $container->setDefinition("turbo.mercure.{$name}.broadcaster", new ChildDefinition(Broadcaster::class));
+        $broadcaster = $container->setDefinition("turbo.mercure.{$name}.broadcaster", new ChildDefinition('turbo.broadcaster.mercure'));
         $broadcaster->replaceArgument(0, $name);
-        $broadcaster->replaceArgument(2, new Reference($hubId));
-        $broadcaster->replaceArgument(3, $config['broadcast']['entity_template_prefixes']);
+        $broadcaster->replaceArgument(1, new Reference($hubId));
         $broadcaster->addTag('turbo.broadcaster');
     }
 }
