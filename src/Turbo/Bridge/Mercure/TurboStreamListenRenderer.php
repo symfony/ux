@@ -52,7 +52,7 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
 
         return $this->stimulusTwigExtension->renderStimulusController(
             $env,
-            'symfony/ux-turbo/turbo-stream-mercure',
+            'symfony/mercure-ux-turbo/turbo-stream',
             ['topic' => $topic, 'hub' => $this->hub->getPublicUrl()]
         );
     }

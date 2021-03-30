@@ -12,7 +12,7 @@
 import { Application } from 'stimulus';
 import { getByTestId } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
-import TurboStreamController from '../../../Bridge/Mercure/Resources/assets/src/turbo_stream_controller.js';
+import TurboStreamController from '../src/turbo_stream_controller.js';
 
 const startStimulus = () => {
     const application = Application.start();
@@ -20,7 +20,7 @@ const startStimulus = () => {
 };
 
 /* eslint-disable no-undef */
-describe('TurboStreamMercureController', () => {
+describe('TurboStreamController', () => {
     let container;
 
     beforeEach(() => {

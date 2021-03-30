@@ -62,6 +62,7 @@ class Kernel extends BaseKernel
     protected function configureContainer(ContainerConfigurator $container): void
     {
         $container->extension('framework', [
+            'secret' => 'ChangeMe',
             'test' => 'test' === ($_SERVER['APP_ENV'] ?? 'dev'),
             'router' => [
                 'utf8' => true,
