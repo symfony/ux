@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Symfony UX Turbo</title>
+        {% block stylesheets %}{% endblock %}
+        {{ encore_entry_script_tags('app') }}
+    </head>
+    <body>
+        <nav id="navigation">
+            <ul>
+                <li><a href="{{ path('home') }}">Home</a></li>
+                <li><a href="{{ path('chat') }}">Chat</a></li>
+                <li><a href="{{ path('books') }}">Books (broadcast)</a></li>
+            </ul>
+        </nav>
+
+        {% block body %}{% endblock %}
+    </body>
+</html>

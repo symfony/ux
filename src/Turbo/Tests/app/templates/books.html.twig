@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Books</h1>
+
+    <div id="books" {{ turbo_stream_listen('App\\Entity\\Book') }}></div>
+
+    <turbo-frame id="api">
+        <form method="post" enctype="application/x-www-form-urlencoded">
+            <input placeholder="ID" name="id">
+            <input placeholder="Title" name="title">
+            <label><input type="checkbox" name="remove" value="remove"> Remove</label>
+            <button>Submit</button>
+        </form>
+    </turbo-frame>
+{% endblock %}

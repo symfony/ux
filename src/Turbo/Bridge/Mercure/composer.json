@@ -1,0 +1,44 @@
+{
+    "name": "symfony/ux-turbo-mercure",
+    "type": "library",
+    "description": "Mercure bridge for Symfony UX Turbo",
+    "keywords": [
+        "symfony-ux",
+        "turbo",
+        "hotwire",
+        "mercure"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kévin Dunglas",
+            "email": "kevin@dunglas.fr"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Turbo\\Bridge\\Mercure\\": ""
+        }
+    },
+    "require": {
+        "php": ">=7.2.5",
+        "symfony/mercure-bundle": "^0.3",
+        "symfony/twig-bundle": "^5.2",
+        "symfony/ux-turbo": "^1.3"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.3-dev"
+        },
+        "thanks": {
+            "name": "symfony/ux-turbo",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}

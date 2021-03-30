@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Chat</h1>
+
+    <div id="messages" {{ turbo_stream_listen('chat') }}></div>
+
+    <turbo-frame id="message_form">
+        {{ form(form) }}
+    </turbo-frame>
+{% endblock %}

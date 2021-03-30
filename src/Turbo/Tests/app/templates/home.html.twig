@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <turbo-frame id="lazy" src="{{ path('lazy') }}"></turbo-frame>
+
+    <turbo-frame id="the_frame_id">
+        <a href="{{ path('block') }}">This block is scoped, the rest of the page will not change if you click here!</a>
+    </turbo-frame>
+
+    <turbo-frame id="form">
+        <form method="POST" action="{{ path('form') }}">
+            <button>Trigger Turbo Stream!</button>
+        </form>
+    </turbo-frame>
+
+    <div id="another_block">initial content</div>
+{% endblock %}
