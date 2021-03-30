@@ -1,5 +1,5 @@
 {
-    "name": "symfony/mercure-ux-turbo",
+    "name": "symfony/ux-turbo-mercure",
     "type": "library",
     "description": "Mercure bridge for Symfony UX Turbo",
     "keywords": [

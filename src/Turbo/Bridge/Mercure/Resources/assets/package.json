@@ -1,5 +1,5 @@
 {
-    "name": "@symfony/mercure-ux-turbo",
+    "name": "@symfony/ux-turbo-mercure",
     "description": "Mercure integration for Symfony UX Turbo",
     "license": "MIT",
     "private": true,
