@@ -13,7 +13,6 @@ namespace Symfony\UX\Turbo\DependencyInjection;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\MercureBundle\MercureBundle;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 
@@ -47,17 +46,6 @@ final class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
                 ->scalarNode('default_transport')->defaultValue('default')->end()
-                ->arrayNode('mercure')
-                    ->{class_exists(MercureBundle::class) ? 'canBeDisabled' : 'canBeEnabled'}()
-                    ->info('If no Mercure hubs are configured explicitly, the default Mercure hub will be used.')
-                    ->children()
-                        ->arrayNode('hubs')
-                            ->fixXmlConfig('hub')
-                            ->info('The name of the Mercure hubs (configured in MercureBundle) to use as transports')
-                            ->scalarPrototype()->end()
-                        ->end()
-                    ->end()
-                ->end()
             ->end()
         ;
 

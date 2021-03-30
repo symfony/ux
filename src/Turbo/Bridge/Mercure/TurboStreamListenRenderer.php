@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Turbo\Mercure;
+namespace Symfony\UX\Turbo\Bridge\Mercure;
 
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\UX\Turbo\Broadcaster\IdAccessor;
@@ -52,7 +52,7 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
 
         return $this->stimulusTwigExtension->renderStimulusController(
             $env,
-            'symfony/ux-turbo/turbo-stream-mercure',
+            'symfony/ux-turbo-mercure/turbo-stream',
             ['topic' => $topic, 'hub' => $this->hub->getPublicUrl()]
         );
     }

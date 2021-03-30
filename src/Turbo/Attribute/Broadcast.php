@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Turbo\Attribute;
 
-use Symfony\UX\Turbo\Mercure\Broadcaster;
+use Symfony\UX\Turbo\Bridge\Mercure\Broadcaster;
 
 /**
  * Marks the entity as broadcastable.
