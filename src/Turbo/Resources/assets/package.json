@@ -1,0 +1,15 @@
+{
+    "name": "@symfony/ux-turbo",
+    "description": "Hotwire Turbo integration for Symfony",
+    "license": "MIT",
+    "private": true,
+    "version": "0.1.0",
+    "scripts": {
+        "build": "echo skip",
+        "test": "echo skip",
+        "lint": "echo skip"
+    },
+    "dependencies": {
+        "@hotwired/turbo": "^7.0.0-beta.4"
+    }
+}

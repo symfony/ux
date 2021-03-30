@@ -16,7 +16,7 @@ jobs:
                   php-version: '7.4'
             - name: php-cs-fixer
               run: |
-                  wget https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.16.1/php-cs-fixer.phar -q
+                  wget https://github.com/FriendsOfPHP/PHP-CS-Fixer/releases/download/v2.18.2/php-cs-fixer.phar -q
                   php php-cs-fixer.phar fix --dry-run --diff
 
     coding-style-js:
@@ -34,7 +34,6 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '7.2'
-                  extensions: gd
             - name: Chartjs
               run: |
                   cd src/Chartjs
@@ -63,7 +62,6 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
-                  extensions: gd
             - name: Chartjs
               run: |
                   cd src/Chartjs
