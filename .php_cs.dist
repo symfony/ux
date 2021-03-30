@@ -24,6 +24,6 @@ return PhpCsFixer\Config::create()
             ->append([__FILE__])
             ->notPath('#/Fixtures/#')
             ->notPath('#/app/var/#')
-            ->notPath('Turbo/Broadcast.php') // Need https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues/4702
+            ->notPath('Turbo/Attribute/Broadcast.php') // Need https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues/4702
     )
 ;
