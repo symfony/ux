@@ -46,7 +46,7 @@
         "symfony/debug-bundle": "^5.2",
         "symfony/form": "^5.2",
         "symfony/framework-bundle": "^5.2",
-        "symfony/mercure-bundle": "dev-turbo",
+        "symfony/mercure-bundle": "^0.2.7",
         "symfony/messenger": "^5.2",
         "symfony/panther": "^1.0",
         "symfony/phpunit-bridge": "^5.2.1",
