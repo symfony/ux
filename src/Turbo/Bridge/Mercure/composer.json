@@ -37,7 +37,7 @@
         },
         "thanks": {
             "name": "symfony/ux-turbo",
-            "url": "https://github.com/symfony/ux-turbo"
+            "url": "https://github.com/symfony/ux"
         }
     },
     "minimum-stability": "dev"
