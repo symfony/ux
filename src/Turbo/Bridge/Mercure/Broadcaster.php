@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Turbo\Mercure;
+namespace Symfony\UX\Turbo\Bridge\Mercure;
 
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;

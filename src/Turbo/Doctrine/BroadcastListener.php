@@ -20,7 +20,7 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 
 /**
- * Detects changes made from Doctrine entities and broadcasts updates to the Mercure hub.
+ * Detects changes made from Doctrine entities and broadcasts updates to the broadcasters.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
  *

@@ -8,9 +8,9 @@
  */
 
 import { Application } from "stimulus";
-import TurboStreamMercureController from "@symfony/ux-turbo/dist/turbo_stream_mercure_controller";
+import TurboStreamMercureController from "@symfony/mercure-ux-turbo/dist/turbo_stream_controller";
 
 const application = Application.start();
-application.register("symfony--ux-turbo--turbo-stream-mercure", TurboStreamMercureController);
+application.register("symfony--mercure-ux-turbo--turbo-stream", TurboStreamMercureController);
 
 console.log('test app initialized');
