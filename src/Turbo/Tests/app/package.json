@@ -1,5 +1,6 @@
 {
     "devDependencies": {
+        "@symfony/ux-turbo": "file:../../Resources/assets",
         "@symfony/mercure-ux-turbo": "file:../../Bridge/Mercure/Resources/assets",
         "@symfony/webpack-encore": "^0.32.0",
         "core-js": "^3.0.0",
