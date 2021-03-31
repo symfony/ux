@@ -487,7 +487,7 @@ turbo:
         hubs: [hub1, hub2]
 ```
 
-Use the appropriate Mercure `Publisher` service to send a change using a specific transport:
+Use the appropriate Mercure `HubInterface` service to send a change using a specific transport:
 
 ```php
 // src/Controller/MyController.php
@@ -495,12 +495,12 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mercure\PublisherInterface;
+use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 
 class MyController extends AbstractController
 {
-    public function publish(PublisherInterface $hub1): Response
+    public function publish(HubInterface $hub1): Response
     {
         $id = $hub1->publish(new Update('topic', 'content'));
 
