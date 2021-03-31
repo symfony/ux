@@ -32,7 +32,7 @@ final class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('broadcast')
-                    ->{\PHP_VERSION_ID >= 80000 ? 'canBeDisabled' : 'canBeEnabled'}()
+                    ->canBeDisabled()
                     ->children()
                         ->arrayNode('entity_template_prefixes')
                             ->fixXmlConfig('entity_template_prefix')

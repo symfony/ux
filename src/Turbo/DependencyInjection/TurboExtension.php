@@ -75,10 +75,6 @@ final class TurboExtension extends Extension
             return;
         }
 
-        if (\PHP_VERSION_ID < 80000) {
-            throw new InvalidConfigurationException('Enabling the "turbo.broadcast" configuration option requires PHP 8 or higher.');
-        }
-
         $container
             ->registerForAutoconfiguration(BroadcasterInterface::class)
             ->addTag('turbo.broadcaster')

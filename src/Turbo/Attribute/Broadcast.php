@@ -16,6 +16,9 @@ use Symfony\UX\Turbo\Bridge\Mercure\Broadcaster;
 /**
  * Marks the entity as broadcastable.
  *
+ * @Annotation
+ * @Target({"CLASS"})
+ *
  * @author Kévin Dunglas <kevin@dunglas.fr>
  *
  * @experimental
@@ -30,15 +33,21 @@ final class Broadcast
     /**
      * @var mixed[]
      */
-    public array $options;
+    public $options;
 
     /**
      * Options can be any option supported by the broadcaster.
      *
      * @see Broadcaster for the default options when using Mercure
+     *
+     * @param mixed[] ...$options
      */
-    public function __construct(mixed ...$options)
+    public function __construct(...$options)
     {
+        if ([0] === array_keys($options) && \is_array($options[0]) && \is_string(key($options[0]))) {
+            $options = $options[0];
+        }
+
         $this->options = $options;
     }
 }
