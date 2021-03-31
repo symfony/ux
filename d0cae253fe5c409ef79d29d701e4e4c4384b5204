@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by dunglas at 2021-03-31T12:45:15Z
+
+@nicolas-grekas removing [this line](https://github.com/symfony/ux/blob/main/src/Turbo/Tests/BroadcastTest.php#L21) should do the trick.
