@@ -53,7 +53,10 @@ return static function (ContainerConfigurator $container): void {
             ->tag('twig.extension')
 
         ->set('turbo.doctrine.event_listener', BroadcastListener::class)
-            ->args([service('turbo.broadcaster.imux')])
+            ->args([
+                service('turbo.broadcaster.imux'),
+                service('annotation_reader')->nullOnInvalid(),
+            ])
             ->tag('doctrine.event_listener', ['event' => 'onFlush'])
             ->tag('doctrine.event_listener', ['event' => 'postFlush'])
     ;

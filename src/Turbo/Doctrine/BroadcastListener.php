@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Turbo\Doctrine;
 
+use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventArgs;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
@@ -29,9 +30,10 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 final class BroadcastListener implements ResetInterface
 {
     private $broadcaster;
+    private $annotationReader;
 
     /**
-     * @var array<class-string, \ReflectionAttribute[]>
+     * @var array<class-string, mixed[]|false>
      */
     private $broadcastedClasses;
 
@@ -48,15 +50,12 @@ final class BroadcastListener implements ResetInterface
      */
     private $removedEntities;
 
-    public function __construct(BroadcasterInterface $broadcaster)
+    public function __construct(BroadcasterInterface $broadcaster, Reader $annotationReader = null)
     {
-        if (80000 > \PHP_VERSION_ID) {
-            throw new \LogicException('The broadcast feature requires PHP 8.0 or greater, you must either upgrade to PHP 8 or disable it.');
-        }
-
         $this->reset();
 
         $this->broadcaster = $broadcaster;
+        $this->annotationReader = $annotationReader;
     }
 
     /**
@@ -123,17 +122,25 @@ final class BroadcastListener implements ResetInterface
     private function storeEntitiesToPublish(EntityManagerInterface $em, object $entity, string $property): void
     {
         $class = \get_class($entity);
-        $this->broadcastedClasses[$class] ?? $this->broadcastedClasses[$class] = (new \ReflectionClass($class))->getAttributes(Broadcast::class);
 
-        if ($attribute = $this->broadcastedClasses[$class][0] ?? false) {
-            /**
-             * @var Broadcast $options
-             */
-            $options = $attribute->newInstance();
-            if ('createdEntities' !== $property) {
-                $options->options['id'] = $em->getClassMetadata($class)->getIdentifierValues($entity);
+        if (!isset($this->broadcastedClasses[$class])) {
+            $this->broadcastedClasses[$class] = false;
+            $r = null;
+
+            if (\PHP_VERSION_ID >= 80000 && $options = ($r = new \ReflectionClass($class))->getAttributes(Broadcast::class)) {
+                $options = $options[0]->newInstance();
+                // @phpstan-ignore-next-line
+                $this->broadcastedClasses[$class] = $options->options;
+            } elseif ($this->annotationReader && $options = $this->annotationReader->getClassAnnotation($r ?? new \ReflectionClass($class), Broadcast::class)) {
+                $this->broadcastedClasses[$class] = $options->options;
             }
-            $this->{$property}->attach($entity, $options->options);
+        }
+
+        if (false !== $options = $this->broadcastedClasses[$class]) {
+            if ('createdEntities' !== $property) {
+                $options['id'] = $em->getClassMetadata($class)->getIdentifierValues($entity);
+            }
+            $this->{$property}->attach($entity, $options);
         }
     }
 }
