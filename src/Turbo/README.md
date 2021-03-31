@@ -215,7 +215,15 @@ using the [Mercure](https://mercure.rocks) protocol or any other.
 
 To illustrate this, let's build a chat system with **0 lines of JavaScript**!
 
-Start by installing [the Mercure support](https://symfony.com/doc/current/mercure.html) on your project.
+
+Start by installing [the Mercure support](https://symfony.com/doc/current/mercure.html) on your project:
+
+```sh
+composer require symfony/ux-turbo-mercure
+yarn install --force
+yarn encore dev
+```
+
 The easiest way to have a working development (and production-ready) environment is to use [Symfony Docker](https://github.com/dunglas/symfony-docker/),
 which comes with a Mercure hub integrated in the web server.
 
