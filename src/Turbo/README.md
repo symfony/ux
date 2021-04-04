@@ -215,7 +215,6 @@ using the [Mercure](https://mercure.rocks) protocol or any other.
 
 To illustrate this, let's build a chat system with **0 lines of JavaScript**!
 
-
 Start by installing [the Mercure support](https://symfony.com/doc/current/mercure.html) on your project:
 
 ```sh
@@ -379,21 +378,21 @@ Finally, create the template that will be rendered when an entity is created, mo
 {% block create %}
     <turbo-stream action="append" target="books">
         <template>
-            <div id="{{ 'book_' ~ entity.id }}">{{ entity.title }} (#{{ entity.id }})</div>
+            <div id="{{ 'book_' ~ id }}">{{ entity.title }} (#{{ id }})</div>
         </template>
     </turbo-stream>
 {% endblock %}
 
 {% block update %}
-    <turbo-stream action="update" target="book_{{ entity.id }}">
+    <turbo-stream action="update" target="book_{{ id }}">
         <template>
-            {{ entity.title }} (#{{ entity.id }}, updated)
+            {{ entity.title }} (#{{ id }}, updated)
         </template>
     </turbo-stream>
 {% endblock %}
 
 {% block remove %}
-    <turbo-stream action="remove" target="book_{{ entity.id }}"></turbo-stream>
+    <turbo-stream action="remove" target="book_{{ id }}"></turbo-stream>
 {% endblock %}
 ```
 
@@ -410,8 +409,8 @@ For instance, if the same entity is displayed on different pages, you can includ
 in the template.
 Actions applying to non-existing DOM elements will simply be ignored.
 
-The current entity, the action (`create`, `update` or `remove`) and options set on the `Broadcast` attribute
-are passed to the template as variables: `entity`, `action` and `options`.
+The current entity, the string representation of its identifier(s), the action (`create`, `update` or `remove`) and options set on the `Broadcast` attribute
+are passed to the template as variables: `entity`, `id`, `action` and `options`.
 
 ### Broadcast Conventions and Configuration
 
