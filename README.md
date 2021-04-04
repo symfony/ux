@@ -10,7 +10,7 @@ Symfony UX is an initiative and set of libraries to seamlessly
 integrate JavaScript tools into your application. For example,
 want to render a chart with [Chart.js](https://www.chartjs.org/)? Use
 [UX Chart.js](https://github.com/symfony/ux-chartjs)
-to build the chart in PHP. The JavaScript is handled for your automatically.
+to build the chart in PHP. The JavaScript is handled for you automatically.
 
 **That's Symfony UX.**
 
@@ -20,7 +20,7 @@ to build the chart in PHP. The JavaScript is handled for your automatically.
 
 Symfony UX leverages [Stimulus](https://stimulus.hotwire.dev/) for JavaScript
 and the [Stimulus Bridge](https://github.com/symfony/stimulus-bridge) for
-integrating it into Webpack Encore.
+integrating it into [Webpack Encore](https://github.com/symfony/webpack-encore).
 
 ## Packages
 
