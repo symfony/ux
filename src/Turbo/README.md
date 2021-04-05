@@ -414,7 +414,7 @@ are passed to the template as variables: `entity`, `id`, `action` and `options`.
 
 ### Broadcast Conventions and Configuration
 
-Because Symfony UX Turbo needs acces to their identifier, entities have to either be managed
+Because Symfony UX Turbo needs access to their identifier, entities have to either be managed
 by Doctrine ORM, have a public property named `id`, or have a public method named `getId()`.
 
 Symfony UX Turbo will look for a template named after mapping their Fully Qualified Class Names.
