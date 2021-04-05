@@ -19,11 +19,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Symfony\\UX\\Dropzone\\": ""
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+            "Symfony\\UX\\Dropzone\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Dropzone\\Tests\\": "tests/"
+        }
     },
     "require": {
         "php": ">=7.2.5",

@@ -1,13 +1,13 @@
 {
     "private": true,
     "workspaces": [
-        "src/**/Resources/assets"
+        "src/**/assets"
     ],
     "scripts": {
         "build": "yarn workspaces run build",
         "test": "yarn workspaces run test",
         "lint": "yarn workspaces run lint --fix",
-        "format": "prettier src/*/Resources/assets/{src,test}/*.js {,src/*/}*.{json,md} --write",
+        "format": "prettier src/*/assets/{src,test}/*.js {,src/*/}*.{json,md} --write",
         "check-lint": "yarn lint --no-fix",
         "check-format": "yarn format --no-write --check"
     },
@@ -31,7 +31,7 @@
         "overrides": [
             {
                 "files": [
-                    "src/*/Resources/assets/test/*.js"
+                    "src/*/assets/test/*.js"
                 ],
                 "extends": [
                     "plugin:jest/recommended"

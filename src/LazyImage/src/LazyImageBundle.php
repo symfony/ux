@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Dropzone;
+namespace Symfony\UX\LazyImage;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -19,6 +19,10 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * @final
  * @experimental
  */
-class DropzoneBundle extends Bundle
+class LazyImageBundle extends Bundle
 {
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
 }

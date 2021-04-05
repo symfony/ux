@@ -19,11 +19,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Symfony\\UX\\LazyImage\\": ""
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+            "Symfony\\UX\\LazyImage\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\LazyImage\\Tests\\": "tests/"
+        }
     },
     "require": {
         "php": ">=7.2.5",

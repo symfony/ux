@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Chartjs;
+namespace Symfony\UX\Dropzone;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -19,6 +19,10 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * @final
  * @experimental
  */
-class ChartjsBundle extends Bundle
+class DropzoneBundle extends Bundle
 {
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
 }
