@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by tgalopin at 2021-03-02T14:59:03Z
+
+We need to fix the CI in main it seems, probably due to a change in Github actions default image
+
+---------------------------------------------------------------------------
+
+by chalasr at 2021-03-09T20:42:54Z
+
+The CI is green on the main branch (#68).
