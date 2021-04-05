@@ -43,7 +43,7 @@ The main usage of Symfony UX Swup is to use its Stimulus controller to initializ
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
     </head>
-    <body data-controller="symfony--ux-swup--swup">
+    <body {{ stimulus_controller('symfony/ux-swup/swup') }}>
         {# ... #}
 
         <main id="swup">
@@ -52,6 +52,9 @@ The main usage of Symfony UX Swup is to use its Stimulus controller to initializ
     </body>
 </html>
 ```
+
+**Note** The `stimulus_controller()` function comes from
+[WebpackEncoreBundle v1.10](https://github.com/symfony/webpack-encore-bundle).
 
 That's it! Swup now reacts to a link click and run the default fade-in transition.
 
@@ -69,7 +72,7 @@ additional containers, for instance to have a navigation menu that updates when 
         {% endblock %}
     </head>
     <body
-        data-controller="symfony--ux-swup--swup"
+        {{ stimulus_controller('symfony/ux-swup/swup') }}
         data-containers="#swup #nav" {# list of selectors separated by spaces #}
     >
         {# ... #}
@@ -93,7 +96,7 @@ You can configure several other options using data-attributes on the `body` tag:
         <title>Swup</title>
     </head>
     <body
-        data-controller="symfony--ux-swup--swup"
+        {{ stimulus_controller('symfony/ux-swup/swup') }}
         data-containers="#swup #nav"
         data-theme="slide" {# or "fade", the default #}
         data-debug="data-debug" {# add this attribute to enable debug #}
@@ -140,7 +143,10 @@ Then in your template, add your controller to the HTML attribute:
         <title>Swup</title>
         {# ... #}
     </head>
-    <body data-controller="myswup symfony--ux-swup--swup">
+    <body {{ stimulus_controller({
+        myswup: {},
+        'symfony/ux-swup/swup: {}
+    })>
         {# ... #}
     </body>
 </html>

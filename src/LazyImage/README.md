@@ -34,7 +34,7 @@ page has been rendered:
 ```twig
 <img
     src="{{ asset('image/small.png') }}"
-    data-controller="symfony--ux-lazy-image--lazy-image"
+    {{ stimulus_controller('symfony/ux-lazy-image/lazy-image') }}
     data-hd-src="{{ asset('image/large.png') }}"
 
     {# Optional but avoids having a page jump when the image is loaded #}
@@ -43,13 +43,16 @@ page has been rendered:
 />
 ```
 
+**Note** The `stimulus_controller()` function comes from
+[WebpackEncoreBundle v1.10](https://github.com/symfony/webpack-encore-bundle).
+
 Instead of using a generated thumbnail that would exist on your filesystem, you can use
 the BlurHash algorithm to create a light, blurred, data-uri thumbnail of the image:
 
 ```twig
 <img
     src="{{ data_uri_thumbnail('public/image/large.png', 100, 75) }}"
-    data-controller="symfony--ux-lazy-image--lazy-image"
+    {{ stimulus_controller('symfony/ux-lazy-image/lazy-image') }}
     data-hd-src="{{ asset('image/large.png') }}"
 
     {# Using BlurHash, the size is required #}
@@ -104,7 +107,10 @@ Then in your template, add your controller to the HTML attribute:
 ```twig
 <img
     src="{{ data_uri_thumbnail('public/image/large.png', 100, 75) }}"
-    data-controller="mylazyimage symfony--ux-lazy-image--lazy-image"
+    {{ stimulus_controller({
+        mylazyimage: {},
+        'symfony/ux-lazy-image/lazy-image: {}
+    }) }}
     data-hd-src="{{ asset('image/large.png') }}"
 
     {# Using BlurHash, the size is required #}
