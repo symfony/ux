@@ -171,7 +171,10 @@ class TaskController extends AbstractController
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        $submitted = $form->isSubmitted();
+        $valid = $submitted && $form->isValid();
+
+        if ($valid) {
             $task = $form->getData();
             // ... perform some action, such as saving the task to the database
 
@@ -183,12 +186,21 @@ class TaskController extends AbstractController
 
             // If the client doesn't support JavaScript, or isn't using Turbo, the form still works as usual.
             // Symfony UX Turbo is all about progressively enhancing your apps!
-            return $this->redirectToRoute('task_success');
+            return $this->redirectToRoute('task_success', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('task/new.html.twig', [
+        // Symfony 5.3+
+        return $this->renderForm('task/new.html.twig', $form);
+
+        // Older versions
+        $response = $this->render('task/new.html.twig', [
             'form' => $form->createView(),
         ]);
+        if ($submitted && !$valid) {
+            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        return $response;
     }
 }
 ```

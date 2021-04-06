@@ -38,7 +38,7 @@ The main usage of Symfony UX Swup is to use its Stimulus controller to initializ
 <html lang="en">
     <head>
         <title>Swup</title>
-        
+
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
@@ -66,7 +66,7 @@ additional containers, for instance to have a navigation menu that updates when 
 <html lang="en">
     <head>
         <title>Swup</title>
-        
+
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
