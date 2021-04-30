@@ -166,8 +166,37 @@ class TaskController extends AbstractController
 {
     public function new(Request $request): Response
     {
-        $task = new Task();
+        // Symfony 5.3+
+        return $this->handleForm(
+            $this->createForm(TaskType::class, new Task),
+            $request,
+            function (FormInterface $form, Task $task) use ($request) {
+                // perform some action with the $task object
+                // such as saving the task to the database...
+                
+                // 🔥 The magic happens here! 🔥
+                if (TurboStreamResponse::STREAM_FORMAT === $request->getPreferredFormat()) {
+                    // If the request comes from Turbo, only send the HTML to update using a TurboStreamResponse
+                    return $this->render(
+                        'task/success.stream.html.twig',
+                        ['task' => $task],
+                        new TurboStreamResponse()
+                    );
+                }
+                
+                // If the client doesn't support JavaScript, or isn't using Turbo, the form still works as usual.
+                // Symfony UX Turbo is all about progressively enhancing your apps!
+                return $this->redirectToRoute('task_success', [], Response::HTTP_SEE_OTHER);
+            },
+            function (FormInterface $form) {
+                return $this->render('task/new.html.twig', [
+                    'form' => $form->createView(),
+                ]);
+            }
+        );
 
+        // Older versions
+        $task = new Task();
         $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 
@@ -188,11 +217,7 @@ class TaskController extends AbstractController
             // Symfony UX Turbo is all about progressively enhancing your apps!
             return $this->redirectToRoute('task_success', [], Response::HTTP_SEE_OTHER);
         }
-
-        // Symfony 5.3+
-        return $this->renderForm('task/new.html.twig', $form);
-
-        // Older versions
+        
         $response = $this->render('task/new.html.twig', [
             'form' => $form->createView(),
         ]);
@@ -261,11 +286,11 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mercure\PublisherInterface;
+use Symfony\Component\Mercure\HubInterface;
 
 class ChatController extends AbstractController
 {
-    public function chat(Request $request, PublisherInterface $mercure): Response
+    public function chat(Request $request, HubInterface $hub): Response
     {
         $form = $this->createFormBuilder()
             ->add('message', TextType::class, ['attr' => ['autocomplete' => 'off']])
@@ -280,7 +305,7 @@ class ChatController extends AbstractController
 
             // 🔥 The magic happens here! 🔥
             // The HTML update is pushed to the client using Mercure
-            $mercure->publish(new Update(
+            $hub->publish(new Update(
                 'chat',
                 $this->renderView('chat/message.stream.html.twig', ['message' => $data['message']])
             ));
