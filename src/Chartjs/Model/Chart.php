@@ -21,6 +21,7 @@ class Chart
 {
     public const TYPE_LINE = 'line';
     public const TYPE_BAR = 'bar';
+    public const TYPE_BAR_HORIZONTAL = 'horizontalBar';
     public const TYPE_RADAR = 'radar';
     public const TYPE_PIE = 'pie';
     public const TYPE_DOUGHNUT = 'doughnut';
