@@ -161,20 +161,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\UX\Turbo\Stream\TurboStreamResponse;
+use App\Entity\Task;
 
 class TaskController extends AbstractController
 {
     public function new(Request $request): Response
     {
-        $task = new Task();
-
-        $form = $this->createForm(TaskType::class, $task);
+        $form = $this->createForm(TaskType::class, new Task());
+        
         $form->handleRequest($request);
 
-        $submitted = $form->isSubmitted();
-        $valid = $submitted && $form->isValid();
-
-        if ($valid) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $task = $form->getData();
             // ... perform some action, such as saving the task to the database
 
@@ -188,15 +185,17 @@ class TaskController extends AbstractController
             // Symfony UX Turbo is all about progressively enhancing your apps!
             return $this->redirectToRoute('task_success', [], Response::HTTP_SEE_OTHER);
         }
-
+        
         // Symfony 5.3+
-        return $this->renderForm('task/new.html.twig', $form);
-
+        return $this->renderForm('task/new.html.twig', [
+            'form' => $form,
+        ]);
+        
         // Older versions
         $response = $this->render('task/new.html.twig', [
             'form' => $form->createView(),
         ]);
-        if ($submitted && !$valid) {
+        if ($form->isSubmitted() && !$form->isValid()) {
             $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
@@ -261,11 +260,11 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mercure\PublisherInterface;
+use Symfony\Component\Mercure\HubInterface;
 
 class ChatController extends AbstractController
 {
-    public function chat(Request $request, PublisherInterface $mercure): Response
+    public function chat(Request $request, HubInterface $hub): Response
     {
         $form = $this->createFormBuilder()
             ->add('message', TextType::class, ['attr' => ['autocomplete' => 'off']])
@@ -280,7 +279,7 @@ class ChatController extends AbstractController
 
             // 🔥 The magic happens here! 🔥
             // The HTML update is pushed to the client using Mercure
-            $mercure->publish(new Update(
+            $hub->publish(new Update(
                 'chat',
                 $this->renderView('chat/message.stream.html.twig', ['message' => $data['message']])
             ));
@@ -290,8 +289,8 @@ class ChatController extends AbstractController
             $form = $emptyForm;
         }
 
-        return $this->render('chat/index.html.twig', [
-            'form' => $form->createView(),
+        return $this->renderForm('chat/index.html.twig', [
+            'form' => $form,
          ]);
     }
 }
