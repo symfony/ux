@@ -168,7 +168,7 @@ class TaskController extends AbstractController
     {
         // Symfony 5.3+
         return $this->handleForm(
-            $this->createForm(TaskType::class, new Task),
+            $this->createForm(TaskType::class, new Task()),
             $request,
             function (FormInterface $form, Task $task) use ($request) {
                 // perform some action with the $task object
