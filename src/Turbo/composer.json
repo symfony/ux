@@ -42,7 +42,7 @@
     "require-dev": {
         "doctrine/annotations": "^1.12",
         "doctrine/doctrine-bundle": "^2.2",
-        "doctrine/orm": "^2.8",
+        "doctrine/orm": "~2.8.0",
         "phpstan/phpstan": "^0.12",
         "symfony/debug-bundle": "^5.2",
         "symfony/form": "^5.2",
