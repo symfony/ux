@@ -23,6 +23,7 @@
         data-{{ controllerName }}-allow-delete-value="{{ allow_delete|json_encode }}"
         data-{{ controllerName }}-button-add-value="{{ block('button_add')|e }}"
         data-{{ controllerName }}-button-delete-value="{{ block('button_delete')|e }}"
+        data-{{ controllerName }}-prototype-name-value="{{ prototype_name }}"
     >
         {% if prototype is defined and not prototype.rendered %}
             {%- set prototype_attr = prototype.vars.attr|merge(attrDataTarget) -%}

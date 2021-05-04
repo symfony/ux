@@ -12,7 +12,8 @@ export default class extends Controller {
         allowAdd: Boolean,
         allowDelete: Boolean,
         buttonAdd: String,
-        buttonDelete: String
+        buttonDelete: String,
+        prototypeName: String
     };
 
     /**
@@ -63,8 +64,13 @@ export default class extends Controller {
 
         // Compute the new entry
         let newEntry = this.containerTarget.dataset.prototype;
-        newEntry = newEntry.replace(/__name__label__/g, this.index);
-        newEntry = newEntry.replace(/__name__/g, this.index);
+        
+        let regExp = new RegExp(this.prototypeNameValue+'label__', 'g');
+        newEntry = newEntry.replace(regExp, this.index);
+
+        regExp = new RegExp(this.prototypeNameValue, 'g');
+        newEntry = newEntry.replace(regExp, this.index);
+
         newEntry = this._textToNode(newEntry);
 
         this._dispatchEvent('form-collection:pre-add', {
