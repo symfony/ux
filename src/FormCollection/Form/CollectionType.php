@@ -48,6 +48,7 @@ class CollectionType extends AbstractType
 
         $view->vars['button_add'] = $options['button_add'];
         $view->vars['button_delete'] = $options['button_delete'];
+        $view->vars['prototype_name'] = $options['prototype_name'];
     }
 
     public function getBlockPrefix()
