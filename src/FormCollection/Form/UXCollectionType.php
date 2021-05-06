@@ -32,10 +32,12 @@ class UXCollectionType extends AbstractType
     {
         $resolver->setDefaults([
             'button_add' => [
-                'text' => 'Add'
+                'text' => 'Add',
+                'attr' => ['class' => 'btn btn-outline-primary'],
             ],
             'button_delete' => [
-                'text' => 'Remove'
+                'text' => 'Remove',
+                'attr' => ['class' => 'btn btn-outline-secondary'],
             ],
         ]);
     }
