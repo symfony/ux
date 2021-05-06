@@ -32,8 +32,130 @@ yarn encore dev
 
 Turbo Drive enhances page-level navigation. It watches for link clicks and form submissions,
 performs them in the background, and updates the page without doing a full reload.
+This gives you the "single-page-app" experience without major changes to your code!
 
-Turbo Drive is automatically enabled when you install Symfony UX Turbo.
+Turbo Drive is automatically enabled when you install Symfony UX Turbo. And while
+you don't need to make major changes to get things to work smoothly, there are 3
+things to be aware of:
+
+#### 1. Make sure your JavaScript is Turbo-ready
+
+Because navigation no longer results in full page refreshes, you may need to
+adjust your JavaScript to work properly. The best solution is to write your
+JavaScript using [Stimulus](https://stimulus.hotwire.dev/) or something similar.
+
+We also recommend that you place your `script` tags live inside your `head` tag so
+that they aren't reloaded on every navigation (Turbo re-executes any `script` tags
+inside `body` on every navigation). Add a `defer` attribute to each `script` tag
+to prevent it from blocking the page load. See
+[Moving <script> inside <head> and the "defer" Attribute](https://symfony.com/blog/moving-script-inside-head-and-the-defer-attribute)
+for more info.
+
+#### 2. Reloading When a JavaScript/CSS File Changes
+
+Turbo drive can automatically perform a full refresh if the content of one of
+your CSS or JS files _changes_, to ensure that your users always have the latest
+version.
+
+To enable this, first verify that you have versioning enabled in Encore so that
+your filenames change when the file contents change:
+
+```js
+// webpack.config.js
+
+Encore.
+    // ...
+    .enableVersioning(Encore.isProduction())
+```
+
+Then add a `data-turbo-track="reload"` attribute to all of your `script` and
+`link` tags:
+
+```yml
+# config/packages/webpack_encore.yaml
+webpack_encore:
+    # ...
+
+    script_attributes:
+        defer: true
+        'data-turbo-track': reload
+    link_attributes:
+        'data-turbo-track': reload
+```
+
+For more info, see:
+[Turbo: Reloading When Assets Change](https://turbo.hotwire.dev/handbook/drive#reloading-when-assets-change)
+
+#### 3. Form Response Code Changes
+
+Turbo Drive also converts form submissions to AJAX calls. To get it to work, you
+_do_ need to adjust your code to return a 422 status code on a validation error
+(instead of a 200).
+
+If you're using Symfony 5.3, the new `handleForm()` shortcut takes care of this
+automatically:
+
+```php
+/**
+ * @Route("/product/new")
+ */
+public function newProduct(Request $request): Response
+{
+    return $this->handleForm(
+        $this->createForm(ProductFormType::class),
+        $request,
+        function (FormInterface $form) {
+            // save...
+
+            return $this->redirectToRoute(
+                'product_list',
+                [],
+                Response::HTTP_SEE_OTHER
+            );
+        },
+        function (FormInterface $form) {
+            return $this->render('product/new.html.twig', [
+                'form' => $form->createView(),
+            ]);
+        }
+    );
+}
+```
+
+If you're _not_ using the `handleForm()` shortcut, adjust your code manually:
+
+```diff
+/**
+ * @Route("/product/new")
+ */
+public function newProduct(Request $request): Response
+{
+    $form = $this->createForm(ProductFormType::class);
+    $form->handleRequest($request);
+
+    if ($form->isSubmitted() && $form->isValid()) {
+        // save...
+
+-        return $this->redirectToRoute('product_list');
++        return $this->redirectToRoute('product_list', [], Response::HTTP_SEE_OTHER);
+    }
+
++    $response = new Response(null, $form->isSubmitted() ? 422 : 200);
+
+    return $this->render('product/new.html.twig', [
+        'form' => $form->createView()
+-    ]);
++    ], $response);
+}
+```
+
+This changes the response status code to 422 on validation error, which tells Turbo
+Drive that the form submit failed and it should re-render with the errors. This
+_also_ changes the redirect status code from 302 (the default) to 303
+(`HTTP_SEE_OTHER`). That's not required for Turbo Drive, but 303 is "more correct"
+for this situation.
+
+#### More Turbo Drive Info
 
 [Read the Turbo Drive documentation](https://turbo.hotwire.dev/handbook/drive) to learn about the advanced features offered
 by Turbo Drive.
