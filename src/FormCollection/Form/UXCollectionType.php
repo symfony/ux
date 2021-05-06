@@ -12,7 +12,7 @@
 namespace Symfony\UX\FormCollection\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType as BaseCollectionType;
+use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -21,23 +21,21 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @final
  * @experimental
  */
-class CollectionType extends AbstractType
+class UXCollectionType extends AbstractType
 {
     public function getParent()
     {
-        return BaseCollectionType::class;
+        return CollectionType::class;
     }
 
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
             'button_add' => [
-                'text' => 'Add',
-                'attr' => ['class' => 'btn btn-outline-primary'],
+                'text' => 'Add'
             ],
             'button_delete' => [
-                'text' => 'Remove',
-                'attr' => ['class' => 'btn btn-outline-secondary'],
+                'text' => 'Remove'
             ],
         ]);
     }

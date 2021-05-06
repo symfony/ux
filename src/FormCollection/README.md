@@ -40,7 +40,7 @@ the native CollectionType class:
 
 ```php
 // ...
-use Symfony\UX\FormCollection\Form\CollectionType;
+use Symfony\UX\FormCollection\Form\UXCollectionType;
 
 class BlogFormType extends AbstractType
 {
@@ -48,7 +48,7 @@ class BlogFormType extends AbstractType
     {
         $builder
             // ...
-            ->add('comments', CollectionType::class, [
+            ->add('comments', UXCollectionType::class, [
                 // ...
                 'button_add' => [
                      // Default text for the add button
