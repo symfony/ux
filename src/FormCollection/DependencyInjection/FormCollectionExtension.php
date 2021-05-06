@@ -13,19 +13,14 @@ namespace Symfony\UX\FormCollection\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
-use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\UX\FormCollection\Form\UXCollectionType;
 
 /**
  * @internal
  */
-class FormCollectionExtension extends Extension implements PrependExtensionInterface
+class FormCollectionExtension extends Extension
 {
-    public function prepend(ContainerBuilder $container)
-    {
-    }
-
     public function load(array $configs, ContainerBuilder $container)
     {
         $container
