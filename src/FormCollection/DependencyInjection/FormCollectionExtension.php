@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
-use Symfony\UX\FormCollection\Form\CollectionType;
+use Symfony\UX\FormCollection\Form\UXCollectionType;
 
 /**
  * @internal
@@ -29,7 +29,7 @@ class FormCollectionExtension extends Extension implements PrependExtensionInter
     public function load(array $configs, ContainerBuilder $container)
     {
         $container
-            ->setDefinition('form.ux_collection', new Definition(CollectionType::class))
+            ->setDefinition('form.ux_collection', new Definition(UXCollectionType::class))
             ->addTag('form.type')
             ->setPublic(false)
         ;
