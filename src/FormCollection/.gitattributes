@@ -1,2 +1,3 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/Resources/assets/test export-ignore
