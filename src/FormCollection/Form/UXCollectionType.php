@@ -32,12 +32,12 @@ class UXCollectionType extends AbstractType
     {
         $resolver->setDefaults([
             'button_add' => [
-                'text' => 'Add',
-                'attr' => ['class' => 'btn btn-outline-primary'],
+                'text' => '',
+                'class' => '',
             ],
             'button_delete' => [
-                'text' => 'Remove',
-                'attr' => ['class' => 'btn btn-outline-secondary'],
+                'text' => '',
+                'class' => '',
             ],
         ]);
     }
@@ -53,6 +53,6 @@ class UXCollectionType extends AbstractType
 
     public function getBlockPrefix()
     {
-        return 'form_collection';
+        return 'ux_collection';
     }
 }
