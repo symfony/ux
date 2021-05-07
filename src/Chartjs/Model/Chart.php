@@ -51,7 +51,7 @@ class Chart
     /**
      * Sets Chart.js options.
      *
-     * @see https://www.chartjs.org/docs/latest/
+     * @see https://www.chartjs.org/docs/2.9.4
      *
      * <code>
      *    $chart->setOptions([
