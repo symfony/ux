@@ -185,6 +185,6 @@ php vendor/bin/phpunit
 ### JavaScript tests
 
 ```sh
-cd Resources/assets
+cd assets
 yarn test
 ```

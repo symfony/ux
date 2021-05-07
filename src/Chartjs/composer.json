@@ -19,11 +19,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Symfony\\UX\\Chartjs\\": ""
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+            "Symfony\\UX\\Chartjs\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Chartjs\\Tests\\": "tests/"
+        }
     },
     "require": {
         "php": ">=7.2.5",

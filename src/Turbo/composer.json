@@ -24,15 +24,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Symfony\\UX\\Turbo\\": ""
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+            "Symfony\\UX\\Turbo\\": "src/"
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\": "Tests/app/"
+            "Symfony\\UX\\Turbo\\Tests\\": "tests/",
+            "App\\": "tests/app/"
         }
     },
     "require": {
