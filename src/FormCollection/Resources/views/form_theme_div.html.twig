@@ -1,17 +1,17 @@
 {%- block button_add -%}
     {%- set attrDataAction = (attr['data-action']|default('') ~ ' ' ~ controllerName ~ '#add')|trim -%}
     <button data-action="{{ attrDataAction }}"
-            class="{{ button_add.attr.class }}"  type="button">{{ button_add.text|trans }}</button>
+            class="{{ button_add.class|default('') }}"  type="button">{{ button_add.text|default('Add')|trans }}</button>
 {%- endblock button_add -%}
 
 {%- block button_delete -%}
     {%- set attrDataAction = (attr['data-action']|default('') ~ ' ' ~ controllerName ~ '#delete')|trim -%}
     <button data-action="{{ attrDataAction }}"
-            data-index-entry="" class="{{ button_delete.attr.class }}" type="button">
-        {{ button_delete.text|trans }}</button>
+            class="{{ button_delete.class|default('') }}" type="button">
+        {{ button_delete.text|default('Remove')|trans }}</button>
 {%- endblock button_delete -%}
 
-{% block form_collection_widget -%}
+{% block ux_collection_widget -%}
     {%- set controllerName = 'symfony--ux-form-collection--collection' -%}
     {%- set dataController = (attr['data-controller']|default('') ~ ' ' ~ controllerName)|trim -%}
 
@@ -19,11 +19,11 @@
     {%- set attrDataTarget = {('data-' ~ controllerName ~ '-target'): 'entry' } -%}
 
     <div data-controller="{{ dataController }}"
-        data-{{ controllerName }}-allow-add-value="{{ allow_add|json_encode }}"
-        data-{{ controllerName }}-allow-delete-value="{{ allow_delete|json_encode }}"
-        data-{{ controllerName }}-button-add-value="{{ block('button_add')|e }}"
-        data-{{ controllerName }}-button-delete-value="{{ block('button_delete')|e }}"
-        data-{{ controllerName }}-prototype-name-value="{{ prototype_name }}"
+         data-{{ controllerName }}-allow-add-value="{{ allow_add|json_encode }}"
+         data-{{ controllerName }}-allow-delete-value="{{ allow_delete|json_encode }}"
+         data-{{ controllerName }}-button-add-value="{{ block('button_add')|e }}"
+         data-{{ controllerName }}-button-delete-value="{{ block('button_delete')|e }}"
+         data-{{ controllerName }}-prototype-name-value="{{ prototype_name }}"
     >
         {% if prototype is defined and not prototype.rendered %}
             {%- set prototype_attr = prototype.vars.attr|merge(attrDataTarget) -%}

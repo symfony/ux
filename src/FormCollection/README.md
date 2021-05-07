@@ -53,14 +53,14 @@ class BlogFormType extends AbstractType
                 'button_add' => [
                      // Default text for the add button
                     'text' => 'Add',    
-                    // Default attr class for the add button
-                    'attr' => ['class' => 'btn btn-outline-primary'] 
+                    // Add HTML classes to the add button
+                    'class' => 'btn btn-outline-primary'
                 ],
                 'button_delete' => [
                     // Default text for the delete button
                     'text' => 'Remove',    
-                    // Default class for the delete button
-                    'attr' => ['class' => 'btn btn-outline-secondary']    
+                    // Add HTML classes to the add button
+                    'class' => 'btn btn-outline-secondary'
                 ],
             ])
             // ...
@@ -69,6 +69,18 @@ class BlogFormType extends AbstractType
 
     // ...
 }
+```
+
+You can display it using Twig as you would normally with any form:
+
+```twig
+{# edit.html.twig #}
+
+{{ form_start(form) }}
+    {# ... #}
+    {{ form_row(comments) }}
+    {# ... #}
+{{ form_end(form) }}
 ```
 
 ### Extend the default behavior
