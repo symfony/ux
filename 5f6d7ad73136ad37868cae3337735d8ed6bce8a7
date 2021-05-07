@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2021-04-30T22:23:57Z
+
+Looks like some of Turbo tests are not passing because of [`ClearMetadataCacheDoctrineCommand`](https://github.com/doctrine/DoctrineBundle/blob/2.3.x/Command/Proxy/ClearMetadataCacheDoctrineCommand.php#L32) already defines an option `em`:
+
+```
+➜  app git:(GH-40) ✗ php public/index.php doctrine:schema:create -v
+[critical] Error thrown while running command "'doctrine:schema:create' -v". Message: "An option named "em" already exists."
+
+In InputDefinition.php line 234:
+
+  [Symfony\Component\Console\Exception\LogicException]
+  An option named "em" already exists.
+
+Exception trace:
+  at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/symfony/console/Input/InputDefinition.php:234
+ Symfony\Component\Console\Input\InputDefinition->addOption() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/symfony/console/Command/Command.php:442
+ Symfony\Component\Console\Command\Command->addOption() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/doctrine/doctrine-bundle/Command/Proxy/CreateSchemaDoctrineCommand.php:26
+ Doctrine\Bundle\DoctrineBundle\Command\Proxy\CreateSchemaDoctrineCommand->configure() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/symfony/console/Command/Command.php:112
+ Symfony\Component\Console\Command\Command->__construct() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/doctrine/orm/lib/Doctrine/ORM/Tools/Console/Command/AbstractEntityManagerCommand.php:18
+ Doctrine\ORM\Tools\Console\Command\AbstractEntityManagerCommand->__construct() at /home/hugo/workspace-os/symfony-ux/src/Turbo/Tests/app/var/cache/dev/ContainerD6A5oeA/getDoctrine_SchemaCreateCommandService.php:26
+ ContainerD6A5oeA\getDoctrine_SchemaCreateCommandService::do() at /home/hugo/workspace-os/symfony-ux/src/Turbo/Tests/app/var/cache/dev/ContainerD6A5oeA/App_KernelDevDebugContainer.php:297
+ ContainerD6A5oeA\App_KernelDevDebugContainer->load() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/symfony/dependency-injection/Container.php:441
+ Symfony\Component\DependencyInjection\Container->getService() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/symfony/dependency-injection/Argument/ServiceLocator.php:42
+ Symfony\Component\DependencyInjection\Argument\ServiceLocator->get() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/symfony/console/CommandLoader/ContainerCommandLoader.php:45
+ Symfony\Component\Console\CommandLoader\ContainerCommandLoader->get() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/symfony/console/Application.php:554
+ Symfony\Component\Console\Application->has() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/symfony/console/Application.php:643
+ Symfony\Component\Console\Application->find() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/symfony/framework-bundle/Console/Application.php:116
+ Symfony\Bundle\FrameworkBundle\Console\Application->find() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/symfony/console/Application.php:255
+ Symfony\Component\Console\Application->doRun() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/symfony/framework-bundle/Console/Application.php:82
+ Symfony\Bundle\FrameworkBundle\Console\Application->doRun() at /home/hugo/workspace-os/symfony-ux/src/Turbo/vendor/symfony/console/Application.php:167
+ Symfony\Component\Console\Application->run() at /home/hugo/workspace-os/symfony-ux/src/Turbo/Tests/app/public/index.php:22
+```
+
+This option `em` is now defined in [Doctrine's `MetadataCommand`](https://github.com/doctrine/orm/blob/2.9.x/lib/Doctrine/ORM/Tools/Console/Command/ClearCache/MetadataCommand.php#L52) in 2.9, but is not present in [2.8](https://github.com/doctrine/orm/blob/2.8.x/lib/Doctrine/ORM/Tools/Console/Command/ClearCache/MetadataCommand.php#L47).
+
+I've forced `doctrine/orm` to version `~2.8.0` until doctrine-bundle is fixed (https://github.com/doctrine/DoctrineBundle/pull/1327).
