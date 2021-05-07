@@ -63,3 +63,18 @@ do in JavaScript could be done streamlined as a UX package.
 
 We have some ideas and we will release more packages in the coming days. The rest
 is on you: let's create an amazing ecosystem together!
+
+## Contributing
+
+If you want to test your code in an existing project that uses Symfony UX packages,
+you can use the `link` utility provided in this Git repository (that you have to clone).
+This tool scans the `vendor/` directory of your project, finds Symfony UX packages it uses,
+and replaces them by symbolic links to the ones in the Git repository.
+
+```shell
+# Install required dependencies
+$ composer install
+
+# And link Symfony UX packages to your project
+$ php link /path/to/your/project
+```
