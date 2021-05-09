@@ -155,6 +155,30 @@ _also_ changes the redirect status code from 302 (the default) to 303
 (`HTTP_SEE_OTHER`). That's not required for Turbo Drive, but 303 is "more correct"
 for this situation.
 
+> **NOTE:**
+> When your form contains more than one submit button and, you want to check which of the buttons was clicked
+> to adapt the program flow in your controller. You need to add a value to each button because
+> Turbo Drive doesn't send element with empty value:
+
+```php
+$form = $this->createFormBuilder($task)
+    ->add('task', TextType::class)
+    ->add('dueDate', DateType::class)
+    ->add('save', SubmitType::class, [
+        'label' => 'Create Task',
+        'attr' => [
+            'value' => 'create-task'
+        ]
+    ])
+    ->add('saveAndAdd', SubmitType::class, [
+        'label' => 'Save and Add',
+        'attr' => [
+            'value' => 'save-and-add'
+        ]
+    ])
+    ->getForm();
+```
+
 #### More Turbo Drive Info
 
 [Read the Turbo Drive documentation](https://turbo.hotwire.dev/handbook/drive) to learn about the advanced features offered
