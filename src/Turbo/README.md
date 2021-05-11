@@ -161,9 +161,8 @@ for this situation.
 > Turbo Drive doesn't send element with empty value:
 
 ```php
-$form = $this->createFormBuilder($task)
-    ->add('task', TextType::class)
-    ->add('dueDate', DateType::class)
+$builder
+    // ...
     ->add('save', SubmitType::class, [
         'label' => 'Create Task',
         'attr' => [
@@ -175,8 +174,7 @@ $form = $this->createFormBuilder($task)
         'attr' => [
             'value' => 'save-and-add'
         ]
-    ])
-    ->getForm();
+    ]);
 ```
 
 #### More Turbo Drive Info
