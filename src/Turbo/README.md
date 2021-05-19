@@ -161,12 +161,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\UX\Turbo\Stream\TurboStreamResponse;
+use App\Entity\Task;
 
 class TaskController extends AbstractController
 {
     public function new(Request $request): Response
     {
-        $form = $this->createForm(TaskType::class);
+        $form = $this->createForm(TaskType::class, new Task());
         
         $form->handleRequest($request);
 
