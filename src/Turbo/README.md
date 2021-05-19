@@ -21,9 +21,6 @@ Install this bundle using Composer and Symfony Flex:
 ```sh
 composer require symfony/ux-turbo
 
-# install turbo itself
-yarn add @hotwired/turbo --dev
-
 # Don't forget to install the JavaScript dependencies as well and compile
 yarn install --force
 yarn encore dev
