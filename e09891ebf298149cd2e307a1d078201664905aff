@@ -1,0 +1,79 @@
+---------------------------------------------------------------------------
+
+by dunglas at 2021-05-06T17:29:20Z
+
+Isn't the whole point of Symfony UX to not have to install the packages directly? I mean, all other packages in this repo have the same "problem", including Swup which is very similar to Turbo: https://github.com/symfony/ux/blob/main/src/Swup/Resources/assets/package.json#L26
+
+ For the record, the Mercure adapter already list Turbo as a peer dependency, which should limit the problem: https://github.com/symfony/ux/blob/main/src/Turbo/Bridge/Mercure/Resources/assets/package.json#L23
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-05-07T13:16:11Z
+
+> Isn't the whole point of Symfony UX to not have to install the packages directly?
+
+I'd say the whole point is to automatically bind "controllers" into your system with zero config - but not necessarily to remove the need to install packages, which is pretty easy anyways (and, as Nicolas said, could be added to Flex).
+
+> I  mean, all other packages in this repo have the same "problem", including Swup which is very similar to Turbo:
+
+I would argue that those are wrong as well 😇 .
+
+The overall problem is that something like `Turbo` is a package that, if imported from the ux controller AND also imported from user land code, we need these to return the same one module. But by using `dependencies`, that is not guaranteed. From the [Yarn blog](https://classic.yarnpkg.com/blog/2018/04/18/dependencies-done-right/):
+
+> When you specify a dependency, package managers are not required to give you the exact same version from anywhere in the dependency tree! Doing so is an optimization, and while we try to do our best to remove duplicated packages from the tree, it’s not always feasible or possible. Because we cannot guarantee it, you should not rely on us doing it. By spec, we are allowed to change the behavior from a version to another if we think it might give a better result. We technically could even disable hoisting altogether!
+
+If I install `symfony/ux-turbo` locally AND then also run `yarn add @hotwired/turbo`, thanks to hoisting, the same module `./node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js` is used when I import turbo from my code as is used when the ux package imports turbo.
+
+But, if I change the version in my `package.json` to something that is different than the one from `ux-turbo` (e.g. I change from `^7.0.0-beta.5` to exactly `7.0.0-beta.3`), then TWO different Turbos are imported:
+
+* import `@hotwired/turbo` in my code imports `./node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js`
+* import `@hotwired/turbo` from the `ux-turbo` controller imports `./node_modules/@symfony/ux-turbo/node_modules/@hotwired/turbo/dist/turbo.es2017-esm.js`
+
+This results in 2 copies of Turbo in my final app.js. And, because Turbo initializes itself when imported, it explodes:
+
+<img width="1267" alt="Screen Shot 2021-05-07 at 9 13 14 AM" src="https://user-images.githubusercontent.com/121003/117454737-7578f480-af14-11eb-98e1-e9646d8d4970.png">
+
+We could tell the user to not install Turbo directly, but that feels wrong (it might even cause eslint to fail, as their code would be referencing a module that is not in their `package.json` file).
+
+So, it IS nice to put things under `dependencies`... and it works nearly all of the time. But if the user imports Turbo directly in their code, they'll get PhpStorm/eslint errors and (if they try to fix that) the possibility that Turbo will be imported twice.
+
+Cheers!
+
+---------------------------------------------------------------------------
+
+by dunglas at 2021-05-07T13:22:08Z
+
+I agree that we must either tell the user to not install the dep directly or move it to peer dependencies (this looks obvious for most JS developers, but probably not to PHP developers because NPM works differently than Composer).
+However for consistency we should follow the same strategy for all UX packages. WDYT @tgalopin?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-05-17T19:05:02Z
+
+This is ready.
+
+We *should* also move `chart.js`, `swup` (and plugins) and `cropperjs` to `peerDependencies`. However, I'd like to get https://github.com/symfony/flex/pull/764 merged & tagged first, to minimize any "experience" change people have (i.e. new projects will STILL not need to worry about manually adding those libs to their `package.json`). But since `ux-turbo` is unreleased, I'd like to get this correct before we do. Once the Flex PR is merged (and maybe after some time... to make sure most people are using the newest version) we could remove the addition to the README from this PR.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2021-05-18T10:20:25Z
+
+flex v1.13.0 now released
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2021-05-18T14:14:45Z
+
+> Once the Flex PR is merged (and maybe after some time...
+
+no need to wait: just conflict with flex < 1.13
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-05-19T13:47:06Z
+
+All `package.json` dependencies have now been moved to `peerDependencies` (and `devDependencies` so tests can run). For the packages that now have `peerDependencies`, a `composer.json` conflict has been added to require `symfony/flex` `1.13` at least so the synchronization happens.
+
+We should be ready to go!
