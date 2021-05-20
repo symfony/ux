@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by tgalopin at 2021-03-11T14:40:46Z
+
+Hi @Jibbarth !
+
+Sorry for the delay, we are working on the SymfonyLive Polish :) . I think that's fine not to have tests dedicated to this, the bundle tests are checking this work already.
+
+@nicolas-grekas WDYT?
+
+---------------------------------------------------------------------------
+
+by lwillems at 2021-05-03T07:22:25Z
+
+Hi did you plan to merge this fix ? broken on my symfony 4.4 too
+
+Regards
