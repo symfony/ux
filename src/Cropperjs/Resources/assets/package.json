@@ -22,10 +22,8 @@
         "test": "babel src -d dist && jest",
         "lint": "eslint src test"
     },
-    "dependencies": {
-        "cropperjs": "^1.5.9"
-    },
     "peerDependencies": {
+        "cropperjs": "^1.5.9",
         "stimulus": "^2.0.0"
     },
     "devDependencies": {
@@ -34,6 +32,7 @@
         "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@babel/preset-env": "^7.12.7",
         "@symfony/stimulus-testing": "^1.1.0",
+        "cropperjs": "^1.5.9",
         "stimulus": "^2.0.0"
     },
     "jest": {
