@@ -39,4 +39,15 @@ class DropzoneBundleTest extends TestCase
         $kernel->boot();
         $this->assertArrayHasKey('DropzoneBundle', $kernel->getBundles());
     }
+
+    public function testFormThemeMerging()
+    {
+        $kernel = new TwigAppKernel('test', true);
+        $kernel->boot();
+        $this->assertEquals([
+            'form_div_layout.html.twig',
+            '@Dropzone/form_theme.html.twig',
+            'form_theme.html.twig',
+        ], $kernel->getContainer()->getParameter('twig.form.resources'));
+    }
 }
