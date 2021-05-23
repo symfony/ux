@@ -20,6 +20,8 @@ yarn encore dev
 Also make sure you have at least version 2.0 of [@symfony/stimulus-bridge](https://github.com/symfony/stimulus-bridge)
 in your `package.json` file.
 
+## Use predefined theme
+
 You need to select the right theme from the one you are using :
 ```yaml
 # config/packages/twig.yaml
@@ -32,6 +34,42 @@ You have 2 different themes :
 - `@FormCollection/form_theme_table.html.twig`
 
 [Check the Symfony doc](https://symfony.com/doc/4.4/form/form_themes.html) for the different ways to set themes in Symfony.
+
+## Use manual theming
+
+> Consider your `BlogFormType` form set up and with a comments field that is a `CollectionType`, you can
+render it in your template:
+
+```twig
+{% macro commentFormRow(commentForm) %}
+    <div
+        class="col-4"
+        data-symfony--ux-form-collection--collection-target="entry"
+    >
+        {{ form_errors(commentForm) }}
+        {{ form_row(commentForm.content) }}
+        {{ form_row(commentForm.otherField) }}
+
+        <button type="button" data-action="symfony--ux-form-collection--collection#delete">
+            Remove
+        </button>
+    </div>
+{% endmacro %}
+
+<div
+    class="row"
+    data-controller="symfony--ux-form-collection--collection"
+    data-prototype="{{ _self.commentFormRow(form.comments.vars.prototype)|e }}"
+>
+    {% for commentForm in form.comments %}
+        {{ _self.commentFormRow(commentForm) }}
+    {% endfor %}
+
+    <button type="button" data-action="symfony--ux-form-collection--collection#add">
+        Add Another
+    </button>
+</div>
+```
 
 ## Usage
 
@@ -51,15 +89,15 @@ class BlogFormType extends AbstractType
             ->add('comments', UXCollectionType::class, [
                 // ...
                 'button_add' => [
-                     // Default text for the add button
+                     // Default text for the add button (used by predefined theme)
                     'text' => 'Add',    
-                    // Add HTML classes to the add button
+                    // Add HTML classes to the add button (used by predefined theme)
                     'class' => 'btn btn-outline-primary'
                 ],
                 'button_delete' => [
-                    // Default text for the delete button
+                    // Default text for the delete button (used by predefined theme)
                     'text' => 'Remove',    
-                    // Add HTML classes to the add button
+                    // Add HTML classes to the add button (used by predefined theme)
                     'class' => 'btn btn-outline-secondary'
                 ],
             ])
