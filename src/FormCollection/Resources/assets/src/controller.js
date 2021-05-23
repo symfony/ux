@@ -1,10 +1,9 @@
 'use strict';
 
-import { Controller } from 'stimulus';
+import {Controller} from 'stimulus';
 
 export default class extends Controller {
     static targets = [
-        'container',
         'entry'
     ];
 
@@ -13,7 +12,8 @@ export default class extends Controller {
         allowDelete: Boolean,
         buttonAdd: String,
         buttonDelete: String,
-        prototypeName: String
+        prototypeName: String,
+        prototype: String
     };
 
     /**
@@ -30,7 +30,11 @@ export default class extends Controller {
 
     connect() {
         this.controllerName = this.context.scope.identifier;
+        this.index = this.entryTargets.length - 1;
 
+        if (!this.prototypeNameValue) {
+            this.prototypeNameValue = '__name__';
+        }
 
         this._dispatchEvent('form-collection:pre-connect', {
             allowAdd: this.allowAddValue,
@@ -40,15 +44,14 @@ export default class extends Controller {
         if (true === this.allowAddValue) {
             // Add button Add
             let buttonAdd = this._textToNode(this.buttonAddValue);
-            this.containerTarget.prepend(buttonAdd);
+            this.element.prepend(buttonAdd);
         }
 
         // Add buttons Delete
         if (true === this.allowDeleteValue) {
             for (let i = 0; i < this.entryTargets.length; i++) {
-                this.index = i;
                 let entry = this.entryTargets[i];
-                this._addDeleteButton(entry, this.index);
+                this._addDeleteButton(entry, i);
             }
         }
 
@@ -63,9 +66,12 @@ export default class extends Controller {
         this.index++;
 
         // Compute the new entry
-        let newEntry = this.containerTarget.dataset.prototype;
-        
-        let regExp = new RegExp(this.prototypeNameValue+'label__', 'g');
+        let newEntry = this.element.dataset.prototype;
+        if (!newEntry) {
+            newEntry = this.prototypeValue;
+        }
+
+        let regExp = new RegExp(this.prototypeNameValue + 'label__', 'g');
         newEntry = newEntry.replace(regExp, this.index);
 
         regExp = new RegExp(this.prototypeNameValue, 'g');
@@ -78,7 +84,7 @@ export default class extends Controller {
             element: newEntry
         });
 
-        this.containerTarget.append(newEntry);
+        this.element.append(newEntry);
 
         // Retrieve the entry from targets to make sure that this is the one
         let entry = this.entryTargets[this.entryTargets.length - 1];
@@ -91,27 +97,19 @@ export default class extends Controller {
     }
 
     delete(event) {
+        let entry = event.target.closest('[data-' + this.controllerName + '-target="entry"]');
 
-        let theIndexEntryToDelete = event.target.dataset.indexEntry;
+        this._dispatchEvent('form-collection:pre-delete', {
+            index: entry.dataset.indexEntry,
+            element: entry
+        });
 
-        // Search the entry to delete from the data-index-entry attribute
-        for (let i = 0; i < this.entryTargets.length; i++) {
-            let entry = this.entryTargets[i];
-            if (theIndexEntryToDelete === entry.dataset.indexEntry) {
+        entry.remove();
 
-                this._dispatchEvent('form-collection:pre-delete', {
-                    index: entry.dataset.indexEntry,
-                    element: entry
-                });
-
-                entry.remove();
-
-                this._dispatchEvent('form-collection:delete', {
-                    index: entry.dataset.indexEntry,
-                    element: entry
-                });
-            }
-        }
+        this._dispatchEvent('form-collection:delete', {
+            index: entry.dataset.indexEntry,
+            element: entry
+        });
     }
 
     /**
@@ -127,9 +125,12 @@ export default class extends Controller {
         entry.dataset.indexEntry = index;
 
         let buttonDelete = this._textToNode(this.buttonDeleteValue);
+        if (!buttonDelete) {
+            return entry;
+        }
         buttonDelete.dataset.indexEntry = index;
 
-        if('TR' === entry.nodeName) {
+        if ('TR' === entry.nodeName) {
             entry.lastElementChild.append(buttonDelete);
         } else {
             entry.append(buttonDelete);

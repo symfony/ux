@@ -58,6 +58,11 @@ var _default = /*#__PURE__*/function (_Controller) {
     key: "connect",
     value: function connect() {
       this.controllerName = this.context.scope.identifier;
+      this.index = this.entryTargets.length - 1;
+
+      if (!this.prototypeNameValue) {
+        this.prototypeNameValue = '__name__';
+      }
 
       this._dispatchEvent('form-collection:pre-connect', {
         allowAdd: this.allowAddValue,
@@ -68,16 +73,15 @@ var _default = /*#__PURE__*/function (_Controller) {
         // Add button Add
         var buttonAdd = this._textToNode(this.buttonAddValue);
 
-        this.containerTarget.prepend(buttonAdd);
+        this.element.prepend(buttonAdd);
       } // Add buttons Delete
 
 
       if (true === this.allowDeleteValue) {
         for (var i = 0; i < this.entryTargets.length; i++) {
-          this.index = i;
           var entry = this.entryTargets[i];
 
-          this._addDeleteButton(entry, this.index);
+          this._addDeleteButton(entry, i);
         }
       }
 
@@ -91,7 +95,12 @@ var _default = /*#__PURE__*/function (_Controller) {
     value: function add(event) {
       this.index++; // Compute the new entry
 
-      var newEntry = this.containerTarget.dataset.prototype;
+      var newEntry = this.element.dataset.prototype;
+
+      if (!newEntry) {
+        newEntry = this.prototypeValue;
+      }
+
       var regExp = new RegExp(this.prototypeNameValue + 'label__', 'g');
       newEntry = newEntry.replace(regExp, this.index);
       regExp = new RegExp(this.prototypeNameValue, 'g');
@@ -103,7 +112,7 @@ var _default = /*#__PURE__*/function (_Controller) {
         element: newEntry
       });
 
-      this.containerTarget.append(newEntry); // Retrieve the entry from targets to make sure that this is the one
+      this.element.append(newEntry); // Retrieve the entry from targets to make sure that this is the one
 
       var entry = this.entryTargets[this.entryTargets.length - 1];
       entry = this._addDeleteButton(entry, this.index);
@@ -116,25 +125,19 @@ var _default = /*#__PURE__*/function (_Controller) {
   }, {
     key: "delete",
     value: function _delete(event) {
-      var theIndexEntryToDelete = event.target.dataset.indexEntry; // Search the entry to delete from the data-index-entry attribute
+      var entry = event.target.closest('[data-' + this.controllerName + '-target="entry"]');
 
-      for (var i = 0; i < this.entryTargets.length; i++) {
-        var entry = this.entryTargets[i];
+      this._dispatchEvent('form-collection:pre-delete', {
+        index: entry.dataset.indexEntry,
+        element: entry
+      });
 
-        if (theIndexEntryToDelete === entry.dataset.indexEntry) {
-          this._dispatchEvent('form-collection:pre-delete', {
-            index: entry.dataset.indexEntry,
-            element: entry
-          });
+      entry.remove();
 
-          entry.remove();
-
-          this._dispatchEvent('form-collection:delete', {
-            index: entry.dataset.indexEntry,
-            element: entry
-          });
-        }
-      }
+      this._dispatchEvent('form-collection:delete', {
+        index: entry.dataset.indexEntry,
+        element: entry
+      });
     }
     /**
      * Add the delete button to the entry
@@ -151,6 +154,10 @@ var _default = /*#__PURE__*/function (_Controller) {
       entry.dataset.indexEntry = index;
 
       var buttonDelete = this._textToNode(this.buttonDeleteValue);
+
+      if (!buttonDelete) {
+        return entry;
+      }
 
       buttonDelete.dataset.indexEntry = index;
 
@@ -195,12 +202,13 @@ var _default = /*#__PURE__*/function (_Controller) {
 
 exports["default"] = _default;
 
-_defineProperty(_default, "targets", ['container', 'entry']);
+_defineProperty(_default, "targets", ['entry']);
 
 _defineProperty(_default, "values", {
   allowAdd: Boolean,
   allowDelete: Boolean,
   buttonAdd: String,
   buttonDelete: String,
-  prototypeName: String
+  prototypeName: String,
+  prototype: String
 });
