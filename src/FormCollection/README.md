@@ -91,18 +91,14 @@ class BlogFormType extends AbstractType
             // ...
             ->add('comments', UXCollectionType::class, [
                 // ...
-                'button_add' => [
-                     // Default text for the add button (used by predefined theme)
-                    'text' => 'Add',    
-                    // Add HTML classes to the add button (used by predefined theme)
-                    'class' => 'btn btn-outline-primary'
-                ],
-                'button_delete' => [
-                    // Default text for the delete button (used by predefined theme)
-                    'text' => 'Remove',    
-                    // Add HTML classes to the add button (used by predefined theme)
-                    'class' => 'btn btn-outline-secondary'
-                ],
+                // Default text for the add button (used by predefined theme)
+                'button_add_text' => 'Add',    
+                // Add HTML classes to the add button (used by predefined theme)
+                'button_add_class' => 'btn btn-outline-primary',
+                // Default text for the delete button (used by predefined theme)
+                'button_delete_text' => 'Remove',    
+                // Add HTML classes to the add button (used by predefined theme)
+                'button_delete_class' => 'btn btn-outline-secondary',
             ])
             // ...
         ;
