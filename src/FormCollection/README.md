@@ -22,7 +22,8 @@ in your `package.json` file.
 
 ## Use predefined theme
 
-You need to select the right theme from the one you are using :
+You need to select the right theme from the one you are using:
+
 ```yaml
 # config/packages/twig.yaml
 twig:
