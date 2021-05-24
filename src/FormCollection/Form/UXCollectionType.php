@@ -31,23 +31,26 @@ class UXCollectionType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'button_add' => [
-                'text' => '',
-                'class' => '',
-            ],
-            'button_delete' => [
-                'text' => '',
-                'class' => '',
-            ],
+            'button_add_text' => 'Add',
+            'button_add_class' => '',
+            'button_delete_text' => 'Remove',
+            'button_delete_class' => '',
         ]);
+
+        $resolver->setAllowedTypes('button_add_text', 'string');
+        $resolver->setAllowedTypes('button_add_class', 'string');
+        $resolver->setAllowedTypes('button_delete_text', 'string');
+        $resolver->setAllowedTypes('button_delete_class', 'string');
     }
 
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         parent::finishView($view, $form, $options);
 
-        $view->vars['button_add'] = $options['button_add'];
-        $view->vars['button_delete'] = $options['button_delete'];
+        $view->vars['button_add_text'] = $options['button_add_text'];
+        $view->vars['button_add_class'] = $options['button_add_class'];
+        $view->vars['button_delete_text'] = $options['button_delete_text'];
+        $view->vars['button_delete_class'] = $options['button_delete_class'];
         $view->vars['prototype_name'] = $options['prototype_name'];
     }
 
