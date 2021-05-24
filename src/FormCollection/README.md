@@ -38,7 +38,7 @@ There are 2 predefined themes available:
 
 [Check the Symfony doc](https://symfony.com/doc/4.4/form/form_themes.html) for the different ways to set themes in Symfony.
 
-## Use manual theming
+## Use a custom form theme
 
 Consider your `BlogFormType` form set up and with a comments field that is a `CollectionType`, you can
 render it in your template:
