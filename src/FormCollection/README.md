@@ -40,7 +40,7 @@ There are 2 predefined themes available:
 
 ## Use manual theming
 
-> Consider your `BlogFormType` form set up and with a comments field that is a `CollectionType`, you can
+Consider your `BlogFormType` form set up and with a comments field that is a `CollectionType`, you can
 render it in your template:
 
 ```twig
