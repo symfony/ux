@@ -30,7 +30,9 @@ twig:
   # For bootstrap for example
   form_themes: ['@FormCollection/form_theme_div.html.twig']
 ```
-You have 2 different themes :
+
+There are 2 predefined themes available:
+
 - `@FormCollection/form_theme_div.html.twig`
 - `@FormCollection/form_theme_table.html.twig`
 
