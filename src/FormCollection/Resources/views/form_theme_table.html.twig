@@ -30,8 +30,8 @@
     <div data-controller="{{ dataController }}"
          data-{{ controllerName }}-allow-add-value="{{ allow_add|json_encode }}"
          data-{{ controllerName }}-allow-delete-value="{{ allow_delete|json_encode }}"
-         data-{{ controllerName }}-button-add-value="{{ block('button_add')|e }}"
-         data-{{ controllerName }}-button-delete-value="{{ block('button_delete')|e }}"
+         data-{{ controllerName }}-button-add-value="{{ block('button_add')|e('html_attr') }}"
+         data-{{ controllerName }}-button-delete-value="{{ block('button_delete')|e('html_attr') }}"
          data-{{ controllerName }}-prototype-name-value="{{ prototype_name }}"
             {{ block('widget_container_attributes') }}
     >
