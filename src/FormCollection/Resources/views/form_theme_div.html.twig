@@ -24,12 +24,16 @@
     {% endif %}
     {%- set attr = attr|merge({('data-' ~ controllerName ~ '-target'): 'container' }) -%}
 
+    {% set indexKeys = data|keys %}
+    {% set startIndex = indexKeys|length == 0 ? 0 : max(indexKeys) %}
+
     <div data-controller="{{ dataController }}"
          data-{{ controllerName }}-allow-add-value="{{ allow_add|json_encode }}"
          data-{{ controllerName }}-allow-delete-value="{{ allow_delete|json_encode }}"
          data-{{ controllerName }}-button-add-value="{{ block('button_add')|e('html_attr') }}"
          data-{{ controllerName }}-button-delete-value="{{ block('button_delete')|e('html_attr') }}"
          data-{{ controllerName }}-prototype-name-value="{{ prototype_name }}"
+         data-{{ controllerName }}-start-index-value="{{ startIndex }}"
             {{ block('widget_container_attributes') }}
     >
         {%- if form is rootform -%}
