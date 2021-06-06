@@ -58,7 +58,7 @@ var _default = /*#__PURE__*/function (_Controller) {
     key: "connect",
     value: function connect() {
       this.controllerName = this.context.scope.identifier;
-      this.index = this.entryTargets.length - 1;
+      this.index = this.startIndexValue ? this.startIndexValue : this.entryTargets.length - 1;
 
       if (!this.prototypeNameValue) {
         this.prototypeNameValue = '__name__';
@@ -210,5 +210,6 @@ _defineProperty(_default, "values", {
   buttonAdd: String,
   buttonDelete: String,
   prototypeName: String,
-  prototype: String
+  prototype: String,
+  startIndex: Number
 });

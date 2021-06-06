@@ -13,7 +13,8 @@ export default class extends Controller {
         buttonAdd: String,
         buttonDelete: String,
         prototypeName: String,
-        prototype: String
+        prototype: String,
+        startIndex: Number
     };
 
     /**
@@ -30,7 +31,7 @@ export default class extends Controller {
 
     connect() {
         this.controllerName = this.context.scope.identifier;
-        this.index = this.entryTargets.length - 1;
+        this.index = this.startIndexValue ? this.startIndexValue : this.entryTargets.length - 1;
 
         if (!this.prototypeNameValue) {
             this.prototypeNameValue = '__name__';
