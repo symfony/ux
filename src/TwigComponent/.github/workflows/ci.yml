@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  tests:
+    name: PHP ${{ matrix.php }}, SF ${{ matrix.symfony }} - ${{ matrix.stability }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        php: [7.2, 7.4, 8.0]
+        stability: [hightest]
+        symfony: [4.4.*, 5.2.*, 5.3.*]
+        include:
+          - php: 7.2
+            stability: lowest
+            symfony: '*'
+          - php: 8.0
+            stability: highest
+            symfony: '5.4.*@dev'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2.3.3
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@2.7.0
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - name: Install Symfony Flex
+        run: composer global require --no-progress --no-scripts --no-plugins symfony/flex dev-main
+
+      - name: Set minimum-stability to dev
+        run: composer config minimum-stability dev
+        if: ${{ contains(matrix.symfony, '@dev') }}
+
+      - name: Install dependencies
+        uses: ramsey/composer-install@v1
+        with:
+          dependency-versions: ${{ matrix.stability }}
+          composer-options: --prefer-dist
+        env:
+          SYMFONY_REQUIRE: ${{ matrix.symfony }}
+
+      - name: Test
+        run: vendor/bin/simple-phpunit -v
