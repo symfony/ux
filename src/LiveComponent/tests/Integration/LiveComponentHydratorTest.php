@@ -1,0 +1,298 @@
+<?php
+
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Symfony\UX\LiveComponent\Tests\Integration;
+
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
+use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
+use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component3;
+use Symfony\UX\LiveComponent\Tests\Fixture\Entity\Entity1;
+use Symfony\UX\TwigComponent\ComponentFactory;
+use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
+use function Zenstruck\Foundry\create;
+
+/**
+ * @author Kevin Bond <kevinbond@gmail.com>
+ */
+final class LiveComponentHydratorTest extends KernelTestCase
+{
+    use Factories, ResetDatabase;
+
+    /**
+     * @test
+     */
+    public function can_dehydrate_and_hydrate_live_component(): void
+    {
+        self::bootKernel();
+
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::$container->get(LiveComponentHydrator::class);
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get(ComponentFactory::class);
+
+        /** @var Component1 $component */
+        $component = $factory->create(Component1::getComponentName(), [
+            'prop1' => $prop1 = create(Entity1::class)->object(),
+            'prop2' => $prop2 = new \DateTime('2021-03-05 9:23'),
+            'prop3' => $prop3 = 'value3',
+            'prop4' => $prop4 = 'value4',
+        ]);
+
+        $this->assertSame($prop1, $component->prop1);
+        $this->assertSame($prop2, $component->prop2);
+        $this->assertSame($prop3, $component->prop3);
+        $this->assertSame($prop4, $component->prop4);
+
+        $dehydrated = $hydrator->dehydrate($component);
+
+        $this->assertSame($prop1->id, $dehydrated['prop1']);
+        $this->assertSame($prop2->format('c'), $dehydrated['prop2']);
+        $this->assertSame($prop3, $dehydrated['prop3']);
+        $this->assertArrayHasKey('_checksum', $dehydrated);
+        $this->assertArrayNotHasKey('prop4', $dehydrated);
+
+        $component = $factory->get(Component1::getComponentName());
+
+        $hydrator->hydrate($component, $dehydrated);
+
+        $this->assertSame($prop1->id, $component->prop1->id);
+        $this->assertSame($prop2->format('c'), $component->prop2->format('c'));
+        $this->assertSame($prop3, $component->prop3);
+        $this->assertNull($component->prop4);
+    }
+
+    /**
+     * @test
+     */
+    public function can_modify_writable_props(): void
+    {
+        self::bootKernel();
+
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::$container->get(LiveComponentHydrator::class);
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get(ComponentFactory::class);
+
+        /** @var Component1 $component */
+        $component = $factory->create(Component1::getComponentName(), [
+            'prop1' => create(Entity1::class)->object(),
+            'prop2' => new \DateTime('2021-03-05 9:23'),
+            'prop3' => 'value3',
+        ]);
+
+        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated['prop3'] = 'new value';
+
+        $component = $factory->get(Component1::getComponentName());
+
+        $hydrator->hydrate($component, $dehydrated);
+
+        $this->assertSame('new value', $component->prop3);
+    }
+
+    /**
+     * @test
+     */
+    public function cannot_modify_readonly_props(): void
+    {
+        self::bootKernel();
+
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::$container->get(LiveComponentHydrator::class);
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get(ComponentFactory::class);
+
+        /** @var Component1 $component */
+        $component = $factory->create(Component1::getComponentName(), [
+            'prop1' => create(Entity1::class)->object(),
+            'prop2' => new \DateTime('2021-03-05 9:23'),
+            'prop3' => 'value3',
+        ]);
+
+        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated['prop2'] = (new \DateTime())->format('c');
+
+        $component = $factory->get(Component1::getComponentName());
+
+        $this->expectException(\RuntimeException::class);
+        $hydrator->hydrate($component, $dehydrated);
+    }
+
+    /**
+     * @test
+     */
+    public function hydration_fails_if_checksum_missing(): void
+    {
+        self::bootKernel();
+
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::$container->get(LiveComponentHydrator::class);
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get(ComponentFactory::class);
+
+        $this->expectException(\RuntimeException::class);
+        $hydrator->hydrate($factory->get(Component1::getComponentName()), []);
+    }
+
+    /**
+     * @test
+     */
+    public function hydration_fails_on_checksum_mismatch(): void
+    {
+        self::bootKernel();
+
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::$container->get(LiveComponentHydrator::class);
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get(ComponentFactory::class);
+
+        $this->expectException(\RuntimeException::class);
+        $hydrator->hydrate($factory->get(Component1::getComponentName()), ['_checksum' => 'invalid']);
+    }
+
+    /**
+     * @test
+     */
+    public function can_check_if_action_is_allowed(): void
+    {
+        self::bootKernel();
+
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::$container->get(LiveComponentHydrator::class);
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get(ComponentFactory::class);
+
+        $component = $factory->get(Component1::getComponentName());
+
+        $this->assertTrue($hydrator->isActionAllowed($component, 'method1'));
+        $this->assertFalse($hydrator->isActionAllowed($component, 'method2'));
+    }
+
+    /**
+     * @test
+     */
+    public function pre_dehydrate_and_post_hydrate_hooks_called(): void
+    {
+        self::bootKernel();
+
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::$container->get(LiveComponentHydrator::class);
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get(ComponentFactory::class);
+
+        /** @var Component2 $component */
+        $component = $factory->create(Component2::getComponentName());
+
+        $this->assertFalse($component->preDehydrateCalled);
+        $this->assertFalse($component->postHydrateCalled);
+
+        $data = $hydrator->dehydrate($component);
+
+        $this->assertTrue($component->preDehydrateCalled);
+        $this->assertFalse($component->postHydrateCalled);
+
+        /** @var Component2 $component */
+        $component = $factory->get(Component2::getComponentName());
+
+        $this->assertFalse($component->preDehydrateCalled);
+        $this->assertFalse($component->postHydrateCalled);
+
+        $hydrator->hydrate($component, $data);
+
+        $this->assertFalse($component->preDehydrateCalled);
+        $this->assertTrue($component->postHydrateCalled);
+    }
+
+    /**
+     * @test
+     */
+    public function deleting_entity_between_dehydration_and_hydration_sets_it_to_null(): void
+    {
+        self::bootKernel();
+
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::$container->get(LiveComponentHydrator::class);
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get(ComponentFactory::class);
+
+        $entity = create(Entity1::class);
+
+        /** @var Component1 $component */
+        $component = $factory->create(Component1::getComponentName(), [
+            'prop1' => $entity->object(),
+            'prop2' => new \DateTime('2021-03-05 9:23'),
+        ]);
+
+        $this->assertSame($entity->id, $component->prop1->id);
+
+        $data = $hydrator->dehydrate($component);
+
+        $this->assertSame($entity->id, $data['prop1']);
+
+        $entity->remove();
+
+        /** @var Component1 $component */
+        $component = $factory->get(Component1::getComponentName());
+
+        $hydrator->hydrate($component, $data);
+
+        $this->assertNull($component->prop1);
+
+        $data = $hydrator->dehydrate($component);
+
+        $this->assertNull($data['prop1']);
+    }
+
+    /**
+     * @test
+     */
+    public function correctly_uses_custom_frontend_name_in_dehydrate_and_hydrate(): void
+    {
+        self::bootKernel();
+
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::$container->get(LiveComponentHydrator::class);
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get(ComponentFactory::class);
+
+        /** @var Component3 $component */
+        $component = $factory->create('component_3', ['prop1' => 'value1', 'prop2' => 'value2']);
+
+        $dehydrated = $hydrator->dehydrate($component);
+
+        $this->assertArrayNotHasKey('prop1', $dehydrated);
+        $this->assertArrayNotHasKey('prop2', $dehydrated);
+        $this->assertArrayHasKey('myProp1', $dehydrated);
+        $this->assertArrayHasKey('myProp2', $dehydrated);
+        $this->assertSame('value1', $dehydrated['myProp1']);
+        $this->assertSame('value2', $dehydrated['myProp2']);
+
+        /** @var Component3 $component */
+        $component = $factory->get('component_3');
+
+        $hydrator->hydrate($component, $dehydrated);
+
+        $this->assertSame('value1', $component->prop1);
+        $this->assertSame('value2', $component->prop2);
+    }
+}

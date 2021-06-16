@@ -1,0 +1,57 @@
+{
+    "name": "symfony/ux-live-component",
+    "type": "symfony-bundle",
+    "description": "Live components for Symfony",
+    "keywords": [
+        "symfony-ux",
+        "twig",
+        "components"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\LiveComponent\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\LiveComponent\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.4",
+        "symfony/ux-twig-component": "dev-main"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "^4.4|^5.0",
+        "symfony/dependency-injection": "^4.4.2|^5.0",
+        "symfony/twig-bundle": "^4.4|^5.0",
+        "symfony/security-csrf": "^4.4|^5.0",
+        "symfony/serializer": "^4.4|^5.0",
+        "symfony/validator": "^4.4|^5.0",
+        "symfony/phpunit-bridge": "^5.2",
+        "doctrine/doctrine-bundle": "^2.0",
+        "doctrine/orm": "^2.7",
+        "zenstruck/foundry": "^1.10",
+        "zenstruck/browser": "^0.5.0"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "git@github.com:kbond/ux-twig-component.git"
+        }
+    ],
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    }
+}
