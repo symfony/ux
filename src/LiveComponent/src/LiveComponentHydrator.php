@@ -25,6 +25,7 @@ use Symfony\UX\LiveComponent\Exception\UnsupportedHydrationException;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
+ *
  * @internal
  */
 final class LiveComponentHydrator
@@ -82,7 +83,7 @@ final class LiveComponentHydrator
             $frontendName = $this->getFrontendFieldName($liveProp, $component, $property);
 
             if (isset($frontendPropertyNames[$frontendName])) {
-                $message = sprintf('The field name "%s" cannot be used by multiple LiveProp properties in a component. Currently, both "%s" and "%s" are trying to use it in "%s".', $frontendName, $frontendPropertyNames[$frontendName], $name, get_class($component));
+                $message = sprintf('The field name "%s" cannot be used by multiple LiveProp properties in a component. Currently, both "%s" and "%s" are trying to use it in "%s".', $frontendName, $frontendPropertyNames[$frontendName], $name, \get_class($component));
 
                 if ($frontendName === $frontendPropertyNames[$frontendName] || $frontendName === $name) {
                     $message .= sprintf(' Try adding LiveProp(fieldName="somethingElse") for the "%s" property to avoid this.', $frontendName);
@@ -107,7 +108,7 @@ final class LiveComponentHydrator
                 $dehydratedValue = $this->dehydrateProperty($value, $name, $component);
             }
 
-            if (count($liveProp->exposed()) > 0) {
+            if (\count($liveProp->exposed()) > 0) {
                 $data[$frontendName] = [
                     self::EXPOSED_PROP_KEY => $dehydratedValue,
                 ];
@@ -161,7 +162,7 @@ final class LiveComponentHydrator
             // in an array under self::EXPOSED_PROP_KEY. But if the value is
             // *not* an array, then use the main value. This could mean that,
             // for example, in a "post.title" situation, the "post" itself was changed.
-            if (count($liveProp->exposed()) > 0 && isset($dehydratedValue[self::EXPOSED_PROP_KEY])) {
+            if (\count($liveProp->exposed()) > 0 && isset($dehydratedValue[self::EXPOSED_PROP_KEY])) {
                 $dehydratedValue = $dehydratedValue[self::EXPOSED_PROP_KEY];
                 unset($data[$frontendName][self::EXPOSED_PROP_KEY]);
             }
@@ -190,12 +191,7 @@ final class LiveComponentHydrator
                         $exposedPropertyData
                     );
                 } catch (UnexpectedTypeException $e) {
-                    throw new \LogicException(sprintf(
-                        'Unable to set the exposed field "%s" onto the "%s" property because it has an invalid type (%s).',
-                        $exposedProperty,
-                        $name,
-                        get_debug_type($value)
-                    ), 0, $e);
+                    throw new \LogicException(sprintf('Unable to set the exposed field "%s" onto the "%s" property because it has an invalid type (%s).', $exposedProperty, $name, get_debug_type($value)), 0, $e);
                 }
             }
 
@@ -211,20 +207,20 @@ final class LiveComponentHydrator
     private function computeChecksum(array $data, array $readonlyProperties): string
     {
         // filter to only readonly properties
-        $properties = array_filter($data, static fn($key) => \in_array($key, $readonlyProperties, true), ARRAY_FILTER_USE_KEY);
+        $properties = array_filter($data, static fn ($key) => \in_array($key, $readonlyProperties, true), \ARRAY_FILTER_USE_KEY);
 
         // for read-only properties with "exposed" sub-parts,
         // only use the main value
         foreach ($properties as $key => $val) {
-            if (\in_array($key, $readonlyProperties) && is_array($val)) {
+            if (\in_array($key, $readonlyProperties) && \is_array($val)) {
                 $properties[$key] = $val[self::EXPOSED_PROP_KEY];
             }
         }
 
         // sort so it is always consistent (frontend could have re-ordered data)
-        \ksort($properties);
+        ksort($properties);
 
-        return \base64_encode(\hash_hmac('sha256', http_build_query($properties), $this->secret, true));
+        return base64_encode(hash_hmac('sha256', http_build_query($properties), $this->secret, true));
     }
 
     private function verifyChecksum(array $data, array $readonlyProperties): void
@@ -239,7 +235,7 @@ final class LiveComponentHydrator
     }
 
     /**
-     * @param scalar|null|array $value
+     * @param scalar|array|null $value
      *
      * @return mixed
      */
@@ -264,11 +260,11 @@ final class LiveComponentHydrator
     /**
      * @param mixed $value
      *
-     * @return scalar|null|array
+     * @return scalar|array|null
      */
     private function dehydrateProperty($value, string $name, LiveComponentInterface $component)
     {
-        if (\is_scalar($value) || \is_array($value) || \is_null($value)) {
+        if (is_scalar($value) || \is_array($value) || null === $value) {
             // nothing to dehydrate...
             return $value;
         }
@@ -283,8 +279,8 @@ final class LiveComponentHydrator
             }
         }
 
-        if (!\is_scalar($value) && !\is_array($value) && !\is_null($value)) {
-            throw new \LogicException(\sprintf('Cannot dehydrate property "%s" of "%s". The value "%s" does not have a dehydrator.', $name, get_class($component),  get_debug_type($value)));
+        if (!is_scalar($value) && !\is_array($value) && null !== $value) {
+            throw new \LogicException(sprintf('Cannot dehydrate property "%s" of "%s". The value "%s" does not have a dehydrator.', $name, \get_class($component), get_debug_type($value)));
         }
 
         return $value;
@@ -320,9 +316,6 @@ final class LiveComponentHydrator
      *
      * This allows us to use the property accessor to find this
      * inside an array.
-     *
-     * @param string $propertyPath
-     * @return string
      */
     private function transformToArrayPath(string $propertyPath): string
     {

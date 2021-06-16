@@ -54,6 +54,25 @@ jobs:
                   cd src/LazyImage
                   composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
+            - name: TwigComponent
+              run: |
+                  cd src/TwigComponent
+                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/simple-phpunit
+
+    tests-php-low-deps-74:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - uses: shivammathur/setup-php@v2
+              with:
+                  php-version: '7.4'
+            - name: LiveComponent
+              run: |
+                  cd src/LiveComponent
+                  php ../../.github/build-packages.php
+                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/simple-phpunit
 
     tests-php-high-deps:
         runs-on: ubuntu-latest
@@ -86,6 +105,19 @@ jobs:
                   composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
+            - name: TwigComponent
+              run: |
+                  cd src/TwigComponent
+                  composer config platform.php 7.4.99
+                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/simple-phpunit
+            - name: LiveComponent
+              run: |
+                  cd src/LiveComponent
+                  php ../../.github/build-packages.php
+                  composer config platform.php 7.4.99
+                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/simple-phpunit
 
     tests-js:
         runs-on: ubuntu-latest
@@ -93,3 +125,11 @@ jobs:
             - uses: actions/checkout@master
             - run: yarn
             - run: yarn test
+
+            - name: Verify dist files are up to date
+              run: |
+                  if [ -z "$(git status --porcelain)" ]; then
+                      exit 0
+                  else
+                      exit 1
+                  fi

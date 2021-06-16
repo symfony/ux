@@ -19,10 +19,7 @@ use Twig\Environment;
  */
 final class ComponentExtensionTest extends KernelTestCase
 {
-    /**
-     * @test
-     */
-    public function can_render_component(): void
+    public function testCanRenderComponent(): void
     {
         self::bootKernel();
 
@@ -33,10 +30,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('service: service a value', $output);
     }
 
-    /**
-     * @test
-     */
-    public function can_render_the_same_component_multiple_times(): void
+    public function testCanRenderTheSameComponentMultipleTimes(): void
     {
         self::bootKernel();
 

@@ -55,7 +55,7 @@ final class Kernel extends BaseKernel
         $c->register('component_b', ComponentB::class)->setAutoconfigured(true)->setAutowired(true);
         $c->register(ComponentC::class)->setAutoconfigured(true)->setAutowired(true);
 
-        if ($this->environment === 'multiple_component_b') {
+        if ('multiple_component_b' === $this->environment) {
             $c->register('different_component_b', ComponentB::class)->setAutoconfigured(true)->setAutowired(true);
         }
     }

@@ -23,10 +23,7 @@ use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentC;
  */
 final class ComponentFactoryTest extends KernelTestCase
 {
-    /**
-     * @test
-     */
-    public function created_components_are_not_shared(): void
+    public function testCreatedComponentsAreNotShared(): void
     {
         self::bootKernel();
 
@@ -39,18 +36,15 @@ final class ComponentFactoryTest extends KernelTestCase
         /** @var ComponentA $componentB */
         $componentB = $factory->create('component_a', ['propA' => 'C', 'propB' => 'D']);
 
-        $this->assertNotSame(\spl_object_id($componentA), \spl_object_id($componentB));
-        $this->assertSame(\spl_object_id($componentA->getService()), \spl_object_id($componentB->getService()));
+        $this->assertNotSame(spl_object_id($componentA), spl_object_id($componentB));
+        $this->assertSame(spl_object_id($componentA->getService()), spl_object_id($componentB->getService()));
         $this->assertSame('A', $componentA->propA);
         $this->assertSame('B', $componentA->getPropB());
         $this->assertSame('C', $componentB->propA);
         $this->assertSame('D', $componentB->getPropB());
     }
 
-    /**
-     * @test
-     */
-    public function non_auto_configured_created_components_are_not_shared(): void
+    public function testNonAutoConfiguredCreatedComponentsAreNotShared(): void
     {
         self::bootKernel();
 
@@ -63,13 +57,10 @@ final class ComponentFactoryTest extends KernelTestCase
         /** @var ComponentB $componentB */
         $componentB = $factory->create('component_b');
 
-        $this->assertNotSame(\spl_object_id($componentA), \spl_object_id($componentB));
+        $this->assertNotSame(spl_object_id($componentA), spl_object_id($componentB));
     }
 
-    /**
-     * @test
-     */
-    public function short_name_cannot_be_different_than_component_name(): void
+    public function testShortNameCannotBeDifferentThanComponentName(): void
     {
         $this->expectException(LogicException::class);
         $this->expectExceptionMessage('Component "Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentB" is already registered as "component_b", components cannot be registered more than once.');
@@ -77,10 +68,7 @@ final class ComponentFactoryTest extends KernelTestCase
         self::bootKernel(['environment' => 'multiple_component_b']);
     }
 
-    /**
-     * @test
-     */
-    public function can_get_service_id(): void
+    public function testCanGetServiceId(): void
     {
         self::bootKernel();
 
@@ -91,10 +79,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertSame('component_b', $factory->serviceIdFor('component_b'));
     }
 
-    /**
-     * @test
-     */
-    public function can_get_unmounted_component(): void
+    public function testCanGetUnmountedComponent(): void
     {
         self::bootKernel();
 
@@ -108,10 +93,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertNull($component->getPropB());
     }
 
-    /**
-     * @test
-     */
-    public function mount_can_have_optional_parameters(): void
+    public function testMountCanHaveOptionalParameters(): void
     {
         self::bootKernel();
 
@@ -139,10 +121,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertSame('default', $component->propC);
     }
 
-    /**
-     * @test
-     */
-    public function exception_thrown_if_required_mount_parameter_is_missing_from_passed_data(): void
+    public function testExceptionThrownIfRequiredMountParameterIsMissingFromPassedData(): void
     {
         self::bootKernel();
 
@@ -155,10 +134,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $factory->create('component_c');
     }
 
-    /**
-     * @test
-     */
-    public function exception_thrown_if_unable_to_write_passed_data_to_property(): void
+    public function testExceptionThrownIfUnableToWritePassedDataToProperty(): void
     {
         self::bootKernel();
 

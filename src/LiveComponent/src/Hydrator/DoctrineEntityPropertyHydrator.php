@@ -13,8 +13,8 @@ namespace Symfony\UX\LiveComponent\Hydrator;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\UX\LiveComponent\PropertyHydratorInterface;
 use Symfony\UX\LiveComponent\Exception\UnsupportedHydrationException;
+use Symfony\UX\LiveComponent\PropertyHydratorInterface;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -46,13 +46,11 @@ final class DoctrineEntityPropertyHydrator implements PropertyHydratorInterface
             ->getIdentifierValues($value)
         ;
 
-        // TODO: entity id is UUID
         switch (\count($id)) {
             case 0:
-                // TODO: should this be allowed?
                 throw new \RuntimeException("Cannot dehydrate an unpersisted entity ({$class}). If you want to allow this, add a dehydrateWith= option to LiveProp.");
             case 1:
-                return \array_values($id)[0];
+                return array_values($id)[0];
         }
 
         // composite id

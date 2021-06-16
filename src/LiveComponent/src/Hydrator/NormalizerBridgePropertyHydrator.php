@@ -13,8 +13,8 @@ namespace Symfony\UX\LiveComponent\Hydrator;
 
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\UX\LiveComponent\PropertyHydratorInterface;
 use Symfony\UX\LiveComponent\Exception\UnsupportedHydrationException;
+use Symfony\UX\LiveComponent\PropertyHydratorInterface;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>

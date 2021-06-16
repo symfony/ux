@@ -221,7 +221,7 @@ function parseDirectives(content) {
       break;
 
     default:
-      throw new Error("Did you forget to add a closing \") after \"".concat(currentActionName, "\"?"));
+      throw new Error("Did you forget to add a closing \")\" after \"".concat(currentActionName, "\"?"));
   }
 
   return directives;

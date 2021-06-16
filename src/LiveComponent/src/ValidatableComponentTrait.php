@@ -66,7 +66,7 @@ trait ValidatableComponentTrait
 
         $this->validationErrors = $this->getValidator()->validate($this);
 
-        if (count($this->validationErrors) > 0 && $throw) {
+        if (\count($this->validationErrors) > 0 && $throw) {
             throw new UnprocessableEntityHttpException('Component validation failed');
         }
     }
@@ -80,14 +80,14 @@ trait ValidatableComponentTrait
      */
     public function validateField(string $propertyName, bool $throw = true): void
     {
-        if (!in_array($propertyName, $this->validatedFields)) {
+        if (!\in_array($propertyName, $this->validatedFields)) {
             $this->validatedFields[] = $propertyName;
         }
 
         $errors = $this->getValidator()->validateField($this, $propertyName);
         $this->validationErrors[$propertyName] = $errors;
 
-        if (count($errors) > 0 && $throw) {
+        if (\count($errors) > 0 && $throw) {
             throw new UnprocessableEntityHttpException(sprintf('The "%s" field of the component failed validation.', $propertyName));
         }
     }
@@ -110,7 +110,7 @@ trait ValidatableComponentTrait
 
     public function isValid(): bool
     {
-        return count($this->validationErrors) === 0;
+        return 0 === \count($this->validationErrors);
     }
 
     /**
@@ -134,7 +134,7 @@ trait ValidatableComponentTrait
             return;
         }
 
-        if (count($this->validatedFields) > 0) {
+        if (\count($this->validatedFields) > 0) {
             foreach ($this->validatedFields as $validatedField) {
                 $this->validateField($validatedField, false);
             }
@@ -153,10 +153,7 @@ trait ValidatableComponentTrait
     private function getValidator(): ComponentValidatorInterface
     {
         if (!$this->componentValidator) {
-            throw new \InvalidArgumentException(sprintf(
-                'The ComponentValidator service was not injected into %s. Did you forget to autowire this service or configure the setComponentValidator() call?',
-                get_class($this)
-            ));
+            throw new \InvalidArgumentException(sprintf('The ComponentValidator service was not injected into %s. Did you forget to autowire this service or configure the setComponentValidator() call?', static::class));
         }
 
         return $this->componentValidator;

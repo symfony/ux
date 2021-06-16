@@ -19,7 +19,7 @@ describe('LiveController Action Tests', () => {
     const template = (data) => `
         <div
             data-controller="live"
-            data-live-url-value="http://localhost/components/my_component"
+            data-live-url-value="http://localhost/_components/my_component"
         >
             <label>
                 Comments:
@@ -52,7 +52,7 @@ describe('LiveController Action Tests', () => {
         );
 
         // ONLY a post is sent, not a re-render GET
-        const postMock = fetchMock.postOnce('http://localhost/components/my_component/save', {
+        const postMock = fetchMock.postOnce('http://localhost/_components/my_component/save', {
             html: template({ comments: 'hi weaver', isSaved: true }),
             data: { comments: 'hi weaver', isSaved: true }
         });

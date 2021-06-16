@@ -62,6 +62,8 @@ require("core-js/modules/es.array.of.js");
 
 require("core-js/modules/es.array.slice.js");
 
+require("core-js/modules/es.array.sort.js");
+
 require("core-js/modules/es.array.species.js");
 
 require("core-js/modules/es.array.splice.js");

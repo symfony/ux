@@ -7,7 +7,8 @@
     "scripts": {
         "build": "babel src -d dist",
         "test-only": "jest",
-        "test": "yarn build && yarn test-only"
+        "test": "yarn build && yarn test-only",
+        "lint": "eslint src"
     },
     "dependencies": {
         "core-js": "^3.14.0",

@@ -76,7 +76,7 @@ final class Kernel extends BaseKernel
         ]);
 
         $c->loadFromExtension('twig', [
-            'default_path' => '%kernel.project_dir%/tests/Fixture/templates'
+            'default_path' => '%kernel.project_dir%/tests/Fixture/templates',
         ]);
 
         $c->loadFromExtension('doctrine', [

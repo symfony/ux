@@ -18,21 +18,19 @@ use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component3;
 use Symfony\UX\LiveComponent\Tests\Fixture\Entity\Entity1;
 use Symfony\UX\TwigComponent\ComponentFactory;
+use function Zenstruck\Foundry\create;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
-use function Zenstruck\Foundry\create;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
 final class LiveComponentHydratorTest extends KernelTestCase
 {
-    use Factories, ResetDatabase;
+    use Factories;
+    use ResetDatabase;
 
-    /**
-     * @test
-     */
-    public function can_dehydrate_and_hydrate_live_component(): void
+    public function testCanDehydrateAndHydrateLiveComponent(): void
     {
         self::bootKernel();
 
@@ -73,10 +71,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertNull($component->prop4);
     }
 
-    /**
-     * @test
-     */
-    public function can_modify_writable_props(): void
+    public function testCanModifyWritableProps(): void
     {
         self::bootKernel();
 
@@ -103,10 +98,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertSame('new value', $component->prop3);
     }
 
-    /**
-     * @test
-     */
-    public function cannot_modify_readonly_props(): void
+    public function testCannotModifyReadonlyProps(): void
     {
         self::bootKernel();
 
@@ -132,10 +124,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $hydrator->hydrate($component, $dehydrated);
     }
 
-    /**
-     * @test
-     */
-    public function hydration_fails_if_checksum_missing(): void
+    public function testHydrationFailsIfChecksumMissing(): void
     {
         self::bootKernel();
 
@@ -149,10 +138,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $hydrator->hydrate($factory->get(Component1::getComponentName()), []);
     }
 
-    /**
-     * @test
-     */
-    public function hydration_fails_on_checksum_mismatch(): void
+    public function testHydrationFailsOnChecksumMismatch(): void
     {
         self::bootKernel();
 
@@ -166,10 +152,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $hydrator->hydrate($factory->get(Component1::getComponentName()), ['_checksum' => 'invalid']);
     }
 
-    /**
-     * @test
-     */
-    public function can_check_if_action_is_allowed(): void
+    public function testCanCheckIfActionIsAllowed(): void
     {
         self::bootKernel();
 
@@ -185,10 +168,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertFalse($hydrator->isActionAllowed($component, 'method2'));
     }
 
-    /**
-     * @test
-     */
-    public function pre_dehydrate_and_post_hydrate_hooks_called(): void
+    public function testPreDehydrateAndPostHydrateHooksCalled(): void
     {
         self::bootKernel();
 
@@ -221,10 +201,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertTrue($component->postHydrateCalled);
     }
 
-    /**
-     * @test
-     */
-    public function deleting_entity_between_dehydration_and_hydration_sets_it_to_null(): void
+    public function testDeletingEntityBetweenDehydrationAndHydrationSetsItToNull(): void
     {
         self::bootKernel();
 
@@ -262,10 +239,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertNull($data['prop1']);
     }
 
-    /**
-     * @test
-     */
-    public function correctly_uses_custom_frontend_name_in_dehydrate_and_hydrate(): void
+    public function testCorrectlyUsesCustomFrontendNameInDehydrateAndHydrate(): void
     {
         self::bootKernel();
 

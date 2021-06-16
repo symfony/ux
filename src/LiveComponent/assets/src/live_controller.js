@@ -30,9 +30,6 @@ export default class extends Controller {
     /**
      * The current "timeout" that's waiting before an action should
      * be taken.
-     *
-     * TODO: this timeout should possible be specific to the exact action
-     * being taken so that another quick action taken doesn't clear this.
      */
     actionDebounceTimeout = null;
 
@@ -54,7 +51,6 @@ export default class extends Controller {
     connect() {
         // hide "loading" elements to begin with
         // This is done with CSS, but only for the most basic cases
-        // TODO: document that the user should do this manually in other cases
         this._onLoadingFinish();
 
         if (this.element.dataset.poll !== undefined) {
@@ -80,19 +76,16 @@ export default class extends Controller {
     update(event) {
         const value = event.target.value;
 
-        // todo - handle modifiers like "defer"
         this._updateModelFromElement(event.target, value, true);
     }
 
     updateDefer(event) {
         const value = event.target.value;
 
-        // todo - handle modifiers like "defer"
         this._updateModelFromElement(event.target, value, false);
     }
 
     action(event) {
-        // TODO - add validation for this in case it's missing
         // using currentTarget means that the data-action and data-action-name
         // must live on the same element: you can't add
         // data-action="click->live#action" on a parent element and
@@ -132,23 +125,25 @@ export default class extends Controller {
                             return;
                         }
                         break;
-                    case 'debounce':
+                    case 'debounce': {
                         const length = modifier.value ? modifier.value : DEFAULT_DEBOUNCE;
 
                         // clear any pending renders
-                         if (this.actionDebounceTimeout) {
-                             clearTimeout(this.actionDebounceTimeout);
-                             this.actionDebounceTimeout = null;
-                         }
+                        if (this.actionDebounceTimeout) {
+                            clearTimeout(this.actionDebounceTimeout);
+                            this.actionDebounceTimeout = null;
+                        }
 
-                         this.actionDebounceTimeout = setTimeout(() => {
-                             this.actionDebounceTimeout = null;
-                             _executeAction();
-                         }, length);
+                        this.actionDebounceTimeout = setTimeout(() => {
+                            this.actionDebounceTimeout = null;
+                            _executeAction();
+                        }, length);
 
-                         handled = true;
+                        handled = true;
 
-                         break;
+                        break;
+                    }
+
                     default:
                         console.warn(`Unknown modifier ${modifier.name} in action ${rawAction}`);
                 }
@@ -233,7 +228,6 @@ export default class extends Controller {
             // clear any pending renders
             this._clearWaitingDebouncedRenders();
 
-            // todo - make timeout configurable with a value
             this.renderDebounceTimeout = setTimeout(() => {
                 this.renderDebounceTimeout = null;
                 this.$render();
@@ -267,14 +261,12 @@ export default class extends Controller {
             fetchOptions.body = buildFormData(this.dataValue);
         }
 
-        // todo: make this work for specific actions, or models
         this._onLoadingStart();
         const paramsString = params.toString();
         const thisPromise = fetch(`${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`, fetchOptions);
         this.renderPromiseStack.addPromise(thisPromise);
         thisPromise.then((response) => {
             // if another re-render is scheduled, do not "run it over"
-            // todo: think if this should behave differently for actions
             if (this.renderDebounceTimeout) {
                 return;
             }
@@ -291,8 +283,6 @@ export default class extends Controller {
     /**
      * Processes the response from an AJAX call and uses it to re-render.
      *
-     * @todo Make this truly private
-     *
      * @private
      */
     _processRerender(data) {
@@ -303,6 +293,7 @@ export default class extends Controller {
 
         if (data.redirect_url) {
             // action returned a redirect
+            /* global Turbo */
             if (typeof Turbo !== 'undefined') {
                 Turbo.visit(data.redirect_url);
             } else {
@@ -372,14 +363,12 @@ export default class extends Controller {
 
         switch (finalAction) {
             case 'show':
-                // todo error on args - e.g. show(foo)
                 loadingDirective = () => {
                     this._showElement(element)
                 };
                 break;
 
             case 'hide':
-                // todo error on args
                 loadingDirective = () => this._hideElement(element);
                 break;
 
@@ -406,7 +395,7 @@ export default class extends Controller {
         let isHandled = false;
         directive.modifiers.forEach((modifier => {
             switch (modifier.name) {
-                case 'delay':
+                case 'delay': {
                     // if loading has *stopped*, the delay modifier has no effect
                     if (!isLoading) {
                         break;
@@ -422,6 +411,7 @@ export default class extends Controller {
                     isHandled = true;
 
                     break;
+                }
                 default:
                     throw new Error(`Unknown modifier ${modifier.name} used in the loading directive ${directive.getString()}`)
             }
@@ -450,7 +440,6 @@ export default class extends Controller {
     }
 
     _showElement(element) {
-        // TODO - allow different "display" types
         element.style.display = 'inline-block';
     }
 
@@ -576,8 +565,6 @@ export default class extends Controller {
 
 /**
  * Tracks the current "re-render" promises.
- *
- * @todo extract to a module
  */
 class PromiseStack {
     stack = [];
@@ -587,7 +574,7 @@ class PromiseStack {
     }
 
     /**
-     * Removes the promise AND returns if it is the most recent.
+     * Removes the promise AND returns `true` if it is the most recent.
      *
      * @param {Promise} promise
      * @return {boolean}

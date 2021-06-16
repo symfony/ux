@@ -11,6 +11,6 @@
 
 use Zenstruck\Foundry\Test\TestState;
 
-require \dirname(__DIR__).'/vendor/autoload.php';
+require dirname(__DIR__).'/vendor/autoload.php';
 
 TestState::disableDefaultProxyAutoRefresh();

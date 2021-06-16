@@ -105,7 +105,7 @@ trait ComponentWithFormTrait
      */
     public function getForm(): FormView
     {
-        if ($this->formView === null) {
+        if (null === $this->formView) {
             $this->formView = $this->getFormInstance()->createView();
         }
 
@@ -118,8 +118,6 @@ trait ComponentWithFormTrait
      * If your are not passing a FormView into your component, you
      * don't need to call this directly: the form will be set for
      * you from your instantiateForm() method.
-     *
-     * @param FormView $form
      */
     public function setForm(FormView $form)
     {
@@ -177,13 +175,13 @@ trait ComponentWithFormTrait
         $values = [];
         foreach ($formView->children as $child) {
             $name = $child->vars['name'];
-            if (count($child->children) > 0) {
+            if (\count($child->children) > 0) {
                 $values[$name] = $this->extractFormValues($child);
 
                 continue;
             }
 
-            if (array_key_exists('checked', $child->vars)) {
+            if (\array_key_exists('checked', $child->vars)) {
                 // special handling for check boxes
                 $values[$name] = $child->vars['checked'] ? $child->vars['value'] : null;
             } else {
@@ -196,7 +194,7 @@ trait ComponentWithFormTrait
 
     private function getFormInstance(): FormInterface
     {
-        if ($this->formInstance === null) {
+        if (null === $this->formInstance) {
             $this->formInstance = $this->instantiateForm();
         }
 
@@ -205,7 +203,7 @@ trait ComponentWithFormTrait
 
     private function clearErrorsForNonValidatedFields(Form $form, $currentPath = '')
     {
-        if (!$currentPath || !in_array($currentPath, $this->validatedFields,  true)) {
+        if (!$currentPath || !\in_array($currentPath, $this->validatedFields, true)) {
             $form->clearErrors();
         }
 

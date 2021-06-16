@@ -21,10 +21,7 @@ final class LiveComponentExtensionTest extends KernelTestCase
 {
     use HasBrowser;
 
-    /**
-     * @test
-     */
-    public function init_live_component(): void
+    public function testInitLiveComponent(): void
     {
         $response = $this->browser()
             ->visit('/render-template/template1')
@@ -34,10 +31,10 @@ final class LiveComponentExtensionTest extends KernelTestCase
         ;
 
         $div = $response->crawler()->filter('div');
-        $data = \json_decode($div->attr('data-live-data-value'), true);
+        $data = json_decode($div->attr('data-live-data-value'), true);
 
         $this->assertSame('live', $div->attr('data-controller'));
-        $this->assertSame('/components/component2', $div->attr('data-live-url-value'));
+        $this->assertSame('/_components/component2', $div->attr('data-live-url-value'));
         $this->assertNotNull($div->attr('data-live-csrf-value'));
         $this->assertCount(2, $data);
         $this->assertSame(1, $data['count']);

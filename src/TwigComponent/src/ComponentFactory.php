@@ -47,7 +47,7 @@ final class ComponentFactory
         // set data that wasn't set in mount on the component directly
         foreach ($data as $property => $value) {
             if (!$this->propertyAccessor->isWritable($component, $property)) {
-                throw new \LogicException(\sprintf('Unable to write "%s" to component "%s". Make sure this is a writable property or create a mount() with a $%s argument.', $property, \get_class($component), $property));
+                throw new \LogicException(sprintf('Unable to write "%s" to component "%s". Make sure this is a writable property or create a mount() with a $%s argument.', $property, \get_class($component), $property));
             }
 
             $this->propertyAccessor->setValue($component, $property, $value);
@@ -95,7 +95,7 @@ final class ComponentFactory
             } elseif ($refParameter->isDefaultValueAvailable()) {
                 $parameters[] = $refParameter->getDefaultValue();
             } else {
-                throw new \LogicException(\sprintf('%s::mount() has a required $%s parameter. Make sure this is passed or make give a default value.', \get_class($component), $refParameter->getName()));
+                throw new \LogicException(sprintf('%s::mount() has a required $%s parameter. Make sure this is passed or make give a default value.', \get_class($component), $refParameter->getName()));
             }
         }
 
@@ -105,11 +105,7 @@ final class ComponentFactory
     private function getComponent(string $name): ComponentInterface
     {
         if (!$this->components->has($name)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Unknown component "%s". The registered components are: %s',
-                $name,
-                implode(', ', array_keys($this->serviceIdMap))
-            ));
+            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->serviceIdMap))));
         }
 
         return $this->components->get($name);

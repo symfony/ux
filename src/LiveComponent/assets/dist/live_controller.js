@@ -27,7 +27,7 @@ function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArra
 
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _iterableToArrayLimit(arr, i) { var _i = arr && (typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]); if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
@@ -110,7 +110,6 @@ var _default = /*#__PURE__*/function (_Controller) {
     value: function connect() {
       // hide "loading" elements to begin with
       // This is done with CSS, but only for the most basic cases
-      // TODO: document that the user should do this manually in other cases
       this._onLoadingFinish();
 
       if (this.element.dataset.poll !== undefined) {
@@ -136,14 +135,14 @@ var _default = /*#__PURE__*/function (_Controller) {
   }, {
     key: "update",
     value: function update(event) {
-      var value = event.target.value; // todo - handle modifiers like "defer"
+      var value = event.target.value;
 
       this._updateModelFromElement(event.target, value, true);
     }
   }, {
     key: "updateDefer",
     value: function updateDefer(event) {
-      var value = event.target.value; // todo - handle modifiers like "defer"
+      var value = event.target.value;
 
       this._updateModelFromElement(event.target, value, false);
     }
@@ -152,7 +151,6 @@ var _default = /*#__PURE__*/function (_Controller) {
     value: function action(event) {
       var _this2 = this;
 
-      // TODO - add validation for this in case it's missing
       // using currentTarget means that the data-action and data-action-name
       // must live on the same element: you can't add
       // data-action="click->live#action" on a parent element and
@@ -195,20 +193,22 @@ var _default = /*#__PURE__*/function (_Controller) {
               break;
 
             case 'debounce':
-              var length = modifier.value ? modifier.value : DEFAULT_DEBOUNCE; // clear any pending renders
+              {
+                var length = modifier.value ? modifier.value : DEFAULT_DEBOUNCE; // clear any pending renders
 
-              if (_this2.actionDebounceTimeout) {
-                clearTimeout(_this2.actionDebounceTimeout);
-                _this2.actionDebounceTimeout = null;
+                if (_this2.actionDebounceTimeout) {
+                  clearTimeout(_this2.actionDebounceTimeout);
+                  _this2.actionDebounceTimeout = null;
+                }
+
+                _this2.actionDebounceTimeout = setTimeout(function () {
+                  _this2.actionDebounceTimeout = null;
+
+                  _executeAction();
+                }, length);
+                handled = true;
+                break;
               }
-
-              _this2.actionDebounceTimeout = setTimeout(function () {
-                _this2.actionDebounceTimeout = null;
-
-                _executeAction();
-              }, length);
-              handled = true;
-              break;
 
             default:
               console.warn("Unknown modifier ".concat(modifier.name, " in action ").concat(rawAction));
@@ -298,8 +298,7 @@ var _default = /*#__PURE__*/function (_Controller) {
 
       if (shouldRender) {
         // clear any pending renders
-        this._clearWaitingDebouncedRenders(); // todo - make timeout configurable with a value
-
+        this._clearWaitingDebouncedRenders();
 
         this.renderDebounceTimeout = setTimeout(function () {
           _this3.renderDebounceTimeout = null;
@@ -339,8 +338,7 @@ var _default = /*#__PURE__*/function (_Controller) {
       } else {
         fetchOptions.method = 'POST';
         fetchOptions.body = (0, _http_data_helper.buildFormData)(this.dataValue);
-      } // todo: make this work for specific actions, or models
-
+      }
 
       this._onLoadingStart();
 
@@ -349,7 +347,6 @@ var _default = /*#__PURE__*/function (_Controller) {
       this.renderPromiseStack.addPromise(thisPromise);
       thisPromise.then(function (response) {
         // if another re-render is scheduled, do not "run it over"
-        // todo: think if this should behave differently for actions
         if (_this4.renderDebounceTimeout) {
           return;
         }
@@ -366,8 +363,6 @@ var _default = /*#__PURE__*/function (_Controller) {
     /**
      * Processes the response from an AJAX call and uses it to re-render.
      *
-     * @todo Make this truly private
-     *
      * @private
      */
 
@@ -381,6 +376,8 @@ var _default = /*#__PURE__*/function (_Controller) {
 
       if (data.redirect_url) {
         // action returned a redirect
+
+        /* global Turbo */
         if (typeof Turbo !== 'undefined') {
           Turbo.visit(data.redirect_url);
         } else {
@@ -462,7 +459,6 @@ var _default = /*#__PURE__*/function (_Controller) {
 
       switch (finalAction) {
         case 'show':
-          // todo error on args - e.g. show(foo)
           loadingDirective = function loadingDirective() {
             _this6._showElement(element);
           };
@@ -470,7 +466,6 @@ var _default = /*#__PURE__*/function (_Controller) {
           break;
 
         case 'hide':
-          // todo error on args
           loadingDirective = function loadingDirective() {
             return _this6._hideElement(element);
           };
@@ -513,19 +508,21 @@ var _default = /*#__PURE__*/function (_Controller) {
       directive.modifiers.forEach(function (modifier) {
         switch (modifier.name) {
           case 'delay':
-            // if loading has *stopped*, the delay modifier has no effect
-            if (!isLoading) {
+            {
+              // if loading has *stopped*, the delay modifier has no effect
+              if (!isLoading) {
+                break;
+              }
+
+              var delayLength = modifier.value || 200;
+              setTimeout(function () {
+                if (element.hasAttribute('data-live-is-loading')) {
+                  loadingDirective();
+                }
+              }, delayLength);
+              isHandled = true;
               break;
             }
-
-            var delayLength = modifier.value || 200;
-            setTimeout(function () {
-              if (element.hasAttribute('data-live-is-loading')) {
-                loadingDirective();
-              }
-            }, delayLength);
-            isHandled = true;
-            break;
 
           default:
             throw new Error("Unknown modifier ".concat(modifier.name, " used in the loading directive ").concat(directive.getString()));
@@ -553,7 +550,6 @@ var _default = /*#__PURE__*/function (_Controller) {
   }, {
     key: "_showElement",
     value: function _showElement(element) {
-      // TODO - allow different "display" types
       element.style.display = 'inline-block';
     }
   }, {
@@ -695,8 +691,6 @@ var _default = /*#__PURE__*/function (_Controller) {
 }(_stimulus.Controller);
 /**
  * Tracks the current "re-render" promises.
- *
- * @todo extract to a module
  */
 
 
@@ -728,7 +722,7 @@ var PromiseStack = /*#__PURE__*/function () {
       this.stack.push(promise);
     }
     /**
-     * Removes the promise AND returns if it is the most recent.
+     * Removes the promise AND returns `true` if it is the most recent.
      *
      * @param {Promise} promise
      * @return {boolean}

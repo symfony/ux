@@ -21,6 +21,7 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
  * @experimental
+ *
  * @internal
  */
 class ComponentValidator implements ComponentValidatorInterface, ServiceSubscriberInterface
@@ -68,7 +69,7 @@ class ComponentValidator implements ComponentValidatorInterface, ServiceSubscrib
         $propertyParts = explode('.', $propertyPath);
         $propertyName = $propertyParts[0];
 
-        /** @var  $errors */
+        /** @var $errors */
         $errors = $this->getValidator()->validateProperty($component, $propertyName);
 
         $errorsForPath = [];

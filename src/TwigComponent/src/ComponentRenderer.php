@@ -31,7 +31,7 @@ final class ComponentRenderer
     {
         // TODO: Template attribute/annotation/interface to customize
         // TODO: Self-Rendering components?
-        $templateName = \sprintf('components/%s.html.twig', $component::getComponentName());
+        $templateName = sprintf('components/%s.html.twig', $component::getComponentName());
 
         return $this->twig->render($templateName, ['this' => $component]);
     }

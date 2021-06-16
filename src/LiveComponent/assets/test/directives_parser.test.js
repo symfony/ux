@@ -193,13 +193,13 @@ describe('directives parser', () => {
         it('missing ending )', () => {
             expect(() => {
                 parseDirectives('addClass(opacity-50');
-            }).toThrow('Did you forget to add a closing ") after "addClass"?')
+            }).toThrow('Did you forget to add a closing ")" after "addClass"?')
         });
 
         it('missing ending before next action', () => {
             expect(() => {
                 parseDirectives('addClass(opacity-50 hide');
-            }).toThrow('Did you forget to add a closing ") after "addClass"?')
+            }).toThrow('Did you forget to add a closing ")" after "addClass"?')
         });
 
         it('no space between actions', () => {

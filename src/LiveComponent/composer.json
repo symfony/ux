@@ -27,7 +27,7 @@
     },
     "require": {
         "php": ">=7.4",
-        "symfony/ux-twig-component": "dev-main"
+        "symfony/ux-twig-component": "^1.4"
     },
     "require-dev": {
         "symfony/framework-bundle": "^4.4|^5.0",
@@ -42,16 +42,14 @@
         "zenstruck/foundry": "^1.10",
         "zenstruck/browser": "^0.5.0"
     },
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "git@github.com:kbond/ux-twig-component.git"
-        }
-    ],
     "extra": {
+        "branch-alias": {
+            "dev-main": "1.4-dev"
+        },
         "thanks": {
             "name": "symfony/ux",
             "url": "https://github.com/symfony/ux"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }

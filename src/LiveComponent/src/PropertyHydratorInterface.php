@@ -23,18 +23,18 @@ interface PropertyHydratorInterface
     /**
      * @param mixed $value
      *
-     * @return scalar|null|array
+     * @return scalar|array|null
      *
-     * @throws UnsupportedHydrationException If unable to dehydrate.
+     * @throws UnsupportedHydrationException if unable to dehydrate
      */
     public function dehydrate($value);
 
     /**
-     * @param scalar|null|array $value
+     * @param scalar|array|null $value
      *
      * @return mixed
      *
-     * @throws UnsupportedHydrationException If unable to dehydrate.
+     * @throws UnsupportedHydrationException if unable to dehydrate
      */
     public function hydrate(string $type, $value);
 }

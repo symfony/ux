@@ -19,21 +19,20 @@ use Symfony\UX\LiveComponent\Tests\Fixture\Entity\Entity1;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Zenstruck\Browser\Response\HtmlResponse;
 use Zenstruck\Browser\Test\HasBrowser;
+use function Zenstruck\Foundry\create;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
-use function Zenstruck\Foundry\create;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
 final class LiveComponentSubscriberTest extends KernelTestCase
 {
-    use Factories, ResetDatabase, HasBrowser;
+    use Factories;
+    use HasBrowser;
+    use ResetDatabase;
 
-    /**
-     * @test
-     */
-    public function can_render_component_as_html_or_json(): void
+    public function testCanRenderComponentAsHtmlOrJson(): void
     {
         self::bootKernel();
 
@@ -55,7 +54,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/components/component1?'.http_build_query($dehydrated))
+            ->get('/_components/component1?'.http_build_query($dehydrated))
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Prop1: '.$entity->id)
@@ -63,7 +62,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertContains('Prop3: value3')
             ->assertContains('Prop4: (none)')
 
-            ->get('/components/component1?'.http_build_query($dehydrated), ['headers' => ['Accept' => 'application/vnd.live-component+json']])
+            ->get('/_components/component1?'.http_build_query($dehydrated), ['headers' => ['Accept' => 'application/vnd.live-component+json']])
             ->assertSuccessful()
             ->assertHeaderEquals('Content-Type', 'application/vnd.live-component+json')
             ->assertJsonMatches('keys(@)', ['html', 'data'])
@@ -78,10 +77,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    /**
-     * @test
-     */
-    public function can_execute_component_action(): void
+    public function testCanExecuteComponentAction(): void
     {
         self::bootKernel();
 
@@ -99,30 +95,30 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/components/component2?'.http_build_query($dehydrated))
+            ->get('/_components/component2?'.http_build_query($dehydrated))
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 1')
-            ->use(function(HtmlResponse $response) use (&$token) {
+            ->use(function (HtmlResponse $response) use (&$token) {
                 // get a valid token to use for actions
                 $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
             })
-            ->post('/components/component2/increase?'.http_build_query($dehydrated), [
-                'headers' => ['X-CSRF-TOKEN' => $token]
+            ->post('/_components/component2/increase?'.http_build_query($dehydrated), [
+                'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 2')
 
-            ->get('/components/component2?'.http_build_query($dehydrated), ['headers' => ['Accept' => 'application/vnd.live-component+json']])
+            ->get('/_components/component2?'.http_build_query($dehydrated), ['headers' => ['Accept' => 'application/vnd.live-component+json']])
             ->assertSuccessful()
             ->assertJsonMatches('data.count', 1)
             ->assertJsonMatches("contains(html, 'Count: 1')", true)
-            ->post('/components/component2/increase?'.http_build_query($dehydrated), [
+            ->post('/_components/component2/increase?'.http_build_query($dehydrated), [
                 'headers' => [
                     'Accept' => 'application/vnd.live-component+json',
                     'X-CSRF-TOKEN' => $token,
-                ]
+                ],
             ])
             ->assertSuccessful()
             ->assertJsonMatches('data.count', 2)
@@ -130,45 +126,33 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    /**
-     * @test
-     */
-    public function cannot_execute_component_action_for_get_request(): void
+    public function testCannotExecuteComponentActionForGetRequest(): void
     {
         $this->browser()
-            ->get('/components/component2/increase')
+            ->get('/_components/component2/increase')
             ->assertStatus(405)
         ;
     }
 
-    /**
-     * @test
-     */
-    public function missing_csrf_token_for_component_action_fails(): void
+    public function testMissingCsrfTokenForComponentActionFails(): void
     {
         $this->browser()
-            ->post('/components/component2/increase')
+            ->post('/_components/component2/increase')
             ->assertStatus(400)
         ;
     }
 
-    /**
-     * @test
-     */
-    public function invalid_csrf_token_for_component_action_fails(): void
+    public function testInvalidCsrfTokenForComponentActionFails(): void
     {
         $this->browser()
-            ->post('/components/component2/increase', [
-                'headers' => ['X-CSRF-TOKEN' => 'invalid']
+            ->post('/_components/component2/increase', [
+                'headers' => ['X-CSRF-TOKEN' => 'invalid'],
             ])
             ->assertStatus(400)
         ;
     }
 
-    /**
-     * @test
-     */
-    public function before_re_render_hook_only_executed_during_ajax(): void
+    public function testBeforeReRenderHookOnlyExecutedDuringAjax(): void
     {
         self::bootKernel();
 
@@ -187,16 +171,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->visit('/render-template/template1')
             ->assertSuccessful()
             ->assertSee('BeforeReRenderCalled: No')
-            ->get('/components/component2?'.http_build_query($dehydrated))
+            ->get('/_components/component2?'.http_build_query($dehydrated))
             ->assertSuccessful()
             ->assertSee('BeforeReRenderCalled: Yes')
         ;
     }
 
-    /**
-     * @test
-     */
-    public function can_redirect_from_component_action(): void
+    public function testCanRedirectFromComponentAction(): void
     {
         self::bootKernel();
 
@@ -214,23 +195,23 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/components/component2?'.http_build_query($dehydrated))
+            ->get('/_components/component2?'.http_build_query($dehydrated))
             ->assertSuccessful()
-            ->use(function(HtmlResponse $response) use (&$token) {
+            ->use(function (HtmlResponse $response) use (&$token) {
                 // get a valid token to use for actions
                 $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
             })
             ->interceptRedirects()
-            ->post('/components/component2/redirect?'.http_build_query($dehydrated), [
-                'headers' => ['X-CSRF-TOKEN' => $token]
+            ->post('/_components/component2/redirect?'.http_build_query($dehydrated), [
+                'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertRedirectedTo('/')
 
-            ->post('/components/component2/redirect?'.http_build_query($dehydrated), [
+            ->post('/_components/component2/redirect?'.http_build_query($dehydrated), [
                 'headers' => [
                     'Accept' => 'application/json',
                     'X-CSRF-TOKEN' => $token,
-                ]
+                ],
             ])
             ->assertSuccessful()
             ->assertJsonMatches('redirect_url', '/')

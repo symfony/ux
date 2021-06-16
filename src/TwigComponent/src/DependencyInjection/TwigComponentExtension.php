@@ -38,13 +38,13 @@ final class TwigComponentExtension extends Extension
         $container->register(ComponentFactory::class)
             ->setArguments([
                 new ServiceLocatorArgument(new TaggedIteratorArgument('twig.component', null, 'getComponentName')),
-                new Reference('property_accessor')
+                new Reference('property_accessor'),
             ])
         ;
 
         $container->register(ComponentRenderer::class)
             ->setArguments([
-                new Reference('twig')
+                new Reference('twig'),
             ])
         ;
 

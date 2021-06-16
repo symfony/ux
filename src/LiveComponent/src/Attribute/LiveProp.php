@@ -51,7 +51,7 @@ final class LiveProp
         $validOptions = ['writable', 'exposed', 'hydrateWith', 'dehydrateWith', 'fieldName'];
 
         foreach ($values as $name => $value) {
-            if (!in_array($name, $validOptions)) {
+            if (!\in_array($name, $validOptions)) {
                 throw new \InvalidArgumentException(sprintf('Unknown option "%s" passed to LiveProp. Valid options are: %s.', $name, implode(', ', $validOptions)));
             }
 

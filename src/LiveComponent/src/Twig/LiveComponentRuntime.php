@@ -44,24 +44,23 @@ final class LiveComponentRuntime
     public function renderLiveAttributes(Environment $env, ComponentInterface $component): string
     {
         if (!$component instanceof LiveComponentInterface) {
-            throw new \InvalidArgumentException(sprintf('The "%s" component (%s) is not a LiveComponent. Don\'t forget to implement LiveComponentInterface', $component::getComponentName(), get_class($component)));
+            throw new \InvalidArgumentException(sprintf('The "%s" component (%s) is not a LiveComponent. Don\'t forget to implement LiveComponentInterface', $component::getComponentName(), \get_class($component)));
         }
 
         $url = $this->urlGenerator->generate('live_component', ['component' => $component::getComponentName()]);
         $data = $this->hydrator->dehydrate($component);
 
-        $ret = \sprintf(
+        $ret = sprintf(
             'data-controller="live" data-live-url-value="%s" data-live-data-value="%s"',
             twig_escape_filter($env, $url, 'html_attr'),
-            twig_escape_filter($env, \json_encode($data, \JSON_THROW_ON_ERROR), 'html_attr'),
-
+            twig_escape_filter($env, json_encode($data, \JSON_THROW_ON_ERROR), 'html_attr'),
         );
 
         if (!$this->csrfTokenManager) {
             return $ret;
         }
 
-        return \sprintf('%s data-live-csrf-value="%s"',
+        return sprintf('%s data-live-csrf-value="%s"',
             $ret,
             $this->csrfTokenManager->getToken($component::getComponentName())->getValue()
         );

@@ -27,7 +27,7 @@ final class TwigComponentPass implements CompilerPassInterface
     {
         $serviceIdMap = [];
 
-        foreach (\array_keys($container->findTaggedServiceIds('twig.component')) as $serviceId) {
+        foreach (array_keys($container->findTaggedServiceIds('twig.component')) as $serviceId) {
             $definition = $container->getDefinition($serviceId);
 
             // make all component services non-shared
@@ -37,7 +37,7 @@ final class TwigComponentPass implements CompilerPassInterface
 
             // ensure component not already defined
             if (\array_key_exists($name, $serviceIdMap)) {
-                throw new LogicException(\sprintf('Component "%s" is already registered as "%s", components cannot be registered more than once.', $definition->getClass(), $serviceIdMap[$name]));
+                throw new LogicException(sprintf('Component "%s" is already registered as "%s", components cannot be registered more than once.', $definition->getClass(), $serviceIdMap[$name]));
             }
 
             // add to service id map for ComponentFactory

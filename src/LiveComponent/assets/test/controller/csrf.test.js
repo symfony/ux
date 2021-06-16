@@ -18,7 +18,7 @@ describe('LiveController CSRF Tests', () => {
     const template = (data) => `
         <div
             data-controller="live"
-            data-live-url-value="http://localhost/components/my_component"
+            data-live-url-value="http://localhost/_components/my_component"
             data-live-csrf-value="123TOKEN"
         >
             <label>
@@ -51,7 +51,7 @@ describe('LiveController CSRF Tests', () => {
             data
         );
 
-        const postMock = fetchMock.postOnce('http://localhost/components/my_component/save', {
+        const postMock = fetchMock.postOnce('http://localhost/_components/my_component/save', {
             html: template({ comments: 'hi', isSaved: true }),
             data: { comments: 'hi', isSaved: true }
         });

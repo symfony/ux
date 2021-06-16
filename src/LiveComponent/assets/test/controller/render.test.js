@@ -19,7 +19,7 @@ describe('LiveController rendering Tests', () => {
     const template = (data, includeLoading = false) => `
         <div
             data-controller="live"
-            data-live-url-value="http://localhost/components/my_component"
+            data-live-url-value="http://localhost/_components/my_component"
         >
             <!-- form field not mapped with data-model -->
             <label>
@@ -51,7 +51,7 @@ describe('LiveController rendering Tests', () => {
             data
         );
 
-        fetchMock.get('http://localhost/components/my_component?name=Ryan', {
+        fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
             html: '<div>aloha!</div>',
             data: { name: 'Kevin' }
         });
@@ -68,7 +68,7 @@ describe('LiveController rendering Tests', () => {
             data
         );
 
-        fetchMock.get('http://localhost/components/my_component?name=Ryan', {
+        fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
             html: template({ name: 'Kevin' }),
             data: { name: 'Kevin' }
         }, {
@@ -92,7 +92,7 @@ describe('LiveController rendering Tests', () => {
             data
         );
 
-        fetchMock.get('http://localhost/components/my_component?name=Ryan', {
+        fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
             html: template({ name: 'Kevin' }, true),
             data: { name: 'Kevin' }
         }, {
@@ -111,7 +111,7 @@ describe('LiveController rendering Tests', () => {
             return `
                 <div
                     data-controller="live"
-                    data-live-url-value="http://localhost/components/parent"
+                    data-live-url-value="http://localhost/_components/parent"
                 >
                     Title: ${data.title}
 
@@ -135,7 +135,7 @@ describe('LiveController rendering Tests', () => {
         element.querySelector('[data-controller="live"]').dataset.liveDataValue = JSON.stringify(childData);
 
         // child re-render: render with new name & an error class
-        fetchMock.get('http://localhost/components/my_component?name=Ryan', {
+        fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
             html: template({ name: 'Kevin', hasError: true }),
             data: { name: 'Kevin', hasError: true }
         });
@@ -145,7 +145,7 @@ describe('LiveController rendering Tests', () => {
         await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
 
         // reload the parent template
-        fetchMock.get('http://localhost/components/parent?title=Parent+component', {
+        fetchMock.get('http://localhost/_components/parent?title=Parent+component', {
             html: parentTemplate({ title: 'Changed parent' }, { name: 'changed name'}),
             data: { title: 'Changed parent'}
         });
@@ -163,7 +163,7 @@ describe('LiveController rendering Tests', () => {
             data
         );
 
-        fetchMock.get('http://localhost/components/my_component?name=Ryan', {
+        fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
             html: '<div>aloha!</div>',
             data: { name: 'Kevin' }
         }, {

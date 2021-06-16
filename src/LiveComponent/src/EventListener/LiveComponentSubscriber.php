@@ -30,11 +30,11 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Attribute\BeforeReRender;
+use Symfony\UX\LiveComponent\DefaultComponentController;
+use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\LiveComponent\LiveComponentInterface;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
-use Symfony\UX\LiveComponent\LiveComponentHydrator;
-use Symfony\UX\LiveComponent\DefaultComponentController;
-use Symfony\UX\LiveComponent\LiveComponentInterface;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -95,8 +95,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         if (
             $this->container->has(CsrfTokenManagerInterface::class) &&
-            !$this->container->get(CsrfTokenManagerInterface::class)->isTokenValid(new CsrfToken($componentName, $request->headers->get('X-CSRF-TOKEN'))))
-        {
+            !$this->container->get(CsrfTokenManagerInterface::class)->isTokenValid(new CsrfToken($componentName, $request->headers->get('X-CSRF-TOKEN')))) {
             throw new BadRequestHttpException('Invalid CSRF token.');
         }
 
@@ -117,8 +116,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        // TODO: also allow reading from $request->attributes in case
-        // some data is part of the URL string - see #42
         $data = array_merge(
             $request->query->all(),
             $request->request->all()
@@ -138,15 +135,11 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         }
 
         if (!$component instanceof LiveComponentInterface) {
-            throw new NotFoundHttpException('this is not a live component!');
+            throw new NotFoundHttpException(sprintf('A request has been made for a component, but the component - "%s" does not implement LiveComponentInterface.', \get_class($component)));
         }
 
         if (null !== $action && !$this->container->get(LiveComponentHydrator::class)->isActionAllowed($component, $action)) {
-            throw new NotFoundHttpException('invalid action');
-        }
-
-        if (!\is_array($data)) {
-            throw new NotFoundHttpException('invalid component data');
+            throw new NotFoundHttpException(sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveProp attribute/annotation above it.', $action, \get_class($component)));
         }
 
         $this->container->get(LiveComponentHydrator::class)->hydrate($component, $data);
@@ -256,7 +249,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
     private function isLiveComponentRequest(Request $request): bool
     {
-        return $request->attributes->get('_route') === 'live_component';
+        return 'live_component' === $request->attributes->get('_route');
     }
 
     private function isLiveComponentJsonRequest(Request $request): bool

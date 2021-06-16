@@ -40,9 +40,13 @@
         "symfony/dependency-injection": "<4.4.18,<5.1.10,<5.2.1"
     },
     "extra": {
+        "branch-alias": {
+            "dev-main": "1.4-dev"
+        },
         "thanks": {
             "name": "symfony/ux",
             "url": "https://github.com/symfony/ux"
         }
-    }
+    },
+    "minimum-stability": "dev"
 }

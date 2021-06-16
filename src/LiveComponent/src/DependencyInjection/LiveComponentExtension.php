@@ -35,7 +35,7 @@ final class LiveComponentExtension extends Extension
         ;
 
         $container->register(DoctrineEntityPropertyHydrator::class)
-            ->setArguments([[new Reference('doctrine')]]) // TODO: additional object managers
+            ->setArguments([[new Reference('doctrine')]])
             ->addTag('twig.component.property_hydrator', ['priority' => -200])
         ;
 

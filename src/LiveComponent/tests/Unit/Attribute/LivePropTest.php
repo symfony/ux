@@ -20,28 +20,19 @@ use Symfony\UX\LiveComponent\LiveComponentInterface;
  */
 final class LivePropTest extends TestCase
 {
-    /**
-     * @test
-     */
-    public function hydrate_with_method(): void
+    public function testHydrateWithMethod(): void
     {
         $this->assertSame('someMethod', (new LiveProp(['hydrateWith' => 'someMethod']))->hydrateMethod());
         $this->assertSame('someMethod', (new LiveProp(['hydrateWith' => 'someMethod()']))->hydrateMethod());
     }
 
-    /**
-     * @test
-     */
-    public function dehydrate_with_method(): void
+    public function testDehydrateWithMethod(): void
     {
         $this->assertSame('someMethod', (new LiveProp(['dehydrateWith' => 'someMethod']))->dehydrateMethod());
         $this->assertSame('someMethod', (new LiveProp(['dehydrateWith' => 'someMethod()']))->dehydrateMethod());
     }
 
-    /**
-     * @test
-     */
-    public function can_call_calculate_field_name_as_string(): void
+    public function testCanCallCalculateFieldNameAsString(): void
     {
         $component = new class() implements LiveComponentInterface {
             public static function getComponentName(): string
@@ -53,10 +44,7 @@ final class LivePropTest extends TestCase
         $this->assertSame('field', (new LiveProp(['fieldName' => 'field']))->calculateFieldName($component, 'fallback'));
     }
 
-    /**
-     * @test
-     */
-    public function can_call_calculate_field_name_as_method(): void
+    public function testCanCallCalculateFieldNameAsMethod(): void
     {
         $component = new class() implements LiveComponentInterface {
             public static function getComponentName(): string
@@ -73,10 +61,7 @@ final class LivePropTest extends TestCase
         $this->assertSame('foo', (new LiveProp(['fieldName' => 'fieldName()']))->calculateFieldName($component, 'fallback'));
     }
 
-    /**
-     * @test
-     */
-    public function can_call_calculate_field_name_when_not_set(): void
+    public function testCanCallCalculateFieldNameWhenNotSet(): void
     {
         $component = new class() implements LiveComponentInterface {
             public static function getComponentName(): string

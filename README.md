@@ -34,6 +34,10 @@ integrating it into [Webpack Encore](https://github.com/symfony/webpack-encore).
     Improve image loading performances through lazy-loading and data-uri thumbnails
 -   [UX Swup](https://github.com/symfony/ux-swup):
     [Swup](https://swup.js.org/) page transition library integration for Symfony
+-   [Twig Component](https://github.com/symfony/ux-twig-component):
+    A system to build reusable "components" with Twig
+-   [Live Component](https://github.com/symfony/ux-live-component):
+    Gives Twig Components a URL and a JavaScript library to automatically re-render via Ajax as your user interacts with it
 
 ## Stimulus Tools around the World
 

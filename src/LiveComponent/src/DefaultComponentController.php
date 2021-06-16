@@ -17,6 +17,7 @@ use Symfony\UX\TwigComponent\ComponentInterface;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
+ *
  * @internal
  */
 final class DefaultComponentController
@@ -27,7 +28,7 @@ final class DefaultComponentController
     public function __construct(ComponentInterface $component)
     {
         if (!$component instanceof LiveComponentInterface) {
-            throw new \InvalidArgumentException('Not a live component.');
+            throw new \InvalidArgumentException('Not an instance of LiveComponentInterface.');
         }
 
         $this->component = $component;
