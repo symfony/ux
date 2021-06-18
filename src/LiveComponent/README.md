@@ -525,7 +525,7 @@ class RandomNumberComponent implements LiveComponentInterface
 
 When you trigger an action, a POST request is sent that contains
 a `X-CSRF-TOKEN` header. This header is automatically populated
-and violated. In other words... you get CSRF protection without
+and validated. In other words... you get CSRF protection without
 any work.
 
 Your only job is to make sure that the CSRF component is installed:
@@ -674,7 +674,7 @@ a `post_form` component that we will create next:
 ```
 
 Ok: time to build that `post_form` component! The Live Components package
-come with a special trait - `ComponentWithFormTrait` - to make it easy to
+comes with a special trait - `ComponentWithFormTrait` - to make it easy to
 deal with forms:
 
 ```php
@@ -1051,7 +1051,7 @@ class EditUserComponent implements LiveComponentInterface
 Be sure to add the `@Assert\IsValid` to any property where you want
 the object on that property to also be validated.
 
-Tahnks to this setup, the component will now be automatically validated
+Thanks to this setup, the component will now be automatically validated
 on each render, but in a smart way: a property will only be validated
 once its "model" has been updated on the frontend. The system keeps track
 of which models have been updated (e.g. `data-action="live#update"`)
