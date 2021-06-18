@@ -1,7 +1,8 @@
 {
     "private": true,
     "workspaces": [
-        "src/**/Resources/assets"
+        "src/**/Resources/assets",
+        "src/**/assets"
     ],
     "scripts": {
         "build": "yarn workspaces run build",

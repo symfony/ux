@@ -1,0 +1,18 @@
+{
+    "presets": [
+        [
+            "@babel/env",
+            {
+                "targets": {
+                    "node": "current",
+                    "ie": "11"
+                },
+                "useBuiltIns": "entry",
+                "corejs": "3.14.0"
+            }
+        ]
+    ],
+    "plugins": [
+        "@babel/plugin-proposal-class-properties"
+    ]
+}
