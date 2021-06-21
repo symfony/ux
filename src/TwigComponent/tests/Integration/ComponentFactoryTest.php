@@ -28,7 +28,7 @@ final class ComponentFactoryTest extends KernelTestCase
         self::bootKernel();
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get(ComponentFactory::class);
+        $factory = self::$container->get('ux.twig_component.component_factory');
 
         /** @var ComponentA $componentA */
         $componentA = $factory->create('component_a', ['propA' => 'A', 'propB' => 'B']);
@@ -49,7 +49,7 @@ final class ComponentFactoryTest extends KernelTestCase
         self::bootKernel();
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get(ComponentFactory::class);
+        $factory = self::$container->get('ux.twig_component.component_factory');
 
         /** @var ComponentB $componentA */
         $componentA = $factory->create('component_b');
@@ -60,31 +60,12 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->assertNotSame(spl_object_id($componentA), spl_object_id($componentB));
     }
 
-    public function testShortNameCannotBeDifferentThanComponentName(): void
-    {
-        $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Component "Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentB" is already registered as "component_b", components cannot be registered more than once.');
-
-        self::bootKernel(['environment' => 'multiple_component_b']);
-    }
-
-    public function testCanGetServiceId(): void
-    {
-        self::bootKernel();
-
-        /** @var ComponentFactory $factory */
-        $factory = self::$container->get(ComponentFactory::class);
-
-        $this->assertSame(ComponentA::class, $factory->serviceIdFor('component_a'));
-        $this->assertSame('component_b', $factory->serviceIdFor('component_b'));
-    }
-
     public function testCanGetUnmountedComponent(): void
     {
         self::bootKernel();
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get(ComponentFactory::class);
+        $factory = self::$container->get('ux.twig_component.component_factory');
 
         /** @var ComponentA $component */
         $component = $factory->get('component_a');
@@ -98,7 +79,7 @@ final class ComponentFactoryTest extends KernelTestCase
         self::bootKernel();
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get(ComponentFactory::class);
+        $factory = self::$container->get('ux.twig_component.component_factory');
 
         /** @var ComponentC $component */
         $component = $factory->create('component_c', [
@@ -126,7 +107,7 @@ final class ComponentFactoryTest extends KernelTestCase
         self::bootKernel();
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get(ComponentFactory::class);
+        $factory = self::$container->get('ux.twig_component.component_factory');
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentC::mount() has a required $propA parameter. Make sure this is passed or make give a default value.');
@@ -139,11 +120,19 @@ final class ComponentFactoryTest extends KernelTestCase
         self::bootKernel();
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get(ComponentFactory::class);
+        $factory = self::$container->get('ux.twig_component.component_factory');
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Unable to write "service" to component "Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentA". Make sure this is a writable property or create a mount() with a $service argument.');
 
         $factory->create('component_a', ['propB' => 'B', 'service' => 'invalid']);
+    }
+
+    public function testTwigComponentServiceMustHaveAttribute(): void
+    {
+        $this->expectException(LogicException::class);
+        $this->expectExceptionMessage('Service "Symfony\UX\TwigComponent\Tests\Fixture\Service\ServiceA" is tagged as a "twig.component" but does not have a "Symfony\UX\TwigComponent\Attribute\AsTwigComponent" class attribute.');
+
+        self::bootKernel(['environment' => 'missing_attribute']);
     }
 }

@@ -11,27 +11,20 @@
 
 namespace Symfony\UX\LiveComponent\Attribute;
 
-use Symfony\UX\LiveComponent\LiveComponentInterface;
-
 /**
- * @Annotation
- * @Target("PROPERTY")
- *
  * @experimental
  */
+#[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class LiveProp
 {
-    /** @var bool */
-    private $writable = false;
+    private bool $writable;
 
     /** @var string[] */
-    private $exposed = [];
+    private array $exposed;
 
-    /** @var string|null */
-    private $hydrateWith = null;
+    private ?string $hydrateWith;
 
-    /** @var string|null */
-    private $dehydrateWith = null;
+    private ?string $dehydrateWith;
 
     /**
      *The "frontend" field name that should be used for this property.
@@ -41,22 +34,21 @@ final class LiveProp
      *
      * If you pass a string that ends in () - like "getFieldName()" - that
      * method on the component will be called to determine this.
-     *
-     * @var string|null
      */
-    private $fieldName = null;
+    private ?string $fieldName;
 
-    public function __construct(array $values)
-    {
-        $validOptions = ['writable', 'exposed', 'hydrateWith', 'dehydrateWith', 'fieldName'];
-
-        foreach ($values as $name => $value) {
-            if (!\in_array($name, $validOptions)) {
-                throw new \InvalidArgumentException(sprintf('Unknown option "%s" passed to LiveProp. Valid options are: %s.', $name, implode(', ', $validOptions)));
-            }
-
-            $this->$name = $value;
-        }
+    public function __construct(
+        bool $writable = false,
+        array $exposed = [],
+        ?string $hydrateWith = null,
+        ?string $dehydrateWith = null,
+        ?string $fieldName = null
+    ) {
+        $this->writable = $writable;
+        $this->exposed = $exposed;
+        $this->hydrateWith = $hydrateWith;
+        $this->dehydrateWith = $dehydrateWith;
+        $this->fieldName = $fieldName;
     }
 
     public function isReadonly(): bool
@@ -79,7 +71,7 @@ final class LiveProp
         return $this->dehydrateWith ? trim($this->dehydrateWith, '()') : null;
     }
 
-    public function calculateFieldName(LiveComponentInterface $component, string $fallback): string
+    public function calculateFieldName(object $component, string $fallback): string
     {
         if (!$this->fieldName) {
             return $fallback;

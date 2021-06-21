@@ -23,35 +23,26 @@ use Symfony\UX\LiveComponent\Attribute\PostHydrate;
  */
 trait ValidatableComponentTrait
 {
-    /** @var ComponentValidatorInterface|null */
-    private $componentValidator;
-
-    /** @var array */
-    private $validationErrors = [];
+    private ?ComponentValidatorInterface $componentValidator = null;
+    private array $validationErrors = [];
 
     /**
      * Tracks whether this entire component has been validated.
      *
      * This is used to know if validation should be automatically applied
      * when rendering.
-     *
-     * @LiveProp(writable=true)
-     *
-     * @var bool
      */
-    public $isValidated = false;
+    #[LiveProp(writable: true)]
+    public bool $isValidated = false;
 
     /**
      * Tracks which specific fields have been validated.
      *
      * Instead of validating the entire object (isValidated),
      * the component can be validated, field-by-field.
-     *
-     * @LiveProp(writable=true)
-     *
-     * @var array
      */
-    public $validatedFields = [];
+    #[LiveProp(writable: true)]
+    public array $validatedFields = [];
 
     /**
      * Validate the entire component.
@@ -123,9 +114,7 @@ trait ValidatableComponentTrait
         $this->validationErrors = [];
     }
 
-    /**
-     * @PostHydrate()
-     */
+    #[PostHydrate]
     public function validateAfterHydration()
     {
         if ($this->isValidated) {

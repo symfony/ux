@@ -15,9 +15,10 @@ A real-time product search component might look like this:
 // src/Components/ProductSearchComponent.php
 namespace App\Components;
 
-use Symfony\UX\LiveComponent\LiveComponentInterface;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
-class ProductSearchComponent implements LiveComponentInterface
+#[AsLiveComponent('product_search')]
+class ProductSearchComponent
 {
     public string $query = '';
 
@@ -32,11 +33,6 @@ class ProductSearchComponent implements LiveComponentInterface
     {
         // example method that returns an array of Products
         return $this->productRepository->search($this->query);
-    }
-
-    public static function getComponentName(): string
-    {
-        return 'product_search';
     }
 }
 ```
@@ -103,18 +99,14 @@ Suppose you've already built a basic Twig component:
 // src/Components/RandomNumberComponent.php
 namespace App\Components;
 
-use Symfony\UX\TwigComponent\ComponentInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-class RandomNumberComponent implements ComponentInterface
+#[AsTwigComponent('random_number')]
+class RandomNumberComponent
 {
     public function getRandomNumber(): string
     {
         return rand(0, 1000);
-    }
-
-    public static function getComponentName(): string
-    {
-        return 'random_number';
     }
 }
 ```
@@ -127,16 +119,18 @@ class RandomNumberComponent implements ComponentInterface
 ```
 
 To transform this into a "live" component (i.e. one that
-can be re-rendered live on the frontend), change your
-component's interface to `LiveComponentInterface`:
+can be re-rendered live on the frontend), replace the
+component's `AsTwigComponent` attribute with `AsLiveComponent`:
 
 ```diff
 // src/Components/RandomNumberComponent.php
 
-+use Symfony\UX\LiveComponent\LiveComponentInterface;
+-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
++use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
--class RandomNumberComponent implements ComponentInterface
-+class RandomNumberComponent implements LiveComponentInterface
+-#[AsTwigComponent('random_number')]
+-#[AsLiveComponent('random_number')]
+class RandomNumberComponent
 {
 }
 ```
@@ -183,11 +177,13 @@ namespace App\Components;
 // ...
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
-class RandomNumberComponent implements LiveComponentInterface
+#[AsLiveComponent('random_number')]
+class RandomNumberComponent
 {
-    /** @LiveProp */
+    #[LiveProp]
     public int $min = 0;
-    /** @LiveProp */
+
+    #[LiveProp]
     public int $max = 1000;
 
     public function getRandomNumber(): string
@@ -206,14 +202,14 @@ when rendering the component:
 {{ component('random_number', { min: 5, max: 500 }) }}
 ```
 
-But what's up with those `@LiveProp` annotations? A property with
-the `@LiveProp` annotation (or `LiveProp` PHP 8 attribute) becomes
-a "stateful" property for this component. In other words, each time
-we click the "Generate a new number!" button, when the component
-re-renders, it will _remember_ the original values for the `$min` and
-`$max` properties and generate a random number between 5 and 500.
-If you forgot to add `@LiveProp`, when the component re-rendered,
-those two values would _not_ be set on the object.
+But what's up with those `LiveProp` attributes? A property with
+the `LiveProp` attribute becomes a "stateful" property for this
+component. In other words, each time we click the "Generate a
+new number!" button, when the component re-renders, it will
+_remember_ the original values for the `$min` and `$max` properties
+and generate a random number between 5 and 500. If you forgot to
+add `LiveProp`, when the component re-rendered, those two values
+would _not_ be set on the object.
 
 In short: LiveProps are "stateful properties": they will always
 be set when rendering. Most properties will be LiveProps, with
@@ -267,13 +263,14 @@ the `writable=true` option:
 // src/Components/RandomNumberComponent.php
 // ...
 
-class RandomNumberComponent implements LiveComponentInterface
+class RandomNumberComponent
 {
--    /** @LiveProp() */
-+    /** @LiveProp(writable=true) */
+-    #[LiveProp]
++    #[LiveProp(writable: true)]
     public int $min = 0;
--    /** @LiveProp() */
-+    /** @LiveProp(writable=true) */
+
+-   #[LiveProp]
++   #[LiveProp(writable: true)]
     public int $max = 1000;
 
     // ...
@@ -428,8 +425,8 @@ want to add a "Reset Min/Max" button to our "random number"
 component that, when clicked, sets the min/max numbers back
 to a default value.
 
-First, add a method with a `LiveAction` annotation (or PHP 8 attribute)
-above it that does the work:
+First, add a method with a `LiveAction` attribute above it that
+does the work:
 
 ```php
 // src/Components/RandomNumberComponent.php
@@ -438,13 +435,11 @@ namespace App\Components;
 // ...
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 
-class RandomNumberComponent implements LiveComponentInterface
+class RandomNumberComponent
 {
     // ...
 
-    /**
-     * @LiveAction
-     */
+    #[LiveAction]
     public function resetMinMax()
     {
         $this->min = 0;
@@ -503,13 +498,11 @@ namespace App\Components;
 // ...
 use Psr\Log\LoggerInterface;
 
-class RandomNumberComponent implements LiveComponentInterface
+class RandomNumberComponent
 {
     // ...
 
-    /**
-     * @LiveAction
-     */
+    #[LiveAction]
     public function resetMinMax(LoggerInterface $logger)
     {
         $this->min = 0;
@@ -548,13 +541,11 @@ namespace App\Components;
 // ...
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class RandomNumberComponent extends AbstractController implements LiveComponentInterface
+class RandomNumberComponent extends AbstractController
 {
     // ...
 
-    /**
-     * @LiveAction
-     */
+    #[LiveAction]
     public function resetMinMax()
     {
         // ...
@@ -684,11 +675,12 @@ use App\Entity\Post;
 use App\Form\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\LiveComponentInterface;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 
-class PostFormComponent extends AbstractController implements LiveComponentInterface
+#[AsLiveComponent('post_form')]
+class PostFormComponent extends AbstractController
 {
     use ComponentWithFormTrait;
 
@@ -698,13 +690,12 @@ class PostFormComponent extends AbstractController implements LiveComponentInter
      * Needed so the same form can be re-created
      * when the component is re-rendered via Ajax.
      *
-     * The fieldName="" option is needed in this situation because
+     * The `fieldName` option is needed in this situation because
      * the form renders fields with names like `name="post[title]"`.
-     * We set fieldName="" so that this live prop doesn't collide
+     * We set `fieldName: ''` so that this live prop doesn't collide
      * with that data. The value - initialFormData - could be anything.
-     *
-     * @LiveProp(fieldName="initialFormData")
      */
+    #[LiveProp(fieldName: 'initialFormData')]
     public ?Post $post = null;
 
     /**
@@ -714,11 +705,6 @@ class PostFormComponent extends AbstractController implements LiveComponentInter
     {
         // we can extend AbstractController to get the normal shortcuts
         return $this->createForm(PostType::class, $this->post);
-    }
-
-    public static function getComponentName(): string
-    {
-        return 'post_form';
     }
 }
 ```
@@ -875,13 +861,11 @@ action to the component:
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 
-class PostFormComponent extends AbstractController implements LiveComponentInterface
+class PostFormComponent extends AbstractController
 {
     // ...
 
-    /**
-     * @LiveAction()
-     */
+    #[LiveAction]
     public function save(EntityManagerInterface $entityManager)
     {
         // shortcut to submit the form with form values
@@ -932,20 +916,14 @@ that is being edited:
 namespace App\Twig\Components;
 
 use App\Entity\Post;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\LiveComponentInterface;
 
-class EditPostComponent implements LiveComponentInterface
+#[AsLiveComponent('edit_post')]
+class EditPostComponent
 {
-    /**
-     * @LiveProp()
-     */
+    #[LiveProp]
     public Post $post;
-
-    public static function getComponentName(): string
-    {
-        return 'edit_post';
-    }
 }
 ```
 
@@ -985,12 +963,10 @@ you can enable it via the `exposed` option:
 ```diff
 // ...
 
-class EditPostComponent implements LiveComponentInterface
+class EditPostComponent
 {
-    /**
--     * @LiveProp(exposed={})
-+     * @LiveProp(exposed={"title", "content"})
-     */
+-   #[LiveProp]
++   #[LiveProp(exposed: ['title', 'content'])]
     public Post $post;
 
     // ...
@@ -1020,36 +996,28 @@ First use the `ValidatableComponentTrait` and add any constraints you need:
 
 ```php
 use App\Entity\User;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\LiveComponentInterface;
 use Symfony\UX\LiveComponent\ValidatableComponentTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class EditUserComponent implements LiveComponentInterface
+#[AsLiveComponent('edit_user')]
+class EditUserComponent
 {
     use ValidatableComponentTrait;
 
-    /**
-     * @LiveProp(exposed={"email", "plainPassword"})
-     * @Assert\Valid()
-     */
+    #[LiveProp(exposed: ['email', 'plainPassword'])]
+    #[Assert\Valid]
     public User $user;
 
-    /**
-     * @LiveProp()
-     * @Assert\IsTrue()
-     */
+     #[LiveProp]
+     #[Assert\IsTrue]
     public bool $agreeToTerms = false;
-
-    public static function getComponentName() : string
-    {
-        return 'edit_user';
-    }
 }
 ```
 
-Be sure to add the `@Assert\IsValid` to any property where you want
-the object on that property to also be validated.
+Be sure to add the `IsValid` attribute/annotation to any property where
+you want the object on that property to also be validated.
 
 Thanks to this setup, the component will now be automatically validated
 on each render, but in a smart way: a property will only be validated
@@ -1063,13 +1031,12 @@ in an action:
 ```php
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 
-class EditUserComponent implements LiveComponentInterface
+#[AsLiveComponent('edit_user')]
+class EditUserComponent
 {
     // ...
 
-    /**
-     * @LiveAction()
-     */
+    #[LiveAction]
     public function save()
     {
         // this will throw an exception if validation fails

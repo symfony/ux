@@ -11,14 +11,11 @@
 
 namespace Symfony\UX\LiveComponent;
 
-use Doctrine\Common\Annotations\Reader;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Symfony\UX\LiveComponent\Attribute\LiveAction;
-use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\Attribute\PostHydrate;
-use Symfony\UX\LiveComponent\Attribute\PreDehydrate;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LivePropContext;
 use Symfony\UX\LiveComponent\Exception\UnsupportedHydrationException;
 
 /**
@@ -34,53 +31,35 @@ final class LiveComponentHydrator
     private const EXPOSED_PROP_KEY = 'id';
 
     /** @var PropertyHydratorInterface[] */
-    private $propertyHydrators;
-
-    /** @var PropertyAccessorInterface */
-    private $propertyAccessor;
-
-    /** @var Reader */
-    private $annotationReader;
-
-    /** @var string */
-    private $secret;
+    private iterable $propertyHydrators;
+    private PropertyAccessorInterface $propertyAccessor;
+    private string $secret;
 
     /**
      * @param PropertyHydratorInterface[] $propertyHydrators
      */
-    public function __construct(iterable $propertyHydrators, PropertyAccessorInterface $propertyAccessor, Reader $annotationReader, string $secret)
+    public function __construct(iterable $propertyHydrators, PropertyAccessorInterface $propertyAccessor, string $secret)
     {
         $this->propertyHydrators = $propertyHydrators;
         $this->propertyAccessor = $propertyAccessor;
-        $this->annotationReader = $annotationReader;
         $this->secret = $secret;
     }
 
-    public function isActionAllowed(LiveComponentInterface $component, string $action): bool
+    public function dehydrate(object $component): array
     {
-        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($action === $method->name && $this->annotationReader->getMethodAnnotation($method, LiveAction::class)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public function dehydrate(LiveComponentInterface $component): array
-    {
-        foreach ($this->preDehydrateMethods($component) as $method) {
+        foreach (AsLiveComponent::preDehydrateMethods($component) as $method) {
             $component->{$method->name}();
         }
 
         $data = [];
         $readonlyProperties = [];
-
         $frontendPropertyNames = [];
-        foreach ($this->reflectionProperties($component) as $property) {
-            $liveProp = $this->livePropFor($property);
+
+        foreach (AsLiveComponent::liveProps($component) as $context) {
+            $property = $context->reflectionProperty();
+            $liveProp = $context->liveProp();
             $name = $property->getName();
-            $frontendName = $this->getFrontendFieldName($liveProp, $component, $property);
+            $frontendName = $liveProp->calculateFieldName($component, $property->getName());
 
             if (isset($frontendPropertyNames[$frontendName])) {
                 $message = sprintf('The field name "%s" cannot be used by multiple LiveProp properties in a component. Currently, both "%s" and "%s" are trying to use it in "%s".', $frontendName, $frontendPropertyNames[$frontendName], $name, \get_class($component));
@@ -126,9 +105,12 @@ final class LiveComponentHydrator
         return $data;
     }
 
-    public function hydrate(LiveComponentInterface $component, array $data): void
+    public function hydrate(object $component, array $data): void
     {
         $readonlyProperties = [];
+
+        /** @var LivePropContext[] $propertyContexts */
+        $propertyContexts = iterator_to_array(AsLiveComponent::liveProps($component));
 
         /*
          * Determine readonly properties for checksum verification. We need to do this
@@ -136,10 +118,12 @@ final class LiveComponentHydrator
          * be security implications to doing it after (component setter's could have
          * side effects).
          */
-        foreach ($this->reflectionProperties($component) as $property) {
-            $liveProp = $this->livePropFor($property);
+        foreach ($propertyContexts as $context) {
+            $liveProp = $context->liveProp();
+            $name = $context->reflectionProperty()->getName();
+
             if ($liveProp->isReadonly()) {
-                $readonlyProperties[] = $this->getFrontendFieldName($liveProp, $component, $property);
+                $readonlyProperties[] = $liveProp->calculateFieldName($component, $name);
             }
         }
 
@@ -147,10 +131,11 @@ final class LiveComponentHydrator
 
         unset($data[self::CHECKSUM_KEY]);
 
-        foreach ($this->reflectionProperties($component) as $property) {
-            $liveProp = $this->livePropFor($property);
+        foreach ($propertyContexts as $context) {
+            $property = $context->reflectionProperty();
+            $liveProp = $context->liveProp();
             $name = $property->getName();
-            $frontendName = $this->getFrontendFieldName($liveProp, $component, $property);
+            $frontendName = $liveProp->calculateFieldName($component, $name);
 
             if (!\array_key_exists($frontendName, $data)) {
                 // this property was not sent
@@ -199,7 +184,7 @@ final class LiveComponentHydrator
             $this->propertyAccessor->setValue($component, $name, $value);
         }
 
-        foreach ($this->postHydrateMethods($component) as $method) {
+        foreach (AsLiveComponent::postHydrateMethods($component) as $method) {
             $component->{$method->name}();
         }
     }
@@ -241,7 +226,6 @@ final class LiveComponentHydrator
      */
     private function hydrateProperty(\ReflectionProperty $property, $value)
     {
-        // TODO: make compatible with PHP 7.2
         if (!$property->getType() || !$property->getType() instanceof \ReflectionNamedType || $property->getType()->isBuiltin()) {
             return $value;
         }
@@ -262,7 +246,7 @@ final class LiveComponentHydrator
      *
      * @return scalar|array|null
      */
-    private function dehydrateProperty($value, string $name, LiveComponentInterface $component)
+    private function dehydrateProperty($value, string $name, object $component)
     {
         if (is_scalar($value) || \is_array($value) || null === $value) {
             // nothing to dehydrate...
@@ -287,31 +271,6 @@ final class LiveComponentHydrator
     }
 
     /**
-     * @param \ReflectionClass|object $object
-     *
-     * @return \ReflectionProperty[]
-     */
-    private function reflectionProperties(object $object): iterable
-    {
-        $class = $object instanceof \ReflectionClass ? $object : new \ReflectionClass($object);
-
-        foreach ($class->getProperties() as $property) {
-            if (null !== $this->livePropFor($property)) {
-                yield $property;
-            }
-        }
-
-        if ($parent = $class->getParentClass()) {
-            yield from $this->reflectionProperties($parent);
-        }
-    }
-
-    private function livePropFor(\ReflectionProperty $property): ?LiveProp
-    {
-        return $this->annotationReader->getPropertyAnnotation($property, LiveProp::class);
-    }
-
-    /**
      * Transforms a path like `post.name` into `[post][name]`.
      *
      * This allows us to use the property accessor to find this
@@ -320,41 +279,12 @@ final class LiveComponentHydrator
     private function transformToArrayPath(string $propertyPath): string
     {
         $parts = explode('.', $propertyPath);
-
         $path = '';
+
         foreach ($parts as $part) {
             $path .= "[{$part}]";
         }
 
         return $path;
-    }
-
-    /**
-     * @return \ReflectionMethod[]
-     */
-    private function preDehydrateMethods(LiveComponentInterface $component): iterable
-    {
-        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($this->annotationReader->getMethodAnnotation($method, PreDehydrate::class)) {
-                yield $method;
-            }
-        }
-    }
-
-    /**
-     * @return \ReflectionMethod[]
-     */
-    private function postHydrateMethods(LiveComponentInterface $component): iterable
-    {
-        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($this->annotationReader->getMethodAnnotation($method, PostHydrate::class)) {
-                yield $method;
-            }
-        }
-    }
-
-    private function getFrontendFieldName(LiveProp $liveProp, LiveComponentInterface $component, \ReflectionProperty $property): string
-    {
-        return $liveProp->calculateFieldName($component, $property->getName());
     }
 }

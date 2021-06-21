@@ -50,13 +50,21 @@ final class Kernel extends BaseKernel
             'default_path' => '%kernel.project_dir%/tests/Fixture/templates',
         ]);
 
-        $c->register(ServiceA::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(ComponentA::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register('component_b', ComponentB::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(ComponentC::class)->setAutoconfigured(true)->setAutowired(true);
+        $service = $c->register(ServiceA::class)->setAutoconfigured(true)->setAutowired(true);
 
-        if ('multiple_component_b' === $this->environment) {
-            $c->register('different_component_b', ComponentB::class)->setAutoconfigured(true)->setAutowired(true);
+        $componentA = $c->register(ComponentA::class)->setAutoconfigured(true)->setAutowired(true);
+        $componentB = $c->register('component_b', ComponentB::class)->setAutoconfigured(true)->setAutowired(true);
+        $componentC = $c->register(ComponentC::class)->setAutoconfigured(true)->setAutowired(true);
+
+        if (self::VERSION_ID < 50300) {
+            // add tag manually
+            $componentA->addTag('twig.component');
+            $componentB->addTag('twig.component');
+            $componentC->addTag('twig.component');
+        }
+
+        if ('missing_attribute' === $this->environment) {
+            $service->addTag('twig.component');
         }
     }
 

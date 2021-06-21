@@ -12,11 +12,9 @@
 namespace Symfony\UX\LiveComponent\Attribute;
 
 /**
- * @Annotation
- * @Target("METHOD")
- *
  * @experimental
  */
+#[\Attribute(\Attribute::TARGET_METHOD)]
 final class PreDehydrate
 {
 }

@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
@@ -37,13 +38,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         self::bootKernel();
 
         /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::$container->get(LiveComponentHydrator::class);
+        $hydrator = self::$container->get('ux.live_component.component_hydrator');
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get(ComponentFactory::class);
+        $factory = self::$container->get('ux.twig_component.component_factory');
 
         /** @var Component1 $component */
-        $component = $factory->create(Component1::getComponentName(), [
+        $component = $factory->create('component1', [
             'prop1' => $entity = create(Entity1::class)->object(),
             'prop2' => $date = new \DateTime('2021-03-05 9:23'),
             'prop3' => 'value3',
@@ -82,13 +83,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         self::bootKernel();
 
         /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::$container->get(LiveComponentHydrator::class);
+        $hydrator = self::$container->get('ux.live_component.component_hydrator');
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get(ComponentFactory::class);
+        $factory = self::$container->get('ux.twig_component.component_factory');
 
         /** @var Component2 $component */
-        $component = $factory->create(Component2::getComponentName());
+        $component = $factory->create('component2');
 
         $dehydrated = $hydrator->dehydrate($component);
         $token = null;
@@ -140,6 +141,19 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->post('/_components/component2/increase')
             ->assertStatus(400)
         ;
+
+        try {
+            $this->browser()
+                ->throwExceptions()
+                ->post('/_components/component2/increase')
+            ;
+        } catch (BadRequestHttpException $e) {
+            $this->assertSame('Invalid CSRF token.', $e->getMessage());
+
+            return;
+        }
+
+        $this->fail('Expected exception not thrown.');
     }
 
     public function testInvalidCsrfTokenForComponentActionFails(): void
@@ -150,6 +164,21 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ])
             ->assertStatus(400)
         ;
+
+        try {
+            $this->browser()
+                ->throwExceptions()
+                ->post('/_components/component2/increase', [
+                    'headers' => ['X-CSRF-TOKEN' => 'invalid'],
+                ])
+            ;
+        } catch (BadRequestHttpException $e) {
+            $this->assertSame('Invalid CSRF token.', $e->getMessage());
+
+            return;
+        }
+
+        $this->fail('Expected exception not thrown.');
     }
 
     public function testBeforeReRenderHookOnlyExecutedDuringAjax(): void
@@ -157,13 +186,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         self::bootKernel();
 
         /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::$container->get(LiveComponentHydrator::class);
+        $hydrator = self::$container->get('ux.live_component.component_hydrator');
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get(ComponentFactory::class);
+        $factory = self::$container->get('ux.twig_component.component_factory');
 
         /** @var Component2 $component */
-        $component = $factory->create(Component2::getComponentName());
+        $component = $factory->create('component2');
 
         $dehydrated = $hydrator->dehydrate($component);
 
@@ -182,13 +211,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         self::bootKernel();
 
         /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::$container->get(LiveComponentHydrator::class);
+        $hydrator = self::$container->get('ux.live_component.component_hydrator');
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get(ComponentFactory::class);
+        $factory = self::$container->get('ux.twig_component.component_factory');
 
         /** @var Component2 $component */
-        $component = $factory->create(Component2::getComponentName());
+        $component = $factory->create('component2');
 
         $dehydrated = $hydrator->dehydrate($component);
         $token = null;

@@ -21,24 +21,19 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  */
 final class ComponentFactory
 {
-    private $components;
-    private $propertyAccessor;
-    private $serviceIdMap;
+    private ServiceLocator $components;
+    private PropertyAccessorInterface $propertyAccessor;
 
-    /**
-     * @param ServiceLocator|ComponentInterface[] $components
-     */
-    public function __construct(ServiceLocator $components, PropertyAccessorInterface $propertyAccessor, array $serviceIdMap)
+    public function __construct(ServiceLocator $components, PropertyAccessorInterface $propertyAccessor)
     {
         $this->components = $components;
         $this->propertyAccessor = $propertyAccessor;
-        $this->serviceIdMap = $serviceIdMap;
     }
 
     /**
      * Creates the component and "mounts" it with the passed data.
      */
-    public function create(string $name, array $data = []): ComponentInterface
+    public function create(string $name, array $data = []): object
     {
         $component = $this->getComponent($name);
 
@@ -59,21 +54,12 @@ final class ComponentFactory
     /**
      * Returns the "unmounted" component.
      */
-    public function get(string $name): ComponentInterface
+    public function get(string $name): object
     {
         return $this->getComponent($name);
     }
 
-    public function serviceIdFor(string $name): string
-    {
-        if (!isset($this->serviceIdMap[$name])) {
-            throw new \InvalidArgumentException('Component not found.');
-        }
-
-        return $this->serviceIdMap[$name];
-    }
-
-    private function mount(ComponentInterface $component, array &$data): void
+    private function mount(object $component, array &$data): void
     {
         try {
             $method = (new \ReflectionClass($component))->getMethod('mount');
@@ -102,10 +88,10 @@ final class ComponentFactory
         $component->mount(...$parameters);
     }
 
-    private function getComponent(string $name): ComponentInterface
+    private function getComponent(string $name): object
     {
         if (!$this->components->has($name)) {
-            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->serviceIdMap))));
+            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->components->getProvidedServices()))));
         }
 
         return $this->components->get($name);

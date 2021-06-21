@@ -9,14 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent;
+namespace Symfony\UX\LiveComponent\Tests\Fixture\Component;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
  */
-interface ComponentInterface
+final class Component5 extends Component4
 {
-    public static function getComponentName(): string;
 }

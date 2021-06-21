@@ -20,6 +20,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Routing\RouteCollectionBuilder;
 use Symfony\UX\LiveComponent\LiveComponentBundle;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
@@ -61,9 +62,16 @@ final class Kernel extends BaseKernel
         // disable logging errors to the console
         $c->register('logger', NullLogger::class);
 
-        $c->register(Component1::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(Component2::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(Component3::class)->setAutoconfigured(true)->setAutowired(true);
+        $componentA = $c->register(Component1::class)->setAutoconfigured(true)->setAutowired(true);
+        $componentB = $c->register(Component2::class)->setAutoconfigured(true)->setAutowired(true);
+        $componentC = $c->register(Component3::class)->setAutoconfigured(true)->setAutowired(true);
+
+        if (self::VERSION_ID < 50300) {
+            // add tag manually
+            $componentA->addTag('twig.component')->addTag('controller.service_arguments');
+            $componentB->addTag('twig.component')->addTag('controller.service_arguments');
+            $componentC->addTag('twig.component')->addTag('controller.service_arguments');
+        }
 
         $sessionConfig = self::VERSION_ID < 50300 ? ['storage_id' => 'session.storage.mock_file'] : ['storage_factory_id' => 'session.storage.factory.mock_file'];
 
@@ -97,11 +105,21 @@ final class Kernel extends BaseKernel
         ]);
     }
 
-    protected function configureRoutes(RouteCollectionBuilder $routes): void
+    /**
+     * @param RoutingConfigurator|RouteCollectionBuilder $routes
+     */
+    protected function configureRoutes($routes): void
     {
         $routes->import('@LiveComponentBundle/Resources/config/routing/live_component.xml');
 
-        $routes->add('/render-template/{template}', 'kernel::renderTemplate');
-        $routes->add('/', 'kernel::index');
+        if ($routes instanceof RoutingConfigurator) {
+            $routes->add('template', '/render-template/{template}')->controller('kernel::renderTemplate');
+            $routes->add('homepage', '/')->controller('kernel::index');
+
+            return;
+        }
+
+        $routes->add('/render-template/{template}', 'kernel::renderTemplate', 'template');
+        $routes->add('/', 'kernel::index', 'homepage');
     }
 }

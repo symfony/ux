@@ -11,27 +11,24 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixture\Component;
 
-use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\BeforeReRender;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\Tests\Fixture\Entity\Entity1;
+use Symfony\UX\LiveComponent\Attribute\PostHydrate;
+use Symfony\UX\LiveComponent\Attribute\PreDehydrate;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-#[AsLiveComponent('component1')]
-final class Component1
+class Component4
 {
     #[LiveProp]
-    public ?Entity1 $prop1;
+    public $prop1;
+
+    public $prop2;
 
     #[LiveProp]
-    public \DateTimeInterface $prop2;
-
-    #[LiveProp(writable: true)]
-    public $prop3;
-
-    public $prop4;
+    private $prop3;
 
     #[LiveAction]
     public function method1()
@@ -39,6 +36,21 @@ final class Component1
     }
 
     public function method2()
+    {
+    }
+
+    #[BeforeReRender]
+    public function method3()
+    {
+    }
+
+    #[PreDehydrate]
+    public function method4()
+    {
+    }
+
+    #[PostHydrate]
+    public function method5()
     {
     }
 }

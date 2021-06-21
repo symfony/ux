@@ -11,13 +11,14 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Fixture\Component;
 
-use Symfony\UX\TwigComponent\ComponentInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Tests\Fixture\Service\ServiceA;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ComponentA implements ComponentInterface
+#[AsTwigComponent('component_a')]
+final class ComponentA
 {
     public $propA;
 
@@ -27,11 +28,6 @@ final class ComponentA implements ComponentInterface
     public function __construct(ServiceA $service)
     {
         $this->service = $service;
-    }
-
-    public static function getComponentName(): string
-    {
-        return 'component_a';
     }
 
     public function getService()

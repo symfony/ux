@@ -21,8 +21,8 @@ use Symfony\UX\TwigComponent\ComponentRenderer;
  */
 final class ComponentRuntime
 {
-    private $componentFactory;
-    private $componentRenderer;
+    private ComponentFactory $componentFactory;
+    private ComponentRenderer $componentRenderer;
 
     public function __construct(ComponentFactory $componentFactory, ComponentRenderer $componentRenderer)
     {
