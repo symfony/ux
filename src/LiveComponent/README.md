@@ -3,7 +3,7 @@
 **EXPERIMENTAL** This component is currently experimental and is
 likely to change, or even change drastically.
 
-Live components work with the [TwigComponent](../TwigComponent)
+Live components work with the [TwigComponent](https://github.com/symfony/ux-twig-component)
 library to give you the power to automatically update your
 Twig components on the frontend as the user interacts with them.
 Inspired by [Livewire](https://laravel-livewire.com/) and
@@ -62,6 +62,8 @@ class ProductSearchComponent implements LiveComponentInterface
 As a user types into the box, the component will automatically
 re-render and show the new results!
 
+Want a demo? Check out https://github.com/weaverryan/live-demo.
+
 ## Installation
 
 Let's get started! Install the library with:
@@ -94,7 +96,7 @@ That's it! We're ready!
 
 ## Making your Component "Live"
 
-If you haven't already, check out the [Twig Component](../TwigComponent)
+If you haven't already, check out the [Twig Component](https://github.com/symfony/ux-twig-component)
 documentation to get the basics of Twig components.
 
 Suppose you've already built a basic Twig component:
@@ -220,7 +222,7 @@ be set when rendering. Most properties will be LiveProps, with
 common exceptions being properties that hold services (these don't
 need to be stateful because they will be autowired each time before
 the component is rendered) and
-[properties used for computed properties](../TwigComponent/README.md#computed-properties).
+[properties used for computed properties](https://github.com/symfony/ux-twig-component/blob/main/README.md#computed-properties).
 
 ## data-action="live#update": Re-rendering on LiveProp Change
 
