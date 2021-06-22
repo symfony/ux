@@ -92,6 +92,14 @@ yarn install --force
 yarn encore dev
 ```
 
+Oh, and just one more step! Import a routing file from the bundle:
+
+```yaml
+# config/routes.yaml
+live_component:
+    resource: '@LiveComponentBundle/Resources/config/routing/live_component.xml'
+```
+
 That's it! We're ready!
 
 ## Making your Component "Live"
