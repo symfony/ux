@@ -97,12 +97,14 @@ automatically:
 
 ```php
 /**
- * @Route("/product/new")
+ * @Route("/product/new", name="product_new")
  */
 public function newProduct(Request $request): Response
 {
     return $this->handleForm(
-        $this->createForm(ProductFormType::class),
+        $this->createForm(ProductFormType::class, null, [
+            'action' => $this->generateUrl('product_new'),
+        ]),
         $request,
         function (FormInterface $form) {
             // save...
