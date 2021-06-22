@@ -1,0 +1,26 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-06-16T11:45:43Z
+
+Hey @pierrejoye - thanks for this… and moving it from the split ;).
+
+I’m not familiar with this specific bad behavior with a blank action. Does the form submit to the wrong url for you? You mentioned it redirected - was that after a successful form submit, or did it redirect after an unsuccessful form submit to the wrong page?
+
+EDIT: oh, is your form in a turbo-frame? Indeed, in that case, with no action, it’s very easy to end up with that form on a url that doesn’t match the form submit. And then, the form submits to the wrong (current) url. We should specify the action more consistently to avoid this problem. The question is, as a general recommendation, whether we should show the action being passed when creating the form in PHP or via form_row() in Twig. I kind of prefer the latter, but I don’t have a strong reason.
+
+Cheers!
+
+---------------------------------------------------------------------------
+
+by pierrejoye at 2021-06-16T12:57:18Z
+
+> Hey @pierrejoye - thanks for this… and moving it from the split ;).
+>
+> I’m not familiar with this specific bad behavior with a blank action. Does the form submit to the wrong url for you? You mentioned it redirected - was that after a successful form submit, or did it redirect after an unsuccessful form submit to the wrong page?
+
+Yes, it is in a turbo-frame, it refreshes the full page at /, not the current one. Is it the expected behaviors? Reading the turbo doc, I was not expecting this as they mentioned they will follow the server redirect and update the frame.  I am still discovering and taking notes of the parts I had to dig in :)
+
+>
+> EDIT: oh, is your form in a turbo-frame? Indeed, in that case, with no action, it’s very easy to end up with that form on a url that doesn’t match the form submit. And then, the form submits to the wrong (current) url. We should specify the action more consistently to avoid this problem. The question is, as a general recommendation, whether we should show the action being passed when creating the form in PHP or via form_row() in Twig. I kind of prefer the latter, but I don’t have a strong reason.
+
+You are fully correct. I also think the examples should show the best practices, to avoid to fall into this kind of trap. :)
