@@ -44,11 +44,13 @@ Done! Now render it wherever you want:
 
 Enjoy your new component!
 
-![Example of the AlertComponent](./alert-example.png)
+![Example of the AlertComponent](https://github.com/symfony/ux-twig-component/blob/main/alert-example.png?raw=true)
 
 This brings the familiar "component" system from client-side frameworks
-into Symfony. Combine this with [Live Components](../LiveComponent),
+into Symfony. Combine this with [Live Components](https://github.com/symfony/ux-live-component),
 to create an interactive frontend with automatic, Ajax-powered rendering.
+
+Want a demo? Check out https://github.com/weaverryan/live-demo.
 
 ## Installation
 
@@ -271,7 +273,7 @@ method and called that from the template via `this.products`.
 This was done because, as a general rule, you should make your components
 as _lazy_ as possible and store only the information you need on its
 properties (this also helps if you convert your component to a
-[live component](../LiveComponent)) later. With this setup, the
+[live component](https://github.com/symfony/ux-live-component)) later. With this setup, the
 query is only executed if and when the `getProducts()` method
 is actually called. This is very similar to the idea of
 "computed properties" in frameworks like [Vue](https://v3.vuejs.org/guide/computed.html).
