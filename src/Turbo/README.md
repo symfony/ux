@@ -102,11 +102,9 @@ automatically:
 public function newProduct(Request $request): Response
 {
     return $this->handleForm(
-        $this->createForm(ProductFormType::class, null,
-        [
+        $this->createForm(ProductFormType::class, null, [
             'action' => $this->generateUrl('product_new'),
-        ]
-        ),
+        ]),
         $request,
         function (FormInterface $form) {
             // save...
@@ -179,17 +177,6 @@ $builder
             'value' => 'save-and-add'
         ]
     ]);
-```
-> **NOTE Turbo ^7.0.0-beta.5:**
-> If Turbo ^7.0.0-beta.5 or lower (may be still valid with future version), there is a bug with turbo-frame and form submit. F.e., a link to add a product will work the 1st time, the frame will have the new product form, on submit, the frame will be updated using the products listing. At this point the new link won't work anymore. This is cache issue in Turbo. To avoid it add a ramdom value as get parameter, microtime(true) will make it unique for one client:
-
-```php
-return $this->redirectToRoute('school', ['rmd' => time()], Response::HTTP_SEE_OTHER);
-```
-and in the listing template:
-
-```php
-<a data-turbo-action="replace" href="/school/new?rdm={{ rdm }}">Add Product</a>
 ```
 
 #### More Turbo Drive Info
