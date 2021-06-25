@@ -75,102 +75,19 @@ var _default = /*#__PURE__*/function (_Controller) {
         autoInsertCss: this.autoInsertCssValue || true,
         attr: this.attrValue || null,
         bindInputFocusEvents: this.bindInputFocusEventsValue || false,
-        contentType: this.contentTypeValue || 'html',
-        onBegin: this.onBegin,
-        onComplete: this.onComplete,
-        preStringTyped: this.preStringTyped,
-        onStringTyped: this.onStringTyped,
-        onLastStringBackspaced: this.onLastStringBackspaced,
-        onTypingPaused: this.onTypingPaused,
-        onTypingResumed: this.onTypingResumed,
-        onReset: this.onReset,
-        onStop: this.onStop,
-        onStart: this.onStart,
-        onDestroy: this.onDestroy
+        contentType: this.contentTypeValue || 'html'
       };
-      var typed = new _typed["default"](this.element, options);
-      this._object = typed;
 
-      this._dispatchEvent('typed:connect', {
-        typed: typed,
+      this._dispatchEvent('typed:pre-connect', {
         options: options
       });
-    }
-  }, {
-    key: "toggle",
-    value: function toggle(event) {
-      console.log('toggle');
 
-      this._object.toggle();
-    }
-  }, {
-    key: "start",
-    value: function start(event) {
-      console.log('start');
+      var typed = new _typed["default"](this.element, options);
 
-      this._object.start();
+      this._dispatchEvent('typed:connect', {
+        typed: typed
+      });
     }
-  }, {
-    key: "stop",
-    value: function stop(event) {
-      console.log('stop');
-
-      this._object.stop();
-    }
-  }, {
-    key: "reset",
-    value: function reset(event) {
-      console.log('reset');
-
-      this._object.reset();
-    }
-  }, {
-    key: "destroy",
-    value: function destroy(event) {
-      console.log('destroy');
-
-      this._object.destroy();
-    }
-  }, {
-    key: "disconnect",
-    value: function disconnect() {
-      this._object.destroy();
-    }
-  }, {
-    key: "onBegin",
-    value: function onBegin() {}
-  }, {
-    key: "onComplete",
-    value: function onComplete() {
-      console.log(this._object);
-    }
-  }, {
-    key: "preStringTyped",
-    value: function preStringTyped() {}
-  }, {
-    key: "onStringTyped",
-    value: function onStringTyped() {}
-  }, {
-    key: "onLastStringBackspaced",
-    value: function onLastStringBackspaced() {}
-  }, {
-    key: "onTypingPaused",
-    value: function onTypingPaused() {}
-  }, {
-    key: "onTypingResumed",
-    value: function onTypingResumed() {}
-  }, {
-    key: "onReset",
-    value: function onReset() {}
-  }, {
-    key: "onStop",
-    value: function onStop() {}
-  }, {
-    key: "onStart",
-    value: function onStart() {}
-  }, {
-    key: "onDestroy",
-    value: function onDestroy() {}
   }, {
     key: "_dispatchEvent",
     value: function _dispatchEvent(name) {

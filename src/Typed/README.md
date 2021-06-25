@@ -6,7 +6,7 @@ Symfony applications. It is part of [the Symfony UX initiative](https://symfony.
 Typed is a complete and easy to use animated typed texts.
 Just enter the strings you want to see typed and it goes live without complexity.
 
-![](Animation.gif)
+![Typed in action](Animation.gif)
 
 ## Installation
 
@@ -34,27 +34,12 @@ and smart backspace are some of the incredible parameters you can use.
 The main usage of Symfony UX Typed is to use its Stimulus controller to initialize Typed:
 
 ```twig
-<html lang="en">
-    <head>
-        <title>Typed</title>
-
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        <div>
-            I created this UX component because <span {{
-                stimulus_controller(
-                    'symfony/ux-typed/typed',
-                    {
-                        strings: ['I ❤ Symfony UX', 'Symfony UX is great', 'Symfony UX is easy']
-                    }
-                )
-            }}></span>
-        </div>
-    </body>
-</html>
+<div>
+    I created this UX component because
+    <span {{ stimulus_controller('symfony/ux-typed/typed', {
+        strings: ['I ❤ Symfony UX', 'Symfony UX is great', 'Symfony UX is easy']
+    }) }}></span>
+</div>
 ```
 
 **Note** The `stimulus_controller()` function comes from
@@ -65,39 +50,20 @@ You can customize the way those messages are typed.
 Parameters are exactly the same as for the [typed library](https://github.com/mattboldt/typed.js/blob/master/README.md)
 
 ```twig
-<html lang="en">
-    <head>
-        <title>Typed</title>
-
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-        {% endblock %}
-    </head>
-    <body>
-        <div>
-            I created this UX component because <span {{
-                stimulus_controller(
-                    'symfony/ux-typed/typed',
-                    {
-                        strings: ['I ❤ Symfony UX', 'Symfony UX is great', 'Symfony UX is easy'],
-                        smartBackspace: true,
-                        startDelay: 100,
-                        backSpeed: 20,
-                        backDelay: 100,
-                        loop: true,
-                        showCursor: true,
-                        cursorChar: '✨'
-                    }
-                )
-            }}></span>
-        </div>
-    </body>
-</html>
+<div>
+    I created this UX component because
+    <span {{ stimulus_controller('symfony/ux-typed/typed', {
+        strings: ['I ❤ Symfony UX', 'Symfony UX is great', 'Symfony UX is easy'],
+        smartBackspace: true,
+        startDelay: 100,
+        backSpeed: 20,
+        backDelay: 100,
+        loop: true,
+        showCursor: true,
+        cursorChar: '✨'
+    }) }}></span>
+</div>
 ```
-
-### Event
-
-Symfony UX Typed dispatched the events from the Typed object.
 
 ## Backward Compatibility promise
 

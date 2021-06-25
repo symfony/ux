@@ -55,69 +55,12 @@ export default class extends Controller {
             attr: this.attrValue || null,
             bindInputFocusEvents: this.bindInputFocusEventsValue || false,
             contentType: this.contentTypeValue || 'html',
-            onBegin: this.onBegin,
-            onComplete: this.onComplete,
-            preStringTyped: this.preStringTyped,
-            onStringTyped: this.onStringTyped,
-            onLastStringBackspaced: this.onLastStringBackspaced,
-            onTypingPaused: this.onTypingPaused,
-            onTypingResumed: this.onTypingResumed,
-            onReset: this.onReset,
-            onStop: this.onStop,
-            onStart: this.onStart,
-            onDestroy: this.onDestroy,
         };
 
+        this._dispatchEvent('typed:pre-connect', { options });
         const typed = new Typed(this.element, options);
-        this._object = typed;
-        this._dispatchEvent('typed:connect', { typed, options });
+        this._dispatchEvent('typed:connect', { typed });
     }
-
-    toggle(event)
-    {
-        console.log('toggle')
-        this._object.toggle();
-    }
-
-    start(event)
-    {
-        console.log('start')
-        this._object.start();
-    }
-
-    stop(event)
-    {
-        console.log('stop')
-        this._object.stop();
-    }
-
-    reset(event)
-    {
-        console.log('reset')
-        this._object.reset();
-    }
-
-    destroy(event)
-    {
-        console.log('destroy')
-        this._object.destroy();
-    }
-
-    disconnect() {
-        this._object.destroy()
-    }
-
-    onBegin () {}
-    onComplete () {console.log(this._object)}
-    preStringTyped () {}
-    onStringTyped () {}
-    onLastStringBackspaced () {}
-    onTypingPaused () {}
-    onTypingResumed () {}
-    onReset () {}
-    onStop () {}
-    onStart () {}
-    onDestroy () {}
 
     _dispatchEvent(name, payload = null, canBubble = false, cancelable = false) {
         const userEvent = document.createEvent('CustomEvent');

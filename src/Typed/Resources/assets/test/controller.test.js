@@ -20,11 +20,8 @@ class CheckController extends Controller {
         this.element.addEventListener('typed:connect', () => {
             this.element.classList.add('connected');
         });
-        this.element.addEventListener('typed:onBegin', () => {
-            this.element.classList.add('onBegin');
-        });
-        this.element.addEventListener('typed:onComplete', () => {
-            this.element.classList.add('onComplete');
+        this.element.addEventListener('typed:pre-connect', () => {
+            this.element.classList.add('preconnected');
         });
     }
 }
@@ -46,7 +43,7 @@ describe('TypedController', () => {
                 </head>
                 <body>                    
                     <div>
-                        I created this UX component because <span {{ stimulus_controller("typed", {
+                        I created this UX component because <span data-testid="typed" {{ stimulus_controller("typed", {
                             strings: ["I ❤ Symfony UX", "Symfony UX is great", "Symfony UX is easy"],
                             smartBackspace: true,
                             startDelay: 100,
@@ -67,10 +64,17 @@ describe('TypedController', () => {
         clearDOM();
     });
 
-    it('connect', async () => {
-        expect(getByTestId(container, 'body')).not.toHaveClass('connected');
+    it('pre-connect', async () => {
+        expect(getByTestId(container, 'typed')).not.toHaveClass('preconnected');
 
         startStimulus();
-        await waitFor(() => expect(getByTestId(container, 'body')).toHaveClass('connected'));
+        await waitFor(() => expect(getByTestId(container, 'typed')).toHaveClass('preconnected'));
+    });
+
+    it('connect', async () => {
+        expect(getByTestId(container, 'typed')).not.toHaveClass('connected');
+
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'typed')).toHaveClass('connected'));
     });
 });
