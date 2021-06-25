@@ -1,0 +1,33 @@
+{
+    "name": "symfony/ux-typed",
+    "type": "symfony-bundle",
+    "description": "Typed integration for Symfony",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Florent Morselli",
+            "email": "contact@spomky-labs.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "conflict": {
+        "symfony/flex": "<1.13"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-main": "1.3-dev"
+        },
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}

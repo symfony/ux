@@ -1,0 +1,210 @@
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+'use strict';
+
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports["default"] = void 0;
+
+var _stimulus = require("stimulus");
+
+var _typed = _interopRequireDefault(require("typed.js"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
+
+function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
+
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
+
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+
+function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
+
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
+
+function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
+var _default = /*#__PURE__*/function (_Controller) {
+  _inherits(_default, _Controller);
+
+  var _super = _createSuper(_default);
+
+  function _default() {
+    _classCallCheck(this, _default);
+
+    return _super.apply(this, arguments);
+  }
+
+  _createClass(_default, [{
+    key: "connect",
+    value: function connect() {
+      var options = {
+        strings: this.stringsValue || null,
+        typeSpeed: this.typeSpeedValue || 30,
+        smartBackspace: this.smartBackspaceValue || true,
+        startDelay: this.startDelayValue || 0,
+        backSpeed: this.backSpeedValue || 0,
+        shuffle: this.shuffleValue || false,
+        backDelay: this.backDelayValue || 700,
+        fadeOut: this.fadeOutValue || false,
+        fadeOutClass: this.fadeOutClassValue || 'typed-fade-out',
+        fadeOutDelay: this.fadeOutDelayValue || 500,
+        loop: this.loopValue || false,
+        loopCount: this.loopCountValue || Infinity,
+        showCursor: this.showCursorValue || true,
+        cursorChar: this.cursorCharValue || '|',
+        autoInsertCss: this.autoInsertCssValue || true,
+        attr: this.attrValue || null,
+        bindInputFocusEvents: this.bindInputFocusEventsValue || false,
+        contentType: this.contentTypeValue || 'html',
+        onBegin: this.onBegin,
+        onComplete: this.onComplete,
+        preStringTyped: this.preStringTyped,
+        onStringTyped: this.onStringTyped,
+        onLastStringBackspaced: this.onLastStringBackspaced,
+        onTypingPaused: this.onTypingPaused,
+        onTypingResumed: this.onTypingResumed,
+        onReset: this.onReset,
+        onStop: this.onStop,
+        onStart: this.onStart,
+        onDestroy: this.onDestroy
+      };
+      var typed = new _typed["default"](this.element, options);
+      this._object = typed;
+
+      this._dispatchEvent('typed:connect', {
+        typed: typed,
+        options: options
+      });
+    }
+  }, {
+    key: "toggle",
+    value: function toggle(event) {
+      console.log('toggle');
+
+      this._object.toggle();
+    }
+  }, {
+    key: "start",
+    value: function start(event) {
+      console.log('start');
+
+      this._object.start();
+    }
+  }, {
+    key: "stop",
+    value: function stop(event) {
+      console.log('stop');
+
+      this._object.stop();
+    }
+  }, {
+    key: "reset",
+    value: function reset(event) {
+      console.log('reset');
+
+      this._object.reset();
+    }
+  }, {
+    key: "destroy",
+    value: function destroy(event) {
+      console.log('destroy');
+
+      this._object.destroy();
+    }
+  }, {
+    key: "disconnect",
+    value: function disconnect() {
+      this._object.destroy();
+    }
+  }, {
+    key: "onBegin",
+    value: function onBegin() {}
+  }, {
+    key: "onComplete",
+    value: function onComplete() {
+      console.log(this._object);
+    }
+  }, {
+    key: "preStringTyped",
+    value: function preStringTyped() {}
+  }, {
+    key: "onStringTyped",
+    value: function onStringTyped() {}
+  }, {
+    key: "onLastStringBackspaced",
+    value: function onLastStringBackspaced() {}
+  }, {
+    key: "onTypingPaused",
+    value: function onTypingPaused() {}
+  }, {
+    key: "onTypingResumed",
+    value: function onTypingResumed() {}
+  }, {
+    key: "onReset",
+    value: function onReset() {}
+  }, {
+    key: "onStop",
+    value: function onStop() {}
+  }, {
+    key: "onStart",
+    value: function onStart() {}
+  }, {
+    key: "onDestroy",
+    value: function onDestroy() {}
+  }, {
+    key: "_dispatchEvent",
+    value: function _dispatchEvent(name) {
+      var payload = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+      var canBubble = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+      var cancelable = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+      var userEvent = document.createEvent('CustomEvent');
+      userEvent.initCustomEvent(name, canBubble, cancelable, payload);
+      this.element.dispatchEvent(userEvent);
+    }
+  }]);
+
+  return _default;
+}(_stimulus.Controller);
+
+exports["default"] = _default;
+
+_defineProperty(_default, "values", {
+  strings: Array,
+  typeSpeed: Number,
+  smartBackspace: Boolean,
+  startDelay: Number,
+  backSpeed: Number,
+  shuffle: Boolean,
+  backDelay: Number,
+  fadeOut: Boolean,
+  fadeOutClass: String,
+  fadeOutDelay: Number,
+  loop: Boolean,
+  loopCount: Number,
+  showCursor: Boolean,
+  cursorChar: String,
+  autoInsertCss: Boolean,
+  attr: String,
+  bindInputFocusEvents: Boolean,
+  contentType: String
+});
