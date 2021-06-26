@@ -10,10 +10,9 @@
 'use strict';
 
 import { Controller } from 'stimulus';
-import Typed from "typed.js";
+import Typed from 'typed.js';
 
 export default class extends Controller {
-
     static values = {
         strings: Array,
         typeSpeed: Number,
@@ -33,7 +32,7 @@ export default class extends Controller {
         attr: String,
         bindInputFocusEvents: Boolean,
         contentType: String,
-    }
+    };
 
     connect() {
         const options = {
