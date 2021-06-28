@@ -1,4 +1,4 @@
-import { parseDirectives } from '../dist/directives_parser';
+import { parseDirectives } from '../src/directives_parser';
 
 const assertDirectiveEquals = function(actual, expected) {
     delete actual.getString;

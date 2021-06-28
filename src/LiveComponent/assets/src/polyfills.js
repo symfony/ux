@@ -1,6 +1,6 @@
 /**
- * A file that imports all necessary polyfills.
- *
- * core-js is replaced by the actually-needed imports at build time.
+ * A file that imports polyfills needed for older browser (IE 11).
  */
-import 'core-js';
+import 'core-js/web/url';
+import 'core-js/es/promise';
+import 'core-js/es/array/find-index';

@@ -1,4 +1,4 @@
-import { combineSpacedArray } from '../dist/string_utils';
+import { combineSpacedArray } from '../src/string_utils';
 
 describe('combinedSpacedArray', () => {
     it('parse normal array', () => {
