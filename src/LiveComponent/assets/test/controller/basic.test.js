@@ -26,7 +26,6 @@ describe('LiveController Basic Tests', () => {
         })
         const { element } = await startStimulus(
             '<div data-controller="live"></div>',
-            {},
             container
         );
 

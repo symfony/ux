@@ -1250,6 +1250,8 @@ var _default = /*#__PURE__*/function (_Controller) {
   }, {
     key: "connect",
     value: function connect() {
+      var _this2 = this;
+
       // hide "loading" elements to begin with
       // This is done with CSS, but only for the most basic cases
       this._onLoadingFinish();
@@ -1259,6 +1261,14 @@ var _default = /*#__PURE__*/function (_Controller) {
       }
 
       window.addEventListener('beforeunload', this.markAsWindowUnloaded);
+      this.element.addEventListener('live:update-model', function (event) {
+        // ignore events that we dispatched
+        if (event.target === _this2.element) {
+          return;
+        }
+
+        _this2._handleChildComponentUpdateModel(event);
+      });
 
       this._dispatchEvent('live:connect');
     }
@@ -1291,7 +1301,7 @@ var _default = /*#__PURE__*/function (_Controller) {
   }, {
     key: "action",
     value: function action(event) {
-      var _this2 = this;
+      var _this3 = this;
 
       // using currentTarget means that the data-action and data-action-name
       // must live on the same element: you can't add
@@ -1311,9 +1321,9 @@ var _default = /*#__PURE__*/function (_Controller) {
           // then the action Ajax will start. We want to avoid the
           // re-render request from starting after the debounce and
           // taking precedence
-          _this2._clearWaitingDebouncedRenders();
+          _this3._clearWaitingDebouncedRenders();
 
-          _this2._makeRequest(directive.action);
+          _this3._makeRequest(directive.action);
         };
 
         var handled = false;
@@ -1338,13 +1348,13 @@ var _default = /*#__PURE__*/function (_Controller) {
               {
                 var length = modifier.value ? modifier.value : DEFAULT_DEBOUNCE; // clear any pending renders
 
-                if (_this2.actionDebounceTimeout) {
-                  clearTimeout(_this2.actionDebounceTimeout);
-                  _this2.actionDebounceTimeout = null;
+                if (_this3.actionDebounceTimeout) {
+                  clearTimeout(_this3.actionDebounceTimeout);
+                  _this3.actionDebounceTimeout = null;
                 }
 
-                _this2.actionDebounceTimeout = setTimeout(function () {
-                  _this2.actionDebounceTimeout = null;
+                _this3.actionDebounceTimeout = setTimeout(function () {
+                  _this3.actionDebounceTimeout = null;
 
                   _executeAction();
                 }, length);
@@ -1378,14 +1388,14 @@ var _default = /*#__PURE__*/function (_Controller) {
         throw new Error("The update() method could not be called for \"".concat(clonedElement.outerHTML, "\": the element must either have a \"data-model\" or \"name\" attribute set to the model name."));
       }
 
-      this.$updateModel(model, value, element, shouldRender);
+      this.$updateModel(model, value, shouldRender);
     }
   }, {
     key: "$updateModel",
-    value: function $updateModel(model, value, element) {
-      var _this3 = this;
+    value: function $updateModel(model, value) {
+      var _this4 = this;
 
-      var shouldRender = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : true;
+      var shouldRender = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
       var directives = parseDirectives(model);
 
       if (directives.length > 1) {
@@ -1414,7 +1424,12 @@ var _default = /*#__PURE__*/function (_Controller) {
 
       if (!doesDeepPropertyExist(this.dataValue, modelName)) {
         console.warn("Model \"".concat(modelName, "\" is not a valid data-model value"));
-      } // we do not send old and new data to the server
+      }
+
+      this._dispatchEvent('live:update-model', {
+        model: modelName,
+        value: value
+      }); // we do not send old and new data to the server
       // we merge in the new data now
       // TODO: handle edge case for top-level of a model with "exposed" props
       // For example, suppose there is a "post" field but "post.title" is exposed.
@@ -1443,16 +1458,16 @@ var _default = /*#__PURE__*/function (_Controller) {
         this._clearWaitingDebouncedRenders();
 
         this.renderDebounceTimeout = setTimeout(function () {
-          _this3.renderDebounceTimeout = null;
+          _this4.renderDebounceTimeout = null;
 
-          _this3.$render();
+          _this4.$render();
         }, this.debounceValue || DEFAULT_DEBOUNCE);
       }
     }
   }, {
     key: "_makeRequest",
     value: function _makeRequest(action) {
-      var _this4 = this;
+      var _this5 = this;
 
       var _this$urlValue$split = this.urlValue.split('?'),
           _this$urlValue$split2 = _slicedToArray(_this$urlValue$split, 2),
@@ -1489,15 +1504,15 @@ var _default = /*#__PURE__*/function (_Controller) {
       this.renderPromiseStack.addPromise(thisPromise);
       thisPromise.then(function (response) {
         // if another re-render is scheduled, do not "run it over"
-        if (_this4.renderDebounceTimeout) {
+        if (_this5.renderDebounceTimeout) {
           return;
         }
 
-        var isMostRecent = _this4.renderPromiseStack.removePromise(thisPromise);
+        var isMostRecent = _this5.renderPromiseStack.removePromise(thisPromise);
 
         if (isMostRecent) {
           response.json().then(function (data) {
-            _this4._processRerender(data);
+            _this5._processRerender(data);
           });
         }
       });
@@ -1566,7 +1581,7 @@ var _default = /*#__PURE__*/function (_Controller) {
   }, {
     key: "_handleLoadingToggle",
     value: function _handleLoadingToggle(isLoading) {
-      var _this5 = this;
+      var _this6 = this;
 
       this._getLoadingDirectives().forEach(function (_ref) {
         var element = _ref.element,
@@ -1574,13 +1589,13 @@ var _default = /*#__PURE__*/function (_Controller) {
 
         // so we can track, at any point, if an element is in a "loading" state
         if (isLoading) {
-          _this5._addAttributes(element, ['data-live-is-loading']);
+          _this6._addAttributes(element, ['data-live-is-loading']);
         } else {
-          _this5._removeAttributes(element, ['data-live-is-loading']);
+          _this6._removeAttributes(element, ['data-live-is-loading']);
         }
 
         directives.forEach(function (directive) {
-          _this5._handleLoadingDirective(element, isLoading, directive);
+          _this6._handleLoadingDirective(element, isLoading, directive);
         });
       });
     }
@@ -1594,7 +1609,7 @@ var _default = /*#__PURE__*/function (_Controller) {
   }, {
     key: "_handleLoadingDirective",
     value: function _handleLoadingDirective(element, isLoading, directive) {
-      var _this6 = this;
+      var _this7 = this;
 
       var finalAction = parseLoadingAction(directive.action, isLoading);
       var loadingDirective = null;
@@ -1602,42 +1617,42 @@ var _default = /*#__PURE__*/function (_Controller) {
       switch (finalAction) {
         case 'show':
           loadingDirective = function loadingDirective() {
-            _this6._showElement(element);
+            _this7._showElement(element);
           };
 
           break;
 
         case 'hide':
           loadingDirective = function loadingDirective() {
-            return _this6._hideElement(element);
+            return _this7._hideElement(element);
           };
 
           break;
 
         case 'addClass':
           loadingDirective = function loadingDirective() {
-            return _this6._addClass(element, directive.args);
+            return _this7._addClass(element, directive.args);
           };
 
           break;
 
         case 'removeClass':
           loadingDirective = function loadingDirective() {
-            return _this6._removeClass(element, directive.args);
+            return _this7._removeClass(element, directive.args);
           };
 
           break;
 
         case 'addAttribute':
           loadingDirective = function loadingDirective() {
-            return _this6._addAttributes(element, directive.args);
+            return _this7._addAttributes(element, directive.args);
           };
 
           break;
 
         case 'removeAttribute':
           loadingDirective = function loadingDirective() {
-            return _this6._removeAttributes(element, directive.args);
+            return _this7._removeAttributes(element, directive.args);
           };
 
           break;
@@ -1741,7 +1756,7 @@ var _default = /*#__PURE__*/function (_Controller) {
   }, {
     key: "_executeMorphdom",
     value: function _executeMorphdom(newHtml) {
-      var _this7 = this;
+      var _this8 = this;
 
       // https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro#answer-35385518
       function htmlToElement(html) {
@@ -1760,7 +1775,7 @@ var _default = /*#__PURE__*/function (_Controller) {
           } // avoid updating child components: they will handle themselves
 
 
-          if (fromEl.hasAttribute('data-controller') && fromEl.getAttribute('data-controller').split(' ').indexOf('live') !== -1 && fromEl !== _this7.element) {
+          if (fromEl.hasAttribute('data-controller') && fromEl.getAttribute('data-controller').split(' ').indexOf('live') !== -1 && fromEl !== _this8.element) {
             return false;
           }
 
@@ -1771,7 +1786,7 @@ var _default = /*#__PURE__*/function (_Controller) {
   }, {
     key: "_initiatePolling",
     value: function _initiatePolling(rawPollConfig) {
-      var _this8 = this;
+      var _this9 = this;
 
       var directives = parseDirectives(rawPollConfig || '$render');
       directives.forEach(function (directive) {
@@ -1790,23 +1805,23 @@ var _default = /*#__PURE__*/function (_Controller) {
           }
         });
 
-        _this8.startPoll(directive.action, duration);
+        _this9._startPoll(directive.action, duration);
       });
     }
   }, {
-    key: "startPoll",
-    value: function startPoll(actionName, duration) {
-      var _this9 = this;
+    key: "_startPoll",
+    value: function _startPoll(actionName, duration) {
+      var _this10 = this;
 
       var callback;
 
       if (actionName.charAt(0) === '$') {
         callback = function callback() {
-          _this9[actionName]();
+          _this10[actionName]();
         };
       } else {
         callback = function callback() {
-          _this9._makeRequest(actionName);
+          _this10._makeRequest(actionName);
         };
       }
 
@@ -1826,6 +1841,15 @@ var _default = /*#__PURE__*/function (_Controller) {
         detail: payload
       });
       return this.element.dispatchEvent(userEvent);
+    }
+  }, {
+    key: "_handleChildComponentUpdateModel",
+    value: function _handleChildComponentUpdateModel(event) {
+      if (!doesDeepPropertyExist(this.dataValue, event.detail.model)) {
+        return;
+      }
+
+      this.$updateModel(event.detail.model, event.detail.value, false);
     }
   }]);
 

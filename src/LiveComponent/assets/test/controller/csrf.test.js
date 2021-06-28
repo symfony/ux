@@ -10,15 +10,14 @@
 'use strict';
 
 import { clearDOM } from '@symfony/stimulus-testing';
-import { startStimulus } from '../tools';
-import { getByLabelText, getByText, waitFor } from '@testing-library/dom';
+import { initLiveComponent, startStimulus } from '../tools';
+import { getByText, waitFor } from '@testing-library/dom';
 import fetchMock from 'fetch-mock-jest';
 
 describe('LiveController CSRF Tests', () => {
     const template = (data) => `
         <div
-            data-controller="live"
-            data-live-url-value="http://localhost/_components/my_component"
+            ${initLiveComponent('/_components/my_component', data)}
             data-live-csrf-value="123TOKEN"
         >
             <label>
@@ -46,10 +45,7 @@ describe('LiveController CSRF Tests', () => {
 
     it('Sends the CSRF token on an action', async () => {
         const data = { comments: 'hi' };
-        const { element } = await startStimulus(
-            template(data),
-            data
-        );
+        const { element } = await startStimulus(template(data));
 
         const postMock = fetchMock.postOnce('http://localhost/_components/my_component/save', {
             html: template({ comments: 'hi', isSaved: true }),

@@ -10,7 +10,7 @@
 'use strict';
 
 import { clearDOM } from '@symfony/stimulus-testing';
-import { startStimulus } from '../tools';
+import { initLiveComponent, startStimulus } from '../tools';
 import { getByLabelText, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock-jest';
@@ -18,8 +18,7 @@ import fetchMock from 'fetch-mock-jest';
 describe('LiveController Action Tests', () => {
     const template = (data) => `
         <div
-            data-controller="live"
-            data-live-url-value="http://localhost/_components/my_component"
+            ${initLiveComponent('/_components/my_component', data)}
         >
             <label>
                 Comments:
@@ -46,10 +45,7 @@ describe('LiveController Action Tests', () => {
 
     it('Sends an action and cancels any re-renders', async () => {
         const data = { comments: 'hi' };
-        const { element } = await startStimulus(
-            template(data),
-            data
-        );
+        const { element } = await startStimulus(template(data));
 
         // ONLY a post is sent, not a re-render GET
         const postMock = fetchMock.postOnce('http://localhost/_components/my_component/save', {
