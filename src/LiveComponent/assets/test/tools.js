@@ -1,5 +1,5 @@
 import { Application } from 'stimulus';
-import LiveController from '../dist/live_controller';
+import LiveController from '../src/live_controller';
 import { waitFor } from '@testing-library/dom';
 
 const TestData = class {
