@@ -13,9 +13,8 @@ namespace Symfony\UX\LiveComponent\Twig;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
-use Symfony\UX\LiveComponent\LiveComponentInterface;
-use Symfony\UX\TwigComponent\ComponentInterface;
 use Twig\Environment;
 
 /**
@@ -25,14 +24,9 @@ use Twig\Environment;
  */
 final class LiveComponentRuntime
 {
-    /** @var LiveComponentHydrator */
-    private $hydrator;
-
-    /** @var UrlGeneratorInterface */
-    private $urlGenerator;
-
-    /** @var CsrfTokenManagerInterface|null */
-    private $csrfTokenManager;
+    private LiveComponentHydrator $hydrator;
+    private UrlGeneratorInterface $urlGenerator;
+    private ?CsrfTokenManagerInterface $csrfTokenManager;
 
     public function __construct(LiveComponentHydrator $hydrator, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager = null)
     {
@@ -41,13 +35,9 @@ final class LiveComponentRuntime
         $this->csrfTokenManager = $csrfTokenManager;
     }
 
-    public function renderLiveAttributes(Environment $env, ComponentInterface $component): string
+    public function renderLiveAttributes(Environment $env, object $component): string
     {
-        if (!$component instanceof LiveComponentInterface) {
-            throw new \InvalidArgumentException(sprintf('The "%s" component (%s) is not a LiveComponent. Don\'t forget to implement LiveComponentInterface', $component::getComponentName(), \get_class($component)));
-        }
-
-        $url = $this->urlGenerator->generate('live_component', ['component' => $component::getComponentName()]);
+        $url = $this->urlGenerator->generate('live_component', ['component' => AsLiveComponent::forClass($component::class)->getName()]);
         $data = $this->hydrator->dehydrate($component);
 
         $ret = sprintf(
@@ -62,14 +52,14 @@ final class LiveComponentRuntime
 
         return sprintf('%s data-live-csrf-value="%s"',
             $ret,
-            $this->csrfTokenManager->getToken($component::getComponentName())->getValue()
+            $this->csrfTokenManager->getToken(AsLiveComponent::forClass($component::class)->getName())->getValue()
         );
     }
 
-    public function getComponentUrl(LiveComponentInterface $component): string
+    public function getComponentUrl(object $component): string
     {
         $data = $this->hydrator->dehydrate($component);
-        $params = ['component' => $component::getComponentName()] + $data;
+        $params = ['component' => AsLiveComponent::forClass($component::class)->getName()] + $data;
 
         return $this->urlGenerator->generate('live_component', $params);
     }

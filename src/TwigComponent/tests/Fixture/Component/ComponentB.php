@@ -11,15 +11,12 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Fixture\Component;
 
-use Symfony\UX\TwigComponent\ComponentInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class ComponentB implements ComponentInterface
+#[AsTwigComponent('component_b')]
+final class ComponentB
 {
-    public static function getComponentName(): string
-    {
-        return 'component_b';
-    }
 }

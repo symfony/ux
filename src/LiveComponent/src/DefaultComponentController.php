@@ -11,8 +11,6 @@
 
 namespace Symfony\UX\LiveComponent;
 
-use Symfony\UX\TwigComponent\ComponentInterface;
-
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
@@ -22,15 +20,10 @@ use Symfony\UX\TwigComponent\ComponentInterface;
  */
 final class DefaultComponentController
 {
-    /** @var LiveComponentInterface */
-    private $component;
+    private object $component;
 
-    public function __construct(ComponentInterface $component)
+    public function __construct(object $component)
     {
-        if (!$component instanceof LiveComponentInterface) {
-            throw new \InvalidArgumentException('Not an instance of LiveComponentInterface.');
-        }
-
         $this->component = $component;
     }
 
@@ -38,7 +31,7 @@ final class DefaultComponentController
     {
     }
 
-    public function getComponent(): LiveComponentInterface
+    public function getComponent(): object
     {
         return $this->component;
     }

@@ -11,10 +11,12 @@
 
 namespace Symfony\UX\TwigComponent\DependencyInjection\Compiler;
 
+use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
-use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -25,25 +27,25 @@ final class TwigComponentPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $serviceIdMap = [];
+        $componentMap = [];
 
-        foreach (array_keys($container->findTaggedServiceIds('twig.component')) as $serviceId) {
-            $definition = $container->getDefinition($serviceId);
+        foreach (array_keys($container->findTaggedServiceIds('twig.component')) as $id) {
+            $componentDefinition = $container->findDefinition($id);
 
-            // make all component services non-shared
-            $definition->setShared(false);
-
-            $name = $definition->getClass()::getComponentName();
-
-            // ensure component not already defined
-            if (\array_key_exists($name, $serviceIdMap)) {
-                throw new LogicException(sprintf('Component "%s" is already registered as "%s", components cannot be registered more than once.', $definition->getClass(), $serviceIdMap[$name]));
+            try {
+                $attribute = AsTwigComponent::forClass($componentDefinition->getClass());
+            } catch (\InvalidArgumentException $e) {
+                throw new LogicException(sprintf('Service "%s" is tagged as a "twig.component" but does not have a "%s" class attribute.', $id, AsTwigComponent::class), 0, $e);
             }
 
-            // add to service id map for ComponentFactory
-            $serviceIdMap[$name] = $serviceId;
+            $componentMap[$attribute->getName()] = new Reference($id);
+
+            // component services must not be shared
+            $componentDefinition->setShared(false);
         }
 
-        $container->getDefinition(ComponentFactory::class)->setArgument(2, $serviceIdMap);
+        $container->findDefinition('ux.twig_component.component_factory')
+            ->setArgument(0, new ServiceLocatorArgument($componentMap))
+        ;
     }
 }

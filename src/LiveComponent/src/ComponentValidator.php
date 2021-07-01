@@ -12,7 +12,6 @@
 namespace Symfony\UX\LiveComponent;
 
 use Psr\Container\ContainerInterface;
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -26,8 +25,7 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  */
 class ComponentValidator implements ComponentValidatorInterface, ServiceSubscriberInterface
 {
-    /** @var ContainerInterface */
-    private $container;
+    private ContainerInterface $container;
 
     public function __construct(ContainerInterface $container)
     {
@@ -88,16 +86,10 @@ class ComponentValidator implements ComponentValidatorInterface, ServiceSubscrib
         return $this->container->get('validator');
     }
 
-    private function getPropertyAccessor(): PropertyAccessorInterface
-    {
-        return $this->container->get('property_accessor');
-    }
-
     public static function getSubscribedServices(): array
     {
         return [
             'validator' => ValidatorInterface::class,
-            'property_accessor' => PropertyAccessorInterface::class,
         ];
     }
 }

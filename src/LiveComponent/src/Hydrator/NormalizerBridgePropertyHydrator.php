@@ -24,8 +24,11 @@ use Symfony\UX\LiveComponent\PropertyHydratorInterface;
 final class NormalizerBridgePropertyHydrator implements PropertyHydratorInterface
 {
     /** @var NormalizerInterface|DenormalizerInterface */
-    private $normalizer;
+    private NormalizerInterface $normalizer;
 
+    /**
+     * @param NormalizerInterface|DenormalizerInterface $normalizer
+     */
     public function __construct(NormalizerInterface $normalizer)
     {
         if (!$normalizer instanceof DenormalizerInterface) {

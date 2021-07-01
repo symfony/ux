@@ -54,19 +54,19 @@ jobs:
                   cd src/LazyImage
                   composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
-            - name: TwigComponent
-              run: |
-                  cd src/TwigComponent
-                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/simple-phpunit
 
-    tests-php-low-deps-74:
+    tests-php8-low-deps:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
             - uses: shivammathur/setup-php@v2
               with:
-                  php-version: '7.4'
+                  php-version: '8.0'
+            - name: TwigComponent
+              run: |
+                  cd src/TwigComponent
+                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
+                  php vendor/bin/simple-phpunit
             - name: LiveComponent
               run: |
                   cd src/LiveComponent
@@ -108,14 +108,12 @@ jobs:
             - name: TwigComponent
               run: |
                   cd src/TwigComponent
-                  composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
             - name: LiveComponent
               run: |
                   cd src/LiveComponent
                   php ../../.github/build-packages.php
-                  composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
 
