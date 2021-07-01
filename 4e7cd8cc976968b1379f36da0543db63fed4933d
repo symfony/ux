@@ -1,0 +1,119 @@
+---------------------------------------------------------------------------
+
+by wouterj at 2021-06-21T20:31:13Z
+
+I quickly discussed this on Slack already, but I think we should use a DI tag + `registerAttributeForAutoconfiguration()` for configuring components (and name + template). That seems to be the standard for all other Symfony attributes and it adds a nice extra: It means we have support for PHP <8.0 and Symfony <5.3 if a user just adds the tag to the component services.
+
+It does require some rewriting of the renderer though, as it currently uses the attribute at runtime.
+
+Is there anyone that can share their experiences with attributes on which approach is the best (based on performance or other thing that we didn't come up with)?
+
+---------------------------------------------------------------------------
+
+by kbond at 2021-06-21T21:27:28Z
+
+I now use `registerAttributeForAutoconfiguration` in lieu of the compiler pass. Twig components can also be manually configured by adding a `twig.component` tag with a `key` parameter for the *name*.
+
+The failing test is related to components with the same  *name*. I no longer ensure they are unique. Right now, the last one registered wins. Thoughts? Should I add a compiler pass to ensure they are unique? (I believe a compiler pass is the only way)
+
+Also, I now require Symfony 5.3+ so I can use `registerAttributeForAutoconfiguration` but could allow older version if desired. On older versions, components could only be registered manually.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-06-22T11:28:04Z
+
+> The failing test is related to components with the same name. I no longer ensure they are unique. Right now, the last one registered wins. Thoughts? Should I add a compiler pass to ensure they are unique? (I believe a compiler pass is the only way)
+
+I vote for last one wins - like service id's
+
+> Also, I now require Symfony 5.3+ so I can use registerAttributeForAutoconfiguration but could allow older version if desired. On older versions, components could only be registered manually.
+
+If it's just a matter of doing a `method_exists()` before calling that method, then I'm +1 for doing that and at least allowing 5.2 and lower users to use this library with manual tagging.
+
+---------------------------------------------------------------------------
+
+by kbond at 2021-06-22T16:45:56Z
+
+Do we want the `AsTwigComponent` to be completely optional as @dbrekelmans suggests above? Allow both the component name and template to be set manually via the `twig.component` tag? How should I map the component to a template for the `ComponentRenderer`? Build a component class => template map?
+
+---------------------------------------------------------------------------
+
+by kbond at 2021-06-22T17:41:26Z
+
+> I vote for last one wins - like service id's
+
+I went with this.
+
+> If it's just a matter of doing a method_exists() before calling that method, then I'm +1 for doing that and at least allowing 5.2 and lower users to use this library with manual tagging.
+
+Manual tagging/4.4+ is now supported (I haven't updated the gh action to prove this). PHP8 and the `AsLiveComponent` is still required. Manual tagging is a little annoying as your `key` tag attribute must match your `AsLiveComponent` name property.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-06-23T13:15:04Z
+
+> Do we want the AsTwigComponent to be completely optional as @dbrekelmans suggests above?
+
+Maybe? Right now we only have name and template options... but there is already the question of:
+
+> How should I map the component to a template for the ComponentRenderer? Build a component class => template map?
+
+And, what if we have more options in the future? I can envision that, if we decide to put it all on the tag, then we would, in a compiler pass, push that tag data into some sort of "component metadata service" where we would probably have a method like `getMetadata($class)` that would return an object that's very similar to the `AsLiveComponent`. But it would be tricky to make this service lazy (we would probably inject ALL of the tag data from ALL of the components into its constructor, so instantiating it would put that all into memory).
+
+So I think we should NOT do this. We should follow the API Platform model (or the Doctrine entity model) where the metadata is pulled lazily at runtime when needed. The only stuff in the tag is the stuff that is useful to know without needing to instantiate the objects (e.g. with commands, it's nice to know the name of each command without instantiating it, and the same with Twig components).
+
+If we *were* to make the PHP8 attribute optional, I think it makes sense to do so with an alternate configuration format - e.g. a PHP config format (like routing config or validation config).
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-06-23T13:16:01Z
+
+> Manual tagging is a little annoying as your key tag attribute must match your AsLiveComponent name property.
+
+What happens if it doesn't? It seems like an odd situation, but I would imagine that the tag `name` would "win" over the one in the attribute.
+
+---------------------------------------------------------------------------
+
+by kbond at 2021-06-23T13:36:04Z
+
+> So I think we should NOT do this
+
+I agree.
+
+> What happens if it doesn't?
+
+For twig components, I don't believe it will be a problem as we never, at runtime, get the component name from the class. For live components, as of right now, the url is generated with the name the component class gives. The subscriber would look for the component based on the DI tag so there could be a mismatch.
+
+I could enforce this in the compiler pass.
+
+---------------------------------------------------------------------------
+
+by dbrekelmans at 2021-06-23T13:40:34Z
+
+Fair points @weaverryan, I agree.
+
+---------------------------------------------------------------------------
+
+by kbond at 2021-06-23T14:00:23Z
+
+> I could enforce this in the compiler pass.
+
+Alternatively, and I think I prefer this, I can remove the requirement to set a tag `key` and configure the service locator in the compiler pass. This would remove any possibility of a mismatch when manually tagging.
+
+---------------------------------------------------------------------------
+
+by kbond at 2021-06-23T15:23:27Z
+
+I think the TwigComponent refactor is complete and ready for review. I added a GH action job to run on php8 with low deps to prove it's compatible with 4.4.
+
+> Alternatively, and I think I prefer this, I can remove the requirement to set a tag key and configure the service locator in the compiler pass. This would remove any possibility of a mismatch when manually tagging.
+
+I went with this. No possibility for a mismatch. The "name" is now only pulled from the attribute.
+
+---------------------------------------------------------------------------
+
+by kbond at 2021-06-27T14:01:40Z
+
+I have switched LiveComponents to PHP8 attributes (only) so this is ready for another round of reviews (ping @dbrekelmans, @weaverryan).
+
+~Not sure why the coding-style-js job is failing.. Looks to be caused by the live component readme.~ _fixed_
