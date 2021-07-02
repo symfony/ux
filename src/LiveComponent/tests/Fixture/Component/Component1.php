@@ -14,6 +14,7 @@ namespace Symfony\UX\LiveComponent\Tests\Fixture\Component;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\Tests\Fixture\Entity\Entity1;
 
 /**
@@ -22,6 +23,8 @@ use Symfony\UX\LiveComponent\Tests\Fixture\Entity\Entity1;
 #[AsLiveComponent('component1')]
 final class Component1
 {
+    use DefaultActionTrait;
+
     #[LiveProp]
     public ?Entity1 $prop1;
 

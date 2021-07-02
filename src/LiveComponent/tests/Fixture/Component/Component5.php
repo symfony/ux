@@ -11,9 +11,14 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixture\Component;
 
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
+
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
+#[AsLiveComponent('component5')]
 final class Component5 extends Component4
 {
+    use DefaultActionTrait;
 }

@@ -15,24 +15,19 @@ namespace Symfony\UX\LiveComponent;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
- *
- * @internal
  */
-final class DefaultComponentController
+trait DefaultActionTrait
 {
-    private object $component;
-
-    public function __construct(object $component)
-    {
-        $this->component = $component;
-    }
-
+    /**
+     * The "default" action for a component.
+     *
+     * This is executed when your component is being re-rendered,
+     * but no custom action is being called. You probably don't
+     * want to do any work here because this method is *not*
+     * executed when a custom action is triggered.
+     */
     public function __invoke(): void
     {
-    }
-
-    public function getComponent(): object
-    {
-        return $this->component;
+        // noop - this is the default action
     }
 }
