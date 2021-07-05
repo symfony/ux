@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2021-07-05T12:59:22Z
+
+@t-richard Stimulus was mostly created by a developer that abandoned his company because of some discussions (I won't give more details or links to not contribute to the discussion) ... so the old employee redirected the original URL to another page and that's why we must updated URLs as soon as possible. Thanks!
+
+---------------------------------------------------------------------------
+
+by t-richard at 2021-07-05T13:11:49Z
+
+@javiereguiluz that's a pity to take revenge like that but anyway, there is no other choice for us than to adapt.
+
+It may be worth noting there are also links to the old site in some blog posts on symfony.com.
+
+Here are two I noticed but again there may be more :
+* https://symfony.com/blog/new-in-symfony-the-ux-initiative-a-new-javascript-ecosystem-for-symfony#symfony-ux-building-highly-interactive-applications-by-leveraging-javascript-giants
+* https://symfony.com/blog/webpack-encore-1-0-and-stimulus-bridge-2-0-released#symfony-stimulus-bridge-2-0
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2021-07-05T13:14:14Z
+
+Good catch! I've fixed those blog posts too. Thanks!
