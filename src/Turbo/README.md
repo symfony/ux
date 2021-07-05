@@ -1,6 +1,6 @@
 # Symfony UX Turbo
 
-Symfony UX Turbo is a Symfony bundle integrating the [Hotwire Turbo](https://turbo.hotwire.dev)
+Symfony UX Turbo is a Symfony bundle integrating the [Hotwire Turbo](https://turbo.hotwired.dev)
 library in Symfony applications. It is part of [the Symfony UX initiative](https://symfony.com/ux).
 
 Symfony UX Turbo allows having the same user experience as with [Single Page Apps](https://en.wikipedia.org/wiki/Single-page_application)
@@ -42,7 +42,7 @@ things to be aware of:
 
 Because navigation no longer results in full page refreshes, you may need to
 adjust your JavaScript to work properly. The best solution is to write your
-JavaScript using [Stimulus](https://stimulus.hotwire.dev/) or something similar.
+JavaScript using [Stimulus](https://stimulus.hotwired.dev/) or something similar.
 
 We also recommend that you place your `script` tags live inside your `head` tag so
 that they aren't reloaded on every navigation (Turbo re-executes any `script` tags
@@ -84,7 +84,7 @@ webpack_encore:
 ```
 
 For more info, see:
-[Turbo: Reloading When Assets Change](https://turbo.hotwire.dev/handbook/drive#reloading-when-assets-change)
+[Turbo: Reloading When Assets Change](https://turbo.hotwired.dev/handbook/drive#reloading-when-assets-change)
 
 #### 3. Form Response Code Changes
 
@@ -181,12 +181,12 @@ $builder
 
 #### More Turbo Drive Info
 
-[Read the Turbo Drive documentation](https://turbo.hotwire.dev/handbook/drive) to learn about the advanced features offered
+[Read the Turbo Drive documentation](https://turbo.hotwired.dev/handbook/drive) to learn about the advanced features offered
 by Turbo Drive.
 
 ### Decomposing Complex Pages with Turbo Frames
 
-Once Symfony UX Turbo is installed, you can also leverage [Turbo Frames](https://turbo.hotwire.dev/handbook/introduction#turbo-frames-decompose-complex-pages):
+Once Symfony UX Turbo is installed, you can also leverage [Turbo Frames](https://turbo.hotwired.dev/handbook/introduction#turbo-frames-decompose-complex-pages):
 
 ```twig
 {# home.html.twig #}
@@ -283,7 +283,7 @@ and tests it using Google Chrome or Firefox!
 
 You can even watch changes happening in the browser by using: `PANTHER_NO_HEADLESS=1 bin/phpunit --debug`
 
-[Read the Turbo Frames documentation](https://turbo.hotwire.dev/handbook/frames) to learn everything you can do using Turbo Frames.
+[Read the Turbo Frames documentation](https://turbo.hotwired.dev/handbook/frames) to learn everything you can do using Turbo Frames.
 
 ### Coming Alive with Turbo Streams
 
@@ -364,7 +364,7 @@ class TaskController extends AbstractController
 ```
 
 Supported actions are `append`, `prepend`, `replace`, `update` and `remove`.
-[Read the Turbo Streams documentation for more details](https://turbo.hotwire.dev/handbook/streams).
+[Read the Turbo Streams documentation for more details](https://turbo.hotwired.dev/handbook/streams).
 
 #### Sending Async Changes using Mercure: a Chat
 

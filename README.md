@@ -18,7 +18,7 @@ to build the chart in PHP. The JavaScript is handled for you automatically.
 
 ## Components of UX
 
-Symfony UX leverages [Stimulus](https://stimulus.hotwire.dev/) for JavaScript
+Symfony UX leverages [Stimulus](https://stimulus.hotwired.dev/) for JavaScript
 and the [Stimulus Bridge](https://github.com/symfony/stimulus-bridge) for
 integrating it into [Webpack Encore](https://github.com/symfony/webpack-encore).
 
