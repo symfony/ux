@@ -13,7 +13,6 @@ namespace App;
 
 use App\Entity\Book;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineBundle\Mapping\MappingDriver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
@@ -91,10 +90,6 @@ class Kernel extends BaseKernel
             ],
         ];
 
-        if (class_exists(MappingDriver::class)) {
-            $doctrineConfig['dbal']['override_url'] = true;
-        }
-
         $container
             ->extension('doctrine', $doctrineConfig);
 
@@ -105,7 +100,6 @@ class Kernel extends BaseKernel
         ]);
 
         $container->extension('mercure', [
-            'enable_profiler' => '%kernel.debug%',
             'hubs' => [
                 'default' => [
                     'url' => $_SERVER['MERCURE_PUBLISH_URL'] ?? 'http://127.0.0.1:3000/.well-known/mercure',
