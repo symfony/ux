@@ -361,6 +361,9 @@ code works identically to the previous example:
 </div>
 ```
 
+If an element has _both_ `data-model` and `name` attributes, the
+`data-model` attribute takes precedence.
+
 ## Loading States
 
 Often, you'll want to show (or hide) an element while a component is
@@ -1135,3 +1138,226 @@ You can also trigger a specific "action" instead of a normal re-render:
     #}
 >
 ```
+
+## Embedded Components
+
+Need to embed one live component inside another one? No problem! As a rule
+of thumb, **each component exists in its own, isolated universe**. This
+means that embedding one component inside another could be really simple
+or a bit more complex, depending on how inter-connected you want your components
+to be.
+
+Here are a few helpful things to know:
+
+### Each component re-renders independent of one another
+
+If a parent component re-renders, the child component will _not_ (most
+of the time) be updated, even though it lives inside the parent. Each
+component is its own, isolated universe.
+
+But this is not always what you want. For example, suppose you have a
+parent component that renders a form and a child component that renders
+one field in that form. When you click a "Save" button on the parent
+component, that validates the form and re-renders with errors - including
+a new `error` value that it passes into the child:
+
+```twig
+{# templates/components/post_form.html.twig #}
+
+{{ component('textarea_field', {
+    value: this.content,
+    error: this.getError('content')
+}) }}
+```
+
+In this situation, when the parent component re-renders after clicking
+"Save", you _do_ want the updated child component (with the validation
+error) to be rendered. And this _will_ happen automatically. Why? because
+the live component system detects that the **parent component has
+_changed_ how it's rendering the child**.
+
+This may not always be perfect, and if your child component has its own
+`LiveProp` that has changed since it was first rendered, that value will
+be lost when the parent component causes the child to re-render. If you
+have this situation, use `data-model-map` to map that child `LiveProp` to
+a `LiveProp` in the parent component, and pass it into the child when
+rendering.
+
+### Actions, methods and model updates in a child do not affect the parent
+
+Again, each component is its own, isolated universe! For example, suppose
+your child component has:
+
+```html
+<button data-action="live#action" data-action-name="save">Save</button>
+```
+
+When the user clicks that button, it will attempt to call the `save` action
+in the _child_ component only, even if the `save` action actually only
+exists in the parent. The same is true for `data-model`, though there is
+some special handling for this case (see next point).
+
+### If a child model updates, it will attempt to update the parent model
+
+Suppose a child component has a:
+
+```html
+<textarea data-model="markdown_value" data-action="live#update">
+```
+
+When the user changes this field, this will _only_ update the `markdown_value`
+field in the _child_ component... because (yup, we're saying it again):
+each component is its own, isolated universe.
+
+However, sometimes this isn't what you want! Sometimes, in addition
+to updating the child component's model, you _also_ want to update a
+model on the _parent_ component.
+
+To help with this, whenever a model updates, a `live:update-model` event
+is dispatched. All components automatically listen to this event. This
+means that, when the `markdown_value` model is updated in the child
+component, _if_ the parent component _also_ has a model called `markdown_value`
+it will _also_ be updated. This is done as a "deferred" update
+(i.e. [updateDefer()](#deferring-a-re-render-until-later)).
+
+If the model name in your child component (e.g. `markdown_value`) is
+_different_ than the model name in your parent component (e.g. `post.content`),
+you have two options. First, you can make sure both are set by
+leveraging both the `data-model` and `name` attributes:
+
+```twig
+<textarea
+    data-model="markdown_value"
+    name="post[content]"
+    data-action="live#update"
+>
+```
+
+In this situation, the `markdown_value` model will be updated on the child
+component (because `data-model` takes precedence over `name`). But if
+any parent components have a `markdown_value` model _or_ a `post.content`
+model (normalized from `post[content`]`), their model will also be updated.
+
+A second option is to wrap your child element in a special `data-model-map`
+element:
+
+```twig
+{# templates/components/post_form.html.twig #}
+
+<div data-model-map="from(markdown_value)|post.content">
+    {{ component('textarea_field', {
+        value: this.content,
+        error: this.getError('content')
+    }) }}
+</div>
+```
+
+Thanks to the `data-model-map`, whenever the `markdown_value` model
+updates in the child component, the `post.content` model will be
+updated in the parent component.
+
+**NOTE**: If you _change_ a `LiveProp` of a child component on the server
+(e.g. during re-rendering or via an action), that change will _not_ be
+reflected on any parent components that share that model.
+
+### Full Embedded Component Example
+
+Let's look at a full, complex example of an embedded component. Suppose
+you have an `EditPostComponent`:
+
+```php
+<?php
+
+namespace App\Twig\Components;
+
+use App\Entity\Post;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
+
+#[AsLiveComponent('edit_post')]
+final class EditPostComponent extends AbstractController
+{
+    #[LiveProp(exposed: ['title', 'content'])]
+    public Post $post;
+
+    #[LiveAction]
+    public function save(EntityManagerInterface $entityManager)
+    {
+        $entityManager->flush();
+
+        return $this->redirectToRoute('some_route');
+    }
+}
+```
+
+And a `MarkdownTextareaComponent`:
+
+```php
+<?php
+
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
+
+#[AsLiveComponent('markdown_textarea')]
+final class MarkdownTextareaComponent
+{
+    #[LiveProp]
+    public string $label;
+
+    #[LiveProp]
+    public string $name;
+
+    #[LiveProp(writable: true)]
+    public string $value = '';
+}
+```
+
+In the `EditPostComponent` template, you render the `MarkdownTextareaComponent`:
+
+```twig
+{# templates/components/edit_post.html.twig #}
+<div {{ init_live_component(this) }}>
+    <input
+        type="text"
+        name="post[title]"
+        data-action="live#update"
+        value="{{ this.post.title }}"
+    >
+
+    {{ component('markdown_textarea', {
+        name: 'post[content]',
+        label: 'Content',
+        value: this.post.content
+    }) }}
+
+    <button
+        data-action="live#action"
+        data-action-name="save"
+    >Save</button>
+</div>
+```
+
+```twig
+<div {{ init_live_component(this) }} class="mb-3">
+    <textarea
+        name="{{ this.name }}"
+        data-model="value"
+        data-action="live#update"
+    >{{ this.value }}</textarea>
+
+    <div class="markdown-preview">
+        {{ this.value|markdown_to_html }}
+    </div>
+</div>
+```
+
+Notice that `MarkdownTextareaComponent` allows a dynamic `name` attribute to
+be passed in. This makes that component re-usable in any form. But it
+also makes sure that when the `textarea` changes, both the `value` model
+in `MarkdownTextareaComponent` _and_ the `post.content` model in
+`EditPostcomponent` will be updated.

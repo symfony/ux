@@ -10,7 +10,7 @@
 'use strict';
 
 import { clearDOM } from '@symfony/stimulus-testing';
-import { startStimulus } from '../tools';
+import { initLiveComponent, mockRerender, startStimulus } from '../tools';
 import { getByLabelText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock-jest';
@@ -18,8 +18,7 @@ import fetchMock from 'fetch-mock-jest';
 describe('LiveController data-model Tests', () => {
     const template = (data) => `
         <div
-            data-controller="live"
-            data-live-url-value="http://localhost"
+            ${initLiveComponent('/_components/my_component', data)}
         >
             <label>
             Name:
@@ -39,12 +38,9 @@ describe('LiveController data-model Tests', () => {
 
     it('renders correctly with data-model and live#update', async () => {
         const data = { name: 'Ryan' };
-        const { element, controller } = await startStimulus(
-            template(data),
-            data
-        );
+        const { element, controller } = await startStimulus(template(data));
 
-        fetchMock.getOnce('http://localhost/?name=Ryan+WEAVER', {
+        fetchMock.getOnce('end:?name=Ryan+WEAVER', {
             html: template({ name: 'Ryan Weaver' }),
             data: { name: 'Ryan Weaver' }
         });
@@ -67,10 +63,7 @@ describe('LiveController data-model Tests', () => {
 
     it('correctly only uses the most recent render call results', async () => {
         const data = { name: 'Ryan' };
-        const { element, controller } = await startStimulus(
-            template(data),
-            data
-        );
+        const { element, controller } = await startStimulus(template(data));
 
         let renderCount = 0;
         element.addEventListener('live:render', () => {
@@ -83,7 +76,7 @@ describe('LiveController data-model Tests', () => {
             ['guy', 150]
         ];
         requests.forEach(([string, delay]) => {
-            fetchMock.getOnce(`http://localhost/?name=Ryan${string}`, {
+            fetchMock.getOnce(`end:my_component?name=Ryan${string}`, {
                 // the _ at the end helps us look that the input has changed
                 // as a result of a re-render (not just from typing in the input)
                 html: template({ name: `Ryan${string}_` }),
@@ -114,19 +107,15 @@ describe('LiveController data-model Tests', () => {
 
     it('falls back to using the name attribute when no data-model is present', async () => {
         const data = { name: 'Ryan' };
-        const { element, controller } = await startStimulus(
-            template(data),
-            data
-        );
+        const { element, controller } = await startStimulus(template(data));
 
         // replace data-model with name attribute
         const inputElement = getByLabelText(element, 'Name:');
         delete inputElement.dataset.model;
         inputElement.setAttribute('name', 'name');
 
-        fetchMock.getOnce('http://localhost/?name=Ryan+WEAVER', {
-            html: template({ name: 'Ryan Weaver' }),
-            data: { name: 'Ryan Weaver' }
+        mockRerender({name: 'Ryan WEAVER'}, template, (data) => {
+            data.name = 'Ryan Weaver';
         });
 
         await userEvent.type(inputElement, ' WEAVER');
@@ -138,11 +127,31 @@ describe('LiveController data-model Tests', () => {
         fetchMock.done();
     });
 
+    it('uses data-model when both name and data-model is present', async () => {
+        const data = { name: 'Ryan' };
+        const { element, controller } = await startStimulus(template(data));
+
+        // give element data-model="name" and name="first_name"
+        const inputElement = getByLabelText(element, 'Name:');
+        inputElement.setAttribute('name', 'first_name');
+
+        // ?name should be what's sent to the server
+        mockRerender({name: 'Ryan WEAVER'}, template, (data) => {
+            data.name = 'Ryan Weaver';
+        })
+
+        await userEvent.type(inputElement, ' WEAVER');
+
+        await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
+        expect(controller.dataValue).toEqual({name: 'Ryan Weaver'});
+
+        fetchMock.done();
+    });
+
     it('standardizes user[firstName] style models into post.name', async () => {
         const deeperModelTemplate = (data) => `
             <div
-                data-controller="live"
-                data-live-url-value="http://localhost"
+                ${initLiveComponent('/_components/my_component', data)}
             >
                 <label>
                 First Name:
@@ -155,18 +164,14 @@ describe('LiveController data-model Tests', () => {
             </div>
         `;
         const data = { user: { firstName: 'Ryan' } };
-        const { element, controller } = await startStimulus(
-            deeperModelTemplate(data),
-            data
-        );
+        const { element, controller } = await startStimulus(deeperModelTemplate(data));
 
         // replace data-model with name attribute
         const inputElement = getByLabelText(element, 'First Name:');
 
         const newData = { user: { firstName: 'Ryan Weaver' } };
-        fetchMock.getOnce('http://localhost/?user%5BfirstName%5D=Ryan+WEAVER', {
-            html: deeperModelTemplate(newData),
-            data: newData
+        mockRerender({'user': {firstName: 'Ryan WEAVER'}}, deeperModelTemplate, (data) => {
+            data.user.firstName = 'Ryan Weaver';
         });
 
         await userEvent.type(inputElement, ' WEAVER');
@@ -181,8 +186,7 @@ describe('LiveController data-model Tests', () => {
     it('updates correctly when live#update is on a parent element', async () => {
         const parentUpdateTemplate = (data) => `
             <div
-                data-controller="live"
-                data-live-url-value="http://localhost"
+                ${initLiveComponent('/_components/my_component', data)}
             >
                 <div data-action="input->live#update">
                     <label>
@@ -197,14 +201,10 @@ describe('LiveController data-model Tests', () => {
         `;
 
         const data = { firstName: 'Ryan' };
-        const { element, controller } = await startStimulus(
-            parentUpdateTemplate(data),
-            data
-        );
+        const { element } = await startStimulus(parentUpdateTemplate(data));
 
-        fetchMock.getOnce('http://localhost/?firstName=Ryan+WEAVER', {
-            html: parentUpdateTemplate({ firstName: 'Ryan Weaver' }),
-            data: { firstName: 'Ryan Weaver' }
+        mockRerender({firstName: 'Ryan WEAVER'}, parentUpdateTemplate, (data) => {
+            data.firstName = 'Ryan Weaver';
         });
 
         const inputElement = getByLabelText(element, 'Name:');
@@ -221,14 +221,10 @@ describe('LiveController data-model Tests', () => {
     it('tracks which fields should be modified, sends, without forgetting previous fields', async () => {
         // start with one other field in validatedFields
         const data = { name: 'Ryan', validatedFields: ['otherField'] };
-        const { element, controller } = await startStimulus(
-            template(data),
-            data
-        );
+        const { element } = await startStimulus(template(data));
 
-        fetchMock.getOnce('http://localhost/?name=Ryan+WEAVER&validatedFields%5B0%5D=otherField&validatedFields%5B1%5D=name', {
-            html: template({ name: 'Ryan Weaver' }),
-            data: { name: 'Ryan Weaver' }
+        mockRerender({name: 'Ryan WEAVER', validatedFields: ['otherField', 'name']}, template, (data) => {
+            data.name = 'Ryan Weaver';
         });
 
         const inputElement = getByLabelText(element, 'Name:');
@@ -239,7 +235,4 @@ describe('LiveController data-model Tests', () => {
         // assert all calls were done the correct number of times
         fetchMock.done();
     });
-
-    // TODO - test changing debounce
-    // TODO - test deferred rendering
 });

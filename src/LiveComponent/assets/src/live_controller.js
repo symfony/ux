@@ -5,6 +5,7 @@ import { combineSpacedArray } from './string_utils';
 import { buildFormData, buildSearchParams } from './http_data_helper';
 import { setDeepData, doesDeepPropertyExist, normalizeModelName } from './set_deep_data';
 import './polyfills';
+import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 
 const DEFAULT_DEBOUNCE = '150';
 
@@ -44,8 +45,12 @@ export default class extends Controller {
 
     isWindowUnloaded = false;
 
+    originalDataJSON;
+
     initialize() {
         this.markAsWindowUnloaded = this.markAsWindowUnloaded.bind(this);
+        this.originalDataJSON = JSON.stringify(this.dataValue);
+        this._exposeOriginalData();
     }
 
     connect() {
@@ -58,6 +63,15 @@ export default class extends Controller {
         }
 
         window.addEventListener('beforeunload', this.markAsWindowUnloaded);
+
+        this.element.addEventListener('live:update-model', (event) => {
+            // ignore events that we dispatched
+            if (event.target === this.element) {
+                return;
+            }
+
+            this._handleChildComponentUpdateModel(event);
+        });
 
         this._dispatchEvent('live:connect');
     }
@@ -169,10 +183,27 @@ export default class extends Controller {
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
 
-        this.$updateModel(model, value, element, shouldRender);
+        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null);
     }
 
-    $updateModel(model, value, element, shouldRender = true) {
+    /**
+     * Update a model value.
+     *
+     * The extraModelName should be set to the "name" attribute of an element
+     * if it has one. This is only important in a parent/child component,
+     * where, in the child, you might be updating a "foo" model, but you
+     * also want this update to "sync" to the parent component's "bar" model.
+     * Typically, setup on a field like this:
+     *
+     *      <input data-model="foo" name="bar">
+     *
+     * @param {string} model The model update, which could include modifiers
+     * @param {any} value The new value
+     * @param {boolean} shouldRender Whether a re-render should be triggered
+     * @param {string|null} extraModelName Another model name that this might go by in a parent component.
+     * @param {Object} options Options include: {bool} dispatch
+     */
+    $updateModel(model, value, shouldRender = true, extraModelName = null, options = {}) {
         const directives = parseDirectives(model);
         if (directives.length > 1) {
             throw new Error(`The data-model="${model}" format is invalid: it does not support multiple directives (i.e. remove any spaces).`);
@@ -185,6 +216,7 @@ export default class extends Controller {
         }
 
         const modelName = normalizeModelName(directive.action);
+        const normalizedExtraModelName = extraModelName ? normalizeModelName(extraModelName) : null;
 
         // if there is a "validatedFields" data, it means this component wants
         // to track which fields have been / should be validated.
@@ -197,8 +229,12 @@ export default class extends Controller {
             this.dataValue = setDeepData(this.dataValue, 'validatedFields', validatedFields);
         }
 
-        if (!doesDeepPropertyExist(this.dataValue, modelName)) {
-            console.warn(`Model "${modelName}" is not a valid data-model value`);
+        if (options.dispatch !== false) {
+            this._dispatchEvent('live:update-model', {
+                modelName,
+                extraModelName: normalizedExtraModelName,
+                value,
+            });
         }
 
         // we do not send old and new data to the server
@@ -499,6 +535,7 @@ export default class extends Controller {
                 if (fromEl.hasAttribute('data-controller')
                     && fromEl.getAttribute('data-controller').split(' ').indexOf('live') !== -1
                     && fromEl !== this.element
+                    && !this._shouldChildLiveElementUpdate(fromEl, toEl)
                 ) {
                     return false;
                 }
@@ -506,6 +543,8 @@ export default class extends Controller {
                 return true;
             }
         });
+        // restore the data-original-data attribute
+        this._exposeOriginalData();
     }
 
     markAsWindowUnloaded = () => {
@@ -531,11 +570,11 @@ export default class extends Controller {
                 }
             });
 
-            this.startPoll(directive.action, duration);
+            this._startPoll(directive.action, duration);
         })
     }
 
-    startPoll(actionName, duration) {
+    _startPoll(actionName, duration) {
         let callback;
         if (actionName.charAt(0) === '$') {
             callback = () => {
@@ -560,6 +599,104 @@ export default class extends Controller {
         });
 
         return this.element.dispatchEvent(userEvent);
+    }
+
+    _handleChildComponentUpdateModel(event) {
+        const mainModelName = event.detail.modelName;
+        const potentialModelNames = [
+            { name: mainModelName, required: false },
+            { name: event.detail.extraModelName, required: false },
+        ]
+
+        const modelMapElement = event.target.closest('[data-model-map]');
+        if (this.element.contains(modelMapElement)) {
+            const directives = parseDirectives(modelMapElement.dataset.modelMap);
+
+            directives.forEach((directive) => {
+                let from = null;
+                directive.modifiers.forEach((modifier) => {
+                    switch (modifier.name) {
+                        case 'from':
+                            if (!modifier.value) {
+                                throw new Error(`The from() modifier requires a model name in data-model-map="${modelMapElement.dataset.modelMap}"`);
+                            }
+                            from = modifier.value;
+
+                            break;
+                        default:
+                            console.warn(`Unknown modifier "${modifier.name}" in data-model-map="${modelMapElement.dataset.modelMap}".`);
+                    }
+                });
+
+                if (!from) {
+                    throw new Error(`Missing from() modifier in data-model-map="${modelMapElement.dataset.modelMap}". The format should be "from(childModelName)|parentModelName"`);
+                }
+
+                // only look maps for the model currently being updated
+                if (from !== mainModelName) {
+                    return;
+                }
+
+                potentialModelNames.push({ name: directive.action, required: true });
+            });
+        }
+
+        potentialModelNames.reverse();
+        let foundModelName = null;
+        potentialModelNames.forEach((potentialModel) => {
+            if (foundModelName) {
+                return;
+            }
+
+            if (doesDeepPropertyExist(this.dataValue, potentialModel.name)) {
+                foundModelName = potentialModel.name;
+
+                return;
+            }
+
+            if (potentialModel.required) {
+                throw new Error(`The model name "${potentialModel.name}" does not exist! Found in data-model-map="from(${mainModelName})|${potentialModel.name}"`);
+            }
+        });
+
+        if (!foundModelName) {
+            return;
+        }
+
+        this.$updateModel(
+            foundModelName,
+            event.detail.value,
+            false,
+            null,
+            {
+                dispatch: false
+            }
+        );
+    }
+
+    /**
+     * Determines of a child live element should be re-rendered.
+     *
+     * This is called when this element re-renders and detects that
+     * a child element is inside. Normally, in that case, we do not
+     * re-render the child element. However, if we detect that the
+     * "data" on the child element has changed from its initial data,
+     * then this will trigger a re-render.
+     *
+     * @param {Element} fromEl
+     * @param {Element} toEl
+     * @return {boolean}
+     */
+    _shouldChildLiveElementUpdate(fromEl, toEl) {
+        return haveRenderedValuesChanged(
+            fromEl.dataset.originalData,
+            fromEl.dataset.liveDataValue,
+            toEl.dataset.liveDataValue
+        );
+    }
+
+    _exposeOriginalData() {
+        this.element.dataset.originalData = this.originalDataJSON;
     }
 }
 

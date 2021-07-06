@@ -25,15 +25,14 @@ export function setDeepData(data, propertyPath, value) {
     }
 
     // represents a situation where the key you're setting *is* an object,
-    // but the key we're setting is a new key. This, perhaps, could be
-    // allowed. But right now, all keys should be initialized with the
-    // initial data.
+    // but the key we're setting is a new key. Currently, all keys should
+    // be initialized with the initial data.
     if (currentLevelData[finalKey] === undefined) {
         const lastPart = parts.pop();
         if (parts.length > 0) {
-            console.warn(`The property used in data-model="${propertyPath}" was never initialized. Did you forget to add exposed={"${lastPart}"} to its LiveProp?`)
+            throw new Error(`The property used in data-model="${propertyPath}" was never initialized. Did you forget to add exposed={"${lastPart}"} to its LiveProp?`)
         } else {
-            console.warn(`The property used in data-model="${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp?`)
+            throw new Error(`The property used in data-model="${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp? Available models values are: ${Object.keys(data).length > 0 ? Object.keys(data).join(', ') : '(none)'}`)
         }
     }
 

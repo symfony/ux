@@ -324,6 +324,14 @@ class FeaturedProductsComponent
 }
 ```
 
+## Embedded Components
+
+It's totally possible to embed one component into another. When you do
+this, there's nothing special to know: both components render independently.
+If you're using [Live Components](https://github.com/symfony/ux-live-component),
+then there _are_ some guidelines related to how the re-rendering of parent
+and child components works. Read [Live Embedded Components](https://github.com/symfony/ux-live-component#embedded-components).
+
 ## Contributing
 
 Interested in contributing? Visit the main source for this repository:
