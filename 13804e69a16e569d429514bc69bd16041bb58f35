@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-07-06T15:32:21Z
+
+This is ready to go - the `README.md` is updated. Mostly, this makes parent-child relationships much smarter to capture the "95%" use-case without any extra config.
