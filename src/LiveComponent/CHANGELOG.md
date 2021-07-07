@@ -2,6 +2,14 @@
 
 ## NEXT
 
+-   When a model is updated, a new `live:update-model` event is dispatched. Parent
+    components (in a parent-child component setup) listen to this and automatically
+    try to update any model with a matching name. A `data-model-map` was also added
+    to map child component model names to a parent - see #113.
+
+-   Child components are now re-rendered if the parent components passes new data
+    to the child when rendering - see #113.
+
 -   Minimum PHP version was bumped to 8.0 so that PHP 8 attributes could be used.
 
 -   The `LiveComponentInterface` was dropped and replaced by the `AsLiveComponent` attribute,
