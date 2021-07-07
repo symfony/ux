@@ -145,8 +145,8 @@ Then in your template, add your controller to the HTML attribute:
     </head>
     <body {{ stimulus_controller({
         myswup: {},
-        'symfony/ux-swup/swup: {}
-    })>
+        'symfony/ux-swup/swup': {}
+    }) }}>
         {# ... #}
     </body>
 </html>
