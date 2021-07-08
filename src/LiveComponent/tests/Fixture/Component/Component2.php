@@ -23,7 +23,7 @@ use Symfony\UX\LiveComponent\Attribute\PreDehydrate;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-#[AsLiveComponent('component2')]
+#[AsLiveComponent('component2', defaultAction: 'defaultAction()')]
 final class Component2
 {
     #[LiveProp]
@@ -34,6 +34,10 @@ final class Component2
     public bool $postHydrateCalled = false;
 
     public bool $beforeReRenderCalled = false;
+
+    public function defaultAction(): void
+    {
+    }
 
     #[LiveAction]
     public function increase(): void

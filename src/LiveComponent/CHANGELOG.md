@@ -2,6 +2,10 @@
 
 ## NEXT
 
+-   Require live components have a default action (`__invoke()` by default) to enable
+    controller annotations/attributes (ie `@Security/@Cache`). Added `DefaultActionTrait`
+    helper.
+
 -   When a model is updated, a new `live:update-model` event is dispatched. Parent
     components (in a parent-child component setup) listen to this and automatically
     try to update any model with a matching name. A `data-model-map` was also added

@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Tests\Fixture\Component;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -20,6 +21,8 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 #[AsLiveComponent('component3')]
 final class Component3
 {
+    use DefaultActionTrait;
+
     #[LiveProp(fieldName: 'myProp1')]
     public $prop1;
 

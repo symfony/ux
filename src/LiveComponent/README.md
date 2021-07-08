@@ -16,10 +16,13 @@ A real-time product search component might look like this:
 namespace App\Components;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent('product_search')]
 class ProductSearchComponent
 {
+    use DefaultActionTrait;
+
     public string $query = '';
 
     private ProductRepository $productRepository;
@@ -130,18 +133,21 @@ class RandomNumberComponent
 
 To transform this into a "live" component (i.e. one that
 can be re-rendered live on the frontend), replace the
-component's `AsTwigComponent` attribute with `AsLiveComponent`:
+component's `AsTwigComponent` attribute with `AsLiveComponent`
+and add the `DefaultActionTrait`:
 
 ```diff
 // src/Components/RandomNumberComponent.php
 
 -use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 +use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
++use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 -#[AsTwigComponent('random_number')]
 -#[AsLiveComponent('random_number')]
 class RandomNumberComponent
 {
++    use DefaultActionTrait;
 }
 ```
 
@@ -433,10 +439,18 @@ changes until loading has taken longer than a certain amount of time:
 
 ## Actions
 
-You can also trigger actions on your component. Let's pretend we
-want to add a "Reset Min/Max" button to our "random number"
-component that, when clicked, sets the min/max numbers back
-to a default value.
+Live components require a single "default action" that is
+used to re-render it. By default, this is an empty `__invoke()`
+method and can be added with the `DefaultActionTrait`.
+Live components are actually Symfony controllers so you
+can add the normal controller attributes/annotations (ie
+`@Cache`/`@Security`) to either the entire class just a
+single action.
+
+You can also trigger custom actions on your component. Let's
+pretend we want to add a "Reset Min/Max" button to our "random
+number" component that, when clicked, sets the min/max numbers
+back to a default value.
 
 First, add a method with a `LiveAction` attribute above it that
 does the work:

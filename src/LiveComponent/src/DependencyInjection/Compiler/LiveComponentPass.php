@@ -27,13 +27,18 @@ final class LiveComponentPass implements CompilerPassInterface
         $componentServiceMap = [];
 
         foreach (array_keys($container->findTaggedServiceIds('twig.component')) as $id) {
+            $class = $container->findDefinition($id)->getClass();
+
             try {
-                $attribute = AsLiveComponent::forClass($container->findDefinition($id)->getClass());
+                $attribute = AsLiveComponent::forClass($class);
             } catch (\InvalidArgumentException $e) {
                 continue;
             }
 
-            $componentServiceMap[$attribute->getName()] = $id;
+            $componentServiceMap[$attribute->getName()] = [$id, $class];
+
+            // Ensure default action method is configured correctly
+            AsLiveComponent::defaultActionFor($class);
         }
 
         $container->findDefinition('ux.live_component.event_subscriber')->setArgument(0, $componentServiceMap);

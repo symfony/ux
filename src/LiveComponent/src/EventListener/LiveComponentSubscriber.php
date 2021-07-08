@@ -29,9 +29,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\DefaultComponentController;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
-use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 
 /**
@@ -45,7 +43,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private const JSON_FORMAT = 'live-component-json';
     private const JSON_CONTENT_TYPE = 'application/vnd.live-component+json';
 
-    /** @var array<string, string> */
+    /** @var array<string, string[]> */
     private array $componentServiceMap;
     private ContainerInterface $container;
 
@@ -58,7 +56,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     public static function getSubscribedServices(): array
     {
         return [
-            ComponentFactory::class,
             ComponentRenderer::class,
             LiveComponentHydrator::class,
             '?'.CsrfTokenManagerInterface::class,
@@ -79,11 +76,17 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         $action = $request->get('action', 'get');
         $componentName = (string) $request->get('component');
 
+        if (!\array_key_exists($componentName, $this->componentServiceMap)) {
+            throw new NotFoundHttpException(sprintf('Component "%s" not found.', $componentName));
+        }
+
+        [$componentServiceId, $componentClass] = $this->componentServiceMap[$componentName];
+
         if ('get' === $action) {
             // set default controller for "default" action
             $request->attributes->set(
                 '_controller',
-                new DefaultComponentController($this->container->get(ComponentFactory::class)->get($componentName))
+                sprintf('%s::%s', $componentServiceId, AsLiveComponent::defaultActionFor($componentClass))
             );
 
             return;
@@ -99,11 +102,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             throw new BadRequestHttpException('Invalid CSRF token.');
         }
 
-        if (!\array_key_exists($componentName, $this->componentServiceMap)) {
-            throw new NotFoundHttpException(sprintf('Component "%s" not found.', $componentName));
-        }
-
-        $request->attributes->set('_controller', sprintf('%s::%s', $this->componentServiceMap[$componentName], $action));
+        $request->attributes->set('_controller', sprintf('%s::%s', $componentServiceId, $action));
     }
 
     public function onKernelController(ControllerEvent $event): void
@@ -119,20 +118,17 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             $request->request->all()
         );
 
-        $component = $event->getController();
-        $action = null;
-
-        if (\is_array($component)) {
-            // action is being called
-            $action = $component[1];
-            $component = $component[0];
+        if (!\is_array($controller = $event->getController()) || 2 !== \count($controller)) {
+            throw new \RuntimeException('Not a valid live component.');
         }
 
-        if ($component instanceof DefaultComponentController) {
-            $component = $component->getComponent();
+        [$component, $action] = $controller;
+
+        if (!\is_object($component)) {
+            throw new \RuntimeException('Not a valid live component.');
         }
 
-        if (null !== $action && !AsLiveComponent::isActionAllowed($component, $action)) {
+        if (!AsLiveComponent::isActionAllowed($component, $action)) {
             throw new NotFoundHttpException(sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveAction attribute above it.', $action, \get_class($component)));
         }
 
