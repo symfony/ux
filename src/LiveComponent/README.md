@@ -139,7 +139,7 @@ component's `AsTwigComponent` attribute with `AsLiveComponent`:
 +use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 
 -#[AsTwigComponent('random_number')]
--#[AsLiveComponent('random_number')]
++#[AsLiveComponent('random_number')]
 class RandomNumberComponent
 {
 }
