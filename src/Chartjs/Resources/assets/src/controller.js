@@ -10,7 +10,7 @@
 'use strict';
 
 import { Controller } from 'stimulus';
-import { Chart } from 'chart.js';
+import Chart from 'chart.js/auto';
 
 export default class extends Controller {
     connect() {
