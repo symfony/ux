@@ -144,7 +144,7 @@ and add the `DefaultActionTrait`:
 +use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 -#[AsTwigComponent('random_number')]
--#[AsLiveComponent('random_number')]
++#[AsLiveComponent('random_number')]
 class RandomNumberComponent
 {
 +    use DefaultActionTrait;
