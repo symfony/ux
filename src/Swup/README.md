@@ -102,6 +102,7 @@ You can configure several other options using data-attributes on the `body` tag:
         data-debug="data-debug" {# add this attribute to enable debug #}
         data-cache="data-cache" {# add this attribute to enable local cache: be careful, it only makes sense for mostly static websites #}
         data-animate-history-browsing="data-animate-history-browsing" {# add this attribute to animate history browsing #}
+        data-main-element="#content" {# add this attribute to use a custom selector for the swup theme #}
     >
         {# ... #}
     </body>

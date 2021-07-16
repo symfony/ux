@@ -18,19 +18,23 @@ import SwupSlideTheme from '@swup/slide-theme';
 
 export default class extends Controller {
     connect() {
+        const dataContainers = this.element.getAttribute('data-containers')?.split(' ') || [];
+        const mainElement = this.element.getAttribute('data-main-element') || dataContainers[0] || '#swup';
+        const allElements = [mainElement].concat(dataContainers);
+        const containersList = allElements.filter((item, index) => {
+            return allElements.indexOf(item) === index;
+        });
         const options = {
-            containers: ['#swup'],
+            containers: containersList,
             cache: this.element.hasAttribute('data-cache'),
             animateHistoryBrowsing: this.element.hasAttribute('data-animate-history-browsing'),
             plugins: [
-                'slide' === this.element.getAttribute('data-theme') ? new SwupSlideTheme() : new SwupFadeTheme(),
+                'slide' === this.element.getAttribute('data-theme')
+                    ? new SwupSlideTheme({ mainElement: mainElement })
+                    : new SwupFadeTheme({ mainElement: mainElement }),
                 new SwupFormsPlugin(),
             ],
         };
-
-        if (this.element.getAttribute('data-containers')) {
-            options.containers = this.element.getAttribute('data-containers').split(' ');
-        }
 
         if (this.element.getAttribute('data-link-selector')) {
             options.linkSelector = this.element.getAttribute('data-link-selector');

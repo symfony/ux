@@ -63,16 +63,24 @@ var _default = /*#__PURE__*/function (_Controller) {
   _createClass(_default, [{
     key: "connect",
     value: function connect() {
+      var _this$element$getAttr;
+
+      var dataContainers = ((_this$element$getAttr = this.element.getAttribute('data-containers')) === null || _this$element$getAttr === void 0 ? void 0 : _this$element$getAttr.split(' ')) || [];
+      var mainElement = this.element.getAttribute('data-main-element') || dataContainers[0] || '#swup';
+      var allElements = [mainElement].concat(dataContainers);
+      var containersList = allElements.filter(function (item, index) {
+        return allElements.indexOf(item) === index;
+      });
       var options = {
-        containers: ['#swup'],
+        containers: containersList,
         cache: this.element.hasAttribute('data-cache'),
         animateHistoryBrowsing: this.element.hasAttribute('data-animate-history-browsing'),
-        plugins: ['slide' === this.element.getAttribute('data-theme') ? new _slideTheme["default"]() : new _fadeTheme["default"](), new _formsPlugin["default"]()]
+        plugins: ['slide' === this.element.getAttribute('data-theme') ? new _slideTheme["default"]({
+          mainElement: mainElement
+        }) : new _fadeTheme["default"]({
+          mainElement: mainElement
+        }), new _formsPlugin["default"]()]
       };
-
-      if (this.element.getAttribute('data-containers')) {
-        options.containers = this.element.getAttribute('data-containers').split(' ');
-      }
 
       if (this.element.getAttribute('data-link-selector')) {
         options.linkSelector = this.element.getAttribute('data-link-selector');
