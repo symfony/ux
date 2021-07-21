@@ -23,7 +23,7 @@
     {%- set attrDataTarget = {('data-' ~ controllerName ~ '-target'): 'entry' } -%}
 
     {% if prototype is defined and not prototype.rendered %}
-        {%- set prototype_attr = prototype.vars.attr|merge(attrDataTarget) -%}
+        {%- set prototype_attr = prototype.vars.row_attr|merge(attrDataTarget) -%}
         {%- set attr = attr|merge({'data-prototype': form_row(prototype, {'row_attr': prototype_attr}) }) -%}
     {% endif %}
 
