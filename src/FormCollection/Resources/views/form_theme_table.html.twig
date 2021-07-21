@@ -46,7 +46,7 @@
 
             {% for child in form|filter(child => not child.rendered) %}
 
-                {%- set child_attr = child.vars.attr|merge(attrDataTarget) -%}
+                {%- set child_attr = child.vars.row_attr|merge(attrDataTarget) -%}
                 {{- form_row(child, {'row_attr': child_attr}) -}}
 
             {% endfor %}
