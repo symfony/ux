@@ -42,4 +42,22 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('propB: prop b value 2', $output);
         $this->assertStringContainsString('service: service a value', $output);
     }
+
+    public function testCanCustomizeTemplateWithAttribute(): void
+    {
+        self::bootKernel();
+
+        $output = self::$container->get(Environment::class)->render('template_b.html.twig');
+
+        $this->assertStringContainsString('Custom template 1', $output);
+    }
+
+    public function testCanCustomizeTemplateWithServiceTag(): void
+    {
+        self::bootKernel();
+
+        $output = self::$container->get(Environment::class)->render('template_c.html.twig');
+
+        $this->assertStringContainsString('Custom template 2', $output);
+    }
 }

@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\TwigComponent;
 
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Twig\Environment;
 
 /**
@@ -28,11 +27,9 @@ final class ComponentRenderer
         $this->twig = $twig;
     }
 
-    public function render(object $component): string
+    public function render(object $component, string $template): string
     {
         // TODO: Self-Rendering components?
-        $attribute = AsTwigComponent::forClass($component::class);
-
-        return $this->twig->render($attribute->getTemplate(), ['this' => $component]);
+        return $this->twig->render($template, ['this' => $component]);
     }
 }

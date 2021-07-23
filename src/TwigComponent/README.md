@@ -79,7 +79,8 @@ class AlertComponent
 
 **Note:** If this class is auto-configured, _and_ you're using Symfony 5.3+,
 then you're all set. Otherwise, register the service and tag it with
-`twig.component`.
+`twig.component` and with a `key` tag attribute for the component's name
+(`alert`).
 
 Step 2 is to create a template for this component. By default,
 templates live in `templates/components/{Component Name}.html.twig`,
@@ -169,6 +170,11 @@ class AlertComponent
     // ...
 }
 ```
+
+**Note:** If this class is auto-configured, _and_ you're using Symfony 5.3+,
+then you're all set. Otherwise, register the service and tag it with
+`twig.component` and with a `key` tag attribute for the component's name
+(`alert`) and a `template` tag attribute (`my/custom/template.html.twig`).
 
 ### The mount() Method
 

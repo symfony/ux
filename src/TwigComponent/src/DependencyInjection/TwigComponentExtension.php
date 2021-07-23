@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Argument\AbstractArgument;
 use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -36,16 +37,20 @@ final class TwigComponentExtension extends Extension
         if (method_exists($container, 'registerAttributeForAutoconfiguration')) {
             $container->registerAttributeForAutoconfiguration(
                 AsTwigComponent::class,
-                static function (ChildDefinition $definition) {
-                    $definition->addTag('twig.component');
+                static function (ChildDefinition $definition, AsTwigComponent $attribute) {
+                    $definition->addTag('twig.component', array_filter([
+                        'key' => $attribute->name,
+                        'template' => $attribute->template,
+                    ]));
                 }
             );
         }
 
         $container->register('ux.twig_component.component_factory', ComponentFactory::class)
             ->setArguments([
-                class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : new ServiceLocatorArgument(),
+                new ServiceLocatorArgument(new TaggedIteratorArgument('twig.component', 'key', null, true)),
                 new Reference('property_accessor'),
+                class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : [],
             ])
         ;
 

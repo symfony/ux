@@ -59,6 +59,5 @@ final class AsLiveComponentTest extends TestCase
 
         $this->assertTrue(AsLiveComponent::isActionAllowed($component, 'method1'));
         $this->assertFalse(AsLiveComponent::isActionAllowed($component, 'method2'));
-        $this->assertTrue(AsLiveComponent::isActionAllowed($component, '__invoke'));
     }
 }

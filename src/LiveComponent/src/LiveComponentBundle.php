@@ -11,9 +11,7 @@
 
 namespace Symfony\UX\LiveComponent;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use Symfony\UX\LiveComponent\DependencyInjection\Compiler\LiveComponentPass;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -22,8 +20,4 @@ use Symfony\UX\LiveComponent\DependencyInjection\Compiler\LiveComponentPass;
  */
 final class LiveComponentBundle extends Bundle
 {
-    public function build(ContainerBuilder $container): void
-    {
-        $container->addCompilerPass(new LiveComponentPass());
-    }
 }

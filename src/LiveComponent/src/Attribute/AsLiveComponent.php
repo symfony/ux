@@ -21,30 +21,13 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class AsLiveComponent extends AsTwigComponent
 {
-    private string $defaultAction;
+    public ?string $defaultAction;
 
-    public function __construct(string $name, ?string $template = null, string $defaultAction = '__invoke')
+    public function __construct(string $name, ?string $template = null, ?string $defaultAction = null)
     {
         parent::__construct($name, $template);
 
-        $this->defaultAction = trim($defaultAction, '()');
-    }
-
-    /**
-     * @internal
-     *
-     * @param string|object $component
-     */
-    public static function defaultActionFor($component): string
-    {
-        $component = \is_object($component) ? \get_class($component) : $component;
-        $method = self::forClass($component)->defaultAction;
-
-        if (!method_exists($component, $method)) {
-            throw new \LogicException(sprintf('Live component "%s" requires the default action method "%s".%s', $component, $method, '__invoke' === $method ? ' Either add this method or use the DefaultActionTrait' : ''));
-        }
-
-        return $method;
+        $this->defaultAction = $defaultAction;
     }
 
     /**
@@ -77,10 +60,6 @@ final class AsLiveComponent extends AsTwigComponent
      */
     public static function isActionAllowed(object $component, string $action): bool
     {
-        if (self::defaultActionFor($component) === $action) {
-            return true;
-        }
-
         foreach (self::attributeMethodsFor(LiveAction::class, $component) as $method) {
             if ($action === $method->getName()) {
                 return true;
