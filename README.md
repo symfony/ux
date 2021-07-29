@@ -34,6 +34,7 @@ integrating it into [Webpack Encore](https://github.com/symfony/webpack-encore).
     Improve image loading performances through lazy-loading and data-uri thumbnails
 -   [UX Swup](https://github.com/symfony/ux-swup):
     [Swup](https://swup.js.org/) page transition library integration for Symfony
+-   [UX Turbo](https://github.com/symfony/ux-turbo): [Hotwire Turbo](https://turbo.hotwired.dev/) library integration for Symfony
 -   [Twig Component](https://github.com/symfony/ux-twig-component):
     A system to build reusable "components" with Twig
 -   [Live Component](https://github.com/symfony/ux-live-component):
