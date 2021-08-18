@@ -20,7 +20,7 @@
         "lint": "eslint src test"
     },
     "peerDependencies": {
-        "@hotwired/turbo": "^7.0.0-beta.8",
+        "@hotwired/turbo": "^7.0.0-rc.1",
         "stimulus": "^2.0.0"
     },
     "devDependencies": {
@@ -28,7 +28,7 @@
         "@babel/core": "^7.12.3",
         "@babel/plugin-proposal-class-properties": "^7.12.1",
         "@babel/preset-env": "^7.12.7",
-        "@hotwired/turbo": "^7.0.0-beta.8",
+        "@hotwired/turbo": "^7.0.0-rc.1",
         "@symfony/stimulus-testing": "^1.1.0",
         "stimulus": "^2.0.0"
     },
