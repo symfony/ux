@@ -128,11 +128,126 @@ final class ComponentFactoryTest extends KernelTestCase
         $factory->create('component_a', ['propB' => 'B', 'service' => 'invalid']);
     }
 
-    public function testTwigComponentServiceMustHaveAttribute(): void
+    public function testTwigComponentServiceTagMustHaveKey(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('Service "Symfony\UX\TwigComponent\Tests\Fixture\Service\ServiceA" is tagged as a "twig.component" but does not have a "Symfony\UX\TwigComponent\Attribute\AsTwigComponent" class attribute.');
+        $this->expectExceptionMessage('"twig.component" tag for service "missing_key" requires a "key" attribute.');
 
-        self::bootKernel(['environment' => 'missing_attribute']);
+        self::bootKernel(['environment' => 'missing_key']);
+    }
+
+    public function testCanGetConfigForComponentByName(): void
+    {
+        self::bootKernel();
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get('ux.twig_component.component_factory');
+
+        $this->assertSame(
+            [
+                'key' => 'component_a',
+                'service_id' => ComponentA::class,
+                'class' => ComponentA::class,
+                'name' => 'component_a',
+                'template' => 'components/component_a.html.twig',
+            ],
+            $factory->configFor('component_a')
+        );
+    }
+
+    public function testCanGetConfigForComponentByObject(): void
+    {
+        self::bootKernel();
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get('ux.twig_component.component_factory');
+
+        $this->assertSame(
+            [
+                'key' => 'component_c',
+                'service_id' => ComponentC::class,
+                'class' => ComponentC::class,
+                'name' => 'component_c',
+                'template' => 'components/component_c.html.twig',
+            ],
+            $factory->configFor(new ComponentC())
+        );
+    }
+
+    public function testCanGetConfigForComponentByClass(): void
+    {
+        self::bootKernel();
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get('ux.twig_component.component_factory');
+
+        $this->assertSame(
+            [
+                'key' => 'component_a',
+                'service_id' => ComponentA::class,
+                'class' => ComponentA::class,
+                'name' => 'component_a',
+                'template' => 'components/component_a.html.twig',
+            ],
+            $factory->configFor(ComponentA::class)
+        );
+    }
+
+    public function testCanGetConfigForSameComponentWithDifferentName(): void
+    {
+        self::bootKernel();
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get('ux.twig_component.component_factory');
+
+        $this->assertSame(
+            [
+                'key' => 'component_d',
+                'template' => 'components/custom2.html.twig',
+                'service_id' => 'component_d',
+                'class' => ComponentB::class,
+                'name' => 'component_d',
+            ],
+            $factory->configFor(new ComponentB(), 'component_d')
+        );
+    }
+
+    public function testCannotGetConfigForComponentIfMultipleOfSameClass(): void
+    {
+        self::bootKernel();
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get('ux.twig_component.component_factory');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectDeprecationMessage(sprintf('2 "%s" components registered with names "component_b, component_d". Use the $name parameter to explicitly choose one.', ComponentB::class));
+
+        $factory->configFor(new ComponentB());
+    }
+
+    public function testCannotGetConfigByNameForNonRegisteredComponent(): void
+    {
+        self::bootKernel();
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get('ux.twig_component.component_factory');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unknown component "invalid". The registered components are: component_a, component_b, component_c, component_d');
+
+        $factory->configFor('invalid');
+    }
+
+    public function testCannotGetConfigByClassForNonRegisteredComponent(): void
+    {
+        self::bootKernel();
+
+        /** @var ComponentFactory $factory */
+        $factory = self::$container->get('ux.twig_component.component_factory');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('Unknown component class "Symfony\UX\TwigComponent\Tests\Integration\ComponentFactoryTest". The registered components are: component_a, component_b, component_c, component_d');
+
+        $factory->configFor(self::class);
     }
 }

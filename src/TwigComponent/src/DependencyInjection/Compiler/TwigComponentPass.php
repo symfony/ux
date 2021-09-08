@@ -11,12 +11,9 @@
 
 namespace Symfony\UX\TwigComponent\DependencyInjection\Compiler;
 
-use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
-use Symfony\Component\DependencyInjection\Reference;
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -27,25 +24,29 @@ final class TwigComponentPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $componentMap = [];
+        $componentConfig = [];
 
-        foreach (array_keys($container->findTaggedServiceIds('twig.component')) as $id) {
-            $componentDefinition = $container->findDefinition($id);
-
-            try {
-                $attribute = AsTwigComponent::forClass($componentDefinition->getClass());
-            } catch (\InvalidArgumentException $e) {
-                throw new LogicException(sprintf('Service "%s" is tagged as a "twig.component" but does not have a "%s" class attribute.', $id, AsTwigComponent::class), 0, $e);
-            }
-
-            $componentMap[$attribute->getName()] = new Reference($id);
+        foreach ($container->findTaggedServiceIds('twig.component') as $id => $tags) {
+            $definition = $container->findDefinition($id);
 
             // component services must not be shared
-            $componentDefinition->setShared(false);
+            $definition->setShared(false);
+
+            foreach ($tags as $tag) {
+                if (!\array_key_exists('key', $tag)) {
+                    throw new LogicException(sprintf('"twig.component" tag for service "%s" requires a "key" attribute.', $id));
+                }
+
+                $tag['service_id'] = $id;
+                $tag['class'] = $definition->getClass();
+                $tag['name'] = $tag['key'];
+                $tag['template'] = $tag['template'] ?? "components/{$tag['key']}.html.twig";
+                $componentConfig[$tag['key']] = $tag;
+            }
         }
 
         $container->findDefinition('ux.twig_component.component_factory')
-            ->setArgument(0, new ServiceLocatorArgument($componentMap))
+            ->setArgument(2, $componentConfig)
         ;
     }
 }

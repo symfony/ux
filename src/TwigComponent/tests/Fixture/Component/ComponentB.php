@@ -16,7 +16,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-#[AsTwigComponent('component_b')]
+#[AsTwigComponent('component_b', template: 'components/custom1.html.twig')]
 final class ComponentB
 {
 }

@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\LiveComponent\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\Argument\AbstractArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -22,7 +21,6 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentValidator;
 use Symfony\UX\LiveComponent\ComponentValidatorInterface;
-use Symfony\UX\LiveComponent\DependencyInjection\Compiler\LiveComponentPass;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
 use Symfony\UX\LiveComponent\Hydrator\DoctrineEntityPropertyHydrator;
 use Symfony\UX\LiveComponent\Hydrator\NormalizerBridgePropertyHydrator;
@@ -30,6 +28,7 @@ use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\PropertyHydratorInterface;
 use Symfony\UX\LiveComponent\Twig\LiveComponentExtension as LiveComponentTwigExtension;
 use Symfony\UX\LiveComponent\Twig\LiveComponentRuntime;
+use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 
 /**
@@ -42,12 +41,19 @@ final class LiveComponentExtension extends Extension
     public function load(array $configs, ContainerBuilder $container): void
     {
         if (method_exists($container, 'registerAttributeForAutoconfiguration')) {
-            $container->registerAttributeForAutoconfiguration(AsLiveComponent::class, function (ChildDefinition $definition) {
-                $definition
-                    ->addTag('twig.component')
-                    ->addTag('controller.service_arguments')
-                ;
-            });
+            $container->registerAttributeForAutoconfiguration(
+                AsLiveComponent::class,
+                function (ChildDefinition $definition, AsLiveComponent $attribute) {
+                    $definition
+                        ->addTag('twig.component', array_filter([
+                            'key' => $attribute->name,
+                            'template' => $attribute->template,
+                            'default_action' => $attribute->defaultAction,
+                        ]))
+                        ->addTag('controller.service_arguments')
+                    ;
+                }
+            );
         }
 
         $container->registerForAutoconfiguration(PropertyHydratorInterface::class)
@@ -73,10 +79,8 @@ final class LiveComponentExtension extends Extension
         ;
 
         $container->register('ux.live_component.event_subscriber', LiveComponentSubscriber::class)
-            ->setArguments([
-                class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', LiveComponentPass::class)) : [],
-            ])
             ->addTag('kernel.event_subscriber')
+            ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
             ->addTag('container.service_subscriber', ['key' => ComponentRenderer::class, 'id' => 'ux.twig_component.component_renderer'])
             ->addTag('container.service_subscriber', ['key' => LiveComponentHydrator::class, 'id' => 'ux.live_component.component_hydrator'])
             ->addTag('container.service_subscriber')
@@ -89,6 +93,7 @@ final class LiveComponentExtension extends Extension
         $container->register('ux.live_component.twig.component_runtime', LiveComponentRuntime::class)
             ->setArguments([
                 new Reference('ux.live_component.component_hydrator'),
+                new Reference('ux.twig_component.component_factory'),
                 new Reference(UrlGeneratorInterface::class),
                 new Reference(CsrfTokenManagerInterface::class, ContainerBuilder::NULL_ON_INVALID_REFERENCE),
             ])

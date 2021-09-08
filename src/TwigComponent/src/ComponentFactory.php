@@ -24,10 +24,54 @@ final class ComponentFactory
     private ServiceLocator $components;
     private PropertyAccessorInterface $propertyAccessor;
 
-    public function __construct(ServiceLocator $components, PropertyAccessorInterface $propertyAccessor)
+    /** @var array<string, array> */
+    private array $config;
+
+    public function __construct(ServiceLocator $components, PropertyAccessorInterface $propertyAccessor, array $config)
     {
         $this->components = $components;
         $this->propertyAccessor = $propertyAccessor;
+        $this->config = $config;
+    }
+
+    /**
+     * @param string|object $component Component name as string or component object
+     */
+    public function configFor($component, string $name = null): array
+    {
+        if (\is_object($component)) {
+            $component = \get_class($component);
+        }
+
+        if (!$name && class_exists($component)) {
+            $configs = [];
+
+            foreach ($this->config as $config) {
+                if ($component === $config['class']) {
+                    $configs[] = $config;
+                }
+            }
+
+            if (0 === \count($configs)) {
+                throw new \InvalidArgumentException(sprintf('Unknown component class "%s". The registered components are: %s', $component, implode(', ', array_keys($this->config))));
+            }
+
+            if (\count($configs) > 1) {
+                throw new \InvalidArgumentException(sprintf('%d "%s" components registered with names "%s". Use the $name parameter to explicitly choose one.', \count($configs), $component, implode(', ', array_column($configs, 'name'))));
+            }
+
+            $name = $configs[0]['name'];
+        }
+
+        if (!$name) {
+            $name = $component;
+        }
+
+        if (!\array_key_exists($name, $this->config)) {
+            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->config))));
+        }
+
+        return $this->config[$name];
     }
 
     /**

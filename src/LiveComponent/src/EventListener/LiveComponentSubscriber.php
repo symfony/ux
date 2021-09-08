@@ -30,6 +30,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 
 /**
@@ -43,13 +44,10 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private const JSON_FORMAT = 'live-component-json';
     private const JSON_CONTENT_TYPE = 'application/vnd.live-component+json';
 
-    /** @var array<string, string[]> */
-    private array $componentServiceMap;
     private ContainerInterface $container;
 
-    public function __construct(array $componentServiceMap, ContainerInterface $container)
+    public function __construct(ContainerInterface $container)
     {
-        $this->componentServiceMap = $componentServiceMap;
         $this->container = $container;
     }
 
@@ -57,6 +55,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     {
         return [
             ComponentRenderer::class,
+            ComponentFactory::class,
             LiveComponentHydrator::class,
             '?'.CsrfTokenManagerInterface::class,
         ];
@@ -76,18 +75,26 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         $action = $request->get('action', 'get');
         $componentName = (string) $request->get('component');
 
-        if (!\array_key_exists($componentName, $this->componentServiceMap)) {
-            throw new NotFoundHttpException(sprintf('Component "%s" not found.', $componentName));
+        try {
+            $config = $this->container->get(ComponentFactory::class)->configFor($componentName);
+        } catch (\InvalidArgumentException $e) {
+            throw new NotFoundHttpException(sprintf('Component "%s" not found.', $componentName), $e);
         }
 
-        [$componentServiceId, $componentClass] = $this->componentServiceMap[$componentName];
+        $request->attributes->set('_component_template', $config['template']);
 
         if ('get' === $action) {
+            $defaultAction = trim($config['default_action'] ?? '__invoke', '()');
+            $componentClass = $config['class'];
+
+            if (!method_exists($componentClass, $defaultAction)) {
+                // todo should this check be in a compiler pass to ensure fails at compile time?
+                throw new \LogicException(sprintf('Live component "%s" requires the default action method "%s".%s', $componentClass, $defaultAction, '__invoke' === $defaultAction ? ' Either add this method or use the DefaultActionTrait' : ''));
+            }
+
             // set default controller for "default" action
-            $request->attributes->set(
-                '_controller',
-                sprintf('%s::%s', $componentServiceId, AsLiveComponent::defaultActionFor($componentClass))
-            );
+            $request->attributes->set('_controller', sprintf('%s::%s', $config['service_id'], $defaultAction));
+            $request->attributes->set('_component_default_action', true);
 
             return;
         }
@@ -102,7 +109,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             throw new BadRequestHttpException('Invalid CSRF token.');
         }
 
-        $request->attributes->set('_controller', sprintf('%s::%s', $componentServiceId, $action));
+        $request->attributes->set('_controller', sprintf('%s::%s', $config['service_id'], $action));
     }
 
     public function onKernelController(ControllerEvent $event): void
@@ -128,7 +135,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             throw new \RuntimeException('Not a valid live component.');
         }
 
-        if (!AsLiveComponent::isActionAllowed($component, $action)) {
+        if (!$request->attributes->get('_component_default_action', false) && !AsLiveComponent::isActionAllowed($component, $action)) {
             throw new NotFoundHttpException(sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveAction attribute above it.', $action, \get_class($component)));
         }
 
@@ -215,7 +222,10 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             $component->{$method->name}();
         }
 
-        $html = $this->container->get(ComponentRenderer::class)->render($component);
+        $html = $this->container->get(ComponentRenderer::class)->render(
+            $component,
+            $request->attributes->get('_component_template')
+        );
 
         if ($this->isLiveComponentJsonRequest($request)) {
             return new JsonResponse(
