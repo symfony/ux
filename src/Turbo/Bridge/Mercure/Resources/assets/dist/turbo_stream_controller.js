@@ -7,7 +7,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 
-var _stimulus = require("stimulus");
+var _stimulus = require("@hotwired/stimulus");
 
 var _turbo = require("@hotwired/turbo");
 

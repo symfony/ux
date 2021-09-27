@@ -9,7 +9,7 @@
 
 'use strict';
 
-import { Application } from 'stimulus';
+import { Application } from '@hotwired/stimulus';
 import { getByTestId } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import TurboStreamController from '../src/turbo_stream_controller.js';

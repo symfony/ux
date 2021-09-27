@@ -9,7 +9,7 @@
 
 'use strict';
 
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 import Cropper from 'cropperjs';
 
 export default class extends Controller {

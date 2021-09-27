@@ -7,6 +7,7 @@
     "license": "MIT",
     "scripts": {
         "build": "yarn rollup -c",
+        "build": "yarn rollup -c",
         "test-only": "jest",
         "test": "yarn build && yarn test-only",
         "lint": "eslint src"
@@ -17,7 +18,7 @@
         "morphdom": "^2.6.1"
     },
     "peerDependencies": {
-        "stimulus": "^2.0.0"
+        "@hotwired/stimulus": "^3.0.0"
     },
     "devDependencies": {
         "@babel/cli": "^7.12.1",
@@ -33,7 +34,7 @@
         "fetch-mock-jest": "^1.5.1",
         "node-fetch": "^2.6.1",
         "rollup": "^2.52.2",
-        "stimulus": "^2.0.0"
+        "@hotwired/stimulus": "^3.0.0"
     },
     "jest": {
         "testRegex": "test/.*\\.test.js",

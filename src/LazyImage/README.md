@@ -78,7 +78,7 @@ Symfony UX LazyImage allows you to extend its default behavior using a custom St
 ```js
 // mylazyimage_controller.js
 
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     connect() {
