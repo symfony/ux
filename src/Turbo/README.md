@@ -92,7 +92,7 @@ Turbo Drive also converts form submissions to AJAX calls. To get it to work, you
 _do_ need to adjust your code to return a 422 status code on a validation error
 (instead of a 200).
 
-If you're using Symfony 5.3, the new `handleForm()` shortcut takes care of this
+If you're using Symfony 5.3, the new `renderForm()` shortcut takes care of this
 automatically:
 
 ```php
@@ -101,30 +101,24 @@ automatically:
  */
 public function newProduct(Request $request): Response
 {
-    return $this->handleForm(
-        $this->createForm(ProductFormType::class, null, [
-            'action' => $this->generateUrl('product_new'),
-        ]),
-        $request,
-        function (FormInterface $form) {
-            // save...
+    $form = this->createForm(ProductFormType::class, null, [
+        'action' => $this->generateUrl('product_new'),
+    ]);
+    $form->handleRequest($request);
 
-            return $this->redirectToRoute(
-                'product_list',
-                [],
-                Response::HTTP_SEE_OTHER
-            );
-        },
-        function (FormInterface $form) {
-            return $this->render('product/new.html.twig', [
-                'form' => $form->createView(),
-            ]);
-        }
+    if ($form->isSubmitted() && $form->isValid()) {
+        // save...
+
+        return $this->redirectToRoute('product_list');
     );
+
+    return $this->renderForm('product/new.html.twig', [
+        'form' => $form,
+    ]);
 }
 ```
 
-If you're _not_ using the `handleForm()` shortcut, adjust your code manually:
+If you're _not_ using the `renderForm()` shortcut, adjust your code manually:
 
 ```diff
 /**
@@ -137,9 +131,6 @@ public function newProduct(Request $request): Response
 
     if ($form->isSubmitted() && $form->isValid()) {
         // save...
-
--        return $this->redirectToRoute('product_list');
-+        return $this->redirectToRoute('product_list', [], Response::HTTP_SEE_OTHER);
     }
 
 +    $response = new Response(null, $form->isSubmitted() ? 422 : 200);
@@ -152,10 +143,10 @@ public function newProduct(Request $request): Response
 ```
 
 This changes the response status code to 422 on validation error, which tells Turbo
-Drive that the form submit failed and it should re-render with the errors. This
-_also_ changes the redirect status code from 302 (the default) to 303
-(`HTTP_SEE_OTHER`). That's not required for Turbo Drive, but 303 is "more correct"
-for this situation.
+Drive that the form submit failed and it should re-render with the errors. You
+can _also_ choose to change the success redirect status code from 302 (the default)
+to 303 (`HTTP_SEE_OTHER`). That's not required for Turbo Drive, but 303 is "more
+correct" for this situation.
 
 > **NOTE:**
 > When your form contains more than one submit button and, you want to check which of the buttons was clicked
@@ -314,7 +305,7 @@ class TaskController extends AbstractController
     public function new(Request $request): Response
     {
         $form = $this->createForm(TaskType::class, new Task());
-        
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -331,21 +322,11 @@ class TaskController extends AbstractController
             // Symfony UX Turbo is all about progressively enhancing your apps!
             return $this->redirectToRoute('task_success', [], Response::HTTP_SEE_OTHER);
         }
-        
+
         // Symfony 5.3+
         return $this->renderForm('task/new.html.twig', [
             'form' => $form,
         ]);
-        
-        // Older versions
-        $response = $this->render('task/new.html.twig', [
-            'form' => $form->createView(),
-        ]);
-        if ($form->isSubmitted() && !$form->isValid()) {
-            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        return $response;
     }
 }
 ```
