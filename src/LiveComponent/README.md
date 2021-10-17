@@ -793,6 +793,45 @@ This is possible thanks to a few interesting pieces:
     However, if a field has not been modified yet by the user, its
     validation errors are cleared so that they aren't rendered.
 
+### Handling "Cannot dehydrate an unpersisted entity" Errors.
+
+If you're building a form to create a _new_ entity, then when you
+render the component, you may be passing in a new, non-persisted entity.
+
+For example, imagine you create a `new Post()` in your controller,
+pass this "not-yet-persisted" entity into your template as a `post`
+variable and pass _that_ into your component:
+
+```twig
+{{ component('post_form', {
+    post: post,
+    form: form
+}) }}
+```
+
+If you do this, you'll likely see this error:
+
+> Cannot dehydrate an unpersisted entity (App\Entity\Post). If you
+> want to allow this, add a dehydrateWith= option to LiveProp
+
+The problem is that the Live component system doesn't know how to
+transform this object into something that can be sent to the frontend,
+called "dehydration". If an entity has already been saved to the database,
+its "id" is sent to the frontend. But if the entity hasn't been saved
+yet, that's not possible.
+
+The solution is to pass `null` into your component instead of a
+non-persisted entity object. If you need to, you can re-create
+your `new Post()` inside of your component:
+
+```diff
+{{ component('post_form', {
+-    post: post,
++    post: post.id ? post : null,
+    form: form
+}) }}
+```
+
 ### Form Rendering Problems
 
 For the most part, rendering a form inside a component works beautifully.
@@ -931,6 +970,21 @@ Finally, tell the `form` element to use this action:
 Now, when the form is submitted, it will execute the `save()` method
 via Ajax. If the form fails validation, it will re-render with the
 errors. And if it's successful, it will redirect.
+
+**NOTE**: Make sure that each time the user changes a field, you
+update the component's model. If you don't do this, when you trigger
+the action, it will _not_ contain the form's data because the data
+in the fields and the component's data will be out of sync.
+
+An easy way to accomplish this (explained more in the
+[Forms](#forms) section above) is to add:
+
+```diff
+<div
+    {{ init_live_component(this) }}
++    data-action="change->live#update"
+>
+```
 
 ## Modifying Embedded Properties with the "exposed" Option
 
