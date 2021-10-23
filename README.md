@@ -50,7 +50,7 @@ exist beyond the UX packages:
     [detecting outside clicks](https://stimulus-use.github.io/stimulus-use/#/use-click-outside)
     and many other things. See: https://stimulus-use.github.io/stimulus-use/#/
 
--   [stimulus-components](https://stimulus-components.netlify.app/docs/components/index/): A
+-   [stimulus-components](https://stimulus-components.netlify.app/): A
     large number of pre-made Stimulus controllers, like for
     [Copying to clipboard](https://stimulus-components.netlify.app/docs/components/stimulus-clipboard/),
     [Sortable](https://stimulus-components.netlify.app/docs/components/stimulus-sortable/),
