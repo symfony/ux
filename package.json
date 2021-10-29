@@ -5,34 +5,56 @@
         "src/**/assets"
     ],
     "scripts": {
-        "build": "yarn workspaces run build",
-        "test": "yarn workspaces run test",
-        "lint": "yarn workspaces run lint --fix",
-        "format": "prettier src/*/Resources/assets/{src,test}/*.js {,src/*/}*.{json,md} --write",
+        "build": "yarn rollup -c",
+        "test": "yarn workspaces run jest",
+        "lint": "yarn workspaces run eslint src test",
+        "format": "prettier src/*/Resources/assets/src/*.ts src/*/Resources/assets/test/*.js {,src/*/}*.{json,md} --write",
         "check-lint": "yarn lint --no-fix",
         "check-format": "yarn format --no-write --check"
     },
     "devDependencies": {
-        "@babel/eslint-parser": "^7.12.1",
-        "eslint": "^7.15.0",
-        "eslint-config-prettier": "^6.15.0",
-        "eslint-plugin-jest": "^24.1.3",
-        "prettier": "^2.2.1"
+        "@babel/core": "^7.15.8",
+        "@babel/preset-env": "^7.15.8",
+        "@babel/preset-typescript": "^7.15.0",
+        "@rollup/plugin-node-resolve": "^13.0.0",
+        "@rollup/plugin-typescript": "^8.3.0",
+        "@symfony/stimulus-testing": "^1.1.0",
+        "@typescript-eslint/eslint-plugin": "^5.2.0",
+        "@typescript-eslint/parser": "^5.2.0",
+        "babel-jest": "^27.3.1",
+        "eslint": "^8.1.0",
+        "eslint-config-prettier": "^8.0.0",
+        "eslint-plugin-jest": "^25.2.2",
+        "jest": "^27.3.1",
+        "pkg-up": "^3.1.0",
+        "prettier": "^2.2.1",
+        "rollup": "^2.52.2",
+        "tslib": "^2.3.1",
+        "typescript": "^4.4.4"
     },
     "eslintConfig": {
         "root": true,
-        "parser": "@babel/eslint-parser",
+        "parser": "@typescript-eslint/parser",
+        "plugins": [
+            "@typescript-eslint"
+        ],
         "extends": [
             "eslint:recommended",
-            "prettier"
+            "prettier",
+            "plugin:@typescript-eslint/eslint-recommended",
+            "plugin:@typescript-eslint/recommended"
         ],
+        "rules": {
+            "@typescript-eslint/no-explicit-any": "off"
+        },
         "env": {
             "browser": true
         },
         "overrides": [
             {
                 "files": [
-                    "src/*/Resources/assets/test/*.js"
+                    "src/*/Resources/assets/test/**/*.ts",
+                    "src/*/assets/test/**/*.ts"
                 ],
                 "extends": [
                     "plugin:jest/recommended"

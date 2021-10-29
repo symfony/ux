@@ -7,6 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import '@symfony/stimulus-testing/setup';
 // adds the missing "fetch" function - fetch-mock-jest will replace this
+// eslint-disable-next-line
 global.fetch = require('node-fetch');
