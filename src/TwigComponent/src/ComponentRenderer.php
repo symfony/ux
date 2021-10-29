@@ -30,6 +30,7 @@ final class ComponentRenderer
     public function render(object $component, string $template): string
     {
         // TODO: Self-Rendering components?
-        return $this->twig->render($template, ['this' => $component]);
+        $templateName = $component->getTemplate() ?? $template;     
+        return $this->twig->render($templateName, ['this' => $component]);
     }
 }
