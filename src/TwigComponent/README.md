@@ -291,7 +291,7 @@ method and called that from the template via `this.products`.
 This was done because, as a general rule, you should make your components
 as _lazy_ as possible and store only the information you need on its
 properties (this also helps if you convert your component to a
-[live component](https://github.com/symfony/ux-live-component)) later. With this setup, the
+[live component](https://github.com/symfony/ux-live-component) later). With this setup, the
 query is only executed if and when the `getProducts()` method
 is actually called. This is very similar to the idea of
 "computed properties" in frameworks like [Vue](https://v3.vuejs.org/guide/computed.html).
