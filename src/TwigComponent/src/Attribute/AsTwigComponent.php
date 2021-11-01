@@ -27,9 +27,4 @@ class AsTwigComponent
         $this->name = $name;
         $this->template = $template;
     }
-
-    public function getTemplate(): ?string
-    {
-        return null;
-    }
 }
