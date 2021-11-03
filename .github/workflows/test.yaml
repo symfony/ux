@@ -2,10 +2,6 @@ name: Symfony UX
 
 on: [push, pull_request]
 
-env:
-    SYMFONY_PHPUNIT_DIR: '/tmp/.phpunit'
-    SYMFONY_PHPUNIT_VERSION: '8.5'
-
 jobs:
     coding-style-php:
         runs-on: ubuntu-latest
