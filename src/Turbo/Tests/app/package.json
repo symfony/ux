@@ -9,6 +9,7 @@
         "stimulus": "^2.0.0",
         "webpack-notifier": "^1.6.0"
     },
+    "resolutions": { "coa": "2.0.2" },
     "license": "MIT",
     "private": true,
     "scripts": {
