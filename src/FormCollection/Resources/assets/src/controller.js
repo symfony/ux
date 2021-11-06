@@ -62,7 +62,7 @@ export default class extends Controller {
         });
     }
 
-    add(event) {
+    add() {
 
         this.index++;
 
