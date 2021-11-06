@@ -27,14 +27,14 @@ You need to select the right theme from the one you are using:
 ```yaml
 # config/packages/twig.yaml
 twig:
-  # For bootstrap for example
-  form_themes: ['@FormCollection/form_theme_div.html.twig']
+    # For bootstrap for example
+    form_themes: ['@FormCollection/form_theme_div.html.twig']
 ```
 
 There are 2 predefined themes available:
 
-- `@FormCollection/form_theme_div.html.twig`
-- `@FormCollection/form_theme_table.html.twig`
+-   `@FormCollection/form_theme_div.html.twig`
+-   `@FormCollection/form_theme_table.html.twig`
 
 [Check the Symfony doc](https://symfony.com/doc/4.4/form/form_themes.html) for the different ways to set themes in Symfony.
 
@@ -92,11 +92,11 @@ class BlogFormType extends AbstractType
             ->add('comments', UXCollectionType::class, [
                 // ...
                 // Default text for the add button (used by predefined theme)
-                'button_add_text' => 'Add',    
+                'button_add_text' => 'Add',
                 // Add HTML classes to the add button (used by predefined theme)
                 'button_add_class' => 'btn btn-outline-primary',
                 // Default text for the delete button (used by predefined theme)
-                'button_delete_text' => 'Remove',    
+                'button_delete_text' => 'Remove',
                 // Add HTML classes to the add button (used by predefined theme)
                 'button_delete_class' => 'btn btn-outline-secondary',
             ])
@@ -147,7 +147,7 @@ export default class extends Controller {
 
     _onPreConnect(event) {
         // The collection is not yet connected
-        console.log(event.detail.allowAdd);    // Access to the allow_add option of the form 
+        console.log(event.detail.allowAdd); // Access to the allow_add option of the form
         console.log(event.detail.allowDelete); // Access to the allow_delete option of the form
     }
 
@@ -156,7 +156,7 @@ export default class extends Controller {
     }
 
     _onPreAdd(event) {
-        console.log(event.detail.index);   // Access to the curent index will be added 
+        console.log(event.detail.index); // Access to the curent index will be added
         console.log(event.detail.element); // Access to the element will be added
     }
 
@@ -165,7 +165,7 @@ export default class extends Controller {
     }
 
     _onPreDelete(event) {
-        console.log(event.detail.index);   // Access to the index will be removed 
+        console.log(event.detail.index); // Access to the index will be removed
         console.log(event.detail.element); // Access to the elemnt will be removed
     }
 
@@ -183,8 +183,8 @@ Then in your render call, add your controller as an HTML attribute:
             ->add('comments', UXCollectionType::class, [
                 // ...
                 'attr' => [
-                    // Change the controller name 
-                    'data-controller' => 'mycollection' 
+                    // Change the controller name
+                    'data-controller' => 'mycollection'
                 ]
             ]);
 ```
