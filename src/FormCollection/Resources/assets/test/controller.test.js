@@ -11,7 +11,6 @@
 
 import { Application, Controller } from 'stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
-import user from '@testing-library/user-event';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import FormCollectionController from '../dist/controller';
 
