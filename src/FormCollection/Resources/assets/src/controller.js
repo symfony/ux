@@ -1,11 +1,9 @@
 'use strict';
 
-import {Controller} from 'stimulus';
+import { Controller } from 'stimulus';
 
 export default class extends Controller {
-    static targets = [
-        'entry'
-    ];
+    static targets = ['entry'];
 
     static values = {
         allowAdd: Boolean,
@@ -14,7 +12,7 @@ export default class extends Controller {
         buttonDelete: String,
         prototypeName: String,
         prototype: String,
-        startIndex: Number
+        startIndex: Number,
     };
 
     /**
@@ -63,7 +61,6 @@ export default class extends Controller {
     }
 
     add() {
-
         this.index++;
 
         // Compute the new entry
@@ -82,7 +79,7 @@ export default class extends Controller {
 
         this._dispatchEvent('form-collection:pre-add', {
             index: this.index,
-            element: newEntry
+            element: newEntry,
         });
 
         this.element.append(newEntry);
@@ -93,7 +90,7 @@ export default class extends Controller {
 
         this._dispatchEvent('form-collection:add', {
             index: this.index,
-            element: entry
+            element: entry,
         });
     }
 
@@ -102,14 +99,14 @@ export default class extends Controller {
 
         this._dispatchEvent('form-collection:pre-delete', {
             index: entry.dataset.indexEntry,
-            element: entry
+            element: entry,
         });
 
         entry.remove();
 
         this._dispatchEvent('form-collection:delete', {
             index: entry.dataset.indexEntry,
-            element: entry
+            element: entry,
         });
     }
 
@@ -121,7 +118,6 @@ export default class extends Controller {
      * @private
      */
     _addDeleteButton(entry, index) {
-
         // link the button and the entry by the data-index-entry attribute
         entry.dataset.indexEntry = index;
 
@@ -147,7 +143,6 @@ export default class extends Controller {
      * @private
      */
     _textToNode(text) {
-
         let template = document.createElement('template');
         text = text.trim(); // Never return a text node of whitespace as the result
         template.innerHTML = text;

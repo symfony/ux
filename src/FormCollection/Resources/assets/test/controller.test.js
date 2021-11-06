@@ -55,5 +55,4 @@ describe('FormCollectionController', () => {
         await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
         await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('pre-connected'));
     });
-
 });
