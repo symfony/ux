@@ -62,12 +62,12 @@ final class LiveComponentExtension extends Extension
 
         $container->register('ux.live_component.doctrine_entity_property_hydrator', DoctrineEntityPropertyHydrator::class)
             ->setArguments([[new Reference('doctrine')]])
-            ->addTag('twig.component.property_hydrator', ['priority' => -200])
+            ->addTag('twig.component.property_hydrator', ['priority' => -100])
         ;
 
-        $container->register('ux.live_component.datetime_property_hydrator', NormalizerBridgePropertyHydrator::class)
-            ->setArguments([new Reference('serializer.normalizer.datetime')])
-            ->addTag('twig.component.property_hydrator', ['priority' => -100])
+        $container->register('ux.live_component.serializer_property_hydrator', NormalizerBridgePropertyHydrator::class)
+            ->setArguments([new Reference('serializer')])
+            ->addTag('twig.component.property_hydrator', ['priority' => -200])
         ;
 
         $container->register('ux.live_component.component_hydrator', LiveComponentHydrator::class)
