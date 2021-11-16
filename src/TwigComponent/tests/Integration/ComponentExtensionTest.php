@@ -60,4 +60,13 @@ final class ComponentExtensionTest extends KernelTestCase
 
         $this->assertStringContainsString('Custom template 2', $output);
     }
+
+    public function testCanRenderSelfRenderingComponent(): void
+    {
+        self::bootKernel();
+
+        $output = self::$container->get(Environment::class)->render('template_d.html.twig');
+
+        $this->assertStringContainsString('bar', $output);
+    }
 }

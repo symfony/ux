@@ -338,6 +338,44 @@ If you're using [Live Components](https://github.com/symfony/ux-live-component),
 then there _are_ some guidelines related to how the re-rendering of parent
 and child components works. Read [Live Embedded Components](https://github.com/symfony/ux-live-component#embedded-components).
 
+## Self-Rendering Components
+
+To take full control of the rendering of your component, have it implement
+`Symfony\UX\TwigComponent\SelfRenderingInterface`. This allows you create
+_dynamic templates_ based on component data:
+
+```php
+// src/Components/AlertComponent.php
+// ...
+
+use Symfony\UX\TwigComponent\SelfRenderingInterface;
+
+#[AsTwigComponent('alert')]
+class AlertComponent implements SelfRenderingInterface
+{
+    public string $message;
+    public string $type = 'success';
+
+    public function mount(bool $isSuccess = true)
+    {
+        $this->type = $isSuccess ? 'success' : 'danger';
+    }
+
+    public function render(\Twig\Environment $twig) : string
+    {
+        $template = 'components/alert-'.$this->type.'.html.twig';
+        $template = $this->getLoader()->exists($template) ? $template : 'components/alert-default.html.twig';
+
+        return $twig->render($template, [
+            'this' => $this,
+            'something' => 'else',
+        ]);
+    }
+
+    // ...
+}
+```
+
 ## Contributing
 
 Interested in contributing? Visit the main source for this repository:

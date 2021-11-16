@@ -233,7 +233,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $factory = self::$container->get('ux.twig_component.component_factory');
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unknown component "invalid". The registered components are: component_a, component_b, component_c, component_d');
+        $this->expectExceptionMessage('Unknown component "invalid". The registered components are: component_a, component_b, component_c, component_e, component_d');
 
         $factory->configFor('invalid');
     }
@@ -246,7 +246,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $factory = self::$container->get('ux.twig_component.component_factory');
 
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unknown component class "Symfony\UX\TwigComponent\Tests\Integration\ComponentFactoryTest". The registered components are: component_a, component_b, component_c, component_d');
+        $this->expectExceptionMessage('Unknown component class "Symfony\UX\TwigComponent\Tests\Integration\ComponentFactoryTest". The registered components are: component_a, component_b, component_c, component_e, component_d');
 
         $factory->configFor(self::class);
     }

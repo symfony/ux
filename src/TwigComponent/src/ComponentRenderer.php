@@ -29,7 +29,10 @@ final class ComponentRenderer
 
     public function render(object $component, string $template): string
     {
-        // TODO: Self-Rendering components?
+        if ($component instanceof SelfRenderingInterface) {
+            return $component->render($this->twig);
+        }
+
         return $this->twig->render($template, ['this' => $component]);
     }
 }

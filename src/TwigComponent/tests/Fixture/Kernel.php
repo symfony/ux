@@ -21,6 +21,7 @@ use Symfony\Component\Routing\RouteCollectionBuilder;
 use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentA;
 use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentB;
 use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentC;
+use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentE;
 use Symfony\UX\TwigComponent\Tests\Fixture\Service\ServiceA;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 
@@ -55,6 +56,7 @@ final class Kernel extends BaseKernel
         $componentA = $c->register(ComponentA::class)->setAutoconfigured(true)->setAutowired(true);
         $componentB = $c->register('component_b', ComponentB::class)->setAutoconfigured(true)->setAutowired(true);
         $componentC = $c->register(ComponentC::class)->setAutoconfigured(true)->setAutowired(true);
+        $componentE = $c->register(ComponentE::class)->setAutoconfigured(true)->setAutowired(true);
 
         $c->register('component_d', ComponentB::class)->addTag('twig.component', [
             'key' => 'component_d',
@@ -66,6 +68,7 @@ final class Kernel extends BaseKernel
             $componentA->addTag('twig.component', ['key' => 'component_a']);
             $componentB->addTag('twig.component', ['key' => 'component_b', 'template' => 'components/custom1.html.twig']);
             $componentC->addTag('twig.component', ['key' => 'component_c']);
+            $componentE->addTag('twig.component', ['key' => 'component_e']);
         }
 
         if ('missing_key' === $this->environment) {
