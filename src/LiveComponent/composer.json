@@ -41,7 +41,7 @@
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/orm": "^2.7",
         "zenstruck/foundry": "^1.10",
-        "zenstruck/browser": "^0.5.0"
+        "zenstruck/browser": "^0.9.1"
     },
     "extra": {
         "branch-alias": {
