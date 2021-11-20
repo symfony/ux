@@ -49,7 +49,7 @@
         "symfony/framework-bundle": "^5.2|^6.0",
         "symfony/mercure-bundle": "^0.3",
         "symfony/messenger": "^5.2|^6.0",
-        "symfony/panther": "^1.0|dev-main",
+        "symfony/panther": "^1.0|^2.0",
         "symfony/phpunit-bridge": "^5.2.1|^6.0",
         "symfony/property-access": "^5.2|^6.0",
         "symfony/security-core": "^5.2|^6.0",
