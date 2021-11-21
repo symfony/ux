@@ -2,6 +2,6 @@
     "name": "symfony/ux",
     "license": "MIT",
     "require-dev": {
-        "symfony/filesystem": "^5.2"
+        "symfony/filesystem": "^5.2|^6.0"
     }
 }

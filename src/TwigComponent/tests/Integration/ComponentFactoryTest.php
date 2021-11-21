@@ -23,12 +23,12 @@ use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentC;
  */
 final class ComponentFactoryTest extends KernelTestCase
 {
+    use ContainerBC;
+
     public function testCreatedComponentsAreNotShared(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         /** @var ComponentA $componentA */
         $componentA = $factory->create('component_a', ['propA' => 'A', 'propB' => 'B']);
@@ -46,10 +46,8 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testNonAutoConfiguredCreatedComponentsAreNotShared(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         /** @var ComponentB $componentA */
         $componentA = $factory->create('component_b');
@@ -62,10 +60,8 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testCanGetUnmountedComponent(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         /** @var ComponentA $component */
         $component = $factory->get('component_a');
@@ -76,10 +72,8 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testMountCanHaveOptionalParameters(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         /** @var ComponentC $component */
         $component = $factory->create('component_c', [
@@ -104,10 +98,8 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testExceptionThrownIfRequiredMountParameterIsMissingFromPassedData(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentC::mount() has a required $propA parameter. Make sure this is passed or make give a default value.');
@@ -117,10 +109,8 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testExceptionThrownIfUnableToWritePassedDataToProperty(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->expectException(\LogicException::class);
         $this->expectExceptionMessage('Unable to write "service" to component "Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentA". Make sure this is a writable property or create a mount() with a $service argument.');
@@ -138,10 +128,8 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testCanGetConfigForComponentByName(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->assertSame(
             [
@@ -157,10 +145,8 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testCanGetConfigForComponentByObject(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->assertSame(
             [
@@ -176,10 +162,8 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testCanGetConfigForComponentByClass(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->assertSame(
             [
@@ -195,10 +179,8 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testCanGetConfigForSameComponentWithDifferentName(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->assertSame(
             [
@@ -214,10 +196,8 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testCannotGetConfigForComponentIfMultipleOfSameClass(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectDeprecationMessage(sprintf('2 "%s" components registered with names "component_b, component_d". Use the $name parameter to explicitly choose one.', ComponentB::class));
@@ -227,10 +207,8 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testCannotGetConfigByNameForNonRegisteredComponent(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unknown component "invalid". The registered components are: component_a, component_b, component_c, component_d');
@@ -240,10 +218,8 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testCannotGetConfigByClassForNonRegisteredComponent(): void
     {
-        self::bootKernel();
-
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Unknown component class "Symfony\UX\TwigComponent\Tests\Integration\ComponentFactoryTest". The registered components are: component_a, component_b, component_c, component_d');

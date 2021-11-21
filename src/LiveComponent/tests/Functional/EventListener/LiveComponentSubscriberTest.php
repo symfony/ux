@@ -14,6 +14,7 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\LiveComponent\Tests\ContainerBC;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixture\Entity\Entity1;
@@ -29,19 +30,18 @@ use Zenstruck\Foundry\Test\ResetDatabase;
  */
 final class LiveComponentSubscriberTest extends KernelTestCase
 {
+    use ContainerBC;
     use Factories;
     use HasBrowser;
     use ResetDatabase;
 
     public function testCanRenderComponentAsHtmlOrJson(): void
     {
-        self::bootKernel();
-
         /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::$container->get('ux.live_component.component_hydrator');
+        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         /** @var Component1 $component */
         $component = $factory->create('component1', [
@@ -80,13 +80,11 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testCanExecuteComponentAction(): void
     {
-        self::bootKernel();
-
         /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::$container->get('ux.live_component.component_hydrator');
+        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         /** @var Component2 $component */
         $component = $factory->create('component2');
@@ -183,13 +181,11 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testBeforeReRenderHookOnlyExecutedDuringAjax(): void
     {
-        self::bootKernel();
-
         /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::$container->get('ux.live_component.component_hydrator');
+        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         /** @var Component2 $component */
         $component = $factory->create('component2');
@@ -208,13 +204,11 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testCanRedirectFromComponentAction(): void
     {
-        self::bootKernel();
-
         /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::$container->get('ux.live_component.component_hydrator');
+        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
 
         /** @var ComponentFactory $factory */
-        $factory = self::$container->get('ux.twig_component.component_factory');
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         /** @var Component2 $component */
         $component = $factory->create('component2');
