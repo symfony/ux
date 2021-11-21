@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-11-08T00:53:04Z
+
+This is blocked by Panther's support for Symfony 6: https://github.com/symfony/panther/pull/509
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-11-19T20:37:16Z
+
+Blocked either by a Panther 2.x release of this PR: https://github.com/symfony/panther/pull/513
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-11-20T21:45:46Z
+
+This is ready. Once merged, I'd like to tag one more 1.x release for symfony/ux. Then we can prep for 2.0 with #141
