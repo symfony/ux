@@ -22,8 +22,6 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentValidator;
 use Symfony\UX\LiveComponent\ComponentValidatorInterface;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
-use Symfony\UX\LiveComponent\Hydrator\DoctrineEntityPropertyHydrator;
-use Symfony\UX\LiveComponent\Hydrator\NormalizerBridgePropertyHydrator;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\PropertyHydratorInterface;
 use Symfony\UX\LiveComponent\Twig\LiveComponentExtension as LiveComponentTwigExtension;
@@ -58,16 +56,6 @@ final class LiveComponentExtension extends Extension
 
         $container->registerForAutoconfiguration(PropertyHydratorInterface::class)
             ->addTag('twig.component.property_hydrator')
-        ;
-
-        $container->register('ux.live_component.doctrine_entity_property_hydrator', DoctrineEntityPropertyHydrator::class)
-            ->setArguments([[new Reference('doctrine')]])
-            ->addTag('twig.component.property_hydrator', ['priority' => -100])
-        ;
-
-        $container->register('ux.live_component.serializer_property_hydrator', NormalizerBridgePropertyHydrator::class)
-            ->setArguments([new Reference('serializer')])
-            ->addTag('twig.component.property_hydrator', ['priority' => -200])
         ;
 
         $container->register('ux.live_component.component_hydrator', LiveComponentHydrator::class)
