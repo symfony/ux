@@ -1056,7 +1056,7 @@ class EditPostComponent
 
 With this, both the `title` and the `content` properties of the
 `$post` property _can_ be modified by the user. However, notice
-that the `LiveProp` does _not_ have `modifiable=true`. This
+that the `LiveProp` does _not_ have `writable=true`. This
 means that while the `title` and `content` properties can be
 changed, the `Post` object itself **cannot** be changed. In other
 words, if the component was originally created with a Post
