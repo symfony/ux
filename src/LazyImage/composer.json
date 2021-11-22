@@ -41,7 +41,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "1.3-dev"
+            "dev-main": "1.4-dev"
         },
         "thanks": {
             "name": "symfony/ux",
