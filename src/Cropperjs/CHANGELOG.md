@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.4
+
+-   Support added for Symfony 6
+
 ## 1.3
 
 -   [DEPENDENCY CHANGE] `cropperjs` is no longer included automatically (#93)

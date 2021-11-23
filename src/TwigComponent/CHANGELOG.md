@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## NEXT
+## 1.4.0
 
 -   Minimum PHP version was bumped to 8.0 so that PHP 8 attributes could be used.
 

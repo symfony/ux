@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## NEXT
+## 1.4.0
 
 -   Require live components have a default action (`__invoke()` by default) to enable
     controller annotations/attributes (ie `@Security/@Cache`). Added `DefaultActionTrait`

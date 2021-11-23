@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.4
+
+-   Support added for Symfony 6
+
 ## 1.3
 
 -   [DEPENDENCY CHANGE] `swup` (and a few themes/plugins) is no longer included
