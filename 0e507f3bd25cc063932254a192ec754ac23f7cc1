@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-09-28T16:30:13Z
+
+This is ready. Along with:
+
+* https://github.com/symfony/stimulus-testing/pull/4
+* https://github.com/symfony/stimulus-bridge/pull/48
+
+---------------------------------------------------------------------------
+
+by Growiel at 2021-10-23T06:18:11Z
+
+Hello,
+
+What can one do to help move this along ? There's a few things in Stimulus 3 that would make my life easier (namely the XXXTargetAdded events).
+
+I'd be willing to help if it's in my range of competences and help is required in anyway.
