@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 import * as Turbo from '@hotwired/turbo';
 
 // Expose Turbo to the rest of the app to allow for dynamic Turbo calls

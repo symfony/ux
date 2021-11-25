@@ -1,4 +1,4 @@
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 import morphdom from 'morphdom';
 import { parseDirectives } from './directives_parser';
 import { combineSpacedArray } from './string_utils';

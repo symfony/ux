@@ -9,7 +9,7 @@
 
 'use strict';
 
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 import Swup from 'swup';
 import SwupDebugPlugin from '@swup/debug-plugin';
 import SwupFormsPlugin from '@swup/forms-plugin';

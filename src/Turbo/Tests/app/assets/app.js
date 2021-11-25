@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import { Application } from "stimulus";
+import { Application } from "@hotwired/stimulus";
 import TurboStreamMercureController from "@symfony/ux-turbo-mercure/dist/turbo_stream_controller";
 
 const application = Application.start();

@@ -1,4 +1,4 @@
-import { Application } from 'stimulus';
+import { Application } from '@hotwired/stimulus';
 import LiveController from '../src/live_controller';
 import { waitFor } from '@testing-library/dom';
 import fetchMock from 'fetch-mock-jest';

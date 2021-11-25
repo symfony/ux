@@ -13,7 +13,7 @@ export default [
         external: [
             /@babel\/runtime/,
             /core-js\//,
-            'stimulus',
+            '@hotwired/stimulus',
         ],
         plugins: [
             babel({

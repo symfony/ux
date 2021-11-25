@@ -9,7 +9,7 @@
 
 'use strict';
 
-import { Application, Controller } from 'stimulus';
+import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import LazyImageController from '../dist/controller';

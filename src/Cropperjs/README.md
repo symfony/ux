@@ -126,7 +126,7 @@ Symfony UX Cropper.js allows you to extend its default behavior using a custom S
 ```js
 // mycropper_controller.js
 
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     connect() {

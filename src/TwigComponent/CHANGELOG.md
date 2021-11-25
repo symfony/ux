@@ -1,6 +1,10 @@
 # CHANGELOG
 
-## 1.4.0
+## 2.0.0
+
+-   Support for `stimulus` version 2 was removed and support for `@hotwired/stimulus`
+    version 3 was added. See the [@symfony/stimulus-bridge CHANGELOG](https://github.com/symfony/stimulus-bridge/blob/main/CHANGELOG.md#300)
+    for more details.
 
 -   Minimum PHP version was bumped to 8.0 so that PHP 8 attributes could be used.
 

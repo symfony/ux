@@ -7,7 +7,7 @@ import _inherits from '@babel/runtime/helpers/inherits';
 import _possibleConstructorReturn from '@babel/runtime/helpers/possibleConstructorReturn';
 import _getPrototypeOf from '@babel/runtime/helpers/getPrototypeOf';
 import _defineProperty from '@babel/runtime/helpers/defineProperty';
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 import _typeof from '@babel/runtime/helpers/typeof';
 import 'core-js/web/url';
 import 'core-js/es/promise';
@@ -1158,18 +1158,17 @@ function setDeepData(data, propertyPath, value) {
     var lastPart = parts.pop();
     throw new Error("Cannot set data-model=\"".concat(propertyPath, "\". They parent \"").concat(parts.join(','), "\" data does not appear to be an object (it's \"").concat(currentLevelData, "\"). Did you forget to add exposed={\"").concat(lastPart, "\"} to its LiveProp?"));
   } // represents a situation where the key you're setting *is* an object,
-  // but the key we're setting is a new key. This, perhaps, could be
-  // allowed. But right now, all keys should be initialized with the
-  // initial data.
+  // but the key we're setting is a new key. Currently, all keys should
+  // be initialized with the initial data.
 
 
   if (currentLevelData[finalKey] === undefined) {
     var _lastPart = parts.pop();
 
     if (parts.length > 0) {
-      console.warn("The property used in data-model=\"".concat(propertyPath, "\" was never initialized. Did you forget to add exposed={\"").concat(_lastPart, "\"} to its LiveProp?"));
+      throw new Error("The property used in data-model=\"".concat(propertyPath, "\" was never initialized. Did you forget to add exposed={\"").concat(_lastPart, "\"} to its LiveProp?"));
     } else {
-      console.warn("The property used in data-model=\"".concat(propertyPath, "\" was never initialized. Did you forget to expose \"").concat(_lastPart, "\" as a LiveProp?"));
+      throw new Error("The property used in data-model=\"".concat(propertyPath, "\" was never initialized. Did you forget to expose \"").concat(_lastPart, "\" as a LiveProp? Available models values are: ").concat(Object.keys(data).length > 0 ? Object.keys(data).join(', ') : '(none)'));
     }
   }
 
@@ -1204,6 +1203,75 @@ function normalizeModelName(model) {
   }).join('.');
 }
 
+function haveRenderedValuesChanged(originalDataJson, currentDataJson, newDataJson) {
+  /*
+   * Right now, if the "data" on the new value is different than
+   * the "original data" on the child element, then we force re-render
+   * the child component. There may be some other cases that we
+   * add later if they come up. Either way, this is probably the
+   * behavior we want most of the time, but it's not perfect. For
+   * example, if the child component has some a writable prop that
+   * has changed since the initial render, re-rendering the child
+   * component from the parent component will "eliminate" that
+   * change.
+   */
+  // if the original data matches the new data, then the parent
+  // hasn't changed how they render the child.
+  if (originalDataJson === newDataJson) {
+    return false;
+  } // The child component IS now being rendered in a "new way".
+  // This means that at least one of the "data" pieces used
+  // to render the child component has changed.
+  // However, the piece of data that changed might simply
+  // match the "current data" of that child component. In that case,
+  // there is no point to re-rendering.
+  // And, to be safe (in case the child has some "private LiveProp"
+  // that has been modified), we want to avoid rendering.
+  // if the current data exactly matches the new data, then definitely
+  // do not re-render.
+
+
+  if (currentDataJson === newDataJson) {
+    return false;
+  } // here, we will compare the original data for the child component
+  // with the new data. What we're looking for are they keys that
+  // have changed between the original "child rendering" and the
+  // new "child rendering".
+
+
+  var originalData = JSON.parse(originalDataJson);
+  var newData = JSON.parse(newDataJson);
+  var changedKeys = Object.keys(newData);
+  Object.entries(originalData).forEach(function (_ref) {
+    var _ref2 = _slicedToArray(_ref, 2),
+        key = _ref2[0],
+        value = _ref2[1];
+
+    // if any key in the new data is different than a key in the
+    // current data, then we *should* re-render. But if all the
+    // keys in the new data equal
+    if (value === newData[key]) {
+      // value is equal, remove from changedKeys
+      changedKeys.splice(changedKeys.indexOf(key), 1);
+    }
+  }); // now that we know which keys have changed between originally
+  // rendering the child component and this latest render, we
+  // can check to see if the the child component *already* has
+  // the latest value for those keys.
+
+  var currentData = JSON.parse(currentDataJson);
+  var keyHasChanged = false;
+  changedKeys.forEach(function (key) {
+    // if any key in the new data is different than a key in the
+    // current data, then we *should* re-render. But if all the
+    // keys in the new data equal
+    if (currentData[key] !== newData[key]) {
+      keyHasChanged = true;
+    }
+  });
+  return keyHasChanged;
+}
+
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
@@ -1235,6 +1303,8 @@ var _default = /*#__PURE__*/function (_Controller) {
 
     _defineProperty(_assertThisInitialized(_this), "isWindowUnloaded", false);
 
+    _defineProperty(_assertThisInitialized(_this), "originalDataJSON", void 0);
+
     _defineProperty(_assertThisInitialized(_this), "markAsWindowUnloaded", function () {
       _this.isWindowUnloaded = true;
     });
@@ -1246,6 +1316,9 @@ var _default = /*#__PURE__*/function (_Controller) {
     key: "initialize",
     value: function initialize() {
       this.markAsWindowUnloaded = this.markAsWindowUnloaded.bind(this);
+      this.originalDataJSON = JSON.stringify(this.dataValue);
+
+      this._exposeOriginalData();
     }
   }, {
     key: "connect",
@@ -1388,14 +1461,34 @@ var _default = /*#__PURE__*/function (_Controller) {
         throw new Error("The update() method could not be called for \"".concat(clonedElement.outerHTML, "\": the element must either have a \"data-model\" or \"name\" attribute set to the model name."));
       }
 
-      this.$updateModel(model, value, shouldRender);
+      this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null);
     }
+    /**
+     * Update a model value.
+     *
+     * The extraModelName should be set to the "name" attribute of an element
+     * if it has one. This is only important in a parent/child component,
+     * where, in the child, you might be updating a "foo" model, but you
+     * also want this update to "sync" to the parent component's "bar" model.
+     * Typically, setup on a field like this:
+     *
+     *      <input data-model="foo" name="bar">
+     *
+     * @param {string} model The model update, which could include modifiers
+     * @param {any} value The new value
+     * @param {boolean} shouldRender Whether a re-render should be triggered
+     * @param {string|null} extraModelName Another model name that this might go by in a parent component.
+     * @param {Object} options Options include: {bool} dispatch
+     */
+
   }, {
     key: "$updateModel",
     value: function $updateModel(model, value) {
       var _this4 = this;
 
       var shouldRender = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+      var extraModelName = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+      var options = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
       var directives = parseDirectives(model);
 
       if (directives.length > 1) {
@@ -1408,7 +1501,8 @@ var _default = /*#__PURE__*/function (_Controller) {
         throw new Error("The data-model=\"".concat(model, "\" format is invalid: it does not support passing arguments to the model."));
       }
 
-      var modelName = normalizeModelName(directive.action); // if there is a "validatedFields" data, it means this component wants
+      var modelName = normalizeModelName(directive.action);
+      var normalizedExtraModelName = extraModelName ? normalizeModelName(extraModelName) : null; // if there is a "validatedFields" data, it means this component wants
       // to track which fields have been / should be validated.
       // in that case, when the model is updated, mark that it should be validated
 
@@ -1422,14 +1516,13 @@ var _default = /*#__PURE__*/function (_Controller) {
         this.dataValue = setDeepData(this.dataValue, 'validatedFields', validatedFields);
       }
 
-      if (!doesDeepPropertyExist(this.dataValue, modelName)) {
-        console.warn("Model \"".concat(modelName, "\" is not a valid data-model value"));
-      }
-
-      this._dispatchEvent('live:update-model', {
-        model: modelName,
-        value: value
-      }); // we do not send old and new data to the server
+      if (options.dispatch !== false) {
+        this._dispatchEvent('live:update-model', {
+          modelName: modelName,
+          extraModelName: normalizedExtraModelName,
+          value: value
+        });
+      } // we do not send old and new data to the server
       // we merge in the new data now
       // TODO: handle edge case for top-level of a model with "exposed" props
       // For example, suppose there is a "post" field but "post.title" is exposed.
@@ -1775,13 +1868,15 @@ var _default = /*#__PURE__*/function (_Controller) {
           } // avoid updating child components: they will handle themselves
 
 
-          if (fromEl.hasAttribute('data-controller') && fromEl.getAttribute('data-controller').split(' ').indexOf('live') !== -1 && fromEl !== _this8.element) {
+          if (fromEl.hasAttribute('data-controller') && fromEl.getAttribute('data-controller').split(' ').indexOf('live') !== -1 && fromEl !== _this8.element && !_this8._shouldChildLiveElementUpdate(fromEl, toEl)) {
             return false;
           }
 
           return true;
         }
-      });
+      }); // restore the data-original-data attribute
+
+      this._exposeOriginalData();
     }
   }, {
     key: "_initiatePolling",
@@ -1845,11 +1940,101 @@ var _default = /*#__PURE__*/function (_Controller) {
   }, {
     key: "_handleChildComponentUpdateModel",
     value: function _handleChildComponentUpdateModel(event) {
-      if (!doesDeepPropertyExist(this.dataValue, event.detail.model)) {
+      var _this11 = this;
+
+      var mainModelName = event.detail.modelName;
+      var potentialModelNames = [{
+        name: mainModelName,
+        required: false
+      }, {
+        name: event.detail.extraModelName,
+        required: false
+      }];
+      var modelMapElement = event.target.closest('[data-model-map]');
+
+      if (this.element.contains(modelMapElement)) {
+        var directives = parseDirectives(modelMapElement.dataset.modelMap);
+        directives.forEach(function (directive) {
+          var from = null;
+          directive.modifiers.forEach(function (modifier) {
+            switch (modifier.name) {
+              case 'from':
+                if (!modifier.value) {
+                  throw new Error("The from() modifier requires a model name in data-model-map=\"".concat(modelMapElement.dataset.modelMap, "\""));
+                }
+
+                from = modifier.value;
+                break;
+
+              default:
+                console.warn("Unknown modifier \"".concat(modifier.name, "\" in data-model-map=\"").concat(modelMapElement.dataset.modelMap, "\"."));
+            }
+          });
+
+          if (!from) {
+            throw new Error("Missing from() modifier in data-model-map=\"".concat(modelMapElement.dataset.modelMap, "\". The format should be \"from(childModelName)|parentModelName\""));
+          } // only look maps for the model currently being updated
+
+
+          if (from !== mainModelName) {
+            return;
+          }
+
+          potentialModelNames.push({
+            name: directive.action,
+            required: true
+          });
+        });
+      }
+
+      potentialModelNames.reverse();
+      var foundModelName = null;
+      potentialModelNames.forEach(function (potentialModel) {
+        if (foundModelName) {
+          return;
+        }
+
+        if (doesDeepPropertyExist(_this11.dataValue, potentialModel.name)) {
+          foundModelName = potentialModel.name;
+          return;
+        }
+
+        if (potentialModel.required) {
+          throw new Error("The model name \"".concat(potentialModel.name, "\" does not exist! Found in data-model-map=\"from(").concat(mainModelName, ")|").concat(potentialModel.name, "\""));
+        }
+      });
+
+      if (!foundModelName) {
         return;
       }
 
-      this.$updateModel(event.detail.model, event.detail.value, false);
+      this.$updateModel(foundModelName, event.detail.value, false, null, {
+        dispatch: false
+      });
+    }
+    /**
+     * Determines of a child live element should be re-rendered.
+     *
+     * This is called when this element re-renders and detects that
+     * a child element is inside. Normally, in that case, we do not
+     * re-render the child element. However, if we detect that the
+     * "data" on the child element has changed from its initial data,
+     * then this will trigger a re-render.
+     *
+     * @param {Element} fromEl
+     * @param {Element} toEl
+     * @return {boolean}
+     */
+
+  }, {
+    key: "_shouldChildLiveElementUpdate",
+    value: function _shouldChildLiveElementUpdate(fromEl, toEl) {
+      return haveRenderedValuesChanged(fromEl.dataset.originalData, fromEl.dataset.liveDataValue, toEl.dataset.liveDataValue);
+    }
+  }, {
+    key: "_exposeOriginalData",
+    value: function _exposeOriginalData() {
+      this.element.dataset.originalData = this.originalDataJSON;
     }
   }]);
 
