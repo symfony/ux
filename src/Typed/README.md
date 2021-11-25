@@ -76,12 +76,6 @@ meaning it is not bound to Symfony's BC policy for the moment.
 
 ## Run tests
 
-### PHP tests
-
-```sh
-php vendor/bin/phpunit
-```
-
 ### JavaScript tests
 
 ```sh
