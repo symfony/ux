@@ -101,7 +101,7 @@ automatically:
  */
 public function newProduct(Request $request): Response
 {
-    $form = this->createForm(ProductFormType::class, null, [
+    $form = $this->createForm(ProductFormType::class, null, [
         'action' => $this->generateUrl('product_new'),
     ]);
     $form->handleRequest($request);
@@ -110,7 +110,7 @@ public function newProduct(Request $request): Response
         // save...
 
         return $this->redirectToRoute('product_list');
-    );
+    }
 
     return $this->renderForm('product/new.html.twig', [
         'form' => $form,
