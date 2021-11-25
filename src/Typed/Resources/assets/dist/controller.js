@@ -71,7 +71,7 @@ var _default = /*#__PURE__*/function (_Controller) {
         loop: this.loopValue || false,
         loopCount: this.loopCountValue || Infinity,
         showCursor: this.showCursorValue || true,
-        cursorChar: this.cursorCharValue || '|',
+        cursorChar: this.cursorCharValue || '.',
         autoInsertCss: this.autoInsertCssValue || true,
         attr: this.attrValue || null,
         bindInputFocusEvents: this.bindInputFocusEventsValue || false,

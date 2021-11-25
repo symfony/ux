@@ -21,7 +21,7 @@ class CheckController extends Controller {
             this.element.classList.add('connected');
         });
         this.element.addEventListener('typed:pre-connect', () => {
-            this.element.classList.add('preconnected');
+            this.element.classList.add('pre-connected');
         });
     }
 }
@@ -43,17 +43,18 @@ describe('TypedController', () => {
                 </head>
                 <body>                    
                     <div>
-                        I created this UX component because <span data-testid="typed" {{ stimulus_controller("typed", {
-                            strings: ["I ❤ Symfony UX", "Symfony UX is great", "Symfony UX is easy"],
-                            smartBackspace: true,
-                            startDelay: 100,
-                            backSpeed: 20,
-                            backDelay: 100,
-                            loop: true,
-                            showCursor: true,
-                            cursorChar: "✨"
-                        })
-                        }}></span>
+                        I created this UX component because <span
+                          data-testid="typed"
+                          data-controller="check typed"
+                          data-typed-strings-value='["I ❤ Symfony UX", "Symfony UX is great", "Symfony UX is easy"]'
+                          data-typed-smart-backspace-value=true
+                          data-typed-smart-start-delay-value=100
+                          data-typed-smart-back-speed-value=100
+                          data-typed-smart-back-delay-value=100
+                          data-typed-smart-loop-value=true
+                          data-typed-smart-show-cursor-value=true
+                          data-typed-smart-cursor-char-value="✨"
+                       ></span>
                     </div>
                 </body>
             </html>
@@ -65,16 +66,11 @@ describe('TypedController', () => {
     });
 
     it('pre-connect', async () => {
-        expect(getByTestId(container, 'typed')).not.toHaveClass('preconnected');
-
-        startStimulus();
-        await waitFor(() => expect(getByTestId(container, 'typed')).toHaveClass('preconnected'));
-    });
-
-    it('connect', async () => {
+        expect(getByTestId(container, 'typed')).not.toHaveClass('pre-connected');
         expect(getByTestId(container, 'typed')).not.toHaveClass('connected');
 
         startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'typed')).toHaveClass('pre-connected'));
         await waitFor(() => expect(getByTestId(container, 'typed')).toHaveClass('connected'));
     });
 });
