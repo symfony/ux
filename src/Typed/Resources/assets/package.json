@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "symfony": {
         "controllers": {
-            "swup": {
+            "typed": {
                 "main": "dist/controller.js",
                 "webpackMode": "eager",
                 "fetch": "eager",
