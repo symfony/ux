@@ -1,4 +1,4 @@
-import { setDeepData, normalizeModelName } from '../dist/set_deep_data';
+import { setDeepData, normalizeModelName } from '../src/set_deep_data';
 
 describe('setDeepData', () => {
     it('sets a simple key', () => {

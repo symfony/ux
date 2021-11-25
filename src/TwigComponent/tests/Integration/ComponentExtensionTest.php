@@ -19,11 +19,11 @@ use Twig\Environment;
  */
 final class ComponentExtensionTest extends KernelTestCase
 {
+    use ContainerBC;
+
     public function testCanRenderComponent(): void
     {
-        self::bootKernel();
-
-        $output = self::$container->get(Environment::class)->render('template_a.html.twig');
+        $output = self::getContainer()->get(Environment::class)->render('template_a.html.twig');
 
         $this->assertStringContainsString('propA: prop a value', $output);
         $this->assertStringContainsString('propB: prop b value', $output);
@@ -32,14 +32,26 @@ final class ComponentExtensionTest extends KernelTestCase
 
     public function testCanRenderTheSameComponentMultipleTimes(): void
     {
-        self::bootKernel();
-
-        $output = self::$container->get(Environment::class)->render('template_b.html.twig');
+        $output = self::getContainer()->get(Environment::class)->render('template_b.html.twig');
 
         $this->assertStringContainsString('propA: prop a value 1', $output);
         $this->assertStringContainsString('propB: prop b value 1', $output);
         $this->assertStringContainsString('propA: prop a value 2', $output);
         $this->assertStringContainsString('propB: prop b value 2', $output);
         $this->assertStringContainsString('service: service a value', $output);
+    }
+
+    public function testCanCustomizeTemplateWithAttribute(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('template_b.html.twig');
+
+        $this->assertStringContainsString('Custom template 1', $output);
+    }
+
+    public function testCanCustomizeTemplateWithServiceTag(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('template_c.html.twig');
+
+        $this->assertStringContainsString('Custom template 2', $output);
     }
 }

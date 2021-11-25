@@ -9,14 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent;
+namespace Symfony\UX\LiveComponent\Tests\Fixture\Component;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
  */
-interface ComponentInterface
+#[AsLiveComponent('component5')]
+final class Component5 extends Component4
 {
-    public static function getComponentName(): string;
+    use DefaultActionTrait;
 }

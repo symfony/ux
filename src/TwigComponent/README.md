@@ -13,17 +13,13 @@ Every component consists of (1) a class:
 // src/Components/AlertComponent.php
 namespace App\Components;
 
-use Symfony\UX\TwigComponent\ComponentInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-class AlertComponent implements ComponentInterface
+#[AsTwigComponent('alert')]
+class AlertComponent
 {
     public string $type = 'success';
     public string $message;
-
-    public static function getComponentName(): string
-    {
-        return 'alert';
-    }
 }
 ```
 
@@ -44,11 +40,13 @@ Done! Now render it wherever you want:
 
 Enjoy your new component!
 
-![Example of the AlertComponent](./alert-example.png)
+![Example of the AlertComponent](https://github.com/symfony/ux-twig-component/blob/main/alert-example.png?raw=true)
 
 This brings the familiar "component" system from client-side frameworks
-into Symfony. Combine this with [Live Components](../LiveComponent),
+into Symfony. Combine this with [Live Components](https://github.com/symfony/ux-live-component),
 to create an interactive frontend with automatic, Ajax-powered rendering.
+
+Want a demo? Check out https://github.com/weaverryan/live-demo.
 
 ## Installation
 
@@ -64,28 +62,30 @@ That's it! We're ready to go!
 
 Let's create a reusable "alert" element that we can use to show
 success or error messages across our site. Step 1 is always to create
-a component that implements `ComponentInterface`. Let's start as simple
-as possible:
+a component that has an `AsTwigComponent` class attribute. Let's start as
+simple as possible:
 
 ```php
 // src/Components/AlertComponent.php
 namespace App\Components;
 
-use Symfony\UX\TwigComponent\ComponentInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-class AlertComponent implements ComponentInterface
+#[AsTwigComponent('alert')]
+class AlertComponent
 {
-    public static function getComponentName(): string
-    {
-        return 'alert';
-    }
 }
 ```
 
-Step 2 is to create a template for this component. Templates live
-in `templates/components/{Component Name}.html.twig`, where
-`{Component Name}` is whatever you return from the `getComponentName()`
-method:
+**Note:** If this class is auto-configured, _and_ you're using Symfony 5.3+,
+then you're all set. Otherwise, register the service and tag it with
+`twig.component` and with a `key` tag attribute for the component's name
+(`alert`).
+
+Step 2 is to create a template for this component. By default,
+templates live in `templates/components/{Component Name}.html.twig`,
+where `{Component Name}` is whatever you passed as the first argument
+to the `AsTwigComponent` class attribute:
 
 ```twig
 {# templates/components/alert.html.twig #}
@@ -116,7 +116,8 @@ that, create a public property for each:
 // src/Components/AlertComponent.php
 // ...
 
-class AlertComponent implements ComponentInterface
+#[AsTwigComponent('alert')]
+class AlertComponent
 {
 +    public string $message;
 
@@ -153,6 +154,28 @@ property of the object. Then, the component is rendered! If a
 property has a setter method (e.g. `setMessage()`), that will
 be called instead of setting the property directly.
 
+### Customize the Twig Template
+
+You can customize the template used to render the template by
+passing it as the second argument to the `AsTwigComponent` attribute:
+
+```diff
+// src/Components/AlertComponent.php
+// ...
+
+-#[AsTwigComponent('alert')]
++#[AsTwigComponent('alert', 'my/custom/template.html.twig')]
+class AlertComponent
+{
+    // ...
+}
+```
+
+**Note:** If this class is auto-configured, _and_ you're using Symfony 5.3+,
+then you're all set. Otherwise, register the service and tag it with
+`twig.component` and with a `key` tag attribute for the component's name
+(`alert`) and a `template` tag attribute (`my/custom/template.html.twig`).
+
 ### The mount() Method
 
 If, for some reason, you don't want an option to the `component()`
@@ -163,7 +186,8 @@ a `mount()` method in your component:
 // src/Components/AlertComponent.php
 // ...
 
-class AlertComponent implements ComponentInterface
+#[AsTwigComponent('alert')]
+class AlertComponent
 {
     public string $message;
     public string $type = 'success';
@@ -209,9 +233,10 @@ Doctrine entity and `ProductRepository`:
 namespace App\Components;
 
 use App\Repository\ProductRepository;
-use Symfony\UX\TwigComponent\ComponentInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-class FeaturedProductsComponent implements ComponentInterface
+#[AsTwigComponent('featured_products')]
+class FeaturedProductsComponent
 {
     private ProductRepository $productRepository;
 
@@ -224,11 +249,6 @@ class FeaturedProductsComponent implements ComponentInterface
     {
         // an example method that returns an array of Products
         return $this->productRepository->findFeatured();
-    }
-
-    public static function getComponentName() : string
-    {
-        return 'featured_products';
     }
 }
 ```
@@ -271,7 +291,7 @@ method and called that from the template via `this.products`.
 This was done because, as a general rule, you should make your components
 as _lazy_ as possible and store only the information you need on its
 properties (this also helps if you convert your component to a
-[live component](../LiveComponent)) later. With this setup, the
+[live component](https://github.com/symfony/ux-live-component) later). With this setup, the
 query is only executed if and when the `getProducts()` method
 is actually called. This is very similar to the idea of
 "computed properties" in frameworks like [Vue](https://v3.vuejs.org/guide/computed.html).
@@ -289,7 +309,8 @@ method), you can store its result on a private property:
 namespace App\Components;
 // ...
 
-class FeaturedProductsComponent implements ComponentInterface
+#[AsTwigComponent('featured_products')]
+class FeaturedProductsComponent
 {
     private ProductRepository $productRepository;
 
@@ -308,6 +329,14 @@ class FeaturedProductsComponent implements ComponentInterface
     }
 }
 ```
+
+## Embedded Components
+
+It's totally possible to embed one component into another. When you do
+this, there's nothing special to know: both components render independently.
+If you're using [Live Components](https://github.com/symfony/ux-live-component),
+then there _are_ some guidelines related to how the re-rendering of parent
+and child components works. Read [Live Embedded Components](https://github.com/symfony/ux-live-component#embedded-components).
 
 ## Contributing
 

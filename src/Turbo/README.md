@@ -1,6 +1,6 @@
 # Symfony UX Turbo
 
-Symfony UX Turbo is a Symfony bundle integrating the [Hotwire Turbo](https://turbo.hotwire.dev)
+Symfony UX Turbo is a Symfony bundle integrating the [Hotwire Turbo](https://turbo.hotwired.dev)
 library in Symfony applications. It is part of [the Symfony UX initiative](https://symfony.com/ux).
 
 Symfony UX Turbo allows having the same user experience as with [Single Page Apps](https://en.wikipedia.org/wiki/Single-page_application)
@@ -42,7 +42,7 @@ things to be aware of:
 
 Because navigation no longer results in full page refreshes, you may need to
 adjust your JavaScript to work properly. The best solution is to write your
-JavaScript using [Stimulus](https://stimulus.hotwire.dev/) or something similar.
+JavaScript using [Stimulus](https://stimulus.hotwired.dev/) or something similar.
 
 We also recommend that you place your `script` tags live inside your `head` tag so
 that they aren't reloaded on every navigation (Turbo re-executes any `script` tags
@@ -84,7 +84,7 @@ webpack_encore:
 ```
 
 For more info, see:
-[Turbo: Reloading When Assets Change](https://turbo.hotwire.dev/handbook/drive#reloading-when-assets-change)
+[Turbo: Reloading When Assets Change](https://turbo.hotwired.dev/handbook/drive#reloading-when-assets-change)
 
 #### 3. Form Response Code Changes
 
@@ -92,37 +92,33 @@ Turbo Drive also converts form submissions to AJAX calls. To get it to work, you
 _do_ need to adjust your code to return a 422 status code on a validation error
 (instead of a 200).
 
-If you're using Symfony 5.3, the new `handleForm()` shortcut takes care of this
+If you're using Symfony 5.3, the new `renderForm()` shortcut takes care of this
 automatically:
 
 ```php
 /**
- * @Route("/product/new")
+ * @Route("/product/new", name="product_new")
  */
 public function newProduct(Request $request): Response
 {
-    return $this->handleForm(
-        $this->createForm(ProductFormType::class),
-        $request,
-        function (FormInterface $form) {
-            // save...
+    $form = this->createForm(ProductFormType::class, null, [
+        'action' => $this->generateUrl('product_new'),
+    ]);
+    $form->handleRequest($request);
 
-            return $this->redirectToRoute(
-                'product_list',
-                [],
-                Response::HTTP_SEE_OTHER
-            );
-        },
-        function (FormInterface $form) {
-            return $this->render('product/new.html.twig', [
-                'form' => $form->createView(),
-            ]);
-        }
+    if ($form->isSubmitted() && $form->isValid()) {
+        // save...
+
+        return $this->redirectToRoute('product_list');
     );
+
+    return $this->renderForm('product/new.html.twig', [
+        'form' => $form,
+    ]);
 }
 ```
 
-If you're _not_ using the `handleForm()` shortcut, adjust your code manually:
+If you're _not_ using the `renderForm()` shortcut, adjust your code manually:
 
 ```diff
 /**
@@ -135,9 +131,6 @@ public function newProduct(Request $request): Response
 
     if ($form->isSubmitted() && $form->isValid()) {
         // save...
-
--        return $this->redirectToRoute('product_list');
-+        return $this->redirectToRoute('product_list', [], Response::HTTP_SEE_OTHER);
     }
 
 +    $response = new Response(null, $form->isSubmitted() ? 422 : 200);
@@ -150,10 +143,10 @@ public function newProduct(Request $request): Response
 ```
 
 This changes the response status code to 422 on validation error, which tells Turbo
-Drive that the form submit failed and it should re-render with the errors. This
-_also_ changes the redirect status code from 302 (the default) to 303
-(`HTTP_SEE_OTHER`). That's not required for Turbo Drive, but 303 is "more correct"
-for this situation.
+Drive that the form submit failed and it should re-render with the errors. You
+can _also_ choose to change the success redirect status code from 302 (the default)
+to 303 (`HTTP_SEE_OTHER`). That's not required for Turbo Drive, but 303 is "more
+correct" for this situation.
 
 > **NOTE:**
 > When your form contains more than one submit button and, you want to check which of the buttons was clicked
@@ -179,12 +172,12 @@ $builder
 
 #### More Turbo Drive Info
 
-[Read the Turbo Drive documentation](https://turbo.hotwire.dev/handbook/drive) to learn about the advanced features offered
+[Read the Turbo Drive documentation](https://turbo.hotwired.dev/handbook/drive) to learn about the advanced features offered
 by Turbo Drive.
 
 ### Decomposing Complex Pages with Turbo Frames
 
-Once Symfony UX Turbo is installed, you can also leverage [Turbo Frames](https://turbo.hotwire.dev/handbook/introduction#turbo-frames-decompose-complex-pages):
+Once Symfony UX Turbo is installed, you can also leverage [Turbo Frames](https://turbo.hotwired.dev/handbook/introduction#turbo-frames-decompose-complex-pages):
 
 ```twig
 {# home.html.twig #}
@@ -281,7 +274,7 @@ and tests it using Google Chrome or Firefox!
 
 You can even watch changes happening in the browser by using: `PANTHER_NO_HEADLESS=1 bin/phpunit --debug`
 
-[Read the Turbo Frames documentation](https://turbo.hotwire.dev/handbook/frames) to learn everything you can do using Turbo Frames.
+[Read the Turbo Frames documentation](https://turbo.hotwired.dev/handbook/frames) to learn everything you can do using Turbo Frames.
 
 ### Coming Alive with Turbo Streams
 
@@ -305,20 +298,17 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\UX\Turbo\Stream\TurboStreamResponse;
+use App\Entity\Task;
 
 class TaskController extends AbstractController
 {
     public function new(Request $request): Response
     {
-        $task = new Task();
+        $form = $this->createForm(TaskType::class, new Task());
 
-        $form = $this->createForm(TaskType::class, $task);
         $form->handleRequest($request);
 
-        $submitted = $form->isSubmitted();
-        $valid = $submitted && $form->isValid();
-
-        if ($valid) {
+        if ($form->isSubmitted() && $form->isValid()) {
             $task = $form->getData();
             // ... perform some action, such as saving the task to the database
 
@@ -334,17 +324,9 @@ class TaskController extends AbstractController
         }
 
         // Symfony 5.3+
-        return $this->renderForm('task/new.html.twig', $form);
-
-        // Older versions
-        $response = $this->render('task/new.html.twig', [
-            'form' => $form->createView(),
+        return $this->renderForm('task/new.html.twig', [
+            'form' => $form,
         ]);
-        if ($submitted && !$valid) {
-            $response->setStatusCode(Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
-
-        return $response;
     }
 }
 ```
@@ -362,7 +344,7 @@ class TaskController extends AbstractController
 ```
 
 Supported actions are `append`, `prepend`, `replace`, `update` and `remove`.
-[Read the Turbo Streams documentation for more details](https://turbo.hotwire.dev/handbook/streams).
+[Read the Turbo Streams documentation for more details](https://turbo.hotwired.dev/handbook/streams).
 
 #### Sending Async Changes using Mercure: a Chat
 
@@ -405,11 +387,11 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mercure\PublisherInterface;
+use Symfony\Component\Mercure\HubInterface;
 
 class ChatController extends AbstractController
 {
-    public function chat(Request $request, PublisherInterface $mercure): Response
+    public function chat(Request $request, HubInterface $hub): Response
     {
         $form = $this->createFormBuilder()
             ->add('message', TextType::class, ['attr' => ['autocomplete' => 'off']])
@@ -424,7 +406,7 @@ class ChatController extends AbstractController
 
             // 🔥 The magic happens here! 🔥
             // The HTML update is pushed to the client using Mercure
-            $mercure->publish(new Update(
+            $hub->publish(new Update(
                 'chat',
                 $this->renderView('chat/message.stream.html.twig', ['message' => $data['message']])
             ));
@@ -434,8 +416,8 @@ class ChatController extends AbstractController
             $form = $emptyForm;
         }
 
-        return $this->render('chat/index.html.twig', [
-            'form' => $form->createView(),
+        return $this->renderForm('chat/index.html.twig', [
+            'form' => $form,
          ]);
     }
 }

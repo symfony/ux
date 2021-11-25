@@ -3,7 +3,7 @@
 **EXPERIMENTAL** This component is currently experimental and is
 likely to change, or even change drastically.
 
-Live components work with the [TwigComponent](../TwigComponent)
+Live components work with the [TwigComponent](https://github.com/symfony/ux-twig-component)
 library to give you the power to automatically update your
 Twig components on the frontend as the user interacts with them.
 Inspired by [Livewire](https://laravel-livewire.com/) and
@@ -15,10 +15,14 @@ A real-time product search component might look like this:
 // src/Components/ProductSearchComponent.php
 namespace App\Components;
 
-use Symfony\UX\LiveComponent\LiveComponentInterface;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-class ProductSearchComponent implements LiveComponentInterface
+#[AsLiveComponent('product_search')]
+class ProductSearchComponent
 {
+    use DefaultActionTrait;
+
     public string $query = '';
 
     private ProductRepository $productRepository;
@@ -32,11 +36,6 @@ class ProductSearchComponent implements LiveComponentInterface
     {
         // example method that returns an array of Products
         return $this->productRepository->search($this->query);
-    }
-
-    public static function getComponentName(): string
-    {
-        return 'product_search';
     }
 }
 ```
@@ -61,6 +60,8 @@ class ProductSearchComponent implements LiveComponentInterface
 
 As a user types into the box, the component will automatically
 re-render and show the new results!
+
+Want a demo? Check out https://github.com/weaverryan/live-demo.
 
 ## Installation
 
@@ -90,11 +91,19 @@ yarn install --force
 yarn encore dev
 ```
 
+Oh, and just one more step! Import a routing file from the bundle:
+
+```yaml
+# config/routes.yaml
+live_component:
+    resource: '@LiveComponentBundle/Resources/config/routing/live_component.xml'
+```
+
 That's it! We're ready!
 
 ## Making your Component "Live"
 
-If you haven't already, check out the [Twig Component](../TwigComponent)
+If you haven't already, check out the [Twig Component](https://github.com/symfony/ux-twig-component)
 documentation to get the basics of Twig components.
 
 Suppose you've already built a basic Twig component:
@@ -103,18 +112,14 @@ Suppose you've already built a basic Twig component:
 // src/Components/RandomNumberComponent.php
 namespace App\Components;
 
-use Symfony\UX\TwigComponent\ComponentInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-class RandomNumberComponent implements ComponentInterface
+#[AsTwigComponent('random_number')]
+class RandomNumberComponent
 {
     public function getRandomNumber(): string
     {
         return rand(0, 1000);
-    }
-
-    public static function getComponentName(): string
-    {
-        return 'random_number';
     }
 }
 ```
@@ -127,17 +132,22 @@ class RandomNumberComponent implements ComponentInterface
 ```
 
 To transform this into a "live" component (i.e. one that
-can be re-rendered live on the frontend), change your
-component's interface to `LiveComponentInterface`:
+can be re-rendered live on the frontend), replace the
+component's `AsTwigComponent` attribute with `AsLiveComponent`
+and add the `DefaultActionTrait`:
 
 ```diff
 // src/Components/RandomNumberComponent.php
 
-+use Symfony\UX\LiveComponent\LiveComponentInterface;
+-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
++use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
++use Symfony\UX\LiveComponent\DefaultActionTrait;
 
--class RandomNumberComponent implements ComponentInterface
-+class RandomNumberComponent implements LiveComponentInterface
+-#[AsTwigComponent('random_number')]
++#[AsLiveComponent('random_number')]
+class RandomNumberComponent
 {
++    use DefaultActionTrait;
 }
 ```
 
@@ -183,11 +193,13 @@ namespace App\Components;
 // ...
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
-class RandomNumberComponent implements LiveComponentInterface
+#[AsLiveComponent('random_number')]
+class RandomNumberComponent
 {
-    /** @LiveProp */
+    #[LiveProp]
     public int $min = 0;
-    /** @LiveProp */
+
+    #[LiveProp]
     public int $max = 1000;
 
     public function getRandomNumber(): string
@@ -206,21 +218,21 @@ when rendering the component:
 {{ component('random_number', { min: 5, max: 500 }) }}
 ```
 
-But what's up with those `@LiveProp` annotations? A property with
-the `@LiveProp` annotation (or `LiveProp` PHP 8 attribute) becomes
-a "stateful" property for this component. In other words, each time
-we click the "Generate a new number!" button, when the component
-re-renders, it will _remember_ the original values for the `$min` and
-`$max` properties and generate a random number between 5 and 500.
-If you forgot to add `@LiveProp`, when the component re-rendered,
-those two values would _not_ be set on the object.
+But what's up with those `LiveProp` attributes? A property with
+the `LiveProp` attribute becomes a "stateful" property for this
+component. In other words, each time we click the "Generate a
+new number!" button, when the component re-renders, it will
+_remember_ the original values for the `$min` and `$max` properties
+and generate a random number between 5 and 500. If you forgot to
+add `LiveProp`, when the component re-rendered, those two values
+would _not_ be set on the object.
 
 In short: LiveProps are "stateful properties": they will always
 be set when rendering. Most properties will be LiveProps, with
 common exceptions being properties that hold services (these don't
 need to be stateful because they will be autowired each time before
 the component is rendered) and
-[properties used for computed properties](../TwigComponent/README.md#computed-properties).
+[properties used for computed properties](https://github.com/symfony/ux-twig-component/blob/main/README.md#computed-properties).
 
 ## data-action="live#update": Re-rendering on LiveProp Change
 
@@ -267,13 +279,14 @@ the `writable=true` option:
 // src/Components/RandomNumberComponent.php
 // ...
 
-class RandomNumberComponent implements LiveComponentInterface
+class RandomNumberComponent
 {
--    /** @LiveProp() */
-+    /** @LiveProp(writable=true) */
+-    #[LiveProp]
++    #[LiveProp(writable: true)]
     public int $min = 0;
--    /** @LiveProp() */
-+    /** @LiveProp(writable=true) */
+
+-   #[LiveProp]
++   #[LiveProp(writable: true)]
     public int $max = 1000;
 
     // ...
@@ -354,6 +367,9 @@ code works identically to the previous example:
 </div>
 ```
 
+If an element has _both_ `data-model` and `name` attributes, the
+`data-model` attribute takes precedence.
+
 ## Loading States
 
 Often, you'll want to show (or hide) an element while a component is
@@ -423,13 +439,21 @@ changes until loading has taken longer than a certain amount of time:
 
 ## Actions
 
-You can also trigger actions on your component. Let's pretend we
-want to add a "Reset Min/Max" button to our "random number"
-component that, when clicked, sets the min/max numbers back
-to a default value.
+Live components require a single "default action" that is
+used to re-render it. By default, this is an empty `__invoke()`
+method and can be added with the `DefaultActionTrait`.
+Live components are actually Symfony controllers so you
+can add the normal controller attributes/annotations (ie
+`@Cache`/`@Security`) to either the entire class just a
+single action.
 
-First, add a method with a `LiveAction` annotation (or PHP 8 attribute)
-above it that does the work:
+You can also trigger custom actions on your component. Let's
+pretend we want to add a "Reset Min/Max" button to our "random
+number" component that, when clicked, sets the min/max numbers
+back to a default value.
+
+First, add a method with a `LiveAction` attribute above it that
+does the work:
 
 ```php
 // src/Components/RandomNumberComponent.php
@@ -438,13 +462,11 @@ namespace App\Components;
 // ...
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 
-class RandomNumberComponent implements LiveComponentInterface
+class RandomNumberComponent
 {
     // ...
 
-    /**
-     * @LiveAction
-     */
+    #[LiveAction]
     public function resetMinMax()
     {
         $this->min = 0;
@@ -503,13 +525,11 @@ namespace App\Components;
 // ...
 use Psr\Log\LoggerInterface;
 
-class RandomNumberComponent implements LiveComponentInterface
+class RandomNumberComponent
 {
     // ...
 
-    /**
-     * @LiveAction
-     */
+    #[LiveAction]
     public function resetMinMax(LoggerInterface $logger)
     {
         $this->min = 0;
@@ -548,13 +568,11 @@ namespace App\Components;
 // ...
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-class RandomNumberComponent extends AbstractController implements LiveComponentInterface
+class RandomNumberComponent extends AbstractController
 {
     // ...
 
-    /**
-     * @LiveAction
-     */
+    #[LiveAction]
     public function resetMinMax()
     {
         // ...
@@ -684,11 +702,12 @@ use App\Entity\Post;
 use App\Form\PostType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\LiveComponentInterface;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 
-class PostFormComponent extends AbstractController implements LiveComponentInterface
+#[AsLiveComponent('post_form')]
+class PostFormComponent extends AbstractController
 {
     use ComponentWithFormTrait;
 
@@ -698,13 +717,12 @@ class PostFormComponent extends AbstractController implements LiveComponentInter
      * Needed so the same form can be re-created
      * when the component is re-rendered via Ajax.
      *
-     * The fieldName="" option is needed in this situation because
+     * The `fieldName` option is needed in this situation because
      * the form renders fields with names like `name="post[title]"`.
-     * We set fieldName="" so that this live prop doesn't collide
+     * We set `fieldName: ''` so that this live prop doesn't collide
      * with that data. The value - initialFormData - could be anything.
-     *
-     * @LiveProp(fieldName="initialFormData")
      */
+    #[LiveProp(fieldName: 'initialFormData')]
     public ?Post $post = null;
 
     /**
@@ -714,11 +732,6 @@ class PostFormComponent extends AbstractController implements LiveComponentInter
     {
         // we can extend AbstractController to get the normal shortcuts
         return $this->createForm(PostType::class, $this->post);
-    }
-
-    public static function getComponentName(): string
-    {
-        return 'post_form';
     }
 }
 ```
@@ -779,6 +792,45 @@ This is possible thanks to a few interesting pieces:
     the component re-renders, the form is _submitted_ using the values.
     However, if a field has not been modified yet by the user, its
     validation errors are cleared so that they aren't rendered.
+
+### Handling "Cannot dehydrate an unpersisted entity" Errors.
+
+If you're building a form to create a _new_ entity, then when you
+render the component, you may be passing in a new, non-persisted entity.
+
+For example, imagine you create a `new Post()` in your controller,
+pass this "not-yet-persisted" entity into your template as a `post`
+variable and pass _that_ into your component:
+
+```twig
+{{ component('post_form', {
+    post: post,
+    form: form
+}) }}
+```
+
+If you do this, you'll likely see this error:
+
+> Cannot dehydrate an unpersisted entity (App\Entity\Post). If you
+> want to allow this, add a dehydrateWith= option to LiveProp
+
+The problem is that the Live component system doesn't know how to
+transform this object into something that can be sent to the frontend,
+called "dehydration". If an entity has already been saved to the database,
+its "id" is sent to the frontend. But if the entity hasn't been saved
+yet, that's not possible.
+
+The solution is to pass `null` into your component instead of a
+non-persisted entity object. If you need to, you can re-create
+your `new Post()` inside of your component:
+
+```diff
+{{ component('post_form', {
+-    post: post,
++    post: post.id ? post : null,
+    form: form
+}) }}
+```
 
 ### Form Rendering Problems
 
@@ -875,13 +927,11 @@ action to the component:
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 
-class PostFormComponent extends AbstractController implements LiveComponentInterface
+class PostFormComponent extends AbstractController
 {
     // ...
 
-    /**
-     * @LiveAction()
-     */
+    #[LiveAction]
     public function save(EntityManagerInterface $entityManager)
     {
         // shortcut to submit the form with form values
@@ -921,6 +971,21 @@ Now, when the form is submitted, it will execute the `save()` method
 via Ajax. If the form fails validation, it will re-render with the
 errors. And if it's successful, it will redirect.
 
+**NOTE**: Make sure that each time the user changes a field, you
+update the component's model. If you don't do this, when you trigger
+the action, it will _not_ contain the form's data because the data
+in the fields and the component's data will be out of sync.
+
+An easy way to accomplish this (explained more in the
+[Forms](#forms) section above) is to add:
+
+```diff
+<div
+    {{ init_live_component(this) }}
++    data-action="change->live#update"
+>
+```
+
 ## Modifying Embedded Properties with the "exposed" Option
 
 If your component will render a form, you don't need to use
@@ -932,20 +997,14 @@ that is being edited:
 namespace App\Twig\Components;
 
 use App\Entity\Post;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\LiveComponentInterface;
 
-class EditPostComponent implements LiveComponentInterface
+#[AsLiveComponent('edit_post')]
+class EditPostComponent
 {
-    /**
-     * @LiveProp()
-     */
+    #[LiveProp]
     public Post $post;
-
-    public static function getComponentName(): string
-    {
-        return 'edit_post';
-    }
 }
 ```
 
@@ -985,12 +1044,10 @@ you can enable it via the `exposed` option:
 ```diff
 // ...
 
-class EditPostComponent implements LiveComponentInterface
+class EditPostComponent
 {
-    /**
--     * @LiveProp(exposed={})
-+     * @LiveProp(exposed={"title", "content"})
-     */
+-   #[LiveProp]
++   #[LiveProp(exposed: ['title', 'content'])]
     public Post $post;
 
     // ...
@@ -999,7 +1056,7 @@ class EditPostComponent implements LiveComponentInterface
 
 With this, both the `title` and the `content` properties of the
 `$post` property _can_ be modified by the user. However, notice
-that the `LiveProp` does _not_ have `modifiable=true`. This
+that the `LiveProp` does _not_ have `writable=true`. This
 means that while the `title` and `content` properties can be
 changed, the `Post` object itself **cannot** be changed. In other
 words, if the component was originally created with a Post
@@ -1020,36 +1077,28 @@ First use the `ValidatableComponentTrait` and add any constraints you need:
 
 ```php
 use App\Entity\User;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\LiveComponentInterface;
 use Symfony\UX\LiveComponent\ValidatableComponentTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class EditUserComponent implements LiveComponentInterface
+#[AsLiveComponent('edit_user')]
+class EditUserComponent
 {
     use ValidatableComponentTrait;
 
-    /**
-     * @LiveProp(exposed={"email", "plainPassword"})
-     * @Assert\Valid()
-     */
+    #[LiveProp(exposed: ['email', 'plainPassword'])]
+    #[Assert\Valid]
     public User $user;
 
-    /**
-     * @LiveProp()
-     * @Assert\IsTrue()
-     */
+     #[LiveProp]
+     #[Assert\IsTrue]
     public bool $agreeToTerms = false;
-
-    public static function getComponentName() : string
-    {
-        return 'edit_user';
-    }
 }
 ```
 
-Be sure to add the `@Assert\IsValid` to any property where you want
-the object on that property to also be validated.
+Be sure to add the `IsValid` attribute/annotation to any property where
+you want the object on that property to also be validated.
 
 Thanks to this setup, the component will now be automatically validated
 on each render, but in a smart way: a property will only be validated
@@ -1063,13 +1112,12 @@ in an action:
 ```php
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 
-class EditUserComponent implements LiveComponentInterface
+#[AsLiveComponent('edit_user')]
+class EditUserComponent
 {
     // ...
 
-    /**
-     * @LiveAction()
-     */
+    #[LiveAction]
     public function save()
     {
         // this will throw an exception if validation fails
@@ -1158,3 +1206,226 @@ You can also trigger a specific "action" instead of a normal re-render:
     #}
 >
 ```
+
+## Embedded Components
+
+Need to embed one live component inside another one? No problem! As a rule
+of thumb, **each component exists in its own, isolated universe**. This
+means that embedding one component inside another could be really simple
+or a bit more complex, depending on how inter-connected you want your components
+to be.
+
+Here are a few helpful things to know:
+
+### Each component re-renders independent of one another
+
+If a parent component re-renders, the child component will _not_ (most
+of the time) be updated, even though it lives inside the parent. Each
+component is its own, isolated universe.
+
+But this is not always what you want. For example, suppose you have a
+parent component that renders a form and a child component that renders
+one field in that form. When you click a "Save" button on the parent
+component, that validates the form and re-renders with errors - including
+a new `error` value that it passes into the child:
+
+```twig
+{# templates/components/post_form.html.twig #}
+
+{{ component('textarea_field', {
+    value: this.content,
+    error: this.getError('content')
+}) }}
+```
+
+In this situation, when the parent component re-renders after clicking
+"Save", you _do_ want the updated child component (with the validation
+error) to be rendered. And this _will_ happen automatically. Why? because
+the live component system detects that the **parent component has
+_changed_ how it's rendering the child**.
+
+This may not always be perfect, and if your child component has its own
+`LiveProp` that has changed since it was first rendered, that value will
+be lost when the parent component causes the child to re-render. If you
+have this situation, use `data-model-map` to map that child `LiveProp` to
+a `LiveProp` in the parent component, and pass it into the child when
+rendering.
+
+### Actions, methods and model updates in a child do not affect the parent
+
+Again, each component is its own, isolated universe! For example, suppose
+your child component has:
+
+```html
+<button data-action="live#action" data-action-name="save">Save</button>
+```
+
+When the user clicks that button, it will attempt to call the `save` action
+in the _child_ component only, even if the `save` action actually only
+exists in the parent. The same is true for `data-model`, though there is
+some special handling for this case (see next point).
+
+### If a child model updates, it will attempt to update the parent model
+
+Suppose a child component has a:
+
+```html
+<textarea data-model="markdown_value" data-action="live#update">
+```
+
+When the user changes this field, this will _only_ update the `markdown_value`
+field in the _child_ component... because (yup, we're saying it again):
+each component is its own, isolated universe.
+
+However, sometimes this isn't what you want! Sometimes, in addition
+to updating the child component's model, you _also_ want to update a
+model on the _parent_ component.
+
+To help with this, whenever a model updates, a `live:update-model` event
+is dispatched. All components automatically listen to this event. This
+means that, when the `markdown_value` model is updated in the child
+component, _if_ the parent component _also_ has a model called `markdown_value`
+it will _also_ be updated. This is done as a "deferred" update
+(i.e. [updateDefer()](#deferring-a-re-render-until-later)).
+
+If the model name in your child component (e.g. `markdown_value`) is
+_different_ than the model name in your parent component (e.g. `post.content`),
+you have two options. First, you can make sure both are set by
+leveraging both the `data-model` and `name` attributes:
+
+```twig
+<textarea
+    data-model="markdown_value"
+    name="post[content]"
+    data-action="live#update"
+>
+```
+
+In this situation, the `markdown_value` model will be updated on the child
+component (because `data-model` takes precedence over `name`). But if
+any parent components have a `markdown_value` model _or_ a `post.content`
+model (normalized from `post[content`]`), their model will also be updated.
+
+A second option is to wrap your child element in a special `data-model-map`
+element:
+
+```twig
+{# templates/components/post_form.html.twig #}
+
+<div data-model-map="from(markdown_value)|post.content">
+    {{ component('textarea_field', {
+        value: this.content,
+        error: this.getError('content')
+    }) }}
+</div>
+```
+
+Thanks to the `data-model-map`, whenever the `markdown_value` model
+updates in the child component, the `post.content` model will be
+updated in the parent component.
+
+**NOTE**: If you _change_ a `LiveProp` of a child component on the server
+(e.g. during re-rendering or via an action), that change will _not_ be
+reflected on any parent components that share that model.
+
+### Full Embedded Component Example
+
+Let's look at a full, complex example of an embedded component. Suppose
+you have an `EditPostComponent`:
+
+```php
+<?php
+
+namespace App\Twig\Components;
+
+use App\Entity\Post;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
+
+#[AsLiveComponent('edit_post')]
+final class EditPostComponent extends AbstractController
+{
+    #[LiveProp(exposed: ['title', 'content'])]
+    public Post $post;
+
+    #[LiveAction]
+    public function save(EntityManagerInterface $entityManager)
+    {
+        $entityManager->flush();
+
+        return $this->redirectToRoute('some_route');
+    }
+}
+```
+
+And a `MarkdownTextareaComponent`:
+
+```php
+<?php
+
+namespace App\Twig\Components;
+
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
+
+#[AsLiveComponent('markdown_textarea')]
+final class MarkdownTextareaComponent
+{
+    #[LiveProp]
+    public string $label;
+
+    #[LiveProp]
+    public string $name;
+
+    #[LiveProp(writable: true)]
+    public string $value = '';
+}
+```
+
+In the `EditPostComponent` template, you render the `MarkdownTextareaComponent`:
+
+```twig
+{# templates/components/edit_post.html.twig #}
+<div {{ init_live_component(this) }}>
+    <input
+        type="text"
+        name="post[title]"
+        data-action="live#update"
+        value="{{ this.post.title }}"
+    >
+
+    {{ component('markdown_textarea', {
+        name: 'post[content]',
+        label: 'Content',
+        value: this.post.content
+    }) }}
+
+    <button
+        data-action="live#action"
+        data-action-name="save"
+    >Save</button>
+</div>
+```
+
+```twig
+<div {{ init_live_component(this) }} class="mb-3">
+    <textarea
+        name="{{ this.name }}"
+        data-model="value"
+        data-action="live#update"
+    >{{ this.value }}</textarea>
+
+    <div class="markdown-preview">
+        {{ this.value|markdown_to_html }}
+    </div>
+</div>
+```
+
+Notice that `MarkdownTextareaComponent` allows a dynamic `name` attribute to
+be passed in. This makes that component re-usable in any form. But it
+also makes sure that when the `textarea` changes, both the `value` model
+in `MarkdownTextareaComponent` _and_ the `post.content` model in
+`EditPostcomponent` will be updated.

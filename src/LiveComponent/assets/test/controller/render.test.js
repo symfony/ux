@@ -10,7 +10,7 @@
 'use strict';
 
 import { clearDOM } from '@symfony/stimulus-testing';
-import { startStimulus } from '../tools';
+import { initLiveComponent, mockRerender, startStimulus } from '../tools';
 import { createEvent, fireEvent, getByLabelText, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock-jest';
@@ -18,8 +18,7 @@ import fetchMock from 'fetch-mock-jest';
 describe('LiveController rendering Tests', () => {
     const template = (data, includeLoading = false) => `
         <div
-            data-controller="live"
-            data-live-url-value="http://localhost/_components/my_component"
+            ${initLiveComponent('/_components/my_component', data)}
         >
             <!-- form field not mapped with data-model -->
             <label>
@@ -46,27 +45,21 @@ describe('LiveController rendering Tests', () => {
 
     it('renders from the AJAX endpoint & updates data', async () => {
         const data = { name: 'Ryan' };
-        const { element, controller } = await startStimulus(
-            template(data),
-            data
-        );
+        const { element, controller } = await startStimulus(template(data));
 
-        fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
-            html: '<div>aloha!</div>',
-            data: { name: 'Kevin' }
+        mockRerender({ name: 'Ryan' }, template, (data) => {
+            // change the data on the server
+            data.name = 'Kevin';
         });
         getByText(element, 'Reload').click();
 
-        await waitFor(() => expect(element).toHaveTextContent('aloha!'));
+        await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
         expect(controller.dataValue).toEqual({name: 'Kevin'});
     });
 
     it('conserves values of fields modified after a render request', async () => {
         const data = { name: 'Ryan' };
-        const { element } = await startStimulus(
-            template(data),
-            data
-        );
+        const { element } = await startStimulus(template(data));
 
         fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
             html: template({ name: 'Kevin' }),
@@ -88,8 +81,7 @@ describe('LiveController rendering Tests', () => {
             // "true" gives the comment input a loading behavior
             // this could make the input.isEqualNode() be false when comparing
             // that's exactly what we want test for
-            template(data, true),
-            data
+            template(data, true)
         );
 
         fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
@@ -106,64 +98,11 @@ describe('LiveController rendering Tests', () => {
         expect(document.activeElement.name).toEqual('comments');
     });
 
-    it('avoids updating a child component', async () => {
-        const parentTemplate = (data, childData) => {
-            return `
-                <div
-                    data-controller="live"
-                    data-live-url-value="http://localhost/_components/parent"
-                >
-                    Title: ${data.title}
-
-                    <button
-                        data-action="live#$render"
-                    >Parent Re-render</button>
-
-                    ${template(childData)}
-                </div>
-            `
-        }
-
-        const data = { title: 'Parent component' };
-        const childData = { name: 'Ryan' };
-        const { element } = await startStimulus(
-            // render the parent and child component
-            parentTemplate(data, childData),
-            data
-        );
-        // setup the values on the child element
-        element.querySelector('[data-controller="live"]').dataset.liveDataValue = JSON.stringify(childData);
-
-        // child re-render: render with new name & an error class
-        fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
-            html: template({ name: 'Kevin', hasError: true }),
-            data: { name: 'Kevin', hasError: true }
-        });
-
-        // reload the child template
-        getByText(element, 'Reload').click();
-        await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
-
-        // reload the parent template
-        fetchMock.get('http://localhost/_components/parent?title=Parent+component', {
-            html: parentTemplate({ title: 'Changed parent' }, { name: 'changed name'}),
-            data: { title: 'Changed parent'}
-        });
-        getByText(element, 'Parent Re-render').click();
-        await waitFor(() => expect(element).toHaveTextContent('Title: Changed parent'));
-
-        // the child component should *not* have updated
-        expect(element).toHaveTextContent('Name: Kevin');
-    });
-
     it('cancels a re-render if the page is navigating away', async () => {
         const data = { name: 'Ryan' };
-        const { element, controller } = await startStimulus(
-            template(data),
-            data
-        );
+        const { element } = await startStimulus(template(data));
 
-        fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
+        fetchMock.get('end:?name=Ryan', {
             html: '<div>aloha!</div>',
             data: { name: 'Kevin' }
         }, {
@@ -174,7 +113,7 @@ describe('LiveController rendering Tests', () => {
         // imitate navigating away
         fireEvent(window, createEvent('beforeunload', window));
 
-        // wait for the fetch to fonish
+        // wait for the fetch to finish
         await fetchMock.flush();
 
         // the re-render should not have happened

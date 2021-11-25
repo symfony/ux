@@ -1,6 +1,6 @@
 {
     "devDependencies": {
-        "@hotwired/turbo": "^7.0.0-beta.5",
+        "@hotwired/turbo": "^7.0.1",
         "@symfony/ux-turbo": "file:../../Resources/assets",
         "@symfony/ux-turbo-mercure": "file:../../Bridge/Mercure/Resources/assets",
         "@symfony/webpack-encore": "^0.32.0",
@@ -9,6 +9,7 @@
         "stimulus": "^2.0.0",
         "webpack-notifier": "^1.6.0"
     },
+    "resolutions": { "coa": "2.0.2" },
     "license": "MIT",
     "private": true,
     "scripts": {

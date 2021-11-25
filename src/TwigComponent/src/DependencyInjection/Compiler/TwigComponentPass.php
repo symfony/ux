@@ -14,7 +14,6 @@ namespace Symfony\UX\TwigComponent\DependencyInjection\Compiler;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
-use Symfony\UX\TwigComponent\ComponentFactory;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -25,25 +24,29 @@ final class TwigComponentPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        $serviceIdMap = [];
+        $componentConfig = [];
 
-        foreach (array_keys($container->findTaggedServiceIds('twig.component')) as $serviceId) {
-            $definition = $container->getDefinition($serviceId);
+        foreach ($container->findTaggedServiceIds('twig.component') as $id => $tags) {
+            $definition = $container->findDefinition($id);
 
-            // make all component services non-shared
+            // component services must not be shared
             $definition->setShared(false);
 
-            $name = $definition->getClass()::getComponentName();
+            foreach ($tags as $tag) {
+                if (!\array_key_exists('key', $tag)) {
+                    throw new LogicException(sprintf('"twig.component" tag for service "%s" requires a "key" attribute.', $id));
+                }
 
-            // ensure component not already defined
-            if (\array_key_exists($name, $serviceIdMap)) {
-                throw new LogicException(sprintf('Component "%s" is already registered as "%s", components cannot be registered more than once.', $definition->getClass(), $serviceIdMap[$name]));
+                $tag['service_id'] = $id;
+                $tag['class'] = $definition->getClass();
+                $tag['name'] = $tag['key'];
+                $tag['template'] = $tag['template'] ?? "components/{$tag['key']}.html.twig";
+                $componentConfig[$tag['key']] = $tag;
             }
-
-            // add to service id map for ComponentFactory
-            $serviceIdMap[$name] = $serviceId;
         }
 
-        $container->getDefinition(ComponentFactory::class)->setArgument(2, $serviceIdMap);
+        $container->findDefinition('ux.twig_component.component_factory')
+            ->setArgument(2, $componentConfig)
+        ;
     }
 }

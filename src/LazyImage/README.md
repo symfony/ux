@@ -109,7 +109,7 @@ Then in your template, add your controller to the HTML attribute:
     src="{{ data_uri_thumbnail('public/image/large.png', 100, 75) }}"
     {{ stimulus_controller({
         mylazyimage: {},
-        'symfony/ux-lazy-image/lazy-image: {}
+        'symfony/ux-lazy-image/lazy-image': {}
     }) }}
     data-hd-src="{{ asset('image/large.png') }}"
 

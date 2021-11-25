@@ -30,16 +30,14 @@ trait ComponentWithFormTrait
 
     /**
      * Holds the name prefix the form uses.
-     *
-     * @LiveProp()
      */
+    #[LiveProp]
     public ?string $formName = null;
 
     /**
      * Holds the raw form values.
-     *
-     * @LiveProp(writable=true, fieldName="getFormName()")
      */
+    #[LiveProp(writable: true, fieldName: 'getFormName()')]
     public ?array $formValues = null;
 
     /**
@@ -47,24 +45,18 @@ trait ComponentWithFormTrait
      *
      * This is used to know if validation should be automatically applied
      * when rendering.
-     *
-     * @LiveProp(writable=true)
-     *
-     * @var bool
      */
-    public $isValidated = false;
+    #[LiveProp(writable: true)]
+    public bool $isValidated = false;
 
     /**
      * Tracks which specific fields have been validated.
      *
      * Instead of validating the entire object (isValidated),
      * the component can be validated, field-by-field.
-     *
-     * @LiveProp(writable=true)
-     *
-     * @var array
      */
-    public $validatedFields = [];
+    #[LiveProp(writable: true)]
+    public array $validatedFields = [];
 
     /**
      * Return the full, top-level, Form object that this component uses.
@@ -90,10 +82,9 @@ trait ComponentWithFormTrait
      * This primarily applies to a re-render where $actionName is null.
      * But, in the event that there is an action and the form was
      * not submitted manually, it will be submitted here.
-     *
-     * @BeforeReRender()
      */
-    public function submitFormOnRender()
+    #[BeforeReRender]
+    public function submitFormOnRender(): void
     {
         if (!$this->getFormInstance()->isSubmitted()) {
             $this->submitForm(false);
@@ -119,7 +110,7 @@ trait ComponentWithFormTrait
      * don't need to call this directly: the form will be set for
      * you from your instantiateForm() method.
      */
-    public function setForm(FormView $form)
+    public function setForm(FormView $form): void
     {
         $this->formView = $form;
     }
@@ -142,7 +133,7 @@ trait ComponentWithFormTrait
         return $this->formValues;
     }
 
-    private function submitForm(bool $validateAll = true)
+    private function submitForm(bool $validateAll = true): void
     {
         $this->getFormInstance()->submit($this->formValues);
 
@@ -201,7 +192,7 @@ trait ComponentWithFormTrait
         return $this->formInstance;
     }
 
-    private function clearErrorsForNonValidatedFields(Form $form, $currentPath = '')
+    private function clearErrorsForNonValidatedFields(Form $form, $currentPath = ''): void
     {
         if (!$currentPath || !\in_array($currentPath, $this->validatedFields, true)) {
             $form->clearErrors();

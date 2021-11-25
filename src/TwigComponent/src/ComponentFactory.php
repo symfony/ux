@@ -21,24 +21,63 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
  */
 final class ComponentFactory
 {
-    private $components;
-    private $propertyAccessor;
-    private $serviceIdMap;
+    private ServiceLocator $components;
+    private PropertyAccessorInterface $propertyAccessor;
 
-    /**
-     * @param ServiceLocator|ComponentInterface[] $components
-     */
-    public function __construct(ServiceLocator $components, PropertyAccessorInterface $propertyAccessor, array $serviceIdMap)
+    /** @var array<string, array> */
+    private array $config;
+
+    public function __construct(ServiceLocator $components, PropertyAccessorInterface $propertyAccessor, array $config)
     {
         $this->components = $components;
         $this->propertyAccessor = $propertyAccessor;
-        $this->serviceIdMap = $serviceIdMap;
+        $this->config = $config;
+    }
+
+    /**
+     * @param string|object $component Component name as string or component object
+     */
+    public function configFor($component, string $name = null): array
+    {
+        if (\is_object($component)) {
+            $component = \get_class($component);
+        }
+
+        if (!$name && class_exists($component)) {
+            $configs = [];
+
+            foreach ($this->config as $config) {
+                if ($component === $config['class']) {
+                    $configs[] = $config;
+                }
+            }
+
+            if (0 === \count($configs)) {
+                throw new \InvalidArgumentException(sprintf('Unknown component class "%s". The registered components are: %s', $component, implode(', ', array_keys($this->config))));
+            }
+
+            if (\count($configs) > 1) {
+                throw new \InvalidArgumentException(sprintf('%d "%s" components registered with names "%s". Use the $name parameter to explicitly choose one.', \count($configs), $component, implode(', ', array_column($configs, 'name'))));
+            }
+
+            $name = $configs[0]['name'];
+        }
+
+        if (!$name) {
+            $name = $component;
+        }
+
+        if (!\array_key_exists($name, $this->config)) {
+            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->config))));
+        }
+
+        return $this->config[$name];
     }
 
     /**
      * Creates the component and "mounts" it with the passed data.
      */
-    public function create(string $name, array $data = []): ComponentInterface
+    public function create(string $name, array $data = []): object
     {
         $component = $this->getComponent($name);
 
@@ -59,21 +98,12 @@ final class ComponentFactory
     /**
      * Returns the "unmounted" component.
      */
-    public function get(string $name): ComponentInterface
+    public function get(string $name): object
     {
         return $this->getComponent($name);
     }
 
-    public function serviceIdFor(string $name): string
-    {
-        if (!isset($this->serviceIdMap[$name])) {
-            throw new \InvalidArgumentException('Component not found.');
-        }
-
-        return $this->serviceIdMap[$name];
-    }
-
-    private function mount(ComponentInterface $component, array &$data): void
+    private function mount(object $component, array &$data): void
     {
         try {
             $method = (new \ReflectionClass($component))->getMethod('mount');
@@ -102,10 +132,10 @@ final class ComponentFactory
         $component->mount(...$parameters);
     }
 
-    private function getComponent(string $name): ComponentInterface
+    private function getComponent(string $name): object
     {
         if (!$this->components->has($name)) {
-            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->serviceIdMap))));
+            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->components->getProvidedServices()))));
         }
 
         return $this->components->get($name);

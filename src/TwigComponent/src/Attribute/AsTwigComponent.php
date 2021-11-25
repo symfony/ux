@@ -9,15 +9,22 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent;
-
-use Symfony\UX\TwigComponent\ComponentInterface;
+namespace Symfony\UX\TwigComponent\Attribute;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
  */
-interface LiveComponentInterface extends ComponentInterface
+#[\Attribute(\Attribute::TARGET_CLASS)]
+class AsTwigComponent
 {
+    public string $name;
+    public ?string $template;
+
+    public function __construct(string $name, ?string $template = null)
+    {
+        $this->name = $name;
+        $this->template = $template;
+    }
 }

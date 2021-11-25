@@ -17,11 +17,9 @@ namespace Symfony\UX\LiveComponent\Attribute;
  * This hook ONLY happens when rendering via HTTP: it does
  * not happen during the initial render of a component.
  *
- * @Annotation
- * @Target("METHOD")
- *
  * @experimental
  */
+#[\Attribute(\Attribute::TARGET_METHOD)]
 final class BeforeReRender
 {
 }

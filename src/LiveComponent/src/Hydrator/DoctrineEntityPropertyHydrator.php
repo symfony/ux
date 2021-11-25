@@ -24,7 +24,7 @@ use Symfony\UX\LiveComponent\PropertyHydratorInterface;
 final class DoctrineEntityPropertyHydrator implements PropertyHydratorInterface
 {
     /** @var ManagerRegistry[] */
-    private $managerRegistries;
+    private iterable $managerRegistries;
 
     /**
      * @param ManagerRegistry[] $managerRegistries

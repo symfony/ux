@@ -51,12 +51,25 @@ final class Kernel extends BaseKernel
         ]);
 
         $c->register(ServiceA::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(ComponentA::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register('component_b', ComponentB::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(ComponentC::class)->setAutoconfigured(true)->setAutowired(true);
 
-        if ('multiple_component_b' === $this->environment) {
-            $c->register('different_component_b', ComponentB::class)->setAutoconfigured(true)->setAutowired(true);
+        $componentA = $c->register(ComponentA::class)->setAutoconfigured(true)->setAutowired(true);
+        $componentB = $c->register('component_b', ComponentB::class)->setAutoconfigured(true)->setAutowired(true);
+        $componentC = $c->register(ComponentC::class)->setAutoconfigured(true)->setAutowired(true);
+
+        $c->register('component_d', ComponentB::class)->addTag('twig.component', [
+            'key' => 'component_d',
+            'template' => 'components/custom2.html.twig',
+        ]);
+
+        if (self::VERSION_ID < 50300) {
+            // add tag manually
+            $componentA->addTag('twig.component', ['key' => 'component_a']);
+            $componentB->addTag('twig.component', ['key' => 'component_b', 'template' => 'components/custom1.html.twig']);
+            $componentC->addTag('twig.component', ['key' => 'component_c']);
+        }
+
+        if ('missing_key' === $this->environment) {
+            $c->register('missing_key', ComponentB::class)->setAutowired(true)->addTag('twig.component');
         }
     }
 

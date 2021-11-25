@@ -21,8 +21,8 @@ use Symfony\UX\TwigComponent\ComponentRenderer;
  */
 final class ComponentRuntime
 {
-    private $componentFactory;
-    private $componentRenderer;
+    private ComponentFactory $componentFactory;
+    private ComponentRenderer $componentRenderer;
 
     public function __construct(ComponentFactory $componentFactory, ComponentRenderer $componentRenderer)
     {
@@ -33,7 +33,8 @@ final class ComponentRuntime
     public function render(string $name, array $props = []): string
     {
         return $this->componentRenderer->render(
-            $this->componentFactory->create($name, $props)
+            $this->componentFactory->create($name, $props),
+            $this->componentFactory->configFor($name)['template']
         );
     }
 }

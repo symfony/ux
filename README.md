@@ -18,7 +18,7 @@ to build the chart in PHP. The JavaScript is handled for you automatically.
 
 ## Components of UX
 
-Symfony UX leverages [Stimulus](https://stimulus.hotwire.dev/) for JavaScript
+Symfony UX leverages [Stimulus](https://stimulus.hotwired.dev/) for JavaScript
 and the [Stimulus Bridge](https://github.com/symfony/stimulus-bridge) for
 integrating it into [Webpack Encore](https://github.com/symfony/webpack-encore).
 
@@ -34,6 +34,7 @@ integrating it into [Webpack Encore](https://github.com/symfony/webpack-encore).
     Improve image loading performances through lazy-loading and data-uri thumbnails
 -   [UX Swup](https://github.com/symfony/ux-swup):
     [Swup](https://swup.js.org/) page transition library integration for Symfony
+-   [UX Turbo](https://github.com/symfony/ux-turbo): [Hotwire Turbo](https://turbo.hotwired.dev/) library integration for Symfony
 -   [Twig Component](https://github.com/symfony/ux-twig-component):
     A system to build reusable "components" with Twig
 -   [Live Component](https://github.com/symfony/ux-live-component):
@@ -49,7 +50,7 @@ exist beyond the UX packages:
     [detecting outside clicks](https://stimulus-use.github.io/stimulus-use/#/use-click-outside)
     and many other things. See: https://stimulus-use.github.io/stimulus-use/#/
 
--   [stimulus-components](https://stimulus-components.netlify.app/docs/components/index/): A
+-   [stimulus-components](https://stimulus-components.netlify.app/): A
     large number of pre-made Stimulus controllers, like for
     [Copying to clipboard](https://stimulus-components.netlify.app/docs/components/stimulus-clipboard/),
     [Sortable](https://stimulus-components.netlify.app/docs/components/stimulus-sortable/),
