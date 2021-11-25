@@ -4,7 +4,7 @@ Symfony UX Typed is a Symfony bundle integrating [Typed](https://github.com/matt
 Symfony applications. It is part of [the Symfony UX initiative](https://symfony.com/ux).
 
 Typed is a complete and easy to use animated typed texts.
-Just enter the strings you want to see typed and it goes live without complexity.
+Just enter the strings you want to see typed, and it goes live without complexity.
 
 ![Typed in action](Animation.gif)
 
@@ -28,8 +28,8 @@ in your `package.json` file.
 ## Usage
 
 Typed works using a list of strings and will manage typing them on your page.
-It comes with lot of parameters to customize the way the strings are typed: speed, cursor, delays
-and smart backspace are some of the incredible parameters you can use.
+It comes with a lot of parameters to customize the way the strings are typed: speed, cursor, delays
+and smart backspace are some incredible parameters you can use.
 
 The main usage of Symfony UX Typed is to use its Stimulus controller to initialize Typed:
 

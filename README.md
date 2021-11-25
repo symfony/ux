@@ -39,6 +39,8 @@ integrating it into [Webpack Encore](https://github.com/symfony/webpack-encore).
     A system to build reusable "components" with Twig
 -   [Live Component](https://github.com/symfony/ux-live-component):
     Gives Twig Components a URL and a JavaScript library to automatically re-render via Ajax as your user interacts with it
+-   [Typed](https://github.com/symfony/ux-typed):
+    Complete and easy to use animated typed texts. Just enter the strings you want to see typed, and it goes live without complexity.
 
 ## Stimulus Tools around the World
 
