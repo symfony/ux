@@ -33,7 +33,7 @@
     },
     "extra": {
         "branch-alias": {
-            "dev-main": "1.4-dev"
+            "dev-main": "2.0-dev"
         },
         "thanks": {
             "name": "symfony/ux-turbo",
