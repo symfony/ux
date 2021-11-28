@@ -85,7 +85,7 @@ Symfony UX Dropzone allows you to extend its default behavior using a custom Sti
 ```js
 // mydropzone_controller.js
 
-import { Controller } from '@hotwired/stimulus';
+import { Controller } from 'stimulus';
 
 export default class extends Controller {
     connect() {
