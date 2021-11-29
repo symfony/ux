@@ -17,10 +17,12 @@ export default class extends Controller {
 
         hd.addEventListener('load', () => {
             this.element.src = this.element.getAttribute('data-hd-src');
+            this.element.srcset = this.element.getAttribute('data-hd-srcset');
             this._dispatchEvent('lazy-image:ready', { hd });
         });
 
         hd.src = this.element.getAttribute('data-hd-src');
+        hd.srcset = this.element.getAttribute('data-hd-srcset');
 
         this._dispatchEvent('lazy-image:connect', { hd });
     }
