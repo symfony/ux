@@ -34,8 +34,8 @@ class BlurHash implements BlurHashInterface
         $encoded = $this->encode($filename, $encodingWidth, $encodingHeight);
 
         if ($encoded instanceof \Exception) {
-            // Return 1 x 1 pixel JPG in case of error (so we don't break the whole app)
-            return 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEAYABgAAD/2wBDAP//////////////////////////////////////////////////////////////////////////////////////wAALCAABAAEBAREA/8QAJgABAAAAAAAAAAAAAAAAAAAAAxABAAAAAAAAAAAAAAAAAAAAAP/aAAgBAQAAPwBH/9k';
+            // Return 1 x 1 pixel transparent PNG
+            return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
         }
 
         // Create a new blurred thumbnail from encoded BlurHash
