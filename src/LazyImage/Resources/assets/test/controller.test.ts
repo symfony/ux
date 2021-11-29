@@ -34,10 +34,13 @@ describe('LazyImageController', () => {
 
     beforeEach(() => {
         container = mountDOM(`
-            <img src="https://symfony.com/logos/symfony_black_02.png"
-                data-testid="img"
-                data-hd-src="https://symfony.com/logos/symfony_black_03.png" 
-                data-controller="check lazy-image" />
+          <img 
+              src="https://symfony.com/logos/symfony_black_02.png"
+              srcset="https://symfony.com/logos/symfony_black_02.png 1x, https://symfony.com/logos/symfony_black_02.png 2x"
+              data-testid="img"
+              data-hd-src="https://symfony.com/logos/symfony_black_03.png" 
+              data-hd-srcset="https://symfony.com/logos/symfony_black_03.png 1x, https://symfony.com/logos/symfony_black_03.png 2x"
+              data-controller="check lazy-image" />
         `);
     });
 
