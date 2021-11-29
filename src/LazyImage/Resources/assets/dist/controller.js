@@ -29,7 +29,7 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
+function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
@@ -56,14 +56,20 @@ var _default = /*#__PURE__*/function (_Controller) {
       var hd = new Image();
       hd.addEventListener('load', function () {
         _this.element.src = _this.element.getAttribute('data-hd-src');
-        _this.element.srcset = _this.element.getAttribute('data-hd-srcset');
+
+        if (_this.element.getAttribute('data-hd-srcset')) {
+          _this.element.srcset = _this.element.getAttribute('data-hd-srcset');
+        }
 
         _this._dispatchEvent('lazy-image:ready', {
           hd: hd
         });
       });
       hd.src = this.element.getAttribute('data-hd-src');
-      hd.srcset = this.element.getAttribute('data-hd-srcset');
+
+      if (this.element.getAttribute('data-hd-srcset')) {
+        hd.srcset = this.element.getAttribute('data-hd-srcset');
+      }
 
       this._dispatchEvent('lazy-image:connect', {
         hd: hd

@@ -16,13 +16,17 @@ export default class extends Controller {
         const hd = new Image();
 
         hd.addEventListener('load', () => {
-            this.element.src = this.element.getAttribute('data-hd-src');
+          this.element.src = this.element.getAttribute('data-hd-src');
+          if (this.element.getAttribute('data-hd-srcset')) {
             this.element.srcset = this.element.getAttribute('data-hd-srcset');
-            this._dispatchEvent('lazy-image:ready', { hd });
+          }
+          this._dispatchEvent('lazy-image:ready', { hd });
         });
 
-        hd.src = this.element.getAttribute('data-hd-src');
+      hd.src = this.element.getAttribute('data-hd-src');
+      if (this.element.getAttribute('data-hd-srcset')) {
         hd.srcset = this.element.getAttribute('data-hd-srcset');
+      }
 
         this._dispatchEvent('lazy-image:connect', { hd });
     }
