@@ -33,11 +33,6 @@ class BlurHash implements BlurHashInterface
         // Resize and encode
         $encoded = $this->encode($filename, $encodingWidth, $encodingHeight);
 
-        if ($encoded instanceof \Exception) {
-            // Return 1 x 1 pixel transparent PNG
-            return 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-        }
-
         // Create a new blurred thumbnail from encoded BlurHash
         $pixels = \kornrunner\Blurhash\Blurhash::decode($encoded, $width, $height);
 
@@ -57,31 +52,28 @@ class BlurHash implements BlurHashInterface
             throw new \LogicException("Missing package, to use the \"blur_hash\" Twig function, run:\n\ncomposer require intervention/image");
         }
 
-        try {
-            // Resize image to increase encoding performance
-            $image = $this->imageManager->make(file_get_contents($filename));
-            $image->resize($encodingWidth, $encodingHeight, static function ($constraint) {
-                $constraint->aspectRatio();
-                $constraint->upsize();
-            });
+        // Resize image to increase encoding performance
+        $image = $this->imageManager->make(file_get_contents($filename));
+        $image->resize($encodingWidth, $encodingHeight, static function ($constraint) {
+            $constraint->aspectRatio();
+            $constraint->upsize();
+        });
 
-            // Encode using BlurHash
-            $width = $image->getWidth();
-            $height = $image->getHeight();
+        // Encode using BlurHash
+        $width = $image->getWidth();
+        $height = $image->getHeight();
 
-            $pixels = [];
-            for ($y = 0; $y < $height; ++$y) {
-                $row = [];
-                for ($x = 0; $x < $width; ++$x) {
-                    $color = $image->pickColor($x, $y);
-                    $row[] = [$color[0], $color[1], $color[2]];
-                }
-
-                $pixels[] = $row;
+        $pixels = [];
+        for ($y = 0; $y < $height; ++$y) {
+            $row = [];
+            for ($x = 0; $x < $width; ++$x) {
+                $color = $image->pickColor($x, $y);
+                $row[] = [$color[0], $color[1], $color[2]];
             }
-            return \kornrunner\Blurhash\Blurhash::encode($pixels, 4, 3);
-        } catch (\Exception $e) {
-            return $e;
-        }   
+
+            $pixels[] = $row;
+        }
+
+        return \kornrunner\Blurhash\Blurhash::encode($pixels, 4, 3);
     }
 }
