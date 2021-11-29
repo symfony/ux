@@ -13,11 +13,6 @@
             }
         }
     },
-    "scripts": {
-        "build": "babel src -d dist",
-        "test": "babel src -d dist && jest",
-        "lint": "eslint src test"
-    },
     "peerDependencies": {
         "@swup/fade-theme": "^1.0",
         "@swup/slide-theme": "^1.0",
@@ -27,22 +22,11 @@
         "@hotwired/stimulus": "^3.0.0"
     },
     "devDependencies": {
-        "@babel/cli": "^7.12.1",
-        "@babel/core": "^7.12.3",
-        "@babel/plugin-proposal-class-properties": "^7.12.1",
-        "@babel/preset-env": "^7.12.7",
         "@swup/fade-theme": "^1.0",
         "@swup/slide-theme": "^1.0",
         "@swup/forms-plugin": "^1.0",
         "@swup/debug-plugin": "^1.0",
         "swup": "^2.0",
-        "@symfony/stimulus-testing": "^1.1.0",
         "@hotwired/stimulus": "^3.0.0"
-    },
-    "jest": {
-        "testRegex": "test/.*\\.test.js",
-        "setupFilesAfterEnv": [
-            "./test/setup.js"
-        ]
     }
 }

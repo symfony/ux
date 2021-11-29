@@ -1,13 +1,28 @@
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+'use strict';
+
 import { Controller } from '@hotwired/stimulus';
 import Cropper from 'cropperjs';
 
-class controller extends Controller {
+export default class extends Controller {
     connect() {
+        // Create image view
         const img = document.createElement('img');
         img.classList.add('cropperjs-image');
         img.src = this.element.getAttribute('data-public-url');
+
         const parent = this.element.parentNode;
         parent.appendChild(img);
+
+        // Build the cropper
         const options = {
             viewMode: parseInt(this.element.getAttribute('data-view-mode')),
             dragMode: this.element.getAttribute('data-drag-mode'),
@@ -39,23 +54,28 @@ class controller extends Controller {
             minCropBoxWidth: parseInt(this.element.getAttribute('data-min-crop-box-width')),
             minCropBoxHeight: parseInt(this.element.getAttribute('data-min-crop-box-height')),
         };
+
         if (this.element.getAttribute('data-aspect-ratio')) {
             options.aspectRatio = parseFloat(this.element.getAttribute('data-aspect-ratio'));
         }
+
         if (this.element.getAttribute('data-initial-aspect-ratio')) {
             options.initialAspectRatio = parseFloat(this.element.getAttribute('data-initial-aspect-ratio'));
         }
+
         const cropper = new Cropper(img, options);
+
         img.addEventListener('crop', (event) => {
             this.element.value = JSON.stringify(event.detail);
         });
+
         this._dispatchEvent('cropperjs:connect', { cropper, options, img });
     }
+
     _dispatchEvent(name, payload = null, canBubble = false, cancelable = false) {
         const userEvent = document.createEvent('CustomEvent');
         userEvent.initCustomEvent(name, canBubble, cancelable, payload);
+
         this.element.dispatchEvent(userEvent);
     }
 }
-
-export { controller as default };
