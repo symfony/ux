@@ -36,7 +36,7 @@ page has been rendered:
     src="{{ asset('image/small.png') }}"
     {{ stimulus_controller('symfony/ux-lazy-image/lazy-image') }}
     data-hd-src="{{ asset('image/large.png') }}"
-    
+
     srcset="{{ asset('image/small.png') }} 1x, {{ asset('image/small2x.png') }} 2x"
     data-hd-srcset="{{ asset('image/large.png') }} 1x, {{ asset('image/large2x.png') }} 2x"
 
