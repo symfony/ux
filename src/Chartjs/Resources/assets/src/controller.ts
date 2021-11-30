@@ -13,17 +13,16 @@ import { Controller } from '@hotwired/stimulus';
 import { Chart } from 'chart.js';
 
 export default class extends Controller {
+    static values = {
+        view: Object,
+    };
+
     connect() {
         if (!(this.element instanceof HTMLCanvasElement)) {
             throw new Error('Invalid element');
         }
 
-        const viewData = this.element.getAttribute('data-view');
-        if (!viewData) {
-            throw new Error('Missing data-view attribute.');
-        }
-
-        const payload = JSON.parse(viewData);
+        const payload = this.viewValue;
         if (Array.isArray(payload.options) && 0 === payload.options.length) {
             payload.options = {};
         }

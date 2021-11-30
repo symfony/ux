@@ -68,7 +68,8 @@ class HomeController extends AbstractController
 All options and data are provided as-is to Chart.js. You can read
 [Chart.js documentation](https://www.chartjs.org/docs/latest/) to discover them all.
 
-Once created in PHP, a chart can be displayed using Twig:
+Once created in PHP, a chart can be displayed using Twig if installed
+(requires [Symfony Webpack Encore](https://symfony.com/doc/current/frontend/encore/installation.html)):
 
 ```twig
 {{ render_chart(chart) }}

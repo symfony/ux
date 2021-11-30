@@ -17,6 +17,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\UX\Chartjs\ChartjsBundle;
+use Symfony\WebpackEncoreBundle\WebpackEncoreBundle;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -29,7 +30,7 @@ class TwigAppKernel extends Kernel
 
     public function registerBundles(): iterable
     {
-        return [new FrameworkBundle(), new TwigBundle(), new ChartjsBundle()];
+        return [new FrameworkBundle(), new TwigBundle(), new WebpackEncoreBundle(), new ChartjsBundle()];
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
@@ -37,6 +38,7 @@ class TwigAppKernel extends Kernel
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', ['secret' => '$ecret', 'test' => true]);
             $container->loadFromExtension('twig', ['default_path' => __DIR__.'/templates', 'strict_variables' => true, 'exception_controller' => null]);
+            $container->loadFromExtension('webpack_encore', ['output_path' => '%kernel.project_dir%/public/build']);
 
             $container->setAlias('test.chartjs.builder', 'chartjs.builder')->setPublic(true);
             $container->setAlias('test.chartjs.twig_extension', 'chartjs.twig_extension')->setPublic(true);
