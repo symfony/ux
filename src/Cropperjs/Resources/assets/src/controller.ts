@@ -11,68 +11,75 @@
 
 import { Controller } from '@hotwired/stimulus';
 import Cropper from 'cropperjs';
+import CropEvent = Cropper.CropEvent;
 
-export default class extends Controller {
+export default class CropperController extends Controller {
+    static values = {
+        publicUrl: String,
+        viewMode: Number,
+        dragMode: String,
+        responsive: Boolean,
+        restore: Boolean,
+        checkCrossOrigin: Boolean,
+        checkOrientation: Boolean,
+        modal: Boolean,
+        guides: Boolean,
+        center: Boolean,
+        highlight: Boolean,
+        background: Boolean,
+        autoCrop: Boolean,
+        autoCropArea: Number,
+        movable: Boolean,
+        rotatable: Boolean,
+        scalable: Boolean,
+        zoomable: Boolean,
+        zoomOnTouch: Boolean,
+        zoomOnWheel: Boolean,
+        wheelZoomRatio: Number,
+        cropBoxMovable: Boolean,
+        cropBoxResizable: Boolean,
+        toggleDragModeOnDblclick: Boolean,
+        minContainerWidth: Number,
+        minContainerHeight: Number,
+        minCanvasWidth: Number,
+        minCanvasHeight: Number,
+        minCropBoxWidth: Number,
+        minCropBoxHeight: Number,
+        aspectRatio: Number,
+        initialAspectRatio: Number,
+    };
+
     connect() {
         // Create image view
         const img = document.createElement('img');
         img.classList.add('cropperjs-image');
-        img.src = this.element.getAttribute('data-public-url');
+        img.src = (this as any).publicUrlValue;
 
-        const parent = this.element.parentNode;
+        const parent = (this.element as HTMLInputElement).parentNode;
+        if (!parent) {
+            throw new Error('Missing parent node for Cropperjs');
+        }
+
         parent.appendChild(img);
 
         // Build the cropper
-        const options = {
-            viewMode: parseInt(this.element.getAttribute('data-view-mode')),
-            dragMode: this.element.getAttribute('data-drag-mode'),
-            responsive: this.element.hasAttribute('data-responsive'),
-            restore: this.element.hasAttribute('data-restore'),
-            checkCrossOrigin: this.element.hasAttribute('data-check-cross-origin'),
-            checkOrientation: this.element.hasAttribute('data-check-orientation'),
-            modal: this.element.hasAttribute('data-modal'),
-            guides: this.element.hasAttribute('data-guides'),
-            center: this.element.hasAttribute('data-center'),
-            highlight: this.element.hasAttribute('data-highlight'),
-            background: this.element.hasAttribute('data-background'),
-            autoCrop: this.element.hasAttribute('data-auto-crop'),
-            autoCropArea: parseFloat(this.element.getAttribute('data-auto-crop-area')),
-            movable: this.element.hasAttribute('data-movable'),
-            rotatable: this.element.hasAttribute('data-rotatable'),
-            scalable: this.element.hasAttribute('data-scalable'),
-            zoomable: this.element.hasAttribute('data-zoomable'),
-            zoomOnTouch: this.element.hasAttribute('data-zoom-on-touch'),
-            zoomOnWheel: this.element.hasAttribute('data-zoom-on-wheel'),
-            wheelZoomRatio: parseFloat(this.element.getAttribute('data-wheel-zoom-ratio')),
-            cropBoxMovable: this.element.hasAttribute('data-crop-box-movable'),
-            cropBoxResizable: this.element.hasAttribute('data-crop-box-resizable'),
-            toggleDragModeOnDblclick: this.element.hasAttribute('data-toggle-drag-mode-on-dblclick'),
-            minContainerWidth: parseInt(this.element.getAttribute('data-min-container-width')),
-            minContainerHeight: parseInt(this.element.getAttribute('data-min-container-height')),
-            minCanvasWidth: parseInt(this.element.getAttribute('data-min-canvas-width')),
-            minCanvasHeight: parseInt(this.element.getAttribute('data-min-canvas-height')),
-            minCropBoxWidth: parseInt(this.element.getAttribute('data-min-crop-box-width')),
-            minCropBoxHeight: parseInt(this.element.getAttribute('data-min-crop-box-height')),
-        };
-
-        if (this.element.getAttribute('data-aspect-ratio')) {
-            options.aspectRatio = parseFloat(this.element.getAttribute('data-aspect-ratio'));
-        }
-
-        if (this.element.getAttribute('data-initial-aspect-ratio')) {
-            options.initialAspectRatio = parseFloat(this.element.getAttribute('data-initial-aspect-ratio'));
+        let options: any = {};
+        for (let name in CropperController.values) {
+            if ((this as any)['has' + name.charAt(0).toUpperCase() + name.slice(1) + 'Value']) {
+                options[name] = (this as any)[name + 'Value'];
+            }
         }
 
         const cropper = new Cropper(img, options);
 
         img.addEventListener('crop', (event) => {
-            this.element.value = JSON.stringify(event.detail);
+            (this.element as HTMLInputElement).value = JSON.stringify((event as CropEvent).detail);
         });
 
         this._dispatchEvent('cropperjs:connect', { cropper, options, img });
     }
 
-    _dispatchEvent(name, payload = null, canBubble = false, cancelable = false) {
+    _dispatchEvent(name: string, payload: any = null, canBubble = false, cancelable = false) {
         const userEvent = document.createEvent('CustomEvent');
         userEvent.initCustomEvent(name, canBubble, cancelable, payload);
 
