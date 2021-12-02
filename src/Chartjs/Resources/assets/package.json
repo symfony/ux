@@ -21,6 +21,7 @@
         "@hotwired/stimulus": "^3.0.0",
         "@types/chart.js": "^2.9.34",
         "chart.js": "^3.4.1",
-        "jest-canvas-mock": "^2.3.0"
+        "jest-canvas-mock": "^2.3.0",
+        "resize-observer-polyfill": "^1.5.1"
     }
 }

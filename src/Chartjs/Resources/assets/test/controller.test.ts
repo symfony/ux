@@ -32,17 +32,20 @@ const startStimulus = () => {
     const application = Application.start();
     application.register('check', CheckController);
     application.register('chartjs', ChartjsController);
+
+    return application;
 };
 
 describe('ChartjsController', () => {
-    let container;
+    let application;
 
     afterEach(() => {
         clearDOM();
+        application.stop();
     });
 
     it('connect without options', async () => {
-        container = mountDOM(`
+        const container = mountDOM(`
             <canvas
                 data-testid="canvas"
                 data-controller="check chartjs"
@@ -53,18 +56,19 @@ describe('ChartjsController', () => {
         expect(getByTestId(container, 'canvas')).not.toHaveClass('pre-connected');
         expect(getByTestId(container, 'canvas')).not.toHaveClass('connected');
 
-        startStimulus();
+        application = startStimulus();
+
         await waitFor(() => {
             expect(getByTestId(container, 'canvas')).toHaveClass('pre-connected');
             expect(getByTestId(container, 'canvas')).toHaveClass('connected');
         });
 
         const chart = getByTestId(container, 'canvas').chart;
-        expect(chart.options.showLines).toBe(true);
+        expect(chart.options.showLines).toBeUndefined();
     });
 
     it('connect with options', async () => {
-        container = mountDOM(`
+        const container = mountDOM(`
             <canvas
                 data-testid="canvas"
                 data-controller="check chartjs"
@@ -75,7 +79,7 @@ describe('ChartjsController', () => {
         expect(getByTestId(container, 'canvas')).not.toHaveClass('pre-connected');
         expect(getByTestId(container, 'canvas')).not.toHaveClass('connected');
 
-        startStimulus();
+        application = startStimulus();
         await waitFor(() => {
             expect(getByTestId(container, 'canvas')).toHaveClass('pre-connected');
             expect(getByTestId(container, 'canvas')).toHaveClass('connected');
