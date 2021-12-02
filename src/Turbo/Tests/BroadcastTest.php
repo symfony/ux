@@ -22,6 +22,10 @@ class BroadcastTest extends PantherTestCase
 
     public function testBroadcast(): void
     {
+        if (!file_exists(__DIR__.'/app/public/build')) {
+            throw new \Exception(sprintf('Move into %s and execute Encore before running this test.', realpath(__DIR__.'/app')));
+        }
+
         ($client = self::createPantherClient())->request('GET', '/books');
 
         $crawler = $client->submitForm('Submit', ['title' => self::BOOK_TITLE]);
