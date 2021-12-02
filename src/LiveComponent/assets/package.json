@@ -1,8 +1,8 @@
 {
     "name": "@symfony/live-stimulus",
     "description": "Live Component: bring server-side re-rendering & model binding to any element.",
-    "main": "dist/live-controller.esm.js",
-    "module": "dist/live-controller.esm.js",
+    "main": "dist/live_controller.js",
+    "module": "dist/live_controller.js",
     "version": "0.0.1",
     "license": "MIT",
     "dependencies": {
