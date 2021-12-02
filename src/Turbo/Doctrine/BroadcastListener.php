@@ -129,7 +129,6 @@ final class BroadcastListener implements ResetInterface
 
             if (\PHP_VERSION_ID >= 80000 && $options = ($r = new \ReflectionClass($class))->getAttributes(Broadcast::class)) {
                 $options = $options[0]->newInstance();
-                // @phpstan-ignore-next-line
                 $this->broadcastedClasses[$class] = $options->options;
             } elseif ($this->annotationReader && $options = $this->annotationReader->getClassAnnotation($r ?? new \ReflectionClass($class), Broadcast::class)) {
                 $this->broadcastedClasses[$class] = $options->options;
