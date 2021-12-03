@@ -20,7 +20,7 @@ class CheckController extends Controller {
         this.element.addEventListener('lazy-image:connect', (event) => {
             // the Image won't natively have its "load" method in this test
             // so we trigger it manually, to "fake" the Image loading.
-            event.detail.hd.dispatchEvent(new Event('load'));
+            event.detail.image.dispatchEvent(new Event('load'));
             this.element.classList.add('connected');
         });
     }

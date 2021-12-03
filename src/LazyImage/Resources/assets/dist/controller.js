@@ -9,13 +9,13 @@ class default_1 extends Controller {
             if (srcsetString) {
                 this.element.srcset = srcsetString;
             }
-            this._dispatchEvent('lazy-image:ready', { hd });
+            this._dispatchEvent('lazy-image:ready', { image: hd });
         });
         hd.src = this.srcValue;
         if (srcsetString) {
             hd.srcset = srcsetString;
         }
-        this._dispatchEvent('lazy-image:connect', { hd });
+        this._dispatchEvent('lazy-image:connect', { image: hd });
     }
     _calculateSrcsetString() {
         if (!this.hasSrcsetValue) {

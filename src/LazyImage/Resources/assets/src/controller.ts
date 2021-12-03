@@ -27,7 +27,7 @@ export default class extends Controller {
             if (srcsetString) {
                 this.element.srcset = srcsetString;
             }
-            this._dispatchEvent('lazy-image:ready', { hd });
+            this._dispatchEvent('lazy-image:ready', { image: hd });
         });
 
         hd.src = this.srcValue;
@@ -35,7 +35,7 @@ export default class extends Controller {
             hd.srcset = srcsetString;
         }
 
-        this._dispatchEvent('lazy-image:connect', { hd });
+        this._dispatchEvent('lazy-image:connect', { image: hd });
     }
 
     _calculateSrcsetString(): string {
