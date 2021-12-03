@@ -13,8 +13,8 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static values = {
-        hdSrc: String,
-        hdSrcset: Object
+        src: String,
+        srcset: Object,
     };
 
     connect() {
@@ -23,14 +23,14 @@ export default class extends Controller {
         const srcsetString = this._calculateSrcsetString();
 
         hd.addEventListener('load', () => {
-            this.element.src = this.hdSrcValue;
+            this.element.src = this.srcValue;
             if (srcsetString) {
                 this.element.srcset = srcsetString;
             }
             this._dispatchEvent('lazy-image:ready', { hd });
         });
 
-        hd.src = this.hdSrcValue;
+        hd.src = this.srcValue;
         if (srcsetString) {
             hd.srcset = srcsetString;
         }
@@ -39,13 +39,13 @@ export default class extends Controller {
     }
 
     _calculateSrcsetString(): string {
-        if (!this.hasHdSrcsetValue) {
+        if (!this.hasSrcsetValue) {
             return '';
         }
 
-        const sets = Object.keys(this.hdSrcsetValue).map((size => {
-            return `${this.hdSrcsetValue[size]} ${size}`;
-        }));
+        const sets = Object.keys(this.srcsetValue).map((size) => {
+            return `${this.srcsetValue[size]} ${size}`;
+        });
 
         return sets.join(', ').trimEnd();
     }

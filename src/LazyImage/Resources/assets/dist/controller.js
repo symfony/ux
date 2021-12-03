@@ -5,25 +5,25 @@ class default_1 extends Controller {
         const hd = new Image();
         const srcsetString = this._calculateSrcsetString();
         hd.addEventListener('load', () => {
-            this.element.src = this.hdSrcValue;
+            this.element.src = this.srcValue;
             if (srcsetString) {
                 this.element.srcset = srcsetString;
             }
             this._dispatchEvent('lazy-image:ready', { hd });
         });
-        hd.src = this.hdSrcValue;
+        hd.src = this.srcValue;
         if (srcsetString) {
             hd.srcset = srcsetString;
         }
         this._dispatchEvent('lazy-image:connect', { hd });
     }
     _calculateSrcsetString() {
-        if (!this.hasHdSrcsetValue) {
+        if (!this.hasSrcsetValue) {
             return '';
         }
-        const sets = Object.keys(this.hdSrcsetValue).map((size => {
-            return `${this.hdSrcsetValue[size]} ${size}`;
-        }));
+        const sets = Object.keys(this.srcsetValue).map((size) => {
+            return `${this.srcsetValue[size]} ${size}`;
+        });
         return sets.join(', ').trimEnd();
     }
     _dispatchEvent(name, payload = null, canBubble = false, cancelable = false) {
@@ -33,8 +33,8 @@ class default_1 extends Controller {
     }
 }
 default_1.values = {
-    hdSrc: String,
-    hdSrcset: Object
+    src: String,
+    srcset: Object,
 };
 
 export { default_1 as default };

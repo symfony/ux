@@ -41,8 +41,8 @@ describe('LazyImageController', () => {
               src="https://symfony.com/logos/symfony_black_02.png"
               srcset="https://symfony.com/logos/symfony_black_02.png 1x, https://symfony.com/logos/symfony_black_02.png 2x"
               data-testid="img"
-              data-lazy-image-hd-src-value="https://symfony.com/logos/symfony_black_03.png"
-              data-lazy-image-hd-srcset-value="{&quot;1x&quot;: &quot;https://symfony.com/logos/symfony_black_03.png&quot;, &quot;2x&quot;: &quot;https://symfony.com/logos/symfony_black_03_2x.png&quot;}"
+              data-lazy-image-src-value="https://symfony.com/logos/symfony_black_03.png"
+              data-lazy-image-srcset-value="{&quot;1x&quot;: &quot;https://symfony.com/logos/symfony_black_03.png&quot;, &quot;2x&quot;: &quot;https://symfony.com/logos/symfony_black_03_2x.png&quot;}"
               data-controller="check lazy-image" />
         `);
     });
