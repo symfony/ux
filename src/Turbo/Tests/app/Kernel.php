@@ -13,7 +13,6 @@ namespace App;
 
 use App\Entity\Book;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
-use Doctrine\Bundle\DoctrineBundle\Mapping\MappingDriver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\TemplateController;
@@ -90,10 +89,6 @@ class Kernel extends BaseKernel
                 ],
             ],
         ];
-
-        if (class_exists(MappingDriver::class)) {
-            $doctrineConfig['dbal']['override_url'] = true;
-        }
 
         $container
             ->extension('doctrine', $doctrineConfig);
