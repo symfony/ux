@@ -44,9 +44,6 @@
         "zenstruck/browser": "^0.9.1"
     },
     "extra": {
-        "branch-alias": {
-            "dev-main": "1.4-dev"
-        },
         "thanks": {
             "name": "symfony/ux",
             "url": "https://github.com/symfony/ux"
