@@ -1,20 +1,30 @@
 import { Controller } from '@hotwired/stimulus';
 
-class controller extends Controller {
+class default_1 extends Controller {
     connect() {
         const hd = new Image();
+        const srcsetString = this._calculateSrcsetString();
         hd.addEventListener('load', () => {
-            this.element.src = this.element.getAttribute('data-hd-src');
-            if (this.element.getAttribute('data-hd-srcset')) {
-                this.element.srcset = this.element.getAttribute('data-hd-srcset');
+            this.element.src = this.hdSrcValue;
+            if (srcsetString) {
+                this.element.srcset = srcsetString;
             }
             this._dispatchEvent('lazy-image:ready', { hd });
         });
-        hd.src = this.element.getAttribute('data-hd-src');
-        if (this.element.getAttribute('data-hd-srcset')) {
-            hd.srcset = this.element.getAttribute('data-hd-srcset');
+        hd.src = this.hdSrcValue;
+        if (srcsetString) {
+            hd.srcset = srcsetString;
         }
         this._dispatchEvent('lazy-image:connect', { hd });
+    }
+    _calculateSrcsetString() {
+        if (!this.hasHdSrcsetValue) {
+            return '';
+        }
+        const sets = Object.keys(this.hdSrcsetValue).map((size => {
+            return `${this.hdSrcsetValue[size]} ${size}`;
+        }));
+        return sets.join(', ').trimEnd();
     }
     _dispatchEvent(name, payload = null, canBubble = false, cancelable = false) {
         const userEvent = document.createEvent('CustomEvent');
@@ -22,5 +32,9 @@ class controller extends Controller {
         this.element.dispatchEvent(userEvent);
     }
 }
+default_1.values = {
+    hdSrc: String,
+    hdSrcset: Object
+};
 
-export { controller as default };
+export { default_1 as default };

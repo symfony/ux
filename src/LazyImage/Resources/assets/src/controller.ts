@@ -12,23 +12,42 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
+    static values = {
+        hdSrc: String,
+        hdSrcset: Object
+    };
+
     connect() {
         const hd = new Image();
 
+        const srcsetString = this._calculateSrcsetString();
+
         hd.addEventListener('load', () => {
-            this.element.src = this.element.getAttribute('data-hd-src');
-            if (this.element.getAttribute('data-hd-srcset')) {
-                this.element.srcset = this.element.getAttribute('data-hd-srcset');
+            this.element.src = this.hdSrcValue;
+            if (srcsetString) {
+                this.element.srcset = srcsetString;
             }
             this._dispatchEvent('lazy-image:ready', { hd });
         });
 
-        hd.src = this.element.getAttribute('data-hd-src');
-        if (this.element.getAttribute('data-hd-srcset')) {
-            hd.srcset = this.element.getAttribute('data-hd-srcset');
+        hd.src = this.hdSrcValue;
+        if (srcsetString) {
+            hd.srcset = srcsetString;
         }
 
         this._dispatchEvent('lazy-image:connect', { hd });
+    }
+
+    _calculateSrcsetString(): string {
+        if (!this.hasHdSrcsetValue) {
+            return '';
+        }
+
+        const sets = Object.keys(this.hdSrcsetValue).map((size => {
+            return `${this.hdSrcsetValue[size]} ${size}`;
+        }));
+
+        return sets.join(', ').trimEnd();
     }
 
     _dispatchEvent(name, payload = null, canBubble = false, cancelable = false) {

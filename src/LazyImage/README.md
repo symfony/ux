@@ -34,15 +34,35 @@ page has been rendered:
 ```twig
 <img
     src="{{ asset('image/small.png') }}"
-    {{ stimulus_controller('symfony/ux-lazy-image/lazy-image') }}
-    data-hd-src="{{ asset('image/large.png') }}"
-
-    srcset="{{ asset('image/small.png') }} 1x, {{ asset('image/small2x.png') }} 2x"
-    data-hd-srcset="{{ asset('image/large.png') }} 1x, {{ asset('image/large2x.png') }} 2x"
+    {{ stimulus_controller('symfony/ux-lazy-image/lazy-image', {
+        hdSrc: asset('image/large.png')
+    }) }}
 
     {# Optional but avoids having a page jump when the image is loaded #}
     width="200"
     height="150"
+>
+```
+
+With this setup, the user will initially see `images/small.png`. Then,
+once the page has loaded and the user's browser has downloaded the larger
+image, the `src` attribute will change to `image/large.png`.
+
+There is also support for the `srcset` attribute by passing an
+`hdSrcset` value to the controller:
+
+```twig
+<img
+    src="{{ asset('image/small.png') }}"
+    srcset="{{ asset('image/small.png') }} 1x, {{ asset('image/small2x.png') }} 2x"
+
+    {{ stimulus_controller('symfony/ux-lazy-image/lazy-image', {
+        hdSrc: asset('image/large.png'),
+        hdSrcset: {
+            '1x': asset('image/large.png'),
+            '2x': asset('image/large2x.png')
+        }
+    }) }}
 />
 ```
 
@@ -55,8 +75,9 @@ the BlurHash algorithm to create a light, blurred, data-uri thumbnail of the ima
 ```twig
 <img
     src="{{ data_uri_thumbnail('public/image/large.png', 100, 75) }}"
-    {{ stimulus_controller('symfony/ux-lazy-image/lazy-image') }}
-    data-hd-src="{{ asset('image/large.png') }}"
+    {{ stimulus_controller('symfony/ux-lazy-image/lazy-image', {
+        hdSrc: asset('image/large.png')
+    }) }}
 
     {# Using BlurHash, the size is required #}
     width="200"
@@ -112,9 +133,10 @@ Then in your template, add your controller to the HTML attribute:
     src="{{ data_uri_thumbnail('public/image/large.png', 100, 75) }}"
     {{ stimulus_controller({
         mylazyimage: {},
-        'symfony/ux-lazy-image/lazy-image': {}
+        'symfony/ux-lazy-image/lazy-image': {
+            hdSrc: asset('image/large.png')
+        }
     }) }}
-    data-hd-src="{{ asset('image/large.png') }}"
 
     {# Using BlurHash, the size is required #}
     width="200"
