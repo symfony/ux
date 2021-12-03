@@ -50,10 +50,7 @@ export default class extends Controller {
         return sets.join(', ').trimEnd();
     }
 
-    _dispatchEvent(name, payload = null, canBubble = false, cancelable = false) {
-        const userEvent = document.createEvent('CustomEvent');
-        userEvent.initCustomEvent(name, canBubble, cancelable, payload);
-
-        this.element.dispatchEvent(userEvent);
+    _dispatchEvent(name: string, payload: any) {
+        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
     }
 }
