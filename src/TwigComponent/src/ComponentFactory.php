@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent;
 
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -80,6 +81,7 @@ final class ComponentFactory
     public function create(string $name, array $data = []): object
     {
         $component = $this->getComponent($name);
+        $data = $this->preMount($component, $data);
 
         $this->mount($component, $data);
 
@@ -139,5 +141,14 @@ final class ComponentFactory
         }
 
         return $this->components->get($name);
+    }
+
+    private function preMount(object $component, array $data): array
+    {
+        foreach (AsTwigComponent::preMountMethods($component) as $method) {
+            $data = $component->{$method->name}($data);
+        }
+
+        return $data;
     }
 }
