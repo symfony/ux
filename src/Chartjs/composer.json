@@ -43,9 +43,6 @@
         "symfony/webpack-encore-bundle": "<1.11"
     },
     "extra": {
-        "branch-alias": {
-            "dev-main": "1.4-dev"
-        },
         "thanks": {
             "name": "symfony/ux",
             "url": "https://github.com/symfony/ux"
