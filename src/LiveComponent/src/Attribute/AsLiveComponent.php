@@ -100,20 +100,6 @@ final class AsLiveComponent extends AsTwigComponent
     }
 
     /**
-     * @param string|object $classOrObject
-     *
-     * @return \ReflectionMethod[]
-     */
-    private static function attributeMethodsFor(string $attribute, object $component): \Traversable
-    {
-        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($method->getAttributes($attribute)[0] ?? null) {
-                yield $method;
-            }
-        }
-    }
-
-    /**
      * @return \ReflectionProperty[]
      */
     private static function propertiesFor(object $object): \Traversable

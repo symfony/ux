@@ -12,6 +12,7 @@
 namespace Symfony\UX\TwigComponent\Tests\Fixture\Component;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -19,4 +20,15 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent('component_b', template: 'components/custom1.html.twig')]
 final class ComponentB
 {
+    public string $value;
+
+    #[PreMount]
+    public function preMount(array $data): array
+    {
+        if (isset($data['value'])) {
+            $data['value'] = 'pre-mount '.$data['value'];
+        }
+
+        return $data;
+    }
 }
