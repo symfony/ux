@@ -1,16 +1,12 @@
 import { Controller } from '@hotwired/stimulus';
-import { Chart } from 'chart.js';
+import Chart from 'chart.js/auto';
 
-class controller extends Controller {
+class default_1 extends Controller {
     connect() {
         if (!(this.element instanceof HTMLCanvasElement)) {
             throw new Error('Invalid element');
         }
-        const viewData = this.element.getAttribute('data-view');
-        if (!viewData) {
-            throw new Error('Missing data-view attribute.');
-        }
-        const payload = JSON.parse(viewData);
+        const payload = this.viewValue;
         if (Array.isArray(payload.options) && 0 === payload.options.length) {
             payload.options = {};
         }
@@ -28,5 +24,8 @@ class controller extends Controller {
         this.element.dispatchEvent(userEvent);
     }
 }
+default_1.values = {
+    view: Object,
+};
 
-export { controller as default };
+export { default_1 as default };
