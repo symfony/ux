@@ -17,7 +17,7 @@ yarn install --force
 yarn encore dev
 ```
 
-Also make sure you have at least version 2.0 of [@symfony/stimulus-bridge](https://github.com/symfony/stimulus-bridge)
+Also make sure you have at least version 3.0 of [@symfony/stimulus-bridge](https://github.com/symfony/stimulus-bridge)
 in your `package.json` file.
 
 ## Usage
@@ -33,7 +33,7 @@ use Symfony\UX\Chartjs\Model\Chart;
 class HomeController extends AbstractController
 {
     /**
-     * @Route("/", name="homepage")
+     * #[Route('/', name: 'app_homepage')]
      */
     public function index(ChartBuilderInterface $chartBuilder): Response
     {

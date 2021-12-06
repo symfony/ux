@@ -650,7 +650,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PostController extends AbstractController
 {
     /**
-     * @Route("/admin/post/{id}/edit", name="app_post_edit")
+     * #[Route('/admin/post/{id}/edit', name: 'app_post_edit')]
      */
     public function edit(Request $request, Post $post): Response
     {
@@ -896,7 +896,7 @@ need any form logic in your controller:
 
 ```php
 /**
- * @Route("/admin/post/{id}/edit", name="app_post_edit")
+ * #[Route('/admin/post/{id}/edit', name: 'app_post_edit')]
  */
 public function edit(Post $post): Response
 {

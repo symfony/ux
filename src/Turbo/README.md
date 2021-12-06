@@ -97,7 +97,7 @@ automatically:
 
 ```php
 /**
- * @Route("/product/new", name="product_new")
+ * #[Route('/product/new', name: 'product_new')]
  */
 public function newProduct(Request $request): Response
 {
@@ -122,7 +122,7 @@ If you're _not_ using the `renderForm()` shortcut, adjust your code manually:
 
 ```diff
 /**
- * @Route("/product/new")
+ * #[Route('/product/new')]
  */
 public function newProduct(Request $request): Response
 {
