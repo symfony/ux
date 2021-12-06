@@ -44,7 +44,9 @@ class HomeController extends AbstractController
         $form = $this->createFormBuilder(['crop' => $crop])
             ->add('crop', CropperType::class, [
                 'public_url' => '/public/url/to/the/image.jpg',
-                'aspect_ratio' => 2000 / 1500,
+                'cropper_options' => [
+                    'aspectRatio' => 2000 / 1500,
+                ],
             ])
             ->getForm()
         ;
@@ -68,49 +70,7 @@ class HomeController extends AbstractController
 }
 ```
 
-You can pass the following options to the `CropperType` field:
-
-```php
-$form = $this->createFormBuilder(['crop' => $crop])
-    ->add('crop', CropperType::class, [
-        'public_url' => '/public/url/to/the/image.jpg',
-        'view_mode' => 1,
-        'drag_mode' => 'move',
-        'initial_aspect_ratio' => 2000 / 1800,
-        'aspect_ratio' => 2000 / 1800,
-        'responsive' => true,
-        'restore' => true,
-        'check_cross_origin' => true,
-        'check_orientation' => true,
-        'modal' => true,
-        'guides' => true,
-        'center' => true,
-        'highlight' => true,
-        'background' => true,
-        'auto_crop' => true,
-        'auto_crop_area' => 0.1,
-        'movable' => true,
-        'rotatable' => true,
-        'scalable' => true,
-        'zoomable' => true,
-        'zoom_on_touch' => true,
-        'zoom_on_wheel' => true,
-        'wheel_zoom_ratio' => 0.2,
-        'crop_box_movable' => true,
-        'crop_box_resizable' => true,
-        'toggle_drag_mode_on_dblclick' => true,
-        'min_container_width' => 200,
-        'min_container_height' => 100,
-        'min_canvas_width' => 0,
-        'min_canvas_height' => 0,
-        'min_crop_box_width' => 0,
-        'min_crop_box_height' => 0,
-    ])
-    ->getForm()
-;
-```
-
-These options are associated to [the Cropper.js options](https://github.com/fengyuanchen/cropperjs/blob/master/README.md#options).
+These `cropper_options` can be any [the Cropper.js option](https://github.com/fengyuanchen/cropperjs/blob/main/README.md#options).
 
 Once created in PHP, a crop form is a normal form, meaning you can display it using Twig
 as you would normally with any form:
@@ -130,12 +90,20 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     connect() {
+        this.element.addEventListener('cropperjs:pre-connect', this._onPreConnect);
         this.element.addEventListener('cropperjs:connect', this._onConnect);
     }
 
     disconnect() {
         // You should always remove listeners when the controller is disconnected to avoid side effects
+        this.element.removeEventListener('cropperjs:pre-connect', this._onConnect);
         this.element.removeEventListener('cropperjs:connect', this._onConnect);
+    }
+
+    _onPreConnect(event) {
+        // The cropper has not yet been created and options can be modified
+        console.log(event.detail.options);
+        console.log(event.detail.img);
     }
 
     _onConnect(event) {
@@ -158,7 +126,9 @@ Then in your form, add your controller as an HTML attribute:
 $form = $this->createFormBuilder(['crop' => $crop])
     ->add('crop', CropperType::class, [
         'public_url' => '/public/url/to/the/image.jpg',
-        'aspect_ratio' => 2000 / 1800,
+        'cropper_options' => [
+            'aspectRatio' => 2000 / 1800,
+        ],
         'attr' => ['data-controller' => 'mycropper'],
     ])
     ->getForm()

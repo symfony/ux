@@ -34,37 +34,10 @@ class CropperTypeTest extends TestCase
             ->add('photo', CropperType::class, [
                 'public_url' => '/public/url.jpg',
                 'attr' => ['data-controller' => 'mycropper'],
-                'view_mode' => 1,
-                'drag_mode' => 'move',
-                'initial_aspect_ratio' => 2000 / 1800,
-                'aspect_ratio' => 2000 / 1800,
-                'responsive' => true,
-                'restore' => true,
-                'check_cross_origin' => true,
-                'check_orientation' => true,
-                'modal' => true,
-                'guides' => true,
-                'center' => true,
-                'highlight' => true,
-                'background' => true,
-                'auto_crop' => true,
-                'auto_crop_area' => 0.1,
-                'movable' => true,
-                'rotatable' => true,
-                'scalable' => true,
-                'zoomable' => true,
-                'zoom_on_touch' => true,
-                'zoom_on_wheel' => true,
-                'wheel_zoom_ratio' => 0.2,
-                'crop_box_movable' => true,
-                'crop_box_resizable' => true,
-                'toggle_drag_mode_on_dblclick' => true,
-                'min_container_width' => 1,
-                'min_container_height' => 2,
-                'min_canvas_width' => 3,
-                'min_canvas_height' => 4,
-                'min_crop_box_width' => 5,
-                'min_crop_box_height' => 6,
+                'cropper_options' => [
+                    'viewMode' => 1,
+                    'dragMode' => 'move',
+                ],
             ])
             ->getForm()
         ;
@@ -79,37 +52,7 @@ class CropperTypeTest extends TestCase
                             '<input type="hidden" id="form_photo_options" name="form[photo][options]" '.
                                 'data-controller="mycropper symfony--ux-cropperjs--cropper" '.
                                 'data-symfony--ux-cropperjs--cropper-public-url-value="/public/url.jpg" '.
-                                'data-symfony--ux-cropperjs--cropper-view-mode-value="1" '.
-                                'data-symfony--ux-cropperjs--cropper-drag-mode-value="move" '.
-                                'data-symfony--ux-cropperjs--cropper-aspect-ratio-value="'.(2000 / 1800).'" '.
-                                'data-symfony--ux-cropperjs--cropper-initial-aspect-ratio-value="'.(2000 / 1800).'" '.
-                                'data-symfony--ux-cropperjs--cropper-responsive-value="data-symfony--ux-cropperjs--cropper-responsive-value" '.
-                                'data-symfony--ux-cropperjs--cropper-restore-value="data-symfony--ux-cropperjs--cropper-restore-value" '.
-                                'data-symfony--ux-cropperjs--cropper-check-cross-origin-value="data-symfony--ux-cropperjs--cropper-check-cross-origin-value" '.
-                                'data-symfony--ux-cropperjs--cropper-check-orientation-value="data-symfony--ux-cropperjs--cropper-check-orientation-value" '.
-                                'data-symfony--ux-cropperjs--cropper-modal-value="data-symfony--ux-cropperjs--cropper-modal-value" '.
-                                'data-symfony--ux-cropperjs--cropper-guides-value="data-symfony--ux-cropperjs--cropper-guides-value" '.
-                                'data-symfony--ux-cropperjs--cropper-center-value="data-symfony--ux-cropperjs--cropper-center-value" '.
-                                'data-symfony--ux-cropperjs--cropper-highlight-value="data-symfony--ux-cropperjs--cropper-highlight-value" '.
-                                'data-symfony--ux-cropperjs--cropper-background-value="data-symfony--ux-cropperjs--cropper-background-value" '.
-                                'data-symfony--ux-cropperjs--cropper-auto-crop-value="data-symfony--ux-cropperjs--cropper-auto-crop-value" '.
-                                'data-symfony--ux-cropperjs--cropper-auto-crop-area-value="0.1" '.
-                                'data-symfony--ux-cropperjs--cropper-movable-value="data-symfony--ux-cropperjs--cropper-movable-value" '.
-                                'data-symfony--ux-cropperjs--cropper-rotatable-value="data-symfony--ux-cropperjs--cropper-rotatable-value" '.
-                                'data-symfony--ux-cropperjs--cropper-scalable-value="data-symfony--ux-cropperjs--cropper-scalable-value" '.
-                                'data-symfony--ux-cropperjs--cropper-zoomable-value="data-symfony--ux-cropperjs--cropper-zoomable-value" '.
-                                'data-symfony--ux-cropperjs--cropper-zoom-on-touch-value="data-symfony--ux-cropperjs--cropper-zoom-on-touch-value" '.
-                                'data-symfony--ux-cropperjs--cropper-zoom-on-wheel-value="data-symfony--ux-cropperjs--cropper-zoom-on-wheel-value" '.
-                                'data-symfony--ux-cropperjs--cropper-wheel-zoom-ratio-value="0.2" '.
-                                'data-symfony--ux-cropperjs--cropper-crop-box-movable-value="data-symfony--ux-cropperjs--cropper-crop-box-movable-value" '.
-                                'data-symfony--ux-cropperjs--cropper-crop-box-resizable-value="-symfony--ux-cropperjs--cropper-crop-box-resizable-value" '.
-                                'data-symfony--ux-cropperjs--cropper-toggle-drag-mode-on-dblclick-value="data-symfony--ux-cropperjs--cropper-toggle-drag-mode-on-dblclick-value" '.
-                                'data-symfony--ux-cropperjs--cropper-min-container-width-value="1" '.
-                                'data-symfony--ux-cropperjs--cropper-min-container-height-value="2" '.
-                                'data-symfony--ux-cropperjs--cropper-min-canvas-width-value="3" '.
-                                'data-symfony--ux-cropperjs--cropper-min-canvas-height-value="4" '.
-                                'data-symfony--ux-cropperjs--cropper-min-crop-box-width-value="5" '.
-                                'data-symfony--ux-cropperjs--cropper-min-crop-box-height-value="6" />'.
+                                'data-symfony--ux-cropperjs--cropper-options-value="{&quot;viewMode&quot;:1,&quot;dragMode&quot;:&quot;move&quot;}" />'.
                         '</div>'.
                     '</div>'.
                 '</div>'.
@@ -143,32 +86,7 @@ class CropperTypeTest extends TestCase
                             '<input type="hidden" id="form_photo_options" name="form[photo][options]" '.
                                 'data-controller="mycropper symfony--ux-cropperjs--cropper" '.
                                 'data-symfony--ux-cropperjs--cropper-public-url-value="/public/url.jpg" '.
-                                'data-symfony--ux-cropperjs--cropper-view-mode-value="0" '.
-                                'data-symfony--ux-cropperjs--cropper-drag-mode-value="crop"   '.
-                                'data-symfony--ux-cropperjs--cropper-responsive-value="data-symfony--ux-cropperjs--cropper-responsive-value" '.
-                                'data-symfony--ux-cropperjs--cropper-restore-value="data-symfony--ux-cropperjs--cropper-restore-value" '.
-                                'data-symfony--ux-cropperjs--cropper-check-cross-origin-value="data-symfony--ux-cropperjs--cropper-check-cross-origin-value" '.
-                                'data-symfony--ux-cropperjs--cropper-check-orientation-value="data-symfony--ux-cropperjs--cropper-check-orientation-value" '.
-                                'data-symfony--ux-cropperjs--cropper-modal-value="data-symfony--ux-cropperjs--cropper-modal-value" '.
-                                'data-symfony--ux-cropperjs--cropper-guides-value="data-symfony--ux-cropperjs--cropper-guides-value" '.
-                                'data-symfony--ux-cropperjs--cropper-center-value="data-symfony--ux-cropperjs--cropper-center-value" '.
-                                'data-symfony--ux-cropperjs--cropper-highlight-value="data-symfony--ux-cropperjs--cropper-highlight-value" '.
-                                'data-symfony--ux-cropperjs--cropper-background-value="data-symfony--ux-cropperjs--cropper-background-value" '.
-                                'data-symfony--ux-cropperjs--cropper-auto-crop-value="data-symfony--ux-cropperjs--cropper-auto-crop-value" '.
-                                'data-symfony--ux-cropperjs--cropper-auto-crop-area-value="0.8"  '.
-                                'data-symfony--ux-cropperjs--cropper-rotatable-value="data-symfony--ux-cropperjs--cropper-rotatable-value"   '.
-                                'data-symfony--ux-cropperjs--cropper-zoom-on-touch-value="data-symfony--ux-cropperjs--cropper-zoom-on-touch-value" '.
-                                'data-symfony--ux-cropperjs--cropper-zoom-on-wheel-value="data-symfony--ux-cropperjs--cropper-zoom-on-wheel-value" '.
-                                'data-symfony--ux-cropperjs--cropper-wheel-zoom-ratio-value="0.1" '.
-                                'data-symfony--ux-cropperjs--cropper-crop-box-movable-value="data-symfony--ux-cropperjs--cropper-crop-box-movable-value" '.
-                                'data-symfony--ux-cropperjs--cropper-crop-box-resizable-value="-symfony--ux-cropperjs--cropper-crop-box-resizable-value" '.
-                                'data-symfony--ux-cropperjs--cropper-toggle-drag-mode-on-dblclick-value="data-symfony--ux-cropperjs--cropper-toggle-drag-mode-on-dblclick-value" '.
-                                'data-symfony--ux-cropperjs--cropper-min-container-width-value="200" '.
-                                'data-symfony--ux-cropperjs--cropper-min-container-height-value="100" '.
-                                'data-symfony--ux-cropperjs--cropper-min-canvas-width-value="0" '.
-                                'data-symfony--ux-cropperjs--cropper-min-canvas-height-value="0" '.
-                                'data-symfony--ux-cropperjs--cropper-min-crop-box-width-value="0" '.
-                                'data-symfony--ux-cropperjs--cropper-min-crop-box-height-value="0" />'.
+                                'data-symfony--ux-cropperjs--cropper-options-value="[]" />'.
                         '</div>'.
                     '</div>'.
                 '</div>'.
