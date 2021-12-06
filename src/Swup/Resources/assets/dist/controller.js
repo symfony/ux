@@ -5,29 +5,31 @@ import SwupFormsPlugin from '@swup/forms-plugin';
 import SwupFadeTheme from '@swup/fade-theme';
 import SwupSlideTheme from '@swup/slide-theme';
 
-class controller extends Controller {
+class default_1 extends Controller {
     connect() {
         const options = {
             containers: ['#swup'],
-            cache: this.element.hasAttribute('data-cache'),
-            animateHistoryBrowsing: this.element.hasAttribute('data-animate-history-browsing'),
-            plugins: [
-                'slide' === this.element.getAttribute('data-theme') ? new SwupSlideTheme() : new SwupFadeTheme(),
-                new SwupFormsPlugin(),
-            ],
+            plugins: ['slide' === this.themeValue ? new SwupSlideTheme() : new SwupFadeTheme(), new SwupFormsPlugin()],
         };
-        if (this.element.getAttribute('data-containers')) {
-            options.containers = this.element.getAttribute('data-containers').split(' ');
+        if (this.hasAnimateHistoryBrowsingValue) {
+            options.animateHistoryBrowsing = this.animateHistoryBrowsingValue;
         }
-        if (this.element.getAttribute('data-link-selector')) {
-            options.linkSelector = this.element.getAttribute('data-link-selector');
+        if (this.hasAnimationSelectorValue) {
+            options.animationSelector = this.animationSelectorValue;
         }
-        if (this.element.getAttribute('data-animation-selector')) {
-            options.animationSelector = this.element.getAttribute('data-animation-selector');
+        if (this.hasCacheValue) {
+            options.cache = this.cacheValue;
         }
-        if (this.element.hasAttribute('data-debug')) {
+        if (this.hasContainersValue) {
+            options.containers = this.containersValue;
+        }
+        if (this.hasLinkSelectorValue) {
+            options.linkSelector = this.linkSelectorValue;
+        }
+        if (this.debugValue) {
             options.plugins.push(new SwupDebugPlugin());
         }
+        this._dispatchEvent('swup:pre-connect', { options });
         const swup = new Swup(options);
         this._dispatchEvent('swup:connect', { swup, options });
     }
@@ -37,5 +39,14 @@ class controller extends Controller {
         this.element.dispatchEvent(userEvent);
     }
 }
+default_1.values = {
+    animateHistoryBrowsing: Boolean,
+    animationSelector: String,
+    cache: Boolean,
+    containers: Array,
+    linkSelector: String,
+    theme: String,
+    debug: Boolean,
+};
 
-export { controller as default };
+export { default_1 as default };
