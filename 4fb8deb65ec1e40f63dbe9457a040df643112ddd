@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by tgalopin at 2021-12-02T22:02:58Z
+
+There seems to be a missing browser feature required by Chartjs 3 (ResizeObserver), perhaps would it be necessary to add a new polyfill.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-12-03T01:55:35Z
+
+> There seems to be a missing browser feature required by Chartjs 3 (ResizeObserver), perhaps would it be necessary to add a new polyfill.
+
+You're right - it WAS missing in the test environment. I polyfilled it there. But I don't think we need to polyfill it for the users, if that's what you meant (let me know if that IS what you were thinking and let's chat).
+
+I have just one more tweak on this one - it's in the "externals" of the built file (if you build the file right now, the dist file will "contain" chartjs instead of just having the `import line`). I know the fix - I just need to make a nice addition to the build system for it.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-12-03T14:26:52Z
+
+This is now ready!
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2021-12-04T10:50:22Z
+
+Could you squash your commits? I can't do it automatically due to two authors :)
+
+---------------------------------------------------------------------------
+
+by Huluti at 2021-12-05T14:04:21Z
+
+ChartJS is now at v3.6.2. Is it something to change in this PR since it's based on v3.4.1?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-12-06T01:07:33Z
+
+The 3.4.1 only means that it's the minimum version. In reality, if you installed this, you would have `^3.4.1` in your package.json, but yarn/npm would install the latest version 3 (so 3.6.2). It's really not a big deal one way or another, but I'd say just keep it.
+
+I've got it rebased to only 2 commits - that's how (I think) we should keep it.
