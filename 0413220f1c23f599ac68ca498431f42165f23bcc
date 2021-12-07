@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-12-06T03:33:46Z
+
+I've just rebased this and converted all the cropper.js options to just a single "options" value. @tgalopin if you have a project handy to test this IRL, that'd be awesome. But everything seems to be hooked up and ready.
