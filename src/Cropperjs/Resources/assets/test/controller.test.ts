@@ -14,11 +14,14 @@ import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import CropperjsController from '../src/controller';
 
+let cropper: Cropper|null = null;
+
 // Controller used to check the actual controller was properly booted
 class CheckController extends Controller {
     connect() {
-        this.element.addEventListener('cropperjs:connect', () => {
+        this.element.addEventListener('cropperjs:connect', (event: any) => {
             this.element.classList.add('connected');
+            cropper = event.detail.cropper;
         });
     }
 }
@@ -29,8 +32,16 @@ const startStimulus = () => {
     application.register('cropperjs', CropperjsController);
 };
 
+const dataToJsonAttribute = (data: any) => {
+    const container = document.createElement('div');
+    container.dataset.foo = JSON.stringify(data);
+
+    // returns the now-escaped string, ready to be used in an HTML attribute
+    return container.outerHTML.match(/data-foo="(.+)"/)[1]
+}
+
 describe('CropperjsController', () => {
-    let container;
+    let container: any;
 
     beforeEach(() => {
         container = mountDOM(`
@@ -38,44 +49,19 @@ describe('CropperjsController', () => {
                 <input type="hidden" id="form_photo_options" name="form[photo][options]" 
                     data-testid="input"
                     data-controller="check cropperjs"
-                    data-public-url="https://symfony.com/logos/symfony_black_02.png" 
-                    data-view-mode="1"
-                    data-drag-mode="move"
-                    data-aspect-ratio="1"
-                    data-initial-aspect-ratio="2" 
-                    data-responsive="data-responsive" 
-                    data-restore="data-restore"
-                    data-check-cross-origin="data-check-cross-origin" 
-                    data-check-orientation="data-check-orientation"
-                    data-modal="data-modal" 
-                    data-guides="data-guides"
-                    data-center="data-center"
-                    data-highlight="data-highlight" 
-                    data-background="data-background" 
-                    data-auto-crop="data-auto-crop"
-                    data-auto-crop-area="0.1" 
-                    data-movable="data-movable"
-                    data-rotatable="data-rotatable" 
-                    data-scalable="data-scalable"
-                    data-zoomable="data-zoomable" 
-                    data-zoom-on-touch="data-zoom-on-touch" 
-                    data-zoom-on-wheel="data-zoom-on-wheel" 
-                    data-wheel-zoom-ratio="0.2" 
-                    data-crop-box-movable="data-crop-box-movable"
-                    data-crop-box-resizable="data-crop-box-resizable"
-                    data-toggle-drag-mode-on-dblclick="data-toggle-drag-mode-on-dblclick"
-                    data-min-container-width="1"
-                    data-min-container-height="2" 
-                    data-min-canvas-width="3" 
-                    data-min-canvas-height="4"
-                    data-min-crop-box-width="5" 
-                    data-min-crop-box-height="6" />
+                    data-cropperjs-public-url-value="https://symfony.com/logos/symfony_black_02.png"
+                    data-cropperjs-options-value="${dataToJsonAttribute({
+                        viewMode: 1,
+                        dragMode: "move"
+                    })}"
+                >
             </div>
         `);
     });
 
     afterEach(() => {
         clearDOM();
+        cropper = null;
     });
 
     it('connect', async () => {
@@ -83,5 +69,7 @@ describe('CropperjsController', () => {
 
         startStimulus();
         await waitFor(() => expect(getByTestId(container, 'input')).toHaveClass('connected'));
+        expect(cropper.options.viewMode).toBe(1);
+        expect(cropper.options.dragMode).toBe('move');
     });
 });
