@@ -14,9 +14,15 @@ import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import SwupController from '../src/controller';
 
+let actualSwupOptions: any = null;
+
 // Controller used to check the actual controller was properly booted
 class CheckController extends Controller {
     connect() {
+        this.element.addEventListener('swup:pre-connect', (event) => {
+            actualSwupOptions = event.detail.options;
+        });
+
         this.element.addEventListener('swup:connect', () => {
             this.element.classList.add('connected');
         });
@@ -42,12 +48,12 @@ describe('SwupController', () => {
                     <div 
                         data-testid="body"
                         data-controller="check swup"
-                        data-containers="#swup #nav"
-                        data-link-selector="a"
-                        data-animation-selector="[transition-*]"
-                        data-debug="data-debug"
-                        data-cache="data-cache"
-                        data-animate-history-browsing="data-animate-history-browsing">
+                        data-swup-containers-value="[&quot;#swup&quot;, &quot;#nav&quot;]"
+                        data-swup-link-selector-value="a"
+                        data-swup-animation-selector-value="[transition-*]"
+                        data-swup-debug-value="data-debug"
+                        data-swup-cache-value="data-cache"
+                        data-swup-animate-history-browsing-value="data-animate-history-browsing">
                         <div id="nav"></div>
                         <div id="swup">
                             <a href="/">Link</a>
@@ -60,12 +66,19 @@ describe('SwupController', () => {
 
     afterEach(() => {
         clearDOM();
+        actualSwupOptions = null;
     });
 
     it('connect', async () => {
-        expect(getByTestId(container, 'body')).not.toHaveClass('connected');
+        const bodyElement = getByTestId(container, 'body');
+        expect(bodyElement).not.toHaveClass('connected');
 
         startStimulus();
-        await waitFor(() => expect(getByTestId(container, 'body')).toHaveClass('connected'));
+        await waitFor(() => expect(bodyElement).toHaveClass('connected'));
+        expect(actualSwupOptions.containers).toEqual(['#swup', '#nav']);
+        expect(actualSwupOptions.linkSelector).toBe('a');
+        expect(actualSwupOptions.animationSelector).toBe('[transition-*]');
+        expect(actualSwupOptions.cache).toBe(true);
+        expect(actualSwupOptions.animateHistoryBrowsing).toBe(true);
     });
 });

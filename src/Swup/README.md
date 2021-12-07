@@ -72,8 +72,9 @@ additional containers, for instance to have a navigation menu that updates when 
         {% endblock %}
     </head>
     <body
-        {{ stimulus_controller('symfony/ux-swup/swup') }}
-        data-containers="#swup #nav" {# list of selectors separated by spaces #}
+        {{ stimulus_controller('symfony/ux-swup/swup', {
+            containers: ['#swup', '#nav']
+        }) }}
     >
         {# ... #}
 
@@ -88,7 +89,9 @@ additional containers, for instance to have a navigation menu that updates when 
 </html>
 ```
 
-You can configure several other options using data-attributes on the `body` tag:
+You can configure several other options using values on the controller.
+Most of these correspond to [Swup Options](https://swup.js.org/options),
+but there are a few extra added:
 
 ```twig
 <html lang="en">
@@ -96,17 +99,26 @@ You can configure several other options using data-attributes on the `body` tag:
         <title>Swup</title>
     </head>
     <body
-        {{ stimulus_controller('symfony/ux-swup/swup') }}
-        data-containers="#swup #nav"
-        data-theme="slide" {# or "fade", the default #}
-        data-debug="data-debug" {# add this attribute to enable debug #}
-        data-cache="data-cache" {# add this attribute to enable local cache: be careful, it only makes sense for mostly static websites #}
-        data-animate-history-browsing="data-animate-history-browsing" {# add this attribute to animate history browsing #}
+        {{ stimulus_controller('symfony/ux-swup/swup', {
+            containers: ['#swup', '#nav'],
+            animateHistoryBrowsing: true
+            animationSelector: '[class*="transition-"]',
+            cache: true,
+            linkSelector: '...',
+
+            theme: 'slide',
+            debug: true,
+        }) }}
     >
         {# ... #}
     </body>
 </html>
 ```
+
+The extra options are:
+
+-   `theme`: either `slide` or `fade` (the default);
+-   `debug`: add this attribute to enable debug.
 
 ### Extend the default behavior
 
@@ -119,12 +131,19 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     connect() {
+        this.element.addEventListener('swup:pre-connect', this._onPreConnect);
         this.element.addEventListener('swup:connect', this._onConnect);
     }
 
     disconnect() {
         // You should always remove listeners when the controller is disconnected to avoid side-effects
-        this.element.removeEventListener('swup:connect', this._onConnect);
+        this.element.removeEventListener('swup:pre-connect', this._onConnect);
+        this.element.removeEventListener('swup:connect', this._onPreConnect);
+    }
+
+    _onPreConnect(event) {
+        // Swup has not been initialized - options can be changed
+        console.log(event.detail.options); // Options that will be used to initialize Swup
     }
 
     _onConnect(event) {
