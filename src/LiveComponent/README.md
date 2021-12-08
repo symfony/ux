@@ -117,7 +117,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent('random_number')]
 class RandomNumberComponent
 {
-    public function getRandomNumber(): string
+    public function getRandomNumber(): int
     {
         return rand(0, 1000);
     }
@@ -202,7 +202,7 @@ class RandomNumberComponent
     #[LiveProp]
     public int $max = 1000;
 
-    public function getRandomNumber(): string
+    public function getRandomNumber(): int
     {
         return rand($this->min, $this->max);
     }
