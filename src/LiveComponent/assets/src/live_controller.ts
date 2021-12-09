@@ -629,13 +629,11 @@ export default class extends Controller {
     }
 
     _dispatchEvent(name: string, payload: object | null = null, canBubble = true, cancelable = false) {
-        const userEvent = new CustomEvent(name, {
+        return this.element.dispatchEvent(new CustomEvent(name, {
             bubbles: canBubble,
             cancelable,
             detail: payload,
-        });
-
-        return this.element.dispatchEvent(userEvent);
+        }));
     }
 
     _handleChildComponentUpdateModel(event: any) {

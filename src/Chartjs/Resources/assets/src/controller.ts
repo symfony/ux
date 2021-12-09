@@ -38,10 +38,7 @@ export default class extends Controller {
         this._dispatchEvent('chartjs:connect', { chart });
     }
 
-    _dispatchEvent(name: string, payload: any = null, canBubble = false, cancelable = false) {
-        const userEvent = document.createEvent('CustomEvent');
-        userEvent.initCustomEvent(name, canBubble, cancelable, payload);
-
-        this.element.dispatchEvent(userEvent);
+    _dispatchEvent(name: string, payload: any) {
+        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
     }
 }

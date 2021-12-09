@@ -33,10 +33,8 @@ class default_1 extends Controller {
         const swup = new Swup(options);
         this._dispatchEvent('swup:connect', { swup, options });
     }
-    _dispatchEvent(name, payload = null, canBubble = false, cancelable = false) {
-        const userEvent = document.createEvent('CustomEvent');
-        userEvent.initCustomEvent(name, canBubble, cancelable, payload);
-        this.element.dispatchEvent(userEvent);
+    _dispatchEvent(name, payload) {
+        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
     }
 }
 default_1.values = {

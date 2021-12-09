@@ -1407,12 +1407,11 @@ class default_1 extends Controller {
         this.pollingIntervals.push(timer);
     }
     _dispatchEvent(name, payload = null, canBubble = true, cancelable = false) {
-        const userEvent = new CustomEvent(name, {
+        return this.element.dispatchEvent(new CustomEvent(name, {
             bubbles: canBubble,
             cancelable,
             detail: payload,
-        });
-        return this.element.dispatchEvent(userEvent);
+        }));
     }
     _handleChildComponentUpdateModel(event) {
         const mainModelName = event.detail.modelName;
