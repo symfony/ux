@@ -52,8 +52,9 @@ class HomeController extends AbstractController
 
         $chart->setOptions([
             'scales' => [
-                'yAxes' => [
-                    ['ticks' => ['min' => 0, 'max' => 100]],
+                'y' => [
+                   'suggestedMin' => 0,
+                   'suggestedMax' => 100,
                 ],
             ],
         ]);
