@@ -18,7 +18,7 @@
         "@babel/preset-typescript": "^7.15.0",
         "@rollup/plugin-node-resolve": "^13.0.0",
         "@rollup/plugin-typescript": "^8.3.0",
-        "@symfony/stimulus-testing": "^1.1.0",
+        "@symfony/stimulus-testing": "^2.0.1",
         "@typescript-eslint/eslint-plugin": "^5.2.0",
         "@typescript-eslint/parser": "^5.2.0",
         "babel-jest": "^27.3.1",
