@@ -29,7 +29,7 @@
         "php": ">=7.2.5",
         "symfony/mercure-bundle": "^0.3",
         "symfony/twig-bundle": "^5.2|^6.0",
-        "symfony/ux-turbo": "^1.3"
+        "symfony/ux-turbo": "^2.0"
     },
     "extra": {
         "thanks": {
