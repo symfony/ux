@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2021-12-10T15:12:47Z
+
+I think should only allow 2.0. Otherwise you will have one lib trying to use stimulus and another using @hotwired/stimulus is you have a mix of 1.0 and 2.0
+
+@kbond this is the issue you were talking about (we saw this also with twig/live components) - our test suite needs to be enhanced to catch these :)
