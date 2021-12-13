@@ -370,6 +370,27 @@ code works identically to the previous example:
 If an element has _both_ `data-model` and `name` attributes, the
 `data-model` attribute takes precedence.
 
+### Using data-value="" for non input elements
+
+If you want to set the value of a model with an element that is not an input element and does not have a `value` attribute you can use `data-value`
+
+```twig
+<div {{ init_live_component(this)>
+
+    <a
+        data-action="live#update"
+        data-model="min"
+        data-value="10">
+        Set min to 10
+    </a>
+
+    // ...
+</div>
+```
+
+If an element has _both_ `data-value` and `value` attributes, the
+`data-value` attribute takes precedence.
+
 ## Loading States
 
 Often, you'll want to show (or hide) an element while a component is
