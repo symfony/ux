@@ -73,10 +73,10 @@ composer require symfony/ux-live-component
 
 This comes with an embedded JavaScript Stimulus controller. Unlike
 other Symfony UX packages, this needs to be enabled manually
-in your `config/bootstrap.js` file:
+in your `assets/bootstrap.js` file:
 
 ```js
-// config/bootstrap.js
+// assets/bootstrap.js
 import LiveController from '@symfony/ux-live-component';
 import '@symfony/ux-live-component/styles/live.css';
 // ...
