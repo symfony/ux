@@ -12,6 +12,8 @@ or any other transports to broadcast DOM changes to all currently connected user
 You're in a hurry? Take a look at [the chat example](#sending-async-changes-using-mercure-a-chat)
 to discover the full potential of Symfony UX Turbo.
 
+Or watch the [Turbo Screencast on SymfonyCasts](https://symfonycasts.com/screencast/turbo).
+
 ## Installation
 
 Symfony UX Turbo requires PHP 7.2+ and Symfony 5.2+.
