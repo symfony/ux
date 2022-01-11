@@ -28,6 +28,11 @@ final class AddTurboStreamFormatSubscriber implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event): void
     {
         $request = $event->getRequest();
+
+        if (!$request->attributes->get('turbo', false)) {
+            return;
+        }
+
         if (!($accept = $request->headers->get('Accept')) || 0 !== strpos($accept, TurboStreamResponse::STREAM_MEDIA_TYPE)) {
             return;
         }
