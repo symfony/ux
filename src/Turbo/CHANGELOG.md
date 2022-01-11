@@ -1,5 +1,29 @@
 # CHANGELOG
 
+## 2.1
+
+-   `TurboStreamResponse` and `AddTurboStreamFormatSubscriber` have been removed, use native content negotiation instead:
+
+    ```php
+    use Symfony\UX\Turbo\TurboBundle;
+
+    class TaskController extends AbstractController
+    {
+        public function new(Request $request): Response
+        {
+            // ...
+            if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+                $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+                $response = $this->render('task/success.stream.html.twig', ['task' => $task]);
+            } else {
+                $response = $this->render('task/success.html.twig', ['task' => $task]);
+            }
+
+            return $response->setVary('Accept');
+        }
+    }
+    ```
+
 ## 2.0
 
 -   Support for `stimulus` version 2 was removed and support for `@hotwired/stimulus`

@@ -16,7 +16,6 @@ use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 use Symfony\UX\Turbo\Broadcaster\ImuxBroadcaster;
 use Symfony\UX\Turbo\Broadcaster\TwigBroadcaster;
 use Symfony\UX\Turbo\Doctrine\BroadcastListener;
-use Symfony\UX\Turbo\Stream\AddTurboStreamFormatSubscriber;
 use Symfony\UX\Turbo\Twig\TwigExtension;
 
 /*
@@ -24,9 +23,6 @@ use Symfony\UX\Turbo\Twig\TwigExtension;
  */
 return static function (ContainerConfigurator $container): void {
     $container->services()
-
-        ->set('turbo.kernel.event_subscriber', AddTurboStreamFormatSubscriber::class)
-            ->tag('kernel.event_subscriber')
 
         ->set('turbo.broadcaster.imux', ImuxBroadcaster::class)
             ->args([tagged_iterator('turbo.broadcaster')])

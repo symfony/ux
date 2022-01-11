@@ -295,7 +295,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\UX\Turbo\Stream\TurboStreamResponse;
+use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Task;
 
 class TaskController extends AbstractController
@@ -311,9 +311,10 @@ class TaskController extends AbstractController
             // ... perform some action, such as saving the task to the database
 
             // 🔥 The magic happens here! 🔥
-            if (TurboStreamResponse::STREAM_FORMAT === $request->getPreferredFormat()) {
-                // If the request comes from Turbo, only send the HTML to update using a TurboStreamResponse
-                return $this->render('task/success.stream.html.twig', ['task' => $task], new TurboStreamResponse());
+            if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+                // If the request comes from Turbo, set the content type as text/vnd.turbo-stream.html and only send the HTML to update
+                $request->setFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('task/success.stream.html.twig', ['task' => $task]);
             }
 
             // If the client doesn't support JavaScript, or isn't using Turbo, the form still works as usual.
