@@ -292,6 +292,7 @@ Let's discover how to use Turbo Streams to enhance your [Symfony forms](https://
 namespace App\Controller;
 
 // ...
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -300,6 +301,10 @@ use App\Entity\Task;
 
 class TaskController extends AbstractController
 {
+    // The same URL will return a response with a different Content-Type HTTP header
+    // depending on the Accept request header.
+    // To prevent cache pollution issues, we must set the Vary response header.
+    #[Cache(vary: ['Accept'])]
     public function new(Request $request): Response
     {
         $form = $this->createForm(TaskType::class, new Task());
