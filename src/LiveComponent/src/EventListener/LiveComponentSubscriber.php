@@ -28,6 +28,7 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
@@ -137,11 +138,21 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         $this->container->get(LiveComponentHydrator::class)->hydrate($component, $data);
 
+        $request->attributes->set('_component', $component);
+
+        if (!\is_string($queryString = $request->query->get('args'))) {
+            return;
+        }
+
         // extra variables to be made available to the controller
         // (for "actions" only)
-        parse_str($request->query->get('values'), $values);
-        $request->attributes->add($values);
-        $request->attributes->set('_component', $component);
+        parse_str($queryString, $args);
+
+        foreach (LiveArg::liveArgs($component, $action) as $parameter => $arg) {
+            if (isset($args[$arg])) {
+                $request->attributes->set($parameter, $args[$arg]);
+            }
+        }
     }
 
     public function onKernelView(ViewEvent $event): void
