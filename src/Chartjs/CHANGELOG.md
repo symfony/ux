@@ -6,6 +6,7 @@
     version 3 was added. See the [@symfony/stimulus-bridge CHANGELOG](https://github.com/symfony/stimulus-bridge/blob/main/CHANGELOG.md#300)
     for more details.
 -   Support added for Symfony 6
+-   Upgrade Chart.js to version 3
 
 ## 1.3
 
