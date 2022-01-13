@@ -32,12 +32,11 @@ use Symfony\UX\Chartjs\Model\Chart;
 
 class HomeController extends AbstractController
 {
-    /**
-     * #[Route('/', name: 'app_homepage')]
-     */
+    #[Route('/', name: 'app_homepage')]
     public function index(ChartBuilderInterface $chartBuilder): Response
     {
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
+
         $chart->setData([
             'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             'datasets' => [
