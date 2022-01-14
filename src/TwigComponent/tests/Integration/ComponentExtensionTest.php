@@ -37,6 +37,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('propA: prop a value 2', $output);
         $this->assertStringContainsString('propB: prop b value 2', $output);
         $this->assertStringContainsString('b value: pre-mount b value 1', $output);
+        $this->assertStringContainsString('post value: value', $output);
         $this->assertStringContainsString('service: service a value', $output);
     }
 
@@ -52,5 +53,15 @@ final class ComponentExtensionTest extends KernelTestCase
         $output = self::getContainer()->get(Environment::class)->render('template_c.html.twig');
 
         $this->assertStringContainsString('Custom template 2', $output);
+    }
+
+    public function testCanRenderComponentWithAttributes(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('template_a.html.twig');
+
+        $this->assertStringContainsString('Component Content (prop value 1)', $output);
+        $this->assertStringContainsString('<button class="foo bar" type="button" style="color:red;">', $output);
+        $this->assertStringContainsString('Component Content (prop value 2)', $output);
+        $this->assertStringContainsString('<button class="foo baz" type="submit" style="color:red;">', $output);
     }
 }

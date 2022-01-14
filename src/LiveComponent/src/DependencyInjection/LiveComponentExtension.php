@@ -21,6 +21,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentValidator;
 use Symfony\UX\LiveComponent\ComponentValidatorInterface;
+use Symfony\UX\LiveComponent\EventListener\AddLiveAttributesSubscriber;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\PropertyHydratorInterface;
@@ -46,6 +47,7 @@ final class LiveComponentExtension extends Extension
                         'key' => $attribute->name,
                         'template' => $attribute->template,
                         'default_action' => $attribute->defaultAction,
+                        'live' => true,
                     ]))
                     ->addTag('controller.service_arguments')
                 ;
@@ -78,6 +80,7 @@ final class LiveComponentExtension extends Extension
 
         $container->register('ux.live_component.twig.component_runtime', LiveComponentRuntime::class)
             ->setArguments([
+                new Reference('twig'),
                 new Reference('ux.live_component.component_hydrator'),
                 new Reference('ux.twig_component.component_factory'),
                 new Reference(UrlGeneratorInterface::class),
@@ -88,6 +91,11 @@ final class LiveComponentExtension extends Extension
 
         $container->register(ComponentValidator::class)
             ->addTag('container.service_subscriber', ['key' => 'validator', 'id' => 'validator'])
+        ;
+
+        $container->register('ux.live_component.add_attributes_subscriber', AddLiveAttributesSubscriber::class)
+            ->addTag('kernel.event_subscriber')
+            ->addTag('container.service_subscriber', ['key' => LiveComponentRuntime::class, 'id' => 'ux.live_component.twig.component_runtime'])
         ;
 
         $container->setAlias(ComponentValidatorInterface::class, ComponentValidator::class);

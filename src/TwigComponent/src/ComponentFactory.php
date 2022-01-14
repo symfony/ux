@@ -35,44 +35,13 @@ final class ComponentFactory
         $this->config = $config;
     }
 
-    /**
-     * @param string|object $component Component name as string or component object
-     */
-    public function configFor($component, string $name = null): array
+    public function metadataFor(string $name): ComponentMetadata
     {
-        if (\is_object($component)) {
-            $component = \get_class($component);
-        }
-
-        if (!$name && class_exists($component)) {
-            $configs = [];
-
-            foreach ($this->config as $config) {
-                if ($component === $config['class']) {
-                    $configs[] = $config;
-                }
-            }
-
-            if (0 === \count($configs)) {
-                throw new \InvalidArgumentException(sprintf('Unknown component class "%s". The registered components are: %s', $component, implode(', ', array_keys($this->config))));
-            }
-
-            if (\count($configs) > 1) {
-                throw new \InvalidArgumentException(sprintf('%d "%s" components registered with names "%s". Use the $name parameter to explicitly choose one.', \count($configs), $component, implode(', ', array_column($configs, 'name'))));
-            }
-
-            $name = $configs[0]['name'];
-        }
-
-        if (!$name) {
-            $name = $component;
-        }
-
-        if (!\array_key_exists($name, $this->config)) {
+        if (!$config = $this->config[$name] ?? null) {
             throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->config))));
         }
 
-        return $this->config[$name];
+        return new ComponentMetadata($config);
     }
 
     /**
@@ -87,11 +56,17 @@ final class ComponentFactory
 
         // set data that wasn't set in mount on the component directly
         foreach ($data as $property => $value) {
-            if (!$this->propertyAccessor->isWritable($component, $property)) {
-                throw new \LogicException(sprintf('Unable to write "%s" to component "%s". Make sure this is a writable property or create a mount() with a $%s argument.', $property, \get_class($component), $property));
-            }
+            if ($this->propertyAccessor->isWritable($component, $property)) {
+                $this->propertyAccessor->setValue($component, $property, $value);
 
-            $this->propertyAccessor->setValue($component, $property, $value);
+                unset($data[$property]);
+            }
+        }
+
+        $data = $this->postMount($component, $data);
+
+        foreach ($data as $property => $value) {
+            throw new \LogicException(sprintf('Unable to write "%s" to component "%s". Make sure this is a writable property or create a mount() with a $%s argument.', $property, \get_class($component), $property));
         }
 
         return $component;
@@ -146,6 +121,15 @@ final class ComponentFactory
     private function preMount(object $component, array $data): array
     {
         foreach (AsTwigComponent::preMountMethods($component) as $method) {
+            $data = $component->{$method->name}($data);
+        }
+
+        return $data;
+    }
+
+    private function postMount(object $component, array $data): array
+    {
+        foreach (AsTwigComponent::postMountMethods($component) as $method) {
             $data = $component->{$method->name}($data);
         }
 

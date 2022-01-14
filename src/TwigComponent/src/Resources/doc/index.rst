@@ -258,6 +258,43 @@ component use a ``PreMount`` hook::
     the order in which they're called, use the ``priority`` attribute parameter:
     ``PreMount(priority: 10)`` (higher called earlier).
 
+PostMount Hook
+~~~~~~~~~~~~~~
+
+.. versionadded:: 2.1
+
+    The ``PostMount`` hook was added in TwigComponents 2.1.
+
+When a component is mounted with the passed data, if an item cannot be
+mounted on the component, an exception is thrown. You can intercept this
+behavior and "catch" this extra data with a ``PostMount`` hook method. This
+method accepts the extra data as an argument and must return an array. If
+the returned array is empty, the exception will be avoided::
+
+    // src/Components/AlertComponent.php
+
+    use Symfony\UX\TwigComponent\Attribute\PostMount;
+    // ...
+
+    #[AsTwigComponent('alert')]
+    class AlertComponent
+    {
+        #[PostMount]
+        public function postMount(array $data): array
+        {
+            // do something with the "extra" data
+
+            return $data;
+        }
+        // ...
+    }
+
+.. note::
+
+    If your component has multiple ``PostMount`` hooks, and you'd like to control
+    the order in which they're called, use the ``priority`` attribute parameter:
+    ``PostMount(priority: 10)`` (higher called earlier).
+
 Fetching Services
 -----------------
 
@@ -370,6 +407,146 @@ you can store its result on a private property:
     +         return $this->products;
           }
       }
+
+Component Attributes
+--------------------
+
+.. versionadded:: 2.1
+
+    The ``HasAttributes`` trait was added in TwigComponents 2.1.
+
+A common need for components is to configure/render attributes for the
+root node. You can enable this feature by having your component use
+the ``HasAttributesTrait``.  Attributes are any data passed to ``component()``
+that cannot be mounted on the component itself. This extra data is added
+to a ``ComponentAttributes`` object that lives as a public property on your
+component (available as ``attributes`` in your component's template).
+
+To use, add the ``HasAttributesTrait`` to your component:
+
+    use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+    use Symfony\UX\TwigComponent\HasAttributesTrait;
+
+    #[AsTwigComponent('my_component')]
+    class MyComponent
+    {
+        use HasAttributesTrait;
+    }
+
+Then render the attributes on the root element:
+
+.. code-block:: twig
+
+    {# templates/components/my_component.html.twig #}
+
+    <div{{ attributes }}>
+      My Component!
+    </div>
+
+When rendering the component, you can pass an array of html attributes to add:
+
+.. code-block:: twig
+
+    {{ component('my_component', { class: 'foo', style: 'color:red' }) }}
+
+    {# renders as: #}
+    <div class="foo" style="color:red">
+      My Component!
+    </div>
+
+Defaults & Merging
+~~~~~~~~~~~~~~~~~~
+
+In your component template, you can set defaults that are merged with
+passed attributes. The passed attributes override the default with
+the exception of *class*. For ``class``, the defaults are prepended:
+
+.. code-block:: twig
+
+    {# templates/components/my_component.html.twig #}
+
+    <button{{ attributes.defaults({ class: 'bar', type: 'button' }) }}>Save</button>
+
+    {# render component #}
+    {{ component('my_component', { style: 'color:red' }) }}
+
+    {# renders as: #}
+    <button class="bar" style="color:red">Save</button>
+
+    {# render component #}
+    {{ component('my_component', { class: 'foo', type: 'submit' }) }}
+
+    {# renders as: #}
+    <button class="bar foo" type="submit">Save</button>
+
+Only
+~~~~
+
+Extract specific attributes and discard the rest:
+
+.. code-block:: twig
+
+    {# templates/components/my_component.html.twig #}
+
+    <div{{ attributes.only('class') }}>
+      My Component!
+    </div>
+
+    {# render component #}
+    {{ component('my_component', { class: 'foo', style: 'color:red' }) }}
+
+    {# renders as: #}
+    <div class="foo">
+      My Component!
+    </div>
+
+Without
+~~~~~~~
+
+Exclude specific attributes:
+
+.. code-block:: twig
+
+    {# templates/components/my_component.html.twig #}
+
+    <div{{ attributes.without('class') }}>
+      My Component!
+    </div>
+
+    {# render component #}
+    {{ component('my_component', { class: 'foo', style: 'color:red' }) }}
+
+    {# renders as: #}
+    <div style="color:red">
+      My Component!
+    </div>
+
+PreRenderEvent
+--------------
+
+.. versionadded:: 2.1
+
+    The ``PreRenderEvent`` was added in TwigComponents 2.1.
+
+Subscribing to the ``PreRenderEvent`` gives the ability to modify
+the twig template and twig variables before components are rendered:
+
+    use Symfony\UX\TwigComponent\EventListener\PreRenderEvent;
+
+    public function preRenderListener(PreRenderEvent $event): void
+    {
+        $event->getComponent(); // the component object
+        $event->getTemplate(); // the twig template name that will be rendered
+        $event->getVariables(); // the variables that will be available in the template
+
+        $event->setTemplate('some_other_template.html.twig'); // change the template used
+
+        // manipulate the variables:
+        $variables = $event->getVariables();
+        $variables['custom'] => 'value';
+
+        $event->setVariables($variables); // {{ custom }} will be available in your template
+    }
 
 Embedded Components
 -------------------

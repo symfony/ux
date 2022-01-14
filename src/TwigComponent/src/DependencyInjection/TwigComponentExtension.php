@@ -55,6 +55,7 @@ final class TwigComponentExtension extends Extension
         $container->register('ux.twig_component.component_renderer', ComponentRenderer::class)
             ->setArguments([
                 new Reference('twig'),
+                new Reference('event_dispatcher'),
             ])
         ;
 

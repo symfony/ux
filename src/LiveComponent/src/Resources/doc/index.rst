@@ -43,10 +43,15 @@ A real-time product search component might look like this::
     The ability to reference local variables in the template (e.g. ``query``) was added in TwigComponents 2.1.
     Previously, all data needed to be referenced through ``this`` (e.g. ``this.query``).
 
+.. versionadded:: 2.1
+
+    The ability to initialize live component with the ``attributes`` twig variable was added in LiveComponents
+    2.1. Previously, the ``init_live_component()`` function was required (this function was removed in 2.1).
+
 .. code-block:: twig
 
     {# templates/components/product_search.html.twig #}
-    <div {{ init_live_component(this) }}>
+    <div {{ attributes }}>
         <input
             type="search"
             name="query"
@@ -159,13 +164,13 @@ re-rendered live on the frontend), replace the component's
       }
 
 Then, in the template, make sure there is *one* HTML element around your
-entire component and use the ``{{ init_live_component() }}`` function to
-initialize the Stimulus controller:
+entire component and use the ``{{ attributes }}`` variable to initialize
+the Stimulus controller:
 
 .. code-block:: diff
 
     - <div>
-    + <div {{ init_live_component(this) }}>
+    + <div {{ attributes }}>
           <strong>{{ this.randomNumber }}</strong>
       </div>
 
@@ -176,7 +181,7 @@ and give the user a new random number:
 
 .. code-block:: twig
 
-    <div {{ init_live_component(this) }}>
+    <div {{ attributes }}>
         <strong>{{ this.randomNumber }}</strong>
 
         <button
@@ -239,6 +244,44 @@ exceptions being properties that hold services (these don't need to be
 stateful because they will be autowired each time before the component
 is rendered) and `properties used for computed properties`_.
 
+Component Attributes
+--------------------
+
+.. versionadded:: 2.1
+
+    The ``HasAttributes`` trait was added in TwigComponents 2.1.
+
+`Component attributes`_ allows you to render your components with extra
+props that are are converted to html attributes and made available in
+your component's template as an ``attributes`` variable. When used on
+live components, these props are persisted between renders. You can enable
+this feature by having your live component use the ``HasAttributesTrait``:
+
+.. code-block:: diff
+
+      // ...
+      use Symfony\UX\LiveComponent\Attribute\LiveProp;
+    + use Symfony\UX\TwigComponent\HasAttributesTrait;
+
+      #[AsLiveComponent('random_number')]
+      class RandomNumberComponent
+      {
+    +     use HasAttributesTrait;
+
+          #[LiveProp]
+          public int $min = 0;
+
+Now, when rendering your component, you can pass html attributes
+as props and these will be added to ``attributes``:
+
+.. code-block:: twig
+
+    {{ component('random_number', { min: 5, max: 500, class: 'widget', style: 'color: black;' }) }}
+
+    {# renders as: #}
+    <div class="widget" style="color: black;" <!-- other live attributes -->>
+        <!-- ... -->
+
 data-action=“live#update”: Re-rendering on LiveProp Change
 ----------------------------------------------------------
 
@@ -251,7 +294,7 @@ Let's add two inputs to our template:
 .. code-block:: twig
 
     {# templates/components/random_number.html.twig #}
-    <div {{ init_live_component(this) }}>
+    <div {{ attributes }}>
         <input
             type="number"
             value="{{ min }}"
@@ -368,7 +411,7 @@ property. The following code works identically to the previous example:
 
 .. code-block:: diff
 
-      <div {{ init_live_component(this)>
+      <div {{ attributes }}>
           <input
               type="number"
               value="{{ min }}"
@@ -791,7 +834,7 @@ as ``this.form`` thanks to the trait:
 
     {# templates/components/post_form.html.twig #}
     <div
-        {{ init_live_component(this) }}
+        {{ attributes }}
         {#
             Automatically catch all "change" events from the fields
             below and re-render the component.
@@ -815,8 +858,7 @@ as ``this.form`` thanks to the trait:
     </div>
 
 Mostly, this is a pretty boring template! It includes the normal
-``init_live_component(this)`` and then you render the form however you
-want.
+``attributes`` and then you render the form however you want.
 
 But the result is incredible! As you finish changing each field, the
 component automatically re-renders - including showing any validation
@@ -1024,7 +1066,7 @@ section above) is to add:
 .. code-block:: diff
 
       <div
-          {{ init_live_component(this) }}
+          {{ attributes }}
     +     data-action="change->live#update"
       >
 
@@ -1056,7 +1098,7 @@ rendered the ``content`` through a Markdown filter from the
 
 .. code-block:: twig
 
-    <div {{init_live_component(this)}}>
+    <div {{ attributes }}>
         <input
             type="text"
             value="{{ post.title }}"
@@ -1221,7 +1263,7 @@ You can also use “polling” to continually refresh a component. On the
 .. code-block:: diff
 
       <div
-          {{ init_live_component(this) }}
+          {{ attributes }}
     +     data-poll
       >
 
@@ -1233,7 +1275,7 @@ delay for 500ms:
 .. code-block:: twig
 
     <div
-        {{ init_live_component(this) }}
+        {{ attributes }}
         data-poll="delay(500)|$render"
     >
 
@@ -1242,7 +1284,7 @@ You can also trigger a specific “action” instead of a normal re-render:
 .. code-block:: twig
 
     <div
-        {{ init_live_component(this) }}
+        {{ attributes }}
 
         data-poll="save"
         {#
@@ -1437,7 +1479,7 @@ In the ``EditPostComponent`` template, you render the
 .. code-block:: twig
 
     {# templates/components/edit_post.html.twig #}
-    <div {{ init_live_component(this) }}>
+    <div {{ attributes }}>
         <input
             type="text"
             name="post[title]"
@@ -1459,7 +1501,7 @@ In the ``EditPostComponent`` template, you render the
 
 .. code-block:: twig
 
-    <div {{ init_live_component(this) }} class="mb-3">
+    <div {{ attributes }} class="mb-3">
         <textarea
             name="{{ name }}"
             data-model="value"
@@ -1496,3 +1538,4 @@ bound to Symfony's BC policy for the moment.
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`dependent form fields`: https://symfony.com/doc/current/form/dynamic_form_modification.html#dynamic-generation-for-submitted-forms
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _`Component attributes`: https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes
