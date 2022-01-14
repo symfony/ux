@@ -31,8 +31,8 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 #[AsLiveComponent('component6')]
 class Component6 extends AbstractController
 {
-    use DefaultActionTrait;
     use ComponentWithFormTrait;
+    use DefaultActionTrait;
 
     private FormBuilderInterface $builder;
 
@@ -50,15 +50,15 @@ class Component6 extends AbstractController
             ->add('choice', ChoiceType::class, [
                 'choices' => [
                     'foo' => 1,
-                    'bar' => 2
-                ]
+                    'bar' => 2,
+                ],
             ])
             ->add('choice_expanded', ChoiceType::class, [
                 'choices' => [
                     'foo' => 1,
-                    'bar' => 2
+                    'bar' => 2,
                 ],
-                'expanded' => true
+                'expanded' => true,
             ])
             ->add('checkbox', CheckboxType::class)
             ->add('file', FileType::class)

@@ -168,7 +168,7 @@ trait ComponentWithFormTrait
             $name = $child->vars['name'];
             if (
                 (
-                    !array_key_exists('expanded', $child->vars)
+                    !\array_key_exists('expanded', $child->vars)
                     || !$child->vars['expanded']
                 )
                 && \count($child->children) > 0

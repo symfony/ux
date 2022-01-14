@@ -19,7 +19,6 @@ use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component6;
  */
 class ComponentWithFormTest extends TypeTestCase
 {
-
     public function testFormValues(): void
     {
         $component = new Component6($this->factory->createBuilder());
