@@ -30,6 +30,7 @@
         "symfony/ux-twig-component": "^2.0"
     },
     "require-dev": {
+        "symfony/form": "^4.4|^5.0|^6.0",
         "symfony/framework-bundle": "^4.4|^5.0|^6.0",
         "symfony/dependency-injection": "^4.4.2|^5.0|^6.0",
         "symfony/twig-bundle": "^4.4|^5.0|^6.0",
