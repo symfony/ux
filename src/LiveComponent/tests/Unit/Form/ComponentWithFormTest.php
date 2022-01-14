@@ -32,7 +32,7 @@ class ComponentWithFormTest extends TypeTestCase
                 'textarea' => '',
                 'range' => '',
                 'choice' => '',
-                'choice_expanded' => null,
+                'choice_expanded' => '',
                 'checkbox' => null,
                 'file' => '',
                 'hidden' => '',
