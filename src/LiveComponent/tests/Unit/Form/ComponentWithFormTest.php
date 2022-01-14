@@ -23,9 +23,7 @@ class ComponentWithFormTest extends TypeTestCase
     {
         $component = new Component6($this->factory->createBuilder());
 
-        $values = $component->getFormValues();
         $this->assertSame(
-            $values,
             [
                 'text' => '',
                 'textarea' => '',
@@ -35,7 +33,8 @@ class ComponentWithFormTest extends TypeTestCase
                 'checkbox' => null,
                 'file' => '',
                 'hidden' => '',
-            ]
+            ],
+            $component->getFormValues()
         );
     }
 }

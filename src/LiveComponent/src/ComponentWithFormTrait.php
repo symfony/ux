@@ -166,13 +166,7 @@ trait ComponentWithFormTrait
         $values = [];
         foreach ($formView->children as $child) {
             $name = $child->vars['name'];
-            if (
-                (
-                    !\array_key_exists('expanded', $child->vars)
-                    || !$child->vars['expanded']
-                )
-                && \count($child->children) > 0
-            ) {
+            if (!($child->vars['expanded'] ?? false) && \count($child->children) > 0) {
                 $values[$name] = $this->extractFormValues($child);
 
                 continue;
