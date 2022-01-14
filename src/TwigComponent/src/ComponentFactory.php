@@ -78,7 +78,7 @@ final class ComponentFactory
     /**
      * Creates the component and "mounts" it with the passed data.
      */
-    public function create(string $name, array $data = []): object
+    public function create(string $name, array $data = []): ComponentContext
     {
         $component = $this->getComponent($name);
         $data = $this->preMount($component, $data);
@@ -88,13 +88,14 @@ final class ComponentFactory
         // set data that wasn't set in mount on the component directly
         foreach ($data as $property => $value) {
             if (!$this->propertyAccessor->isWritable($component, $property)) {
-                throw new \LogicException(sprintf('Unable to write "%s" to component "%s". Make sure this is a writable property or create a mount() with a $%s argument.', $property, \get_class($component), $property));
+                continue;
             }
 
             $this->propertyAccessor->setValue($component, $property, $value);
+            unset($data[$property]);
         }
 
-        return $component;
+        return new ComponentContext($component, new ComponentAttributes($data));
     }
 
     /**

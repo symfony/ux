@@ -27,9 +27,12 @@ final class ComponentRenderer
         $this->twig = $twig;
     }
 
-    public function render(object $component, string $template): string
+    public function render(ComponentContext $context, string $template): string
     {
         // TODO: Self-Rendering components?
-        return $this->twig->render($template, ['this' => $component]);
+        return $this->twig->render($template, [
+            'this' => $context->component,
+            'attributes' => $context->attributes,
+        ]);
     }
 }
