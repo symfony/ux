@@ -9,7 +9,7 @@
 Symfony UX is an initiative and set of libraries to seamlessly
 integrate JavaScript tools into your application. For example,
 want to render a chart with [Chart.js](https://www.chartjs.org/)? Use
-[UX Chart.js](https://github.com/symfony/ux-chartjs)
+[UX Chart.js](https://symfony.com/bundles/ux-chartjs/current/index.html)
 to build the chart in PHP. The JavaScript is handled for you automatically.
 
 **That's Symfony UX.**
@@ -26,20 +26,20 @@ integrating it into [Webpack Encore](https://github.com/symfony/webpack-encore).
 
 ## Packages
 
--   [UX Chart.js](https://github.com/symfony/ux-chartjs):
+-   [UX Chart.js](https://symfony.com/bundles/ux-chartjs/current/index.html):
     [Chart.js](https://www.chartjs.org/) chart library integration for Symfony
--   [UX Cropper.js](https://github.com/symfony/ux-cropperjs):
+-   [UX Cropper.js](https://symfony.com/bundles/ux-cropperjs/current/index.html):
     [Cropper.js](https://fengyuanchen.github.io/cropperjs/) image cropper library integration for Symfony
--   [UX Dropzone](https://github.com/symfony/ux-dropzone):
+-   [UX Dropzone](https://symfony.com/bundles/ux-dropzone/current/index.html):
     File input drag-and-drop zones for Symfony Forms
--   [UX LazyImage](https://github.com/symfony/ux-lazy-image):
+-   [UX LazyImage](https://symfony.com/bundles/ux-lazy-image/current/index.html):
     Improve image loading performances through lazy-loading and data-uri thumbnails
--   [UX Swup](https://github.com/symfony/ux-swup):
+-   [UX Swup](https://symfony.com/bundles/ux-swup/current/index.html):
     [Swup](https://swup.js.org/) page transition library integration for Symfony
--   [UX Turbo](https://github.com/symfony/ux-turbo): [Hotwire Turbo](https://turbo.hotwired.dev/) library integration for Symfony
--   [Twig Component](https://github.com/symfony/ux-twig-component):
+-   [UX Turbo](https://symfony.com/bundles/ux-turbo/current/index.html): [Hotwire Turbo](https://turbo.hotwired.dev/) library integration for Symfony
+-   [Twig Component](https://symfony.com/bundles/ux-twig-component/current/index.html):
     A system to build reusable "components" with Twig
--   [Live Component](https://github.com/symfony/ux-live-component):
+-   [Live Component](https://symfony.com/bundles/ux-live-component/current/index.html):
     Gives Twig Components a URL and a JavaScript library to automatically re-render via Ajax as your user interacts with it
 
 ## Stimulus Tools around the World
@@ -68,7 +68,7 @@ fields of your Symfony forms? Or the ability to make the `EntityType` render wit
 [AJAX auto-completion](https://tarekraafat.github.io/autoComplete.js)? Anything you
 do in JavaScript could be done streamlined as a UX package.
 
-We have some ideas and we will release more packages in the coming days. The rest
+We have some ideas, and we will release more packages in the coming days. The rest
 is on you: let's create an amazing ecosystem together!
 
 ## Contributing
