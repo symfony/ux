@@ -38,7 +38,7 @@ Accelerating Navigation with Turbo Drive
 
 Turbo Drive enhances page-level navigation. It watches for link clicks
 and form submissions, performs them in the background, and updates the
-page without doing a full reload. This gives you the “single-page-app”
+page without doing a full reload. This gives you the "single-page-app"
 experience without major changes to your code!
 
 Turbo Drive is automatically enabled when you install Symfony UX Turbo.
@@ -57,20 +57,7 @@ We also recommend that you place your ``script`` tags live inside your
 ``head`` tag so that they aren't reloaded on every navigation (Turbo
 re-executes any ``script`` tags inside ``body`` on every navigation).
 Add a ``defer`` attribute to each ``script`` tag to prevent it from
-blocking the page load. See [Moving
-
-.. raw:: html
-
-   <script>
-
-inside
-
-.. raw:: html
-
-   <head>
-
-and the “defer”
-Attribute](https://symfony.com/blog/moving-script-inside-head-and-the-defer-attribute)
+blocking the page load. See `Moving <script> inside <head> and the "defer" Attribute`_
 for more info.
 
 2. Reloading When a JavaScript/CSS File Changes
@@ -164,7 +151,7 @@ This changes the response status code to 422 on validation error, which
 tells Turbo Drive that the form submit failed and it should re-render
 with the errors. You can *also* choose to change the success redirect
 status code from 302 (the default) to 303 (``HTTP_SEE_OTHER``). That's
-not required for Turbo Drive, but 303 is “more correct” for this
+not required for Turbo Drive, but 303 is "more correct" for this
 situation.
 
 .. note::
@@ -830,3 +817,4 @@ meaning it is not bound to Symfony's BC policy for the moment.
 .. _`hotwired/turbo-rails`: https://github.com/hotwired/turbo-rails
 .. _`sroze/live-twig`: https://github.com/sroze/live-twig
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _`Moving <script> inside <head> and the "defer" Attribute`: https://symfony.com/blog/moving-script-inside-head-and-the-defer-attribute

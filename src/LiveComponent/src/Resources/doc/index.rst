@@ -1043,8 +1043,8 @@ you can enable it via the ``exposed`` option:
 
       class EditPostComponent
       {
-    -    #[LiveProp]
-    +    #[LiveProp(exposed: ['title', 'content'])]
+    -     #[LiveProp]
+    +     #[LiveProp(exposed: ['title', 'content'])]
           public Post $post;
 
           // ...
