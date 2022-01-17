@@ -12,9 +12,9 @@ It provides two key features:
 Installation
 ------------
 
-Symfony UX LazyImage requires PHP 7.2+ and Symfony 4.4+.
+Before you start, make sure you have `Symfony UX configured in your app`_.
 
-You can install this bundle using Composer and Symfony Flex:
+Then install this bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -172,3 +172,4 @@ meaning it is not bound to Symfony’s BC policy for the moment.
 .. _`BlurHash implementation`: https://blurha.sh
 .. _`WebpackEncoreBundle v1.10`: https://github.com/symfony/webpack-encore-bundle
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
+.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html

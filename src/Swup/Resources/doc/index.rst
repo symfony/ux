@@ -12,10 +12,9 @@ bringing the complexity of a React/Vue/Angular application.
 Installation
 ------------
 
-Symfony UX Swup does not use any PHP and can be installed with any
-PHP/Symfony version.
+Before you start, make sure you have `Symfony UX configured in your app`_.
 
-You can install this bundle using Composer and Symfony Flex:
+Then install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -203,3 +202,4 @@ meaning it is not bound to Symfony's BC policy for the moment.
 .. _`WebpackEncoreBundle v1.10`: https://github.com/symfony/webpack-encore-bundle
 .. _`Swup Options`: https://swup.js.org/options
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
+.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html

@@ -10,9 +10,9 @@ having to browse their computer for a file.
 Installation
 ------------
 
-Symfony UX Dropzone requires PHP 7.2+ and Symfony 4.4+.
+Before you start, make sure you have `Symfony UX configured in your app`_.
 
-Install this bundle using Composer and Symfony Flex:
+Then, install this bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -155,3 +155,4 @@ bound to Symfony’s BC policy for the moment.
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _`@symfony/stimulus-bridge`: https://github.com/symfony/stimulus-bridge
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
+.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html

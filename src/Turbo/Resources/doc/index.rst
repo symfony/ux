@@ -18,7 +18,7 @@ Or watch the `Turbo Screencast on SymfonyCasts`_.
 Installation
 ------------
 
-Symfony UX Turbo requires PHP 7.2+ and Symfony 5.2+.
+Before you start, make sure you have `Symfony UX configured in your app`_.
 
 Install this bundle using Composer and Symfony Flex:
 
@@ -829,3 +829,4 @@ meaning it is not bound to Symfony's BC policy for the moment.
 .. _`Kévin Dunglas`: https://dunglas.fr
 .. _`hotwired/turbo-rails`: https://github.com/hotwired/turbo-rails
 .. _`sroze/live-twig`: https://github.com/sroze/live-twig
+.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html

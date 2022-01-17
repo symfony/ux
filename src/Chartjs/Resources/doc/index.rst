@@ -8,9 +8,9 @@ It is part of `the Symfony UX initiative`_.
 Installation
 ------------
 
-Symfony UX Chart.js requires PHP 7.2+ and Symfony 4.4+.
+Before you start, make sure you have `Symfony UX configured in your app`_.
 
-Install this bundle using Composer and Symfony Flex:
+Then, install this bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -157,3 +157,4 @@ bound to Symfony's BC policy for the moment.
 .. _`Chart.js documentation`: https://www.chartjs.org/docs/latest/
 .. _`Symfony Webpack Encore`: https://symfony.com/doc/current/frontend/encore/installation.html
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
+.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html

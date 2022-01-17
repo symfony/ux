@@ -5,8 +5,8 @@ Twig Components
 to change, or even change drastically.
 
 Twig components give you the power to bind an object to a template,
-making it easier to render and re-use small template “units” - like an
-“alert”, markup for a modal, or a category sidebar:
+making it easier to render and re-use small template "units" - like an
+"alert", markup for a modal, or a category sidebar:
 
 Every component consists of (1) a class::
 
@@ -44,7 +44,7 @@ Enjoy your new component!
 
    Example of the AlertComponent
 
-This brings the familiar “component” system from client-side frameworks
+This brings the familiar "component" system from client-side frameworks
 into Symfony. Combine this with `Live Components`_, to create
 an interactive frontend with automatic, Ajax-powered rendering.
 
@@ -64,7 +64,7 @@ That's it! We're ready to go!
 Creating a Basic Component
 --------------------------
 
-Let's create a reusable “alert” element that we can use to show success
+Let's create a reusable "alert" element that we can use to show success
 or error messages across our site. Step 1 is always to create a
 component that has an ``AsTwigComponent`` class attribute. Let's start
 as simple as possible::
@@ -257,7 +257,7 @@ component use a ``PreMount`` hook::
 Fetching Services
 -----------------
 
-Let's create a more complex example: a “featured products” component.
+Let's create a more complex example: a "featured products" component.
 You *could* choose to pass an array of Product objects into the
 ``component()`` function and set those on a ``$products`` property. But
 instead, let's allow the component to do the work of executing the

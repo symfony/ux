@@ -8,9 +8,9 @@ Symfony UX Cropper.js is a Symfony bundle integrating the
 Installation
 ------------
 
-Symfony UX Cropper.js requires PHP 7.2+ and Symfony 4.4+.
+Before you start, make sure you have `Symfony UX configured in your app`_.
 
-Install this bundle using Composer and Symfony Flex:
+Then, install this bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -152,3 +152,4 @@ meaning it is not bound to Symfony’s BC policy for the moment.
 .. _`@symfony/stimulus-bridge`: https://github.com/symfony/stimulus-bridge
 .. _`the Cropper.js options`: https://github.com/fengyuanchen/cropperjs/blob/main/README.md#options
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
+.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html

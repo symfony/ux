@@ -64,7 +64,9 @@ Want a demo? Check out https://github.com/weaverryan/live-demo.
 Installation
 ------------
 
-Let's get started! Install the library with:
+Before you start, make sure you have `Symfony UX configured in your app`_.
+
+Now install the library with:
 
 .. code-block:: terminal
 
@@ -1444,3 +1446,4 @@ bound to Symfony's BC policy for the moment.
 .. _`Symfony form`: https://symfony.com/doc/current/forms.html
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`dependent form fields`: https://symfony.com/doc/current/form/dynamic_form_modification.html#dynamic-generation-for-submitted-forms
+.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
