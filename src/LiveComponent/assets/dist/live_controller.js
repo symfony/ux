@@ -1057,11 +1057,11 @@ class default_1 extends Controller {
         window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
     }
     update(event) {
-        const value = event.target.value;
+        const value = this._getValueFromElement(event.target);
         this._updateModelFromElement(event.target, value, true);
     }
     updateDefer(event) {
-        const value = event.target.value;
+        const value = this._getValueFromElement(event.target);
         this._updateModelFromElement(event.target, value, false);
     }
     action(event) {
@@ -1110,6 +1110,17 @@ class default_1 extends Controller {
     }
     $render() {
         this._makeRequest(null);
+    }
+    _getValueFromElement(element) {
+        const value = element.dataset.value || element.value;
+        if (!value) {
+            const clonedElement = (element.cloneNode());
+            if (!(clonedElement instanceof HTMLElement)) {
+                throw new Error('cloneNode() produced incorrect type');
+            }
+            throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-value" or "value" attribute set.`);
+        }
+        return value;
     }
     _updateModelFromElement(element, value, shouldRender) {
         const model = element.dataset.model || element.getAttribute('name');

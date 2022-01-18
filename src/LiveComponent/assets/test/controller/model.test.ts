@@ -11,7 +11,7 @@
 
 import { clearDOM } from '@symfony/stimulus-testing';
 import { initLiveComponent, mockRerender, startStimulus } from '../tools';
-import { getByLabelText, waitFor } from '@testing-library/dom';
+import {getByLabelText, getByText, waitFor} from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock-jest';
 
@@ -28,6 +28,7 @@ describe('LiveController data-model Tests', () => {
                 value="${data.name}"
             >
             </label>
+            <a data-action="live#update" data-model="name" data-value="Jan">Change name to Jan</a>
         </div>
     `;
 
@@ -60,6 +61,25 @@ describe('LiveController data-model Tests', () => {
         // assert the input is still focused after rendering
         expect(document.activeElement.dataset.model).toEqual('name');
     });
+
+    it('renders correctly with data-value and live#update', async () => {
+        const data = { name: 'Ryan' };
+        const { element, controller } = await startStimulus(template(data));
+
+        fetchMock.getOnce('end:?name=Jan', {
+            html: template({ name: 'Jan' }),
+            data: { name: 'Jan' }
+        });
+
+        userEvent.click(getByText(element, 'Change name to Jan'));
+
+        await waitFor(() => expect(getByLabelText(element, 'Name:')).toHaveValue('Jan'));
+        expect(controller.dataValue).toEqual({name: 'Jan'});
+
+        // assert all calls were done the correct number of times
+        fetchMock.done();
+    });
+
 
     it('correctly only uses the most recent render call results', async () => {
         const data = { name: 'Ryan' };
@@ -144,6 +164,27 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({name: 'Ryan Weaver'});
+
+        fetchMock.done();
+    });
+
+    it('uses data-value when both value and data-value is present', async () => {
+        const data = { name: 'Ryan' };
+        const { element, controller } = await startStimulus(template(data));
+
+        // give element data-model="name" and name="first_name"
+        const inputElement = getByLabelText(element, 'Name:');
+        inputElement.dataset.value = 'first_name';
+
+        // ?name should be what's sent to the server
+        mockRerender({name: 'first_name'}, template, (data) => {
+            data.name = 'first_name';
+        })
+
+        await userEvent.type(inputElement, ' WEAVER');
+
+        await waitFor(() => expect(inputElement).toHaveValue('first_name'));
+        expect(controller.dataValue).toEqual({name: 'first_name'});
 
         fetchMock.done();
     });
