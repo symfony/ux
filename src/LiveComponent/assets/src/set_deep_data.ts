@@ -21,7 +21,7 @@ export function setDeepData(data, propertyPath, value) {
     // an integer (2).
     if (typeof currentLevelData !== 'object') {
         const lastPart = parts.pop();
-        throw new Error(`Cannot set data-model="${propertyPath}". They parent "${parts.join(',')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`)
+        throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`)
     }
 
     // represents a situation where the key you're setting *is* an object,
