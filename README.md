@@ -34,6 +34,8 @@ integrating it into [Webpack Encore](https://github.com/symfony/webpack-encore).
     File input drag-and-drop zones for Symfony Forms
 -   [UX LazyImage](https://github.com/symfony/ux-lazy-image):
     Improve image loading performances through lazy-loading and data-uri thumbnails
+-   [UX Leaflet.js](https://github.com/symfony/ux-leafletjs):
+    [Leaflet](https://leafletjs.com/) map library integration for Symfony
 -   [UX Swup](https://github.com/symfony/ux-swup):
     [Swup](https://swup.js.org/) page transition library integration for Symfony
 -   [UX Turbo](https://github.com/symfony/ux-turbo): [Hotwire Turbo](https://turbo.hotwired.dev/) library integration for Symfony
