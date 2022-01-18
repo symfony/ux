@@ -1,0 +1,46 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-01-13T14:56:36Z
+
+Hey @WhiteRabbitDE!
+
+My apologies for the slow response on this! I like this. Could you (A) add a test and (B) update the documentation? The test would be inside `model.test.ts`.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by WhiteRabbitDE at 2022-01-13T17:00:12Z
+
+Hallo @weaverryan ,
+
+i just tried to add a test but i have little experience with Jest and how it is used here. Im not sure how to add my case in a proper way. Can you give me a small hint please?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-01-14T15:32:30Z
+
+Absolutely :).
+
+Here are a few ideas to get you started:
+
+A) This is the template used in the test - https://github.com/symfony/ux/blob/2.x/src/LiveComponent/assets/test/controller/model.test.ts#L19-L32 - it is a little template with just a `name` data. I would add something like `<a data-action="live#update" data-model="name" data-value="Kevin">Change name to Kevin</a>`. Adding this link shouldn't mess up in other tests that use this.
+
+B) Duplicate this test and update its description to make sense - https://github.com/symfony/ux/blob/2.x/src/LiveComponent/assets/test/controller/model.test.ts#L39-L62
+
+C) Inside that test, instead of typing into the input (that's the `userEvent.type` part), you will click the "Change name to Kevin" link. Here's an example of clicking things: https://github.com/symfony/ux/blob/2.x/src/LiveComponent/assets/test/controller/action.test.ts#L58. Then, for the "assert" part - https://github.com/symfony/ux/blob/2.x/src/LiveComponent/assets/test/controller/model.test.ts#L54-L55 - you will be looking for "Kevin" instead of Ryan Weaver.
+
+D) The last bit you'll need to change is the fetchMock - https://github.com/symfony/ux/blob/2.x/src/LiveComponent/assets/test/controller/model.test.ts#L54-L55 - change both `Ryan Weaver` to `Kevin`. This asserts that the Ajax request was made using this correct data and it basically controls the template re-rendering (which is what allows us to assert that the input box (after re-render) has changed to `Kevin`.
+
+To run the test, move into `src/LiveComponent/assets/` and run `yarn` then `yarn jest`.
+
+Let me know if this helps!
+
+---------------------------------------------------------------------------
+
+by WhiteRabbitDE at 2022-01-16T16:47:38Z
+
+Hey @weaverryan ,
+thanks for that super helpful and in detail explaination 🥇  The fetchMock part was what i was missing but now things are much clearer !
+
+I hope i can use that new knowledge in future PRs :-)
