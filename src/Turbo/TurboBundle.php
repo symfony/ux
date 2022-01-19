@@ -14,6 +14,7 @@ namespace Symfony\UX\Turbo;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
@@ -23,6 +24,14 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  */
 final class TurboBundle extends Bundle
 {
+    public const STREAM_FORMAT = 'turbo_stream';
+    public const STREAM_MEDIA_TYPE = 'text/vnd.turbo-stream.html';
+
+    public function boot(): void
+    {
+        (new Request())->setFormat(self::STREAM_FORMAT, self::STREAM_MEDIA_TYPE);
+    }
+
     public function build(ContainerBuilder $container): void
     {
         parent::build($container);

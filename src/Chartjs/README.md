@@ -17,7 +17,7 @@ yarn install --force
 yarn encore dev
 ```
 
-Also make sure you have at least version 2.0 of [@symfony/stimulus-bridge](https://github.com/symfony/stimulus-bridge)
+Also make sure you have at least version 3.0 of [@symfony/stimulus-bridge](https://github.com/symfony/stimulus-bridge)
 in your `package.json` file.
 
 ## Usage
@@ -32,12 +32,11 @@ use Symfony\UX\Chartjs\Model\Chart;
 
 class HomeController extends AbstractController
 {
-    /**
-     * @Route("/", name="homepage")
-     */
+    #[Route('/', name: 'app_homepage')]
     public function index(ChartBuilderInterface $chartBuilder): Response
     {
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
+
         $chart->setData([
             'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
             'datasets' => [
@@ -52,8 +51,9 @@ class HomeController extends AbstractController
 
         $chart->setOptions([
             'scales' => [
-                'yAxes' => [
-                    ['ticks' => ['min' => 0, 'max' => 100]],
+                'y' => [
+                   'suggestedMin' => 0,
+                   'suggestedMax' => 100,
                 ],
             ],
         ]);
@@ -68,7 +68,8 @@ class HomeController extends AbstractController
 All options and data are provided as-is to Chart.js. You can read
 [Chart.js documentation](https://www.chartjs.org/docs/latest/) to discover them all.
 
-Once created in PHP, a chart can be displayed using Twig:
+Once created in PHP, a chart can be displayed using Twig if installed
+(requires [Symfony Webpack Encore](https://symfony.com/doc/current/frontend/encore/installation.html)):
 
 ```twig
 {{ render_chart(chart) }}
@@ -84,7 +85,7 @@ Symfony UX Chart.js allows you to extend its default behavior using a custom Sti
 ```js
 // mychart_controller.js
 
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     connect() {

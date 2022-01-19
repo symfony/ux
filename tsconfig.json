@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "lib": ["dom", "es2015"],
+        "module": "es2015",
+        "moduleResolution": "node",
+        "noUnusedLocals": true,
+        "rootDir": "src",
+        "strict": true,
+        "target": "es2017",
+        "removeComments": true,
+        "outDir": "dist",
+        "baseUrl": ".",
+        "noEmit": false,
+        "declaration": false,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true
+    },
+    "exclude": ["src/**/dist"],
+    "include": ["src/**/*"]
+}

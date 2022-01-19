@@ -20,7 +20,7 @@ yarn install --force
 yarn encore dev
 ```
 
-Also make sure you have at least version 2.0 of [@symfony/stimulus-bridge](https://github.com/symfony/stimulus-bridge)
+Also make sure you have at least version 3.0 of [@symfony/stimulus-bridge](https://github.com/symfony/stimulus-bridge)
 in your `package.json` file.
 
 ## Usage
@@ -61,7 +61,7 @@ the `@symfony/ux-dropzone/src/style.css` autoimport to `false`:
         "@symfony/ux-dropzone": {
             "dropzone": {
                 "enabled": true,
-                "webpackMode": "eager",
+                "fetch": "eager",
                 "autoimport": {
                     "@symfony/ux-dropzone/src/style.css": false
                 }
@@ -85,7 +85,7 @@ Symfony UX Dropzone allows you to extend its default behavior using a custom Sti
 ```js
 // mydropzone_controller.js
 
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     connect() {

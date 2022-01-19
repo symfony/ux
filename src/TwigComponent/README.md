@@ -217,6 +217,40 @@ If an option name matches an argument name in `mount()`, the
 option is passed as that argument and the component system
 will _not_ try to set it directly on a property.
 
+### PreMount Hook
+
+If you need to modify/validate data before it's _mounted_ on the
+component use a `PreMount` hook:
+
+```php
+// src/Components/AlertComponent.php
+
+use Symfony\UX\TwigComponent\Attribute\PreMount;
+// ...
+
+#[AsTwigComponent('alert')]
+class AlertComponent
+{
+    public string $message;
+    public string $type = 'success';
+
+    #[PreMount]
+    public function preMount(array $data): array
+    {
+        // validate data
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults(['type' => 'success']);
+        $resolver->setAllowedValues('type', ['success', 'danger']);
+        $resolver->setRequired('message');
+        $resolver->setAllowedTypes('message', 'string');
+
+        return $resolver->resolve($data)
+    }
+
+    // ...
+}
+```
+
 ## Fetching Services
 
 Let's create a more complex example: a "featured products" component.

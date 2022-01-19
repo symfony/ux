@@ -12,6 +12,8 @@ or any other transports to broadcast DOM changes to all currently connected user
 You're in a hurry? Take a look at [the chat example](#sending-async-changes-using-mercure-a-chat)
 to discover the full potential of Symfony UX Turbo.
 
+Or watch the [Turbo Screencast on SymfonyCasts](https://symfonycasts.com/screencast/turbo).
+
 ## Installation
 
 Symfony UX Turbo requires PHP 7.2+ and Symfony 5.2+.
@@ -96,12 +98,10 @@ If you're using Symfony 5.3, the new `renderForm()` shortcut takes care of this
 automatically:
 
 ```php
-/**
- * @Route("/product/new", name="product_new")
- */
+#[Route('/product/new', name: 'product_new')]
 public function newProduct(Request $request): Response
 {
-    $form = this->createForm(ProductFormType::class, null, [
+    $form = $this->createForm(ProductFormType::class, null, [
         'action' => $this->generateUrl('product_new'),
     ]);
     $form->handleRequest($request);
@@ -110,7 +110,7 @@ public function newProduct(Request $request): Response
         // save...
 
         return $this->redirectToRoute('product_list');
-    );
+    }
 
     return $this->renderForm('product/new.html.twig', [
         'form' => $form,
@@ -121,9 +121,7 @@ public function newProduct(Request $request): Response
 If you're _not_ using the `renderForm()` shortcut, adjust your code manually:
 
 ```diff
-/**
- * @Route("/product/new")
- */
+#[Route('/product/new')]
 public function newProduct(Request $request): Response
 {
     $form = $this->createForm(ProductFormType::class);
@@ -297,7 +295,7 @@ namespace App\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\UX\Turbo\Stream\TurboStreamResponse;
+use Symfony\UX\Turbo\TurboBundle;
 use App\Entity\Task;
 
 class TaskController extends AbstractController
@@ -313,9 +311,10 @@ class TaskController extends AbstractController
             // ... perform some action, such as saving the task to the database
 
             // 🔥 The magic happens here! 🔥
-            if (TurboStreamResponse::STREAM_FORMAT === $request->getPreferredFormat()) {
-                // If the request comes from Turbo, only send the HTML to update using a TurboStreamResponse
-                return $this->render('task/success.stream.html.twig', ['task' => $task], new TurboStreamResponse());
+            if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+                // If the request comes from Turbo, set the content type as text/vnd.turbo-stream.html and only send the HTML to update
+                $request->setFormat(TurboBundle::STREAM_FORMAT);
+                return $this->render('task/success.stream.html.twig', ['task' => $task]);
             }
 
             // If the client doesn't support JavaScript, or isn't using Turbo, the form still works as usual.

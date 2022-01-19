@@ -73,10 +73,10 @@ composer require symfony/ux-live-component
 
 This comes with an embedded JavaScript Stimulus controller. Unlike
 other Symfony UX packages, this needs to be enabled manually
-in your `config/bootstrap.js` file:
+in your `assets/bootstrap.js` file:
 
 ```js
-// config/bootstrap.js
+// assets/bootstrap.js
 import LiveController from '@symfony/ux-live-component';
 import '@symfony/ux-live-component/styles/live.css';
 // ...
@@ -117,7 +117,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[AsTwigComponent('random_number')]
 class RandomNumberComponent
 {
-    public function getRandomNumber(): string
+    public function getRandomNumber(): int
     {
         return rand(0, 1000);
     }
@@ -202,7 +202,7 @@ class RandomNumberComponent
     #[LiveProp]
     public int $max = 1000;
 
-    public function getRandomNumber(): string
+    public function getRandomNumber(): int
     {
         return rand($this->min, $this->max);
     }
@@ -369,6 +369,27 @@ code works identically to the previous example:
 
 If an element has _both_ `data-model` and `name` attributes, the
 `data-model` attribute takes precedence.
+
+### Using data-value="" for non input elements
+
+If you want to set the value of a model with an element that is not an input element and does not have a `value` attribute you can use `data-value`
+
+```twig
+<div {{ init_live_component(this)>
+
+    <a
+        data-action="live#update"
+        data-model="min"
+        data-value="10">
+        Set min to 10
+    </a>
+
+    // ...
+</div>
+```
+
+If an element has _both_ `data-value` and `value` attributes, the
+`data-value` attribute takes precedence.
 
 ## Loading States
 
@@ -650,7 +671,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PostController extends AbstractController
 {
     /**
-     * @Route("/admin/post/{id}/edit", name="app_post_edit")
+     * #[Route('/admin/post/{id}/edit', name: 'app_post_edit')]
      */
     public function edit(Request $request, Post $post): Response
     {
@@ -896,7 +917,7 @@ need any form logic in your controller:
 
 ```php
 /**
- * @Route("/admin/post/{id}/edit", name="app_post_edit")
+ * #[Route('/admin/post/{id}/edit', name: 'app_post_edit')]
  */
 public function edit(Post $post): Response
 {
@@ -1056,7 +1077,7 @@ class EditPostComponent
 
 With this, both the `title` and the `content` properties of the
 `$post` property _can_ be modified by the user. However, notice
-that the `LiveProp` does _not_ have `modifiable=true`. This
+that the `LiveProp` does _not_ have `writable=true`. This
 means that while the `title` and `content` properties can be
 changed, the `Post` object itself **cannot** be changed. In other
 words, if the component was originally created with a Post

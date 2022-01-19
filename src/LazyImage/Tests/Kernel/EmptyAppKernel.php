@@ -24,7 +24,7 @@ class EmptyAppKernel extends Kernel
 {
     use AppKernelTrait;
 
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         return [new LazyImageBundle()];
     }

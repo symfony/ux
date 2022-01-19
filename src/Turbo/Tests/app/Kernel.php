@@ -34,7 +34,6 @@ use Symfony\Component\Mercure\Hub;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
-use Symfony\UX\Turbo\Stream\TurboStreamResponse;
 use Symfony\UX\Turbo\TurboBundle;
 use Symfony\WebpackEncoreBundle\WebpackEncoreBundle;
 use Twig\Environment;
@@ -131,11 +130,14 @@ class Kernel extends BaseKernel
 
     public function form(Request $request, Environment $twig): Response
     {
-        if (TurboStreamResponse::STREAM_FORMAT === $request->getPreferredFormat()) {
-            return new TurboStreamResponse($twig->render('form.stream.html.twig'));
+        if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+            $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+            $response = (new Response($twig->render('form.stream.html.twig')));
+        } else {
+            $response = new Response('Turbo not installed, default to plain HTML.');
         }
 
-        return new Response('Turbo not installed, default to plain HTML.');
+        return $response->setVary('Accept');
     }
 
     public function chat(Request $request, FormFactoryInterface $formFactory, HubInterface $mercureHub, Environment $twig): Response

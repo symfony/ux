@@ -16,6 +16,8 @@ to build the chart in PHP. The JavaScript is handled for you automatically.
 
 [Read all the details about the Symfony UX initiative](https://symfony.com/ux)
 
+Or watch the [Stimulus Screencast on SymfonyCasts](https://symfonycasts.com/screencast/stimulus).
+
 ## Components of UX
 
 Symfony UX leverages [Stimulus](https://stimulus.hotwired.dev/) for JavaScript

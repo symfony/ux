@@ -27,4 +27,28 @@ class AsTwigComponent
         $this->name = $name;
         $this->template = $template;
     }
+
+    /**
+     * @internal
+     *
+     * @return \ReflectionMethod[]
+     */
+    public static function preMountMethods(object $component): \Traversable
+    {
+        yield from self::attributeMethodsFor(PreMount::class, $component);
+    }
+
+    /**
+     * @internal
+     *
+     * @return \ReflectionMethod[]
+     */
+    protected static function attributeMethodsFor(string $attribute, object $component): \Traversable
+    {
+        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->getAttributes($attribute)[0] ?? null) {
+                yield $method;
+            }
+        }
+    }
 }
