@@ -8,7 +8,7 @@ it easier to render and re-use small template "units" - like an "alert",
 markup for a modal, or a category sidebar. A very simple example
 would be a re-usable alert component:
 
-![Example of the AlertComponent](https://github.com/symfony/ux-twig-component/blob/main/alert-example.png?raw=true)
+![Example of the AlertComponent](https://github.com/symfony/ux/blob/2.x/src/TwigComponent/alert-example.png?raw=true)
 
 **This repository is a READ-ONLY sub-tree split**. See
 https://github.com/symfony/ux to create issues or submit pull requests.

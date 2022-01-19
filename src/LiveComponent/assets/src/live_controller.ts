@@ -110,13 +110,13 @@ export default class extends Controller {
      * Called to update one piece of the model
      */
     update(event: any) {
-        const value = event.target.value;
+        const value = this._getValueFromElement(event.target);
 
         this._updateModelFromElement(event.target, value, true);
     }
 
     updateDefer(event: any) {
-        const value = event.target.value;
+        const value = this._getValueFromElement(event.target);
 
         this._updateModelFromElement(event.target, value, false);
     }
@@ -193,6 +193,22 @@ export default class extends Controller {
 
     $render() {
         this._makeRequest(null);
+    }
+
+    _getValueFromElement(element: HTMLElement){
+        const value = element.dataset.value || element.value;
+
+        if (!value) {
+            const clonedElement = (element.cloneNode());
+            // helps typescript know this is an HTMLElement
+            if (!(clonedElement instanceof HTMLElement)) {
+                throw new Error('cloneNode() produced incorrect type');
+            }
+
+            throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-value" or "value" attribute set.`);
+        }
+
+        return value;
     }
 
     _updateModelFromElement(element: HTMLElement, value: string, shouldRender: boolean) {
