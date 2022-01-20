@@ -258,6 +258,12 @@ component use a ``PreMount`` hook::
         // ...
     }
 
+.. note::
+
+    If your component has multiple ``PreMount`` hooks, and you'd like to control
+    the order in which they're called, use the ``priority`` attribute parameter:
+    ``PreMount(priority: 10)`` (higher called earlier).
+
 Fetching Services
 -----------------
 

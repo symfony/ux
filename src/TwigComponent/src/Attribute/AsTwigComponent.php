@@ -33,9 +33,15 @@ class AsTwigComponent
      *
      * @return \ReflectionMethod[]
      */
-    public static function preMountMethods(object $component): \Traversable
+    public static function preMountMethods(object $component): iterable
     {
-        yield from self::attributeMethodsFor(PreMount::class, $component);
+        $methods = iterator_to_array(self::attributeMethodsFor(PreMount::class, $component));
+
+        usort($methods, static function (\ReflectionMethod $a, \ReflectionMethod $b) {
+            return $a->getAttributes(PreMount::class)[0]->newInstance()->priority <=> $b->getAttributes(PreMount::class)[0]->newInstance()->priority;
+        });
+
+        return array_reverse($methods);
     }
 
     /**
