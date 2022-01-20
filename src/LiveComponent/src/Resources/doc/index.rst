@@ -45,7 +45,7 @@ A real-time product search component might look like this::
         <input
             type="search"
             name="query"
-            value="{{ this.query }}"
+            value="{{ query }}"
             data-action="live#update"
         >
 
@@ -247,19 +247,19 @@ Let's add two inputs to our template:
     <div {{ init_live_component(this) }}>
         <input
             type="number"
-            value="{{ this.min }}"
+            value="{{ min }}"
             data-model="min"
             data-action="live#update"
         >
 
         <input
             type="number"
-            value="{{ this.max }}"
+            value="{{ max }}"
             data-model="max"
             data-action="live#update"
         >
 
-        Generating a number between {{ this.min }} and {{ this.max }}
+        Generating a number between {{ min }} and {{ max }}
         <strong>{{ this.randomNumber }}</strong>
     </div>
 
@@ -316,7 +316,7 @@ happens, add it to the ``data-action`` call:
 
       <input
           type="number"
-          value="{{ this.max }}"
+          value="{{ max }}"
           data-model="max"
     -     data-action="live#update"
     +     data-action="change->live#update"
@@ -341,7 +341,7 @@ clicked). To do that, use the ``updateDefer`` method:
 
       <input
           type="number"
-          value="{{ this.max }}"
+          value="{{ max }}"
           data-model="max"
     -     data-action="live#update"
     +     data-action="live#updateDefer"
@@ -364,7 +364,7 @@ property. The following code works identically to the previous example:
       <div {{ init_live_component(this)>
           <input
               type="number"
-              value="{{ this.min }}"
+              value="{{ min }}"
     -         data-model="min"
     +         name="min"
               data-action="live#update"
@@ -1016,7 +1016,7 @@ rendered the ``content`` through a Markdown filter from the
     <div {{init_live_component(this)}}>
         <input
             type="text"
-            value="{{ this.post.title }}"
+            value="{{ post.title }}"
             data-model="post.title"
             data-action="live#update"
         >
@@ -1024,11 +1024,11 @@ rendered the ``content`` through a Markdown filter from the
            <textarea
                data-model="post.content"
                data-action="live#update"
-           >{{this.post.content}}</textarea>
+           >{{post.content}}</textarea>
 
             <div className="markdown-preview" data-loading="addClass(low-opacity)">
-                <h3>{{this.post.title}}</h3>
-                {{this.post.content | markdown_to_html}}
+                <h3>{{post.title}}</h3>
+                {{post.content | markdown_to_html}}
             </div>
     </div>
 
@@ -1142,7 +1142,7 @@ method:
         data-model="post.content"
         data-action="live#update"
         class="{{ this.getError('post.content') ? 'has-error' : '' }}"
-    >{{ this.post.content }}</textarea>
+    >{{ post.content }}</textarea>
 
 Once a component has been validated, the component will “rememeber” that
 it has been validated. This means that, if you edit a field and the
@@ -1162,7 +1162,7 @@ blur the field), update the model via the ``change`` event:
         data-model="post.content"
         data-action="change->live#update"
         class="{{ this.getError('post.content') ? 'has-error' : '' }}"
-    >{{ this.post.content }}</textarea>
+    >{{ post.content }}</textarea>
 
 When the component re-renders, it will signal to the server that this
 one field should be validated. Like with normal validation, once an
@@ -1399,13 +1399,13 @@ In the ``EditPostComponent`` template, you render the
             type="text"
             name="post[title]"
             data-action="live#update"
-            value="{{ this.post.title }}"
+            value="{{ post.title }}"
         >
 
         {{ component('markdown_textarea', {
             name: 'post[content]',
             label: 'Content',
-            value: this.post.content
+            value: post.content
         }) }}
 
         <button
@@ -1418,13 +1418,13 @@ In the ``EditPostComponent`` template, you render the
 
     <div {{ init_live_component(this) }} class="mb-3">
         <textarea
-            name="{{ this.name }}"
+            name="{{ name }}"
             data-model="value"
             data-action="live#update"
-        >{{ this.value }}</textarea>
+        >{{ value }}</textarea>
 
         <div class="markdown-preview">
-            {{ this.value|markdown_to_html }}
+            {{ value|markdown_to_html }}
         </div>
     </div>
 
