@@ -58,8 +58,9 @@ initialize Swup:
         </body>
     </html>
 
-**Note** The ``stimulus_controller()`` function comes from
-`WebpackEncoreBundle v1.10`_.
+.. note::
+
+    The ``stimulus_controller()`` function comes from `WebpackEncoreBundle v1.10`_.
 
 That's it! Swup now reacts to a link click and run the default fade-in
 transition.
@@ -180,11 +181,10 @@ Then in your template, add your controller to the HTML attribute:
         </body>
     </html>
 
-..
+.. note::
 
-   **Note**: be careful to add your controller **before** the Swup
-   controller so that it is executed before and can listen on the
-   ``swup:connect`` event properly.
+   Be careful to add your controller **before** the Swup controller so that it
+   is executed before and can listen on the ``swup:connect`` event properly.
 
 Backward Compatibility promise
 ------------------------------

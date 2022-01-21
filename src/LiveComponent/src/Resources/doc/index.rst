@@ -968,10 +968,12 @@ Now, when the form is submitted, it will execute the ``save()`` method
 via Ajax. If the form fails validation, it will re-render with the
 errors. And if it's successful, it will redirect.
 
-**NOTE**: Make sure that each time the user changes a field, you update
-the component's model. If you don't do this, when you trigger the
-action, it will *not* contain the form's data because the data in the
-fields and the component's data will be out of sync.
+.. note::
+
+    Make sure that each time the user changes a field, you update the
+    component's model. If you don't do this, when you trigger the action, it
+    will *not* contain the form's data because the data in the fields and the
+    component's data will be out of sync.
 
 An easy way to accomplish this (explained more in the :ref:`Forms <forms>`
 section above) is to add:
@@ -1064,8 +1066,10 @@ property.
 Validation (without a Form)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**NOTE** If your component :ref:`contains a form <forms>`, then validation
-is built-in automatically. Follow those docs for more details.
+.. note::
+
+    If your component :ref:`contains a form <forms>`, then validation
+    is built-in automatically. Follow those docs for more details.
 
 If you're building some sort of form *without* using Symfony's form
 component, you *can* still validate your data.
@@ -1328,9 +1332,11 @@ Thanks to the ``data-model-map``, whenever the ``markdown_value`` model
 updates in the child component, the ``post.content`` model will be
 updated in the parent component.
 
-**NOTE**: If you *change* a ``LiveProp`` of a child component on the
-server (e.g. during re-rendering or via an action), that change will
-*not* be reflected on any parent components that share that model.
+.. note::
+
+    If you *change* a ``LiveProp`` of a child component on the server
+    (e.g. during re-rendering or via an action), that change will
+    *not* be reflected on any parent components that share that model.
 
 Full Embedded Component Example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
