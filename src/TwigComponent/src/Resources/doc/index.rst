@@ -312,11 +312,12 @@ need to populate, you can render it with:
 
     {{ component('featured_products') }}
 
-**NOTE** Because components are services, normal dependency injection
-can be used. However, each component service is registered with
-``shared: false``. That means that you can safely render the same
-component multiple times with different data because each component will
-be an independent instance.
+.. note::
+
+    Because components are services, normal dependency injection can be used.
+    However, each component service is registered with ``shared: false``. That
+    means that you can safely render the same component multiple times with
+    different data because each component will be an independent instance.
 
 Computed Properties
 ~~~~~~~~~~~~~~~~~~~
