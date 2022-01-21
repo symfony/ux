@@ -232,7 +232,7 @@ export default class extends Controller {
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
 
-        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {}, element.hasAttribute('value') ? element.getAttribute('value') : null);
+        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {}, this._getValueFromElement(element));
     }
 
     /**

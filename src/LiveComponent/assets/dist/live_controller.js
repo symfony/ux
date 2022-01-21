@@ -975,7 +975,7 @@ function setDeepData(data, propertyPath, value, modelValue = null) {
     }
     if (typeof currentLevelData !== 'object') {
         const lastPart = parts.pop();
-        throw new Error(`Cannot set data-model="${propertyPath}". They parent "${parts.join(',')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
+        throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
     }
     if (currentLevelData[finalKey] === undefined) {
         const lastPart = parts.pop();
@@ -1149,7 +1149,7 @@ class default_1 extends Controller {
             }
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
-        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {}, element.hasAttribute('value') ? element.getAttribute('value') : null);
+        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {}, this._getValueFromElement(element));
     }
     $updateModel(model, value, shouldRender = true, extraModelName = null, options = {}, modelValue = null) {
         const directives = parseDirectives(model);
