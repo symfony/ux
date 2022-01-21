@@ -27,8 +27,8 @@ And (2) a corresponding template:
 .. code-block:: twig
 
     {# templates/components/alert.html.twig #}
-    <div class="alert alert-{{ this.type }}">
-        {{ this.message }}
+    <div class="alert alert-{{ type }}">
+        {{ message }}
     </div>
 
 Done! Now render it wherever you want:
@@ -130,12 +130,16 @@ public property for each:
           // ...
       }
 
-In the template, the ``AlertComponent`` instance is available via the
-``this`` variable. Use it to render the two new properties:
+In the template, the ``AlertComponent`` instance is available via
+the ``this`` variable and public properties are available directly.
+Use them to render the two new properties:
 
 .. code-block:: twig
 
-    <div class="alert alert-{{ this.type }}">
+    <div class="alert alert-{{ type }}">
+        {{ message }}
+
+        {# Same as above, but using "this", which is the component object #}
         {{ this.message }}
     </div>
 
