@@ -28,7 +28,7 @@ use Symfony\UX\LiveComponent\Exception\UnsupportedHydrationException;
 final class LiveComponentHydrator
 {
     private const CHECKSUM_KEY = '_checksum';
-    private const EXPOSED_PROP_KEY = 'id';
+    private const EXPOSED_PROP_KEY = '_id';
 
     /** @var PropertyHydratorInterface[] */
     private iterable $propertyHydrators;
@@ -197,7 +197,7 @@ final class LiveComponentHydrator
         // for read-only properties with "exposed" sub-parts,
         // only use the main value
         foreach ($properties as $key => $val) {
-            if (\in_array($key, $readonlyProperties) && \is_array($val)) {
+            if (\in_array($key, $readonlyProperties) && \is_array($val) && isset($val[self::EXPOSED_PROP_KEY])) {
                 $properties[$key] = $val[self::EXPOSED_PROP_KEY];
             }
         }
