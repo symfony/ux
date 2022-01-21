@@ -99,6 +99,8 @@ Oh, and just one more step! Import a routing file from the bundle:
     # config/routes.yaml
     live_component:
         resource: '@LiveComponentBundle/Resources/config/routing/live_component.xml'
+        # uncomment to add localization to your components
+        #prefix: '/{_locale}'
 
 That's it! We're ready!
 
