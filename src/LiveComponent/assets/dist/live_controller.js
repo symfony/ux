@@ -953,7 +953,7 @@ function buildSearchParams(searchParams, data) {
     return searchParams;
 }
 
-function setDeepData(data, propertyPath, value) {
+function setDeepData(data, propertyPath, value, modelValue = null) {
     const finalData = JSON.parse(JSON.stringify(data));
     let currentLevelData = finalData;
     const parts = propertyPath.split('.');
@@ -961,6 +961,18 @@ function setDeepData(data, propertyPath, value) {
         currentLevelData = currentLevelData[parts[i]];
     }
     const finalKey = parts[parts.length - 1];
+    if (currentLevelData instanceof Array) {
+        if (null === value) {
+            const index = currentLevelData.indexOf(modelValue);
+            if (index > -1) {
+                currentLevelData.splice(index, 1);
+            }
+        }
+        else {
+            currentLevelData.push(value);
+        }
+        return finalData;
+    }
     if (typeof currentLevelData !== 'object') {
         const lastPart = parts.pop();
         throw new Error(`Cannot set data-model="${propertyPath}". They parent "${parts.join(',')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
@@ -1137,9 +1149,9 @@ class default_1 extends Controller {
             }
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
-        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null);
+        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {}, element.hasAttribute('value') ? element.getAttribute('value') : null);
     }
-    $updateModel(model, value, shouldRender = true, extraModelName = null, options = {}) {
+    $updateModel(model, value, shouldRender = true, extraModelName = null, options = {}, modelValue = null) {
         const directives = parseDirectives(model);
         if (directives.length > 1) {
             throw new Error(`The data-model="${model}" format is invalid: it does not support multiple directives (i.e. remove any spaces).`);
@@ -1162,9 +1174,10 @@ class default_1 extends Controller {
                 modelName,
                 extraModelName: normalizedExtraModelName,
                 value,
+                modelValue
             });
         }
-        this.dataValue = setDeepData(this.dataValue, modelName, value);
+        this.dataValue = setDeepData(this.dataValue, modelName, value, modelValue);
         directive.modifiers.forEach((modifier => {
             switch (modifier.name) {
                 default:
@@ -1481,7 +1494,7 @@ class default_1 extends Controller {
         }
         this.$updateModel(foundModelName, event.detail.value, false, null, {
             dispatch: false
-        });
+        }, event.detail.modelValue);
     }
     _shouldChildLiveElementUpdate(fromEl, toEl) {
         if (!fromEl.dataset.originalData) {

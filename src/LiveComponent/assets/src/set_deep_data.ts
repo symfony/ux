@@ -1,5 +1,5 @@
 // post.user.username
-export function setDeepData(data, propertyPath, value) {
+export function setDeepData(data, propertyPath, value, modelValue = null) {
     // cheap way to deep clone simple data
     const finalData = JSON.parse(JSON.stringify(data));
 
@@ -13,6 +13,21 @@ export function setDeepData(data, propertyPath, value) {
 
     // now finally change the key on that deeper object
     const finalKey = parts[parts.length - 1];
+
+    // if currentLevelData is an array we are in a collection situation
+    // we need to handle addition and removal of values from it to send
+    // back only required data
+    if (currentLevelData instanceof Array) {
+        if (null === value) {
+            const index = currentLevelData.indexOf(modelValue);
+            if (index > -1) {
+                currentLevelData.splice(index, 1);
+            }
+        } else {
+            currentLevelData.push(value);
+        }
+        return finalData;
+    }
 
     // make sure the currentLevelData is an object, not a scalar
     // if it is, it means the initial data didn't know that sub-properties

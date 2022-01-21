@@ -232,7 +232,7 @@ export default class extends Controller {
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
 
-        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null);
+        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {}, element.hasAttribute('value') ? element.getAttribute('value') : null);
     }
 
     /**
@@ -251,8 +251,9 @@ export default class extends Controller {
      * @param {boolean} shouldRender Whether a re-render should be triggered
      * @param {string|null} extraModelName Another model name that this might go by in a parent component.
      * @param {Object} options Options include: {bool} dispatch
+     * @param {any} modelValue Original HTML element value (for handling collection checkbox fields)
      */
-    $updateModel(model: string, value: any, shouldRender = true, extraModelName: string | null = null, options: any = {}) {
+    $updateModel(model: string, value: any, shouldRender = true, extraModelName: string | null = null, options: any = {}, modelValue: any = null) {
         const directives = parseDirectives(model);
         if (directives.length > 1) {
             throw new Error(`The data-model="${model}" format is invalid: it does not support multiple directives (i.e. remove any spaces).`);
@@ -283,6 +284,7 @@ export default class extends Controller {
                 modelName,
                 extraModelName: normalizedExtraModelName,
                 value,
+                modelValue
             });
         }
 
@@ -299,7 +301,7 @@ export default class extends Controller {
         // Then, then modify the data-model="post.title" field. In theory,
         // we should be smart enough to convert the post data - which is now
         // the string "4" - back into an array with [id=4, title=new_title].
-        this.dataValue = setDeepData(this.dataValue, modelName, value);
+        this.dataValue = setDeepData(this.dataValue, modelName, value, modelValue);
 
         directive.modifiers.forEach((modifier => {
             switch (modifier.name) {
@@ -729,7 +731,8 @@ export default class extends Controller {
             null,
             {
                 dispatch: false
-            }
+            },
+            event.detail.modelValue
         );
     }
 
