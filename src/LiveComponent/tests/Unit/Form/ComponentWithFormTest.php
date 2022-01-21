@@ -30,6 +30,7 @@ class ComponentWithFormTest extends TypeTestCase
                 'range' => '',
                 'choice' => '',
                 'choice_expanded' => '',
+                'choice_multiple' => [],
                 'checkbox' => null,
                 'file' => '',
                 'hidden' => '',

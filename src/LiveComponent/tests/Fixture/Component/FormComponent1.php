@@ -60,6 +60,14 @@ class FormComponent1 extends AbstractController
                 ],
                 'expanded' => true,
             ])
+            ->add('choice_multiple', ChoiceType::class, [
+                'choices' => [
+                    'foo' => 1,
+                    'bar' => 2,
+                ],
+                'expanded' => true,
+                'multiple' => true,
+            ])
             ->add('checkbox', CheckboxType::class)
             ->add('file', FileType::class)
             ->add('hidden', HiddenType::class)
