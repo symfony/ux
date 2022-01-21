@@ -12,7 +12,7 @@
 namespace Symfony\UX\LiveComponent\Tests\Unit\Form;
 
 use Symfony\Component\Form\Test\TypeTestCase;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component6;
+use Symfony\UX\LiveComponent\Tests\Fixture\Component\FormComponent1;
 
 /**
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
@@ -21,7 +21,7 @@ class ComponentWithFormTest extends TypeTestCase
 {
     public function testFormValues(): void
     {
-        $component = new Component6($this->factory->createBuilder());
+        $component = new FormComponent1($this->factory->createBuilder());
 
         $this->assertSame(
             [

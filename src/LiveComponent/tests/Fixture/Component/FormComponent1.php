@@ -29,7 +29,7 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
  */
 #[AsLiveComponent('component6')]
-class Component6 extends AbstractController
+class FormComponent1 extends AbstractController
 {
     use ComponentWithFormTrait;
     use DefaultActionTrait;
