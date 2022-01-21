@@ -110,13 +110,21 @@ export default class extends Controller {
      * Called to update one piece of the model
      */
     update(event: any) {
-        const value = this._getValueFromElement(event.target);
+        let value = this._getValueFromElement(event.target);
+
+        if (event.target.type === 'checkbox' && !event.target.checked) {
+            value = null;
+        }
 
         this._updateModelFromElement(event.target, value, true);
     }
 
     updateDefer(event: any) {
-        const value = this._getValueFromElement(event.target);
+        let value = this._getValueFromElement(event.target);
+
+        if (event.target.type === 'checkbox' && !event.target.checked) {
+            value = null;
+        }
 
         this._updateModelFromElement(event.target, value, false);
     }

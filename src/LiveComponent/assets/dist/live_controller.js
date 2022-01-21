@@ -1057,11 +1057,17 @@ class default_1 extends Controller {
         window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
     }
     update(event) {
-        const value = this._getValueFromElement(event.target);
+        let value = this._getValueFromElement(event.target);
+        if (event.target.type === 'checkbox' && !event.target.checked) {
+            value = null;
+        }
         this._updateModelFromElement(event.target, value, true);
     }
     updateDefer(event) {
-        const value = this._getValueFromElement(event.target);
+        let value = this._getValueFromElement(event.target);
+        if (event.target.type === 'checkbox' && !event.target.checked) {
+            value = null;
+        }
         this._updateModelFromElement(event.target, value, false);
     }
     action(event) {
