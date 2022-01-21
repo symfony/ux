@@ -126,9 +126,7 @@ trait ComponentWithFormTrait
 
     public function getFormValues(): array
     {
-        if (null === $this->formValues) {
-            $this->formValues = $this->extractFormValues($this->getForm());
-        }
+        $this->formValues = $this->extractFormValues($this->getForm());
 
         return $this->formValues;
     }
