@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by kbond at 2022-01-21T13:25:23Z
+
+Can this be achieved by adding the locale prefix when importing the route? https://symfony.com/doc/current/routing.html#route-groups-and-prefixes
+
+I'd prefer suggesting this. Maybe a note in the docs/recipe?
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2022-01-21T13:29:05Z
+
+@kbond it looks like you are right and your approach seems much cleaner. I will follow up on that :+1:
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2022-01-21T13:38:49Z
+
+@kbond I don't think there is any recipe for live component (at least I couldn't find any), therefore I believe putting this in installation step instructions is enough.
