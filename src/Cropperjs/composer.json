@@ -44,9 +44,6 @@
         "symfony/flex": "<1.13"
     },
     "extra": {
-        "branch-alias": {
-            "dev-main": "1.4-dev"
-        },
         "thanks": {
             "name": "symfony/ux",
             "url": "https://github.com/symfony/ux"

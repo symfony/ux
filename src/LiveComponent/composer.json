@@ -27,7 +27,7 @@
     },
     "require": {
         "php": ">=8.0",
-        "symfony/ux-twig-component": "^1.4"
+        "symfony/ux-twig-component": "^2.0"
     },
     "require-dev": {
         "symfony/framework-bundle": "^4.4|^5.0|^6.0",
@@ -44,9 +44,6 @@
         "zenstruck/browser": "^0.9.1"
     },
     "extra": {
-        "branch-alias": {
-            "dev-main": "1.4-dev"
-        },
         "thanks": {
             "name": "symfony/ux",
             "url": "https://github.com/symfony/ux"

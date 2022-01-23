@@ -80,25 +80,21 @@ jobs:
             - name: Chartjs
               run: |
                   cd src/Chartjs
-                  composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
             - name: Cropperjs
               run: |
                   cd src/Cropperjs
-                  composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
             - name: Dropzone
               run: |
                   cd src/Dropzone
-                  composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
             - name: LazyImage
               run: |
                   cd src/LazyImage
-                  composer config platform.php 7.4.99
                   composer update --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
             - name: TwigComponent

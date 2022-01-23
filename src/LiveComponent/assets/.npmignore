@@ -1,6 +1,0 @@
-.babelrc
-.gitignore
-yarn.lock
-/.git
-/node_modules
-/test

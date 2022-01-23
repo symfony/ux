@@ -38,6 +38,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('propB: prop b value 1', $output);
         $this->assertStringContainsString('propA: prop a value 2', $output);
         $this->assertStringContainsString('propB: prop b value 2', $output);
+        $this->assertStringContainsString('b value: pre-mount b value 1', $output);
         $this->assertStringContainsString('service: service a value', $output);
     }
 

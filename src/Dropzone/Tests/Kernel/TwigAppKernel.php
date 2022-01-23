@@ -14,7 +14,9 @@ namespace Symfony\UX\Dropzone\Tests\Kernel;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\Alias;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\UX\Dropzone\DropzoneBundle;
 
@@ -27,7 +29,7 @@ class TwigAppKernel extends Kernel
 {
     use AppKernelTrait;
 
-    public function registerBundles()
+    public function registerBundles(): iterable
     {
         return [new FrameworkBundle(), new TwigBundle(), new DropzoneBundle()];
     }
@@ -45,6 +47,9 @@ class TwigAppKernel extends Kernel
                 'exception_controller' => null,
                 'debug' => '%kernel.debug%',
             ]);
+
+            // create a public alias - FormFactoryInterface is removed otherwise
+            $container->setAlias('public_form_factory', new Alias(FormFactoryInterface::class, true));
         });
     }
 }
