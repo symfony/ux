@@ -61,7 +61,7 @@ export default class extends Controller {
         this._dispatchEvent('typed:connect', { typed });
     }
 
-    _dispatchEvent(name, payload) {
+    _dispatchEvent(name: string, payload: any) {
         this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
     }
 }

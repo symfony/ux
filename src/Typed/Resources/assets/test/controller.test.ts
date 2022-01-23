@@ -12,7 +12,7 @@
 import { Application, Controller } from 'stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
-import TypedController from '../dist/controller';
+import TypedController from '../src/controller';
 
 // Controller used to check the actual controller was properly booted
 class CheckController extends Controller {
