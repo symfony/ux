@@ -9,7 +9,7 @@
 
 'use strict';
 
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 import Typed from 'typed.js';
 
 export default class extends Controller {
@@ -61,10 +61,7 @@ export default class extends Controller {
         this._dispatchEvent('typed:connect', { typed });
     }
 
-    _dispatchEvent(name, payload = null, canBubble = false, cancelable = false) {
-        const userEvent = document.createEvent('CustomEvent');
-        userEvent.initCustomEvent(name, canBubble, cancelable, payload);
-
-        this.element.dispatchEvent(userEvent);
+    _dispatchEvent(name, payload) {
+        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
     }
 }
