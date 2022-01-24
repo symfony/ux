@@ -27,8 +27,8 @@ And (2) a corresponding template:
 .. code-block:: twig
 
     {# templates/components/alert.html.twig #}
-    <div class="alert alert-{{ type }}">
-        {{ message }}
+    <div class="alert alert-{{ this.type }}">
+        {{ this.message }}
     </div>
 
 Done! Now render it wherever you want:
@@ -132,14 +132,11 @@ public property for each:
 
 In the template, the ``AlertComponent`` instance is available via
 the ``this`` variable and public properties are available directly.
-Use them to render the two new properties:
+Access the variable to render the two new properties:
 
 .. code-block:: twig
 
-    <div class="alert alert-{{ type }}">
-        {{ message }}
-
-        {# Same as above, but using "this", which is the component object #}
+    <div class="alert alert-{{ this.type }}">
         {{ this.message }}
     </div>
 
@@ -188,9 +185,9 @@ component's name (``alert``) and a ``template`` tag attribute
 The mount() Method
 ~~~~~~~~~~~~~~~~~~
 
-If, for some reason, you don't want an option to the ``component()``
-function to be set directly onto a property, you can, instead, create a
-``mount()`` method in your component::
+If, for some reason, you don't want an option passed to the
+``component()`` function to be set directly onto a property, you can, 
+instead, create a ``mount()`` method in your component::
 
     // src/Components/AlertComponent.php
     // ...
