@@ -48,10 +48,10 @@ describe('LiveController Action Tests', () => {
         const { element } = await startStimulus(template(data));
 
         // ONLY a post is sent, not a re-render GET
-        const postMock = fetchMock.postOnce('http://localhost/_components/my_component/save', {
-            html: template({ comments: 'hi weaver', isSaved: true }),
-            data: { comments: 'hi weaver', isSaved: true }
-        });
+        const postMock = fetchMock.postOnce(
+            'http://localhost/_components/my_component/save',
+            template({ comments: 'hi weaver', isSaved: true })
+        );
 
         await userEvent.type(getByLabelText(element, 'Comments:'), ' WEAVER');
 

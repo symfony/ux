@@ -35,7 +35,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
     use HasBrowser;
     use ResetDatabase;
 
-    public function testCanRenderComponentAsHtmlOrJson(): void
+    public function testCanRenderComponentAsHtml(): void
     {
         /** @var LiveComponentHydrator $hydrator */
         $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
@@ -62,19 +62,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertContains('Prop2: 2021-03-05 9:23')
             ->assertContains('Prop3: value3')
             ->assertContains('Prop4: (none)')
-
-            ->get('/_components/component1?'.http_build_query($dehydrated), ['headers' => ['Accept' => 'application/vnd.live-component+json']])
-            ->assertSuccessful()
-            ->assertHeaderEquals('Content-Type', 'application/vnd.live-component+json')
-            ->assertJsonMatches('keys(@)', ['html', 'data'])
-            ->assertJsonMatches("contains(html, 'Prop1: {$entity->id}')", true)
-            ->assertJsonMatches("contains(html, 'Prop2: 2021-03-05 9:23')", true)
-            ->assertJsonMatches("contains(html, 'Prop3: value3')", true)
-            ->assertJsonMatches("contains(html, 'Prop4: (none)')", true)
-            ->assertJsonMatches('keys(data)', ['prop1', 'prop2', 'prop3', '_checksum'])
-            ->assertJsonMatches('data.prop1', $entity->id)
-            ->assertJsonMatches('data.prop2', $date->format('c'))
-            ->assertJsonMatches('data.prop3', 'value3')
         ;
     }
 
@@ -108,20 +95,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 2')
-
-            ->get('/_components/component2?'.http_build_query($dehydrated), ['headers' => ['Accept' => 'application/vnd.live-component+json']])
-            ->assertSuccessful()
-            ->assertJsonMatches('data.count', 1)
-            ->assertJsonMatches("contains(html, 'Count: 1')", true)
-            ->post('/_components/component2/increase?'.http_build_query($dehydrated), [
-                'headers' => [
-                    'Accept' => 'application/vnd.live-component+json',
-                    'X-CSRF-TOKEN' => $token,
-                ],
-            ])
-            ->assertSuccessful()
-            ->assertJsonMatches('data.count', 2)
-            ->assertJsonMatches("contains(html, 'Count: 2')", true)
         ;
     }
 
@@ -225,19 +198,21 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                 $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
             })
             ->interceptRedirects()
+            // with no custom header, it redirects like a normal browser
             ->post('/_components/component2/redirect?'.http_build_query($dehydrated), [
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertRedirectedTo('/')
 
+            // with custom header, a special 204 is returned
             ->post('/_components/component2/redirect?'.http_build_query($dehydrated), [
                 'headers' => [
-                    'Accept' => 'application/json',
+                    'Accept' => 'application/vnd.live-component+html',
                     'X-CSRF-TOKEN' => $token,
                 ],
             ])
-            ->assertSuccessful()
-            ->assertJsonMatches('redirect_url', '/')
+            ->assertStatus(204)
+            ->assertHeaderEquals('Location', '/')
         ;
     }
 }

@@ -41,10 +41,7 @@ describe('LiveController data-model Tests', () => {
         const data = { name: 'Ryan' };
         const { element, controller } = await startStimulus(template(data));
 
-        fetchMock.getOnce('end:?name=Ryan+WEAVER', {
-            html: template({ name: 'Ryan Weaver' }),
-            data: { name: 'Ryan Weaver' }
-        });
+        fetchMock.getOnce('end:?name=Ryan+WEAVER', template({ name: 'Ryan Weaver' }));
 
         await userEvent.type(getByLabelText(element, 'Name:'), ' WEAVER', {
             // this tests the debounce: characters have a 10ms delay
@@ -66,10 +63,7 @@ describe('LiveController data-model Tests', () => {
         const data = { name: 'Ryan' };
         const { element, controller } = await startStimulus(template(data));
 
-        fetchMock.getOnce('end:?name=Jan', {
-            html: template({ name: 'Jan' }),
-            data: { name: 'Jan' }
-        });
+        fetchMock.getOnce('end:?name=Jan', template({ name: 'Jan' }));
 
         userEvent.click(getByText(element, 'Change name to Jan'));
 
@@ -96,12 +90,11 @@ describe('LiveController data-model Tests', () => {
             ['guy', 150]
         ];
         requests.forEach(([string, delay]) => {
-            fetchMock.getOnce(`end:my_component?name=Ryan${string}`, {
-                // the _ at the end helps us look that the input has changed
-                // as a result of a re-render (not just from typing in the input)
-                html: template({ name: `Ryan${string}_` }),
-                data: { name: `Ryan${string}_` }
-            }, { delay });
+            fetchMock.getOnce(
+                `end:my_component?name=Ryan${string}`,
+                template({ name: `Ryan${string}_` }),
+                { delay }
+            );
         });
 
         await userEvent.type(getByLabelText(element, 'Name:'), 'guy', {
@@ -273,6 +266,24 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
 
         // assert all calls were done the correct number of times
+        fetchMock.done();
+    });
+
+    it('data changed on server should be noticed by controller', async () => {
+        const data = { name: 'Ryan' };
+        const { element, controller } = await startStimulus(template(data));
+
+        mockRerender({name: 'Ryan WEAVER'}, template, (data) => {
+            // sneaky server changes the data!
+            data.name = 'Kevin Bond';
+        });
+
+        const inputElement = getByLabelText(element, 'Name:');
+        await userEvent.type(inputElement, ' WEAVER');
+
+        await waitFor(() => expect(inputElement).toHaveValue('Kevin Bond'));
+        expect(controller.dataValue).toEqual({name: 'Kevin Bond'});
+
         fetchMock.done();
     });
 });
