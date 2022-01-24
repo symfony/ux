@@ -134,6 +134,11 @@ In the template, the ``AlertComponent`` instance is available via
 the ``this`` variable and public properties are available directly.
 Use them to render the two new properties:
 
+.. versionadded:: 2.1
+
+    The ability to reference local variables in the template (e.g. ``message``) was added in TwigComponents 2.1.
+    Previously, all data needed to be referenced through ``this`` (e.g. ``this.message``).
+
 .. code-block:: twig
 
     <div class="alert alert-{{ type }}">
