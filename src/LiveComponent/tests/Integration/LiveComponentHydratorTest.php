@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Tests\ContainerBC;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
@@ -238,5 +239,30 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->assertSame('value1', $component->prop1);
         $this->assertSame('value2', $component->prop2);
+    }
+
+    public function testCanDehydrateAndHydrateArrays(): void
+    {
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
+
+        $component = new class() {
+            #[LiveProp]
+            public array $prop;
+        };
+
+        $instance = clone $component;
+        $instance->prop = ['some', 'array'];
+
+        $dehydrated = $hydrator->dehydrate($instance);
+
+        $this->assertArrayHasKey('prop', $dehydrated);
+        $this->assertSame($instance->prop, $dehydrated['prop']);
+
+        $this->assertFalse(isset($component->prop));
+
+        $hydrator->hydrate($component, $dehydrated);
+
+        $this->assertSame($instance->prop, $component->prop);
     }
 }
