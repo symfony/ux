@@ -13,7 +13,6 @@ namespace Symfony\UX\LiveComponent\EventListener;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -41,8 +40,7 @@ use Symfony\UX\TwigComponent\ComponentRenderer;
  */
 class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {
-    private const JSON_FORMAT = 'live-component-json';
-    private const JSON_CONTENT_TYPE = 'application/vnd.live-component+json';
+    private const HTML_CONTENT_TYPE = 'application/vnd.live-component+html';
 
     private ContainerInterface $container;
 
@@ -68,8 +66,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         if (!$this->isLiveComponentRequest($request)) {
             return;
         }
-
-        $request->setFormat(self::JSON_FORMAT, self::JSON_CONTENT_TYPE);
 
         // the default "action" is get, which does nothing
         $action = $request->get('action', 'get');
@@ -192,7 +188,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        if (!$this->isLiveComponentJsonRequest($request)) {
+        if (!\in_array(self::HTML_CONTENT_TYPE, $request->getAcceptableContentTypes(), true)) {
             return;
         }
 
@@ -200,8 +196,9 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $event->setResponse(new JsonResponse([
-            'redirect_url' => $response->headers->get('Location'),
+        $event->setResponse(new Response(null, 204, [
+            'Location' => $response->headers->get('Location'),
+            'Content-Type' => self::HTML_CONTENT_TYPE,
         ]));
     }
 
@@ -227,27 +224,11 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             $request->attributes->get('_component_template')
         );
 
-        if ($this->isLiveComponentJsonRequest($request)) {
-            return new JsonResponse(
-                [
-                    'html' => $html,
-                    'data' => $this->container->get(LiveComponentHydrator::class)->dehydrate($component),
-                ],
-                200,
-                ['Content-Type' => self::JSON_CONTENT_TYPE]
-            );
-        }
-
         return new Response($html);
     }
 
     private function isLiveComponentRequest(Request $request): bool
     {
         return 'live_component' === $request->attributes->get('_route');
-    }
-
-    private function isLiveComponentJsonRequest(Request $request): bool
-    {
-        return \in_array($request->getPreferredFormat(), [self::JSON_FORMAT, 'json'], true);
     }
 }

@@ -133,6 +133,7 @@ describe('LiveController parent -> child component tests', () => {
         const inputElement = getByLabelText(element, 'Content:');
         await userEvent.clear(inputElement);
         await userEvent.type(inputElement, 'changed content');
+        // change the rows on the server
         mockRerender({'value': 'changed content'}, childTemplate, (data) => {
             data.rows = 5;
         });

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.1.0
+
+-   The Live Component AJAX endpoints now return HTML in all situations
+    instead of JSON.
+
 ## 2.0.0
 
 -   Support for `stimulus` version 2 was removed and support for `@hotwired/stimulus`

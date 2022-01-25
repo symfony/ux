@@ -61,12 +61,11 @@ describe('LiveController rendering Tests', () => {
         const data = { name: 'Ryan' };
         const { element } = await startStimulus(template(data));
 
-        fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
-            html: template({ name: 'Kevin' }),
-            data: { name: 'Kevin' }
-        }, {
-            delay: 100
-        });
+        fetchMock.get(
+            'http://localhost/_components/my_component?name=Ryan',
+            template({ name: 'Kevin' }),
+            { delay: 100 }
+        );
         getByText(element, 'Reload').click();
         userEvent.type(getByLabelText(element, 'Comments:'), '!!');
 
@@ -84,12 +83,11 @@ describe('LiveController rendering Tests', () => {
             template(data, true)
         );
 
-        fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
-            html: template({ name: 'Kevin' }, true),
-            data: { name: 'Kevin' }
-        }, {
-            delay: 100
-        });
+        fetchMock.get(
+            'http://localhost/_components/my_component?name=Ryan',
+            template({ name: 'Kevin' }, true),
+            { delay: 100 }
+        );
         getByText(element, 'Reload').click();
         userEvent.type(getByLabelText(element, 'Comments:'), '!!');
 
@@ -102,10 +100,7 @@ describe('LiveController rendering Tests', () => {
         const data = { name: 'Ryan' };
         const { element } = await startStimulus(template(data));
 
-        fetchMock.get('end:?name=Ryan', {
-            html: '<div>aloha!</div>',
-            data: { name: 'Kevin' }
-        }, {
+        fetchMock.get('end:?name=Ryan', '<div>aloha!</div>', {
             delay: 100
         });
 
