@@ -38,6 +38,11 @@ A real-time product search component might look like this::
         }
     }
 
+.. versionadded:: 2.1
+
+    The ability to reference local variables in the template (e.g. ``query``) was added in TwigComponents 2.1.
+    Previously, all data needed to be referenced through ``this`` (e.g. ``this.query``).
+
 .. code-block:: twig
 
     {# templates/components/product_search.html.twig #}
