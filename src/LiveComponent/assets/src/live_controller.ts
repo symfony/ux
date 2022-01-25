@@ -190,7 +190,7 @@ export default class extends Controller {
     }
 
     _getValueFromElement(element: HTMLElement) {
-        return element.dataset.value || element.value;
+        return element.dataset.value || (element as any).value;
     }
 
     _updateModelFromElement(element: HTMLElement, value: string, shouldRender: boolean) {
@@ -356,7 +356,7 @@ export default class extends Controller {
             if (typeof Turbo !== 'undefined') {
                 Turbo.visit(response.headers.get('Location'));
             } else {
-                window.location.href = response.headers.get('Location');
+                window.location.href = response.headers.get('Location') || '';
             }
 
             return;
@@ -605,7 +605,7 @@ export default class extends Controller {
         let callback: () => void;
         if (actionName.charAt(0) === '$') {
             callback = () => {
-                this[actionName]();
+                (this as any)[actionName]();
             }
         } else {
             callback = () => {
