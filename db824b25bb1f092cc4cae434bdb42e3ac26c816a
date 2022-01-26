@@ -1,0 +1,155 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-13T07:04:19Z
+
+Added some tests, but I trully don't understand how they works, so just adopted from existing test :D
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-13T14:15:05Z
+
+>
+
+What if we would not directly append to the `request->attributes`, but set an attribute `values` and then add a custom argument value resolver to inject to live actions? Then this would not be a security risk (currently it is, because values can be passed if faking request manually via post man or some http client). And as for the non named args, I added it so if people really need, they can manually retrieve then from the request attributes.
+
+And: currently symfony argument value resolver injects the values from attributes, so `#[ActionArgument('someValue')]` wouldn't do anything
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-01-13T14:42:26Z
+
+> What if we would not directly append to the `request->attributes`, but set an attribute `values` and then add a custom argument value resolver to inject to live actions?
+
+That's a fantastic idea! I love it! I'd use some attribute named something like `_live_values` instead of `values` (just to not collide with anything and because it's kind of an internal value). Also, we should set the priority on the arg resolver low. What we need to avoid (a security edge-case) is someone having a `$iAmConfiguredViaAServiceBind` argument to an action that is configured via service config. We don't want a bad user to be able to override that by passing this as a value. I think (?) that if we set our arg resolver to a low priority, then it will only be called for arguments that have not been resolved in any other way.
+
+> And as for the non named args, I added it so if people really need, they can manually retrieve then from the request attributes.
+
+Unless you are using this feature (and if so, give some explanation as to how it's useful to you), we should remove it.
+
+And one last thing, can you update the documentation a bit for the new feature?
+
+Thanks a lot for this - it's excellent work and you've got excellent ideas!
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-13T14:47:37Z
+
+> > And as for the non named args, I added it so if people really need, they can manually retrieve then from the request attributes.
+>
+> Unless you are using this feature (and if so, give some explanation as to how it's useful to you), we should remove it.
+
+Trully - I don't, I only need named args currently :) Ok, will remove, then if someone will have a usecase for this then could be proposed again later :)
+
+> And one last thing, can you update the documentation a bit for the new feature?
+
+Yes, sure, will do tomorrow :)
+
+> I'd use some attribute named something like _live_values instead of values (just to not collide with anything and because it's kind of an internal value). Also, we should set the priority on the arg resolver low. What we need to avoid (a security edge-case) is someone having a $iAmConfiguredViaAServiceBind argument to an action that is configured via service config. We don't want a bad user to be able to override that by passing this as a value. I think (?) that if we set our arg resolver to a low priority, then it will only be called for arguments that have not been resolved in any other way.
+
+Yes, wanted just to propose so didn't think much about the attribute name :) But this will be a BC break, but as till now it was not fully supported, I think it shouldn't impact anyone?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-01-13T15:49:37Z
+
+> Ok, will remove, then if someone will have a usecase for this then could be proposed again later :)
+
+Very true - thank you!
+
+> Yes, wanted just to propose so didn't think much about the attribute name :) But this will be a BC break, but as till now it was not fully supported, I think it shouldn't impact anyone?
+
+BC break is ok, because we're still experimental. And it's unlikely anyone is using this right now anyways.
+
+BUUT, after talking with @kbond, instead of doing your argument resolver, we like a different path (let me explain). But, this full solution doesn't need to be done in THIS PR.
+
+At the very least, we should stop merging all of the values into `$request->attributes` and instead put them in some new key, as we've been discussing. I was now thinking about `_live_args`. I'm not sure why I was calling this `values` until now. We may also want to update the frontend query param to be `?args=` instead of `?values=` unless you can think of a reason to keep it as `values`.
+
+And, we could stop here for this PR if you want to. It would mean the user would need to, for now, use `$request->attributes->get('_live_args')` in their live action. Annoying, but temporary.
+
+The rest of the solution would involve a new `LiveArg` attribute:
+
+```php
+#[LiveAction]
+public function updateUser(#[LiveArg] string $someValue, #[LiveArg]  string $otherValue, IAmANormalService $service)
+{
+}
+```
+
+The logic would be:
+
+We read all of the `LiveArg`. If any of these are present in `$request->query->get('values')`, then we add that avlue to `$request->attributes`.
+
+The reason behind doing this is so that the values can be available to things like FrameworkExtraBundle's param converters. In other words, so that the values work even MORE identically to route `{params}`.
+
+Here is a more advanced example that shows off an argument to `LiveArg`:
+
+In HTML:
+
+```
+data-action-name="updatePost(id=1)
+```
+
+```php
+#[LiveAction]
+public function updatePost(#[LiveValue('id')] Post $post)
+{
+}
+```
+
+In this case, `id` is what is sent to the server. And thanks to the `'id'` arg to `LiveValue`, we recognize that and place it into `$request->attributes`. But then, FrameworkExtraBundle can work its normal magic to convert this into the `Post` entity.
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-14T14:10:04Z
+
+> Were we going to call args _live_args?
+
+I am not sure it's needed anymore as we don't store all args
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-14T14:14:37Z
+
+Would be nice if cs-fixer in CI would report in files where code style was not followed, because now when running cs fixer it fixes too much unrelated fixes.
+
+edit: well now green without any changes in code :man_shrugging:
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-01-14T14:21:00Z
+
+> I am not sure it's needed anymore as we don't store all args
+
+Ah ok so we aren't going to have the catch all way to grab the raw args from the request? The only way into get them is to inject (or parse the raw args yourself).
+
+I don't have a strong opinion on this, I was just curious.
+
+> Would be nice if cs-fixer in CI would report in files where code style was not followed, because now when running cs fixer it fixes too much unrelated fixes.
+
+Would be nice to get fabbot on this repo. I realized after I suggested property promotion for the attribute that the cs might fail (think it's a syntax error). ~Guess that's been fixed.~ guess not... https://github.com/symfony/ux/runs/4817869695?check_suite_focus=true#step:4:7
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-01-14T17:55:11Z
+
+@weaverryan what do you think we should do for the failing cs? Easiest solution for this pr is to not use a promoted property for the attribute. I'm thinking switch that out, we can always change later once the cs fixer can handle.
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-19T04:38:47Z
+
+I think this is ready :)
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-24T04:59:34Z
+
+> Can you add a changelog entry for 2.1?
+
+Done
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-24T14:29:23Z
+
+Will it be merged now? :stuck_out_tongue_closed_eyes:
