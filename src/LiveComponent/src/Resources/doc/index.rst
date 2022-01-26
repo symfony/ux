@@ -552,6 +552,38 @@ This means that, for example, you can use action autowiring::
         // ...
     }
 
+Actions & Arguments
+^^^^^^^^^^^^^^^^^^^
+
+You can also provide custom arguments to your action::
+
+.. code-block:: twig
+    <form>
+        <button data-action="live#action" data-action-name="addItem(id={{ item.id }}, name=CustomItem)">Add Item</button>
+    </form>
+
+In component for custom arguments to be injected we need to use `#[LiveArg()]` attribute, otherwise it would be
+ignored. Optionally you can provide `name` argument like: `[#LiveArg('itemName')]` so it will use custom name from
+args but inject to your defined parameter with another name.::
+
+    // src/Components/ItemComponent.php
+    namespace App\Components;
+
+    // ...
+    use Symfony\UX\LiveComponent\Attribute\LiveArg;
+    use Psr\Log\LoggerInterface;
+
+    class ItemComponent
+    {
+        // ...
+        #[LiveAction]
+        public function addItem(#[LiveArg] int $id, #[LiveArg('itemName')] string $name)
+        {
+            $this->id = $id;
+            $this->name = $name;
+        }
+    }
+
 Actions and CSRF Protection
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

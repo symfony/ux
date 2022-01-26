@@ -138,7 +138,7 @@ export default class extends Controller {
                 // taking precedence
                 this._clearWaitingDebouncedRenders();
 
-                this._makeRequest(directive.action);
+                this._makeRequest(directive.action, directive.named);
             }
 
             let handled = false;
@@ -294,11 +294,15 @@ export default class extends Controller {
         }
     }
 
-    _makeRequest(action: string|null) {
+    _makeRequest(action: string|null, args: Record<string,unknown>) {
         const splitUrl = this.urlValue.split('?');
         let [url] = splitUrl
         const [, queryString] = splitUrl;
         const params = new URLSearchParams(queryString || '');
+
+        if (typeof args === 'object' && Object.keys(args).length > 0) {
+            params.set('args', new URLSearchParams(args).toString());
+        }
 
         const fetchOptions: RequestInit = {};
         fetchOptions.headers = {

@@ -5,6 +5,8 @@
 -   The Live Component AJAX endpoints now return HTML in all situations
     instead of JSON.
 
+-   Send live action arguments to backend
+
 ## 2.0.0
 
 -   Support for `stimulus` version 2 was removed and support for `@hotwired/stimulus`

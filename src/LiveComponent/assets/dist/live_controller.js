@@ -1070,7 +1070,7 @@ class default_1 extends Controller {
         directives.forEach((directive) => {
             const _executeAction = () => {
                 this._clearWaitingDebouncedRenders();
-                this._makeRequest(directive.action);
+                this._makeRequest(directive.action, directive.named);
             };
             let handled = false;
             directive.modifiers.forEach((modifier) => {
@@ -1173,11 +1173,14 @@ class default_1 extends Controller {
             }, this.debounceValue || DEFAULT_DEBOUNCE);
         }
     }
-    _makeRequest(action) {
+    _makeRequest(action, args) {
         const splitUrl = this.urlValue.split('?');
         let [url] = splitUrl;
         const [, queryString] = splitUrl;
         const params = new URLSearchParams(queryString || '');
+        if (typeof args === 'object' && Object.keys(args).length > 0) {
+            params.set('args', new URLSearchParams(args).toString());
+        }
         const fetchOptions = {};
         fetchOptions.headers = {
             'Accept': 'application/vnd.live-component+json',
