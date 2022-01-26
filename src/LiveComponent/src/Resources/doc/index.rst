@@ -555,6 +555,10 @@ This means that, for example, you can use action autowiring::
 Actions & Arguments
 ^^^^^^^^^^^^^^^^^^^
 
+.. versionadded:: 2.1
+
+    The ability to pass arguments to actions was added in version 2.1.
+
 You can also provide custom arguments to your action::
 
 .. code-block:: twig
