@@ -59,10 +59,10 @@ final class LiveComponentRuntime
         );
     }
 
-    public function getComponentUrl(object $component, string $name = null): string
+    public function getComponentUrl(string $name, array $props = []): string
     {
-        $data = $this->hydrator->dehydrate($component);
-        $params = ['component' => $this->nameFor($component, $name)] + $data;
+        $component = $this->factory->create($name, $props);
+        $params = ['component' => $name] + $this->hydrator->dehydrate($component);
 
         return $this->urlGenerator->generate('live_component', $params);
     }
