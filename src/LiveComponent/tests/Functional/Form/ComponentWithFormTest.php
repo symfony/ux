@@ -54,12 +54,12 @@ class ComponentWithFormTest extends KernelTestCase
             'choice_multiple' => ['2'],
             'checkbox_checked' => '1',
             'file' => '',
-            'hidden' => ''
+            'hidden' => '',
         ];
         $fullBareData = array_merge(
             $bareForm,
             [
-                'checkbox' => null
+                'checkbox' => null,
             ]
         );
 
@@ -71,7 +71,7 @@ class ComponentWithFormTest extends KernelTestCase
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" />')
             ->assertContains('<input type="checkbox" id="form_checkbox" name="form[checkbox]" required="required" value="1" />')
             ->assertContains('<input type="checkbox" id="form_checkbox_checked" name="form[checkbox_checked]" required="required" value="1" checked="checked" />')
-            ->use(function (HtmlResponse $response) use(&$fullBareData, &$dehydrated, &$bareForm) {
+            ->use(function (HtmlResponse $response) use (&$fullBareData, &$dehydrated, &$bareForm) {
                 $data = json_decode(
                     $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
                     true
@@ -86,7 +86,7 @@ class ComponentWithFormTest extends KernelTestCase
             ->get('/_components/form_component1?'.http_build_query($dehydrated))
             ->assertContains('<input type="checkbox" id="form_choice_multiple_1" name="form[choice_multiple][]" value="2" checked="checked" />')
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" checked="checked" />')
-            ->use(function (HtmlResponse $response) use(&$fullBareData, &$dehydrated, &$bareForm) {
+            ->use(function (HtmlResponse $response) use (&$fullBareData, &$dehydrated, &$bareForm) {
                 $data = json_decode(
                     $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
                     true
@@ -108,7 +108,7 @@ class ComponentWithFormTest extends KernelTestCase
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" />')
             ->assertContains('<input type="checkbox" id="form_checkbox" name="form[checkbox]" required="required" value="1" checked="checked" />')
             ->assertContains('<input type="checkbox" id="form_checkbox_checked" name="form[checkbox_checked]" required="required" value="1" />')
-            ->use(function (HtmlResponse $response) use($fullBareData) {
+            ->use(function (HtmlResponse $response) use ($fullBareData) {
                 $data = json_decode(
                     $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
                     true

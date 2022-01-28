@@ -55,11 +55,11 @@ class FormType1 extends AbstractType
                 ],
                 'expanded' => true,
                 'multiple' => true,
-                'data' => [2]
+                'data' => [2],
             ])
             ->add('checkbox', CheckboxType::class)
             ->add('checkbox_checked', CheckboxType::class, [
-                'data' => true
+                'data' => true,
             ])
             ->add('file', FileType::class)
             ->add('hidden', HiddenType::class)
@@ -69,7 +69,7 @@ class FormType1 extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'csrf_protection' => false
+            'csrf_protection' => false,
         ]);
     }
 }

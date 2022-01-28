@@ -11,13 +11,13 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixture\Component;
 
-use Symfony\UX\LiveComponent\Tests\Fixture\Form\FormType1;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\LiveComponent\Tests\Fixture\Form\FormType1;
 
 /**
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
