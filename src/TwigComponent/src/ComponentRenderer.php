@@ -25,11 +25,14 @@ final class ComponentRenderer
 {
     private bool $safeClassesRegistered = false;
 
-    public function __construct(private Environment $twig, private EventDispatcherInterface $dispatcher)
-    {
+    public function __construct(
+        private Environment $twig,
+        private EventDispatcherInterface $dispatcher,
+        private ComponentFactory $factory
+    ) {
     }
 
-    public function render(object $component, ComponentMetadata $metadata): string
+    public function render(MountedComponent $mounted): string
     {
         if (!$this->safeClassesRegistered) {
             $this->twig->getExtension(EscaperExtension::class)->addSafeClass(ComponentAttributes::class, ['html']);
@@ -37,11 +40,7 @@ final class ComponentRenderer
             $this->safeClassesRegistered = true;
         }
 
-        $event = new PreRenderEvent(
-            $component,
-            $metadata,
-            array_merge(['this' => $component], get_object_vars($component))
-        );
+        $event = new PreRenderEvent($mounted, $this->factory->metadataFor($mounted->getName()));
 
         $this->dispatcher->dispatch($event);
 

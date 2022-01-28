@@ -123,15 +123,18 @@ class ComponentWithFormTest extends KernelTestCase
 
         $form = $formFactory->create(BlogPostFormType::class);
         $form->submit(['title' => '', 'content' => '']);
-        /** @var FormWithCollectionTypeComponent $component */
-        $component = $factory->create('form_with_collection_type', [
+
+        $mounted = $factory->create('form_with_collection_type', [
             'form' => $form->createView(),
         ]);
+
+        /** @var FormWithCollectionTypeComponent $component */
+        $component = $mounted->getComponent();
 
         // component should recognize that it is already submitted
         $this->assertTrue($component->isValidated);
 
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $hydrator->dehydrate($mounted);
         $dehydrated['blog_post_form']['content'] = 'changed description';
         $dehydrated['validatedFields'][] = 'blog_post_form.content';
 

@@ -31,8 +31,8 @@ final class LiveComponentRuntime
 
     public function getComponentUrl(string $name, array $props = []): string
     {
-        $component = $this->factory->create($name, $props);
-        $params = ['component' => $name] + $this->hydrator->dehydrate($component);
+        $mounted = $this->factory->create($name, $props);
+        $params = ['component' => $name] + $this->hydrator->dehydrate($mounted);
 
         return $this->urlGenerator->generate('live_component', $params);
     }

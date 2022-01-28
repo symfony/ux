@@ -17,9 +17,10 @@ use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component3;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithAttributes;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\UX\TwigComponent\MountedComponent;
 use function Zenstruck\Foundry\create;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -40,20 +41,22 @@ final class LiveComponentHydratorTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
-        /** @var Component1 $component */
-        $component = $factory->create('component1', [
+        $mounted = $factory->create('component1', [
             'prop1' => $prop1 = create(Entity1::class)->object(),
             'prop2' => $prop2 = new \DateTime('2021-03-05 9:23'),
             'prop3' => $prop3 = 'value3',
             'prop4' => $prop4 = 'value4',
         ]);
 
+        /** @var Component1 $component */
+        $component = $mounted->getComponent();
+
         $this->assertSame($prop1, $component->prop1);
         $this->assertSame($prop2, $component->prop2);
         $this->assertSame($prop3, $component->prop3);
         $this->assertSame($prop4, $component->prop4);
 
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $hydrator->dehydrate($mounted);
 
         $this->assertSame($prop1->id, $dehydrated['prop1']);
         $this->assertSame($prop2->format('c'), $dehydrated['prop2']);
@@ -63,7 +66,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $component = $factory->get('component1');
 
-        $hydrator->hydrate($component, $dehydrated);
+        $hydrator->hydrate($component, $dehydrated, $mounted->getName());
 
         $this->assertSame($prop1->id, $component->prop1->id);
         $this->assertSame($prop2->format('c'), $component->prop2->format('c'));
@@ -79,19 +82,18 @@ final class LiveComponentHydratorTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
-        /** @var Component1 $component */
-        $component = $factory->create('component1', [
+        $mounted = $factory->create('component1', [
             'prop1' => create(Entity1::class)->object(),
             'prop2' => new \DateTime('2021-03-05 9:23'),
             'prop3' => 'value3',
         ]);
 
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $hydrator->dehydrate($mounted);
         $dehydrated['prop3'] = 'new value';
 
         $component = $factory->get('component1');
 
-        $hydrator->hydrate($component, $dehydrated);
+        $hydrator->hydrate($component, $dehydrated, $mounted->getName());
 
         $this->assertSame('new value', $component->prop3);
     }
@@ -104,20 +106,19 @@ final class LiveComponentHydratorTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
-        /** @var Component1 $component */
-        $component = $factory->create('component1', [
+        $mounted = $factory->create('component1', [
             'prop1' => create(Entity1::class)->object(),
             'prop2' => new \DateTime('2021-03-05 9:23'),
             'prop3' => 'value3',
         ]);
 
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $hydrator->dehydrate($mounted);
         $dehydrated['prop2'] = (new \DateTime())->format('c');
 
         $component = $factory->get('component1');
 
         $this->expectException(\RuntimeException::class);
-        $hydrator->hydrate($component, $dehydrated);
+        $hydrator->hydrate($component, $dehydrated, $mounted->getName());
     }
 
     public function testHydrationFailsIfChecksumMissing(): void
@@ -129,7 +130,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->expectException(\RuntimeException::class);
-        $hydrator->hydrate($factory->get('component1'), []);
+        $hydrator->hydrate($factory->get('component1'), [], 'component1');
     }
 
     public function testHydrationFailsOnChecksumMismatch(): void
@@ -141,7 +142,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->expectException(\RuntimeException::class);
-        $hydrator->hydrate($factory->get('component1'), ['_checksum' => 'invalid']);
+        $hydrator->hydrate($factory->get('component1'), ['_checksum' => 'invalid'], 'component1');
     }
 
     public function testPreDehydrateAndPostHydrateHooksCalled(): void
@@ -152,13 +153,15 @@ final class LiveComponentHydratorTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
+        $mounted = $factory->create('component2');
+
         /** @var Component2 $component */
-        $component = $factory->create('component2');
+        $component = $mounted->getComponent();
 
         $this->assertFalse($component->preDehydrateCalled);
         $this->assertFalse($component->postHydrateCalled);
 
-        $data = $hydrator->dehydrate($component);
+        $data = $hydrator->dehydrate($mounted);
 
         $this->assertTrue($component->preDehydrateCalled);
         $this->assertFalse($component->postHydrateCalled);
@@ -169,7 +172,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertFalse($component->preDehydrateCalled);
         $this->assertFalse($component->postHydrateCalled);
 
-        $hydrator->hydrate($component, $data);
+        $hydrator->hydrate($component, $data, $mounted->getName());
 
         $this->assertFalse($component->preDehydrateCalled);
         $this->assertTrue($component->postHydrateCalled);
@@ -185,15 +188,17 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $entity = create(Entity1::class);
 
-        /** @var Component1 $component */
-        $component = $factory->create('component1', [
+        $mounted = $factory->create('component1', [
             'prop1' => $entity->object(),
             'prop2' => new \DateTime('2021-03-05 9:23'),
         ]);
 
+        /** @var Component1 $component */
+        $component = $mounted->getComponent();
+
         $this->assertSame($entity->id, $component->prop1->id);
 
-        $data = $hydrator->dehydrate($component);
+        $data = $hydrator->dehydrate($mounted);
 
         $this->assertSame($entity->id, $data['prop1']);
 
@@ -202,11 +207,11 @@ final class LiveComponentHydratorTest extends KernelTestCase
         /** @var Component1 $component */
         $component = $factory->get('component1');
 
-        $hydrator->hydrate($component, $data);
+        $mounted = $hydrator->hydrate($component, $data, $mounted->getName());
 
         $this->assertNull($component->prop1);
 
-        $data = $hydrator->dehydrate($component);
+        $data = $hydrator->dehydrate($mounted);
 
         $this->assertNull($data['prop1']);
     }
@@ -219,10 +224,12 @@ final class LiveComponentHydratorTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
-        /** @var Component3 $component */
-        $component = $factory->create('component3', ['prop1' => 'value1', 'prop2' => 'value2']);
+        $mounted = $factory->create('component3', ['prop1' => 'value1', 'prop2' => 'value2']);
 
-        $dehydrated = $hydrator->dehydrate($component);
+        /** @var Component3 $component */
+        $component = $mounted->getComponent();
+
+        $dehydrated = $hydrator->dehydrate($mounted);
 
         $this->assertArrayNotHasKey('prop1', $dehydrated);
         $this->assertArrayNotHasKey('prop2', $dehydrated);
@@ -234,7 +241,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         /** @var Component3 $component */
         $component = $factory->get('component3');
 
-        $hydrator->hydrate($component, $dehydrated);
+        $hydrator->hydrate($component, $dehydrated, $mounted->getName());
 
         $this->assertSame('value1', $component->prop1);
         $this->assertSame('value2', $component->prop2);
@@ -253,14 +260,14 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $instance = clone $component;
         $instance->prop = ['some', 'array'];
 
-        $dehydrated = $hydrator->dehydrate($instance);
+        $dehydrated = $hydrator->dehydrate(new MountedComponent('my_component', $instance, new ComponentAttributes([])));
 
         $this->assertArrayHasKey('prop', $dehydrated);
         $this->assertSame($instance->prop, $dehydrated['prop']);
 
         $this->assertFalse(isset($component->prop));
 
-        $hydrator->hydrate($component, $dehydrated);
+        $hydrator->hydrate($component, $dehydrated, 'my_component');
 
         $this->assertSame($instance->prop, $component->prop);
     }
@@ -273,19 +280,18 @@ final class LiveComponentHydratorTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
-        /** @var ComponentWithAttributes $component */
-        $component = $factory->create('with_attributes', $attributes = ['class' => 'foo', 'value' => null]);
+        $mounted = $factory->create('with_attributes', $attributes = ['class' => 'foo', 'value' => null]);
 
-        $this->assertSame($attributes, $component->attributes->all());
+        $this->assertSame($attributes, $mounted->getAttributes()->all());
 
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $hydrator->dehydrate($mounted);
 
-        $this->assertArrayHasKey('attributes', $dehydrated);
-        $this->assertSame($attributes, $dehydrated['attributes']);
+        $this->assertArrayHasKey('_attributes', $dehydrated);
+        $this->assertSame($attributes, $dehydrated['_attributes']);
 
-        $hydrator->hydrate($component = $factory->get('with_attributes'), $dehydrated);
+        $mounted = $hydrator->hydrate($factory->get('with_attributes'), $dehydrated, $mounted->getName());
 
-        $this->assertSame($attributes, $component->attributes->all());
+        $this->assertSame($attributes, $mounted->getAttributes()->all());
     }
 
     public function testCanDehydrateAndHydrateComponentsWithEmptyAttributes(): void
@@ -296,20 +302,16 @@ final class LiveComponentHydratorTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
-        /** @var ComponentWithAttributes $component */
-        $component = $factory->create('with_attributes');
+        $mounted = $factory->create('with_attributes');
 
-        $this->assertSame([], $component->attributes->all());
+        $this->assertSame([], $mounted->getAttributes()->all());
 
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $hydrator->dehydrate($mounted);
 
-        $this->assertArrayHasKey('attributes', $dehydrated);
-        $this->assertSame([], $dehydrated['attributes']);
+        $this->assertArrayNotHasKey('_attributes', $dehydrated);
 
-        $component = $factory->get('with_attributes');
+        $mounted = $hydrator->hydrate($factory->get('with_attributes'), $dehydrated, $mounted->getName());
 
-        $hydrator->hydrate($component, $dehydrated);
-
-        $this->assertSame([], $component->attributes->all());
+        $this->assertSame([], $mounted->getAttributes()->all());
     }
 }

@@ -249,30 +249,15 @@ Component Attributes
 
 .. versionadded:: 2.1
 
-    The ``HasAttributes`` trait was added in TwigComponents 2.1.
+    Component attributes were added in TwigComponents 2.1.
 
 `Component attributes`_ allows you to render your components with extra
 props that are are converted to html attributes and made available in
 your component's template as an ``attributes`` variable. When used on
-live components, these props are persisted between renders. You can enable
-this feature by having your live component use the ``HasAttributesTrait``:
+live components, these props are persisted between renders.
 
-.. code-block:: diff
-
-      // ...
-      use Symfony\UX\LiveComponent\Attribute\LiveProp;
-    + use Symfony\UX\TwigComponent\HasAttributesTrait;
-
-      #[AsLiveComponent('random_number')]
-      class RandomNumberComponent
-      {
-    +     use HasAttributesTrait;
-
-          #[LiveProp]
-          public int $min = 0;
-
-Now, when rendering your component, you can pass html attributes
-as props and these will be added to ``attributes``:
+When rendering your component, you can pass html attributes as props and
+these will be added to ``attributes``:
 
 .. code-block:: twig
 

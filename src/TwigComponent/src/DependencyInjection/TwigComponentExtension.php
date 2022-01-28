@@ -56,6 +56,7 @@ final class TwigComponentExtension extends Extension
             ->setArguments([
                 new Reference('twig'),
                 new Reference('event_dispatcher'),
+                new Reference('ux.twig_component.component_factory'),
             ])
         ;
 

@@ -32,9 +32,6 @@ final class ComponentRuntime
 
     public function render(string $name, array $props = []): string
     {
-        return $this->componentRenderer->render(
-            $this->componentFactory->create($name, $props),
-            $this->componentFactory->metadataFor($name)
-        );
+        return $this->componentRenderer->render($this->componentFactory->create($name, $props));
     }
 }
