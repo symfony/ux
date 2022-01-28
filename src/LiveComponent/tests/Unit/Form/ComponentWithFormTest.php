@@ -11,17 +11,21 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Unit\Form;
 
-use Symfony\Component\Form\Test\TypeTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\LiveComponent\Tests\ContainerBC;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\FormComponent1;
 
 /**
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
  */
-class ComponentWithFormTest extends TypeTestCase
+class ComponentWithFormTest extends KernelTestCase
 {
+    use ContainerBC;
+
     public function testFormValues(): void
     {
-        $component = new FormComponent1($this->factory->createBuilder());
+        $formFactory = self::getContainer()->get('form.factory');
+        $component = new FormComponent1($formFactory);
 
         $this->assertSame(
             [
@@ -30,8 +34,9 @@ class ComponentWithFormTest extends TypeTestCase
                 'range' => '',
                 'choice' => '',
                 'choice_expanded' => '',
-                'choice_multiple' => [],
+                'choice_multiple' => ['2'],
                 'checkbox' => null,
+                'checkbox_checked' => '1',
                 'file' => '',
                 'hidden' => '',
             ],

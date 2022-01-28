@@ -18,6 +18,12 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Form\Extension\Core\Type\FormType;
+use Symfony\Component\Form\FormBuilder;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormFactory;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
@@ -27,6 +33,7 @@ use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component3;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component6;
+use Symfony\UX\LiveComponent\Tests\Fixture\Component\FormComponent1;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Environment;
 
@@ -67,6 +74,7 @@ final class Kernel extends BaseKernel
         $componentB = $c->register(Component2::class)->setAutoconfigured(true)->setAutowired(true);
         $componentC = $c->register(Component3::class)->setAutoconfigured(true)->setAutowired(true);
         $componentF = $c->register(Component6::class)->setAutoconfigured(true)->setAutowired(true);
+        $componentFormA = $c->register(FormComponent1::class)->setAutoconfigured(true)->setAutowired(true);
 
         if (self::VERSION_ID < 50300) {
             // add tag manually
@@ -74,6 +82,7 @@ final class Kernel extends BaseKernel
             $componentB->addTag('twig.component', ['key' => 'component2', 'default_action' => 'defaultAction'])->addTag('controller.service_arguments');
             $componentC->addTag('twig.component', ['key' => 'component3'])->addTag('controller.service_arguments');
             $componentF->addTag('twig.component', ['key' => 'component6'])->addTag('controller.service_arguments');
+            $componentFormA->addTag('twig.component', ['key' => 'form_component1'])->addTag('controller.service_arguments');
         }
 
         $sessionConfig = self::VERSION_ID < 50300 ? ['storage_id' => 'session.storage.mock_file'] : ['storage_factory_id' => 'session.storage.factory.mock_file'];
