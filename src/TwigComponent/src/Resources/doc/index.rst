@@ -27,8 +27,8 @@ And (2) a corresponding template:
 .. code-block:: twig
 
     {# templates/components/alert.html.twig #}
-    <div class="alert alert-{{ this.type }}">
-        {{ this.message }}
+    <div class="alert alert-{{ type }}">
+        {{ message }}
     </div>
 
 Done! Now render it wherever you want:
@@ -130,12 +130,21 @@ public property for each:
           // ...
       }
 
-In the template, the ``AlertComponent`` instance is available via the
-``this`` variable. Use it to render the two new properties:
+In the template, the ``AlertComponent`` instance is available via
+the ``this`` variable and public properties are available directly.
+Use them to render the two new properties:
+
+.. versionadded:: 2.1
+
+    The ability to reference local variables in the template (e.g. ``message``) was added in TwigComponents 2.1.
+    Previously, all data needed to be referenced through ``this`` (e.g. ``this.message``).
 
 .. code-block:: twig
 
-    <div class="alert alert-{{ this.type }}">
+    <div class="alert alert-{{ type }}">
+        {{ message }}
+
+        {# Same as above, but using "this", which is the component object #}
         {{ this.message }}
     </div>
 
@@ -254,6 +263,12 @@ component use a ``PreMount`` hook::
         // ...
     }
 
+.. note::
+
+    If your component has multiple ``PreMount`` hooks, and you'd like to control
+    the order in which they're called, use the ``priority`` attribute parameter:
+    ``PreMount(priority: 10)`` (higher called earlier).
+
 Fetching Services
 -----------------
 
@@ -312,11 +327,12 @@ need to populate, you can render it with:
 
     {{ component('featured_products') }}
 
-**NOTE** Because components are services, normal dependency injection
-can be used. However, each component service is registered with
-``shared: false``. That means that you can safely render the same
-component multiple times with different data because each component will
-be an independent instance.
+.. note::
+
+    Because components are services, normal dependency injection can be used.
+    However, each component service is registered with ``shared: false``. That
+    means that you can safely render the same component multiple times with
+    different data because each component will be an independent instance.
 
 Computed Properties
 ~~~~~~~~~~~~~~~~~~~

@@ -35,6 +35,8 @@ describe('LiveController Action Tests', () => {
                 data-action="live#action"
                 data-action-name="save"
             >Save</button>
+
+            <button data-action="live#action" data-action-name="sendNamedArgs(a=1, b=2, c=3)">Send named args</button>
         </div>
     `;
 
@@ -48,10 +50,10 @@ describe('LiveController Action Tests', () => {
         const { element } = await startStimulus(template(data));
 
         // ONLY a post is sent, not a re-render GET
-        const postMock = fetchMock.postOnce('http://localhost/_components/my_component/save', {
-            html: template({ comments: 'hi weaver', isSaved: true }),
-            data: { comments: 'hi weaver', isSaved: true }
-        });
+        const postMock = fetchMock.postOnce(
+            'http://localhost/_components/my_component/save',
+            template({ comments: 'hi weaver', isSaved: true })
+        );
 
         await userEvent.type(getByLabelText(element, 'Comments:'), ' WEAVER');
 
@@ -63,5 +65,16 @@ describe('LiveController Action Tests', () => {
         fetchMock.done();
 
         expect(postMock.lastOptions().body.get('comments')).toEqual('hi WEAVER');
+    });
+
+    it('Sends action named args', async () => {
+        const data = { comments: 'hi' };
+        const { element } = await startStimulus(template(data));
+
+        fetchMock.postOnce('http://localhost/_components/my_component/sendNamedArgs?values=a%3D1%26b%3D2%26c%3D3', {
+            html: template({ comments: 'hi' }),
+        });
+
+        getByText(element, 'Send named args').click();
     });
 });

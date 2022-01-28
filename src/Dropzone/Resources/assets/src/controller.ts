@@ -12,6 +12,13 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
+    readonly inputTarget: HTMLInputElement;
+    readonly placeholderTarget: HTMLDivElement;
+    readonly previewTarget: HTMLDivElement;
+    readonly previewClearButtonTarget: HTMLButtonElement;
+    readonly previewFilenameTarget: HTMLDivElement;
+    readonly previewImageTarget: HTMLDivElement;
+
     static targets = ['input', 'placeholder', 'preview', 'previewClearButton', 'previewFilename', 'previewImage'];
 
     connect() {
@@ -39,7 +46,7 @@ export default class extends Controller {
         this._dispatchEvent('dropzone:clear');
     }
 
-    onInputChange(event) {
+    onInputChange(event: any) {
         const file = event.target.files[0];
         if (typeof file === 'undefined') {
             return;
@@ -62,7 +69,7 @@ export default class extends Controller {
         this._dispatchEvent('dropzone:change', file);
     }
 
-    _populateImagePreview(file) {
+    _populateImagePreview(file: Blob) {
         if (typeof FileReader === 'undefined') {
             // FileReader API not available, skip
             return;
@@ -70,7 +77,7 @@ export default class extends Controller {
 
         const reader = new FileReader();
 
-        reader.addEventListener('load', (event) => {
+        reader.addEventListener('load', (event: any) => {
             this.previewImageTarget.style.display = 'block';
             this.previewImageTarget.style.backgroundImage = 'url("' + event.target.result + '")';
         });
@@ -78,7 +85,7 @@ export default class extends Controller {
         reader.readAsDataURL(file);
     }
 
-    _dispatchEvent(name: string, payload: any) {
+    _dispatchEvent(name: string, payload: any = {}) {
         this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
     }
 }

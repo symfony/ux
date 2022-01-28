@@ -6,12 +6,6 @@ import { buildFormData, buildSearchParams } from './http_data_helper';
 import { setDeepData, doesDeepPropertyExist, normalizeModelName } from './set_deep_data';
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 
-interface LiveResponseData {
-    redirect_url?: string,
-    html?: string,
-    data?: any,
-}
-
 interface ElementLoadingDirectives {
     element: HTMLElement,
     directives: Directive[]
@@ -152,7 +146,7 @@ export default class extends Controller {
                 // taking precedence
                 this._clearWaitingDebouncedRenders();
 
-                this._makeRequest(directive.action);
+                this._makeRequest(directive.action, directive.named);
             }
 
             let handled = false;
@@ -203,20 +197,8 @@ export default class extends Controller {
         this._makeRequest(null);
     }
 
-    _getValueFromElement(element: HTMLElement){
-        const value = element.dataset.value || element.value;
-
-        if (!value) {
-            const clonedElement = (element.cloneNode());
-            // helps typescript know this is an HTMLElement
-            if (!(clonedElement instanceof HTMLElement)) {
-                throw new Error('cloneNode() produced incorrect type');
-            }
-
-            throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-value" or "value" attribute set.`);
-        }
-
-        return value;
+    _getValueFromElement(element: HTMLElement) {
+        return element.dataset.value || (element as any).value;
     }
 
     _updateModelFromElement(element: HTMLElement, value: string, shouldRender: boolean) {
@@ -322,15 +304,19 @@ export default class extends Controller {
         }
     }
 
-    _makeRequest(action: string|null) {
+    _makeRequest(action: string|null, args: Record<string,unknown>) {
         const splitUrl = this.urlValue.split('?');
         let [url] = splitUrl
         const [, queryString] = splitUrl;
         const params = new URLSearchParams(queryString || '');
 
+        if (typeof args === 'object' && Object.keys(args).length > 0) {
+            params.set('args', new URLSearchParams(args).toString());
+        }
+
         const fetchOptions: RequestInit = {};
         fetchOptions.headers = {
-            'Accept': 'application/vnd.live-component+json',
+            'Accept': 'application/vnd.live-component+html',
         };
 
         if (action) {
@@ -361,8 +347,8 @@ export default class extends Controller {
 
             const isMostRecent = this.renderPromiseStack.removePromise(thisPromise);
             if (isMostRecent) {
-                response.json().then((data) => {
-                    this._processRerender(data)
+                response.text().then((html) => {
+                    this._processRerender(html, response);
                 });
             }
         })
@@ -373,24 +359,24 @@ export default class extends Controller {
      *
      * @private
      */
-    _processRerender(data: LiveResponseData) {
+    _processRerender(html: string, response: Response) {
         // check if the page is navigating away
         if (this.isWindowUnloaded) {
             return;
         }
 
-        if (data.redirect_url) {
+        if (response.headers.get('Location')) {
             // action returned a redirect
             if (typeof Turbo !== 'undefined') {
-                Turbo.visit(data.redirect_url);
+                Turbo.visit(response.headers.get('Location'));
             } else {
-                window.location.href = data.redirect_url;
+                window.location.href = response.headers.get('Location') || '';
             }
 
             return;
         }
 
-        if (!this._dispatchEvent('live:render', data, true, true)) {
+        if (!this._dispatchEvent('live:render', html, true, true)) {
             // preventDefault() was called
             return;
         }
@@ -400,15 +386,8 @@ export default class extends Controller {
         // elements to appear different unnecessarily
         this._onLoadingFinish();
 
-        if (!data.html) {
-            throw new Error('Missing html key on response JSON');
-        }
-
         // merge/patch in the new HTML
-        this._executeMorphdom(data.html);
-
-        // "data" holds the new, updated data
-        this.dataValue = data.data;
+        this._executeMorphdom(html);
     }
 
     _clearWaitingDebouncedRenders() {
@@ -640,7 +619,7 @@ export default class extends Controller {
         let callback: () => void;
         if (actionName.charAt(0) === '$') {
             callback = () => {
-                this[actionName]();
+                (this as any)[actionName]();
             }
         } else {
             callback = () => {
@@ -654,7 +633,7 @@ export default class extends Controller {
         this.pollingIntervals.push(timer);
     }
 
-    _dispatchEvent(name: string, payload: object | null = null, canBubble = true, cancelable = false) {
+    _dispatchEvent(name: string, payload: object | string | null = null, canBubble = true, cancelable = false) {
         return this.element.dispatchEvent(new CustomEvent(name, {
             bubbles: canBubble,
             cancelable,

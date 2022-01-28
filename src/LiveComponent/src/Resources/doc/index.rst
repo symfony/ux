@@ -38,6 +38,11 @@ A real-time product search component might look like this::
         }
     }
 
+.. versionadded:: 2.1
+
+    The ability to reference local variables in the template (e.g. ``query``) was added in TwigComponents 2.1.
+    Previously, all data needed to be referenced through ``this`` (e.g. ``this.query``).
+
 .. code-block:: twig
 
     {# templates/components/product_search.html.twig #}
@@ -45,7 +50,7 @@ A real-time product search component might look like this::
         <input
             type="search"
             name="query"
-            value="{{ this.query }}"
+            value="{{ query }}"
             data-action="live#update"
         >
 
@@ -99,6 +104,8 @@ Oh, and just one more step! Import a routing file from the bundle:
     # config/routes.yaml
     live_component:
         resource: '@LiveComponentBundle/Resources/config/routing/live_component.xml'
+        # uncomment to add localization to your components
+        #prefix: '/{_locale}'
 
 That's it! We're ready!
 
@@ -247,19 +254,19 @@ Let's add two inputs to our template:
     <div {{ init_live_component(this) }}>
         <input
             type="number"
-            value="{{ this.min }}"
+            value="{{ min }}"
             data-model="min"
             data-action="live#update"
         >
 
         <input
             type="number"
-            value="{{ this.max }}"
+            value="{{ max }}"
             data-model="max"
             data-action="live#update"
         >
 
-        Generating a number between {{ this.min }} and {{ this.max }}
+        Generating a number between {{ min }} and {{ max }}
         <strong>{{ this.randomNumber }}</strong>
     </div>
 
@@ -316,7 +323,7 @@ happens, add it to the ``data-action`` call:
 
       <input
           type="number"
-          value="{{ this.max }}"
+          value="{{ max }}"
           data-model="max"
     -     data-action="live#update"
     +     data-action="change->live#update"
@@ -341,7 +348,7 @@ clicked). To do that, use the ``updateDefer`` method:
 
       <input
           type="number"
-          value="{{ this.max }}"
+          value="{{ max }}"
           data-model="max"
     -     data-action="live#update"
     +     data-action="live#updateDefer"
@@ -364,7 +371,7 @@ property. The following code works identically to the previous example:
       <div {{ init_live_component(this)>
           <input
               type="number"
-              value="{{ this.min }}"
+              value="{{ min }}"
     -         data-model="min"
     +         name="min"
               data-action="live#update"
@@ -543,6 +550,42 @@ This means that, for example, you can use action autowiring::
         }
 
         // ...
+    }
+
+Actions & Arguments
+^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 2.1
+
+    The ability to pass arguments to actions was added in version 2.1.
+
+You can also provide custom arguments to your action::
+
+.. code-block:: twig
+    <form>
+        <button data-action="live#action" data-action-name="addItem(id={{ item.id }}, name=CustomItem)">Add Item</button>
+    </form>
+
+In component for custom arguments to be injected we need to use `#[LiveArg()]` attribute, otherwise it would be
+ignored. Optionally you can provide `name` argument like: `[#LiveArg('itemName')]` so it will use custom name from
+args but inject to your defined parameter with another name.::
+
+    // src/Components/ItemComponent.php
+    namespace App\Components;
+
+    // ...
+    use Symfony\UX\LiveComponent\Attribute\LiveArg;
+    use Psr\Log\LoggerInterface;
+
+    class ItemComponent
+    {
+        // ...
+        #[LiveAction]
+        public function addItem(#[LiveArg] int $id, #[LiveArg('itemName')] string $name)
+        {
+            $this->id = $id;
+            $this->name = $name;
+        }
     }
 
 Actions and CSRF Protection
@@ -968,10 +1011,12 @@ Now, when the form is submitted, it will execute the ``save()`` method
 via Ajax. If the form fails validation, it will re-render with the
 errors. And if it's successful, it will redirect.
 
-**NOTE**: Make sure that each time the user changes a field, you update
-the component's model. If you don't do this, when you trigger the
-action, it will *not* contain the form's data because the data in the
-fields and the component's data will be out of sync.
+.. note::
+
+    Make sure that each time the user changes a field, you update the
+    component's model. If you don't do this, when you trigger the action, it
+    will *not* contain the form's data because the data in the fields and the
+    component's data will be out of sync.
 
 An easy way to accomplish this (explained more in the :ref:`Forms <forms>`
 section above) is to add:
@@ -1014,7 +1059,7 @@ rendered the ``content`` through a Markdown filter from the
     <div {{init_live_component(this)}}>
         <input
             type="text"
-            value="{{ this.post.title }}"
+            value="{{ post.title }}"
             data-model="post.title"
             data-action="live#update"
         >
@@ -1022,11 +1067,11 @@ rendered the ``content`` through a Markdown filter from the
            <textarea
                data-model="post.content"
                data-action="live#update"
-           >{{this.post.content}}</textarea>
+           >{{post.content}}</textarea>
 
             <div className="markdown-preview" data-loading="addClass(low-opacity)">
-                <h3>{{this.post.title}}</h3>
-                {{this.post.content | markdown_to_html}}
+                <h3>{{post.title}}</h3>
+                {{post.content | markdown_to_html}}
             </div>
     </div>
 
@@ -1064,8 +1109,10 @@ property.
 Validation (without a Form)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-**NOTE** If your component :ref:`contains a form <forms>`, then validation
-is built-in automatically. Follow those docs for more details.
+.. note::
+
+    If your component :ref:`contains a form <forms>`, then validation
+    is built-in automatically. Follow those docs for more details.
 
 If you're building some sort of form *without* using Symfony's form
 component, you *can* still validate your data.
@@ -1138,7 +1185,7 @@ method:
         data-model="post.content"
         data-action="live#update"
         class="{{ this.getError('post.content') ? 'has-error' : '' }}"
-    >{{ this.post.content }}</textarea>
+    >{{ post.content }}</textarea>
 
 Once a component has been validated, the component will “rememeber” that
 it has been validated. This means that, if you edit a field and the
@@ -1158,7 +1205,7 @@ blur the field), update the model via the ``change`` event:
         data-model="post.content"
         data-action="change->live#update"
         class="{{ this.getError('post.content') ? 'has-error' : '' }}"
-    >{{ this.post.content }}</textarea>
+    >{{ post.content }}</textarea>
 
 When the component re-renders, it will signal to the server that this
 one field should be validated. Like with normal validation, once an
@@ -1328,9 +1375,11 @@ Thanks to the ``data-model-map``, whenever the ``markdown_value`` model
 updates in the child component, the ``post.content`` model will be
 updated in the parent component.
 
-**NOTE**: If you *change* a ``LiveProp`` of a child component on the
-server (e.g. during re-rendering or via an action), that change will
-*not* be reflected on any parent components that share that model.
+.. note::
+
+    If you *change* a ``LiveProp`` of a child component on the server
+    (e.g. during re-rendering or via an action), that change will
+    *not* be reflected on any parent components that share that model.
 
 Full Embedded Component Example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1393,13 +1442,13 @@ In the ``EditPostComponent`` template, you render the
             type="text"
             name="post[title]"
             data-action="live#update"
-            value="{{ this.post.title }}"
+            value="{{ post.title }}"
         >
 
         {{ component('markdown_textarea', {
             name: 'post[content]',
             label: 'Content',
-            value: this.post.content
+            value: post.content
         }) }}
 
         <button
@@ -1412,13 +1461,13 @@ In the ``EditPostComponent`` template, you render the
 
     <div {{ init_live_component(this) }} class="mb-3">
         <textarea
-            name="{{ this.name }}"
+            name="{{ name }}"
             data-model="value"
             data-action="live#update"
-        >{{ this.value }}</textarea>
+        >{{ value }}</textarea>
 
         <div class="markdown-preview">
-            {{ this.value|markdown_to_html }}
+            {{ value|markdown_to_html }}
         </div>
     </div>
 

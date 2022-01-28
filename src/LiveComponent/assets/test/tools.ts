@@ -74,10 +74,7 @@ const mockRerender = (sentData, renderCallback, changeDataCallback = null) => {
         changeDataCallback(sentData);
     }
 
-    fetchMock.mock(url, {
-        html: renderCallback(sentData),
-        data: sentData
-    });
+    fetchMock.mock(url, renderCallback(sentData));
 }
 
 export { startStimulus, getControllerElement, initLiveComponent, mockRerender };

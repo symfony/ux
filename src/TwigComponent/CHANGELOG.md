@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.1
+
+-   Make public component properties available directly in the template (`{{ prop }}` vs `{{ this.prop }}`).
+
+-   Add `PreMount` priority parameter.
+
 ## 2.0.0
 
 -   Support for `stimulus` version 2 was removed and support for `@hotwired/stimulus`

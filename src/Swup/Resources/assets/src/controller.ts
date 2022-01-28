@@ -17,6 +17,19 @@ import SwupFadeTheme from '@swup/fade-theme';
 import SwupSlideTheme from '@swup/slide-theme';
 
 export default class extends Controller {
+    animateHistoryBrowsingValue: boolean;
+    hasAnimateHistoryBrowsingValue: boolean;
+    animationSelectorValue: string;
+    hasAnimationSelectorValue: boolean;
+    cacheValue: boolean;
+    hasCacheValue: boolean;
+    containersValue: string[];
+    hasContainersValue: boolean;
+    linkSelectorValue: string;
+    hasLinkSelectorValue: boolean;
+    themeValue: string;
+    debugValue: boolean;
+
     static values = {
         animateHistoryBrowsing: Boolean,
         animationSelector: String,
@@ -30,7 +43,7 @@ export default class extends Controller {
     };
 
     connect() {
-        const options = {
+        const options: any = {
             containers: ['#swup'],
             plugins: ['slide' === this.themeValue ? new SwupSlideTheme() : new SwupFadeTheme(), new SwupFormsPlugin()],
         };

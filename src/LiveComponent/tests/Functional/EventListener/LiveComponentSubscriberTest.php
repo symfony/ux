@@ -17,6 +17,7 @@ use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Tests\ContainerBC;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
+use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component6;
 use Symfony\UX\LiveComponent\Tests\Fixture\Entity\Entity1;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Zenstruck\Browser\Response\HtmlResponse;
@@ -35,7 +36,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
     use HasBrowser;
     use ResetDatabase;
 
-    public function testCanRenderComponentAsHtmlOrJson(): void
+    public function testCanRenderComponentAsHtml(): void
     {
         /** @var LiveComponentHydrator $hydrator */
         $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
@@ -62,19 +63,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertContains('Prop2: 2021-03-05 9:23')
             ->assertContains('Prop3: value3')
             ->assertContains('Prop4: (none)')
-
-            ->get('/_components/component1?'.http_build_query($dehydrated), ['headers' => ['Accept' => 'application/vnd.live-component+json']])
-            ->assertSuccessful()
-            ->assertHeaderEquals('Content-Type', 'application/vnd.live-component+json')
-            ->assertJsonMatches('keys(@)', ['html', 'data'])
-            ->assertJsonMatches("contains(html, 'Prop1: {$entity->id}')", true)
-            ->assertJsonMatches("contains(html, 'Prop2: 2021-03-05 9:23')", true)
-            ->assertJsonMatches("contains(html, 'Prop3: value3')", true)
-            ->assertJsonMatches("contains(html, 'Prop4: (none)')", true)
-            ->assertJsonMatches('keys(data)', ['prop1', 'prop2', 'prop3', '_checksum'])
-            ->assertJsonMatches('data.prop1', $entity->id)
-            ->assertJsonMatches('data.prop2', $date->format('c'))
-            ->assertJsonMatches('data.prop3', 'value3')
         ;
     }
 
@@ -108,20 +96,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 2')
-
-            ->get('/_components/component2?'.http_build_query($dehydrated), ['headers' => ['Accept' => 'application/vnd.live-component+json']])
-            ->assertSuccessful()
-            ->assertJsonMatches('data.count', 1)
-            ->assertJsonMatches("contains(html, 'Count: 1')", true)
-            ->post('/_components/component2/increase?'.http_build_query($dehydrated), [
-                'headers' => [
-                    'Accept' => 'application/vnd.live-component+json',
-                    'X-CSRF-TOKEN' => $token,
-                ],
-            ])
-            ->assertSuccessful()
-            ->assertJsonMatches('data.count', 2)
-            ->assertJsonMatches("contains(html, 'Count: 2')", true)
         ;
     }
 
@@ -225,19 +199,62 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                 $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
             })
             ->interceptRedirects()
+            // with no custom header, it redirects like a normal browser
             ->post('/_components/component2/redirect?'.http_build_query($dehydrated), [
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertRedirectedTo('/')
 
+            // with custom header, a special 204 is returned
             ->post('/_components/component2/redirect?'.http_build_query($dehydrated), [
                 'headers' => [
-                    'Accept' => 'application/json',
+                    'Accept' => 'application/vnd.live-component+html',
                     'X-CSRF-TOKEN' => $token,
                 ],
             ])
+            ->assertStatus(204)
+            ->assertHeaderEquals('Location', '/')
+        ;
+    }
+
+    public function testInjectsLiveArgs(): void
+    {
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
+
+        /** @var ComponentFactory $factory */
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
+
+        /** @var Component6 $component */
+        $component = $factory->create('component6');
+
+        $dehydrated = $hydrator->dehydrate($component);
+        $token = null;
+
+        $dehydratedWithArgs = array_merge($dehydrated, [
+            'args' => http_build_query(['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3']),
+        ]);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/_components/component6?'.http_build_query($dehydrated))
             ->assertSuccessful()
-            ->assertJsonMatches('redirect_url', '/')
+            ->assertHeaderContains('Content-Type', 'html')
+            ->assertContains('Arg1: not provided')
+            ->assertContains('Arg2: not provided')
+            ->assertContains('Arg3: not provided')
+            ->use(function (HtmlResponse $response) use (&$token) {
+                // get a valid token to use for actions
+                $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
+            })
+            ->post('/_components/component6/inject?'.http_build_query($dehydratedWithArgs), [
+                'headers' => ['X-CSRF-TOKEN' => $token],
+            ])
+            ->assertSuccessful()
+            ->assertHeaderContains('Content-Type', 'html')
+            ->assertContains('Arg1: hello')
+            ->assertContains('Arg2: 666')
+            ->assertContains('Arg3: 33.3')
         ;
     }
 }
