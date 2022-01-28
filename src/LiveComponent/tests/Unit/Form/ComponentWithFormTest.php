@@ -9,6 +9,8 @@
  * file that was distributed with this source code.
  */
 
+declare(strict_types=1);
+
 namespace Symfony\UX\LiveComponent\Tests\Unit\Form;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;

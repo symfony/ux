@@ -34,6 +34,6 @@ class FormComponent1 extends AbstractController
 
     protected function instantiateForm(): FormInterface
     {
-        return $this->formFactory->create(FormType1::class);
+        return $this->formFactory->createNamed('form', FormType1::class);
     }
 }
