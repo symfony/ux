@@ -12,15 +12,12 @@
 namespace Symfony\UX\LiveComponent\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\UX\LiveComponent\Tests\ContainerBC;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
 final class LiveComponentExtensionTest extends KernelTestCase
 {
-    use ContainerBC;
-
     public function testGetComponentUrl(): void
     {
         $rendered = self::getContainer()->get('twig')->render('component_url.html.twig', [

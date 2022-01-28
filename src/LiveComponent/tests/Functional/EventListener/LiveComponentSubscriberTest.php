@@ -14,7 +14,6 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
-use Symfony\UX\LiveComponent\Tests\ContainerBC;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component6;
@@ -31,7 +30,6 @@ use Zenstruck\Foundry\Test\ResetDatabase;
  */
 final class LiveComponentSubscriberTest extends KernelTestCase
 {
-    use ContainerBC;
     use Factories;
     use HasBrowser;
     use ResetDatabase;

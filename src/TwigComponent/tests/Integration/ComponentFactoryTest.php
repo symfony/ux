@@ -23,8 +23,6 @@ use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentC;
  */
 final class ComponentFactoryTest extends KernelTestCase
 {
-    use ContainerBC;
-
     public function testCreatedComponentsAreNotShared(): void
     {
         /** @var ComponentFactory $factory */

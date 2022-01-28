@@ -34,17 +34,15 @@ final class TwigComponentExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        if (method_exists($container, 'registerAttributeForAutoconfiguration')) {
-            $container->registerAttributeForAutoconfiguration(
-                AsTwigComponent::class,
-                static function (ChildDefinition $definition, AsTwigComponent $attribute) {
-                    $definition->addTag('twig.component', array_filter([
-                        'key' => $attribute->name,
-                        'template' => $attribute->template,
-                    ]));
-                }
-            );
-        }
+        $container->registerAttributeForAutoconfiguration(
+            AsTwigComponent::class,
+            static function (ChildDefinition $definition, AsTwigComponent $attribute) {
+                $definition->addTag('twig.component', array_filter([
+                    'key' => $attribute->name,
+                    'template' => $attribute->template,
+                ]));
+            }
+        );
 
         $container->register('ux.twig_component.component_factory', ComponentFactory::class)
             ->setArguments([

@@ -14,7 +14,6 @@ namespace Symfony\UX\LiveComponent\Tests\Integration;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
-use Symfony\UX\LiveComponent\Tests\ContainerBC;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component3;
@@ -29,7 +28,6 @@ use Zenstruck\Foundry\Test\ResetDatabase;
  */
 final class LiveComponentHydratorTest extends KernelTestCase
 {
-    use ContainerBC;
     use Factories;
     use ResetDatabase;
 
