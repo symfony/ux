@@ -231,10 +231,8 @@ describe('LiveController data-model Tests', () => {
                 </label>
             </div>
         `;
-        const data = { form: { } };
+        const data = { form: { check1: null, check2: null} };
         const { element, controller } = await startStimulus(checkboxTemplate(data));
-
-        mockRerender({ form: {check1: '1'}}, checkboxTemplate);
 
         const check1Element = getByLabelText(element, 'Checkbox 1:');
         const check2Element = getByLabelText(element, 'Checkbox 2:');
@@ -242,8 +240,18 @@ describe('LiveController data-model Tests', () => {
         await userEvent.click(check1Element);
         await waitFor(() => expect(check1Element).toBeChecked());
 
+        mockRerender({ form: {check1: '1'}}, checkboxTemplate, (data) => {
+            data.form.check1 = '1';
+            data.form.check2 = null;
+        });
+
         await userEvent.click(check2Element);
         await waitFor(() => expect(check2Element).toBeChecked());
+
+        mockRerender({ form: {check1: '1', check2: '1'}}, checkboxTemplate, (data) => {
+            data.form.check1 = '1';
+            data.form.check2 = '1';
+        });
 
         expect(controller.dataValue).toEqual({form: {check1: '1', check2: '1'}});
 
