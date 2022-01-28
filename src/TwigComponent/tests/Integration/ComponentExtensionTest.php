@@ -19,8 +19,6 @@ use Twig\Environment;
  */
 final class ComponentExtensionTest extends KernelTestCase
 {
-    use ContainerBC;
-
     public function testCanRenderComponent(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('template_a.html.twig');

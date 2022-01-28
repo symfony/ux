@@ -79,11 +79,6 @@ as simple as possible::
     {
     }
 
-**Note:** If this class is auto-configured, *and* you're using Symfony
-5.3+, then you're all set. Otherwise, register the service and tag it
-with ``twig.component`` and with a ``key`` tag attribute for the
-component's name (``alert``).
-
 Step 2 is to create a template for this component. By default, templates
 live in ``templates/components/{Component Name}.html.twig``, where
 ``{Component Name}`` is whatever you passed as the first argument to the
@@ -183,12 +178,6 @@ as the second argument to the ``AsTwigComponent`` attribute:
       {
           // ...
       }
-
-**Note:** If this class is auto-configured, *and* you're using Symfony
-5.3+, then you're all set. Otherwise, register the service and tag it
-with ``twig.component`` and with a ``key`` tag attribute for the
-component's name (``alert``) and a ``template`` tag attribute
-(``my/custom/template.html.twig``).
 
 The mount() Method
 ~~~~~~~~~~~~~~~~~~

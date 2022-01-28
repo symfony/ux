@@ -38,21 +38,19 @@ final class LiveComponentExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        if (method_exists($container, 'registerAttributeForAutoconfiguration')) {
-            $container->registerAttributeForAutoconfiguration(
-                AsLiveComponent::class,
-                function (ChildDefinition $definition, AsLiveComponent $attribute) {
-                    $definition
-                        ->addTag('twig.component', array_filter([
-                            'key' => $attribute->name,
-                            'template' => $attribute->template,
-                            'default_action' => $attribute->defaultAction,
-                        ]))
-                        ->addTag('controller.service_arguments')
-                    ;
-                }
-            );
-        }
+        $container->registerAttributeForAutoconfiguration(
+            AsLiveComponent::class,
+            function (ChildDefinition $definition, AsLiveComponent $attribute) {
+                $definition
+                    ->addTag('twig.component', array_filter([
+                        'key' => $attribute->name,
+                        'template' => $attribute->template,
+                        'default_action' => $attribute->defaultAction,
+                    ]))
+                    ->addTag('controller.service_arguments')
+                ;
+            }
+        );
 
         $container->registerForAutoconfiguration(PropertyHydratorInterface::class)
             ->addTag('twig.component.property_hydrator')

@@ -27,17 +27,20 @@
     },
     "require": {
         "php": ">=8.0",
-        "twig/twig": "^2.0|^3.0",
-        "symfony/property-access": "^4.4|^5.0|^6.0",
-        "symfony/dependency-injection": "^4.4|^5.0|^6.0"
+        "symfony/dependency-injection": "^5.4|^6.0",
+        "symfony/property-access": "^5.4|^6.0",
+        "twig/twig": "^2.0|^3.0"
     },
     "require-dev": {
-        "symfony/framework-bundle": "^4.4|^5.0|^6.0",
-        "symfony/twig-bundle": "^4.4|^5.0|^6.0",
-        "symfony/phpunit-bridge": "^5.2|^6.0"
+        "symfony/framework-bundle": "^5.4|^6.0",
+        "symfony/phpunit-bridge": "^6.0",
+        "symfony/twig-bundle": "^5.4|^6.0"
     },
     "conflict": {
-        "symfony/dependency-injection": "<4.4.18,<5.1.10,<5.2.1"
+        "symfony/config": "<5.4.0"
+    },
+    "config": {
+        "sort-packages": true
     },
     "extra": {
         "thanks": {

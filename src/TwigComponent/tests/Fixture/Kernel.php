@@ -17,7 +17,6 @@ use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Routing\RouteCollectionBuilder;
 use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentA;
 use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentB;
 use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentC;
@@ -51,29 +50,16 @@ final class Kernel extends BaseKernel
         ]);
 
         $c->register(ServiceA::class)->setAutoconfigured(true)->setAutowired(true);
-
-        $componentA = $c->register(ComponentA::class)->setAutoconfigured(true)->setAutowired(true);
-        $componentB = $c->register('component_b', ComponentB::class)->setAutoconfigured(true)->setAutowired(true);
-        $componentC = $c->register(ComponentC::class)->setAutoconfigured(true)->setAutowired(true);
-
+        $c->register(ComponentA::class)->setAutoconfigured(true)->setAutowired(true);
+        $c->register('component_b', ComponentB::class)->setAutoconfigured(true)->setAutowired(true);
+        $c->register(ComponentC::class)->setAutoconfigured(true)->setAutowired(true);
         $c->register('component_d', ComponentB::class)->addTag('twig.component', [
             'key' => 'component_d',
             'template' => 'components/custom2.html.twig',
         ]);
 
-        if (self::VERSION_ID < 50300) {
-            // add tag manually
-            $componentA->addTag('twig.component', ['key' => 'component_a']);
-            $componentB->addTag('twig.component', ['key' => 'component_b', 'template' => 'components/custom1.html.twig']);
-            $componentC->addTag('twig.component', ['key' => 'component_c']);
-        }
-
         if ('missing_key' === $this->environment) {
             $c->register('missing_key', ComponentB::class)->setAutowired(true)->addTag('twig.component');
         }
-    }
-
-    protected function configureRoutes(RouteCollectionBuilder $routes): void
-    {
     }
 }

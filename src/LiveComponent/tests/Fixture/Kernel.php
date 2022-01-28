@@ -21,7 +21,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
-use Symfony\Component\Routing\RouteCollectionBuilder;
 use Symfony\UX\LiveComponent\LiveComponentBundle;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
@@ -63,27 +62,17 @@ final class Kernel extends BaseKernel
         // disable logging errors to the console
         $c->register('logger', NullLogger::class);
 
-        $componentA = $c->register(Component1::class)->setAutoconfigured(true)->setAutowired(true);
-        $componentB = $c->register(Component2::class)->setAutoconfigured(true)->setAutowired(true);
-        $componentC = $c->register(Component3::class)->setAutoconfigured(true)->setAutowired(true);
-        $componentF = $c->register(Component6::class)->setAutoconfigured(true)->setAutowired(true);
-
-        if (self::VERSION_ID < 50300) {
-            // add tag manually
-            $componentA->addTag('twig.component', ['key' => 'component1'])->addTag('controller.service_arguments');
-            $componentB->addTag('twig.component', ['key' => 'component2', 'default_action' => 'defaultAction'])->addTag('controller.service_arguments');
-            $componentC->addTag('twig.component', ['key' => 'component3'])->addTag('controller.service_arguments');
-            $componentF->addTag('twig.component', ['key' => 'component6'])->addTag('controller.service_arguments');
-        }
-
-        $sessionConfig = self::VERSION_ID < 50300 ? ['storage_id' => 'session.storage.mock_file'] : ['storage_factory_id' => 'session.storage.factory.mock_file'];
+        $c->register(Component1::class)->setAutoconfigured(true)->setAutowired(true);
+        $c->register(Component2::class)->setAutoconfigured(true)->setAutowired(true);
+        $c->register(Component3::class)->setAutoconfigured(true)->setAutowired(true);
+        $c->register(Component6::class)->setAutoconfigured(true)->setAutowired(true);
 
         $c->loadFromExtension('framework', [
             'secret' => 'S3CRET',
             'test' => true,
             'router' => ['utf8' => true],
             'secrets' => false,
-            'session' => $sessionConfig,
+            'session' => ['storage_factory_id' => 'session.storage.factory.mock_file'],
         ]);
 
         $c->loadFromExtension('twig', [
@@ -108,21 +97,11 @@ final class Kernel extends BaseKernel
         ]);
     }
 
-    /**
-     * @param RoutingConfigurator|RouteCollectionBuilder $routes
-     */
-    protected function configureRoutes($routes): void
+    protected function configureRoutes(RoutingConfigurator $routes): void
     {
         $routes->import('@LiveComponentBundle/Resources/config/routing/live_component.xml');
 
-        if ($routes instanceof RoutingConfigurator) {
-            $routes->add('template', '/render-template/{template}')->controller('kernel::renderTemplate');
-            $routes->add('homepage', '/')->controller('kernel::index');
-
-            return;
-        }
-
-        $routes->add('/render-template/{template}', 'kernel::renderTemplate', 'template');
-        $routes->add('/', 'kernel::index', 'homepage');
+        $routes->add('template', '/render-template/{template}')->controller('kernel::renderTemplate');
+        $routes->add('homepage', '/')->controller('kernel::index');
     }
 }
