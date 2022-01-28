@@ -953,7 +953,7 @@ function buildSearchParams(searchParams, data) {
     return searchParams;
 }
 
-function setDeepData(data, propertyPath, value, modelValue = null) {
+function getDeepData(data, propertyPath) {
     const finalData = JSON.parse(JSON.stringify(data));
     let currentLevelData = finalData;
     const parts = propertyPath.split('.');
@@ -961,18 +961,15 @@ function setDeepData(data, propertyPath, value, modelValue = null) {
         currentLevelData = currentLevelData[parts[i]];
     }
     const finalKey = parts[parts.length - 1];
-    if (currentLevelData instanceof Array) {
-        if (null === value) {
-            const index = currentLevelData.indexOf(modelValue);
-            if (index > -1) {
-                currentLevelData.splice(index, 1);
-            }
-        }
-        else {
-            currentLevelData.push(value);
-        }
-        return finalData;
-    }
+    return {
+        currentLevelData,
+        finalData,
+        finalKey,
+        parts
+    };
+}
+function setDeepData(data, propertyPath, value) {
+    const { currentLevelData, finalData, finalKey, parts } = getDeepData(data, propertyPath);
     if (typeof currentLevelData !== 'object') {
         const lastPart = parts.pop();
         throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
@@ -995,10 +992,12 @@ function doesDeepPropertyExist(data, propertyPath) {
 }
 function normalizeModelName(model) {
     return model
+        .replace(/\[]$/, '')
         .split('[')
         .map(function (s) {
         return s.replace(']', '');
-    }).join('.');
+    })
+        .join('.');
 }
 
 function haveRenderedValuesChanged(originalDataJson, currentDataJson, newDataJson) {
@@ -1069,18 +1068,10 @@ class default_1 extends Controller {
         window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
     }
     update(event) {
-        let value = this._getValueFromElement(event.target);
-        if (event.target.type === 'checkbox' && !event.target.checked) {
-            value = null;
-        }
-        this._updateModelFromElement(event.target, value, true);
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), true);
     }
     updateDefer(event) {
-        let value = this._getValueFromElement(event.target);
-        if (event.target.type === 'checkbox' && !event.target.checked) {
-            value = null;
-        }
-        this._updateModelFromElement(event.target, value, false);
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), false);
     }
     action(event) {
         const rawAction = event.currentTarget.dataset.actionName;
@@ -1141,9 +1132,28 @@ class default_1 extends Controller {
             }
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
-        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {}, this._getValueFromElement(element));
+        if (element instanceof HTMLInputElement && element.type === 'checkbox' && !element.checked) {
+            value = null;
+        }
+        if (/\[]$/.test(model)) {
+            const { currentLevelData, finalKey } = getDeepData(this.dataValue, normalizeModelName(model));
+            const currentValue = currentLevelData[finalKey];
+            if (currentValue instanceof Array) {
+                if (null === value) {
+                    const index = currentValue.indexOf(this._getValueFromElement(element));
+                    if (index > -1) {
+                        currentValue.splice(index, 1);
+                    }
+                }
+                else {
+                    currentValue.push(value);
+                }
+            }
+            value = currentValue;
+        }
+        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
     }
-    $updateModel(model, value, shouldRender = true, extraModelName = null, options = {}, modelValue = null) {
+    $updateModel(model, value, shouldRender = true, extraModelName = null, options = {}) {
         const directives = parseDirectives(model);
         if (directives.length > 1) {
             throw new Error(`The data-model="${model}" format is invalid: it does not support multiple directives (i.e. remove any spaces).`);
@@ -1165,11 +1175,10 @@ class default_1 extends Controller {
             this._dispatchEvent('live:update-model', {
                 modelName,
                 extraModelName: normalizedExtraModelName,
-                value,
-                modelValue
+                value
             });
         }
-        this.dataValue = setDeepData(this.dataValue, modelName, value, modelValue);
+        this.dataValue = setDeepData(this.dataValue, modelName, value);
         directive.modifiers.forEach((modifier => {
             switch (modifier.name) {
                 default:
@@ -1485,7 +1494,7 @@ class default_1 extends Controller {
         }
         this.$updateModel(foundModelName, event.detail.value, false, null, {
             dispatch: false
-        }, event.detail.modelValue);
+        });
     }
     _shouldChildLiveElementUpdate(fromEl, toEl) {
         if (!fromEl.dataset.originalData) {

@@ -3,7 +3,7 @@ import morphdom from 'morphdom';
 import { parseDirectives, Directive } from './directives_parser';
 import { combineSpacedArray } from './string_utils';
 import { buildFormData, buildSearchParams } from './http_data_helper';
-import { setDeepData, doesDeepPropertyExist, normalizeModelName } from './set_deep_data';
+import {setDeepData, doesDeepPropertyExist, normalizeModelName, parseDeepData} from './set_deep_data';
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 
 interface ElementLoadingDirectives {
@@ -104,23 +104,11 @@ export default class extends Controller {
      * Called to update one piece of the model
      */
     update(event: any) {
-        let value = this._getValueFromElement(event.target);
-
-        if (event.target.type === 'checkbox' && !event.target.checked) {
-            value = null;
-        }
-
-        this._updateModelFromElement(event.target, value, true);
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), true);
     }
 
     updateDefer(event: any) {
-        let value = this._getValueFromElement(event.target);
-
-        if (event.target.type === 'checkbox' && !event.target.checked) {
-            value = null;
-        }
-
-        this._updateModelFromElement(event.target, value, false);
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), false);
     }
 
     action(event: any) {
@@ -201,7 +189,7 @@ export default class extends Controller {
         return element.dataset.value || (element as any).value;
     }
 
-    _updateModelFromElement(element: HTMLElement, value: string, shouldRender: boolean) {
+    _updateModelFromElement(element: HTMLElement, value: string|null, shouldRender: boolean) {
         const model = element.dataset.model || element.getAttribute('name');
 
         if (!model) {
@@ -214,7 +202,31 @@ export default class extends Controller {
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
 
-        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {}, this._getValueFromElement(element));
+        if (element instanceof HTMLInputElement && element.type === 'checkbox' && !element.checked) {
+            value = null;
+        }
+
+        // HTML form elements with name ending with [] require array as data
+        // we need to handle addition and removal of values from it to send
+        // back only required data
+        if (/\[]$/.test(model)) {
+            const {currentLevelData, finalKey} = parseDeepData(this.dataValue, normalizeModelName(model))
+
+            const currentValue = currentLevelData[finalKey];
+            if (currentValue instanceof Array) {
+                if (null === value) {
+                    const index = currentValue.indexOf(this._getValueFromElement(element));
+                    if (index > -1) {
+                        currentValue.splice(index, 1);
+                    }
+                } else {
+                    currentValue.push(value);
+                }
+            }
+            value = currentValue;
+        }
+
+        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
     }
 
     /**
@@ -233,9 +245,8 @@ export default class extends Controller {
      * @param {boolean} shouldRender Whether a re-render should be triggered
      * @param {string|null} extraModelName Another model name that this might go by in a parent component.
      * @param {Object} options Options include: {bool} dispatch
-     * @param {any} modelValue Original HTML element value (for handling collection checkbox fields)
      */
-    $updateModel(model: string, value: any, shouldRender = true, extraModelName: string | null = null, options: any = {}, modelValue: any = null) {
+    $updateModel(model: string, value: any, shouldRender = true, extraModelName: string | null = null, options: any = {}) {
         const directives = parseDirectives(model);
         if (directives.length > 1) {
             throw new Error(`The data-model="${model}" format is invalid: it does not support multiple directives (i.e. remove any spaces).`);
@@ -265,8 +276,7 @@ export default class extends Controller {
             this._dispatchEvent('live:update-model', {
                 modelName,
                 extraModelName: normalizedExtraModelName,
-                value,
-                modelValue
+                value
             });
         }
 
@@ -283,7 +293,7 @@ export default class extends Controller {
         // Then, then modify the data-model="post.title" field. In theory,
         // we should be smart enough to convert the post data - which is now
         // the string "4" - back into an array with [id=4, title=new_title].
-        this.dataValue = setDeepData(this.dataValue, modelName, value, modelValue);
+        this.dataValue = setDeepData(this.dataValue, modelName, value);
 
         directive.modifiers.forEach((modifier => {
             switch (modifier.name) {
@@ -710,8 +720,7 @@ export default class extends Controller {
             null,
             {
                 dispatch: false
-            },
-            event.detail.modelValue
+            }
         );
     }
 
