@@ -1,0 +1,53 @@
+---------------------------------------------------------------------------
+
+by kbond at 2022-01-28T14:30:21Z
+
+Pinging some community members who are clearly using these library's: @Lustmored, @seb-jean, @norkunas, @allejo, @mdoutreluingne, @sabat24, @BeyerJC, @benr77. Any thoughts/objections?
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-28T14:31:57Z
+
+None from me, using 6.0+PHP8.1 for the project
+
+---------------------------------------------------------------------------
+
+by BeyerJC at 2022-01-28T14:34:48Z
+
+I think its a good idea. My projects are all >=5.4 , so lets go :-)
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2022-01-28T14:34:50Z
+
+Same here - 6.0 and PHP8.1 only. In fact I was just thinking about that when making changes in test Kernel :smiley:
+
+---------------------------------------------------------------------------
+
+by sabat24 at 2022-01-28T14:56:10Z
+
+Keeping it up to date with last active Symphony's LTS version is perfectly fine for me.
+
+---------------------------------------------------------------------------
+
+by benr77 at 2022-01-28T15:17:04Z
+
+Agreed - 5.4 as the minimum is fine by me and I also think it's sensible to make this change sooner rather than later.
+
+---------------------------------------------------------------------------
+
+by mdoutreluingne at 2022-01-28T16:45:18Z
+
+It's totally understandable and acceptable to demand Symfony 5.4+, as it's an LTS release. Anyway, active projects have every interest in moving to Symfony 5.4 or more for security reasons and more... So let's go 👍
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-01-28T17:00:44Z
+
+@symfony/mergers any objections?
+
+---------------------------------------------------------------------------
+
+by allejo at 2022-01-28T18:13:54Z
+
+No concerns here! Using PHP8.1 & Symfony 5.4 here 🥳
