@@ -126,7 +126,7 @@ trait ComponentWithFormTrait
 
     public function getFormValues(): array
     {
-        return $this->formValues = $this->extractFormValues($this->getForm(), $this->formValues ?? []);
+        return $this->formValues = $this->extractFormValues($this->getForm());
     }
 
     private function submitForm(bool $validateAll = true): void
@@ -157,17 +157,15 @@ trait ComponentWithFormTrait
      * frontend, and it's meant to equal the raw POST data that would
      * be sent if the form were submitted without modification.
      */
-    private function extractFormValues(FormView $formView, array $values = []): array
+    private function extractFormValues(FormView $formView): array
     {
+        $values = [];
+
         foreach ($formView->children as $child) {
             $name = $child->vars['name'];
             if (!($child->vars['expanded'] ?? false) && \count($child->children) > 0) {
-                $values[$name] = $this->extractFormValues($child, $values[$name] ?? []);
+                $values[$name] = $this->extractFormValues($child);
 
-                continue;
-            }
-
-            if (null !== ($values[$name] ?? null)) {
                 continue;
             }
 
