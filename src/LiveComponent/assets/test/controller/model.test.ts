@@ -216,6 +216,41 @@ describe('LiveController data-model Tests', () => {
         fetchMock.done();
     });
 
+    it('sends correct data for checkbox fields', async () => {
+        const checkboxTemplate = (data) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Checkbox 1: <input type="checkbox" name="form[check1]" value="1" ${data.form.check1 ? 'checked' : ''} />
+                </label>
+                
+                <label>
+                    Checkbox 2: <input type="checkbox" name="form[check2]" value="1" ${data.form.check2 ? 'checked' : ''} />
+                </label>
+            </div>
+        `;
+        const data = { form: { } };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        mockRerender({ form: {check1: '1'}}, checkboxTemplate);
+
+        const check1Element = getByLabelText(element, 'Checkbox 1:');
+        const check2Element = getByLabelText(element, 'Checkbox 2:');
+
+        await userEvent.click(check1Element);
+        await waitFor(() => expect(check1Element).toBeChecked());
+
+        await userEvent.click(check2Element);
+        await waitFor(() => expect(check2Element).toBeChecked());
+
+        expect(controller.dataValue).toEqual({form: {check1: '1', check2: '1'}});
+
+        // assert all calls were done the correct number of times
+        fetchMock.done();
+    });
+
     it('updates correctly when live#update is on a parent element', async () => {
         const parentUpdateTemplate = (data) => `
             <div
