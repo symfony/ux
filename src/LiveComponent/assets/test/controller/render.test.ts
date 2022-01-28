@@ -40,6 +40,9 @@ describe('LiveController rendering Tests', () => {
 
     afterEach(() => {
         clearDOM();
+        if (!fetchMock.done()) {
+            throw new Error('Mocked requests did not match');
+        }
         fetchMock.reset();
     });
 
@@ -57,19 +60,46 @@ describe('LiveController rendering Tests', () => {
         expect(controller.dataValue).toEqual({name: 'Kevin'});
     });
 
-    it('conserves values of fields modified after a render request', async () => {
+    it('renders over local value in input', async () => {
         const data = { name: 'Ryan' };
         const { element } = await startStimulus(template(data));
 
         fetchMock.get(
+            // name=Ryan is sent to the server
             'http://localhost/_components/my_component?name=Ryan',
+            // server changes that data
             template({ name: 'Kevin' }),
             { delay: 100 }
         );
-        getByText(element, 'Reload').click();
+        // type into the input that is not bound to a model
         userEvent.type(getByLabelText(element, 'Comments:'), '!!');
+        getByText(element, 'Reload').click();
 
         await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
+        // value if unmapped input is reset
+        expect(getByLabelText(element, 'Comments:')).toHaveValue('i like pizza');
+        expect(document.activeElement.name).toEqual('comments');
+    });
+
+    it('conserves values of fields modified after a render request IF data-live-ignore', async () => {
+        const data = { name: 'Ryan' };
+        const { element } = await startStimulus(template(data));
+
+        fetchMock.get(
+            // name=Ryan is sent to the server
+            'http://localhost/_components/my_component?name=Ryan',
+            // server changes that data
+            template({ name: 'Kevin' }),
+            { delay: 100 }
+        );
+        // type into the input that is not bound to a model
+        const input = getByLabelText(element, 'Comments:');
+        input.setAttribute('data-live-ignore', '');
+        userEvent.type(input, '!!');
+        getByText(element, 'Reload').click();
+
+        await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
+        // value of unmapped input is NOT reset because of data-live-ignore
         expect(getByLabelText(element, 'Comments:')).toHaveValue('i like pizza!!');
         expect(document.activeElement.name).toEqual('comments');
     });
@@ -88,8 +118,10 @@ describe('LiveController rendering Tests', () => {
             template({ name: 'Kevin' }, true),
             { delay: 100 }
         );
+        const input = getByLabelText(element, 'Comments:');
+        input.setAttribute('data-live-ignore', '');
+        userEvent.type(input, '!!');
         getByText(element, 'Reload').click();
-        userEvent.type(getByLabelText(element, 'Comments:'), '!!');
 
         await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
         expect(getByLabelText(element, 'Comments:')).toHaveValue('i like pizza!!');

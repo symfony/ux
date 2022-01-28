@@ -72,6 +72,9 @@ describe('LiveController parent -> child component tests', () => {
 
     afterEach(() => {
         clearDOM();
+        if (!fetchMock.done()) {
+            throw new Error('Mocked requests did not match');
+        }
         fetchMock.reset();
     });
 

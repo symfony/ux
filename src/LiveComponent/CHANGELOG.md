@@ -2,10 +2,13 @@
 
 ## 2.1.0
 
+-   Added `data-live-ignore` attribute. If included in an element, that element
+    will not be updated on re-render.
+
 -   The Live Component AJAX endpoints now return HTML in all situations
     instead of JSON.
 
--   Send live action arguments to backend
+-   Ability to send live action arguments to backend
 
 ## 2.0.0
 

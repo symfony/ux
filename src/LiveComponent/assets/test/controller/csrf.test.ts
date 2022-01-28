@@ -40,6 +40,9 @@ describe('LiveController CSRF Tests', () => {
 
     afterEach(() => {
         clearDOM();
+        if (!fetchMock.done()) {
+            throw new Error('Mocked requests did not match');
+        }
         fetchMock.reset();
     });
 
@@ -56,7 +59,5 @@ describe('LiveController CSRF Tests', () => {
         await waitFor(() => expect(element).toHaveTextContent('Comment Saved!'));
 
         expect(postMock.lastOptions().headers['X-CSRF-TOKEN']).toEqual('123TOKEN');
-
-        fetchMock.done();
     });
 });

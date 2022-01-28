@@ -34,6 +34,9 @@ describe('LiveController data-model Tests', () => {
 
     afterEach(() => {
         clearDOM();
+        if (!fetchMock.done()) {
+            throw new Error('Mocked requests did not match');
+        }
         fetchMock.reset();
     });
 
@@ -52,9 +55,6 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(getByLabelText(element, 'Name:')).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({name: 'Ryan Weaver'});
 
-        // assert all calls were done the correct number of times
-        fetchMock.done();
-
         // assert the input is still focused after rendering
         expect(document.activeElement.dataset.model).toEqual('name');
     });
@@ -69,9 +69,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(getByLabelText(element, 'Name:')).toHaveValue('Jan'));
         expect(controller.dataValue).toEqual({name: 'Jan'});
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
 
@@ -111,9 +108,6 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(getByLabelText(element, 'Name:')).toHaveValue('Ryanguy_'));
         expect(controller.dataValue).toEqual({name: 'Ryanguy_'});
 
-        // assert all calls were done the correct number of times
-        fetchMock.done();
-
         // only 1 render should have ultimately occurred
         expect(renderCount).toEqual(1);
     });
@@ -135,9 +129,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({name: 'Ryan Weaver'});
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('uses data-model when both name and data-model is present', async () => {
@@ -157,8 +148,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({name: 'Ryan Weaver'});
-
-        fetchMock.done();
     });
 
     it('uses data-value when both value and data-value is present', async () => {
@@ -178,8 +167,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('first_name'));
         expect(controller.dataValue).toEqual({name: 'first_name'});
-
-        fetchMock.done();
     });
 
     it('standardizes user[firstName] style models into post.name', async () => {
@@ -211,9 +198,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({ user: { firstName: 'Ryan Weaver' } });
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('updates correctly when live#update is on a parent element', async () => {
@@ -245,8 +229,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
 
-        fetchMock.done();
-
         // assert the input is still focused after rendering
         expect(document.activeElement.getAttribute('name')).toEqual('firstName');
     });
@@ -264,9 +246,6 @@ describe('LiveController data-model Tests', () => {
         await userEvent.type(inputElement, ' WEAVER');
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('data changed on server should be noticed by controller', async () => {
@@ -283,7 +262,5 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Kevin Bond'));
         expect(controller.dataValue).toEqual({name: 'Kevin Bond'});
-
-        fetchMock.done();
     });
 });
