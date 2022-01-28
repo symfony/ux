@@ -43,7 +43,7 @@ class default_1 extends Controller {
         });
         reader.readAsDataURL(file);
     }
-    _dispatchEvent(name, payload) {
+    _dispatchEvent(name, payload = {}) {
         this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
     }
 }

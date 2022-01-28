@@ -1130,15 +1130,7 @@ class default_1 extends Controller {
         this._makeRequest(null);
     }
     _getValueFromElement(element) {
-        const value = element.dataset.value || element.value;
-        if (!value) {
-            const clonedElement = (element.cloneNode());
-            if (!(clonedElement instanceof HTMLElement)) {
-                throw new Error('cloneNode() produced incorrect type');
-            }
-            throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-value" or "value" attribute set.`);
-        }
-        return value;
+        return element.dataset.value || element.value;
     }
     _updateModelFromElement(element, value, shouldRender) {
         const model = element.dataset.model || element.getAttribute('name');
@@ -1202,7 +1194,7 @@ class default_1 extends Controller {
         }
         const fetchOptions = {};
         fetchOptions.headers = {
-            'Accept': 'application/vnd.live-component+json',
+            'Accept': 'application/vnd.live-component+html',
         };
         if (action) {
             url += `/${encodeURIComponent(action)}`;
@@ -1228,34 +1220,30 @@ class default_1 extends Controller {
             }
             const isMostRecent = this.renderPromiseStack.removePromise(thisPromise);
             if (isMostRecent) {
-                response.json().then((data) => {
-                    this._processRerender(data);
+                response.text().then((html) => {
+                    this._processRerender(html, response);
                 });
             }
         });
     }
-    _processRerender(data) {
+    _processRerender(html, response) {
         if (this.isWindowUnloaded) {
             return;
         }
-        if (data.redirect_url) {
+        if (response.headers.get('Location')) {
             if (typeof Turbo !== 'undefined') {
-                Turbo.visit(data.redirect_url);
+                Turbo.visit(response.headers.get('Location'));
             }
             else {
-                window.location.href = data.redirect_url;
+                window.location.href = response.headers.get('Location') || '';
             }
             return;
         }
-        if (!this._dispatchEvent('live:render', data, true, true)) {
+        if (!this._dispatchEvent('live:render', html, true, true)) {
             return;
         }
         this._onLoadingFinish();
-        if (!data.html) {
-            throw new Error('Missing html key on response JSON');
-        }
-        this._executeMorphdom(data.html);
-        this.dataValue = data.data;
+        this._executeMorphdom(html);
     }
     _clearWaitingDebouncedRenders() {
         if (this.renderDebounceTimeout) {
