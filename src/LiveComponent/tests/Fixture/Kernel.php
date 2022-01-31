@@ -26,6 +26,7 @@ use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component3;
 use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component6;
+use Symfony\UX\LiveComponent\Tests\Fixture\Component\ComponentWithAttributes;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Environment;
 
@@ -66,6 +67,7 @@ final class Kernel extends BaseKernel
         $c->register(Component2::class)->setAutoconfigured(true)->setAutowired(true);
         $c->register(Component3::class)->setAutoconfigured(true)->setAutowired(true);
         $c->register(Component6::class)->setAutoconfigured(true)->setAutowired(true);
+        $c->register(ComponentWithAttributes::class)->setAutoconfigured(true)->setAutowired(true);
 
         $c->loadFromExtension('framework', [
             'secret' => 'S3CRET',

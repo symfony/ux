@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent\Tests\Functional\Twig;
+namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Zenstruck\Browser\Test\HasBrowser;
@@ -17,7 +17,7 @@ use Zenstruck\Browser\Test\HasBrowser;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class LiveComponentExtensionTest extends KernelTestCase
+final class AddLiveAttributesSubscriberTest extends KernelTestCase
 {
     use HasBrowser;
 

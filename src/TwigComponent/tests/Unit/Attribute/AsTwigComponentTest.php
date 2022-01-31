@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 /**
@@ -35,6 +36,33 @@ final class AsTwigComponentTest extends TestCase
                 }
 
                 #[PreMount]
+                public function hook3()
+                {
+                }
+            }
+        );
+
+        $this->assertCount(3, $hooks);
+        $this->assertSame('hook2', $hooks[0]->name);
+        $this->assertSame('hook3', $hooks[1]->name);
+        $this->assertSame('hook1', $hooks[2]->name);
+    }
+
+    public function testPostMountHooksAreOrderedByPriority(): void
+    {
+        $hooks = AsTwigComponent::postMountMethods(
+            new class() {
+                #[PostMount(priority: -10)]
+                public function hook1()
+                {
+                }
+
+                #[PostMount(priority: 10)]
+                public function hook2()
+                {
+                }
+
+                #[PostMount]
                 public function hook3()
                 {
                 }

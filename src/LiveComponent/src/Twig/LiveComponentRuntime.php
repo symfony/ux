@@ -14,7 +14,9 @@ namespace Symfony\UX\LiveComponent\Twig;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\UX\TwigComponent\ComponentMetadata;
 use Twig\Environment;
 
 /**
@@ -24,39 +26,13 @@ use Twig\Environment;
  */
 final class LiveComponentRuntime
 {
-    private LiveComponentHydrator $hydrator;
-    private ComponentFactory $factory;
-    private UrlGeneratorInterface $urlGenerator;
-    private ?CsrfTokenManagerInterface $csrfTokenManager;
-
-    public function __construct(LiveComponentHydrator $hydrator, ComponentFactory $factory, UrlGeneratorInterface $urlGenerator, CsrfTokenManagerInterface $csrfTokenManager = null)
-    {
-        $this->hydrator = $hydrator;
-        $this->factory = $factory;
-        $this->urlGenerator = $urlGenerator;
-        $this->csrfTokenManager = $csrfTokenManager;
-    }
-
-    public function renderLiveAttributes(Environment $env, object $component, string $name = null): string
-    {
-        $name = $this->nameFor($component, $name);
-        $url = $this->urlGenerator->generate('live_component', ['component' => $name]);
-        $data = $this->hydrator->dehydrate($component);
-
-        $ret = sprintf(
-            'data-controller="live" data-live-url-value="%s" data-live-data-value="%s"',
-            twig_escape_filter($env, $url, 'html_attr'),
-            twig_escape_filter($env, json_encode($data, \JSON_THROW_ON_ERROR), 'html_attr'),
-        );
-
-        if (!$this->csrfTokenManager) {
-            return $ret;
-        }
-
-        return sprintf('%s data-live-csrf-value="%s"',
-            $ret,
-            $this->csrfTokenManager->getToken($name)->getValue()
-        );
+    public function __construct(
+        private Environment $twig,
+        private LiveComponentHydrator $hydrator,
+        private ComponentFactory $factory,
+        private UrlGeneratorInterface $urlGenerator,
+        private ?CsrfTokenManagerInterface $csrfTokenManager = null
+    ) {
     }
 
     public function getComponentUrl(string $name, array $props = []): string
@@ -67,8 +43,21 @@ final class LiveComponentRuntime
         return $this->urlGenerator->generate('live_component', $params);
     }
 
-    private function nameFor(object $component, string $name = null): string
+    public function getLiveAttributes(object $component, ComponentMetadata $metadata): ComponentAttributes
     {
-        return $this->factory->configFor($component, $name)['name'];
+        $url = $this->urlGenerator->generate('live_component', ['component' => $metadata->getName()]);
+        $data = $this->hydrator->dehydrate($component);
+
+        $attributes = [
+            'data-controller' => 'live',
+            'data-live-url-value' => twig_escape_filter($this->twig, $url, 'html_attr'),
+            'data-live-data-value' => twig_escape_filter($this->twig, json_encode($data, \JSON_THROW_ON_ERROR), 'html_attr'),
+        ];
+
+        if ($this->csrfTokenManager) {
+            $attributes['data-live-csrf-value'] = $this->csrfTokenManager->getToken($metadata->getName())->getValue();
+        }
+
+        return new ComponentAttributes($attributes);
     }
 }

@@ -7,6 +7,12 @@
 
 -   Send live action arguments to backend
 
+-   [BC BREAK] Remove `init_live_component()` twig function, use `{{ attributes }}` instead:
+    ```diff
+    - <div {{ init_live_component() }}>
+    + <div {{ attributes }}>
+    ```
+
 ## 2.0.0
 
 -   Support for `stimulus` version 2 was removed and support for `@hotwired/stimulus`

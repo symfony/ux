@@ -12,6 +12,7 @@
 namespace Symfony\UX\TwigComponent\Tests\Fixture\Component;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
 use Symfony\UX\TwigComponent\Attribute\PreMount;
 
 /**
@@ -21,6 +22,7 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
 final class ComponentB
 {
     public string $value;
+    public string $postValue;
 
     #[PreMount]
     public function preMount(array $data): array
@@ -30,5 +32,13 @@ final class ComponentB
         }
 
         return $data;
+    }
+
+    #[PostMount]
+    public function postMount(array $data): array
+    {
+        $this->postValue = $data['extra'] ?? 'default';
+
+        return [];
     }
 }

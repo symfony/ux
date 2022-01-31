@@ -27,7 +27,7 @@
     },
     "require": {
         "php": ">=8.0",
-        "symfony/ux-twig-component": "^2.0"
+        "symfony/ux-twig-component": "^2.1"
     },
     "require-dev": {
         "doctrine/annotations": "^1.0",
