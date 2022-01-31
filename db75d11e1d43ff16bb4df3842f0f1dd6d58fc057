@@ -1,0 +1,77 @@
+---------------------------------------------------------------------------
+
+by kbond at 2022-01-14T00:28:11Z
+
+629d8343e615a89371a82b1f0a8d581e989284c9 demonstrates a bit of a hack to remove the requirement for `{{ attributes|raw }}`. Maybe there's a better way to do this?
+
+_BTW, I'm totally fine to just live with `|raw`._
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2022-01-14T08:12:53Z
+
+I love this feature @kbond
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-01-14T13:52:34Z
+
+To make this feature _live_, I was thinking to mark the property as a `LiveProp` (with a hydrator) so it _just works_ when making an existing component _live_.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-01-14T14:32:51Z
+
+I like this - and the idea is proven by other libraries.
+
+> 629d834 demonstrates a bit of a hack to remove the requirement for {{ attributes|raw }}. Maybe there's a better way to do this?
+
+See https://twig.symfony.com/doc/3.x/api.html#escaper-extension - look for `addSafeClass`. I *think* that's the correct way to handle this.
+
+> To make this feature live, I was thinking to mark the property as a LiveProp (with a hydrator) so it just works when making an existing component live.
+
+I can't think of why this would be a problem. So 👍
+
+> This proposal adds a way to do this (albeit a bit verbose) with twig components
+
+2 ideas for this, both which are beyond the scope of this PR:
+
+A) Allow using "…args" for the “props”
+
+```twig
+{{ component('my_component', attributes: { class: 'foo', style: 'color:red' }, otherProp: 'bar' ) }}
+```
+
+It removes an extra `{}` basically.
+
+2. Allowing using an `<component attributes=""` style for the components.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-01-14T15:53:53Z
+
+Also, it would be great if, for live components, we could also do:
+
+```html
+<div{{ attributes }}>
+```
+
+Instead of:
+
+```html
+<div {{ init_live_component(this) }}>
+```
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-01-14T16:12:03Z
+
+> See https://twig.symfony.com/doc/3.x/api.html#escaper-extension - look for addSafeClass. I think that's the correct way to handle this.
+
+This is what I used. The hack I was referring to is the weird way of adding it in the extension. I don't think there's a great way for a third party bundle to add these.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-01-21T23:38:07Z
+
+The `LiveComponent` failing test will be fixed once #241 is merged/rebased. The cs fixer will pass once #240 is merged/rebased.
