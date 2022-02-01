@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-28T15:09:17Z
+
+Ran into a case today where I've defined a modal (with managed form) in a LiveComponent and after changing value in form everything was re-rendered and modal was closed, so `data-live-ignore` should solve this for me? :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-01-28T16:34:58Z
+
+> Ran into a case today where I've defined a modal (with managed form) in a LiveComponent and after changing value in form everything was re-rendered and modal was closed, so data-live-ignore should solve this for me? :)
+
+Ideally, yes! That's exactly the case that we should test to make sure works :)
