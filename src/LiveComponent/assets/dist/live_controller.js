@@ -963,7 +963,7 @@ function setDeepData(data, propertyPath, value) {
     const finalKey = parts[parts.length - 1];
     if (typeof currentLevelData !== 'object') {
         const lastPart = parts.pop();
-        throw new Error(`Cannot set data-model="${propertyPath}". They parent "${parts.join(',')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
+        throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
     }
     if (currentLevelData[finalKey] === undefined) {
         const lastPart = parts.pop();
@@ -1012,6 +1012,26 @@ function haveRenderedValuesChanged(originalDataJson, currentDataJson, newDataJso
         }
     });
     return keyHasChanged;
+}
+
+function normalizeAttributesForComparison(element) {
+    if (element.value) {
+        element.setAttribute('value', element.value);
+    }
+    else if (element.hasAttribute('value')) {
+        element.setAttribute('value', '');
+    }
+    Array.from(element.children).forEach((child) => {
+        normalizeAttributesForComparison(child);
+    });
+}
+
+function cloneHTMLElement(element) {
+    const newElement = element.cloneNode(true);
+    if (!(newElement instanceof HTMLElement)) {
+        throw new Error('Could not clone element');
+    }
+    return newElement;
 }
 
 const DEFAULT_DEBOUNCE = 150;
@@ -1112,23 +1132,12 @@ class default_1 extends Controller {
         this._makeRequest(null);
     }
     _getValueFromElement(element) {
-        const value = element.dataset.value || element.value;
-        if (!value) {
-            const clonedElement = (element.cloneNode());
-            if (!(clonedElement instanceof HTMLElement)) {
-                throw new Error('cloneNode() produced incorrect type');
-            }
-            throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-value" or "value" attribute set.`);
-        }
-        return value;
+        return element.dataset.value || element.value;
     }
     _updateModelFromElement(element, value, shouldRender) {
         const model = element.dataset.model || element.getAttribute('name');
         if (!model) {
-            const clonedElement = (element.cloneNode());
-            if (!(clonedElement instanceof HTMLElement)) {
-                throw new Error('cloneNode() produced incorrect type');
-            }
+            const clonedElement = cloneHTMLElement(element);
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
         this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null);
@@ -1183,7 +1192,7 @@ class default_1 extends Controller {
         }
         const fetchOptions = {};
         fetchOptions.headers = {
-            'Accept': 'application/vnd.live-component+json',
+            'Accept': 'application/vnd.live-component+html',
         };
         if (action) {
             url += `/${encodeURIComponent(action)}`;
@@ -1209,34 +1218,30 @@ class default_1 extends Controller {
             }
             const isMostRecent = this.renderPromiseStack.removePromise(thisPromise);
             if (isMostRecent) {
-                response.json().then((data) => {
-                    this._processRerender(data);
+                response.text().then((html) => {
+                    this._processRerender(html, response);
                 });
             }
         });
     }
-    _processRerender(data) {
+    _processRerender(html, response) {
         if (this.isWindowUnloaded) {
             return;
         }
-        if (data.redirect_url) {
+        if (response.headers.get('Location')) {
             if (typeof Turbo !== 'undefined') {
-                Turbo.visit(data.redirect_url);
+                Turbo.visit(response.headers.get('Location'));
             }
             else {
-                window.location.href = data.redirect_url;
+                window.location.href = response.headers.get('Location') || '';
             }
             return;
         }
-        if (!this._dispatchEvent('live:render', data, true, true)) {
+        if (!this._dispatchEvent('live:render', html, true, true)) {
             return;
         }
         this._onLoadingFinish();
-        if (!data.html) {
-            throw new Error('Missing html key on response JSON');
-        }
-        this._executeMorphdom(data.html);
-        this.dataValue = data.data;
+        this._executeMorphdom(html);
     }
     _clearWaitingDebouncedRenders() {
         if (this.renderDebounceTimeout) {
@@ -1371,13 +1376,22 @@ class default_1 extends Controller {
         morphdom(this.element, newElement, {
             onBeforeElUpdated: (fromEl, toEl) => {
                 if (fromEl.isEqualNode(toEl)) {
-                    return false;
+                    const normalizedFromEl = cloneHTMLElement(fromEl);
+                    normalizeAttributesForComparison(normalizedFromEl);
+                    const normalizedToEl = cloneHTMLElement(toEl);
+                    normalizeAttributesForComparison(normalizedToEl);
+                    if (normalizedFromEl.isEqualNode(normalizedToEl)) {
+                        return false;
+                    }
                 }
                 const controllerName = fromEl.hasAttribute('data-controller') ? fromEl.getAttribute('data-controller') : null;
                 if (controllerName
                     && controllerName.split(' ').indexOf('live') !== -1
                     && fromEl !== this.element
                     && !this._shouldChildLiveElementUpdate(fromEl, toEl)) {
+                    return false;
+                }
+                if (fromEl.hasAttribute('data-live-ignore')) {
                     return false;
                 }
                 return true;
