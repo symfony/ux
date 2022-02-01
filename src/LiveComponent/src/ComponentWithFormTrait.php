@@ -18,6 +18,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\UX\LiveComponent\Attribute\BeforeReRender;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Util\LiveFormUtility;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 /**
@@ -27,6 +28,7 @@ use Symfony\UX\TwigComponent\Attribute\PostMount;
  */
 trait ComponentWithFormTrait
 {
+    #[ExposeInTemplate(name: 'form', getter: 'getForm')]
     private ?FormView $formView = null;
     private ?FormInterface $formInstance = null;
 

@@ -57,6 +57,7 @@ final class TwigComponentExtension extends Extension
                 new Reference('twig'),
                 new Reference('event_dispatcher'),
                 new Reference('ux.twig_component.component_factory'),
+                new Reference('property_accessor'),
             ])
         ;
 

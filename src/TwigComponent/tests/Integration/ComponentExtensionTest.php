@@ -64,4 +64,13 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('Component Content (prop value 2)', $output);
         $this->assertStringContainsString('<button class="foo baz" type="submit" style="color:red;">', $output);
     }
+
+    public function testRenderComponentWithExposedVariables(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('exposed_variables.html.twig');
+
+        $this->assertStringContainsString('Prop1: prop1 value', $output);
+        $this->assertStringContainsString('Prop2: prop2 value', $output);
+        $this->assertStringContainsString('Prop3: prop3 value', $output);
+    }
 }
