@@ -22,6 +22,21 @@ jobs:
             - run: yarn check-lint
             - run: yarn check-format
 
+    js-dist-current:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@master
+            - run: yarn && yarn build
+            - name: Check if js dist files are current
+              id: changes
+              uses: UnicornGlobal/has-changes-action@v1.0.11
+
+            - name: Ensure no changes
+              if: steps.changes.outputs.changed == 1
+              run: |
+                echo "JS dist files need to be rebuilt"
+                exit 1
+
     tests-php-low-deps:
         runs-on: ubuntu-latest
         steps:
