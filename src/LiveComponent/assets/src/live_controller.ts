@@ -5,6 +5,8 @@ import { combineSpacedArray } from './string_utils';
 import { buildFormData, buildSearchParams } from './http_data_helper';
 import { setDeepData, doesDeepPropertyExist, normalizeModelName } from './set_deep_data';
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
+import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
+import { cloneHTMLElement } from './clone_html_element';
 
 interface ElementLoadingDirectives {
     element: HTMLElement,
@@ -197,11 +199,7 @@ export default class extends Controller {
         const model = element.dataset.model || element.getAttribute('name');
 
         if (!model) {
-            const clonedElement = (element.cloneNode());
-            // helps typescript know this is an HTMLElement
-            if (!(clonedElement instanceof HTMLElement)) {
-                throw new Error('cloneNode() produced incorrect type');
-            }
+            const clonedElement = cloneHTMLElement(element);
 
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
@@ -558,7 +556,18 @@ export default class extends Controller {
             onBeforeElUpdated: (fromEl, toEl) => {
                 // https://github.com/patrick-steele-idem/morphdom#can-i-make-morphdom-blaze-through-the-dom-tree-even-faster-yes
                 if (fromEl.isEqualNode(toEl)) {
-                    return false
+                    // the nodes are equal, but the "value" on some might differ
+                    // lets try to quickly compare a bit more deeply
+                    const normalizedFromEl = cloneHTMLElement(fromEl);
+                    normalizeAttributesForComparison(normalizedFromEl);
+
+                    const normalizedToEl = cloneHTMLElement(toEl);
+                    normalizeAttributesForComparison(normalizedToEl);
+
+                    if (normalizedFromEl.isEqualNode(normalizedToEl)) {
+                        // don't bother updating
+                        return false;
+                    }
                 }
 
                 // avoid updating child components: they will handle themselves
@@ -568,6 +577,11 @@ export default class extends Controller {
                     && fromEl !== this.element
                     && !this._shouldChildLiveElementUpdate(fromEl, toEl)
                 ) {
+                    return false;
+                }
+
+                // look for data-live-ignore, and don't update
+                if (fromEl.hasAttribute('data-live-ignore')) {
                     return false;
                 }
 

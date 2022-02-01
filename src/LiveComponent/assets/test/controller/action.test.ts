@@ -42,6 +42,9 @@ describe('LiveController Action Tests', () => {
 
     afterEach(() => {
         clearDOM();
+        if (!fetchMock.done()) {
+            throw new Error('Mocked requests did not match');
+        }
         fetchMock.reset();
     });
 
@@ -62,8 +65,6 @@ describe('LiveController Action Tests', () => {
         await waitFor(() => expect(element).toHaveTextContent('Comment Saved!'));
         expect(getByLabelText(element, 'Comments:')).toHaveValue('hi weaver');
 
-        fetchMock.done();
-
         expect(postMock.lastOptions().body.get('comments')).toEqual('hi WEAVER');
     });
 
@@ -71,7 +72,7 @@ describe('LiveController Action Tests', () => {
         const data = { comments: 'hi' };
         const { element } = await startStimulus(template(data));
 
-        fetchMock.postOnce('http://localhost/_components/my_component/sendNamedArgs?values=a%3D1%26b%3D2%26c%3D3', {
+        fetchMock.postOnce('http://localhost/_components/my_component/sendNamedArgs?args=a%3D1%26b%3D2%26c%3D3', {
             html: template({ comments: 'hi' }),
         });
 

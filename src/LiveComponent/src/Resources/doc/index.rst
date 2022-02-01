@@ -1519,6 +1519,20 @@ form. But it also makes sure that when the ``textarea`` changes, both
 the ``value`` model in ``MarkdownTextareaComponent`` *and* the
 ``post.content`` model in ``EditPostcomponent`` will be updated.
 
+Skipping Updating Certain Elements
+----------------------------------
+
+Sometimes you may have an element inside a component that you do *not* want to
+change whenever your component re-renders. For example, some elements managed by
+third-party JavaScript or a form element that is not bound to a model... where you
+don't want a re-render to reset the data the user has entered.
+
+To handle this, add the ``data-live-ignore`` attribute to the element:
+
+.. code-block:: html
+
+    <input name="favorite_color" data-live-ignore>
+
 Backward Compatibility promise
 ------------------------------
 
