@@ -21,9 +21,14 @@ final class ComponentAttributesTest extends TestCase
 {
     public function testCanConvertToString(): void
     {
-        $attributes = new ComponentAttributes(['class' => 'foo', 'style' => 'color:black;']);
+        $attributes = new ComponentAttributes([
+            'class' => 'foo',
+            'style' => 'color:black;',
+            'value' => '',
+            'autofocus' => null,
+        ]);
 
-        $this->assertSame(' class="foo" style="color:black;"', (string) $attributes);
+        $this->assertSame(' class="foo" style="color:black;" value="" autofocus', (string) $attributes);
     }
 
     public function testCanSetDefaults(): void

@@ -274,7 +274,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         /** @var ComponentWithAttributes $component */
-        $component = $factory->create('with_attributes', $attributes = ['class' => 'foo']);
+        $component = $factory->create('with_attributes', $attributes = ['class' => 'foo', 'value' => null]);
 
         $this->assertSame($attributes, $component->attributes->all());
 

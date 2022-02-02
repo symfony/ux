@@ -45,8 +45,8 @@ trait HasAttributesTrait
         }
 
         foreach ($data as $key => $value) {
-            if (!is_scalar($value)) {
-                throw new \LogicException(sprintf('Unable to use "%s" (%s) as an attribute. Attributes must be scalar. If you meant to mount this value on your component, make sure this is a writable property.', $key, get_debug_type($value)));
+            if (!is_scalar($value) && null !== $value) {
+                throw new \LogicException(sprintf('Unable to use "%s" (%s) as an attribute. Attributes must be scalar or null. If you meant to mount this value on your component, make sure this is a writable property.', $key, get_debug_type($value)));
             }
         }
 
