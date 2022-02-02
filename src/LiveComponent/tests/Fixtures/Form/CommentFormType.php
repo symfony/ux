@@ -11,13 +11,13 @@
 
 declare(strict_types=1);
 
-namespace Symfony\UX\LiveComponent\Tests\Fixture\Form;
+namespace Symfony\UX\LiveComponent\Tests\Fixtures\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\UX\LiveComponent\Tests\Fixture\Dto\Comment;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Comment;
 
 class CommentFormType extends AbstractType
 {

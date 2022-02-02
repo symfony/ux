@@ -14,9 +14,9 @@ namespace Symfony\UX\TwigComponent\Tests\Integration;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\UX\TwigComponent\ComponentFactory;
-use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentA;
-use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentB;
-use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentC;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -100,7 +100,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentC::mount() has a required $propA parameter. Make sure this is passed or make give a default value.');
+        $this->expectExceptionMessage('Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC::mount() has a required $propA parameter. Make sure this is passed or make give a default value.');
 
         $factory->create('component_c');
     }
@@ -111,7 +111,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Unable to write "service" to component "Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentA". Make sure this is a writable property or create a mount() with a $service argument.');
+        $this->expectExceptionMessage('Unable to write "service" to component "Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA". Make sure this is a writable property or create a mount() with a $service argument.');
 
         $factory->create('component_a', ['propB' => 'B', 'service' => 'invalid']);
     }

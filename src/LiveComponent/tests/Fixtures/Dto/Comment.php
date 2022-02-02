@@ -9,19 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent\Tests\Fixture\Entity;
+namespace Symfony\UX\LiveComponent\Tests\Fixtures\Dto;
 
-use Doctrine\ORM\Mapping as ORM;
-
-/**
- * @ORM\Entity
- */
-class Entity1
+class Comment
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
-    public $id;
+    public ?string $content;
+
+    public ?BlogPost $blogPost;
 }

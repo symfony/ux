@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent\Tests\Fixture\Component;
+namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
@@ -18,9 +18,9 @@ use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-use Symfony\UX\LiveComponent\Tests\Fixture\Dto\BlogPost;
-use Symfony\UX\LiveComponent\Tests\Fixture\Dto\Comment;
-use Symfony\UX\LiveComponent\Tests\Fixture\Form\BlogPostFormType;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\BlogPost;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Comment;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Form\BlogPostFormType;
 
 #[AsLiveComponent('form_with_collection_type')]
 class FormWithCollectionTypeComponent extends AbstractController

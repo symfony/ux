@@ -13,7 +13,7 @@ namespace Symfony\UX\LiveComponent\Tests\Unit\Attribute;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component5;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component5;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>

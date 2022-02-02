@@ -9,16 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent\Tests\Fixture\Component;
-
-use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\DefaultActionTrait;
+namespace Symfony\UX\TwigComponent\Tests\Fixtures\Service;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-#[AsLiveComponent('component5')]
-final class Component5 extends Component4
+final class ServiceA
 {
-    use DefaultActionTrait;
+    public $value = 'service a value';
 }
