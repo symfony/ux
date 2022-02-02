@@ -21,10 +21,15 @@
 -   Ability to send live action arguments to backend
 
 -   [BC BREAK] Remove `init_live_component()` twig function, use `{{ attributes }}` instead:
+
     ```diff
     - <div {{ init_live_component() }}>
     + <div {{ attributes }}>
     ```
+
+-   [BC BREAK] Replace property hydration system with `symfony/serializer` normalizers. This
+    is a BC break if you've created custom hydrators. They'll need to be converted to
+    normalizers.
 
 ## 2.0.0
 

@@ -27,6 +27,7 @@
     },
     "require": {
         "php": ">=8.0",
+        "symfony/serializer": "^5.4|^6.0",
         "symfony/ux-twig-component": "^2.1"
     },
     "require-dev": {
@@ -38,7 +39,6 @@
         "symfony/framework-bundle": "^5.4|^6.0",
         "symfony/phpunit-bridge": "^6.0",
         "symfony/security-csrf": "^5.4|^6.0",
-        "symfony/serializer": "^5.4|^6.0",
         "symfony/twig-bundle": "^5.4|^6.0",
         "symfony/validator": "^5.4|^6.0",
         "zenstruck/browser": "^0.9.1",

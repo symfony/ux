@@ -14,9 +14,10 @@ namespace Symfony\UX\LiveComponent;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LivePropContext;
-use Symfony\UX\LiveComponent\Exception\UnsupportedHydrationException;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\MountedComponent;
 
@@ -29,23 +30,16 @@ use Symfony\UX\TwigComponent\MountedComponent;
  */
 final class LiveComponentHydrator
 {
+    public const LIVE_CONTEXT = 'live-component';
     private const CHECKSUM_KEY = '_checksum';
     private const EXPOSED_PROP_KEY = '_id';
     private const ATTRIBUTES_KEY = '_attributes';
 
-    /** @var PropertyHydratorInterface[] */
-    private iterable $propertyHydrators;
-    private PropertyAccessorInterface $propertyAccessor;
-    private string $secret;
-
-    /**
-     * @param PropertyHydratorInterface[] $propertyHydrators
-     */
-    public function __construct(iterable $propertyHydrators, PropertyAccessorInterface $propertyAccessor, string $secret)
-    {
-        $this->propertyHydrators = $propertyHydrators;
-        $this->propertyAccessor = $propertyAccessor;
-        $this->secret = $secret;
+    public function __construct(
+        private NormalizerInterface|DenormalizerInterface $normalizer,
+        private PropertyAccessorInterface $propertyAccessor,
+        private string $secret
+    ) {
     }
 
     public function dehydrate(MountedComponent $mounted): array
@@ -75,6 +69,7 @@ final class LiveComponentHydrator
 
                 throw new \LogicException($message);
             }
+
             $frontendPropertyNames[$frontendName] = $name;
 
             if ($liveProp->isReadonly()) {
@@ -83,13 +78,13 @@ final class LiveComponentHydrator
 
             // TODO: improve error message if not readable
             $value = $this->propertyAccessor->getValue($component, $name);
-
             $dehydratedValue = null;
+
             if ($method = $liveProp->dehydrateMethod()) {
                 // TODO: Error checking
                 $dehydratedValue = $component->$method($value);
-            } else {
-                $dehydratedValue = $this->dehydrateProperty($value, $name, $component);
+            } elseif (\is_object($dehydratedValue = $value)) {
+                $dehydratedValue = $this->normalizer->normalize($dehydratedValue, 'json', [self::LIVE_CONTEXT => true]);
             }
 
             if (\count($liveProp->exposed()) > 0) {
@@ -98,7 +93,7 @@ final class LiveComponentHydrator
                 ];
                 foreach ($liveProp->exposed() as $propertyPath) {
                     $value = $this->propertyAccessor->getValue($component, sprintf('%s.%s', $name, $propertyPath));
-                    $data[$frontendName][$propertyPath] = $this->dehydrateProperty($value, $propertyPath, $component);
+                    $data[$frontendName][$propertyPath] = \is_object($value) ? $this->normalizer->normalize($value, 'json', [self::LIVE_CONTEXT => true]) : $value;
                 }
             } else {
                 $data[$frontendName] = $dehydratedValue;
@@ -168,11 +163,13 @@ final class LiveComponentHydrator
                 unset($data[$frontendName][self::EXPOSED_PROP_KEY]);
             }
 
+            $value = $dehydratedValue;
+
             if ($method = $liveProp->hydrateMethod()) {
                 // TODO: Error checking
                 $value = $component->$method($dehydratedValue);
-            } else {
-                $value = $this->hydrateProperty($property, $dehydratedValue);
+            } elseif ($property->getType() instanceof \ReflectionNamedType && !$property->getType()->isBuiltin()) {
+                $value = $this->normalizer->denormalize($value, $property->getType()->getName(), 'json', [self::LIVE_CONTEXT => true]);
             }
 
             foreach ($liveProp->exposed() as $exposedProperty) {
@@ -235,57 +232,6 @@ final class LiveComponentHydrator
         if (!hash_equals($this->computeChecksum($data, $readonlyProperties), $data[self::CHECKSUM_KEY])) {
             throw new UnprocessableEntityHttpException('Invalid checksum!');
         }
-    }
-
-    /**
-     * @param scalar|array|null $value
-     *
-     * @return mixed
-     */
-    private function hydrateProperty(\ReflectionProperty $property, $value)
-    {
-        if (!$property->getType() || !$property->getType() instanceof \ReflectionNamedType || $property->getType()->isBuiltin()) {
-            return $value;
-        }
-
-        foreach ($this->propertyHydrators as $hydrator) {
-            try {
-                return $hydrator->hydrate($property->getType()->getName(), $value);
-            } catch (UnsupportedHydrationException $e) {
-                continue;
-            }
-        }
-
-        return $value;
-    }
-
-    /**
-     * @param mixed $value
-     *
-     * @return scalar|array|null
-     */
-    private function dehydrateProperty($value, string $name, object $component)
-    {
-        if (is_scalar($value) || \is_array($value) || null === $value) {
-            // nothing to dehydrate...
-            return $value;
-        }
-
-        foreach ($this->propertyHydrators as $hydrator) {
-            try {
-                $value = $hydrator->dehydrate($value);
-
-                break;
-            } catch (UnsupportedHydrationException $e) {
-                continue;
-            }
-        }
-
-        if (!is_scalar($value) && !\is_array($value) && null !== $value) {
-            throw new \LogicException(sprintf('Cannot dehydrate property "%s" of "%s". The value "%s" does not have a dehydrator.', $name, \get_class($component), get_debug_type($value)));
-        }
-
-        return $value;
     }
 
     /**
