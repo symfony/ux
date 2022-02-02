@@ -17,20 +17,9 @@ jobs:
                   php-version: '8.0'
                   extensions: zip
 
-            - name: Get composer cache directory
-              id: composercache
-              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-            - name: Cache dependencies
-              uses: actions/cache@v2
+            - uses: ramsey/composer-install@v2
               with:
-                  path: ${{ steps.composercache.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-                  restore-keys: ${{ runner.os }}-composer-
-
-            - name: Install dependencies
-              working-directory: src/Turbo
-              run: composer install --prefer-dist
+                  working-directory: src/Turbo
 
             - name: Install PHPUnit dependencies
               working-directory: src/Turbo
@@ -71,20 +60,9 @@ jobs:
                   php-version: ${{ matrix.php-versions }}
                   extensions: zip, pdo_sqlite
 
-            - name: Get composer cache directory
-              id: composercache
-              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-            - name: Cache PHP dependencies
-              uses: actions/cache@v2
+            - uses: ramsey/composer-install@v2
               with:
-                  path: ${{ steps.composercache.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-                  restore-keys: ${{ runner.os }}-composer-
-
-            - name: Install PHP dependencies
-              working-directory: src/Turbo
-              run: composer install --prefer-dist
+                  working-directory: src/Turbo
 
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
@@ -143,20 +121,10 @@ jobs:
                   php-version: '8.0'
                   extensions: zip, pdo_sqlite
 
-            - name: Get composer cache directory
-              id: composercache
-              run: echo "::set-output name=dir::$(composer config cache-files-dir)"
-
-            - name: Cache PHP dependencies
-              uses: actions/cache@v2
+            - uses: ramsey/composer-install@v2
               with:
-                  path: ${{ steps.composercache.outputs.dir }}
-                  key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
-                  restore-keys: ${{ runner.os }}-composer-
-
-            - name: Install PHP dependencies
-              working-directory: src/Turbo
-              run: composer update --prefer-dist --prefer-lowest --prefer-stable
+                  working-directory: src/Turbo
+                  dependency-versions: lowest
 
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path

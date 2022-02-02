@@ -18,6 +18,16 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
+            - name: Get yarn cache directory path
+              id: yarn-cache-dir-path
+              run: echo "::set-output name=dir::$(yarn cache dir)"
+            - uses: actions/cache@v2
+              id: yarn-cache
+              with:
+                  path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
             - run: yarn
             - run: yarn check-lint
             - run: yarn check-format
@@ -26,6 +36,16 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
+            - name: Get yarn cache directory path
+              id: yarn-cache-dir-path
+              run: echo "::set-output name=dir::$(yarn cache dir)"
+            - uses: actions/cache@v2
+              id: yarn-cache
+              with:
+                  path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
             - run: yarn && yarn build
             - name: Check if js dist files are current
               id: changes
@@ -44,26 +64,42 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '7.2'
-            - name: Chartjs
-              run: |
-                  cd src/Chartjs
-                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/simple-phpunit
-            - name: Cropperjs
-              run: |
-                  cd src/Cropperjs
-                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/simple-phpunit
-            - name: Dropzone
-              run: |
-                  cd src/Dropzone
-                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/simple-phpunit
-            - name: LazyImage
-              run: |
-                  cd src/LazyImage
-                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/simple-phpunit
+
+            - name: Chartjs Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/Chartjs
+                  dependency-versions: lowest
+            - name: Chartjs Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/Chartjs
+
+            - name: Cropperjs Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/Cropperjs
+                  dependency-versions: lowest
+            - name: Cropperjs Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/Cropperjs
+
+            - name: Dropzone Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/Dropzone
+                  dependency-versions: lowest
+            - name: Dropzone Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/Dropzone
+
+            - name: LazyImage Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/LazyImage
+                  dependency-versions: lowest
+            - name: LazyImage Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/LazyImage
 
     tests-php8-low-deps:
         runs-on: ubuntu-latest
@@ -72,16 +108,25 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
-            - name: TwigComponent
+
+            - name: TwigComponent Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/TwigComponent
+                  dependency-versions: lowest
+            - name: TwigComponent Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/TwigComponent
+
+            - name: LiveComponent Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/LiveComponent
+                  dependency-versions: lowest
+            - name: LiveComponent Tests
+              working-directory: src/LiveComponent
               run: |
-                  cd src/TwigComponent
-                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/simple-phpunit
-            - name: LiveComponent
-              run: |
-                  cd src/LiveComponent
                   php ../../.github/build-packages.php
-                  composer update --prefer-lowest --prefer-dist --no-interaction --no-ansi --no-progress
                   php vendor/bin/simple-phpunit
 
     tests-php-high-deps:
@@ -91,41 +136,70 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
-            - name: Chartjs
+
+            - name: Chartjs Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/Chartjs
+            - name: Chartjs Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/Chartjs
+
+            - name: Cropperjs Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/Cropperjs
+            - name: Cropperjs Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/Cropperjs
+
+            - name: Dropzone Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/Dropzone
+            - name: Dropzone Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/Dropzone
+
+            - name: LazyImage Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/LazyImage
+            - name: LazyImage Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/LazyImage
+
+            - name: TwigComponent Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/TwigComponent
+            - name: TwigComponent Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/TwigComponent
+
+            - name: LiveComponent Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/LiveComponent
+            - name: LiveComponent Tests
+              working-directory: src/LiveComponent
               run: |
-                  cd src/Chartjs
-                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/simple-phpunit
-            - name: Cropperjs
-              run: |
-                  cd src/Cropperjs
-                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/simple-phpunit
-            - name: Dropzone
-              run: |
-                  cd src/Dropzone
-                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/simple-phpunit
-            - name: LazyImage
-              run: |
-                  cd src/LazyImage
-                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/simple-phpunit
-            - name: TwigComponent
-              run: |
-                  cd src/TwigComponent
-                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/simple-phpunit
-            - name: LiveComponent
-              run: |
-                  cd src/LiveComponent
-                  php ../../.github/build-packages.php
-                  composer update --prefer-dist --no-interaction --no-ansi --no-progress
-                  php vendor/bin/simple-phpunit
+                php ../../.github/build-packages.php
+                php vendor/bin/simple-phpunit
 
     tests-js:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
+            - name: Get yarn cache directory path
+              id: yarn-cache-dir-path
+              run: echo "::set-output name=dir::$(yarn cache dir)"
+            - uses: actions/cache@v2
+              id: yarn-cache
+              with:
+                  path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                  key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}
+                  restore-keys: |
+                      ${{ runner.os }}-yarn-
             - run: yarn
             - run: yarn test
