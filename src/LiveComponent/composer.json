@@ -34,6 +34,7 @@
         "doctrine/doctrine-bundle": "^2.0",
         "doctrine/orm": "^2.7",
         "symfony/dependency-injection": "^5.4|^6.0",
+        "symfony/form": "^5.4|^6.0",
         "symfony/framework-bundle": "^5.4|^6.0",
         "symfony/phpunit-bridge": "^6.0",
         "symfony/security-csrf": "^5.4|^6.0",

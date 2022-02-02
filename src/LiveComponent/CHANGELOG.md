@@ -5,6 +5,11 @@
 -   Added `data-live-ignore` attribute. If included in an element, that element
     will not be updated on re-render.
 
+-   `ComponentWithFormTrait` no longer has a `setForm()` method. But there
+    is also no need to call it anymore. To pass an already-built form to
+    your component, pass it as a `form` var to `component()`. If you have
+    a custom `mount()`, you no longer need to call `setForm()` or anything else.
+
 -   The Live Component AJAX endpoints now return HTML in all situations
     instead of JSON.
 
