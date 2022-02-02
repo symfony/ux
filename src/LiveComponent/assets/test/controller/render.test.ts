@@ -64,13 +64,9 @@ describe('LiveController rendering Tests', () => {
         const data = { name: 'Ryan' };
         const { element } = await startStimulus(template(data));
 
-        fetchMock.get(
-            // name=Ryan is sent to the server
-            'http://localhost/_components/my_component?name=Ryan',
-            // server changes that data
-            template({ name: 'Kevin' }),
-            { delay: 100 }
-        );
+        mockRerender({name: 'Ryan'}, template, (data: any) => {
+            data.name = 'Kevin';
+        }, { delay: 100 });
         // type into the input that is not bound to a model
         userEvent.type(getByLabelText(element, 'Comments:'), '!!');
         getByText(element, 'Reload').click();
@@ -85,13 +81,11 @@ describe('LiveController rendering Tests', () => {
         const data = { name: 'Ryan' };
         const { element } = await startStimulus(template(data));
 
-        fetchMock.get(
-            // name=Ryan is sent to the server
-            'http://localhost/_components/my_component?name=Ryan',
-            // server changes that data
-            template({ name: 'Kevin' }),
-            { delay: 100 }
-        );
+        // name=Ryan is sent to the server
+        mockRerender({name: 'Ryan'}, template, (data: any) => {
+            data.name = 'Kevin';
+        }, { delay: 100 });
+
         // type into the input that is not bound to a model
         const input = getByLabelText(element, 'Comments:');
         input.setAttribute('data-live-ignore', '');
@@ -113,11 +107,14 @@ describe('LiveController rendering Tests', () => {
             template(data, true)
         );
 
-        fetchMock.get(
-            'http://localhost/_components/my_component?name=Ryan',
-            template({ name: 'Kevin' }, true),
+        mockRerender(
+            { name: 'Ryan' },
+            // re-render but passing true as the second arg
+            (data: any) => template(data, true),
+            (data: any) => { data.name = 'Kevin'; },
             { delay: 100 }
         );
+
         const input = getByLabelText(element, 'Comments:');
         input.setAttribute('data-live-ignore', '');
         userEvent.type(input, '!!');
@@ -132,9 +129,12 @@ describe('LiveController rendering Tests', () => {
         const data = { name: 'Ryan' };
         const { element } = await startStimulus(template(data));
 
-        fetchMock.get('end:?name=Ryan', '<div>aloha!</div>', {
-            delay: 100
-        });
+        mockRerender(
+            { name: 'Ryan' },
+            () => '<div>aloha!</div>',
+            () => { },
+            { delay: 100 }
+        );
 
         getByText(element, 'Reload').click();
         // imitate navigating away

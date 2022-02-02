@@ -2,6 +2,11 @@
 
 ## 2.1.0
 
+-   Your component's live "data" is now send over Ajax as a JSON string.
+    Previously data was sent as pure query parameters or as pure POST data.
+    However, this made it impossible to keep certain data types, like
+    distinguishing between `null` and `''`. This has no impact on end-users.
+
 -   Added `data-live-ignore` attribute. If included in an element, that element
     will not be updated on re-render.
 

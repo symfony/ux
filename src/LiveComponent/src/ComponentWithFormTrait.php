@@ -178,7 +178,13 @@ trait ComponentWithFormTrait
         $values = [];
         foreach ($formView->children as $child) {
             $name = $child->vars['name'];
-            if (\count($child->children) > 0) {
+
+            // if there are children, expand their values recursively
+            // UNLESS the field is "expanded": in that case the value
+            // is already correct. For example, an expanded ChoiceType with
+            // options "text" and "phone" would already have a value in the format
+            // ["text"] (assuming "text" is checked and "phone" is not).
+            if (!($child->vars['expanded'] ?? false) && \count($child->children) > 0) {
                 $values[$name] = $this->extractFormValues($child);
 
                 continue;

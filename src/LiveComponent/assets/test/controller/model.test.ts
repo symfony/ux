@@ -44,7 +44,9 @@ describe('LiveController data-model Tests', () => {
         const data = { name: 'Ryan' };
         const { element, controller } = await startStimulus(template(data));
 
-        fetchMock.getOnce('end:?name=Ryan+WEAVER', template({ name: 'Ryan Weaver' }));
+        mockRerender({name: 'Ryan WEAVER'}, template, (data: any) => {
+            data.name = 'Ryan Weaver';
+        });
 
         await userEvent.type(getByLabelText(element, 'Name:'), ' WEAVER', {
             // this tests the debounce: characters have a 10ms delay
@@ -63,7 +65,7 @@ describe('LiveController data-model Tests', () => {
         const data = { name: 'Ryan' };
         const { element, controller } = await startStimulus(template(data));
 
-        fetchMock.getOnce('end:?name=Jan', template({ name: 'Jan' }));
+        mockRerender({name: 'Jan'}, template);
 
         userEvent.click(getByText(element, 'Change name to Jan'));
 
@@ -87,11 +89,9 @@ describe('LiveController data-model Tests', () => {
             ['guy', 150]
         ];
         requests.forEach(([string, delay]) => {
-            fetchMock.getOnce(
-                `end:my_component?name=Ryan${string}`,
-                template({ name: `Ryan${string}_` }),
-                { delay }
-            );
+            mockRerender({name: `Ryan${string}`}, template, (data: any) => {
+                data.name = `Ryan${string}_`;
+            }, { delay });
         });
 
         await userEvent.type(getByLabelText(element, 'Name:'), 'guy', {
@@ -121,7 +121,7 @@ describe('LiveController data-model Tests', () => {
         delete inputElement.dataset.model;
         inputElement.setAttribute('name', 'name');
 
-        mockRerender({name: 'Ryan WEAVER'}, template, (data) => {
+        mockRerender({name: 'Ryan WEAVER'}, template, (data: any) => {
             data.name = 'Ryan Weaver';
         });
 
