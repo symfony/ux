@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-28T20:13:27Z
+
+So if I'll have hundred live actions I'll need to write same number submit/reset statements? :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-01-29T01:52:34Z
+
+> So if I'll have hundred live actions I'll need to write same number submit/reset statements? :)
+
+Yup! The same as if you has a hundred controller actions 😉
+
+BUT, I'm re-thinking this approach - I think it's flawed, as trying to "submit the form" then "change the data the form was created from" then... re-recreate the form with the new mix of data... just doesn't work, as the final "new" form wouldn't be "submitted", so it wouldn't have correct validation errors. If we re-submit the 2nd form, then we overwrite the new values we just changed in our underlying object. I think it's a dead approach.
+
+I think the easier flow is to, in your actions, manipulate `$formValues` directly. This, I believe, is actually what you were doing all along @norkunas  - I was trying to do something fancier. It doesn't look as neat as manipulating the underlying form data DTO/entity, but it's much simpler. The flow in an action would be what you have currently @norkunas (I'm just arriving to the solution later). I still need to try it, and see if my fix for `getFormValues()` still works with your approach. Will check into it next week.
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-29T06:42:28Z
+
+>  just doesn't work, as the final "new" form wouldn't be "submitted", so it wouldn't have correct validation errors.
+
+Yeah, at least I currently get them 😉
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2022-01-29T11:27:29Z
+
+From a quick glimpse I can tell that this does not collide nor solve the problem addressed in my PR, which focuses on handling different kind of checkbox field types within forms :+1:
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-02-01T01:35:21Z
+
+Other than a small TODO in the documentation, this is ready to go. This is much simpler now & mirrors what @norkunas was doing in his project, except now with the fix to `formValues`. It mentally took me awhile to get the clarity that this small solution was needed (I previously had a much bigger solution in this PR).
+
+> So if I'll have hundred live actions I'll need to write same number submit/reset statements? :)
+
+So now the answer to that is "no": your actions modify `formValues` and nothing else.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-02-01T19:37:56Z
+
+This is now ready. The form process is now much smoother, working with `CollectionType` is a wonderful experience.
