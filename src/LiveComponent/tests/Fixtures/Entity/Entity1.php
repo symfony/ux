@@ -9,12 +9,19 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent\Tests\Fixture\Service;
+namespace Symfony\UX\LiveComponent\Tests\Fixtures\Entity;
+
+use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @author Kevin Bond <kevinbond@gmail.com>
+ * @ORM\Entity
  */
-final class ServiceA
+class Entity1
 {
-    public $value = 'service a value';
+    /**
+     * @ORM\Id
+     * @ORM\GeneratedValue
+     * @ORM\Column(type="integer")
+     */
+    public $id;
 }

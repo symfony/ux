@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Symfony\UX\LiveComponent\Tests\Fixture\Form;
+namespace Symfony\UX\LiveComponent\Tests\Fixtures\Form;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
@@ -19,7 +19,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\UX\LiveComponent\Tests\Fixture\Dto\BlogPost;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\BlogPost;
 
 class BlogPostFormType extends AbstractType
 {

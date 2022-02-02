@@ -1,6 +1,6 @@
 <?php
 
-namespace Symfony\UX\LiveComponent\Tests\Fixture\Component;
+namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;

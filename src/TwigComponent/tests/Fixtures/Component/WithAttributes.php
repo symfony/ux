@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent\Tests\Fixture\Component;
+namespace Symfony\UX\TwigComponent\Tests\Fixtures\Component;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\HasAttributesTrait;

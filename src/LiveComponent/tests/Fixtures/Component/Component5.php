@@ -9,28 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent\Tests\Fixture\Component;
+namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-#[AsLiveComponent('component3')]
-final class Component3
+#[AsLiveComponent('component5')]
+final class Component5 extends Component4
 {
     use DefaultActionTrait;
-
-    #[LiveProp(fieldName: 'myProp1')]
-    public $prop1;
-
-    #[LiveProp(fieldName: 'getProp2Name()')]
-    public $prop2;
-
-    public function getProp2Name(): string
-    {
-        return 'myProp2';
-    }
 }

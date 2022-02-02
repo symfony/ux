@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent\Tests\Fixture;
+namespace Symfony\UX\TwigComponent\Tests\Fixtures;
 
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -17,11 +17,11 @@ use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentA;
-use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentB;
-use Symfony\UX\TwigComponent\Tests\Fixture\Component\ComponentC;
-use Symfony\UX\TwigComponent\Tests\Fixture\Component\WithAttributes;
-use Symfony\UX\TwigComponent\Tests\Fixture\Service\ServiceA;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\WithAttributes;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Service\ServiceA;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 
 /**
@@ -47,7 +47,7 @@ final class Kernel extends BaseKernel
             'secrets' => false,
         ]);
         $c->loadFromExtension('twig', [
-            'default_path' => '%kernel.project_dir%/tests/Fixture/templates',
+            'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
         ]);
 
         $c->register(ServiceA::class)->setAutoconfigured(true)->setAutowired(true);

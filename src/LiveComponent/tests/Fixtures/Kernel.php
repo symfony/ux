@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent\Tests\Fixture;
+namespace Symfony\UX\LiveComponent\Tests\Fixtures;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Psr\Log\NullLogger;
@@ -22,12 +22,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\LiveComponent\LiveComponentBundle;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component3;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component6;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\ComponentWithAttributes;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\FormWithCollectionTypeComponent;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component3;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component6;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithAttributes;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormWithCollectionTypeComponent;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Environment;
 
@@ -80,7 +80,7 @@ final class Kernel extends BaseKernel
         ]);
 
         $c->loadFromExtension('twig', [
-            'default_path' => '%kernel.project_dir%/tests/Fixture/templates',
+            'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
         ]);
 
         $c->loadFromExtension('doctrine', [
@@ -92,8 +92,8 @@ final class Kernel extends BaseKernel
                     'Test' => [
                         'is_bundle' => false,
                         'type' => 'annotation',
-                        'dir' => '%kernel.project_dir%/tests/Fixture/Entity',
-                        'prefix' => 'Symfony\UX\LiveComponent\Tests\Fixture\Entity',
+                        'dir' => '%kernel.project_dir%/tests/Fixtures/Entity',
+                        'prefix' => 'Symfony\UX\LiveComponent\Tests\Fixtures\Entity',
                         'alias' => 'Test',
                     ],
                 ],

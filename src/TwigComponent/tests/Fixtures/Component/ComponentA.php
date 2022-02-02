@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent\Tests\Fixture\Component;
+namespace Symfony\UX\TwigComponent\Tests\Fixtures\Component;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Tests\Fixture\Service\ServiceA;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Service\ServiceA;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
