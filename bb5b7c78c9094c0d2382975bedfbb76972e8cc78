@@ -1,0 +1,14 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2022-02-03T04:59:43Z
+
+Also just want to point out that in this way it will be impossible to support #102 Bug I :) Unless with some workarounds which would allow to convert files to base64 so symfony serializer would transform it
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-02-03T14:15:52Z
+
+> https://github.com/symfony/ux/issues/102 Bug I :)
+> Bug I) Check file uploads with actions
+
+You're right that uploads will definitely NOT work after this. But I think it's still fixable - data uri is one approach, but we can also look into submitting a "multipart" request body (like a normal file upload) where one part is the file upload and another part is the JSON data.
