@@ -2,7 +2,6 @@ import { Controller } from '@hotwired/stimulus';
 import morphdom from 'morphdom';
 import { parseDirectives, Directive } from './directives_parser';
 import { combineSpacedArray } from './string_utils';
-import { buildFormData, buildSearchParams } from './http_data_helper';
 import { setDeepData, doesDeepPropertyExist, normalizeModelName } from './set_deep_data';
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
@@ -315,12 +314,21 @@ export default class extends Controller {
             }
         }
 
-        if (!action && this._willDataFitInUrl()) {
-            buildSearchParams(params, this.dataValue);
-            fetchOptions.method = 'GET';
-        } else {
+        let dataAdded = false;
+        if (!action) {
+            const dataJson = JSON.stringify(this.dataValue);
+            if (this._willDataFitInUrl(dataJson, params)) {
+                params.set('data', dataJson);
+                fetchOptions.method = 'GET';
+                dataAdded = true;
+            }
+        }
+
+        // if GET can't be used, fallback to POST
+        if (!dataAdded) {
             fetchOptions.method = 'POST';
-            fetchOptions.body = buildFormData(this.dataValue);
+            fetchOptions.body = JSON.stringify(this.dataValue);
+            fetchOptions.headers['Content-Type'] = 'application/json';
         }
 
         this._onLoadingStart();
@@ -531,9 +539,11 @@ export default class extends Controller {
         })
     }
 
-    _willDataFitInUrl() {
+    _willDataFitInUrl(dataJson: string, params: URLSearchParams) {
+        const urlEncodedJsonData = new URLSearchParams(dataJson).toString();
+
         // if the URL gets remotely close to 2000 chars, it may not fit
-        return Object.values(this.dataValue).join(',').length < 1500;
+        return (urlEncodedJsonData + params.toString()).length < 1500;
     }
 
     _executeMorphdom(newHtml: string) {

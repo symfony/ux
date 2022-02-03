@@ -46,7 +46,7 @@ class ComponentWithFormTest extends KernelTestCase
         $token = null;
 
         $this->browser()
-            ->get('/_components/form_with_collection_type?'.http_build_query($dehydrated))
+            ->get('/_components/form_with_collection_type?data='.urlencode(json_encode($dehydrated)))
             ->use(function (HtmlResponse $response) use (&$dehydrated, &$token) {
                 // mimic user typing
                 $dehydrated['blog_post_form']['content'] = 'changed description by user';
@@ -56,7 +56,7 @@ class ComponentWithFormTest extends KernelTestCase
 
             // post to action, which will add a new embedded comment
             ->post('/_components/form_with_collection_type/addComment', [
-                'body' => $dehydrated,
+                'body' => json_encode($dehydrated),
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
@@ -92,7 +92,7 @@ class ComponentWithFormTest extends KernelTestCase
 
             // post to action, which will remove the original embedded comment
             ->post('/_components/form_with_collection_type/removeComment?'.http_build_query(['args' => 'index=0']), [
-                'body' => $dehydrated,
+                'body' => json_encode($dehydrated),
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
@@ -136,7 +136,7 @@ class ComponentWithFormTest extends KernelTestCase
         $dehydrated['validatedFields'][] = 'blog_post_form.content';
 
         $this->browser()
-            ->get('/_components/form_with_collection_type?'.http_build_query($dehydrated))
+            ->get('/_components/form_with_collection_type?data='.urlencode(json_encode($dehydrated)))
             // normal validation happened
             ->assertContains('The content field is too short')
             // title is STILL validated as all fields should be validated

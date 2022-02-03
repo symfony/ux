@@ -122,10 +122,13 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $data = array_merge(
-            $request->query->all(),
-            $request->request->all()
-        );
+        if ($request->query->has('data')) {
+            // ?data=
+            $data = json_decode($request->query->get('data'), true, 512, \JSON_THROW_ON_ERROR);
+        } else {
+            // OR body of the request is JSON
+            $data = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
+        }
 
         if (!\is_array($controller = $event->getController()) || 2 !== \count($controller)) {
             throw new \RuntimeException('Not a valid live component.');

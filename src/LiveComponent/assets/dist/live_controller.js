@@ -898,61 +898,6 @@ function combineSpacedArray(parts) {
     return finalParts;
 }
 
-const buildFormKey = function (key, parentKeys) {
-    let fieldName = '';
-    [...parentKeys, key].forEach((name) => {
-        fieldName += fieldName ? `[${name}]` : name;
-    });
-    return fieldName;
-};
-const addObjectToFormData = function (formData, data, parentKeys) {
-    Object.keys(data).forEach((key => {
-        let value = data[key];
-        if (value === true) {
-            value = 1;
-        }
-        if (value === false) {
-            value = 0;
-        }
-        if (value === null) {
-            return;
-        }
-        if (typeof value === 'object') {
-            addObjectToFormData(formData, value, [...parentKeys, key]);
-            return;
-        }
-        formData.append(buildFormKey(key, parentKeys), value);
-    }));
-};
-const addObjectToSearchParams = function (searchParams, data, parentKeys) {
-    Object.keys(data).forEach((key => {
-        let value = data[key];
-        if (value === true) {
-            value = 1;
-        }
-        if (value === false) {
-            value = 0;
-        }
-        if (value === null) {
-            return;
-        }
-        if (typeof value === 'object') {
-            addObjectToSearchParams(searchParams, value, [...parentKeys, key]);
-            return;
-        }
-        searchParams.set(buildFormKey(key, parentKeys), value);
-    }));
-};
-function buildFormData(data) {
-    const formData = new FormData();
-    addObjectToFormData(formData, data, []);
-    return formData;
-}
-function buildSearchParams(searchParams, data) {
-    addObjectToSearchParams(searchParams, data, []);
-    return searchParams;
-}
-
 function setDeepData(data, propertyPath, value) {
     const finalData = JSON.parse(JSON.stringify(data));
     let currentLevelData = finalData;
@@ -1200,13 +1145,19 @@ class default_1 extends Controller {
                 fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfValue;
             }
         }
-        if (!action && this._willDataFitInUrl()) {
-            buildSearchParams(params, this.dataValue);
-            fetchOptions.method = 'GET';
+        let dataAdded = false;
+        if (!action) {
+            const dataJson = JSON.stringify(this.dataValue);
+            if (this._willDataFitInUrl(dataJson, params)) {
+                params.set('data', dataJson);
+                fetchOptions.method = 'GET';
+                dataAdded = true;
+            }
         }
-        else {
+        if (!dataAdded) {
             fetchOptions.method = 'POST';
-            fetchOptions.body = buildFormData(this.dataValue);
+            fetchOptions.body = JSON.stringify(this.dataValue);
+            fetchOptions.headers['Content-Type'] = 'application/json';
         }
         this._onLoadingStart();
         const paramsString = params.toString();
@@ -1358,8 +1309,9 @@ class default_1 extends Controller {
             element.removeAttribute(attribute);
         });
     }
-    _willDataFitInUrl() {
-        return Object.values(this.dataValue).join(',').length < 1500;
+    _willDataFitInUrl(dataJson, params) {
+        const urlEncodedJsonData = new URLSearchParams(dataJson).toString();
+        return (urlEncodedJsonData + params.toString()).length < 1500;
     }
     _executeMorphdom(newHtml) {
         function htmlToElement(html) {

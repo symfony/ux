@@ -2,7 +2,7 @@ import { Application } from '@hotwired/stimulus';
 import LiveController from '../src/live_controller';
 import { waitFor } from '@testing-library/dom';
 import fetchMock from 'fetch-mock-jest';
-import { buildSearchParams } from '../src/http_data_helper';
+import MockOptions = jest.MockOptions;
 
 const TestData = class {
     constructor(controller, element) {
@@ -64,17 +64,20 @@ const initLiveComponent = (url, data) => {
  * @param {Object} sentData The *expected* data that should be sent to the server
  * @param {function} renderCallback Function that will render the component
  * @param {function|null} changeDataCallback Specify if you want to change the data before rendering
+ * @param {MockOptions} options Options passed to fetchMock
  */
-const mockRerender = (sentData, renderCallback, changeDataCallback = null) => {
-    const params = new URLSearchParams('');
+const mockRerender = (sentData: any, renderCallback, changeDataCallback = null, options: MockOptions = {}) => {
+    const params = new URLSearchParams({
+        data: JSON.stringify(sentData)
+    });
 
-    const url = `end:?${buildSearchParams(params, sentData).toString()}`;
+    const url = `end:?${params.toString()}`;
 
     if (changeDataCallback) {
         changeDataCallback(sentData);
     }
 
-    fetchMock.mock(url, renderCallback(sentData));
+    fetchMock.mock(url, renderCallback(sentData), options);
 }
 
 export { startStimulus, getControllerElement, initLiveComponent, mockRerender };

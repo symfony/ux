@@ -187,7 +187,7 @@ describe('LiveController parent -> child component tests', () => {
         const inputElement = getByLabelText(element, 'Content:');
         await userEvent.clear(inputElement);
         await userEvent.type(inputElement, 'changed content');
-        mockRerender({value: 'changed content'}, childTemplate);
+        mockRerender({value: 'changed content', error: null}, childTemplate);
 
         await waitFor(() => expect(element).toHaveTextContent('Value in child: changed content'));
 
