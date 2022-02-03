@@ -73,4 +73,17 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('Prop2: prop2 value', $output);
         $this->assertStringContainsString('Prop3: prop3 value', $output);
     }
+
+    public function testCanUseComputedMethods(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('template_a.html.twig');
+
+        $this->assertStringContainsString('countDirect1: 1', $output);
+        $this->assertStringContainsString('countDirect2: 2', $output);
+        $this->assertStringContainsString('countComputed1: 3', $output);
+        $this->assertStringContainsString('countComputed2: 3', $output);
+        $this->assertStringContainsString('countComputed3: 3', $output);
+        $this->assertStringContainsString('propDirect: value', $output);
+        $this->assertStringContainsString('propComputed: value', $output);
+    }
 }

@@ -48,6 +48,9 @@ final class ComponentRenderer
             // add the component as "this"
             ['this' => $component],
 
+            // add computed properties proxy
+            ['computed' => new ComputedPropertiesProxy($component)],
+
             // add attributes
             ['attributes' => $mounted->getAttributes()],
 

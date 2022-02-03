@@ -21,6 +21,7 @@ use Symfony\UX\TwigComponent\Tests\Fixtures\Component\WithExposedVariables;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComputedComponent;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\WithAttributes;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Service\ServiceA;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
@@ -61,6 +62,7 @@ final class Kernel extends BaseKernel
             'template' => 'components/custom2.html.twig',
         ]);
         $c->register(WithExposedVariables::class)->setAutoconfigured(true)->setAutowired(true);
+        $c->register(ComputedComponent::class)->setAutoconfigured(true)->setAutowired(true);
 
         if ('missing_key' === $this->environment) {
             $c->register('missing_key', ComponentB::class)->setAutowired(true)->addTag('twig.component');
