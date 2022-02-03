@@ -16,8 +16,6 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentValidator;
 use Symfony\UX\LiveComponent\ComponentValidatorInterface;
@@ -71,7 +69,7 @@ final class LiveComponentExtension extends Extension
             ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
             ->addTag('container.service_subscriber', ['key' => ComponentRenderer::class, 'id' => 'ux.twig_component.component_renderer'])
             ->addTag('container.service_subscriber', ['key' => LiveComponentHydrator::class, 'id' => 'ux.live_component.component_hydrator'])
-            ->addTag('container.service_subscriber')
+            ->addTag('container.service_subscriber') // csrf
         ;
 
         $container->register('ux.live_component.twig.component_extension', LiveComponentTwigExtension::class)
@@ -80,11 +78,9 @@ final class LiveComponentExtension extends Extension
 
         $container->register('ux.live_component.twig.component_runtime', LiveComponentRuntime::class)
             ->setArguments([
-                new Reference('twig'),
                 new Reference('ux.live_component.component_hydrator'),
                 new Reference('ux.twig_component.component_factory'),
-                new Reference(UrlGeneratorInterface::class),
-                new Reference(CsrfTokenManagerInterface::class, ContainerBuilder::NULL_ON_INVALID_REFERENCE),
+                new Reference('router'),
             ])
             ->addTag('twig.runtime')
         ;
@@ -95,7 +91,8 @@ final class LiveComponentExtension extends Extension
 
         $container->register('ux.live_component.add_attributes_subscriber', AddLiveAttributesSubscriber::class)
             ->addTag('kernel.event_subscriber')
-            ->addTag('container.service_subscriber', ['key' => LiveComponentRuntime::class, 'id' => 'ux.live_component.twig.component_runtime'])
+            ->addTag('container.service_subscriber', ['key' => LiveComponentHydrator::class, 'id' => 'ux.live_component.component_hydrator'])
+            ->addTag('container.service_subscriber') // csrf, twig & router
         ;
 
         $container->setAlias(ComponentValidatorInterface::class, ComponentValidator::class);
