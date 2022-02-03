@@ -108,6 +108,7 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
+            - run: php .github/build-packages.php
 
             - name: TwigComponent Dependencies
               uses: ramsey/composer-install@v2
@@ -125,9 +126,7 @@ jobs:
                   dependency-versions: lowest
             - name: LiveComponent Tests
               working-directory: src/LiveComponent
-              run: |
-                  php ../../.github/build-packages.php
-                  php vendor/bin/simple-phpunit
+              run: php vendor/bin/simple-phpunit
 
     tests-php-high-deps:
         runs-on: ubuntu-latest
@@ -136,6 +135,7 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
+            - run: php .github/build-packages.php
 
             - name: Chartjs Dependencies
               uses: ramsey/composer-install@v2
@@ -183,9 +183,7 @@ jobs:
                   working-directory: src/LiveComponent
             - name: LiveComponent Tests
               working-directory: src/LiveComponent
-              run: |
-                php ../../.github/build-packages.php
-                php vendor/bin/simple-phpunit
+              run: php vendor/bin/simple-phpunit
 
     tests-js:
         runs-on: ubuntu-latest
