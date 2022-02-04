@@ -422,13 +422,13 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(element).toHaveTextContent('Select: foo bar Option 2 is selected'));
 
-        mockRerender({ form: {select: null}}, checkboxTemplate);
+        mockRerender({ form: {select: []}}, checkboxTemplate);
 
         await userEvent.deselectOptions(selectElement, 'bar');
 
         await waitFor(() => expect(element).toHaveTextContent('Select: foo bar Option 2 is unselected'));
 
-        expect(controller.dataValue).toEqual({form: {select: null}});
+        expect(controller.dataValue).toEqual({form: {select: []}});
 
         // assert all calls were done the correct number of times
         fetchMock.done();

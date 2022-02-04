@@ -9,7 +9,7 @@ export function getArrayValue(
     element: HTMLElement,
     value: string|null,
     currentValue: any
-): Array<string>|null {
+): Array<string> {
     // Enforce returned value is an array
     if (!(currentValue instanceof Array)) {
         currentValue = [];
@@ -35,5 +35,5 @@ export function getArrayValue(
     }
 
     // When no values are selected for collection no data should be sent over the wire
-    return currentValue.length ? currentValue : null;
+    return currentValue;
 }

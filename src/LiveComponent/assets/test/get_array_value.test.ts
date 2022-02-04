@@ -21,9 +21,9 @@ describe('getArrayValue', () => {
         input.checked = false;
 
         expect(getArrayValue(input, 'foo', null))
-            .toEqual(null);
+            .toEqual([]);
         expect(getArrayValue(input, 'foo', ['foo']))
-            .toEqual(null);
+            .toEqual([]);
         expect(getArrayValue(input, 'foo', ['bar']))
             .toEqual(['bar']);
         expect(getArrayValue(input, 'foo', ['foo', 'bar']))
@@ -41,7 +41,7 @@ describe('getArrayValue', () => {
         select.add(barOption);
 
         expect(getArrayValue(select, '', null))
-            .toEqual(null);
+            .toEqual([]);
 
         fooOption.selected = true;
         expect(getArrayValue(select, '', null))
