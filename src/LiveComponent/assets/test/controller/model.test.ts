@@ -361,12 +361,12 @@ describe('LiveController data-model Tests', () => {
                 <label>
                     Select:
                     <select name="form[select][]" multiple>
-                        <option value="foo" ${data.form.select.indexOf('foo') > -1 ? 'selected' : ''}>foo</option>
-                        <option value="bar" ${data.form.select.indexOf('bar') > -1 ? 'selected' : ''}>bar</option>
+                        <option value="foo" ${data.form.select?.indexOf('foo') > -1 ? 'selected' : ''}>foo</option>
+                        <option value="bar" ${data.form.select?.indexOf('bar') > -1 ? 'selected' : ''}>bar</option>
                     </select>
                 </label>
                 
-                Option 2 is ${data.form.select.indexOf('bar') > -1 ? 'selected' : 'unselected' }
+                Option 2 is ${data.form.select?.indexOf('bar') > -1 ? 'selected' : 'unselected' }
             </div>
         `;
         const data = { form: { select: []} };
@@ -399,12 +399,12 @@ describe('LiveController data-model Tests', () => {
                 <label>
                     Select:
                     <select name="form[select][]" multiple>
-                        <option value="foo" ${data.form.select.indexOf('foo') > -1 ? 'selected' : ''}>foo</option>
-                        <option value="bar" ${data.form.select.indexOf('bar') > -1 ? 'selected' : ''}>bar</option>
+                        <option value="foo" ${data.form.select?.indexOf('foo') > -1 ? 'selected' : ''}>foo</option>
+                        <option value="bar" ${data.form.select?.indexOf('bar') > -1 ? 'selected' : ''}>bar</option>
                     </select>
                 </label>
                 
-                Option 2 is ${data.form.select.indexOf('bar') > -1 ? 'selected' : 'unselected' }
+                Option 2 is ${data.form.select?.indexOf('bar') > -1 ? 'selected' : 'unselected' }
             </div>
         `;
         const data = { form: { select: ['foo']} };
@@ -426,7 +426,7 @@ describe('LiveController data-model Tests', () => {
 
         await userEvent.deselectOptions(selectElement, 'bar');
 
-        await waitFor(() => expect(element).toHaveTextContent('Select: foo bar Option 2 is deselected'));
+        await waitFor(() => expect(element).toHaveTextContent('Select: foo bar Option 2 is unselected'));
 
         expect(controller.dataValue).toEqual({form: {select: null}});
 
