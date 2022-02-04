@@ -34,7 +34,7 @@ final class ComponentRuntime
     {
         return $this->componentRenderer->render(
             $this->componentFactory->create($name, $props),
-            $this->componentFactory->configFor($name)['template']
+            $this->componentFactory->metadataFor($name)
         );
     }
 }

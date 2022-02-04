@@ -1,0 +1,61 @@
+<?php
+
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Symfony\UX\TwigComponent;
+
+/**
+ * @author Kevin Bond <kevinbond@gmail.com>
+ *
+ * @experimental
+ */
+final class ComponentMetadata
+{
+    /**
+     * @internal
+     */
+    public function __construct(private array $config)
+    {
+    }
+
+    public function getName(): string
+    {
+        return $this->config['key'];
+    }
+
+    /**
+     * @return string Component's twig template
+     */
+    public function getTemplate(): string
+    {
+        return $this->config['template'];
+    }
+
+    /**
+     * @return class-string The Component's FQCN
+     */
+    public function getClass(): string
+    {
+        return $this->config['class'];
+    }
+
+    /**
+     * @return string The Component's service id
+     */
+    public function getServiceId(): string
+    {
+        return $this->config['service_id'];
+    }
+
+    public function get(string $key, mixed $default = null): mixed
+    {
+        return $this->config[$key] ?? $default;
+    }
+}

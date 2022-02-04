@@ -31,6 +31,7 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 
 /**
@@ -73,24 +74,28 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         $componentName = (string) $request->get('component');
 
         try {
-            $config = $this->container->get(ComponentFactory::class)->configFor($componentName);
+            /** @var ComponentMetadata $metadata */
+            $metadata = $this->container->get(ComponentFactory::class)->metadataFor($componentName);
         } catch (\InvalidArgumentException $e) {
             throw new NotFoundHttpException(sprintf('Component "%s" not found.', $componentName), $e);
         }
 
-        $request->attributes->set('_component_template', $config['template']);
+        if (!$metadata->get('live', false)) {
+            throw new NotFoundHttpException(sprintf('"%s" (%s) is not a Live Component.', $metadata->getClass(), $componentName));
+        }
+
+        $request->attributes->set('_component_metadata', $metadata);
 
         if ('get' === $action) {
-            $defaultAction = trim($config['default_action'] ?? '__invoke', '()');
-            $componentClass = $config['class'];
+            $defaultAction = trim($metadata->get('default_action', '__invoke'), '()');
 
-            if (!method_exists($componentClass, $defaultAction)) {
+            if (!method_exists($metadata->getClass(), $defaultAction)) {
                 // todo should this check be in a compiler pass to ensure fails at compile time?
-                throw new \LogicException(sprintf('Live component "%s" requires the default action method "%s".%s', $componentClass, $defaultAction, '__invoke' === $defaultAction ? ' Either add this method or use the DefaultActionTrait' : ''));
+                throw new \LogicException(sprintf('Live component "%s" (%s) requires the default action method "%s".%s', $metadata->getClass(), $componentName, $defaultAction, '__invoke' === $defaultAction ? ' Either add this method or use the DefaultActionTrait' : ''));
             }
 
             // set default controller for "default" action
-            $request->attributes->set('_controller', sprintf('%s::%s', $config['service_id'], $defaultAction));
+            $request->attributes->set('_controller', sprintf('%s::%s', $metadata->getServiceId(), $defaultAction));
             $request->attributes->set('_component_default_action', true);
 
             return;
@@ -106,7 +111,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             throw new BadRequestHttpException('Invalid CSRF token.');
         }
 
-        $request->attributes->set('_controller', sprintf('%s::%s', $config['service_id'], $action));
+        $request->attributes->set('_controller', sprintf('%s::%s', $metadata->getServiceId(), $action));
     }
 
     public function onKernelController(ControllerEvent $event): void
@@ -117,10 +122,13 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $data = array_merge(
-            $request->query->all(),
-            $request->request->all()
-        );
+        if ($request->query->has('data')) {
+            // ?data=
+            $data = json_decode($request->query->get('data'), true, 512, \JSON_THROW_ON_ERROR);
+        } else {
+            // OR body of the request is JSON
+            $data = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
+        }
 
         if (!\is_array($controller = $event->getController()) || 2 !== \count($controller)) {
             throw new \RuntimeException('Not a valid live component.');
@@ -232,7 +240,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         $html = $this->container->get(ComponentRenderer::class)->render(
             $component,
-            $request->attributes->get('_component_template')
+            $request->attributes->get('_component_metadata')
         );
 
         return new Response($html);

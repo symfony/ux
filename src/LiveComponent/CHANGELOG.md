@@ -2,10 +2,29 @@
 
 ## 2.1.0
 
+-   Your component's live "data" is now send over Ajax as a JSON string.
+    Previously data was sent as pure query parameters or as pure POST data.
+    However, this made it impossible to keep certain data types, like
+    distinguishing between `null` and `''`. This has no impact on end-users.
+
+-   Added `data-live-ignore` attribute. If included in an element, that element
+    will not be updated on re-render.
+
+-   `ComponentWithFormTrait` no longer has a `setForm()` method. But there
+    is also no need to call it anymore. To pass an already-built form to
+    your component, pass it as a `form` var to `component()`. If you have
+    a custom `mount()`, you no longer need to call `setForm()` or anything else.
+
 -   The Live Component AJAX endpoints now return HTML in all situations
     instead of JSON.
 
--   Send live action arguments to backend
+-   Ability to send live action arguments to backend
+
+-   [BC BREAK] Remove `init_live_component()` twig function, use `{{ attributes }}` instead:
+    ```diff
+    - <div {{ init_live_component() }}>
+    + <div {{ attributes }}>
+    ```
 
 ## 2.0.0
 

@@ -14,11 +14,10 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
-use Symfony\UX\LiveComponent\Tests\ContainerBC;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component6;
-use Symfony\UX\LiveComponent\Tests\Fixture\Entity\Entity1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component6;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Zenstruck\Browser\Response\HtmlResponse;
 use Zenstruck\Browser\Test\HasBrowser;
@@ -31,7 +30,6 @@ use Zenstruck\Foundry\Test\ResetDatabase;
  */
 final class LiveComponentSubscriberTest extends KernelTestCase
 {
-    use ContainerBC;
     use Factories;
     use HasBrowser;
     use ResetDatabase;
@@ -56,7 +54,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component1?'.http_build_query($dehydrated))
+            ->get('/_components/component1?data='.urlencode(json_encode($dehydrated)))
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Prop1: '.$entity->id)
@@ -82,7 +80,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component2?'.http_build_query($dehydrated))
+            ->get('/_components/component2?data='.urlencode(json_encode($dehydrated)))
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 1')
@@ -90,8 +88,9 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                 // get a valid token to use for actions
                 $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
             })
-            ->post('/_components/component2/increase?'.http_build_query($dehydrated), [
+            ->post('/_components/component2/increase', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
+                'body' => json_encode($dehydrated),
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
@@ -170,7 +169,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->visit('/render-template/template1')
             ->assertSuccessful()
             ->assertSee('BeforeReRenderCalled: No')
-            ->get('/_components/component2?'.http_build_query($dehydrated))
+            ->get('/_components/component2?data='.urlencode(json_encode($dehydrated)))
             ->assertSuccessful()
             ->assertSee('BeforeReRenderCalled: Yes')
         ;
@@ -192,7 +191,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component2?'.http_build_query($dehydrated))
+            ->get('/_components/component2?data='.urlencode(json_encode($dehydrated)))
             ->assertSuccessful()
             ->use(function (HtmlResponse $response) use (&$token) {
                 // get a valid token to use for actions
@@ -200,17 +199,19 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             })
             ->interceptRedirects()
             // with no custom header, it redirects like a normal browser
-            ->post('/_components/component2/redirect?'.http_build_query($dehydrated), [
+            ->post('/_components/component2/redirect', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
+                'body' => json_encode($dehydrated),
             ])
             ->assertRedirectedTo('/')
 
             // with custom header, a special 204 is returned
-            ->post('/_components/component2/redirect?'.http_build_query($dehydrated), [
+            ->post('/_components/component2/redirect', [
                 'headers' => [
                     'Accept' => 'application/vnd.live-component+html',
                     'X-CSRF-TOKEN' => $token,
                 ],
+                'body' => json_encode($dehydrated),
             ])
             ->assertStatus(204)
             ->assertHeaderEquals('Location', '/')
@@ -231,13 +232,10 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         $dehydrated = $hydrator->dehydrate($component);
         $token = null;
 
-        $dehydratedWithArgs = array_merge($dehydrated, [
-            'args' => http_build_query(['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3']),
-        ]);
-
+        $argsQueryParams = http_build_query(['args' => http_build_query(['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3'])]);
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component6?'.http_build_query($dehydrated))
+            ->get('/_components/component6?data='.urlencode(json_encode($dehydrated)).'&'.$argsQueryParams)
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Arg1: not provided')
@@ -247,8 +245,9 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                 // get a valid token to use for actions
                 $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
             })
-            ->post('/_components/component6/inject?'.http_build_query($dehydratedWithArgs), [
+            ->post('/_components/component6/inject?'.$argsQueryParams, [
                 'headers' => ['X-CSRF-TOKEN' => $token],
+                'body' => json_encode($dehydrated),
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')

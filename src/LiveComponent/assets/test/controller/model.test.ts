@@ -34,6 +34,9 @@ describe('LiveController data-model Tests', () => {
 
     afterEach(() => {
         clearDOM();
+        if (!fetchMock.done()) {
+            throw new Error('Mocked requests did not match');
+        }
         fetchMock.reset();
     });
 
@@ -41,7 +44,9 @@ describe('LiveController data-model Tests', () => {
         const data = { name: 'Ryan' };
         const { element, controller } = await startStimulus(template(data));
 
-        fetchMock.getOnce('end:?name=Ryan+WEAVER', template({ name: 'Ryan Weaver' }));
+        mockRerender({name: 'Ryan WEAVER'}, template, (data: any) => {
+            data.name = 'Ryan Weaver';
+        });
 
         await userEvent.type(getByLabelText(element, 'Name:'), ' WEAVER', {
             // this tests the debounce: characters have a 10ms delay
@@ -52,9 +57,6 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(getByLabelText(element, 'Name:')).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({name: 'Ryan Weaver'});
 
-        // assert all calls were done the correct number of times
-        fetchMock.done();
-
         // assert the input is still focused after rendering
         expect(document.activeElement.dataset.model).toEqual('name');
     });
@@ -63,15 +65,12 @@ describe('LiveController data-model Tests', () => {
         const data = { name: 'Ryan' };
         const { element, controller } = await startStimulus(template(data));
 
-        fetchMock.getOnce('end:?name=Jan', template({ name: 'Jan' }));
+        mockRerender({name: 'Jan'}, template);
 
         userEvent.click(getByText(element, 'Change name to Jan'));
 
         await waitFor(() => expect(getByLabelText(element, 'Name:')).toHaveValue('Jan'));
         expect(controller.dataValue).toEqual({name: 'Jan'});
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
 
@@ -90,11 +89,9 @@ describe('LiveController data-model Tests', () => {
             ['guy', 150]
         ];
         requests.forEach(([string, delay]) => {
-            fetchMock.getOnce(
-                `end:my_component?name=Ryan${string}`,
-                template({ name: `Ryan${string}_` }),
-                { delay }
-            );
+            mockRerender({name: `Ryan${string}`}, template, (data: any) => {
+                data.name = `Ryan${string}_`;
+            }, { delay });
         });
 
         await userEvent.type(getByLabelText(element, 'Name:'), 'guy', {
@@ -111,9 +108,6 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(getByLabelText(element, 'Name:')).toHaveValue('Ryanguy_'));
         expect(controller.dataValue).toEqual({name: 'Ryanguy_'});
 
-        // assert all calls were done the correct number of times
-        fetchMock.done();
-
         // only 1 render should have ultimately occurred
         expect(renderCount).toEqual(1);
     });
@@ -127,7 +121,7 @@ describe('LiveController data-model Tests', () => {
         delete inputElement.dataset.model;
         inputElement.setAttribute('name', 'name');
 
-        mockRerender({name: 'Ryan WEAVER'}, template, (data) => {
+        mockRerender({name: 'Ryan WEAVER'}, template, (data: any) => {
             data.name = 'Ryan Weaver';
         });
 
@@ -135,9 +129,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({name: 'Ryan Weaver'});
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('uses data-model when both name and data-model is present', async () => {
@@ -157,8 +148,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({name: 'Ryan Weaver'});
-
-        fetchMock.done();
     });
 
     it('uses data-value when both value and data-value is present', async () => {
@@ -178,8 +167,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('first_name'));
         expect(controller.dataValue).toEqual({name: 'first_name'});
-
-        fetchMock.done();
     });
 
     it('standardizes user[firstName] style models into post.name', async () => {
@@ -211,9 +198,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({ user: { firstName: 'Ryan Weaver' } });
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('sends correct data for checkbox fields', async () => {
@@ -288,8 +272,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
 
-        fetchMock.done();
-
         // assert the input is still focused after rendering
         expect(document.activeElement.getAttribute('name')).toEqual('firstName');
     });
@@ -307,9 +289,6 @@ describe('LiveController data-model Tests', () => {
         await userEvent.type(inputElement, ' WEAVER');
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('data changed on server should be noticed by controller', async () => {
@@ -326,7 +305,5 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Kevin Bond'));
         expect(controller.dataValue).toEqual({name: 'Kevin Bond'});
-
-        fetchMock.done();
     });
 });

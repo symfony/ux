@@ -6,6 +6,13 @@
 
 -   Add `PreMount` priority parameter.
 
+-   Add `PostMount` hook component hook to intercept extra props.
+
+-   Add `HasAttributesTrait` for components which makes `attributes` variable available
+    in component templates.
+
+-   Add `PreRenderEvent` to intercept/manipulate twig template/variables before rendering.
+
 ## 2.0.0
 
 -   Support for `stimulus` version 2 was removed and support for `@hotwired/stimulus`

@@ -44,6 +44,17 @@ class AsTwigComponent
         return array_reverse($methods);
     }
 
+    public static function postMountMethods(object $component): iterable
+    {
+        $methods = iterator_to_array(self::attributeMethodsFor(PostMount::class, $component));
+
+        usort($methods, static function (\ReflectionMethod $a, \ReflectionMethod $b) {
+            return $a->getAttributes(PostMount::class)[0]->newInstance()->priority <=> $b->getAttributes(PostMount::class)[0]->newInstance()->priority;
+        });
+
+        return array_reverse($methods);
+    }
+
     /**
      * @internal
      *

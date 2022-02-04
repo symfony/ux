@@ -24,6 +24,7 @@ return (new PhpCsFixer\Config())
             ->append([__FILE__])
             ->notPath('#/Fixtures/#')
             ->notPath('#/app/var/#')
+            ->notPath('#/var/cache/#')
             ->notPath('Turbo/Attribute/Broadcast.php') // Need https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues/4702
     )
 ;

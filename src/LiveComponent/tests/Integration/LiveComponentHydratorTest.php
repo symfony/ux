@@ -14,11 +14,11 @@ namespace Symfony\UX\LiveComponent\Tests\Integration;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
-use Symfony\UX\LiveComponent\Tests\ContainerBC;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component1;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component2;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\Component3;
-use Symfony\UX\LiveComponent\Tests\Fixture\Entity\Entity1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component3;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithAttributes;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use function Zenstruck\Foundry\create;
 use Zenstruck\Foundry\Test\Factories;
@@ -29,7 +29,6 @@ use Zenstruck\Foundry\Test\ResetDatabase;
  */
 final class LiveComponentHydratorTest extends KernelTestCase
 {
-    use ContainerBC;
     use Factories;
     use ResetDatabase;
 
@@ -264,5 +263,53 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $hydrator->hydrate($component, $dehydrated);
 
         $this->assertSame($instance->prop, $component->prop);
+    }
+
+    public function testCanDehydrateAndHydrateComponentsWithAttributes(): void
+    {
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
+
+        /** @var ComponentFactory $factory */
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
+
+        /** @var ComponentWithAttributes $component */
+        $component = $factory->create('with_attributes', $attributes = ['class' => 'foo', 'value' => null]);
+
+        $this->assertSame($attributes, $component->attributes->all());
+
+        $dehydrated = $hydrator->dehydrate($component);
+
+        $this->assertArrayHasKey('attributes', $dehydrated);
+        $this->assertSame($attributes, $dehydrated['attributes']);
+
+        $hydrator->hydrate($component = $factory->get('with_attributes'), $dehydrated);
+
+        $this->assertSame($attributes, $component->attributes->all());
+    }
+
+    public function testCanDehydrateAndHydrateComponentsWithEmptyAttributes(): void
+    {
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
+
+        /** @var ComponentFactory $factory */
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
+
+        /** @var ComponentWithAttributes $component */
+        $component = $factory->create('with_attributes');
+
+        $this->assertSame([], $component->attributes->all());
+
+        $dehydrated = $hydrator->dehydrate($component);
+
+        $this->assertArrayHasKey('attributes', $dehydrated);
+        $this->assertSame([], $dehydrated['attributes']);
+
+        $component = $factory->get('with_attributes');
+
+        $hydrator->hydrate($component, $dehydrated);
+
+        $this->assertSame([], $component->attributes->all());
     }
 }

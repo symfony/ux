@@ -898,61 +898,6 @@ function combineSpacedArray(parts) {
     return finalParts;
 }
 
-const buildFormKey = function (key, parentKeys) {
-    let fieldName = '';
-    [...parentKeys, key].forEach((name) => {
-        fieldName += fieldName ? `[${name}]` : name;
-    });
-    return fieldName;
-};
-const addObjectToFormData = function (formData, data, parentKeys) {
-    Object.keys(data).forEach((key => {
-        let value = data[key];
-        if (value === true) {
-            value = 1;
-        }
-        if (value === false) {
-            value = 0;
-        }
-        if (value === null) {
-            return;
-        }
-        if (typeof value === 'object') {
-            addObjectToFormData(formData, value, [...parentKeys, key]);
-            return;
-        }
-        formData.append(buildFormKey(key, parentKeys), value);
-    }));
-};
-const addObjectToSearchParams = function (searchParams, data, parentKeys) {
-    Object.keys(data).forEach((key => {
-        let value = data[key];
-        if (value === true) {
-            value = 1;
-        }
-        if (value === false) {
-            value = 0;
-        }
-        if (value === null) {
-            return;
-        }
-        if (typeof value === 'object') {
-            addObjectToSearchParams(searchParams, value, [...parentKeys, key]);
-            return;
-        }
-        searchParams.set(buildFormKey(key, parentKeys), value);
-    }));
-};
-function buildFormData(data) {
-    const formData = new FormData();
-    addObjectToFormData(formData, data, []);
-    return formData;
-}
-function buildSearchParams(searchParams, data) {
-    addObjectToSearchParams(searchParams, data, []);
-    return searchParams;
-}
-
 function getDeepData(data, propertyPath) {
     const finalData = JSON.parse(JSON.stringify(data));
     let currentLevelData = finalData;
@@ -1023,6 +968,26 @@ function haveRenderedValuesChanged(originalDataJson, currentDataJson, newDataJso
         }
     });
     return keyHasChanged;
+}
+
+function normalizeAttributesForComparison(element) {
+    if (element.value) {
+        element.setAttribute('value', element.value);
+    }
+    else if (element.hasAttribute('value')) {
+        element.setAttribute('value', '');
+    }
+    Array.from(element.children).forEach((child) => {
+        normalizeAttributesForComparison(child);
+    });
+}
+
+function cloneHTMLElement(element) {
+    const newElement = element.cloneNode(true);
+    if (!(newElement instanceof HTMLElement)) {
+        throw new Error('Could not clone element');
+    }
+    return newElement;
 }
 
 const DEFAULT_DEBOUNCE = 150;
@@ -1126,10 +1091,7 @@ class default_1 extends Controller {
     _updateModelFromElement(element, value, shouldRender) {
         const model = element.dataset.model || element.getAttribute('name');
         if (!model) {
-            const clonedElement = (element.cloneNode());
-            if (!(clonedElement instanceof HTMLElement)) {
-                throw new Error('cloneNode() produced incorrect type');
-            }
+            const clonedElement = cloneHTMLElement(element);
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
         if (element instanceof HTMLInputElement && element.type === 'checkbox' && !element.checked) {
@@ -1211,13 +1173,19 @@ class default_1 extends Controller {
                 fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfValue;
             }
         }
-        if (!action && this._willDataFitInUrl()) {
-            buildSearchParams(params, this.dataValue);
-            fetchOptions.method = 'GET';
+        let dataAdded = false;
+        if (!action) {
+            const dataJson = JSON.stringify(this.dataValue);
+            if (this._willDataFitInUrl(dataJson, params)) {
+                params.set('data', dataJson);
+                fetchOptions.method = 'GET';
+                dataAdded = true;
+            }
         }
-        else {
+        if (!dataAdded) {
             fetchOptions.method = 'POST';
-            fetchOptions.body = buildFormData(this.dataValue);
+            fetchOptions.body = JSON.stringify(this.dataValue);
+            fetchOptions.headers['Content-Type'] = 'application/json';
         }
         this._onLoadingStart();
         const paramsString = params.toString();
@@ -1369,8 +1337,9 @@ class default_1 extends Controller {
             element.removeAttribute(attribute);
         });
     }
-    _willDataFitInUrl() {
-        return Object.values(this.dataValue).join(',').length < 1500;
+    _willDataFitInUrl(dataJson, params) {
+        const urlEncodedJsonData = new URLSearchParams(dataJson).toString();
+        return (urlEncodedJsonData + params.toString()).length < 1500;
     }
     _executeMorphdom(newHtml) {
         function htmlToElement(html) {
@@ -1387,13 +1356,22 @@ class default_1 extends Controller {
         morphdom(this.element, newElement, {
             onBeforeElUpdated: (fromEl, toEl) => {
                 if (fromEl.isEqualNode(toEl)) {
-                    return false;
+                    const normalizedFromEl = cloneHTMLElement(fromEl);
+                    normalizeAttributesForComparison(normalizedFromEl);
+                    const normalizedToEl = cloneHTMLElement(toEl);
+                    normalizeAttributesForComparison(normalizedToEl);
+                    if (normalizedFromEl.isEqualNode(normalizedToEl)) {
+                        return false;
+                    }
                 }
                 const controllerName = fromEl.hasAttribute('data-controller') ? fromEl.getAttribute('data-controller') : null;
                 if (controllerName
                     && controllerName.split(' ').indexOf('live') !== -1
                     && fromEl !== this.element
                     && !this._shouldChildLiveElementUpdate(fromEl, toEl)) {
+                    return false;
+                }
+                if (fromEl.hasAttribute('data-live-ignore')) {
                     return false;
                 }
                 return true;
