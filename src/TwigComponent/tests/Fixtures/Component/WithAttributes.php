@@ -12,12 +12,9 @@
 namespace Symfony\UX\TwigComponent\Tests\Fixtures\Component;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\HasAttributesTrait;
 
 #[AsTwigComponent('with_attributes')]
 class WithAttributes
 {
-    use HasAttributesTrait;
-
     public string $prop;
 }
