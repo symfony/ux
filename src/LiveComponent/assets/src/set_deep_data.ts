@@ -75,6 +75,9 @@ export function doesDeepPropertyExist(data, propertyPath) {
  */
 export function normalizeModelName(model) {
     return model
+        // Names ending in "[]" represent arrays in HTML.
+        // To get normalized name we need to ignore this part.
+        // For example: "user[mailing][]" becomes "user.mailing" (and has array typed value)
         .replace(/\[]$/, '')
         .split('[')
         // ['object', 'foo', 'bar', 'ya']
