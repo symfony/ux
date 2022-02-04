@@ -1010,7 +1010,7 @@ function getArrayValue(element, value, currentValue) {
     else if (element instanceof HTMLSelectElement) {
         currentValue = Array.from(element.selectedOptions).map(el => el.value);
     }
-    return currentValue.length ? currentValue : null;
+    return currentValue;
 }
 
 const DEFAULT_DEBOUNCE = 150;
