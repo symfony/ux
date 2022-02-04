@@ -898,7 +898,7 @@ function combineSpacedArray(parts) {
     return finalParts;
 }
 
-function getDeepData(data, propertyPath) {
+function parseDeepData(data, propertyPath) {
     const finalData = JSON.parse(JSON.stringify(data));
     let currentLevelData = finalData;
     const parts = propertyPath.split('.');
@@ -914,7 +914,7 @@ function getDeepData(data, propertyPath) {
     };
 }
 function setDeepData(data, propertyPath, value) {
-    const { currentLevelData, finalData, finalKey, parts } = getDeepData(data, propertyPath);
+    const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath);
     if (typeof currentLevelData !== 'object') {
         const lastPart = parts.pop();
         throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
@@ -988,6 +988,29 @@ function cloneHTMLElement(element) {
         throw new Error('Could not clone element');
     }
     return newElement;
+}
+
+function getArrayValue(element, value, currentValue) {
+    if (!(currentValue instanceof Array)) {
+        currentValue = [];
+    }
+    if (element instanceof HTMLInputElement && element.type === 'checkbox') {
+        const index = currentValue.indexOf(value);
+        if (element.checked) {
+            if (index === -1) {
+                currentValue.push(value);
+            }
+        }
+        else {
+            if (index > -1) {
+                currentValue.splice(index, 1);
+            }
+        }
+    }
+    else if (element instanceof HTMLSelectElement) {
+        currentValue = Array.from(element.selectedOptions).map(el => el.value);
+    }
+    return currentValue.length ? currentValue : null;
 }
 
 const DEFAULT_DEBOUNCE = 150;
@@ -1094,24 +1117,15 @@ class default_1 extends Controller {
             const clonedElement = cloneHTMLElement(element);
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
-        if (element instanceof HTMLInputElement && element.type === 'checkbox' && !element.checked) {
-            value = null;
-        }
         if (/\[]$/.test(model)) {
-            const { currentLevelData, finalKey } = getDeepData(this.dataValue, normalizeModelName(model));
+            const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model));
             const currentValue = currentLevelData[finalKey];
-            if (currentValue instanceof Array) {
-                if (null === value) {
-                    const index = currentValue.indexOf(this._getValueFromElement(element));
-                    if (index > -1) {
-                        currentValue.splice(index, 1);
-                    }
-                }
-                else {
-                    currentValue.push(value);
-                }
-            }
-            value = currentValue;
+            value = getArrayValue(element, value, currentValue);
+        }
+        else if (element instanceof HTMLInputElement
+            && element.type === 'checkbox'
+            && !element.checked) {
+            value = null;
         }
         this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
     }
