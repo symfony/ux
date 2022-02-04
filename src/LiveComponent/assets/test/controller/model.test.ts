@@ -201,7 +201,7 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('sends correct data for checkbox fields', async () => {
-        const checkboxTemplate = (data) => `
+        const checkboxTemplate = (data: any) => `
             <div
                 ${initLiveComponent('/_components/my_component', data)}
                 data-action="change->live#update"
@@ -213,29 +213,24 @@ describe('LiveController data-model Tests', () => {
                 <label>
                     Checkbox 2: <input type="checkbox" name="form[check2]" value="1" ${data.form.check2 ? 'checked' : ''} />
                 </label>
+                
+                Checkbox 2 is ${data.form.check2 ? 'checked' : 'unchecked' }
             </div>
         `;
-        const data = { form: { check1: null, check2: null} };
+        const data = { form: { check1: false, check2: false} };
         const { element, controller } = await startStimulus(checkboxTemplate(data));
 
         const check1Element = getByLabelText(element, 'Checkbox 1:');
         const check2Element = getByLabelText(element, 'Checkbox 2:');
 
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
         await userEvent.click(check1Element);
-        await waitFor(() => expect(check1Element).toBeChecked());
 
-        mockRerender({ form: {check1: '1'}}, checkboxTemplate, (data) => {
-            data.form.check1 = '1';
-            data.form.check2 = null;
-        });
+        mockRerender({ form: {check1: '1', check2: '1'}}, checkboxTemplate);
 
         await userEvent.click(check2Element);
-        await waitFor(() => expect(check2Element).toBeChecked());
-
-        mockRerender({ form: {check1: '1', check2: '1'}}, checkboxTemplate, (data) => {
-            data.form.check1 = '1';
-            data.form.check2 = '1';
-        });
+        await waitFor(() => expect(element).toHaveTextContent('Checkbox 2 is checked'));
 
         expect(controller.dataValue).toEqual({form: {check1: '1', check2: '1'}});
 

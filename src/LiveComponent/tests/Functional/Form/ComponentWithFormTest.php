@@ -17,7 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\FormComponent1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormComponent1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormWithCollectionTypeComponent;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Form\BlogPostFormType;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -144,6 +144,7 @@ class ComponentWithFormTest extends KernelTestCase
             ->assertContains('The title field should not be blank')
         ;
     }
+
     public function testHandleCheckboxChanges(): void
     {
         /** @var LiveComponentHydrator $hydrator */
@@ -176,7 +177,7 @@ class ComponentWithFormTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/form_component1?'.http_build_query($dehydrated))
+            ->get('/_components/form_component1?data='.urlencode(json_encode($dehydrated)))
             ->assertSuccessful()
             ->assertContains('<input type="checkbox" id="form_choice_multiple_1" name="form[choice_multiple][]" value="2" checked="checked" />')
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" />')
@@ -194,7 +195,7 @@ class ComponentWithFormTest extends KernelTestCase
 
                 $dehydrated['form'] = $bareForm;
             })
-            ->get('/_components/form_component1?'.http_build_query($dehydrated))
+            ->get('/_components/form_component1?data='.urlencode(json_encode($dehydrated)))
             ->assertContains('<input type="checkbox" id="form_choice_multiple_1" name="form[choice_multiple][]" value="2" checked="checked" />')
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" checked="checked" />')
             ->use(function (HtmlResponse $response) use (&$fullBareData, &$dehydrated, &$bareForm) {
@@ -214,7 +215,7 @@ class ComponentWithFormTest extends KernelTestCase
 
                 $dehydrated['form'] = $bareForm;
             })
-            ->get('/_components/form_component1?'.http_build_query($dehydrated))
+            ->get('/_components/form_component1?data='.urlencode(json_encode($dehydrated)))
             ->assertContains('<input type="checkbox" id="form_choice_multiple_1" name="form[choice_multiple][]" value="2" />')
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" />')
             ->assertContains('<input type="checkbox" id="form_checkbox" name="form[checkbox]" required="required" value="1" checked="checked" />')

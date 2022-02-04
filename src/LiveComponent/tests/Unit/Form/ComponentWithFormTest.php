@@ -14,20 +14,18 @@ declare(strict_types=1);
 namespace Symfony\UX\LiveComponent\Tests\Unit\Form;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\UX\LiveComponent\Tests\ContainerBC;
-use Symfony\UX\LiveComponent\Tests\Fixture\Component\FormComponent1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormComponent1;
 
 /**
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
  */
 class ComponentWithFormTest extends KernelTestCase
 {
-    use ContainerBC;
-
     public function testFormValues(): void
     {
         $formFactory = self::getContainer()->get('form.factory');
         $component = new FormComponent1($formFactory);
+        $component->postMount([]);
 
         $this->assertSame(
             [
@@ -42,7 +40,7 @@ class ComponentWithFormTest extends KernelTestCase
                 'file' => '',
                 'hidden' => '',
             ],
-            $component->getFormValues()
+            $component->formValues
         );
     }
 }

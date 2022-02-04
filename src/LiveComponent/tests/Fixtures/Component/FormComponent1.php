@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent\Tests\Fixture\Component;
+namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -17,7 +17,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-use Symfony\UX\LiveComponent\Tests\Fixture\Form\FormType1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Form\FormType1;
 
 /**
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
