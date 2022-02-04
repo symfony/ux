@@ -57,6 +57,14 @@ class FormType1 extends AbstractType
                 'multiple' => true,
                 'data' => [2],
             ])
+            ->add('select_multiple', ChoiceType::class, [
+                'choices' => [
+                    'foo' => 1,
+                    'bar' => 2,
+                ],
+                'multiple' => true,
+                'data' => [2],
+            ])
             ->add('checkbox', CheckboxType::class)
             ->add('checkbox_checked', CheckboxType::class, [
                 'data' => true,

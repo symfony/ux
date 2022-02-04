@@ -35,6 +35,7 @@ class ComponentWithFormTest extends KernelTestCase
                 'choice' => '',
                 'choice_expanded' => '',
                 'choice_multiple' => ['2'],
+                'select_multiple' => ['2'],
                 'checkbox' => null,
                 'checkbox_checked' => '1',
                 'file' => '',
