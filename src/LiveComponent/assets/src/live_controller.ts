@@ -6,6 +6,7 @@ import {setDeepData, doesDeepPropertyExist, normalizeModelName, parseDeepData} f
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
 import { cloneHTMLElement } from './clone_html_element';
+import {getArrayValue} from "./get_array_value";
 
 interface ElementLoadingDirectives {
     element: HTMLElement,
@@ -199,28 +200,22 @@ export default class extends Controller {
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
 
-        if (element instanceof HTMLInputElement && element.type === 'checkbox' && !element.checked) {
-            value = null;
-        }
-
         // HTML form elements with name ending with [] require array as data
         // we need to handle addition and removal of values from it to send
         // back only required data
         if (/\[]$/.test(model)) {
+            // Get current value from data
             const {currentLevelData, finalKey} = parseDeepData(this.dataValue, normalizeModelName(model))
-
             const currentValue = currentLevelData[finalKey];
-            if (currentValue instanceof Array) {
-                if (null === value) {
-                    const index = currentValue.indexOf(this._getValueFromElement(element));
-                    if (index > -1) {
-                        currentValue.splice(index, 1);
-                    }
-                } else {
-                    currentValue.push(value);
-                }
-            }
-            value = currentValue;
+
+            value = getArrayValue(element, value, currentValue);
+        } else if (
+            element instanceof HTMLInputElement
+            && element.type === 'checkbox'
+            && !element.checked
+        ) {
+            // Unchecked checkboxes in a single value scenarios should map to `null`
+            value = null;
         }
 
         this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
