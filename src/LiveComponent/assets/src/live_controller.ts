@@ -8,7 +8,7 @@ import { normalizeAttributesForComparison } from './normalize_attributes_for_com
 import { cloneHTMLElement } from './clone_html_element';
 
 interface ElementLoadingDirectives {
-    element: HTMLElement,
+    element: HTMLElement|SVGElement,
     directives: Directive[]
 }
 
@@ -190,11 +190,15 @@ export default class extends Controller {
         this._makeRequest(null);
     }
 
-    _getValueFromElement(element: HTMLElement) {
+    _getValueFromElement(element: HTMLElement|SVGElement) {
         return element.dataset.value || (element as any).value;
     }
 
-    _updateModelFromElement(element: HTMLElement, value: string, shouldRender: boolean) {
+    _updateModelFromElement(element: Element, value: string, shouldRender: boolean) {
+        if (!(element instanceof HTMLElement)) {
+            throw new Error('Could not update model for non HTMLElement');
+        }
+
         const model = element.dataset.model || element.getAttribute('name');
 
         if (!model) {
@@ -419,7 +423,7 @@ export default class extends Controller {
     /**
      * @private
      */
-    _handleLoadingDirective(element: HTMLElement, isLoading: boolean, directive: Directive) {
+    _handleLoadingDirective(element: HTMLElement|SVGElement, isLoading: boolean, directive: Directive) {
         const finalAction = parseLoadingAction(directive.action, isLoading);
 
         let loadingDirective: (() => void);
@@ -490,7 +494,7 @@ export default class extends Controller {
         const loadingDirectives: ElementLoadingDirectives[] = [];
 
         this.element.querySelectorAll('[data-loading]').forEach((element => {
-            if (!(element instanceof HTMLElement)) {
+            if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
                 throw new Error('Invalid Element Type');
             }
 
@@ -506,19 +510,19 @@ export default class extends Controller {
         return loadingDirectives;
     }
 
-    _showElement(element: HTMLElement) {
+    _showElement(element: HTMLElement|SVGElement) {
         element.style.display = 'inline-block';
     }
 
-    _hideElement(element: HTMLElement) {
+    _hideElement(element: HTMLElement|SVGElement) {
         element.style.display = 'none';
     }
 
-    _addClass(element: HTMLElement, classes: string[]) {
+    _addClass(element: HTMLElement|SVGElement, classes: string[]) {
         element.classList.add(...combineSpacedArray(classes));
     }
 
-    _removeClass(element: HTMLElement, classes: string[]) {
+    _removeClass(element: HTMLElement|SVGElement, classes: string[]) {
         element.classList.remove(...combineSpacedArray(classes));
 
         // remove empty class="" to avoid morphdom "diff" problem
@@ -564,6 +568,10 @@ export default class extends Controller {
         const newElement = htmlToElement(newHtml);
         morphdom(this.element, newElement, {
             onBeforeElUpdated: (fromEl, toEl) => {
+                if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
+                    return false;
+                }
+
                 // https://github.com/patrick-steele-idem/morphdom#can-i-make-morphdom-blaze-through-the-dom-tree-even-faster-yes
                 if (fromEl.isEqualNode(toEl)) {
                     // the nodes are equal, but the "value" on some might differ
