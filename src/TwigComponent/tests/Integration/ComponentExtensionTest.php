@@ -60,7 +60,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $output = self::getContainer()->get(Environment::class)->render('template_a.html.twig');
 
         $this->assertStringContainsString('Component Content (prop value 1)', $output);
-        $this->assertStringContainsString('<button class="foo bar" type="button" style="color:red;">', $output);
+        $this->assertStringContainsString('<button class="foo bar" type="button" style="color:red;" value="" autofocus>', $output);
         $this->assertStringContainsString('Component Content (prop value 2)', $output);
         $this->assertStringContainsString('<button class="foo baz" type="submit" style="color:red;">', $output);
     }

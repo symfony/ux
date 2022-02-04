@@ -30,7 +30,13 @@ final class ComponentAttributes
     {
         return array_reduce(
             array_keys($this->attributes),
-            fn (string $carry, string $key) => sprintf('%s %s="%s"', $carry, $key, $this->attributes[$key]),
+            function (string $carry, string $key) {
+                if (null === $this->attributes[$key]) {
+                    return "{$carry} {$key}";
+                }
+
+                return sprintf('%s %s="%s"', $carry, $key, $this->attributes[$key]);
+            },
             ''
         );
     }
