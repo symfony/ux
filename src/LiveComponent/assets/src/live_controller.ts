@@ -2,11 +2,11 @@ import { Controller } from '@hotwired/stimulus';
 import morphdom from 'morphdom';
 import { parseDirectives, Directive } from './directives_parser';
 import { combineSpacedArray } from './string_utils';
-import { setDeepData, doesDeepPropertyExist, normalizeModelName } from './set_deep_data';
+import { setDeepData, doesDeepPropertyExist, normalizeModelName, parseDeepData } from './set_deep_data';
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
 import { cloneHTMLElement } from './clone_html_element';
-import {getArrayValue} from "./get_array_value";
+import { getArrayValue } from "./get_array_value";
 
 interface ElementLoadingDirectives {
     element: HTMLElement|SVGElement,
@@ -208,7 +208,7 @@ export default class extends Controller {
         // back only required data
         if (/\[]$/.test(model)) {
             // Get current value from data
-            const {currentLevelData, finalKey} = parseDeepData(this.dataValue, normalizeModelName(model))
+            const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model))
             const currentValue = currentLevelData[finalKey];
 
             value = getArrayValue(element, value, currentValue);

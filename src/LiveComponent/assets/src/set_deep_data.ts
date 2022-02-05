@@ -23,7 +23,7 @@ export function parseDeepData(data, propertyPath) {
 
 // post.user.username
 export function setDeepData(data, propertyPath, value) {
-    const {currentLevelData, finalData, finalKey, parts} = parseDeepData(data, propertyPath)
+    const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath)
 
     // make sure the currentLevelData is an object, not a scalar
     // if it is, it means the initial data didn't know that sub-properties
