@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent\EventListener;
 
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\UX\TwigComponent\ComponentMetadata;
+use Symfony\UX\TwigComponent\MountedComponent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -22,16 +23,15 @@ use Symfony\UX\TwigComponent\ComponentMetadata;
 final class PreRenderEvent extends Event
 {
     private string $template;
+    private array $variables;
 
     /**
      * @internal
      */
-    public function __construct(
-        private object $component,
-        private ComponentMetadata $metadata,
-        private array $variables
-    ) {
+    public function __construct(private MountedComponent $mounted, private ComponentMetadata $metadata)
+    {
         $this->template = $this->metadata->getTemplate();
+        $this->variables = $this->mounted->getVariables();
     }
 
     /**
@@ -54,7 +54,7 @@ final class PreRenderEvent extends Event
 
     public function getComponent(): object
     {
-        return $this->component;
+        return $this->mounted->getComponent();
     }
 
     /**
@@ -78,5 +78,13 @@ final class PreRenderEvent extends Event
     public function getMetadata(): ComponentMetadata
     {
         return $this->metadata;
+    }
+
+    /**
+     * @internal
+     */
+    public function getMountedComponent(): MountedComponent
+    {
+        return $this->mounted;
     }
 }

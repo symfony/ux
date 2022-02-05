@@ -14,9 +14,6 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component6;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Zenstruck\Browser\Response\HtmlResponse;
@@ -42,7 +39,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
-        /** @var Component1 $component */
         $component = $factory->create('component1', [
             'prop1' => $entity = create(Entity1::class)->object(),
             'prop2' => $date = new \DateTime('2021-03-05 9:23'),
@@ -72,10 +68,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
-        /** @var Component2 $component */
-        $component = $factory->create('component2');
-
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $hydrator->dehydrate($factory->create('component2'));
         $token = null;
 
         $this->browser()
@@ -160,10 +153,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
-        /** @var Component2 $component */
-        $component = $factory->create('component2');
-
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $hydrator->dehydrate($factory->create('component2'));
 
         $this->browser()
             ->visit('/render-template/template1')
@@ -183,10 +173,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
-        /** @var Component2 $component */
-        $component = $factory->create('component2');
-
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $hydrator->dehydrate($factory->create('component2'));
         $token = null;
 
         $this->browser()
@@ -226,10 +213,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
-        /** @var Component6 $component */
-        $component = $factory->create('component6');
-
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $hydrator->dehydrate($factory->create('component6'));
         $token = null;
 
         $argsQueryParams = http_build_query(['args' => http_build_query(['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3'])]);

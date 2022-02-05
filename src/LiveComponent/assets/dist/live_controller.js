@@ -1112,6 +1112,9 @@ class default_1 extends Controller {
         return element.dataset.value || element.value;
     }
     _updateModelFromElement(element, value, shouldRender) {
+        if (!(element instanceof HTMLElement)) {
+            throw new Error('Could not update model for non HTMLElement');
+        }
         const model = element.dataset.model || element.getAttribute('name');
         if (!model) {
             const clonedElement = cloneHTMLElement(element);
@@ -1315,7 +1318,7 @@ class default_1 extends Controller {
     _getLoadingDirectives() {
         const loadingDirectives = [];
         this.element.querySelectorAll('[data-loading]').forEach((element => {
-            if (!(element instanceof HTMLElement)) {
+            if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
                 throw new Error('Invalid Element Type');
             }
             const directives = parseDirectives(element.dataset.loading || 'show');
@@ -1369,6 +1372,9 @@ class default_1 extends Controller {
         const newElement = htmlToElement(newHtml);
         morphdom(this.element, newElement, {
             onBeforeElUpdated: (fromEl, toEl) => {
+                if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
+                    return false;
+                }
                 if (fromEl.isEqualNode(toEl)) {
                     const normalizedFromEl = cloneHTMLElement(fromEl);
                     normalizeAttributesForComparison(normalizedFromEl);

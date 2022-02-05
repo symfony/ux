@@ -29,10 +29,10 @@ final class ComponentFactoryTest extends KernelTestCase
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         /** @var ComponentA $componentA */
-        $componentA = $factory->create('component_a', ['propA' => 'A', 'propB' => 'B']);
+        $componentA = $factory->create('component_a', ['propA' => 'A', 'propB' => 'B'])->getComponent();
 
         /** @var ComponentA $componentB */
-        $componentB = $factory->create('component_a', ['propA' => 'C', 'propB' => 'D']);
+        $componentB = $factory->create('component_a', ['propA' => 'C', 'propB' => 'D'])->getComponent();
 
         $this->assertNotSame(spl_object_id($componentA), spl_object_id($componentB));
         $this->assertSame(spl_object_id($componentA->getService()), spl_object_id($componentB->getService()));
@@ -48,10 +48,10 @@ final class ComponentFactoryTest extends KernelTestCase
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         /** @var ComponentB $componentA */
-        $componentA = $factory->create('component_b');
+        $componentA = $factory->create('component_b')->getComponent();
 
         /** @var ComponentB $componentB */
-        $componentB = $factory->create('component_b');
+        $componentB = $factory->create('component_b')->getComponent();
 
         $this->assertNotSame(spl_object_id($componentA), spl_object_id($componentB));
     }
@@ -77,7 +77,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $component = $factory->create('component_c', [
             'propA' => 'valueA',
             'propC' => 'valueC',
-        ]);
+        ])->getComponent();
 
         $this->assertSame('valueA', $component->propA);
         $this->assertNull($component->propB);
@@ -87,7 +87,7 @@ final class ComponentFactoryTest extends KernelTestCase
         $component = $factory->create('component_c', [
             'propA' => 'valueA',
             'propB' => 'valueB',
-        ]);
+        ])->getComponent();
 
         $this->assertSame('valueA', $component->propA);
         $this->assertSame('valueB', $component->propB);
@@ -105,15 +105,15 @@ final class ComponentFactoryTest extends KernelTestCase
         $factory->create('component_c');
     }
 
-    public function testExceptionThrownIfUnableToWritePassedDataToProperty(): void
+    public function testExceptionThrownIfUnableToWritePassedDataToPropertyAndIsNotScalar(): void
     {
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Unable to write "service" to component "Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA". Make sure this is a writable property or create a mount() with a $service argument.');
+        $this->expectExceptionMessage('Unable to use "service" (stdClass) as an attribute. Attributes must be scalar or null.');
 
-        $factory->create('component_a', ['propB' => 'B', 'service' => 'invalid']);
+        $factory->create('component_a', ['propB' => 'B', 'service' => new \stdClass()]);
     }
 
     public function testTwigComponentServiceTagMustHaveKey(): void

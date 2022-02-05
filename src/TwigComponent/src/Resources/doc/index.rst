@@ -413,27 +413,16 @@ Component Attributes
 
 .. versionadded:: 2.1
 
-    The ``HasAttributes`` trait was added in TwigComponents 2.1.
+    Component attributes were added in TwigComponents 2.1.
 
 A common need for components is to configure/render attributes for the
-root node. You can enable this feature by having your component use
-the ``HasAttributesTrait``.  Attributes are any data passed to ``component()``
-that cannot be mounted on the component itself. This extra data is added
-to a ``ComponentAttributes`` object that lives as a public property on your
-component (available as ``attributes`` in your component's template).
+root node. Attributes are any data passed to ``component()`` that cannot be
+mounted on the component itself. This extra data is added to a
+``ComponentAttributes`` that is available as ``attributes`` in your
+component's template.
 
-To use, add the ``HasAttributesTrait`` to your component:
-
-    use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-    use Symfony\UX\TwigComponent\HasAttributesTrait;
-
-    #[AsTwigComponent('my_component')]
-    class MyComponent
-    {
-        use HasAttributesTrait;
-    }
-
-Then render the attributes on the root element:
+To use, in your component's template, render the ``attributes`` variable in
+the root element:
 
 .. code-block:: twig
 
