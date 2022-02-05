@@ -25,6 +25,11 @@ class ComponentWithFormTest extends KernelTestCase
     {
         $formFactory = self::getContainer()->get('form.factory');
         $component = new FormComponentWithManyDifferentFieldsType($formFactory);
+        $component->initialData = [
+            'choice_multiple' => [2],
+            'select_multiple' => [2],
+            'checkbox_checked' => true
+        ];
         $component->postMount([]);
 
         $this->assertSame(

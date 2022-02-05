@@ -28,12 +28,18 @@ class FormComponentWithManyDifferentFieldsType extends AbstractController
     use ComponentWithFormTrait;
     use DefaultActionTrait;
 
+    public array $initialData = [];
+
     public function __construct(private FormFactoryInterface $formFactory)
     {
     }
 
     protected function instantiateForm(): FormInterface
     {
-        return $this->formFactory->createNamed('form', FormWithManyDifferentFieldsType::class);
+        return $this->formFactory->createNamed(
+            'form',
+            FormWithManyDifferentFieldsType::class,
+            $this->initialData
+        );
     }
 }

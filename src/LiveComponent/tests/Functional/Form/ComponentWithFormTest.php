@@ -157,7 +157,16 @@ class ComponentWithFormTest extends KernelTestCase
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
         /** @var FormComponentWithManyDifferentFieldsType $component */
-        $component = $factory->create('form_with_many_different_fields_type');
+        $component = $factory->create(
+            'form_with_many_different_fields_type',
+            [
+                'initialData' => [
+                    'choice_multiple' => [2],
+                    'select_multiple' => [2],
+                    'checkbox_checked' => true
+                ]
+            ]
+        );
 
         $dehydrated = $hydrator->dehydrate($component);
         $bareForm = [
@@ -195,7 +204,7 @@ class ComponentWithFormTest extends KernelTestCase
                 self::assertEquals($fullBareData, $data['form']);
 
                 // check both multiple fields
-                $bareForm['choice_multiple'] = $fullBareData['choice_multiple'] = ['2', '1'];
+                $bareForm['choice_multiple'] = $fullBareData['choice_multiple'] = ['1', '2'];
 
                 $dehydrated['form'] = $bareForm;
             })

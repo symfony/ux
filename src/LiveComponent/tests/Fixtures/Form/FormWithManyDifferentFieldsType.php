@@ -55,7 +55,6 @@ class FormWithManyDifferentFieldsType extends AbstractType
                 ],
                 'expanded' => true,
                 'multiple' => true,
-                'data' => [2],
             ])
             ->add('select_multiple', ChoiceType::class, [
                 'choices' => [
@@ -63,12 +62,9 @@ class FormWithManyDifferentFieldsType extends AbstractType
                     'bar' => 2,
                 ],
                 'multiple' => true,
-                'data' => [2],
             ])
             ->add('checkbox', CheckboxType::class)
-            ->add('checkbox_checked', CheckboxType::class, [
-                'data' => true,
-            ])
+            ->add('checkbox_checked', CheckboxType::class)
             ->add('file', FileType::class)
             ->add('hidden', HiddenType::class)
         ;
