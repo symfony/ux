@@ -990,27 +990,28 @@ function cloneHTMLElement(element) {
     return newElement;
 }
 
-function getArrayValue(element, value, currentValue) {
-    if (!(currentValue instanceof Array)) {
-        currentValue = [];
+function updateArrayDataFromChangedElement(element, value, currentValues) {
+    if (!(currentValues instanceof Array)) {
+        currentValues = [];
     }
     if (element instanceof HTMLInputElement && element.type === 'checkbox') {
-        const index = currentValue.indexOf(value);
+        const index = currentValues.indexOf(value);
         if (element.checked) {
             if (index === -1) {
-                currentValue.push(value);
+                currentValues.push(value);
             }
+            return currentValues;
         }
-        else {
-            if (index > -1) {
-                currentValue.splice(index, 1);
-            }
+        if (index > -1) {
+            currentValues.splice(index, 1);
         }
+        return currentValues;
     }
-    else if (element instanceof HTMLSelectElement) {
-        currentValue = Array.from(element.selectedOptions).map(el => el.value);
+    if (element instanceof HTMLSelectElement) {
+        currentValues = Array.from(element.selectedOptions).map(el => el.value);
+        return currentValues;
     }
-    return currentValue;
+    throw new Error(`The element used to determine array data from is unsupported (${element.tagName} provided)`);
 }
 
 const DEFAULT_DEBOUNCE = 150;
@@ -1123,7 +1124,7 @@ class default_1 extends Controller {
         if (/\[]$/.test(model)) {
             const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model));
             const currentValue = currentLevelData[finalKey];
-            value = getArrayValue(element, value, currentValue);
+            value = updateArrayDataFromChangedElement(element, value, currentValue);
         }
         else if (element instanceof HTMLInputElement
             && element.type === 'checkbox'
