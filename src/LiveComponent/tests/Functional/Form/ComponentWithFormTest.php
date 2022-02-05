@@ -156,8 +156,7 @@ class ComponentWithFormTest extends KernelTestCase
         /** @var ComponentFactory $factory */
         $factory = self::getContainer()->get('ux.twig_component.component_factory');
 
-        /** @var FormComponentWithManyDifferentFieldsType $component */
-        $component = $factory->create(
+        $mounted = $factory->create(
             'form_with_many_different_fields_type',
             [
                 'initialData' => [
@@ -168,7 +167,7 @@ class ComponentWithFormTest extends KernelTestCase
             ]
         );
 
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $hydrator->dehydrate($mounted);
         $bareForm = [
             'text' => '',
             'textarea' => '',
