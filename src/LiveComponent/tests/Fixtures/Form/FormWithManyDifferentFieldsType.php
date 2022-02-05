@@ -27,7 +27,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 /**
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
  */
-class FormType1 extends AbstractType
+class FormWithManyDifferentFieldsType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

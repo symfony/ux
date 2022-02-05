@@ -7,38 +7,38 @@
  * return the final, updated array (e.g. ["text", "phone", "email"]).
  *
  * @param element       Current HTML element
- * @param value         Resolved value of a single HTML element (.value or [data-value])
- * @param currentValue  Current data value
+ * @param value         The value that should be set or removed from currentValues
+ * @param currentValues  Current data value
  */
 export function updateArrayDataFromChangedElement(
     element: HTMLElement,
     value: string|null,
-    currentValue: any
+    currentValues: any
 ): Array<string> {
     // Enforce returned value is an array
-    if (!(currentValue instanceof Array)) {
-        currentValue = [];
+    if (!(currentValues instanceof Array)) {
+        currentValues = [];
     }
 
     if (element instanceof HTMLInputElement && element.type === 'checkbox') {
-        const index = currentValue.indexOf(value);
+        const index = currentValues.indexOf(value);
 
         if (element.checked) {
             // Add value to an array if it's not in it already
             if (index === -1) {
-                currentValue.push(value);
+                currentValues.push(value);
             }
         } else {
             // Remove value from an array
             if (index > -1) {
-                currentValue.splice(index, 1);
+                currentValues.splice(index, 1);
             }
         }
     } else if (element instanceof HTMLSelectElement) {
         // Select elements with `multiple` option require mapping chosen options to their values
-        currentValue = Array.from(element.selectedOptions).map(el => el.value);
+        currentValues = Array.from(element.selectedOptions).map(el => el.value);
     }
 
     // When no values are selected for collection no data should be sent over the wire
-    return currentValue;
+    return currentValues;
 }

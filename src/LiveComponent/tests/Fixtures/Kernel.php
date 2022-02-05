@@ -26,7 +26,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component3;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component6;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormComponent1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormComponentWithManyDifferentFieldsType;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithAttributes;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormWithCollectionTypeComponent;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
@@ -70,7 +70,7 @@ final class Kernel extends BaseKernel
         $c->register(Component3::class)->setAutoconfigured(true)->setAutowired(true);
         $c->register(Component6::class)->setAutoconfigured(true)->setAutowired(true);
         $c->register(ComponentWithAttributes::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(FormComponent1::class)->setAutoconfigured(true)->setAutowired(true);
+        $c->register(FormComponentWithManyDifferentFieldsType::class)->setAutoconfigured(true)->setAutowired(true);
         $c->register(FormWithCollectionTypeComponent::class)->setAutoconfigured(true)->setAutowired(true);
 
         $c->loadFromExtension('framework', [

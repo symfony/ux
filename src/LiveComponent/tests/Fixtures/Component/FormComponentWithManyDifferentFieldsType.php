@@ -17,13 +17,13 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Form\FormType1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Form\FormWithManyDifferentFieldsType;
 
 /**
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
  */
-#[AsLiveComponent('form_component1')]
-class FormComponent1 extends AbstractController
+#[AsLiveComponent('form_with_many_different_fields_type')]
+class FormComponentWithManyDifferentFieldsType extends AbstractController
 {
     use ComponentWithFormTrait;
     use DefaultActionTrait;
@@ -34,6 +34,6 @@ class FormComponent1 extends AbstractController
 
     protected function instantiateForm(): FormInterface
     {
-        return $this->formFactory->createNamed('form', FormType1::class);
+        return $this->formFactory->createNamed('form', FormWithManyDifferentFieldsType::class);
     }
 }

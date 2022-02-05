@@ -14,7 +14,7 @@ declare(strict_types=1);
 namespace Symfony\UX\LiveComponent\Tests\Unit\Form;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormComponent1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormComponentWithManyDifferentFieldsType;
 
 /**
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
@@ -24,7 +24,7 @@ class ComponentWithFormTest extends KernelTestCase
     public function testFormValues(): void
     {
         $formFactory = self::getContainer()->get('form.factory');
-        $component = new FormComponent1($formFactory);
+        $component = new FormComponentWithManyDifferentFieldsType($formFactory);
         $component->postMount([]);
 
         $this->assertSame(
