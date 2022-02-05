@@ -233,9 +233,6 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(element).toHaveTextContent('Checkbox 2 is checked'));
 
         expect(controller.dataValue).toEqual({form: {check1: '1', check2: '1'}});
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('sends correct data for initially checked checkbox fields', async () => {
@@ -271,9 +268,6 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(element).toHaveTextContent('Checkbox 1 is unchecked'));
 
         expect(controller.dataValue).toEqual({form: {check1: null, check2: '1'}});
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('sends correct data for array valued checkbox fields', async () => {
@@ -309,9 +303,6 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(element).toHaveTextContent('Checkbox 2 is checked'));
 
         expect(controller.dataValue).toEqual({form: {check: ['foo', 'bar']}});
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('sends correct data for array valued checkbox fields with initial data', async () => {
@@ -347,9 +338,6 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(element).toHaveTextContent('Checkbox 1 is unchecked'));
 
         expect(controller.dataValue).toEqual({form: {check: ['bar']}});
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('sends correct data for select multiple field', async () => {
@@ -385,9 +373,6 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(element).toHaveTextContent('Select: foo bar Option 2 is selected'));
 
         expect(controller.dataValue).toEqual({form: {select: ['foo', 'bar']}});
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('sends correct data for select multiple field with initial data', async () => {
@@ -429,9 +414,6 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(element).toHaveTextContent('Select: foo bar Option 2 is unselected'));
 
         expect(controller.dataValue).toEqual({form: {select: []}});
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('updates correctly when live#update is on a parent element', async () => {
