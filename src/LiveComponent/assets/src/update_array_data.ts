@@ -28,17 +28,24 @@ export function updateArrayDataFromChangedElement(
             if (index === -1) {
                 currentValues.push(value);
             }
-        } else {
-            // Remove value from an array
-            if (index > -1) {
-                currentValues.splice(index, 1);
-            }
+
+            return currentValues;
         }
-    } else if (element instanceof HTMLSelectElement) {
-        // Select elements with `multiple` option require mapping chosen options to their values
-        currentValues = Array.from(element.selectedOptions).map(el => el.value);
+
+        // Remove value from an array
+        if (index > -1) {
+            currentValues.splice(index, 1);
+        }
+
+        return currentValues;
     }
 
-    // When no values are selected for collection no data should be sent over the wire
-    return currentValues;
+    if (element instanceof HTMLSelectElement) {
+        // Select elements with `multiple` option require mapping chosen options to their values
+        currentValues = Array.from(element.selectedOptions).map(el => el.value);
+
+        return currentValues;
+    }
+
+    throw new Error(`The element used to determine array data from is unsupported (${element.tagName} provided)`);
 }

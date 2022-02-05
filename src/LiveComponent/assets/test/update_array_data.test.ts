@@ -51,4 +51,11 @@ describe('getArrayValue', () => {
         expect(updateArrayDataFromChangedElement(select, '', null))
             .toEqual(['foo', 'bar']);
     })
+
+    it('Throws on unsupported elements', () => {
+        const div = document.createElement('div');
+
+        expect(() => updateArrayDataFromChangedElement(div, '', null))
+            .toThrowError('The element used to determine array data from is unsupported (DIV provided)')
+    });
 });
