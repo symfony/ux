@@ -1,5 +1,10 @@
 /**
- * Resolve multiple value data from changed HTML element.
+ * Adds or removes a key from an array element based on an array element.
+ *
+ * Given an "array" element (e.g. )
+ * and the current data for "preferences" (e.g. ["text", "phone"]), this function will add or
+ * remove the value (e.g. email) from that array (based on if the element (un)checked) and
+ * return the final, updated array (e.g. ["text", "phone", "email"]).
  *
  * @param element       Current HTML element
  * @param value         Resolved value of a single HTML element (.value or [data-value])
