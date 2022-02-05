@@ -6,7 +6,7 @@ import { setDeepData, doesDeepPropertyExist, normalizeModelName, parseDeepData }
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
 import { cloneHTMLElement } from './clone_html_element';
-import { getArrayValue } from "./get_array_value";
+import { updateArrayDataFromChangedElement } from "./update_array_data";
 
 interface ElementLoadingDirectives {
     element: HTMLElement|SVGElement,
@@ -211,7 +211,7 @@ export default class extends Controller {
             const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model))
             const currentValue = currentLevelData[finalKey];
 
-            value = getArrayValue(element, value, currentValue);
+            value = updateArrayDataFromChangedElement(element, value, currentValue);
         } else if (
             element instanceof HTMLInputElement
             && element.type === 'checkbox'

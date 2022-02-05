@@ -1,4 +1,4 @@
-import {getArrayValue} from "../src/get_array_value";
+import {updateArrayDataFromChangedElement} from "../src/update_array_data";
 
 
 describe('getArrayValue', () => {
@@ -7,11 +7,11 @@ describe('getArrayValue', () => {
         input.type = 'checkbox';
         input.checked = true;
 
-        expect(getArrayValue(input, 'foo', null))
+        expect(updateArrayDataFromChangedElement(input, 'foo', null))
             .toEqual(['foo']);
-        expect(getArrayValue(input, 'foo', []))
+        expect(updateArrayDataFromChangedElement(input, 'foo', []))
             .toEqual(['foo']);
-        expect(getArrayValue(input, 'foo', ['bar']))
+        expect(updateArrayDataFromChangedElement(input, 'foo', ['bar']))
             .toEqual(['bar', 'foo']);
     })
 
@@ -20,13 +20,13 @@ describe('getArrayValue', () => {
         input.type = 'checkbox';
         input.checked = false;
 
-        expect(getArrayValue(input, 'foo', null))
+        expect(updateArrayDataFromChangedElement(input, 'foo', null))
             .toEqual([]);
-        expect(getArrayValue(input, 'foo', ['foo']))
+        expect(updateArrayDataFromChangedElement(input, 'foo', ['foo']))
             .toEqual([]);
-        expect(getArrayValue(input, 'foo', ['bar']))
+        expect(updateArrayDataFromChangedElement(input, 'foo', ['bar']))
             .toEqual(['bar']);
-        expect(getArrayValue(input, 'foo', ['foo', 'bar']))
+        expect(updateArrayDataFromChangedElement(input, 'foo', ['foo', 'bar']))
             .toEqual(['bar']);
     })
 
@@ -40,15 +40,15 @@ describe('getArrayValue', () => {
         barOption.value = 'bar';
         select.add(barOption);
 
-        expect(getArrayValue(select, '', null))
+        expect(updateArrayDataFromChangedElement(select, '', null))
             .toEqual([]);
 
         fooOption.selected = true;
-        expect(getArrayValue(select, '', null))
+        expect(updateArrayDataFromChangedElement(select, '', null))
             .toEqual(['foo']);
 
         barOption.selected = true;
-        expect(getArrayValue(select, '', null))
+        expect(updateArrayDataFromChangedElement(select, '', null))
             .toEqual(['foo', 'bar']);
     })
 });

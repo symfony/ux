@@ -5,7 +5,7 @@
  * @param value         Resolved value of a single HTML element (.value or [data-value])
  * @param currentValue  Current data value
  */
-export function getArrayValue(
+export function updateArrayDataFromChangedElement(
     element: HTMLElement,
     value: string|null,
     currentValue: any
