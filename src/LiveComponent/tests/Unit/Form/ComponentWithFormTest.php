@@ -28,7 +28,7 @@ class ComponentWithFormTest extends KernelTestCase
         $component->initialData = [
             'choice_multiple' => [2],
             'select_multiple' => [2],
-            'checkbox_checked' => true
+            'checkbox_checked' => true,
         ];
         $component->postMount([]);
 

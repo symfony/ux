@@ -17,7 +17,6 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormComponentWithManyDifferentFieldsType;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormWithCollectionTypeComponent;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Form\BlogPostFormType;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -162,8 +161,8 @@ class ComponentWithFormTest extends KernelTestCase
                 'initialData' => [
                     'choice_multiple' => [2],
                     'select_multiple' => [2],
-                    'checkbox_checked' => true
-                ]
+                    'checkbox_checked' => true,
+                ],
             ]
         );
 
