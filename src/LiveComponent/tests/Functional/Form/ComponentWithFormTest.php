@@ -177,16 +177,11 @@ class ComponentWithFormTest extends KernelTestCase
             'choice_expanded' => '',
             'choice_multiple' => ['2'],
             'select_multiple' => ['2'],
+            'checkbox' => null,
             'checkbox_checked' => '1',
             'file' => '',
             'hidden' => '',
         ];
-        $fullBareData = array_merge(
-            $bareForm,
-            [
-                'checkbox' => null,
-            ]
-        );
 
         $this->browser()
             ->throwExceptions()
@@ -196,35 +191,34 @@ class ComponentWithFormTest extends KernelTestCase
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" />')
             ->assertContains('<input type="checkbox" id="form_checkbox" name="form[checkbox]" required="required" value="1" />')
             ->assertContains('<input type="checkbox" id="form_checkbox_checked" name="form[checkbox_checked]" required="required" value="1" checked="checked" />')
-            ->use(function (HtmlResponse $response) use (&$fullBareData, &$dehydrated, &$bareForm) {
+            ->use(function (HtmlResponse $response) use (&$dehydrated, &$bareForm) {
                 $data = json_decode(
                     $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
                     true
                 );
-                self::assertEquals($fullBareData, $data['form']);
+                self::assertEquals($bareForm, $data['form']);
 
                 // check both multiple fields
-                $bareForm['choice_multiple'] = $fullBareData['choice_multiple'] = ['1', '2'];
+                $bareForm['choice_multiple'] = ['1', '2'];
 
                 $dehydrated['form'] = $bareForm;
             })
             ->get('/_components/form_with_many_different_fields_type?data='.urlencode(json_encode($dehydrated)))
             ->assertContains('<input type="checkbox" id="form_choice_multiple_1" name="form[choice_multiple][]" value="2" checked="checked" />')
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" checked="checked" />')
-            ->use(function (HtmlResponse $response) use (&$fullBareData, &$dehydrated, &$bareForm) {
+            ->use(function (HtmlResponse $response) use (&$dehydrated, &$bareForm) {
                 $data = json_decode(
                     $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
                     true
                 );
-                self::assertEquals($fullBareData, $data['form']);
+                self::assertEquals($bareForm, $data['form']);
 
                 // uncheck multiple, check single checkbox
-                $bareForm['checkbox'] = $fullBareData['checkbox'] = '1';
-                $bareForm['choice_multiple'] = $fullBareData['choice_multiple'] = [];
+                $bareForm['checkbox'] = '1';
+                $bareForm['choice_multiple'] = [];
 
                 // uncheck previously checked checkbox
-                unset($bareForm['checkbox_checked']);
-                $fullBareData['checkbox_checked'] = null;
+                $bareForm['checkbox_checked'] = null;
 
                 $dehydrated['form'] = $bareForm;
             })
@@ -233,27 +227,27 @@ class ComponentWithFormTest extends KernelTestCase
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" />')
             ->assertContains('<input type="checkbox" id="form_checkbox" name="form[checkbox]" required="required" value="1" checked="checked" />')
             ->assertContains('<input type="checkbox" id="form_checkbox_checked" name="form[checkbox_checked]" required="required" value="1" />')
-            ->use(function (HtmlResponse $response) use (&$fullBareData, &$dehydrated, &$bareForm) {
+            ->use(function (HtmlResponse $response) use (&$dehydrated, &$bareForm) {
                 $data = json_decode(
                     $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
                     true
                 );
-                self::assertEquals($fullBareData, $data['form']);
+                self::assertEquals($bareForm, $data['form']);
 
                 // check both multiple fields
-                $bareForm['select_multiple'] = $fullBareData['select_multiple'] = ['2', '1'];
+                $bareForm['select_multiple'] = ['2', '1'];
 
                 $dehydrated['form'] = $bareForm;
             })
             ->get('/_components/form_with_many_different_fields_type?data='.urlencode(json_encode($dehydrated)))
             ->assertContains('<option value="2" selected="selected">')
             ->assertContains('<option value="1" selected="selected">')
-            ->use(function (HtmlResponse $response) use ($fullBareData) {
+            ->use(function (HtmlResponse $response) use ($bareForm) {
                 $data = json_decode(
                     $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
                     true
                 );
-                self::assertEquals($fullBareData, $data['form']);
+                self::assertEquals($bareForm, $data['form']);
             })
         ;
     }
