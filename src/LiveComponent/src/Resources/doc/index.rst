@@ -1137,7 +1137,7 @@ Now, create a Twig component to render the form::
         #[LiveAction]
         public function removeComment(#[LiveArg] int $index)
         {
-            unset($this->formValues['comments'][$index]);
+            array_splice($this->formValues['comments'], $index, 1);
         }
     }
 
