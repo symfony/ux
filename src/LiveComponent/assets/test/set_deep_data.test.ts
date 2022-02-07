@@ -96,4 +96,8 @@ describe('normalizeModelName', () => {
     it('can normalize a string with []', () => {
         expect(normalizeModelName('user[firstName]')).toEqual('user.firstName');
     });
+
+    it('can normalize a string ending in []', () => {
+        expect(normalizeModelName('user[mailing][]')).toEqual('user.mailing');
+    });
 });

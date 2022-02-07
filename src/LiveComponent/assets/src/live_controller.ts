@@ -2,10 +2,11 @@ import { Controller } from '@hotwired/stimulus';
 import morphdom from 'morphdom';
 import { parseDirectives, Directive } from './directives_parser';
 import { combineSpacedArray } from './string_utils';
-import { setDeepData, doesDeepPropertyExist, normalizeModelName } from './set_deep_data';
+import { setDeepData, doesDeepPropertyExist, normalizeModelName, parseDeepData } from './set_deep_data';
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
 import { cloneHTMLElement } from './clone_html_element';
+import { updateArrayDataFromChangedElement } from "./update_array_data";
 
 interface ElementLoadingDirectives {
     element: HTMLElement|SVGElement,
@@ -105,15 +106,11 @@ export default class extends Controller {
      * Called to update one piece of the model
      */
     update(event: any) {
-        const value = this._getValueFromElement(event.target);
-
-        this._updateModelFromElement(event.target, value, true);
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), true);
     }
 
     updateDefer(event: any) {
-        const value = this._getValueFromElement(event.target);
-
-        this._updateModelFromElement(event.target, value, false);
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), false);
     }
 
     action(event: any) {
@@ -194,11 +191,10 @@ export default class extends Controller {
         return element.dataset.value || (element as any).value;
     }
 
-    _updateModelFromElement(element: Element, value: string, shouldRender: boolean) {
+    _updateModelFromElement(element: Element, value: string|null, shouldRender: boolean) {
         if (!(element instanceof HTMLElement)) {
             throw new Error('Could not update model for non HTMLElement');
         }
-
         const model = element.dataset.model || element.getAttribute('name');
 
         if (!model) {
@@ -207,7 +203,25 @@ export default class extends Controller {
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
 
-        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null);
+        // HTML form elements with name ending with [] require array as data
+        // we need to handle addition and removal of values from it to send
+        // back only required data
+        if (/\[]$/.test(model)) {
+            // Get current value from data
+            const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model))
+            const currentValue = currentLevelData[finalKey];
+
+            value = updateArrayDataFromChangedElement(element, value, currentValue);
+        } else if (
+            element instanceof HTMLInputElement
+            && element.type === 'checkbox'
+            && !element.checked
+        ) {
+            // Unchecked checkboxes in a single value scenarios should map to `null`
+            value = null;
+        }
+
+        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
     }
 
     /**
@@ -257,7 +271,7 @@ export default class extends Controller {
             this._dispatchEvent('live:update-model', {
                 modelName,
                 extraModelName: normalizedExtraModelName,
-                value,
+                value
             });
         }
 

@@ -11,7 +11,7 @@
 
 import { clearDOM } from '@symfony/stimulus-testing';
 import { initLiveComponent, mockRerender, startStimulus } from '../tools';
-import {getByLabelText, getByText, waitFor} from '@testing-library/dom';
+import { getByLabelText, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock-jest';
 
@@ -198,6 +198,222 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({ user: { firstName: 'Ryan Weaver' } });
+    });
+
+    it('sends correct data for checkbox fields', async () => {
+        const checkboxTemplate = (data: any) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Checkbox 1: <input type="checkbox" name="form[check1]" value="1" ${data.form.check1 ? 'checked' : ''} />
+                </label>
+                
+                <label>
+                    Checkbox 2: <input type="checkbox" name="form[check2]" value="1" ${data.form.check2 ? 'checked' : ''} />
+                </label>
+                
+                Checkbox 2 is ${data.form.check2 ? 'checked' : 'unchecked' }
+            </div>
+        `;
+        const data = { form: { check1: false, check2: false} };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        const check1Element = getByLabelText(element, 'Checkbox 1:');
+        const check2Element = getByLabelText(element, 'Checkbox 2:');
+
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
+        await userEvent.click(check1Element);
+
+        mockRerender({ form: {check1: '1', check2: '1'}}, checkboxTemplate);
+
+        await userEvent.click(check2Element);
+        await waitFor(() => expect(element).toHaveTextContent('Checkbox 2 is checked'));
+
+        expect(controller.dataValue).toEqual({form: {check1: '1', check2: '1'}});
+    });
+
+    it('sends correct data for initially checked checkbox fields', async () => {
+        const checkboxTemplate = (data: any) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Checkbox 1: <input type="checkbox" name="form[check1]" value="1" ${data.form.check1 ? 'checked' : ''} />
+                </label>
+                
+                <label>
+                    Checkbox 2: <input type="checkbox" name="form[check2]" value="1" ${data.form.check2 ? 'checked' : ''} />
+                </label>
+                
+                Checkbox 1 is ${data.form.check1 ? 'checked' : 'unchecked' }
+            </div>
+        `;
+        const data = { form: { check1: '1', check2: false} };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        const check1Element = getByLabelText(element, 'Checkbox 1:');
+        const check2Element = getByLabelText(element, 'Checkbox 2:');
+
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
+        await userEvent.click(check2Element);
+
+        mockRerender({ form: {check1: null, check2: '1'}}, checkboxTemplate);
+
+        await userEvent.click(check1Element);
+        await waitFor(() => expect(element).toHaveTextContent('Checkbox 1 is unchecked'));
+
+        expect(controller.dataValue).toEqual({form: {check1: null, check2: '1'}});
+    });
+
+    it('sends correct data for array valued checkbox fields', async () => {
+        const checkboxTemplate = (data: any) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Checkbox 1: <input type="checkbox" name="form[check][]" value="foo" ${data.form.check.indexOf('foo') > -1 ? 'checked' : ''} />
+                </label>
+                
+                <label>
+                    Checkbox 2: <input type="checkbox" name="form[check][]" value="bar" ${data.form.check.indexOf('bar') > -1 ? 'checked' : ''} />
+                </label>
+                
+                Checkbox 2 is ${data.form.check.indexOf('bar') > -1 ? 'checked' : 'unchecked' }
+            </div>
+        `;
+        const data = { form: { check: []} };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        const check1Element = getByLabelText(element, 'Checkbox 1:');
+        const check2Element = getByLabelText(element, 'Checkbox 2:');
+
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
+        await userEvent.click(check1Element);
+
+        mockRerender({ form: {check: ['foo', 'bar']}}, checkboxTemplate);
+
+        await userEvent.click(check2Element);
+        await waitFor(() => expect(element).toHaveTextContent('Checkbox 2 is checked'));
+
+        expect(controller.dataValue).toEqual({form: {check: ['foo', 'bar']}});
+    });
+
+    it('sends correct data for array valued checkbox fields with initial data', async () => {
+        const checkboxTemplate = (data: any) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Checkbox 1: <input type="checkbox" name="form[check][]" value="foo" ${data.form.check.indexOf('foo') > -1 ? 'checked' : ''} />
+                </label>
+                
+                <label>
+                    Checkbox 2: <input type="checkbox" name="form[check][]" value="bar" ${data.form.check.indexOf('bar') > -1 ? 'checked' : ''} />
+                </label>
+                
+                Checkbox 1 is ${data.form.check.indexOf('foo') > -1 ? 'checked' : 'unchecked' }
+            </div>
+        `;
+        const data = { form: { check: ['foo']} };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        const check1Element = getByLabelText(element, 'Checkbox 1:');
+        const check2Element = getByLabelText(element, 'Checkbox 2:');
+
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
+        await userEvent.click(check2Element);
+
+        mockRerender({ form: {check: ['bar']}}, checkboxTemplate);
+
+        await userEvent.click(check1Element);
+        await waitFor(() => expect(element).toHaveTextContent('Checkbox 1 is unchecked'));
+
+        expect(controller.dataValue).toEqual({form: {check: ['bar']}});
+    });
+
+    it('sends correct data for select multiple field', async () => {
+        const checkboxTemplate = (data: any) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Select:
+                    <select name="form[select][]" multiple>
+                        <option value="foo" ${data.form.select?.indexOf('foo') > -1 ? 'selected' : ''}>foo</option>
+                        <option value="bar" ${data.form.select?.indexOf('bar') > -1 ? 'selected' : ''}>bar</option>
+                    </select>
+                </label>
+                
+                Option 2 is ${data.form.select?.indexOf('bar') > -1 ? 'selected' : 'unselected' }
+            </div>
+        `;
+        const data = { form: { select: []} };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        const selectElement = getByLabelText(element, 'Select:');
+
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
+        await userEvent.selectOptions(selectElement, 'foo');
+
+        mockRerender({ form: {select: ['foo', 'bar']}}, checkboxTemplate);
+
+        await userEvent.selectOptions(selectElement, 'bar');
+
+        await waitFor(() => expect(element).toHaveTextContent('Select: foo bar Option 2 is selected'));
+
+        expect(controller.dataValue).toEqual({form: {select: ['foo', 'bar']}});
+    });
+
+    it('sends correct data for select multiple field with initial data', async () => {
+        const checkboxTemplate = (data: any) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Select:
+                    <select name="form[select][]" multiple>
+                        <option value="foo" ${data.form.select?.indexOf('foo') > -1 ? 'selected' : ''}>foo</option>
+                        <option value="bar" ${data.form.select?.indexOf('bar') > -1 ? 'selected' : ''}>bar</option>
+                    </select>
+                </label>
+                
+                Option 2 is ${data.form.select?.indexOf('bar') > -1 ? 'selected' : 'unselected' }
+            </div>
+        `;
+        const data = { form: { select: ['foo']} };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        const selectElement = getByLabelText(element, 'Select:');
+
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
+        await userEvent.selectOptions(selectElement, 'bar');
+
+        mockRerender({ form: {select: ['bar']}}, checkboxTemplate);
+
+        await userEvent.deselectOptions(selectElement, 'foo');
+
+        await waitFor(() => expect(element).toHaveTextContent('Select: foo bar Option 2 is selected'));
+
+        mockRerender({ form: {select: []}}, checkboxTemplate);
+
+        await userEvent.deselectOptions(selectElement, 'bar');
+
+        await waitFor(() => expect(element).toHaveTextContent('Select: foo bar Option 2 is unselected'));
+
+        expect(controller.dataValue).toEqual({form: {select: []}});
     });
 
     it('updates correctly when live#update is on a parent element', async () => {

@@ -176,6 +176,7 @@ trait ComponentWithFormTrait
     private function extractFormValues(FormView $formView): array
     {
         $values = [];
+
         foreach ($formView->children as $child) {
             $name = $child->vars['name'];
 

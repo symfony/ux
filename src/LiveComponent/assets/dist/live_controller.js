@@ -898,7 +898,7 @@ function combineSpacedArray(parts) {
     return finalParts;
 }
 
-function setDeepData(data, propertyPath, value) {
+function parseDeepData(data, propertyPath) {
     const finalData = JSON.parse(JSON.stringify(data));
     let currentLevelData = finalData;
     const parts = propertyPath.split('.');
@@ -906,6 +906,15 @@ function setDeepData(data, propertyPath, value) {
         currentLevelData = currentLevelData[parts[i]];
     }
     const finalKey = parts[parts.length - 1];
+    return {
+        currentLevelData,
+        finalData,
+        finalKey,
+        parts
+    };
+}
+function setDeepData(data, propertyPath, value) {
+    const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath);
     if (typeof currentLevelData !== 'object') {
         const lastPart = parts.pop();
         throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
@@ -928,10 +937,12 @@ function doesDeepPropertyExist(data, propertyPath) {
 }
 function normalizeModelName(model) {
     return model
+        .replace(/\[]$/, '')
         .split('[')
         .map(function (s) {
         return s.replace(']', '');
-    }).join('.');
+    })
+        .join('.');
 }
 
 function haveRenderedValuesChanged(originalDataJson, currentDataJson, newDataJson) {
@@ -979,6 +990,30 @@ function cloneHTMLElement(element) {
     return newElement;
 }
 
+function updateArrayDataFromChangedElement(element, value, currentValues) {
+    if (!(currentValues instanceof Array)) {
+        currentValues = [];
+    }
+    if (element instanceof HTMLInputElement && element.type === 'checkbox') {
+        const index = currentValues.indexOf(value);
+        if (element.checked) {
+            if (index === -1) {
+                currentValues.push(value);
+            }
+            return currentValues;
+        }
+        if (index > -1) {
+            currentValues.splice(index, 1);
+        }
+        return currentValues;
+    }
+    if (element instanceof HTMLSelectElement) {
+        currentValues = Array.from(element.selectedOptions).map(el => el.value);
+        return currentValues;
+    }
+    throw new Error(`The element used to determine array data from is unsupported (${element.tagName} provided)`);
+}
+
 const DEFAULT_DEBOUNCE = 150;
 class default_1 extends Controller {
     constructor() {
@@ -1022,12 +1057,10 @@ class default_1 extends Controller {
         window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
     }
     update(event) {
-        const value = this._getValueFromElement(event.target);
-        this._updateModelFromElement(event.target, value, true);
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), true);
     }
     updateDefer(event) {
-        const value = this._getValueFromElement(event.target);
-        this._updateModelFromElement(event.target, value, false);
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), false);
     }
     action(event) {
         const rawAction = event.currentTarget.dataset.actionName;
@@ -1088,7 +1121,17 @@ class default_1 extends Controller {
             const clonedElement = cloneHTMLElement(element);
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
-        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null);
+        if (/\[]$/.test(model)) {
+            const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model));
+            const currentValue = currentLevelData[finalKey];
+            value = updateArrayDataFromChangedElement(element, value, currentValue);
+        }
+        else if (element instanceof HTMLInputElement
+            && element.type === 'checkbox'
+            && !element.checked) {
+            value = null;
+        }
+        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
     }
     $updateModel(model, value, shouldRender = true, extraModelName = null, options = {}) {
         const directives = parseDirectives(model);
@@ -1112,7 +1155,7 @@ class default_1 extends Controller {
             this._dispatchEvent('live:update-model', {
                 modelName,
                 extraModelName: normalizedExtraModelName,
-                value,
+                value
             });
         }
         this.dataValue = setDeepData(this.dataValue, modelName, value);

@@ -146,4 +146,107 @@ class ComponentWithFormTest extends KernelTestCase
             ->assertContains('The title field should not be blank')
         ;
     }
+
+    public function testHandleCheckboxChanges(): void
+    {
+        /** @var LiveComponentHydrator $hydrator */
+        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
+
+        /** @var ComponentFactory $factory */
+        $factory = self::getContainer()->get('ux.twig_component.component_factory');
+
+        $mounted = $factory->create(
+            'form_with_many_different_fields_type',
+            [
+                'initialData' => [
+                    'choice_multiple' => [2],
+                    'select_multiple' => [2],
+                    'checkbox_checked' => true,
+                ],
+            ]
+        );
+
+        $dehydrated = $hydrator->dehydrate($mounted);
+        $bareForm = [
+            'text' => '',
+            'textarea' => '',
+            'range' => '',
+            'choice' => '',
+            'choice_expanded' => '',
+            'choice_multiple' => ['2'],
+            'select_multiple' => ['2'],
+            'checkbox' => null,
+            'checkbox_checked' => '1',
+            'file' => '',
+            'hidden' => '',
+        ];
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/_components/form_with_many_different_fields_type?data='.urlencode(json_encode($dehydrated)))
+            ->assertSuccessful()
+            ->assertContains('<input type="checkbox" id="form_choice_multiple_1" name="form[choice_multiple][]" value="2" checked="checked" />')
+            ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" />')
+            ->assertContains('<input type="checkbox" id="form_checkbox" name="form[checkbox]" required="required" value="1" />')
+            ->assertContains('<input type="checkbox" id="form_checkbox_checked" name="form[checkbox_checked]" required="required" value="1" checked="checked" />')
+            ->use(function (HtmlResponse $response) use (&$dehydrated, &$bareForm) {
+                $data = json_decode(
+                    $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
+                    true
+                );
+                self::assertEquals($bareForm, $data['form']);
+
+                // check both multiple fields
+                $bareForm['choice_multiple'] = ['1', '2'];
+
+                $dehydrated['form'] = $bareForm;
+            })
+            ->get('/_components/form_with_many_different_fields_type?data='.urlencode(json_encode($dehydrated)))
+            ->assertContains('<input type="checkbox" id="form_choice_multiple_1" name="form[choice_multiple][]" value="2" checked="checked" />')
+            ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" checked="checked" />')
+            ->use(function (HtmlResponse $response) use (&$dehydrated, &$bareForm) {
+                $data = json_decode(
+                    $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
+                    true
+                );
+                self::assertEquals($bareForm, $data['form']);
+
+                // uncheck multiple, check single checkbox
+                $bareForm['checkbox'] = '1';
+                $bareForm['choice_multiple'] = [];
+
+                // uncheck previously checked checkbox
+                $bareForm['checkbox_checked'] = null;
+
+                $dehydrated['form'] = $bareForm;
+            })
+            ->get('/_components/form_with_many_different_fields_type?data='.urlencode(json_encode($dehydrated)))
+            ->assertContains('<input type="checkbox" id="form_choice_multiple_1" name="form[choice_multiple][]" value="2" />')
+            ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" />')
+            ->assertContains('<input type="checkbox" id="form_checkbox" name="form[checkbox]" required="required" value="1" checked="checked" />')
+            ->assertContains('<input type="checkbox" id="form_checkbox_checked" name="form[checkbox_checked]" required="required" value="1" />')
+            ->use(function (HtmlResponse $response) use (&$dehydrated, &$bareForm) {
+                $data = json_decode(
+                    $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
+                    true
+                );
+                self::assertEquals($bareForm, $data['form']);
+
+                // check both multiple fields
+                $bareForm['select_multiple'] = ['2', '1'];
+
+                $dehydrated['form'] = $bareForm;
+            })
+            ->get('/_components/form_with_many_different_fields_type?data='.urlencode(json_encode($dehydrated)))
+            ->assertContains('<option value="2" selected="selected">')
+            ->assertContains('<option value="1" selected="selected">')
+            ->use(function (HtmlResponse $response) use ($bareForm) {
+                $data = json_decode(
+                    $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
+                    true
+                );
+                self::assertEquals($bareForm, $data['form']);
+            })
+        ;
+    }
 }
