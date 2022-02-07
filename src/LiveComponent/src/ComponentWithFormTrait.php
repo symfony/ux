@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\LiveComponent;
 
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\ClearableErrorsInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
@@ -210,9 +210,9 @@ trait ComponentWithFormTrait
         return $this->formInstance;
     }
 
-    private function clearErrorsForNonValidatedFields(Form $form, string $currentPath = ''): void
+    private function clearErrorsForNonValidatedFields(FormInterface $form, string $currentPath = ''): void
     {
-        if (!$currentPath || !\in_array($currentPath, $this->validatedFields, true)) {
+        if ($form instanceof ClearableErrorsInterface && (!$currentPath || !\in_array($currentPath, $this->validatedFields, true))) {
             $form->clearErrors();
         }
 
