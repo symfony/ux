@@ -1,0 +1,98 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-01-28T20:37:38Z
+
+@Lustmored check out the test modifications I made here - it was tricky: https://gist.github.com/weaverryan/5d35bf94a43c888970cb7ca2dade2d9f/revisions
+
+Notes:
+
+* Ignore my `console.log()` in there ;)
+* The initial `data` needed to be more initialized for me, else I got a deep JS err: https://gist.github.com/weaverryan/5d35bf94a43c888970cb7ca2dade2d9f/revisions#diff-35b353a0a2e3abf41b7f7bb8b9e0db7e2dd4b9d9bee88226176aac7f9e87ddf7R236
+* These waits - https://gist.github.com/weaverryan/5d35bf94a43c888970cb7ca2dade2d9f/revisions#diff-35b353a0a2e3abf41b7f7bb8b9e0db7e2dd4b9d9bee88226176aac7f9e87ddf7L243 - didn't make sense and weren't doing anything. When you check, that's instant. You were trying to wait for the re-render to finish, but you can't do it this way. That's why I added the "Checkbox 2 is checked" data to the template. We would only see that after a re-render. So that's the way to check to see if the render has finished
+
+Cheers!
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2022-01-31T10:08:51Z
+
+> @Lustmored check out the test modifications I made here - it was tricky: https://gist.github.com/weaverryan/5d35bf94a43c888970cb7ca2dade2d9f/revisions
+>
+> Notes:
+>
+>     * Ignore my `console.log()` in there ;)
+>
+>     * The initial `data` needed to be more initialized for me, else I got a deep JS err: https://gist.github.com/weaverryan/5d35bf94a43c888970cb7ca2dade2d9f/revisions#diff-35b353a0a2e3abf41b7f7bb8b9e0db7e2dd4b9d9bee88226176aac7f9e87ddf7R236
+>
+>     * These waits - https://gist.github.com/weaverryan/5d35bf94a43c888970cb7ca2dade2d9f/revisions#diff-35b353a0a2e3abf41b7f7bb8b9e0db7e2dd4b9d9bee88226176aac7f9e87ddf7L243 - didn't make sense and weren't doing anything. When you check, that's instant. You were trying to wait for the re-render to finish, but you can't do it this way. That's why I added the "Checkbox 2 is checked" data to the template. We would only see that after a re-render. So that's the way to check to see if the render has finished
+>
+>
+> Cheers!
+
+Thanks a lot! That looks well - I see you had the same problem as I did with mocks :) I think I know everything I need now to finish those tests and will probably do so by this Friday :+1:
+
+If you could check out if my changes in set_deep_data.ts sound reasonable and acceptable - that'd help me push things a bit faster. I have another approach in my head, but this one looked easiest from implementation perspective :)
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-31T13:58:54Z
+
+Tried this PR to check if it would fix when using CheckboxType (expanded: false, multiple: true), but it fixed only js error that the prop is not exposed, but still it sends for me always the first selected choice instead of multiple selected values
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2022-01-31T14:03:58Z
+
+@norkunas Can you please share an example?
+
+Also - don't you mean `ChoiceType`? AFAIK `CheckboxType` does not have `multiple` option. In that case I must admit I have not yet worked with `expanded: false, multiple: true` as I haven't used that in a while and probably forgot about it. Will be great addition to the tests :+1:
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-31T14:04:40Z
+
+yeah sorry, choice indeed :)
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-01-31T14:05:23Z
+
+Example - CountryType (expanded: false, multiple: true) :)
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2022-01-31T14:06:26Z
+
+> yeah sorry, choice indeed :)
+
+Then thank you for the report - I must've missed that case. I will work on it next time I sit to this PR :+1:
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-02-01T04:43:02Z
+
+Hey @Lustmored,
+I've checked why it doesn't return proper values and it looks like that it's by design: change/input events returns only the first selected value like it's not a multiselect.
+We need to use https://developer.mozilla.org/en-US/docs/Web/API/HTMLSelectElement/selectedOptions to get all selected values :)
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2022-02-04T13:11:44Z
+
+I think I have finished all refactoring and have added enough tests to cover all cases. The `<select multiple>` became trivial once checkbox logic was in place and has a few tests of it's own right now.
+
+I have tested this on locally modified live twig demo (it is a bit behind with changes here btw.) - my real world project usage is right now a bit too hacky (to make it work without this PR).
+
+I think I'm ready for the next wave of reviews :grinning:
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2022-02-04T16:45:19Z
+
+Thanks @weaverryan for the review - I will try to work on it during weekend, as it seems like mostly tidying up, so shouldn't be difficult 👍
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2022-02-05T09:57:56Z
+
+@weaverryan I think I have done most of your change request. I have resolved some of them to ease tracking what was done and what's left. In a few I left comments where explanation was needed or I had doubts about change suggestions :+1:
