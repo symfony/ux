@@ -28,7 +28,7 @@ describe('LiveController Action Tests', () => {
                     value="${data.comments}"
                 >
             </label>
-            
+
             ${data.isSaved ? 'Comment Saved!' : ''}
 
             <button
@@ -37,6 +37,8 @@ describe('LiveController Action Tests', () => {
             >Save</button>
 
             <button data-action="live#action" data-action-name="sendNamedArgs(a=1, b=2, c=3)">Send named args</button>
+
+            <a href="/comments?page=2" data-action="live#action" data-action-name="prevent|pushState|loadMore(cursor=30)">Comments next page</a>
         </div>
     `;
 
@@ -78,5 +80,18 @@ describe('LiveController Action Tests', () => {
         });
 
         getByText(element, 'Send named args').click();
+    });
+
+    it('Changes url with pushState directive', async () => {
+        const data = { comments: 'hi' };
+        const { element } = await startStimulus(template(data));
+
+        fetchMock.postOnce('http://localhost/_components/my_component/loadMore?args=cursor%3D30', {
+            html: template({ comments: 'hi' }),
+        });
+
+        getByText(element, 'Comments next page').click();
+
+        expect(window.location.href).toEqual('http://localhost/comments?page=2');
     });
 });

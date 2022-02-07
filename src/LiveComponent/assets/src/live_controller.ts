@@ -156,7 +156,7 @@ export default class extends Controller {
                             return;
                         }
                         break;
-                    case 'debounce': {
+                    case 'debounce':
                         const length: number = modifier.value ? parseInt(modifier.value) : DEFAULT_DEBOUNCE;
 
                         // clear any pending renders
@@ -173,7 +173,12 @@ export default class extends Controller {
                         handled = true;
 
                         break;
-                    }
+                    case 'pushState':
+                        if (event.target instanceof HTMLAnchorElement) {
+                            window.history.pushState({}, '', event.target.href);
+                        }
+
+                        break;
 
                     default:
                         console.warn(`Unknown modifier ${modifier.name} in action ${rawAction}`);

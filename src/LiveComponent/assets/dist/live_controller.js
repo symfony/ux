@@ -1051,7 +1051,7 @@ class default_1 extends Controller {
                             return;
                         }
                         break;
-                    case 'debounce': {
+                    case 'debounce':
                         const length = modifier.value ? parseInt(modifier.value) : DEFAULT_DEBOUNCE;
                         if (this.actionDebounceTimeout) {
                             clearTimeout(this.actionDebounceTimeout);
@@ -1063,7 +1063,11 @@ class default_1 extends Controller {
                         }, length);
                         handled = true;
                         break;
-                    }
+                    case 'pushState':
+                        if (event.target instanceof HTMLAnchorElement) {
+                            window.history.pushState({}, '', event.target.href);
+                        }
+                        break;
                     default:
                         console.warn(`Unknown modifier ${modifier.name} in action ${rawAction}`);
                 }
