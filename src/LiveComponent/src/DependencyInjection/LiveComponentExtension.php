@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\LiveComponent\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\Extension;
@@ -22,7 +21,6 @@ use Symfony\UX\LiveComponent\ComponentValidatorInterface;
 use Symfony\UX\LiveComponent\EventListener\AddLiveAttributesSubscriber;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
-use Symfony\UX\LiveComponent\PropertyHydratorInterface;
 use Symfony\UX\LiveComponent\Twig\LiveComponentExtension as LiveComponentTwigExtension;
 use Symfony\UX\LiveComponent\Twig\LiveComponentRuntime;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -52,13 +50,9 @@ final class LiveComponentExtension extends Extension
             }
         );
 
-        $container->registerForAutoconfiguration(PropertyHydratorInterface::class)
-            ->addTag('twig.component.property_hydrator')
-        ;
-
         $container->register('ux.live_component.component_hydrator', LiveComponentHydrator::class)
             ->setArguments([
-                new TaggedIteratorArgument('twig.component.property_hydrator'),
+                new Reference('serializer'),
                 new Reference('property_accessor'),
                 '%kernel.secret%',
             ])
