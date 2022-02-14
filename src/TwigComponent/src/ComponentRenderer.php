@@ -11,7 +11,9 @@
 
 namespace Symfony\UX\TwigComponent;
 
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\EventListener\PreRenderEvent;
 use Twig\Environment;
 use Twig\Extension\EscaperExtension;
@@ -28,7 +30,8 @@ final class ComponentRenderer
     public function __construct(
         private Environment $twig,
         private EventDispatcherInterface $dispatcher,
-        private ComponentFactory $factory
+        private ComponentFactory $factory,
+        private PropertyAccessorInterface $propertyAccessor
     ) {
     }
 
@@ -40,10 +43,42 @@ final class ComponentRenderer
             $this->safeClassesRegistered = true;
         }
 
-        $event = new PreRenderEvent($mounted, $this->factory->metadataFor($mounted->getName()));
+        $component = $mounted->getComponent();
+        $variables = array_merge(
+            // add the component as "this"
+            ['this' => $component],
+
+            // add attributes
+            ['attributes' => $mounted->getAttributes()],
+
+            // expose all public properties
+            get_object_vars($component),
+
+            // expose non-public properties marked with ExposeInTemplate attribute
+            iterator_to_array($this->exposedVariables($component)),
+        );
+        $event = new PreRenderEvent($mounted, $this->factory->metadataFor($mounted->getName()), $variables);
 
         $this->dispatcher->dispatch($event);
 
         return $this->twig->render($event->getTemplate(), $event->getVariables());
+    }
+
+    private function exposedVariables(object $component): \Iterator
+    {
+        $class = new \ReflectionClass($component);
+
+        foreach ($class->getProperties() as $property) {
+            if (!$attribute = $property->getAttributes(ExposeInTemplate::class)[0] ?? null) {
+                continue;
+            }
+
+            $attribute = $attribute->newInstance();
+
+            /** @var ExposeInTemplate $attribute */
+            $value = $attribute->getter ? $component->{rtrim($attribute->getter, '()')}() : $this->propertyAccessor->getValue($component, $property->name);
+
+            yield $attribute->name ?? $property->name => $value;
+        }
     }
 }

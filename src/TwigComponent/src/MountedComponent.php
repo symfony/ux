@@ -41,12 +41,4 @@ final class MountedComponent
     {
         return $this->attributes;
     }
-
-    public function getVariables(): array
-    {
-        return array_merge(
-            ['this' => $this->component, 'attributes' => $this->attributes],
-            get_object_vars($this->component)
-        );
-    }
 }

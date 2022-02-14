@@ -23,15 +23,16 @@ use Symfony\UX\TwigComponent\MountedComponent;
 final class PreRenderEvent extends Event
 {
     private string $template;
-    private array $variables;
 
     /**
      * @internal
      */
-    public function __construct(private MountedComponent $mounted, private ComponentMetadata $metadata)
-    {
+    public function __construct(
+        private MountedComponent $mounted,
+        private ComponentMetadata $metadata,
+        private array $variables
+    ) {
         $this->template = $this->metadata->getTemplate();
-        $this->variables = $this->mounted->getVariables();
     }
 
     /**

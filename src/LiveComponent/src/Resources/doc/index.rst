@@ -813,7 +813,12 @@ recreate the *same* form, we pass in the ``Post`` object and set it as a
 ``LiveProp``.
 
 The template for this component will render the form, which is available
-as ``this.form`` thanks to the trait:
+as ``form`` thanks to the trait:
+
+.. versionadded:: 2.1
+
+    The ability to access ``form`` directly in your component's template
+    was added in LiveComponents 2.1. Previously ``this.form`` was required.
 
 .. code-block:: twig
 
@@ -833,13 +838,13 @@ as ``this.form`` thanks to the trait:
         #}
         data-action="change->live#update"
     >
-        {{ form_start(this.form) }}
-            {{ form_row(this.form.title) }}
-            {{ form_row(this.form.slug) }}
-            {{ form_row(this.form.content) }}
+        {{ form_start(form) }}
+            {{ form_row(form.title) }}
+            {{ form_row(form.slug) }}
+            {{ form_row(form.content) }}
 
             <button>Save</button>
-        {{ form_end(this.form) }}
+        {{ form_end(form) }}
     </div>
 
 Mostly, this is a pretty boring template! It includes the normal
@@ -1027,7 +1032,7 @@ Finally, tell the ``form`` element to use this action:
     {# templates/components/post_form.html.twig #}
     {# ... #}
 
-    {{ form_start(this.form, {
+    {{ form_start(form, {
         attr: {
             'data-action': 'live#action',
             'data-action-name': 'prevent|save'
@@ -1148,11 +1153,11 @@ and ``removeComment()`` actions:
 .. code-block:: twig
 
     <div{{ attributes }}>
-        {{ form_start(this.form) }}
-            {{ form_row(this.form.title) }}
+        {{ form_start(form) }}
+            {{ form_row(form.title) }}
 
             <h3>Comments:</h3>
-            {% for key, commentForm in this.form.comments %}
+            {% for key, commentForm in form.comments %}
                 <button
                     data-action="live#action"
                     data-action-name="removeComment(index={{ key }})"
@@ -1164,7 +1169,7 @@ and ``removeComment()`` actions:
             </div>
 
             {# avoid an extra label for this field #}
-            {% do this.form.comments.setRendered %}
+            {% do form.comments.setRendered %}
 
             <button
                 data-action="live#action"
@@ -1173,7 +1178,7 @@ and ``removeComment()`` actions:
             >+ Add Comment</button>
 
             <button type="submit" >Save</button>
-        {{ form_end(this.form) }}
+        {{ form_end(form) }}
     </div>
 
 Done! Behind the scenes, it works like this:

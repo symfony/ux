@@ -13,6 +13,9 @@
 
 -   Add `PreRenderEvent` to intercept/manipulate twig template/variables before rendering.
 
+-   Add `ExposeInTemplate` attribute to make non-public properties available in component
+    templates directly.
+
 ## 2.0.0
 
 -   Support for `stimulus` version 2 was removed and support for `@hotwired/stimulus`

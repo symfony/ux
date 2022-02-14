@@ -219,6 +219,60 @@ If an option name matches an argument name in ``mount()``, the option is
 passed as that argument and the component system will *not* try to set
 it directly on a property.
 
+ExposeInTemplate Attribute
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.1
+
+    The ``ExposeInTemplate`` attribute was added in TwigComponents 2.1.
+
+All public component properties are available directly in your component
+template. You can use the ``ExposeInTemplate`` attribute to expose
+private/protected properties directly in a component template (``someProp``
+vs ``this.someProp``). These properties must be *accessible* (have a getter).
+
+    // ...
+    use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
+
+    #[AsTwigComponent('alert')]
+    class AlertComponent
+    {
+        #[ExposeInTemplate]
+        private string $message; // available as `{{ message }}` in the template
+
+        #[ExposeInTemplate('alert_type')]
+        private string $type = 'success'; // available as `{{ alert_type }}` in the template
+
+        #[ExposeInTemplate(name: 'ico', getter: 'fetchIcon')]
+        private string $icon = 'ico-warning'; // available as `{{ ico }}` in the template using `fetchIcon()` as the getter
+
+        /**
+         * Required to access $this->message
+         */
+        public function getMessage(): string
+        {
+            return $this->message;
+        }
+
+        /**
+         * Required to access $this->type
+         */
+        public function getType(): string
+        {
+            return $this->type;
+        }
+
+        /**
+         * Required to access $this->icon
+         */
+        public function fetchIcon(): string
+        {
+            return $this->icon;
+        }
+
+        // ...
+    }
+
 PreMount Hook
 ~~~~~~~~~~~~~
 
