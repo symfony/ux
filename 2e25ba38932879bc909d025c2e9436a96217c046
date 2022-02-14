@@ -1,0 +1,33 @@
+---------------------------------------------------------------------------
+
+by kbond at 2022-02-04T13:28:51Z
+
+What do you think about making this a property-only attribute? Then for methods, we'll recommend either using `this.` or `computed.` (from #266)? I think this could help with documentation.
+
+For making `form` available on `ComponentWithFormTrait`, I'm thinking we could use this syntax:
+
+```
+trait ComponentWithFormTrait
+{
+    #[ExposeInTemplate(name: 'form', getter: 'getForm')]
+    private ?FormView $formView = null;
+
+    // ...
+}
+```
+
+We wouldn't have to rename `$formView`. The `getter` attribute argument wouldn't make sense for methods.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-02-04T15:09:39Z
+
+> What do you think about making this a property-only attribute? Then for methods, we'll recommend either using this. or computed. (from https://github.com/symfony/ux/pull/266)? I think this could help with documentation
+
+Hmm, ok. Let's do this. It doesn't prevent us from adding this later by popular demand, so I don't see any risk. 👍
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-02-11T15:15:20Z
+
+I believe this to be ready.
