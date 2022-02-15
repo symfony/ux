@@ -31,13 +31,14 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
 
         $attributes = $this->getLiveAttributes($event->getMountedComponent());
         $variables = $event->getVariables();
+        $attributesKey = $event->getMetadata()->getAttributesVar();
 
-        if (isset($variables['attributes']) && $variables['attributes'] instanceof ComponentAttributes) {
+        if (isset($variables[$attributesKey]) && $variables[$attributesKey] instanceof ComponentAttributes) {
             // merge with existing attributes if available
-            $attributes = $attributes->defaults($variables['attributes']->all());
+            $attributes = $attributes->defaults($variables[$attributesKey]->all());
         }
 
-        $variables['attributes'] = $attributes;
+        $variables[$attributesKey] = $attributes;
 
         $event->setVariables($variables);
     }

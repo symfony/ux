@@ -54,6 +54,16 @@ final class ComponentMetadata
         return $this->config['service_id'];
     }
 
+    public function isPublicPropsExposed(): bool
+    {
+        return $this->get('expose_public_props', false);
+    }
+
+    public function getAttributesVar(): string
+    {
+        return $this->get('attributes_var', 'attributes');
+    }
+
     public function get(string $key, mixed $default = null): mixed
     {
         return $this->config[$key] ?? $default;

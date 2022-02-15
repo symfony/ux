@@ -37,10 +37,7 @@ final class TwigComponentExtension extends Extension
         $container->registerAttributeForAutoconfiguration(
             AsTwigComponent::class,
             static function (ChildDefinition $definition, AsTwigComponent $attribute) {
-                $definition->addTag('twig.component', array_filter([
-                    'key' => $attribute->name,
-                    'template' => $attribute->template,
-                ]));
+                $definition->addTag('twig.component', array_filter($attribute->serviceConfig()));
             }
         );
 

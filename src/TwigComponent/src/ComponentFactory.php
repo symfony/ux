@@ -66,8 +66,9 @@ final class ComponentFactory
         $data = $this->postMount($component, $data);
 
         // create attributes from "attributes" key if exists
-        $attributes = $data['attributes'] ?? [];
-        unset($data['attributes']);
+        $attributesVar = $this->metadataFor($name)->getAttributesVar();
+        $attributes = $data[$attributesVar] ?? [];
+        unset($data[$attributesVar]);
 
         // ensure remaining data is scalar
         foreach ($data as $key => $value) {

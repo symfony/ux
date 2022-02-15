@@ -161,6 +161,17 @@ Behind the scenes, a new ``AlertComponent`` will be instantiated and the
 a property has a setter method (e.g. ``setMessage()``), that will be
 called instead of setting the property directly.
 
+.. note::
+
+    You can disable exposing public properties for a component. When disabled,
+    ``this.property`` must be used::
+
+        #[AsTwigComponent('alert', exposePublicProps: false)]
+        class AlertComponent
+        {
+            // ...
+        }
+
 Customize the Twig Template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -512,6 +523,16 @@ Set an attribute's value to ``null`` to exclude the value when rendering:
 
     {# renders as: #}
     <input type="text" value="" autofocus/>
+
+.. note::
+
+    You can adjust the attributes variable exposed in your template::
+
+        #[AsTwigComponent('alert', attributesVar: '_attributes')]
+        class AlertComponent
+        {
+            // ...
+        }
 
 Defaults & Merging
 ~~~~~~~~~~~~~~~~~~
