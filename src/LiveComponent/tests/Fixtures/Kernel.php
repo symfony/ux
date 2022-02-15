@@ -16,19 +16,11 @@ use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
-use Symfony\Component\Config\Loader\LoaderInterface;
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\LiveComponent\LiveComponentBundle;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component3;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component6;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormComponentWithManyDifferentFieldsType;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithAttributes;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormWithCollectionTypeComponent;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Environment;
 
@@ -60,20 +52,9 @@ final class Kernel extends BaseKernel
         yield new LiveComponentBundle();
     }
 
-    protected function configureContainer(ContainerBuilder $c, LoaderInterface $loader): void
+    protected function configureContainer(ContainerConfigurator $c): void
     {
-        // disable logging errors to the console
-        $c->register('logger', NullLogger::class);
-
-        $c->register(Component1::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(Component2::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(Component3::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(Component6::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(ComponentWithAttributes::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(FormComponentWithManyDifferentFieldsType::class)->setAutoconfigured(true)->setAutowired(true);
-        $c->register(FormWithCollectionTypeComponent::class)->setAutoconfigured(true)->setAutowired(true);
-
-        $c->loadFromExtension('framework', [
+        $c->extension('framework', [
             'secret' => 'S3CRET',
             'test' => true,
             'router' => ['utf8' => true],
@@ -81,11 +62,11 @@ final class Kernel extends BaseKernel
             'session' => ['storage_factory_id' => 'session.storage.factory.mock_file'],
         ]);
 
-        $c->loadFromExtension('twig', [
+        $c->extension('twig', [
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
         ]);
 
-        $c->loadFromExtension('doctrine', [
+        $c->extension('doctrine', [
             'dbal' => ['url' => '%env(resolve:DATABASE_URL)%'],
             'orm' => [
                 'auto_generate_proxy_classes' => true,
@@ -101,6 +82,15 @@ final class Kernel extends BaseKernel
                 ],
             ],
         ]);
+
+        $c->services()
+            ->defaults()
+                ->autowire()
+                ->autoconfigure()
+            // disable logging errors to the console
+            ->set('logger', NullLogger::class)
+            ->load(__NAMESPACE__.'\\Component\\', __DIR__.'/Component')
+        ;
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void

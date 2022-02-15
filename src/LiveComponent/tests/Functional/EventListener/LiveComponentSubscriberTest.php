@@ -13,9 +13,8 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
-use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Response\HtmlResponse;
 use Zenstruck\Browser\Test\HasBrowser;
 use function Zenstruck\Foundry\create;
@@ -29,24 +28,19 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 {
     use Factories;
     use HasBrowser;
+    use LiveComponentTestHelper;
     use ResetDatabase;
 
     public function testCanRenderComponentAsHtml(): void
     {
-        /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
-
-        /** @var ComponentFactory $factory */
-        $factory = self::getContainer()->get('ux.twig_component.component_factory');
-
-        $component = $factory->create('component1', [
+        $component = $this->mountComponent('component1', [
             'prop1' => $entity = create(Entity1::class)->object(),
             'prop2' => $date = new \DateTime('2021-03-05 9:23'),
             'prop3' => 'value3',
             'prop4' => 'value4',
         ]);
 
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $this->dehydrateComponent($component);
 
         $this->browser()
             ->throwExceptions()
@@ -62,13 +56,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testCanExecuteComponentAction(): void
     {
-        /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
-
-        /** @var ComponentFactory $factory */
-        $factory = self::getContainer()->get('ux.twig_component.component_factory');
-
-        $dehydrated = $hydrator->dehydrate($factory->create('component2'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
         $token = null;
 
         $this->browser()
@@ -147,13 +135,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testBeforeReRenderHookOnlyExecutedDuringAjax(): void
     {
-        /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
-
-        /** @var ComponentFactory $factory */
-        $factory = self::getContainer()->get('ux.twig_component.component_factory');
-
-        $dehydrated = $hydrator->dehydrate($factory->create('component2'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
 
         $this->browser()
             ->visit('/render-template/template1')
@@ -167,13 +149,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testCanRedirectFromComponentAction(): void
     {
-        /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
-
-        /** @var ComponentFactory $factory */
-        $factory = self::getContainer()->get('ux.twig_component.component_factory');
-
-        $dehydrated = $hydrator->dehydrate($factory->create('component2'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
         $token = null;
 
         $this->browser()
@@ -207,13 +183,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testInjectsLiveArgs(): void
     {
-        /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
-
-        /** @var ComponentFactory $factory */
-        $factory = self::getContainer()->get('ux.twig_component.component_factory');
-
-        $dehydrated = $hydrator->dehydrate($factory->create('component6'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component6'));
         $token = null;
 
         $argsQueryParams = http_build_query(['args' => http_build_query(['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3'])]);
