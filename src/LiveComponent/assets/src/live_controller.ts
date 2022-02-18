@@ -184,7 +184,7 @@ export default class extends Controller {
     }
 
     $render() {
-        this._makeRequest(null);
+        this._makeRequest(null, {});
     }
 
     _getValueFromElement(element: HTMLElement|SVGElement) {
@@ -206,22 +206,23 @@ export default class extends Controller {
         // HTML form elements with name ending with [] require array as data
         // we need to handle addition and removal of values from it to send
         // back only required data
+        let finalValue : string|null|string[] = value
         if (/\[]$/.test(model)) {
             // Get current value from data
             const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model))
             const currentValue = currentLevelData[finalKey];
 
-            value = updateArrayDataFromChangedElement(element, value, currentValue);
+            finalValue = updateArrayDataFromChangedElement(element, value, currentValue);
         } else if (
             element instanceof HTMLInputElement
             && element.type === 'checkbox'
             && !element.checked
         ) {
             // Unchecked checkboxes in a single value scenarios should map to `null`
-            value = null;
+            finalValue = null;
         }
 
-        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
+        this.$updateModel(model, finalValue, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
     }
 
     /**
@@ -309,7 +310,7 @@ export default class extends Controller {
         }
     }
 
-    _makeRequest(action: string|null, args: Record<string,unknown>) {
+    _makeRequest(action: string|null, args: Record<string, string>) {
         const splitUrl = this.urlValue.split('?');
         let [url] = splitUrl
         const [, queryString] = splitUrl;
@@ -659,11 +660,16 @@ export default class extends Controller {
             }
         } else {
             callback = () => {
-                this._makeRequest(actionName);
+                this._makeRequest(actionName, {});
             }
         }
 
         const timer = setInterval(() => {
+            // if there is already an active render promise, skip the poll
+            if (this.renderPromiseStack.countActivePromises() > 0) {
+                return;
+            }
+
             callback();
         }, duration);
         this.pollingIntervals.push(timer);
@@ -819,6 +825,10 @@ class PromiseStack {
 
     findPromiseIndex(promise: Promise<any>) {
         return this.stack.findIndex((item) => item === promise);
+    }
+
+    countActivePromises(): number {
+        return this.stack.length;
     }
 }
 

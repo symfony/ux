@@ -1107,7 +1107,7 @@ class default_1 extends Controller {
         });
     }
     $render() {
-        this._makeRequest(null);
+        this._makeRequest(null, {});
     }
     _getValueFromElement(element) {
         return element.dataset.value || element.value;
@@ -1121,17 +1121,18 @@ class default_1 extends Controller {
             const clonedElement = cloneHTMLElement(element);
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
+        let finalValue = value;
         if (/\[]$/.test(model)) {
             const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model));
             const currentValue = currentLevelData[finalKey];
-            value = updateArrayDataFromChangedElement(element, value, currentValue);
+            finalValue = updateArrayDataFromChangedElement(element, value, currentValue);
         }
         else if (element instanceof HTMLInputElement
             && element.type === 'checkbox'
             && !element.checked) {
-            value = null;
+            finalValue = null;
         }
-        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
+        this.$updateModel(model, finalValue, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
     }
     $updateModel(model, value, shouldRender = true, extraModelName = null, options = {}) {
         const directives = parseDirectives(model);
@@ -1427,10 +1428,13 @@ class default_1 extends Controller {
         }
         else {
             callback = () => {
-                this._makeRequest(actionName);
+                this._makeRequest(actionName, {});
             };
         }
         const timer = setInterval(() => {
+            if (this.renderPromiseStack.countActivePromises() > 0) {
+                return;
+            }
             callback();
         }, duration);
         this.pollingIntervals.push(timer);
@@ -1538,6 +1542,9 @@ class PromiseStack {
     }
     findPromiseIndex(promise) {
         return this.stack.findIndex((item) => item === promise);
+    }
+    countActivePromises() {
+        return this.stack.length;
     }
 }
 const parseLoadingAction = function (action, isLoading) {
