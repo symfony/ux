@@ -80,8 +80,8 @@ as simple as possible::
     }
 
 Step 2 is to create a template for this component. By default, templates
-live in ``templates/components/{Component Name}.html.twig``, where
-``{Component Name}`` is whatever you passed as the first argument to the
+live in ``templates/components/{component_name}.html.twig``, where
+``{component_name}`` is whatever you passed as the first argument to the
 ``AsTwigComponent`` class attribute:
 
 .. code-block:: twig
@@ -230,6 +230,8 @@ All public component properties are available directly in your component
 template. You can use the ``ExposeInTemplate`` attribute to expose
 private/protected properties directly in a component template (``someProp``
 vs ``this.someProp``). These properties must be *accessible* (have a getter).
+
+.. code-block:: php
 
     // ...
     use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
@@ -586,7 +588,7 @@ PreRenderEvent
     The ``PreRenderEvent`` was added in TwigComponents 2.1.
 
 Subscribing to the ``PreRenderEvent`` gives the ability to modify
-the twig template and twig variables before components are rendered:
+the twig template and twig variables before components are rendered::
 
     use Symfony\UX\TwigComponent\EventListener\PreRenderEvent;
 
