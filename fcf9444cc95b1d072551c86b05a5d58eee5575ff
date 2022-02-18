@@ -1,0 +1,33 @@
+---------------------------------------------------------------------------
+
+by kbond at 2022-02-04T13:48:52Z
+
+Should we make the public properties available via computed (`computed.prop1`)? Right now only public methods are available.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-02-04T15:12:17Z
+
+> Should we make the public properties available via computed (computed.prop1)? Right now only public methods are available.
+
+Ideally yes... just so that `this` and `component` work identically. But more so, could we re-use the Twig logic for calling the method / fetching the property? For example, we know that Twig checks several things when we say `this.foo` to get that property / call that method. Can we reuse that inside the proxy class?
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-02-04T21:34:18Z
+
+> Can we reuse that inside the proxy class?
+
+I believe so, yes. I only check get/no-get method prefix now (so `computed.getMethod` and `computed.method` both work and refer to the same cache). I'll take a look at twig's internals and try to match.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-02-11T14:26:54Z
+
+Ok, I think this is ready. I ensure `computed.x` works with public properties, components implementing `\ArrayAccess`, _getter's_, _isser's_ and _hasser's_.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-02-14T13:28:32Z
+
+Rebased and conflicts resolved.
