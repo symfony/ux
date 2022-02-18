@@ -38,16 +38,6 @@ A real-time product search component might look like this::
         }
     }
 
-.. versionadded:: 2.1
-
-    The ability to reference local variables in the template (e.g. ``query``) was added in TwigComponents 2.1.
-    Previously, all data needed to be referenced through ``this`` (e.g. ``this.query``).
-
-.. versionadded:: 2.1
-
-    The ability to initialize live component with the ``attributes`` twig variable was added in LiveComponents
-    2.1. Previously, the ``init_live_component()`` function was required (this function was removed in 2.1).
-
 .. code-block:: twig
 
     {# templates/components/product_search.html.twig #}
@@ -65,6 +55,16 @@ A real-time product search component might look like this::
             {% endfor %}
         </ul>
     </div>
+
+.. versionadded:: 2.1
+
+    The ability to reference local variables in the template (e.g. ``query``) was added in TwigComponents 2.1.
+    Previously, all data needed to be referenced through ``this`` (e.g. ``this.query``).
+
+.. versionadded:: 2.1
+
+    The ability to initialize live component with the ``attributes`` twig variable was added in LiveComponents
+    2.1. Previously, the ``init_live_component()`` function was required (this function was removed in 2.1).
 
 As a user types into the box, the component will automatically re-render
 and show the new results!
