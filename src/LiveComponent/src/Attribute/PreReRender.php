@@ -20,6 +20,6 @@ namespace Symfony\UX\LiveComponent\Attribute;
  * @experimental
  */
 #[\Attribute(\Attribute::TARGET_METHOD)]
-final class BeforeReRender
+final class PreReRender
 {
 }

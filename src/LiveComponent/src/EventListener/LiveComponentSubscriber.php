@@ -241,7 +241,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     {
         $component = $mounted->getComponent();
 
-        foreach (AsLiveComponent::beforeReRenderMethods($component) as $method) {
+        foreach (AsLiveComponent::preReRenderMethods($component) as $method) {
             $component->{$method->name}();
         }
 
