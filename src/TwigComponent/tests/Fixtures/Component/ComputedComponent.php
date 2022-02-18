@@ -1,0 +1,26 @@
+<?php
+
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Symfony\UX\TwigComponent\Tests\Fixtures\Component;
+
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+
+#[AsTwigComponent('computed_component')]
+final class ComputedComponent
+{
+    public $prop = 'value';
+    private $count = 0;
+
+    public function getCount()
+    {
+        return ++$this->count;
+    }
+}

@@ -16,6 +16,8 @@
 -   Add `ExposeInTemplate` attribute to make non-public properties available in component
     templates directly.
 
+-   Add _Computed Properties_ system.
+
 ## 2.0.0
 
 -   Support for `stimulus` version 2 was removed and support for `@hotwired/stimulus`

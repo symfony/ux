@@ -417,6 +417,10 @@ need to populate, you can render it with:
 Computed Properties
 ~~~~~~~~~~~~~~~~~~~
 
+.. versionadded:: 2.1
+
+    Computed Properties were added in TwigComponents 2.1.
+
 In the previous example, instead of querying for the featured products
 immediately (e.g. in ``__construct()``), we created a ``getProducts()``
 method and called that from the template via ``this.products``.
@@ -432,35 +436,32 @@ But there's no magic with the ``getProducts()`` method: if you call
 ``this.products`` multiple times in your template, the query would be
 executed multiple times.
 
-To make your ``getProducts()`` method act like a true computed property
-(where its value is only evaluated the first time you call the method),
-you can store its result on a private property:
+To make your ``getProducts()`` method act like a true computed property,
+call ``computed.products`` in your template. ``computed`` is a proxy
+that wraps your component and caches the return of methods. If they
+are called additional times, the cached value is used.
 
-.. code-block:: diff
+.. code-block:: twig
 
-      // src/Components/FeaturedProductsComponent.php
-      namespace App\Components;
-      // ...
+    {# templates/components/featured_products.html.twig #}
 
-      #[AsTwigComponent('featured_products')]
-      class FeaturedProductsComponent
-      {
-          private ProductRepository $productRepository;
+    <div>
+        <h3>Featured Products</h3>
 
-    +     private ?array $products = null;
+        {% for product in computed.products %}
+            ...
+        {% endfor %}
 
-          // ...
+        ...
+        {% for product in computed.products %} {# use cache, does not result in a second query #}
+            ...
+        {% endfor %}
+    </div>
 
-          public function getProducts(): array
-          {
-    +         if ($this->products === null) {
-    +             $this->products = $this->productRepository->findFeatured();
-    +         }
+.. note::
 
-    -         return $this->productRepository->findFeatured();
-    +         return $this->products;
-          }
-      }
+    Computed methods only work for component methods with no required
+    arguments.
 
 Component Attributes
 --------------------
