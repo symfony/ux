@@ -19,20 +19,19 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
+ *
+ * @internal
  */
 final class ComponentFactory
 {
-    private ServiceLocator $components;
-    private PropertyAccessorInterface $propertyAccessor;
-
-    /** @var array<string, array> */
-    private array $config;
-
-    public function __construct(ServiceLocator $components, PropertyAccessorInterface $propertyAccessor, array $config)
-    {
-        $this->components = $components;
-        $this->propertyAccessor = $propertyAccessor;
-        $this->config = $config;
+    /**
+     * @param array<string, array> $config
+     */
+    public function __construct(
+        private ServiceLocator $components,
+        private PropertyAccessorInterface $propertyAccessor,
+        private array $config
+    ) {
     }
 
     public function metadataFor(string $name): ComponentMetadata

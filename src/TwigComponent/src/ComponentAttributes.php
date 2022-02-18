@@ -20,6 +20,8 @@ namespace Symfony\UX\TwigComponent;
 final class ComponentAttributes
 {
     /**
+     * @internal
+     *
      * @param array<string, string> $attributes
      */
     public function __construct(private array $attributes)

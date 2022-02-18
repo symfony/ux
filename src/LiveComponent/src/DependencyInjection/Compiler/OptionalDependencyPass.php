@@ -10,6 +10,10 @@ use Symfony\UX\LiveComponent\Normalizer\DoctrineObjectNormalizer;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
+ *
+ * @experimental
+ *
+ * @internal
  */
 final class OptionalDependencyPass implements CompilerPassInterface
 {

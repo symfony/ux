@@ -30,6 +30,8 @@ use Symfony\UX\TwigComponent\ComponentRenderer;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
+ *
+ * @internal
  */
 final class LiveComponentExtension extends Extension
 {

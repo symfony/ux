@@ -21,6 +21,8 @@ use Symfony\UX\LiveComponent\LiveComponentHydrator;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
+ *
+ * @internal
  */
 final class DoctrineObjectNormalizer implements NormalizerInterface, DenormalizerInterface
 {

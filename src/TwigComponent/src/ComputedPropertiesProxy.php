@@ -20,6 +20,9 @@ final class ComputedPropertiesProxy
 {
     private array $cache = [];
 
+    /**
+     * @internal
+     */
     public function __construct(private object $component)
     {
     }

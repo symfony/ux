@@ -15,6 +15,10 @@ use Twig\Environment;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
+ *
+ * @experimental
+ *
+ * @internal
  */
 final class AddLiveAttributesSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {

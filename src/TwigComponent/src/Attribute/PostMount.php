@@ -19,14 +19,11 @@ namespace Symfony\UX\TwigComponent\Attribute;
 #[\Attribute(\Attribute::TARGET_METHOD)]
 final class PostMount
 {
-    public int $priority;
-
     /**
      * @param int $priority If multiple hooks are registered in a component, use to configure
      *                      the order in which they are called (higher called earlier)
      */
-    public function __construct(int $priority = 0)
+    public function __construct(public int $priority = 0)
     {
-        $this->priority = $priority;
     }
 }

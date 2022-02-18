@@ -40,16 +40,15 @@ use Symfony\UX\TwigComponent\MountedComponent;
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
  * @experimental
+ *
+ * @internal
  */
 class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {
     private const HTML_CONTENT_TYPE = 'application/vnd.live-component+html';
 
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->container = $container;
     }
 
     public static function getSubscribedServices(): array
@@ -170,21 +169,16 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
     public function onKernelView(ViewEvent $event): void
     {
-        $request = $event->getRequest();
-        if (!$this->isLiveComponentRequest($request)) {
+        if (!$this->isLiveComponentRequest($request = $event->getRequest())) {
             return;
         }
 
-        $response = $this->createResponse($request->attributes->get('_mounted_component'), $request);
-
-        $event->setResponse($response);
+        $event->setResponse($this->createResponse($request->attributes->get('_mounted_component')));
     }
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        $request = $event->getRequest();
-
-        if (!$this->isLiveComponentRequest($request)) {
+        if (!$this->isLiveComponentRequest($request = $event->getRequest())) {
             return;
         }
 
@@ -192,15 +186,12 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $mounted = $request->attributes->get('_mounted_component');
-
         // in case the exception was too early somehow
-        if (!$mounted) {
+        if (!$mounted = $request->attributes->get('_mounted_component')) {
             return;
         }
 
-        $response = $this->createResponse($mounted, $request);
-        $event->setResponse($response);
+        $event->setResponse($this->createResponse($mounted));
     }
 
     public function onKernelResponse(ResponseEvent $event): void
@@ -237,7 +228,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         ];
     }
 
-    private function createResponse(MountedComponent $mounted, Request $request): Response
+    private function createResponse(MountedComponent $mounted): Response
     {
         $component = $mounted->getComponent();
 
@@ -245,11 +236,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             $component->{$method->name}();
         }
 
-        $html = $this->container->get(ComponentRenderer::class)->render(
-            $mounted,
-        );
-
-        return new Response($html);
+        return new Response($this->container->get(ComponentRenderer::class)->render($mounted));
     }
 
     private function isLiveComponentRequest(Request $request): bool

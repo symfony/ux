@@ -29,6 +29,8 @@ use Symfony\UX\TwigComponent\Twig\ComponentRuntime;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
+ *
+ * @internal
  */
 final class TwigComponentExtension extends Extension
 {

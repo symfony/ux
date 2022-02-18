@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\Exception\LogicException;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
+ *
+ * @internal
  */
 final class TwigComponentPass implements CompilerPassInterface
 {
