@@ -39,12 +39,7 @@ final class LiveComponentExtension extends Extension
             AsLiveComponent::class,
             function (ChildDefinition $definition, AsLiveComponent $attribute) {
                 $definition
-                    ->addTag('twig.component', array_filter([
-                        'key' => $attribute->name,
-                        'template' => $attribute->template,
-                        'default_action' => $attribute->defaultAction,
-                        'live' => true,
-                    ]))
+                    ->addTag('twig.component', array_filter($attribute->serviceConfig()))
                     ->addTag('controller.service_arguments')
                 ;
             }

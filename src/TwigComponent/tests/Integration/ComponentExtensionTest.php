@@ -82,6 +82,13 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('<button class="foo baz" type="submit" style="color:red;">', $output);
     }
 
+    public function testCanSetCustomAttributesVariable(): void
+    {
+        $output = $this->renderComponent('custom_attributes', ['class' => 'from-custom']);
+
+        $this->assertStringContainsString('<div class="from-custom"></div>', $output);
+    }
+
     public function testRenderComponentWithExposedVariables(): void
     {
         $output = $this->renderComponent('with_exposed_variables');
@@ -102,6 +109,13 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('countComputed3: 3', $output);
         $this->assertStringContainsString('propDirect: value', $output);
         $this->assertStringContainsString('propComputed: value', $output);
+    }
+
+    public function testCanDisableExposingPublicProps(): void
+    {
+        $output = $this->renderComponent('no_public_props');
+
+        $this->assertStringContainsString('NoPublicProp1: default', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string

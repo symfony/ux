@@ -40,4 +40,22 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertSame(1, $data['count']);
         $this->assertArrayHasKey('_checksum', $data);
     }
+
+    public function testCanUseCustomAttributes(): void
+    {
+        $response = $this->browser()
+            ->visit('/render-template/render_custom_attributes')
+            ->assertSuccessful()
+            ->response()
+            ->assertHtml()
+        ;
+
+        $div = $response->crawler()->filter('div');
+        $data = json_decode($div->attr('data-live-data-value'), true);
+
+        $this->assertSame('live', $div->attr('data-controller'));
+        $this->assertSame('/_components/custom_attributes', $div->attr('data-live-url-value'));
+        $this->assertNotNull($div->attr('data-live-csrf-value'));
+        $this->assertArrayHasKey('_checksum', $data);
+    }
 }

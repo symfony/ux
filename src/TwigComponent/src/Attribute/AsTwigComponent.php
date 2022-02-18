@@ -19,13 +19,25 @@ namespace Symfony\UX\TwigComponent\Attribute;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class AsTwigComponent
 {
-    public string $name;
-    public ?string $template;
+    public function __construct(
+        private string $name,
+        private ?string $template = null,
+        private bool $exposePublicProps = true,
+        private string $attributesVar = 'attributes'
+    ) {
+    }
 
-    public function __construct(string $name, ?string $template = null)
+    /**
+     * @internal
+     */
+    public function serviceConfig(): array
     {
-        $this->name = $name;
-        $this->template = $template;
+        return [
+            'key' => $this->name,
+            'template' => $this->template,
+            'expose_public_props' => $this->exposePublicProps,
+            'attributes_var' => $this->attributesVar,
+        ];
     }
 
     /**
@@ -44,6 +56,11 @@ class AsTwigComponent
         return array_reverse($methods);
     }
 
+    /**
+     * @internal
+     *
+     * @return \ReflectionMethod[]
+     */
     public static function postMountMethods(object $component): iterable
     {
         $methods = iterator_to_array(self::attributeMethodsFor(PostMount::class, $component));

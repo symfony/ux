@@ -44,6 +44,7 @@ final class ComponentRenderer
         }
 
         $component = $mounted->getComponent();
+        $metadata = $this->factory->metadataFor($mounted->getName());
         $variables = array_merge(
             // add the component as "this"
             ['this' => $component],
@@ -52,23 +53,24 @@ final class ComponentRenderer
             ['computed' => new ComputedPropertiesProxy($component)],
 
             // add attributes
-            ['attributes' => $mounted->getAttributes()],
+            [$metadata->getAttributesVar() => $mounted->getAttributes()],
 
-            // expose all public properties
-            get_object_vars($component),
-
-            // expose non-public properties marked with ExposeInTemplate attribute
-            iterator_to_array($this->exposedVariables($component)),
+            // expose public properties and properties marked with ExposeInTemplate attribute
+            iterator_to_array($this->exposedVariables($component, $metadata->isPublicPropsExposed())),
         );
-        $event = new PreRenderEvent($mounted, $this->factory->metadataFor($mounted->getName()), $variables);
+        $event = new PreRenderEvent($mounted, $metadata, $variables);
 
         $this->dispatcher->dispatch($event);
 
         return $this->twig->render($event->getTemplate(), $event->getVariables());
     }
 
-    private function exposedVariables(object $component): \Iterator
+    private function exposedVariables(object $component, bool $exposePublicProps): \Iterator
     {
+        if ($exposePublicProps) {
+            yield from get_object_vars($component);
+        }
+
         $class = new \ReflectionClass($component);
 
         foreach ($class->getProperties() as $property) {

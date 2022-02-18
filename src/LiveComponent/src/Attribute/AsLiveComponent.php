@@ -21,13 +21,25 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class AsLiveComponent extends AsTwigComponent
 {
-    public ?string $defaultAction;
+    public function __construct(
+        string $name,
+        ?string $template = null,
+        private ?string $defaultAction = null,
+        bool $exposePublicProps = true,
+        string $attributesVar = 'attributes'
+    ) {
+        parent::__construct($name, $template, $exposePublicProps, $attributesVar);
+    }
 
-    public function __construct(string $name, ?string $template = null, ?string $defaultAction = null)
+    /**
+     * @internal
+     */
+    public function serviceConfig(): array
     {
-        parent::__construct($name, $template);
-
-        $this->defaultAction = $defaultAction;
+        return array_merge(parent::serviceConfig(), [
+            'default_action' => $this->defaultAction,
+            'live' => true,
+        ]);
     }
 
     /**
