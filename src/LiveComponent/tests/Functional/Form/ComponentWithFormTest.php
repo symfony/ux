@@ -16,10 +16,9 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\Form\FormFactoryInterface;
-use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormWithCollectionTypeComponent;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Form\BlogPostFormType;
-use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Response\HtmlResponse;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
@@ -32,17 +31,12 @@ class ComponentWithFormTest extends KernelTestCase
 {
     use Factories;
     use HasBrowser;
+    use LiveComponentTestHelper;
     use ResetDatabase;
 
     public function testFormValuesRebuildAfterFormChanges(): void
     {
-        /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
-        /** @var ComponentFactory $factory */
-        $factory = self::getContainer()->get('ux.twig_component.component_factory');
-        $component = $factory->create('form_with_collection_type');
-
-        $dehydrated = $hydrator->dehydrate($component);
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'));
         $token = null;
 
         $this->browser()
@@ -114,17 +108,13 @@ class ComponentWithFormTest extends KernelTestCase
 
     public function testFormRemembersValidationFromInitialForm(): void
     {
-        /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
-        /** @var ComponentFactory $factory */
-        $factory = self::getContainer()->get('ux.twig_component.component_factory');
         /** @var FormFactoryInterface $formFactory */
         $formFactory = self::getContainer()->get('form.factory');
 
         $form = $formFactory->create(BlogPostFormType::class);
         $form->submit(['title' => '', 'content' => '']);
 
-        $mounted = $factory->create('form_with_collection_type', [
+        $mounted = $this->mountComponent('form_with_collection_type', [
             'form' => $form->createView(),
         ]);
 
@@ -134,7 +124,7 @@ class ComponentWithFormTest extends KernelTestCase
         // component should recognize that it is already submitted
         $this->assertTrue($component->isValidated);
 
-        $dehydrated = $hydrator->dehydrate($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted);
         $dehydrated['blog_post_form']['content'] = 'changed description';
         $dehydrated['validatedFields'][] = 'blog_post_form.content';
 
@@ -149,13 +139,7 @@ class ComponentWithFormTest extends KernelTestCase
 
     public function testHandleCheckboxChanges(): void
     {
-        /** @var LiveComponentHydrator $hydrator */
-        $hydrator = self::getContainer()->get('ux.live_component.component_hydrator');
-
-        /** @var ComponentFactory $factory */
-        $factory = self::getContainer()->get('ux.twig_component.component_factory');
-
-        $mounted = $factory->create(
+        $mounted = $this->mountComponent(
             'form_with_many_different_fields_type',
             [
                 'initialData' => [
@@ -166,7 +150,7 @@ class ComponentWithFormTest extends KernelTestCase
             ]
         );
 
-        $dehydrated = $hydrator->dehydrate($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted);
         $bareForm = [
             'text' => '',
             'textarea' => '',
