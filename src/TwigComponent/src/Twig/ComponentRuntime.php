@@ -32,6 +32,11 @@ final class ComponentRuntime
 
     public function render(string $name, array $props = []): string
     {
-        return $this->componentRenderer->render($this->componentFactory->create($name, $props));
+        try {
+            return $this->componentRenderer->render($this->componentFactory->create($name, $props));
+        } catch (\InvalidArgumentException) {
+            // component not found, try as anonymous component
+            return $this->componentRenderer->renderAnonymous($name, $props);
+        }
     }
 }

@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -116,6 +117,41 @@ final class ComponentExtensionTest extends KernelTestCase
         $output = $this->renderComponent('no_public_props');
 
         $this->assertStringContainsString('NoPublicProp1: default', $output);
+    }
+
+    public function testCanRenderAnonymousComponent(): void
+    {
+        $output = $this->renderComponent('components/with_attributes.html.twig', [
+            'prop' => 'prop value 1',
+            'attributes' => [
+                'class' => 'bar',
+                'style' => 'color:red;',
+                'value' => '',
+                'autofocus' => null,
+            ],
+        ]);
+
+        $this->assertStringContainsString('Component Content (prop value 1)', $output);
+        $this->assertStringContainsString('<button class="foo bar" type="button" style="color:red;" value="" autofocus>', $output);
+
+        $output = $this->renderComponent('components/with_attributes.html.twig', [
+            'prop' => 'prop value 2',
+            'attributes' => [
+                'class' => 'baz',
+                'type' => 'submit',
+                'style' => 'color:red;',
+            ],
+        ]);
+
+        $this->assertStringContainsString('Component Content (prop value 2)', $output);
+        $this->assertStringContainsString('<button class="foo baz" type="submit" style="color:red;">', $output);
+    }
+
+    public function testInvalidAnonymousComponent(): void
+    {
+        $this->expectException(RuntimeError::class);
+
+        $this->renderComponent('invalid.html.twig');
     }
 
     private function renderComponent(string $name, array $data = []): string

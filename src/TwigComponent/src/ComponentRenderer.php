@@ -16,6 +16,7 @@ use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\EventListener\PreRenderEvent;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 use Twig\Extension\EscaperExtension;
 
 /**
@@ -25,24 +26,17 @@ use Twig\Extension\EscaperExtension;
  */
 final class ComponentRenderer
 {
-    private bool $safeClassesRegistered = false;
-
     public function __construct(
         private Environment $twig,
         private EventDispatcherInterface $dispatcher,
         private ComponentFactory $factory,
         private PropertyAccessorInterface $propertyAccessor
     ) {
+        $this->twig->getExtension(EscaperExtension::class)->addSafeClass(ComponentAttributes::class, ['html']);
     }
 
     public function render(MountedComponent $mounted): string
     {
-        if (!$this->safeClassesRegistered) {
-            $this->twig->getExtension(EscaperExtension::class)->addSafeClass(ComponentAttributes::class, ['html']);
-
-            $this->safeClassesRegistered = true;
-        }
-
         $component = $mounted->getComponent();
         $metadata = $this->factory->metadataFor($mounted->getName());
         $variables = array_merge(
@@ -63,6 +57,18 @@ final class ComponentRenderer
         $this->dispatcher->dispatch($event);
 
         return $this->twig->render($event->getTemplate(), $event->getVariables());
+    }
+
+    public function renderAnonymous(string $template, array $data): string
+    {
+        // TODO configurable attributes - global option for anon components?
+        $data['attributes'] = new ComponentAttributes($data['attributes'] ?? []);
+
+        try {
+            return $this->twig->render($template, $data);
+        } catch (LoaderError) {
+            throw new \RuntimeException(); // todo user mistyped the component name, mistyped the component template, didn't autowire component...
+        }
     }
 
     private function exposedVariables(object $component, bool $exposePublicProps): \Iterator
