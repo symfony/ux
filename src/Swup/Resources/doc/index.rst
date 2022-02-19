@@ -110,7 +110,7 @@ added:
         <body
             {{ stimulus_controller('symfony/ux-swup/swup', {
                 containers: ['#swup', '#nav'],
-                animateHistoryBrowsing: true
+                animateHistoryBrowsing: true,
                 animationSelector: '[class*="transition-"]',
                 cache: true,
                 linkSelector: '...',
