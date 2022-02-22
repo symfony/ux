@@ -309,7 +309,7 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
-    use Symfony\UX\Turbo\Stream\TurboStreamResponse;
+    use Symfony\UX\Turbo\Stream\TurboBundle;
     
     use App\Entity\Task;
 
@@ -326,10 +326,10 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
                 // ... perform some action, such as saving the task to the database
 
                 // 🔥 The magic happens here! 🔥
-                if (TurboStreamResponse::STREAM_FORMAT === $request->getPreferredFormat()) {
+                if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
                     // If the request comes from Turbo, set the content type as text/vnd.turbo-stream.html and only send the HTML to update
-                    $request->setFormat(TurboStreamResponse::STREAM_FORMAT);
-                    return $this->render('task/success.stream.html.twig', ['task' => $task], new TurboStreamResponse());
+                    $request->setFormat(TurboBundle::STREAM_FORMAT);
+                    return $this->render('task/success.stream.html.twig', ['task' => $task]);
                 }
 
                 // If the client doesn't support JavaScript, or isn't using Turbo, the form still works as usual.
@@ -337,7 +337,12 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
                 return $this->redirectToRoute('task_success', [], Response::HTTP_SEE_OTHER);
             }
 
-            // Symfony 5.3+
+  .. versionadded:: 2.1
+  
+  In versions prior to 2.1, TurboStreamResponse::STREAM_FORMAT was used instead of TurboBundle::STREAM_FORMAT. Also, one had to return a new TurboStreamResponse() object as the third argument for this->render().
+  
+        
+        // Symfony 5.3+
             return $this->renderForm('task/new.html.twig', [
                 'form' => $form,
             ]);
