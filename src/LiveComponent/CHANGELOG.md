@@ -31,6 +31,8 @@
     is a BC break if you've created custom hydrators. They'll need to be converted to
     normalizers.
 
+-   [BC BREAK] Rename `BeforeReRender` attribute to `PreReRender`.
+
 ## 2.0.0
 
 -   Support for `stimulus` version 2 was removed and support for `@hotwired/stimulus`

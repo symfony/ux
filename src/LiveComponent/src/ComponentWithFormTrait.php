@@ -15,8 +15,8 @@ use Symfony\Component\Form\ClearableErrorsInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\UX\LiveComponent\Attribute\BeforeReRender;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
+use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\Util\LiveFormUtility;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
@@ -99,7 +99,7 @@ trait ComponentWithFormTrait
      * But, in the event that there is an action and the form was
      * not submitted manually, it will be submitted here.
      */
-    #[BeforeReRender]
+    #[PreReRender]
     public function submitFormOnRender(): void
     {
         if (!$this->getFormInstance()->isSubmitted()) {

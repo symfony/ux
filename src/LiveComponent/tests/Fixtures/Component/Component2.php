@@ -14,7 +14,7 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\Attribute\BeforeReRender;
+use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Attribute\PostHydrate;
@@ -63,7 +63,7 @@ final class Component2
         $this->postHydrateCalled = true;
     }
 
-    #[BeforeReRender]
+    #[PreReRender]
     public function beforeReRenderMethod(): void
     {
         $this->beforeReRenderCalled = true;

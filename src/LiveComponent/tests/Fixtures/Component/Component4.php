@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
-use Symfony\UX\LiveComponent\Attribute\BeforeReRender;
+use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Attribute\PostHydrate;
@@ -39,7 +39,7 @@ class Component4
     {
     }
 
-    #[BeforeReRender]
+    #[PreReRender]
     public function method3()
     {
     }

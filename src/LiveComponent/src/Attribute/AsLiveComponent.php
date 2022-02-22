@@ -86,9 +86,9 @@ final class AsLiveComponent extends AsTwigComponent
      *
      * @return \ReflectionMethod[]
      */
-    public static function beforeReRenderMethods(object $component): \Traversable
+    public static function preReRenderMethods(object $component): \Traversable
     {
-        yield from self::attributeMethodsFor(BeforeReRender::class, $component);
+        yield from self::attributeMethodsFor(PreReRender::class, $component);
     }
 
     /**
