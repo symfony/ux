@@ -91,6 +91,7 @@ final class LiveComponentHydrator
                 $data[$frontendName] = [
                     self::EXPOSED_PROP_KEY => $dehydratedValue,
                 ];
+
                 foreach ($liveProp->exposed() as $propertyPath) {
                     $value = $this->propertyAccessor->getValue($component, sprintf('%s.%s', $name, $propertyPath));
                     $data[$frontendName][$propertyPath] = \is_object($value) ? $this->normalizer->normalize($value, 'json', [self::LIVE_CONTEXT => true]) : $value;
@@ -154,6 +155,7 @@ final class LiveComponentHydrator
             }
 
             $dehydratedValue = $data[$frontendName];
+
             // if there are exposed keys, then the main value should be hidden
             // in an array under self::EXPOSED_PROP_KEY. But if the value is
             // *not* an array, then use the main value. This could mean that,
@@ -173,7 +175,7 @@ final class LiveComponentHydrator
             }
 
             foreach ($liveProp->exposed() as $exposedProperty) {
-                $propertyPath = $this->transformToArrayPath("{$name}.$exposedProperty");
+                $propertyPath = self::transformToArrayPath("{$name}.$exposedProperty");
 
                 if (!$this->propertyAccessor->isReadable($data, $propertyPath)) {
                     continue;
@@ -240,7 +242,7 @@ final class LiveComponentHydrator
      * This allows us to use the property accessor to find this
      * inside an array.
      */
-    private function transformToArrayPath(string $propertyPath): string
+    private static function transformToArrayPath(string $propertyPath): string
     {
         $parts = explode('.', $propertyPath);
         $path = '';

@@ -18,9 +18,9 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component3;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithArrayProp;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
-use function Zenstruck\Foundry\create;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
+use function Zenstruck\Foundry\create;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>

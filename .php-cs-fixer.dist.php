@@ -16,6 +16,9 @@ return (new PhpCsFixer\Config())
         'native_constant_invocation' => true,
         'combine_nested_dirname' => true,
         'list_syntax' => ['syntax' => 'short'],
+        'ordered_imports' => [
+            'imports_order' => ['const', 'class', 'function'],
+        ],
     ])
     ->setRiskyAllowed(true)
     ->setFinder(

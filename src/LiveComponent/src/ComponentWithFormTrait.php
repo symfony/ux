@@ -67,27 +67,29 @@ trait ComponentWithFormTrait
      */
     abstract protected function instantiateForm(): FormInterface;
 
+    /**
+     * @internal
+     */
     #[PostMount]
-    public function postMount(array $data): array
+    public function initializeForm(array $data): array
     {
         // allow the FormView object to be passed into the component() as "form"
         if (\array_key_exists('form', $data)) {
             $this->formView = $data['form'];
+
             unset($data['form']);
 
-            if ($this->formView) {
-                // if a FormView is passed in and it contains any errors, then
-                // we mark that this entire component has been validated so that
-                // all validation errors continue showing on re-render
-                if (LiveFormUtility::doesFormContainAnyErrors($this->formView)) {
-                    $this->isValidated = true;
-                    $this->validatedFields = [];
-                }
+            // if a FormView is passed in and it contains any errors, then
+            // we mark that this entire component has been validated so that
+            // all validation errors continue showing on re-render
+            if ($this->formView && LiveFormUtility::doesFormContainAnyErrors($this->formView)) {
+                $this->isValidated = true;
+                $this->validatedFields = [];
             }
         }
 
         // set the formValues from the initial form view's data
-        $this->initializeFormValues();
+        $this->formValues = $this->extractFormValues($this->getForm());
 
         return $data;
     }
@@ -98,6 +100,8 @@ trait ComponentWithFormTrait
      * This primarily applies to a re-render where $actionName is null.
      * But, in the event that there is an action and the form was
      * not submitted manually, it will be submitted here.
+     *
+     * @internal
      */
     #[PreReRender]
     public function submitFormOnRender(): void
@@ -128,11 +132,6 @@ trait ComponentWithFormTrait
         return $this->formName;
     }
 
-    private function initializeFormValues(): void
-    {
-        $this->formValues = $this->extractFormValues($this->getForm());
-    }
-
     private function submitForm(bool $validateAll = true): void
     {
         if (null !== $this->formView) {
@@ -157,6 +156,7 @@ trait ComponentWithFormTrait
         // re-extract the "view" values in case the submitted data
         // changed the underlying data or structure of the form
         $this->formValues = $this->extractFormValues($this->getForm());
+
         // remove any validatedFields that do not exist in data anymore
         $this->validatedFields = LiveFormUtility::removePathsNotInData(
             $this->validatedFields ?? [],
@@ -168,12 +168,23 @@ trait ComponentWithFormTrait
         }
     }
 
+    private function getFormInstance(): FormInterface
+    {
+        if (null === $this->formInstance) {
+            $this->formInstance = $this->instantiateForm();
+        }
+
+        return $this->formInstance;
+    }
+
     /**
      * Returns a hierarchical array of the entire form's values.
      *
      * This is used to pass the initial values into the live component's
      * frontend, and it's meant to equal the raw POST data that would
      * be sent if the form were submitted without modification.
+     *
+     * @internal
      */
     private function extractFormValues(FormView $formView): array
     {
@@ -204,15 +215,9 @@ trait ComponentWithFormTrait
         return $values;
     }
 
-    private function getFormInstance(): FormInterface
-    {
-        if (null === $this->formInstance) {
-            $this->formInstance = $this->instantiateForm();
-        }
-
-        return $this->formInstance;
-    }
-
+    /**
+     * @internal
+     */
     private function clearErrorsForNonValidatedFields(FormInterface $form, string $currentPath = ''): void
     {
         if ($form instanceof ClearableErrorsInterface && (!$currentPath || !\in_array($currentPath, $this->validatedFields, true))) {

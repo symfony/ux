@@ -25,11 +25,8 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
  */
 class ComponentValidator implements ComponentValidatorInterface, ServiceSubscriberInterface
 {
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->container = $container;
     }
 
     /**

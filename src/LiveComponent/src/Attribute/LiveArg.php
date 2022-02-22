@@ -24,6 +24,8 @@ final class LiveArg
     }
 
     /**
+     * @internal
+     *
      * @return array<string, string>
      */
     public static function liveArgs(object $component, string $action): array

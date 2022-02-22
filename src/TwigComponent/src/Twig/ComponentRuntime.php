@@ -18,16 +18,15 @@ use Symfony\UX\TwigComponent\ComponentRenderer;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
+ *
+ * @internal
  */
 final class ComponentRuntime
 {
-    private ComponentFactory $componentFactory;
-    private ComponentRenderer $componentRenderer;
-
-    public function __construct(ComponentFactory $componentFactory, ComponentRenderer $componentRenderer)
-    {
-        $this->componentFactory = $componentFactory;
-        $this->componentRenderer = $componentRenderer;
+    public function __construct(
+        private ComponentFactory $componentFactory,
+        private ComponentRenderer $componentRenderer
+    ) {
     }
 
     public function render(string $name, array $props = []): string

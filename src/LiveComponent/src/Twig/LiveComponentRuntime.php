@@ -19,6 +19,8 @@ use Symfony\UX\TwigComponent\ComponentFactory;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
+ *
+ * @internal
  */
 final class LiveComponentRuntime
 {

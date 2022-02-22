@@ -30,7 +30,7 @@ class ComponentWithFormTest extends KernelTestCase
             'select_multiple' => [2],
             'checkbox_checked' => true,
         ];
-        $component->postMount([]);
+        $component->initializeForm([]);
 
         $this->assertSame(
             [
