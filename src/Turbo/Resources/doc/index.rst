@@ -300,12 +300,12 @@ clients. There are two main ways to receive the updates:
 Forms
 ^^^^^
 
-Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
-
-  .. versionadded:: 2.1
+.. versionadded:: 2.1
   
-  In versions prior to 2.1, `TurboStreamResponse::STREAM_FORMAT` was used instead of `TurboBundle::STREAM_FORMAT`. Also, one had to return a new
-  `TurboStreamResponse()` object as the third argument for this->render().
+    Prior to 2.1, ``TurboStreamResponse::STREAM_FORMAT`` was used instead of ``TurboBundle::STREAM_FORMAT``.
+    Also, one had to return a new ``TurboStreamResponse()`` object as the third argument to ``$this->render()``.
+
+Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
 
     // src/Controller/TaskController.php
     namespace App\Controller;
@@ -315,7 +315,6 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\UX\Turbo\TurboBundle;
-    
     use App\Entity\Task;
 
     class TaskController extends AbstractController
@@ -342,10 +341,7 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
                 return $this->redirectToRoute('task_success', [], Response::HTTP_SEE_OTHER);
             }
 
-
-  
-        
-        // Symfony 5.3+
+            // Symfony 5.3+
             return $this->renderForm('task/new.html.twig', [
                 'form' => $form,
             ]);
