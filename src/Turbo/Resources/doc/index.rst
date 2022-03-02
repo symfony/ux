@@ -300,6 +300,11 @@ clients. There are two main ways to receive the updates:
 Forms
 ^^^^^
 
+.. versionadded:: 2.1
+  
+    Prior to 2.1, ``TurboStreamResponse::STREAM_FORMAT`` was used instead of ``TurboBundle::STREAM_FORMAT``.
+    Also, one had to return a new ``TurboStreamResponse()`` object as the third argument to ``$this->render()``.
+
 Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
 
     // src/Controller/TaskController.php
