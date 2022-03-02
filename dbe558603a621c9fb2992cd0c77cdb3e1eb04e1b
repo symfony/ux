@@ -1,0 +1,22 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-02-22T14:29:12Z
+
+Hi!
+
+Sorry about this. The documentation IS correct but not for the currently-released version. Let me be more clear:
+
+* v2.0  (current version) uses `TurboStreamResponse` (as you've seen)
+* v2.1 (unreleased) uses what you see in the documentation
+
+What we need in the docs (and should have added when this change was originally made) was a `versionadded:: 2.1` tag that explained the change and how it worked before. For an example, see https://github.com/symfony/ux/blob/2.x/src/LiveComponent/src/Resources/doc/index.rst#L59
+
+Would you be able to revert your changes by add a nice `versionadded` note explaining things?
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by htmlshaman1 at 2022-02-22T15:22:14Z
+
+I added a brief message about the previous version using a different class, and returning a streaming response. If you can't use it, that's alright. I never knew contributing to the docs was so easy and smooth.
