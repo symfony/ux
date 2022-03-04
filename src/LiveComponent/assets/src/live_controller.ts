@@ -60,6 +60,8 @@ export default class extends Controller {
 
     originalDataJSON = '{}';
 
+    mutationObserver: MutationObserver|null = null;
+
     initialize() {
         this.markAsWindowUnloaded = this.markAsWindowUnloaded.bind(this);
         this.originalDataJSON = JSON.stringify(this.dataValue);
@@ -82,6 +84,8 @@ export default class extends Controller {
 
         window.addEventListener('beforeunload', this.markAsWindowUnloaded);
 
+        this._startAttributesMutationObserver();
+
         this.element.addEventListener('live:update-model', (event) => {
             // ignore events that we dispatched
             if (event.target === this.element) {
@@ -100,6 +104,10 @@ export default class extends Controller {
         });
 
         window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
+
+        if (this.mutationObserver) {
+            this.mutationObserver.disconnect();
+        }
     }
 
     /**
@@ -789,6 +797,34 @@ export default class extends Controller {
         }
 
         this.element.dataset.originalData = this.originalDataJSON;
+    }
+
+    /**
+     * Re-establishes the data-original-data attribute if missing.
+     *
+     * This happens if a parent component re-renders a child component
+     * and morphdom *updates* child. This commonly happens if a parent
+     * component is around a list of child components, and changing
+     * something in the parent causes the list to change. In that case,
+     * the a child component might be removed while another is added.
+     * But to morphdom, this sometimes looks like an "update". The result
+     * is that the child component is re-rendered, but the child component
+     * is not re-initialized. And so, the data-original-data attribute
+     * is missing and never re-established.
+     */
+    _startAttributesMutationObserver() {
+        this.mutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && !this.element.dataset.originalData) {
+                    this.originalDataJSON = JSON.stringify(this.dataValue);
+                    this._exposeOriginalData();
+                }
+            });
+        });
+
+        this.mutationObserver.observe(this.element, {
+            attributes: true
+        });
     }
 }
 
