@@ -1655,6 +1655,20 @@ form. But it also makes sure that when the ``textarea`` changes, both
 the ``value`` model in ``MarkdownTextareaComponent`` *and* the
 ``post.content`` model in ``EditPostcomponent`` will be updated.
 
+Rendering Quirks with List of Embedded Components
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Imagine your component renders a list of embedded components and
+that list is updated as the user types into a search box. Most of the
+time, this works *fine*. But in some cases, as the list of items
+changes, a child component will re-render even though it was there
+before *and* after the list changed. This can cause that child component
+to lose some state (i.e. it re-renders with its original live props data).
+
+To fix this, add a unique ``id`` attribute to the root component of each
+child element. This will helps LiveComponent identify each item in the
+list and correctly determine if a re-render is necessary, or not.
+
 Skipping Updating Certain Elements
 ----------------------------------
 

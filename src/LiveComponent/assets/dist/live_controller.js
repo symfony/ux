@@ -1024,6 +1024,7 @@ class default_1 extends Controller {
         this.pollingIntervals = [];
         this.isWindowUnloaded = false;
         this.originalDataJSON = '{}';
+        this.mutationObserver = null;
         this.markAsWindowUnloaded = () => {
             this.isWindowUnloaded = true;
         };
@@ -1042,6 +1043,7 @@ class default_1 extends Controller {
             this._initiatePolling(this.element.dataset.poll);
         }
         window.addEventListener('beforeunload', this.markAsWindowUnloaded);
+        this._startAttributesMutationObserver();
         this.element.addEventListener('live:update-model', (event) => {
             if (event.target === this.element) {
                 return;
@@ -1055,6 +1057,9 @@ class default_1 extends Controller {
             clearInterval(interval);
         });
         window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
+        if (this.mutationObserver) {
+            this.mutationObserver.disconnect();
+        }
     }
     update(event) {
         this._updateModelFromElement(event.target, this._getValueFromElement(event.target), true);
@@ -1516,6 +1521,19 @@ class default_1 extends Controller {
             throw new Error('Invalid Element Type');
         }
         this.element.dataset.originalData = this.originalDataJSON;
+    }
+    _startAttributesMutationObserver() {
+        this.mutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && !this.element.dataset.originalData) {
+                    this.originalDataJSON = JSON.stringify(this.dataValue);
+                    this._exposeOriginalData();
+                }
+            });
+        });
+        this.mutationObserver.observe(this.element, {
+            attributes: true
+        });
     }
 }
 default_1.values = {
