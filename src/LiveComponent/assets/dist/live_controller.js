@@ -1182,7 +1182,7 @@ class default_1 extends Controller {
             }, this.debounceValue || DEFAULT_DEBOUNCE);
         }
     }
-    _makeRequest(action, args) {
+    _makeRequest(action, args, files = {}) {
         const splitUrl = this.urlValue.split('?');
         let [url] = splitUrl;
         const [, queryString] = splitUrl;
@@ -1210,9 +1210,16 @@ class default_1 extends Controller {
             }
         }
         if (!dataAdded) {
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(this.dataValue));
             fetchOptions.method = 'POST';
-            fetchOptions.body = JSON.stringify(this.dataValue);
-            fetchOptions.headers['Content-Type'] = 'application/json';
+            fetchOptions.body = formData;
+            for (const [key, value] of Object.entries(files)) {
+                const length = value.length;
+                for (let i = 0; i < length; ++i) {
+                    formData.append(length > 1 ? key + '[]' : key, value[i]);
+                }
+            }
         }
         this._onLoadingStart();
         const paramsString = params.toString();

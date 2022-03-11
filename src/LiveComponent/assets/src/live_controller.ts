@@ -318,7 +318,7 @@ export default class extends Controller {
         }
     }
 
-    _makeRequest(action: string|null, args: Record<string, string>) {
+    _makeRequest(action: string|null, args: Record<string, string>, files: Record<string, FileList> = {}) {
         const splitUrl = this.urlValue.split('?');
         let [url] = splitUrl
         const [, queryString] = splitUrl;
@@ -357,6 +357,13 @@ export default class extends Controller {
             formData.append('data', JSON.stringify(this.dataValue));
             fetchOptions.method = 'POST';
             fetchOptions.body = formData;
+
+            for (const [key, value] of Object.entries(files)) {
+                const length = value.length;
+                for (let i=0; i < length; ++i) {
+                    formData.append(length > 1 ? key+'[]' : key, value[i]);
+                }
+            }
         }
 
         this._onLoadingStart();
