@@ -18,6 +18,7 @@ declare const Turbo: any;
 const DEFAULT_DEBOUNCE = 150;
 
 export default class extends Controller {
+    static targets = [ 'file' ]
     static values = {
         url: String,
         data: Object,
@@ -132,6 +133,8 @@ export default class extends Controller {
         // data-action-name="prevent|debounce(1000)|save"
         const directives = parseDirectives(rawAction);
 
+        const files: Record<string, FileList> = {};
+
         directives.forEach((directive) => {
             // set here so it can be delayed with debouncing below
             const _executeAction = () => {
@@ -144,7 +147,7 @@ export default class extends Controller {
                 // taking precedence
                 this._clearWaitingDebouncedRenders();
 
-                this._makeRequest(directive.action, directive.named);
+                this._makeRequest(directive.action, directive.named, files);
             }
 
             let handled = false;
@@ -179,6 +182,20 @@ export default class extends Controller {
 
                         break;
                     }
+                    case 'file':
+                        if (!modifier.value) {
+                            console.warn(`Modifier file requires value in action ${rawAction}`);
+
+                            break;
+                        }
+
+                        this.fileTargets.forEach(input => {
+                            if (input.name === modifier.value) {
+                                files[input.name] = input.files;
+                            }
+                        })
+
+                        break;
 
                     default:
                         console.warn(`Unknown modifier ${modifier.name} in action ${rawAction}`);

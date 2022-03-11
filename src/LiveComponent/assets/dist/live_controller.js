@@ -1073,10 +1073,11 @@ class default_1 extends Controller {
     action(event) {
         const rawAction = event.currentTarget.dataset.actionName;
         const directives = parseDirectives(rawAction);
+        const files = {};
         directives.forEach((directive) => {
             const _executeAction = () => {
                 this._clearWaitingDebouncedRenders();
-                this._makeRequest(directive.action, directive.named);
+                this._makeRequest(directive.action, directive.named, files);
             };
             let handled = false;
             directive.modifiers.forEach((modifier) => {
@@ -1105,6 +1106,17 @@ class default_1 extends Controller {
                         handled = true;
                         break;
                     }
+                    case 'file':
+                        if (!modifier.value) {
+                            console.warn(`Modifier file requires value in action ${rawAction}`);
+                            break;
+                        }
+                        this.fileTargets.forEach(input => {
+                            if (input.name === modifier.value) {
+                                files[input.name] = input.files;
+                            }
+                        });
+                        break;
                     default:
                         console.warn(`Unknown modifier ${modifier.name} in action ${rawAction}`);
                 }
@@ -1546,6 +1558,7 @@ class default_1 extends Controller {
         });
     }
 }
+default_1.targets = ['file'];
 default_1.values = {
     url: String,
     data: Object,
