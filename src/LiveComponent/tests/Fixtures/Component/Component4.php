@@ -11,11 +11,11 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
-use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Attribute\PostHydrate;
 use Symfony\UX\LiveComponent\Attribute\PreDehydrate;
+use Symfony\UX\LiveComponent\Attribute\PreReRender;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
