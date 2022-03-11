@@ -71,7 +71,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             })
             ->post('/_components/component2/increase', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode($dehydrated),
+                'body' => ['data' => json_encode($dehydrated)],
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
@@ -183,7 +183,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             // with no custom header, it redirects like a normal browser
             ->post('/_components/component2/redirect', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode($dehydrated),
+                'body' => ['data' => json_encode($dehydrated)],
             ])
             ->assertRedirectedTo('/')
 
@@ -193,7 +193,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                     'Accept' => 'application/vnd.live-component+html',
                     'X-CSRF-TOKEN' => $token,
                 ],
-                'body' => json_encode($dehydrated),
+                'body' => ['data' => json_encode($dehydrated)],
             ])
             ->assertStatus(204)
             ->assertHeaderEquals('Location', '/')
@@ -220,7 +220,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             })
             ->post('/_components/component6/inject?'.$argsQueryParams, [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode($dehydrated),
+                'body' => ['data' => json_encode($dehydrated)],
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')

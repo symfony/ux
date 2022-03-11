@@ -50,7 +50,7 @@ class ComponentWithFormTest extends KernelTestCase
 
             // post to action, which will add a new embedded comment
             ->post('/_components/form_with_collection_type/addComment', [
-                'body' => json_encode($dehydrated),
+                'body' => ['data' => json_encode($dehydrated)],
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
@@ -86,7 +86,7 @@ class ComponentWithFormTest extends KernelTestCase
 
             // post to action, which will remove the original embedded comment
             ->post('/_components/form_with_collection_type/removeComment?'.http_build_query(['args' => 'index=0']), [
-                'body' => json_encode($dehydrated),
+                'body' => ['data' => json_encode($dehydrated)],
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)

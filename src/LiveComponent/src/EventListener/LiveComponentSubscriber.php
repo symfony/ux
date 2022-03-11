@@ -121,9 +121,11 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         if ($request->query->has('data')) {
             // ?data=
             $data = json_decode($request->query->get('data'), true, 512, \JSON_THROW_ON_ERROR);
-        } else {
+        } elseif ($request->request->has('data')) {
             // OR body of the request is JSON
-            $data = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
+            $data = json_decode($request->request->get('data'), true, 512, \JSON_THROW_ON_ERROR);
+        } else {
+            $data = $request->query->all();
         }
 
         if (!\is_array($controller = $event->getController()) || 2 !== \count($controller)) {

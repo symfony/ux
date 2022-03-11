@@ -353,9 +353,10 @@ export default class extends Controller {
 
         // if GET can't be used, fallback to POST
         if (!dataAdded) {
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(this.dataValue));
             fetchOptions.method = 'POST';
-            fetchOptions.body = JSON.stringify(this.dataValue);
-            fetchOptions.headers['Content-Type'] = 'application/json';
+            fetchOptions.body = formData;
         }
 
         this._onLoadingStart();
