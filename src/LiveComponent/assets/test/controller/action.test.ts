@@ -65,7 +65,7 @@ describe('LiveController Action Tests', () => {
         await waitFor(() => expect(element).toHaveTextContent('Comment Saved!'));
         expect(getByLabelText(element, 'Comments:')).toHaveValue('hi weaver');
 
-        const bodyData = JSON.parse(postMock.lastOptions().body);
+        const bodyData = JSON.parse(postMock.lastOptions().body.get('data'));
         expect(bodyData.comments).toEqual('hi WEAVER');
     });
 
