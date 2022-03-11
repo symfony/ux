@@ -1106,13 +1106,9 @@ class default_1 extends Controller {
                         handled = true;
                         break;
                     }
-                    case 'file':
-                        if (!modifier.value) {
-                            console.warn(`Modifier file requires value in action ${rawAction}`);
-                            break;
-                        }
+                    case 'files':
                         this.fileTargets.forEach(input => {
-                            if (input.name === modifier.value) {
+                            if (!modifier.value || input.name === modifier.value) {
                                 files[input.name] = input.files;
                             }
                         });
