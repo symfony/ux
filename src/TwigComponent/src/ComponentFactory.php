@@ -71,7 +71,7 @@ final class ComponentFactory
 
         // ensure remaining data is scalar
         foreach ($data as $key => $value) {
-            if (!is_scalar($value) && null !== $value) {
+            if (!\is_scalar($value) && null !== $value) {
                 throw new \LogicException(sprintf('Unable to use "%s" (%s) as an attribute. Attributes must be scalar or null. If you meant to mount this value on "%s", make sure "$%1$s" is a writable property or create a mount() method with a "$%1$s" argument.', $key, get_debug_type($value), $component::class));
             }
         }

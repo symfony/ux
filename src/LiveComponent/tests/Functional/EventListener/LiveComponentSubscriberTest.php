@@ -210,4 +210,16 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertContains('Arg3: 33.3')
         ;
     }
+
+    public function testWithNullableEntity(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_nullable_entity'));
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/_components/with_nullable_entity?data='.urlencode(json_encode($dehydrated)))
+            ->assertSuccessful()
+            ->assertContains('Prop1: default')
+        ;
+    }
 }
