@@ -66,7 +66,7 @@ final class DoctrineObjectNormalizer implements NormalizerInterface, Denormalize
 
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): ?object
     {
-        return $this->objectManagerFor($type)->find($type, $data);
+        return null === $data ? null : $this->objectManagerFor($type)->find($type, $data);
     }
 
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = [])
