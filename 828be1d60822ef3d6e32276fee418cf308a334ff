@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by kbond at 2022-03-14T13:14:19Z
+
+I wonder if this change should be in the hydration system itself:
+1. If raw prop === the property's default, skip
+2. If raw prop === null and the property allows null, skip
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-03-14T13:54:53Z
+
+> I wonder if this change should be in the hydration system itself:
+
+Let's keep the behavior simple and predictable (i.e. always run a value through the hydration system) :)
