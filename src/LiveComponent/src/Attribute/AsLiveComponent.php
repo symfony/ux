@@ -45,7 +45,7 @@ final class AsLiveComponent extends AsTwigComponent
     /**
      * @internal
      *
-     * @return LivePropContext[]
+     * @return \Traversable<int,array{0:\ReflectionProperty,1:LiveProp}>
      */
     public static function liveProps(object $component): \Traversable
     {
@@ -63,7 +63,7 @@ final class AsLiveComponent extends AsTwigComponent
 
             $properties[] = $property->getName();
 
-            yield new LivePropContext($attribute->newInstance(), $property);
+            yield [$property, $attribute->newInstance()];
         }
     }
 

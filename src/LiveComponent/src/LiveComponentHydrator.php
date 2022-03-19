@@ -17,7 +17,6 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\Attribute\LivePropContext;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\MountedComponent;
 
@@ -54,9 +53,7 @@ final class LiveComponentHydrator
         $readonlyProperties = [];
         $frontendPropertyNames = [];
 
-        foreach (AsLiveComponent::liveProps($component) as $context) {
-            $property = $context->reflectionProperty();
-            $liveProp = $context->liveProp();
+        foreach (AsLiveComponent::liveProps($component) as [$property, $liveProp]) {
             $name = $property->getName();
             $frontendName = $liveProp->calculateFieldName($component, $property->getName());
 
@@ -119,7 +116,6 @@ final class LiveComponentHydrator
             $readonlyProperties[] = self::ATTRIBUTES_KEY;
         }
 
-        /** @var LivePropContext[] $propertyContexts */
         $propertyContexts = iterator_to_array(AsLiveComponent::liveProps($component));
 
         /*
@@ -128,9 +124,8 @@ final class LiveComponentHydrator
          * be security implications to doing it after (component setter's could have
          * side effects).
          */
-        foreach ($propertyContexts as $context) {
-            $liveProp = $context->liveProp();
-            $name = $context->reflectionProperty()->getName();
+        foreach ($propertyContexts as [$property, $liveProp]) {
+            $name = $property->getName();
 
             if ($liveProp->isReadonly()) {
                 $readonlyProperties[] = $liveProp->calculateFieldName($component, $name);
@@ -143,9 +138,7 @@ final class LiveComponentHydrator
 
         unset($data[self::CHECKSUM_KEY], $data[self::ATTRIBUTES_KEY]);
 
-        foreach ($propertyContexts as $context) {
-            $property = $context->reflectionProperty();
-            $liveProp = $context->liveProp();
+        foreach ($propertyContexts as [$property, $liveProp]) {
             $name = $property->getName();
             $frontendName = $liveProp->calculateFieldName($component, $name);
 

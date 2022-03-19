@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Tests\Unit\Attribute;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component5;
 
 /**
@@ -25,8 +26,10 @@ final class AsLiveComponentTest extends TestCase
         $props = iterator_to_array(AsLiveComponent::liveProps(new Component5()));
 
         $this->assertCount(2, $props);
-        $this->assertSame('prop1', $props[0]->reflectionProperty()->getName());
-        $this->assertSame('prop3', $props[1]->reflectionProperty()->getName());
+        $this->assertSame('prop1', $props[0][0]->getName());
+        $this->assertInstanceOf(LiveProp::class, $props[0][1]);
+        $this->assertSame('prop3', $props[1][0]->getName());
+        $this->assertInstanceOf(LiveProp::class, $props[1][1]);
     }
 
     public function testCanGetPreDehydrateMethods(): void
