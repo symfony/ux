@@ -183,8 +183,6 @@ trait ComponentWithFormTrait
      * This is used to pass the initial values into the live component's
      * frontend, and it's meant to equal the raw POST data that would
      * be sent if the form were submitted without modification.
-     *
-     * @internal
      */
     private function extractFormValues(FormView $formView): array
     {
@@ -215,9 +213,6 @@ trait ComponentWithFormTrait
         return $values;
     }
 
-    /**
-     * @internal
-     */
     private function clearErrorsForNonValidatedFields(FormInterface $form, string $currentPath = ''): void
     {
         if ($form instanceof ClearableErrorsInterface && (!$currentPath || !\in_array($currentPath, $this->validatedFields, true))) {
