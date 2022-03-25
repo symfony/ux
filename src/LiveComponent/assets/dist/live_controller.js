@@ -1225,7 +1225,7 @@ class default_1 extends Controller {
             for (const [key, value] of Object.entries(files)) {
                 const length = value.length;
                 for (let i = 0; i < length; ++i) {
-                    formData.append(length > 1 ? key + '[]' : key, value[i]);
+                    formData.append(key, value[i]);
                 }
             }
         }
