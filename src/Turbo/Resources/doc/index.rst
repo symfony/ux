@@ -332,7 +332,7 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
                 // 🔥 The magic happens here! 🔥
                 if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
                     // If the request comes from Turbo, set the content type as text/vnd.turbo-stream.html and only send the HTML to update
-                    $request->setFormat(TurboBundle::STREAM_FORMAT);
+                    $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
                     return $this->render('task/success.stream.html.twig', ['task' => $task]);
                 }
 
