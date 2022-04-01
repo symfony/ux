@@ -12,6 +12,7 @@
 namespace Symfony\UX\LazyImage\BlurHash;
 
 use Intervention\Image\ImageManager;
+use kornrunner\Blurhash\Blurhash as BlurhashEncoder;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -30,11 +31,18 @@ class BlurHash implements BlurHashInterface
 
     public function createDataUriThumbnail(string $filename, int $width, int $height, int $encodingWidth = 75, int $encodingHeight = 75): string
     {
+        if (!$this->imageManager) {
+            throw new \LogicException('To use the Blurhash feature, install intervention/image.');
+        }
+        if (!class_exists(BlurhashEncoder::class)) {
+            throw new \LogicException('To use the Blurhash feature, install kornrunner/blurhash.');
+        }
+
         // Resize and encode
         $encoded = $this->encode($filename, $encodingWidth, $encodingHeight);
 
         // Create a new blurred thumbnail from encoded BlurHash
-        $pixels = \kornrunner\Blurhash\Blurhash::decode($encoded, $width, $height);
+        $pixels = BlurhashEncoder::decode($encoded, $width, $height);
 
         $thumbnail = $this->imageManager->canvas($width, $height);
         for ($y = 0; $y < $height; ++$y) {
@@ -49,7 +57,10 @@ class BlurHash implements BlurHashInterface
     public function encode(string $filename, int $encodingWidth = 75, int $encodingHeight = 75): string
     {
         if (!$this->imageManager) {
-            throw new \LogicException("Missing package, to use the \"blur_hash\" Twig function, run:\n\ncomposer require intervention/image");
+            throw new \LogicException('To use the Blurhash feature, install intervention/image.');
+        }
+        if (!class_exists(BlurhashEncoder::class)) {
+            throw new \LogicException('To use the Blurhash feature, install kornrunner/blurhash.');
         }
 
         // Resize image to increase encoding performance
@@ -74,6 +85,6 @@ class BlurHash implements BlurHashInterface
             $pixels[] = $row;
         }
 
-        return \kornrunner\Blurhash\Blurhash::encode($pixels, 4, 3);
+        return BlurhashEncoder::encode($pixels, 4, 3);
     }
 }
