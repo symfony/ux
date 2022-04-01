@@ -571,6 +571,7 @@ Actions & Arguments
 You can also provide custom arguments to your action::
 
 .. code-block:: twig
+
     <form>
         <button data-action="live#action" data-action-name="addItem(id={{ item.id }}, name=CustomItem)">Add Item</button>
     </form>
@@ -596,6 +597,36 @@ args but inject to your defined parameter with another name.::
             $this->name = $name;
         }
     }
+
+Actions and file uploads
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.2
+
+    The ability to pass arguments to actions was added in version 2.2.
+
+If you want live component to track and send files you first need
+to mark file upload inputs as ``file`` Stimulus target.::
+
+.. code-block:: twig
+
+    <input type="file" {{ stimulus_target('live', 'file') }} name="my_file" />
+
+Then, when defining action you need to use special ``files(name)`` modifier.::
+
+.. code-block:: twig
+
+    <div
+        data-action="change->live#action"
+        data-action-name="prevent|files(my_file)|upload"
+        <input type="file" {{ stimulus_target('live', 'file') }} name="my_file" />
+    </div>
+
+This will send files from ``my_file`` file input. When used without argument
+it would send all files from all ``file`` targets of the controller.
+
+If you want to send multiple files from a single input remember to suffix its' name
+with ``[]`` - both in HTML name attribute and ``files`` modifier argument.
 
 Actions and CSRF Protection
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
