@@ -184,7 +184,7 @@ as the second argument to the ``AsTwigComponent`` attribute:
       // ...
 
     - #[AsTwigComponent('alert')]
-    + #[AsTwigComponent('alert', 'my/custom/template.html.twig')]
+    + #[AsTwigComponent('alert', template: 'my/custom/template.html.twig')]
       class AlertComponent
       {
           // ...
