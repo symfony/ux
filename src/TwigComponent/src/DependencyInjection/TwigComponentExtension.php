@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -36,6 +37,10 @@ final class TwigComponentExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
+        if (!isset($container->getParameter('kernel.bundles')['TwigBundle'])) {
+            throw new LogicException('The TwigBundle is not registered in your application. Try running "composer require symfony/twig-bundle".');
+        }
+
         $container->registerAttributeForAutoconfiguration(
             AsTwigComponent::class,
             static function (ChildDefinition $definition, AsTwigComponent $attribute) {
