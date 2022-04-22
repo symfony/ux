@@ -25,10 +25,10 @@ class default_1 extends Controller {
         };
         this._dispatchEvent('typed:pre-connect', { options });
         const typed = new Typed(this.element, options);
-        this._dispatchEvent('typed:connect', { typed });
+        this._dispatchEvent('typed:connect', { typed, options });
     }
     _dispatchEvent(name, payload) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
+        this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
     }
 }
 default_1.values = {
