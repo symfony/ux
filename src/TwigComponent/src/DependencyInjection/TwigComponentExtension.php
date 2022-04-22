@@ -16,6 +16,7 @@ use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -29,22 +30,23 @@ use Symfony\UX\TwigComponent\Twig\ComponentRuntime;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
+ *
+ * @internal
  */
 final class TwigComponentExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
-        if (method_exists($container, 'registerAttributeForAutoconfiguration')) {
-            $container->registerAttributeForAutoconfiguration(
-                AsTwigComponent::class,
-                static function (ChildDefinition $definition, AsTwigComponent $attribute) {
-                    $definition->addTag('twig.component', array_filter([
-                        'key' => $attribute->name,
-                        'template' => $attribute->template,
-                    ]));
-                }
-            );
+        if (!isset($container->getParameter('kernel.bundles')['TwigBundle'])) {
+            throw new LogicException('The TwigBundle is not registered in your application. Try running "composer require symfony/twig-bundle".');
         }
+
+        $container->registerAttributeForAutoconfiguration(
+            AsTwigComponent::class,
+            static function (ChildDefinition $definition, AsTwigComponent $attribute) {
+                $definition->addTag('twig.component', array_filter($attribute->serviceConfig()));
+            }
+        );
 
         $container->register('ux.twig_component.component_factory', ComponentFactory::class)
             ->setArguments([
@@ -57,6 +59,9 @@ final class TwigComponentExtension extends Extension
         $container->register('ux.twig_component.component_renderer', ComponentRenderer::class)
             ->setArguments([
                 new Reference('twig'),
+                new Reference('event_dispatcher'),
+                new Reference('ux.twig_component.component_factory'),
+                new Reference('property_accessor'),
             ])
         ;
 

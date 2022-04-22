@@ -13,7 +13,6 @@ namespace Symfony\UX\LiveComponent\EventListener;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -29,26 +28,27 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\ComponentRenderer;
+use Symfony\UX\TwigComponent\MountedComponent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
  * @experimental
+ *
+ * @internal
  */
 class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {
-    private const JSON_FORMAT = 'live-component-json';
-    private const JSON_CONTENT_TYPE = 'application/vnd.live-component+json';
+    private const HTML_CONTENT_TYPE = 'application/vnd.live-component+html';
 
-    private ContainerInterface $container;
-
-    public function __construct(ContainerInterface $container)
+    public function __construct(private ContainerInterface $container)
     {
-        $this->container = $container;
     }
 
     public static function getSubscribedServices(): array
@@ -69,31 +69,33 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $request->setFormat(self::JSON_FORMAT, self::JSON_CONTENT_TYPE);
-
         // the default "action" is get, which does nothing
         $action = $request->get('action', 'get');
         $componentName = (string) $request->get('component');
 
+        $request->attributes->set('_component_name', $componentName);
+
         try {
-            $config = $this->container->get(ComponentFactory::class)->configFor($componentName);
+            /** @var ComponentMetadata $metadata */
+            $metadata = $this->container->get(ComponentFactory::class)->metadataFor($componentName);
         } catch (\InvalidArgumentException $e) {
             throw new NotFoundHttpException(sprintf('Component "%s" not found.', $componentName), $e);
         }
 
-        $request->attributes->set('_component_template', $config['template']);
+        if (!$metadata->get('live', false)) {
+            throw new NotFoundHttpException(sprintf('"%s" (%s) is not a Live Component.', $metadata->getClass(), $componentName));
+        }
 
         if ('get' === $action) {
-            $defaultAction = trim($config['default_action'] ?? '__invoke', '()');
-            $componentClass = $config['class'];
+            $defaultAction = trim($metadata->get('default_action', '__invoke'), '()');
 
-            if (!method_exists($componentClass, $defaultAction)) {
+            if (!method_exists($metadata->getClass(), $defaultAction)) {
                 // todo should this check be in a compiler pass to ensure fails at compile time?
-                throw new \LogicException(sprintf('Live component "%s" requires the default action method "%s".%s', $componentClass, $defaultAction, '__invoke' === $defaultAction ? ' Either add this method or use the DefaultActionTrait' : ''));
+                throw new \LogicException(sprintf('Live component "%s" (%s) requires the default action method "%s".%s', $metadata->getClass(), $componentName, $defaultAction, '__invoke' === $defaultAction ? ' Either add this method or use the DefaultActionTrait' : ''));
             }
 
             // set default controller for "default" action
-            $request->attributes->set('_controller', sprintf('%s::%s', $config['service_id'], $defaultAction));
+            $request->attributes->set('_controller', sprintf('%s::%s', $metadata->getServiceId(), $defaultAction));
             $request->attributes->set('_component_default_action', true);
 
             return;
@@ -109,7 +111,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             throw new BadRequestHttpException('Invalid CSRF token.');
         }
 
-        $request->attributes->set('_controller', sprintf('%s::%s', $config['service_id'], $action));
+        $request->attributes->set('_controller', sprintf('%s::%s', $metadata->getServiceId(), $action));
     }
 
     public function onKernelController(ControllerEvent $event): void
@@ -120,10 +122,13 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $data = array_merge(
-            $request->query->all(),
-            $request->request->all()
-        );
+        if ($request->query->has('data')) {
+            // ?data=
+            $data = json_decode($request->query->get('data'), true, 512, \JSON_THROW_ON_ERROR);
+        } else {
+            // OR body of the request is JSON
+            $data = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
+        }
 
         if (!\is_array($controller = $event->getController()) || 2 !== \count($controller)) {
             throw new \RuntimeException('Not a valid live component.');
@@ -139,32 +144,41 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             throw new NotFoundHttpException(sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveAction attribute above it.', $action, \get_class($component)));
         }
 
-        $this->container->get(LiveComponentHydrator::class)->hydrate($component, $data);
+        $mounted = $this->container->get(LiveComponentHydrator::class)->hydrate(
+            $component,
+            $data,
+            $request->attributes->get('_component_name')
+        );
+
+        $request->attributes->set('_mounted_component', $mounted);
+
+        if (!\is_string($queryString = $request->query->get('args'))) {
+            return;
+        }
 
         // extra variables to be made available to the controller
         // (for "actions" only)
-        parse_str($request->query->get('values'), $values);
-        $request->attributes->add($values);
-        $request->attributes->set('_component', $component);
+        parse_str($queryString, $args);
+
+        foreach (LiveArg::liveArgs($component, $action) as $parameter => $arg) {
+            if (isset($args[$arg])) {
+                $request->attributes->set($parameter, $args[$arg]);
+            }
+        }
     }
 
     public function onKernelView(ViewEvent $event): void
     {
-        $request = $event->getRequest();
-        if (!$this->isLiveComponentRequest($request)) {
+        if (!$this->isLiveComponentRequest($request = $event->getRequest())) {
             return;
         }
 
-        $response = $this->createResponse($request->attributes->get('_component'), $request);
-
-        $event->setResponse($response);
+        $event->setResponse($this->createResponse($request->attributes->get('_mounted_component')));
     }
 
     public function onKernelException(ExceptionEvent $event): void
     {
-        $request = $event->getRequest();
-
-        if (!$this->isLiveComponentRequest($request)) {
+        if (!$this->isLiveComponentRequest($request = $event->getRequest())) {
             return;
         }
 
@@ -172,15 +186,12 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $component = $request->attributes->get('_component');
-
         // in case the exception was too early somehow
-        if (!$component) {
+        if (!$mounted = $request->attributes->get('_mounted_component')) {
             return;
         }
 
-        $response = $this->createResponse($component, $request);
-        $event->setResponse($response);
+        $event->setResponse($this->createResponse($mounted));
     }
 
     public function onKernelResponse(ResponseEvent $event): void
@@ -192,7 +203,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        if (!$this->isLiveComponentJsonRequest($request)) {
+        if (!\in_array(self::HTML_CONTENT_TYPE, $request->getAcceptableContentTypes(), true)) {
             return;
         }
 
@@ -200,8 +211,9 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $event->setResponse(new JsonResponse([
-            'redirect_url' => $response->headers->get('Location'),
+        $event->setResponse(new Response(null, 204, [
+            'Location' => $response->headers->get('Location'),
+            'Content-Type' => self::HTML_CONTENT_TYPE,
         ]));
     }
 
@@ -216,38 +228,19 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         ];
     }
 
-    private function createResponse(object $component, Request $request): Response
+    private function createResponse(MountedComponent $mounted): Response
     {
-        foreach (AsLiveComponent::beforeReRenderMethods($component) as $method) {
+        $component = $mounted->getComponent();
+
+        foreach (AsLiveComponent::preReRenderMethods($component) as $method) {
             $component->{$method->name}();
         }
 
-        $html = $this->container->get(ComponentRenderer::class)->render(
-            $component,
-            $request->attributes->get('_component_template')
-        );
-
-        if ($this->isLiveComponentJsonRequest($request)) {
-            return new JsonResponse(
-                [
-                    'html' => $html,
-                    'data' => $this->container->get(LiveComponentHydrator::class)->dehydrate($component),
-                ],
-                200,
-                ['Content-Type' => self::JSON_CONTENT_TYPE]
-            );
-        }
-
-        return new Response($html);
+        return new Response($this->container->get(ComponentRenderer::class)->render($mounted));
     }
 
     private function isLiveComponentRequest(Request $request): bool
     {
         return 'live_component' === $request->attributes->get('_route');
-    }
-
-    private function isLiveComponentJsonRequest(Request $request): bool
-    {
-        return \in_array($request->getPreferredFormat(), [self::JSON_FORMAT, 'json'], true);
     }
 }

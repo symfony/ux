@@ -10,7 +10,7 @@
 >
     <php>
         <ini name="error_reporting" value="-1" />
-        <server name="KERNEL_CLASS" value="Symfony\UX\LiveComponent\Tests\Fixture\Kernel" />
+        <server name="KERNEL_CLASS" value="Symfony\UX\LiveComponent\Tests\Fixtures\Kernel" />
         <server name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/data.db" />
         <env name="SHELL_VERBOSITY" value="-1"/>
         <server name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0&amp;max[direct]=0"/>

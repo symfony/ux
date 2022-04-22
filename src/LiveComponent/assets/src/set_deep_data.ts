@@ -1,6 +1,5 @@
 // post.user.username
-export function setDeepData(data, propertyPath, value) {
-    // cheap way to deep clone simple data
+export function parseDeepData(data, propertyPath) {
     const finalData = JSON.parse(JSON.stringify(data));
 
     let currentLevelData = finalData;
@@ -13,6 +12,18 @@ export function setDeepData(data, propertyPath, value) {
 
     // now finally change the key on that deeper object
     const finalKey = parts[parts.length - 1];
+
+    return {
+        currentLevelData,
+        finalData,
+        finalKey,
+        parts
+    }
+}
+
+// post.user.username
+export function setDeepData(data, propertyPath, value) {
+    const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath)
 
     // make sure the currentLevelData is an object, not a scalar
     // if it is, it means the initial data didn't know that sub-properties
@@ -64,9 +75,14 @@ export function doesDeepPropertyExist(data, propertyPath) {
  */
 export function normalizeModelName(model) {
     return model
+        // Names ending in "[]" represent arrays in HTML.
+        // To get normalized name we need to ignore this part.
+        // For example: "user[mailing][]" becomes "user.mailing" (and has array typed value)
+        .replace(/\[]$/, '')
         .split('[')
         // ['object', 'foo', 'bar', 'ya']
         .map(function (s) {
             return s.replace(']', '')
-        }).join('.')
+        })
+        .join('.')
 }

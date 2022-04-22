@@ -40,6 +40,9 @@ describe('LiveController CSRF Tests', () => {
 
     afterEach(() => {
         clearDOM();
+        if (!fetchMock.done()) {
+            throw new Error('Mocked requests did not match');
+        }
         fetchMock.reset();
     });
 
@@ -47,16 +50,14 @@ describe('LiveController CSRF Tests', () => {
         const data = { comments: 'hi' };
         const { element } = await startStimulus(template(data));
 
-        const postMock = fetchMock.postOnce('http://localhost/_components/my_component/save', {
-            html: template({ comments: 'hi', isSaved: true }),
-            data: { comments: 'hi', isSaved: true }
-        });
+        const postMock = fetchMock.postOnce(
+            'http://localhost/_components/my_component/save',
+            template({ comments: 'hi', isSaved: true })
+        );
         getByText(element, 'Save').click();
 
         await waitFor(() => expect(element).toHaveTextContent('Comment Saved!'));
 
         expect(postMock.lastOptions().headers['X-CSRF-TOKEN']).toEqual('123TOKEN');
-
-        fetchMock.done();
     });
 });

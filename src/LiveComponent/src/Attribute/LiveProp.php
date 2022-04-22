@@ -51,26 +51,41 @@ final class LiveProp
         $this->fieldName = $fieldName;
     }
 
+    /**
+     * @internal
+     */
     public function isReadonly(): bool
     {
         return !$this->writable;
     }
 
+    /**
+     * @internal
+     */
     public function exposed(): array
     {
         return $this->exposed;
     }
 
+    /**
+     * @internal
+     */
     public function hydrateMethod(): ?string
     {
         return $this->hydrateWith ? trim($this->hydrateWith, '()') : null;
     }
 
+    /**
+     * @internal
+     */
     public function dehydrateMethod(): ?string
     {
         return $this->dehydrateWith ? trim($this->dehydrateWith, '()') : null;
     }
 
+    /**
+     * @internal
+     */
     public function calculateFieldName(object $component, string $fallback): string
     {
         if (!$this->fieldName) {

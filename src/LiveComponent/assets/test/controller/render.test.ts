@@ -40,6 +40,9 @@ describe('LiveController rendering Tests', () => {
 
     afterEach(() => {
         clearDOM();
+        if (!fetchMock.done()) {
+            throw new Error('Mocked requests did not match');
+        }
         fetchMock.reset();
     });
 
@@ -57,20 +60,40 @@ describe('LiveController rendering Tests', () => {
         expect(controller.dataValue).toEqual({name: 'Kevin'});
     });
 
-    it('conserves values of fields modified after a render request', async () => {
+    it('renders over local value in input', async () => {
         const data = { name: 'Ryan' };
         const { element } = await startStimulus(template(data));
 
-        fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
-            html: template({ name: 'Kevin' }),
-            data: { name: 'Kevin' }
-        }, {
-            delay: 100
-        });
-        getByText(element, 'Reload').click();
+        mockRerender({name: 'Ryan'}, template, (data: any) => {
+            data.name = 'Kevin';
+        }, { delay: 100 });
+        // type into the input that is not bound to a model
         userEvent.type(getByLabelText(element, 'Comments:'), '!!');
+        getByText(element, 'Reload').click();
 
         await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
+        // value if unmapped input is reset
+        expect(getByLabelText(element, 'Comments:')).toHaveValue('i like pizza');
+        expect(document.activeElement.name).toEqual('comments');
+    });
+
+    it('conserves values of fields modified after a render request IF data-live-ignore', async () => {
+        const data = { name: 'Ryan' };
+        const { element } = await startStimulus(template(data));
+
+        // name=Ryan is sent to the server
+        mockRerender({name: 'Ryan'}, template, (data: any) => {
+            data.name = 'Kevin';
+        }, { delay: 100 });
+
+        // type into the input that is not bound to a model
+        const input = getByLabelText(element, 'Comments:');
+        input.setAttribute('data-live-ignore', '');
+        userEvent.type(input, '!!');
+        getByText(element, 'Reload').click();
+
+        await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
+        // value of unmapped input is NOT reset because of data-live-ignore
         expect(getByLabelText(element, 'Comments:')).toHaveValue('i like pizza!!');
         expect(document.activeElement.name).toEqual('comments');
     });
@@ -84,14 +107,18 @@ describe('LiveController rendering Tests', () => {
             template(data, true)
         );
 
-        fetchMock.get('http://localhost/_components/my_component?name=Ryan', {
-            html: template({ name: 'Kevin' }, true),
-            data: { name: 'Kevin' }
-        }, {
-            delay: 100
-        });
+        mockRerender(
+            { name: 'Ryan' },
+            // re-render but passing true as the second arg
+            (data: any) => template(data, true),
+            (data: any) => { data.name = 'Kevin'; },
+            { delay: 100 }
+        );
+
+        const input = getByLabelText(element, 'Comments:');
+        input.setAttribute('data-live-ignore', '');
+        userEvent.type(input, '!!');
         getByText(element, 'Reload').click();
-        userEvent.type(getByLabelText(element, 'Comments:'), '!!');
 
         await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
         expect(getByLabelText(element, 'Comments:')).toHaveValue('i like pizza!!');
@@ -102,12 +129,12 @@ describe('LiveController rendering Tests', () => {
         const data = { name: 'Ryan' };
         const { element } = await startStimulus(template(data));
 
-        fetchMock.get('end:?name=Ryan', {
-            html: '<div>aloha!</div>',
-            data: { name: 'Kevin' }
-        }, {
-            delay: 100
-        });
+        mockRerender(
+            { name: 'Ryan' },
+            () => '<div>aloha!</div>',
+            () => { },
+            { delay: 100 }
+        );
 
         getByText(element, 'Reload').click();
         // imitate navigating away

@@ -72,6 +72,9 @@ describe('LiveController parent -> child component tests', () => {
 
     afterEach(() => {
         clearDOM();
+        if (!fetchMock.done()) {
+            throw new Error('Mocked requests did not match');
+        }
         fetchMock.reset();
     });
 
@@ -133,6 +136,7 @@ describe('LiveController parent -> child component tests', () => {
         const inputElement = getByLabelText(element, 'Content:');
         await userEvent.clear(inputElement);
         await userEvent.type(inputElement, 'changed content');
+        // change the rows on the server
         mockRerender({'value': 'changed content'}, childTemplate, (data) => {
             data.rows = 5;
         });
@@ -183,10 +187,50 @@ describe('LiveController parent -> child component tests', () => {
         const inputElement = getByLabelText(element, 'Content:');
         await userEvent.clear(inputElement);
         await userEvent.type(inputElement, 'changed content');
-        mockRerender({value: 'changed content'}, childTemplate);
+        mockRerender({value: 'changed content', error: null}, childTemplate);
 
         await waitFor(() => expect(element).toHaveTextContent('Value in child: changed content'));
 
         expect(controller.dataValue).toEqual({ textareaContent: 'changed content' });
+   });
+
+    it('updates child data-original-data on parent re-render', async () => {
+        const parentTemplateListOfChildren = (data) => `
+            <div
+                ${initLiveComponent('/_components/parent', data)}
+            >
+                <ul>
+                    ${data.children.map((child) => {
+                        return `
+                            <li ${initLiveComponent('/_components/child', child)}>
+                               ${child.name}
+                            </li>
+                        `
+                    })}
+                </ul>
+
+                <button
+                    data-action="live#$render"
+                >Parent Re-render</button>
+            </div>
+        `;
+
+        const data = { children: [{name: 'child1'}, {name: 'child2'}, {name: 'child3'}] };
+        const { element, controller } = await startStimulus(parentTemplateListOfChildren(data));
+
+        // mock a re-render where "child2" disappears
+        mockRerender(data, parentTemplateListOfChildren, (returnedData) => {
+            returnedData.children = [{name: 'child1'}, {name: 'child3'}];
+        });
+        getByText(element, 'Parent Re-render').click();
+
+        await waitFor(() => expect(element).not.toHaveTextContent('child2'));
+        const secondLi = element.querySelectorAll('li').item(1);
+        expect(secondLi).not.toBeNull();
+        // the 2nd li was just "updated" by the parent component, which
+        // would have eliminated its data-original-data attribute. Check
+        // that it was re-established to the 3rd child's data.
+        // see MutationObserver in live_controller for more details.
+        expect(secondLi.dataset.originalData).toEqual(JSON.stringify({name: 'child3'}));
    });
 });

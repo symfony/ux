@@ -27,13 +27,13 @@
     },
     "require": {
         "php": ">=7.2.5",
-        "kornrunner/blurhash": "^1.1",
         "symfony/config": "^4.4.17|^5.0|^6.0",
         "symfony/http-kernel": "^4.4.17|^5.0|^6.0",
         "symfony/dependency-injection": "^4.4.17|^5.0|^6.0"
     },
     "require-dev": {
         "intervention/image": "^2.5",
+        "kornrunner/blurhash": "^1.1",
         "symfony/framework-bundle": "^4.4.17|^5.0|^6.0",
         "symfony/phpunit-bridge": "^5.2|^6.0",
         "symfony/twig-bundle": "^4.4.17|^5.0|^6.0",

@@ -41,7 +41,7 @@ A real-time product search component might look like this::
 .. code-block:: twig
 
     {# templates/components/product_search.html.twig #}
-    <div {{ init_live_component(this) }}>
+    <div {{ attributes }}>
         <input
             type="search"
             name="query"
@@ -55,6 +55,16 @@ A real-time product search component might look like this::
             {% endfor %}
         </ul>
     </div>
+
+.. versionadded:: 2.1
+
+    The ability to reference local variables in the template (e.g. ``query``) was added in TwigComponents 2.1.
+    Previously, all data needed to be referenced through ``this`` (e.g. ``this.query``).
+
+.. versionadded:: 2.1
+
+    The ability to initialize live component with the ``attributes`` twig variable was added in LiveComponents
+    2.1. Previously, the ``init_live_component()`` function was required (this function was removed in 2.1).
 
 As a user types into the box, the component will automatically re-render
 and show the new results!
@@ -104,7 +114,7 @@ Oh, and just one more step! Import a routing file from the bundle:
 
 That's it! We're ready!
 
-Making your Component “Live”
+Making your Component "Live"
 ----------------------------
 
 If you haven't already, check out the `Twig Component`_
@@ -133,7 +143,7 @@ Suppose you've already built a basic Twig component::
         <strong>{{ this.randomNumber }}</strong>
     </div>
 
-To transform this into a “live” component (i.e. one that can be
+To transform this into a "live" component (i.e. one that can be
 re-rendered live on the frontend), replace the component's
 ``AsTwigComponent`` attribute with ``AsLiveComponent`` and add the
 ``DefaultActionTrait``:
@@ -154,13 +164,13 @@ re-rendered live on the frontend), replace the component's
       }
 
 Then, in the template, make sure there is *one* HTML element around your
-entire component and use the ``{{ init_live_component() }}`` function to
-initialize the Stimulus controller:
+entire component and use the ``{{ attributes }}`` variable to initialize
+the Stimulus controller:
 
 .. code-block:: diff
 
     - <div>
-    + <div {{ init_live_component(this) }}>
+    + <div {{ attributes }}>
           <strong>{{ this.randomNumber }}</strong>
       </div>
 
@@ -171,7 +181,7 @@ and give the user a new random number:
 
 .. code-block:: twig
 
-    <div {{ init_live_component(this) }}>
+    <div {{ attributes }}>
         <strong>{{ this.randomNumber }}</strong>
 
         <button
@@ -221,20 +231,43 @@ when rendering the component:
     {{ component('random_number', { min: 5, max: 500 }) }}
 
 But what's up with those ``LiveProp`` attributes? A property with the
-``LiveProp`` attribute becomes a “stateful” property for this component.
-In other words, each time we click the “Generate a new number!” button,
+``LiveProp`` attribute becomes a "stateful" property for this component.
+In other words, each time we click the "Generate a new number!" button,
 when the component re-renders, it will *remember* the original values
 for the ``$min`` and ``$max`` properties and generate a random number
 between 5 and 500. If you forgot to add ``LiveProp``, when the component
 re-rendered, those two values would *not* be set on the object.
 
-In short: LiveProps are “stateful properties”: they will always be set
+In short: LiveProps are "stateful properties": they will always be set
 when rendering. Most properties will be LiveProps, with common
 exceptions being properties that hold services (these don't need to be
 stateful because they will be autowired each time before the component
 is rendered) and `properties used for computed properties`_.
 
-data-action=“live#update”: Re-rendering on LiveProp Change
+Component Attributes
+--------------------
+
+.. versionadded:: 2.1
+
+    Component attributes were added in TwigComponents 2.1.
+
+`Component attributes`_ allows you to render your components with extra
+props that are are converted to html attributes and made available in
+your component's template as an ``attributes`` variable. When used on
+live components, these props are persisted between renders.
+
+When rendering your component, you can pass html attributes as props and
+these will be added to ``attributes``:
+
+.. code-block:: twig
+
+    {{ component('random_number', { min: 5, max: 500, class: 'widget', style: 'color: black;' }) }}
+
+    {# renders as: #}
+    <div class="widget" style="color: black;" <!-- other live attributes -->>
+        <!-- ... -->
+
+data-action="live#update": Re-rendering on LiveProp Change
 ----------------------------------------------------------
 
 Could we allow the user to *choose* the ``$min`` and ``$max`` values and
@@ -246,7 +279,7 @@ Let's add two inputs to our template:
 .. code-block:: twig
 
     {# templates/components/random_number.html.twig #}
-    <div {{ init_live_component(this) }}>
+    <div {{ attributes }}>
         <input
             type="number"
             value="{{ min }}"
@@ -272,7 +305,7 @@ that field! Yes, as you type in a box, the component automatically
 updates to reflect the new number!
 
 Well, actually, we're missing one step. By default, a ``LiveProp`` is
-“read only”. For security purposes, a user cannot change the value of a
+"read only". For security purposes, a user cannot change the value of a
 ``LiveProp`` and re-render the component unless you allow it with the
 ``writable=true`` option:
 
@@ -306,7 +339,7 @@ method has built-in debouncing: it waits for a 150ms pause before
 sending an Ajax request to re-render. This is built in, so you don't
 need to think about it.
 
-Lazy Updating on “blur” or “change” of a Field
+Lazy Updating on "blur" or "change" of a Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sometimes, you might want a field to re-render only after the user has
@@ -327,7 +360,7 @@ happens, add it to the ``data-action`` call:
 The ``data-action="change->live#update"`` syntax is standard Stimulus
 syntax, which says:
 
-   When the “change” event occurs, call the ``update`` method on the
+   When the "change" event occurs, call the ``update`` method on the
    ``live`` controller.
 
 .. _deferring-a-re-render-until-later:
@@ -349,7 +382,7 @@ clicked). To do that, use the ``updateDefer`` method:
     +     data-action="live#updateDefer"
       >
 
-Now, as you type, the ``max`` “model” will be updated in JavaScript, but
+Now, as you type, the ``max`` "model" will be updated in JavaScript, but
 it won't, yet, make an Ajax call to re-render the component. Whenever
 the next re-render *does* happen, the updated ``max`` value will be
 used.
@@ -363,7 +396,7 @@ property. The following code works identically to the previous example:
 
 .. code-block:: diff
 
-      <div {{ init_live_component(this)>
+      <div {{ attributes }}>
           <input
               type="number"
               value="{{ min }}"
@@ -452,7 +485,7 @@ changes until loading has taken longer than a certain amount of time:
 Actions
 -------
 
-Live components require a single “default action” that is used to
+Live components require a single "default action" that is used to
 re-render it. By default, this is an empty ``__invoke()`` method and can
 be added with the ``DefaultActionTrait``. Live components are actually
 Symfony controllers so you can add the normal controller
@@ -460,7 +493,7 @@ attributes/annotations (ie ``@Cache``/``@Security``) to either the
 entire class just a single action.
 
 You can also trigger custom actions on your component. Let's pretend we
-want to add a “Reset Min/Max” button to our “random number” component
+want to add a "Reset Min/Max" button to our "random number" component
 that, when clicked, sets the min/max numbers back to a default value.
 
 First, add a method with a ``LiveAction`` attribute above it that does
@@ -501,7 +534,7 @@ will trigger the ``resetMinMax()`` method! After calling that method,
 the component will re-render like normal, using the new ``$min`` and
 ``$max`` properties!
 
-You can also add several “modifiers” to the action:
+You can also add several "modifiers" to the action:
 
 .. code-block:: twig
 
@@ -514,7 +547,7 @@ You can also add several “modifiers” to the action:
 
 The ``prevent`` modifier would prevent the form from submitting
 (``event.preventDefault()``). The ``debounce(300)`` modifier will add
-300ms of “debouncing” before the action is executed. In other words, if
+300ms of "debouncing" before the action is executed. In other words, if
 you click really fast 5 times, only one Ajax request will be made!
 
 Actions & Services
@@ -545,6 +578,42 @@ This means that, for example, you can use action autowiring::
         }
 
         // ...
+    }
+
+Actions & Arguments
+^^^^^^^^^^^^^^^^^^^
+
+.. versionadded:: 2.1
+
+    The ability to pass arguments to actions was added in version 2.1.
+
+You can also provide custom arguments to your action::
+
+.. code-block:: twig
+    <form>
+        <button data-action="live#action" data-action-name="addItem(id={{ item.id }}, name=CustomItem)">Add Item</button>
+    </form>
+
+In component for custom arguments to be injected we need to use `#[LiveArg()]` attribute, otherwise it would be
+ignored. Optionally you can provide `name` argument like: `[#LiveArg('itemName')]` so it will use custom name from
+args but inject to your defined parameter with another name.::
+
+    // src/Components/ItemComponent.php
+    namespace App\Components;
+
+    // ...
+    use Symfony\UX\LiveComponent\Attribute\LiveArg;
+    use Psr\Log\LoggerInterface;
+
+    class ItemComponent
+    {
+        // ...
+        #[LiveAction]
+        public function addItem(#[LiveArg] int $id, #[LiveArg('itemName')] string $name)
+        {
+            $this->id = $id;
+            $this->name = $name;
+        }
     }
 
 Actions and CSRF Protection
@@ -723,9 +792,9 @@ make it easy to deal with forms::
          * The `fieldName` option is needed in this situation because
          * the form renders fields with names like `name="post[title]"`.
          * We set `fieldName: ''` so that this live prop doesn't collide
-         * with that data. The value - initialFormData - could be anything.
+         * with that data. The value - data - could be anything.
          */
-        #[LiveProp(fieldName: 'initialFormData')]
+        #[LiveProp(fieldName: 'data')]
         public ?Post $post = null;
 
         /**
@@ -744,13 +813,18 @@ recreate the *same* form, we pass in the ``Post`` object and set it as a
 ``LiveProp``.
 
 The template for this component will render the form, which is available
-as ``this.form`` thanks to the trait:
+as ``form`` thanks to the trait:
+
+.. versionadded:: 2.1
+
+    The ability to access ``form`` directly in your component's template
+    was added in LiveComponents 2.1. Previously ``this.form`` was required.
 
 .. code-block:: twig
 
     {# templates/components/post_form.html.twig #}
     <div
-        {{ init_live_component(this) }}
+        {{ attributes }}
         {#
             Automatically catch all "change" events from the fields
             below and re-render the component.
@@ -764,18 +838,17 @@ as ``this.form`` thanks to the trait:
         #}
         data-action="change->live#update"
     >
-        {{ form_start(this.form) }}
-            {{ form_row(this.form.title) }}
-            {{ form_row(this.form.slug) }}
-            {{ form_row(this.form.content) }}
+        {{ form_start(form) }}
+            {{ form_row(form.title) }}
+            {{ form_row(form.slug) }}
+            {{ form_row(form.content) }}
 
             <button>Save</button>
-        {{ form_end(this.form) }}
+        {{ form_end(form) }}
     </div>
 
 Mostly, this is a pretty boring template! It includes the normal
-``init_live_component(this)`` and then you render the form however you
-want.
+``attributes`` and then you render the form however you want.
 
 But the result is incredible! As you finish changing each field, the
 component automatically re-renders - including showing any validation
@@ -798,14 +871,14 @@ This is possible thanks to a few interesting pieces:
    the user, its validation errors are cleared so that they aren't
    rendered.
 
-Handling “Cannot dehydrate an unpersisted entity” Errors.
+Handling "Cannot dehydrate an unpersisted entity" Errors.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you're building a form to create a *new* entity, then when you render
 the component, you may be passing in a new, non-persisted entity.
 
 For example, imagine you create a ``new Post()`` in your controller,
-pass this “not-yet-persisted” entity into your template as a ``post``
+pass this "not-yet-persisted" entity into your template as a ``post``
 variable and pass *that* into your component:
 
 .. code-block:: twig
@@ -823,8 +896,8 @@ If you do this, you'll likely see this error:
 
 The problem is that the Live component system doesn't know how to
 transform this object into something that can be sent to the frontend,
-called “dehydration”. If an entity has already been saved to the
-database, its “id” is sent to the frontend. But if the entity hasn't
+called "dehydration". If an entity has already been saved to the
+database, its "id" is sent to the frontend. But if the entity hasn't
 been saved yet, that's not possible.
 
 The solution is to pass ``null`` into your component instead of a
@@ -850,10 +923,10 @@ behave how you want.
 
 If you're re-rendering a field on the ``input`` event (that's the
 default event on a field, which is fired each time you type in a text
-box), then if you type a “space” and pause for a moment, the space will
+box), then if you type a "space" and pause for a moment, the space will
 disappear!
 
-This is because Symfony text fields “trim spaces” automatically. When
+This is because Symfony text fields "trim spaces" automatically. When
 your component re-renders, the space will disappear… as the user is
 typing! To fix this, either re-render on the ``change`` event (which
 fires after the text box loses focus) or set the ``trim`` option of your
@@ -959,7 +1032,7 @@ Finally, tell the ``form`` element to use this action:
     {# templates/components/post_form.html.twig #}
     {# ... #}
 
-    {{ form_start(this.form, {
+    {{ form_start(form, {
         attr: {
             'data-action': 'live#action',
             'data-action-name': 'prevent|save'
@@ -983,9 +1056,155 @@ section above) is to add:
 .. code-block:: diff
 
       <div
-          {{ init_live_component(this) }}
+          {{ attributes }}
     +     data-action="change->live#update"
       >
+
+Using Actions to Change your Form: CollectionType
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Symfony's `CollectionType`_ can be used to embed a collection of
+embedded forms including allowing the user to dynamically add or remove
+them. Live components can accomplish make this all possible while
+writing zero JavaScript.
+
+For example, imagine a "Blog Post" form with an embedded "Comment" forms
+via the ``CollectionType``::
+
+    namespace App\Form;
+
+    use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\Extension\Core\Type\CollectionType;
+    use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+    use App\Entity\BlogPost;
+
+    class BlogPostFormType extends AbstractType
+    {
+        public function buildForm(FormBuilderInterface $builder, array $options)
+        {
+            $builder
+                ->add('title', TextType::class)
+                // ...
+                ->add('comments', CollectionType::class, [
+                    'entry_type' => CommentFormType::class,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'by_reference' => false,
+                ])
+            ;
+        }
+
+        public function configureOptions(OptionsResolver $resolver)
+        {
+            $resolver->setDefaults(['data_class' => BlogPost::class]);
+        }
+    }
+
+Now, create a Twig component to render the form::
+
+    namespace App\Twig;
+
+    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\Form\FormInterface;
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\Attribute\LiveAction;
+    use Symfony\UX\LiveComponent\ComponentWithFormTrait;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+    use App\Entity\BlogPost;
+    use App\Entity\Comment;
+    use App\Form\BlogPostFormType;
+
+    #[AsLiveComponent('blog_post_collection_type')]
+    class BlogPostCollectionTypeComponent extends AbstractController
+    {
+        use ComponentWithFormTrait;
+        use DefaultActionTrait;
+
+        #[LiveProp]
+        public BlogPost $post;
+
+        protected function instantiateForm(): FormInterface
+        {
+            return $this->createForm(BlogPostFormType::class, $this->post);
+        }
+
+        #[LiveAction]
+        public function addComment()
+        {
+            // "formValues" represents the current data in the form
+            // this modifies the form to add an extra comment
+            // the result: another embedded comment form!
+            // change "comments" to the name of the field that uses CollectionType
+            $this->formValues['comments'][] = [];
+        }
+
+        #[LiveAction]
+        public function removeComment(#[LiveArg] int $index)
+        {
+            unset($this->formValues['comments'][$index]);
+        }
+    }
+
+The template for this component has two jobs: (1) render the form
+like normal and (2) include links that trigger the ``addComment()``
+and ``removeComment()`` actions:
+
+.. code-block:: twig
+
+    <div{{ attributes }}>
+        {{ form_start(form) }}
+            {{ form_row(form.title) }}
+
+            <h3>Comments:</h3>
+            {% for key, commentForm in form.comments %}
+                <button
+                    data-action="live#action"
+                    data-action-name="removeComment(index={{ key }})"
+                    type="button"
+                >X</button>
+
+                {{ form_widget(commentForm) }}
+            {% endfor %}
+            </div>
+
+            {# avoid an extra label for this field #}
+            {% do form.comments.setRendered %}
+
+            <button
+                data-action="live#action"
+                data-action-name="addComment"
+                type="button"
+            >+ Add Comment</button>
+
+            <button type="submit" >Save</button>
+        {{ form_end(form) }}
+    </div>
+
+Done! Behind the scenes, it works like this:
+
+A) When the user clicks "+ Add Comment", an Ajax request is sent that
+triggers the ``addComment()`` action.
+
+B) ``addComment()`` modifies ``formValues``, which you can think of as
+the raw "POST" data of your form.
+
+C) Still during the Ajax request, the ``formValues`` are "submitted"
+into your form. The new key inside of ``$this->formValues['comments']``
+tells the ``CollectionType`` that you want a new, embedded form.
+
+D) The form is rendered - now with another embedded form! - and the
+Ajax call returns with the form (with the new embedded form).
+
+When the user clicks ``removeComment()``, a similar process happens.
+
+.. note::
+
+    When working with Doctrine entities, add ``orphanRemoval: true``
+    and ``cascade={"persist"}`` to your ``OneToMany`` relationship.
+    In this example, these options would be added to the ``OneToMany``
+    attribute above the ``Post.comments`` property. These help new
+    items save and deletes any items whose embedded forms are removed.
 
 Modifying Embedded Properties with the "exposed" Option
 -------------------------------------------------------
@@ -1008,14 +1227,14 @@ edited::
         public Post $post;
     }
 
-In the template, let's render an HTML form *and* a “preview” area where
+In the template, let's render an HTML form *and* a "preview" area where
 the user can see, as they type, what the post will look like (including
 rendered the ``content`` through a Markdown filter from the
 ``twig/markdown-extra`` library):
 
 .. code-block:: twig
 
-    <div {{init_live_component(this)}}>
+    <div {{ attributes }}>
         <input
             type="text"
             value="{{ post.title }}"
@@ -1104,7 +1323,7 @@ where you want the object on that property to also be validated.
 
 Thanks to this setup, the component will now be automatically validated
 on each render, but in a smart way: a property will only be validated
-once its “model” has been updated on the frontend. The system keeps
+once its "model" has been updated on the frontend. The system keeps
 track of which models have been updated
 (e.g. ``data-action="live#update"``) and only stores the errors for
 those fields on re-render.
@@ -1146,7 +1365,7 @@ method:
         class="{{ this.getError('post.content') ? 'has-error' : '' }}"
     >{{ post.content }}</textarea>
 
-Once a component has been validated, the component will “rememeber” that
+Once a component has been validated, the component will "rememeber" that
 it has been validated. This means that, if you edit a field and the
 component re-renders, it will be validated again.
 
@@ -1155,7 +1374,7 @@ Real Time Validation
 
 As soon as you enable validation, each field will automatically be
 validated when its model is updated. For example, if you want a single
-field to be validated “on change” (when you change the field and then
+field to be validated "on change" (when you change the field and then
 blur the field), update the model via the ``change`` event:
 
 .. code-block:: twig
@@ -1168,19 +1387,19 @@ blur the field), update the model via the ``change`` event:
 
 When the component re-renders, it will signal to the server that this
 one field should be validated. Like with normal validation, once an
-individual field has been validated, the component “remembers” that, and
+individual field has been validated, the component "remembers" that, and
 re-validates it on each render.
 
 Polling
 -------
 
-You can also use “polling” to continually refresh a component. On the
+You can also use "polling" to continually refresh a component. On the
 **top-level** element for your component, add ``data-poll``:
 
 .. code-block:: diff
 
       <div
-          {{ init_live_component(this) }}
+          {{ attributes }}
     +     data-poll
       >
 
@@ -1192,16 +1411,16 @@ delay for 500ms:
 .. code-block:: twig
 
     <div
-        {{ init_live_component(this) }}
+        {{ attributes }}
         data-poll="delay(500)|$render"
     >
 
-You can also trigger a specific “action” instead of a normal re-render:
+You can also trigger a specific "action" instead of a normal re-render:
 
 .. code-block:: twig
 
     <div
-        {{ init_live_component(this) }}
+        {{ attributes }}
 
         data-poll="save"
         {#
@@ -1230,7 +1449,7 @@ component is its own, isolated universe.
 
 But this is not always what you want. For example, suppose you have a
 parent component that renders a form and a child component that renders
-one field in that form. When you click a “Save” button on the parent
+one field in that form. When you click a "Save" button on the parent
 component, that validates the form and re-renders with errors -
 including a new ``error`` value that it passes into the child:
 
@@ -1293,7 +1512,7 @@ event is dispatched. All components automatically listen to this event.
 This means that, when the ``markdown_value`` model is updated in the
 child component, *if* the parent component *also* has a model called
 ``markdown_value`` it will *also* be updated. This is done as a
-“deferred” update
+"deferred" update
 (i.e. :ref:`updateDefer() <deferring-a-re-render-until-later>`).
 
 If the model name in your child component (e.g. ``markdown_value``) is
@@ -1396,7 +1615,7 @@ In the ``EditPostComponent`` template, you render the
 .. code-block:: twig
 
     {# templates/components/edit_post.html.twig #}
-    <div {{ init_live_component(this) }}>
+    <div {{ attributes }}>
         <input
             type="text"
             name="post[title]"
@@ -1418,7 +1637,7 @@ In the ``EditPostComponent`` template, you render the
 
 .. code-block:: twig
 
-    <div {{ init_live_component(this) }} class="mb-3">
+    <div {{ attributes }} class="mb-3">
         <textarea
             name="{{ name }}"
             data-model="value"
@@ -1435,6 +1654,34 @@ attribute to be passed in. This makes that component re-usable in any
 form. But it also makes sure that when the ``textarea`` changes, both
 the ``value`` model in ``MarkdownTextareaComponent`` *and* the
 ``post.content`` model in ``EditPostcomponent`` will be updated.
+
+Rendering Quirks with List of Embedded Components
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Imagine your component renders a list of embedded components and
+that list is updated as the user types into a search box. Most of the
+time, this works *fine*. But in some cases, as the list of items
+changes, a child component will re-render even though it was there
+before *and* after the list changed. This can cause that child component
+to lose some state (i.e. it re-renders with its original live props data).
+
+To fix this, add a unique ``id`` attribute to the root component of each
+child element. This will helps LiveComponent identify each item in the
+list and correctly determine if a re-render is necessary, or not.
+
+Skipping Updating Certain Elements
+----------------------------------
+
+Sometimes you may have an element inside a component that you do *not* want to
+change whenever your component re-renders. For example, some elements managed by
+third-party JavaScript or a form element that is not bound to a model... where you
+don't want a re-render to reset the data the user has entered.
+
+To handle this, add the ``data-live-ignore`` attribute to the element:
+
+.. code-block:: html
+
+    <input name="favorite_color" data-live-ignore>
 
 Backward Compatibility promise
 ------------------------------
@@ -1455,3 +1702,5 @@ bound to Symfony's BC policy for the moment.
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`dependent form fields`: https://symfony.com/doc/current/form/dynamic_form_modification.html#dynamic-generation-for-submitted-forms
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _`Component attributes`: https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes
+.. _`CollectionType`: https://symfony.com/doc/current/form/form_collections.html

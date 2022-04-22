@@ -20,13 +20,8 @@ namespace Symfony\UX\LiveComponent\Attribute;
  */
 final class LivePropContext
 {
-    private LiveProp $liveProp;
-    private \ReflectionProperty $reflectionProperty;
-
-    public function __construct(LiveProp $liveProp, \ReflectionProperty $reflectionProperty)
+    public function __construct(private LiveProp $liveProp, private \ReflectionProperty $reflectionProperty)
     {
-        $this->liveProp = $liveProp;
-        $this->reflectionProperty = $reflectionProperty;
     }
 
     public function liveProp(): LiveProp

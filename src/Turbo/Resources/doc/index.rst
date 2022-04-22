@@ -300,6 +300,11 @@ clients. There are two main ways to receive the updates:
 Forms
 ^^^^^
 
+.. versionadded:: 2.1
+  
+    Prior to 2.1, ``TurboStreamResponse::STREAM_FORMAT`` was used instead of ``TurboBundle::STREAM_FORMAT``.
+    Also, one had to return a new ``TurboStreamResponse()`` object as the third argument to ``$this->render()``.
+
 Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
 
     // src/Controller/TaskController.php
@@ -327,7 +332,7 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
                 // 🔥 The magic happens here! 🔥
                 if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
                     // If the request comes from Turbo, set the content type as text/vnd.turbo-stream.html and only send the HTML to update
-                    $request->setFormat(TurboBundle::STREAM_FORMAT);
+                    $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
                     return $this->render('task/success.stream.html.twig', ['task' => $task]);
                 }
 
@@ -779,16 +784,6 @@ Credits
 
 Symfony UX Turbo has been created by `Kévin Dunglas`_. It has been inspired by
 `hotwired/turbo-rails`_ and `sroze/live-twig`_.
-
-Backward Compatibility promise
-------------------------------
-
-This bundle aims at following the same Backward Compatibility promise as
-the Symfony framework:
-https://symfony.com/doc/current/contributing/code/bc.html
-
-However it is currently considered `experimental`_,
-meaning it is not bound to Symfony's BC policy for the moment.
 
 .. _`Hotwire Turbo`: https://turbo.hotwired.dev
 .. _`the Symfony UX initiative`: https://symfony.com/ux

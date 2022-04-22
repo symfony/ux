@@ -79,14 +79,9 @@ as simple as possible::
     {
     }
 
-**Note:** If this class is auto-configured, *and* you're using Symfony
-5.3+, then you're all set. Otherwise, register the service and tag it
-with ``twig.component`` and with a ``key`` tag attribute for the
-component's name (``alert``).
-
 Step 2 is to create a template for this component. By default, templates
-live in ``templates/components/{Component Name}.html.twig``, where
-``{Component Name}`` is whatever you passed as the first argument to the
+live in ``templates/components/{component_name}.html.twig``, where
+``{component_name}`` is whatever you passed as the first argument to the
 ``AsTwigComponent`` class attribute:
 
 .. code-block:: twig
@@ -134,6 +129,11 @@ In the template, the ``AlertComponent`` instance is available via
 the ``this`` variable and public properties are available directly.
 Use them to render the two new properties:
 
+.. versionadded:: 2.1
+
+    The ability to reference local variables in the template (e.g. ``message``) was added in TwigComponents 2.1.
+    Previously, all data needed to be referenced through ``this`` (e.g. ``this.message``).
+
 .. code-block:: twig
 
     <div class="alert alert-{{ type }}">
@@ -161,6 +161,17 @@ Behind the scenes, a new ``AlertComponent`` will be instantiated and the
 a property has a setter method (e.g. ``setMessage()``), that will be
 called instead of setting the property directly.
 
+.. note::
+
+    You can disable exposing public properties for a component. When disabled,
+    ``this.property`` must be used::
+
+        #[AsTwigComponent('alert', exposePublicProps: false)]
+        class AlertComponent
+        {
+            // ...
+        }
+
 Customize the Twig Template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -173,17 +184,11 @@ as the second argument to the ``AsTwigComponent`` attribute:
       // ...
 
     - #[AsTwigComponent('alert')]
-    + #[AsTwigComponent('alert', 'my/custom/template.html.twig')]
+    + #[AsTwigComponent('alert', template: 'my/custom/template.html.twig')]
       class AlertComponent
       {
           // ...
       }
-
-**Note:** If this class is auto-configured, *and* you're using Symfony
-5.3+, then you're all set. Otherwise, register the service and tag it
-with ``twig.component`` and with a ``key`` tag attribute for the
-component's name (``alert``) and a ``template`` tag attribute
-(``my/custom/template.html.twig``).
 
 The mount() Method
 ~~~~~~~~~~~~~~~~~~
@@ -225,6 +230,62 @@ If an option name matches an argument name in ``mount()``, the option is
 passed as that argument and the component system will *not* try to set
 it directly on a property.
 
+ExposeInTemplate Attribute
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.1
+
+    The ``ExposeInTemplate`` attribute was added in TwigComponents 2.1.
+
+All public component properties are available directly in your component
+template. You can use the ``ExposeInTemplate`` attribute to expose
+private/protected properties directly in a component template (``someProp``
+vs ``this.someProp``). These properties must be *accessible* (have a getter).
+
+.. code-block:: php
+
+    // ...
+    use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
+
+    #[AsTwigComponent('alert')]
+    class AlertComponent
+    {
+        #[ExposeInTemplate]
+        private string $message; // available as `{{ message }}` in the template
+
+        #[ExposeInTemplate('alert_type')]
+        private string $type = 'success'; // available as `{{ alert_type }}` in the template
+
+        #[ExposeInTemplate(name: 'ico', getter: 'fetchIcon')]
+        private string $icon = 'ico-warning'; // available as `{{ ico }}` in the template using `fetchIcon()` as the getter
+
+        /**
+         * Required to access $this->message
+         */
+        public function getMessage(): string
+        {
+            return $this->message;
+        }
+
+        /**
+         * Required to access $this->type
+         */
+        public function getType(): string
+        {
+            return $this->type;
+        }
+
+        /**
+         * Required to access $this->icon
+         */
+        public function fetchIcon(): string
+        {
+            return $this->icon;
+        }
+
+        // ...
+    }
+
 PreMount Hook
 ~~~~~~~~~~~~~
 
@@ -263,6 +324,43 @@ component use a ``PreMount`` hook::
     If your component has multiple ``PreMount`` hooks, and you'd like to control
     the order in which they're called, use the ``priority`` attribute parameter:
     ``PreMount(priority: 10)`` (higher called earlier).
+
+PostMount Hook
+~~~~~~~~~~~~~~
+
+.. versionadded:: 2.1
+
+    The ``PostMount`` hook was added in TwigComponents 2.1.
+
+When a component is mounted with the passed data, if an item cannot be
+mounted on the component, an exception is thrown. You can intercept this
+behavior and "catch" this extra data with a ``PostMount`` hook method. This
+method accepts the extra data as an argument and must return an array. If
+the returned array is empty, the exception will be avoided::
+
+    // src/Components/AlertComponent.php
+
+    use Symfony\UX\TwigComponent\Attribute\PostMount;
+    // ...
+
+    #[AsTwigComponent('alert')]
+    class AlertComponent
+    {
+        #[PostMount]
+        public function postMount(array $data): array
+        {
+            // do something with the "extra" data
+
+            return $data;
+        }
+        // ...
+    }
+
+.. note::
+
+    If your component has multiple ``PostMount`` hooks, and you'd like to control
+    the order in which they're called, use the ``priority`` attribute parameter:
+    ``PostMount(priority: 10)`` (higher called earlier).
 
 Fetching Services
 -----------------
@@ -332,6 +430,10 @@ need to populate, you can render it with:
 Computed Properties
 ~~~~~~~~~~~~~~~~~~~
 
+.. versionadded:: 2.1
+
+    Computed Properties were added in TwigComponents 2.1.
+
 In the previous example, instead of querying for the featured products
 immediately (e.g. in ``__construct()``), we created a ``getProducts()``
 method and called that from the template via ``this.products``.
@@ -347,35 +449,184 @@ But there's no magic with the ``getProducts()`` method: if you call
 ``this.products`` multiple times in your template, the query would be
 executed multiple times.
 
-To make your ``getProducts()`` method act like a true computed property
-(where its value is only evaluated the first time you call the method),
-you can store its result on a private property:
+To make your ``getProducts()`` method act like a true computed property,
+call ``computed.products`` in your template. ``computed`` is a proxy
+that wraps your component and caches the return of methods. If they
+are called additional times, the cached value is used.
 
-.. code-block:: diff
+.. code-block:: twig
 
-      // src/Components/FeaturedProductsComponent.php
-      namespace App\Components;
-      // ...
+    {# templates/components/featured_products.html.twig #}
 
-      #[AsTwigComponent('featured_products')]
-      class FeaturedProductsComponent
-      {
-          private ProductRepository $productRepository;
+    <div>
+        <h3>Featured Products</h3>
 
-    +     private ?array $products = null;
+        {% for product in computed.products %}
+            ...
+        {% endfor %}
 
-          // ...
+        ...
+        {% for product in computed.products %} {# use cache, does not result in a second query #}
+            ...
+        {% endfor %}
+    </div>
 
-          public function getProducts(): array
-          {
-    +         if ($this->products === null) {
-    +             $this->products = $this->productRepository->findFeatured();
-    +         }
+.. note::
 
-    -         return $this->productRepository->findFeatured();
-    +         return $this->products;
-          }
-      }
+    Computed methods only work for component methods with no required
+    arguments.
+
+Component Attributes
+--------------------
+
+.. versionadded:: 2.1
+
+    Component attributes were added in TwigComponents 2.1.
+
+A common need for components is to configure/render attributes for the
+root node. Attributes are any data passed to ``component()`` that cannot be
+mounted on the component itself. This extra data is added to a
+``ComponentAttributes`` that is available as ``attributes`` in your
+component's template.
+
+To use, in your component's template, render the ``attributes`` variable in
+the root element:
+
+.. code-block:: twig
+
+    {# templates/components/my_component.html.twig #}
+
+    <div{{ attributes }}>
+      My Component!
+    </div>
+
+When rendering the component, you can pass an array of html attributes to add:
+
+.. code-block:: twig
+
+    {{ component('my_component', { class: 'foo', style: 'color:red' }) }}
+
+    {# renders as: #}
+    <div class="foo" style="color:red">
+      My Component!
+    </div>
+
+Set an attribute's value to ``null`` to exclude the value when rendering:
+
+.. code-block:: twig
+
+    {# templates/components/my_component.html.twig #}
+    <input{{ attributes}}/>
+
+    {# render component #}
+    {{ component('my_component', { type: 'text', value: '', autofocus: null }) }}
+
+    {# renders as: #}
+    <input type="text" value="" autofocus/>
+
+.. note::
+
+    You can adjust the attributes variable exposed in your template::
+
+        #[AsTwigComponent('alert', attributesVar: '_attributes')]
+        class AlertComponent
+        {
+            // ...
+        }
+
+Defaults & Merging
+~~~~~~~~~~~~~~~~~~
+
+In your component template, you can set defaults that are merged with
+passed attributes. The passed attributes override the default with
+the exception of *class*. For ``class``, the defaults are prepended:
+
+.. code-block:: twig
+
+    {# templates/components/my_component.html.twig #}
+
+    <button{{ attributes.defaults({ class: 'bar', type: 'button' }) }}>Save</button>
+
+    {# render component #}
+    {{ component('my_component', { style: 'color:red' }) }}
+
+    {# renders as: #}
+    <button class="bar" style="color:red">Save</button>
+
+    {# render component #}
+    {{ component('my_component', { class: 'foo', type: 'submit' }) }}
+
+    {# renders as: #}
+    <button class="bar foo" type="submit">Save</button>
+
+Only
+~~~~
+
+Extract specific attributes and discard the rest:
+
+.. code-block:: twig
+
+    {# templates/components/my_component.html.twig #}
+
+    <div{{ attributes.only('class') }}>
+      My Component!
+    </div>
+
+    {# render component #}
+    {{ component('my_component', { class: 'foo', style: 'color:red' }) }}
+
+    {# renders as: #}
+    <div class="foo">
+      My Component!
+    </div>
+
+Without
+~~~~~~~
+
+Exclude specific attributes:
+
+.. code-block:: twig
+
+    {# templates/components/my_component.html.twig #}
+
+    <div{{ attributes.without('class') }}>
+      My Component!
+    </div>
+
+    {# render component #}
+    {{ component('my_component', { class: 'foo', style: 'color:red' }) }}
+
+    {# renders as: #}
+    <div style="color:red">
+      My Component!
+    </div>
+
+PreRenderEvent
+--------------
+
+.. versionadded:: 2.1
+
+    The ``PreRenderEvent`` was added in TwigComponents 2.1.
+
+Subscribing to the ``PreRenderEvent`` gives the ability to modify
+the twig template and twig variables before components are rendered::
+
+    use Symfony\UX\TwigComponent\EventListener\PreRenderEvent;
+
+    public function preRenderListener(PreRenderEvent $event): void
+    {
+        $event->getComponent(); // the component object
+        $event->getTemplate(); // the twig template name that will be rendered
+        $event->getVariables(); // the variables that will be available in the template
+
+        $event->setTemplate('some_other_template.html.twig'); // change the template used
+
+        // manipulate the variables:
+        $variables = $event->getVariables();
+        $variables['custom'] => 'value';
+
+        $event->setVariables($variables); // {{ custom }} will be available in your template
+    }
 
 Embedded Components
 -------------------

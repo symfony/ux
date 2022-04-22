@@ -51,13 +51,12 @@ trait ValidatableComponentTrait
      */
     public function validate(bool $throw = true): void
     {
-        $this->isValidated = true;
         // set fields back to empty, as now the *entire* object is validated.
         $this->validatedFields = [];
-
+        $this->isValidated = true;
         $this->validationErrors = $this->getValidator()->validate($this);
 
-        if (\count($this->validationErrors) > 0 && $throw) {
+        if ($throw && \count($this->validationErrors) > 0) {
             throw new UnprocessableEntityHttpException('Component validation failed');
         }
     }
@@ -71,14 +70,14 @@ trait ValidatableComponentTrait
      */
     public function validateField(string $propertyName, bool $throw = true): void
     {
-        if (!\in_array($propertyName, $this->validatedFields)) {
+        if (!\in_array($propertyName, $this->validatedFields, true)) {
             $this->validatedFields[] = $propertyName;
         }
 
         $errors = $this->getValidator()->validateField($this, $propertyName);
         $this->validationErrors[$propertyName] = $errors;
 
-        if (\count($errors) > 0 && $throw) {
+        if ($throw && \count($errors) > 0) {
             throw new UnprocessableEntityHttpException(sprintf('The "%s" field of the component failed validation.', $propertyName));
         }
     }
@@ -114,8 +113,11 @@ trait ValidatableComponentTrait
         $this->validationErrors = [];
     }
 
+    /**
+     * @internal
+     */
     #[PostHydrate]
-    public function validateAfterHydration()
+    public function validateAfterHydration(): void
     {
         if ($this->isValidated) {
             $this->validate(false);

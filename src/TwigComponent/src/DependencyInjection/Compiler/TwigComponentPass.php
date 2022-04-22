@@ -19,6 +19,8 @@ use Symfony\Component\DependencyInjection\Exception\LogicException;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
+ *
+ * @internal
  */
 final class TwigComponentPass implements CompilerPassInterface
 {
@@ -39,7 +41,6 @@ final class TwigComponentPass implements CompilerPassInterface
 
                 $tag['service_id'] = $id;
                 $tag['class'] = $definition->getClass();
-                $tag['name'] = $tag['key'];
                 $tag['template'] = $tag['template'] ?? "components/{$tag['key']}.html.twig";
                 $componentConfig[$tag['key']] = $tag;
             }
