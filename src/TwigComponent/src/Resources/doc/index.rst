@@ -623,7 +623,7 @@ the twig template and twig variables before components are rendered::
 
         // manipulate the variables:
         $variables = $event->getVariables();
-        $variables['custom'] => 'value';
+        $variables['custom'] = 'value';
 
         $event->setVariables($variables); // {{ custom }} will be available in your template
     }
