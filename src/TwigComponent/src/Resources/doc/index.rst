@@ -611,21 +611,30 @@ PreRenderEvent
 Subscribing to the ``PreRenderEvent`` gives the ability to modify
 the twig template and twig variables before components are rendered::
 
+    use Symfony\Component\EventDispatcher\EventSubscriberInterface;
     use Symfony\UX\TwigComponent\EventListener\PreRenderEvent;
 
-    public function preRenderListener(PreRenderEvent $event): void
+    class HookIntoTwigPreRenderSubscriber implements EventSubscriberInterface
     {
-        $event->getComponent(); // the component object
-        $event->getTemplate(); // the twig template name that will be rendered
-        $event->getVariables(); // the variables that will be available in the template
+        public function onPreRender(PreRenderEvent $event): void
+        {
+            $event->getComponent(); // the component object
+            $event->getTemplate(); // the twig template name that will be rendered
+            $event->getVariables(); // the variables that will be available in the template
 
-        $event->setTemplate('some_other_template.html.twig'); // change the template used
+            $event->setTemplate('some_other_template.html.twig'); // change the template used
 
-        // manipulate the variables:
-        $variables = $event->getVariables();
-        $variables['custom'] = 'value';
+            // manipulate the variables:
+            $variables = $event->getVariables();
+            $variables['custom'] = 'value';
 
-        $event->setVariables($variables); // {{ custom }} will be available in your template
+            $event->setVariables($variables); // {{ custom }} will be available in your template
+        }
+
+        public static function getSubscribedEvents(): array
+        {
+            return [PreRenderEvent::class => 'onPreRender'];
+        }
     }
 
 Embedded Components
