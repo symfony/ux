@@ -1,0 +1,28 @@
+<table{{ attributes }}>
+    {% if this.caption %}
+        <caption>{{ this.caption }}</caption>
+    {% endif %}
+    <thead>
+    <tr>
+        {% for header in this.headers %}
+            <th>
+                {% block th %}{{ header }}{% endblock %}
+            </th>
+        {% endfor %}
+    </tr>
+    </thead>
+    <tbody>
+    {% for row in this.data %}
+        <tr>
+            {% for cell in row %}
+                <td>
+                    {% block td %}{{ cell }}{% endblock %}
+                </td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% if block('footer') is defined %}
+    {{ block('footer') }}
+{% endif %}

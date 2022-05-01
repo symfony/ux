@@ -37,7 +37,26 @@ final class ComponentRenderer
     ) {
     }
 
+    public function createAndRender(string $name, array $props = []): string
+    {
+        return $this->render($this->factory->create($name, $props));
+    }
+
     public function render(MountedComponent $mounted): string
+    {
+        $event = $this->preRender($mounted);
+
+        return $this->twig->render($event->getTemplate(), $event->getVariables());
+    }
+
+    public function embeddedContext(string $name, array $props, array $context): array
+    {
+        $context[PreRenderEvent::EMBEDDED] = true;
+
+        return $this->preRender($this->factory->create($name, $props), $context)->getVariables();
+    }
+
+    private function preRender(MountedComponent $mounted, array $context = []): PreRenderEvent
     {
         if (!$this->safeClassesRegistered) {
             $this->twig->getExtension(EscaperExtension::class)->addSafeClass(ComponentAttributes::class, ['html']);
@@ -48,6 +67,9 @@ final class ComponentRenderer
         $component = $mounted->getComponent();
         $metadata = $this->factory->metadataFor($mounted->getName());
         $variables = array_merge(
+            // first so values can be overridden
+            $context,
+
             // add the component as "this"
             ['this' => $component],
 
@@ -64,7 +86,7 @@ final class ComponentRenderer
 
         $this->dispatcher->dispatch($event);
 
-        return $this->twig->render($event->getTemplate(), $event->getVariables());
+        return $event;
     }
 
     private function exposedVariables(object $component, bool $exposePublicProps): \Iterator

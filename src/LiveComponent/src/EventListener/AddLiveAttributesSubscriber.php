@@ -34,6 +34,11 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
             return;
         }
 
+        if (method_exists($event, 'isEmbedded') && $event->isEmbedded()) {
+            // TODO: remove method_exists once min ux-twig-component version has this method
+            throw new \LogicException('Embedded components cannot be live.');
+        }
+
         $metadata = $event->getMetadata();
         $attributes = $this->getLiveAttributes($event->getMountedComponent(), $metadata);
         $variables = $event->getVariables();

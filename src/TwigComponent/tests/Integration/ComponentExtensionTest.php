@@ -118,6 +118,15 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('NoPublicProp1: default', $output);
     }
 
+    public function testCanRenderEmbeddedComponent(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('embedded_component.html.twig');
+
+        $this->assertStringContainsString('<caption>data table</caption>', $output);
+        $this->assertStringContainsString('custom th (key)', $output);
+        $this->assertStringContainsString('custom td (1)', $output);
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [
