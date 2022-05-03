@@ -39,7 +39,7 @@ Done! Now render it wherever you want:
 
 Enjoy your new component!
 
-.. figure:: https://github.com/symfony/ux-twig-component/blob/2.x/alert-example.png?raw=true
+.. image:: images/alert-example.png
    :alt: Example of the AlertComponent
 
    Example of the AlertComponent
