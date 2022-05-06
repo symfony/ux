@@ -69,7 +69,7 @@ Parameters are exactly the same as for the `typed library`_
 
 .. note::
 
-Extend the default behavior
+Extend the JavaScript Controller
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Symfony UX Typed allows you to extend its default behavior using a custom
