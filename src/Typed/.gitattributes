@@ -2,5 +2,3 @@
 /.gitignore export-ignore
 /Resources/assets/test export-ignore
 /Animation.gif export-ignore
-/CHANGELOG.md export-ignore
-/README.md export-ignore

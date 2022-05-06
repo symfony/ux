@@ -82,6 +82,11 @@ Stimulus controller:
     import { Controller } from '@hotwired/stimulus';
 
     export default class extends Controller {
+        initialize() {
+            this._onPreConnect = this._onPreConnect.bind(this);
+            this._onConnect = this._onConnect.bind(this);
+        }
+
         connect() {
             this.element.addEventListener('typed:pre-connect', this._onPreConnect);
             this.element.addEventListener('typed:connect', this._onConnect);
@@ -96,6 +101,12 @@ Stimulus controller:
         _onPreConnect(event) {
             // Typed has not been initialized - options can be changed
             console.log(event.detail.options); // Options that will be used to initialize Typed
+            event.detail.options.onBegin = (typed) => {
+                console.log("Typed is ready to type cool messages!");
+            });
+            event.detail.options.onStop = (typed) => {
+                console.log("OK. Enough is enough.");
+            });
         }
 
         _onConnect(event) {
