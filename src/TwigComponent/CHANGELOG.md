@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2
+
+-   Allow to pass stringable object as non mapped component attribute
+
 ## 2.1
 
 -   Make public component properties available directly in the template (`{{ prop }}` vs `{{ this.prop }}`).
