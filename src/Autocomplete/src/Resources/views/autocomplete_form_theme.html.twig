@@ -1,0 +1,9 @@
+{# EasyAdminAutocomplete form type #}
+{% block ux_entity_autocomplete_widget %}
+    {{ form_widget(form.autocomplete, { attr: attr|merge({ required: required }) }) }}
+{% endblock ux_entity_autocomplete_widget %}
+
+{% block ux_entity_autocomplete_label %}
+    {% set id = form.autocomplete.vars.id %}
+    {{ block('form_label') }}
+{% endblock ux_entity_autocomplete_label %}

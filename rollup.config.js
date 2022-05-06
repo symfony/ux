@@ -1,4 +1,5 @@
 import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 import glob from 'glob';
 import path from 'path';
@@ -56,6 +57,11 @@ const packages = files.map((file) => {
         plugins: [
             resolve(),
             typescript(),
+            commonjs({
+                namedExports: {
+                    'react-dom/client': ['createRoot'],
+                },
+            }),
             wildcardExternalsPlugin(peerDependencies)
         ],
     };
