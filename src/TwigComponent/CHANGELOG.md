@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## 2.2
+
+-   Allow to pass stringable object as non mapped component attribute
+
+## 2.1
+
+-   Make public component properties available directly in the template (`{{ prop }}` vs `{{ this.prop }}`).
+
+-   Add `PreMount` priority parameter.
+
+-   Add `PostMount` hook component hook to intercept extra props.
+
+-   Add attributes system that takes extra props passed to `component()` and converts them
+    into a `ComponentAttributes` object available in your template as `attributes`.
+
+-   Add `PreRenderEvent` to intercept/manipulate twig template/variables before rendering.
+
+-   Add `ExposeInTemplate` attribute to make non-public properties available in component
+    templates directly.
+
+-   Add _Computed Properties_ system.
+
 ## 2.0.0
 
 -   Support for `stimulus` version 2 was removed and support for `@hotwired/stimulus`

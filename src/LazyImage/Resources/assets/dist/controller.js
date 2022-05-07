@@ -3,11 +3,12 @@ import { Controller } from '@hotwired/stimulus';
 class default_1 extends Controller {
     connect() {
         const hd = new Image();
+        const element = this.element;
         const srcsetString = this._calculateSrcsetString();
         hd.addEventListener('load', () => {
-            this.element.src = this.srcValue;
+            element.src = this.srcValue;
             if (srcsetString) {
-                this.element.srcset = srcsetString;
+                element.srcset = srcsetString;
             }
             this._dispatchEvent('lazy-image:ready', { image: hd });
         });

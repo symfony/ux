@@ -11,7 +11,7 @@
 
 import { clearDOM } from '@symfony/stimulus-testing';
 import { initLiveComponent, mockRerender, startStimulus } from '../tools';
-import {getByLabelText, getByText, waitFor} from '@testing-library/dom';
+import { getByLabelText, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock-jest';
 
@@ -34,6 +34,9 @@ describe('LiveController data-model Tests', () => {
 
     afterEach(() => {
         clearDOM();
+        if (!fetchMock.done()) {
+            throw new Error('Mocked requests did not match');
+        }
         fetchMock.reset();
     });
 
@@ -41,9 +44,8 @@ describe('LiveController data-model Tests', () => {
         const data = { name: 'Ryan' };
         const { element, controller } = await startStimulus(template(data));
 
-        fetchMock.getOnce('end:?name=Ryan+WEAVER', {
-            html: template({ name: 'Ryan Weaver' }),
-            data: { name: 'Ryan Weaver' }
+        mockRerender({name: 'Ryan WEAVER'}, template, (data: any) => {
+            data.name = 'Ryan Weaver';
         });
 
         await userEvent.type(getByLabelText(element, 'Name:'), ' WEAVER', {
@@ -55,9 +57,6 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(getByLabelText(element, 'Name:')).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({name: 'Ryan Weaver'});
 
-        // assert all calls were done the correct number of times
-        fetchMock.done();
-
         // assert the input is still focused after rendering
         expect(document.activeElement.dataset.model).toEqual('name');
     });
@@ -66,18 +65,12 @@ describe('LiveController data-model Tests', () => {
         const data = { name: 'Ryan' };
         const { element, controller } = await startStimulus(template(data));
 
-        fetchMock.getOnce('end:?name=Jan', {
-            html: template({ name: 'Jan' }),
-            data: { name: 'Jan' }
-        });
+        mockRerender({name: 'Jan'}, template);
 
         userEvent.click(getByText(element, 'Change name to Jan'));
 
         await waitFor(() => expect(getByLabelText(element, 'Name:')).toHaveValue('Jan'));
         expect(controller.dataValue).toEqual({name: 'Jan'});
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
 
@@ -96,11 +89,8 @@ describe('LiveController data-model Tests', () => {
             ['guy', 150]
         ];
         requests.forEach(([string, delay]) => {
-            fetchMock.getOnce(`end:my_component?name=Ryan${string}`, {
-                // the _ at the end helps us look that the input has changed
-                // as a result of a re-render (not just from typing in the input)
-                html: template({ name: `Ryan${string}_` }),
-                data: { name: `Ryan${string}_` }
+            mockRerender({name: `Ryan${string}`}, template, (data: any) => {
+                data.name = `Ryan${string}_`;
             }, { delay });
         });
 
@@ -118,9 +108,6 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(getByLabelText(element, 'Name:')).toHaveValue('Ryanguy_'));
         expect(controller.dataValue).toEqual({name: 'Ryanguy_'});
 
-        // assert all calls were done the correct number of times
-        fetchMock.done();
-
         // only 1 render should have ultimately occurred
         expect(renderCount).toEqual(1);
     });
@@ -134,7 +121,7 @@ describe('LiveController data-model Tests', () => {
         delete inputElement.dataset.model;
         inputElement.setAttribute('name', 'name');
 
-        mockRerender({name: 'Ryan WEAVER'}, template, (data) => {
+        mockRerender({name: 'Ryan WEAVER'}, template, (data: any) => {
             data.name = 'Ryan Weaver';
         });
 
@@ -142,9 +129,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({name: 'Ryan Weaver'});
-
-        // assert all calls were done the correct number of times
-        fetchMock.done();
     });
 
     it('uses data-model when both name and data-model is present', async () => {
@@ -164,8 +148,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({name: 'Ryan Weaver'});
-
-        fetchMock.done();
     });
 
     it('uses data-value when both value and data-value is present', async () => {
@@ -185,8 +167,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('first_name'));
         expect(controller.dataValue).toEqual({name: 'first_name'});
-
-        fetchMock.done();
     });
 
     it('standardizes user[firstName] style models into post.name', async () => {
@@ -218,9 +198,222 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
         expect(controller.dataValue).toEqual({ user: { firstName: 'Ryan Weaver' } });
+    });
 
-        // assert all calls were done the correct number of times
-        fetchMock.done();
+    it('sends correct data for checkbox fields', async () => {
+        const checkboxTemplate = (data: any) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Checkbox 1: <input type="checkbox" name="form[check1]" value="1" ${data.form.check1 ? 'checked' : ''} />
+                </label>
+                
+                <label>
+                    Checkbox 2: <input type="checkbox" name="form[check2]" value="1" ${data.form.check2 ? 'checked' : ''} />
+                </label>
+                
+                Checkbox 2 is ${data.form.check2 ? 'checked' : 'unchecked' }
+            </div>
+        `;
+        const data = { form: { check1: false, check2: false} };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        const check1Element = getByLabelText(element, 'Checkbox 1:');
+        const check2Element = getByLabelText(element, 'Checkbox 2:');
+
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
+        await userEvent.click(check1Element);
+
+        mockRerender({ form: {check1: '1', check2: '1'}}, checkboxTemplate);
+
+        await userEvent.click(check2Element);
+        await waitFor(() => expect(element).toHaveTextContent('Checkbox 2 is checked'));
+
+        expect(controller.dataValue).toEqual({form: {check1: '1', check2: '1'}});
+    });
+
+    it('sends correct data for initially checked checkbox fields', async () => {
+        const checkboxTemplate = (data: any) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Checkbox 1: <input type="checkbox" name="form[check1]" value="1" ${data.form.check1 ? 'checked' : ''} />
+                </label>
+                
+                <label>
+                    Checkbox 2: <input type="checkbox" name="form[check2]" value="1" ${data.form.check2 ? 'checked' : ''} />
+                </label>
+                
+                Checkbox 1 is ${data.form.check1 ? 'checked' : 'unchecked' }
+            </div>
+        `;
+        const data = { form: { check1: '1', check2: false} };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        const check1Element = getByLabelText(element, 'Checkbox 1:');
+        const check2Element = getByLabelText(element, 'Checkbox 2:');
+
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
+        await userEvent.click(check2Element);
+
+        mockRerender({ form: {check1: null, check2: '1'}}, checkboxTemplate);
+
+        await userEvent.click(check1Element);
+        await waitFor(() => expect(element).toHaveTextContent('Checkbox 1 is unchecked'));
+
+        expect(controller.dataValue).toEqual({form: {check1: null, check2: '1'}});
+    });
+
+    it('sends correct data for array valued checkbox fields', async () => {
+        const checkboxTemplate = (data: any) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Checkbox 1: <input type="checkbox" name="form[check][]" value="foo" ${data.form.check.indexOf('foo') > -1 ? 'checked' : ''} />
+                </label>
+                
+                <label>
+                    Checkbox 2: <input type="checkbox" name="form[check][]" value="bar" ${data.form.check.indexOf('bar') > -1 ? 'checked' : ''} />
+                </label>
+                
+                Checkbox 2 is ${data.form.check.indexOf('bar') > -1 ? 'checked' : 'unchecked' }
+            </div>
+        `;
+        const data = { form: { check: []} };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        const check1Element = getByLabelText(element, 'Checkbox 1:');
+        const check2Element = getByLabelText(element, 'Checkbox 2:');
+
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
+        await userEvent.click(check1Element);
+
+        mockRerender({ form: {check: ['foo', 'bar']}}, checkboxTemplate);
+
+        await userEvent.click(check2Element);
+        await waitFor(() => expect(element).toHaveTextContent('Checkbox 2 is checked'));
+
+        expect(controller.dataValue).toEqual({form: {check: ['foo', 'bar']}});
+    });
+
+    it('sends correct data for array valued checkbox fields with initial data', async () => {
+        const checkboxTemplate = (data: any) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Checkbox 1: <input type="checkbox" name="form[check][]" value="foo" ${data.form.check.indexOf('foo') > -1 ? 'checked' : ''} />
+                </label>
+                
+                <label>
+                    Checkbox 2: <input type="checkbox" name="form[check][]" value="bar" ${data.form.check.indexOf('bar') > -1 ? 'checked' : ''} />
+                </label>
+                
+                Checkbox 1 is ${data.form.check.indexOf('foo') > -1 ? 'checked' : 'unchecked' }
+            </div>
+        `;
+        const data = { form: { check: ['foo']} };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        const check1Element = getByLabelText(element, 'Checkbox 1:');
+        const check2Element = getByLabelText(element, 'Checkbox 2:');
+
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
+        await userEvent.click(check2Element);
+
+        mockRerender({ form: {check: ['bar']}}, checkboxTemplate);
+
+        await userEvent.click(check1Element);
+        await waitFor(() => expect(element).toHaveTextContent('Checkbox 1 is unchecked'));
+
+        expect(controller.dataValue).toEqual({form: {check: ['bar']}});
+    });
+
+    it('sends correct data for select multiple field', async () => {
+        const checkboxTemplate = (data: any) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Select:
+                    <select name="form[select][]" multiple>
+                        <option value="foo" ${data.form.select?.indexOf('foo') > -1 ? 'selected' : ''}>foo</option>
+                        <option value="bar" ${data.form.select?.indexOf('bar') > -1 ? 'selected' : ''}>bar</option>
+                    </select>
+                </label>
+                
+                Option 2 is ${data.form.select?.indexOf('bar') > -1 ? 'selected' : 'unselected' }
+            </div>
+        `;
+        const data = { form: { select: []} };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        const selectElement = getByLabelText(element, 'Select:');
+
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
+        await userEvent.selectOptions(selectElement, 'foo');
+
+        mockRerender({ form: {select: ['foo', 'bar']}}, checkboxTemplate);
+
+        await userEvent.selectOptions(selectElement, 'bar');
+
+        await waitFor(() => expect(element).toHaveTextContent('Select: foo bar Option 2 is selected'));
+
+        expect(controller.dataValue).toEqual({form: {select: ['foo', 'bar']}});
+    });
+
+    it('sends correct data for select multiple field with initial data', async () => {
+        const checkboxTemplate = (data: any) => `
+            <div
+                ${initLiveComponent('/_components/my_component', data)}
+                data-action="change->live#update"
+            >
+                <label>
+                    Select:
+                    <select name="form[select][]" multiple>
+                        <option value="foo" ${data.form.select?.indexOf('foo') > -1 ? 'selected' : ''}>foo</option>
+                        <option value="bar" ${data.form.select?.indexOf('bar') > -1 ? 'selected' : ''}>bar</option>
+                    </select>
+                </label>
+                
+                Option 2 is ${data.form.select?.indexOf('bar') > -1 ? 'selected' : 'unselected' }
+            </div>
+        `;
+        const data = { form: { select: ['foo']} };
+        const { element, controller } = await startStimulus(checkboxTemplate(data));
+
+        const selectElement = getByLabelText(element, 'Select:');
+
+        // no mockRerender needed... not sure why. This first Ajax call is likely
+        // interrupted by the next immediately starting
+        await userEvent.selectOptions(selectElement, 'bar');
+
+        mockRerender({ form: {select: ['bar']}}, checkboxTemplate);
+
+        await userEvent.deselectOptions(selectElement, 'foo');
+
+        await waitFor(() => expect(element).toHaveTextContent('Select: foo bar Option 2 is selected'));
+
+        mockRerender({ form: {select: []}}, checkboxTemplate);
+
+        await userEvent.deselectOptions(selectElement, 'bar');
+
+        await waitFor(() => expect(element).toHaveTextContent('Select: foo bar Option 2 is unselected'));
+
+        expect(controller.dataValue).toEqual({form: {select: []}});
     });
 
     it('updates correctly when live#update is on a parent element', async () => {
@@ -252,8 +445,6 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
 
-        fetchMock.done();
-
         // assert the input is still focused after rendering
         expect(document.activeElement.getAttribute('name')).toEqual('firstName');
     });
@@ -271,8 +462,21 @@ describe('LiveController data-model Tests', () => {
         await userEvent.type(inputElement, ' WEAVER');
 
         await waitFor(() => expect(inputElement).toHaveValue('Ryan Weaver'));
+    });
 
-        // assert all calls were done the correct number of times
-        fetchMock.done();
+    it('data changed on server should be noticed by controller', async () => {
+        const data = { name: 'Ryan' };
+        const { element, controller } = await startStimulus(template(data));
+
+        mockRerender({name: 'Ryan WEAVER'}, template, (data) => {
+            // sneaky server changes the data!
+            data.name = 'Kevin Bond';
+        });
+
+        const inputElement = getByLabelText(element, 'Name:');
+        await userEvent.type(inputElement, ' WEAVER');
+
+        await waitFor(() => expect(inputElement).toHaveValue('Kevin Bond'));
+        expect(controller.dataValue).toEqual({name: 'Kevin Bond'});
     });
 });

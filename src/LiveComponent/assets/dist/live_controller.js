@@ -898,62 +898,7 @@ function combineSpacedArray(parts) {
     return finalParts;
 }
 
-const buildFormKey = function (key, parentKeys) {
-    let fieldName = '';
-    [...parentKeys, key].forEach((name) => {
-        fieldName += fieldName ? `[${name}]` : name;
-    });
-    return fieldName;
-};
-const addObjectToFormData = function (formData, data, parentKeys) {
-    Object.keys(data).forEach((key => {
-        let value = data[key];
-        if (value === true) {
-            value = 1;
-        }
-        if (value === false) {
-            value = 0;
-        }
-        if (value === null) {
-            return;
-        }
-        if (typeof value === 'object') {
-            addObjectToFormData(formData, value, [...parentKeys, key]);
-            return;
-        }
-        formData.append(buildFormKey(key, parentKeys), value);
-    }));
-};
-const addObjectToSearchParams = function (searchParams, data, parentKeys) {
-    Object.keys(data).forEach((key => {
-        let value = data[key];
-        if (value === true) {
-            value = 1;
-        }
-        if (value === false) {
-            value = 0;
-        }
-        if (value === null) {
-            return;
-        }
-        if (typeof value === 'object') {
-            addObjectToSearchParams(searchParams, value, [...parentKeys, key]);
-            return;
-        }
-        searchParams.set(buildFormKey(key, parentKeys), value);
-    }));
-};
-function buildFormData(data) {
-    const formData = new FormData();
-    addObjectToFormData(formData, data, []);
-    return formData;
-}
-function buildSearchParams(searchParams, data) {
-    addObjectToSearchParams(searchParams, data, []);
-    return searchParams;
-}
-
-function setDeepData(data, propertyPath, value) {
+function parseDeepData(data, propertyPath) {
     const finalData = JSON.parse(JSON.stringify(data));
     let currentLevelData = finalData;
     const parts = propertyPath.split('.');
@@ -961,9 +906,18 @@ function setDeepData(data, propertyPath, value) {
         currentLevelData = currentLevelData[parts[i]];
     }
     const finalKey = parts[parts.length - 1];
+    return {
+        currentLevelData,
+        finalData,
+        finalKey,
+        parts
+    };
+}
+function setDeepData(data, propertyPath, value) {
+    const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath);
     if (typeof currentLevelData !== 'object') {
         const lastPart = parts.pop();
-        throw new Error(`Cannot set data-model="${propertyPath}". They parent "${parts.join(',')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
+        throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
     }
     if (currentLevelData[finalKey] === undefined) {
         const lastPart = parts.pop();
@@ -983,10 +937,12 @@ function doesDeepPropertyExist(data, propertyPath) {
 }
 function normalizeModelName(model) {
     return model
+        .replace(/\[]$/, '')
         .split('[')
         .map(function (s) {
         return s.replace(']', '');
-    }).join('.');
+    })
+        .join('.');
 }
 
 function haveRenderedValuesChanged(originalDataJson, currentDataJson, newDataJson) {
@@ -1014,6 +970,50 @@ function haveRenderedValuesChanged(originalDataJson, currentDataJson, newDataJso
     return keyHasChanged;
 }
 
+function normalizeAttributesForComparison(element) {
+    if (element.value) {
+        element.setAttribute('value', element.value);
+    }
+    else if (element.hasAttribute('value')) {
+        element.setAttribute('value', '');
+    }
+    Array.from(element.children).forEach((child) => {
+        normalizeAttributesForComparison(child);
+    });
+}
+
+function cloneHTMLElement(element) {
+    const newElement = element.cloneNode(true);
+    if (!(newElement instanceof HTMLElement)) {
+        throw new Error('Could not clone element');
+    }
+    return newElement;
+}
+
+function updateArrayDataFromChangedElement(element, value, currentValues) {
+    if (!(currentValues instanceof Array)) {
+        currentValues = [];
+    }
+    if (element instanceof HTMLInputElement && element.type === 'checkbox') {
+        const index = currentValues.indexOf(value);
+        if (element.checked) {
+            if (index === -1) {
+                currentValues.push(value);
+            }
+            return currentValues;
+        }
+        if (index > -1) {
+            currentValues.splice(index, 1);
+        }
+        return currentValues;
+    }
+    if (element instanceof HTMLSelectElement) {
+        currentValues = Array.from(element.selectedOptions).map(el => el.value);
+        return currentValues;
+    }
+    throw new Error(`The element used to determine array data from is unsupported (${element.tagName} provided)`);
+}
+
 const DEFAULT_DEBOUNCE = 150;
 class default_1 extends Controller {
     constructor() {
@@ -1024,6 +1024,7 @@ class default_1 extends Controller {
         this.pollingIntervals = [];
         this.isWindowUnloaded = false;
         this.originalDataJSON = '{}';
+        this.mutationObserver = null;
         this.markAsWindowUnloaded = () => {
             this.isWindowUnloaded = true;
         };
@@ -1042,6 +1043,7 @@ class default_1 extends Controller {
             this._initiatePolling(this.element.dataset.poll);
         }
         window.addEventListener('beforeunload', this.markAsWindowUnloaded);
+        this._startAttributesMutationObserver();
         this.element.addEventListener('live:update-model', (event) => {
             if (event.target === this.element) {
                 return;
@@ -1055,14 +1057,15 @@ class default_1 extends Controller {
             clearInterval(interval);
         });
         window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
+        if (this.mutationObserver) {
+            this.mutationObserver.disconnect();
+        }
     }
     update(event) {
-        const value = this._getValueFromElement(event.target);
-        this._updateModelFromElement(event.target, value, true);
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), true);
     }
     updateDefer(event) {
-        const value = this._getValueFromElement(event.target);
-        this._updateModelFromElement(event.target, value, false);
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), false);
     }
     action(event) {
         const rawAction = event.currentTarget.dataset.actionName;
@@ -1070,7 +1073,7 @@ class default_1 extends Controller {
         directives.forEach((directive) => {
             const _executeAction = () => {
                 this._clearWaitingDebouncedRenders();
-                this._makeRequest(directive.action);
+                this._makeRequest(directive.action, directive.named);
             };
             let handled = false;
             directive.modifiers.forEach((modifier) => {
@@ -1109,29 +1112,32 @@ class default_1 extends Controller {
         });
     }
     $render() {
-        this._makeRequest(null);
+        this._makeRequest(null, {});
     }
     _getValueFromElement(element) {
-        const value = element.dataset.value || element.value;
-        if (!value) {
-            const clonedElement = (element.cloneNode());
-            if (!(clonedElement instanceof HTMLElement)) {
-                throw new Error('cloneNode() produced incorrect type');
-            }
-            throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-value" or "value" attribute set.`);
-        }
-        return value;
+        return element.dataset.value || element.value;
     }
     _updateModelFromElement(element, value, shouldRender) {
+        if (!(element instanceof HTMLElement)) {
+            throw new Error('Could not update model for non HTMLElement');
+        }
         const model = element.dataset.model || element.getAttribute('name');
         if (!model) {
-            const clonedElement = (element.cloneNode());
-            if (!(clonedElement instanceof HTMLElement)) {
-                throw new Error('cloneNode() produced incorrect type');
-            }
+            const clonedElement = cloneHTMLElement(element);
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
-        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null);
+        let finalValue = value;
+        if (/\[]$/.test(model)) {
+            const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model));
+            const currentValue = currentLevelData[finalKey];
+            finalValue = updateArrayDataFromChangedElement(element, value, currentValue);
+        }
+        else if (element instanceof HTMLInputElement
+            && element.type === 'checkbox'
+            && !element.checked) {
+            finalValue = null;
+        }
+        this.$updateModel(model, finalValue, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
     }
     $updateModel(model, value, shouldRender = true, extraModelName = null, options = {}) {
         const directives = parseDirectives(model);
@@ -1155,7 +1161,7 @@ class default_1 extends Controller {
             this._dispatchEvent('live:update-model', {
                 modelName,
                 extraModelName: normalizedExtraModelName,
-                value,
+                value
             });
         }
         this.dataValue = setDeepData(this.dataValue, modelName, value);
@@ -1173,14 +1179,17 @@ class default_1 extends Controller {
             }, this.debounceValue || DEFAULT_DEBOUNCE);
         }
     }
-    _makeRequest(action) {
+    _makeRequest(action, args) {
         const splitUrl = this.urlValue.split('?');
         let [url] = splitUrl;
         const [, queryString] = splitUrl;
         const params = new URLSearchParams(queryString || '');
+        if (typeof args === 'object' && Object.keys(args).length > 0) {
+            params.set('args', new URLSearchParams(args).toString());
+        }
         const fetchOptions = {};
         fetchOptions.headers = {
-            'Accept': 'application/vnd.live-component+json',
+            'Accept': 'application/vnd.live-component+html',
         };
         if (action) {
             url += `/${encodeURIComponent(action)}`;
@@ -1188,13 +1197,19 @@ class default_1 extends Controller {
                 fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfValue;
             }
         }
-        if (!action && this._willDataFitInUrl()) {
-            buildSearchParams(params, this.dataValue);
-            fetchOptions.method = 'GET';
+        let dataAdded = false;
+        if (!action) {
+            const dataJson = JSON.stringify(this.dataValue);
+            if (this._willDataFitInUrl(dataJson, params)) {
+                params.set('data', dataJson);
+                fetchOptions.method = 'GET';
+                dataAdded = true;
+            }
         }
-        else {
+        if (!dataAdded) {
             fetchOptions.method = 'POST';
-            fetchOptions.body = buildFormData(this.dataValue);
+            fetchOptions.body = JSON.stringify(this.dataValue);
+            fetchOptions.headers['Content-Type'] = 'application/json';
         }
         this._onLoadingStart();
         const paramsString = params.toString();
@@ -1206,34 +1221,30 @@ class default_1 extends Controller {
             }
             const isMostRecent = this.renderPromiseStack.removePromise(thisPromise);
             if (isMostRecent) {
-                response.json().then((data) => {
-                    this._processRerender(data);
+                response.text().then((html) => {
+                    this._processRerender(html, response);
                 });
             }
         });
     }
-    _processRerender(data) {
+    _processRerender(html, response) {
         if (this.isWindowUnloaded) {
             return;
         }
-        if (data.redirect_url) {
+        if (response.headers.get('Location')) {
             if (typeof Turbo !== 'undefined') {
-                Turbo.visit(data.redirect_url);
+                Turbo.visit(response.headers.get('Location'));
             }
             else {
-                window.location.href = data.redirect_url;
+                window.location.href = response.headers.get('Location') || '';
             }
             return;
         }
-        if (!this._dispatchEvent('live:render', data, true, true)) {
+        if (!this._dispatchEvent('live:render', html, true, true)) {
             return;
         }
         this._onLoadingFinish();
-        if (!data.html) {
-            throw new Error('Missing html key on response JSON');
-        }
-        this._executeMorphdom(data.html);
-        this.dataValue = data.data;
+        this._executeMorphdom(html);
     }
     _clearWaitingDebouncedRenders() {
         if (this.renderDebounceTimeout) {
@@ -1314,7 +1325,7 @@ class default_1 extends Controller {
     _getLoadingDirectives() {
         const loadingDirectives = [];
         this.element.querySelectorAll('[data-loading]').forEach((element => {
-            if (!(element instanceof HTMLElement)) {
+            if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
                 throw new Error('Invalid Element Type');
             }
             const directives = parseDirectives(element.dataset.loading || 'show');
@@ -1350,8 +1361,9 @@ class default_1 extends Controller {
             element.removeAttribute(attribute);
         });
     }
-    _willDataFitInUrl() {
-        return Object.values(this.dataValue).join(',').length < 1500;
+    _willDataFitInUrl(dataJson, params) {
+        const urlEncodedJsonData = new URLSearchParams(dataJson).toString();
+        return (urlEncodedJsonData + params.toString()).length < 1500;
     }
     _executeMorphdom(newHtml) {
         function htmlToElement(html) {
@@ -1367,14 +1379,26 @@ class default_1 extends Controller {
         const newElement = htmlToElement(newHtml);
         morphdom(this.element, newElement, {
             onBeforeElUpdated: (fromEl, toEl) => {
-                if (fromEl.isEqualNode(toEl)) {
+                if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
                     return false;
+                }
+                if (fromEl.isEqualNode(toEl)) {
+                    const normalizedFromEl = cloneHTMLElement(fromEl);
+                    normalizeAttributesForComparison(normalizedFromEl);
+                    const normalizedToEl = cloneHTMLElement(toEl);
+                    normalizeAttributesForComparison(normalizedToEl);
+                    if (normalizedFromEl.isEqualNode(normalizedToEl)) {
+                        return false;
+                    }
                 }
                 const controllerName = fromEl.hasAttribute('data-controller') ? fromEl.getAttribute('data-controller') : null;
                 if (controllerName
                     && controllerName.split(' ').indexOf('live') !== -1
                     && fromEl !== this.element
                     && !this._shouldChildLiveElementUpdate(fromEl, toEl)) {
+                    return false;
+                }
+                if (fromEl.hasAttribute('data-live-ignore')) {
                     return false;
                 }
                 return true;
@@ -1409,10 +1433,13 @@ class default_1 extends Controller {
         }
         else {
             callback = () => {
-                this._makeRequest(actionName);
+                this._makeRequest(actionName, {});
             };
         }
         const timer = setInterval(() => {
+            if (this.renderPromiseStack.countActivePromises() > 0) {
+                return;
+            }
             callback();
         }, duration);
         this.pollingIntervals.push(timer);
@@ -1495,6 +1522,19 @@ class default_1 extends Controller {
         }
         this.element.dataset.originalData = this.originalDataJSON;
     }
+    _startAttributesMutationObserver() {
+        this.mutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && !this.element.dataset.originalData) {
+                    this.originalDataJSON = JSON.stringify(this.dataValue);
+                    this._exposeOriginalData();
+                }
+            });
+        });
+        this.mutationObserver.observe(this.element, {
+            attributes: true
+        });
+    }
 }
 default_1.values = {
     url: String,
@@ -1520,6 +1560,9 @@ class PromiseStack {
     }
     findPromiseIndex(promise) {
         return this.stack.findIndex((item) => item === promise);
+    }
+    countActivePromises() {
+        return this.stack.length;
     }
 }
 const parseLoadingAction = function (action, isLoading) {

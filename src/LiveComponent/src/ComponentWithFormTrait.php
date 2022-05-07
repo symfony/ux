@@ -11,12 +11,15 @@
 
 namespace Symfony\UX\LiveComponent;
 
-use Symfony\Component\Form\Form;
+use Symfony\Component\Form\ClearableErrorsInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\UX\LiveComponent\Attribute\BeforeReRender;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
+use Symfony\UX\LiveComponent\Attribute\PreReRender;
+use Symfony\UX\LiveComponent\Util\LiveFormUtility;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
+use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
@@ -25,6 +28,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
  */
 trait ComponentWithFormTrait
 {
+    #[ExposeInTemplate(name: 'form', getter: 'getForm')]
     private ?FormView $formView = null;
     private ?FormInterface $formInstance = null;
 
@@ -64,16 +68,30 @@ trait ComponentWithFormTrait
     abstract protected function instantiateForm(): FormInterface;
 
     /**
-     * Override in your class if you need extra mounted values.
-     *
-     * Call $this->setForm($form) manually in that situation
-     * if you're passing in an initial form.
+     * @internal
      */
-    public function mount(?FormView $form = null)
+    #[PostMount]
+    public function initializeForm(array $data): array
     {
-        if ($form) {
-            $this->setForm($form);
+        // allow the FormView object to be passed into the component() as "form"
+        if (\array_key_exists('form', $data)) {
+            $this->formView = $data['form'];
+
+            unset($data['form']);
+
+            // if a FormView is passed in and it contains any errors, then
+            // we mark that this entire component has been validated so that
+            // all validation errors continue showing on re-render
+            if ($this->formView && LiveFormUtility::doesFormContainAnyErrors($this->formView)) {
+                $this->isValidated = true;
+                $this->validatedFields = [];
+            }
         }
+
+        // set the formValues from the initial form view's data
+        $this->formValues = $this->extractFormValues($this->getForm());
+
+        return $data;
     }
 
     /**
@@ -82,12 +100,14 @@ trait ComponentWithFormTrait
      * This primarily applies to a re-render where $actionName is null.
      * But, in the event that there is an action and the form was
      * not submitted manually, it will be submitted here.
+     *
+     * @internal
      */
-    #[BeforeReRender]
+    #[PreReRender]
     public function submitFormOnRender(): void
     {
         if (!$this->getFormInstance()->isSubmitted()) {
-            $this->submitForm(false);
+            $this->submitForm($this->isValidated);
         }
     }
 
@@ -103,18 +123,6 @@ trait ComponentWithFormTrait
         return $this->formView;
     }
 
-    /**
-     * Call this from mount() if your component receives a FormView.
-     *
-     * If your are not passing a FormView into your component, you
-     * don't need to call this directly: the form will be set for
-     * you from your instantiateForm() method.
-     */
-    public function setForm(FormView $form): void
-    {
-        $this->formView = $form;
-    }
-
     public function getFormName(): string
     {
         if (!$this->formName) {
@@ -124,18 +132,14 @@ trait ComponentWithFormTrait
         return $this->formName;
     }
 
-    public function getFormValues(): array
-    {
-        if (null === $this->formValues) {
-            $this->formValues = $this->extractFormValues($this->getForm());
-        }
-
-        return $this->formValues;
-    }
-
     private function submitForm(bool $validateAll = true): void
     {
-        $this->getFormInstance()->submit($this->formValues);
+        if (null !== $this->formView) {
+            throw new \LogicException('The submitForm() method is being called, but the FormView has already been built. Are you calling $this->getForm() - which creates the FormView - before submitting the form?');
+        }
+
+        $form = $this->getFormInstance();
+        $form->submit($this->formValues);
 
         if ($validateAll) {
             // mark the entire component as validated
@@ -146,12 +150,31 @@ trait ComponentWithFormTrait
             // we only want to validate fields in validatedFields
             // but really, everything is validated at this point, which
             // means we need to clear validation on non-matching fields
-            $this->clearErrorsForNonValidatedFields($this->getFormInstance(), $this->getFormName());
+            $this->clearErrorsForNonValidatedFields($form, $form->getName());
         }
 
-        if (!$this->getFormInstance()->isValid()) {
+        // re-extract the "view" values in case the submitted data
+        // changed the underlying data or structure of the form
+        $this->formValues = $this->extractFormValues($this->getForm());
+
+        // remove any validatedFields that do not exist in data anymore
+        $this->validatedFields = LiveFormUtility::removePathsNotInData(
+            $this->validatedFields ?? [],
+            [$form->getName() => $this->formValues],
+        );
+
+        if (!$form->isValid()) {
             throw new UnprocessableEntityHttpException('Form validation failed in component');
         }
+    }
+
+    private function getFormInstance(): FormInterface
+    {
+        if (null === $this->formInstance) {
+            $this->formInstance = $this->instantiateForm();
+        }
+
+        return $this->formInstance;
     }
 
     /**
@@ -164,9 +187,16 @@ trait ComponentWithFormTrait
     private function extractFormValues(FormView $formView): array
     {
         $values = [];
+
         foreach ($formView->children as $child) {
             $name = $child->vars['name'];
-            if (\count($child->children) > 0) {
+
+            // if there are children, expand their values recursively
+            // UNLESS the field is "expanded": in that case the value
+            // is already correct. For example, an expanded ChoiceType with
+            // options "text" and "phone" would already have a value in the format
+            // ["text"] (assuming "text" is checked and "phone" is not).
+            if (!($child->vars['expanded'] ?? false) && \count($child->children) > 0) {
                 $values[$name] = $this->extractFormValues($child);
 
                 continue;
@@ -183,18 +213,9 @@ trait ComponentWithFormTrait
         return $values;
     }
 
-    private function getFormInstance(): FormInterface
+    private function clearErrorsForNonValidatedFields(FormInterface $form, string $currentPath = ''): void
     {
-        if (null === $this->formInstance) {
-            $this->formInstance = $this->instantiateForm();
-        }
-
-        return $this->formInstance;
-    }
-
-    private function clearErrorsForNonValidatedFields(Form $form, $currentPath = ''): void
-    {
-        if (!$currentPath || !\in_array($currentPath, $this->validatedFields, true)) {
+        if ($form instanceof ClearableErrorsInterface && (!$currentPath || !\in_array($currentPath, $this->validatedFields, true))) {
             $form->clearErrors();
         }
 

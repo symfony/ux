@@ -18,13 +18,14 @@ use Twig\TwigFunction;
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
+ *
+ * @internal
  */
 final class LiveComponentExtension extends AbstractExtension
 {
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('init_live_component', [LiveComponentRuntime::class, 'renderLiveAttributes'], ['needs_environment' => true, 'is_safe' => ['html_attr']]),
             new TwigFunction('component_url', [LiveComponentRuntime::class, 'getComponentUrl']),
         ];
     }

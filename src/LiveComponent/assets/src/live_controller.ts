@@ -2,18 +2,14 @@ import { Controller } from '@hotwired/stimulus';
 import morphdom from 'morphdom';
 import { parseDirectives, Directive } from './directives_parser';
 import { combineSpacedArray } from './string_utils';
-import { buildFormData, buildSearchParams } from './http_data_helper';
-import { setDeepData, doesDeepPropertyExist, normalizeModelName } from './set_deep_data';
+import { setDeepData, doesDeepPropertyExist, normalizeModelName, parseDeepData } from './set_deep_data';
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
-
-interface LiveResponseData {
-    redirect_url?: string,
-    html?: string,
-    data?: any,
-}
+import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
+import { cloneHTMLElement } from './clone_html_element';
+import { updateArrayDataFromChangedElement } from "./update_array_data";
 
 interface ElementLoadingDirectives {
-    element: HTMLElement,
+    element: HTMLElement|SVGElement,
     directives: Directive[]
 }
 
@@ -64,6 +60,8 @@ export default class extends Controller {
 
     originalDataJSON = '{}';
 
+    mutationObserver: MutationObserver|null = null;
+
     initialize() {
         this.markAsWindowUnloaded = this.markAsWindowUnloaded.bind(this);
         this.originalDataJSON = JSON.stringify(this.dataValue);
@@ -86,6 +84,8 @@ export default class extends Controller {
 
         window.addEventListener('beforeunload', this.markAsWindowUnloaded);
 
+        this._startAttributesMutationObserver();
+
         this.element.addEventListener('live:update-model', (event) => {
             // ignore events that we dispatched
             if (event.target === this.element) {
@@ -104,21 +104,21 @@ export default class extends Controller {
         });
 
         window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
+
+        if (this.mutationObserver) {
+            this.mutationObserver.disconnect();
+        }
     }
 
     /**
      * Called to update one piece of the model
      */
     update(event: any) {
-        const value = this._getValueFromElement(event.target);
-
-        this._updateModelFromElement(event.target, value, true);
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), true);
     }
 
     updateDefer(event: any) {
-        const value = this._getValueFromElement(event.target);
-
-        this._updateModelFromElement(event.target, value, false);
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), false);
     }
 
     action(event: any) {
@@ -144,7 +144,7 @@ export default class extends Controller {
                 // taking precedence
                 this._clearWaitingDebouncedRenders();
 
-                this._makeRequest(directive.action);
+                this._makeRequest(directive.action, directive.named);
             }
 
             let handled = false;
@@ -192,39 +192,45 @@ export default class extends Controller {
     }
 
     $render() {
-        this._makeRequest(null);
+        this._makeRequest(null, {});
     }
 
-    _getValueFromElement(element: HTMLElement){
-        const value = element.dataset.value || element.value;
+    _getValueFromElement(element: HTMLElement|SVGElement) {
+        return element.dataset.value || (element as any).value;
+    }
 
-        if (!value) {
-            const clonedElement = (element.cloneNode());
-            // helps typescript know this is an HTMLElement
-            if (!(clonedElement instanceof HTMLElement)) {
-                throw new Error('cloneNode() produced incorrect type');
-            }
-
-            throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-value" or "value" attribute set.`);
+    _updateModelFromElement(element: Element, value: string|null, shouldRender: boolean) {
+        if (!(element instanceof HTMLElement)) {
+            throw new Error('Could not update model for non HTMLElement');
         }
-
-        return value;
-    }
-
-    _updateModelFromElement(element: HTMLElement, value: string, shouldRender: boolean) {
         const model = element.dataset.model || element.getAttribute('name');
 
         if (!model) {
-            const clonedElement = (element.cloneNode());
-            // helps typescript know this is an HTMLElement
-            if (!(clonedElement instanceof HTMLElement)) {
-                throw new Error('cloneNode() produced incorrect type');
-            }
+            const clonedElement = cloneHTMLElement(element);
 
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
 
-        this.$updateModel(model, value, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null);
+        // HTML form elements with name ending with [] require array as data
+        // we need to handle addition and removal of values from it to send
+        // back only required data
+        let finalValue : string|null|string[] = value
+        if (/\[]$/.test(model)) {
+            // Get current value from data
+            const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model))
+            const currentValue = currentLevelData[finalKey];
+
+            finalValue = updateArrayDataFromChangedElement(element, value, currentValue);
+        } else if (
+            element instanceof HTMLInputElement
+            && element.type === 'checkbox'
+            && !element.checked
+        ) {
+            // Unchecked checkboxes in a single value scenarios should map to `null`
+            finalValue = null;
+        }
+
+        this.$updateModel(model, finalValue, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
     }
 
     /**
@@ -274,7 +280,7 @@ export default class extends Controller {
             this._dispatchEvent('live:update-model', {
                 modelName,
                 extraModelName: normalizedExtraModelName,
-                value,
+                value
             });
         }
 
@@ -312,15 +318,19 @@ export default class extends Controller {
         }
     }
 
-    _makeRequest(action: string|null) {
+    _makeRequest(action: string|null, args: Record<string, string>) {
         const splitUrl = this.urlValue.split('?');
         let [url] = splitUrl
         const [, queryString] = splitUrl;
         const params = new URLSearchParams(queryString || '');
 
+        if (typeof args === 'object' && Object.keys(args).length > 0) {
+            params.set('args', new URLSearchParams(args).toString());
+        }
+
         const fetchOptions: RequestInit = {};
         fetchOptions.headers = {
-            'Accept': 'application/vnd.live-component+json',
+            'Accept': 'application/vnd.live-component+html',
         };
 
         if (action) {
@@ -331,12 +341,21 @@ export default class extends Controller {
             }
         }
 
-        if (!action && this._willDataFitInUrl()) {
-            buildSearchParams(params, this.dataValue);
-            fetchOptions.method = 'GET';
-        } else {
+        let dataAdded = false;
+        if (!action) {
+            const dataJson = JSON.stringify(this.dataValue);
+            if (this._willDataFitInUrl(dataJson, params)) {
+                params.set('data', dataJson);
+                fetchOptions.method = 'GET';
+                dataAdded = true;
+            }
+        }
+
+        // if GET can't be used, fallback to POST
+        if (!dataAdded) {
             fetchOptions.method = 'POST';
-            fetchOptions.body = buildFormData(this.dataValue);
+            fetchOptions.body = JSON.stringify(this.dataValue);
+            fetchOptions.headers['Content-Type'] = 'application/json';
         }
 
         this._onLoadingStart();
@@ -351,8 +370,8 @@ export default class extends Controller {
 
             const isMostRecent = this.renderPromiseStack.removePromise(thisPromise);
             if (isMostRecent) {
-                response.json().then((data) => {
-                    this._processRerender(data)
+                response.text().then((html) => {
+                    this._processRerender(html, response);
                 });
             }
         })
@@ -363,24 +382,24 @@ export default class extends Controller {
      *
      * @private
      */
-    _processRerender(data: LiveResponseData) {
+    _processRerender(html: string, response: Response) {
         // check if the page is navigating away
         if (this.isWindowUnloaded) {
             return;
         }
 
-        if (data.redirect_url) {
+        if (response.headers.get('Location')) {
             // action returned a redirect
             if (typeof Turbo !== 'undefined') {
-                Turbo.visit(data.redirect_url);
+                Turbo.visit(response.headers.get('Location'));
             } else {
-                window.location.href = data.redirect_url;
+                window.location.href = response.headers.get('Location') || '';
             }
 
             return;
         }
 
-        if (!this._dispatchEvent('live:render', data, true, true)) {
+        if (!this._dispatchEvent('live:render', html, true, true)) {
             // preventDefault() was called
             return;
         }
@@ -390,15 +409,8 @@ export default class extends Controller {
         // elements to appear different unnecessarily
         this._onLoadingFinish();
 
-        if (!data.html) {
-            throw new Error('Missing html key on response JSON');
-        }
-
         // merge/patch in the new HTML
-        this._executeMorphdom(data.html);
-
-        // "data" holds the new, updated data
-        this.dataValue = data.data;
+        this._executeMorphdom(html);
     }
 
     _clearWaitingDebouncedRenders() {
@@ -434,7 +446,7 @@ export default class extends Controller {
     /**
      * @private
      */
-    _handleLoadingDirective(element: HTMLElement, isLoading: boolean, directive: Directive) {
+    _handleLoadingDirective(element: HTMLElement|SVGElement, isLoading: boolean, directive: Directive) {
         const finalAction = parseLoadingAction(directive.action, isLoading);
 
         let loadingDirective: (() => void);
@@ -505,7 +517,7 @@ export default class extends Controller {
         const loadingDirectives: ElementLoadingDirectives[] = [];
 
         this.element.querySelectorAll('[data-loading]').forEach((element => {
-            if (!(element instanceof HTMLElement)) {
+            if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
                 throw new Error('Invalid Element Type');
             }
 
@@ -521,19 +533,19 @@ export default class extends Controller {
         return loadingDirectives;
     }
 
-    _showElement(element: HTMLElement) {
+    _showElement(element: HTMLElement|SVGElement) {
         element.style.display = 'inline-block';
     }
 
-    _hideElement(element: HTMLElement) {
+    _hideElement(element: HTMLElement|SVGElement) {
         element.style.display = 'none';
     }
 
-    _addClass(element: HTMLElement, classes: string[]) {
+    _addClass(element: HTMLElement|SVGElement, classes: string[]) {
         element.classList.add(...combineSpacedArray(classes));
     }
 
-    _removeClass(element: HTMLElement, classes: string[]) {
+    _removeClass(element: HTMLElement|SVGElement, classes: string[]) {
         element.classList.remove(...combineSpacedArray(classes));
 
         // remove empty class="" to avoid morphdom "diff" problem
@@ -554,9 +566,11 @@ export default class extends Controller {
         })
     }
 
-    _willDataFitInUrl() {
+    _willDataFitInUrl(dataJson: string, params: URLSearchParams) {
+        const urlEncodedJsonData = new URLSearchParams(dataJson).toString();
+
         // if the URL gets remotely close to 2000 chars, it may not fit
-        return Object.values(this.dataValue).join(',').length < 1500;
+        return (urlEncodedJsonData + params.toString()).length < 1500;
     }
 
     _executeMorphdom(newHtml: string) {
@@ -577,9 +591,24 @@ export default class extends Controller {
         const newElement = htmlToElement(newHtml);
         morphdom(this.element, newElement, {
             onBeforeElUpdated: (fromEl, toEl) => {
+                if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
+                    return false;
+                }
+
                 // https://github.com/patrick-steele-idem/morphdom#can-i-make-morphdom-blaze-through-the-dom-tree-even-faster-yes
                 if (fromEl.isEqualNode(toEl)) {
-                    return false
+                    // the nodes are equal, but the "value" on some might differ
+                    // lets try to quickly compare a bit more deeply
+                    const normalizedFromEl = cloneHTMLElement(fromEl);
+                    normalizeAttributesForComparison(normalizedFromEl);
+
+                    const normalizedToEl = cloneHTMLElement(toEl);
+                    normalizeAttributesForComparison(normalizedToEl);
+
+                    if (normalizedFromEl.isEqualNode(normalizedToEl)) {
+                        // don't bother updating
+                        return false;
+                    }
                 }
 
                 // avoid updating child components: they will handle themselves
@@ -589,6 +618,11 @@ export default class extends Controller {
                     && fromEl !== this.element
                     && !this._shouldChildLiveElementUpdate(fromEl, toEl)
                 ) {
+                    return false;
+                }
+
+                // look for data-live-ignore, and don't update
+                if (fromEl.hasAttribute('data-live-ignore')) {
                     return false;
                 }
 
@@ -630,21 +664,26 @@ export default class extends Controller {
         let callback: () => void;
         if (actionName.charAt(0) === '$') {
             callback = () => {
-                this[actionName]();
+                (this as any)[actionName]();
             }
         } else {
             callback = () => {
-                this._makeRequest(actionName);
+                this._makeRequest(actionName, {});
             }
         }
 
         const timer = setInterval(() => {
+            // if there is already an active render promise, skip the poll
+            if (this.renderPromiseStack.countActivePromises() > 0) {
+                return;
+            }
+
             callback();
         }, duration);
         this.pollingIntervals.push(timer);
     }
 
-    _dispatchEvent(name: string, payload: object | null = null, canBubble = true, cancelable = false) {
+    _dispatchEvent(name: string, payload: object | string | null = null, canBubble = true, cancelable = false) {
         return this.element.dispatchEvent(new CustomEvent(name, {
             bubbles: canBubble,
             cancelable,
@@ -759,6 +798,34 @@ export default class extends Controller {
 
         this.element.dataset.originalData = this.originalDataJSON;
     }
+
+    /**
+     * Re-establishes the data-original-data attribute if missing.
+     *
+     * This happens if a parent component re-renders a child component
+     * and morphdom *updates* child. This commonly happens if a parent
+     * component is around a list of child components, and changing
+     * something in the parent causes the list to change. In that case,
+     * the a child component might be removed while another is added.
+     * But to morphdom, this sometimes looks like an "update". The result
+     * is that the child component is re-rendered, but the child component
+     * is not re-initialized. And so, the data-original-data attribute
+     * is missing and never re-established.
+     */
+    _startAttributesMutationObserver() {
+        this.mutationObserver = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.type === 'attributes' && !this.element.dataset.originalData) {
+                    this.originalDataJSON = JSON.stringify(this.dataValue);
+                    this._exposeOriginalData();
+                }
+            });
+        });
+
+        this.mutationObserver.observe(this.element, {
+            attributes: true
+        });
+    }
 }
 
 /**
@@ -794,6 +861,10 @@ class PromiseStack {
 
     findPromiseIndex(promise: Promise<any>) {
         return this.stack.findIndex((item) => item === promise);
+    }
+
+    countActivePromises(): number {
+        return this.stack.length;
     }
 }
 
