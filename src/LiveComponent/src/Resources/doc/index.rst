@@ -629,6 +629,20 @@ Your only job is to make sure that the CSRF component is installed:
 
     $ composer require symfony/security-csrf
 
+If you want to disable CSRF for a single component you can set
+``csrf`` option to ``false``::
+
+    namespace App\Twig\Components;
+
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\Attribute\LiveProp;
+
+    #[AsLiveComponent('my_live_component', csrf: false)]
+    class MyLiveComponent
+    {
+        // ...
+    }
+
 Actions, Redirecting and AbstractController
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

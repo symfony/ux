@@ -107,6 +107,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         if (
             $this->container->has(CsrfTokenManagerInterface::class) &&
+            $metadata->get('csrf') &&
             !$this->container->get(CsrfTokenManagerInterface::class)->isTokenValid(new CsrfToken($componentName, $request->headers->get('X-CSRF-TOKEN')))) {
             throw new BadRequestHttpException('Invalid CSRF token.');
         }
