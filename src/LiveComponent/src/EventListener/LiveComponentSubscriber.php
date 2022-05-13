@@ -163,7 +163,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                     throw new \RuntimeException(sprintf('File path "%s" for parameter "%s" is invalid', $fileArg->name, $parameter));
                 }
 
-                if ($files = $accessor->getValue($allFiles, $fileArg->getPropertyPath())) {
+                if ($files = $accessor->getValue($allFiles, $path)) {
                     $request->attributes->set(
                         $parameter,
                         $fileArg->multiple ? $files : $files[0]
