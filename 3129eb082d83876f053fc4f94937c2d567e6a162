@@ -1,0 +1,80 @@
+---------------------------------------------------------------------------
+
+by tgalopin at 2021-11-24T21:12:58Z
+
+Hello @Spomky
+
+I quite like this component, do you think you could have time to finalize it (meaning fixing failing tests and marking the PR as ready when you have finished it)?
+
+---------------------------------------------------------------------------
+
+by Spomky at 2021-11-25T13:08:11Z
+
+Hi @tgalopin,
+
+Thank you for your interest in this UX component.
+Sure I will take time to finish it.
+
+Just one question to you or @weaverryan: I can see in all components that the `options` variable is populated using `this.element.hasAttribute` and `this.element.getAttribute` calls.
+
+But in my component I do it this way:
+
+```js
+  const options = {
+      strings: this.stringsValue || null,
+      typeSpeed: this.typeSpeedValue || 30,
+      smartBackspace: this.smartBackspaceValue || true,
+      startDelay: this.startDelayValue || 0,
+      ...
+  };
+```
+
+Which one should I use?
+
+---------------------------------------------------------------------------
+
+by Spomky at 2021-11-25T13:40:36Z
+
+OK I modified a few things, built it and all test pass.
+Ready for your review.
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2021-11-25T21:30:00Z
+
+Values are the way to go, the original packages will need to be updated to use them.
+
+Reviewing now :)
+
+---------------------------------------------------------------------------
+
+by Spomky at 2022-01-23T20:57:02Z
+
+Hi all,
+
+I hope you are well.
+I noted some changes in the `symfony/ux` repository and I've just updated this PR.
+Let me know if you see something I may have missed.
+
+Regards.
+
+---------------------------------------------------------------------------
+
+by Spomky at 2022-02-21T19:44:08Z
+
+Ping @tgalopin and @weaverryan.
+What do you plan for this repository? Is there any chance for other components like this one to be part of it?
+Regards.
+
+---------------------------------------------------------------------------
+
+by Spomky at 2022-04-22T21:04:04Z
+
+Hi @weaverryan,
+
+Thank you very much for the code review and your message; it warms the heart 🤩.
+And don't apologize for anything. I'm sure you were busy because for good reasons.
+
+I think I have answered all the comments you have raised.
+Also, I rebased the branch. It should be fine now.
+Just ask if there is any modification I should do.
