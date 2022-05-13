@@ -89,11 +89,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         if ('get' === $action) {
             $defaultAction = trim($metadata->get('default_action', '__invoke'), '()');
 
-            if (!method_exists($metadata->getClass(), $defaultAction)) {
-                // todo should this check be in a compiler pass to ensure fails at compile time?
-                throw new \LogicException(sprintf('Live component "%s" (%s) requires the default action method "%s".%s', $metadata->getClass(), $componentName, $defaultAction, '__invoke' === $defaultAction ? ' Either add this method or use the DefaultActionTrait' : ''));
-            }
-
             // set default controller for "default" action
             $request->attributes->set('_controller', sprintf('%s::%s', $metadata->getServiceId(), $defaultAction));
             $request->attributes->set('_component_default_action', true);
