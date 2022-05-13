@@ -122,7 +122,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                 ->throwExceptions()
                 ->post('/_components/component2/increase', [
                     'headers' => ['X-CSRF-TOKEN' => 'invalid'],
-                    'body' => ['data' => '[]']
+                    'body' => ['data' => '[]'],
                 ])
             ;
         } catch (BadRequestHttpException $e) {

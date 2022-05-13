@@ -23,8 +23,7 @@ final class LiveFileArg
         public ?string $name = null,
         public bool $multiple = false,
         public array $constraints = []
-    )
-    {
+    ) {
     }
 
     public function getPropertyPath(): string
