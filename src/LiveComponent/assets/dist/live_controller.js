@@ -1112,6 +1112,9 @@ class default_1 extends Controller {
                                 files[input.name] = input.files;
                             }
                         });
+                        if (modifier.value && !files[modifier.value]) {
+                            throw new Error(`Could not find the file input foo. Did you remember to make this element a Stimulus target (e.g. {{ stimulus_target('live', 'file') }}).`);
+                        }
                         break;
                     default:
                         console.warn(`Unknown modifier ${modifier.name} in action ${rawAction}`);
