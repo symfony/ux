@@ -29,6 +29,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
+use Symfony\UX\LiveComponent\Attribute\LiveFileArg;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
@@ -149,6 +150,17 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         );
 
         $request->attributes->set('_mounted_component', $mounted);
+
+        // autowire live file arguments
+        foreach (LiveFileArg::liveFileArgs($component, $action) as $parameter => $fileArg) {
+            if ($request->files->has($fileArg->name)) {
+                $files = $request->files->get($fileArg->name);
+                $request->attributes->set(
+                    $parameter,
+                    $fileArg->multiple ? $files : $files[0]
+                );
+            }
+        }
 
         if (!\is_string($queryString = $request->query->get('args'))) {
             return;
