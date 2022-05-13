@@ -152,13 +152,15 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         $request->attributes->set('_mounted_component', $mounted);
 
         // autowire live file arguments
-        foreach (LiveFileArg::liveFileArgs($component, $action) as $parameter => $fileArg) {
-            if ($request->files->has($fileArg->name)) {
-                $files = $request->files->get($fileArg->name);
-                $request->attributes->set(
-                    $parameter,
-                    $fileArg->multiple ? $files : $files[0]
-                );
+        if ($request->files->count()) {
+            foreach (LiveFileArg::liveFileArgs($component, $action) as $parameter => $fileArg) {
+                if ($request->files->has($fileArg->name)) {
+                    $files = $request->files->get($fileArg->name);
+                    $request->attributes->set(
+                        $parameter,
+                        $fileArg->multiple ? $files : $files[0]
+                    );
+                }
             }
         }
 
