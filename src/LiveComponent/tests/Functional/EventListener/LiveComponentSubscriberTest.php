@@ -122,6 +122,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                 ->throwExceptions()
                 ->post('/_components/component2/increase', [
                     'headers' => ['X-CSRF-TOKEN' => 'invalid'],
+                    'body' => ['data' => '[]']
                 ])
             ;
         } catch (BadRequestHttpException $e) {
@@ -144,7 +145,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 1')
             ->post('/_components/disabled_csrf/increase', [
-                'body' => json_encode($dehydrated),
+                'body' => ['data' => json_encode($dehydrated)],
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')

@@ -122,10 +122,10 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             // ?data=
             $data = json_decode($request->query->get('data'), true, 512, \JSON_THROW_ON_ERROR);
         } elseif ($request->request->has('data')) {
-            // OR body of the request is JSON
+            // OR data key from POST data
             $data = json_decode($request->request->get('data'), true, 512, \JSON_THROW_ON_ERROR);
         } else {
-            $data = $request->query->all();
+            throw new BadRequestHttpException('Missing live component data.');
         }
 
         if (!\is_array($controller = $event->getController()) || 2 !== \count($controller)) {
