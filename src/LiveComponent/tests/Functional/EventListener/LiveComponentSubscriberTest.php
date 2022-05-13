@@ -133,6 +133,25 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         $this->fail('Expected exception not thrown.');
     }
 
+    public function testDisabledCsrfTokenForComponentDoesNotFail(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('disabled_csrf'));
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/_components/disabled_csrf?data='.urlencode(json_encode($dehydrated)))
+            ->assertSuccessful()
+            ->assertHeaderContains('Content-Type', 'html')
+            ->assertContains('Count: 1')
+            ->post('/_components/disabled_csrf/increase', [
+                'body' => json_encode($dehydrated),
+            ])
+            ->assertSuccessful()
+            ->assertHeaderContains('Content-Type', 'html')
+            ->assertContains('Count: 2')
+        ;
+    }
+
     public function testBeforeReRenderHookOnlyExecutedDuringAjax(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));

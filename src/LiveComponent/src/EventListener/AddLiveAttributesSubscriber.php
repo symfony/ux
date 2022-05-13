@@ -9,6 +9,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\TwigComponent\ComponentAttributes;
+use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\EventListener\PreRenderEvent;
 use Symfony\UX\TwigComponent\MountedComponent;
 use Twig\Environment;
@@ -33,9 +34,10 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
             return;
         }
 
-        $attributes = $this->getLiveAttributes($event->getMountedComponent());
+        $metadata = $event->getMetadata();
+        $attributes = $this->getLiveAttributes($event->getMountedComponent(), $metadata);
         $variables = $event->getVariables();
-        $attributesKey = $event->getMetadata()->getAttributesVar();
+        $attributesKey = $metadata->getAttributesVar();
 
         if (isset($variables[$attributesKey]) && $variables[$attributesKey] instanceof ComponentAttributes) {
             // merge with existing attributes if available
@@ -62,7 +64,7 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
         ];
     }
 
-    private function getLiveAttributes(MountedComponent $mounted): ComponentAttributes
+    private function getLiveAttributes(MountedComponent $mounted, ComponentMetadata $metadata): ComponentAttributes
     {
         $name = $mounted->getName();
         $url = $this->container->get(UrlGeneratorInterface::class)->generate('live_component', ['component' => $name]);
@@ -75,7 +77,7 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
             'data-live-data-value' => twig_escape_filter($twig, json_encode($data, \JSON_THROW_ON_ERROR), 'html_attr'),
         ];
 
-        if ($this->container->has(CsrfTokenManagerInterface::class)) {
+        if ($this->container->has(CsrfTokenManagerInterface::class) && $metadata->get('csrf')) {
             $attributes['data-live-csrf-value'] = $this->container->get(CsrfTokenManagerInterface::class)
                 ->getToken($name)->getValue()
             ;

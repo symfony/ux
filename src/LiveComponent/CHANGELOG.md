@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2.0
+
+-   Allow to disable CSRF per component
+
 ## 2.1.0
 
 -   Your component's live "data" is now send over Ajax as a JSON string.

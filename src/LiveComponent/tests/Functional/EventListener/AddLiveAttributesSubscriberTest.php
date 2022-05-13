@@ -58,4 +58,20 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertNotNull($div->attr('data-live-csrf-value'));
         $this->assertArrayHasKey('_checksum', $data);
     }
+
+    public function testCanDisableCsrf(): void
+    {
+        $response = $this->browser()
+            ->visit('/render-template/csrf')
+            ->assertSuccessful()
+            ->response()
+            ->assertHtml()
+        ;
+
+        $div = $response->crawler()->filter('div');
+
+        $this->assertSame('live', $div->attr('data-controller'));
+        $this->assertSame('/_components/disabled_csrf', $div->attr('data-live-url-value'));
+        $this->assertNull($div->attr('data-live-csrf-value'));
+    }
 }
