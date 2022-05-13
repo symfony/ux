@@ -27,6 +27,11 @@ final class LiveFileArg
     {
     }
 
+    public function getPropertyPath(): string
+    {
+        return preg_replace('/^([^[]+)/', '[$1]', $this->name);
+    }
+
     /**
      * @internal
      *

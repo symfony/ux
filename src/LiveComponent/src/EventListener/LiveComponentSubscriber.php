@@ -24,6 +24,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -153,12 +154,24 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         // autowire live file arguments
         if ($request->files->count()) {
+            $allFiles = $request->files->all();
+            $accessor = PropertyAccess::createPropertyAccessor();
             foreach (LiveFileArg::liveFileArgs($component, $action) as $parameter => $fileArg) {
-                if ($request->files->has($fileArg->name)) {
-                    $files = $request->files->get($fileArg->name);
+                $path = $fileArg->getPropertyPath();
+
+                if (!$accessor->isReadable($allFiles, $path)) {
+                    throw new \RuntimeException(sprintf('File path "%s" for parameter "%s" is invalid', $fileArg->name, $parameter));
+                }
+
+                if ($files = $accessor->getValue($allFiles, $fileArg->getPropertyPath())) {
                     $request->attributes->set(
                         $parameter,
                         $fileArg->multiple ? $files : $files[0]
+                    );
+                } else {
+                    $request->attributes->set(
+                        $parameter,
+                        $fileArg->multiple ? [] : null
                     );
                 }
             }
