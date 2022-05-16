@@ -7,10 +7,24 @@ import SwupSlideTheme from '@swup/slide-theme';
 
 class default_1 extends Controller {
     connect() {
+        const dataContainers = this.containersValue;
+        const mainElement = this.mainElementValue || dataContainers[0] || '#swup';
+        const allElements = [mainElement].concat(dataContainers);
+        const containersList = allElements.filter((item, index) => {
+            return allElements.indexOf(item) === index;
+        });
         const options = {
-            containers: ['#swup'],
-            plugins: ['slide' === this.themeValue ? new SwupSlideTheme() : new SwupFadeTheme(), new SwupFormsPlugin()],
+            containers: containersList,
+            plugins: [
+                'slide' === this.themeValue
+                    ? new SwupSlideTheme({ mainElement: mainElement })
+                    : new SwupFadeTheme({ mainElement: mainElement }),
+                new SwupFormsPlugin(),
+            ],
         };
+        if (this.hasMainElementValue) {
+            options.mainElement = this.mainElementValue;
+        }
         if (this.hasAnimateHistoryBrowsingValue) {
             options.animateHistoryBrowsing = this.animateHistoryBrowsingValue;
         }
@@ -19,9 +33,6 @@ class default_1 extends Controller {
         }
         if (this.hasCacheValue) {
             options.cache = this.cacheValue;
-        }
-        if (this.hasContainersValue) {
-            options.containers = this.containersValue;
         }
         if (this.hasLinkSelectorValue) {
             options.linkSelector = this.linkSelectorValue;
@@ -45,6 +56,7 @@ default_1.values = {
     linkSelector: String,
     theme: String,
     debug: Boolean,
+    mainElement: String,
 };
 
 export { default_1 as default };
