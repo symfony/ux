@@ -1,0 +1,87 @@
+---------------------------------------------------------------------------
+
+by kbond at 2022-05-01T14:46:07Z
+
+Some context on what I would like the default slot feature to look like (using the first example above):
+
+```twig
+{# "embed" in another template: #}
+{% component 'alert' with {message: 'embedded message', class: 'extra-class', role: 'alert'} %}
+    {# anything not wrapped in a block is considered the default slot #}
+    {{ parent() }} {# call parent "slot" #}
+    Custom stuff...
+    {{ this.message }} {# access component properties/methods as normal #}
+    {{ computed.someMethod }} {# all component features available #}
+
+    {% block title %}
+        {# can still override "named slots" #}
+        Custom Title
+    {% endblock %}
+{% endcomponent %}
+```
+
+I certainly don't think _not having_ this feature is a showstopper - just a nice DX improvement.
+
+---------------------------------------------------------------------------
+
+by gharlan at 2022-05-03T17:05:57Z
+
+> Some context on what I would like the default slot feature to look like (using the first example above):
+
+I'm not sure about the mixture of default slot and other blocks. But if only the default block is needed, I would also prefer the notation without `{% block %}`.
+
+> I certainly don't think not having this feature is a showstopper - just a nice DX improvement.
+
+100% agree!
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2022-05-04T07:35:13Z
+
+Thanks for your work kbond ! I tried it out, and it's working great ! I was thinking about the default slots with parent(). What do you think about doing it in the other way. We can use a children function in the component:
+
+```php
+{# templates/components/alert.html.twig #}
+<div{{ attributes.defaults({class: 'alert alert-'~type}) }}>
+		{{ children() }}
+    {% block default %}<strong>{{ type }}</strong> {{ message }}{% endblock %}
+</div>`
+
+{# "embed" in another template: #}
+{% component 'alert' with {message: 'embedded message', class: 'extra-class', type: 'alert'} %}
+    {# anything not wrapped in a block is considered the children slot #}
+    <p>My custom stuff...</p>
+{% endcomponent %}
+```
+
+This children function is only accessible inside a component. I think it can be much easier to read, and closer to front-end framework like react. 🤔
+
+---------------------------------------------------------------------------
+
+by gharlan at 2022-05-04T10:01:00Z
+
+> Some context on what I would like the default slot feature to look like (using the first example above):
+
+fyi: found an issue regarding similar functionality for original embed tag: https://github.com/twigphp/Twig/issues/3572
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-05-06T17:04:23Z
+
+I love this! The code already looks clean. Let's finish this.
+
+> I really wanted to have a default slot to avoid the need for overriding the default block (see first example above) but couldn't figure out how to do this or if it's even possible. Maybe someone with a deeper knowledge of twig internals could help?
+
+I agree & also agree that NOT having this is NOT a show stopper. If we merge this, perhaps some brave curious person will come along and add this. My "hunch" is that it the implementation might involve "hacking in" a `{% block default %}` and then `{% endblock %}` into the token stream inside `ComponentTokenParser`, similar to how a fake `{% extends %}` is already added there. The tricky part would be to figure out IF there is already any blocks defined. My thinking is that (in part for simplicity of implementation) you would either (A) define zero blocks, and thus all content is the `default` block else (B) you define ALL blocks, including `default`. If we have this assumption, then we just need to determine if the content contains ANY blocks. And if not, hack in the `{% block default %}`. However, with more work, someone could probably make this even smarter.
+
+> Using with LiveComponent's is not supported and throws an exception if attempted. Perhaps some trickery could be added in the future to achieve but I think this feature adds enough value to stand on its own.
+
+Agree 👍. In theory, we could stash the raw Twig contents into a system cache, and re-render using that. A bit crazy, but I actually don't see any issue with it. But, later.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-05-16T15:40:55Z
+
+I believe this to be ready for a final review.
