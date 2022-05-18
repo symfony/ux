@@ -637,14 +637,82 @@ the twig template and twig variables before components are rendered::
         }
     }
 
-Embedded Components
--------------------
+Nested Components
+-----------------
 
-It's totally possible to embed one component into another. When you do
+It's totally possible to nest one component into another. When you do
 this, there's nothing special to know: both components render
 independently. If you're using `Live Components`_, then there
 *are* some guidelines related to how the re-rendering of parent and
-child components works. Read `Live Embedded Components`_.
+child components works. Read `Live Nested Components`_.
+
+Embedded Components
+-------------------
+
+.. versionadded:: 2.2
+
+    Embedded components were added in TwigComponents 2.2.
+
+You can write your component's Twig template with blocks that can be overridden
+when rendering using the ``{% component %}`` syntax. These blocks can be thought of as
+*slots* which you may be familiar with from Vue. The ``component`` tag is very
+similar to Twig's native `embed tag`_.
+
+Consider a data table component. You pass it headers and rows but can expose
+blocks for the cells and an optional footer:
+
+.. code-block:: twig
+
+    {# templates/components/data_table.html.twig #}
+
+    <div{{ attributes.defaults({class: 'data-table'}) }}>
+        <table>
+            <thead>
+                <tr>
+                    {% for header in this.headers %}
+                        <th class="{% block th_class %}data-table-header{% endblock %}">
+                            {{ header }}
+                        </th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in this.data %}
+                    <tr>
+                        {% for cell in row %}
+                            <td class="{% block td_class %}data-table-cell{% endblock %}">
+                                {{ cell }}
+                            </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% block footer %}{% endblock %}
+    </div>
+
+When rendering, you can override the ``th_class``, ``td_class``, and ``footer`` blocks.
+The ``with`` data is what's mounted on the component object.
+
+.. code-block:: twig
+
+    {# templates/some_page.html.twig #}
+
+    {% component table with {headers: ['key', 'value'], data: [[1, 2], [3, 4]]} %}
+        {% block th_class %}{{ parent() }} text-bold{% endblock %}
+
+        {% block td_class %}{{ parent() }} text-italic{% endblock %}
+
+        {% block footer %}
+            <div class="data-table-footer">
+                My footer
+            </div>
+        {% endblock %}
+    {% endcomponent %}
+
+.. note::
+
+    Embedded components *cannot* currently be used with LiveComponents.
 
 Contributing
 ------------
@@ -665,5 +733,6 @@ meaning it is not bound to Symfony's BC policy for the moment.
 .. _`Live Components`: https://symfony.com/bundles/ux-live-component/current/index.html
 .. _`live component`: https://symfony.com/bundles/ux-live-component/current/index.html
 .. _`Vue`: https://v3.vuejs.org/guide/computed.html
-.. _`Live Embedded Components`: https://symfony.com/bundles/ux-live-component/current/index.html#embedded-components
+.. _`Live Nested Components`: https://symfony.com/bundles/ux-live-component/current/index.html#nested-components
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
+.. _`embed tag`: https://twig.symfony.com/doc/3.x/tags/embed.html

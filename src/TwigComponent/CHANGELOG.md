@@ -3,6 +3,7 @@
 ## 2.2
 
 -   Allow to pass stringable object as non mapped component attribute
+-   Add _embedded_ components.
 
 ## 2.1
 

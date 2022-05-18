@@ -24,7 +24,6 @@ use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 use Symfony\UX\TwigComponent\Twig\ComponentExtension;
-use Symfony\UX\TwigComponent\Twig\ComponentRuntime;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -67,14 +66,8 @@ final class TwigComponentExtension extends Extension
 
         $container->register('ux.twig_component.twig.component_extension', ComponentExtension::class)
             ->addTag('twig.extension')
-        ;
-
-        $container->register('ux.twig_component.twig.component_runtime', ComponentRuntime::class)
-            ->setArguments([
-                new Reference('ux.twig_component.component_factory'),
-                new Reference('ux.twig_component.component_renderer'),
-            ])
-            ->addTag('twig.runtime')
+            ->addTag('container.service_subscriber', ['key' => ComponentRenderer::class, 'id' => 'ux.twig_component.component_renderer'])
+            ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
         ;
     }
 }
