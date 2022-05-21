@@ -1,6 +1,6 @@
 'use strict';
 
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static targets = ['entry'];
@@ -15,17 +15,22 @@ export default class extends Controller {
         startIndex: Number,
     };
 
+    allowAddValue: boolean;
+    allowDeleteValue: boolean;
+    buttonAddValue: string;
+    buttonDeleteValue: string;
+    prototypeNameValue: string;
+    prototypeValue: string;
+    startIndexValue: number;
+
     /**
      * Number of elements for the index of the collection
-     * @type Number
      */
     index = 0;
 
-    /**
-     * Controller name of this
-     * @type String|null
-     */
-    controllerName = null;
+    controllerName: string;
+
+    entryTargets: Array<any>;
 
     connect() {
         this.controllerName = this.context.scope.identifier;
@@ -40,16 +45,16 @@ export default class extends Controller {
             allowDelete: this.allowDeleteValue,
         });
 
-        if (true === this.allowAddValue) {
+        if (this.allowAddValue) {
             // Add button Add
-            let buttonAdd = this._textToNode(this.buttonAddValue);
+            const buttonAdd = this._textToNode(this.buttonAddValue);
             this.element.prepend(buttonAdd);
         }
 
         // Add buttons Delete
-        if (true === this.allowDeleteValue) {
+        if (this.allowDeleteValue) {
             for (let i = 0; i < this.entryTargets.length; i++) {
-                let entry = this.entryTargets[i];
+                const entry = this.entryTargets[i];
                 this._addDeleteButton(entry, i);
             }
         }
@@ -95,7 +100,7 @@ export default class extends Controller {
     }
 
     delete(event) {
-        let entry = event.target.closest('[data-' + this.controllerName + '-target="entry"]');
+        const entry = event.target.closest('[data-' + this.controllerName + '-target="entry"]');
 
         this._dispatchEvent('form-collection:pre-delete', {
             index: entry.dataset.indexEntry,
@@ -112,16 +117,13 @@ export default class extends Controller {
 
     /**
      * Add the delete button to the entry
-     * @param String entry
-     * @param Number index
-     * @returns {ChildNode}
      * @private
      */
-    _addDeleteButton(entry, index) {
+    _addDeleteButton(entry: HTMLElement, index: number) {
         // link the button and the entry by the data-index-entry attribute
-        entry.dataset.indexEntry = index;
+        entry.dataset.indexEntry = index.toString();
 
-        let buttonDelete = this._textToNode(this.buttonDeleteValue);
+        const buttonDelete = this._textToNode(this.buttonDeleteValue);
         if (!buttonDelete) {
             return entry;
         }
@@ -138,22 +140,17 @@ export default class extends Controller {
 
     /**
      * Convert text to Element to insert in the DOM
-     * @param String text
-     * @returns {ChildNode}
      * @private
      */
-    _textToNode(text) {
-        let template = document.createElement('template');
+    _textToNode(text: string) {
+        const template = document.createElement('template');
         text = text.trim(); // Never return a text node of whitespace as the result
         template.innerHTML = text;
 
         return template.content.firstChild;
     }
 
-    _dispatchEvent(name, payload = null, canBubble = false, cancelable = false) {
-        const userEvent = document.createEvent('CustomEvent');
-        userEvent.initCustomEvent(name, canBubble, cancelable, payload);
-
-        this.element.dispatchEvent(userEvent);
+    _dispatchEvent(name: string, payload: any) {
+        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
     }
 }
