@@ -9,7 +9,7 @@
 
 'use strict';
 
-import { Application, Controller } from 'stimulus';
+import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import FormCollectionController from '../src/controller';
@@ -30,29 +30,35 @@ const startStimulus = () => {
     const application = Application.start();
     application.register('check', CheckController);
     application.register('formCollection', FormCollectionController);
+
+    return application;
 };
 
 describe('FormCollectionController', () => {
-    let container: HTMLElement;
-
-    beforeEach(() => {
-        container = mountDOM(`
-            <div class="container" data-controller="check formCollection" data-testid="container"> 
-                
-            </div>
-        `);
-    });
+    let application;
 
     afterEach(() => {
         clearDOM();
+        application.stop();
     });
 
     it('events', async () => {
-        expect(getByTestId(container, 'container')).not.toHaveClass('connected');
-        expect(getByTestId(container, 'container')).not.toHaveClass('pre-connected');
+        const container = mountDOM(`
+            <div
+              data-testid="container"
+              data-controller="check formCollection"
+              class="container">
+            </div>
+        `);
 
-        startStimulus();
-        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('connected'));
-        await waitFor(() => expect(getByTestId(container, 'container')).toHaveClass('pre-connected'));
+        expect(getByTestId(container, 'container')).not.toHaveClass('pre-connected');
+        expect(getByTestId(container, 'container')).not.toHaveClass('connected');
+
+        application = startStimulus();
+
+        await waitFor(() => {
+            expect(getByTestId(container, 'container')).toHaveClass('pre-connected')
+            expect(getByTestId(container, 'container')).toHaveClass('connected')
+        });
     });
 });
