@@ -1,14 +1,13 @@
 {%- block button_add -%}
     {%- set attrDataAction = (attr['data-action']|default('') ~ ' ' ~ controllerName ~ '#add')|trim -%}
     <button data-action="{{ attrDataAction }}"
-            class="{{ button_add_class }}"  type="button">{{ button_add_text|trans }}</button>
+            class="{{ button_add_options.class }}"  type="button">{{ button_add_options.label|trans }}</button>
 {%- endblock button_add -%}
 
 {%- block button_delete -%}
     {%- set attrDataAction = (attr['data-action']|default('') ~ ' ' ~ controllerName ~ '#delete')|trim -%}
     <button data-action="{{ attrDataAction }}"
-            class="{{ button_delete_class }}" type="button">
-        {{ button_delete_text|trans }}</button>
+            class="{{ button_delete_options.class }}" type="button">{{ button_delete_options.label|trans }}</button>
 {%- endblock button_delete -%}
 
 {% block ux_collection_widget -%}

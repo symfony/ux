@@ -30,7 +30,7 @@ export default class extends Controller {
 
     controllerName: string;
 
-    entryTargets: Array<any>;
+    entryTargets: Array<any> = [];
 
     connect() {
         this.controllerName = this.context.scope.identifier;
