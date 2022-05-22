@@ -1220,6 +1220,106 @@ When the user clicks ``removeComment()``, a similar process happens.
     attribute above the ``Post.comments`` property. These help new
     items save and deletes any items whose embedded forms are removed.
 
+Using LiveCollectionType
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.2
+
+    The ``LiveCollectionType`` and the ``LiveCollectionTrait`` was added in LiveComponent 2.2.
+
+
+The ``LiveCollectionType`` uses the same method described above, but in
+a generic way, so it needs even less code. This form type adds an 'Add'
+and a 'Delete' button for each row by default, which work out of the box
+thanks to the ``LiveCollectionTrait``.
+
+Let's take the same example as before, a "Blog Post" form with an embedded "Comment" forms
+via the ``LiveCollectionType``::
+
+    namespace App\Form;
+
+    use Symfony\Component\Form\AbstractType;
+    use Symfony\Component\Form\FormBuilderInterface;
+    use Symfony\Component\OptionsResolver\OptionsResolver;
+    use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
+    use App\Entity\BlogPost;
+
+    class BlogPostFormType extends AbstractType
+    {
+        public function buildForm(FormBuilderInterface $builder, array $options)
+        {
+            $builder
+                ->add('title', TextType::class)
+                // ...
+                ->add('comments', LiveCollectionType::class, [
+                    'entry_type' => CommentFormType::class,
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'by_reference' => false,
+                ])
+            ;
+        }
+
+        public function configureOptions(OptionsResolver $resolver)
+        {
+            $resolver->setDefaults(['data_class' => BlogPost::class]);
+        }
+    }
+
+Now, create a Twig component to render the form::
+
+    namespace App\Twig;
+
+    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+    use Symfony\Component\Form\FormInterface;
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+    use Symfony\UX\LiveComponent\LiveCollectionTrait;
+    use App\Entity\BlogPost;
+    use App\Form\BlogPostFormType;
+
+    #[AsLiveComponent('blog_post_collection_type')]
+    class BlogPostCollectionTypeComponent extends AbstractController
+    {
+        use LiveCollectionTrait;
+        use DefaultActionTrait;
+
+        #[LiveProp]
+        public BlogPost $post;
+
+        protected function instantiateForm(): FormInterface
+        {
+            return $this->createForm(BlogPostFormType::class, $this->post);
+        }
+    }
+
+There is no need for a custom template just render the form as usual:
+
+.. code-block:: twig
+
+    <div {{ attributes }} data-action="change->live#update">
+        {{ form(form) }}
+    </div>
+
+The ``add`` and ``delete`` buttons rendered as separate ``ButtonType`` form
+types and can be customized like a normal form type via the ``live_collection_button_add``
+and ``live_collection_button_delete`` respectively:
+
+.. code-block:: twig
+
+    {% block live_collection_button_add_widget %}
+        {% set attr = attr|merge({'class': attr.class|default('btn btn-ghost')}) %}
+        {% set translation_domin = false %}
+        {% set label_html = true %}
+        {%- set label -%}
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            {{ 'form.collection.button.add.label'|trans({}, 'forms') }}
+        {%- endset -%}
+        {{ block('button_widget') }}
+    {% endblock live_collection_button_add_widget %}
+
 Modifying Embedded Properties with the "exposed" Option
 -------------------------------------------------------
 

@@ -1,0 +1,19 @@
+{%- block live_collection_widget -%}
+    {{ block('form_widget') }}
+    {%- if button_add_prototype is defined and not button_add_prototype.rendered -%}
+        {{ form_row(button_add_prototype, { attr: button_add_prototype.vars.attr|merge({
+            'data-action': 'live#action',
+            'data-action-name': 'addCollectionItem(name=' ~ form.vars.full_name ~ ')'
+        }) }) }}
+    {%- endif -%}
+{%- endblock live_collection_widget -%}
+
+{%- block live_collection_entry_row -%}
+    {{ block('form_row') }}
+    {%- if button_delete_prototype is defined and not button_delete_prototype.rendered -%}
+        {{ form_row(button_delete_prototype, { attr: button_delete_prototype.vars.attr|merge({
+            'data-action': 'live#action',
+            'data-action-name': 'removeCollectionItem(name=' ~ form.parent.vars.full_name ~ ', index=' ~ form.vars.name ~ ')'
+        }) }) }}
+    {%- endif -%}
+{%- endblock live_collection_entry_row -%}
