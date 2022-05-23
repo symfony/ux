@@ -1,0 +1,75 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2021-01-24T18:22:53Z
+
+Hi 😃 ,
+
+With this bundle, will it be web push notifications (with allow and block) or simple notifications?
+
+Push notifications :
+![Ca1pture](https://user-images.githubusercontent.com/12116264/105639567-64cad400-5e79-11eb-8f17-53ae0f0274b0.PNG)
+
+![notification-message](https://user-images.githubusercontent.com/12116264/105639463-c9d1fa00-5e78-11eb-9d7b-eb87debb0650.png)
+
+Simple notification :
+![Capture](https://user-images.githubusercontent.com/12116264/105639448-a9a23b00-5e78-11eb-911d-ffb89b560804.PNG)
+
+Thanks :)
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2021-01-24T18:38:44Z
+
+Push notifications (native)
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2021-11-24T21:22:00Z
+
+Hello @mtarld
+
+I think this component still makes sense, could we perhaps use latest Symfony changes (especially on ux-mercure) to finalize it? Would you have time to have a look at the failing tests/rebasing?
+
+---------------------------------------------------------------------------
+
+by mtarld at 2021-11-25T08:12:54Z
+
+Hi @tgalopin!
+Yes indeed, I think it is worth it! A lot of improvements and changes happened, I'll update the bundle consequently :slightly_smiling_face:
+
+---------------------------------------------------------------------------
+
+by mtarld at 2021-12-27T09:41:35Z
+
+Hi @tgalopin! I updated the bundle to be consistent with other bundles (and to reuse some good ideas taken from ux-turbo-mercure)
+
+Still, some questions remain:
+- As the notify bundle is tightly coupled to mercure, should we name the bundle after it? Something like `MercureNotify` with a `stream_mercure_notification` twig function?
+- Actually, `symfony/mercure-notifier` is a strong composer dependency of the bundle. But it could actually work without (as the bundle is just a "listener"). Maybe we can instead change that dependency to a composer suggestion?
+
+---------------------------------------------------------------------------
+
+by mtarld at 2022-05-10T17:10:43Z
+
+As we required PHP 8.1 for that bundle, I updated the test workflow to run the bundle's tests on PHP 8.1.
+I think we may test other bundles over PHP 8.1 instead of 8.0 in another PR.
+WDYT?
+
+---------------------------------------------------------------------------
+
+by mtarld at 2022-05-10T17:11:38Z
+
+Thanks for that wonderful review @weaverryan :slightly_smiling_face:!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-05-13T00:47:30Z
+
+>
+As we required PHP 8.1 for that bundle, I updated the test workflow to run the bundle's tests on PHP 8.1.
+I think we may test other bundles over PHP 8.1 instead of 8.0 in another PR.
+WDYT?
+
+The test matrix DOES need some work. But if a bundle advertises that it works on php8, we need to keep testing it on php 8.0 (though, we should probably also test on php 8.1). Btw, I think we need to improve the test matrix further to be dynamic. There is way too much repeated config, and that's only going to get worse as the number of components grows. If you're interested, I had a WIP version of this at https://github.com/weaverryan/ux/tree/typescript-central-ci - where each package created a dynamic build. I think it's an interesting approach.
+
+For this PR, I'd love to see your excellent explanation put into the docs. But after that, it's ready to merge!
