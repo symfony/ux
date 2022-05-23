@@ -1,0 +1,110 @@
+---------------------------------------------------------------------------
+
+by optior at 2020-12-06T16:15:34Z
+
+That's a good question. If the attribute `data-containers` is meant to specify addtional css selectors for page reloading those values should be merged (`data-containers` and `data-main-element`). WDYT?
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2020-12-08T10:30:15Z
+
+Yes, I think that would be the best course of action:
+
+1/ if neither a main element nor containers are provided, use `#swup` by default
+2/ if only a data-main-element is provided, use it both as a container and in themes
+3/ if only a data-containers is provided, use it in containers and consider the first container as the main element
+4/ if both are provided, always add the main element in the containers list if it's not already, use the main element in themes and use the containers in Swup
+
+I think that makes the most sense
+
+Also, can you rebase on main as the controller changed a bit?
+
+---------------------------------------------------------------------------
+
+by optior at 2020-12-08T16:51:04Z
+
+I rebased my branch on the current main and implemented the required code.
+
+Do I have to build `src/Swup/Resources/assets/dist/controller.js` or is this file generated automatically?
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2020-12-08T16:56:58Z
+
+You should build it :)
+
+---------------------------------------------------------------------------
+
+by stof at 2020-12-08T18:00:33Z
+
+> You should build it :)
+
+@tgalopin it might be worth improving the CI to ensure this does not get forgotten, if possible.
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2020-12-09T21:02:45Z
+
+Hey @optior !
+
+I had a local look at your PR, it's great, thanks!
+
+The final thing that I think we can do it add tests for the various situations. In `test/controller.test.js`, there is a first initial test that doesn't check much things, but as we can access the options from inside a CheckController it should be possible to ensure the right `containers` option is passed to the Swup instance. Do you think you can create such tests for the different cases we talked about earlier?
+
+---------------------------------------------------------------------------
+
+by optior at 2020-12-11T12:00:09Z
+
+I'll give it a try on the weekend, never done any js testing before.
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2020-12-11T12:15:36Z
+
+Awesome, thanks! Feel free to ping me on Symfony Devs Slack if you have questions!
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2021-01-06T17:22:12Z
+
+Friendly ping @optior
+
+---------------------------------------------------------------------------
+
+by optior at 2021-01-07T18:57:48Z
+
+I have no clue how to write those tests. Unfortunately I have currently no time to dig into it. It would be great if anybody else could write these tests.
+
+---------------------------------------------------------------------------
+
+by optior at 2021-01-29T22:21:59Z
+
+Finally I got the tests working..but now I can't fix the linter errors.
+
+@tgalopin Are the tests ok this way? Any idea how I can fix the linter errors?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-05-06T13:25:19Z
+
+Hey @optior!
+
+I'm sorry hasn't gotten more attention yet :/. Would you be willing to update it to the latest version? The big change is that we refactored away from `data-` attributes to use Stimulus values. I think, since you understand this PR, that should be a fairly simple change. But let me know: I'd like to get this merged one way or another.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by optior at 2022-05-10T16:57:42Z
+
+Hey @weaverryan,
+
+I'll update this pr in the next couple days.
+
+---------------------------------------------------------------------------
+
+by optior at 2022-05-20T17:39:09Z
+
+Hey @weaverryan,
+
+I just pushed the updated files.
