@@ -25,7 +25,7 @@ Also make sure you have at least version 3.0 of
 Usage
 -----
 
-To use Symfony UX Notify you must have a `running Mercure server`_ and a 
+To use Symfony UX Notify you must have a `running Mercure server`_ and a
 properly configured notifier transport:
 
 .. code-block:: yaml
@@ -42,7 +42,7 @@ properly configured notifier transport:
    environment variable by specifying the ``topics`` query parameter.
    Otherwise, notifications will be sent to ``https://symfony.com/notifier`` topic.
 
-Then, you can inject the ``NotifierInterface`` service and send messages on the ``chat/mercure`` channel::
+Then, you can inject the ``NotifierInterface`` service and send messages on the ``chat/myMercureChatter`` channel::
 
     // ...
     use Symfony\Component\Notifier\Notification\Notification;
@@ -84,7 +84,7 @@ Enjoy your server-sent native notifications!
    Example of a native notification
 
 Extend the Stimulus Controller
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Symfony UX Notify allows you to extend its default behavior using a
 custom Stimulus controller:
