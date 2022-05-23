@@ -1,0 +1,53 @@
+{
+    "name": "symfony/ux-notify",
+    "type": "symfony-bundle",
+    "description": "Native notification integration for Symfony",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mathias Arlaud",
+            "email": "mathias.arlaud@gmail.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Notify\\": "."
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "require": {
+        "php": ">=8.1",
+        "symfony/config": "^5.4|^6.0",
+        "symfony/dependency-injection": "^5.4|^6.0",
+        "symfony/http-kernel": "^5.4|^6.0",
+        "symfony/mercure-bundle": "^0.3.4",
+        "symfony/mercure-notifier": "^5.4|^6.0",
+        "symfony/twig-bundle": "^5.4|^6.0",
+        "symfony/webpack-encore-bundle": "^1.11"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "^5.4|^6.0",
+        "symfony/phpunit-bridge": "^5.4|^6.0",
+        "symfony/var-dumper": "^5.4|^6.0"
+    },
+    "conflict": {
+        "symfony/config": "<5.4.0"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}
