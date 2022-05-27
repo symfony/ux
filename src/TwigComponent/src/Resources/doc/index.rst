@@ -237,10 +237,16 @@ ExposeInTemplate Attribute
 
     The ``ExposeInTemplate`` attribute was added in TwigComponents 2.1.
 
+.. versionadded:: 2.3
+
+    The ``ExposeInTemplate`` attribute now be used on public methods.
+
 All public component properties are available directly in your component
 template. You can use the ``ExposeInTemplate`` attribute to expose
-private/protected properties directly in a component template (``someProp``
-vs ``this.someProp``). These properties must be *accessible* (have a getter).
+private/protected properties and public methods directly in a component
+template (``someProp`` vs ``this.someProp``, ``someMethod`` vs ``this.someMethod``).
+Properties must be *accessible* (have a getter). Methods *cannot have*
+required parameters.
 
 .. code-block:: php
 
@@ -283,8 +289,25 @@ vs ``this.someProp``). These properties must be *accessible* (have a getter).
             return $this->icon;
         }
 
+        #[ExposeInTemplate]
+        public function getActions(): array // available as `{{ actions }}` in the template
+        {
+            // ...
+        }
+
+        #[ExposeInTemplate('dismissable')]
+        public function canBeDismissed(): bool // available as `{{ dismissable }}` in the template
+        {
+            // ...
+        }
+
         // ...
     }
+
+.. note::
+
+    When using ``ExposeInTemplate`` on a method the value is fetched eagerly
+    before rendering.
 
 PreMount Hook
 ~~~~~~~~~~~~~

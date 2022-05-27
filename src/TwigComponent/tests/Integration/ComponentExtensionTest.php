@@ -96,6 +96,9 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('Prop1: prop1 value', $output);
         $this->assertStringContainsString('Prop2: prop2 value', $output);
         $this->assertStringContainsString('Prop3: prop3 value', $output);
+        $this->assertStringContainsString('Method1: method1 value', $output);
+        $this->assertStringContainsString('Method2: method2 value', $output);
+        $this->assertStringContainsString('customMethod: customMethod value', $output);
     }
 
     public function testCanUseComputedMethods(): void
