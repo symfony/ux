@@ -31,6 +31,9 @@
         "symfony/twig-bundle": "^5.2|^6.0",
         "symfony/ux-turbo": "^2.0"
     },
+    "suggest": {
+        "symfony/expression-language": "To use expression language in topics"
+    },
     "extra": {
         "thanks": {
             "name": "symfony/ux-turbo",

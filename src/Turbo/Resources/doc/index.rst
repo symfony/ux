@@ -301,7 +301,7 @@ Forms
 ^^^^^
 
 .. versionadded:: 2.1
-  
+
     Prior to 2.1, ``TurboStreamResponse::STREAM_FORMAT`` was used instead of ``TurboBundle::STREAM_FORMAT``.
     Also, one had to return a new ``TurboStreamResponse()`` object as the third argument to ``$this->render()``.
 
@@ -616,13 +616,16 @@ The ``Broadcast`` attribute comes with a set of handy options:
    is derived from the FQCN of the entity and from its id
 -  ``template`` (``string``): Twig template to render (see above)
 
-Options are transport-sepcific. When using Mercure, some extra options
+Options are transport-specific. When using Mercure, some extra options
 are supported:
 
 -  ``private`` (``bool``): marks Mercure updates as private
 -  ``sse_id`` (``string``): ``id`` field of the SSE
 -  ``sse_type`` (``string``): ``type`` field of the SSE
 -  ``sse_retry`` (``int``): ``retry`` field of the SSE
+
+The Mercure broadcaster also supports `Expression Language`_ in topics
+by starting with `@=`.
 
 Example::
 
@@ -631,7 +634,7 @@ Example::
 
     use Symfony\UX\Turbo\Attribute\Broadcast;
 
-    #[Broadcast(template: 'foo.stream.html.twig', private: true)]
+    #[Broadcast(topics: ['@="books_by_author_" ~ entity.author?.id', 'books'], template: 'foo.stream.html.twig', private: true)]
     class Book
     {
         // ...
@@ -813,3 +816,4 @@ Symfony UX Turbo has been created by `Kévin Dunglas`_. It has been inspired by
 .. _`sroze/live-twig`: https://github.com/sroze/live-twig
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
 .. _`Moving <script> inside <head> and the "defer" Attribute`: https://symfony.com/blog/moving-script-inside-head-and-the-defer-attribute
+.. _`Expression Language`: https://symfony.com/doc/current/components/expression_language.html

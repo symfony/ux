@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.2
+
+-   The topics defined in the Broadcast attribute now support expression language when prefixed with `@=`.
+
 ## 2.1
 
 -   `TurboStreamResponse` and `AddTurboStreamFormatSubscriber` have been removed, use native content negotiation instead:

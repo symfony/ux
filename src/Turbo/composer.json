@@ -55,7 +55,8 @@
         "symfony/security-core": "^5.2|^6.0",
         "symfony/stopwatch": "^5.2|^6.0",
         "symfony/twig-bundle": "^5.2|^6.0",
-        "symfony/web-profiler-bundle": "^5.2|^6.0"
+        "symfony/web-profiler-bundle": "^5.2|^6.0",
+        "symfony/expression-language": "^5.4|^6.0"
     },
     "conflict": {
         "symfony/flex": "<1.13"

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Artists</h1>
+
+    <div id="artists" {{ turbo_stream_listen('App\\Entity\\Artist') }}></div>
+
+    <form method="post" enctype="application/x-www-form-urlencoded">
+        <input placeholder="ID" name="id">
+        <input placeholder="Name" name="name">
+        <label><input type="checkbox" name="remove" value="remove"> Remove</label>
+        <button>Submit</button>
+    </form>
+{% endblock %}
