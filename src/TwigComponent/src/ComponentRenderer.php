@@ -109,5 +109,22 @@ final class ComponentRenderer
 
             yield $attribute->name ?? $property->name => $value;
         }
+
+        foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            if (!$attribute = $method->getAttributes(ExposeInTemplate::class)[0] ?? null) {
+                continue;
+            }
+
+            $attribute = $attribute->newInstance();
+
+            /** @var ExposeInTemplate $attribute */
+            $name = $attribute->name ?? (str_starts_with($method->name, 'get') ? lcfirst(substr($method->name, 3)) : $method->name);
+
+            if ($method->getNumberOfRequiredParameters()) {
+                throw new \LogicException(sprintf('Cannot use %s on methods with required parameters (%s::%s).', ExposeInTemplate::class, $component::class, $method->name));
+            }
+
+            yield $name => $component->{$method->name}();
+        }
     }
 }
