@@ -2,8 +2,9 @@
 
 ## 2.2
 
--   Allow to pass stringable object as non mapped component attribute
+-   Allow to pass stringable object as non mapped component attribute.
 -   Add _embedded_ components.
+-   Allow `ExposeInTemplate` to be used on public component methods.
 
 ## 2.1
 
