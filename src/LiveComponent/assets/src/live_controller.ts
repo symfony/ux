@@ -648,11 +648,6 @@ export default class extends Controller {
                     return false;
                 }
 
-                // Don't update file targets
-                if (this.fileTargets.includes(fromEl)) {
-                    return false;
-                }
-
                 return true;
             }
         });

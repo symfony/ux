@@ -1422,9 +1422,6 @@ class default_1 extends Controller {
                 if (fromEl.hasAttribute('data-live-ignore')) {
                     return false;
                 }
-                if (this.fileTargets.includes(fromEl)) {
-                    return false;
-                }
                 return true;
             }
         });
