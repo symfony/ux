@@ -1106,7 +1106,7 @@ class default_1 extends Controller {
                         handled = true;
                         break;
                     }
-                    case 'files':
+                    case 'upload_files':
                         this.fileTargets.forEach(input => {
                             if (!modifier.value || input.name === modifier.value) {
                                 files[input.name] = input.files;
