@@ -159,11 +159,10 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             foreach (LiveFileArg::liveFileArgs($component, $action) as $parameter => $fileArg) {
                 $path = $fileArg->getPropertyPath();
 
-                if (!$accessor->isReadable($allFiles, $path)) {
-                    throw new \RuntimeException(sprintf('File path "%s" for parameter "%s" is invalid', $fileArg->name, $parameter));
-                }
-
-                if ($files = $accessor->getValue($allFiles, $path)) {
+                if (
+                    $accessor->isReadable($allFiles, $path)
+                    && ($files = $accessor->getValue($allFiles, $path))
+                ) {
                     $request->attributes->set(
                         $parameter,
                         $fileArg->multiple ? $files : $files[0]
