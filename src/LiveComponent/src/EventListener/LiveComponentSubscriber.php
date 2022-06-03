@@ -24,7 +24,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -161,9 +160,9 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                     $files = $request->files->all($fileArg->name);
 
                     $value = null;
-                    if (count($files) === 1 && $fileArg->isValueCompatible($files[0])) {
+                    if (1 === \count($files) && $fileArg->isValueCompatible($files[0])) {
                         $value = $files[0];
-                    } else if ($fileArg->isValueCompatible($files)) {
+                    } elseif ($fileArg->isValueCompatible($files)) {
                         $value = $files;
                     } else {
                         throw new BadRequestHttpException("Could not autowire uploaded files for {$fileArg->name} parameter.");

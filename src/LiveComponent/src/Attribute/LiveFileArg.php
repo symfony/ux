@@ -11,9 +11,6 @@
 
 namespace Symfony\UX\LiveComponent\Attribute;
 
-
-use ReflectionNamedType;
-
 /**
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
  *
@@ -24,21 +21,21 @@ final class LiveFileArg
 {
     private ?array $types = null;
 
-    public function __construct(
-        public ?string $name = null
-    ) {
+    public function __construct(public ?string $name = null)
+    {
     }
 
-    public function isValueCompatible(mixed $value): bool {
+    public function isValueCompatible(mixed $value): bool
+    {
         if (null === $this->types) {
             return true;
         }
-        $type = gettype($value);
+        $type = \gettype($value);
         if ('object' === $type) {
             $type = $value::class;
         }
 
-        return in_array($type, $this->types, true);
+        return \in_array($type, $this->types, true);
     }
 
     /**
@@ -59,11 +56,11 @@ final class LiveFileArg
 
                 $attr->name ??= $parameterName;
                 if ($type = $parameter->getType()) {
-                    if ($type instanceof ReflectionNamedType) {
+                    if ($type instanceof \ReflectionNamedType) {
                         $attr->types = [$type->getName()];
                     } else {
                         $attr->types = array_map(
-                            static fn (ReflectionNamedType $type) => $type->getName(),
+                            static fn (\ReflectionNamedType $type) => $type->getName(),
                             $type->getTypes()
                         );
                     }
