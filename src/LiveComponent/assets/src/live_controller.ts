@@ -7,6 +7,7 @@ import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
 import { cloneHTMLElement } from './clone_html_element';
 import { updateArrayDataFromChangedElement } from "./update_array_data";
+import * as assert from "assert";
 
 interface ElementLoadingDirectives {
     element: HTMLElement|SVGElement,
@@ -18,7 +19,6 @@ declare const Turbo: any;
 const DEFAULT_DEBOUNCE = 150;
 
 export default class extends Controller {
-    static targets = [ 'file' ]
     static values = {
         url: String,
         data: Object,
@@ -54,6 +54,8 @@ export default class extends Controller {
      * @type {PromiseStack}
      */
     renderPromiseStack = new PromiseStack();
+
+    fileInputs: Record<string, HTMLInputElement> = {}
 
     pollingIntervals: NodeJS.Timer[] = [];
 
@@ -183,13 +185,21 @@ export default class extends Controller {
                         break;
                     }
                     case 'upload_files':
-                        this.fileTargets.forEach(input => {
-                            if (!modifier.value || input.name === modifier.value) {
-                                files[input.name] = input.files;
+                        if (modifier.value) {
+                            const input = this.fileInputs[modifier.value];
+                            if (input && input.files) {
+                                files[modifier.value] = input.files;
+                            } else if (input) {
+                                delete this.fileInputs[modifier.value];
                             }
-                        })
-                        if (modifier.value && !files[modifier.value]) {
-                            throw new Error(`Could not find the file input foo. Did you remember to make this element a Stimulus target (e.g. {{ stimulus_target('live', 'file') }}).`);
+                        } else {
+                            for (const [key, input] of Object.entries(this.fileInputs)) {
+                                if (input && input.files) {
+                                    files[key] = input.files;
+                                } else if (input) {
+                                    delete this.fileInputs[key];
+                                }
+                            }
                         }
 
                         break;
@@ -229,7 +239,15 @@ export default class extends Controller {
         // we need to handle addition and removal of values from it to send
         // back only required data
         let finalValue : string|null|string[] = value
-        if (/\[]$/.test(model)) {
+        if (
+            element instanceof HTMLInputElement
+            && element.type === 'file'
+        ) {
+            // Save file input reference for later and don't upload immediately
+            this.fileInputs[model] = element;
+
+            return;
+        } else if (/\[]$/.test(model)) {
             // Get current value from data
             const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model))
             const currentValue = currentLevelData[finalKey];

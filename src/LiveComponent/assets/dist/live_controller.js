@@ -1024,6 +1024,7 @@ class default_1 extends Controller {
         this.renderDebounceTimeout = null;
         this.actionDebounceTimeout = null;
         this.renderPromiseStack = new PromiseStack();
+        this.fileInputs = {};
         this.pollingIntervals = [];
         this.isWindowUnloaded = false;
         this.originalDataJSON = '{}';
@@ -1107,13 +1108,24 @@ class default_1 extends Controller {
                         break;
                     }
                     case 'upload_files':
-                        this.fileTargets.forEach(input => {
-                            if (!modifier.value || input.name === modifier.value) {
-                                files[input.name] = input.files;
+                        if (modifier.value) {
+                            const input = this.fileInputs[modifier.value];
+                            if (input && input.files) {
+                                files[modifier.value] = input.files;
                             }
-                        });
-                        if (modifier.value && !files[modifier.value]) {
-                            throw new Error(`Could not find the file input foo. Did you remember to make this element a Stimulus target (e.g. {{ stimulus_target('live', 'file') }}).`);
+                            else if (input) {
+                                delete this.fileInputs[modifier.value];
+                            }
+                        }
+                        else {
+                            for (const [key, input] of Object.entries(this.fileInputs)) {
+                                if (input && input.files) {
+                                    files[key] = input.files;
+                                }
+                                else if (input) {
+                                    delete this.fileInputs[key];
+                                }
+                            }
                         }
                         break;
                     default:
@@ -1141,7 +1153,12 @@ class default_1 extends Controller {
             throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
         }
         let finalValue = value;
-        if (/\[]$/.test(model)) {
+        if (element instanceof HTMLInputElement
+            && element.type === 'file') {
+            this.fileInputs[model] = element;
+            return;
+        }
+        else if (/\[]$/.test(model)) {
             const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model));
             const currentValue = currentLevelData[finalKey];
             finalValue = updateArrayDataFromChangedElement(element, value, currentValue);
@@ -1557,7 +1574,6 @@ class default_1 extends Controller {
         });
     }
 }
-default_1.targets = ['file'];
 default_1.values = {
     url: String,
     data: Object,
