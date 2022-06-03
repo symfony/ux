@@ -160,9 +160,17 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                 ) {
                     $files = $request->files->all($fileArg->name);
 
+                    $value = null;
+                    if (count($files) === 1 && $fileArg->isValueCompatible($files[0])) {
+                        $value = $files[0];
+                    } else if ($fileArg->isValueCompatible($files)) {
+                        $value = $files;
+                    } else {
+                        throw new BadRequestHttpException("Could not autowire uploaded files for {$fileArg->name} parameter.");
+                    }
                     $request->attributes->set(
                         $parameter,
-                        $fileArg->multiple ? $files : $files[0]
+                        $value
                     );
                 }
             }
