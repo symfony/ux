@@ -1,7 +1,7 @@
 /**
  * A modifier for a directive
  */
-interface DirectiveModifier {
+export interface DirectiveModifier {
     /**
      * The name of the modifier (e.g. delay)
      */

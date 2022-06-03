@@ -1071,7 +1071,16 @@ class default_1 extends Controller {
     updateDefer(event) {
         this._updateModelFromElement(event.target, this._getValueFromElement(event.target), false);
     }
-    action(event) {
+    uploadFile(event) {
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), false);
+        const model = event.target.dataset.model || event.target.getAttribute('name');
+        const modifier = {
+            name: 'upload_files',
+            value: model
+        };
+        this.action(event, [modifier]);
+    }
+    action(event, autoModifiers = []) {
         const rawAction = event.currentTarget.dataset.actionName;
         const directives = parseDirectives(rawAction);
         const files = {};
@@ -1081,7 +1090,8 @@ class default_1 extends Controller {
                 this._makeRequest(directive.action, directive.named, files);
             };
             let handled = false;
-            directive.modifiers.forEach((modifier) => {
+            const modifiers = [...autoModifiers, ...directive.modifiers];
+            modifiers.forEach((modifier) => {
                 switch (modifier.name) {
                     case 'prevent':
                         event.preventDefault();

@@ -1,13 +1,12 @@
 import { Controller } from '@hotwired/stimulus';
 import morphdom from 'morphdom';
-import { parseDirectives, Directive } from './directives_parser';
+import { parseDirectives, Directive, DirectiveModifier } from './directives_parser';
 import { combineSpacedArray } from './string_utils';
 import { setDeepData, doesDeepPropertyExist, normalizeModelName, parseDeepData } from './set_deep_data';
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
 import { cloneHTMLElement } from './clone_html_element';
 import { updateArrayDataFromChangedElement } from "./update_array_data";
-import * as assert from "assert";
 
 interface ElementLoadingDirectives {
     element: HTMLElement|SVGElement,
@@ -124,7 +123,17 @@ export default class extends Controller {
         this._updateModelFromElement(event.target, this._getValueFromElement(event.target), false);
     }
 
-    action(event: any) {
+    uploadFile(event: any) {
+        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), false);
+        const model = event.target.dataset.model || event.target.getAttribute('name');
+        const modifier = {
+            name: 'upload_files',
+            value: model
+        }
+        this.action(event, [modifier]);
+    }
+
+    action(event: any, autoModifiers: DirectiveModifier[] = []) {
         // using currentTarget means that the data-action and data-action-name
         // must live on the same element: you can't add
         // data-action="click->live#action" on a parent element and
@@ -153,7 +162,8 @@ export default class extends Controller {
             }
 
             let handled = false;
-            directive.modifiers.forEach((modifier) => {
+            const modifiers: DirectiveModifier[] = [...autoModifiers, ...directive.modifiers];
+            modifiers.forEach((modifier) => {
                 switch (modifier.name) {
                     case 'prevent':
                         event.preventDefault();
