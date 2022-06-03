@@ -21,8 +21,7 @@ final class LiveFileArg
 {
     public function __construct(
         public ?string $name = null,
-        public bool $multiple = false,
-        public array $constraints = []
+        public bool $multiple = false
     ) {
     }
 
