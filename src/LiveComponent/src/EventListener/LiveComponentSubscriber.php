@@ -154,15 +154,12 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         // autowire live file arguments
         if ($request->files->count()) {
-            $allFiles = $request->files->all();
-            $accessor = PropertyAccess::createPropertyAccessor();
             foreach (LiveFileArg::liveFileArgs($component, $action) as $parameter => $fileArg) {
-                $path = $fileArg->getPropertyPath();
-
                 if (
-                    $accessor->isReadable($allFiles, $path)
-                    && ($files = $accessor->getValue($allFiles, $path))
+                    $request->files->has($fileArg->name)
                 ) {
+                    $files = $request->files->all($fileArg->name);
+
                     $request->attributes->set(
                         $parameter,
                         $fileArg->multiple ? $files : $files[0]
