@@ -167,11 +167,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                         $parameter,
                         $fileArg->multiple ? $files : $files[0]
                     );
-                } else {
-                    $request->attributes->set(
-                        $parameter,
-                        $fileArg->multiple ? [] : null
-                    );
                 }
             }
         }
