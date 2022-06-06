@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by tgalopin at 2022-06-04T15:53:33Z
+
+Updated after reviews. I dropped support for React 17 and less (not worth it indeed).
+
+The PR is ready I think!
