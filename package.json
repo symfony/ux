@@ -15,7 +15,8 @@
     "devDependencies": {
         "@babel/core": "^7.15.8",
         "@babel/preset-env": "^7.15.8",
-        "@babel/preset-typescript": "^7.15.0",
+        "@babel/preset-react": "^7.15.8",
+        "@babel/preset-typescript": "^7.15.8",
         "@rollup/plugin-node-resolve": "^13.0.0",
         "@rollup/plugin-typescript": "^8.3.0",
         "@symfony/stimulus-testing": "^2.0.1",

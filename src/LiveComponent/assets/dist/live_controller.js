@@ -971,11 +971,14 @@ function haveRenderedValuesChanged(originalDataJson, currentDataJson, newDataJso
 }
 
 function normalizeAttributesForComparison(element) {
-    if (element.value) {
-        element.setAttribute('value', element.value);
-    }
-    else if (element.hasAttribute('value')) {
-        element.setAttribute('value', '');
+    const isFileInput = element instanceof HTMLInputElement && element.type === 'file';
+    if (!isFileInput) {
+        if (element.value) {
+            element.setAttribute('value', element.value);
+        }
+        else if (element.hasAttribute('value')) {
+            element.setAttribute('value', '');
+        }
     }
     Array.from(element.children).forEach((child) => {
         normalizeAttributesForComparison(child);
