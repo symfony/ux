@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2022-06-06T19:05:57Z
+
+G R E A T 💯
+Would using https://github.com/afcapel/stimulus-autocomplete be better?
+In particular to reuse the controller :
+https://github.com/afcapel/stimulus-autocomplete/blob/main/src/autocomplete.js
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-06-06T19:11:57Z
+
+Apparently, I just tripped over my keyboard :)
+
+> Would using https://github.com/afcapel/stimulus-autocomplete be better?
+
+Tom Select (and this package) is focused on transforming `<select>` elements vs creating a generic "autocomplete" (e.g. a search bar where you have HTML results before). If you have that use-case, you can use that library, or live components where it's super easy to create this type of thing ("search bar where results load as you type").
