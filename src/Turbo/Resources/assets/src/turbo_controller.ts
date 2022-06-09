@@ -11,7 +11,7 @@ import { Controller } from '@hotwired/stimulus';
 import * as Turbo from '@hotwired/turbo';
 
 // Expose Turbo to the rest of the app to allow for dynamic Turbo calls
-window.Turbo = Turbo;
+Object.assign(window, { Turbo });
 
 /**
  * Empty Stimulus controller only used for Symfony Flex wiring.
