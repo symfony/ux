@@ -161,7 +161,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
                     $value = null;
                     if (
-                        is_array($files)
+                        \is_array($files)
                         && 1 === \count($files)
                         && $fileArg->isValueCompatible($files[0])
                     ) {
