@@ -29,7 +29,7 @@ Then install the bundle using Composer and Symfony Flex:
     $ yarn install --force
     $ yarn watch
 
-Also make sure you have at least version 3.0 of
+Also make sure you have at least version 3.2 of
 `@symfony/stimulus-bridge`_ in your ``package.json`` file.
 
 Usage
@@ -45,7 +45,7 @@ The main usage of Symfony UX Typed is to use its Stimulus controller to initiali
 
     <div>
         I created this UX component because
-        <span {{ stimulus_controller('symfony/ux-typed/typed', {
+        <span {{ stimulus_controller('symfony/ux-typed', {
             strings: ['I ❤ Symfony UX', 'Symfony UX is great', 'Symfony UX is easy']
         }) }}></span>
     </div>
@@ -59,7 +59,7 @@ Parameters are exactly the same as for the `typed library`_
 
     <div>
         I created this UX component because
-        <span {{ stimulus_controller('symfony/ux-typed/typed', {
+        <span {{ stimulus_controller('symfony/ux-typed', {
             strings: ['I ❤ Symfony UX', 'Symfony UX is great', 'Symfony UX is easy'],
             smartBackspace: true,
             startDelay: 100,
@@ -133,7 +133,7 @@ Then in your template, add your controller to the HTML attribute:
         </head>
         <body {{ stimulus_controller({
             mytyped: {},
-            'symfony/ux-typed/typed': {}
+            'symfony/ux-typed': {}
         }) }}>
             {# ... #}
         </body>
