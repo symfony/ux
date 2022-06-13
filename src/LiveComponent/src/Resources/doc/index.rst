@@ -82,35 +82,16 @@ Now install the library with:
 
     $ composer require symfony/ux-live-component
 
-This comes with an embedded JavaScript Stimulus controller. Unlike other
-Symfony UX packages, this needs to be enabled manually in your
-``assets/bootstrap.js`` file:
+    # Don't forget to install the JavaScript dependencies as well and compile
+    $ npm install --force
+    $ npm run watch
 
-.. code-block:: javascript
-
-    // assets/bootstrap.js
-    import LiveController from '@symfony/ux-live-component';
-    import '@symfony/ux-live-component/styles/live.css';
-    // ...
-
-    app.register('live', LiveController);
-
-Finally, reinstall your Node dependencies and restart Encore:
-
-.. code-block:: terminal
-
+    # or use yarn
     $ yarn install --force
-    $ yarn encore dev
+    $ yarn watch
 
-Oh, and just one more step! Import a routing file from the bundle:
-
-.. code-block:: yaml
-
-    # config/routes.yaml
-    live_component:
-        resource: '@LiveComponentBundle/Resources/config/routing/live_component.xml'
-        # uncomment to add localization to your components
-        #prefix: '/{_locale}'
+Also make sure you have at least version 3.2 of
+``@symfony/stimulus-bridge`` in your ``package.json`` file.
 
 That's it! We're ready!
 

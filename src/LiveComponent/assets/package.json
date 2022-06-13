@@ -1,10 +1,24 @@
 {
-    "name": "@symfony/live-stimulus",
+    "name": "@symfony/live-component",
     "description": "Live Component: bring server-side re-rendering & model binding to any element.",
     "main": "dist/live_controller.js",
     "module": "dist/live_controller.js",
-    "version": "0.0.1",
+    "version": "1.0.0",
     "license": "MIT",
+    "symfony": {
+        "controllers": {
+            "typed": {
+                "main": "dist/live_controller.js",
+                "name": "live",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {
+                    "@symfony/live-component/styles/live.css": true
+                }
+            }
+        }
+    },
     "dependencies": {
         "morphdom": "^2.6.1"
     },
