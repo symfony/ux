@@ -27,8 +27,12 @@ Install this bundle using Composer and Symfony Flex:
     $ composer require symfony/ux-turbo
 
     # Don't forget to install the JavaScript dependencies as well and compile
+    $ npm install --force
+    $ npm run watch
+
+    # or use yarn
     $ yarn install --force
-    $ yarn encore dev
+    $ yarn watch
 
 Usage
 -----
@@ -301,7 +305,7 @@ Forms
 ^^^^^
 
 .. versionadded:: 2.1
-  
+
     Prior to 2.1, ``TurboStreamResponse::STREAM_FORMAT`` was used instead of ``TurboBundle::STREAM_FORMAT``.
     Also, one had to return a new ``TurboStreamResponse()`` object as the third argument to ``$this->render()``.
 

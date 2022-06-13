@@ -24,12 +24,12 @@ Then install the bundle using Composer and Symfony Flex:
     $ composer require symfony/ux-autocomplete
 
     # Don't forget to install the JavaScript dependencies as well and compile
-    $ yarn install --force
-    $ yarn watch
-
-    # or use npm
     $ npm install --force
     $ npm run watch
+
+    # or use yarn
+    $ yarn install --force
+    $ yarn watch
 
 Usage in a Form (without Ajax)
 ------------------------------
