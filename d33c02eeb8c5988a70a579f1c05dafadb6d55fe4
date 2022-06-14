@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2022-06-07T19:57:42Z
+
+What is the difference with this PR?
+https://github.com/symfony/ux/pull/90
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-06-07T20:11:05Z
+
+This requires your entire form be a live component, #90 does not. Basically, if your form already is a live component, just this would be required to add this functionality.
