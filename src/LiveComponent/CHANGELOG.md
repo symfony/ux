@@ -2,13 +2,14 @@
 
 ## 2.2.0
 
-- The bundle now properly exposes a `live` controller, which can be
-  imported via your `assets/controllers.json` file (like any other
-  UX package). Previously, the controller needed to be imported and
-  registered with Stimulus directly (usually in your `assets/bootstrap.js`
-  file). That is no longer needed.
+-   The bundle now properly exposes a `live` controller, which can be
+    imported via your `assets/controllers.json` file (like any other
+    UX package). Previously, the controller needed to be imported and
+    registered with Stimulus directly (usually in your `assets/bootstrap.js`
+    file). That is no longer needed.
 
-- Allow to disable CSRF per component
+-   Add a generic `LiveCollectionType` and `LiveCollectionTrait`
+-   Allow to disable CSRF per component
 
 ## 2.1.0
 

@@ -13,13 +13,16 @@ namespace Symfony\UX\LiveComponent\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentValidator;
 use Symfony\UX\LiveComponent\ComponentValidatorInterface;
 use Symfony\UX\LiveComponent\EventListener\AddLiveAttributesSubscriber;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
+use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Twig\LiveComponentExtension as LiveComponentTwigExtension;
 use Symfony\UX\LiveComponent\Twig\LiveComponentRuntime;
@@ -33,8 +36,20 @@ use Symfony\UX\TwigComponent\ComponentRenderer;
  *
  * @internal
  */
-final class LiveComponentExtension extends Extension
+final class LiveComponentExtension extends Extension implements PrependExtensionInterface
 {
+    public function prepend(ContainerBuilder $container)
+    {
+        // Register the form theme if TwigBundle is available
+        $bundles = $container->getParameter('kernel.bundles');
+
+        if (!isset($bundles['TwigBundle'])) {
+            return;
+        }
+
+        $container->prependExtensionConfig('twig', ['form_themes' => ['@LiveComponent/form_theme.html.twig']]);
+    }
+
     public function load(array $configs, ContainerBuilder $container): void
     {
         $container->registerAttributeForAutoconfiguration(
@@ -87,5 +102,11 @@ final class LiveComponentExtension extends Extension
         ;
 
         $container->setAlias(ComponentValidatorInterface::class, ComponentValidator::class);
+
+        $container
+            ->setDefinition('form.live_collection', new Definition(LiveCollectionType::class))
+            ->addTag('form.type')
+            ->setPublic(false)
+        ;
     }
 }
