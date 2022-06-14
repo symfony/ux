@@ -1,5 +1,5 @@
 {
-    "name": "@symfony/live-component",
+    "name": "@symfony/ux-live-component",
     "description": "Live Component: bring server-side re-rendering & model binding to any element.",
     "main": "dist/live_controller.js",
     "module": "dist/live_controller.js",
@@ -14,7 +14,7 @@
                 "fetch": "eager",
                 "enabled": true,
                 "autoimport": {
-                    "@symfony/live-component/styles/live.css": true
+                    "@symfony/ux-live-component/styles/live.css": true
                 }
             }
         }
