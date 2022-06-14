@@ -1,0 +1,30 @@
+{
+    "name": "@symfony/ux-react",
+    "description": "Integration of React in Symfony",
+    "license": "MIT",
+    "version": "1.0.0",
+    "main": "dist/register_controller.js",
+    "symfony": {
+        "controllers": {
+            "react": {
+                "main": "dist/render_controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "react": "^18.0",
+        "react-dom": "^18.0"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "@types/react": "^18.0",
+        "@types/react-dom": "^18.0",
+        "@types/webpack-env": "^1.16",
+        "react": "^18.0",
+        "react-dom": "^18.0"
+    }
+}

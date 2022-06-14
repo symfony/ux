@@ -26,7 +26,8 @@ final class AsLiveComponent extends AsTwigComponent
         ?string $template = null,
         private ?string $defaultAction = null,
         bool $exposePublicProps = true,
-        string $attributesVar = 'attributes'
+        string $attributesVar = 'attributes',
+        public bool $csrf = true,
     ) {
         parent::__construct($name, $template, $exposePublicProps, $attributesVar);
     }
@@ -39,6 +40,7 @@ final class AsLiveComponent extends AsTwigComponent
         return array_merge(parent::serviceConfig(), [
             'default_action' => $this->defaultAction,
             'live' => true,
+            'csrf' => $this->csrf,
         ]);
     }
 

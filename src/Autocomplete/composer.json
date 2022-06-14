@@ -1,0 +1,58 @@
+{
+    "name": "symfony/ux-autocomplete",
+    "type": "symfony-bundle",
+    "description": "JavaScript Autocomplete functionality for Symfony",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Autocomplete\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Autocomplete\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.0",
+        "symfony/dependency-injection": "^5.4|^6.0",
+        "symfony/http-foundation": "^5.4|^6.0",
+        "symfony/http-kernel": "^5.4|^6.0",
+        "symfony/string": "^5.4|^6.0"
+    },
+    "require-dev": {
+        "doctrine/doctrine-bundle": "^2.0",
+        "doctrine/orm": "^2.7",
+        "mtdowling/jmespath.php": "2.6.x-dev",
+        "symfony/form": "^5.4|^6.0",
+        "symfony/framework-bundle": "^5.4|^6.0",
+        "symfony/maker-bundle": "^1.40",
+        "symfony/phpunit-bridge": "^5.4|^6.0",
+        "symfony/process": "^5.4|^6.0",
+        "symfony/security-bundle": "^5.4|^6.0",
+        "symfony/security-csrf": "^5.4|^6.0",
+        "symfony/twig-bundle": "^5.4|^6.0",
+        "zenstruck/browser": "^1.1",
+        "zenstruck/foundry": "^1.19"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}

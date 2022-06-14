@@ -20,7 +20,7 @@ namespace Symfony\UX\TwigComponent\Attribute;
  *
  * @experimental
  */
-#[\Attribute(\Attribute::TARGET_PROPERTY)]
+#[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD)]
 final class ExposeInTemplate
 {
     /**

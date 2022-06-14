@@ -22,6 +22,9 @@ use Symfony\UX\TwigComponent\MountedComponent;
  */
 final class PreRenderEvent extends Event
 {
+    /** @internal */
+    public const EMBEDDED = '__embedded';
+
     private string $template;
 
     /**
@@ -33,6 +36,11 @@ final class PreRenderEvent extends Event
         private array $variables
     ) {
         $this->template = $this->metadata->getTemplate();
+    }
+
+    public function isEmbedded(): bool
+    {
+        return $this->variables[self::EMBEDDED] ?? false;
     }
 
     /**
@@ -48,6 +56,10 @@ final class PreRenderEvent extends Event
      */
     public function setTemplate(string $template): self
     {
+        if ($this->isEmbedded()) {
+            throw new \LogicException('Cannot modify template for embedded components.');
+        }
+
         $this->template = $template;
 
         return $this;

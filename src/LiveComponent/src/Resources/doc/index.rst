@@ -629,6 +629,20 @@ Your only job is to make sure that the CSRF component is installed:
 
     $ composer require symfony/security-csrf
 
+If you want to disable CSRF for a single component you can set
+``csrf`` option to ``false``::
+
+    namespace App\Twig\Components;
+
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\Attribute\LiveProp;
+
+    #[AsLiveComponent('my_live_component', csrf: false)]
+    class MyLiveComponent
+    {
+        // ...
+    }
+
 Actions, Redirecting and AbstractController
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1429,12 +1443,12 @@ You can also trigger a specific "action" instead of a normal re-render:
         #}
     >
 
-Embedded Components
--------------------
+Nested Components
+-----------------
 
-Need to embed one live component inside another one? No problem! As a
+Need to nest one live component inside another one? No problem! As a
 rule of thumb, **each component exists in its own, isolated universe**.
-This means that embedding one component inside another could be really
+This means that nesting one component inside another could be really
 simple or a bit more complex, depending on how inter-connected you want
 your components to be.
 

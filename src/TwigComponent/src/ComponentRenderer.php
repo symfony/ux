@@ -37,7 +37,26 @@ final class ComponentRenderer
     ) {
     }
 
+    public function createAndRender(string $name, array $props = []): string
+    {
+        return $this->render($this->factory->create($name, $props));
+    }
+
     public function render(MountedComponent $mounted): string
+    {
+        $event = $this->preRender($mounted);
+
+        return $this->twig->render($event->getTemplate(), $event->getVariables());
+    }
+
+    public function embeddedContext(string $name, array $props, array $context): array
+    {
+        $context[PreRenderEvent::EMBEDDED] = true;
+
+        return $this->preRender($this->factory->create($name, $props), $context)->getVariables();
+    }
+
+    private function preRender(MountedComponent $mounted, array $context = []): PreRenderEvent
     {
         if (!$this->safeClassesRegistered) {
             $this->twig->getExtension(EscaperExtension::class)->addSafeClass(ComponentAttributes::class, ['html']);
@@ -48,6 +67,9 @@ final class ComponentRenderer
         $component = $mounted->getComponent();
         $metadata = $this->factory->metadataFor($mounted->getName());
         $variables = array_merge(
+            // first so values can be overridden
+            $context,
+
             // add the component as "this"
             ['this' => $component],
 
@@ -64,7 +86,7 @@ final class ComponentRenderer
 
         $this->dispatcher->dispatch($event);
 
-        return $this->twig->render($event->getTemplate(), $event->getVariables());
+        return $event;
     }
 
     private function exposedVariables(object $component, bool $exposePublicProps): \Iterator
@@ -86,6 +108,23 @@ final class ComponentRenderer
             $value = $attribute->getter ? $component->{rtrim($attribute->getter, '()')}() : $this->propertyAccessor->getValue($component, $property->name);
 
             yield $attribute->name ?? $property->name => $value;
+        }
+
+        foreach ($class->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            if (!$attribute = $method->getAttributes(ExposeInTemplate::class)[0] ?? null) {
+                continue;
+            }
+
+            $attribute = $attribute->newInstance();
+
+            /** @var ExposeInTemplate $attribute */
+            $name = $attribute->name ?? (str_starts_with($method->name, 'get') ? lcfirst(substr($method->name, 3)) : $method->name);
+
+            if ($method->getNumberOfRequiredParameters()) {
+                throw new \LogicException(sprintf('Cannot use %s on methods with required parameters (%s::%s).', ExposeInTemplate::class, $component::class, $method->name));
+            }
+
+            yield $name => $component->{$method->name}();
         }
     }
 }

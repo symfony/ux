@@ -1,0 +1,24 @@
+{
+    "name": "@symfony/ux-typed",
+    "description": "Typed integration for Symfony",
+    "license": "MIT",
+    "version": "1.0.0",
+    "symfony": {
+        "controllers": {
+            "typed": {
+                "main": "dist/controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        }
+    },
+    "peerDependencies": {
+        "typed.js": "^2.0",
+        "@hotwired/stimulus": "^3.0.0"
+    },
+    "devDependencies": {
+        "typed.js": "^2.0",
+        "@hotwired/stimulus": "^3.0.0"
+    }
+}

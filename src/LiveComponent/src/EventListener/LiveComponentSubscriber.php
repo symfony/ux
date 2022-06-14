@@ -89,11 +89,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         if ('get' === $action) {
             $defaultAction = trim($metadata->get('default_action', '__invoke'), '()');
 
-            if (!method_exists($metadata->getClass(), $defaultAction)) {
-                // todo should this check be in a compiler pass to ensure fails at compile time?
-                throw new \LogicException(sprintf('Live component "%s" (%s) requires the default action method "%s".%s', $metadata->getClass(), $componentName, $defaultAction, '__invoke' === $defaultAction ? ' Either add this method or use the DefaultActionTrait' : ''));
-            }
-
             // set default controller for "default" action
             $request->attributes->set('_controller', sprintf('%s::%s', $metadata->getServiceId(), $defaultAction));
             $request->attributes->set('_component_default_action', true);
@@ -107,6 +102,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         if (
             $this->container->has(CsrfTokenManagerInterface::class) &&
+            $metadata->get('csrf') &&
             !$this->container->get(CsrfTokenManagerInterface::class)->isTokenValid(new CsrfToken($componentName, $request->headers->get('X-CSRF-TOKEN')))) {
             throw new BadRequestHttpException('Invalid CSRF token.');
         }

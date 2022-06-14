@@ -34,4 +34,22 @@ final class WithExposedVariables
     {
         return $this->prop3;
     }
+
+    #[ExposeInTemplate]
+    public function getMethod1(): string
+    {
+        return 'method1 value';
+    }
+
+    #[ExposeInTemplate]
+    public function method2(): string
+    {
+        return 'method2 value';
+    }
+
+    #[ExposeInTemplate('customPropMethod')]
+    public function customMethod(): string
+    {
+        return 'customMethod value';
+    }
 }

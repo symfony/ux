@@ -96,6 +96,9 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('Prop1: prop1 value', $output);
         $this->assertStringContainsString('Prop2: prop2 value', $output);
         $this->assertStringContainsString('Prop3: prop3 value', $output);
+        $this->assertStringContainsString('Method1: method1 value', $output);
+        $this->assertStringContainsString('Method2: method2 value', $output);
+        $this->assertStringContainsString('customMethod: customMethod value', $output);
     }
 
     public function testCanUseComputedMethods(): void
@@ -116,6 +119,15 @@ final class ComponentExtensionTest extends KernelTestCase
         $output = $this->renderComponent('no_public_props');
 
         $this->assertStringContainsString('NoPublicProp1: default', $output);
+    }
+
+    public function testCanRenderEmbeddedComponent(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('embedded_component.html.twig');
+
+        $this->assertStringContainsString('<caption>data table</caption>', $output);
+        $this->assertStringContainsString('custom th (key)', $output);
+        $this->assertStringContainsString('custom td (1)', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string
