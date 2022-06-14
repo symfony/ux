@@ -2,6 +2,7 @@
 
 ## 2.2.0
 
+-   Add a generic `LiveCollectionType` and `LiveCollectionTrait`
 -   Allow to disable CSRF per component
 
 ## 2.1.0

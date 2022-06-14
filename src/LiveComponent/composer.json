@@ -27,6 +27,7 @@
     },
     "require": {
         "php": ">=8.0",
+        "symfony/property-access": "^5.4|^6.0",
         "symfony/serializer": "^5.4|^6.0",
         "symfony/ux-twig-component": "^2.1"
     },
