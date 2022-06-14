@@ -22,8 +22,12 @@ Then install the bundle using Composer and Symfony Flex:
     $ composer require symfony/ux-react
 
     # Don't forget to install the JavaScript dependencies as well and compile
+    $ npm install --force
+    $ npm run watch
+
+    # or use yarn
     $ yarn install --force
-    $ yarn encore dev
+    $ yarn watch
 
 You also need to add the following lines at the end to your ``assets/app.js`` file:
 

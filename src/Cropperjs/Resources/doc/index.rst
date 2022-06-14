@@ -17,8 +17,12 @@ Then, install this bundle using Composer and Symfony Flex:
     $ composer require symfony/ux-cropperjs
 
     # Don't forget to install the JavaScript dependencies as well and compile
+    $ npm install --force
+    $ npm run watch
+
+    # or use yarn
     $ yarn install --force
-    $ yarn encore dev
+    $ yarn watch
 
 Also make sure you have at least version 3.0 of
 `@symfony/stimulus-bridge`_ in your ``package.json`` file.
