@@ -11,6 +11,7 @@ use Symfony\Component\PropertyAccess\PropertyPathInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadata;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadataFactory;
+use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;
 use Symfony\UX\Autocomplete\EntityAutocompleterInterface;
 
 /**
@@ -27,7 +28,8 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
         private string $formType,
         private FormFactoryInterface $formFactory,
         private EntityMetadataFactory $metadataFactory,
-        private PropertyAccessorInterface $propertyAccessor
+        private PropertyAccessorInterface $propertyAccessor,
+        private EntitySearchUtil $entitySearchUtil
     ) {
     }
 
@@ -36,13 +38,30 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
         return $this->getFormOption('class');
     }
 
-    public function getQueryBuilder(EntityRepository $repository): QueryBuilder
+    public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder
     {
-        if ($queryBuilder = $this->getFormOption('query_builder')) {
+        $queryBuilder = $this->getFormOption('query_builder');
+        $queryBuilder = $queryBuilder ?: $repository->createQueryBuilder('entity');
+
+        if ($filterQuery = $this->getFilterQuery()) {
+            $filterQuery($queryBuilder, $query, $repository);
+
             return $queryBuilder;
         }
 
-        return $repository->createQueryBuilder('e');
+        // avoid filtering if there is no query
+        if (!$query) {
+            return $queryBuilder;
+        }
+
+        $this->entitySearchUtil->addSearchClause(
+            $queryBuilder,
+            $query,
+            $this->getEntityClass(),
+            $this->getSearchableFields()
+        );
+
+        return $queryBuilder;
     }
 
     public function getLabel(object $entity): string
@@ -64,11 +83,6 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
     public function getValue(object $entity): string
     {
         return $this->getEntityMetadata()->getIdValue($entity);
-    }
-
-    public function getSearchableFields(): ?array
-    {
-        return $this->getForm()->getConfig()->getOption('searchable_fields');
     }
 
     public function isGranted(Security $security): bool
@@ -105,6 +119,16 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
         }
 
         return $this->form;
+    }
+
+    private function getSearchableFields(): ?array
+    {
+        return $this->getForm()->getConfig()->getOption('searchable_fields');
+    }
+
+    private function getFilterQuery(): ?callable
+    {
+        return $this->getForm()->getConfig()->getOption('filter_query');
     }
 
     private function getEntityMetadata(): EntityMetadata

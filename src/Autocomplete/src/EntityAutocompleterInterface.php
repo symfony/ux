@@ -26,9 +26,9 @@ interface EntityAutocompleterInterface
     public function getEntityClass(): string;
 
     /**
-     * A query builder that would return all potential results.
+     * Create a query builder that filters for the given "query".
      */
-    public function getQueryBuilder(EntityRepository $repository): QueryBuilder;
+    public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder;
 
     /**
      * Returns the "choice_label" used to display this entity.
@@ -39,13 +39,6 @@ interface EntityAutocompleterInterface
      * Returns the "value" attribute for this entity, usually the id.
      */
     public function getValue(object $entity): mixed;
-
-    /**
-     * Return an array of the fields to search.
-     *
-     * If null is returned, all fields are searched.
-     */
-    public function getSearchableFields(): ?array;
 
     /**
      * Return true if access should be granted to the autocomplete results for the current user.
