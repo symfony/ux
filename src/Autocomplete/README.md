@@ -1,4 +1,4 @@
-# UX Autocomplete
+# Symfony UX Autocomplete
 
 Javascript-powered auto-completion functionality for your Symfony forms!
 
