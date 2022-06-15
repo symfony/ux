@@ -25,7 +25,7 @@ class <?php echo $class_name; ?> extends AbstractType
 
 <?php if ($variables->repositoryClassDetails) { ?>
             'query_builder' => function(<?php echo $variables->repositoryClassDetails->getShortName(); ?> $<?php echo Str::asLowerCamelCase($variables->repositoryClassDetails->getShortName()); ?>) {
-                return $<?php echo Str::asLowerCamelCase($variables->repositoryClassDetails->getShortName()); ?>->createQueryBuilder('<?php echo Str::asLowerCamelCase($variables->repositoryClassDetails->getShortName()); ?>');
+                return $<?php echo Str::asLowerCamelCase($variables->repositoryClassDetails->getShortName()); ?>->createQueryBuilder('<?php echo Str::asLowerCamelCase($variables->entityClassDetails->getShortName()); ?>');
             },
 <?php } ?>
             //'security' => 'ROLE_SOMETHING',
