@@ -240,6 +240,19 @@ to the options above, you can also pass:
             return $security->isGranted('ROLE_FOO');
         }
 
+``filter_query`` (default: ``null``)
+    If you want to completely control the query made for the "search results",
+    use this option. This is incompatible with ``searchable_fields``::
+
+        'filter_query' => function(QueryBuilder $qb, string $query, EntityRepository $repository) {
+            if (!$query) {
+                return;
+            }
+
+            $qb->andWhere('entity.name LIKE :filter OR entity.description LIKE :filter')
+                ->setParameter('filter', '%'.$query.'%');
+        }
+
 Using with a TextType Field
 ---------------------------
 
@@ -368,12 +381,16 @@ To expose the endpoint, create a class that implements ``Symfony\\UX\\Autocomple
             return Food::class;
         }
 
-        public function getQueryBuilder(EntityRepository $repository): QueryBuilder
+        public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder
         {
             return $repository
                 // the alias "food" can be anything
                 ->createQueryBuilder('food')
-                // andWhere('food.isHealthy = :isHealthy')
+                ->andWhere('food.name LIKE :search OR food.description LIKE :search')
+                ->setParameter('search', '%'.$query.'%')
+
+                // maybe do some custom filtering in all cases
+                //->andWhere('food.isHealthy = :isHealthy')
                 //->setParameter('isHealthy', true)
             ;
         }
@@ -386,12 +403,6 @@ To expose the endpoint, create a class that implements ``Symfony\\UX\\Autocomple
         public function getValue(object $entity): string
         {
             return $entity->getId();
-        }
-
-        public function getSearchableFields(): ?array
-        {
-            // see the "searchable_fields" option for details
-            return null;
         }
 
         public function isGranted(Security $security): bool

@@ -19,6 +19,7 @@ use Symfony\Bundle\MakerBundle\MakerBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -127,6 +128,7 @@ final class Kernel extends BaseKernel
 
         $services->set(CustomProductAutocompleter::class)
             ->public()
+            ->arg(1, new Reference('ux.autocomplete.entity_search_util'))
             ->tag(AutocompleteFormTypePass::ENTITY_AUTOCOMPLETER_TAG, [
                 'alias' => 'custom_product'
             ]);

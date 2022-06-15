@@ -6,13 +6,15 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Security\Core\Security;
+use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;
 use Symfony\UX\Autocomplete\EntityAutocompleterInterface;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Product;
 
 class CustomProductAutocompleter implements EntityAutocompleterInterface
 {
     public function __construct(
-        private RequestStack $requestStack
+        private RequestStack $requestStack,
+        private EntitySearchUtil $entitySearchUtil
     )
     {
     }
@@ -22,11 +24,20 @@ class CustomProductAutocompleter implements EntityAutocompleterInterface
         return Product::class;
     }
 
-    public function getQueryBuilder(EntityRepository $repository): QueryBuilder
+    public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder
     {
-        return $repository->createQueryBuilder('p')
+        $queryBuilder = $repository->createQueryBuilder('p')
             ->andWhere('p.isEnabled = :enabled')
             ->setParameter('enabled', true);
+
+        $this->entitySearchUtil->addSearchClause(
+            $queryBuilder,
+            $query,
+            $this->getEntityClass(),
+            ['name', 'description']
+        );
+
+        return $queryBuilder;
     }
 
     public function getLabel(object $entity): string
@@ -37,11 +48,6 @@ class CustomProductAutocompleter implements EntityAutocompleterInterface
     public function getValue(object $entity): mixed
     {
         return $entity->getId();
-    }
-
-    public function getSearchableFields(): ?array
-    {
-        return ['name', 'description'];
     }
 
     public function isGranted(Security $security): bool

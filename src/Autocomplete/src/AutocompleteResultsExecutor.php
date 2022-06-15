@@ -14,7 +14,6 @@ namespace Symfony\UX\Autocomplete;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
-use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
@@ -24,7 +23,6 @@ use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;
 final class AutocompleteResultsExecutor
 {
     public function __construct(
-        private EntitySearchUtil $entitySearchUtil,
         private DoctrineRegistryWrapper $managerRegistry,
         private ?Security $security = null
     ) {
@@ -36,9 +34,10 @@ final class AutocompleteResultsExecutor
             throw new AccessDeniedException('Access denied from autocompleter class.');
         }
 
-        $queryBuilder = $autocompleter->getQueryBuilder($this->managerRegistry->getRepository($autocompleter->getEntityClass()));
-        $searchableProperties = $autocompleter->getSearchableFields();
-        $this->entitySearchUtil->addSearchClause($queryBuilder, $query, $autocompleter->getEntityClass(), $searchableProperties);
+        $queryBuilder = $autocompleter->createFilteredQueryBuilder(
+            $this->managerRegistry->getRepository($autocompleter->getEntityClass()),
+            $query
+        );
 
         // if no max is set, set one
         if (!$queryBuilder->getMaxResults()) {

@@ -39,7 +39,7 @@ final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
         // pass to AutocompleteChoiceTypeExtension
         $options['autocomplete'] = true;
         $options['autocomplete_url'] = $this->autocompleteUrl;
-        unset($options['searchable_fields'], $options['security']);
+        unset($options['searchable_fields'], $options['security'], $options['filter_query']);
 
         $form->add('autocomplete', EntityType::class, $options);
     }

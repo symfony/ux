@@ -19,17 +19,12 @@ use Symfony\Bundle\SecurityBundle\Security\Security;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\UX\Autocomplete\AutocompleteResultsExecutor;
 use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
-use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;
 use Symfony\UX\Autocomplete\EntityAutocompleterInterface;
 
 class AutocompleteResultsExecutorTest extends TestCase
 {
     public function testItExecutesTheResults()
     {
-        $entitySearchUtil = $this->createMock(EntitySearchUtil::class);
-        $entitySearchUtil->expects($this->once())
-            ->method('addSearchClause');
-
         $doctrineRegistry = $this->createMock(DoctrineRegistryWrapper::class);
         $doctrineRegistry->expects($this->any())
             ->method('getRepository')
@@ -38,7 +33,7 @@ class AutocompleteResultsExecutorTest extends TestCase
         $queryBuilder = $this->createMock(QueryBuilder::class);
         $autocompleter = $this->createMock(EntityAutocompleterInterface::class);
         $autocompleter->expects($this->once())
-            ->method('getQueryBuilder')
+            ->method('createFilteredQueryBuilder')
             ->willReturn($queryBuilder);
         $autocompleter->expects($this->exactly(2))
             ->method('getValue')
@@ -66,7 +61,7 @@ class AutocompleteResultsExecutorTest extends TestCase
             ->method('getQuery')
             ->willReturn($mockQuery);
 
-        $executor = new AutocompleteResultsExecutor($entitySearchUtil, $doctrineRegistry);
+        $executor = new AutocompleteResultsExecutor($doctrineRegistry);
         $this->assertEquals([
             ['value' => 1, 'text' => 'Result 1'],
             ['value' => 2, 'text' => 'Result 2'],
@@ -75,7 +70,6 @@ class AutocompleteResultsExecutorTest extends TestCase
 
     public function testItExecutesSecurity()
     {
-        $entitySearchUtil = $this->createMock(EntitySearchUtil::class);
         $doctrineRegistry = $this->createMock(DoctrineRegistryWrapper::class);
 
         $autocompleter = $this->createMock(EntityAutocompleterInterface::class);
@@ -84,7 +78,6 @@ class AutocompleteResultsExecutorTest extends TestCase
             ->willReturn(false);
 
         $executor = new AutocompleteResultsExecutor(
-            $entitySearchUtil,
             $doctrineRegistry,
             $this->createMock(Security::class)
         );
