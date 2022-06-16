@@ -1,0 +1,19 @@
+{% block create %}
+    <turbo-stream action="append" target="artists">
+        <template>
+            <div id="{{ 'artist_' ~ id }}"><a href="{{ path('artist', {id: id}) }}">{{ entity.name }} (#{{ id }})</a></div>
+        </template>
+    </turbo-stream>
+{% endblock %}
+
+{% block update %}
+    <turbo-stream action="update" target="artist_{{ id }}">
+        <template>
+            {{ entity.name }} (#{{ id }}, updated)
+        </template>
+    </turbo-stream>
+{% endblock %}
+
+{% block remove %}
+    <turbo-stream action="remove" target="artist_{{ id }}"></turbo-stream>
+{% endblock %}

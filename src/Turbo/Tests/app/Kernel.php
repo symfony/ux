@@ -11,7 +11,9 @@
 
 namespace App;
 
+use App\Entity\Artist;
 use App\Entity\Book;
+use App\Entity\Song;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\DebugBundle\DebugBundle;
@@ -121,6 +123,9 @@ class Kernel extends BaseKernel
         $routes->add('form', '/form')->controller('kernel::form');
         $routes->add('chat', '/chat')->controller('kernel::chat');
         $routes->add('books', '/books')->controller('kernel::books');
+        $routes->add('songs', '/songs')->controller('kernel::songs');
+        $routes->add('artists', '/artists')->controller('kernel::artists');
+        $routes->add('artist', '/artists/{id}')->controller('kernel::artist');
     }
 
     public function getProjectDir(): string
@@ -185,5 +190,70 @@ class Kernel extends BaseKernel
         }
 
         return new Response($twig->render('books.html.twig'));
+    }
+
+    public function songs(Request $request, EntityManagerInterface $doctrine, Environment $twig): Response
+    {
+        if ($request->isMethod('POST')) {
+            if ($id = $request->get('id')) {
+                if (!($song = $doctrine->find(Song::class, $id))) {
+                    throw new NotFoundHttpException();
+                }
+            } else {
+                $song = new Song();
+            }
+            if ($title = $request->get('title')) {
+                $song->title = $title;
+                $artistId = $request->get('artistId');
+                if ($artistId > 0) {
+                    $song->artist = $doctrine->find(Artist::class, $artistId);
+                }
+            }
+            if ($remove = $request->get('remove')) {
+                $doctrine->remove($song);
+            } else {
+                $doctrine->persist($song);
+            }
+
+            $doctrine->flush();
+        }
+
+        return new Response($twig->render('songs.html.twig'));
+    }
+
+    public function artists(Request $request, EntityManagerInterface $doctrine, Environment $twig): Response
+    {
+        if ($request->isMethod('POST')) {
+            if ($id = $request->get('id')) {
+                if (!($artist = $doctrine->find(Artist::class, $id))) {
+                    throw new NotFoundHttpException();
+                }
+            } else {
+                $artist = new Artist();
+            }
+            if ($name = $request->get('name')) {
+                $artist->name = $name;
+            }
+            if ($remove = $request->get('remove')) {
+                $doctrine->remove($artist);
+            } else {
+                $doctrine->persist($artist);
+            }
+
+            $doctrine->flush();
+        }
+
+        return new Response($twig->render('artists.html.twig'));
+    }
+
+    public function artist(Request $request, EntityManagerInterface $doctrine, Environment $twig): Response
+    {
+        $id = $request->get('id');
+
+        if (!($artist = $doctrine->find(Artist::class, $id))) {
+            throw new NotFoundHttpException();
+        }
+
+        return new Response($twig->render('artist.html.twig', ['artist' => $artist]));
     }
 }

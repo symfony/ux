@@ -11,9 +11,9 @@
 
 namespace Symfony\UX\Turbo\Bridge\Mercure;
 
+use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 
 /**
@@ -44,10 +44,17 @@ final class Broadcaster implements BroadcasterInterface
     private $name;
     private $hub;
 
+    /** @var ExpressionLanguage|null */
+    private $expressionLanguage;
+
     public function __construct(string $name, HubInterface $hub)
     {
         $this->name = $name;
         $this->hub = $hub;
+
+        if (class_exists(ExpressionLanguage::class)) {
+            $this->expressionLanguage = new ExpressionLanguage();
+        }
     }
 
     /**
@@ -69,7 +76,31 @@ final class Broadcaster implements BroadcasterInterface
             throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s": either option "topics" or "id" is missing, or the PropertyAccess component is not installed. Try running "composer require property-access".', $entityClass));
         }
 
-        $options['topics'] = (array) ($options['topics'] ?? sprintf(self::TOPIC_PATTERN, rawurlencode($entityClass), rawurlencode(implode('-', (array) $options['id']))));
+        $topics = [];
+
+        foreach ((array) ($options['topics'] ?? []) as $topic) {
+            if (!\is_string($topic)) {
+                $topics[] = $topic;
+                continue;
+            }
+
+            if (0 !== strpos($topic, '@=')) {
+                $topics[] = $topic;
+                continue;
+            }
+
+            if (null === $this->expressionLanguage) {
+                throw new \LogicException('The "@=" expression syntax cannot be used without the Expression Language component. Try running "composer require symfony/expression-language".');
+            }
+
+            $topics[] = $this->expressionLanguage->evaluate(substr($topic, 2), ['entity' => $entity]);
+        }
+
+        $options['topics'] = $topics;
+
+        if (0 === \count($options['topics'])) {
+            $options['topics'] = (array) sprintf(self::TOPIC_PATTERN, rawurlencode($entityClass), rawurlencode(implode('-', (array) $options['id'])));
+        }
 
         $update = new Update(
             $options['topics'],

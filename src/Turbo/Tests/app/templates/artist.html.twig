@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Artist</h1>
+
+    {{ artist.name }} (#{{ artist.id }})
+
+    <h2>Songs</h2>
+    <div id="songs" {{ turbo_stream_listen('songs_by_artist_' ~ artist.id) }}></div>
+
+{% endblock %}
