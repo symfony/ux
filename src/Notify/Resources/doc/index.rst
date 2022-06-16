@@ -42,6 +42,7 @@ properly configured notifier transport:
                myMercureChatter: '%env(MERCURE_DSN)%'
 
 .. note::
+
    It is possible to specify the topics to send the notification in the ``MERCURE_DSN``
    environment variable by specifying the ``topics`` query parameter.
    Otherwise, notifications will be sent to ``https://symfony.com/notifier`` topic.
@@ -77,6 +78,7 @@ call the ``stream_notifications()`` Twig function anywhere on the page:
     {{ stream_notifications(['/my/topic/1', '/my/topic/2']) }}
 
 .. note::
+
    Calling ``stream_notifications()`` without parameter will fallback to the
    following unique topic: ``https://symfony.com/notifier``.
 
@@ -84,8 +86,6 @@ Enjoy your server-sent native notifications!
 
 .. figure:: https://github.com/symfony/ux-notify/blob/2.x/Resources/native-notification-example.png?raw=true
    :alt: Example of a native notification
-
-   Example of a native notification
 
 Extend the Stimulus Controller
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
