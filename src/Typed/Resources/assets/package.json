@@ -7,7 +7,7 @@
         "controllers": {
             "typed": {
                 "main": "dist/controller.js",
-                "name": "symfony/ux-typed",
+                "name": "symfony--ux-typed",
                 "webpackMode": "eager",
                 "fetch": "eager",
                 "enabled": true
