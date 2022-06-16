@@ -29,7 +29,7 @@ Then install the bundle using Composer and Symfony Flex:
     $ yarn install --force
     $ yarn watch
 
-Also make sure you have at least version 3.2 of
+Also make sure you have at least version 3.2.1 of
 `@symfony/stimulus-bridge`_ in your ``package.json`` file.
 
 Usage
