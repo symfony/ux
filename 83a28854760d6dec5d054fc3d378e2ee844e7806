@@ -1,0 +1,64 @@
+---------------------------------------------------------------------------
+
+by rskuipers at 2022-05-31T08:38:20Z
+
+This would obviously still need documentation, but I'm just awaiting confirmation before I start writing that.
+
+---------------------------------------------------------------------------
+
+by dunglas at 2022-06-03T14:25:36Z
+
+Nice idea!
+
+We have a similar feature in API Platform: https://github.com/api-platform/core/blob/main/src/Doctrine/EventListener/PublishMercureUpdatesListener.php#L225-L244
+
+Basically, the idea is to let the user generate the whole topic using Expression Language. This has the benefit of giving full control to the user and to leverage all the capabilities of the underlying Transport.
+
+What do you think about following this approach?
+
+---------------------------------------------------------------------------
+
+by rskuipers at 2022-06-04T13:51:46Z
+
+@dunglas That's brilliant! Looks like it will fit here as well, definitely adds even more flexibility and it solves the problem with the current implementation where it's limited to 1 scope.
+
+If @weaverryan agrees then I'll go ahead and reimplement it using your suggestion.
+
+---------------------------------------------------------------------------
+
+by rskuipers at 2022-06-05T15:59:42Z
+
+I have updated this PR to the method suggested by @dunglas.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-06-14T17:17:30Z
+
+Friendly ping @rskuipers - I'm hoping to tag all of UX this week, it'd be great if this got in there :)
+
+---------------------------------------------------------------------------
+
+by rskuipers at 2022-06-14T21:27:26Z
+
+I'll make some time for it! No problem :)
+
+On Tue, Jun 14, 2022, 19:17 Ryan Weaver ***@***.***> wrote:
+
+> Friendly ping @rskuipers <https://github.com/rskuipers> - I'm hoping to
+> tag all of UX this week, it'd be great if this got in there :)
+>
+> —
+> Reply to this email directly, view it on GitHub
+> <https://github.com/symfony/ux/pull/327#issuecomment-1155483259>, or
+> unsubscribe
+> <https://github.com/notifications/unsubscribe-auth/AAOUMNQSRISJ427WYD6QKCDVPC5DLANCNFSM5XIR23JA>
+> .
+> You are receiving this because you were mentioned.Message ID:
+> ***@***.***>
+>
+
+---------------------------------------------------------------------------
+
+by rskuipers at 2022-06-16T14:59:10Z
+
+@weaverryan I've reverted the existing books test and created separate entities to test the expression language feature as advised by @dunglas. I've also made expression language optional and changed `object` to `entity` to be more in-line with the rest of the code. I've also added a small bit of documentation. Not sure if you want to dedicate an entire chapter to it or if this is enough.
