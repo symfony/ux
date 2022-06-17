@@ -17,7 +17,7 @@ class PackageRepository
                 'Turbo',
                 'app_turbo',
                 'linear-gradient(95.22deg, #5920A0 -4.7%, #844EC9 105.43%), #5920A0',
-                'Integration with Turbo Drive for a single-page-app experience',
+                'Integration with Turbo for single-page-app and real-time experience',
                 'I need to transform my app into an SPA!'
             ))
                 ->setDocsLink('https://turbo.hotwired.dev/handbook/introduction', 'Documentation specifically for the Turbo JavaScript library.')
