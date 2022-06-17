@@ -1,0 +1,36 @@
+name: mercure
+
+type: golang:1.18
+
+build:
+    flavor: 'none'
+
+variables:
+    env:
+        MERCURE_TRANSPORT_URL: bolt:///app/.local/database.db
+        # Defined as platform.sh vars
+        # MERCURE_PUBLISHER_JWT_KEY: ''
+        # MERCURE_SUBSCRIBER_JWT_KEY: ''
+
+web:
+    upstream:
+        socket_family: tcp
+        protocol: http
+    commands:
+        start: SERVER_NAME=":${PORT}" ./mercure run -config Caddyfile.dev
+    locations:
+        /:
+            allow: false
+            passthru: true
+
+disk: 2048
+
+mounts:
+    '/.local': 'shared:files/.local'
+
+hooks:
+    build: |
+        set -e -x
+
+        curl -s https://get.symfony.com/cloud/configurator | (>&2 bash)
+        curl -s -H 'Accept: application/octet-stream' -J -L "https://github.com/dunglas/mercure/releases/download/v0.13.0/mercure_0.13.0_Linux_x86_64.tar.gz" | tar -C /app/ -zxpf -

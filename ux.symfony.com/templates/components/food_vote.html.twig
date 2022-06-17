@@ -1,0 +1,30 @@
+<tr {{ attributes }}>
+    <th>{{ food.name }}</th>
+    <td>
+        Votes: <span class="badge bg-secondary"></span>{{ food.votes }}
+    </td>
+    <td style="width: 250px;">
+        {% if hasVoted %}
+            <div class="alert alert-success">
+                Thanks for voting! <i class="fa fa-check-circle"></i>
+            </div>
+        {% else %}
+            <button
+                type="button"
+                class="btn btn-secondary"
+                data-action="live#action"
+                data-action-name="vote(direction=up)"
+            >
+                <i class="fa fa-arrow-up"></i>
+            </button>
+            <button
+                type="button"
+                class="btn btn-secondary"
+                data-action="live#action"
+                data-action-name="vote(direction=down)"
+            >
+                <i class="fa fa-arrow-down"></i>
+            </button>
+        {% endif %}
+    </td>
+</tr>

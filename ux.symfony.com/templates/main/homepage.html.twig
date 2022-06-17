@@ -1,0 +1,103 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container-fluid container-xxl px-5 pt-5 hero-background">
+    {{ include('_main_nav.html.twig') }}
+    <div class="row justify-content-center g-5 pt-3 mt-2">
+      <div class="col-12 text-center text-lg-start col-lg-6">
+        <span class="eyebrows">curated by symfony</span>
+        <h1 class="ubuntu my-3">JavaScript <span class="hero">tools</span> you can't live without.</h1>
+        <p>A set of PHP & JavaScript packages to solve every day frontend problems featuring Stimulus and Turbo.</p>
+      </div>
+      <div class="col-12 col-sm-8 col-lg-6">
+          {{ component('homepage_terminal_swapper') }}
+      </div>
+    </div>
+</div>
+
+<div class="container-fluid container-xxl px-5 py-5">
+    <h2 class="ubuntu">Install it</h2>
+
+    <div class="arrow mb-3 d-none d-md-block"></div>
+
+    <div class="row">
+        <div class="col-12 col-md-6">
+            {% component terminal %}
+                {% block content %}
+                    composer require symfony/webpack-encore-bundle
+                    npm install
+                    npm run watch
+                {% endblock %}
+            {% endcomponent %}
+        </div>
+
+        <div class="col-12 col-md-6 mt-3 mt-md-0">
+            <div {{ stimulus_controller('tooltips')}} class="ux-container file-tree flex-grow-1 ms-2 py-3 pe-5">
+                <div style="height: 185px; overflow: auto;">
+                    <ul class="list-unstyled file-tree-main">
+                        {{ include('main/_fileTreeLevel.html.twig', {
+                            files: recipeFileTree.files
+                        }) }}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <p class="eyebrows" style="margin-top: 70px;">Stimulus Controllers</p>
+    <div class="d-md-flex justify-content-md-between text-center text-md-start">
+        <h2 class="ubuntu pt-2 component-headlines">Write custom JavaScript inside <span class="hero">Stimulus Controllers</span></h2>
+        <a style="height: 100%;" class="btn btn-md btn-outline-dark my-3 my-md-0" href="https://symfony.com/doc/current/frontend/ux.html">Read full Documentation <i class="fa-solid fa-arrow-right ms-2" style="transform: rotate(-45deg);"></i></a>
+    </div>
+
+    <div class="arrow mb-3 d-none d-md-block"></div>
+
+    <div class="row">
+        <div class="col-12 col-md-6">
+            {% component code_block with { filename: 'templates/anything.html.twig' } %}
+                {% block content %}
+                    {{- source('@code_snippets/_markdown.html.twig') -}}
+                {% endblock %}
+            {% endcomponent %}
+        </div>
+        <div class="col-12 col-md-6  mt-3 mt-md-0">
+            {% component code_block with { filename: 'assets/controllers/markdown_controller.js' } %}
+                {% block content %}
+                    {{- source('@assets/controllers/markdown-controller.js') -}}
+                {% endblock %}
+            {% endcomponent %}
+        </div>
+    </div>
+
+    <div class="p-4 markdown-container rainbow-gradient mt-5 row" {{ stimulus_controller('markdown') }}>
+        <div class="col-12 col-md-5">
+            <textarea rows="3" class="form-control" aria-label="Type markdown into this box"
+                {{ stimulus_target('markdown', 'input') }}
+            >Writing JavaScript is a **dream** with Stimulus 🤩</textarea>
+        </div>
+        <div class="col-12 col-md-2 text-center">
+            <button class="btn btn-sm btn-dark mt-3" {{ stimulus_action('markdown', 'render') }}>
+                Convert <i class="fa fa-arrow-right"></i>
+            </button>
+        </div>
+        <div class="col-12 col-md-5 mt-3 mt-md-0">
+            <div style="min-height: 86px;" class="markdown-form-render-container p-2" {{ stimulus_target('markdown', 'preview') }} >
+                <small class="fw-light">(click "Convert")</small>
+            </div>
+        </div>
+    </div>
+
+    <p class="eyebrows" style="margin-top: 111px;">Components</p>
+    <div class="d-md-flex justify-content-md-between text-center text-md-start">
+        <h2 class="ubuntu pt-2 component-headlines">Install extra <span class="hero">Components</span></h2>
+        <a style="height: 100%;" class="btn btn-md btn-outline-dark mt-3 mt-md-0"  href="{{ path('app_all_components')}}">Browse all Components <i class="fa-solid fa-arrow-right-long ms-2"></i></a>
+    </div>
+    <div class="row mt-3 mt-md-5">
+        {{ include('main/_componentsList.html.twig') }}
+    </div>
+
+    {#
+    {{ include('main/_testimonials.html.twig') }}
+    #}
+</div>
+{% endblock %}

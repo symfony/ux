@@ -1,0 +1,46 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'Native Browser Notifications'
+    } %}
+        {% block title_header %}
+            Notify users from
+            <span class="playfair ps-2">inside PHP</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Send real-time, native browser notifications to everyone via Symfony's Notifier Component.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'src/Controller/NotifierController.php', height: '300px' } %}
+        {% block content %}
+            {{- source('@code_snippets/_NotifierController.php')|cleanup_php_file(removeClass=true) -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'templates/notifier/notify.html.twig', height: '300px' } %}
+        {% block content %}
+            {{- source('@code_snippets/_notify.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_title %}UX Notify{% endblock %}
+
+{% block demo_content %}
+    {{ stream_notifications(['/demo/notifier']) }}
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+
+        <button type="submit" class="btn btn-primary">Send Notification</button>
+    {{ form_end(form) }}
+{% endblock %}
+

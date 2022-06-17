@@ -1,0 +1,21 @@
+{% extends 'liveDemoBase.html.twig' %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'src/Twig/MealPlannerComponent.php', height: '300px' } %}
+        {% block content %}
+            {{- source('@src/Twig/MealPlannerComponent.php')|cleanup_php_file -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'templates/components/registration_form.html.twig', height: '300px' } %}
+        {% block content %}
+            {{- source('components/meal_planner.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_content %}
+    {{ component('meal_planner') }}
+{% endblock %}

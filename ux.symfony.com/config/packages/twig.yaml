@@ -1,0 +1,13 @@
+twig:
+    default_path: '%kernel.project_dir%/templates'
+    form_themes: ['bootstrap_5_layout.html.twig']
+    paths:
+        '%kernel.project_dir%/assets': assets
+        '%kernel.project_dir%/src': src
+        '%kernel.project_dir%/code_snippets': code_snippets
+    globals:
+        twigPackageHelper: '@App\Service\TwigPackageHelper'
+
+when@test:
+    twig:
+        strict_variables: true

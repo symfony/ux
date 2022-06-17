@@ -1,0 +1,12 @@
+<div {{ attributes.defaults({
+    class: 'terminal-wrapper',
+}) }}>
+    <div class="terminal-controls">
+        <span class="red"></span>
+        <span class="yellow"></span>
+        <span class="green"></span>
+    </div>
+    <pre class="terminal-body ps-4 pt-3" style="padding-bottom: {{ bottomPadding }}px; height: {{ height }}">
+        {{- this.process(block('content'))|raw -}}
+    </pre>
+</div>

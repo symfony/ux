@@ -1,0 +1,9 @@
+{# See src/Form/MealPlannerForm.php for the form magic #}
+<div
+    {{ attributes }}
+    data-action="change->live#update"
+>
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+    {{ form_end(form) }}
+</div>

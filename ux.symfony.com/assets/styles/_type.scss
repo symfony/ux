@@ -1,0 +1,222 @@
+.ubuntu {
+    font-family: Ubuntu;
+}
+.playfair {
+    font-family: Playfair Display;
+}
+
+h1 {
+    font-size: 52px;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+}
+
+h1.inter {
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 26px;
+    letter-spacing: 0px;
+}
+
+h1.ubuntu {
+    line-height: 60px;
+}
+
+h1 .playfair {
+    font-style: italic;
+    line-height: 70px;
+}
+
+h2.ubuntu {
+    font-size: 42px;
+    font-weight: 700;
+    line-height: 48px;
+    letter-spacing: -2px;
+}
+
+h2.playfair {
+    font-size: 38px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 51px;
+    letter-spacing: -2px;
+}
+
+
+h3, a.component-title {
+    font-family: Ubuntu;
+    font-size: 28px !important;
+    font-weight: 700!important;
+    line-height: 32px !important;
+    letter-spacing: -1px;
+    color: #0A0A0A;
+    text-decoration: none;
+}
+
+h4.ubuntu {
+    font-size: 16px;
+    font-weight: 700;
+    line-height: 18.38px;
+}
+
+.component-headlines {
+    width: 50%;
+}
+
+@media (max-width: 900px) {
+    .component-headlines {
+        width: 56%;
+    }
+}
+
+@media (max-width: 767px) {
+    .component-headlines {
+        text-align: center;
+        width: 100%
+    }
+}
+
+.hero-sub-text {
+    width: 35%;
+}
+
+@media (max-width: 1114px) {
+    .hero-sub-text {
+        width: 60%;
+    }
+}
+
+
+@media (max-width: 734px) {
+    .hero-sub-text {
+        width: 80%;
+    }
+}
+
+.ubuntu-header {
+    font-family: Ubuntu;
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 24px;
+    letter-spacing: -1px;
+    text-decoration: none;
+}
+
+.ubuntu-title {
+    font-family: Ubuntu;
+    font-size: 19px;
+    font-weight: 700;
+    line-height: 22px;
+    letter-spacing: -0.668767511844635px;
+}
+
+.eyebrows {
+    text-transform: uppercase;
+    font-family: Inter;
+    font-size: 11px;
+    font-weight: 600;
+    line-height: 17px;
+    letter-spacing: 2px;
+}
+
+.info-tooltips {
+    font-family: Inter;
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 19px;
+    letter-spacing: 0px;
+}
+
+.font-white {
+    color: #fff;
+}
+
+.font-white a:hover {
+    color: $n-100;
+}
+
+.font-purple{
+    color: #6A2DBA;
+}
+
+.text-underline {
+    text-decoration: underline;
+}
+
+.text-bold {
+    font-weight: 700;
+}
+
+@media (max-width: 576px) {
+    h1.ubuntu {
+        font-size: 36px;
+        line-height: 41px;
+        letter-spacing: -1px;
+    }
+
+    h1.playfair {
+        font-size: 36px;
+        line-height: 48px;
+        letter-spacing: -1px;
+    }
+
+    h2.ubuntu {
+        font-size: 28px;
+        line-height: 32px;
+        letter-spacing: -1px;
+    }
+
+    h2.playfair {
+        font-size: 28px;
+        line-height: 37px;
+        letter-spacing: -1px;
+    }
+
+
+    h3, a.component-title {
+        font-size: 22px;
+        line-height: 25px;
+        letter-spacing: -1px;
+    }
+}
+
+.logo {
+    font-family: 'EB Garamond', serif;font-family: ITC Garamond Std;
+    font-size: 28px;
+    font-style: italic;
+    font-weight: 700;
+    line-height: 34px;
+    letter-spacing: -1.1817766427993774px;
+}
+
+.nav-options {
+    font-family: Ubuntu;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: 0px;
+}
+
+.nav-options-icon {
+    font-size: 20px;
+ }
+
+.hero {
+    background: linear-gradient(113.84deg, #D65831 0%, #D2D631 36.52%, #31D673 71.83%, #315FD6 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.component-arrow {
+    color: $n-200;
+}
+
+.icon-testimonial {
+    font-size: 22px;
+}
+
+.components-link:hover {
+    box-shadow: 2px 3px 9px 4px rgb(0 0 0 / 12%);
+}
+

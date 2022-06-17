@@ -1,0 +1,22 @@
+<div
+    {{ attributes }}
+    data-action="change->live#update"
+>
+    {% if isSuccessful %}
+        <div>Welcome {{ newUserEmail}}!</div>
+    {% else %}
+        <form
+            novalidate
+            data-action="live#action"
+            data-action-name="prevent|saveRegistration"
+        >
+            {{ form_row(form.email) }}
+            {{ form_row(form.password) }}
+            {{ form_row(form.terms) }}
+
+            <button type="submit" class="btn btn-primary">Register</button>
+
+            {{ form_rest(form) }}
+        </form>
+    {% endif %}
+</div>

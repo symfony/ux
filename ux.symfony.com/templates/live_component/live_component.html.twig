@@ -1,0 +1,77 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'Reactive Twig Templates'
+    } %}
+        {% block title_header %}
+            An Interactive UI
+            <span class="playfair ps-2">entirely built in Twig</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Your frontend Swiss Army Knife: build a highly-interactive
+            UI from the comfort of Twig. No JS needed.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'src/Twig/SearchPackagesComponent.php' } %}
+        {% block content %}
+            {{- source('@src/Twig/SearchPackagesComponent.php')|cleanup_php_file -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'templates/components/search_packages.html.twig' } %}
+        {% block content %}
+            {{- source('@code_snippets/_search_packages.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_title %}
+    Live Components
+{% endblock %}
+{% block demo_content %}
+    {{ component('search_packages') }}
+
+    <div class="d-flex eyebrows pt-5">
+        <div>Automatic debouncing</div>
+        <i class="fa-solid fa-circle px-2 align-self-center" style="font-size: 3px;"></i>
+        <div>Loading states</div>
+        <i class="fa-solid fa-circle px-2 align-self-center" style="font-size: 3px;"></i>
+        <div>Required writing ZERO JavaScript</div>
+    </div>
+{% endblock %}
+
+{% block documentation_links %}{% endblock %}
+
+{% block component_bottom %}
+    <h2 class="eyebrows mt-5" id="demos">Live Component Demos</h2>
+    <div class="d-md-flex justify-content-md-between text-center text-md-start">
+        <h2 class="ubuntu pt-2 component-headlines">Find out what else you can <span style="color: #AE5929;">build</span></h2>
+        <a style="height: 100%;" class="btn btn-md btn-outline-dark mt-3 mt-md-0" href="#">Read full Documentation <i class="fa-solid fa-arrow-right ms-2" style="transform: rotate(-45deg);"></i></a>
+    </div>
+
+    <div class="row mt-5 pb-5">
+        {% for demo in demos %}
+            <div class="col-12 col-sm-6 col-md-4 mt-3">
+                <a href="{{ path(demo.route) }}">
+                    <div class="demo-container" style="height: 180px; overflow: hidden">
+                        <img src="{{ demo.screenshotFilename }}" style="border-top-left-radius: 12px; border-top-right-radius: 12px; height: 100%;" alt="Screenshot of the {{ demo.name }} demo">
+                    </div>
+                    <div class="demo-container-inner p-3">
+                        <h4 class="ubuntu">{{ demo.name }}</h4>
+                        <div>
+                            {{ demo.description }}
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

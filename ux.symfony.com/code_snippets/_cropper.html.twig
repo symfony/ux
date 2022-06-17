@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+
+        <button type="submit">Crop it!</button>
+    {{ form_end(form) }}
+{% endblock %}

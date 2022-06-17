@@ -1,0 +1,55 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'Smart Form Controls'
+    } %}
+        {% block title_header %}
+            Ajax-Powered Autocomplete
+            <span class="playfair ps-2">&lt;select&gt;</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Breathe life into <code class="font-white">EntityType</code> and
+            <code class="font-white">ChoiceType</code> fields 
+            with <a class="font-white text-underline" href="https://tom-select.js.org/" rel="noopener nofollow noreferrer">Tom Select</a>
+            and a sprinkle of Ajax.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'src/Form/TimeForAMealForm.php', height: '400px' } %}
+        {% block content %}
+            {{- source('@src/Form/TimeForAMealForm.php')|cleanup_php_file -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'src/Form/FoodAutocompleteField.php', height: '400px' } %}
+        {% block content %}
+            {{- source('@src/Form/FoodAutocompleteField.php')|cleanup_php_file -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_title %}UX Autocomplete{% endblock %}
+
+{% block demo_content %}
+    {# The frame is used just to keep the form submit all in one place: it feels nice #}
+    <turbo-frame id="autocomplete-demo-form">
+        {% for message in app.flashes('autocomplete_success') %}
+            <div class="alert alert-success" data-turbo-cache="false">{{ message }}</div>
+        {% endfor %}
+
+        {{ form_start(form) }}
+            {{ form_row(form.foods) }}
+
+            {{ form_row(form.name) }}
+
+            <button type="submit" class="btn btn-primary">Let's Nom!</button>
+        {{ form_end(form) }}
+    </turbo-frame>
+{% endblock %}

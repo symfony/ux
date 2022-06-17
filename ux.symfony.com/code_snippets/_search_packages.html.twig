@@ -1,0 +1,20 @@
+<div{{ attributes }}>
+    <input
+        type="text"
+        data-model="query"
+        value="{{ query }}"
+        data-action="live#update"
+    >
+
+    {% if this.packages|length > 0 %}
+        <div data-loading="addClass(opacity-50)">
+            {% for package in this.packages %}
+                <div>
+                    <h4>{{ package.humanName }}</h4>
+                </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div>Ah! No packages found matching "{{ query }}"</div>
+    {% endif %}
+</div>

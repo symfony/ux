@@ -1,0 +1,10 @@
+{% for message in messages %}
+    <li>
+        <strong>
+            {{ message.username }}:
+        </strong>
+        {{ message.message }}
+    </li>
+{% else %}
+    <li>Start the conversation!</li>
+{% endfor %}

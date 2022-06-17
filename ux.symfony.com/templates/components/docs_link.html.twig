@@ -1,0 +1,16 @@
+<a
+    {{ attributes.defaults({
+        href: url,
+        rel: isExternal ? 'external noopener noreferrer',
+    }) }}
+>
+    <div class="light-container p-4">
+        <p class="ubuntu-header">
+            {{ title }}
+            {% if isExternal %}
+                <i class="fa-solid fa-arrow-right ms-2" style="transform: rotate(-45deg);"></i>
+            {% endif %}
+        </p>
+        <p>{{ text }}</p>
+    </div>
+</a>

@@ -1,0 +1,42 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'Charts from PHP'
+    } %}
+        {% block title_header %}
+            Render beautiful graphs with
+            <span class="playfair ps-2">chart.js</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Leverage the power of <a class="font-white text-underline" href="https://www.chartjs.org/" rel="noopener nofollow noreferrer">Chart.js</a>
+            entirely from PHP.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'src/Controller/ChartController.php', height: '250px' } %}
+        {% block content %}
+            {{- source('@code_snippets/_ChartController.php')|cleanup_php_file(removeClass=true) -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'templates/chart/chartjs.html.twig', height: '250px' } %}
+        {% block content %}
+            {{- source('@code_snippets/_chartjs.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_title %}UX Chart.js{% endblock %}
+
+{% block demo_content %}
+    <div style="height: 300px;">
+        {{ render_chart(chart) }}
+    </div>
+{% endblock %}

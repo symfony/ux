@@ -1,0 +1,90 @@
+{
+    "controllers": {
+        "@symfony/ux-autocomplete": {
+            "autocomplete": {
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "tom-select/dist/css/tom-select.default.css": false
+                }
+            }
+        },
+        "@symfony/ux-chartjs": {
+            "chart": {
+                "enabled": true,
+                "fetch": "lazy"
+            }
+        },
+        "@symfony/ux-cropperjs": {
+            "cropper": {
+                "enabled": true,
+                "fetch": "lazy",
+                "autoimport": {
+                    "cropperjs/dist/cropper.min.css": true,
+                    "@symfony/ux-cropperjs/src/style.css": true
+                }
+            }
+        },
+        "@symfony/ux-dropzone": {
+            "dropzone": {
+                "enabled": true,
+                "fetch": "lazy",
+                "autoimport": {
+                    "@symfony/ux-dropzone/src/style.css": true
+                }
+            }
+        },
+        "@symfony/ux-lazy-image": {
+            "lazy-image": {
+                "enabled": true,
+                "fetch": "lazy"
+            }
+        },
+        "@symfony/ux-live-component": {
+            "typed": {
+                "enabled": true,
+                "fetch": "eager",
+                "autoimport": {
+                    "@symfony/ux-live-component/styles/live.css": true
+                }
+            }
+        },
+        "@symfony/ux-notify": {
+            "notify": {
+                "enabled": true,
+                "fetch": "eager"
+            }
+        },
+        "@symfony/ux-react": {
+            "react": {
+                "enabled": true,
+                "fetch": "eager"
+            }
+        },
+        "@symfony/ux-swup": {
+            "swup": {
+                "enabled": true,
+                "fetch": "eager"
+            }
+        },
+        "@symfony/ux-turbo": {
+            "turbo-core": {
+                "enabled": true,
+                "fetch": "eager"
+            }
+        },
+        "@symfony/ux-turbo-mercure": {
+            "turbo-stream": {
+                "enabled": true,
+                "fetch": "lazy"
+            }
+        },
+        "@symfony/ux-typed": {
+            "typed": {
+                "enabled": true,
+                "fetch": "eager"
+            }
+        }
+    },
+    "entrypoints": []
+}

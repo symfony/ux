@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+        {{ form_widget(form, { label: false }) }}
+
+        <button type="submit" class="btn btn-primary">Upload it!</button>
+    {{ form_end(form) }}
+{% endblock %}

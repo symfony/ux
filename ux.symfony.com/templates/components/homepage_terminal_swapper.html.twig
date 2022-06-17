@@ -1,0 +1,19 @@
+<div {{ attributes.defaults({
+    class: 'homepage-terminal-swapper'
+}) }}>
+    {% component terminal with { height: '180px', bottomPadding: 0, processContents: false } %}
+        {% block content -%}
+            <span
+                style="font-size: 1.2em;"
+                {{ stimulus_controller('symfony/ux-typed', {
+                    strings: typedStrings,
+                    loop: true,
+                    showCursor: true,
+                    typeSpeed: 20,
+                    cursorChar: '🖱',
+                    contentType: 'html'
+                }) }}
+            ></span>
+        {%- endblock %}
+    {% endcomponent %}
+</div>

@@ -1,0 +1,61 @@
+name: app
+
+type: php:8.1
+
+dependencies:
+    php:
+        composer/composer: "^2"
+    nodejs:
+        yarn: "1.22.17"
+
+build:
+    flavor: none
+
+runtime:
+    sizing_hints:
+        request_memory: 10
+        reserved_memory: 70
+
+    extensions:
+        - sodium
+        - mbstring
+        - imagick
+        - xsl
+
+crons:
+    reload_database:
+        spec: '*/20 * * * *'
+        commands:
+            start: sleep 60 && echo sleep-60-finished && date
+
+web:
+    locations:
+        "/":
+            root: "public"
+            expires: 1h
+            passthru: "/index.php"
+            rules:
+                '\.(gif|jpe?g|png|css|js|woff|woff2|ttf|eot|svg)$':
+                    expires: 365d
+
+disk: 256
+
+mounts:
+    "/var": { source: local, source_path: var }
+
+hooks:
+    build: |
+        set -x -e
+
+        curl -s https://get.symfony.com/cloud/configurator | (>&2 bash)
+
+        (>&2
+            symfony-build
+        )
+
+    deploy: |
+        set -x -e
+
+        (>&2 symfony-deploy)
+
+        php bin/console app:load-data

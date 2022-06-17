@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ package.humanName }} | Symfony UX Components{% endblock %}
+
+{% block body %}
+    {% block component_header %}{% endblock %}
+
+    <div class="container-fluid container-xxl px-5 pt-5">
+        <div class="arrow mb-3 d-none d-md-block"></div>
+
+        <div class="row mb-5">
+            <div class="col-12 col-md-6">
+                {% block code_block_left %}{% endblock %}
+            </div>
+            <div class="col-12 col-md-6 mt-3 mt-md-0">
+                {% block code_block_right %}{% endblock %}
+            </div>
+        </div>
+
+        {% if block('demo_title') is defined %}
+            {% set demoTitle = block('demo_title') %}
+            {% set demoContent = block('demo_content') %}
+            <div id="demo" style="position: relative;">
+                <div class="arrow-2 mb-3 d-sm-block" style="position:absolute; top:-55px; right: -25px;"></div>
+                {% embed 'main/_demoBox.html.twig' %}
+                    {% block demo_title %}{{ demoTitle|raw }}{% endblock %}
+                    {% block demo_content %}{{ demoContent|raw }}{% endblock %}
+                {% endembed %}
+            </div>
+        {% endif %}
+
+        {{ include('main/_installTerminal.html.twig') }}
+
+        {% block component_bottom %}{% endblock %}
+    </div>
+
+    {% block documentation_links %}
+        {{ include('main/_documentationLinks.html.twig') }}
+    {% endblock %}
+{% endblock %}
