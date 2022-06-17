@@ -1,0 +1,80 @@
+@import './variables';
+@import '~bootstrap';
+
+@import './container';
+@import './images';
+@import './type';
+@import './terminal';
+@import './highlight';
+@import './live_demos';
+@import 'tom-select/dist/css/tom-select.bootstrap5.css';
+
+/*
+ * External Fonts
+ */
+
+@import '~@fortawesome/fontawesome-free/css/all.css';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/200.css';
+@import '@fontsource/playfair-display/400.css';
+@import '@fontsource/playfair-display/700-italic.css';
+@import '@fontsource/space-mono';
+@import '@fontsource/ubuntu/400.css';
+@import '@fontsource/ubuntu/700.css';
+
+body {
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 26px;
+    letter-spacing: 0px;
+    color: #0A0A0A;
+}
+
+a, a.page-link, a.page-link:hover {
+    text-decoration: none;
+    color: #0A0A0A;
+}
+
+
+.navbar-toggler:focus {
+    box-shadow: none;
+}
+
+.dropdown button {
+    border: none;
+    background: none;
+    display: block;
+}
+.nav-white-mode .nav-options, i.nav-white-mode {
+    color: #fff;
+}
+
+footer {
+    height: 100px;
+}
+
+.hero-background {
+    background: url(../images/background_homepage.png);
+}
+
+#cropper-preview {
+    overflow: hidden;
+    width: 200px;
+    height: 200px;
+}
+
+.alert-right-message {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    padding: 1.25rem 1rem;
+    font-size: .8rem;
+}
+
+.page-item.active .page-link {
+    background-color: $n-700;
+    border-color: $n-700;
+}

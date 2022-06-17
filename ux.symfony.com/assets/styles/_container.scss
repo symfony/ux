@@ -1,0 +1,197 @@
+.light-container {
+    background-color: white;
+    border: 1px solid $n-100;
+    border-radius: 12px;
+    min-height: 158px;
+}
+
+.install-terminal-header-container {
+    background: #000;
+    position: absolute;
+    bottom: -20px;
+    border-radius: 4px;
+    margin-bottom: 0;
+
+    input {
+        background: none;
+        color: #fff;
+        border: none;
+        outline: none
+    }
+
+    button {
+        background: none;
+        color: #fff;
+        border: none;
+    }
+}
+
+.components-container {
+    background: #fff;
+    border-radius: 15px;
+    border: 0.67px solid #E7E7E7;
+}
+
+.ux-container {
+    border: 1px solid $n-100;
+    border-radius: 12px;
+}
+
+.component-container-shadow {
+    box-shadow: 0px 8px 16px -10px rgba(0, 0, 0, 0.12);
+}
+.component-container-shadow:hover {
+    box-shadow: 2px 3px 9px 4px rgb(0 0 0 / 12%);
+}
+
+.demo-container {
+    background-color: white;
+    border: 1px solid $n-100;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+
+}
+
+.demo-container-inner {
+    background-color: $n-50;
+    border:1px solid $n-100;
+    border-top: transparent;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.demo-container-inner-secondary {
+    background-color: #DADCE1;
+    border:1px solid $n-100;
+    border-top: transparent;
+    border-bottom-left-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.demo-chat>.demo-container-inner {
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+}
+
+.markdown-container {
+  background-color: white;
+  border: 1px solid $n-100;
+  border-radius: 5px;
+  height: 100%;
+  width: 100%;
+  position: relative;
+}
+
+.rainbow-gradient::after {
+  content: '';
+  background-image: url(../images/rainbow.png);
+  position: absolute;
+  height: 200px;
+  width: 100%;
+  top: 10%;
+  right: 0px;
+  z-index: -1;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 1080px) {
+    .rainbow-gradient::after {
+    top: 25%;
+    }
+}
+
+@media (max-width: 930px) {
+    .rainbow-gradient::after {
+    top: 35%;
+    }
+}
+
+@media (max-width: 800px) {
+    .rainbow-gradient::after {
+    top: 47%;
+    }
+}
+
+@media (max-width: 767px) {
+    .rainbow-gradient::after {
+    top: 75%;
+    }
+}
+
+@media (max-width: 500px) {
+    .rainbow-gradient::after {
+    top: 85%;
+    }
+}
+
+.markdown-form-render-container{
+    border: 1px solid $n-100;
+    background-color: $n-50;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.testimonial-container {
+    background-color: $n-50;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+.testimonial-large {
+    font-size: 28px;
+    line-height: 50px;
+}
+
+.file-tree-main::before {
+    background: none!important;
+}
+
+.file-tree ul>:not(ul),
+.file-tree ul {
+  position: relative;
+}
+.file-tree ul :not(summary) {
+  margin-left: 20px;
+}
+.file-tree ul summary {
+  display: inline;
+}
+.file-tree .tooltip-inner {
+    max-width: 350px;
+}
+.file-tree.nodots ul :not(summary) {
+  margin-left: 12px;
+}
+.file-tree ul::before,
+.file-tree ul>:not(ul)::before {
+  content: '';
+  width: 10px;
+  display: block;
+  position: absolute;
+}
+.file-tree ul::before,
+.file-tree ul>:not(ul)::before {
+  background: url(../images/dot.svg) left top / 2px 2px;
+}
+
+.file-tree.nodots ul::before,
+.file-tree.nodots ul>:not(summary)::before {
+  background-image: none;
+}
+.file-tree ul::before {
+  top: 0;
+  height: 100%;
+  background-repeat: repeat-y;
+  left: 5px;
+  z-index: -1;
+}
+.file-tree ul>:not(ul)::before {
+  top: 8px;
+  height: calc(100% - 8px);
+  background-repeat: repeat-x;
+  left: -15px;
+}
+
+
+

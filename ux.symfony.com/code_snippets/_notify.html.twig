@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ stream_notifications(['/demo/notifier']) }}
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+
+        <button type="submit" class="btn btn-primary">Send Notification</button>
+    {{ form_end(form) }}
+{% endblock %}

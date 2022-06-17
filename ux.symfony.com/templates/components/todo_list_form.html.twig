@@ -1,0 +1,54 @@
+<div
+    {{ attributes }}
+    {{ stimulus_action('live', 'update', 'change') }}
+>
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-4">
+                {{ form_row(form.name, {
+                    label: false,
+                    attr: {
+                        placeholder: 'Give your list a name'
+                    }
+                }) }}
+            </div>
+        </div>
+
+        <table class="table table-borderless form-no-mb">
+            <thead>
+                <tr>
+                    <td>Item</td>
+                    <td>Priority</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, itemForm in form.todoItems %}
+                    <tr>
+                        <td>
+                            {{ form_row(itemForm.description, {
+                                label: false,
+                                attr: {
+                                    placeholder: 'Walk the pygmy hippo'
+                                }
+                            }) }}
+                        </td>
+
+                        <td>
+                            {{ form_row(itemForm.priority, {
+                                row_attr: {class: ''},
+                                label: false,
+                            }) }}
+                        </td>
+                        <td>
+                            <button data-action="live#action" data-action-name="removeItem(index={{ key }})" type="button" class="btn btn-outline-danger">X</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% do form.todoItems.setRendered %}
+        <button data-action="live#action" data-action-name="addItem" type="button" class="btn btn-outline-primary">+ Add Item</button>
+        <button type="submit" class="btn btn-success" formnovalidate>Save</button>
+    {{ form_end(form) }}
+</div>

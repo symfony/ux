@@ -1,0 +1,14 @@
+<div {{ attributes.defaults({
+    class: this.classString,
+}) }}>
+    {% if showFilename %}
+        <p class="pb-2 ps-4 mb-0">{{ filename }}</p>
+    {% endif %}
+    <div class="terminal-body ps-4" style="height: {{ height }}; overflow: auto;">
+        <pre class="pt-2">
+        {{- this.highlight(block('content'))|raw -}}
+        </pre>
+
+        {% block code_content_bottom %}{% endblock %}
+    </div>
+</div>

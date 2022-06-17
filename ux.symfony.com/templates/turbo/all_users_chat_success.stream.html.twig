@@ -1,0 +1,11 @@
+<turbo-stream action="update" target="chat-box">
+    <template>
+        {{ include('turbo/_chatList.html.twig') }}
+    </template>
+</turbo-stream>
+
+<turbo-stream action="replace" target="message-count-header">
+    <template>
+        {{ include('turbo/_chatMessageCount.html.twig') }}
+    </template>
+</turbo-stream>

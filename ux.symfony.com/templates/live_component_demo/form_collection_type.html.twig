@@ -1,0 +1,25 @@
+{% extends 'liveDemoBase.html.twig' %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'src/Twig/TodoListFormComponent.php', height: '400px' } %}
+        {% block content %}
+            {{- source('@src/Twig/TodoListFormComponent.php')|cleanup_php_file -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'templates/components/todo_list_form.html.twig', height: '400px' } %}
+        {% block content %}
+            {{- source('components/todo_list_form.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_content %}
+    {{ component('todo_list_form', {
+        form: form,
+        todoList: todo.id ? todo : null
+    }) }}
+{% endblock %}
+

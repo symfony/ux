@@ -1,0 +1,10 @@
+<a href="{{ path(package.route) }}" class="col-12 col-md-4 col-lg-3 mb-2">
+    <div class="components-container p-2">
+        <div class="d-flex">
+            <div class="live-component-img d-flex justify-content-center align-items-center" style="background: {{ package.gradient }}">
+                <img width="17px" height="17px" src="{{ asset('build/images/'~package.imageFilename) }}" alt="Image for the {{ package.humanName }} UX package">
+            </div>
+            <h4 class="ubuntu-title ps-2 align-self-center">{{ package.humanName }}</h4>
+        </div>
+    </div>
+</a>

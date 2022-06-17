@@ -1,0 +1,52 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'A Library that Types'
+    } %}
+        {% block title_header %}
+            Typed brings text
+            <span class="playfair ps-2">to life</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Spice up some text by typing, backspacing and re-typing with <a class="font-white text-underline" href="https://github.com/mattboldt/typed.js/" rel="noopener nofollow noreferrer">Typed.js</a>.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'templates/typed.html.twig', height: '210px' } %}
+        {% block content %}
+            {{- source('@code_snippets/_typed.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% embed 'main/_demoBox.html.twig' %}
+        {% block demo_title %}UX Typed{% endblock %}
+        {% block demo_content %}
+            <div class="p-5" style="font-size: 1.3em;">
+                <span
+                    {{ stimulus_controller('symfony/ux-typed', {
+                        strings: [
+                            'I ❤️ Symfony UX!',
+                            'Symfony UX Typed loves to type',
+                            'Symfony UX Typed and backspace',
+                            'Control the speed',
+                            'Control the cursor',
+                            'Control your destiny!!!',
+                            'Control your destiny... sort of',
+                        ],
+                        loop: true,
+                        showCursor: true,
+                        cursorChar: '✨',
+                    }) }}
+                ></span>
+            </div>
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+

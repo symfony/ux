@@ -1,0 +1,12 @@
+<h2 class="ubuntu text-center mt-5">Install It</h2>
+<div class="d-flex justify-content-center mt-5">
+    <div class="col-12 col-md-6">
+        {% component terminal with { bottomPadding: 20 } %}
+            {% block content %}
+                composer require ux {{ package.composerName }}
+                npm install --force
+                npm run watch
+            {% endblock %}
+        {% endcomponent %}
+    </div>
+</div>

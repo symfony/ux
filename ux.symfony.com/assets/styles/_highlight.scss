@@ -1,0 +1,58 @@
+.hljs-comment, .hljs-prompt {
+    color: #8b949e;
+    user-select: none;
+    -webkit-user-select: none
+}
+
+.codeblock-terminal .hljs-keyword {
+    color: #6a737d;
+}
+
+.codeblock-terminal .hljs-prompt {
+    color: #8b949e;
+    user-select: none;
+    -webkit-user-select: none
+}
+
+.codeblock-terminal .hljs-string {
+    color: #a5d6ff
+}
+
+.hljs-keyword {
+    color: #ff7b72
+}
+
+.hljs-title {
+    color: #ffa657
+}
+
+.hljs-variable-other-marker {
+    color: #79c0ff
+}
+
+.hljs-function .hljs-title {
+    color: #d2a8ff
+}
+
+.hljs-string {
+    color: #a5d6ff
+}
+
+.hljs-attr, .hljs-tag .hljs-name {
+    color: #7ee787
+}
+
+.hljs-tag .hljs-attr {
+    color: #d2a8ff
+}
+
+.hljs-addition {
+    background: rgba(46, 160, 67, .3);
+    outline: 3px solid rgba(46, 160, 67, .3)
+}
+
+.hljs-deletion {
+    background: rgba(218, 54, 51, .3);
+    outline: 3px solid rgba(218, 54, 51, .3)
+}
+

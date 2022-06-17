@@ -1,0 +1,15 @@
+{# initialize the swup controller, then render normal links! #}
+<div
+    {{ stimulus_controller('symfony/ux-swup/swup') }}
+    id="swup"
+>
+
+    {% for package in pager %}
+        <a href="{{ path(package.route) }}" class="col-12">
+            <img src="{{ asset('build/images/'~package.imageFilename) }}">
+            <h4>{{ package.humanName }}</h4>
+        </a>
+    {% endfor %}
+
+    {{ pagerfanta(pager, 'twitter_bootstrap5') }}
+</div>

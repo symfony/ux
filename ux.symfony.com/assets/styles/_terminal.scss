@@ -1,0 +1,59 @@
+.terminal-wrapper {
+    background-color: $n-900;
+    border-radius: 12px;
+    position: relative;
+    padding: 30px 0px 0px 0px;
+}
+
+.terminal-code {
+    background-color: $n-900;
+    border-radius: 12px;
+    padding: 10px 0px 0px 0px;
+    color: #fff;
+    font-size: 12px;
+}
+
+.terminal-code.terminal-code-no-filename {
+    padding-top: 0;
+}
+
+.terminal-wrapper .terminal-controls {
+    position: absolute;
+    top: 6px;
+    left: 12px;
+}
+.terminal-wrapper .terminal-controls span {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.red {
+    background: $red;
+}
+
+.yellow {
+    background: $yellow;
+}
+
+.green {
+    background: $green;
+}
+
+.terminal-body {
+    background-color: $n-800;
+    height: 100%;
+    font-family: 'Space Mono', monospace;
+    font-size: 14px;
+    line-height: 160%;
+    color: #FFF;
+    border-radius: 0px 0px 12px 12px;
+}
+.terminal-code.terminal-code-no-filename .terminal-body {
+    border-radius: 12px;
+}
+.homepage-terminal-swapper pre {
+    margin-bottom: 0;
+}

@@ -1,0 +1,57 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'Slick Page Transitions'
+    } %}
+        {% block title_header %}
+            Ajax Page Transitions with
+            <span class="playfair ps-2">Swup</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Replace full page refreshes with Ajax-powered, stylized page transitions (an alternative to Turbo).
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'src/Controller/SwupController.php' } %}
+        {% block content %}
+            {{- source('@code_snippets/_SwupController.php')|cleanup_php_file(removeClass=true) -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'templates/swup.html.twig' } %}
+        {% block content %}
+            {{- source('@code_snippets/_swup.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_title %}UX Swup{% endblock %}
+
+{% block demo_content %}
+    <div {{ stimulus_controller('symfony/ux-swup/swup') }} id="swup" data-turbo="false">
+        <div class="row">
+            {% for package in pager %}
+                {{ include('main/_package_in_list.html.twig') }}
+            {% endfor %}
+        </div>
+
+        <div class="mt-3">
+            {{ pagerfanta(pager, 'twitter_bootstrap5') }}
+        </div>
+    </div>
+
+    <div class="d-flex eyebrows pt-3">
+        <div>Ajax-powered page navigation</div>
+        <i class="fa-solid fa-circle px-2 align-self-center" style="font-size: 3px;"></i>
+        <div>URL in address bar changes</div>
+        <i class="fa-solid fa-circle px-2 align-self-center" style="font-size: 3px;"></i>
+        <div>Customizable transitions</div>
+    </div>
+{% endblock %}

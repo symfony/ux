@@ -1,0 +1,22 @@
+<div class="container-fluid container-xxl mb-5 px-5 pt-5" style="position: relative; background: {{ package.gradient }}">
+    {{ include('_main_nav.html.twig', {
+        whiteMode: true,
+        withChatIcon: withChatIcon,
+        messageCount: withChatIcon ? this.messageCount : 0
+    }) }}
+    <p class="eyebrows text-center font-white mt-5" style="opacity: 0.6;">{{ eyebrowText|raw }}</p>
+
+    <h1 class="ubuntu text-center font-white">{% block title_header %}{% endblock %}</h1>
+
+    <div class="d-flex justify-content-center">
+        <p class="text-center font-white mt-3 pb-5 hero-sub-text">
+            {% block sub_content %}{% endblock %}
+        </p>
+    </div>
+    <div class="d-flex justify-content-center">
+        <pre
+            {{ stimulus_controller('clipboard') }}
+            class="install-terminal-header-container p-2 font-white"
+        ><input readonly aria-label="The package's composer installation command" size="{{ (package.composerRequireCommand|length) }}" {{ stimulus_target('clipboard', 'source') }} value="{{ package.composerRequireCommand }}"> <div class="d-inline p-2" style="background: #5920A0; border-radius: 5px;"><button type="button" {{ stimulus_action('clipboard', 'copy') }}><i class="fa-solid fa-copy"></i></button></div></pre>
+    </div>
+</div>

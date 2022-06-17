@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}All Symfony UX Components{% endblock %}
+
+{% block body %}
+<div class="container-fluid container-xxl px-5 pt-5">
+    {{ include('_main_nav.html.twig') }}
+
+    <h1 class="text-center ubuntu mt-5">All Components</h1>
+        <p class="text-center mt-2 mb-5">A treasure chest of packages to solve your<br>frontend problems.</p>
+    <div class="row">
+        {{ include('main/_componentsList.html.twig') }}
+    </div>
+</div>
+<div class="container-fluid container-xxl mt-5 p-5" style="background-color: #F2F2F2;">
+    <div class="d-sm-flex justify-content-center">
+        <div class="me-sm-2" style="width: 400px;">
+            {{ component('docs_link', {
+                url: 'https://symfonycasts.com/screencast/stimulus',
+                title: 'Screencasts',
+                text: 'Jump right into with the Symfony UX & Stimulus screencast.'
+            }) }}
+        </div>
+        <div class="mt-3 mt-sm-0 ms-sm-2" style="width: 400px;">
+            {{ component('docs_link', {
+                url: 'https://symfony.com/doc/current/frontend/ux.html',
+                title: 'Documentation',
+                text: 'Ready to get started? The official symfony.com UX Docs.'
+            }) }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}

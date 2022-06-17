@@ -1,0 +1,43 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'React Component Rendering'
+    } %}
+        {% block title_header %}
+            Render React from
+            <span class="playfair ps-2">inside Twig</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Built a React component? Render it quickly &amp; easily in Twig <em>and</em> pass in dynamic props.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'templates/react.html.twig', height: '350px' } %}
+        {% block content %}
+            {{- source('@code_snippets/_react.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'assets/react/controllers/PackageSearch.jsx', height: '350px' } %}
+        {% block content %}
+            {{- source('@code_snippets/_PackageSearch.jsx') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_title %}UX React{% endblock %}
+
+{% block demo_content %}
+    <div {{ react_component('PackageSearch', {
+        packages: packagesData
+    }) }}>
+        Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
+    </div>
+{% endblock %}

@@ -1,0 +1,9 @@
+
+<select aria-label="Choose a message" name="chat_message" class="p-2" style="width: 100%;">
+    <option value="">Choose a message</option>
+    {% for key, message in messageChoices %}
+        <option value="{{ key }}">{{ message }}</option>
+    {% endfor %}
+</select>
+
+<button type="submit" class="btn btn-dark mt-4" style="width: 100%;">Chat!</button>

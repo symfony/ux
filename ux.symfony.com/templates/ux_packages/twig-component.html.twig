@@ -1,0 +1,68 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'Object-Oriented Templates'
+    } %}
+        {% block title_header %}
+            PHP Classes that render:
+            <span class="playfair ps-2">Twig Components</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Create reusable, object-oriented templates. PHP class + template = Twig components.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'src/Twig/AlertComponent.php', height: '330px' } %}
+        {% block content %}
+            {{- source('@src/Twig/AlertComponent.php')|cleanup_php_file -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'templates/components/alert.html.twig', height: '330px' } %}
+        {% block content %}
+            {{- source('components/alert.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_title %}UX Twig Components{% endblock %}
+
+{% block demo_content %}
+    <div class="row">
+        <div class="col-8">
+            {{ component('alert', {
+                message: 'I am a success alert!',
+            }) }}
+        </div>
+        <div class="col-4">
+            {% component code_block with { filename: 'template.html.twig', showFilename: false } %}
+                {% block content %}
+                    {{- source('@code_snippets/_alert_success.html.twig') -}}
+                {% endblock %}
+            {% endcomponent %}
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-8">
+            {{ component('alert', {
+                type: 'danger',
+                message: 'Oh no! The dinos escaped!',
+            }) }}
+        </div>
+        <div class="col-4">
+            {% component code_block with { filename: 'template.html.twig', showFilename: false } %}
+                {% block content %}
+                    {{- source('@code_snippets/_alert_danger.html.twig') -}}
+                {% endblock %}
+            {% endcomponent %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,31 @@
+<div class="container-fluid container-xxl mt-5 p-5" style="background-color: #F2F2F2;">
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-4">
+            {{ component('docs_link', {
+                url: package.officialDocsUrl,
+                title: 'Symfony UX '~package.humanName~' Docs',
+                text: 'Get going with the official documentation.'
+            }) }}
+        </div>
+
+        {% if package.screencastLink %}
+            <div class="col-12 col-sm-6 col-md-4 mt-3 mt-md-0">
+                {{ component('docs_link', {
+                    url: package.screencastLink,
+                    title: 'Screencasts',
+                    text: package.screencastLinkText
+                }) }}
+            </div>
+        {% endif %}
+
+        {% if package.docsLink %}
+            <div class="col-12 col-sm-6 col-md-4 mt-3 mt-md-0">
+                {{ component('docs_link', {
+                    url: package.docsLink,
+                    title: 'Related Docs',
+                    text: package.docsLinkText
+                }) }}
+            </div>
+        {% endif %}
+    </div>
+</div>

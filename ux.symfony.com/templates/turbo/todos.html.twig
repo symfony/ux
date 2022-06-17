@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Today's TODO List!</h1>
+
+    {{ include('turbo/_demo_message.html.twig') }}
+
+    <turbo-frame id="daily-todos">
+        <ul class="mb-0">
+            {% for key, item in todos %}
+                <li>
+                    {{ item }}
+                    <form class="d-inline" action="{{ path('app_turbo_remove_todo_item', {
+                        id: key
+                    }) }}">
+                        <button type="submit" class="btn btn-link p-0" title="All done!"><i class="fa fa-check-circle"></i></button>
+                    </form>
+                </li>
+            {% endfor %}
+        </ul>
+
+        {% if todos is empty %}
+            <div class="alert alert-success">You did it! Order a 🍕 and take the afternoon off.</div>
+        {% endif %}
+
+        <a class="btn btn-dark mt-5" style="width: 100%;" href="{{ path('app_turbo_add_todo_item') }}">+ Add another item</a>
+    </turbo-frame>
+{% endblock %}
+

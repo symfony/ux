@@ -1,0 +1,20 @@
+<div{{ attributes }}>
+    <input
+        type="text"
+        data-model="query"
+        value="{{ query }}"
+        data-action="live#update"
+        placeholder="Results update as you type..."
+        class="form-control"
+    >
+
+    {% if computed.packages|length > 0 %}
+        <div data-loading="addClass(opacity-50)" class="mt-3 row">
+            {% for package in computed.packages %}
+                {{ include('main/_package_in_list.html.twig') }}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="pt-3">Ah! No packages found matching "{{ query }}"</div>
+    {% endif %}
+</div>

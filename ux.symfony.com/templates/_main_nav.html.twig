@@ -1,0 +1,56 @@
+
+<nav class="navbar navbar-expand-lg {{ whiteMode|default ? 'nav-white-mode' }}">
+  <div class="container-fluid">
+    <a href="{{ path('app_homepage') }}" class="logo{{ whiteMode|default ? '-white' }}"></a>
+    <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavToggler" aria-controls="mainNavToggler" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="fa-solid fa-bars {{ whiteMode|default ? 'nav-white-mode' }}"></i>
+    </button>
+    <div class="navbar-collapse collapse mt-3 mt-lg-0" id="mainNavToggler" style="">
+        <div class="me-auto"></div>
+        {% if withChatIcon|default %}
+            <div class="ms-2 ms-lg-0 px-2 me-4 my-2 my-lg-0" style="background: rgba(255, 255, 255, 0.2);
+                        border-radius: 8px; width: 44px;"
+                        >
+                {{ include('turbo/_chatMessageCount.html.twig') }}
+            </div>
+        {% endif %}
+        <a href="{{ path('app_turbo') }}" class="ms-2 ms-lg-0  my-2 my-lg-0 nav-options me-4">Turbo</a>
+        <div class="dropdown  my-2 my-lg-0">
+            <button
+                class="nav-options me-4 ms-0"
+                id="components-dropdown-button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+            >Components <i class="fa-solid fa-angle-down"></i></button>
+            <ul class="dropdown-menu" aria-labelledby="components-dropdown-button">
+                {% for package in twigPackageHelper.topNavPackages %}
+                <li>
+                    <a class="dropdown-item" href="{{ path(package.route) }}">
+                        <div class="d-flex">
+                            <div class="nav-component-img d-flex justify-content-center align-items-center me-2" style="background: {{ package.gradient }}">
+                                <img width="10px" height="10px" src="{{ asset('build/images/'~package.imageFilename) }}" alt="Image for the {{ package.humanName }} UX package">
+                            </div>
+                            {{ package.humanName }}
+                        </div>
+
+                    </a>
+                </li>
+                {% endfor %}
+                <li><hr class="dropdown-divider"></li>
+                <li><a class="dropdown-item" href="{{ path('app_all_components') }}">Browse all Components</a></li>
+            </ul>
+        </div>
+        <p class="nav-options mb-0 me-4 d-none d-lg-inline">|</p>
+
+        {#
+        TODO: add dark mode
+        <a class="nav-options" href="#">
+            <i class="fa-solid fa-moon me-4 nav-options-icon"></i>
+        </a>
+        #}
+        <a class=" my-2 my-lg-0 ms-2 ms-lg-0 nav-options" href="https://github.com/symfony/ux" rel="external noopener noreferrer">
+            <i class="fa-brands fa-github nav-options-icon"></i>
+        </a>
+    </div>
+  </div>
+</nav>

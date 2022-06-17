@@ -1,0 +1,66 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'Craft the perfect image'
+    } %}
+        {% block title_header %}
+            Crop Photos with
+            <span class="playfair ps-2">Cropper.js</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Let your users crop images with <a class="font-white text-underline" href="https://github.com/fengyuanchen/cropperjs" rel="noopener nofollow noreferrer">Cropper.js</a>
+             then grab the final image from PHP. Simple.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'src/Controller/CroppingController.php', height: '270px' } %}
+        {% block content %}
+            {{- source('@code_snippets/_CroppingController.php')|cleanup_php_file(removeClass=true) -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'templates/cropping/cropper.html.twig', height: '270px' } %}
+        {% block content %}
+            {{- source('@code_snippets/_cropper.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_title %}UX Cropper.js{% endblock %}
+
+{% block demo_content %}
+    {% if croppedImage is not null and croppedThumbnail is not null %}
+        <div class="row">
+            <div class="col-9">
+                <figure class="figure">
+                    <img src="{{ croppedImage }}" class="figure-img img-fluid rounded" alt="Cropped image">
+                    <figcaption class="figure-caption">The cropped image.</figcaption>
+                </figure>
+            </div>
+            <div class="col-3">
+                <figure class="figure">
+                    <img src="{{ croppedThumbnail }}" class="figure-img img-fluid rounded" alt="Cropped thumbnail">
+                    <figcaption class="figure-caption">A thumbnail of the cropped image.</figcaption>
+                </figure>
+            </div>
+        </div>
+    {% else %}
+        {{ form_start(form) }}
+        <div class="row">
+            <div class="col-9">{{ form_widget(form) }}</div>
+            <div class="col-3">
+                <div id="cropper-preview"></div>
+            </div>
+        </div>
+            <button type="submit" class="btn btn-dark mt-5" style="width: 100%;">Crop it!</button>
+        {{ form_end(form) }}
+    {% endif %}
+{% endblock %}
+

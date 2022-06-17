@@ -1,0 +1,9 @@
+<img
+    src="{{ data_uri_thumbnail('images/large.jpg', 40, 30) }}"
+    {{ stimulus_controller('symfony/ux-lazy-image/lazy-image', {
+        src: asset('images/large.jpg')
+    }) }}
+
+    alt="A blurhash image that is replaced by the real image on load"
+    width="400"
+>

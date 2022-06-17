@@ -1,0 +1,67 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'Images that Zoom',
+        withChatIcon: true
+    } %}
+        {% block title_header %}
+            Load fast with
+            <span class="playfair ps-2">Lazy Images</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Serve small or <a class="font-white" style="color: transparent; text-shadow: 0 0 1.5px rgba(255,255,255,0.5);" href="https://blurha.sh/" rel="external noopener noreferrer">blurred</a>
+            images first, then load the real thing after the page loads.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'templates/images.html.twig', height: '310px' } %}
+        {% block content %}
+            {{- source('@code_snippets/_lazy_image.html.twig') -}}
+        {% endblock %}
+
+        {% block code_content_bottom %}
+            <div class="eyebrows pt-4">
+                <div>
+                    <i class="fa-solid fa-circle px-2 align-self-center" style="font-size: 3px;"></i>
+                    Load a small (or blurred) image first
+                </div>
+
+                <div>
+                    <i class="fa-solid fa-circle px-2 align-self-center" style="font-size: 3px;"></i>
+                    The real (large) image is downloaded after page load
+                </div>
+            </div>
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% embed 'main/_demoBox.html.twig' %}
+        {% block demo_title %}UX Lazy Image{% endblock %}
+        {% block demo_content_padding %}{% endblock %}
+        {% block demo_content %}
+            <img
+                src="{{ data_uri_thumbnail(publicDir~asset('build/images/legos.jpg'), 40, 30) }}"
+                {{ stimulus_controller('symfony/ux-lazy-image/lazy-image', {
+                    src: asset('build/images/legos.jpg')
+                }) }}
+
+                alt="A blurhash image that is replaced by the real image on load"
+                width="578"
+                height="275"
+                style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;"
+            >
+        {% endblock %}
+    {% endembed %}
+{% endblock %}
+
+
+
+{% block demo_content %}
+
+{% endblock %}

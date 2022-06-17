@@ -1,0 +1,51 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'Styled Upload Zone'
+    } %}
+        {% block title_header %}
+            Native Upload Dropzone
+            <span class="playfair ps-2">with style</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Upgrade your upload field to a stylized "Dropzone"
+            with file previews.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'src/Form/DropzoneForm.php' } %}
+        {% block content %}
+            {{- source('@src/Form/DropzoneForm.php')|cleanup_php_file(removeClass=true) -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'templates/anything.html.twig' } %}
+        {% block content %}
+            {{- source('@code_snippets/_dropzone.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_title %}UX Dropzone{% endblock %}
+
+{% block demo_content %}
+    {% for message in app.flashes('dropzone_success') %}
+        <div class="alert alert-success" data-turbo-cache="false">{{ message }}</div>
+    {% endfor %}
+
+    {{ form_start(form) }}
+        {{ form_widget(form) }}
+        <button type="submit" class="btn btn-primary">Upload it!</button>
+    {{ form_end(form) }}
+
+    <div class="d-flex eyebrows pt-5">
+        <div>NOTE: this library does not integrate with the Dropzone.js JavaScript library.</div>
+    </div>
+{% endblock %}

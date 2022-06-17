@@ -1,0 +1,146 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block body %}
+
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'Speed of an SPA',
+        withChatIcon: true
+    } %}
+        {% block title_header %}
+            Turbo your
+            <span class="playfair ps-2">website</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            The speed of a single-page web app without writing any JavaScript,
+            courtesy of <a class="font-white text-underline" href="https://turbo.hotwired.dev/" rel="external noopener noreferrer">Turbo</a>
+        {% endblock %}
+    {% endcomponent %}
+
+    <div class="container-fluid container-xxl px-5 pt-5">
+        <div class="row mb-5">
+            <div class="col-12 col-md-6 order-md-2">
+                <h2 class="ubuntu mt-3 mt-md-5" id="drive">Turbo <span class="font-purple">Drive</span></h2>
+                <p class="mt-2">Transform all link clicks and form submits into Ajax
+                calls to get that single-page-application feel.</p>
+
+                <div class="alert alert-secondary d-flex justify-content-start col-12 col-md-9 mt-5">
+                    <img width="18px" height="18px" src="{{ asset('build/images/info-icon.png') }}" alt="Icon to indication information">
+                    <p class="info-tooltips ms-2 mb-0"><i class="fa-solid fa-arrow-left"></i>
+                    Click any links on this site or submit this form.
+                    Zero full page refreshes!</p>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6 order-md-1">
+                {% embed 'main/_demoBox.html.twig' %}
+                    {% block demo_title %}
+                        Turbo Drive Demo
+                    {% endblock %}
+                    {% block demo_content %}
+                        {% if name and animal %}
+                            <div>Say hello to {{ name }} the brave & noble {{ animal }}!</div>
+
+                            <a href="{{ path('app_turbo') }}"><i class="fa-solid fa-arrow-left-long"></i> Back</a>
+                        {% else %}
+                            <div class="mb-3">Build yourself a new pet</div>
+                            <form method="POST" novalidate>
+                                <div class="d-flex justify-content-between">
+                                    <div class="flex-grow-1">
+                                        {{ form_row(form.name, {
+                                            row_attr: { class: 'form-floating' },
+                                            attr: { placeholder: 'Enter a name' },
+                                        }) }}
+                                    </div>
+                                    <div class="flex-grow-1 ms-2">
+                                        {{ form_row(form.animal, {
+                                            row_attr: { class: 'form-floating' },
+                                        }) }}
+                                    </div>
+                                </div>
+                                    <button type="submit" class="btn btn-dark mt-5" style="width: 100%;">Create!</button>
+                            </form>
+                        {% endif %}
+                    {% endblock %}
+                {% endembed %}
+            </div>
+        </div>
+
+        <div class="row mb-5 pt-md-5">
+            <div class="col-12 col-md-6">
+                <h2 class="ubuntu mt-5" id="frames">Turbo <span class="font-purple">Frames</span></h2>
+                <div>Decompose complex pages into different parts that load and behave independently. Try it - it's smooth.</div>
+
+                <div class="alert alert-secondary d-flex col-12 col-md-9 justify-content-start mt-5">
+                    <img width="18px" height="18px" src="{{ asset('build/images/info-icon.png') }}" alt="Icon to indication information">
+                    <p class="info-tooltips ms-2 mb-0">
+                    The frame displays just part of the full page from
+                    <a href="{{ path('app_turbo_todo_list') }}">{{ url('app_turbo_todo_list') }}</a>.
+                    All link clicks and form submits stay *inside* the frame.
+                    <i class="fa-solid fa-arrow-right"></i></p>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-6">
+                {% embed 'main/_demoBox.html.twig' %}
+                    {% block demo_title %}
+                        Turbo Frames Demo
+                    {% endblock %}
+                    {% block demo_content %}
+                        <turbo-frame
+                            id="daily-todos"
+                            src="{{ path('app_turbo_todo_list') }}"
+                        ></turbo-frame>
+                    {% endblock %}
+                {% endembed %}
+            </div>
+        </div>
+
+        <div {{ turbo_stream_listen('chat') }} class="row mb-5 pt-md-5">
+            <div class="col-12 col-md-6 order-md-2">
+                <h2 class="ubuntu mt-5" id="turbo-streams">Turbo <span class="font-purple">Streams</span></h2>
+                <div>
+                    Deliver page updates - to *any* elements on your page -
+                    directly from Symfony. Add Mercure to do this for *any*
+                    users on your site, in real-time.
+
+                </div>
+
+                <div class="alert alert-secondary d-flex justify-content-start col-12 col-md-9 mt-5">
+                    <img width="18px" height="18px" src="{{ asset('build/images/info-icon.png') }}" alt="Icon to indication information">
+                    <p class="info-tooltips ms-2 mb-0"><i class="fa-solid fa-arrow-left"></i>
+                    Chat with someone else viewing this page (or open a
+                    2nd browser tab to talk to yourself)! Submitting also
+                    updates the <a href="#message-count-header"><i class="fa fa-comment"></i> icon</a> in the header.</p>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 demo-chat">
+                {% embed 'main/_demoBox.html.twig' %}
+                    {% block demo_title %}
+                        Turbo Streams Demo <small>(your username is <code> {{ myUsername }}</code>)</small>
+                    {% endblock %}
+                    {% block demo_content %}
+                        <div style="height: 150px; overflow: auto;">
+                            <ul class="list-unstyled" id="chat-box">
+                                {{ include('turbo/_chatList.html.twig') }}
+                            </ul>
+                        </div>
+                    {% endblock %}
+                    {% block demo_content_secondary %}
+                    <div class="demo-container-inner-secondary p-4">
+                        <form id="chat-form" action="{{ path('app_turbo_chat') }}" method="POST">
+                            {{ include('turbo/_chatForm.html.twig') }}
+                        </form>
+                    </div>
+                    {% endblock %}
+                {% endembed %}
+            </div>
+        </div>
+
+        {{ include('main/_installTerminal.html.twig') }}
+    </div>
+
+    {{ include('main/_documentationLinks.html.twig') }}
+{% endblock %}
+

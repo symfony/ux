@@ -1,0 +1,22 @@
+{% for package in packages %}
+    <div class="col-12 col-lg-6">
+        <div class="component-container-shadow ux-container mt-3">
+            <a href="{{ path(package.route) }}">
+                <div class="row p-4" style="min-height: 165px;">
+                    <div class="col-12 col-md-2">
+                        <div class="component-img d-flex justify-content-center align-items-center me-md-2" style="background: {{ package.gradient }}">
+                            <img width="36px" height="36px" src="{{ asset('build/images/'~package.imageFilename) }}" alt="Image for the {{ package.humanName }} UX package">
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-10">
+                        <div class="mt-3 mt-md-0 ms-md-3">
+                            <h3 class="d-inline">{{ package.humanName }}</h3>
+                            <i class="fa-solid fa-arrow-right-long component-arrow ms-2" style="font-size: 20px;"></i>
+                            <p>{{ package.description|markdown_to_html }}</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+{% endfor %}

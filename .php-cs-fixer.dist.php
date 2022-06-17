@@ -23,7 +23,7 @@ return (new PhpCsFixer\Config())
     ->setRiskyAllowed(true)
     ->setFinder(
         PhpCsFixer\Finder::create()
-            ->in(__DIR__.'/src')
+            ->in([__DIR__.'/src', __DIR__.'/ux.symfony.com/src'])
             ->append([__FILE__])
             ->notPath('#/Fixtures/#')
             ->notPath('#/app/var/#')
