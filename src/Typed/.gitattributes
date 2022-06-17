@@ -1,4 +1,5 @@
 /.gitattributes export-ignore
 /.gitignore export-ignore
+/.symfony.bundle.yaml export-ignore
 /Resources/assets/test export-ignore
-/Animation.gif export-ignore
+/Resources/assets/jest.config.js export-ignore

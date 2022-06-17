@@ -1,5 +1,7 @@
 /.gitattributes export-ignore
 /.gitignore export-ignore
+/.symfony.bundle.yaml export-ignore
 /phpunit.xml.dist export-ignore
 /Resources/assets/test export-ignore
+/Resources/assets/jest.config.js export-ignore
 /Tests export-ignore
