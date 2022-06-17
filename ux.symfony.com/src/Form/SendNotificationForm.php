@@ -27,7 +27,7 @@ class SendNotificationForm extends AbstractType
     public static function getTextChoices(): array
     {
         return [
-            'Hey! I\', sending notifications via UX Notify!',
+            'Hey! I\'m sending notifications via UX Notify!',
             'All penguin-inspired tuxedos are now on sale! 🐧',
             'Today is a great day to visit the zoo!',
             'Attention! I am a browser notification.',
