@@ -26,7 +26,7 @@ crons:
     reload_database:
         spec: '*/20 * * * *'
         commands:
-            start: sleep 60 && echo sleep-60-finished && date
+            start: 'php bin/console app:load-data'
 
 web:
     locations:
