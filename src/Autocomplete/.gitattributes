@@ -1,1 +1,7 @@
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.symfony.bundle.yaml export-ignore
+/assets/.gitignore export-ignore
+/assets/jest.config.js export-ignore
+/assets/test export-ignore
 /tests export-ignore
