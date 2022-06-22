@@ -22,6 +22,7 @@ integrating it into [Webpack Encore](https://github.com/symfony/webpack-encore).
 
 -   [Install Symfony UX](https://symfony.com/doc/current/frontend/ux.html).
 -   [List of UX Packages](https://symfony.com/doc/current/frontend/ux.html#ux-packages-list).
+-   [Symfony UX Official Demo](https://ux.symfony.com).
 -   Watch the [Stimulus Screencast on SymfonyCasts](https://symfonycasts.com/screencast/stimulus).
 
 ## Let's build an amazing ecosystem together
