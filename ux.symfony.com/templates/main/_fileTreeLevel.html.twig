@@ -7,10 +7,10 @@
 {% for fileInfo in files %}
     {% if fileInfo.isDirectory %}
         <li class="file-tree-main">
-            <summary {{- _self.summaryAttributes(fileInfo.description) -}}>
+            <span {{- _self.summaryAttributes(fileInfo.description) -}}>
                 <i class="fas fa-folder-open pe-2"></i>
                 {{ fileInfo.filename }}
-            </summary>
+            </span>
 
             <ul class="list-unstyled">
                 {{ include('main/_fileTreeLevel.html.twig', {
@@ -20,9 +20,9 @@
         </li>
     {% else %}
         <li class="file-tree-main">
-            <summary {{- _self.summaryAttributes(fileInfo.description) -}}>
+            <span {{- _self.summaryAttributes(fileInfo.description) -}}>
                 <i class="fas fa-folder pe-2"></i>{{ fileInfo.filename }}
-            </summary>
+            </span>
         </li>
     {% endif %}
 {% endfor %}

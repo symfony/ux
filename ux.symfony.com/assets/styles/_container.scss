@@ -151,16 +151,16 @@
 .file-tree ul {
   position: relative;
 }
-.file-tree ul :not(summary) {
+.file-tree ul :not(span) {
   margin-left: 20px;
 }
-.file-tree ul summary {
+.file-tree ul span {
   display: inline;
 }
 .file-tree .tooltip-inner {
     max-width: 350px;
 }
-.file-tree.nodots ul :not(summary) {
+.file-tree.nodots ul :not(span) {
   margin-left: 12px;
 }
 .file-tree ul::before,
@@ -176,7 +176,7 @@
 }
 
 .file-tree.nodots ul::before,
-.file-tree.nodots ul>:not(summary)::before {
+.file-tree.nodots ul>:not(span)::before {
   background-image: none;
 }
 .file-tree ul::before {
