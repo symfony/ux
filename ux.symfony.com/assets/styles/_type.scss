@@ -220,3 +220,7 @@ h4.ubuntu {
     box-shadow: 2px 3px 9px 4px rgb(0 0 0 / 12%);
 }
 
+.form-control::placeholder {
+    color: $n-300;
+    font-weight: lighter;
+}
