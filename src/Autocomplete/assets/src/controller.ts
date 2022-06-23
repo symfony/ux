@@ -39,6 +39,10 @@ export default class extends Controller {
         this.tomSelect = this.#createAutocomplete();
     }
 
+    disconnect() {
+        this.tomSelect.destroy();
+    }
+
     #getCommonConfig(): Partial<TomSettings> {
         const plugins: any = {}
 
