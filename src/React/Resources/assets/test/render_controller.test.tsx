@@ -34,8 +34,8 @@ const startStimulus = () => {
     application.register('react', ReactController);
 };
 
-function ReactComponent(props: { fullName: string }) {
-    return <div>Hello {props.fullName}</div>;
+function ReactComponent(props: { fullName?: string }) {
+    return <div>Hello {props.fullName ? props.fullName : 'without props'}</div>;
 }
 
 (window as any).resolveReactComponent = () => {
@@ -43,22 +43,14 @@ function ReactComponent(props: { fullName: string }) {
 };
 
 describe('ReactController', () => {
-    let container: any;
-
-    beforeEach(() => {
-        container = mountDOM(`
+    it('connect with props', async () => {
+        const container = mountDOM(`
           <div data-testid="component"
               data-controller="check react"
               data-react-component-value="ReactComponent"
               data-react-props-value="{&quot;fullName&quot;: &quot;Titouan Galopin&quot;}" />
         `);
-    });
 
-    afterEach(() => {
-        clearDOM();
-    });
-
-    it('connect', async () => {
         const component = getByTestId(container, 'component');
         expect(component).not.toHaveClass('connected');
         expect(component).not.toHaveClass('mounted');
@@ -67,5 +59,26 @@ describe('ReactController', () => {
         await waitFor(() => expect(component).toHaveClass('connected'));
         await waitFor(() => expect(component).toHaveClass('mounted'));
         await waitFor(() => expect(component.innerHTML).toEqual('<div>Hello Titouan Galopin</div>'));
+
+        clearDOM();
+    });
+
+    it('connect without props', async () => {
+        const container = mountDOM(`
+          <div data-testid="component" id="container-2"
+              data-controller="check react"
+              data-react-component-value="ReactComponent" />
+        `);
+
+        const component = getByTestId(container, 'component');
+        expect(component).not.toHaveClass('connected');
+        expect(component).not.toHaveClass('mounted');
+
+        startStimulus();
+        await waitFor(() => expect(component).toHaveClass('connected'));
+        await waitFor(() => expect(component).toHaveClass('mounted'));
+        await waitFor(() => expect(component.innerHTML).toEqual('<div>Hello without props</div>'));
+
+        clearDOM();
     });
 });

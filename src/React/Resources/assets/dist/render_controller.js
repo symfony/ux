@@ -7,6 +7,7 @@ var createRoot;
 var m = require$$0;
 if (process.env.NODE_ENV === 'production') {
   createRoot = m.createRoot;
+  m.hydrateRoot;
 } else {
   var i = m.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED;
   createRoot = function(c, o) {
@@ -21,23 +22,29 @@ if (process.env.NODE_ENV === 'production') {
 
 class default_1 extends Controller {
     connect() {
-        this._dispatchEvent('react:connect', { component: this.componentValue, props: this.propsValue });
+        const props = this.propsValue ? this.propsValue : null;
+        this._dispatchEvent('react:connect', { component: this.componentValue, props: props });
         const component = window.resolveReactComponent(this.componentValue);
-        this._renderReactElement(React.createElement(component, this.propsValue, null));
+        this._renderReactElement(React.createElement(component, props, null));
         this._dispatchEvent('react:mount', {
             componentName: this.componentValue,
             component: component,
-            props: this.propsValue,
+            props: props,
         });
     }
     disconnect() {
         this.element.root.unmount();
-        this._dispatchEvent('react:unmount', { component: this.componentValue, props: this.propsValue });
+        this._dispatchEvent('react:unmount', {
+            component: this.componentValue,
+            props: this.propsValue ? this.propsValue : null,
+        });
     }
     _renderReactElement(reactElement) {
-        const root = createRoot(this.element);
-        root.render(reactElement);
-        this.element.root = root;
+        const element = this.element;
+        if (!element.root) {
+            element.root = createRoot(this.element);
+        }
+        element.root.render(reactElement);
     }
     _dispatchEvent(name, payload) {
         this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));

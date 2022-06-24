@@ -15,7 +15,7 @@ import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     readonly componentValue: string;
-    readonly propsValue: object;
+    readonly propsValue?: object;
 
     static values = {
         component: String,
@@ -23,28 +23,37 @@ export default class extends Controller {
     };
 
     connect() {
-        this._dispatchEvent('react:connect', { component: this.componentValue, props: this.propsValue });
+        const props = this.propsValue ? this.propsValue : null;
+
+        this._dispatchEvent('react:connect', { component: this.componentValue, props: props });
 
         const component = window.resolveReactComponent(this.componentValue);
-        this._renderReactElement(React.createElement(component, this.propsValue, null));
+        this._renderReactElement(React.createElement(component, props, null));
 
         this._dispatchEvent('react:mount', {
             componentName: this.componentValue,
             component: component,
-            props: this.propsValue,
+            props: props,
         });
     }
 
     disconnect() {
         (this.element as any).root.unmount();
-        this._dispatchEvent('react:unmount', { component: this.componentValue, props: this.propsValue });
+        this._dispatchEvent('react:unmount', {
+            component: this.componentValue,
+            props: this.propsValue ? this.propsValue : null,
+        });
     }
 
     _renderReactElement(reactElement: ReactElement) {
-        const root = createRoot(this.element);
-        root.render(reactElement);
+        const element: any = this.element as any;
 
-        (this.element as any).root = root;
+        // If a root has already been created for this element, reuse it
+        if (!element.root) {
+            element.root = createRoot(this.element);
+        }
+
+        element.root.render(reactElement);
     }
 
     _dispatchEvent(name: string, payload: any) {
