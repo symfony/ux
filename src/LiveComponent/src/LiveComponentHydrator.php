@@ -34,6 +34,7 @@ final class LiveComponentHydrator
     private const CHECKSUM_KEY = '_checksum';
     private const EXPOSED_PROP_KEY = '_id';
     private const ATTRIBUTES_KEY = '_attributes';
+    public const FILES_KEY = '_files';
 
     public function __construct(
         private NormalizerInterface|DenormalizerInterface $normalizer,
@@ -200,7 +201,7 @@ final class LiveComponentHydrator
         }
 
         foreach (AsLiveComponent::postHydrateMethods($component) as $method) {
-            $component->{$method->name}();
+            $component->{$method->name}($data);
         }
 
         return new MountedComponent($componentName, $component, $attributes);

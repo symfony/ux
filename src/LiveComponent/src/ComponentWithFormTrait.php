@@ -16,6 +16,7 @@ use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
+use Symfony\UX\LiveComponent\Attribute\PostHydrate;
 use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\Util\LiveFormUtility;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
@@ -43,6 +44,11 @@ trait ComponentWithFormTrait
      */
     #[LiveProp(writable: true, fieldName: 'getFormName()')]
     public ?array $formValues = null;
+
+    /**
+     * Holds the raw submitted files.
+     */
+    protected array $uploadedFiles = [];
 
     /**
      * Tracks whether this entire component has been validated.
@@ -94,6 +100,14 @@ trait ComponentWithFormTrait
         return $data;
     }
 
+    #[PostHydrate]
+    public function extractFiles(array $data): void
+    {
+        if (isset($data[LiveComponentHydrator::FILES_KEY][$this->formName])) {
+            $this->uploadedFiles = $data[LiveComponentHydrator::FILES_KEY][$this->formName];
+        }
+    }
+
     /**
      * Make sure the form has been submitted.
      *
@@ -138,8 +152,14 @@ trait ComponentWithFormTrait
             throw new \LogicException('The submitForm() method is being called, but the FormView has already been built. Are you calling $this->getForm() - which creates the FormView - before submitting the form?');
         }
 
+        if (\is_array($this->formValues)) {
+            $data = array_replace_recursive($this->formValues, $this->uploadedFiles);
+        } else {
+            $data = $this->uploadedFiles;
+        }
+
         $form = $this->getFormInstance();
-        $form->submit($this->formValues);
+        $form->submit($data);
 
         if ($validateAll) {
             // mark the entire component as validated

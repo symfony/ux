@@ -143,6 +143,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             throw new NotFoundHttpException(sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveAction attribute above it.', $action, \get_class($component)));
         }
 
+        $data[LiveComponentHydrator::FILES_KEY] = $request->files->all();
+
         $mounted = $this->container->get(LiveComponentHydrator::class)->hydrate(
             $component,
             $data,
