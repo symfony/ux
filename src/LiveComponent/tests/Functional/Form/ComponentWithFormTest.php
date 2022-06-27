@@ -321,4 +321,14 @@ class ComponentWithFormTest extends KernelTestCase
             })
         ;
     }
+
+    public function testDataModelAttributeAutomaticallyAdded(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'));
+
+        $this->browser()
+            ->get('/_components/form_with_collection_type?data='.urlencode(json_encode($dehydrated)))
+            ->assertElementAttributeContains('form', 'data-model', 'on(change)|*')
+        ;
+    }
 }

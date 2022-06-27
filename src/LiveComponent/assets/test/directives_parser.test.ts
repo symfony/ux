@@ -1,7 +1,10 @@
-import { parseDirectives } from '../src/directives_parser';
+import {Directive, parseDirectives} from '../src/directives_parser';
 
-const assertDirectiveEquals = function(actual, expected) {
-    delete actual.getString;
+const assertDirectiveEquals = function(actual: Directive, expected: any) {
+    // normalize this so that it doesn't trip up the comparison
+    const getString = () => 'foo';
+    actual.getString = getString;
+    expected.getString = getString;
 
     expect(actual).toEqual(expected);
 }

@@ -1,6 +1,5 @@
 <div
     {{ attributes }}
-    data-action="change->live#update"
 >
     {% if isSuccessful %}
         <div>Welcome {{ newUserEmail}}!</div>
@@ -9,6 +8,7 @@
             novalidate
             data-action="live#action"
             data-action-name="prevent|saveRegistration"
+            data-model="on(change)|*"
         >
             {{ form_row(form.email) }}
             {{ form_row(form.password) }}

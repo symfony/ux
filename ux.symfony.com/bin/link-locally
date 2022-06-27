@@ -1,0 +1,33 @@
+#!/usr/bin/env php
+<?php
+
+use Symfony\Component\Finder\Finder;
+
+require __DIR__.'/../vendor/autoload.php';
+$composerData = json_decode(file_get_contents(__DIR__.'/../composer.json'), true);
+
+$finder = new Finder();
+$finder->in(__DIR__.'/../../src')
+    ->depth('== 0')
+    ->directories();
+
+$repositories = [];
+foreach ($finder as $packageDirectory) {
+    $repositories[] = [
+        'type' => 'path',
+        'url' => $packageDirectory->getRealPath()
+    ];
+}
+$composerData['repositories'] = $repositories;
+
+foreach ($composerData['require'] as $package => $version) {
+    if (!str_starts_with($package, 'symfony/ux-')) {
+        continue;
+    }
+
+    $composerData['require'][$package] = '2.x-dev';
+}
+
+file_put_contents(__DIR__.'/../composer.json', json_encode($composerData, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+echo "composer.json updatded to point to local UX packages\n";
+echo "Run 'composer update' then 'yarn install --force'\n";

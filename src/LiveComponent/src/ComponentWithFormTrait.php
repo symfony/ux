@@ -76,6 +76,7 @@ trait ComponentWithFormTrait
         // allow the FormView object to be passed into the component() as "form"
         if (\array_key_exists('form', $data)) {
             $this->formView = $data['form'];
+            $this->useNameAttributesAsModelName();
 
             unset($data['form']);
 
@@ -118,6 +119,7 @@ trait ComponentWithFormTrait
     {
         if (null === $this->formView) {
             $this->formView = $this->getFormInstance()->createView();
+            $this->useNameAttributesAsModelName();
         }
 
         return $this->formView;
@@ -175,6 +177,43 @@ trait ComponentWithFormTrait
         }
 
         return $this->formInstance;
+    }
+
+    /**
+     * Automatically adds data-model="*" to the form element.
+     *
+     * This makes it so that all fields will automatically become
+     * "models", using their "name" attribute.
+     *
+     * This is for convenience: it prevents you from needing to
+     * manually add data-model="" to every field. Effectively,
+     * having name="foo" becomes the equivalent to data-model="foo".
+     *
+     * To disable or change this behavior, override the
+     * the getDataModelValue() method.
+     */
+    private function useNameAttributesAsModelName(): void
+    {
+        $modelValue = $this->getDataModelValue();
+        $attributes = $this->getForm()->vars['attr'] ?: [];
+        if (null === $modelValue) {
+            unset($attributes['data-model']);
+        } else {
+            $attributes['data-model'] = $modelValue;
+        }
+
+        $this->getForm()->vars['attr'] = $attributes;
+    }
+
+    /**
+     * Controls the data-model="" value that will be rendered on the <form> tag.
+     *
+     * This default value will cause the component to re-render each time
+     * a field "changes". Override this in your controller to change the behavior.
+     */
+    private function getDataModelValue(): ?string
+    {
+        return 'on(change)|*';
     }
 
     /**

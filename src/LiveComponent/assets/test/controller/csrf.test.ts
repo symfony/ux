@@ -9,55 +9,35 @@
 
 'use strict';
 
-import { clearDOM } from '@symfony/stimulus-testing';
-import { initLiveComponent, startStimulus } from '../tools';
+import { createTest, initComponent, shutdownTest } from '../tools';
 import { getByText, waitFor } from '@testing-library/dom';
-import fetchMock from 'fetch-mock-jest';
 
 describe('LiveController CSRF Tests', () => {
-    const template = (data) => `
-        <div
-            ${initLiveComponent('/_components/my_component', data)}
-            data-live-csrf-value="123TOKEN"
-        >
-            <label>
-                Comments:
-                <input
-                    data-model="comments"
-                    data-action="live#update"
-                    value="${data.comments}"
-                >
-            </label>
-            
-            ${data.isSaved ? 'Comment Saved!' : ''}
-
-            <button
-                data-action="live#action"
-                data-action-name="save"
-            >Save</button>
-        </div>
-    `;
-
     afterEach(() => {
-        clearDOM();
-        if (!fetchMock.done()) {
-            throw new Error('Mocked requests did not match');
-        }
-        fetchMock.reset();
-    });
+        shutdownTest();
+    })
 
     it('Sends the CSRF token on an action', async () => {
-        const data = { comments: 'hi' };
-        const { element } = await startStimulus(template(data));
+        const test = await createTest({ isSaved: 0 }, (data: any) => `
+            <div ${initComponent(data, { csrf: '123TOKEN' })}>
+                ${data.isSaved ? 'Saved' : ''}
+                <button
+                    data-action="live#action"
+                    data-action-name="save"
+                >Save</button>
+            </div>
+        `);
 
-        const postMock = fetchMock.postOnce(
-            'http://localhost/_components/my_component/save',
-            template({ comments: 'hi', isSaved: true })
-        );
-        getByText(element, 'Save').click();
+        test.expectsAjaxCall('post')
+            .expectSentData(test.initialData)
+            .expectHeader('X-CSRF-TOKEN', '123TOKEN')
+            .serverWillChangeData((data: any) => {
+                data.isSaved = true;
+            })
+            .init();
 
-        await waitFor(() => expect(element).toHaveTextContent('Comment Saved!'));
+        getByText(test.element, 'Save').click();
 
-        expect(postMock.lastOptions().headers['X-CSRF-TOKEN']).toEqual('123TOKEN');
+        await waitFor(() => expect(test.element).toHaveTextContent('Saved'));
     });
 });

@@ -1,23 +1,34 @@
 import { Controller } from '@hotwired/stimulus';
 import morphdom from 'morphdom';
 import { parseDirectives, Directive } from './directives_parser';
-import { combineSpacedArray } from './string_utils';
-import { setDeepData, doesDeepPropertyExist, normalizeModelName, parseDeepData } from './set_deep_data';
+import { combineSpacedArray, normalizeModelName } from './string_utils';
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
-import { cloneHTMLElement } from './clone_html_element';
-import { updateArrayDataFromChangedElement } from "./update_array_data";
+import ValueStore from './ValueStore';
+import { elementBelongsToThisController, getModelDirectiveFromInput, getValueFromInput, cloneHTMLElement, htmlToElement, getElementAsTagText } from './dom_utils';
+import UnsyncedInputContainer from './UnsyncedInputContainer';
 
 interface ElementLoadingDirectives {
     element: HTMLElement|SVGElement,
     directives: Directive[]
 }
 
+interface UpdateModelOptions {
+    dispatch?: boolean;
+    debounce?: number|null;
+}
+
 declare const Turbo: any;
 
 const DEFAULT_DEBOUNCE = 150;
 
-export default class extends Controller {
+export interface LiveController {
+    dataValue: any;
+    element: Element,
+    childComponentControllers: Array<LiveController>
+}
+
+export default class extends Controller implements LiveController {
     static values = {
         url: String,
         data: Object,
@@ -34,6 +45,9 @@ export default class extends Controller {
     dataValue!: any;
     readonly csrfValue!: string;
     readonly debounceValue!: number;
+    readonly hasDebounceValue: boolean;
+
+    valueStore!: ValueStore;
 
     /**
      * The current "timeout" that's waiting before a model update
@@ -62,9 +76,25 @@ export default class extends Controller {
 
     mutationObserver: MutationObserver|null = null;
 
+    /**
+     * Input fields that have "changed", but whose model value hasn't been set yet.
+     */
+    unsyncedInputs!: UnsyncedInputContainer;
+
+    childComponentControllers: Array<LiveController> = [];
+
+    pendingActionTriggerModelElement: HTMLElement|null = null;
+
     initialize() {
         this.markAsWindowUnloaded = this.markAsWindowUnloaded.bind(this);
-        this.originalDataJSON = JSON.stringify(this.dataValue);
+        this.handleUpdateModelEvent = this.handleUpdateModelEvent.bind(this);
+        this.handleInputEvent = this.handleInputEvent.bind(this);
+        this.handleChangeEvent = this.handleChangeEvent.bind(this);
+        this.handleConnectedControllerEvent = this.handleConnectedControllerEvent.bind(this);
+        this.handleDisconnectedControllerEvent = this.handleDisconnectedControllerEvent.bind(this);
+        this.valueStore = new ValueStore(this);
+        this.originalDataJSON = this.valueStore.asJson();
+        this.unsyncedInputs = new UnsyncedInputContainer();
         this._exposeOriginalData();
     }
 
@@ -83,19 +113,13 @@ export default class extends Controller {
         }
 
         window.addEventListener('beforeunload', this.markAsWindowUnloaded);
-
         this._startAttributesMutationObserver();
+        this.element.addEventListener('live:update-model', this.handleUpdateModelEvent);
+        this.element.addEventListener('input', this.handleInputEvent);
+        this.element.addEventListener('change', this.handleChangeEvent);
+        this.element.addEventListener('live:connect', this.handleConnectedControllerEvent);
 
-        this.element.addEventListener('live:update-model', (event) => {
-            // ignore events that we dispatched
-            if (event.target === this.element) {
-                return;
-            }
-
-            this._handleChildComponentUpdateModel(event);
-        });
-
-        this._dispatchEvent('live:connect');
+        this._dispatchEvent('live:connect', { controller: this });
     }
 
     disconnect() {
@@ -104,6 +128,13 @@ export default class extends Controller {
         });
 
         window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
+        this.element.removeEventListener('live:update-model', this.handleUpdateModelEvent);
+        this.element.removeEventListener('input', this.handleInputEvent);
+        this.element.removeEventListener('change', this.handleChangeEvent);
+        this.element.removeEventListener('live:connect', this.handleConnectedControllerEvent);
+        this.element.removeEventListener('live:disconnect', this.handleDisconnectedControllerEvent);
+
+        this._dispatchEvent('live:disconnect', { controller: this });
 
         if (this.mutationObserver) {
             this.mutationObserver.disconnect();
@@ -111,14 +142,16 @@ export default class extends Controller {
     }
 
     /**
-     * Called to update one piece of the model
+     * Called to update one piece of the model.
+     *
+     *      <button data-action="live#update" data-model="foo" data-value="5">
      */
     update(event: any) {
-        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), true);
-    }
+        if (event.type === 'input' || event.type === 'change') {
+            throw new Error(`Since LiveComponents 2.3, you no longer need data-action="live#update" on form elements. Found on element: ${getElementAsTagText(event.target)}`);
+        }
 
-    updateDefer(event: any) {
-        this._updateModelFromElement(event.target, this._getValueFromElement(event.target), false);
+        this._updateModelFromElement(event.target, null);
     }
 
     action(event: any) {
@@ -162,7 +195,7 @@ export default class extends Controller {
                         }
                         break;
                     case 'debounce': {
-                        const length: number = modifier.value ? parseInt(modifier.value) : DEFAULT_DEBOUNCE;
+                        const length: number = modifier.value ? parseInt(modifier.value) : this.getDefaultDebounce();
 
                         // clear any pending renders
                         if (this.actionDebounceTimeout) {
@@ -186,6 +219,20 @@ export default class extends Controller {
             });
 
             if (!handled) {
+                // possible case where this element is also a "model" element
+                // if so, to be safe, slightly delay the action so that the
+                // change/input listener on LiveController can process the
+                // model change *before* sending the action
+                if (getModelDirectiveFromInput(event.currentTarget, false)) {
+                    this.pendingActionTriggerModelElement = event.currentTarget;
+                    window.setTimeout(() => {
+                        this.pendingActionTriggerModelElement = null;
+                        _executeAction();
+                    }, 10);
+
+                    return;
+                }
+
                 _executeAction();
             }
         })
@@ -195,42 +242,100 @@ export default class extends Controller {
         this._makeRequest(null, {});
     }
 
-    _getValueFromElement(element: HTMLElement|SVGElement) {
-        return element.dataset.value || (element as any).value;
-    }
+    /**
+     * @param element
+     * @param eventName If specified (e.g. "input" or "change"), the model may
+     *                  skip updating if the on() modifier is passed (e.g. on(change)).
+     *                  If not passed, the model will always be updated.
+     */
+    _updateModelFromElement(element: Element, eventName: string|null) {
+        if (!elementBelongsToThisController(element, this)) {
+            return;
+        }
 
-    _updateModelFromElement(element: Element, value: string|null, shouldRender: boolean) {
         if (!(element instanceof HTMLElement)) {
             throw new Error('Could not update model for non HTMLElement');
         }
-        const model = element.dataset.model || element.getAttribute('name');
 
-        if (!model) {
-            const clonedElement = cloneHTMLElement(element);
-
-            throw new Error(`The update() method could not be called for "${clonedElement.outerHTML}": the element must either have a "data-model" or "name" attribute set to the model name.`);
+        const modelDirective = getModelDirectiveFromInput(element, false);
+        if (eventName === 'input') {
+            const modelName = modelDirective ? modelDirective.action : null;
+            // notify existing promises of the new modified input
+            this.renderPromiseStack.addModifiedElement(element, modelName);
+            // track any inputs that are "unsynced"
+            this.unsyncedInputs.add(element, modelName);
         }
 
-        // HTML form elements with name ending with [] require array as data
-        // we need to handle addition and removal of values from it to send
-        // back only required data
-        let finalValue : string|null|string[] = value
-        if (/\[]$/.test(model)) {
-            // Get current value from data
-            const { currentLevelData, finalKey } = parseDeepData(this.dataValue, normalizeModelName(model))
-            const currentValue = currentLevelData[finalKey];
-
-            finalValue = updateArrayDataFromChangedElement(element, value, currentValue);
-        } else if (
-            element instanceof HTMLInputElement
-            && element.type === 'checkbox'
-            && !element.checked
-        ) {
-            // Unchecked checkboxes in a single value scenarios should map to `null`
-            finalValue = null;
+        // if not tied to a model, no more work to be done
+        if (!modelDirective) {
+            return;
         }
 
-        this.$updateModel(model, finalValue, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {});
+        let shouldRender = true;
+        let targetEventName = 'input';
+        let debounce: number|null = null;
+
+        modelDirective.modifiers.forEach((modifier) => {
+            switch (modifier.name) {
+                case 'on':
+                    if (!modifier.value) {
+                        throw new Error(`The "on" modifier in ${modelDirective.getString()} requires a value - e.g. on(change).`);
+                    }
+                    if (!['input', 'change'].includes(modifier.value)) {
+                        throw new Error(`The "on" modifier in ${modelDirective.getString()} only accepts the arguments "input" or "change".`);
+                    }
+
+                    targetEventName = modifier.value;
+
+                    break;
+                case 'norender':
+                    shouldRender = false;
+
+                    break;
+
+                case 'debounce':
+                    debounce = modifier.value ? parseInt(modifier.value) : this.getDefaultDebounce();
+
+                    break;
+                default:
+                    console.warn(`Unknown modifier "${modifier.name}" in data-model="${modelDirective.getString()}".`);
+            }
+        });
+
+        // rare case where the same event+element triggers a model
+        // update *and* an action. The action is already scheduled
+        // to occur, so we do not need to *also* trigger a re-render.
+        if (this.pendingActionTriggerModelElement === element) {
+            shouldRender = false;
+        }
+
+        // e.g. we are targeting "change" and this is the "input" event
+        // so do *not* update the model yet
+        if (eventName && targetEventName !== eventName) {
+            return;
+        }
+
+        if (null === debounce) {
+            if (targetEventName === 'input') {
+                // for the input event, add a debounce by default
+                debounce = this.getDefaultDebounce();
+            } else {
+                // for change, add no debounce
+                debounce = 0;
+            }
+        }
+
+        const finalValue = getValueFromInput(element, this.valueStore);
+
+        this.$updateModel(
+            modelDirective.action,
+            finalValue,
+            shouldRender,
+            element.hasAttribute('name') ? element.getAttribute('name') : null,
+            {
+                debounce
+            }
+        );
     }
 
     /**
@@ -244,36 +349,25 @@ export default class extends Controller {
      *
      *      <input data-model="foo" name="bar">
      *
-     * @param {string} model The model update, which could include modifiers
+     * @param {string} model The model to update
      * @param {any} value The new value
      * @param {boolean} shouldRender Whether a re-render should be triggered
      * @param {string|null} extraModelName Another model name that this might go by in a parent component.
-     * @param {Object} options Options include: {bool} dispatch
+     * @param {UpdateModelOptions} options
      */
-    $updateModel(model: string, value: any, shouldRender = true, extraModelName: string | null = null, options: any = {}) {
-        const directives = parseDirectives(model);
-        if (directives.length > 1) {
-            throw new Error(`The data-model="${model}" format is invalid: it does not support multiple directives (i.e. remove any spaces).`);
-        }
-
-        const directive = directives[0];
-
-        if (directive.args.length > 0 || directive.named.length > 0) {
-            throw new Error(`The data-model="${model}" format is invalid: it does not support passing arguments to the model.`);
-        }
-
-        const modelName = normalizeModelName(directive.action);
+    $updateModel(model: string, value: any, shouldRender = true, extraModelName: string | null = null, options: UpdateModelOptions = {}) {
+        const modelName = normalizeModelName(model);
         const normalizedExtraModelName = extraModelName ? normalizeModelName(extraModelName) : null;
 
         // if there is a "validatedFields" data, it means this component wants
         // to track which fields have been / should be validated.
         // in that case, when the model is updated, mark that it should be validated
-        if (this.dataValue.validatedFields !== undefined) {
-            const validatedFields = [...this.dataValue.validatedFields];
+        if (this.valueStore.has('validatedFields')) {
+            const validatedFields = [...this.valueStore.get('validatedFields')];
             if (validatedFields.indexOf(modelName) === -1) {
                 validatedFields.push(modelName);
             }
-            this.dataValue = setDeepData(this.dataValue, 'validatedFields', validatedFields);
+            this.valueStore.set('validatedFields', validatedFields);
         }
 
         if (options.dispatch !== false) {
@@ -294,27 +388,28 @@ export default class extends Controller {
         // that is fine: the server sees the "4" and uses it for the post data.
         // However, there is an edge case where the user changes data-model="post"
         // and then, for some reason, they don't want an immediate re-render.
-        // Then, then modify the data-model="post.title" field. In theory,
+        // Then, they modify the data-model="post.title" field. In theory,
         // we should be smart enough to convert the post data - which is now
         // the string "4" - back into an array with [id=4, title=new_title].
-        this.dataValue = setDeepData(this.dataValue, modelName, value);
+        this.valueStore.set(modelName, value);
 
-        directive.modifiers.forEach((modifier => {
-            switch (modifier.name) {
-                // there are currently no data-model modifiers
-                default:
-                    throw new Error(`Unknown modifier ${modifier.name} used in data-model="${model}"`)
-            }
-        }));
+        // now that this value is set, remove it from unsyncedInputs
+        // any Ajax request that starts from this moment WILL include this
+        this.unsyncedInputs.remove(modelName);
 
         if (shouldRender) {
             // clear any pending renders
             this._clearWaitingDebouncedRenders();
 
+            let debounce: number = this.getDefaultDebounce();
+            if (options.debounce !== undefined && options.debounce !== null) {
+                debounce = options.debounce;
+            }
+
             this.renderDebounceTimeout = window.setTimeout(() => {
                 this.renderDebounceTimeout = null;
                 this.$render();
-            }, this.debounceValue || DEFAULT_DEBOUNCE);
+            }, debounce);
         }
     }
 
@@ -343,7 +438,7 @@ export default class extends Controller {
 
         let dataAdded = false;
         if (!action) {
-            const dataJson = JSON.stringify(this.dataValue);
+            const dataJson = this.valueStore.asJson();
             if (this._willDataFitInUrl(dataJson, params)) {
                 params.set('data', dataJson);
                 fetchOptions.method = 'GET';
@@ -354,14 +449,15 @@ export default class extends Controller {
         // if GET can't be used, fallback to POST
         if (!dataAdded) {
             fetchOptions.method = 'POST';
-            fetchOptions.body = JSON.stringify(this.dataValue);
+            fetchOptions.body = this.valueStore.asJson();
             fetchOptions.headers['Content-Type'] = 'application/json';
         }
 
         this._onLoadingStart();
         const paramsString = params.toString();
         const thisPromise = fetch(`${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`, fetchOptions);
-        this.renderPromiseStack.addPromise(thisPromise);
+        const reRenderPromise = new ReRenderPromise(thisPromise, this.unsyncedInputs.clone());
+        this.renderPromiseStack.addPromise(reRenderPromise);
         thisPromise.then((response) => {
             // if another re-render is scheduled, do not "run it over"
             if (this.renderDebounceTimeout) {
@@ -371,7 +467,7 @@ export default class extends Controller {
             const isMostRecent = this.renderPromiseStack.removePromise(thisPromise);
             if (isMostRecent) {
                 response.text().then((html) => {
-                    this._processRerender(html, response);
+                    this._processRerender(html, response, reRenderPromise.unsyncedInputContainer);
                 });
             }
         })
@@ -382,7 +478,7 @@ export default class extends Controller {
      *
      * @private
      */
-    _processRerender(html: string, response: Response) {
+    _processRerender(html: string, response: Response, unsyncedInputContainer: UnsyncedInputContainer) {
         // check if the page is navigating away
         if (this.isWindowUnloaded) {
             return;
@@ -409,8 +505,25 @@ export default class extends Controller {
         // elements to appear different unnecessarily
         this._onLoadingFinish();
 
+        /**
+         * If this re-render contains "mapped" fields that were updated after
+         * the Ajax call started, then we need those "unsynced" values to
+         * take precedence over the (out-of-date) values returned by the server.
+         */
+        const modifiedModelValues: any = {};
+        if (unsyncedInputContainer.allMappedFields().size > 0) {
+            for (const [modelName] of unsyncedInputContainer.allMappedFields()) {
+                modifiedModelValues[modelName] = this.valueStore.get(modelName);
+            }
+        }
+
         // merge/patch in the new HTML
-        this._executeMorphdom(html);
+        this._executeMorphdom(html, unsyncedInputContainer.all());
+
+        // reset the modified values back to their client-side version
+        Object.keys(modifiedModelValues).forEach((modelName) => {
+            this.valueStore.set(modelName, modifiedModelValues[modelName]);
+        });
     }
 
     _clearWaitingDebouncedRenders() {
@@ -508,7 +621,7 @@ export default class extends Controller {
         }));
 
         // execute the loading directive
-        if(!isHandled) {
+        if (!isHandled) {
             loadingDirective();
         }
     }
@@ -573,25 +686,16 @@ export default class extends Controller {
         return (urlEncodedJsonData + params.toString()).length < 1500;
     }
 
-    _executeMorphdom(newHtml: string) {
-        // https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro#answer-35385518
-        function htmlToElement(html: string): Node {
-            const template = document.createElement('template');
-            html = html.trim();
-            template.innerHTML = html;
-
-            const child = template.content.firstChild;
-            if (!child) {
-                throw new Error('Child not found');
-            }
-
-            return child;
-        }
-
+    _executeMorphdom(newHtml: string, modifiedElements: Array<HTMLElement>) {
         const newElement = htmlToElement(newHtml);
         morphdom(this.element, newElement, {
             onBeforeElUpdated: (fromEl, toEl) => {
                 if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
+                    return false;
+                }
+
+                // if this field has been modified since this HTML was requested, do not update it
+                if (modifiedElements.includes(fromEl)) {
                     return false;
                 }
 
@@ -636,6 +740,59 @@ export default class extends Controller {
     markAsWindowUnloaded = () => {
         this.isWindowUnloaded = true;
     };
+
+    handleConnectedControllerEvent(event: any) {
+        if (event.target === this.element) {
+            return;
+        }
+
+        this.childComponentControllers.push(event.detail.controller);
+        // live:disconnect needs to be registered on the child element directly
+        // that's because if the child component is removed from the DOM, then
+        // the parent controller is no longer an ancestor, so the live:disconnect
+        // event would not bubble up to it.
+        event.detail.controller.element.addEventListener('live:disconnect', this.handleDisconnectedControllerEvent);
+    }
+
+    handleDisconnectedControllerEvent(event: any) {
+        if (event.target === this.element) {
+            return;
+        }
+
+        const index = this.childComponentControllers.indexOf(event.detail.controller);
+
+        // Remove value from an array
+        if (index > -1) {
+            this.childComponentControllers.splice(index, 1);
+        }
+    }
+
+    handleUpdateModelEvent(event: any) {
+        // ignore events that we dispatched
+        if (event.target === this.element) {
+            return;
+        }
+
+        this._handleChildComponentUpdateModel(event);
+    }
+
+    handleInputEvent(event: Event) {
+        const target = event.target as Element;
+        if (!target) {
+            return;
+        }
+
+        this._updateModelFromElement(target, 'input')
+    }
+
+    handleChangeEvent(event: Event) {
+        const target = event.target as Element;
+        if (!target) {
+            return;
+        }
+
+        this._updateModelFromElement(target, 'change')
+    }
 
     _initiatePolling(rawPollConfig: string) {
         const directives = parseDirectives(rawPollConfig || '$render');
@@ -687,7 +844,7 @@ export default class extends Controller {
         return this.element.dispatchEvent(new CustomEvent(name, {
             bubbles: canBubble,
             cancelable,
-            detail: payload,
+            detail: payload
         }));
     }
 
@@ -695,8 +852,10 @@ export default class extends Controller {
         const mainModelName = event.detail.modelName;
         const potentialModelNames = [
             { name: mainModelName, required: false },
-            { name: event.detail.extraModelName, required: false },
-        ]
+        ];
+        if (event.detail.extraModelName) {
+            potentialModelNames.push({ name: event.detail.extraModelName, required: false });
+        }
 
         const modelMapElement = event.target.closest('[data-model-map]');
         if (this.element.contains(modelMapElement)) {
@@ -738,7 +897,7 @@ export default class extends Controller {
                 return;
             }
 
-            if (doesDeepPropertyExist(this.dataValue, potentialModel.name)) {
+            if (this.valueStore.hasAtTopLevel(potentialModel.name)) {
                 foundModelName = potentialModel.name;
 
                 return;
@@ -765,7 +924,7 @@ export default class extends Controller {
     }
 
     /**
-     * Determines of a child live element should be re-rendered.
+     * Determines if a child live element should be re-rendered.
      *
      * This is called when this element re-renders and detects that
      * a child element is inside. Normally, in that case, we do not
@@ -813,10 +972,15 @@ export default class extends Controller {
      * is missing and never re-established.
      */
     _startAttributesMutationObserver() {
+        if (!(this.element instanceof HTMLElement)) {
+            throw new Error('Invalid Element Type');
+        }
+        const element : HTMLElement = this.element;
+
         this.mutationObserver = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                if (mutation.type === 'attributes' && !this.element.dataset.originalData) {
-                    this.originalDataJSON = JSON.stringify(this.dataValue);
+                if (mutation.type === 'attributes' && !element.dataset.originalData) {
+                    this.originalDataJSON = this.valueStore.asJson();
                     this._exposeOriginalData();
                 }
             });
@@ -826,23 +990,27 @@ export default class extends Controller {
             attributes: true
         });
     }
+
+    private getDefaultDebounce(): number {
+        return this.hasDebounceValue ? this.debounceValue : DEFAULT_DEBOUNCE;
+    }
 }
 
 /**
  * Tracks the current "re-render" promises.
  */
 class PromiseStack {
-    stack: Promise<any>[] = [];
+    stack: Array<ReRenderPromise> = [];
 
-    addPromise(promise: Promise<any>) {
-        this.stack.push(promise);
+    addPromise(reRenderPromise: ReRenderPromise) {
+        this.stack.push(reRenderPromise);
     }
 
     /**
      * Removes the promise AND returns `true` if it is the most recent.
      */
     removePromise(promise: Promise<any>): boolean {
-        const index = this.findPromiseIndex(promise);
+        const index = this.#findPromiseIndex(promise);
 
         // promise was not found - it was removed because a new Promise
         // already resolved before it
@@ -859,12 +1027,32 @@ class PromiseStack {
         return isMostRecent;
     }
 
-    findPromiseIndex(promise: Promise<any>) {
-        return this.stack.findIndex((item) => item === promise);
+    #findPromiseIndex(promise: Promise<any>) {
+        return this.stack.findIndex((item) => item.promise === promise);
     }
 
     countActivePromises(): number {
         return this.stack.length;
+    }
+
+    addModifiedElement(element: HTMLElement, modelName: string|null = null): void {
+        this.stack.forEach((reRenderPromise) => {
+            reRenderPromise.addModifiedElement(element, modelName);
+        });
+    }
+}
+
+class ReRenderPromise {
+    promise: Promise<any>;
+    unsyncedInputContainer: UnsyncedInputContainer;
+
+    constructor(promise: Promise<any>, unsyncedInputContainer: UnsyncedInputContainer) {
+        this.promise = promise;
+        this.unsyncedInputContainer = unsyncedInputContainer;
+    }
+
+    addModifiedElement(element: HTMLElement, modelName: string|null = null): void {
+        this.unsyncedInputContainer.add(element, modelName);
     }
 }
 
