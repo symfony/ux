@@ -16,12 +16,14 @@ A real-time product search component might look like this::
 
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
+    use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
     #[AsLiveComponent('product_search')]
     class ProductSearchComponent
     {
         use DefaultActionTrait;
 
+        #[LiveProp(true)]
         public string $query = '';
 
         private ProductRepository $productRepository;
