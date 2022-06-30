@@ -23,7 +23,7 @@ A real-time product search component might look like this::
     {
         use DefaultActionTrait;
 
-        #[LiveProp(true)]
+        #[LiveProp(writable: true)]
         public string $query = '';
 
         private ProductRepository $productRepository;
