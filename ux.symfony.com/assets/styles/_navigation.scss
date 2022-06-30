@@ -1,0 +1,18 @@
+.nav-tabs {
+    border-bottom: 1px solid $n-900;
+}
+
+.nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+    color: #fff;
+    background-color: $n-800;
+    border-color: $n-800;
+}
+
+.nav-link {
+    color: #fff;
+}
+
+.nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
+    border-color: $n-800;
+    color: $n-100;
+}
