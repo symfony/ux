@@ -1,0 +1,24 @@
+{
+    "name": "@symfony/ux-collection",
+    "description": "Support for collection embedding with Symfony Form",
+    "license": "MIT",
+    "main": "dist/controller.js",
+    "module": "dist/controller.js",
+    "version": "1.0.0",
+    "symfony": {
+        "controllers": {
+            "collection": {
+                "main": "dist/controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    }
+}
