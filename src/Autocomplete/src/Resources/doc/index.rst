@@ -483,7 +483,7 @@ a :ref:`custom autocompleter <custom-autocompleter>`:
     Once you have this, generate the URL to your controller and
     pass it to the ``url`` value of the ``stimulus_controller()`` Twig
     function, or to the ``autocomplete_url`` option of your form field.
-    The search term entered by the user is passed a query parameter:
+    The search term entered by the user is passed as a query parameter called ``query``.
     ``query``
 
 Beyond ``url``, the Stimulus controller has various other values,
