@@ -447,7 +447,7 @@ outside of the Form component. For example:
 
     <select
         name="food"
-        {{ stimulus_controller('symfony/ux-autocomplete/autocomplete')
+        {{ stimulus_controller('symfony/ux-autocomplete/autocomplete') }}
     >
 
 That's it! If you want the options to be autocompleted via
@@ -460,7 +460,7 @@ a :ref:`custom autocompleter <custom-autocompleter>`:
         name="food"
         {{ stimulus_controller('symfony/ux-autocomplete/autocomplete', {
             url: path('ux_entity_autocomplete', { alias: 'food' })
-        })
+        }) }}
     >
 
 .. _custom-autocomplete-endpoint:
