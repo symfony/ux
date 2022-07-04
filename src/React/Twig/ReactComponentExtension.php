@@ -40,9 +40,11 @@ class ReactComponentExtension extends AbstractExtension
 
     public function renderReactComponent(Environment $env, string $componentName, array $props = []): string
     {
-        return $this->stimulusExtension->renderStimulusController($env, '@symfony/ux-react/react', [
-            'component' => $componentName,
-            'props' => $props,
-        ]);
+        $params = ['component' => $componentName];
+        if ($props) {
+            $params['props'] = $props;
+        }
+
+        return $this->stimulusExtension->renderStimulusController($env, '@symfony/ux-react/react', $params);
     }
 }

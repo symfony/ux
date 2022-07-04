@@ -41,4 +41,20 @@ class ReactComponentExtensionTest extends TestCase
             $rendered
         );
     }
+
+    public function testRenderComponentWithoutProps()
+    {
+        $kernel = new TwigAppKernel('test', true);
+        $kernel->boot();
+
+        /** @var ReactComponentExtension $extension */
+        $extension = $kernel->getContainer()->get('test.twig.extension.react');
+
+        $rendered = $extension->renderReactComponent($kernel->getContainer()->get('test.twig'), 'SubDir/MyComponent');
+
+        $this->assertSame(
+            'data-controller="symfony--ux-react--react" data-symfony--ux-react--react-component-value="SubDir&#x2F;MyComponent"',
+            $rendered
+        );
+    }
 }

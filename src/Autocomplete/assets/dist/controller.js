@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import TomSelect from 'tom-select';
 
-/*! *****************************************************************************
+/******************************************************************************
 Copyright (c) Microsoft Corporation.
 
 Permission to use, copy, modify, and/or distribute this software for any
@@ -41,6 +41,9 @@ class default_1 extends Controller {
             return;
         }
         this.tomSelect = __classPrivateFieldGet(this, _instances, "m", _createAutocomplete).call(this);
+    }
+    disconnect() {
+        this.tomSelect.destroy();
     }
     get selectElement() {
         if (!(this.element instanceof HTMLSelectElement)) {
