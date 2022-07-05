@@ -10,6 +10,7 @@ import './bootstrap';
 // imported to initialize global plugins
 import Dropdown from 'bootstrap/js/dist/dropdown';
 import Collapse from 'bootstrap/js/dist/collapse';
+import Tab from 'bootstrap/js/dist/tab';
 
 // initialize symfony/ux-react
 registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));

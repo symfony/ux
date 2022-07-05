@@ -16,6 +16,7 @@
     {% endfor %}
 
     <div class="container-fluid container-xxl px-5 pt-5">
+        {% block code_block_full %}
         <div class="arrow mb-3 d-none d-md-block"></div>
 
         <div class="row mb-5">
@@ -26,6 +27,7 @@
                 {% block code_block_right %}{% endblock %}
             </div>
         </div>
+        {% endblock %}
 
         <div class="p-4 markdown-container rainbow-gradient mt-5" id="demo" style="position: relative;">
                 <div class="arrow-2 mb-3 d-sm-block" style="position:absolute; top:-55px; right: -25px;"></div>

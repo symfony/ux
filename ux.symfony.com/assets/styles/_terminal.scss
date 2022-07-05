@@ -8,7 +8,7 @@
 .terminal-code {
     background-color: $n-900;
     border-radius: 12px;
-    padding: 10px 0px 0px 0px;
+    padding: 0px;
     color: #fff;
     font-size: 12px;
 }
@@ -53,6 +53,11 @@
 }
 .terminal-code.terminal-code-no-filename .terminal-body {
     border-radius: 12px;
+}
+/* for tabbed terminal blocks */
+.terminal-code .terminal-code.terminal-code-no-filename .terminal-body {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
 }
 .homepage-terminal-swapper pre {
     margin-bottom: 0;
