@@ -75,8 +75,8 @@ export function getModelDirectiveFromInput(element: HTMLElement, throwOnMissing 
         const formElement = element.closest('form');
         // require a <form data-model="*"> around elements in order to
         // activate automatic "data binding" via the "name" attribute
-        if (formElement && formElement.dataset.model) {
-            const directives = parseDirectives(formElement.dataset.model);
+        if (formElement && ('model' in formElement.dataset)) {
+            const directives = parseDirectives(formElement.dataset.model || '*');
             const directive = directives[0];
 
             if (directive.args.length > 0 || directive.named.length > 0) {

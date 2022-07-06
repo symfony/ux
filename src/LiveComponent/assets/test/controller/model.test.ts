@@ -179,7 +179,7 @@ describe('LiveController data-model Tests', () => {
     it('falls back to using the name attribute when no data-model is present and <form data-model> is ancestor', async () => {
         const test = await createTest({ color: '' }, (data: any) => `
             <div ${initComponent(data)}>
-                <form data-model="*">
+                <form data-model>
                     <input
                         name="color"
                         value="${data.color}"
