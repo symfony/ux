@@ -13,14 +13,14 @@ export function normalizeAttributesForComparison(element: HTMLElement): void {
     // uploaded, we do NOT want to add a value="" attribute because
     // this would cause the input to re-render (without the attached file)
     if (!isFileInput) {
-        if (element.value) {
-            element.setAttribute('value', element.value);
+        if ('value' in element) {
+            element.setAttribute('value', (element as HTMLInputElement).value);
         } else if (element.hasAttribute('value')) {
             element.setAttribute('value', '');
         }
     }
 
-    Array.from(element.children).forEach((child: HTMLElement) => {
-        normalizeAttributesForComparison(child);
+    Array.from(element.children).forEach((child: Element) => {
+        normalizeAttributesForComparison(child as HTMLElement);
     });
 }

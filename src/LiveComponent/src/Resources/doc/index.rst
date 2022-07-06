@@ -26,11 +26,8 @@ A real-time product search component might look like this::
         #[LiveProp(writable: true)]
         public string $query = '';
 
-        private ProductRepository $productRepository;
-
-        public function __construct(ProductRepository $productRepository)
+        public function __construct(private ProductRepository $productRepository)
         {
-            $this->productRepository = $productRepository;
         }
 
         public function getProducts(): array
@@ -46,9 +43,8 @@ A real-time product search component might look like this::
     <div {{ attributes }}>
         <input
             type="search"
-            name="query"
+            data-name="query"
             value="{{ query }}"
-            data-action="live#update"
         >
 
         <ul>
@@ -71,7 +67,7 @@ A real-time product search component might look like this::
 As a user types into the box, the component will automatically re-render
 and show the new results!
 
-Want a demo? Check out https://github.com/weaverryan/live-demo.
+Want a demo? Check out https://ux.symfony.com/live-component#demo
 
 Installation
 ------------
@@ -147,7 +143,7 @@ re-rendered live on the frontend), replace the component's
       }
 
 Then, in the template, make sure there is *one* HTML element around your
-entire component and use the ``{{ attributes }}`` variable to initialize
+entire component and use the `attributes variable`_ to initialize
 the Stimulus controller:
 
 .. code-block:: diff
@@ -180,8 +176,7 @@ let's keep going because… things get cooler.
 LiveProps: Stateful Component Properties
 ----------------------------------------
 
-Let's make our component more flexible by adding ``$min`` and ``$max``
-properties::
+Let's make our component more flexible by adding a ``$max`` property::
 
     // src/Components/RandomNumberComponent.php
     namespace App\Components;
@@ -193,71 +188,50 @@ properties::
     class RandomNumberComponent
     {
         #[LiveProp]
-        public int $min = 0;
-
-        #[LiveProp]
         public int $max = 1000;
 
         public function getRandomNumber(): int
         {
-            return rand($this->min, $this->max);
+            return rand(0, $this->max);
         }
 
         // ...
     }
 
-With this change, we can control the ``$min`` and ``$max`` properties
-when rendering the component:
+With this change, we can control the ``$max`` property when rendering
+the component:
 
 .. code-block:: twig
 
-    {{ component('random_number', { min: 5, max: 500 }) }}
+    {{ component('random_number', { max: 500 }) }}
 
-But what's up with those ``LiveProp`` attributes? A property with the
+But what's up with tha ``LiveProp`` attribute? A property with the
 ``LiveProp`` attribute becomes a "stateful" property for this component.
 In other words, each time we click the "Generate a new number!" button,
 when the component re-renders, it will *remember* the original values
-for the ``$min`` and ``$max`` properties and generate a random number
-between 5 and 500. If you forgot to add ``LiveProp``, when the component
-re-rendered, those two values would *not* be set on the object.
+for the ``$max`` property and generate a random number between 0 and 500.
+If you forgot to add ``LiveProp``, when the component re-rendered,
+those two values would *not* be set on the object.
 
 In short: LiveProps are "stateful properties": they will always be set
 when rendering. Most properties will be LiveProps, with common
 exceptions being properties that hold services (these don't need to be
 stateful because they will be autowired each time before the component
-is rendered) and `properties used for computed properties`_.
+is rendered).
 
-Component Attributes
---------------------
+Data Binding
+------------
 
-.. versionadded:: 2.1
+One of the best parts of frontend frameworks like React or Vue is
+"data binding". If you're not familiar, this is where you "bind"
+the value of some HTML element (e.g. an ``<input>``) with a property
+on your component object.
 
-    Component attributes were added in TwigComponents 2.1.
-
-`Component attributes`_ allows you to render your components with extra
-props that are are converted to html attributes and made available in
-your component's template as an ``attributes`` variable. When used on
-live components, these props are persisted between renders.
-
-When rendering your component, you can pass html attributes as props and
-these will be added to ``attributes``:
-
-.. code-block:: twig
-
-    {{ component('random_number', { min: 5, max: 500, class: 'widget', style: 'color: black;' }) }}
-
-    {# renders as: #}
-    <div class="widget" style="color: black;" <!-- other live attributes -->>
-        <!-- ... -->
-
-data-action="live#update": Re-rendering on LiveProp Change
-----------------------------------------------------------
-
-Could we allow the user to *choose* the ``$min`` and ``$max`` values and
-automatically re-render the component when they do? Definitely! And
+For example, could we allow the user to *change* the ``$max``
+property and then re-render the component when they do? Definitely! And
 *that* is where live components really shine.
 
-Let's add two inputs to our template:
+Add an inputs to the template:
 
 .. code-block:: twig
 
@@ -265,27 +239,26 @@ Let's add two inputs to our template:
     <div {{ attributes }}>
         <input
             type="number"
-            value="{{ min }}"
-            data-model="min"
-            data-action="live#update"
-        >
-
-        <input
-            type="number"
             value="{{ max }}"
             data-model="max"
-            data-action="live#update"
         >
 
-        Generating a number between {{ min }} and {{ max }}
+        Generating a number between 9 and {{ max }}
         <strong>{{ this.randomNumber }}</strong>
     </div>
 
-Notice the ``data-action="live#update"`` on each ``input``. When the
-user types, live components reads the ``data-model`` attribute
-(e.g. ``min``) and re-renders the component using the *new* value for
-that field! Yes, as you type in a box, the component automatically
-updates to reflect the new number!
+The key is the ``data-model`` attribute. Thanks
+to that, when the user types, the ``$max`` property on
+the component will automatically update!
+
+.. versionadded:: 2.3
+
+    Before version 2.3, you also needed a ``data-action="live#update"``
+    attribute. That attribute should now be removed.
+
+How? Live components *listens* to the ``input`` event and
+sends an Ajax request to re-render the component with the
+new data!
 
 Well, actually, we're missing one step. By default, a ``LiveProp`` is
 "read only". For security purposes, a user cannot change the value of a
@@ -299,9 +272,7 @@ Well, actually, we're missing one step. By default, a ``LiveProp`` is
 
       class RandomNumberComponent
       {
-    -     #[LiveProp]
-    +     #[LiveProp(writable: true)]
-          public int $min = 0;
+          // ...
 
     -     #[LiveProp]
     +     #[LiveProp(writable: true)]
@@ -310,41 +281,40 @@ Well, actually, we're missing one step. By default, a ``LiveProp`` is
           // ...
       }
 
-Now it works: as you type into the ``min`` or ``max`` boxes, the
-component will re-render with a new random number between that range!
+Now it works: as you type into the ``max`` box, the
+component will re-render with a new random in that range.
 
 Debouncing
 ~~~~~~~~~~
 
-If the user types 5 characters really quickly into an ``input``, we
-don't want to send 5 Ajax requests. Fortunately, the ``live#update``
-method has built-in debouncing: it waits for a 150ms pause before
-sending an Ajax request to re-render. This is built in, so you don't
-need to think about it.
+If the user types 5 characters really quickly, we don't want
+to send 5 Ajax requests. Fortunately, live components adds
+automatic debouncing: it waits for a 150ms pause between
+typing before sending an Ajax request to re-render. This is
+built in, so you don't need to think about it. But, you can
+delay via the ``debounce`` modifier:
 
-Lazy Updating on "blur" or "change" of a Field
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block:: twig
+
+        <input
+            data-model="debounce(100)|max"
+            value="{{ max }}"
+        >
+
+Lazy Updating on "change" of a Field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Sometimes, you might want a field to re-render only after the user has
 changed an input *and* moved to another field. Browsers dispatch a
 ``change`` event in this situation. To re-render when this event
-happens, add it to the ``data-action`` call:
+happens, use the ``on(change)`` modifier:
 
-.. code-block:: diff
+.. code-block:: twig
 
-      <input
-          type="number"
-          value="{{ max }}"
-          data-model="max"
-    -     data-action="live#update"
-    +     data-action="change->live#update"
-      >
-
-The ``data-action="change->live#update"`` syntax is standard Stimulus
-syntax, which says:
-
-   When the "change" event occurs, call the ``update`` method on the
-   ``live`` controller.
+    <input
+        data-model="on(change)|max"
+        value="{{ max }}"
+    >
 
 .. _deferring-a-re-render-until-later:
 
@@ -353,46 +323,73 @@ Deferring a Re-Render Until Later
 
 Other times, you might want to update the internal value of a property,
 but wait until later to re-render the component (e.g. until a button is
-clicked). To do that, use the ``updateDefer`` method:
+clicked). To do that, use ``norender`` modifier:
 
 .. code-block:: diff
 
-      <input
-          type="number"
-          value="{{ max }}"
-          data-model="max"
-    -     data-action="live#update"
-    +     data-action="live#updateDefer"
-      >
+    <input
+        data-model="norender|max"
+        value="{{ max }}"
+    >
 
 Now, as you type, the ``max`` "model" will be updated in JavaScript, but
 it won't, yet, make an Ajax call to re-render the component. Whenever
 the next re-render *does* happen, the updated ``max`` value will be
 used.
 
+.. _name-attribute-model:
+
 Using name="" instead of data-model
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Instead of communicating the property name of a field via
-``data-model``, you can communicate it via the standard ``name``
-property. The following code works identically to the previous example:
+If you're building a form (:ref:`more on forms later <forms>`),
+instead of adding ``data-model`` to every field, you can instead
+rely on the ``name`` attribute.
+
+.. versionadded:: 2.3
+
+    The ``data-model`` attribute on the ``form`` is required since version 2.3.
+
+To activate this, you must add a ``data-model`` attribute to
+the ``<form>`` element:
 
 .. code-block:: diff
 
-      <div {{ attributes }}>
-          <input
-              type="number"
-              value="{{ min }}"
-    -         data-model="min"
-    +         name="min"
-              data-action="live#update"
-          >
+    <div {{ attributes }}>
+        <form data-model="*">
+            <input
+                name="max"
+                value="{{ max }}"
+            >
 
-          // ...
-      </div>
+            // ...
+        </form>
+    </div>
 
-If an element has *both* ``data-model`` and ``name`` attributes, the
-``data-model`` attribute takes precedence.
+The ``*`` value of ``data-model`` is not necessary, but is
+commonly used. You can also use the normal modifiers, like
+``data-model="on(change)|*"`` to, for example, only send
+model updates for the ``change`` event of each field inside.
+
+Updating a Model Manually
+-------------------------
+
+You can also change the value of a model more directly, without
+using a form field:
+
+.. code-block:: diff
+
+    <button
+        type="button
+        data-model="mode"
+        data-value="edit"
+        data-action="live#update"
+    >Edit</button>
+
+In this example, clicking the button will change a ``mode``
+live property on your component to the value ``edit``. The
+``data-action="live#update"`` is Stimulus code that triggers
+the update.
 
 Loading States
 --------------
@@ -472,11 +469,11 @@ Live components require a single "default action" that is used to
 re-render it. By default, this is an empty ``__invoke()`` method and can
 be added with the ``DefaultActionTrait``. Live components are actually
 Symfony controllers so you can add the normal controller
-attributes/annotations (ie ``@Cache``/``@Security``) to either the
+attributes/annotations (ie ``#[Cache]``/``#[Security]``) to either the
 entire class just a single action.
 
 You can also trigger custom actions on your component. Let's pretend we
-want to add a "Reset Min/Max" button to our "random number" component
+want to add a "Reset Max" button to our "random number" component
 that, when clicked, sets the min/max numbers back to a default value.
 
 First, add a method with a ``LiveAction`` attribute above it that does
@@ -493,9 +490,8 @@ the work::
         // ...
 
         #[LiveAction]
-        public function resetMinMax()
+        public function resetMax()
         {
-            $this->min = 0;
             $this->max = 1000;
         }
 
@@ -509,13 +505,13 @@ to an element (e.g. a button or form):
 
     <button
         data-action="live#action"
-        data-action-name="resetMinMax"
+        data-action-name="resetMax"
     >Reset Min/Max</button>
 
 Done! When the user clicks this button, a POST request will be sent that
-will trigger the ``resetMinMax()`` method! After calling that method,
-the component will re-render like normal, using the new ``$min`` and
-``$max`` properties!
+will trigger the ``resetMax()`` method! After calling that method,
+the component will re-render like normal, using the new ``$max``
+property value!
 
 You can also add several "modifiers" to the action:
 
@@ -553,9 +549,8 @@ This means that, for example, you can use action autowiring::
         // ...
 
         #[LiveAction]
-        public function resetMinMax(LoggerInterface $logger)
+        public function resetMax(LoggerInterface $logger)
         {
-            $this->min = 0;
             $this->max = 1000;
             $logger->debug('The min/max were reset!');
         }
@@ -570,16 +565,19 @@ Actions & Arguments
 
     The ability to pass arguments to actions was added in version 2.1.
 
-You can also provide custom arguments to your action::
+You can also provide custom arguments to your action:
 
 .. code-block:: twig
+
     <form>
-        <button data-action="live#action" data-action-name="addItem(id={{ item.id }}, name=CustomItem)">Add Item</button>
+        <button
+            data-action="live#action"
+            data-action-name="addItem(id={{ item.id }}, itemName=CustomItem)"
+        >Add Item</button>
     </form>
 
-In component for custom arguments to be injected we need to use `#[LiveArg()]` attribute, otherwise it would be
-ignored. Optionally you can provide `name` argument like: `[#LiveArg('itemName')]` so it will use custom name from
-args but inject to your defined parameter with another name.::
+In your component, to allow each argument to be passed, we need to add
+the ``#[LiveArg()]`` attribute::
 
     // src/Components/ItemComponent.php
     namespace App\Components;
@@ -598,6 +596,10 @@ args but inject to your defined parameter with another name.::
             $this->name = $name;
         }
     }
+
+Normally, the argument name in PHP - e.g. ``$id`` - should match the
+argument named used in Twig ``id={{ item.id }}``. But if they don't
+match, you can pass an argument to ``LiveArg``, like we did with ``itemName``.
 
 Actions and CSRF Protection
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -645,11 +647,11 @@ action::
         // ...
 
         #[LiveAction]
-        public function resetMinMax()
+        public function resetMax()
         {
             // ...
 
-            $this->addFlash('success', 'Min/Max have been reset!');
+            $this->addFlash('success', 'Max has been reset!');
 
             return $this->redirectToRoute('app_random_number');
         }
@@ -723,19 +725,17 @@ write your form controller logic::
         /**
          * #[Route('/admin/post/{id}/edit', name: 'app_post_edit')]
          */
-        public function edit(Request $request, Post $post): Response
+        public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
         {
             $form = $this->createForm(PostType::class, $post);
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
-                $this->getDoctrine()->getManager()->flush();
+                $entityManager->flush();
 
                 return $this->redirectToRoute('app_post_index');
             }
 
-            // renderForm() is new in Symfony 5.3.
-            // Use render() and call $form->createView() if on a lower version
             return $this->renderForm('post/edit.html.twig', [
                 'post' => $post,
                 'form' => $form,
@@ -820,21 +820,7 @@ as ``form`` thanks to the trait:
 .. code-block:: twig
 
     {# templates/components/post_form.html.twig #}
-    <div
-        {{ attributes }}
-        {#
-            Automatically catch all "change" events from the fields
-            below and re-render the component.
-
-            Another common value is "input", which renders whenever
-            the "input" event fires (e.g. as you type in a field).
-            Note: if you use "input", Symfony's form system trims empty
-            spaces. This means that if the user types a space, then waits,
-            the re-render will remove the space. Set the "trim" option
-            to false on any fields with this problem.
-        #}
-        data-action="change->live#update"
-    >
+    <div {{ attributes }}>
         {{ form_start(form) }}
             {{ form_row(form.title) }}
             {{ form_row(form.slug) }}
@@ -844,41 +830,46 @@ as ``form`` thanks to the trait:
         {{ form_end(form) }}
     </div>
 
-Mostly, this is a pretty boring template! It includes the normal
+That's a pretty boring template! It includes the normal
 ``attributes`` and then you render the form however you want.
 
 But the result is incredible! As you finish changing each field, the
 component automatically re-renders - including showing any validation
 errors for that field! Amazing!
 
-This is possible thanks to a few interesting pieces:
+.. versionadded:: 2.3
 
--  ``data-action="change->live#update"``: instead of adding
-   ``data-action`` to *every* field, you can place this on a parent
-   element. Thanks to this, as you change or type into fields (i.e. the
-   ``input`` event), the model for that field will update and the
-   component will re-render.
+    Before version 2.3, a ``data-action="live#update"`` was required
+    on a parent element of the form to trigger updates. That should
+    now be removed.
 
--  The fields in our form do not have a ``data-model=""`` attribute. But
-   that's ok! When that is absent, the ``name`` attribute is used
-   instead. ``ComponentWithFormTrait`` has a modifiable ``LiveProp``
-   that captures these and submits the form using them. That's right:
-   each render time the component re-renders, the form is *submitted*
-   using the values. However, if a field has not been modified yet by
-   the user, its validation errors are cleared so that they aren't
-   rendered.
+This is possible thanks to the team work of two pieces:
+
+-  ``ComponentWithFormTrait`` adds a ``data-model="on(change)|*"``
+   attribute to your ``<form>`` tag. This causes each field to become
+   a "model" that will update on "change"
+   (override the ``getDataModelValue()`` method to control this).
+   See ":ref:`name-attribute-model`".
+
+-  ``ComponentWithFormTrait`` has a modifiable ``LiveProp`` that
+   holds the form data and is updated each time a field changes.
+   On each re-render, these values are used to "submit" the form,
+   triggering validaation! However, if a field has not been modified
+   yet by the user, its validation errors are cleared so that they
+   aren't displayed.
 
 Handling "Cannot dehydrate an unpersisted entity" Errors.
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 If you're building a form to create a *new* entity, then when you render
-the component, you may be passing in a new, non-persisted entity.
-
-For example, imagine you create a ``new Post()`` in your controller,
-pass this "not-yet-persisted" entity into your template as a ``post``
-variable and pass *that* into your component:
+the component, you may be passing a new, non-persisted entity, to your
+component:
 
 .. code-block:: twig
+
+    {# templates/post/new.html.twig #}
+
+    <h1>Create new Post</h1>
 
     {{ component('post_form', {
         post: post,
@@ -888,8 +879,8 @@ variable and pass *that* into your component:
 If you do this, you'll likely see this error:
 
     Cannot dehydrate an unpersisted entity
-    App\Entity\Post. If you want to allow
-    this, add a dehydrateWith= option to LiveProp
+    ``App\Entity\Post``. If you want to allow
+    this, add a ``dehydrateWith=`` option to ``LiveProp``
 
 The problem is that the Live component system doesn't know how to
 transform this object into something that can be sent to the frontend,
@@ -897,9 +888,8 @@ called "dehydration". If an entity has already been saved to the
 database, its "id" is sent to the frontend. But if the entity hasn't
 been saved yet, that's not possible.
 
-The solution is to pass ``null`` into your component instead of a
-non-persisted entity object. If you need to, you can re-create your
-``new Post()`` inside of your component:
+The solution is to pass ``null`` to your component instead of a
+non-persisted entity object:
 
 .. code-block:: diff
 
@@ -908,6 +898,10 @@ non-persisted entity object. If you need to, you can re-create your
     +     post: post.id ? post : null,
           form: form
       }) }}
+
+If you need to (e.g. to render the form with default values),
+you can re-create your ``new Post()`` inside of your component's
+``createForm()`` method before calling ``createForm()``.
 
 Form Rendering Problems
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -961,7 +955,8 @@ To fix this, set the ``always_empty`` option to ``false`` in your form::
 Submitting the Form via an action()
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Notice that, while we *could* add a ``save()`` :ref:`component action <actions>` that handles the form submit through the component,
+Notice that, while we *could* add a ``save()`` :ref:`component action <actions>`
+that handles the form submit through the component,
 we've chosen not to do that so far. The reason is simple: by creating a
 normal route & controller that handles the submit, our form continues to
 work without JavaScript.
@@ -1039,23 +1034,6 @@ Finally, tell the ``form`` element to use this action:
 Now, when the form is submitted, it will execute the ``save()`` method
 via Ajax. If the form fails validation, it will re-render with the
 errors. And if it's successful, it will redirect.
-
-.. note::
-
-    Make sure that each time the user changes a field, you update the
-    component's model. If you don't do this, when you trigger the action, it
-    will *not* contain the form's data because the data in the fields and the
-    component's data will be out of sync.
-
-An easy way to accomplish this (explained more in the :ref:`Forms <forms>`
-section above) is to add:
-
-.. code-block:: diff
-
-      <div
-          {{ attributes }}
-    +     data-action="change->live#update"
-      >
 
 Using Actions to Change your Form: CollectionType
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1210,7 +1188,6 @@ Using LiveCollectionType
 
     The ``LiveCollectionType`` and the ``LiveCollectionTrait`` was added in LiveComponent 2.2.
 
-
 The ``LiveCollectionType`` uses the same method described above, but in
 a generic way, so it needs even less code. This form type adds an 'Add'
 and a 'Delete' button for each row by default, which work out of the box
@@ -1280,11 +1257,11 @@ There is no need for a custom template just render the form as usual:
 
 .. code-block:: twig
 
-    <div {{ attributes }} data-action="change->live#update">
+    <div {{ attributes }}>
         {{ form(form) }}
     </div>
 
-The ``add`` and ``delete`` buttons rendered as separate ``ButtonType`` form
+The ``add`` and ``delete`` buttons are rendered as separate ``ButtonType`` form
 types and can be customized like a normal form type via the ``live_collection_button_add``
 and ``live_collection_button_delete`` respectively:
 
@@ -1303,13 +1280,10 @@ and ``live_collection_button_delete`` respectively:
         {{ block('button_widget') }}
     {% endblock live_collection_button_add_widget %}
 
-Modifying Embedded Properties with the "exposed" Option
--------------------------------------------------------
+Modifying Nested Object Properties with the "exposed" Option
+------------------------------------------------------------
 
-If your component will render a form, you don't need to use the Symfony
-form component. Let's build an ``EditPostComponent`` without a form.
-This will need one ``LiveProp``: the ``Post`` object that is being
-edited::
+Let's look again at a component to edit a ``Post`` Doctrine entity::
 
     namespace App\Twig\Components;
 
@@ -1324,37 +1298,33 @@ edited::
         public Post $post;
     }
 
-In the template, let's render an HTML form *and* a "preview" area where
-the user can see, as they type, what the post will look like (including
-rendered the ``content`` through a Markdown filter from the
-``twig/markdown-extra`` library):
+This time, let's render an HTML form (without Symfony's Form component)
+along with a "preview" area where the user can see, as they type, what th
+post will look like (including rendered the ``content`` through a Markdown
+filter from the ``twig/markdown-extra`` library):
 
 .. code-block:: twig
 
     <div {{ attributes }}>
         <input
-            type="text"
             value="{{ post.title }}"
             data-model="post.title"
-            data-action="live#update"
         >
 
-           <textarea
-               data-model="post.content"
-               data-action="live#update"
-           >{{post.content}}</textarea>
+       <textarea data-model="post.content">{{post.content}}</textarea>
 
-            <div className="markdown-preview" data-loading="addClass(low-opacity)">
-                <h3>{{post.title}}</h3>
-                {{post.content | markdown_to_html}}
-            </div>
+        <div data-loading="addClass(low-opacity)">
+            <h3>{{ post.title }}</h3>
+            {{ post.content|markdown_to_html }}
+        </div>
     </div>
 
 This is pretty straightforward, except for one thing: the ``data-model``
-attributes aren't targeting properties on the component class itself,
-they're targeting *embedded* properties within the ``$post`` property.
+attributes (e.g. ``post.content`` aren't targeting properties on the component
+class itself, they're targeting *nested* properties within the ``$post``
+property object.
 
-Out-of-the-box, modifying embedded properties is *not* allowed. However,
+Out-of-the-box, modifying nested properties is *not* allowed. However,
 you can enable it via the ``exposed`` option:
 
 .. code-block:: diff
@@ -1370,7 +1340,7 @@ you can enable it via the ``exposed`` option:
           // ...
       }
 
-With this, both the ``title`` and the ``content`` properties of the
+Now, both the ``title`` and the ``content`` properties of the
 ``$post`` property *can* be modified by the user. However, notice that
 the ``LiveProp`` does *not* have ``writable=true``. This means that
 while the ``title`` and ``content`` properties can be changed, the
@@ -1378,7 +1348,7 @@ while the ``title`` and ``content`` properties can be changed, the
 component was originally created with a Post object with id=2, a bad
 user could *not* make a request that renders the component with id=3.
 Your component is protected from someone changing to see the form for a
-different ``Post`` object, unless you added ``writable=true`` to this
+different ``Post`` object, unless you add ``writable=true`` to this
 property.
 
 Validation (without a Form)
@@ -1389,7 +1359,7 @@ Validation (without a Form)
     If your component :ref:`contains a form <forms>`, then validation
     is built-in automatically. Follow those docs for more details.
 
-If you're building some sort of form *without* using Symfony's form
+If you're building a form *without* using Symfony's form
 component, you *can* still validate your data.
 
 First use the ``ValidatableComponentTrait`` and add any constraints you
@@ -1421,8 +1391,7 @@ where you want the object on that property to also be validated.
 Thanks to this setup, the component will now be automatically validated
 on each render, but in a smart way: a property will only be validated
 once its "model" has been updated on the frontend. The system keeps
-track of which models have been updated
-(e.g. ``data-action="live#update"``) and only stores the errors for
+track of which models have been updated and only stores the errors for
 those fields on re-render.
 
 You can also trigger validation of your *entire* object manually in an
@@ -1458,34 +1427,32 @@ method:
     {% endif %}
     <textarea
         data-model="post.content"
-        data-action="live#update"
         class="{{ this.getError('post.content') ? 'has-error' : '' }}"
     >{{ post.content }}</textarea>
 
-Once a component has been validated, the component will "rememeber" that
+Once a component has been validated, the component will "remember" that
 it has been validated. This means that, if you edit a field and the
 component re-renders, it will be validated again.
 
-Real Time Validation
---------------------
+Real-Time Validation on Change
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-As soon as you enable validation, each field will automatically be
-validated when its model is updated. For example, if you want a single
-field to be validated "on change" (when you change the field and then
-blur the field), update the model via the ``change`` event:
+As soon as validation is enabled, each field will be validated the
+moment that its model is updated. By default, that happens in the
+``input`` event, so when the user types into text fields. Often,
+that's too much (e.g. you want a user to finish typing their full email
+address before validating it).
+
+To validate only on "change", use the ``on(change)`` modifier:
 
 .. code-block:: twig
 
-    <textarea
-        data-model="post.content"
-        data-action="change->live#update"
+    <input
+        type="email"
+        data-model="on(change)|user.email"
+        value="{{ user.email }}"
         class="{{ this.getError('post.content') ? 'has-error' : '' }}"
-    >{{ post.content }}</textarea>
-
-When the component re-renders, it will signal to the server that this
-one field should be validated. Like with normal validation, once an
-individual field has been validated, the component "remembers" that, and
-re-validates it on each render.
+    >
 
 Polling
 -------
@@ -1623,7 +1590,6 @@ attributes:
     <textarea
         data-model="markdown_value"
         name="post[content]"
-        data-action="live#update"
     >
 
 In this situation, the ``markdown_value`` model will be updated on the
@@ -1713,23 +1679,24 @@ In the ``EditPostComponent`` template, you render the
 
     {# templates/components/edit_post.html.twig #}
     <div {{ attributes }}>
-        <input
-            type="text"
-            name="post[title]"
-            data-action="live#update"
-            value="{{ post.title }}"
-        >
+        <form data-model="on(change)|*">
+            <input
+                type="text"
+                name="post[title]"
+                value="{{ post.title }}"
+            >
 
-        {{ component('markdown_textarea', {
-            name: 'post[content]',
-            label: 'Content',
-            value: post.content
-        }) }}
+            {{ component('markdown_textarea', {
+                name: 'post[content]',
+                label: 'Content',
+                value: post.content
+            }) }}
 
-        <button
-            data-action="live#action"
-            data-action-name="save"
-        >Save</button>
+            <button
+                data-action="live#action"
+                data-action-name="save"
+            >Save</button>
+        </form>
     </div>
 
 .. code-block:: twig
@@ -1738,7 +1705,6 @@ In the ``EditPostComponent`` template, you render the
         <textarea
             name="{{ name }}"
             data-model="value"
-            data-action="live#update"
         >{{ value }}</textarea>
 
         <div class="markdown-preview">
@@ -1750,7 +1716,7 @@ Notice that ``MarkdownTextareaComponent`` allows a dynamic ``name``
 attribute to be passed in. This makes that component re-usable in any
 form. But it also makes sure that when the ``textarea`` changes, both
 the ``value`` model in ``MarkdownTextareaComponent`` *and* the
-``post.content`` model in ``EditPostcomponent`` will be updated.
+``post.content`` model in ``EditPostComponent`` will be updated.
 
 Rendering Quirks with List of Embedded Components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1794,10 +1760,9 @@ bound to Symfony's BC policy for the moment.
 .. _`Livewire`: https://laravel-livewire.com
 .. _`Phoenix LiveView`: https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html
 .. _`Twig Component`: https://symfony.com/bundles/ux-twig-component/current/index.html
-.. _`properties used for computed properties`: https://symfony.com/bundles/ux-live-component/current/index.html#computed-properties
 .. _`Symfony form`: https://symfony.com/doc/current/forms.html
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
-.. _`dependent form fields`: https://symfony.com/doc/current/form/dynamic_form_modification.html#dynamic-generation-for-submitted-forms
+.. _`dependent form fields`: https://ux.symfony.com/live-component/demos/dependent-form-fields
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
-.. _`Component attributes`: https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes
+.. _`attributes variable`: https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes
 .. _`CollectionType`: https://symfony.com/doc/current/form/form_collections.html

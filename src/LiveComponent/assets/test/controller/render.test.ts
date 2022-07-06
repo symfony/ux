@@ -9,134 +9,194 @@
 
 'use strict';
 
-import { clearDOM } from '@symfony/stimulus-testing';
-import { initLiveComponent, mockRerender, startStimulus } from '../tools';
-import { createEvent, fireEvent, getByLabelText, getByText, waitFor } from '@testing-library/dom';
+import { shutdownTest, createTest, initComponent } from '../tools';
+import { createEvent, fireEvent, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock-jest';
 
 describe('LiveController rendering Tests', () => {
-    const template = (data, includeLoading = false) => `
-        <div
-            ${initLiveComponent('/_components/my_component', data)}
-        >
-            <!-- form field not mapped with data-model -->
-            <label>
-                Comments:
-                <input
-                    name="comments"
-                    value="i like pizza"
-                    ${includeLoading ? 'data-loading="addAttribute(foobar) addClass(newClass)"' : ''}
-                >
-            </label>
-
-            <div${data.hasError ? ' class="has-error"' : ''}>Name: ${data.name}</div>
-
-            <button
-                data-action="live#$render"
-            >Reload</button>
-        </div>
-    `;
-
     afterEach(() => {
-        clearDOM();
-        if (!fetchMock.done()) {
-            throw new Error('Mocked requests did not match');
-        }
-        fetchMock.reset();
+        shutdownTest();
+    })
+
+    it('can re-render via an Ajax call', async () => {
+        const test = await createTest({ firstName: 'Ryan' }, (data: any) => `
+            <div ${initComponent(data)}>
+                <span>Name: ${data.firstName}</span>
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `);
+
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data: any) => {
+                // change the data on the server so the template renders differently
+                data.firstName = 'Kevin';
+            })
+            .init();
+
+        getByText(test.element, 'Reload').click();
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Name: Kevin'));
+        // data returned from the server is used for the new "data"
+        expect(test.controller.dataValue).toEqual({firstName: 'Kevin'});
     });
 
-    it('renders from the AJAX endpoint & updates data', async () => {
-        const data = { name: 'Ryan' };
-        const { element, controller } = await startStimulus(template(data));
+    it('conserves the value of model field that was modified after a render request', async () => {
+        const test = await createTest({ title: 'greetings', comment: '' }, (data: any) => `
+            <div ${initComponent(data, { debounce: 1 })}>
+                <input data-model="title" value="${data.title}">
+                <!--
+                    norender for comment to avoid triggering a 2nd Ajax call.
+                    We want the first to finish, to see if it overwrites our value
+                -->
+                <textarea data-model="norender|comment">${data.comment}</textarea>
+                
+                Title: "${data.title}"
+                Comment: "${data.comment}"
 
-        mockRerender({ name: 'Ryan' }, template, (data) => {
-            // change the data on the server
-            data.name = 'Kevin';
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `);
+
+        test.expectsAjaxCall('get')
+            // only the update title will be sent
+            .expectSentData({ title: 'greetings!!', comment: '' })
+            .delayResponse(100)
+            .init();
+
+        userEvent.type(test.queryByDataModel('title'), '!!');
+
+        setTimeout(() => {
+            // wait 10 ms (long enough for the shortened debounce to finish and the
+            // Ajax request to start) and then type into this field
+            userEvent.type(test.queryByDataModel('comment'), 'I had a great time');
+        }, 10);
+
+        // title model updated like normal
+        await waitFor(() => expect(test.element).toHaveTextContent('Title: "greetings!!"'));
+
+        // no re-render yet since "comment" was modified
+        expect(test.element).toHaveTextContent('Comment: ""')
+
+        // the field contains the text that was typed by the user after the first Ajax call triggered
+        expect((test.queryByDataModel('comment') as HTMLTextAreaElement).value).toEqual('I had a great time');
+
+        // the server returned comment as ''. However, this model WAS set
+        // during the last render, and that has not been taken into account yet.
+        // and so, like with the comment textarea, the client-side value is kept
+        expect(test.controller.dataValue).toEqual({
+            title: 'greetings!!',
+            comment: 'I had a great time'
         });
-        getByText(element, 'Reload').click();
 
-        await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
-        expect(controller.dataValue).toEqual({name: 'Kevin'});
+        // trigger render: the new comment data *will* now be sent
+        test.expectsAjaxCall('get')
+            // just repeat what we verified from above
+            .expectSentData(test.controller.dataValue)
+            .serverWillChangeData((data: any) => {
+                // to be EXTRA complicated, the server will change the comment
+                // on the client, we should now recognize that the latest comment
+                // model data *was* sent (the <textarea> is no longer out-of-sync)
+                // and so it should accept the HTML from the server
+                data.comment = data.comment.toUpperCase();
+            })
+            .init();
+
+        getByText(test.element, 'Reload').click();
+        await waitFor(() => expect(test.element).toHaveTextContent('Comment: "I HAD A GREAT TIME"'));
+        expect((test.queryByDataModel('comment') as HTMLTextAreaElement).value).toEqual('I HAD A GREAT TIME');
     });
 
-    it('renders over local value in input', async () => {
-        const data = { name: 'Ryan' };
-        const { element } = await startStimulus(template(data));
+    it('conserves the value of an unmapped field that was modified after a render request', async () => {
+        const test = await createTest({ title: 'greetings' }, (data: any) => `
+            <div ${initComponent(data, { debounce: 1 })}>
+                <input data-model="title" value="${data.title}">
+                <!-- An unmapped field -->
+                <textarea></textarea>
 
-        mockRerender({name: 'Ryan'}, template, (data: any) => {
-            data.name = 'Kevin';
-        }, { delay: 100 });
-        // type into the input that is not bound to a model
-        userEvent.type(getByLabelText(element, 'Comments:'), '!!');
-        getByText(element, 'Reload').click();
+                Title: "${data.title}"
 
-        await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
-        // value if unmapped input is reset
-        expect(getByLabelText(element, 'Comments:')).toHaveValue('i like pizza');
-        expect(document.activeElement.name).toEqual('comments');
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `);
+
+        test.expectsAjaxCall('get')
+            .expectSentData({ title: 'greetings!!' })
+            .delayResponse(100)
+            .init();
+
+        userEvent.type(test.queryByDataModel('title'), '!!');
+
+        setTimeout(() => {
+            // wait 10 ms (long enough for the shortened debounce to finish and the
+            // Ajax request to start) and then type into this field
+            userEvent.type(test.element.querySelector('textarea') as HTMLTextAreaElement, 'typing after the request starts');
+        }, 10);
+
+        // title model updated like normal
+        await waitFor(() => expect(test.element).toHaveTextContent('Title: "greetings!!"'));
+        // field *still* contains the text that was typed by the user after the Ajax call started
+        expect((test.element.querySelector('textarea') as HTMLTextAreaElement).value).toEqual('typing after the request starts');
+
+        // make a 2nd request
+        test.expectsAjaxCall('get')
+            .expectSentData({ title: 'greetings!! Yay!' })
+            .delayResponse(100)
+            .init();
+
+        userEvent.type(test.queryByDataModel('title'), ' Yay!');
+
+        // title model updated like normal
+        await waitFor(() => expect(test.element).toHaveTextContent('Title: "greetings!! Yay!"'));
+        // field *still* contains modified text
+        expect((test.element.querySelector('textarea') as HTMLTextAreaElement).value).toEqual('typing after the request starts');
     });
 
-    it('conserves values of fields modified after a render request IF data-live-ignore', async () => {
-        const data = { name: 'Ryan' };
-        const { element } = await startStimulus(template(data));
+    it('does not render over elements with data-live-ignore', async () => {
+        const test = await createTest({ firstName: 'Ryan' }, (data: any) => `
+            <div ${initComponent(data)}>
+                <div data-live-ignore>Inside Ignore Name: <span>${data.firstName}</span></div>
+                
+                Outside Ignore Name: ${data.firstName}
 
-        // name=Ryan is sent to the server
-        mockRerender({name: 'Ryan'}, template, (data: any) => {
-            data.name = 'Kevin';
-        }, { delay: 100 });
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `);
 
-        // type into the input that is not bound to a model
-        const input = getByLabelText(element, 'Comments:');
-        input.setAttribute('data-live-ignore', '');
-        userEvent.type(input, '!!');
-        getByText(element, 'Reload').click();
+        // imitate some JavaScript changing this element
+        test.element.querySelector('span')?.setAttribute('data-foo', 'bar');
 
-        await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
-        // value of unmapped input is NOT reset because of data-live-ignore
-        expect(getByLabelText(element, 'Comments:')).toHaveValue('i like pizza!!');
-        expect(document.activeElement.name).toEqual('comments');
-    });
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data: any) => {
+                // change the data on the server so the template renders differently
+                data.firstName = 'Kevin';
+            })
+            .init();
 
-    it('conserves values of fields modified after render but with loading behavior', async () => {
-        const data = { name: 'Ryan' };
-        const { element } = await startStimulus(
-            // "true" gives the comment input a loading behavior
-            // this could make the input.isEqualNode() be false when comparing
-            // that's exactly what we want test for
-            template(data, true)
-        );
+        getByText(test.element, 'Reload').click();
 
-        mockRerender(
-            { name: 'Ryan' },
-            // re-render but passing true as the second arg
-            (data: any) => template(data, true),
-            (data: any) => { data.name = 'Kevin'; },
-            { delay: 100 }
-        );
-
-        const input = getByLabelText(element, 'Comments:');
-        input.setAttribute('data-live-ignore', '');
-        userEvent.type(input, '!!');
-        getByText(element, 'Reload').click();
-
-        await waitFor(() => expect(element).toHaveTextContent('Name: Kevin'));
-        expect(getByLabelText(element, 'Comments:')).toHaveValue('i like pizza!!');
-        expect(document.activeElement.name).toEqual('comments');
+        await waitFor(() => expect(test.element).toHaveTextContent('Outside Ignore Name: Kevin'));
+        const ignoreElement = test.element.querySelector('div[data-live-ignore]');
+        expect(ignoreElement).not.toBeNull();
+        expect(ignoreElement?.outerHTML).toEqual('<div data-live-ignore="">Inside Ignore Name: <span data-foo="bar">Ryan</span></div>');
     });
 
     it('cancels a re-render if the page is navigating away', async () => {
-        const data = { name: 'Ryan' };
-        const { element } = await startStimulus(template(data));
+        const test = await createTest({greeting: 'aloha!'}, (data: any) => `
+            <div ${initComponent(data)}>${data.greeting}</div>
+        `);
 
-        mockRerender(
-            { name: 'Ryan' },
-            () => '<div>aloha!</div>',
-            () => { },
-            { delay: 100 }
-        );
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data) => {
+                data.greeting = 'Hello';
+            })
+            .delayResponse(100)
+            .init();
 
-        getByText(element, 'Reload').click();
+        test.controller.$render();
         // imitate navigating away
         fireEvent(window, createEvent('beforeunload', window));
 
@@ -144,6 +204,6 @@ describe('LiveController rendering Tests', () => {
         await fetchMock.flush();
 
         // the re-render should not have happened
-        expect(element).not.toHaveTextContent('aloha!');
+        expect(test.element).not.toHaveTextContent('Hello');
     });
 });

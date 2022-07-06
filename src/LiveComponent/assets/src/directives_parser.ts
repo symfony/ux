@@ -56,7 +56,7 @@ export interface Directive {
  *
  * @param {string} content The value of the attribute
  */
-export function parseDirectives(content: string): Directive[] {
+export function parseDirectives(content: string|null): Directive[] {
     const directives: Directive[] = [];
 
     if (!content) {

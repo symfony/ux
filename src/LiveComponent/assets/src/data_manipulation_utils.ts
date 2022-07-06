@@ -1,5 +1,11 @@
+export function getDeepData(data: any, propertyPath: string) {
+    const { currentLevelData, finalKey } = parseDeepData(data, propertyPath);
+
+    return currentLevelData[finalKey];
+}
+
 // post.user.username
-export function parseDeepData(data, propertyPath) {
+const parseDeepData = function(data: any, propertyPath: string) {
     const finalData = JSON.parse(JSON.stringify(data));
 
     let currentLevelData = finalData;
@@ -22,7 +28,7 @@ export function parseDeepData(data, propertyPath) {
 }
 
 // post.user.username
-export function setDeepData(data, propertyPath, value) {
+export function setDeepData(data: any, propertyPath: string, value: any): any {
     const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath)
 
     // make sure the currentLevelData is an object, not a scalar
@@ -32,6 +38,11 @@ export function setDeepData(data, propertyPath, value) {
     // an integer (2).
     if (typeof currentLevelData !== 'object') {
         const lastPart = parts.pop();
+
+        if (typeof currentLevelData === 'undefined') {
+            throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not exist. Did you forget to expose "${parts[0]}" as a LiveProp?`)
+        }
+
         throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`)
     }
 
@@ -41,48 +52,13 @@ export function setDeepData(data, propertyPath, value) {
     if (currentLevelData[finalKey] === undefined) {
         const lastPart = parts.pop();
         if (parts.length > 0) {
-            throw new Error(`The property used in data-model="${propertyPath}" was never initialized. Did you forget to add exposed={"${lastPart}"} to its LiveProp?`)
+            throw new Error(`The model name ${propertyPath} was never initialized. Did you forget to add exposed={"${lastPart}"} to its LiveProp?`)
         } else {
-            throw new Error(`The property used in data-model="${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp? Available models values are: ${Object.keys(data).length > 0 ? Object.keys(data).join(', ') : '(none)'}`)
+            throw new Error(`The model name "${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp? Available models values are: ${Object.keys(data).length > 0 ? Object.keys(data).join(', ') : '(none)'}`)
         }
     }
 
     currentLevelData[finalKey] = value;
 
     return finalData;
-}
-
-/**
- * Checks if the given propertyPath is for a valid top-level key.
- *
- * @param {Object} data
- * @param {string} propertyPath
- * @return {boolean}
- */
-export function doesDeepPropertyExist(data, propertyPath) {
-    const parts = propertyPath.split('.');
-
-    return data[parts[0]] !== undefined;
-}
-
-/**
- * Normalizes model names with [] into the "." syntax.
- *
- * For example: "user[firstName]" becomes "user.firstName"
- *
- * @param {string} model
- * @return {string}
- */
-export function normalizeModelName(model) {
-    return model
-        // Names ending in "[]" represent arrays in HTML.
-        // To get normalized name we need to ignore this part.
-        // For example: "user[mailing][]" becomes "user.mailing" (and has array typed value)
-        .replace(/\[]$/, '')
-        .split('[')
-        // ['object', 'foo', 'bar', 'ya']
-        .map(function (s) {
-            return s.replace(']', '')
-        })
-        .join('.')
 }

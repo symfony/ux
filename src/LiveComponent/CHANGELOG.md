@@ -1,5 +1,68 @@
 # CHANGELOG
 
+## 2.3.0
+
+-   [BC BREAK] The `data-action="live#update"` attribute must now be
+    removed from **nearly** all elements. This is because LiveComponents
+    now automatically listens to the `input` event on all elements
+    with a `data-model` attribute and updates the data. If you previously
+    used `data-action="change->live#update"` to list on the `change`
+    event, now you should use the `on(change)` modifier inside `data-model`.
+
+```twig
+<!-- BEFORE -->
+<input
+    data-model="max"
+    data-action="change->live#update"
+>
+
+<!-- AFTER -->
+<input
+    data-model="on(change)|max"
+>
+```
+
+-   [BC BREAK] The `live#updateDefer` action was removed entirely.
+    Now, to update a model without triggering a re-render, use the
+    `norender` modifier for `data-model`:
+
+```twig
+<!-- BEFORE -->
+<input
+    data-model="max"
+    data-action="live#updateDefer"
+>
+
+<!-- AFTER -->
+<input
+    data-model="norender|max"
+>
+```
+
+-   [BC BREAK] The `name` attribute is no longer automatically used to
+    update a model when a parent component has `data-action="change->live#update"`.
+    To make a form's fields behave like "model" fields (but using the
+    `name` attribute instead of `data-model`) you need to add a `data-model`
+    attribute to the `<form>` element around your fields (NOTE: the
+    new attribute is automatically added to your `form` element when
+    using `ComponentWithFormTrait`):
+
+```twig
+<!-- BEFORE -->
+<form data-action="change->live#update">
+    <input
+        name="max"
+    >
+</form>
+
+<!-- AFTER -->
+<form data-model="on(change)|*">
+    <input
+        name="max"
+    >
+</form>
+```
+
 ## 2.2.0
 
 -   The bundle now properly exposes a `live` controller, which can be

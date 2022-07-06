@@ -12,6 +12,7 @@
 namespace Symfony\UX\Notify\Twig;
 
 use Symfony\Component\Mercure\HubInterface;
+use Symfony\WebpackEncoreBundle\Dto\StimulusControllersDto;
 use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Twig\Environment;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -39,7 +40,15 @@ final class NotifyRuntime implements RuntimeExtensionInterface
         }
         $controllers['@symfony/ux-notify/notify'] = ['topics' => $topics, 'hub' => $this->hub->getPublicUrl()];
 
-        $html = $this->stimulusTwigExtension->renderStimulusController($environment, $controllers);
+        if (class_exists(StimulusControllersDto::class)) {
+            $dto = new StimulusControllersDto($environment);
+            foreach ($controllers as $name => $controllerValues) {
+                $dto->addController($name, $controllerValues);
+            }
+            $html = (string) $dto;
+        } else {
+            $html = $this->stimulusTwigExtension->renderStimulusController($environment, $controllers);
+        }
 
         return trim(sprintf('<div %s></div>', $html));
     }

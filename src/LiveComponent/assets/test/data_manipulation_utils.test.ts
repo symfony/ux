@@ -1,4 +1,4 @@
-import { setDeepData, normalizeModelName } from '../src/set_deep_data';
+import { setDeepData } from '../src/data_manipulation_utils';
 
 describe('setDeepData', () => {
     it('sets a simple key', () => {
@@ -86,18 +86,4 @@ describe('setDeepData', () => {
     });
 
     // sets undefined keys, even recursively
-});
-
-describe('normalizeModelName', () => {
-    it('can normalize a boring string', () => {
-        expect(normalizeModelName('firstName')).toEqual('firstName');
-    });
-
-    it('can normalize a string with []', () => {
-        expect(normalizeModelName('user[firstName]')).toEqual('user.firstName');
-    });
-
-    it('can normalize a string ending in []', () => {
-        expect(normalizeModelName('user[mailing][]')).toEqual('user.mailing');
-    });
 });

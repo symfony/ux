@@ -1,6 +1,6 @@
 import { haveRenderedValuesChanged } from '../src/have_rendered_values_changed';
 
-const runTest = (originalData, currentData, newData, expected) => {
+const runTest = (originalData: any, currentData: any, newData: any, expected: boolean) => {
     const result = haveRenderedValuesChanged(
         JSON.stringify(originalData),
         JSON.stringify(currentData),

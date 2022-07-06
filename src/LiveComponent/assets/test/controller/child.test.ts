@@ -9,228 +9,244 @@
 
 'use strict';
 
-import { clearDOM } from '@symfony/stimulus-testing';
-import { initLiveComponent, mockRerender, startStimulus } from '../tools';
-import { getByLabelText, getByText, waitFor } from '@testing-library/dom';
+import { createTest, initComponent, shutdownTest } from '../tools';
+import { getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
-import fetchMock from 'fetch-mock-jest';
+import { htmlToElement } from '../../src/dom_utils';
 
 describe('LiveController parent -> child component tests', () => {
-    const parentTemplate = (data) => {
-        const errors = data.errors || { post: {} };
-
-        return `
-            <div
-                ${initLiveComponent('/_components/parent', data)}
-            >
-                <span>Title: ${data.post.title}</span>
-                <span>Description in Parent: ${data.post.content}</span>
-
-                <label>
-                    Title:
-                    <input
-                        type="text"
-                        name="post[title]"
-                        value="${data.post.title}"
-                        data-action="live#update"
-                    >
-                </label>
-
-                ${childTemplate({ value: data.post.content, error: errors.post.content })}
-
-                <button
-                    data-action="live#$render"
-                >Parent Re-render</button>
-            </div>
-        `
-    }
-
-    const childTemplate = (data) => `
-        <div
-            ${initLiveComponent('/_components/child', data)}
-        >
-            <label>
-                Content:
-                <textarea
-                    data-model="value"
-                    name="post[content]"
-                    data-action="live#update"
-                    rows="${data.rows ? data.rows : '3'}"
-                >${data.value}</textarea>
-            </label>
-
-            <div>Value in child: ${data.value}</div>
-            <div>Error in child: ${data.error ? data.error : 'none'}</div>
-            {# Rows represents a writable prop that's private to the child component #}
-            <div>Rows in child: ${data.rows ? data.rows : 'not set'}</div>
-
-            <button
-                data-action="live#$render"
-            >Child Re-render</button>
-        </div>
-    `;
-
     afterEach(() => {
-        clearDOM();
-        if (!fetchMock.done()) {
-            throw new Error('Mocked requests did not match');
-        }
-        fetchMock.reset();
-    });
+        shutdownTest();
+    })
 
     it('renders parent component without affecting child component', async () => {
-        const data = { post: { title: 'Parent component', content: 'i love' } };
-        const { element } = await startStimulus(parentTemplate(data));
-
-        // on child re-render, expect the new value, change rows on the server
-        mockRerender({ value: 'i love popcorn' }, childTemplate, (data) => {
-            // change the "rows" data on the "server"
-            data.rows = 5;
-        });
-        await userEvent.type(getByLabelText(element, 'Content:'), ' popcorn');
-
-        await waitFor(() => expect(element).toHaveTextContent('Value in child: i love popcorn'));
-        expect(element).toHaveTextContent('Rows in child: 5');
-
-        // when the parent re-renders, expect the changed title AND content (from child)
-        // but, importantly, the only "changed" data that will be passed into
-        // the child component will be "content", which will match what the
-        // child already has. This will NOT trigger a re-render.
-        mockRerender(
-            { post: { title: 'Parent component changed', content: 'i love popcorn' } },
-            parentTemplate
-        )
-        await userEvent.type(getByLabelText(element, 'Title:'), ' changed');
-        await waitFor(() => expect(element).toHaveTextContent('Title: Parent component changed'));
-
-        // the child component should *not* have updated
-        expect(element).toHaveTextContent('Rows in child: 5');
-    });
-
-    it('updates child model and parent model in a deferred way', async () => {
-        const data = { post: { title: 'Parent component', content: 'i love' } };
-        const { element, controller } = await startStimulus(parentTemplate(data));
-
-        // verify the child request contains the correct description & re-render
-        mockRerender({ value: 'i love turtles' }, childTemplate);
-
-        // change the description in the child
-        const inputElement = getByLabelText(element, 'Content:');
-        await userEvent.type(inputElement, ' turtles');
-
-        // wait for the render to complete
-        await waitFor(() => expect(element).toHaveTextContent('Value in child: i love turtles'));
-
-        // the parent should not re-render
-        expect(element).not.toHaveTextContent('Content in parent: i love turtles');
-        // but the value DID update on the parent component
-        // this is because the name="post[content]" in the child matches the parent model
-        expect(controller.dataValue.post.content).toEqual('i love turtles');
-    });
-
-    it('updates re-renders a child component if data has changed from initial', async () => {
-        const data = { post: { title: 'Parent component', content: 'initial content' } };
-        const { element } = await startStimulus(parentTemplate(data));
-
-        // allow the child to re-render, but change the "rows" value
-        const inputElement = getByLabelText(element, 'Content:');
-        await userEvent.clear(inputElement);
-        await userEvent.type(inputElement, 'changed content');
-        // change the rows on the server
-        mockRerender({'value': 'changed content'}, childTemplate, (data) => {
-            data.rows = 5;
-        });
-
-        // reload, which will give us rows=5
-        getByText(element, 'Child Re-render').click();
-        await waitFor(() => expect(element).toHaveTextContent('Rows in child: 5'));
-
-        // simulate an action in the parent component where "errors" changes
-        mockRerender({'post': { title: 'Parent component', content: 'changed content' }}, parentTemplate, (data) => {
-            data.post.title = 'Changed title';
-            data.errors = { post: { content: 'the content is not interesting enough' }};
-        });
-
-        getByText(element, 'Parent Re-render').click();
-        await waitFor(() => expect(element).toHaveTextContent('Title: Changed title'));
-        // the child, of course, still has the "changed content" value
-        expect(element).toHaveTextContent('Value in child: changed content');
-        // but because some child data *changed* from its original value, the child DOES re-render
-        expect(element).toHaveTextContent('Error in child: the content is not interesting enough');
-        // however, this means that the updated "rows" data on the child is lost
-        expect(element).toHaveTextContent('Rows in child: not set');
-    });
-
-    it('uses data-model-map to map child models to parent models', async () => {
-        const parentTemplateDifferentModel = (data) => `
-            <div
-                ${initLiveComponent('/_components/parent', data)}
-            >
-                <span>Parent textarea content: ${data.textareaContent}</span>
-
-                <div
-                    data-model-map="from(value)|textareaContent"
-                >
-                    ${childTemplate({ value: data.textareaContent, error: null })}
-                </div>
-
-                <button
-                    data-action="live#$render"
-                >Parent Re-render</button>
+        const childTemplate = (data: any) => `
+            <div ${initComponent(data)} id="child-component">
+                Child component original text
+                Favorite food: ${data.food}
+                
+                <button data-action="live#$render">Render Child</button>
             </div>
         `;
 
-        const data = { textareaContent: 'Original content' };
-        const { element, controller } = await startStimulus(parentTemplateDifferentModel(data));
+        const test = await createTest({ count: 0 }, (data: any) => `
+            <div ${initComponent(data)}>
+                Parent component count: ${data.count}
+                
+                ${childTemplate({food: 'pizza'})}
+            </div>
+        `);
 
-        // update & re-render the child component
-        const inputElement = getByLabelText(element, 'Content:');
-        await userEvent.clear(inputElement);
-        await userEvent.type(inputElement, 'changed content');
-        mockRerender({value: 'changed content', error: null}, childTemplate);
+        // for the child component render
+        test.expectsAjaxCall('get')
+            .expectSentData({food: 'pizza'})
+            .serverWillChangeData((data: any) => {
+                data.food = 'popcorn';
+            })
+            .willReturn(childTemplate)
+            .init();
 
-        await waitFor(() => expect(element).toHaveTextContent('Value in child: changed content'));
+        // re-render *just* the child
+        userEvent.click(getByText(test.element, 'Render Child'));
+        await waitFor(() => expect(test.element).toHaveTextContent('Favorite food: popcorn'));
 
-        expect(controller.dataValue).toEqual({ textareaContent: 'changed content' });
-   });
+        // now let's re-render the parent
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data: any) => {
+                data.count = 1;
+            })
+            .init();
+
+        test.controller.$render();
+        await waitFor(() => expect(test.element).toHaveTextContent('Parent component count: 1'));
+        // child component retains its re-rendered, custom text
+        // this is because the parent's data changed, but the changed data is not passed to the child
+        expect(test.element).toHaveTextContent('Favorite food: popcorn');
+    });
+
+    it('renders parent component AND replaces child component when changed parent data affects child data', async () => {
+        const childTemplate = (data: any) => `
+            <div ${initComponent(data)} id="child-component">
+                Child component count: ${data.childCount}
+            </div>
+        `;
+
+        const test = await createTest({ count: 0 }, (data: any) => `
+            <div ${initComponent(data)}>
+                Parent component count: ${data.count}
+                
+                ${childTemplate({childCount: data.count})}
+            </div>
+        `);
+
+        // change some content on the child
+        (document.getElementById('child-component') as HTMLElement).innerHTML = 'changed child content';
+
+        // re-render the parent
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data: any) => {
+                data.count = 1;
+            })
+            .init();
+
+        test.controller.$render();
+        await waitFor(() => expect(test.element).toHaveTextContent('Parent component count: 1'));
+        // child component reverts to its original text
+        // this is because the parent's data changed AND that change affected child's data
+        expect(test.element).toHaveTextContent('Child component count: 1');
+    });
+
+    it('updates the parent model when the child model updates', async () => {
+        const childTemplate = (data: any) => `
+            <div ${initComponent(data)}>
+                <textarea
+                    data-model="content"
+                    name="post[content]"
+                >${data.content}</textarea>
+                
+                Child Content: ${data.content}
+            </div>
+        `;
+
+        const test = await createTest({ post: { content: 'i love'} }, (data: any) => `
+            <div ${initComponent(data)}>
+                <form data-model="*">
+                    Parent Post Content: ${data.post.content}
+                
+                    ${childTemplate({content: data.post.content})}
+                </form>
+            </div>
+        `);
+
+        // request for the child render
+        test.expectsAjaxCall('get')
+            .expectSentData({content: 'i love turtles'})
+            .willReturn(childTemplate)
+            .init();
+
+        await userEvent.type(test.queryByDataModel('content'), ' turtles');
+        // wait for the render to complete
+        await waitFor(() => expect(test.element).toHaveTextContent('Child Content: i love turtles'));
+
+        // the parent should not re-render
+        // TODO: this behavior was originally added, but it's questionabl
+        expect(test.element).not.toHaveTextContent('Parent Post Content: i love turtles');
+        // but the value DID update on the parent component
+        // this is because the name="post[content]" in the child matches the parent model
+        expect(test.controller.dataValue.post.content).toEqual('i love turtles');
+    });
+
+    it('uses data-model-map to map child models to parent models', async () => {
+        const childTemplate = (data: any) => `
+            <div ${initComponent(data)}>
+                <textarea data-model="value">${data.value}</textarea>
+                
+                Child Content: ${data.value}
+            </div>
+        `;
+
+        const test = await createTest({ post: { content: 'i love'} }, (data: any) => `
+            <div ${initComponent(data)}>
+                <div data-model-map="from(value)|post.content">
+                    ${childTemplate({value: data.post.content})}
+                </div>
+            </div>
+        `);
+
+        // request for the child render
+        test.expectsAjaxCall('get')
+            .expectSentData({ value: 'i love dragons' })
+            .willReturn(childTemplate)
+            .init();
+
+        await userEvent.type(test.queryByDataModel('value'), ' dragons');
+        // wait for the render to complete
+        await waitFor(() => expect(test.element).toHaveTextContent('Child Content: i love dragons'));
+        expect(test.controller.dataValue.post.content).toEqual('i love dragons');
+    });
 
     it('updates child data-original-data on parent re-render', async () => {
-        const parentTemplateListOfChildren = (data) => `
-            <div
-                ${initLiveComponent('/_components/parent', data)}
-            >
+        const initialData = { children: [{ name: 'child1' }, { name: 'child2' }, { name: 'child3' }] };
+        const test = await createTest(initialData, (data: any) => `
+            <div ${initComponent(data)}>
+                Parent count: ${data.count}
+                
                 <ul>
-                    ${data.children.map((child) => {
+                    ${data.children.map((child: any) => {
                         return `
-                            <li ${initLiveComponent('/_components/child', child)}>
+                            <li ${initComponent(child)}>
                                ${child.name}
                             </li>
                         `
                     })}
                 </ul>
-
-                <button
-                    data-action="live#$render"
-                >Parent Re-render</button>
             </div>
-        `;
+        `);
 
-        const data = { children: [{name: 'child1'}, {name: 'child2'}, {name: 'child3'}] };
-        const { element, controller } = await startStimulus(parentTemplateListOfChildren(data));
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data: any) => {
+                // "remove" child2
+                data.children = [{ name: 'child1' }, { name: 'child3' }];
+            })
+            .init();
 
-        // mock a re-render where "child2" disappears
-        mockRerender(data, parentTemplateListOfChildren, (returnedData) => {
-            returnedData.children = [{name: 'child1'}, {name: 'child3'}];
-        });
-        getByText(element, 'Parent Re-render').click();
+        test.controller.$render();
 
-        await waitFor(() => expect(element).not.toHaveTextContent('child2'));
-        const secondLi = element.querySelectorAll('li').item(1);
+        await waitFor(() => expect(test.element).not.toHaveTextContent('child2'));
+        const secondLi = test.element.querySelectorAll('li').item(1);
         expect(secondLi).not.toBeNull();
         // the 2nd li was just "updated" by the parent component, which
         // would have eliminated its data-original-data attribute. Check
         // that it was re-established to the 3rd child's data.
         // see MutationObserver in live_controller for more details.
         expect(secondLi.dataset.originalData).toEqual(JSON.stringify({name: 'child3'}));
-   });
+    });
+
+    it('notices as children are connected and disconnected', async () => {
+        const test = await createTest({}, (data: any) => `
+            <div ${initComponent(data)}>
+                Parent component
+            </div>
+        `);
+
+        expect(test.controller.childComponentControllers).toHaveLength(0);
+
+        const createChildElement = () => {
+            const childElement = htmlToElement(`<div ${initComponent({})}>child</div>`);
+            childElement.addEventListener('live:connect', (event: any) => {
+                event.detail.controller.element.setAttribute('connected', '1');
+            });
+            childElement.addEventListener('live:disconnect', (event: any) => {
+                event.detail.controller.element.setAttribute('connected', '0');
+            });
+
+            return childElement;
+        };
+
+        const childElement1 = createChildElement();
+        const childElement2 = createChildElement();
+        const childElement3 = createChildElement();
+
+        test.element.appendChild(childElement1);
+        await waitFor(() => expect(childElement1).toHaveAttribute('connected', '1'));
+        expect(test.controller.childComponentControllers).toHaveLength(1);
+
+        test.element.appendChild(childElement2);
+        test.element.appendChild(childElement3);
+        await waitFor(() => expect(childElement2).toHaveAttribute('connected', '1'));
+        await waitFor(() => expect(childElement3).toHaveAttribute('connected', '1'));
+        expect(test.controller.childComponentControllers).toHaveLength(3);
+
+        test.element.removeChild(childElement2);
+        await waitFor(() => expect(childElement2).toHaveAttribute('connected', '0'));
+        expect(test.controller.childComponentControllers).toHaveLength(2);
+        test.element.removeChild(childElement1);
+        test.element.removeChild(childElement3);
+        await waitFor(() => expect(childElement1).toHaveAttribute('connected', '0'));
+        await waitFor(() => expect(childElement3).toHaveAttribute('connected', '0'));
+        expect(test.controller.childComponentControllers).toHaveLength(0);
+    });
 });
