@@ -23,7 +23,7 @@ use Symfony\UX\Turbo\Bridge\Mercure\Broadcaster;
  *
  * @experimental
  */
-#[\Attribute(\Attribute::TARGET_CLASS)]
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 final class Broadcast
 {
     public const ACTION_CREATE = 'create';
