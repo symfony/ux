@@ -620,6 +620,11 @@ The ``Broadcast`` attribute comes with a set of handy options:
    is derived from the FQCN of the entity and from its id
 -  ``template`` (``string``): Twig template to render (see above)
 
+The ``Broadcast`` attribute can be repeated. This is convenient to
+to render several templates associated with their own topics for the
+same change (e.g. the same data is rendered in different way in the
+list and in the detail pages).
+
 Options are transport-specific. When using Mercure, some extra options
 are supported:
 
@@ -638,7 +643,8 @@ Example::
 
     use Symfony\UX\Turbo\Attribute\Broadcast;
 
-    #[Broadcast(topics: ['@="books_by_author_" ~ entity.author?.id', 'books'], template: 'foo.stream.html.twig', private: true)]
+    #[Broadcast(topics: ['@="book_detail" ~ entity.id', 'books'], template: 'book_detail.stream.html.twig', private: true)]
+    #[Broadcast(topics: ['@="book_list" ~ entity.id', 'books'], template: 'book_list.stream.html.twig', private: true)]
     class Book
     {
         // ...

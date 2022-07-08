@@ -40,7 +40,7 @@ class Song
     public $title = '';
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Artist", inversedBy="songs")
+     * @ORM\ManyToOne(targetEntity=Artist::class, inversedBy="songs")
      *
      * @var Artist|null
      */

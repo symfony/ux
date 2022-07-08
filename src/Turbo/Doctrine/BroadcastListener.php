@@ -33,7 +33,7 @@ final class BroadcastListener implements ResetInterface
     private $annotationReader;
 
     /**
-     * @var array<class-string, mixed[]|false>
+     * @var array<class-string, array[]>
      */
     private $broadcastedClasses;
 
@@ -96,16 +96,23 @@ final class BroadcastListener implements ResetInterface
         try {
             foreach ($this->createdEntities as $entity) {
                 $options = $this->createdEntities[$entity];
-                $options['id'] = $em->getClassMetadata(\get_class($entity))->getIdentifierValues($entity);
-                $this->broadcaster->broadcast($entity, Broadcast::ACTION_CREATE, $options);
+                $id = $em->getClassMetadata(\get_class($entity))->getIdentifierValues($entity);
+                foreach ($options as $option) {
+                    $option['id'] = $id;
+                    $this->broadcaster->broadcast($entity, Broadcast::ACTION_CREATE, $option);
+                }
             }
 
             foreach ($this->updatedEntities as $entity) {
-                $this->broadcaster->broadcast($entity, Broadcast::ACTION_UPDATE, $this->updatedEntities[$entity]);
+                foreach ($this->updatedEntities[$entity] as $option) {
+                    $this->broadcaster->broadcast($entity, Broadcast::ACTION_UPDATE, $option);
+                }
             }
 
             foreach ($this->removedEntities as $entity) {
-                $this->broadcaster->broadcast($entity, Broadcast::ACTION_REMOVE, $this->removedEntities[$entity]);
+                foreach ($this->removedEntities[$entity] as $option) {
+                    $this->broadcaster->broadcast($entity, Broadcast::ACTION_REMOVE, $option);
+                }
             }
         } finally {
             $this->reset();
@@ -124,21 +131,30 @@ final class BroadcastListener implements ResetInterface
         $class = \get_class($entity);
 
         if (!isset($this->broadcastedClasses[$class])) {
-            $this->broadcastedClasses[$class] = false;
+            $this->broadcastedClasses[$class] = [];
             $r = null;
 
             if (\PHP_VERSION_ID >= 80000 && $options = ($r = new \ReflectionClass($class))->getAttributes(Broadcast::class)) {
-                $options = $options[0]->newInstance();
-                $this->broadcastedClasses[$class] = $options->options;
-            } elseif ($this->annotationReader && $options = $this->annotationReader->getClassAnnotation($r ?? new \ReflectionClass($class), Broadcast::class)) {
-                $this->broadcastedClasses[$class] = $options->options;
+                foreach ($options as $option) {
+                    $this->broadcastedClasses[$class][] = $option->newInstance()->options;
+                }
+            } elseif ($this->annotationReader && $options = $this->annotationReader->getClassAnnotations($r ?? new \ReflectionClass($class))) {
+                foreach ($options as $option) {
+                    if ($option instanceof Broadcast) {
+                        $this->broadcastedClasses[$class][] = $option->options;
+                    }
+                }
             }
         }
 
-        if (false !== $options = $this->broadcastedClasses[$class]) {
+        if ($options = $this->broadcastedClasses[$class]) {
             if ('createdEntities' !== $property) {
-                $options['id'] = $em->getClassMetadata($class)->getIdentifierValues($entity);
+                $id = $em->getClassMetadata($class)->getIdentifierValues($entity);
+                foreach ($options as $k => $option) {
+                    $options[$k]['id'] = $id;
+                }
             }
+
             $this->{$property}->attach($entity, $options);
         }
     }
