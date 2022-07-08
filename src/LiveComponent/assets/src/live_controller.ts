@@ -108,9 +108,7 @@ export default class extends Controller implements LiveController {
             throw new Error('Invalid Element Type');
         }
 
-        if (this.element.dataset.poll !== undefined) {
-            this._initiatePolling(this.element.dataset.poll);
-        }
+        this._initiatePolling();
 
         window.addEventListener('beforeunload', this.markAsWindowUnloaded);
         this._startAttributesMutationObserver();
@@ -123,9 +121,7 @@ export default class extends Controller implements LiveController {
     }
 
     disconnect() {
-        this.pollingIntervals.forEach((interval) => {
-            clearInterval(interval);
-        });
+        this._stopAllPolling();
 
         window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
         this.element.removeEventListener('live:update-model', this.handleUpdateModelEvent);
@@ -794,7 +790,14 @@ export default class extends Controller implements LiveController {
         this._updateModelFromElement(target, 'change')
     }
 
-    _initiatePolling(rawPollConfig: string) {
+    _initiatePolling() {
+        this._stopAllPolling();
+
+        if ((this.element as HTMLElement).dataset.poll === undefined) {
+            return;
+        }
+
+        const rawPollConfig = (this.element as HTMLElement).dataset.poll;
         const directives = parseDirectives(rawPollConfig || '$render');
 
         directives.forEach((directive) => {
@@ -959,7 +962,10 @@ export default class extends Controller implements LiveController {
     }
 
     /**
-     * Re-establishes the data-original-data attribute if missing.
+     * Helps "re-normalize" certain root element attributes after a re-render.
+     *
+     *      1) Re-establishes the data-original-data attribute if missing.
+     *      2) Stops or re-initializes data-poll
      *
      * This happens if a parent component re-renders a child component
      * and morphdom *updates* child. This commonly happens if a parent
@@ -979,9 +985,13 @@ export default class extends Controller implements LiveController {
 
         this.mutationObserver = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                if (mutation.type === 'attributes' && !element.dataset.originalData) {
-                    this.originalDataJSON = this.valueStore.asJson();
-                    this._exposeOriginalData();
+                if (mutation.type === 'attributes') {
+                    if (!element.dataset.originalData) {
+                        this.originalDataJSON = this.valueStore.asJson();
+                        this._exposeOriginalData();
+                    }
+
+                    this._initiatePolling();
                 }
             });
         });
@@ -993,6 +1003,12 @@ export default class extends Controller implements LiveController {
 
     private getDefaultDebounce(): number {
         return this.hasDebounceValue ? this.debounceValue : DEFAULT_DEBOUNCE;
+    }
+
+    private _stopAllPolling() {
+        this.pollingIntervals.forEach((interval) => {
+            clearInterval(interval);
+        });
     }
 }
 
