@@ -1,9 +1,12 @@
 # CHANGELOG
 
+## 2.3
+
+-   The `Broadcast` attribute can now be repeated, this is convenient to render several Turbo Streams Twig templates for the same change
+
 ## 2.2
 
 -   The topics defined in the `Broadcast` attribute now support expression language when prefixed with `@=`.
--   The `Broadcast` attribute can now be repeated, this is convenient to render several Turbo Streams Twig templates for the same change
 
 ## 2.1
 
