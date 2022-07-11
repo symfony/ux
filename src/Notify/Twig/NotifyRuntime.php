@@ -30,7 +30,13 @@ final class NotifyRuntime implements RuntimeExtensionInterface
     ) {
     }
 
-    public function renderStreamNotifications(Environment $environment, array|string $topics = [], array $options = []): string
+    /**
+     * @param Environment $environment
+     * @param array|string $topics
+     * @param array $options
+     * @return string
+     */
+    public function renderStreamNotifications(Environment $environment, $topics = [], array $options = []): string
     {
         $topics = [] === $topics ? ['https://symfony.com/notifier'] : (array) $topics;
 
