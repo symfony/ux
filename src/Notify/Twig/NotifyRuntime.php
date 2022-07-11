@@ -31,10 +31,7 @@ final class NotifyRuntime implements RuntimeExtensionInterface
     }
 
     /**
-     * @param Environment $environment
      * @param array|string $topics
-     * @param array $options
-     * @return string
      */
     public function renderStreamNotifications(Environment $environment, $topics = [], array $options = []): string
     {
