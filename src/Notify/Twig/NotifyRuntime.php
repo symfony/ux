@@ -24,10 +24,15 @@ use Twig\Extension\RuntimeExtensionInterface;
  */
 final class NotifyRuntime implements RuntimeExtensionInterface
 {
+    private $hub;
+    private $stimulusTwigExtension;
+
     public function __construct(
-        private HubInterface $hub,
-        private StimulusTwigExtension $stimulusTwigExtension,
+        HubInterface $hub,
+        StimulusTwigExtension $stimulusTwigExtension
     ) {
+        $this->hub = $hub;
+        $this->stimulusTwigExtension = $stimulusTwigExtension;
     }
 
     /**
