@@ -316,7 +316,7 @@ events that the core Stimulus controller dispatches:
             console.log(event.detail.options); // Options that will be used to initialize TomSelect
             event.detail.options.onChange = (value) => {
                 // ...
-            });
+            };
         }
 
         _onConnect(event) {
