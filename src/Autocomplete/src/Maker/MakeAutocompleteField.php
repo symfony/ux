@@ -65,7 +65,7 @@ The <info>%command.name%</info> command generates an Ajax-autocomplete form fiel
 
 The command will ask you which entity the field is for and what to call your new class.
 EOF)
-         ;
+        ;
     }
 
     public function configureDependencies(DependencyBuilder $dependencies)
