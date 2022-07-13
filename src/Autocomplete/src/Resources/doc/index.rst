@@ -175,14 +175,21 @@ includes a CSS file for Tom Select.
     }
 
 This should give you basic styles for Tom Select. If you're using
-Bootstrap, you can get Bootstrap-ready styling by changing this
-line to:
+Bootstrap, you can get Bootstrap-ready styling by (A) changing this
+line to ``false``:
 
 .. code-block:: text
 
     "autoimport": {
-        "tom-select/dist/css/tom-select.bootstrap5.css": true
+        "tom-select/dist/css/tom-select.default.css": false
     }
+
+And then (B) importing the Bootstrap-css file:
+
+.. code-bock:: css
+
+    /* assets/styles/app.css
+    @import 'tom-select/dist/css/tom-select.bootstrap5.css';
 
 To further customize things, you can override the classes with your own custom
 CSS and even control how individual parts of Tom Select render. See `Tom Select Render Templates`_.
