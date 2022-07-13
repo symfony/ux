@@ -29,6 +29,7 @@ use Symfony\UX\Autocomplete\Form\AutocompleteChoiceTypeExtension;
 use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 use Symfony\UX\Autocomplete\Form\WrappedEntityTypeAutocompleter;
 use Symfony\UX\Autocomplete\Maker\MakeAutocompleteField;
+
 use function Symfony\Component\DependencyInjection\Loader\Configurator\abstract_arg;
 
 /**

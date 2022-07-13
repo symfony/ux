@@ -20,6 +20,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
+
 use function Zenstruck\Foundry\create;
 
 /**
