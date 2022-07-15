@@ -7,4 +7,10 @@
     <route id="live_component" path="/_components/{component}/{action}">
         <default key="action">get</default>
     </route>
+
+    <route id="live_upload" path="/live/upload" methods="POST" controller="ux.live_component.upload_controller::uploadAction" />
+
+    <route id="live_preview" path="/live/preview/{filename}" methods="GET" controller="ux.live_component.upload_controller::previewAction">
+        <requirement key="filename">[\w\-\.]+</requirement>
+    </route>
 </routes>

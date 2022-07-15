@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentValidator;
 use Symfony\UX\LiveComponent\ComponentValidatorInterface;
+use Symfony\UX\LiveComponent\Controller\UploadController;
 use Symfony\UX\LiveComponent\EventListener\AddLiveAttributesSubscriber;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
 use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
@@ -107,6 +108,13 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->setDefinition('form.live_collection', new Definition(LiveCollectionType::class))
             ->addTag('form.type')
             ->setPublic(false)
+        ;
+
+        $container->setParameter('ux.live_component.upload_dir', '%kernel.project_dir%/var/live-tmp'); // TODO customizable?
+
+        $container->register('ux.live_component.upload_controller', UploadController::class)
+            ->setArguments(['%ux.live_component.upload_dir%'])
+            ->setPublic(true)
         ;
     }
 }
