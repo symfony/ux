@@ -20,60 +20,6 @@ yarn encore dev
 Also make sure you have at least version 2.0 of [@symfony/stimulus-bridge](https://github.com/symfony/stimulus-bridge)
 in your `package.json` file.
 
-## Use predefined theme
-
-You need to select the right theme from the one you are using:
-
-```yaml
-# config/packages/twig.yaml
-twig:
-    # For bootstrap for example
-    form_themes: ['@FormCollection/form_theme_div.html.twig']
-```
-
-There are 2 predefined themes available:
-
--   `@FormCollection/form_theme_div.html.twig`
--   `@FormCollection/form_theme_table.html.twig`
-
-[Check the Symfony doc](https://symfony.com/doc/4.4/form/form_themes.html) for the different ways to set themes in Symfony.
-
-## Use a custom form theme
-
-Consider your `BlogFormType` form set up and with a comments field that is a `CollectionType`, you can
-render it in your template:
-
-```twig
-{% macro commentFormRow(commentForm) %}
-    <div
-        class="col-4"
-        data-symfony--ux-form-collection--collection-target="entry"
-    >
-        {{ form_errors(commentForm) }}
-        {{ form_row(commentForm.content) }}
-        {{ form_row(commentForm.otherField) }}
-
-        <button type="button" data-action="symfony--ux-form-collection--collection#delete">
-            Remove
-        </button>
-    </div>
-{% endmacro %}
-
-<div
-    class="row"
-    data-controller="symfony--ux-form-collection--collection"
-    data-prototype="{{ _self.commentFormRow(form.comments.vars.prototype)|e }}"
->
-    {% for commentForm in form.comments %}
-        {{ _self.commentFormRow(commentForm) }}
-    {% endfor %}
-
-    <button type="button" data-action="symfony--ux-form-collection--collection#add">
-        Add Another
-    </button>
-</div>
-```
-
 ## Usage
 
 The most common usage of Form Collection is to use it as a replacement of
@@ -87,21 +33,21 @@ class BlogFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            // ...
-            ->add('comments', UXCollectionType::class, [
-                // ...
-                'button_add_options' => [
-                    'label' => 'Add',                       // Default text for the add button (used by predefined theme)
-                    'class' => 'btn btn-outline-primary',   // Add HTML classes to the add button (used by predefined theme)
-                ],
-                'button_delete_options' => [
-                    'label' => 'Remove',                    // Default text for the delete button (used by predefined theme)
-                    'class' => 'btn btn-outline-secondary', // Add HTML classes to the add button (used by predefined theme)
-                ],
-            ])
-            // ...
-        ;
+        $builder->add('comments', UXCollectionType::class, [
+            'label' => 'Comments',
+            'ux_entry_type' => CommentType::class,
+            'entry_options' => [
+                'label' => false,
+            ],
+            'allow_add' => true,
+            'allow_delete' => true,
+            'add_options' => [
+                'label' => 'Add comment',
+            ],
+            'delete_options' => [
+                'label' => 'Remove Comment',
+            ],
+        ]);
     }
 
     // ...
@@ -111,13 +57,49 @@ class BlogFormType extends AbstractType
 You can display it using Twig as you would normally with any form:
 
 ```twig
-{# edit.html.twig #}
+{{ form(form) }}
+```
 
-{{ form_start(form) }}
-    {# ... #}
-    {{ form_row(comments) }}
-    {# ... #}
-{{ form_end(form) }}
+## Theming
+
+### Change position of the entry toolbar
+
+```twig
+{%- block ux_collection_entry_widget -%}
+    {%- set toolbar -%}
+        {{- form_widget(form.toolbar) -}}
+    {%- endset -%}
+
+    <div class="mt-4 bg-gray-50 border shadow p-4">
+        {{- toolbar -}}
+            
+        {{- block('form_rows') -}}
+        
+        <div class="mt-4 flex justify-end flex-wrap">
+            {{- toolbar -}}
+        </div>
+    </div>
+{%- endblock -%}
+```
+
+### Change entry toolbar
+
+```twig
+{%- block ux_collection_entry_toolbar_widget -%}
+    <div class="mt-4 flex justify-end flex-wrap">
+        {{- block('form_widget') -}}
+    </div>
+{%- endblock -%}
+```
+
+### Change collection toolbar
+
+```twig
+{%- block ux_collection_toolbar_widget -%}
+    <div class="mt-4 flex justify-center flex-wrap">
+        {{- block('form_widget') -}}
+    </div>
+{%- endblock -%}
 ```
 
 ### Extend the default behavior
