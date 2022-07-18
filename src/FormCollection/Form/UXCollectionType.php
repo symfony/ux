@@ -52,7 +52,9 @@ class UXCollectionType extends AbstractType
         };
 
         $attrNormalizer = function (Options $options, $value) {
-            $value['data-controller'] = 'collection';
+            if (!isset($value['data-controller'])) {
+                $value['data-controller'] = 'collection';
+            }
 
             return $value;
         };
