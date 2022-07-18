@@ -1,84 +1,52 @@
 import { Controller } from '@hotwired/stimulus';
 
-class default_1 extends Controller {
+class controller extends Controller {
     constructor() {
         super(...arguments);
         this.index = 0;
+        this.controllerName = 'collection';
+    }
+    static get targets() {
+        return ['entry', 'addButton', 'removeButton'];
     }
     connect() {
         this.controllerName = this.context.scope.identifier;
-        this.index = this.startIndexValue ? this.startIndexValue : this.entryTargets.length - 1;
-        if (!this.prototypeNameValue) {
-            this.prototypeNameValue = '__name__';
-        }
-        this._dispatchEvent('form-collection:pre-connect', {
-            allowAdd: this.allowAddValue,
-            allowDelete: this.allowDeleteValue,
-        });
-        if (this.allowAddValue) {
-            const buttonAdd = this._textToNode(this.buttonAddValue);
-            this.element.prepend(buttonAdd);
-        }
-        if (this.allowDeleteValue) {
-            for (let i = 0; i < this.entryTargets.length; i++) {
-                const entry = this.entryTargets[i];
-                this._addDeleteButton(entry, i);
-            }
-        }
-        this._dispatchEvent('form-collection:connect', {
-            allowAdd: this.allowAddValue,
-            allowDelete: this.allowDeleteValue,
-        });
+        this._dispatchEvent('form-collection:pre-connect');
+        this.index = this.entryTargets.length;
+        this._dispatchEvent('form-collection:connect');
     }
     add() {
-        this.index++;
-        let newEntry = this.element.dataset.prototype;
-        if (!newEntry) {
-            newEntry = this.prototypeValue;
+        const prototype = this.element.dataset.prototype;
+        if (!prototype) {
+            throw new Error('A "data-prototype" attribute was expected on data-controller="' + this.controllerName + '" element.');
         }
-        let regExp = new RegExp(this.prototypeNameValue + 'label__', 'g');
-        newEntry = newEntry.replace(regExp, this.index);
-        regExp = new RegExp(this.prototypeNameValue, 'g');
-        newEntry = newEntry.replace(regExp, this.index);
-        newEntry = this._textToNode(newEntry);
         this._dispatchEvent('form-collection:pre-add', {
+            prototype: prototype,
             index: this.index,
-            element: newEntry,
         });
-        this.element.append(newEntry);
-        let entry = this.entryTargets[this.entryTargets.length - 1];
-        entry = this._addDeleteButton(entry, this.index);
+        const newEntry = this._textToNode(prototype.replace(/__name__/g, this.index.toString()));
+        if (this.entryTargets.length > 1) {
+            this.entryTargets[this.entryTargets.length - 1].after(newEntry);
+        }
+        else {
+            this.element.prepend(newEntry);
+        }
         this._dispatchEvent('form-collection:add', {
+            prototype: prototype,
             index: this.index,
-            element: entry,
         });
+        this.index++;
     }
     delete(event) {
-        const entry = event.target.closest('[data-' + this.controllerName + '-target="entry"]');
+        const clickTarget = event.target;
+        const entry = clickTarget.closest('[data-' + this.controllerName + '-target="entry"]');
         this._dispatchEvent('form-collection:pre-delete', {
-            index: entry.dataset.indexEntry,
             element: entry,
         });
         entry.remove();
         this._dispatchEvent('form-collection:delete', {
-            index: entry.dataset.indexEntry,
             element: entry,
         });
-    }
-    _addDeleteButton(entry, index) {
-        entry.dataset.indexEntry = index.toString();
-        const buttonDelete = this._textToNode(this.buttonDeleteValue);
-        if (!buttonDelete) {
-            return entry;
-        }
-        buttonDelete.dataset.indexEntry = index;
-        if ('TR' === entry.nodeName) {
-            entry.lastElementChild.append(buttonDelete);
-        }
-        else {
-            entry.append(buttonDelete);
-        }
-        return entry;
     }
     _textToNode(text) {
         const template = document.createElement('template');
@@ -86,20 +54,9 @@ class default_1 extends Controller {
         template.innerHTML = text;
         return template.content.firstChild;
     }
-    _dispatchEvent(name, payload) {
-        console.log('TTTT');
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
+    _dispatchEvent(name, payload = {}) {
+        this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
     }
 }
-default_1.targets = ['entry'];
-default_1.values = {
-    allowAdd: Boolean,
-    allowDelete: Boolean,
-    buttonAdd: String,
-    buttonDelete: String,
-    prototypeName: String,
-    prototype: String,
-    startIndex: Number,
-};
 
-export { default_1 as default };
+export { controller as default };

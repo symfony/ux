@@ -64,11 +64,9 @@ class UXCollectionType extends AbstractType
         };
 
         $entryOptionsNormalizer = function (OptionsResolver $options, $value) {
-            $value['row_attr']['data-controller-target'] = 'entry';
-
             return [
                 'row_attr' => [
-                    'data-controller-target' => 'entry',
+                    'data-collection-target' => 'entry',
                 ],
                 'allow_delete' => $options['allow_delete'],
                 'delete_options' => $options['delete_options'],
