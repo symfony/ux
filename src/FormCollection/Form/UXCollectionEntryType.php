@@ -3,34 +3,29 @@
 namespace Symfony\UX\FormCollection\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
-use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @final
  * @experimental
- * @internal Only for internal usage to add the toolbar to every entry of a collection.
+ *
+ * @internal only for internal usage to add the toolbar to every entry of a collection
  */
 class UXCollectionEntryType extends AbstractType
 {
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder->add(
             'entry',
             $options['entry_type'],
-            $options['entry_options']
+            $options['entry_options'],
         );
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $form->add('toolbar', UXCollectionEntryToolbarType::class, [
@@ -39,10 +34,7 @@ class UXCollectionEntryType extends AbstractType
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'entry_type' => TextType::class,

@@ -3,10 +3,8 @@
 namespace Symfony\UX\FormCollection\Form;
 
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
@@ -18,14 +16,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  */
 class UXCollectionType extends AbstractType
 {
-    public function getParent()
+    public function getParent(): string
     {
         return CollectionType::class;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $form->add('toolbar', UXCollectionToolbarType::class, [
@@ -34,14 +29,11 @@ class UXCollectionType extends AbstractType
         ]);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function configureOptions(OptionsResolver $resolver): void
     {
         $addOptionsNormalizer = function (Options $options, $value) {
             $value['block_name'] = 'add_button';
-            $value['attr'] = array_merge([
+            $value['attr'] = \array_merge([
                 'data-collection-target' => 'addButton',
                 'data-action' => 'collection#add',
             ], $value['attr'] ?? []);
@@ -51,7 +43,7 @@ class UXCollectionType extends AbstractType
 
         $deleteOptionsNormalizer = function (Options $options, $value) {
             $value['block_name'] = 'delete_button';
-            $value['attr'] = array_merge([
+            $value['attr'] = \array_merge([
                 'data-collection-target' => 'deleteButton',
                 'data-action' => 'collection#delete',
             ], $value['attr'] ?? []);
