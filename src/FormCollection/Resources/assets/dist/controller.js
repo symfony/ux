@@ -1,38 +1,40 @@
 import { Controller } from '@hotwired/stimulus';
 
-class controller extends Controller {
+class default_1 extends Controller {
     constructor() {
         super(...arguments);
         this.index = 0;
         this.controllerName = 'collection';
-    }
-    static get targets() {
-        return ['entry', 'addButton', 'removeButton'];
+        this.entries = [];
     }
     connect() {
         this.controllerName = this.context.scope.identifier;
         this._dispatchEvent('form-collection:pre-connect');
-        this.index = this.entryTargets.length;
+        this.entries = [];
+        this.element.querySelectorAll(':scope > [data-' + this.controllerName + '-target="entry"]').forEach(entry => {
+            this.entries.push(entry);
+        });
         this._dispatchEvent('form-collection:connect');
     }
     add() {
-        const prototype = this.element.dataset.prototype;
-        if (!prototype) {
+        const prototypeHTML = this.element.dataset.prototype;
+        if (!prototypeHTML) {
             throw new Error('A "data-prototype" attribute was expected on data-controller="' + this.controllerName + '" element.');
         }
+        const newEntry = this._textToNode(prototypeHTML.replace(new RegExp('/' + this.prototypeNameValue + '/', 'g'), this.index.toString()));
         this._dispatchEvent('form-collection:pre-add', {
-            prototype: prototype,
+            entry: newEntry,
             index: this.index,
         });
-        const newEntry = this._textToNode(prototype.replace(/__name__/g, this.index.toString()));
-        if (this.entryTargets.length > 1) {
-            this.entryTargets[this.entryTargets.length - 1].after(newEntry);
+        if (this.entries.length > 1) {
+            this.entries[this.entries.length - 1].after(newEntry);
         }
         else {
             this.element.prepend(newEntry);
         }
+        this.entries.push(newEntry);
         this._dispatchEvent('form-collection:add', {
-            prototype: prototype,
+            entry: newEntry,
             index: this.index,
         });
         this.index++;
@@ -41,11 +43,12 @@ class controller extends Controller {
         const clickTarget = event.target;
         const entry = clickTarget.closest('[data-' + this.controllerName + '-target="entry"]');
         this._dispatchEvent('form-collection:pre-delete', {
-            element: entry,
+            entry: entry,
         });
         entry.remove();
+        this.entries = this.entries.filter(currentEntry => currentEntry !== entry);
         this._dispatchEvent('form-collection:delete', {
-            element: entry,
+            entry: entry,
         });
     }
     _textToNode(text) {
@@ -58,5 +61,8 @@ class controller extends Controller {
         this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
     }
 }
+default_1.values = {
+    prototypeName: String,
+};
 
-export { controller as default };
+export { default_1 as default };

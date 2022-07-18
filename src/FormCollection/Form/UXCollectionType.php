@@ -34,8 +34,8 @@ class UXCollectionType extends AbstractType
         $addOptionsNormalizer = function (Options $options, $value) {
             $value['block_name'] = 'add_button';
             $value['attr'] = \array_merge([
-                'data-collection-target' => 'addButton',
-                'data-action' => 'collection#add',
+                'data-' . $options['attr']['data-controller'] . '-target' => 'addButton',
+                'data-action' => $options['attr']['data-controller'] . '#add',
             ], $value['attr'] ?? []);
 
             return $value;
@@ -44,8 +44,8 @@ class UXCollectionType extends AbstractType
         $deleteOptionsNormalizer = function (Options $options, $value) {
             $value['block_name'] = 'delete_button';
             $value['attr'] = \array_merge([
-                'data-collection-target' => 'deleteButton',
-                'data-action' => 'collection#delete',
+                'data-' . $options['attr']['data-controller'] . '-target' => 'deleteButton',
+                'data-action' => $options['attr']['data-controller'] . '#delete',
             ], $value['attr'] ?? []);
 
             return $value;
@@ -55,6 +55,7 @@ class UXCollectionType extends AbstractType
             if (!isset($value['data-controller'])) {
                 $value['data-controller'] = 'collection';
             }
+            $value['data-' . $value['data-controller'] . '-prototype-name-value'] = $options['prototype_name'];
 
             return $value;
         };
@@ -66,8 +67,9 @@ class UXCollectionType extends AbstractType
         $entryOptionsNormalizer = function (OptionsResolver $options, $value) {
             return [
                 'row_attr' => [
-                    'data-collection-target' => 'entry',
+                    'data-' . $options['attr']['data-controller'] . '-target' => 'entry',
                 ],
+                'label' => false,
                 'allow_delete' => $options['allow_delete'],
                 'delete_options' => $options['delete_options'],
                 'entry_type' => $options['ux_entry_type'] ?? null,

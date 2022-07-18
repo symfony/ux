@@ -3,49 +3,57 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    static get targets() {
-        return ['entry', 'addButton', 'removeButton'];
+    static values = {
+        prototypeName: String,
     }
 
-    declare readonly entryTargets: HTMLElement[];
+    declare readonly prototypeNameValue: string;
 
-    index: Number = 0;
-    controllerName: string = 'collection';
+    index = 0;
+    controllerName = 'collection';
+    entries: Element[] = [];
 
     connect() {
         this.controllerName = this.context.scope.identifier;
 
         this._dispatchEvent('form-collection:pre-connect');
 
-        this.index = this.entryTargets.length;
+        this.entries = [];
+        this.element.querySelectorAll(':scope > [data-' + this.controllerName + '-target="entry"]').forEach(entry => {
+            this.entries.push(entry);
+        });
 
         this._dispatchEvent('form-collection:connect');
     }
 
     add() {
-        const prototype = this.element.dataset.prototype;
+        const prototypeHTML = this.element.dataset.prototype;
 
-        if (!prototype) {
+        if (!prototypeHTML) {
             throw new Error(
                 'A "data-prototype" attribute was expected on data-controller="' + this.controllerName + '" element.'
             );
         }
 
+        const newEntry = this._textToNode(
+            prototypeHTML.replace(new RegExp('/' + this.prototypeNameValue + '/', 'g'), this.index.toString())
+        );
+
         this._dispatchEvent('form-collection:pre-add', {
-            prototype: prototype,
+            entry: newEntry,
             index: this.index,
         });
 
-        const newEntry = this._textToNode(prototype.replace(/__name__/g, this.index.toString()));
-
-        if (this.entryTargets.length > 1) {
-            this.entryTargets[this.entryTargets.length - 1].after(newEntry);
+        if (this.entries.length > 1) {
+            this.entries[this.entries.length - 1].after(newEntry);
         } else {
             this.element.prepend(newEntry);
         }
 
+        this.entries.push(newEntry);
+
         this._dispatchEvent('form-collection:add', {
-            prototype: prototype,
+            entry: newEntry,
             index: this.index,
         });
 
@@ -58,13 +66,14 @@ export default class extends Controller {
         const entry = clickTarget.closest('[data-' + this.controllerName + '-target="entry"]') as HTMLElement;
 
         this._dispatchEvent('form-collection:pre-delete', {
-            element: entry,
+            entry: entry,
         });
 
         entry.remove();
+        this.entries = this.entries.filter(currentEntry => currentEntry !== entry);
 
         this._dispatchEvent('form-collection:delete', {
-            element: entry,
+            entry: entry,
         });
     }
 
