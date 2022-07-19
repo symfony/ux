@@ -1,5 +1,8 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {{ form(form) }}
+    <div style="max-width: 85ch">
+        {% form_theme form 'example_theme.html.twig' %}
+        {{ form(form) }}
+    </div>
 {% endblock %}

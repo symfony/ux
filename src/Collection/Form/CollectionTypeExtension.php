@@ -83,9 +83,9 @@ class CollectionTypeExtension extends AbstractTypeExtension
         };
 
         $resolver->setDefaults([
-            'add_type' => ButtonType::class,
+            'add_type' => ButtonType::class, // TODO add AddButtonType for easier theming and extending
             'add_options' => [],
-            'delete_type' => ButtonType::class,
+            'delete_type' => ButtonType::class, // TODO add DeleteButtonType for easier theming and extending
             'delete_options' => [],
         ]);
 
