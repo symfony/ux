@@ -44,7 +44,7 @@ export default class extends Controller {
             index: this.index,
         });
 
-        if (this.entries.length > 1) {
+        if (this.entries.length > 0) {
             this.entries[this.entries.length - 1].after(newEntry);
         } else {
             this.element.prepend(newEntry);

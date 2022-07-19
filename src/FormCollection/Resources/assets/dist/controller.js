@@ -26,7 +26,7 @@ class default_1 extends Controller {
             entry: newEntry,
             index: this.index,
         });
-        if (this.entries.length > 1) {
+        if (this.entries.length > 0) {
             this.entries[this.entries.length - 1].after(newEntry);
         }
         else {
