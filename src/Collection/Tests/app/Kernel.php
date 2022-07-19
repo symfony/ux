@@ -11,6 +11,9 @@
 
 namespace App;
 
+use App\Entity\Game;
+use App\Entity\Player;
+use App\Entity\Team;
 use App\Form\GameType;
 use Symfony\Bundle\DebugBundle\DebugBundle;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -79,7 +82,23 @@ class Kernel extends BaseKernel
 
     public function form(Request $request, Environment $twig, FormFactoryInterface $formFactory, string $type): Response
     {
-        $form = $formFactory->create(GameType::class);
+        $game = new Game();
+        $team1 = new Team();
+        $team1->name = 'Symfony UX Team';
+        $player1 = new Player();
+        $player1->firstName = 'Player';
+        $player1->lastName = 'A1';
+        $team1->addPlayer($player1);
+        $player2 = new Player();
+        $player2->firstName = 'Player';
+        $player2->lastName = 'A1';
+        $team1->addPlayer($player2);
+        $team2 = new Team();
+        $team2->name = 'Symfony Core Team';
+        $game->addTeam($team1);
+        $game->addTeam($team2);
+
+        $form = $formFactory->create(GameType::class, $game);
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {

@@ -23,6 +23,12 @@ class TeamType extends AbstractType
                 'entry_type' => PlayerType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
+                'add_options' => [
+                    'label' => 'Add Player',
+                ],
+                'delete_options' => [
+                    'label' => 'Remove Player',
+                ],
             ])
         ;
     }

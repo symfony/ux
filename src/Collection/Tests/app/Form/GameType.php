@@ -6,6 +6,7 @@ namespace App\Form;
 
 use App\Entity\Game;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ButtonType;
 use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -25,6 +26,12 @@ class GameType extends AbstractType
                 'entry_type' => TeamType::class,
                 'allow_add' => true,
                 'allow_delete' => true,
+                'add_options' => [
+                    'label' => 'Add Team',
+                ],
+                'delete_options' => [
+                    'label' => 'Remove Team',
+                ],
             ])
             ->add('submit', SubmitType::class)
         ;

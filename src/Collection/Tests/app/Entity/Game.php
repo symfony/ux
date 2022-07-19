@@ -19,8 +19,6 @@ class Game
     {
         $this->teams[] = $team;
         $this->teams = array_values($this->teams);
-
-        dump($this->teams);
     }
 
     public function removeTeam(Team $team): void
