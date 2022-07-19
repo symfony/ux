@@ -3,10 +3,10 @@ import { Controller } from '@hotwired/stimulus';
 const DEFAULT_ITEMS_SELECTOR = ':scope > :is(div, fieldset)';
 var ButtonType;
 (function (ButtonType) {
-    ButtonType["Add"] = "add";
-    ButtonType["Delete"] = "delete";
+    ButtonType[ButtonType["Add"] = 0] = "Add";
+    ButtonType[ButtonType["Delete"] = 1] = "Delete";
 })(ButtonType || (ButtonType = {}));
-class controller extends Controller {
+class default_1 extends Controller {
     connect() {
         this.connectCollection(this.element);
     }
@@ -16,19 +16,24 @@ class controller extends Controller {
             const items = this.getItems(collectionEl);
             collectionEl.dataset.currentIndex = items.length.toString();
             this.addAddButton(collectionEl);
-            this.getItems(collectionEl).forEach(itemEl => this.addDeleteButton(collectionEl, itemEl));
+            this.getItems(collectionEl).forEach((itemEl) => this.addDeleteButton(collectionEl, itemEl));
         });
     }
     getItems(collectionElement) {
         return collectionElement.querySelectorAll(collectionElement.dataset.itemsSelector || DEFAULT_ITEMS_SELECTOR);
     }
     createButton(collectionEl, buttonType) {
-        const buttonTemplateID = collectionEl.dataset[`${buttonType}ButtonTemplateId`];
+        var _a;
+        const attributeName = `${ButtonType[buttonType].toLowerCase()}ButtonTemplateId`;
+        const buttonTemplateID = (_a = collectionEl.dataset[attributeName]) !== null && _a !== void 0 ? _a : this[`${attributeName}Value`];
         if (buttonTemplateID && 'content' in document.createElement('template')) {
             const buttonTemplate = document.getElementById(buttonTemplateID);
             if (!buttonTemplate)
-                throw new Error(`element with ID "${buttonTemplateID}" not found`);
-            return buttonTemplate.content.cloneNode(true);
+                throw new Error(`template with ID "${buttonTemplateID}" not found`);
+            const fragment = buttonTemplate.content.cloneNode(true);
+            if (1 !== fragment.children.length)
+                throw new Error('template with ID "${buttonTemplateID}" must have exactly one child');
+            return fragment.firstElementChild;
         }
         const button = document.createElement('button');
         button.type = 'button';
@@ -67,5 +72,11 @@ class controller extends Controller {
         itemEl.appendChild(deleteButton);
     }
 }
+default_1.values = {
+    addButtonTemplateId: "",
+    disableAddButton: false,
+    deleteButtonTemplateId: "",
+    disableDeleteButton: false,
+};
 
-export { controller as default };
+export { default_1 as default };

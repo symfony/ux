@@ -12,5 +12,6 @@ import Controller from "@symfony/ux-collection/dist/controller.js";
 
 const application = Application.start();
 application.register("symfony--ux-collection--collection", Controller);
+application.register("collection", Controller);
 
 console.log('test app initialized');

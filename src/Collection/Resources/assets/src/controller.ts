@@ -13,11 +13,18 @@ interface CollectionDataset extends DOMStringMap {
 }
 
 enum ButtonType {
-    Add = 'add',
-    Delete = 'delete',
+    Add,
+    Delete,
 }
 
 export default class extends Controller {
+    static values = {
+        addButtonTemplateId: "",
+        disableAddButton: false,
+        deleteButtonTemplateId: "",
+        disableDeleteButton: false,
+    };
+
     connect() {
         this.connectCollection(this.element as HTMLElement);
     }
@@ -39,13 +46,19 @@ export default class extends Controller {
     }
 
     createButton(collectionEl: HTMLElement, buttonType: ButtonType): HTMLElement {
-        const buttonTemplateID = collectionEl.dataset[`${buttonType}ButtonTemplateId`];
+        const attributeName = `${ButtonType[buttonType].toLowerCase()}ButtonTemplateId`;
+        const buttonTemplateID = collectionEl.dataset[attributeName] ?? (this as any)[`${attributeName}Value`];
         if (buttonTemplateID && 'content' in document.createElement('template')) {
             // Get from template
             const buttonTemplate = document.getElementById(buttonTemplateID) as HTMLTemplateElement | null;
-            if (!buttonTemplate) throw new Error(`element with ID "${buttonTemplateID}" not found`);
+            if (!buttonTemplate)
+                throw new Error(`template with ID "${buttonTemplateID}" not found`);
 
-            return buttonTemplate.content.cloneNode(true) as HTMLElement;
+            const fragment = (buttonTemplate.content.cloneNode(true) as DocumentFragment);
+            if (1 !== fragment.children.length)
+                throw new Error('template with ID "${buttonTemplateID}" must have exactly one child');
+
+            return fragment.firstElementChild as HTMLElement;
         }
 
         // If no template is provided, create a raw HTML button

@@ -69,7 +69,7 @@ class Kernel extends BaseKernel
         $routes->import('@WebProfilerBundle/Resources/config/routing/wdt.xml')->prefix('/_wdt');
         $routes->import('@WebProfilerBundle/Resources/config/routing/profiler.xml')->prefix('/_profiler');
 
-        $routes->add('form', '/')->controller('kernel::form');
+        $routes->add('form', '/{type<^basic|template$>?basic}')->controller('kernel::form');
     }
 
     public function getProjectDir(): string
@@ -77,7 +77,7 @@ class Kernel extends BaseKernel
         return __DIR__;
     }
 
-    public function form(Request $request, Environment $twig, FormFactoryInterface $formFactory): Response
+    public function form(Request $request, Environment $twig, FormFactoryInterface $formFactory, string $type): Response
     {
         $form = $formFactory->create(GameType::class);
 
@@ -88,7 +88,7 @@ class Kernel extends BaseKernel
         }
 
         return new Response(
-            $twig->render('form.html.twig', ['form' => $form->createView()])
+            $twig->render("{$type}_form.html.twig", ['form' => $form->createView()])
         );
     }
 }
