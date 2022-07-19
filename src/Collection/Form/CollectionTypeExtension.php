@@ -59,6 +59,16 @@ class CollectionTypeExtension extends AbstractTypeExtension
         }
     }
 
+    public function finishView(FormView $view, FormInterface $form, array $options): void
+    {
+        if (!$form->has('addButton')) {
+            return;
+        }
+
+        $addButton = $form->get('addButton');
+        $form->add('addButton', $options['add_type'], $options['add_options']);
+    }
+
     public function configureOptions(OptionsResolver $resolver)
     {
         $attrNormalizer = function (Options $options, $value) {
@@ -80,7 +90,6 @@ class CollectionTypeExtension extends AbstractTypeExtension
         ]);
 
         $addOptionsNormalizer = function (Options $options, $value) {
-            $value['block_name'] = 'add_button';
             $value['attr'] = \array_merge([
                 'data-action' => $options['attr']['data-controller'] . '#add',
             ], $value['attr'] ?? []);
@@ -89,7 +98,6 @@ class CollectionTypeExtension extends AbstractTypeExtension
         };
 
         $deleteOptionsNormalizer = function (Options $options, $value) {
-            $value['block_name'] = 'delete_button';
             $value['attr'] = \array_merge([
                 'data-action' => $options['attr']['data-controller'] . '#delete',
             ], $value['attr'] ?? []);

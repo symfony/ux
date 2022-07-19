@@ -91,7 +91,7 @@ class Kernel extends BaseKernel
         $team1->addPlayer($player1);
         $player2 = new Player();
         $player2->firstName = 'Player';
-        $player2->lastName = 'A1';
+        $player2->lastName = 'A2';
         $team1->addPlayer($player2);
         $team2 = new Team();
         $team2->name = 'Symfony Core Team';
