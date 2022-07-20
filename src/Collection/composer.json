@@ -54,10 +54,5 @@
             "url": "https://github.com/symfony/ux"
         }
     },
-    "minimum-stability": "dev",
-    "config": {
-        "allow-plugins": {
-            "composer/package-versions-deprecated": true
-        }
-    }
+    "minimum-stability": "dev"
 }

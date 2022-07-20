@@ -19,9 +19,9 @@ enum ButtonType {
 
 export default class extends Controller {
     static values = {
-        addButtonTemplateId: "",
+        addButtonTemplateId: '',
         disableAddButton: false,
-        deleteButtonTemplateId: "",
+        deleteButtonTemplateId: '',
         disableDeleteButton: false,
     };
 
@@ -51,10 +51,9 @@ export default class extends Controller {
         if (buttonTemplateID && 'content' in document.createElement('template')) {
             // Get from template
             const buttonTemplate = document.getElementById(buttonTemplateID) as HTMLTemplateElement | null;
-            if (!buttonTemplate)
-                throw new Error(`template with ID "${buttonTemplateID}" not found`);
+            if (!buttonTemplate) throw new Error(`template with ID "${buttonTemplateID}" not found`);
 
-            const fragment = (buttonTemplate.content.cloneNode(true) as DocumentFragment);
+            const fragment = buttonTemplate.content.cloneNode(true) as DocumentFragment;
             if (1 !== fragment.children.length)
                 throw new Error('template with ID "${buttonTemplateID}" must have exactly one child');
 
