@@ -6,10 +6,8 @@ interface CollectionDataset extends DOMStringMap {
     prototype: string;
     currentIndex: string;
     itemsSelector?: string;
-    addButtonTemplateId?: string;
-    disableAddButton?: string;
-    deleteButtonTemplateId?: string;
-    disableDeleteButton?: string;
+    addButton?: string;
+    deleteButton?: string;
 }
 
 enum ButtonType {
@@ -19,10 +17,8 @@ enum ButtonType {
 
 export default class extends Controller {
     static values = {
-        addButtonTemplateId: '',
-        disableAddButton: false,
-        deleteButtonTemplateId: '',
-        disableDeleteButton: false,
+        addButton: '',
+        deleteButton: '',
     };
 
     connect() {
@@ -45,27 +41,32 @@ export default class extends Controller {
         return collectionElement.querySelectorAll(collectionElement.dataset.itemsSelector || DEFAULT_ITEMS_SELECTOR);
     }
 
-    createButton(collectionEl: HTMLElement, buttonType: ButtonType): HTMLElement {
-        const attributeName = `${ButtonType[buttonType].toLowerCase()}ButtonTemplateId`;
-        const buttonTemplateID = collectionEl.dataset[attributeName] ?? (this as any)[`${attributeName}Value`];
-        if (buttonTemplateID && 'content' in document.createElement('template')) {
-            // Get from template
-            const buttonTemplate = document.getElementById(buttonTemplateID) as HTMLTemplateElement | null;
-            if (!buttonTemplate) throw new Error(`template with ID "${buttonTemplateID}" not found`);
+    createButton(collectionEl: HTMLElement, buttonType: ButtonType): HTMLElement | null {
+        const attributeName = `${ButtonType[buttonType].toLowerCase()}Button`;
+        const button = collectionEl.dataset[attributeName] ?? (this.element as HTMLElement).dataset[attributeName];
+        console.log(button);
 
-            const fragment = buttonTemplate.content.cloneNode(true) as DocumentFragment;
-            if (1 !== fragment.children.length)
-                throw new Error('template with ID "${buttonTemplateID}" must have exactly one child');
+        // Button explicitly disabled through data attribute
+        if ('' === button) return null;
 
-            return fragment.firstElementChild as HTMLElement;
+        // No data attribute provided or <template> not supported: create raw HTML button
+        if (undefined === button || !('content' in document.createElement('template'))) {
+            const button = document.createElement('button') as HTMLButtonElement;
+            button.type = 'button';
+            button.textContent = ButtonType[buttonType];
+
+            return button;
         }
 
-        // If no template is provided, create a raw HTML button
-        const button = document.createElement('button') as HTMLButtonElement;
-        button.type = 'button';
-        button.textContent = buttonType === ButtonType.Add ? 'Add' : 'Delete';
+        // Use the template referenced by the data attribute
+        const buttonTemplate = document.getElementById(button) as HTMLTemplateElement | null;
+        if (!buttonTemplate) throw new Error(`template with ID "${buttonTemplate}" not found`);
 
-        return button;
+        const fragment = buttonTemplate.content.cloneNode(true) as DocumentFragment;
+        if (1 !== fragment.children.length)
+            throw new Error('template with ID "${buttonTemplateID}" must have exactly one child');
+
+        return fragment.firstElementChild as HTMLElement;
     }
 
     addItem(collectionEl: HTMLElement) {
@@ -92,6 +93,8 @@ export default class extends Controller {
 
     addAddButton(collectionEl: HTMLElement) {
         const addButton = this.createButton(collectionEl, ButtonType.Add);
+        if (!addButton) return;
+
         addButton.onclick = (e) => {
             e.preventDefault();
             this.addItem(collectionEl);
@@ -101,6 +104,8 @@ export default class extends Controller {
 
     addDeleteButton(collectionEl: HTMLElement, itemEl: HTMLElement) {
         const deleteButton = this.createButton(collectionEl, ButtonType.Delete);
+        if (!deleteButton) return;
+
         deleteButton.onclick = (e) => {
             e.preventDefault();
             itemEl.remove();

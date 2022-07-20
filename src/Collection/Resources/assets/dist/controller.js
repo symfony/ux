@@ -24,21 +24,24 @@ class default_1 extends Controller {
     }
     createButton(collectionEl, buttonType) {
         var _a;
-        const attributeName = `${ButtonType[buttonType].toLowerCase()}ButtonTemplateId`;
-        const buttonTemplateID = (_a = collectionEl.dataset[attributeName]) !== null && _a !== void 0 ? _a : this[`${attributeName}Value`];
-        if (buttonTemplateID && 'content' in document.createElement('template')) {
-            const buttonTemplate = document.getElementById(buttonTemplateID);
-            if (!buttonTemplate)
-                throw new Error(`template with ID "${buttonTemplateID}" not found`);
-            const fragment = buttonTemplate.content.cloneNode(true);
-            if (1 !== fragment.children.length)
-                throw new Error('template with ID "${buttonTemplateID}" must have exactly one child');
-            return fragment.firstElementChild;
+        const attributeName = `${ButtonType[buttonType].toLowerCase()}Button`;
+        const button = (_a = collectionEl.dataset[attributeName]) !== null && _a !== void 0 ? _a : this.element.dataset[attributeName];
+        console.log(button);
+        if ('' === button)
+            return null;
+        if (undefined === button || !('content' in document.createElement('template'))) {
+            const button = document.createElement('button');
+            button.type = 'button';
+            button.textContent = ButtonType[buttonType];
+            return button;
         }
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.textContent = buttonType === ButtonType.Add ? 'Add' : 'Delete';
-        return button;
+        const buttonTemplate = document.getElementById(button);
+        if (!buttonTemplate)
+            throw new Error(`template with ID "${buttonTemplate}" not found`);
+        const fragment = buttonTemplate.content.cloneNode(true);
+        if (1 !== fragment.children.length)
+            throw new Error('template with ID "${buttonTemplateID}" must have exactly one child');
+        return fragment.firstElementChild;
     }
     addItem(collectionEl) {
         const currentIndex = collectionEl.dataset.currentIndex;
@@ -57,6 +60,8 @@ class default_1 extends Controller {
     }
     addAddButton(collectionEl) {
         const addButton = this.createButton(collectionEl, ButtonType.Add);
+        if (!addButton)
+            return;
         addButton.onclick = (e) => {
             e.preventDefault();
             this.addItem(collectionEl);
@@ -65,6 +70,8 @@ class default_1 extends Controller {
     }
     addDeleteButton(collectionEl, itemEl) {
         const deleteButton = this.createButton(collectionEl, ButtonType.Delete);
+        if (!deleteButton)
+            return;
         deleteButton.onclick = (e) => {
             e.preventDefault();
             itemEl.remove();
@@ -73,10 +80,8 @@ class default_1 extends Controller {
     }
 }
 default_1.values = {
-    addButtonTemplateId: "",
-    disableAddButton: false,
-    deleteButtonTemplateId: "",
-    disableDeleteButton: false,
+    addButton: '',
+    deleteButton: '',
 };
 
 export { default_1 as default };
