@@ -18,7 +18,7 @@ class TeamType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
+            ->add('name', null, ['attr' => ['data-controller' => 'test']])
             ->add('players', CollectionType::class, [
                 'entry_type' => PlayerType::class,
                 'allow_add' => true,

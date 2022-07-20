@@ -1,15 +1,19 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-<template id="addButton">
-    <button type="button">My add button</button>
-</template>
+    <template id="addButton">
+        <button type="button">My add button</button>
+    </template>
 
-<template id="deleteButton">
-    <button type="button">My delete button</button>
-</template>
+    <template id="deleteButton">
+        <button type="button">My delete button</button>
+    </template>
 
-<div data-controller="symfony--ux-collection--collection" data-symfony--ux-collection--collection-add-button-template-id-value="addButton" data-symfony--ux-collection--collection-delete-button-template-id-value="deleteButton">
-    {{ form(form) }}
-</div>
+    {{ form_start(form, {'attr': {
+        'data-controller': 'symfony--ux-collection--collection',
+        'data-symfony--ux-collection--collection-add-button-template-id-value': 'addButton',
+        'data-symfony--ux-collection--collection-delete-button-template-id-value': 'deleteButton',
+    }}) }}
+        {{ form(form) }}
+    {{ form_end(form) }}
 {% endblock %}

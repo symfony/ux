@@ -7,11 +7,14 @@
  * file that was distributed with this source code.
  */
 
-import { Application } from "@hotwired/stimulus";
+import { Application, Controller as BaseController } from "@hotwired/stimulus";
 import Controller from "@symfony/ux-collection/dist/controller.js";
 
 const application = Application.start();
 application.register("symfony--ux-collection--collection", Controller);
-application.register("collection", Controller);
-
+application.register("test", class test extends BaseController {
+    connect() {
+        console.log('Yolo', this.element);
+    }
+});
 console.log('test app initialized');
