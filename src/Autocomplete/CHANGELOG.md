@@ -1,5 +1,33 @@
 # CHANGELOG
 
+## 2.28.0
+
+-   Default plugins like `clear_button` or `remove_button` can now be removed when setting their value to `false` in the `tom_select_options.plugins` option, for example:
+```php
+<?php
+#[AsEntityAutocompleteField]
+class IngredientAutocompleteType extends AbstractType
+{
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'class' => Ingredient::class,
+            'tom_select_options' => [
+                'plugins' => [
+                    'clear_button' => false, // Disable the clear button
+                    'remove_button' => false, // Disable the remove button
+                ],
+            ],
+        ]);
+    }
+
+    public function getParent(): string
+    {
+        return BaseEntityAutocompleteType::class;
+    }
+}
+```
+
 ## 2.25.0
 
 -   Escape `querySelector` dynamic selector with `CSS.escape()` #2663

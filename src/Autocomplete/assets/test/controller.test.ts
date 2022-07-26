@@ -994,4 +994,123 @@ describe('AutocompleteController', () => {
         await shortDelay(10);
         expect(wasReset).toBe(false);
     });
+
+    it('must disable default plugin "clear_button"', async () => {
+        const { tomSelect } = await startAutocompleteTest(`
+            <select data-testid='main-element' data-controller='autocomplete'>
+                <option value='1'>dog1</option>
+                <option value='2'>dog2</option>
+                <option value='3'>dog3</option>
+            </select>
+        `);
+
+        expect(tomSelect.plugins.names, 'The plugin "clear_button" must be present by default.').toEqual([
+            'clear_button',
+        ]);
+
+        const { tomSelect: tomSelect2 } = await startAutocompleteTest(`
+            <select
+                data-testid='main-element'
+                data-controller='autocomplete'
+                data-autocomplete-tom-select-options-value="{&quot;plugins&quot;:{&quot;clear_button&quot;:false}}"
+            >
+                <option value='1'>dog1</option>
+                <option value='2'>dog2</option>
+                <option value='3'>dog3</option>
+            </select>
+        `);
+
+        expect(tomSelect2.plugins.names, 'The plugin "clear_button" must not be present.').toEqual([]);
+    });
+
+    it('must disable default plugin "remove_button"', async () => {
+        const { tomSelect } = await startAutocompleteTest(`
+            <select multiple data-testid='main-element' data-controller='autocomplete'>
+                <option value='1'>dog1</option>
+                <option value='2'>dog2</option>
+                <option value='3'>dog3</option>
+            </select>
+        `);
+
+        expect(tomSelect.plugins.names, 'The plugin "remove_button" must be present by default.').toEqual([
+            'remove_button',
+        ]);
+
+        const { tomSelect: tomSelect2 } = await startAutocompleteTest(`
+            <select
+                multiple
+                data-testid='main-element'
+                data-controller='autocomplete'
+                data-autocomplete-tom-select-options-value="{&quot;plugins&quot;:{&quot;remove_button&quot;:false}}"
+            >
+                <option value='1'>dog1</option>
+                <option value='2'>dog2</option>
+                <option value='3'>dog3</option>
+            </select>
+        `);
+
+        expect(tomSelect2.plugins.names, 'The plugin "remove_button" must not be present.').toEqual([]);
+    });
+
+    it('adding a plugin should merge it with the common plugins list', async () => {
+        const { tomSelect } = await startAutocompleteTest(`
+            <select data-testid='main-element' data-controller='autocomplete'>
+                <option value='1'>dog1</option>
+                <option value='2'>dog2</option>
+                <option value='3'>dog3</option>
+            </select>
+        `);
+
+        expect(tomSelect.plugins.names, 'The plugin "remove_button" must be present by default.').toEqual([
+            'clear_button',
+        ]);
+
+        const { tomSelect: tomSelect2 } = await startAutocompleteTest(`
+            <select
+                data-testid='main-element'
+                data-controller='autocomplete'
+                data-autocomplete-tom-select-options-value="{&quot;plugins&quot;:[&quot;input_autogrow&quot;]}"
+            >
+                <option value='1'>dog1</option>
+                <option value='2'>dog2</option>
+                <option value='3'>dog3</option>
+            </select>
+        `);
+
+        expect(tomSelect2.plugins.names, 'The plugin "input_autogrow" must be present too.').toEqual([
+            'clear_button',
+            'input_autogrow',
+        ]);
+    });
+
+    it('adding a plugin (with configuration) should merge it with the common plugins list', async () => {
+        const { tomSelect } = await startAutocompleteTest(`
+            <select data-testid='main-element' data-controller='autocomplete'>
+                <option value='1'>dog1</option>
+                <option value='2'>dog2</option>
+                <option value='3'>dog3</option>
+            </select>
+        `);
+
+        expect(tomSelect.plugins.names, 'The plugin "remove_button" must be present by default.').toEqual([
+            'clear_button',
+        ]);
+
+        const { tomSelect: tomSelect2 } = await startAutocompleteTest(`
+            <select
+                data-testid='main-element'
+                data-controller='autocomplete'
+                data-autocomplete-tom-select-options-value="{&quot;plugins&quot;:{&quot;input_autogrow&quot;:true}}"
+            >
+                <option value='1'>dog1</option>
+                <option value='2'>dog2</option>
+                <option value='3'>dog3</option>
+            </select>
+        `);
+
+        expect(tomSelect2.plugins.names, 'The plugin "input_autogrow" must be present too.').toEqual([
+            'clear_button',
+            'input_autogrow',
+        ]);
+    });
 });

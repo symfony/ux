@@ -330,10 +330,10 @@ export default class extends Controller {
             ...config1,
             ...config2,
             // Plugins from both configs should be merged together.
-            plugins: {
+            plugins: this.#normalizePlugins({
                 ...this.#normalizePluginsToHash(config1.plugins || {}),
                 ...this.#normalizePluginsToHash(config2.plugins || {}),
-            },
+            }),
         };
     }
 
@@ -357,6 +357,16 @@ export default class extends Controller {
 
         return plugins;
     };
+
+    #normalizePlugins(plugins: TPluginHash): TPluginHash {
+        return Object.entries(plugins).reduce((acc, [pluginName, pluginOptions]) => {
+            if (pluginOptions !== false) {
+                acc[pluginName] = pluginOptions;
+            }
+
+            return acc;
+        }, {} as TPluginHash);
+    }
 
     /**
      * Returns the element, but only if it's a select element.
