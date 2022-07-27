@@ -166,7 +166,7 @@ Styling Tom Select
 ------------------
 
 In your ``assets/controllers.json`` file, you should see a line that automatically
-includes a CSS file for Tom Select.
+includes a CSS file for Tom Select which will give you basic styles.
 
 .. code-block:: text
 
@@ -174,9 +174,8 @@ includes a CSS file for Tom Select.
         "tom-select/dist/css/tom-select.default.css": true
     }
 
-This should give you basic styles for Tom Select. If you're using
-Bootstrap, you can get Bootstrap-ready styling by (A) changing this
-line to ``false``:
+If you're using Bootstrap, you can get Bootstrap-ready styling by 
+changing this line to ``false``:
 
 .. code-block:: text
 
@@ -184,11 +183,11 @@ line to ``false``:
         "tom-select/dist/css/tom-select.default.css": false
     }
 
-And then (B) importing the Bootstrap-css file:
+And then importing the Bootstrap CSS file:
 
-.. code-bock:: css
+.. code-block:: css
 
-    /* assets/styles/app.css
+    /* assets/styles/app.css */
     @import 'tom-select/dist/css/tom-select.bootstrap5.css';
 
 To further customize things, you can override the classes with your own custom
