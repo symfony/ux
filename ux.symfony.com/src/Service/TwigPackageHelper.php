@@ -19,6 +19,7 @@ class TwigPackageHelper
             $this->packageRepository->find('live-component'),
             $this->packageRepository->find('autocomplete'),
             $this->packageRepository->find('react'),
+            $this->packageRepository->find('vue'),
         ];
     }
 }

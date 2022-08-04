@@ -134,6 +134,7 @@ trait ValidatableComponentTrait
 
     /**
      * @internal
+     *
      * @required
      */
     public function setComponentValidator(ComponentValidatorInterface $componentValidator): void

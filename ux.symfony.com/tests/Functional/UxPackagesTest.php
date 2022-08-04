@@ -14,13 +14,13 @@ class UxPackagesTest extends KernelTestCase
     /**
      * @dataProvider getSmokeTests
      */
-    public function testPackagePagesAllLoad(Package $package): void
+    public function testPackagePagesAllLoad(Package $package, string $expectedText): void
     {
         $this->browser()
             ->visit('/'.$package->getName())
             ->assertSuccessful()
             ->assertSeeIn('title', $package->getHumanName())
-            ->assertSee(sprintf('Symfony UX %s Docs', $package->getHumanName()))
+            ->assertSee($expectedText)
         ;
     }
 
@@ -28,7 +28,13 @@ class UxPackagesTest extends KernelTestCase
     {
         $repository = new PackageRepository();
         foreach ($repository->findAll() as $package) {
-            yield $package->getName() => [$package];
+            if ($package->getName() === 'live-component') {
+                // Live Component has a different bottom section
+                yield $package->getName() => [$package, 'Read full Documentation'];
+                continue;
+            }
+
+            yield $package->getName() => [$package, sprintf('Symfony UX %s Docs', $package->getHumanName())];
         }
     }
 }

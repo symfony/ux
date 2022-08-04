@@ -43,8 +43,14 @@ final class LiveCollectionType extends AbstractType
     {
         if ($form->getConfig()->hasAttribute('button_add_prototype')) {
             $prototype = $form->getConfig()->getAttribute('button_add_prototype');
-            $view->vars['button_add_prototype'] = $prototype->setParent($form)->createView($view);
-            array_splice($view->vars['button_add_prototype']->vars['block_prefixes'], 1, 0, 'live_collection_button_add');
+            $view->vars['button_add'] = $prototype->setParent($form)->createView($view);
+
+            $attr = $view->vars['button_add']->vars['attr'];
+            $attr['data-action'] ??= 'live#action';
+            $attr['data-action-name'] ??= sprintf('addCollectionItem(name=%s)', $view->vars['full_name']);
+            $view->vars['button_add']->vars['attr'] = $attr;
+
+            array_splice($view->vars['button_add']->vars['block_prefixes'], 1, 0, 'live_collection_button_add');
         }
     }
 
@@ -75,8 +81,14 @@ final class LiveCollectionType extends AbstractType
             }
 
             foreach ($view as $k => $entryView) {
-                $entryView->vars['button_delete_prototype'] = $prototypes[$k]->createView($entryView);
-                array_splice($entryView->vars['button_delete_prototype']->vars['block_prefixes'], 1, 0, 'live_collection_button_delete');
+                $entryView->vars['button_delete'] = $prototypes[$k]->createView($entryView);
+
+                $attr = $entryView->vars['button_delete']->vars['attr'];
+                $attr['data-action'] ??= 'live#action';
+                $attr['data-action-name'] ??= sprintf('removeCollectionItem(name=%s, index=%s)', $view->vars['full_name'], $k);
+                $entryView->vars['button_delete']->vars['attr'] = $attr;
+
+                array_splice($entryView->vars['button_delete']->vars['block_prefixes'], 1, 0, 'live_collection_button_delete');
             }
         }
     }
@@ -92,6 +104,9 @@ final class LiveCollectionType extends AbstractType
             'button_add_options' => [],
             'button_delete_type' => ButtonType::class,
             'button_delete_options' => [],
+            'allow_add' => true,
+            'allow_delete' => true,
+            'by_reference' => false,
         ]);
     }
 

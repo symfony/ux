@@ -13,6 +13,7 @@ import { shutdownTest, createTest, initComponent } from '../tools';
 import { createEvent, fireEvent, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock-jest';
+import { htmlToElement } from '../../src/dom_utils';
 
 describe('LiveController rendering Tests', () => {
     afterEach(() => {
@@ -166,6 +167,7 @@ describe('LiveController rendering Tests', () => {
 
         // imitate some JavaScript changing this element
         test.element.querySelector('span')?.setAttribute('data-foo', 'bar');
+        test.element.appendChild(htmlToElement('<div data-live-ignore>I should not be removed</div>'));
 
         test.expectsAjaxCall('get')
             .expectSentData(test.initialData)
@@ -181,6 +183,38 @@ describe('LiveController rendering Tests', () => {
         const ignoreElement = test.element.querySelector('div[data-live-ignore]');
         expect(ignoreElement).not.toBeNull();
         expect(ignoreElement?.outerHTML).toEqual('<div data-live-ignore="">Inside Ignore Name: <span data-foo="bar">Ryan</span></div>');
+        expect(test.element.innerHTML).toContain('I should not be removed');
+    });
+
+    it('if data-live-id changes, data-live-ignore elements ARE re-rendered', async () => {
+        const test = await createTest({ firstName: 'Ryan', containerId: 'original' }, (data: any) => `
+            <div ${initComponent(data)}>
+                <div data-live-id="${data.containerId}">
+                    <div data-live-ignore>Inside Ignore Name: <span>${data.firstName}</span></div>
+                </div>
+                
+                Outside Ignore Name: ${data.firstName}
+
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `);
+
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data: any) => {
+                // change the data on the server so the template renders differently
+                data.firstName = 'Kevin';
+                data.containerId = 'updated';
+            })
+            .init();
+
+        getByText(test.element, 'Reload').click();
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Outside Ignore Name: Kevin'));
+        const ignoreElement = test.element.querySelector('div[data-live-ignore]');
+        expect(ignoreElement).not.toBeNull();
+        // check that even the ignored element re-rendered
+        expect(ignoreElement?.outerHTML).toEqual('<div data-live-ignore="">Inside Ignore Name: <span>Kevin</span></div>');
     });
 
     it('cancels a re-render if the page is navigating away', async () => {

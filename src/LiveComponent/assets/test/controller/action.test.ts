@@ -101,4 +101,52 @@ describe('LiveController Action Tests', () => {
 
         await waitFor(() => expect(test.element).toHaveTextContent('Food: pizza'));
    });
+
+    it('prevents re-render model updates while action Ajax is pending', async () => {
+        const test = await createTest({ comment: 'donut', isSaved: false }, (data: any) => `
+            <div ${initComponent(data)}>
+                <input data-model="comment" value="${data.comment}">
+
+                ${data.isSaved ? 'Comment Saved!' : ''}
+
+                <span>${data.comment}</span>
+
+                <button data-action="live#action" data-action-name="save">Save</button>
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `);
+
+        // ONLY a post is sent, not a re-render GET
+        test.expectsAjaxCall('post')
+            .expectSentData(test.initialData)
+            .expectActionCalled('save')
+            .delayResponse(1000) // longer than debounce, so updating comment could potentially send a request
+            .serverWillChangeData((data: any) => {
+                // server marks component as "saved"
+                data.isSaved = true;
+            })
+            .init();
+
+        // save first, then type into the box
+        getByText(test.element, 'Save').click();
+        await userEvent.type(test.queryByDataModel('comment'), ' holes');
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Comment Saved!'));
+        // render has not happened yet
+        expect(test.element).not.toHaveTextContent('donut holes');
+
+        // trigger a render, it should now reflect the changed value
+        test.expectsAjaxCall('get')
+            .expectSentData({comment: 'donut holes', isSaved: true})
+            .init();
+        getByText(test.element, 'Reload').click();
+        await waitFor(() => expect(test.element).toHaveTextContent('donut holes'));
+
+        // now check that model updating works again
+        test.expectsAjaxCall('get')
+            .expectSentData({comment: 'donut holes are delicious', isSaved: true})
+            .init();
+        await userEvent.type(test.queryByDataModel('comment'), ' are delicious');
+        await waitFor(() => expect(test.element).toHaveTextContent('donut holes are delicious'));
+    });
 });
