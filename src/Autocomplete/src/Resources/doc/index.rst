@@ -370,7 +370,7 @@ endpoint and then :ref:`initialize the Stimulus controller manually <manual-stim
 This only works for Doctrine entities: see `Manually using the Stimulus Controller`_
 if you're autocompleting something other than an entity.
 
-To expose the endpoint, create a class that implements ``Symfony\\UX\\Autocomplete\\EntityAutocompleterInterface``::
+To expose the endpoint, create a class that implements ``Symfony\UX\Autocomplete\EntityAutocompleterInterface``::
 
     namespace App\Autocompleter;
 
