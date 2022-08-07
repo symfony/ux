@@ -41,6 +41,8 @@ export default class extends Controller {
 
     disconnect() {
         this.tomSelect.destroy();
+        // Fixes https://github.com/symfony/ux/issues/407
+        this.tomSelect = undefined;
     }
 
     #getCommonConfig(): Partial<TomSettings> {
