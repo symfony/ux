@@ -1,0 +1,28 @@
+{
+    "name": "@symfony/ux-vue",
+    "description": "Integration of Vue.js in Symfony",
+    "license": "MIT",
+    "version": "1.0.0",
+    "main": "dist/register_controller.js",
+    "symfony": {
+        "controllers": {
+            "vue": {
+                "main": "dist/render_controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "vue": "^3.0"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "@types/webpack-env": "^1.16",
+        "@vue/vue3-jest": "^27.0.0",
+        "ts-jest": "^27.1.5",
+        "vue": "^3.0"
+    }
+}

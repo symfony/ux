@@ -1,0 +1,48 @@
+{
+    "name": "symfony/ux-vue",
+    "type": "symfony-bundle",
+    "description": "Integration of Vue.js in Symfony",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Titouan Galopin",
+            "email": "galopintitouan@gmail.com"
+        },
+        {
+            "name": "Thibault Richard",
+            "email": "thibault.richard62@gmail.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Vue\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "require": {
+        "symfony/webpack-encore-bundle": "^1.11"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "^4.4|^5.0|^6.0",
+        "symfony/phpunit-bridge": "^5.2|^6.0",
+        "symfony/twig-bundle": "^4.4|^5.0|^6.0",
+        "symfony/var-dumper": "^4.4|^5.0|^6.0"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}
