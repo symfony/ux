@@ -856,7 +856,7 @@ This is possible thanks to the team work of two pieces:
 -  ``ComponentWithFormTrait`` has a modifiable ``LiveProp`` that
    holds the form data and is updated each time a field changes.
    On each re-render, these values are used to "submit" the form,
-   triggering validaation! However, if a field has not been modified
+   triggering validation! However, if a field has not been modified
    yet by the user, its validation errors are cleared so that they
    aren't displayed.
 
