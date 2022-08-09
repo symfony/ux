@@ -779,6 +779,14 @@ make it easy to deal with forms::
     class PostFormComponent extends AbstractController
     {
         use ComponentWithFormTrait;
+        
+        /**
+         * Default action. Should not return anything.
+         * Use it to add annotations or attributes to the component (#[Security] and #[Cache])
+         */
+        public function __invoke(): void
+        {
+        }
 
         /**
          * The initial data used to create the form.
