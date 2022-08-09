@@ -166,12 +166,15 @@ final class LiveComponentHydrator
             }
 
             $value = $dehydratedValue;
+            $type = $property->getType() instanceof \ReflectionNamedType ? $property->getType() : null;
 
             if ($method = $liveProp->hydrateMethod()) {
                 // TODO: Error checking
                 $value = $component->$method($dehydratedValue);
-            } elseif ($property->getType() instanceof \ReflectionNamedType && !$property->getType()->isBuiltin()) {
-                $value = $this->normalizer->denormalize($value, $property->getType()->getName(), 'json', [self::LIVE_CONTEXT => true]);
+            } elseif (!$value && $type && $type->allowsNull() && is_a($type->getName(), \BackedEnum::class, true) && !\in_array($value, array_map(fn (\BackedEnum $e) => $e->value, $type->getName()::cases()))) {
+                $value = null;
+            } elseif (null !== $value && $type && !$type->isBuiltin()) {
+                $value = $this->normalizer->denormalize($value, $type->getName(), 'json', [self::LIVE_CONTEXT => true]);
             }
 
             foreach ($liveProp->exposed() as $exposedProperty) {
