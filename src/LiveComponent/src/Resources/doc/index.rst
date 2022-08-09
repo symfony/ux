@@ -774,10 +774,12 @@ make it easy to deal with forms::
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
     use Symfony\UX\LiveComponent\ComponentWithFormTrait;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
 
     #[AsLiveComponent('post_form')]
     class PostFormComponent extends AbstractController
     {
+        use DefaultActionTrait;
         use ComponentWithFormTrait;
 
         /**
