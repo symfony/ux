@@ -18,12 +18,17 @@ export default class extends Controller {
     readonly tomSelectOptionsValue: object;
     tomSelect: TomSelect;
 
-    connect() {
-        // this avoids initializing the same field twice (TomSelect shows an error otherwise)
-        if (this.tomSelect) {
-            return;
+    initialize() {
+        this.element.setAttribute('data-live-ignore', '');
+        if (this.element.id) {
+            const label = document.querySelector(`label[for="${this.element.id}"]`);
+            if (label) {
+                label.setAttribute('data-live-ignore', '');
+            }
         }
+    }
 
+    connect() {
         if (this.urlValue) {
             this.tomSelect = this.#createAutocompleteWithRemoteData(this.urlValue);
 
@@ -40,9 +45,9 @@ export default class extends Controller {
     }
 
     disconnect() {
+        // make sure it will "revert" to the latest innerHTML
+        this.tomSelect.revertSettings.innerHTML = this.element.innerHTML;
         this.tomSelect.destroy();
-        // Fixes https://github.com/symfony/ux/issues/407
-        this.tomSelect = undefined;
     }
 
     #getCommonConfig(): Partial<TomSettings> {
@@ -72,6 +77,10 @@ export default class extends Controller {
             // clear the text input after selecting a value
             onItemAdd: () => {
                 this.tomSelect.setTextboxValue('');
+            },
+            onInitialize: function() {
+                const tomSelect = this as any;
+                tomSelect.wrapper.setAttribute('data-live-ignore', '');
             },
             closeAfterSelect: true,
         };
@@ -124,7 +133,7 @@ export default class extends Controller {
             },
             // VERY IMPORTANT: use 'function (query, callback) { ... }' instead of the
             // '(query, callback) => { ... }' syntax because, otherwise,
-            // the 'this.XXX' calls inside of this method fail
+            // the 'this.XXX' calls inside this method fail
             load: function (query: string, callback: (results?: any) => void) {
                 const url = this.getUrl(query);
                 fetch(url)

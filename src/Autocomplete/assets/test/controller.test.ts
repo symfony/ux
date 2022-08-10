@@ -10,7 +10,7 @@
 'use strict';
 
 import { Application, Controller } from '@hotwired/stimulus';
-import { getByTestId, waitFor, getAllByLabelText } from '@testing-library/dom';
+import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import AutocompleteController from '../src/controller';
 import fetchMock from 'fetch-mock-jest';
@@ -136,5 +136,33 @@ describe('AutocompleteController', () => {
         await waitFor(() => {
             expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(2);
         });
+    });
+
+    it('adds live-component support', async () => {
+        const container = mountDOM(`
+            <div>
+                <label for="the-select" data-testid="main-element-label">Select something</label>
+                <select
+                    id="the-select"
+                    data-testid="main-element"
+                    data-controller="check autocomplete"
+                ></select>
+            </div>
+        `);
+
+        application = startStimulus();
+
+        await waitFor(() => {
+            expect(getByTestId(container, 'main-element')).toHaveClass('connected');
+        });
+
+        expect(getByTestId(container, 'main-element')).toHaveAttribute('data-live-ignore');
+        expect(getByTestId(container, 'main-element-label')).toHaveAttribute('data-live-ignore');
+        const tsDropdown = container.querySelector('.ts-wrapper');
+
+        await waitFor(() => {
+            expect(tsDropdown).not.toBeNull();
+        });
+        expect(tsDropdown).toHaveAttribute('data-live-ignore');
     });
 });

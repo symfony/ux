@@ -694,6 +694,13 @@ export default class extends Controller implements LiveController {
     _executeMorphdom(newHtml: string, modifiedElements: Array<HTMLElement>) {
         const newElement = htmlToElement(newHtml);
         morphdom(this.element, newElement, {
+            getNodeKey: (node: Node) => {
+              if (!(node instanceof HTMLElement)) {
+                  return;
+              }
+
+              return node.dataset.liveId;
+            },
             onBeforeElUpdated: (fromEl, toEl) => {
                 if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
                     return false;
@@ -735,6 +742,18 @@ export default class extends Controller implements LiveController {
                     return false;
                 }
 
+                return true;
+            },
+
+            onBeforeNodeDiscarded(node) {
+                if (!(node instanceof HTMLElement)) {
+                    // text element
+                    return true;
+                }
+
+                if (node.hasAttribute('data-live-ignore')) {
+                    return false;
+                }
                 return true;
             }
         });

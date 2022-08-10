@@ -2,6 +2,11 @@
 
 ## 2.3.1
 
+-   [BC BREAK] Previously, the `id` attribute was used with `morphdom` as the
+    "node id" when updating the DOM after a render. This has changed to
+    `data-live-id`. This is useful when maintaining the correct order of a list
+    of elements.
+
 -   [BEHAVIOR CHANGE] If an action Ajax call is still processing and a
     model update occurs, the component will _no_ longer re-render. The
     model will be updated internally, but not re-rendered (so, any

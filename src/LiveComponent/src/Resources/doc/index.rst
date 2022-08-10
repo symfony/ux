@@ -1730,7 +1730,7 @@ changes, a child component will re-render even though it was there
 before *and* after the list changed. This can cause that child component
 to lose some state (i.e. it re-renders with its original live props data).
 
-To fix this, add a unique ``id`` attribute to the root component of each
+To fix this, add a unique ``data-live-id`` attribute to the root component of each
 child element. This will helps LiveComponent identify each item in the
 list and correctly determine if a re-render is necessary, or not.
 
@@ -1747,6 +1747,12 @@ To handle this, add the ``data-live-ignore`` attribute to the element:
 .. code-block:: html
 
     <input name="favorite_color" data-live-ignore>
+
+.. note::
+
+    To *force* an ignored element to re-render, give its parent element a
+    ``data-live-id`` attribute. During a re-render, if this value changes, all
+    of the children of the element will be re-rendered, even those with ``data-live-ignore``.
 
 Backward Compatibility promise
 ------------------------------
