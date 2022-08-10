@@ -6963,12 +6963,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-autocomplete.git",
-                "reference": "255d1693576713c63075b9d987555fc588d9a2b2"
+                "reference": "89b37ed23022dc1529845987ad59f6a203a13047"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-autocomplete/zipball/255d1693576713c63075b9d987555fc588d9a2b2",
-                "reference": "255d1693576713c63075b9d987555fc588d9a2b2",
+                "url": "https://api.github.com/repos/symfony/ux-autocomplete/zipball/89b37ed23022dc1529845987ad59f6a203a13047",
+                "reference": "89b37ed23022dc1529845987ad59f6a203a13047",
                 "shasum": ""
             },
             "require": {
@@ -7038,7 +7038,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-06T20:17:22+00:00"
+            "time": "2022-08-14T12:14:59+00:00"
         },
         {
             "name": "symfony/ux-chartjs",
@@ -7107,7 +7107,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-chartjs/tree/2.x"
+                "source": "https://github.com/symfony/ux-chartjs/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -7193,7 +7193,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-cropperjs/tree/2.x"
+                "source": "https://github.com/symfony/ux-cropperjs/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -7274,7 +7274,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-dropzone/tree/2.x"
+                "source": "https://github.com/symfony/ux-dropzone/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -7356,7 +7356,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-lazy-image/tree/2.x"
+                "source": "https://github.com/symfony/ux-lazy-image/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -7380,12 +7380,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-live-component.git",
-                "reference": "4708658ec02ef62b960fcff383001a73bc874c16"
+                "reference": "44554cb46a745ee30c73f1b221fb52f03bb01812"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-live-component/zipball/4708658ec02ef62b960fcff383001a73bc874c16",
-                "reference": "4708658ec02ef62b960fcff383001a73bc874c16",
+                "url": "https://api.github.com/repos/symfony/ux-live-component/zipball/44554cb46a745ee30c73f1b221fb52f03bb01812",
+                "reference": "44554cb46a745ee30c73f1b221fb52f03bb01812",
                 "shasum": ""
             },
             "require": {
@@ -7458,7 +7458,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-06T20:17:22+00:00"
+            "time": "2022-08-14T23:19:41+00:00"
         },
         {
             "name": "symfony/ux-notify",
@@ -7528,7 +7528,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-notify/tree/2.x"
+                "source": "https://github.com/symfony/ux-notify/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -7605,7 +7605,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-react/tree/2.x"
+                "source": "https://github.com/symfony/ux-react/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -7668,7 +7668,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-swup/tree/2.x"
+                "source": "https://github.com/symfony/ux-swup/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -7692,12 +7692,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-turbo.git",
-                "reference": "2ac817136d357dfc190a9db782e163c37db2ad2d"
+                "reference": "0ac0bbc70b86aa4883c7eb8ac17bc6e3a774dc17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-turbo/zipball/2ac817136d357dfc190a9db782e163c37db2ad2d",
-                "reference": "2ac817136d357dfc190a9db782e163c37db2ad2d",
+                "url": "https://api.github.com/repos/symfony/ux-turbo/zipball/0ac0bbc70b86aa4883c7eb8ac17bc6e3a774dc17",
+                "reference": "0ac0bbc70b86aa4883c7eb8ac17bc6e3a774dc17",
                 "shasum": ""
             },
             "require": {
@@ -7767,7 +7767,7 @@
                 "turbo-stream"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-turbo/tree/2.x"
+                "source": "https://github.com/symfony/ux-turbo/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -7783,7 +7783,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-07-05T13:16:52+00:00"
+            "time": "2022-07-08T14:57:18+00:00"
         },
         {
             "name": "symfony/ux-turbo-mercure",
@@ -7844,7 +7844,7 @@
                 "turbo"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-turbo-mercure/tree/v2.2.0"
+                "source": "https://github.com/symfony/ux-turbo-mercure/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -7922,7 +7922,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-twig-component/tree/2.x"
+                "source": "https://github.com/symfony/ux-twig-component/tree/v2.3.0"
             },
             "funding": [
                 {
@@ -7985,7 +7985,7 @@
                 "symfony-ux"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-typed/tree/2.x"
+                "source": "https://github.com/symfony/ux-typed/tree/v2.3.0"
             },
             "funding": [
                 {
