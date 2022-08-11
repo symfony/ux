@@ -17,6 +17,10 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component3;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithArrayProp;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\EmptyStringEnum;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\IntEnum;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\StringEnum;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\ZeroIntEnum;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -278,5 +282,61 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $mounted = $this->hydrateComponent($this->getComponent('with_attributes'), $dehydrated, $mounted->getName());
 
         $this->assertSame([], $mounted->getAttributes()->all());
+    }
+
+    /**
+     * @requires PHP >= 8.1
+     */
+    public function testCanHydrateEnums(): void
+    {
+        $mounted = $this->mountComponent('with_enum');
+
+        $dehydrated = $this->dehydrateComponent($mounted);
+
+        $this->assertNull($dehydrated['int']);
+        $this->assertNull($dehydrated['string']);
+
+        $mounted = $this->hydrateComponent($this->getComponent('with_enum'), $dehydrated, $mounted->getName());
+
+        $this->assertNull($mounted->getComponent()->int);
+        $this->assertNull($mounted->getComponent()->string);
+
+        $dehydrated['int'] = IntEnum::LOW->value;
+        $dehydrated['string'] = StringEnum::PENDING->value;
+
+        $mounted = $this->hydrateComponent($this->getComponent('with_enum'), $dehydrated, $mounted->getName());
+
+        $this->assertSame(IntEnum::LOW, $mounted->getComponent()->int);
+        $this->assertSame(StringEnum::PENDING, $mounted->getComponent()->string);
+
+        $dehydrated['int'] = null;
+        $dehydrated['string'] = null;
+
+        $mounted = $this->hydrateComponent($this->getComponent('with_enum'), $dehydrated, $mounted->getName());
+
+        $this->assertNull($mounted->getComponent()->int);
+        $this->assertNull($mounted->getComponent()->string);
+
+        $dehydrated['int'] = '';
+        $dehydrated['string'] = '';
+
+        $mounted = $this->hydrateComponent($this->getComponent('with_enum'), $dehydrated, $mounted->getName());
+
+        $this->assertNull($mounted->getComponent()->int);
+        $this->assertNull($mounted->getComponent()->string);
+
+        $dehydrated['zeroInt'] = 0;
+        $dehydrated['emptyString'] = '';
+
+        $mounted = $this->hydrateComponent($this->getComponent('with_enum'), $dehydrated, $mounted->getName());
+
+        $this->assertSame(ZeroIntEnum::ZERO, $mounted->getComponent()->zeroInt);
+        $this->assertSame(EmptyStringEnum::EMPTY, $mounted->getComponent()->emptyString);
+
+        $dehydrated['zeroInt'] = '0';
+
+        $mounted = $this->hydrateComponent($this->getComponent('with_enum'), $dehydrated, $mounted->getName());
+
+        $this->assertSame(ZeroIntEnum::ZERO, $mounted->getComponent()->zeroInt);
     }
 }
