@@ -120,7 +120,7 @@ export default class extends Controller {
 
         // multiple values excepted if this is NOT A select (i.e. input) or a multiple select
         const isMultiple = !this.selectElement || this.selectElement.multiple;
-        if (!this.formElement.disabled && !isMultiple) {
+        if (!this.formElement.required && !this.formElement.disabled && !isMultiple) {
             plugins.clear_button = { title: '' };
         }
 
