@@ -68,6 +68,8 @@ export default class extends Controller implements LiveController {
      */
     renderPromiseStack = new PromiseStack();
 
+    isActionProcessing = false;
+
     pollingIntervals: NodeJS.Timer[] = [];
 
     isWindowUnloaded = false;
@@ -393,7 +395,8 @@ export default class extends Controller implements LiveController {
         // any Ajax request that starts from this moment WILL include this
         this.unsyncedInputs.remove(modelName);
 
-        if (shouldRender) {
+        // skip rendering if there is an action Ajax call processing
+        if (shouldRender && !this.isActionProcessing) {
             // clear any pending renders
             this._clearWaitingDebouncedRenders();
 
@@ -425,6 +428,8 @@ export default class extends Controller implements LiveController {
         };
 
         if (action) {
+            this.isActionProcessing = true;
+
             url += `/${encodeURIComponent(action)}`;
 
             if (this.csrfValue) {
@@ -455,6 +460,10 @@ export default class extends Controller implements LiveController {
         const reRenderPromise = new ReRenderPromise(thisPromise, this.unsyncedInputs.clone());
         this.renderPromiseStack.addPromise(reRenderPromise);
         thisPromise.then((response) => {
+            if (action) {
+                this.isActionProcessing = false;
+            }
+
             // if another re-render is scheduled, do not "run it over"
             if (this.renderDebounceTimeout) {
                 return;
