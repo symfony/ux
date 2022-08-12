@@ -1084,8 +1084,8 @@ function getModelDirectiveFromInput(element, throwOnMissing = true) {
     }
     if (element.getAttribute('name')) {
         const formElement = element.closest('form');
-        if (formElement && formElement.dataset.model) {
-            const directives = parseDirectives(formElement.dataset.model);
+        if (formElement && ('model' in formElement.dataset)) {
+            const directives = parseDirectives(formElement.dataset.model || '*');
             const directive = directives[0];
             if (directive.args.length > 0 || directive.named.length > 0) {
                 throw new Error(`The data-model="${formElement.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
@@ -1222,9 +1222,7 @@ class default_1 extends Controller {
         if (!(this.element instanceof HTMLElement)) {
             throw new Error('Invalid Element Type');
         }
-        if (this.element.dataset.poll !== undefined) {
-            this._initiatePolling(this.element.dataset.poll);
-        }
+        this._initiatePolling();
         window.addEventListener('beforeunload', this.markAsWindowUnloaded);
         this._startAttributesMutationObserver();
         this.element.addEventListener('live:update-model', this.handleUpdateModelEvent);
@@ -1234,9 +1232,7 @@ class default_1 extends Controller {
         this._dispatchEvent('live:connect', { controller: this });
     }
     disconnect() {
-        this.pollingIntervals.forEach((interval) => {
-            clearInterval(interval);
-        });
+        this._stopAllPolling();
         window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
         this.element.removeEventListener('live:update-model', this.handleUpdateModelEvent);
         this.element.removeEventListener('input', this.handleInputEvent);
@@ -1665,7 +1661,12 @@ class default_1 extends Controller {
         }
         this._updateModelFromElement(target, 'change');
     }
-    _initiatePolling(rawPollConfig) {
+    _initiatePolling() {
+        this._stopAllPolling();
+        if (this.element.dataset.poll === undefined) {
+            return;
+        }
+        const rawPollConfig = this.element.dataset.poll;
         const directives = parseDirectives(rawPollConfig || '$render');
         directives.forEach((directive) => {
             let duration = 2000;
@@ -1790,9 +1791,12 @@ class default_1 extends Controller {
         const element = this.element;
         this.mutationObserver = new MutationObserver((mutations) => {
             mutations.forEach((mutation) => {
-                if (mutation.type === 'attributes' && !element.dataset.originalData) {
-                    this.originalDataJSON = this.valueStore.asJson();
-                    this._exposeOriginalData();
+                if (mutation.type === 'attributes') {
+                    if (!element.dataset.originalData) {
+                        this.originalDataJSON = this.valueStore.asJson();
+                        this._exposeOriginalData();
+                    }
+                    this._initiatePolling();
                 }
             });
         });
@@ -1802,6 +1806,11 @@ class default_1 extends Controller {
     }
     getDefaultDebounce() {
         return this.hasDebounceValue ? this.debounceValue : DEFAULT_DEBOUNCE;
+    }
+    _stopAllPolling() {
+        this.pollingIntervals.forEach((interval) => {
+            clearInterval(interval);
+        });
     }
 }
 default_1.values = {

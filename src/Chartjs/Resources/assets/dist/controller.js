@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import Chart from 'chart.js/auto';
+import { Chart } from 'chart.js';
 
 class default_1 extends Controller {
     connect() {
