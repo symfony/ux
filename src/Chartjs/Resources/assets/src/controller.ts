@@ -10,7 +10,8 @@
 'use strict';
 
 import { Controller } from '@hotwired/stimulus';
-import { Chart } from 'chart.js';
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 
 export default class extends Controller {
     readonly viewValue: any;

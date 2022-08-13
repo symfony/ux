@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
-import { Chart } from 'chart.js';
+import { Chart, registerables } from 'chart.js';
 
+Chart.register(...registerables);
 class default_1 extends Controller {
     connect() {
         if (!(this.element instanceof HTMLCanvasElement)) {
