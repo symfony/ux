@@ -1282,7 +1282,7 @@ and ``live_collection_button_delete`` block prefix respectively:
         {{ block('button_widget') }}
     {% endblock live_collection_button_add_widget %}
 
-If you only want to customize some attributes maybe simpler to use the options in the form type:
+If you only want to customize some attributes, it maybe simpler to use the options in the form type:
 
     // ...
     ->add('comments', LiveCollectionType::class, [
@@ -1301,12 +1301,12 @@ If you only want to customize some attributes maybe simpler to use the options i
     // ...
 
 If you want more control over how each row is rendered you can override the blocks
-related to the ``LiveCollectionType``. This works the same way as for `the traditional
-collection type`_, but you should use ``live_collection_*`` and ``live_collection_entry_*``
-as prefixes instead.
+related to the ``LiveCollectionType``. This works the same way as
+`the traditional collection type`_, but you should use ``live_collection_*``
+and ``live_collection_entry_*`` as prefixes instead.
 
 For example, let's continue our previous example and customize the rendering of the blog post comments form.
-By default the add comment button is placed after the comments, let's move it before them.
+By default, the add comment button is placed after the comments. Let's move it before them.
 
 .. code-block:: twig
 
@@ -1339,7 +1339,7 @@ Now add a div around each row:
     collection view variables and a ``button_delete`` is added to each
     item view variables.
 
-As an another example, now let's create a general bootstrap 5 theme for the live
+As another example, let's create a general bootstrap 5 theme for the live
 collection type, rendering every item in a table row:
 
 .. code-block:: twig

@@ -1,11 +1,16 @@
 # CHANGELOG
 
-## 2.3.1
+## 2.4.0
 
 -   [BC BREAK] Previously, the `id` attribute was used with `morphdom` as the
     "node id" when updating the DOM after a render. This has changed to
     `data-live-id`. This is useful when maintaining the correct order of a list
     of elements.
+
+-   [BC BREAK] If using `LiveCollectionType`, the name of the remove field changed
+    from `button_delete_prototype` to `button_delete` and the add field changed
+    from `button_add_prototype` to `button_add`. Additionally, the `allow_add`
+    and `allow_delete` default values were changed from `false` to `true`.
 
 -   [BEHAVIOR CHANGE] If an action Ajax call is still processing and a
     model update occurs, the component will _no_ longer re-render. The
