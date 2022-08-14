@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by 1ed at 2022-08-12T08:43:16Z
+
+> I like this a lot! Would you mind adding a small section to the docs with an example of overriding `live_collection_widget` (e.g. to render the add button first then the widget) and `live_collection_entry_row`. (e.g. to add a `<div>` around each row)?
+
+Thanks! I will.
