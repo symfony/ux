@@ -37,7 +37,7 @@ final class LiveCollectionTypeTest extends TypeTestCase
         ];
 
         $this->assertCount(0, $collectionView);
-        $this->assertSame($expectedBlockPrefixes, $collectionView->vars['button_add_prototype']->vars['block_prefixes']);
+        $this->assertSame($expectedBlockPrefixes, $collectionView->vars['button_add']->vars['block_prefixes']);
     }
 
     public function testAddButtonPrototypeBlockPrefixesWithCustomBlockPrefix()
@@ -57,7 +57,7 @@ final class LiveCollectionTypeTest extends TypeTestCase
         ];
 
         $this->assertCount(0, $collectionView);
-        $this->assertSame($expectedBlockPrefixes, $collectionView->vars['button_add_prototype']->vars['block_prefixes']);
+        $this->assertSame($expectedBlockPrefixes, $collectionView->vars['button_add']->vars['block_prefixes']);
     }
 
     public function testDeleteButtonPrototypeDefaultBlockPrefixes()
@@ -78,7 +78,7 @@ final class LiveCollectionTypeTest extends TypeTestCase
         ];
 
         $this->assertCount(1, $collectionView);
-        $this->assertSame($expectedBlockPrefixes, $collectionView['tags']->vars['button_delete_prototype']->vars['block_prefixes']);
+        $this->assertSame($expectedBlockPrefixes, $collectionView['tags']->vars['button_delete']->vars['block_prefixes']);
     }
 
     public function testDeleteButtonPrototypeBlockPrefixesWithCustomBlockPrefix()
@@ -101,6 +101,6 @@ final class LiveCollectionTypeTest extends TypeTestCase
         ];
 
         $this->assertCount(1, $collectionView);
-        $this->assertSame($expectedBlockPrefixes, $collectionView['tags']->vars['button_delete_prototype']->vars['block_prefixes']);
+        $this->assertSame($expectedBlockPrefixes, $collectionView['tags']->vars['button_delete']->vars['block_prefixes']);
     }
 }

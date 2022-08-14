@@ -1265,7 +1265,7 @@ There is no need for a custom template just render the form as usual:
 
 The ``add`` and ``delete`` buttons are rendered as separate ``ButtonType`` form
 types and can be customized like a normal form type via the ``live_collection_button_add``
-and ``live_collection_button_delete`` respectively:
+and ``live_collection_button_delete`` block prefix respectively:
 
 .. code-block:: twig
 
@@ -1281,6 +1281,118 @@ and ``live_collection_button_delete`` respectively:
         {%- endset -%}
         {{ block('button_widget') }}
     {% endblock live_collection_button_add_widget %}
+
+If you only want to customize some attributes maybe simpler to use the options in the form type:
+
+    // ...
+    ->add('comments', LiveCollectionType::class, [
+        'entry_type' => CommentFormType::class,
+        'allow_add' => true,
+        'allow_delete' => true,
+        'by_reference' => false,
+        'label' => false,
+        'button_delete_options' => [
+            'label' => 'X',
+            'attr' => [
+                'class' => 'btn btn-outline-danger',
+            ],
+        ]
+    ])
+    // ...
+
+If you want more control over how each row is rendered you can override the blocks
+related to the ``LiveCollectionType``. This works the same way as for `the traditional
+collection type`_, but you should use ``live_collection_*`` and ``live_collection_entry_*``
+as prefixes instead.
+
+For example, let's continue our previous example and customize the rendering of the blog post comments form.
+By default the add comment button is placed after the comments, let's move it before them.
+
+.. code-block:: twig
+
+    {%- block live_collection_widget -%}
+        {%- if button_add is defined and not button_add.rendered -%}
+            {{ form_row(button_add) }}
+        {%- endif -%}
+        {{ block('form_widget') }}
+    {%- endblock -%}
+
+Now add a div around each row:
+
+.. code-block:: twig
+
+    {%- block live_collection_entry_row -%}
+        <div>
+            {{ block('form_row') }}
+            {%- if button_delete is defined and not button_delete.rendered -%}
+                {{ form_row(button_delete) }}
+            {%- endif -%}
+        </div>
+    {%- endblock -%}
+
+.. note::
+
+    Under the hood, ``LiveCollectionType`` adds ``button_add`` and
+    ``button_delete`` fields to the form in a special way. These fields
+    are not added as regular form fields, so they are not part of the form
+    tree, but only the form view. The ``button_add`` is added to the
+    collection view variables and a ``button_delete`` is added to each
+    item view variables.
+
+As an another example, now let's create a general bootstrap 5 theme for the live
+collection type, rendering every item in a table row:
+
+.. code-block:: twig
+
+    {%- block live_collection_widget -%}
+        <table class="table table-borderless form-no-mb">
+            <thead>
+            <tr>
+                {% for child in form|last %}
+                    <td>{{ form_label(child) }}</td>
+                {% endfor %}
+                <td></td>
+            </tr>
+            </thead>
+            <tbody>
+                {{ block('form_widget') }}
+            </tbody>
+        </table>
+        {%- if skip_add_button|default(false) is same as false and button_add is defined and not button_add.rendered -%}
+            {{ form_widget(button_add, { label: '+ Add Item', class: 'btn btn-outline-primary' }) }}
+        {%- endif -%}
+    {%- endblock -%}
+
+    {%- block live_collection_entry_row -%}
+        <tr>
+            {% for child in form %}
+                <td>{{- form_row(child, { label: false }) -}}</td>
+            {% endfor %}
+            <td>
+                {{- form_row(button_delete, { label: 'X', attr: { class: 'btn btn-outline-danger' } }) -}}
+            </td>
+        </tr>
+    {%- endblock -%}
+
+To render the add button later in the template, you can skip rendering it initially with ``skip_add_button``,
+then render it manually after:
+
+.. code-block:: twig
+
+    <table class="table table-borderless form-no-mb">
+        <thead>
+            <tr>
+                <td>Item</td>
+                <td>Priority</td>
+                <td></td>
+            </tr>
+        </thead>
+        <tbody>
+            {{ form_row(form.todoItems, { skip_add_button: true }) }}
+        </tbody>
+    </table>
+
+    {{ form_widget(form.todoItems.vars.button_add, { label: '+ Add Item', class: 'btn btn-outline-primary' }) }}
 
 Modifying Nested Object Properties with the "exposed" Option
 ------------------------------------------------------------
@@ -1768,3 +1880,4 @@ bound to Symfony's BC policy for the moment.
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
 .. _`attributes variable`: https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes
 .. _`CollectionType`: https://symfony.com/doc/current/form/form_collections.html
+.. _`the traditional collection type`: https://symfony.com/doc/current/form/form_themes.html#fragment-naming-for-collections
