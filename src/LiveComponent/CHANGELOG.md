@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 2.3.1
+
+-   [BEHAVIOR CHANGE] If an action Ajax call is still processing and a
+    model update occurs, the component will _no_ longer re-render. The
+    model will be updated internally, but not re-rendered (so, any
+    model updates would effectively have the `|norender` modifier). See #419.
+
 ## 2.3.0
 
 -   [BC BREAK] The `data-action="live#update"` attribute must now be
