@@ -1599,6 +1599,12 @@ class default_1 extends Controller {
     _executeMorphdom(newHtml, modifiedElements) {
         const newElement = htmlToElement(newHtml);
         morphdom(this.element, newElement, {
+            getNodeKey: (node) => {
+                if (!(node instanceof HTMLElement)) {
+                    return;
+                }
+                return node.dataset.liveId;
+            },
             onBeforeElUpdated: (fromEl, toEl) => {
                 if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
                     return false;
@@ -1623,6 +1629,15 @@ class default_1 extends Controller {
                     return false;
                 }
                 if (fromEl.hasAttribute('data-live-ignore')) {
+                    return false;
+                }
+                return true;
+            },
+            onBeforeNodeDiscarded(node) {
+                if (!(node instanceof HTMLElement)) {
+                    return true;
+                }
+                if (node.hasAttribute('data-live-ignore')) {
                     return false;
                 }
                 return true;

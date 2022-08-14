@@ -28,10 +28,16 @@ class default_1 extends Controller {
         super(...arguments);
         _instances.add(this);
     }
-    connect() {
-        if (this.tomSelect) {
-            return;
+    initialize() {
+        this.element.setAttribute('data-live-ignore', '');
+        if (this.element.id) {
+            const label = document.querySelector(`label[for="${this.element.id}"]`);
+            if (label) {
+                label.setAttribute('data-live-ignore', '');
+            }
         }
+    }
+    connect() {
         if (this.urlValue) {
             this.tomSelect = __classPrivateFieldGet(this, _instances, "m", _createAutocompleteWithRemoteData).call(this, this.urlValue);
             return;
@@ -43,6 +49,7 @@ class default_1 extends Controller {
         this.tomSelect = __classPrivateFieldGet(this, _instances, "m", _createAutocomplete).call(this);
     }
     disconnect() {
+        this.tomSelect.revertSettings.innerHTML = this.element.innerHTML;
         this.tomSelect.destroy();
     }
     get selectElement() {
@@ -79,6 +86,10 @@ _instances = new WeakSet(), _getCommonConfig = function _getCommonConfig() {
         plugins: plugins,
         onItemAdd: () => {
             this.tomSelect.setTextboxValue('');
+        },
+        onInitialize: function () {
+            const tomSelect = this;
+            tomSelect.wrapper.setAttribute('data-live-ignore', '');
         },
         closeAfterSelect: true,
     };
