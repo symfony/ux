@@ -70,7 +70,7 @@ export default class extends Controller implements LiveController {
 
     pollingIntervals: NodeJS.Timer[] = [];
 
-    isWindowUnloaded = false;
+    isConnected = false;
 
     originalDataJSON = '{}';
 
@@ -86,7 +86,6 @@ export default class extends Controller implements LiveController {
     pendingActionTriggerModelElement: HTMLElement|null = null;
 
     initialize() {
-        this.markAsWindowUnloaded = this.markAsWindowUnloaded.bind(this);
         this.handleUpdateModelEvent = this.handleUpdateModelEvent.bind(this);
         this.handleInputEvent = this.handleInputEvent.bind(this);
         this.handleChangeEvent = this.handleChangeEvent.bind(this);
@@ -100,6 +99,7 @@ export default class extends Controller implements LiveController {
     }
 
     connect() {
+        this.isConnected = true;
         // hide "loading" elements to begin with
         // This is done with CSS, but only for the most basic cases
         this._onLoadingFinish();
@@ -111,7 +111,6 @@ export default class extends Controller implements LiveController {
 
         this._initiatePolling();
 
-        window.addEventListener('beforeunload', this.markAsWindowUnloaded);
         this._startAttributesMutationObserver();
         this.element.addEventListener('live:update-model', this.handleUpdateModelEvent);
         this.element.addEventListener('input', this.handleInputEvent);
@@ -125,7 +124,6 @@ export default class extends Controller implements LiveController {
         this._stopAllPolling();
         this.#clearRequestDebounceTimeout();
 
-        window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
         this.element.removeEventListener('live:update-model', this.handleUpdateModelEvent);
         this.element.removeEventListener('input', this.handleInputEvent);
         this.element.removeEventListener('change', this.handleChangeEvent);
@@ -137,6 +135,8 @@ export default class extends Controller implements LiveController {
         if (this.mutationObserver) {
             this.mutationObserver.disconnect();
         }
+
+        this.isConnected = false;
     }
 
     /**
@@ -493,7 +493,7 @@ export default class extends Controller implements LiveController {
      */
     #processRerender(html: string, response: Response) {
         // check if the page is navigating away
-        if (this.isWindowUnloaded) {
+        if (!this.isConnected) {
             return;
         }
 
@@ -794,10 +794,6 @@ export default class extends Controller implements LiveController {
         // restore the data-original-data attribute
         this._exposeOriginalData();
     }
-
-    markAsWindowUnloaded = () => {
-        this.isWindowUnloaded = true;
-    };
 
     handleConnectedControllerEvent(event: any) {
         if (event.target === this.element) {

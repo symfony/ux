@@ -1238,17 +1238,13 @@ class default_1 extends Controller {
         this.isRerenderRequested = false;
         this.requestDebounceTimeout = null;
         this.pollingIntervals = [];
-        this.isWindowUnloaded = false;
+        this.isConnected = false;
         this.originalDataJSON = '{}';
         this.mutationObserver = null;
         this.childComponentControllers = [];
         this.pendingActionTriggerModelElement = null;
-        this.markAsWindowUnloaded = () => {
-            this.isWindowUnloaded = true;
-        };
     }
     initialize() {
-        this.markAsWindowUnloaded = this.markAsWindowUnloaded.bind(this);
         this.handleUpdateModelEvent = this.handleUpdateModelEvent.bind(this);
         this.handleInputEvent = this.handleInputEvent.bind(this);
         this.handleChangeEvent = this.handleChangeEvent.bind(this);
@@ -1261,12 +1257,12 @@ class default_1 extends Controller {
         this.synchronizeValueOfModelFields();
     }
     connect() {
+        this.isConnected = true;
         this._onLoadingFinish();
         if (!(this.element instanceof HTMLElement)) {
             throw new Error('Invalid Element Type');
         }
         this._initiatePolling();
-        window.addEventListener('beforeunload', this.markAsWindowUnloaded);
         this._startAttributesMutationObserver();
         this.element.addEventListener('live:update-model', this.handleUpdateModelEvent);
         this.element.addEventListener('input', this.handleInputEvent);
@@ -1277,7 +1273,6 @@ class default_1 extends Controller {
     disconnect() {
         this._stopAllPolling();
         __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
-        window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
         this.element.removeEventListener('live:update-model', this.handleUpdateModelEvent);
         this.element.removeEventListener('input', this.handleInputEvent);
         this.element.removeEventListener('change', this.handleChangeEvent);
@@ -1287,6 +1282,7 @@ class default_1 extends Controller {
         if (this.mutationObserver) {
             this.mutationObserver.disconnect();
         }
+        this.isConnected = false;
     }
     update(event) {
         if (event.type === 'input' || event.type === 'change') {
@@ -1944,7 +1940,7 @@ _instances = new WeakSet(), _startPendingRequest = function _startPendingRequest
         __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
     });
 }, _processRerender = function _processRerender(html, response) {
-    if (this.isWindowUnloaded) {
+    if (!this.isConnected) {
         return;
     }
     if (response.headers.get('Location')) {
