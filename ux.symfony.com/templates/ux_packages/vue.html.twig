@@ -1,0 +1,43 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component package_header with {
+        package: package,
+        eyebrowText: 'Vue.js Component Rendering'
+    } %}
+        {% block title_header %}
+            Render Vue.js from
+            <span class="playfair ps-2">inside Twig</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Built a Vue.js component? Render it quickly &amp; easily in Twig <em>and</em> pass in dynamic props.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'templates/vue.html.twig', height: '350px' } %}
+        {% block content %}
+            {{- source('@code_snippets/_vue.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'assets/vue/controllers/PackageSearch.vue', height: '350px', language: 'html' } %}
+        {% block content %}
+            {{- source('@code_snippets/_PackageSearch.vue') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_title %}UX Vue{% endblock %}
+
+{% block demo_content %}
+    <div {{ vue_component('PackageSearch', {
+        packages: packagesData
+    }) }}>
+        Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
+    </div>
+{% endblock %}

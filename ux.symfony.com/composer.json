@@ -41,6 +41,7 @@
         "symfony/ux-turbo-mercure": "2.x-dev",
         "symfony/ux-twig-component": "2.x-dev",
         "symfony/ux-typed": "2.x-dev",
+        "symfony/ux-vue": "2.x-dev",
         "symfony/validator": "6.0.*",
         "symfony/webpack-encore-bundle": "^1.14",
         "symfony/yaml": "6.0.*",

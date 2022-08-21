@@ -54,11 +54,21 @@ class PackageRepository
                 'react',
                 'React',
                 'app_react',
-                'linear-gradient(95.22deg, #35D07C -4.7%, #58D7C7 105.43%), #5920A0',
+                'linear-gradient(95.22deg, #10a2cb -4.7%, #42caf0 105.43%), #5920A0',
                 'Quickly render `<React />` components &amp; pass them props.',
                 'I need to render React components from Twig'
             ))
                 ->setDocsLink('https://reactjs.org/', 'Go deeper with the React docs.'),
+
+            (new Package(
+                'vue',
+                'Vue.js',
+                'app_vue',
+                'linear-gradient(95.22deg, #35b67c -4.7%, #8ce3bc 105.43%)',
+                'Quickly render `<Vue />` components &amp; pass them props.',
+                'I need to render Vue.js components from Twig'
+            ))
+                ->setDocsLink('https://vuejs.org/', 'Go deeper with the Vue.js docs.'),
 
             (new Package(
                 'cropperjs',
