@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by t-richard at 2022-08-12T21:05:21Z
+
+CI fail is unrelated, I fixed it in #427
+
+---------------------------------------------------------------------------
+
+by t-richard at 2022-08-20T21:24:02Z
+
+I've added docs and fixed the review comments.
+
+I'll do the ux.symfony.com page in a separate PR.
+
+CI is still failing due to the Chart.js error but built files are up to date for the Vue component.
