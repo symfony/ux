@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by tgalopin at 2022-08-22T09:38:03Z
+
+You can rebase now it's merged
+
+---------------------------------------------------------------------------
+
+by t-richard at 2022-08-22T09:48:35Z
+
+Rebased, I will update the PR to use the published version once it's live on packagist.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-08-23T13:38:08Z
+
+It's up on packagist now - there's not a release yet, but that's ok - we target `2.x-dev` on all the packages anyways.
+
+---------------------------------------------------------------------------
+
+by t-richard at 2022-08-23T14:20:04Z
+
+I saw it was on packagist but didn't realized all packages were required with 2.x-dev.
+
+I'll update this, thanks for the heads up.
