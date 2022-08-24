@@ -137,18 +137,6 @@
     "phar-io/version": {
         "version": "3.2.1"
     },
-    "phpdocumentor/reflection-common": {
-        "version": "2.2.0"
-    },
-    "phpdocumentor/reflection-docblock": {
-        "version": "5.3.0"
-    },
-    "phpdocumentor/type-resolver": {
-        "version": "1.6.1"
-    },
-    "phpspec/prophecy": {
-        "version": "v1.15.0"
-    },
     "phpunit/php-code-coverage": {
         "version": "9.2.15"
     },
@@ -580,6 +568,9 @@
     "symfony/ux-twig-component": {
         "version": "v2.1.0"
     },
+    "symfony/ux-vue": {
+        "version": "2.x-dev"
+    },
     "symfony/validator": {
         "version": "6.0",
         "recipe": {
@@ -647,9 +638,6 @@
     },
     "twig/twig": {
         "version": "v3.3.10"
-    },
-    "webmozart/assert": {
-        "version": "1.11.0"
     },
     "zenstruck/assert": {
         "version": "v1.0.1"

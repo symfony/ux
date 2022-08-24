@@ -26,8 +26,15 @@ use Symfony\UX\Cropperjs\Form\CropperType;
 
 class UxPackagesController extends AbstractController
 {
+    public function __construct(
+        private PackageRepository $packageRepository,
+        private NormalizerInterface $normalizer,
+        private Packages $assetPackages
+    ) {
+    }
+
     #[Route('/chartjs', name: 'app_chartjs')]
-    public function chartjs(ChartBuilderInterface $chartBuilder, PackageRepository $packageRepository): Response
+    public function chartjs(ChartBuilderInterface $chartBuilder): Response
     {
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
 
@@ -57,29 +64,29 @@ class UxPackagesController extends AbstractController
 
         return $this->render('ux_packages/chartjs.html.twig', [
             'chart' => $chart,
-            'package' => $packageRepository->find('chartjs'),
+            'package' => $this->packageRepository->find('chartjs'),
         ]);
     }
 
     #[Route('/twig-component', name: 'app_twig_component')]
-    public function twigComponent(PackageRepository $packageRepository): Response
+    public function twigComponent(): Response
     {
         return $this->render('ux_packages/twig-component.html.twig', [
-            'package' => $packageRepository->find('twig-component'),
+            'package' => $this->packageRepository->find('twig-component'),
         ]);
     }
 
     #[Route('/lazy-image', name: 'app_lazy_image')]
-    public function lazyImage(PackageRepository $packageRepository): Response
+    public function lazyImage(): Response
     {
         return $this->render('ux_packages/lazy-image.html.twig', [
-            'package' => $packageRepository->find('lazy-image'),
+            'package' => $this->packageRepository->find('lazy-image'),
             'publicDir' => $this->getParameter('kernel.project_dir').'/public',
         ]);
     }
 
     #[Route('/notify', name: 'app_notify')]
-    public function notify(PackageRepository $packageRepository, Request $request, NotifierInterface $notifier): Response
+    public function notify(Request $request, NotifierInterface $notifier): Response
     {
         $form = $this->createForm(SendNotificationForm::class);
 
@@ -96,40 +103,43 @@ class UxPackagesController extends AbstractController
         }
 
         return $this->renderForm('ux_packages/notify.html.twig', [
-            'package' => $packageRepository->find('notify'),
+            'package' => $this->packageRepository->find('notify'),
             'form' => $form,
         ]);
     }
 
     #[Route('/react', name: 'app_react')]
-    public function react(PackageRepository $packageRepository, NormalizerInterface $normalizer, Packages $assetPackages): Response
+    public function react(NormalizerInterface $normalizer, Packages $assetPackages): Response
     {
-        // turn the array of Package into an array, with some extra keys
-        $packagesData = $normalizer->normalize($packageRepository->findAll());
-        $packagesData = array_map(function (array $data) use ($assetPackages) {
-            $data['url'] = $this->generateUrl($data['route']);
-            unset($data['route']);
-            $data['imageUrl'] = $assetPackages->getUrl('build/images/'.$data['imageFilename']);
-
-            return $data;
-        }, $packagesData);
+        $packagesData = $this->getNormalizedPackages();
 
         return $this->render('ux_packages/react.html.twig', [
-            'package' => $packageRepository->find('react'),
+            'package' => $this->packageRepository->find('react'),
+            'packagesData' => $packagesData,
+        ]);
+    }
+
+    #[Route('/vue', name: 'app_vue')]
+    public function vue(NormalizerInterface $normalizer, Packages $assetPackages): Response
+    {
+        $packagesData = $this->getNormalizedPackages();
+
+        return $this->render('ux_packages/vue.html.twig', [
+            'package' => $this->packageRepository->find('vue'),
             'packagesData' => $packagesData,
         ]);
     }
 
     #[Route('/typed', name: 'app_typed')]
-    public function typed(PackageRepository $packageRepository): Response
+    public function typed(): Response
     {
         return $this->render('ux_packages/typed.html.twig', [
-            'package' => $packageRepository->find('typed'),
+            'package' => $this->packageRepository->find('typed'),
         ]);
     }
 
     #[Route('/autocomplete', name: 'app_autocomplete')]
-    public function autocomplete(PackageRepository $packageRepository, Request $request): Response
+    public function autocomplete(Request $request): Response
     {
         $form = $this->createForm(TimeForAMealForm::class);
 
@@ -149,13 +159,13 @@ class UxPackagesController extends AbstractController
         }
 
         return $this->renderForm('ux_packages/autocomplete.html.twig', [
-            'package' => $packageRepository->find('autocomplete'),
+            'package' => $this->packageRepository->find('autocomplete'),
             'form' => $form,
         ]);
     }
 
     #[Route('/cropperjs', name: 'app_cropper')]
-    public function cropper(Packages $package, CropperInterface $cropper, Request $request, string $projectDir, PackageRepository $packageRepository): Response
+    public function cropper(Packages $package, CropperInterface $cropper, Request $request, string $projectDir): Response
     {
         $crop = $cropper->createCrop($projectDir.'/assets/images/large.jpg');
         $crop->setCroppedMaxSize(1000, 750);
@@ -187,12 +197,12 @@ class UxPackagesController extends AbstractController
             'form' => $form,
             'croppedImage' => $croppedImage,
             'croppedThumbnail' => $croppedThumbnail,
-            'package' => $packageRepository->find('cropperjs'),
+            'package' => $this->packageRepository->find('cropperjs'),
         ]);
     }
 
     #[Route('/dropzone', name: 'app_dropzone')]
-    public function dropzone(Request $request, PackageRepository $packageRepository): Response
+    public function dropzone(Request $request): Response
     {
         $form = $this->createForm(DropzoneForm::class);
 
@@ -205,21 +215,21 @@ class UxPackagesController extends AbstractController
 
         return $this->renderForm('ux_packages/dropzone.html.twig', [
             'form' => $form,
-            'package' => $packageRepository->find('dropzone'),
+            'package' => $this->packageRepository->find('dropzone'),
         ]);
     }
 
     #[Route('/swup/{page<\d+>}', name: 'app_swup')]
-    public function swup(PackageRepository $packageRepository, int $page = 1): Response
+    public function swup(int $page = 1): Response
     {
         $pagerfanta = Pagerfanta::createForCurrentPageWithMaxPerPage(
-            new ArrayAdapter($packageRepository->findAll()),
+            new ArrayAdapter($this->packageRepository->findAll()),
             $page,
             4
         );
 
         return $this->render('ux_packages/swup.html.twig', [
-            'package' => $packageRepository->find('swup'),
+            'package' => $this->packageRepository->find('swup'),
             'pager' => $pagerfanta,
         ]);
     }
@@ -251,5 +261,19 @@ class UxPackagesController extends AbstractController
             $this->getDeliciousWord(),
             implode(\count($foodStrings) > 2 ? ', ' : ' ', $foodStrings->toArray())
         );
+    }
+
+    private function getNormalizedPackages(): array
+    {
+        $packagesData = $this->normalizer->normalize($this->packageRepository->findAll());
+        $assetPackages = $this->assetPackages;
+
+        return array_map(function (array $data) use ($assetPackages) {
+            $data['url'] = $this->generateUrl($data['route']);
+            unset($data['route']);
+            $data['imageUrl'] = $assetPackages->getUrl('build/images/'.$data['imageFilename']);
+
+            return $data;
+        }, $packagesData);
     }
 }
