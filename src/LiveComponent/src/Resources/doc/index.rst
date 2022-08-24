@@ -1358,8 +1358,8 @@ collection type, rendering every item in a table row:
                 {{ block('form_widget') }}
             </tbody>
         </table>
-        {%- if skip_add_button|default(false) is same as false and button_add is defined and not button_add.rendered -%}
-            {{ form_widget(button_add, { label: '+ Add Item', class: 'btn btn-outline-primary' }) }}
+        {%- if skip_add_button|default(false) is same as(false) and button_add is defined and not button_add.rendered -%}
+            {{ form_widget(button_add, { label: '+ Add Item', attr: { class: 'btn btn-outline-primary' } }) }}
         {%- endif -%}
     {%- endblock -%}
 
@@ -1392,7 +1392,7 @@ then render it manually after:
         </tbody>
     </table>
 
-    {{ form_widget(form.todoItems.vars.button_add, { label: '+ Add Item', class: 'btn btn-outline-primary' }) }}
+    {{ form_widget(form.todoItems.vars.button_add, { label: '+ Add Item', attr: { class: 'btn btn-outline-primary' } }) }}
 
 Modifying Nested Object Properties with the "exposed" Option
 ------------------------------------------------------------
