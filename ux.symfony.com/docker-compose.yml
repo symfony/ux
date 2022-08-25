@@ -7,8 +7,8 @@ services:
     restart: unless-stopped
     environment:
       SERVER_NAME: ':80'
-      MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
-      MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!'
+      MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!+MAKE_THE_KEY_LONG_ENOUGH'
+      MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!+MAKE_THE_KEY_LONG_ENOUGH'
       # Set the URL of your Symfony project (without trailing slash!) as value of the cors_origins directive
       MERCURE_EXTRA_DIRECTIVES: |
         cors_origins https://127.0.0.1:9044
