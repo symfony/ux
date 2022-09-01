@@ -38,6 +38,9 @@ class CategoryAutocompleteType extends AbstractType
                 return true;
             },
             'placeholder' => 'What should we eat?',
+            'attr' => [
+                'data-controller' => 'custom-autocomplete',
+            ],
         ]);
     }
 

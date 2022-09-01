@@ -29,7 +29,7 @@ class AutocompleteFormRenderingTest extends KernelTestCase
         $this->browser()
             ->throwExceptions()
             ->get('/test-form')
-            ->assertElementAttributeContains('#product_category_autocomplete', 'data-controller', 'symfony--ux-autocomplete--autocomplete')
+            ->assertElementAttributeContains('#product_category_autocomplete', 'data-controller', 'custom-autocomplete symfony--ux-autocomplete--autocomplete')
             ->assertElementAttributeContains('#product_category_autocomplete', 'data-symfony--ux-autocomplete--autocomplete-url-value', '/test/autocomplete/category_autocomplete_type')
 
             ->assertElementAttributeContains('#product_portionSize', 'data-controller', 'symfony--ux-autocomplete--autocomplete')
