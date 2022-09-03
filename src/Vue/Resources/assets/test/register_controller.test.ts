@@ -18,7 +18,7 @@ require.context = createRequireContextPolyfill(__dirname);
 describe('registerVueControllerComponents', () => {
     it('test', () => {
         registerVueControllerComponents(require.context('./fixtures', true, /\.vue$/));
-        const resolveComponent = (window as any).resolveVueComponent;
+        const resolveComponent = window.resolveVueComponent;
 
         expect(resolveComponent).not.toBeUndefined();
         expect(resolveComponent('Hello')).toBe(Hello);

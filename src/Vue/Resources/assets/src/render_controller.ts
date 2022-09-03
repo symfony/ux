@@ -10,9 +10,9 @@
 'use strict';
 
 import { Controller } from '@hotwired/stimulus';
-import { App, Component, createApp } from 'vue';
+import { App, createApp } from 'vue';
 
-export default class extends Controller {
+export default class extends Controller<Element & { __vue_app__?: App<Element> }> {
     private props: Record<string, unknown> | null;
     private app: App<Element>;
     readonly componentValue: string;
@@ -28,7 +28,7 @@ export default class extends Controller {
 
         this._dispatchEvent('vue:connect', { componentName: this.componentValue, props: this.props });
 
-        const component: Component = window.resolveVueComponent(this.componentValue);
+        const component = window.resolveVueComponent(this.componentValue);
 
         this.app = createApp(component, this.props);
 
