@@ -181,6 +181,11 @@ export default class extends Controller implements LiveController {
             let handled = false;
             directive.modifiers.forEach((modifier) => {
                 switch (modifier.name) {
+                    case 'validate':
+                        if (!event.currentTarget.form.reportValidity()) {
+                            handled = true;
+                        }
+                        break;
                     case 'prevent':
                         event.preventDefault();
                         break;
@@ -275,6 +280,11 @@ export default class extends Controller implements LiveController {
 
         modelDirective.modifiers.forEach((modifier) => {
             switch (modifier.name) {
+                case 'validate':
+                    if (!element.reportValidity()) {
+                        shouldRender = false;
+                    }
+                    break;
                 case 'on':
                     if (!modifier.value) {
                         throw new Error(`The "on" modifier in ${modelDirective.getString()} requires a value - e.g. on(change).`);
