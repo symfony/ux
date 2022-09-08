@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Normalizer;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
@@ -83,10 +84,29 @@ final class DoctrineObjectNormalizer implements NormalizerInterface, Denormalize
         // todo cache/warmup an array of classes that are "doctrine objects"
         foreach ($this->managerRegistries as $registry) {
             if ($om = $registry->getManagerForClass($class)) {
-                return $om;
+                return self::ensureManagedObject($om, $class);
             }
         }
 
         return null;
+    }
+
+    /**
+     * Ensure the $class is not embedded or a mapped superclass.
+     */
+    private static function ensureManagedObject(ObjectManager $om, string $class): ?ObjectManager
+    {
+        if (!$om instanceof EntityManagerInterface) {
+            // todo might need to add some checks once ODM support is added
+            return $om;
+        }
+
+        $metadata = $om->getClassMetadata($class);
+
+        if ($metadata->isEmbeddedClass || $metadata->isMappedSuperclass) {
+            return null;
+        }
+
+        return $om;
     }
 }
