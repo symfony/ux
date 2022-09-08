@@ -19,6 +19,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *
  * @final
+ *
  * @experimental
  */
 class DropzoneType extends AbstractType

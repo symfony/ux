@@ -18,6 +18,7 @@ use kornrunner\Blurhash\Blurhash as BlurhashEncoder;
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *
  * @final
+ *
  * @experimental
  */
 class BlurHash implements BlurHashInterface

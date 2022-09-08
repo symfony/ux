@@ -18,6 +18,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * @author Thibault RICHARD <thibault.richard62@gmail.com>
  *
  * @final
+ *
  * @experimental
  */
 class VueBundle extends Bundle
