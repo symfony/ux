@@ -16,6 +16,7 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 
 /**
  * @ORM\Entity
+ *
  * @Broadcast
  *
  * @author Rick Kuipers <rick@levelup-it.com>

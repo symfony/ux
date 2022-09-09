@@ -21,6 +21,7 @@ use Twig\TwigFunction;
  * @author Thibault RICHARD <thibault.richard62@gmail.com>
  *
  * @final
+ *
  * @experimental
  */
 class VueComponentExtension extends AbstractExtension

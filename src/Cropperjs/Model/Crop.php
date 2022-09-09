@@ -20,6 +20,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *
  * @final
+ *
  * @experimental
  */
 class Crop
