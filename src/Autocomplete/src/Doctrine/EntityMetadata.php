@@ -53,7 +53,7 @@ class EntityMetadata
             return $this->metadata->associationMappings[$propertyName];
         }
 
-        throw new \InvalidArgumentException(sprintf('The "%s" field does not exist in the "%s" entity.', $propertyName, $this->getFqcn()));
+        throw new \InvalidArgumentException(sprintf('The "%s" field does not exist in the "%s" entity.', $propertyName, $this->metadata->getName()));
     }
 
     public function getPropertyDataType(string $propertyName): string
