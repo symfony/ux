@@ -1544,6 +1544,19 @@ method:
         class="{{ this.getError('post.content') ? 'has-error' : '' }}"
     >{{ post.content }}</textarea>
 
+    {% if this.getError('agreeToTerms') %}
+        <div class="error">
+            {{ this.getError('agreeToTerms').message }}
+        </div>
+    {% endif %}
+    <input type="checkbox" data-model="agreeToTerms" class="{{ this.getError('agreeToTerms') ? 'has-error' : '' }}"/>
+
+    <button
+            type="submit"
+            data-action="live#action"
+            data-action-name="prevent|save"
+    >Save</button>
+
 Once a component has been validated, the component will "remember" that
 it has been validated. This means that, if you edit a field and the
 component re-renders, it will be validated again.
