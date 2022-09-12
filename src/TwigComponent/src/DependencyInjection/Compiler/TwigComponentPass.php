@@ -41,7 +41,7 @@ final class TwigComponentPass implements CompilerPassInterface
 
                 $tag['service_id'] = $id;
                 $tag['class'] = $definition->getClass();
-                $tag['template'] = $tag['template'] ?? "components/{$tag['key']}.html.twig";
+                $tag['template'] = $tag['template'] ?? sprintf('components/%s.html.twig', str_replace(':', '/', $tag['key']));
                 $componentConfig[$tag['key']] = $tag;
             }
         }

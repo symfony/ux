@@ -130,6 +130,13 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('custom td (1)', $output);
     }
 
+    public function testComponentWithNamespace(): void
+    {
+        $output = $this->renderComponent('foo:bar:baz');
+
+        $this->assertStringContainsString('Content...', $output);
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [

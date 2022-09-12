@@ -190,6 +190,13 @@ as the second argument to the ``AsTwigComponent`` attribute:
           // ...
       }
 
+Twig Template Namespaces
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can use a ``:`` in your component's name to indicate a namespace. The default
+template will replace the ``:`` with ``/``. For example, a component with the name
+``form:input`` will look for a template in ``templates/components/form/input.html.twig``.
+
 The mount() Method
 ~~~~~~~~~~~~~~~~~~
 
