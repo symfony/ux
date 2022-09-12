@@ -1,0 +1,250 @@
+---------------------------------------------------------------------------
+
+by janklan at 2022-08-04T11:13:25Z
+
+I'd like to ignore the failing check, I highly doubt it's caused by my proposed change.
+
+---------------------------------------------------------------------------
+
+by janklan at 2022-08-04T12:18:23Z
+
+Correction, `#[AsEntityAutocompleteField(alias: 'alias')]` doesn't actually fix the problem, it just makes the autocompleter fail silently - well, it doesn't fail per se, but the autocompleter can return incorrect results, if you're using a [custom autocompleter](https://symfony.com/bundles/ux-autocomplete/current/index.html#advanced-creating-an-autocompleter-with-no-form). It's likely that it's a thing for another bug report or PR, but let's bring it up here to talk about:
+
+I'm using a custom Form Type:
+
+```php
+
+#[AsEntityAutocompleteField]
+class SiteAutocompleterType extends AbstractType
+{
+    public function __construct(private readonly UrlGeneratorInterface $urlGenerator)
+    {
+    }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'class' => Site::class,
+            // I thought I would not have to provide the URL here, but when #[AsEntityAutocompleteField] has no alias, it's using the form type alias as a default, which leads to an incorrect URL in the end.
+            'autocomplete_url' => $this->urlGenerator->generate('ux_entity_autocomplete', ['alias' => 'site']),
+            'choice_label' => fn (Site $site) => $site.' '.($site->getParent() ?: 'Root').' / '.$site->getOrganisation(),
+        ]);
+    }
+
+    public function getParent(): string
+    {
+        return ParentEntityAutocompleteType::class;
+    }
+}
+```
+
+And with it, I'm using a custom autocompleter:
+
+```php
+#[AutoconfigureTag(name: 'ux.entity_autocompleter', attributes: ['alias' => 'site'])]
+class SiteAutocompleter implements EntityAutocompleterInterface
+{
+    public function __construct(
+        private readonly SiteRepository $siteRepository,
+        private readonly OrganisationService $organisationService,
+    ) {
+        // Void
+    }
+
+    public function getEntityClass(): string
+    {
+        return Site::class;
+    }
+
+    /** @param SiteRepository $repository */
+    public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder
+    {
+        $iqb = $this->siteRepository->getOrganisationAwareInteractiveQueryBuilder()
+            ->searchFor($query)
+        ;
+
+        return $iqb->build();
+    }
+
+    /** @param Site $entity */
+    public function getLabel(object $entity): string
+    {
+        return (string) $entity;
+    }
+
+    /** @param Site $entity */
+    public function getValue(object $entity): string
+    {
+        return $entity->getId();
+    }
+
+    public function isGranted(Security $security): bool
+    {
+        // Redundant, because the organisation is guaranteed to be readable if it is set as active
+        return $security->isGranted(OrganisationVoter::READ, $this->organisationService->getActiveOrganisation());
+    }
+}
+```
+
+This creates an endpoint `/autocomplete/site`, which works as expected. However, when the `#[AsEntityAutocompleteField]` has the `alias` value, it takes precedence, and the query builder defined in `SiteAutocompleterType` is used, instead of my `SiteAutocompleter` class.
+
+Does this sound like a bug, or am I using it wrong. It's experimental, so let's experiment!
+
+Also, to add more complexity to this comment, I don't think the `EntityAutocompleterInterface` approach is flexible enough. In `public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder`, the `$query` itself is not sufficient data input - for example, if I had a nested structure of Site entities, and wanted to only search among child entities of a particular site, having name matching the `$query` - how would I pass on the ID of the parent site?
+
+I know the answer - I could inject the Request stack into my autocompleter class and then pluck what I need from it. Okay, that would work, but why would I need the $query parameter? It almost sounds like passing the whole request would make more sense?
+
+All and all, I'm not a big fan of the Autocompleter URL magic the way it is done now. Adding a completely custom controller action that serves a key/value json result is almost simpler than, or as simple as adding a dedicated magical autocomplete result loader, but the custom autocompleter controller action has significantly more flexibility. Check this out:
+
+```php
+#[Route(path: '/autocomplete', name: self::ROUTE_AUTOCOMPLETE, methods: [Request::METHOD_GET])]
+public function autocomplete(Request $request, SiteRepository $siteRepository): JsonResponse
+{
+    $result = $siteRepository->getOrganisationAwareInteractiveQueryBuilder()
+        ->searchFor($request->query->get('query'))
+        ->build()
+        ->select('node.id AS value', 'node.name AS text')
+        ->getQuery()
+        ->getScalarResult();
+
+    return $this->json(['results' => $result]);
+}
+```
+
+This is it. It's even shorter block of code than what I have to have in my `class SiteAutocompleter implements EntityAutocompleterInterface`, and it has all the benefits of parameter converters, completer control over the URL, simpler/more powerful access control, la la la... lots of good stuff.
+
+If my vote has any weight at all, I would call the magical autoloader feature unnecessary. Either way, I love the direction of all of the Symfony UX initiative.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-08-04T14:11:11Z
+
+Hi @janklan!
+
+Thanks for bringing up this situation :). So, if I understand it correctly, your (initial) goal is pretty simple: create an autocomplete, but one that uses your custom `SiteAutocompleter` instead of the "built-in" one. And, the problem is that, even when you correctly create `SiteAutocompleter`, the "built-in" system (the one powered by the `#[AsEntityAutocompleteField]`) takes precedence. Is that correct?
+
+If so, is the solution as simple as:
+
+A) removing `#[AsEntityAutocompleteField]` from your code
+B) skipping the check (and error) for this attribute if the autocomplete_url is provided https://github.com/symfony/ux/blob/8e84d49a92b70f99001b8817cd3129a6215175f6/src/Autocomplete/src/Form/ParentEntityAutocompleteType.php#L38-L40
+
+If I remember correctly, the purpose of the `#[AsEntityAutocompleteField]` is to (1) help generate the URL (since it uses the alias) and (2) to effectively create a service tagged with `ux.entity_autocompleter` with an alias matching what's on the attribute. So, if you're creating a custom autocompleter, the attribute should not be needed at all.
+
+If I'm correct, then you just need a small tweak to the PR to get (B) working. Then, the documentation needs some help in the "custom autocompleter" section to explain that, if you're using with a form, you should remove that attribute and generate the autocomplete_url manually. That section was originally written with the use-case of creating an autocomplete endpoint *without* the form system. But what you're trying to do is valid.
+
+> If my vote has any weight at all, I would call the magical autoloader feature unnecessary. Either way, I love the direction of all of the Symfony UX initiative.
+
+For most use-cases, the magic auto-complete endpoint works great. What's nice is that, if it doesn't work for you, no problem! You could override the `autocomplete_url` entirely to point to your custom route/controller. As long as you return the same JSON structure, then it will work. To put it another way: the autocomplete component is 2 parts: (A) a "frontend" component, including the JS but logic to handle the form data transformations on submit and (B) a "backend" autocomplete endpoint. You can pick and choose what you want. But, it's possible that this alternate mode of using the component could be better-documented.
+
+Cheers!
+
+---------------------------------------------------------------------------
+
+by janklan at 2022-08-05T00:19:21Z
+
+> your (initial) goal is pretty simple: create an autocomplete, but one that uses your custom `SiteAutocompleter` instead of the "built-in" one.
+
+Close, but not quite: my goal was to create an autocompleter that returns only entities that belong to a certain `$organisation`, and also match the `$query` value. In my single-db-multi-tenant application, this happens everywhere, every time. Simple, really. But not really!
+
+I'll try to explain. I created a [gist with the related files](https://gist.github.com/janklan/2925ff32b65e39ba8434fa2b84c1e70e), I'll be using it below.
+
+For context, I don't pass Doctrine Entities to my forms to avoid broken states and accidental DB updates when something flushes the manager while the entity is half-correct. Instead, I create a DTO, I modify that DTO in a form. When the DTO is guaranteed to be valid (passes validation once the form is submitted etc), I call a static builder method on the Entity's class. This builder method accepts the DTO, and uses the DTO to build the acutal entity. That way I don't need any setters, my Entities are always correct, and thing are neatly under control. Updating works similarly, however the Create and Update DTO often have different properties, and I often use different DTOs for different mutations of the same entity.
+
+The tiny bit of code overhead is negligible comparing to the benefits.
+
+Anyway, my [SiteCreateDto carries the Organisation](https://gist.github.com/janklan/2925ff32b65e39ba8434fa2b84c1e70e#file-sitecreatedto-php-L28) that [will own the Site once created](https://gist.github.com/janklan/2925ff32b65e39ba8434fa2b84c1e70e#file-site-php-L11). The Organisation is not part of the form itself - I don't want the user to change it, so the controller passes the Organisation object extracted from the current context when it's creating the form and its DTO.
+
+The SiteCreateType [is listening for FormEvents::PRE_SET_DATA](https://gist.github.com/janklan/2925ff32b65e39ba8434fa2b84c1e70e#file-sitecreatetype-php-L33), waiting for the DTO to tell the form which Organisation are we working with. This works great when the Autocompleter loads all options eagerly, but falls apart when the async loading comes in the picture:
+
+1. `/autcomplete/whatever-the-alias-is` has no direct access to anything else than the `$query` value.
+2. The magic in the API endpoint is reconstructing the query builder for the autocompleter field identified by its alias.
+3. The magic happens in a separate request, which is unaware of the context the Form lives in, so has no access to the DTO and/or Organisation
+
+This morning I tried to [experiment with filter_query to limit the Organisations](https://gist.github.com/janklan/2925ff32b65e39ba8434fa2b84c1e70e#file-sitecreatetype-php-L39), expecting it to fail due to the absence of the DTO, but I didn't even get that far, the filter_query seems to be ignored entirely.
+
+I tried to set the `query_builder` instead of the `filter_query`, but that [didn't work (I didn't dig into why)](https://gist.github.com/janklan/2925ff32b65e39ba8434fa2b84c1e70e#file-sitecreatetype-php-L39)
+
+I tried to [add the organisation as an option of SiteAutocompleterType](https://gist.github.com/janklan/2925ff32b65e39ba8434fa2b84c1e70e#file-siteautocompletertype-php-L19-L24), but then when I [passed the Organisation to the field, it didn't work](https://gist.github.com/janklan/2925ff32b65e39ba8434fa2b84c1e70e#file-sitecreatetype-php-L39-L41).
+
+Either way, I think it's all doomed anyway: The `$organisation` is derived from the current context when the form field is generated, and when the autocompleter request is made, that context is lost and the autocompleter magic has no way to reconstsruct it, so I call all this futile.
+
+My takeaway from all this is the docs should be updated to say "If you need to restrict your search result on any other variable than $query, you go and write your own endpoint.
+
+> And, the problem is that, even when you correctly create `SiteAutocompleter`, the "built-in" system (the one powered by the `#[AsEntityAutocompleteField]`) takes precedence. Is that correct?
+
+Yeah, that was one of the confusing moments. There are two auto-generated routes, which both of them do something else if you have a custom autocompleter service with overlapping aliases.
+
+>
+> If so, is the solution as simple as:
+>
+> A) removing `#[AsEntityAutocompleteField]` from your code B) skipping the check (and error) for this attribute if the autocomplete_url is provided
+>
+> https://github.com/symfony/ux/blob/8e84d49a92b70f99001b8817cd3129a6215175f6/src/Autocomplete/src/Form/ParentEntityAutocompleteType.php#L38-L40
+> If I remember correctly, the purpose of the `#[AsEntityAutocompleteField]` is to (1) help generate the URL (since it uses the alias) and (2) to effectively create a service tagged with `ux.entity_autocompleter` with an alias matching what's on the attribute. So, if you're creating a custom autocompleter, the attribute should not be needed at all.
+
+100% right mate - it's just not clear that using `#[AsEntityAutocompleteField(alias: 'foo')]` and `#[AutoconfigureTag(name: 'ux.entity_autocompleter', attributes: ['alias' => 'foo'])]
+class SiteAutocompleter implements EntityAutocompleterInterface` are mutually exclusive.
+
+> If I'm correct, then you just need a small tweak to the PR to get (B) working. Then, the documentation needs some help in the "custom autocompleter" section to explain that, if you're using with a form, you should remove that attribute and generate the autocomplete_url manually. That section was originally written with the use-case of creating an autocomplete endpoint _without_ the form system. But what you're trying to do is valid.
+
+I agree with the docs update being a valid solution to all of the things I wrote above!
+
+> > If my vote has any weight at all, I would call the magical autoloader feature unnecessary. Either way, I love the direction of all of the Symfony UX initiative.
+>
+> For most use-cases, the magic auto-complete endpoint works great. What's nice is that, if it doesn't work for you, no problem! You could override the `autocomplete_url` entirely to point to your custom route/controller. As long as you return the same JSON structure, then it will work. To put it another way: the autocomplete component is 2 parts: (A) a "frontend" component, including the JS but logic to handle the form data transformations on submit and (B) a "backend" autocomplete endpoint. You can pick and choose what you want. But, it's possible that this alternate mode of using the component could be better-documented.
+
+Yeah point taken, although I'm wondering how common would be the use case where asynchronous autocompleter can work with just the $query value. The way I see it, you'd only need an async autocompleter if you had a ton of data in your table. If you have a ton of data, chances are you need some additional conditions applied to find the correct autocompleter result set.
+
+----
+
+Anyway, all this discussion is a bit off-topic to the actual PR contents, which in fact fixes an error preventing me from providing a custom autocompleter URL to the standard autocompleter, which is how I landed here.
+
+I'll try to find some tome to push a PR to the docs, but that's going to be another time, another PR.
+
+What do you think of the change I'm proposing?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-08-09T15:29:55Z
+
+> Either way, I think it's all doomed anyway: The $organisation is derived from the current context when the form field is generated, and when the autocompleter request is made, that context is lost and the autocompleter magic has no way to reconstsruct it, so I call all this futile.
+
+Absolutely - that is indeed the issue. #391 discusses that same general issue.
+
+> My takeaway from all this is the docs should be updated to say "If you need to restrict your search result on any other variable than $query, you go and write your own endpoint.
+
+Yes, or we can fix #391. It is not a particularly easy issue - I do have an idea. But if it fails, then absolutely we should document how to simply workaround this by writing your own endpoint, which is not a super difficult thing to do (if you know that you need to do it and have some basic docs).
+
+> 100% right mate - it's just not clear that using #[AsEntityAutocompleteField(alias: 'foo')] and #[AutoconfigureTag(name: 'ux.entity_autocompleter', attributes: ['alias' => 'foo'])] class SiteAutocompleter implements EntityAutocompleterInterface are mutually exclusive.
+
+Indeed they are mutually exclusive. Using `AsEntityAutocompleteField` causes that services to be tagged with `ENTITY_AUTOCOMPLETE_FIELD_TAG` (i.e. `ux.entity_autocomplete_field`). And THAT, then triggers a new service to be added for you that has the `ux.entity_autocompleter` tag, using the alis from the `AsEntityAutocompleteField` attribute: https://github.com/symfony/ux/blob/72cacda29ddd08e088c96aad480fe83bd0749af2/src/Autocomplete/src/DependencyInjection/AutocompleteFormTypePass.php#L40-L55
+
+So, yes, we should update the docs to explain that if you're creating your own `EntityAutocompleterInterface`, then don't use the `AsEntityAutocompleteField` at all. Also, can't remember if I mentioned it. the docs should show `#[AutoconfigureTag]` instead of `services.yaml` config (that it shows currently): the attribute is much nicer ;)
+
+<hr>
+
+In conclusion, all this PR needs, I believe, is:
+
+A) In `ParentEntityAutocompleteType`, the `throw new \LogicException(sprintf('The %s class must have a #[AsEntityAutocompleteField] attribute above its class.', \get_class($formType)));` should NOT be thrown if `autocomplete_url` is provided. Otherwise, you'll STILL need to use the `AsEntityAutocompleteField` attribute.
+
+B) Having a quick update to the docs would be great, but not strictly required.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by rodnaph at 2022-09-11T08:46:16Z
+
+I'm also running into this issue (trying to provide a custom `autocomplete_url`) and the additional change suggested by @weaverryan above works for me 👍
+
+@janklan Do you still need support for this feature or shall I open a new PR with the change in it?
+
+---------------------------------------------------------------------------
+
+by janklan at 2022-09-12T00:09:03Z
+
+> I'm also running into this issue (trying to provide a custom `autocomplete_url`) and the additional change suggested by @weaverryan above works for me 👍
+>
+> @janklan Do you still need support for this feature or shall I open a new PR with the change in it?
+
+Done, thanks for the ping
