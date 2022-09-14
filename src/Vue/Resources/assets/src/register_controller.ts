@@ -21,8 +21,7 @@ export function registerVueControllerComponents(contexts: any) {
     // Expose a global Vue loader to allow rendering from the Stimulus controller
     (window as any).resolveVueComponent = (name: string): object => {
         const component = Object.values(
-            Object.fromEntries(
-                Object.entries(vueControllers).filter(([key]) => key.endsWith(`${name}.vue`)))
+            Object.fromEntries(Object.entries(vueControllers).filter(([key]) => key.endsWith(`${name}.vue`)))
         )[0];
 
         if (typeof component === 'undefined') {
