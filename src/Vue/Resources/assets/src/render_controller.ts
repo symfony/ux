@@ -35,6 +35,13 @@ export default class extends Controller<Element & { __vue_app__?: App<Element> }
         if (this.element.__vue_app__ !== undefined) {
             this.element.__vue_app__.unmount();
         }
+        
+        this._dispatchEvent('vue:before-mount', {
+            componentName: this.componentValue,
+            component: component,
+            props: this.props,
+            app: this.app,
+        });
 
         this.app.mount(this.element);
 
