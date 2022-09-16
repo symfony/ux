@@ -9,18 +9,21 @@
 
 'use strict';
 
-export function registerVueControllerComponents(context: __WebpackModuleApi.RequireContext) {
+export function registerVueControllerComponents(contexts: any) {
     const vueControllers: { [key: string]: object } = {};
 
     const importAllVueComponents = (r: __WebpackModuleApi.RequireContext) => {
         r.keys().forEach((key) => (vueControllers[key] = r(key).default));
     };
 
-    importAllVueComponents(context);
+    [].concat(contexts).forEach((context: __WebpackModuleApi.RequireContext) => importAllVueComponents(context));
 
     // Expose a global Vue loader to allow rendering from the Stimulus controller
     (window as any).resolveVueComponent = (name: string): object => {
-        const component = vueControllers[`./${name}.vue`];
+        const component = Object.values(
+            Object.fromEntries(Object.entries(vueControllers).filter(([key]) => key.endsWith(`${name}.vue`)))
+        )[0];
+
         if (typeof component === 'undefined') {
             throw new Error(`Vue controller "${name}" does not exist`);
         }
