@@ -1,0 +1,5 @@
+<doctrine-mapping>
+    <embeddable name="Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Embeddable2">
+        <field name="name" type="string" />
+    </embeddable>
+</doctrine-mapping>

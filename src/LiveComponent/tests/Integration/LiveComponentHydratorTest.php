@@ -16,7 +16,12 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component3;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithArrayProp;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Embeddable2;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Money;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Temperature;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Embeddable1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\EmptyStringEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\IntEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\StringEnum;
@@ -338,5 +343,40 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $mounted = $this->hydrateComponent($this->getComponent('with_enum'), $dehydrated, $mounted->getName());
 
         $this->assertSame(ZeroIntEnum::ZERO, $mounted->getComponent()->zeroInt);
+    }
+
+    public function testComponentWithNormalizableObjects(): void
+    {
+        $mounted = $this->mountComponent('with_objects', [
+            'money' => new Money(500, 'CAD'),
+            'temperature' => new Temperature(30, 'C'),
+            'entity1' => $entity1 = create(Entity1::class)->object(),
+            'entity2' => $entity2 = create(Entity2::class, ['embedded1' => new Embeddable1('bar'), 'embedded2' => new Embeddable2('baz')])->object(),
+            'embeddable1' => new Embeddable1('foo'),
+            'embeddable2' => new Embeddable2('qux'),
+        ]);
+
+        $dehydrated = $this->dehydrateComponent($mounted);
+
+        $this->assertSame('500|CAD', $dehydrated['money']);
+        $this->assertSame(['degrees' => 30, 'uom' => 'C'], $dehydrated['temperature']);
+        $this->assertSame($entity1->id, $dehydrated['entity1']);
+        $this->assertSame('entity2:'.$entity2->id, $dehydrated['entity2']);
+        $this->assertSame(['name' => 'foo'], $dehydrated['embeddable1']);
+        $this->assertSame(['name' => 'qux'], $dehydrated['embeddable2']);
+
+        $mounted = $this->hydrateComponent($this->getComponent('with_objects'), $dehydrated, $mounted->getName());
+        $component = $mounted->getComponent();
+
+        $this->assertSame(500, $component->money->amount);
+        $this->assertSame('CAD', $component->money->currency);
+        $this->assertSame(30, $component->temperature->degrees);
+        $this->assertSame('C', $component->temperature->uom);
+        $this->assertSame($entity1->id, $component->entity1->id);
+        $this->assertSame($entity2->id, $component->entity2->id);
+        $this->assertSame('bar', $component->entity2->embedded1->name);
+        $this->assertSame('baz', $component->entity2->embedded2->name);
+        $this->assertSame('foo', $component->embeddable1->name);
+        $this->assertSame('qux', $component->embeddable2->name);
     }
 }

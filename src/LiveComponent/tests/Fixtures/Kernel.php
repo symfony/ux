@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\LiveComponent\LiveComponentBundle;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\Entity2Normalizer;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\MoneyNormalizer;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Environment;
 
@@ -73,12 +75,19 @@ final class Kernel extends BaseKernel
                 'auto_generate_proxy_classes' => true,
                 'auto_mapping' => true,
                 'mappings' => [
-                    'Test' => [
+                    'Default' => [
                         'is_bundle' => false,
                         'type' => 'annotation',
                         'dir' => '%kernel.project_dir%/tests/Fixtures/Entity',
                         'prefix' => 'Symfony\UX\LiveComponent\Tests\Fixtures\Entity',
-                        'alias' => 'Test',
+                        'alias' => 'Default',
+                    ],
+                    'XML' => [
+                        'is_bundle' => false,
+                        'type' => 'xml',
+                        'dir' => '%kernel.project_dir%/tests/Fixtures/config/doctrine',
+                        'prefix' => 'Symfony\UX\LiveComponent\Tests\Fixtures\Dto',
+                        'alias' => 'XML',
                     ],
                 ],
             ],
@@ -90,6 +99,8 @@ final class Kernel extends BaseKernel
                 ->autoconfigure()
             // disable logging errors to the console
             ->set('logger', NullLogger::class)
+            ->set(MoneyNormalizer::class)->autoconfigure()->autowire()
+            ->set(Entity2Normalizer::class)->autoconfigure()->autowire()
             ->load(__NAMESPACE__.'\\Component\\', __DIR__.'/Component')
         ;
     }
