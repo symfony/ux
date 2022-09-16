@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by kbond at 2022-09-12T18:39:02Z
+
+Adjusted this PR to just document/test using `/` as the namespace separator instead of introducing a custom notation.
+
+---------------------------------------------------------------------------
+
+by veewee at 2022-09-13T06:09:55Z
+
+> I've adjusted this PR to just document/test using / in the component's name as a namespace separator. After discussing with @weaverryan, we'd like avoid a custom notation for now.
+
+That was the first thing I tried and it makes a lot of sense to use that as a separator - yet it doesn't work for live components.
+Live components have their own URLs to refresh the content on the page. This URL doesn't allow the name of the live template to contain a `/`. This means that if you use / as the namespace separator, you won't be able to apply the same standard to live components. (Unless we make it possible in the router)
+
+That is why I went with `:`.  Not saying it's the best, but the reasoning behind that separator could be:
+
+* the old way twig did includes.
+* in line with how you'dd namespace in html (xml) `<atom:button />`
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-09-13T10:27:58Z
+
+> yet it doesn't work for live components.
+
+Ah good point!
+
+> in line with how you'dd namespace in html (xml) <atom:button />
+
+Yeah, we'd like to add an html parser in the future. Slashes wouldn't work with this.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-09-14T14:05:39Z
+
+Ok, switched back to `:` for the reasons stated by @veewee.
