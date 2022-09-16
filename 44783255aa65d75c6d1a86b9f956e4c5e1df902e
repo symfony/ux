@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by t-richard at 2022-08-30T09:36:03Z
+
+I thought about doing it in the intial PR but it requires special attention.
+
+My fear was that people would use things like Vue router and that could get messy.
+
+Maybe a simple notice in the docs would be enough ?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-08-30T18:04:25Z
+
+A simple notice so that users are aware of the events is all that's needed - would you be able to do that @t-richard?
+
+---------------------------------------------------------------------------
+
+by pierredup at 2022-08-31T15:34:59Z
+
+Actually I think this patch won't work, because plugins needs to be added before mounting the app. So there would need to be another event between `createApp` and `mount`. Something like `vue:app`, or `vue:before-mount`?
+
+> My fear was that people would use things like Vue router and that could get messy.
+
+Vue router will work fine, as long as the hash history is used. For HTML5 history mode, the router might become a problem.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-09-01T14:08:46Z
+
+WDYT @t-richard? This makes sense to me
