@@ -38,7 +38,7 @@ const Hello = {
     props: ['name']
 };
 
-(window as any).resolveVueComponent = () => {
+window.resolveVueComponent = () => {
     return Hello;
 };
 
