@@ -240,4 +240,74 @@ describe('LiveController rendering Tests', () => {
         // the re-render should not have happened
         expect(test.element).not.toHaveTextContent('Hello');
     });
+
+    it('waits for the previous request to finish & batches changes', async () => {
+        const test = await createTest({ title: 'greetings', contents: '' }, (data: any) => `
+            <div ${initComponent(data, { debounce: 1 })}>
+                <input data-model="title" value="${data.title}">
+                <textarea data-model="contents">${data.contents}</textarea>
+
+                Title: "${data.title}"
+
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `);
+
+        // expect the initial Reload request, but delay it
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .delayResponse(100)
+            .init();
+
+        getByText(test.element, 'Reload').click();
+
+        setTimeout(() => {
+            // wait 10 ms (long enough for the shortened debounce to finish and the
+            // Ajax request to start) and then type into the fields
+            userEvent.type(test.queryByDataModel('title'), '!!!');
+            userEvent.type(test.queryByDataModel('contents'), 'Welcome to our test!');
+
+            // NOW we're expecting th 2nd request
+            test.expectsAjaxCall('get')
+                // only 1 request, both new pieces of data sent at once
+                .expectSentData({
+                    title: 'greetings!!!',
+                    contents: 'Welcome to our test!'
+                })
+                .init();
+        }, 10);
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Title: "greetings!!!"'));
+    });
+
+    it('batches re-render requests together that occurred during debounce', async () => {
+        const test = await createTest({ title: 'greetings', contents: '' }, (data: any) => `
+            <div ${initComponent(data, { debounce: 50 })}>
+                <input data-model="title" value="${data.title}">
+                <textarea data-model="contents">${data.contents}</textarea>
+
+                Title: "${data.title}"
+
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `);
+
+        // type: 50ms debounce will begin
+        userEvent.type(test.queryByDataModel('title'), ' to you');
+        setTimeout(() => {
+            // wait 40 ms: not long enough for debounce, then modify this field
+            userEvent.type(test.queryByDataModel('contents'), 'Welcome to our test!');
+
+            // the ONE request will not start until 50ms (debounce) from now
+            // delay 40 ms before we start to expect it
+            setTimeout(() => {
+                // just one request should be made
+                test.expectsAjaxCall('get')
+                    .expectSentData({ title: 'greetings to you', contents: 'Welcome to our test!'})
+                    .init();
+                }, 40)
+        }, 40);
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Title: "greetings to you"'));
+    });
 });

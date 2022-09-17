@@ -118,12 +118,15 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
+        $actionArguments = [];
         if ($request->query->has('data')) {
             // ?data=
             $data = json_decode($request->query->get('data'), true, 512, \JSON_THROW_ON_ERROR);
         } else {
             // OR body of the request is JSON
-            $data = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
+            $requestData = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
+            $data = $requestData['data'] ?? [];
+            $actionArguments = $requestData['args'] ?? [];
         }
 
         if (!\is_array($controller = $event->getController()) || 2 !== \count($controller)) {
@@ -148,17 +151,11 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         $request->attributes->set('_mounted_component', $mounted);
 
-        if (!\is_string($queryString = $request->query->get('args'))) {
-            return;
-        }
-
         // extra variables to be made available to the controller
         // (for "actions" only)
-        parse_str($queryString, $args);
-
         foreach (LiveArg::liveArgs($component, $action) as $parameter => $arg) {
-            if (isset($args[$arg])) {
-                $request->attributes->set($parameter, $args[$arg]);
+            if (isset($actionArguments[$arg])) {
+                $request->attributes->set($parameter, $actionArguments[$arg]);
             }
         }
     }

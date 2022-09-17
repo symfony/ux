@@ -4,6 +4,7 @@ import { normalizeModelName } from './string_utils';
 
 export default class {
     controller: LiveController;
+    updatedModels: string[] = [];
 
     constructor(liveController: LiveController) {
         this.controller = liveController;
@@ -33,6 +34,7 @@ export default class {
      */
     set(name: string, value: any): void {
         const normalizedName = normalizeModelName(name);
+        this.updatedModels.push(normalizedName);
 
         this.controller.dataValue = setDeepData(this.controller.dataValue, normalizedName, value);
     }
@@ -48,5 +50,9 @@ export default class {
 
     asJson(): string {
         return JSON.stringify(this.controller.dataValue);
+    }
+
+    all(): any {
+        return this.controller.dataValue;
     }
 }

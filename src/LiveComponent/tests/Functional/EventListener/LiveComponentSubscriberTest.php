@@ -72,7 +72,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             })
             ->post('/_components/component2/increase', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode($dehydrated),
+                'body' => json_encode(['data' => $dehydrated]),
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
@@ -145,7 +145,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 1')
             ->post('/_components/disabled_csrf/increase', [
-                'body' => json_encode($dehydrated),
+                'body' => json_encode(['data' => $dehydrated]),
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
@@ -184,7 +184,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             // with no custom header, it redirects like a normal browser
             ->post('/_components/component2/redirect', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode($dehydrated),
+                'body' => json_encode(['data' => $dehydrated]),
             ])
             ->assertRedirectedTo('/')
 
@@ -194,7 +194,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                     'Accept' => 'application/vnd.live-component+html',
                     'X-CSRF-TOKEN' => $token,
                 ],
-                'body' => json_encode($dehydrated),
+                'body' => json_encode(['data' => $dehydrated]),
             ])
             ->assertStatus(204)
             ->assertHeaderEquals('Location', '/')
@@ -206,10 +206,10 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         $dehydrated = $this->dehydrateComponent($this->mountComponent('component6'));
         $token = null;
 
-        $argsQueryParams = http_build_query(['args' => http_build_query(['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3'])]);
+        $arguments = ['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3'];
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component6?data='.urlencode(json_encode($dehydrated)).'&'.$argsQueryParams)
+            ->get('/_components/component6?data='.urlencode(json_encode($dehydrated)))
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Arg1: not provided')
@@ -219,9 +219,12 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                 // get a valid token to use for actions
                 $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
             })
-            ->post('/_components/component6/inject?'.$argsQueryParams, [
+            ->post('/_components/component6/inject', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode($dehydrated),
+                'body' => json_encode([
+                    'data' => $dehydrated,
+                    'args' => $arguments,
+                ]),
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
