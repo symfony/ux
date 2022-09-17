@@ -1237,6 +1237,7 @@ Now, create a Twig component to render the form::
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
     use Symfony\UX\LiveComponent\LiveCollectionTrait;
+    use Symfony\UX\LiveComponent\Attribute\LiveProp;
     use App\Entity\BlogPost;
     use App\Form\BlogPostFormType;
 
