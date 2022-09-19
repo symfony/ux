@@ -459,9 +459,17 @@ export default class extends Controller implements LiveController {
         const thisPromise = fetch(`${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`, fetchOptions);
         const reRenderPromise = new ReRenderPromise(thisPromise, this.unsyncedInputs.clone());
         this.renderPromiseStack.addPromise(reRenderPromise);
-        thisPromise.then((response) => {
+        thisPromise.then(async (response) => {
             if (action) {
                 this.isActionProcessing = false;
+            }
+
+            // if the response does not contain a component, render as an error
+            const html = await response.text();
+            if (response.headers.get('Content-Type') !== 'application/vnd.live-component+html') {
+                this.renderError(html);
+
+                return;
             }
 
             // if another re-render is scheduled, do not "run it over"
@@ -471,9 +479,7 @@ export default class extends Controller implements LiveController {
 
             const isMostRecent = this.renderPromiseStack.removePromise(thisPromise);
             if (isMostRecent) {
-                response.text().then((html) => {
-                    this._processRerender(html, response, reRenderPromise.unsyncedInputContainer);
-                });
+                this._processRerender(html, response, reRenderPromise.unsyncedInputContainer);
             }
         })
     }
@@ -1037,6 +1043,56 @@ export default class extends Controller implements LiveController {
         this.pollingIntervals.forEach((interval) => {
             clearInterval(interval);
         });
+    }
+
+    // inspired by Livewire!
+    private async renderError(html: string) {
+        let modal = document.getElementById('live-component-error');
+        if (modal) {
+            modal.innerHTML = '';
+        } else {
+            modal = document.createElement('div');
+            modal.id = 'live-component-error';
+            modal.style.padding = '50px';
+            modal.style.backgroundColor = 'rgba(0, 0, 0, .5)';
+            modal.style.zIndex = '100000';
+            modal.style.position = 'fixed';
+            modal.style.width = '100vw';
+            modal.style.height = '100vh';
+        }
+
+        const iframe = document.createElement('iframe');
+        iframe.style.borderRadius = '5px';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        modal.appendChild(iframe);
+
+        document.body.prepend(modal);
+        document.body.style.overflow = 'hidden';
+        if (iframe.contentWindow) {
+            iframe.contentWindow.document.open();
+            iframe.contentWindow.document.write(html);
+            iframe.contentWindow.document.close();
+        }
+
+        const closeModal = (modal: HTMLElement|null) => {
+            if (modal) {
+                modal.outerHTML = ''
+            }
+            document.body.style.overflow = 'visible'
+        }
+
+        // close on click
+        modal.addEventListener('click', () => closeModal(modal));
+
+        // close on escape
+        modal.setAttribute('tabindex', '0');
+        modal.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                closeModal(modal);
+            }
+        });
+        modal.focus();
     }
 }
 

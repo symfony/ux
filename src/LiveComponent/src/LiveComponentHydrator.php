@@ -235,7 +235,7 @@ final class LiveComponentHydrator
         }
 
         if (!hash_equals($this->computeChecksum($data, $readonlyProperties), $data[self::CHECKSUM_KEY])) {
-            throw new UnprocessableEntityHttpException('Invalid checksum!');
+            throw new UnprocessableEntityHttpException('Invalid checksum. This usually means that you tried to change a property that is not writable: true.');
         }
     }
 

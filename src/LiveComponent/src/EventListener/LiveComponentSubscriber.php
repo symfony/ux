@@ -232,7 +232,9 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             $component->{$method->name}();
         }
 
-        return new Response($this->container->get(ComponentRenderer::class)->render($mounted));
+        return new Response($this->container->get(ComponentRenderer::class)->render($mounted), 200, [
+            'Content-Type' => self::HTML_CONTENT_TYPE,
+        ]);
     }
 
     private function isLiveComponentRequest(Request $request): bool

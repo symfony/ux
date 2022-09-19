@@ -1434,18 +1434,21 @@ class default_1 extends Controller {
         const thisPromise = fetch(`${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`, fetchOptions);
         const reRenderPromise = new ReRenderPromise(thisPromise, this.unsyncedInputs.clone());
         this.renderPromiseStack.addPromise(reRenderPromise);
-        thisPromise.then((response) => {
+        thisPromise.then(async (response) => {
             if (action) {
                 this.isActionProcessing = false;
+            }
+            const html = await response.text();
+            if (response.headers.get('Content-Type') !== 'application/vnd.live-component+html') {
+                this.renderError(html);
+                return;
             }
             if (this.renderDebounceTimeout) {
                 return;
             }
             const isMostRecent = this.renderPromiseStack.removePromise(thisPromise);
             if (isMostRecent) {
-                response.text().then((html) => {
-                    this._processRerender(html, response, reRenderPromise.unsyncedInputContainer);
-                });
+                this._processRerender(html, response, reRenderPromise.unsyncedInputContainer);
             }
         });
     }
@@ -1831,6 +1834,48 @@ class default_1 extends Controller {
         this.pollingIntervals.forEach((interval) => {
             clearInterval(interval);
         });
+    }
+    async renderError(html) {
+        let modal = document.getElementById('live-component-error');
+        if (modal) {
+            modal.innerHTML = '';
+        }
+        else {
+            modal = document.createElement('div');
+            modal.id = 'live-component-error';
+            modal.style.padding = '50px';
+            modal.style.backgroundColor = 'rgba(0, 0, 0, .5)';
+            modal.style.zIndex = '100000';
+            modal.style.position = 'fixed';
+            modal.style.width = '100vw';
+            modal.style.height = '100vh';
+        }
+        const iframe = document.createElement('iframe');
+        iframe.style.borderRadius = '5px';
+        iframe.style.width = '100%';
+        iframe.style.height = '100%';
+        modal.appendChild(iframe);
+        document.body.prepend(modal);
+        document.body.style.overflow = 'hidden';
+        if (iframe.contentWindow) {
+            iframe.contentWindow.document.open();
+            iframe.contentWindow.document.write(html);
+            iframe.contentWindow.document.close();
+        }
+        const closeModal = (modal) => {
+            if (modal) {
+                modal.outerHTML = '';
+            }
+            document.body.style.overflow = 'visible';
+        };
+        modal.addEventListener('click', () => closeModal(modal));
+        modal.setAttribute('tabindex', '0');
+        modal.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                closeModal(modal);
+            }
+        });
+        modal.focus();
     }
 }
 default_1.values = {
