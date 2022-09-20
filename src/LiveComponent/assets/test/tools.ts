@@ -120,6 +120,8 @@ class MockedAjaxCall {
     options: any = {};
     fetchMock?: typeof fetchMock;
     routeName?: string;
+    customResponseStatusCode?: number;
+    customResponseHTML?: string;
 
     constructor(method: string, test: FunctionalTest) {
         this.method = method.toUpperCase();
@@ -180,9 +182,24 @@ class MockedAjaxCall {
         // use custom template, or the main one
         const template = this.template ? this.template : this.test.template;
 
+        let response;
+        if (this.customResponseStatusCode) {
+            response = {
+                body: this.customResponseHTML,
+                status: this.customResponseStatusCode
+            }
+        } else {
+            response = {
+                body: template(finalServerData),
+                headers: {
+                    'Content-Type': 'application/vnd.live-component+html'
+                }
+            }
+        }
+
         this.fetchMock = fetchMock.mock(
             this.getMockMatcher(),
-            template(finalServerData),
+            response,
             this.options
         );
     }
@@ -197,6 +214,14 @@ class MockedAjaxCall {
     expectHeader(headerName: string, value: string): MockedAjaxCall {
         this.checkInitialization('expectHeader');
         this.expectedHeaders[headerName] = value;
+
+        return this;
+    }
+
+    serverWillReturnCustomResponse(statusCode: number, responseHTML: string): MockedAjaxCall {
+        this.checkInitialization('serverWillReturnAnError');
+        this.customResponseStatusCode = statusCode;
+        this.customResponseHTML = responseHTML;
 
         return this;
     }
