@@ -8,8 +8,21 @@ class default_1 extends Controller {
         this._dispatchEvent('vue:connect', { componentName: this.componentValue, props: this.props });
         const component = window.resolveVueComponent(this.componentValue);
         this.app = createApp(component, this.props);
+        if (this.element.__vue_app__ !== undefined) {
+            this.element.__vue_app__.unmount();
+        }
+        this._dispatchEvent('vue:before-mount', {
+            componentName: this.componentValue,
+            component: component,
+            props: this.props,
+            app: this.app,
+        });
         this.app.mount(this.element);
-        this._dispatchEvent('vue:mount', { componentName: this.componentValue, component: component, props: this.props });
+        this._dispatchEvent('vue:mount', {
+            componentName: this.componentValue,
+            component: component,
+            props: this.props,
+        });
     }
     disconnect() {
         this.app.unmount();
