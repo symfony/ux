@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form, {'attr': {
+        'data-controller': 'symfony--ux-collection--collection'
+    }}) }}
+        {{ form(form) }}
+    {{ form_end(form) }}
+{% endblock %}
