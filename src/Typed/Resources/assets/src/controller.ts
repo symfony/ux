@@ -34,6 +34,25 @@ export default class extends Controller {
         contentType: { type: String, default: 'html' },
     };
 
+    readonly stringsValue!: string[];
+    readonly typeSpeedValue: number;
+    readonly smartBackspaceValue: boolean;
+    readonly startDelayValue?: number;
+    readonly backSpeedValue?: number;
+    readonly shuffleValue?: boolean;
+    readonly backDelayValue: number;
+    readonly fadeOutValue?: boolean;
+    readonly fadeOutClassValue: string;
+    readonly fadeOutDelayValue: number;
+    readonly loopValue?: boolean;
+    readonly loopCountValue: number;
+    readonly showCursorValue: boolean;
+    readonly cursorCharValue: string;
+    readonly autoInsertCssValue: boolean;
+    readonly attrValue?: string;
+    readonly bindInputFocusEventsValue?: boolean;
+    readonly contentTypeValue: string;
+
     connect() {
         const options = {
             strings: this.stringsValue,

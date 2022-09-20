@@ -33,6 +33,8 @@ jobs:
             - run: yarn check-format
 
     js-dist-current:
+        # always skip check for now - building is too inefficient and large for CI
+        if: false
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master

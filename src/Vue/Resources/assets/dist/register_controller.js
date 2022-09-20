@@ -7,7 +7,7 @@ function registerVueControllerComponents(context) {
     window.resolveVueComponent = (name) => {
         const component = vueControllers[`./${name}.vue`];
         if (typeof component === 'undefined') {
-            throw new Error('Vue controller "' + name + '" does not exist');
+            throw new Error(`Vue controller "${name}" does not exist`);
         }
         return component;
     };
