@@ -34,7 +34,9 @@ export default class {
      */
     set(name: string, value: any): void {
         const normalizedName = normalizeModelName(name);
-        this.updatedModels.push(normalizedName);
+        if (!this.updatedModels.includes(normalizedName)) {
+            this.updatedModels.push(normalizedName);
+        }
 
         this.controller.dataValue = setDeepData(this.controller.dataValue, normalizedName, value);
     }
@@ -54,5 +56,12 @@ export default class {
 
     all(): any {
         return this.controller.dataValue;
+    }
+
+    /**
+     * Are any of the passed models currently "updated"?
+     */
+    areAnyModelsUpdated(targetedModels: string[]): boolean {
+        return (this.updatedModels.filter(modelName => targetedModels.includes(modelName))).length > 0;
     }
 }

@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import morphdom from 'morphdom';
-import { parseDirectives, Directive } from './directives_parser';
+import { parseDirectives, Directive, DirectiveModifier } from './directives_parser';
 import { combineSpacedArray, normalizeModelName } from './string_utils';
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
@@ -170,36 +170,40 @@ export default class extends Controller implements LiveController {
             });
 
             let handled = false;
-            directive.modifiers.forEach((modifier) => {
-                switch (modifier.name) {
-                    case 'prevent':
-                        event.preventDefault();
-                        break;
-                    case 'stop':
-                        event.stopPropagation();
-                        break;
-                    case 'self':
-                        if (event.target !== event.currentTarget) {
-                            return;
-                        }
-                        break;
-                    case 'debounce': {
-                        const length: number = modifier.value ? parseInt(modifier.value) : this.getDefaultDebounce();
-
-                        this.#clearRequestDebounceTimeout();
-                        this.requestDebounceTimeout = window.setTimeout(() => {
-                            this.requestDebounceTimeout = null;
-                            this.#startPendingRequest();
-                        }, length);
-
-                        handled = true;
-
-                        break;
-                    }
-
-                    default:
-                        console.warn(`Unknown modifier ${modifier.name} in action ${rawAction}`);
+            const validModifiers: Map<string, (modifier: DirectiveModifier) => void> = new Map();
+            validModifiers.set('prevent', () => {
+                event.preventDefault();
+            });
+            validModifiers.set('stop', () => {
+                    event.stopPropagation();
+            });
+            validModifiers.set('self', () => {
+                if (event.target !== event.currentTarget) {
+                    return;
                 }
+            });
+            validModifiers.set('debounce', (modifier: DirectiveModifier) => {
+                const length: number = modifier.value ? parseInt(modifier.value) : this.getDefaultDebounce();
+
+                this.#clearRequestDebounceTimeout();
+                this.requestDebounceTimeout = window.setTimeout(() => {
+                    this.requestDebounceTimeout = null;
+                    this.#startPendingRequest();
+                }, length);
+
+                handled = true;
+            });
+
+            directive.modifiers.forEach((modifier) => {
+                if (validModifiers.has(modifier.name)) {
+                    // variable is entirely to make ts happy
+                    const callable = validModifiers.get(modifier.name) ?? (() => {});
+                    callable(modifier);
+
+                    return;
+                }
+
+                console.warn(`Unknown modifier ${modifier.name} in action "${rawAction}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
             });
 
             if (!handled) {
@@ -426,7 +430,6 @@ export default class extends Controller implements LiveController {
         };
 
         const updatedModels = this.valueStore.updatedModels;
-        this.valueStore.updatedModels = [];
         if (actions.length === 0 && this._willDataFitInUrl(this.valueStore.asJson(), params)) {
             params.set('data', this.valueStore.asJson());
             updatedModels.forEach((model) => {
@@ -459,10 +462,14 @@ export default class extends Controller implements LiveController {
             fetchOptions.body = JSON.stringify(requestData);
         }
 
-        this._onLoadingStart();
         const paramsString = params.toString();
         const thisPromise = fetch(`${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`, fetchOptions);
-        this.backendRequest = new BackendRequest(thisPromise);
+        this.backendRequest = new BackendRequest(thisPromise, actions.map(action => action.name));
+        // loading should start after this.backendRequest is started but before
+        // updateModels is cleared so it has full data about actions in the
+        // current request and also updated models.
+        this._onLoadingStart();
+        this.valueStore.updatedModels = [];
         thisPromise.then(async (response) => {
             // if the response does not contain a component, render as an error
             const html = await response.text();
@@ -536,12 +543,18 @@ export default class extends Controller implements LiveController {
         this._handleLoadingToggle(true);
     }
 
-    _onLoadingFinish() {
-        this._handleLoadingToggle(false);
+    _onLoadingFinish(targetElement: HTMLElement|SVGElement|null = null) {
+        this._handleLoadingToggle(false, targetElement);
     }
 
-    _handleLoadingToggle(isLoading: boolean) {
-        this._getLoadingDirectives().forEach(({ element, directives }) => {
+    _handleLoadingToggle(isLoading: boolean, targetElement: HTMLElement|SVGElement|null = null) {
+        if (isLoading) {
+            this._addAttributes(this.element, ['busy']);
+        } else {
+            this._removeAttributes(this.element, ['busy']);
+        }
+
+        this._getLoadingDirectives(targetElement).forEach(({ element, directives }) => {
             // so we can track, at any point, if an element is in a "loading" state
             if (isLoading) {
                 this._addAttributes(element, ['data-live-is-loading']);
@@ -560,6 +573,54 @@ export default class extends Controller implements LiveController {
      */
     _handleLoadingDirective(element: HTMLElement|SVGElement, isLoading: boolean, directive: Directive) {
         const finalAction = parseLoadingAction(directive.action, isLoading);
+
+        const targetedActions: string[] = [];
+        const targetedModels: string[] = [];
+        let delay = 0;
+
+        const validModifiers: Map<string, (modifier: DirectiveModifier) => void> = new Map();
+        validModifiers.set('delay', (modifier: DirectiveModifier) => {
+            // if loading has *stopped*, the delay modifier has no effect
+            if (!isLoading) {
+                return;
+            }
+
+            delay = modifier.value ? parseInt(modifier.value) : 200;
+        });
+        validModifiers.set('action', (modifier: DirectiveModifier) => {
+            if (!modifier.value) {
+                throw new Error(`The "action" in data-loading must have an action name - e.g. action(foo). It's missing for "${directive.getString()}"`);
+            }
+            targetedActions.push(modifier.value);
+        });
+        validModifiers.set('model', (modifier: DirectiveModifier) => {
+            if (!modifier.value) {
+                throw new Error(`The "model" in data-loading must have an action name - e.g. model(foo). It's missing for "${directive.getString()}"`);
+            }
+            targetedModels.push(modifier.value);
+        });
+
+        directive.modifiers.forEach((modifier) => {
+            if (validModifiers.has(modifier.name)) {
+                // variable is entirely to make ts happy
+                const callable = validModifiers.get(modifier.name) ?? (() => {});
+                callable(modifier);
+
+                return;
+            }
+
+            throw new Error(`Unknown modifier "${modifier.name}" used in data-loading="${directive.getString()}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`)
+        });
+
+        // if loading is being activated + action modifier, only apply if the action is on the request
+        if (isLoading && targetedActions.length > 0 && this.backendRequest && !this.backendRequest.containsOneOfActions(targetedActions)) {
+            return;
+        }
+
+        // if loading is being activated + model modifier, only apply if the model is modified
+        if (isLoading && targetedModels.length > 0 && !this.valueStore.areAnyModelsUpdated(targetedModels)) {
+            return;
+        }
 
         let loadingDirective: (() => void);
 
@@ -594,41 +655,24 @@ export default class extends Controller implements LiveController {
                 throw new Error(`Unknown data-loading action "${finalAction}"`);
         }
 
-        let isHandled = false;
-        directive.modifiers.forEach((modifier => {
-            switch (modifier.name) {
-                case 'delay': {
-                    // if loading has *stopped*, the delay modifier has no effect
-                    if (!isLoading) {
-                        break;
-                    }
-
-                    const delayLength = modifier.value ? parseInt(modifier.value) : 200;
-                    window.setTimeout(() => {
-                        if (element.hasAttribute('data-live-is-loading')) {
-                            loadingDirective();
-                        }
-                    }, delayLength);
-
-                    isHandled = true;
-
-                    break;
+        if (delay) {
+            window.setTimeout(() => {
+                if (this.isRequestActive()) {
+                    loadingDirective();
                 }
-                default:
-                    throw new Error(`Unknown modifier ${modifier.name} used in the loading directive ${directive.getString()}`)
-            }
-        }));
+            }, delay);
 
-        // execute the loading directive
-        if (!isHandled) {
-            loadingDirective();
+            return;
         }
+
+        loadingDirective();
     }
 
-    _getLoadingDirectives() {
+    _getLoadingDirectives(targetElement: HTMLElement|SVGElement|null = null) {
         const loadingDirectives: ElementLoadingDirectives[] = [];
+        const element = targetElement || this.element;
 
-        this.element.querySelectorAll('[data-loading]').forEach((element => {
+        element.querySelectorAll('[data-loading]').forEach((element => {
             if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
                 throw new Error('Invalid Element Type');
             }
@@ -687,6 +731,8 @@ export default class extends Controller implements LiveController {
 
     _executeMorphdom(newHtml: string, modifiedElements: Array<HTMLElement>) {
         const newElement = htmlToElement(newHtml);
+        // make sure everything is in non-loading state, the same as the HTML currently on the page
+        this._onLoadingFinish(newElement);
         morphdom(this.element, newElement, {
             getNodeKey: (node: Node) => {
               if (!(node instanceof HTMLElement)) {
@@ -733,11 +779,7 @@ export default class extends Controller implements LiveController {
                 }
 
                 // look for data-live-ignore, and don't update
-                if (fromEl.hasAttribute('data-live-ignore')) {
-                    return false;
-                }
-
-                return true;
+                return !fromEl.hasAttribute('data-live-ignore');
             },
 
             onBeforeNodeDiscarded(node) {
@@ -746,10 +788,7 @@ export default class extends Controller implements LiveController {
                     return true;
                 }
 
-                if (node.hasAttribute('data-live-ignore')) {
-                    return false;
-                }
-                return true;
+                return !node.hasAttribute('data-live-ignore');
             }
         });
         // restore the data-original-data attribute
@@ -1132,13 +1171,26 @@ export default class extends Controller implements LiveController {
             }
         })
     }
+
+    private isRequestActive(): boolean {
+        return !!this.backendRequest;
+    }
 }
 
 class BackendRequest {
     promise: Promise<any>;
+    actions: string[];
 
-    constructor(promise: Promise<any>) {
+    constructor(promise: Promise<any>, actions: string[]) {
         this.promise = promise;
+        this.actions = actions;
+    }
+
+    /**
+     * Does this BackendRequest contain at least on action in targetedActions?
+     */
+    containsOneOfActions(targetedActions: string[]) {
+        return (this.actions.filter(action => targetedActions.includes(action))).length > 0;
     }
 }
 

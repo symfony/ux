@@ -1030,7 +1030,9 @@ class ValueStore {
     }
     set(name, value) {
         const normalizedName = normalizeModelName(name);
-        this.updatedModels.push(normalizedName);
+        if (!this.updatedModels.includes(normalizedName)) {
+            this.updatedModels.push(normalizedName);
+        }
         this.controller.dataValue = setDeepData(this.controller.dataValue, normalizedName, value);
     }
     hasAtTopLevel(name) {
@@ -1042,6 +1044,9 @@ class ValueStore {
     }
     all() {
         return this.controller.dataValue;
+    }
+    areAnyModelsUpdated(targetedModels) {
+        return (this.updatedModels.filter(modelName => targetedModels.includes(modelName))).length > 0;
     }
 }
 
@@ -1298,32 +1303,35 @@ class default_1 extends Controller {
                 args: directive.named
             });
             let handled = false;
-            directive.modifiers.forEach((modifier) => {
-                switch (modifier.name) {
-                    case 'prevent':
-                        event.preventDefault();
-                        break;
-                    case 'stop':
-                        event.stopPropagation();
-                        break;
-                    case 'self':
-                        if (event.target !== event.currentTarget) {
-                            return;
-                        }
-                        break;
-                    case 'debounce': {
-                        const length = modifier.value ? parseInt(modifier.value) : this.getDefaultDebounce();
-                        __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
-                        this.requestDebounceTimeout = window.setTimeout(() => {
-                            this.requestDebounceTimeout = null;
-                            __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
-                        }, length);
-                        handled = true;
-                        break;
-                    }
-                    default:
-                        console.warn(`Unknown modifier ${modifier.name} in action ${rawAction}`);
+            const validModifiers = new Map();
+            validModifiers.set('prevent', () => {
+                event.preventDefault();
+            });
+            validModifiers.set('stop', () => {
+                event.stopPropagation();
+            });
+            validModifiers.set('self', () => {
+                if (event.target !== event.currentTarget) {
+                    return;
                 }
+            });
+            validModifiers.set('debounce', (modifier) => {
+                const length = modifier.value ? parseInt(modifier.value) : this.getDefaultDebounce();
+                __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
+                this.requestDebounceTimeout = window.setTimeout(() => {
+                    this.requestDebounceTimeout = null;
+                    __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
+                }, length);
+                handled = true;
+            });
+            directive.modifiers.forEach((modifier) => {
+                var _a;
+                if (validModifiers.has(modifier.name)) {
+                    const callable = (_a = validModifiers.get(modifier.name)) !== null && _a !== void 0 ? _a : (() => { });
+                    callable(modifier);
+                    return;
+                }
+                console.warn(`Unknown modifier ${modifier.name} in action "${rawAction}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
             });
             if (!handled) {
                 if (getModelDirectiveFromElement(event.currentTarget, false)) {
@@ -1436,11 +1444,17 @@ class default_1 extends Controller {
     _onLoadingStart() {
         this._handleLoadingToggle(true);
     }
-    _onLoadingFinish() {
-        this._handleLoadingToggle(false);
+    _onLoadingFinish(targetElement = null) {
+        this._handleLoadingToggle(false, targetElement);
     }
-    _handleLoadingToggle(isLoading) {
-        this._getLoadingDirectives().forEach(({ element, directives }) => {
+    _handleLoadingToggle(isLoading, targetElement = null) {
+        if (isLoading) {
+            this._addAttributes(this.element, ['busy']);
+        }
+        else {
+            this._removeAttributes(this.element, ['busy']);
+        }
+        this._getLoadingDirectives(targetElement).forEach(({ element, directives }) => {
             if (isLoading) {
                 this._addAttributes(element, ['data-live-is-loading']);
             }
@@ -1454,6 +1468,43 @@ class default_1 extends Controller {
     }
     _handleLoadingDirective(element, isLoading, directive) {
         const finalAction = parseLoadingAction(directive.action, isLoading);
+        const targetedActions = [];
+        const targetedModels = [];
+        let delay = 0;
+        const validModifiers = new Map();
+        validModifiers.set('delay', (modifier) => {
+            if (!isLoading) {
+                return;
+            }
+            delay = modifier.value ? parseInt(modifier.value) : 200;
+        });
+        validModifiers.set('action', (modifier) => {
+            if (!modifier.value) {
+                throw new Error(`The "action" in data-loading must have an action name - e.g. action(foo). It's missing for "${directive.getString()}"`);
+            }
+            targetedActions.push(modifier.value);
+        });
+        validModifiers.set('model', (modifier) => {
+            if (!modifier.value) {
+                throw new Error(`The "model" in data-loading must have an action name - e.g. model(foo). It's missing for "${directive.getString()}"`);
+            }
+            targetedModels.push(modifier.value);
+        });
+        directive.modifiers.forEach((modifier) => {
+            var _a;
+            if (validModifiers.has(modifier.name)) {
+                const callable = (_a = validModifiers.get(modifier.name)) !== null && _a !== void 0 ? _a : (() => { });
+                callable(modifier);
+                return;
+            }
+            throw new Error(`Unknown modifier "${modifier.name}" used in data-loading="${directive.getString()}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
+        });
+        if (isLoading && targetedActions.length > 0 && this.backendRequest && !this.backendRequest.containsOneOfActions(targetedActions)) {
+            return;
+        }
+        if (isLoading && targetedModels.length > 0 && !this.valueStore.areAnyModelsUpdated(targetedModels)) {
+            return;
+        }
         let loadingDirective;
         switch (finalAction) {
             case 'show':
@@ -1479,33 +1530,20 @@ class default_1 extends Controller {
             default:
                 throw new Error(`Unknown data-loading action "${finalAction}"`);
         }
-        let isHandled = false;
-        directive.modifiers.forEach((modifier => {
-            switch (modifier.name) {
-                case 'delay': {
-                    if (!isLoading) {
-                        break;
-                    }
-                    const delayLength = modifier.value ? parseInt(modifier.value) : 200;
-                    window.setTimeout(() => {
-                        if (element.hasAttribute('data-live-is-loading')) {
-                            loadingDirective();
-                        }
-                    }, delayLength);
-                    isHandled = true;
-                    break;
+        if (delay) {
+            window.setTimeout(() => {
+                if (this.isRequestActive()) {
+                    loadingDirective();
                 }
-                default:
-                    throw new Error(`Unknown modifier ${modifier.name} used in the loading directive ${directive.getString()}`);
-            }
-        }));
-        if (!isHandled) {
-            loadingDirective();
+            }, delay);
+            return;
         }
+        loadingDirective();
     }
-    _getLoadingDirectives() {
+    _getLoadingDirectives(targetElement = null) {
         const loadingDirectives = [];
-        this.element.querySelectorAll('[data-loading]').forEach((element => {
+        const element = targetElement || this.element;
+        element.querySelectorAll('[data-loading]').forEach((element => {
             if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
                 throw new Error('Invalid Element Type');
             }
@@ -1548,6 +1586,7 @@ class default_1 extends Controller {
     }
     _executeMorphdom(newHtml, modifiedElements) {
         const newElement = htmlToElement(newHtml);
+        this._onLoadingFinish(newElement);
         morphdom(this.element, newElement, {
             getNodeKey: (node) => {
                 if (!(node instanceof HTMLElement)) {
@@ -1578,19 +1617,13 @@ class default_1 extends Controller {
                     && !this._shouldChildLiveElementUpdate(fromEl, toEl)) {
                     return false;
                 }
-                if (fromEl.hasAttribute('data-live-ignore')) {
-                    return false;
-                }
-                return true;
+                return !fromEl.hasAttribute('data-live-ignore');
             },
             onBeforeNodeDiscarded(node) {
                 if (!(node instanceof HTMLElement)) {
                     return true;
                 }
-                if (node.hasAttribute('data-live-ignore')) {
-                    return false;
-                }
-                return true;
+                return !node.hasAttribute('data-live-ignore');
             }
         });
         this._exposeOriginalData();
@@ -1846,6 +1879,9 @@ class default_1 extends Controller {
             }
         });
     }
+    isRequestActive() {
+        return !!this.backendRequest;
+    }
 }
 _instances = new WeakSet(), _startPendingRequest = function _startPendingRequest() {
     if (!this.backendRequest && (this.pendingActions.length > 0 || this.isRerenderRequested)) {
@@ -1865,7 +1901,6 @@ _instances = new WeakSet(), _startPendingRequest = function _startPendingRequest
         'Accept': 'application/vnd.live-component+html',
     };
     const updatedModels = this.valueStore.updatedModels;
-    this.valueStore.updatedModels = [];
     if (actions.length === 0 && this._willDataFitInUrl(this.valueStore.asJson(), params)) {
         params.set('data', this.valueStore.asJson());
         updatedModels.forEach((model) => {
@@ -1893,10 +1928,11 @@ _instances = new WeakSet(), _startPendingRequest = function _startPendingRequest
         }
         fetchOptions.body = JSON.stringify(requestData);
     }
-    this._onLoadingStart();
     const paramsString = params.toString();
     const thisPromise = fetch(`${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`, fetchOptions);
-    this.backendRequest = new BackendRequest(thisPromise);
+    this.backendRequest = new BackendRequest(thisPromise, actions.map(action => action.name));
+    this._onLoadingStart();
+    this.valueStore.updatedModels = [];
     thisPromise.then(async (response) => {
         const html = await response.text();
         if (response.headers.get('Content-Type') !== 'application/vnd.live-component+html') {
@@ -1946,8 +1982,12 @@ default_1.values = {
     debounce: Number,
 };
 class BackendRequest {
-    constructor(promise) {
+    constructor(promise, actions) {
         this.promise = promise;
+        this.actions = actions;
+    }
+    containsOneOfActions(targetedActions) {
+        return (this.actions.filter(action => targetedActions.includes(action))).length > 0;
     }
 }
 const parseLoadingAction = function (action, isLoading) {
