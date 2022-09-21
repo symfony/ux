@@ -205,7 +205,7 @@ the component:
 
     {{ component('random_number', { max: 500 }) }}
 
-But what's up with tha ``LiveProp`` attribute? A property with the
+But what's up with the ``LiveProp`` attribute? A property with the
 ``LiveProp`` attribute becomes a "stateful" property for this component.
 In other words, each time we click the "Generate a new number!" button,
 when the component re-renders, it will *remember* the original values
