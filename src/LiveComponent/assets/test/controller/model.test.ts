@@ -10,7 +10,7 @@
 'use strict';
 
 import { createTest, initComponent, shutdownTest } from '../tools';
-import { getByLabelText, getByText, waitFor } from '@testing-library/dom';
+import { getByLabelText, getByTestId, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
 describe('LiveController data-model Tests', () => {
@@ -513,5 +513,177 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(test.element).toHaveTextContent('First Name: Ryan'));
         await waitFor(() => expect(test.element).toHaveTextContent('Last Name: Weaver'));
+    });
+
+    it('notices the "real" value of a select without an empty value', async () => {
+        const test = await createTest({ food: '' }, (data: any) => `
+            <div ${initComponent(data)}>
+                <select data-model="food">
+                    <option value="carrot">🥕</option>
+                    <option value="brocolli">🥦</option>
+                </select>
+
+                Food: ${data.food}
+
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `);
+
+        // "carrot" is sent because, in practice, that's what's selected
+        test.expectsAjaxCall('get')
+            .expectSentData({ food: 'carrot' })
+            .init();
+
+        getByText(test.element, 'Reload').click();
+        await waitFor(() => expect(test.element).toHaveTextContent('Food: carrot'));
+    });
+
+    it('allows model fields to be set manually and rolled into a single request', async () => {
+        const test = await createTest({ food: '', dessert: '' }, (data: any) => `
+            <div ${initComponent(data)}>
+                <!-- using "change" because it has 0 debounce, which is the more -->
+                <!-- complex case for trying to get both model updates into 1 request -->
+                <select data-model="on(change)|food" data-testid="food-select">
+                    <option value="carrot">🥕</option>
+                    <option value="brocolli">🥦</option>
+                </select>
+
+                <select data-model="on(change)|dessert" data-testid="dessert-select">
+                    <option value="">choose a dessert</option>
+                    <option value="carrot_cake">carrot cake</option>
+                    <option value="ice_cream">ice creamoption>
+                </select>
+
+                Food: ${data.food}
+                Dessert: ${data.dessert}
+            </div>
+        `);
+
+        // just 1 request with both model changes
+        test.expectsAjaxCall('get')
+            .expectSentData({ food: 'carrot', dessert: 'carrot_cake' })
+            .init();
+
+        const foodSelect = getByTestId(test.element, 'food-select');
+
+        // when food changes, manually change the dessert
+        foodSelect.addEventListener('change', () => {
+            const dessertSelect = getByTestId(test.element, 'dessert-select');
+            if (!(dessertSelect instanceof HTMLSelectElement)) {
+                throw new Error('wrong element');
+            }
+            dessertSelect.value = 'carrot_cake';
+            dessertSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        });
+
+        await userEvent.selectOptions(foodSelect, 'carrot');
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Food: carrot'));
+        expect(test.element).toHaveTextContent('Dessert: carrot_cake');
+    });
+
+    it('sets the value of data-model elements initially and after render', async () => {
+        const test = await createTest({ food: 'carrot', comment: 'mmmm' }, (data: any) => `
+            <div ${initComponent(data)}>
+                <select data-model="food">
+                    <option value="">choose a food</option>
+                    <option value="carrot">🥕</option>
+                    <option value="brocolli" selected>🥦</option>
+                </select>
+
+                <textarea data-model="comment"></textarea>
+
+                Comment: ${data.comment}
+            </div>
+        `);
+
+        const foodSelect = test.queryByDataModel('food');
+        if (!(foodSelect instanceof HTMLSelectElement)) {
+            throw new Error('wrong type');
+        }
+        expect(foodSelect.selectedOptions.length).toEqual(1);
+        expect(foodSelect.selectedOptions[0].value).toEqual('carrot');
+
+        const commentField = test.queryByDataModel('comment');
+        if (!(commentField instanceof HTMLTextAreaElement)) {
+            throw new Error('wrong type');
+        }
+        expect(commentField.value).toEqual('mmmm');
+
+        // NOW we will re-render
+        test.expectsAjaxCall('get')
+            .expectSentData({ food: 'carrot', comment: 'mmmm so good' })
+            // change the data to be extra tricky
+            .serverWillChangeData((data) => {
+                data.food = 'brocolli';
+                data.comment = data.comment.toUpperCase();
+            })
+            .init();
+
+        await userEvent.type(commentField, ' so good');
+        await waitFor(() => expect(test.element).toHaveTextContent('Comment: MMMM SO GOOD'));
+
+        expect(foodSelect.selectedOptions.length).toEqual(1);
+        expect(foodSelect.selectedOptions[0].value).toEqual('brocolli');
+        expect(commentField.value).toEqual('MMMM SO GOOD');
+    });
+
+    it('keeps the unsynced value of an input on re-render, but accepts other changes to the field', async () => {
+        const test = await createTest({
+            comment: 'Live components',
+            unmappedTextareaValue: 'no data-model',
+            fieldClass: 'initial-class'
+        }, (data: any) => `
+           <div ${initComponent(data)}>
+               <textarea data-model="on(change)|comment" class="${data.fieldClass}"></textarea>
+
+               <textarea class="${data.fieldClass}" data-testid="unmappedTextarea">${data.unmappedTextareaValue}</textarea>
+
+               FieldClass: ${data.fieldClass}
+
+              <button data-action="live#$render">Reload</button>
+           </div>
+       `);
+
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data) => {
+                data.fieldClass = 'changed-class';
+            })
+            // delay slightly so we can type in the textarea
+            .delayResponse(10)
+            .init();
+
+        getByText(test.element, 'Reload').click();
+        const commentField = test.queryByDataModel('comment');
+        if (!(commentField instanceof HTMLTextAreaElement)) {
+            throw new Error('wrong type');
+        }
+        // mimic changing the field, but without (yet) triggering the change event
+        commentField.value = commentField.value + ' ftw!';
+        commentField.dispatchEvent(new Event('input', { bubbles: true }));
+
+        // also type into the unmapped field - but no worry about the model sync'ing this time
+        userEvent.type(getByTestId(test.element, 'unmappedTextarea'), ' here!')
+
+        await waitFor(() => expect(test.element).toHaveTextContent('FieldClass: changed-class'));
+        // re-find in case the element itself has changed by morphdom
+        const commentFieldAfterRender = test.queryByDataModel('comment');
+        if (!(commentFieldAfterRender instanceof HTMLTextAreaElement)) {
+            throw new Error('wrong type');
+        }
+        // the newly-typed characters have been kept
+        expect(commentFieldAfterRender.value).toEqual('Live components ftw!');
+        // double-check that the model hasn't been updated yet (else bug in test)
+        expect(test.controller.valueStore.get('comment')).toEqual('Live components');
+        expect(commentFieldAfterRender.getAttribute('class')).toEqual('changed-class');
+
+        const unmappedTextarea = getByTestId(test.element, 'unmappedTextarea');
+        if (!(unmappedTextarea instanceof HTMLTextAreaElement)) {
+            throw new Error('wrong type');
+        }
+        // the newly-typed characters have been kept
+        expect(unmappedTextarea.value).toEqual('no data-model here!');
+        expect(unmappedTextarea.getAttribute('class')).toEqual('changed-class');
     });
 });

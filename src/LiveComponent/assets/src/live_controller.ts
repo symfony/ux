@@ -5,7 +5,15 @@ import { combineSpacedArray, normalizeModelName } from './string_utils';
 import { haveRenderedValuesChanged } from './have_rendered_values_changed';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
 import ValueStore from './ValueStore';
-import { elementBelongsToThisController, getModelDirectiveFromInput, getValueFromInput, cloneHTMLElement, htmlToElement, getElementAsTagText } from './dom_utils';
+import {
+    elementBelongsToThisController,
+    getModelDirectiveFromElement,
+    getValueFromElement,
+    cloneHTMLElement,
+    htmlToElement,
+    getElementAsTagText,
+    setValueOnElement
+} from './dom_utils';
 import UnsyncedInputContainer from './UnsyncedInputContainer';
 
 interface ElementLoadingDirectives {
@@ -88,6 +96,7 @@ export default class extends Controller implements LiveController {
         this.originalDataJSON = this.valueStore.asJson();
         this.unsyncedInputs = new UnsyncedInputContainer();
         this._exposeOriginalData();
+        this.synchronizeValueOfModelFields();
     }
 
     connect() {
@@ -198,7 +207,7 @@ export default class extends Controller implements LiveController {
                 // if so, to be safe, slightly delay the action so that the
                 // change/input listener on LiveController can process the
                 // model change *before* sending the action
-                if (getModelDirectiveFromInput(event.currentTarget, false)) {
+                if (getModelDirectiveFromElement(event.currentTarget, false)) {
                     this.pendingActionTriggerModelElement = event.currentTarget;
                     this.#clearRequestDebounceTimeout();
                     window.setTimeout(() => {
@@ -234,7 +243,7 @@ export default class extends Controller implements LiveController {
             throw new Error('Could not update model for non HTMLElement');
         }
 
-        const modelDirective = getModelDirectiveFromInput(element, false);
+        const modelDirective = getModelDirectiveFromElement(element, false);
         if (eventName === 'input') {
             const modelName = modelDirective ? modelDirective.action : null;
             // track any inputs that are "unsynced"
@@ -300,7 +309,7 @@ export default class extends Controller implements LiveController {
             }
         }
 
-        const finalValue = getValueFromInput(element, this.valueStore);
+        const finalValue = getValueFromElement(element, this.valueStore);
 
         this.$updateModel(
             modelDirective.action,
@@ -368,6 +377,9 @@ export default class extends Controller implements LiveController {
         // the string "4" - back into an array with [id=4, title=new_title].
         this.valueStore.set(modelName, value);
 
+        // the model's data is no longer unsynced
+        this.unsyncedInputs.markModelAsSynced(modelName);
+
         // skip rendering if there is an action Ajax call processing
         if (shouldRender) {
             let debounce: number = this.getDefaultDebounce();
@@ -376,6 +388,9 @@ export default class extends Controller implements LiveController {
             }
 
             this.#clearRequestDebounceTimeout();
+            // debouncing even with a 0 value is enough to allow any other potential
+            // events happening right now (e.g. from custom user JavaScript) to
+            // finish setting other models before making the request.
             this.requestDebounceTimeout = window.setTimeout(() => {
                 this.requestDebounceTimeout = null;
                 this.isRerenderRequested = true;
@@ -404,15 +419,6 @@ export default class extends Controller implements LiveController {
         this.isRerenderRequested = false;
         // we're making a request NOW, so no need to make another one after debouncing
         this.#clearRequestDebounceTimeout();
-
-        // check if any unsynced inputs are now "in sync": their value matches what's in the store
-        // if they ARE, then they are on longer "unsynced", which means that any
-        // potential new values from the server *should* now be respected and used
-        this.unsyncedInputs.allMappedFields().forEach((element, modelName) => {
-            if (getValueFromInput(element, this.valueStore) === this.valueStore.get(modelName)) {
-                this.unsyncedInputs.remove(modelName);
-            }
-        });
 
         const fetchOptions: RequestInit = {};
         fetchOptions.headers = {
@@ -506,16 +512,14 @@ export default class extends Controller implements LiveController {
         }
 
         /**
-         * If this re-render contains "mapped" fields that were updated after
-         * the Ajax call started, then we need those "unsynced" values to
-         * take precedence over the (out-of-date) values returned by the server.
+         * For any models modified since the last request started, grab
+         * their value now: we will re-set them after the new data from
+         * the server has been processed.
          */
         const modifiedModelValues: any = {};
-        if (this.unsyncedInputs.allMappedFields().size > 0) {
-            for (const [modelName] of this.unsyncedInputs.allMappedFields()) {
-                modifiedModelValues[modelName] = this.valueStore.get(modelName);
-            }
-        }
+        this.valueStore.updatedModels.forEach((modelName) => {
+            modifiedModelValues[modelName] = this.valueStore.get(modelName);
+        });
 
         // merge/patch in the new HTML
         this._executeMorphdom(html, this.unsyncedInputs.all());
@@ -524,6 +528,8 @@ export default class extends Controller implements LiveController {
         Object.keys(modifiedModelValues).forEach((modelName) => {
             this.valueStore.set(modelName, modifiedModelValues[modelName]);
         });
+
+        this.synchronizeValueOfModelFields();
     }
 
     _onLoadingStart() {
@@ -694,9 +700,10 @@ export default class extends Controller implements LiveController {
                     return false;
                 }
 
-                // if this field has been modified since this HTML was requested, do not update it
+                // if this field's value has been modified since this HTML was
+                // requested, set the toEl's value to match the fromEl
                 if (modifiedElements.includes(fromEl)) {
-                    return false;
+                    setValueOnElement(toEl, getValueFromElement(fromEl, this.valueStore))
                 }
 
                 // https://github.com/patrick-steele-idem/morphdom#can-i-make-morphdom-blaze-through-the-dom-tree-even-faster-yes
@@ -1079,6 +1086,51 @@ export default class extends Controller implements LiveController {
             clearTimeout(this.requestDebounceTimeout);
             this.requestDebounceTimeout = null;
         }
+    }
+
+    /**
+     * Sets the "value" of all model fields to the component data.
+     *
+     * This is called when the component initializes and after re-render.
+     * Take the following element:
+     *
+     *      <input data-model="firstName">
+     *
+     * This method will set the "value" of that element to the value of
+     * the "firstName" model.
+     */
+    private synchronizeValueOfModelFields(): void {
+        this.element.querySelectorAll('[data-model]').forEach((element) => {
+            if (!(element instanceof HTMLElement)) {
+                throw new Error('Invalid element using data-model.');
+            }
+
+            if (element instanceof HTMLFormElement) {
+                return;
+            }
+
+            const modelDirective = getModelDirectiveFromElement(element);
+            if (!modelDirective) {
+                return;
+            }
+
+            const modelName = modelDirective.action;
+
+            // skip any elements whose model name is currently in an unsynced state
+            if (this.unsyncedInputs.getModifiedModels().includes(modelName)) {
+                return;
+            }
+
+            if (this.valueStore.has(modelName)) {
+                setValueOnElement(element, this.valueStore.get(modelName))
+            }
+
+            // for select elements without a blank value, one might be selected automatically
+            // https://github.com/symfony/ux/issues/469
+            if (element instanceof HTMLSelectElement && !element.multiple) {
+                this.valueStore.set(modelName, getValueFromElement(element, this.valueStore));
+            }
+        })
     }
 }
 

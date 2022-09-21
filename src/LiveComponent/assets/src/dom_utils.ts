@@ -11,10 +11,10 @@ import { normalizeModelName } from './string_utils';
  * elements. In those cases, it will return the "full", final value
  * for the model, which includes previously-selected values.
  */
-export function getValueFromInput(element: HTMLElement, valueStore: ValueStore): string|string[]|null {
+export function getValueFromElement(element: HTMLElement, valueStore: ValueStore): string|string[]|null {
     if (element instanceof HTMLInputElement) {
         if (element.type === 'checkbox') {
-            const modelNameData = getModelDirectiveFromInput(element);
+            const modelNameData = getModelDirectiveFromElement(element);
             if (modelNameData === null) {
                 return null;
             }
@@ -46,7 +46,7 @@ export function getValueFromInput(element: HTMLElement, valueStore: ValueStore):
 
     // e.g. a textarea
     if ('value' in element) {
-        // the "as" is a cheap way to hint to TypeScript that the value propery exists
+        // the "as" is a cheap way to hint to TypeScript that the value property exists
         return (element as HTMLInputElement).value;
     }
 
@@ -57,7 +57,61 @@ export function getValueFromInput(element: HTMLElement, valueStore: ValueStore):
     return null;
 }
 
-export function getModelDirectiveFromInput(element: HTMLElement, throwOnMissing = true): null|Directive {
+/**
+ * Adapted from https://github.com/livewire/livewire
+ */
+export function setValueOnElement(element: HTMLElement, value: any): void {
+    if (element instanceof HTMLInputElement) {
+        if (element.type === 'file') {
+            return;
+        }
+
+        if (element.type === 'radio') {
+            element.checked = element.value == value
+
+            return;
+        }
+
+        if (element.type === 'checkbox') {
+            if (Array.isArray(value)) {
+                // I'm purposely not using Array.includes here because it's
+                // strict, and because of Numeric/String mis-casting, I
+                // want the "includes" to be "fuzzy".
+                let valueFound = false
+                value.forEach(val => {
+                    if (val == element.value) {
+                        valueFound = true
+                    }
+                })
+
+                element.checked = valueFound
+            } else {
+                element.checked = element.value == value;
+            }
+
+            return;
+        }
+    }
+
+    if (element instanceof HTMLSelectElement) {
+        const arrayWrappedValue = [].concat(value).map(value => {
+            return value + ''
+        })
+
+        Array.from(element.options).forEach(option => {
+            option.selected = arrayWrappedValue.includes(option.value)
+        })
+
+        return;
+    }
+
+    value = value === undefined ? '' : value;
+
+    // silencing the typescript warning
+    (element as HTMLInputElement).value = value
+}
+
+export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissing = true): null|Directive {
     if (element.dataset.model) {
         const directives = parseDirectives(element.dataset.model);
         const directive = directives[0];
