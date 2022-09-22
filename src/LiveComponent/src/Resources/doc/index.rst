@@ -337,6 +337,22 @@ it won't, yet, make an Ajax call to re-render the component. Whenever
 the next re-render *does* happen, the updated ``max`` value will be
 used.
 
+
+Validating the form before triggering the action
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When using HTML5 form validation, you might want to avoid triggering an
+action as long as the form is invalid (for example when a required field is
+empty). To do that, use the ``validate`` modifier:
+
+.. code-block:: diff
+
+    <input
+        data-model="validate|max"
+        required="required"
+        value="{{ max }}"
+    >
+
 .. _name-attribute-model:
 
 Using name="" instead of data-model
