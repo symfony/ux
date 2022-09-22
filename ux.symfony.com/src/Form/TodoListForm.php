@@ -4,9 +4,9 @@ namespace App\Form;
 
 use App\Entity\TodoList;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CollectionType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 
 class TodoListForm extends AbstractType
 {
@@ -16,7 +16,7 @@ class TodoListForm extends AbstractType
             ->add('name', null, [
                 'label' => 'List name',
             ])
-            ->add('todoItems', CollectionType::class, [
+            ->add('todoItems', LiveCollectionType::class, [
                 'entry_type' => TodoItemForm::class,
                 'entry_options' => ['label' => false],
                 'label' => false,
