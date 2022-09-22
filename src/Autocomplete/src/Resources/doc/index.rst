@@ -258,7 +258,37 @@ to the options above, you can also pass:
             $qb->andWhere('entity.name LIKE :filter OR entity.description LIKE :filter')
                 ->setParameter('filter', '%'.$query.'%');
         }
+..tip::
 
+    By default, the query results number is limited to ten results.
+    In the case where you use the ``filter_query`` attribute, you can define the expected number results
+    by calling the setMaxResults() method of the query builder::
+
+        'filter_query' => function(QueryBuilder $qb, string $query, EntityRepository $repository) {
+            if (!$query) {
+                return;
+            }
+
+            $qb->andWhere('entity.name LIKE :filter OR entity.description LIKE :filter')
+                ->setParameter('filter', '%'.$query.'%')
+                ->setMaxResults(100);
+        }
+    In the case where you use the ``searchable_fields`` attribute, you can define a ``query_builder`` to
+    call the setMaxResults() method of the query builder::
+
+        $resolver->setDefaults([
+            'class' => Food::class,
+            'placeholder' => 'What should we eat?',
+
+            // choose which fields to use in the search
+            // if not passed, *all* fields are used
+            'searchable_fields' => ['name'],
+            'query_builder' => function(EntityRepository $repository)
+            {
+                return $repository->createQueryBuilder('food')
+                    ->setMaxResults(100);
+            },
+        ]);
 Using with a TextType Field
 ---------------------------
 
