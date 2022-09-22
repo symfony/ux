@@ -156,9 +156,11 @@ After creating this class, use it in your form:
         }
     }
 
-For consistent results, avoid passing any options to the 3rd argument
-of the ``->add()`` method. Instead, include all options inside the
-custom class (``FoodAutocompleteField``).
+.. caution::
+
+    Avoid passing any options to the 3rd argument of the ``->add()`` method as
+    these won't be used during the Ajax call to fetch results. Instead, include
+    all options inside the custom class (``FoodAutocompleteField``).
 
 Congratulations! Your ``EntityType`` is now Ajax-powered!
 
