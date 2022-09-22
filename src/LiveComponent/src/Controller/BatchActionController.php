@@ -28,17 +28,15 @@ final class BatchActionController
     {
     }
 
-    public function __invoke(Request $request, MountedComponent $mounted, string $serviceId, array $actions): ?Response
+    public function __invoke(Request $request, MountedComponent $_mounted_component, string $serviceId, array $actions): ?Response
     {
-        $request->attributes->set('_mounted_component', $mounted);
-
         foreach ($actions as $action) {
             $name = $action['name'] ?? throw new BadRequestHttpException('Invalid JSON');
 
             $subRequest = $request->duplicate(attributes: [
                 '_controller' => [$serviceId, $name],
                 '_component_action_args' => $action['args'] ?? [],
-                '_mounted_component' => $mounted,
+                '_mounted_component' => $_mounted_component,
                 '_route' => 'live_component',
             ]);
 
