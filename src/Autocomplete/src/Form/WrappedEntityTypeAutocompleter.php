@@ -54,6 +54,9 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
             return $queryBuilder;
         }
 
+        // Applying max result limit or not
+        $queryBuilder->setMaxResults($this->getMaxResults());
+
         $this->entitySearchUtil->addSearchClause(
             $queryBuilder,
             $query,
@@ -129,6 +132,11 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
     private function getFilterQuery(): ?callable
     {
         return $this->getForm()->getConfig()->getOption('filter_query');
+    }
+
+    private function getMaxResults(): ?int
+    {
+        return $this->getForm()->getConfig()->getOption('max_results');
     }
 
     private function getEntityMetadata(): EntityMetadata

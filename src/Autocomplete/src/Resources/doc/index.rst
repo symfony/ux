@@ -258,6 +258,8 @@ to the options above, you can also pass:
             $qb->andWhere('entity.name LIKE :filter OR entity.description LIKE :filter')
                 ->setParameter('filter', '%'.$query.'%');
         }
+``max_results`` (default: 10)
+    Allow you to control the max number of results returned by the automatic autocomplete endpoint.
 
 Using with a TextType Field
 ---------------------------

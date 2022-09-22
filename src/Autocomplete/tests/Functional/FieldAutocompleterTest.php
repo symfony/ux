@@ -78,4 +78,16 @@ class FieldAutocompleterTest extends KernelTestCase
             ->assertJsonMatches('length(results)', 3)
         ;
     }
+
+    public function testItCheckMaxResultsOption() : void
+    {
+        CategoryFactory::createMany(30, ['name' => 'foo']);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_autocomplete_type?query=foo')
+            ->assertSuccessful()
+            ->assertJsonMatches('length(results)', 5)
+        ;
+    }
 }
