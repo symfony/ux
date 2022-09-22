@@ -1,0 +1,240 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-08-11T01:22:27Z
+
+Yea, I can see the problem. The `LiveCollectionType` works well when you let the form system render the entire `CollectionType` field - e.g. simply `{{ form_widget(form.todoItems) }}`. I don't think (or at least it's not very useful) that if we need to render the button manually (like you have here) that this feature is any good. In the flip side, I think it's pretty unrealistic for someone to be happy out-of-the-box with `form_widget(form.todoItems)` renders :P.
+
+So, the proper solution would be to `form_widget(form.todoItems)` but then be able to use the form theming system to:
+
+A) Render each "row" as a table row (to get the same markup that we have currently).
+B) When we do this, be able to easily render the delete or add button, without repeating all of the ugly details like you had to.
+
+I got this partially working:
+
+```twig
+{# todo_list_form.html.twig - the component template #}
+{% form_theme form 'components/_form_theme_collection_entry_row.html.twig' %}
+
+...
+
+            <tbody>
+                {{ form_widget(form.todoItems) }}
+            </tbody>
+```
+
+Then in that `_form_theme_collection_entry_row.html.twig` form theme template, I have basically the same markup as was in the template before:
+
+```
+{%- block live_collection_entry_row -%}
+    <tr>
+        <td>
+            {{ form_row(form.description, {
+                label: false,
+                attr: {
+                    placeholder: 'Walk the pygmy hippo'
+                }
+            }) }}
+        </td>
+
+        <td>
+            {{ form_row(form.priority, {
+                row_attr: {class: ''},
+                label: false,
+            }) }}
+        </td>
+        <td>
+            DELETE BUTTON TODO
+        </td>
+    </tr>
+{% endblock %}
+```
+
+Two big problems here:
+
+A) Notice the DELETE BUTTON TODO - it doesn't look like we have things organized yet where I can just reuse the delete button from the form theme.
+B) I would rather have put the form theme into the component template and used `{% form_theme form _self %}`. However, because the component template doesn't extend anything, the `{% block live_collection_entry_row %}` is executed/parsed/rendered when the template is originally rendered... which is not what we want (think of `{% block title %}` in `base.html.twig`: because that template doesn't extend another, each block is actually rendered). I'm not sure if there's a way around this.
+
+tl;dr This feature feels too bumpy still to be real-world useful. Hopefully we can unbump it a bit.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-08-11T11:45:29Z
+
+Thanks for looking at this Ryan.
+
+@1ed, do you have any thoughts on this?
+
+---------------------------------------------------------------------------
+
+by 1ed at 2022-08-11T14:59:22Z
+
+Thanks for the ping! Actually I thought this cloud be a problem, but I think we can simplify it a bit easily. I will send a PR soon.
+
+---------------------------------------------------------------------------
+
+by 1ed at 2022-08-11T19:41:22Z
+
+With the tweaks in #421 the attribute rendering is moved into the type itself, so the template block can be simpler. With that the possible solutions can be:
+
+1. render it inline
+
+```twig
+<div
+    {{ attributes }}
+>
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-4">
+                {{ form_row(form.name, {
+                    label: false,
+                    attr: {
+                        placeholder: 'Give your list a name'
+                    }
+                }) }}
+            </div>
+        </div>
+
+        <table class="table table-borderless form-no-mb">
+            <thead>
+                <tr>
+                    <td>Item</td>
+                    <td>Priority</td>
+                </tr>
+            </thead>
+            <tbody>
+                {% for key, itemForm in form.todoItems %}
+                    <tr>
+                        <td>
+                            {{ form_row(itemForm.description, {
+                                label: false,
+                                attr: {
+                                    placeholder: 'Walk the pygmy hippo'
+                                }
+                            }) }}
+                        </td>
+
+                        <td>
+                            {{ form_row(itemForm.priority, {
+                                row_attr: {class: ''},
+                                label: false,
+                            }) }}
+                        </td>
+                        <td>
+                            {{ form_row(itemForm.vars.button_delete_prototype, { label: 'X', attr: { class: 'btn btn-outline-danger' } }) }}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {{ form_widget(form.todoItems.vars.button_add_prototype, { label: '+ Add Item', class: 'btn btn-outline-primary' }) }}
+
+        <button type="submit" class="btn btn-success" formnovalidate>Save</button>
+</div>
+```
+2. override the specific block for todo list items
+
+```twig
+{% form_theme form 'components/_form_theme_todo_list.html.twig' %}
+
+<div
+    {{ attributes }}
+>
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-4">
+                {{ form_row(form.name, {
+                    label: false,
+                    attr: {
+                        placeholder: 'Give your list a name'
+                    }
+                }) }}
+            </div>
+        </div>
+
+        <table class="table table-borderless form-no-mb">
+            <thead>
+                <tr>
+                    <td>Item</td>
+                    <td>Priority</td>
+                </tr>
+            </thead>
+            <tbody>
+                {{ form_row(form.todoItems, { skip_add_button: true }) }}
+            </tbody>
+        </table>
+
+        {{ form_widget(form.todoItems.vars.button_add_prototype, { label: '+ Add Item', class: 'btn btn-outline-primary' }) }}
+
+        <button type="submit" class="btn btn-success" formnovalidate>Save</button>
+</div>
+```
+
+```twig
+{# components/_form_theme_todo_list.html.twig #}
+{%- block _todo_list_form_todoItems_entry_row -%}
+    <tr>
+        <td>
+            {{ form_row(form.description, {
+                label: false,
+                attr: {
+                    placeholder: 'Walk the pygmy hippo'
+                }
+            }) }}
+        </td>
+        <td>
+            {{ form_row(form.priority, {
+                row_attr: {class: ''},
+                label: false,
+            }) }}
+        </td>
+        <td>
+            {{ form_row(button_delete_prototype, { label: 'X', attr: { class: 'btn btn-outline-danger' } }) }}
+        </td>
+    </tr>
+{% endblock %}
+
+```
+3. override the generic collection entry
+```tiwg
+{% form_theme form 'components/_form_theme_collection_entry_row.html.twig' %}
+{# ... the same as number 2 #}
+```
+
+```twig
+{# components/_form_theme_collection_entry_row.html.twig #}
+{%- block live_collection_entry_row -%}
+    <tr>
+        {% for child in form|filter(child => not child.rendered) %}
+            <td>{{- form_row(child) -}}</td>
+        {% endfor %}
+        <td>
+            {{ form_row(button_delete_prototype, { label: 'X', attr: { class: 'btn btn-outline-danger' } }) }}
+        </td>
+    </tr>
+{% endblock %}
+
+```
+This renders differently as the original, because it add extra labels but, that can be disabled in the input type.
+
+You can try these if you rebase this branch to mine.
+
+What do you think?
+
+---------------------------------------------------------------------------
+
+by 1ed at 2022-08-14T23:55:31Z
+
+#421 was merged, so this should work after rebase https://github.com/1ed/ux/commit/a832787
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-08-15T11:10:40Z
+
+Perfect, thanks @1ed! I'll rebase and finish up.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-08-16T13:13:53Z
+
+Works great, thanks again for helping with this @1ed!
