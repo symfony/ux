@@ -67,6 +67,10 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             $values['tom-select-options'] = json_encode($options['tom_select_options']);
         }
 
+        if ($options['max_results']) {
+            $values['max-results'] = $options['max_results'];
+        }
+
         $values['no-results-found-text'] = $this->trans($options['no_results_found_text']);
         $values['no-more-results-text'] = $this->trans($options['no_more_results_text']);
 
@@ -87,6 +91,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             'allow_options_create' => false,
             'no_results_found_text' => 'No results found',
             'no_more_results_text' => 'No more results',
+            'max_results' => 10,
         ]);
 
         // if autocomplete_url is passed, then HTML options are already supported

@@ -39,11 +39,6 @@ final class AutocompleteResultsExecutor
             $query
         );
 
-        // if no max is set, set one
-        if (!$queryBuilder->getMaxResults()) {
-            $queryBuilder->setMaxResults(10);
-        }
-
         $entities = $queryBuilder->getQuery()->execute();
 
         $results = [];

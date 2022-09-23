@@ -76,10 +76,13 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
             // set to the string role that's required to view the autocomplete results
             // or a callable: function(Symfony\Component\Security\Core\Security $security): bool
             'security' => false,
+            // set the max results number that a query on automatic endpoint return.
+            'max_results' => 10,
         ]);
 
         $resolver->setRequired(['class']);
         $resolver->setAllowedTypes('security', ['boolean', 'string', 'callable']);
+        $resolver->setAllowedTypes('max_results', ['int', 'null']);
         $resolver->setAllowedTypes('filter_query', ['callable', 'null']);
         $resolver->setNormalizer('searchable_fields', function (Options $options, ?array $searchableFields) {
             if (null !== $searchableFields && null !== $options['filter_query']) {
