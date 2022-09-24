@@ -12,6 +12,11 @@
 namespace Symfony\UX\Autocomplete;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
+use Symfony\Component\PropertyAccess\PropertyAccessor;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\PropertyAccess\PropertyPath;
+use Symfony\Component\PropertyAccess\PropertyPathInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
@@ -21,10 +26,22 @@ use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
  */
 final class AutocompleteResultsExecutor
 {
+    private PropertyAccessorInterface $propertyAccessor;
+    private ?Security $security;
+
     public function __construct(
         private DoctrineRegistryWrapper $managerRegistry,
-        private ?Security $security = null
+        $propertyAccessor,
+        /* Security $security = null */
     ) {
+        if ($propertyAccessor instanceof Security) {
+            trigger_deprecation('symfony/ux-autocomplete', '2.8.0', 'Passing a "%s" instance as the second argument of "%s()" is deprecated, pass a "%s" instance instead.', Security::class, __METHOD__, PropertyAccessorInterface::class);
+            $this->security = $propertyAccessor;
+            $this->propertyAccessor = new PropertyAccessor();
+        } else {
+            $this->propertyAccessor = $propertyAccessor;
+            $this->security = \func_num_args() >= 3 ? func_get_arg(2) : null;
+        }
     }
 
     public function fetchResults(EntityAutocompleterInterface $autocompleter, string $query, int $page): AutocompleteResults
@@ -50,15 +67,61 @@ final class AutocompleteResultsExecutor
         $paginator = new Paginator($queryBuilder);
 
         $nbPages = (int) ceil($paginator->count() / $queryBuilder->getMaxResults());
+        $hasNextPage = $page < $nbPages;
 
         $results = [];
+
+        if (null === $groupBy = $autocompleter->getGroupBy()) {
+            foreach ($paginator as $entity) {
+                $results[] = [
+                    'value' => $autocompleter->getValue($entity),
+                    'text' => $autocompleter->getLabel($entity),
+                ];
+            }
+
+            return new AutocompleteResults($results, $hasNextPage);
+        }
+
+        if (\is_string($groupBy)) {
+            $groupBy = new PropertyPath($groupBy);
+        }
+
+        if ($groupBy instanceof PropertyPathInterface) {
+            $accessor = $this->propertyAccessor;
+            $groupBy = function ($choice) use ($accessor, $groupBy) {
+                try {
+                    return $accessor->getValue($choice, $groupBy);
+                } catch (UnexpectedTypeException) {
+                    return null;
+                }
+            };
+        }
+
+        if (!\is_callable($groupBy)) {
+            throw new \InvalidArgumentException(sprintf('Option "group_by" must be callable, "%s" given.', get_debug_type($groupBy)));
+        }
+
+        $optgroupLabels = [];
+
         foreach ($paginator as $entity) {
-            $results[] = [
+            $result = [
                 'value' => $autocompleter->getValue($entity),
                 'text' => $autocompleter->getLabel($entity),
             ];
+
+            $groupLabels = $groupBy($entity, $result['value'], $result['text']);
+
+            if (null !== $groupLabels) {
+                $groupLabels = \is_array($groupLabels) ? array_map('strval', $groupLabels) : [(string) $groupLabels];
+                $result['group_by'] = $groupLabels;
+                $optgroupLabels = array_merge($optgroupLabels, $groupLabels);
+            }
+
+            $results[] = $result;
         }
 
-        return new AutocompleteResults($results, $page < $nbPages);
+        $optgroups = array_map(fn (string $label) => ['value' => $label, 'label' => $label], array_unique($optgroupLabels));
+
+        return new AutocompleteResults($results, $hasNextPage, $optgroups);
     }
 }

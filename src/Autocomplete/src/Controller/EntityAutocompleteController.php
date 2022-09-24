@@ -50,7 +50,7 @@ final class EntityAutocompleteController
         }
 
         return new JsonResponse([
-            'results' => $data->results,
+            'results' => ($data->optgroups) ? ['options' => $data->results, 'optgroups' => $data->optgroups] : $data->results,
             'next_page' => $nextPage,
         ]);
     }

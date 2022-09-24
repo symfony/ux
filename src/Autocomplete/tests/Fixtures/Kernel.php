@@ -28,6 +28,7 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\UX\Autocomplete\AutocompleteBundle;
 use Symfony\UX\Autocomplete\DependencyInjection\AutocompleteFormTypePass;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomGroupByProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\ProductType;
 use Twig\Environment;
@@ -143,6 +144,13 @@ final class Kernel extends BaseKernel
             ->arg(1, new Reference('ux.autocomplete.entity_search_util'))
             ->tag(AutocompleteFormTypePass::ENTITY_AUTOCOMPLETER_TAG, [
                 'alias' => 'custom_product'
+            ]);
+
+        $services->set(CustomGroupByProductAutocompleter::class)
+            ->public()
+            ->arg(1, new Reference('ux.autocomplete.entity_search_util'))
+            ->tag(AutocompleteFormTypePass::ENTITY_AUTOCOMPLETER_TAG, [
+                'alias' => 'custom_group_by_product'
             ]);
 
         $services->alias('public.results_executor', 'ux.autocomplete.results_executor')

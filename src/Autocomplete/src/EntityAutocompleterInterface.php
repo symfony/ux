@@ -46,4 +46,9 @@ interface EntityAutocompleterInterface
      * Note: if SecurityBundle is not installed, this will not be called.
      */
     public function isGranted(Security $security): bool;
+
+    /**
+     * Return group_by option.
+     */
+    public function getGroupBy(): mixed;
 }

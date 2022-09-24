@@ -112,6 +112,11 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
         throw new \InvalidArgumentException('Invalid passed to the "security" option: it must be the boolean true, a string role or a callable.');
     }
 
+    public function getGroupBy(): mixed
+    {
+        return $this->getFormOption('group_by');
+    }
+
     private function getFormOption(string $name): mixed
     {
         $form = $this->getForm();

@@ -513,6 +513,20 @@ a :ref:`custom autocompleter <custom-autocompleter>`:
             ]
         }
 
+    for using `Tom Select Option Group`_ the format is as follows
+
+    .. code-block:: json
+
+        {
+            "results": {
+                "options": [
+                    { "value": "1", "text": "Pizza", "group_by": ["food"] },
+                    { "value": "2", "text": "Banana", "group_by": ["food"] }
+                ],
+                "optgroups": [{ "value": "food", "label": "food" }]
+            }
+        }
+
     Once you have this, generate the URL to your controller and
     pass it to the ``url`` value of the ``stimulus_controller()`` Twig
     function, or to the ``autocomplete_url`` option of your form field.
@@ -557,3 +571,4 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Tom Select Options`: https://tom-select.js.org/docs/#general-configuration
 .. _`controller.ts`: https://github.com/symfony/ux/blob/2.x/src/Autocomplete/assets/src/controller.ts
 .. _`Tom Select Render Templates`: https://tom-select.js.org/docs/#render-templates
+.. _`Tom Select Option Group`: https://tom-select.js.org/examples/optgroups/

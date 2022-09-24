@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import TomSelect from 'tom-select';
 import { TPluginHash } from 'tom-select/dist/types/contrib/microplugin';
-import { RecursivePartial, TomSettings, TomTemplates } from 'tom-select/dist/types/types';
+import { RecursivePartial, TomSettings, TomTemplates, TomLoadCallback } from 'tom-select/dist/types/types';
 
 export interface AutocompletePreConnectOptions {
     options: any;
@@ -147,20 +147,21 @@ export default class extends Controller {
             // VERY IMPORTANT: use 'function (query, callback) { ... }' instead of the
             // '(query, callback) => { ... }' syntax because, otherwise,
             // the 'this.XXX' calls inside this method fail
-            load: function (query: string, callback: (results?: any) => void) {
+            load: function (query: string, callback: TomLoadCallback) {
                 const url = this.getUrl(query);
                 fetch(url)
                     .then((response) => response.json())
                     // important: next_url must be set before invoking callback()
                     .then((json) => {
                         this.setNextUrl(query, json.next_page);
-                        callback(json.results);
+                        callback(json.results.options || json.results, json.results.optgroups || []);
                     })
-                    .catch(() => callback());
+                    .catch(() => callback([], []));
             },
             shouldLoad: function (query: string) {
                 return query.length >= minCharacterLength;
             },
+            optgroupField: 'group_by',
             // avoid extra filtering after results are returned
             score: function (search: string) {
                 return function (item: any) {
