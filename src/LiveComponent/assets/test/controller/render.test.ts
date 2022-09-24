@@ -40,7 +40,7 @@ describe('LiveController rendering Tests', () => {
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name: Kevin'));
         // data returned from the server is used for the new "data"
-        expect(test.controller.dataValue).toEqual({firstName: 'Kevin'});
+        expect(test.component.valueStore.all()).toEqual({firstName: 'Kevin'});
     });
 
     it('conserves the value of model field that was modified after a render request', async () => {
@@ -86,7 +86,7 @@ describe('LiveController rendering Tests', () => {
         // the server returned comment as ''. However, this model WAS set
         // during the last render, and that has not been taken into account yet.
         // and so, like with the comment textarea, the client-side value is kept
-        expect(test.controller.dataValue).toEqual({
+        expect(test.component.valueStore.all()).toEqual({
             title: 'greetings!!',
             comment: 'I had a great time'
         });
@@ -94,7 +94,7 @@ describe('LiveController rendering Tests', () => {
         // trigger render: the new comment data *will* now be sent
         test.expectsAjaxCall('get')
             // just repeat what we verified from above
-            .expectSentData(test.controller.dataValue)
+            .expectSentData(test.component.valueStore.all())
             .serverWillChangeData((data: any) => {
                 // to be EXTRA complicated, the server will change the comment
                 // on the client, we should now recognize that the latest comment

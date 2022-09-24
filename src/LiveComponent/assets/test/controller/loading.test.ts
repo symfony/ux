@@ -79,6 +79,7 @@ describe('LiveController data-loading Tests', () => {
             .delayResponse(50)
             .init();
         getByText(test.element, 'Other Action').click();
+        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
         // it should not be loading yet
         expect(getByTestId(test.element, 'loading-element')).not.toBeVisible();
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
@@ -90,6 +91,8 @@ describe('LiveController data-loading Tests', () => {
             .delayResponse(50)
             .init();
         getByText(test.element, 'Save').click();
+        // wait for the ajax call to start (will be 0ms, but with a timeout, so not *quite* instant)
+        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
         // it SHOULD be loading now
         expect(getByTestId(test.element, 'loading-element')).toBeVisible();
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
@@ -171,6 +174,7 @@ describe('LiveController data-loading Tests', () => {
 
         getByText(test.element, 'Save').click();
         getByText(test.element, 'Other Action').click();
+        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
         // it SHOULD be loading now
         expect(getByTestId(test.element, 'loading-element')).toBeVisible();
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));

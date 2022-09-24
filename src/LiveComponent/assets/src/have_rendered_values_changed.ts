@@ -52,7 +52,7 @@ export function haveRenderedValuesChanged(originalDataJson: string, currentDataJ
 
     // now that we know which keys have changed between originally
     // rendering the child component and this latest render, we
-    // can check to see if the the child component *already* has
+    // can check to see if the child component *already* has
     // the latest value for those keys.
 
     const currentData = JSON.parse(currentDataJson)

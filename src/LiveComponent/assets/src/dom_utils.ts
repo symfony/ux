@@ -1,4 +1,4 @@
-import ValueStore from './ValueStore';
+import ValueStore from './Component/ValueStore';
 import { Directive, parseDirectives } from './directives_parser';
 import { LiveController } from './live_controller';
 import { normalizeModelName } from './string_utils';

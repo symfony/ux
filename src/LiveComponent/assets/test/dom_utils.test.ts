@@ -7,15 +7,11 @@ import {
     getElementAsTagText,
     setValueOnElement
 } from '../src/dom_utils';
-import ValueStore from '../src/ValueStore';
+import ValueStore from '../src/Component/ValueStore';
 import { LiveController } from '../src/live_controller';
 
 const createStore = function(data: any = {}): ValueStore {
-    return new ValueStore({
-        dataValue: data,
-        childComponentControllers: [],
-        element: document.createElement('div'),
-    });
+    return new ValueStore(data);
 }
 
 describe('getValueFromElement', () => {

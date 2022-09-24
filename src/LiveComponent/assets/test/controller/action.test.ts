@@ -167,7 +167,10 @@ describe('LiveController Action Tests', () => {
 
         // save first, then type into the box
         getByText(test.element, 'Save').click();
-        await userEvent.type(test.queryByDataModel('comment'), ' holes');
+        // slight pause (should allow action request to start), then start typing
+        setTimeout(() => {
+            userEvent.type(test.queryByDataModel('comment'), ' holes');
+        }, 10);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Comment Saved!'));
         // render has not happened yet

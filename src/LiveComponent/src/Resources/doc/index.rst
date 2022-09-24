@@ -1636,6 +1636,13 @@ To validate only on "change", use the ``on(change)`` modifier:
         class="{{ this.getError('post.content') ? 'has-error' : '' }}"
     >
 
+Interacting with JavaScript
+---------------------------
+
+TODO:
+- events - like live:connect
+- the Component object
+
 Polling
 -------
 

@@ -3,6 +3,7 @@ import LiveController from '../src/live_controller';
 import { waitFor } from '@testing-library/dom';
 import fetchMock from 'fetch-mock-jest';
 import { htmlToElement } from '../src/dom_utils';
+import Component from '../src/Component';
 
 let activeTest: FunctionalTest|null = null;
 let unmatchedFetchErrors: Array<{url: string, method: string, body: any, headers: any}> = [];
@@ -72,6 +73,7 @@ export function shutdownTest() {
 
 class FunctionalTest {
     controller: LiveController;
+    component: Component;
     element: HTMLElement;
     initialData: any;
     template: (data: any) => string;
@@ -79,6 +81,7 @@ class FunctionalTest {
 
     constructor(controller: LiveController, element: HTMLElement, initialData: any, template: (data: any) => string) {
         this.controller = controller;
+        this.component = controller.component;
         this.element = element;
         this.initialData = initialData;
         this.template = template;
@@ -231,7 +234,7 @@ class MockedAjaxCall {
     getVisualSummary(): string {
         const requestInfo = [];
         if (this.method === 'GET') {
-            requestInfo.push(` URL MATCH: ${this.getMockMatcher().url}`);
+            requestInfo.push(` URL MATCH: end:${this.getMockMatcher(true).url}`);
         }
         requestInfo.push(`  METHOD: ${this.method}`);
         if (Object.keys(this.expectedHeaders).length > 0) {
@@ -250,7 +253,7 @@ class MockedAjaxCall {
     }
 
     // https://www.wheresrhys.co.uk/fetch-mock/#api-mockingmock_matcher
-    private getMockMatcher(): any {
+    private getMockMatcher(forError = false): any {
         if (!this.expectedSentData) {
             throw new Error('expectedSentData not set yet');
         }
@@ -265,9 +268,14 @@ class MockedAjaxCall {
             const params = new URLSearchParams({
                 data: JSON.stringify(this.expectedSentData)
             });
-            matcherObject.functionMatcher = (url: string) => {
-                return url.includes(`?${params.toString()}`);
-            };
+            if (forError) {
+                // simplified version for error reporting
+                matcherObject.url = `?${params.toString()}`;
+            } else {
+                matcherObject.functionMatcher = (url: string) => {
+                    return url.includes(`?${params.toString()}`);
+                };
+            }
         } else {
             // match the body, by without "updatedModels" which is not important
             // and also difficult/tedious to always assert

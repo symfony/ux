@@ -1,13 +1,12 @@
-import { getDeepData, setDeepData } from './data_manipulation_utils';
-import { LiveController } from './live_controller';
-import { normalizeModelName } from './string_utils';
+import { getDeepData, setDeepData } from '../data_manipulation_utils';
+import { normalizeModelName } from '../string_utils';
 
 export default class {
-    controller: LiveController;
     updatedModels: string[] = [];
+    private data: any = {};
 
-    constructor(liveController: LiveController) {
-        this.controller = liveController;
+    constructor(data: any) {
+        this.data = data;
     }
 
     /**
@@ -20,7 +19,7 @@ export default class {
     get(name: string): any {
         const normalizedName = normalizeModelName(name);
 
-        return getDeepData(this.controller.dataValue, normalizedName);
+        return getDeepData(this.data, normalizedName);
     }
 
     has(name: string): boolean {
@@ -38,7 +37,7 @@ export default class {
             this.updatedModels.push(normalizedName);
         }
 
-        this.controller.dataValue = setDeepData(this.controller.dataValue, normalizedName, value);
+        this.data = setDeepData(this.data, normalizedName, value);
     }
 
     /**
@@ -47,21 +46,14 @@ export default class {
     hasAtTopLevel(name: string): boolean {
         const parts = name.split('.');
 
-        return this.controller.dataValue[parts[0]] !== undefined;
-    }
-
-    asJson(): string {
-        return JSON.stringify(this.controller.dataValue);
+        return this.data[parts[0]] !== undefined;
     }
 
     all(): any {
-        return this.controller.dataValue;
+        return this.data;
     }
 
-    /**
-     * Are any of the passed models currently "updated"?
-     */
-    areAnyModelsUpdated(targetedModels: string[]): boolean {
-        return (this.updatedModels.filter(modelName => targetedModels.includes(modelName))).length > 0;
+    reinitialize(data: any) {
+        this.data = data;
     }
 }
