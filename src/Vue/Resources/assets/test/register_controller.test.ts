@@ -12,15 +12,24 @@
 import {registerVueControllerComponents} from '../src/register_controller';
 import {createRequireContextPolyfill} from './util/require_context_poylfill';
 import Hello from './fixtures/Hello.vue'
+import Goodbye from './fixtures-lazy/Goodbye.vue'
 
 require.context = createRequireContextPolyfill(__dirname);
 
 describe('registerVueControllerComponents', () => {
-    it('test', () => {
+    it('test should resolve components synchronously', () => {
         registerVueControllerComponents(require.context('./fixtures', true, /\.vue$/));
         const resolveComponent = window.resolveVueComponent;
 
         expect(resolveComponent).not.toBeUndefined();
         expect(resolveComponent('Hello')).toBe(Hello);
+    });
+
+    it('test should resolve lazy components asynchronously', () => {
+        registerVueControllerComponents(require.context('./fixtures-lazy', true, /\.vue$/, 'lazy'));
+        const resolveComponent = window.resolveVueComponent;
+
+        expect(resolveComponent).not.toBeUndefined();
+        expect(resolveComponent('Goodbye')).toBe(Goodbye);
     });
 });

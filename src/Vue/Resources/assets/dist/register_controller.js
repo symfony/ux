@@ -1,15 +1,39 @@
+import { defineAsyncComponent } from 'vue';
+
 function registerVueControllerComponents(context) {
-    const vueControllers = {};
-    const importAllVueComponents = (r) => {
-        r.keys().forEach((key) => (vueControllers[key] = r(key).default));
-    };
-    importAllVueComponents(context);
-    window.resolveVueComponent = (name) => {
-        const component = vueControllers[`./${name}.vue`];
-        if (typeof component === 'undefined') {
-            throw new Error(`Vue controller "${name}" does not exist`);
+    const vueControllers = context.keys().reduce((acc, key) => {
+        acc[key] = undefined;
+        return acc;
+    }, {});
+    function loadComponent(name) {
+        const componentPath = `./${name}.vue`;
+        if (componentPath in vueControllers && typeof vueControllers[componentPath] === 'undefined') {
+            const module = context(componentPath);
+            if (module.default) {
+                vueControllers[componentPath] = module.default;
+            }
+            else if (module instanceof Promise) {
+                vueControllers[componentPath] = defineAsyncComponent(() => new Promise((resolve, reject) => {
+                    module
+                        .then((resolvedModule) => {
+                        if (resolvedModule.default) {
+                            resolve(resolvedModule.default);
+                        }
+                        else {
+                            reject(new Error(`Cannot find default export in async Vue controller "${name}".`));
+                        }
+                    })
+                        .catch(reject);
+                }));
+            }
+            else {
+                throw new Error(`Vue controller "${name}" does not exist.`);
+            }
         }
-        return component;
+        return vueControllers[componentPath];
+    }
+    window.resolveVueComponent = (name) => {
+        return loadComponent(name);
     };
 }
 
