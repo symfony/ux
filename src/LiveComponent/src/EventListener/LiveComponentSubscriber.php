@@ -161,7 +161,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         /*
          * Either we:
-         *      A) To not have a _mounted_component, so hydrate $component
+         *      A) We do NOT have a _mounted_component, so hydrate $component
          *      B) We DO have a _mounted_component, so no need to hydrate,
          *          but we DO need to make sure it's set as the controller.
          */
@@ -201,7 +201,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private function parseDataFor(Request $request): array
     {
         if (!$request->attributes->has('_live_request_data')) {
-
             if ($request->query->has('data')) {
                 return [
                     'data' => json_decode($request->query->get('data'), true, 512, \JSON_THROW_ON_ERROR),
