@@ -210,7 +210,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                 ];
             }
 
-            $requestData = json_decode($request->getContent(), true, 512, \JSON_THROW_ON_ERROR);
+            $requestData = $request->toArray();
 
             $request->attributes->set('_live_request_data', [
                 'data' => $requestData['data'] ?? [],
