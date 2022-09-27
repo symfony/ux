@@ -237,15 +237,17 @@ Add an inputs to the template:
 
     {# templates/components/random_number.html.twig #}
     <div {{ attributes }}>
-        <input
-            type="number"
-            value="{{ max }}"
-            data-model="max"
-        >
+        <input type="number" data-model="max">
 
         Generating a number between 9 and {{ max }}
         <strong>{{ this.randomNumber }}</strong>
     </div>
+
+.. versionadded:: 2.5
+
+    Before version 2.5, you needed to also set ``value="{{ max }}"``
+    on the ``<input>``. That is now set automatically for all
+    "data-model" fields.
 
 The key is the ``data-model`` attribute. Thanks
 to that, when the user types, the ``$max`` property on
@@ -296,10 +298,7 @@ delay via the ``debounce`` modifier:
 
 .. code-block:: twig
 
-        <input
-            data-model="debounce(100)|max"
-            value="{{ max }}"
-        >
+        <input data-model="debounce(100)|max">
 
 Lazy Updating on "change" of a Field
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -311,10 +310,7 @@ happens, use the ``on(change)`` modifier:
 
 .. code-block:: twig
 
-    <input
-        data-model="on(change)|max"
-        value="{{ max }}"
-    >
+    <input data-model="on(change)|max">
 
 .. _deferring-a-re-render-until-later:
 
@@ -327,10 +323,7 @@ clicked). To do that, use ``norender`` modifier:
 
 .. code-block:: diff
 
-    <input
-        data-model="norender|max"
-        value="{{ max }}"
-    >
+    <input data-model="norender|max">
 
 Now, as you type, the ``max`` "model" will be updated in JavaScript, but
 it won't, yet, make an Ajax call to re-render the component. Whenever
@@ -390,6 +383,33 @@ In this example, clicking the button will change a ``mode``
 live property on your component to the value ``edit``. The
 ``data-action="live#update"`` is Stimulus code that triggers
 the update.
+
+Updating a Field via Custom JavaScript
+--------------------------------------
+
+Sometimes you might want to change the value of a field via your own
+custom JavaScript. Suppose you have the following field inside your component:
+
+.. code-block:: twig
+
+    <input
+        id="favorite-food"
+        data-model="favoriteFood"
+    >
+
+To set the value of this field via custom JavaScript (e.g. a Stimulus controller),
+be sure to *also* trigger a ``change`` event so that live components is notified
+of the change:
+
+.. code-block:: javascript
+
+    const input = document.getElementById('favorite-food');
+    input.value = 'sushi';
+
+    element.dispatchEvent(new Event('input', { bubbles: true }));
+
+    // if you have data-model="on(change)|favoriteFood", use the "change" event
+    element.dispatchEvent(new Event('change', { bubbles: true }));
 
 Loading States
 --------------
@@ -1421,12 +1441,9 @@ filter from the ``twig/markdown-extra`` library):
 .. code-block:: twig
 
     <div {{ attributes }}>
-        <input
-            value="{{ post.title }}"
-            data-model="post.title"
-        >
+        <input data-model="post.title">
 
-       <textarea data-model="post.content">{{post.content}}</textarea>
+       <textarea data-model="post.content"></textarea>
 
         <div data-loading="addClass(low-opacity)">
             <h3>{{ post.title }}</h3>
@@ -1543,7 +1560,7 @@ method:
     <textarea
         data-model="post.content"
         class="{{ this.getError('post.content') ? 'has-error' : '' }}"
-    >{{ post.content }}</textarea>
+    ></textarea>
 
     {% if this.getError('agreeToTerms') %}
         <div class="error">
@@ -1553,9 +1570,9 @@ method:
     <input type="checkbox" data-model="agreeToTerms" class="{{ this.getError('agreeToTerms') ? 'has-error' : '' }}"/>
 
     <button
-            type="submit"
-            data-action="live#action"
-            data-action-name="prevent|save"
+        type="submit"
+        data-action="live#action"
+        data-action-name="prevent|save"
     >Save</button>
 
 Once a component has been validated, the component will "remember" that
@@ -1578,7 +1595,6 @@ To validate only on "change", use the ``on(change)`` modifier:
     <input
         type="email"
         data-model="on(change)|user.email"
-        value="{{ user.email }}"
         class="{{ this.getError('post.content') ? 'has-error' : '' }}"
     >
 
@@ -1833,7 +1849,7 @@ In the ``EditPostComponent`` template, you render the
         <textarea
             name="{{ name }}"
             data-model="value"
-        >{{ value }}</textarea>
+        ></textarea>
 
         <div class="markdown-preview">
             {{ value|markdown_to_html }}

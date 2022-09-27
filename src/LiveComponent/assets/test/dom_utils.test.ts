@@ -1,13 +1,14 @@
 import {
-    getValueFromInput,
+    getValueFromElement,
     cloneHTMLElement,
     htmlToElement,
-    getModelDirectiveFromInput,
+    getModelDirectiveFromElement,
     elementBelongsToThisController,
-    getElementAsTagText
+    getElementAsTagText,
+    setValueOnElement
 } from '../src/dom_utils';
 import ValueStore from '../src/ValueStore';
-import {LiveController} from "../src/live_controller";
+import { LiveController } from '../src/live_controller';
 
 const createStore = function(data: any = {}): ValueStore {
     return new ValueStore({
@@ -17,7 +18,7 @@ const createStore = function(data: any = {}): ValueStore {
     });
 }
 
-describe('getValueFromInput', () => {
+describe('getValueFromElement', () => {
     it('Correctly adds data from checked checkbox', () => {
         const input = document.createElement('input');
         input.type = 'checkbox';
@@ -25,13 +26,13 @@ describe('getValueFromInput', () => {
         input.dataset.model = 'foo';
         input.value = 'the_checkbox_value';
 
-        expect(getValueFromInput(input, createStore()))
+        expect(getValueFromElement(input, createStore()))
             .toEqual('the_checkbox_value');
 
-        expect(getValueFromInput(input, createStore({ foo: [] })))
+        expect(getValueFromElement(input, createStore({ foo: [] })))
             .toEqual(['the_checkbox_value']);
 
-        expect(getValueFromInput(input, createStore({ foo: ['bar'] })))
+        expect(getValueFromElement(input, createStore({ foo: ['bar'] })))
             .toEqual(['bar', 'the_checkbox_value']);
     });
 
@@ -42,21 +43,20 @@ describe('getValueFromInput', () => {
         input.dataset.model = 'foo';
         input.value = 'the_checkbox_value';
 
-        expect(getValueFromInput(input, createStore()))
+        expect(getValueFromElement(input, createStore()))
             .toEqual(null);
-        expect(getValueFromInput(input, createStore({ foo: ['the_checkbox_value'] })))
+        expect(getValueFromElement(input, createStore({ foo: ['the_checkbox_value'] })))
             .toEqual([]);
         // unchecked value already was not in store
-        expect(getValueFromInput(input, createStore({ foo: ['bar'] })))
+        expect(getValueFromElement(input, createStore({ foo: ['bar'] })))
             .toEqual(['bar']);
-        expect(getValueFromInput(input, createStore({ foo: ['bar', 'the_checkbox_value'] })))
+        expect(getValueFromElement(input, createStore({ foo: ['bar', 'the_checkbox_value'] })))
             .toEqual(['bar']);
     })
 
     it('Correctly sets data from select multiple', () => {
         const select = document.createElement('select');
         select.multiple = true;
-        select.name = 'foo'
 
         const fooOption = document.createElement('option');
         fooOption.value = 'foo';
@@ -66,15 +66,15 @@ describe('getValueFromInput', () => {
         select.add(barOption);
 
         // nothing selected
-        expect(getValueFromInput(select, createStore()))
+        expect(getValueFromElement(select, createStore()))
             .toEqual([]);
 
         fooOption.selected = true;
-        expect(getValueFromInput(select, createStore()))
+        expect(getValueFromElement(select, createStore()))
             .toEqual(['foo']);
 
         barOption.selected = true;
-        expect(getValueFromInput(select, createStore()))
+        expect(getValueFromElement(select, createStore()))
             .toEqual(['foo', 'bar']);
     })
 
@@ -82,7 +82,7 @@ describe('getValueFromInput', () => {
         const div = document.createElement('div');
         div.dataset.value = 'the_value';
 
-        expect(getValueFromInput(div, createStore()))
+        expect(getValueFromElement(div, createStore()))
             .toEqual('the_value');
     });
 
@@ -90,8 +90,85 @@ describe('getValueFromInput', () => {
         const div = document.createElement('div');
         div.setAttribute('value', 'the_value_from_attribute');
 
-        expect(getValueFromInput(div, createStore()))
+        expect(getValueFromElement(div, createStore()))
             .toEqual('the_value_from_attribute');
+    });
+});
+
+describe('setValueOnElement', () => {
+    it('Checks checkbox with scalar value', () => {
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.value = 'the_checkbox_value';
+
+        setValueOnElement(input, 'the_checkbox_value');
+        expect(input.checked).toBeTruthy();
+    });
+
+    it('Checks checkbox with array value', () => {
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.value = 'the_checkbox_value';
+
+        setValueOnElement(input, ['dinosaur', 'the_checkbox_value']);
+        expect(input.checked).toBeTruthy();
+    });
+
+    it('Unchecks checkbox with scalar value', () => {
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = true;
+        input.value = 'the_checkbox_value';
+
+        setValueOnElement(input, 'other_value');
+        expect(input.checked).toBeFalsy();
+    });
+
+    it('Unchecks checkbox with array value', () => {
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = true;
+        input.value = 'the_checkbox_value';
+
+        setValueOnElement(input, ['other_value', 'foo']);
+        expect(input.checked).toBeFalsy();
+    });
+
+    it('Sets data onto select multiple', () => {
+        const select = document.createElement('select');
+        select.multiple = true;
+
+        const fooOption = document.createElement('option');
+        fooOption.value = 'foo';
+        select.add(fooOption);
+        const barOption = document.createElement('option');
+        barOption.value = 'bar';
+        select.add(barOption);
+
+        setValueOnElement(select, ['not matching']);
+        expect(fooOption.selected).toBeFalsy();
+        expect(barOption.selected).toBeFalsy();
+
+        setValueOnElement(select, ['bar']);
+        expect(fooOption.selected).toBeFalsy();
+        expect(barOption.selected).toBeTruthy();
+
+        setValueOnElement(select, ['bar', 'foo']);
+        expect(fooOption.selected).toBeTruthy();
+        expect(barOption.selected).toBeTruthy();
+
+        setValueOnElement(select, ['foo']);
+        expect(fooOption.selected).toBeTruthy();
+        expect(barOption.selected).toBeFalsy();
+    })
+
+    it('Sets value on other elements', () => {
+        const input = document.createElement('input');
+        input.value = 'some thing else';
+
+        setValueOnElement(input, 'new value');
+
+        expect(input.value).toEqual('new value');
     });
 });
 
@@ -99,7 +176,7 @@ describe('getModelDirectiveFromInput', () => {
     it('reads data-model correctly', () => {
         const element = htmlToElement('<input data-model="firstName">');
 
-        const directive = getModelDirectiveFromInput(element);
+        const directive = getModelDirectiveFromElement(element);
         expect(directive).not.toBeNull();
         expect(directive?.action).toBe('firstName');
     });
@@ -107,7 +184,7 @@ describe('getModelDirectiveFromInput', () => {
     it('reads data-model normalized name', () => {
         const element = htmlToElement('<input data-model="user[firstName]">');
 
-        const directive = getModelDirectiveFromInput(element);
+        const directive = getModelDirectiveFromElement(element);
         expect(directive).not.toBeNull();
         expect(directive?.action).toBe('user.firstName');
     });
@@ -117,7 +194,7 @@ describe('getModelDirectiveFromInput', () => {
         const element = htmlToElement('<input name="user[firstName]">');
         formElement.appendChild(element);
 
-        const directive = getModelDirectiveFromInput(element);
+        const directive = getModelDirectiveFromElement(element);
         expect(directive).not.toBeNull();
         expect(directive?.action).toBe('user.firstName');
     });
@@ -127,14 +204,14 @@ describe('getModelDirectiveFromInput', () => {
         const element = htmlToElement('<input name="user[firstName]">');
         formElement.appendChild(element);
 
-        const directive = getModelDirectiveFromInput(element, false);
+        const directive = getModelDirectiveFromElement(element, false);
         expect(directive).toBeNull();
     });
 
     it('throws error if no data-model found', () => {
         const element = htmlToElement('<input>');
 
-        expect(() => { getModelDirectiveFromInput(element) }).toThrow('Cannot determine the model name');
+        expect(() => { getModelDirectiveFromElement(element) }).toThrow('Cannot determine the model name');
     });
 });
 

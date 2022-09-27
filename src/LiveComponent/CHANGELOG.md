@@ -9,6 +9,23 @@
     it finishes. Then, all queued changes (potentially multiple model updates
     or actions) will be sent all at once on the next request.
 
+-   [BEHAVIOR CHANGE] Fields with `data-model` will now have their `value` set
+    automatically when the component initially loads and re-renders. For example,
+    previously you needed to manually set the value in your component template:
+
+    ```twig
+    <!-- BEFORE -->
+    <input data-model="firstName" value="{{ firstName }}">
+    ```
+
+    This is no longer necessary: Live Components will now set the value on load,
+    which allows you to simply have the following in your template:
+
+    ```twig
+    <!-- AFTER -->
+    <input data-model="firstName">
+    ```
+
 ## 2.4.0
 
 -   [BC BREAK] Previously, the `id` attribute was used with `morphdom` as the

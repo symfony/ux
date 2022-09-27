@@ -1018,6 +1018,7 @@ function setDeepData(data, propertyPath, value) {
 
 class ValueStore {
     constructor(liveController) {
+        this.updatedModels = [];
         this.controller = liveController;
     }
     get(name) {
@@ -1029,6 +1030,7 @@ class ValueStore {
     }
     set(name, value) {
         const normalizedName = normalizeModelName(name);
+        this.updatedModels.push(normalizedName);
         this.controller.dataValue = setDeepData(this.controller.dataValue, normalizedName, value);
     }
     hasAtTopLevel(name) {
@@ -1038,12 +1040,15 @@ class ValueStore {
     asJson() {
         return JSON.stringify(this.controller.dataValue);
     }
+    all() {
+        return this.controller.dataValue;
+    }
 }
 
-function getValueFromInput(element, valueStore) {
+function getValueFromElement(element, valueStore) {
     if (element instanceof HTMLInputElement) {
         if (element.type === 'checkbox') {
-            const modelNameData = getModelDirectiveFromInput(element);
+            const modelNameData = getModelDirectiveFromElement(element);
             if (modelNameData === null) {
                 return null;
             }
@@ -1072,7 +1077,44 @@ function getValueFromInput(element, valueStore) {
     }
     return null;
 }
-function getModelDirectiveFromInput(element, throwOnMissing = true) {
+function setValueOnElement(element, value) {
+    if (element instanceof HTMLInputElement) {
+        if (element.type === 'file') {
+            return;
+        }
+        if (element.type === 'radio') {
+            element.checked = element.value == value;
+            return;
+        }
+        if (element.type === 'checkbox') {
+            if (Array.isArray(value)) {
+                let valueFound = false;
+                value.forEach(val => {
+                    if (val == element.value) {
+                        valueFound = true;
+                    }
+                });
+                element.checked = valueFound;
+            }
+            else {
+                element.checked = element.value == value;
+            }
+            return;
+        }
+    }
+    if (element instanceof HTMLSelectElement) {
+        const arrayWrappedValue = [].concat(value).map(value => {
+            return value + '';
+        });
+        Array.from(element.options).forEach(option => {
+            option.selected = arrayWrappedValue.includes(option.value);
+        });
+        return;
+    }
+    value = value === undefined ? '' : value;
+    element.value = value;
+}
+function getModelDirectiveFromElement(element, throwOnMissing = true) {
     if (element.dataset.model) {
         const directives = parseDirectives(element.dataset.model);
         const directive = directives[0];
@@ -1172,30 +1214,24 @@ class UnsyncedInputContainer {
     all() {
         return [...__classPrivateFieldGet(this, _UnsyncedInputContainer_unmappedFields, "f"), ...__classPrivateFieldGet(this, _UnsyncedInputContainer_mappedFields, "f").values()];
     }
-    clone() {
-        const container = new UnsyncedInputContainer();
-        __classPrivateFieldSet(container, _UnsyncedInputContainer_mappedFields, new Map(__classPrivateFieldGet(this, _UnsyncedInputContainer_mappedFields, "f")), "f");
-        __classPrivateFieldSet(container, _UnsyncedInputContainer_unmappedFields, [...__classPrivateFieldGet(this, _UnsyncedInputContainer_unmappedFields, "f")], "f");
-        return container;
-    }
-    allMappedFields() {
-        return __classPrivateFieldGet(this, _UnsyncedInputContainer_mappedFields, "f");
-    }
-    remove(modelName) {
+    markModelAsSynced(modelName) {
         __classPrivateFieldGet(this, _UnsyncedInputContainer_mappedFields, "f").delete(modelName);
+    }
+    getModifiedModels() {
+        return Array.from(__classPrivateFieldGet(this, _UnsyncedInputContainer_mappedFields, "f").keys());
     }
 }
 _UnsyncedInputContainer_mappedFields = new WeakMap(), _UnsyncedInputContainer_unmappedFields = new WeakMap();
 
-var _PromiseStack_instances, _PromiseStack_findPromiseIndex;
+var _instances, _startPendingRequest, _makeRequest, _processRerender, _clearRequestDebounceTimeout;
 const DEFAULT_DEBOUNCE = 150;
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
-        this.renderDebounceTimeout = null;
-        this.actionDebounceTimeout = null;
-        this.renderPromiseStack = new PromiseStack();
-        this.isActionProcessing = false;
+        _instances.add(this);
+        this.pendingActions = [];
+        this.isRerenderRequested = false;
+        this.requestDebounceTimeout = null;
         this.pollingIntervals = [];
         this.isWindowUnloaded = false;
         this.originalDataJSON = '{}';
@@ -1217,6 +1253,7 @@ class default_1 extends Controller {
         this.originalDataJSON = this.valueStore.asJson();
         this.unsyncedInputs = new UnsyncedInputContainer();
         this._exposeOriginalData();
+        this.synchronizeValueOfModelFields();
     }
     connect() {
         this._onLoadingFinish();
@@ -1234,6 +1271,7 @@ class default_1 extends Controller {
     }
     disconnect() {
         this._stopAllPolling();
+        __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
         window.removeEventListener('beforeunload', this.markAsWindowUnloaded);
         this.element.removeEventListener('live:update-model', this.handleUpdateModelEvent);
         this.element.removeEventListener('input', this.handleInputEvent);
@@ -1255,10 +1293,10 @@ class default_1 extends Controller {
         const rawAction = event.currentTarget.dataset.actionName;
         const directives = parseDirectives(rawAction);
         directives.forEach((directive) => {
-            const _executeAction = () => {
-                this._clearWaitingDebouncedRenders();
-                this._makeRequest(directive.action, directive.named);
-            };
+            this.pendingActions.push({
+                name: directive.action,
+                args: directive.named
+            });
             let handled = false;
             directive.modifiers.forEach((modifier) => {
                 switch (modifier.name) {
@@ -1275,13 +1313,10 @@ class default_1 extends Controller {
                         break;
                     case 'debounce': {
                         const length = modifier.value ? parseInt(modifier.value) : this.getDefaultDebounce();
-                        if (this.actionDebounceTimeout) {
-                            clearTimeout(this.actionDebounceTimeout);
-                            this.actionDebounceTimeout = null;
-                        }
-                        this.actionDebounceTimeout = window.setTimeout(() => {
-                            this.actionDebounceTimeout = null;
-                            _executeAction();
+                        __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
+                        this.requestDebounceTimeout = window.setTimeout(() => {
+                            this.requestDebounceTimeout = null;
+                            __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
                         }, length);
                         handled = true;
                         break;
@@ -1291,20 +1326,22 @@ class default_1 extends Controller {
                 }
             });
             if (!handled) {
-                if (getModelDirectiveFromInput(event.currentTarget, false)) {
+                if (getModelDirectiveFromElement(event.currentTarget, false)) {
                     this.pendingActionTriggerModelElement = event.currentTarget;
+                    __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
                     window.setTimeout(() => {
                         this.pendingActionTriggerModelElement = null;
-                        _executeAction();
+                        __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
                     }, 10);
                     return;
                 }
-                _executeAction();
+                __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
             }
         });
     }
     $render() {
-        this._makeRequest(null, {});
+        this.isRerenderRequested = true;
+        __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
     }
     _updateModelFromElement(element, eventName) {
         if (!elementBelongsToThisController(element, this)) {
@@ -1313,10 +1350,9 @@ class default_1 extends Controller {
         if (!(element instanceof HTMLElement)) {
             throw new Error('Could not update model for non HTMLElement');
         }
-        const modelDirective = getModelDirectiveFromInput(element, false);
+        const modelDirective = getModelDirectiveFromElement(element, false);
         if (eventName === 'input') {
             const modelName = modelDirective ? modelDirective.action : null;
-            this.renderPromiseStack.addModifiedElement(element, modelName);
             this.unsyncedInputs.add(element, modelName);
         }
         if (!modelDirective) {
@@ -1360,7 +1396,7 @@ class default_1 extends Controller {
                 debounce = 0;
             }
         }
-        const finalValue = getValueFromInput(element, this.valueStore);
+        const finalValue = getValueFromElement(element, this.valueStore);
         this.$updateModel(modelDirective.action, finalValue, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {
             debounce
         });
@@ -1383,107 +1419,18 @@ class default_1 extends Controller {
             });
         }
         this.valueStore.set(modelName, value);
-        this.unsyncedInputs.remove(modelName);
-        if (shouldRender && !this.isActionProcessing) {
-            this._clearWaitingDebouncedRenders();
+        this.unsyncedInputs.markModelAsSynced(modelName);
+        if (shouldRender) {
             let debounce = this.getDefaultDebounce();
             if (options.debounce !== undefined && options.debounce !== null) {
                 debounce = options.debounce;
             }
-            this.renderDebounceTimeout = window.setTimeout(() => {
-                this.renderDebounceTimeout = null;
-                this.$render();
+            __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
+            this.requestDebounceTimeout = window.setTimeout(() => {
+                this.requestDebounceTimeout = null;
+                this.isRerenderRequested = true;
+                __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
             }, debounce);
-        }
-    }
-    _makeRequest(action, args) {
-        const splitUrl = this.urlValue.split('?');
-        let [url] = splitUrl;
-        const [, queryString] = splitUrl;
-        const params = new URLSearchParams(queryString || '');
-        if (typeof args === 'object' && Object.keys(args).length > 0) {
-            params.set('args', new URLSearchParams(args).toString());
-        }
-        const fetchOptions = {};
-        fetchOptions.headers = {
-            'Accept': 'application/vnd.live-component+html',
-        };
-        if (action) {
-            this.isActionProcessing = true;
-            url += `/${encodeURIComponent(action)}`;
-            if (this.csrfValue) {
-                fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfValue;
-            }
-        }
-        let dataAdded = false;
-        if (!action) {
-            const dataJson = this.valueStore.asJson();
-            if (this._willDataFitInUrl(dataJson, params)) {
-                params.set('data', dataJson);
-                fetchOptions.method = 'GET';
-                dataAdded = true;
-            }
-        }
-        if (!dataAdded) {
-            fetchOptions.method = 'POST';
-            fetchOptions.body = this.valueStore.asJson();
-            fetchOptions.headers['Content-Type'] = 'application/json';
-        }
-        this._onLoadingStart();
-        const paramsString = params.toString();
-        const thisPromise = fetch(`${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`, fetchOptions);
-        const reRenderPromise = new ReRenderPromise(thisPromise, this.unsyncedInputs.clone());
-        this.renderPromiseStack.addPromise(reRenderPromise);
-        thisPromise.then(async (response) => {
-            if (action) {
-                this.isActionProcessing = false;
-            }
-            const html = await response.text();
-            if (response.headers.get('Content-Type') !== 'application/vnd.live-component+html') {
-                this.renderError(html);
-                return;
-            }
-            if (this.renderDebounceTimeout) {
-                return;
-            }
-            const isMostRecent = this.renderPromiseStack.removePromise(thisPromise);
-            if (isMostRecent) {
-                this._processRerender(html, response, reRenderPromise.unsyncedInputContainer);
-            }
-        });
-    }
-    _processRerender(html, response, unsyncedInputContainer) {
-        if (this.isWindowUnloaded) {
-            return;
-        }
-        if (response.headers.get('Location')) {
-            if (typeof Turbo !== 'undefined') {
-                Turbo.visit(response.headers.get('Location'));
-            }
-            else {
-                window.location.href = response.headers.get('Location') || '';
-            }
-            return;
-        }
-        if (!this._dispatchEvent('live:render', html, true, true)) {
-            return;
-        }
-        this._onLoadingFinish();
-        const modifiedModelValues = {};
-        if (unsyncedInputContainer.allMappedFields().size > 0) {
-            for (const [modelName] of unsyncedInputContainer.allMappedFields()) {
-                modifiedModelValues[modelName] = this.valueStore.get(modelName);
-            }
-        }
-        this._executeMorphdom(html, unsyncedInputContainer.all());
-        Object.keys(modifiedModelValues).forEach((modelName) => {
-            this.valueStore.set(modelName, modifiedModelValues[modelName]);
-        });
-    }
-    _clearWaitingDebouncedRenders() {
-        if (this.renderDebounceTimeout) {
-            clearTimeout(this.renderDebounceTimeout);
-            this.renderDebounceTimeout = null;
         }
     }
     _onLoadingStart() {
@@ -1613,7 +1560,7 @@ class default_1 extends Controller {
                     return false;
                 }
                 if (modifiedElements.includes(fromEl)) {
-                    return false;
+                    setValueOnElement(toEl, getValueFromElement(fromEl, this.valueStore));
                 }
                 if (fromEl.isEqualNode(toEl)) {
                     const normalizedFromEl = cloneHTMLElement(fromEl);
@@ -1716,13 +1663,11 @@ class default_1 extends Controller {
         }
         else {
             callback = () => {
-                this._makeRequest(actionName, {});
+                this.pendingActions.push({ name: actionName, args: {} });
+                __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
             };
         }
         const timer = setInterval(() => {
-            if (this.renderPromiseStack.countActivePromises() > 0) {
-                return;
-            }
             callback();
         }, duration);
         this.pollingIntervals.push(timer);
@@ -1877,49 +1822,132 @@ class default_1 extends Controller {
         });
         modal.focus();
     }
+    synchronizeValueOfModelFields() {
+        this.element.querySelectorAll('[data-model]').forEach((element) => {
+            if (!(element instanceof HTMLElement)) {
+                throw new Error('Invalid element using data-model.');
+            }
+            if (element instanceof HTMLFormElement) {
+                return;
+            }
+            const modelDirective = getModelDirectiveFromElement(element);
+            if (!modelDirective) {
+                return;
+            }
+            const modelName = modelDirective.action;
+            if (this.unsyncedInputs.getModifiedModels().includes(modelName)) {
+                return;
+            }
+            if (this.valueStore.has(modelName)) {
+                setValueOnElement(element, this.valueStore.get(modelName));
+            }
+            if (element instanceof HTMLSelectElement && !element.multiple) {
+                this.valueStore.set(modelName, getValueFromElement(element, this.valueStore));
+            }
+        });
+    }
 }
+_instances = new WeakSet(), _startPendingRequest = function _startPendingRequest() {
+    if (!this.backendRequest && (this.pendingActions.length > 0 || this.isRerenderRequested)) {
+        __classPrivateFieldGet(this, _instances, "m", _makeRequest).call(this);
+    }
+}, _makeRequest = function _makeRequest() {
+    const splitUrl = this.urlValue.split('?');
+    let [url] = splitUrl;
+    const [, queryString] = splitUrl;
+    const params = new URLSearchParams(queryString || '');
+    const actions = this.pendingActions;
+    this.pendingActions = [];
+    this.isRerenderRequested = false;
+    __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
+    const fetchOptions = {};
+    fetchOptions.headers = {
+        'Accept': 'application/vnd.live-component+html',
+    };
+    const updatedModels = this.valueStore.updatedModels;
+    this.valueStore.updatedModels = [];
+    if (actions.length === 0 && this._willDataFitInUrl(this.valueStore.asJson(), params)) {
+        params.set('data', this.valueStore.asJson());
+        updatedModels.forEach((model) => {
+            params.append('updatedModels[]', model);
+        });
+        fetchOptions.method = 'GET';
+    }
+    else {
+        fetchOptions.method = 'POST';
+        fetchOptions.headers['Content-Type'] = 'application/json';
+        const requestData = { data: this.valueStore.all() };
+        requestData.updatedModels = updatedModels;
+        if (actions.length > 0) {
+            if (this.csrfValue) {
+                fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfValue;
+            }
+            if (actions.length === 1) {
+                requestData.args = actions[0].args;
+                url += `/${encodeURIComponent(actions[0].name)}`;
+            }
+            else {
+                url += '/_batch';
+                requestData.actions = actions;
+            }
+        }
+        fetchOptions.body = JSON.stringify(requestData);
+    }
+    this._onLoadingStart();
+    const paramsString = params.toString();
+    const thisPromise = fetch(`${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`, fetchOptions);
+    this.backendRequest = new BackendRequest(thisPromise);
+    thisPromise.then(async (response) => {
+        const html = await response.text();
+        if (response.headers.get('Content-Type') !== 'application/vnd.live-component+html') {
+            this.renderError(html);
+            return;
+        }
+        __classPrivateFieldGet(this, _instances, "m", _processRerender).call(this, html, response);
+        this.backendRequest = null;
+        __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
+    });
+}, _processRerender = function _processRerender(html, response) {
+    if (this.isWindowUnloaded) {
+        return;
+    }
+    if (response.headers.get('Location')) {
+        if (typeof Turbo !== 'undefined') {
+            Turbo.visit(response.headers.get('Location'));
+        }
+        else {
+            window.location.href = response.headers.get('Location') || '';
+        }
+        return;
+    }
+    this._onLoadingFinish();
+    if (!this._dispatchEvent('live:render', html, true, true)) {
+        return;
+    }
+    const modifiedModelValues = {};
+    this.valueStore.updatedModels.forEach((modelName) => {
+        modifiedModelValues[modelName] = this.valueStore.get(modelName);
+    });
+    this._executeMorphdom(html, this.unsyncedInputs.all());
+    Object.keys(modifiedModelValues).forEach((modelName) => {
+        this.valueStore.set(modelName, modifiedModelValues[modelName]);
+    });
+    this.synchronizeValueOfModelFields();
+}, _clearRequestDebounceTimeout = function _clearRequestDebounceTimeout() {
+    if (this.requestDebounceTimeout) {
+        clearTimeout(this.requestDebounceTimeout);
+        this.requestDebounceTimeout = null;
+    }
+};
 default_1.values = {
     url: String,
     data: Object,
     csrf: String,
     debounce: Number,
 };
-class PromiseStack {
-    constructor() {
-        _PromiseStack_instances.add(this);
-        this.stack = [];
-    }
-    addPromise(reRenderPromise) {
-        this.stack.push(reRenderPromise);
-    }
-    removePromise(promise) {
-        const index = __classPrivateFieldGet(this, _PromiseStack_instances, "m", _PromiseStack_findPromiseIndex).call(this, promise);
-        if (index === -1) {
-            return false;
-        }
-        const isMostRecent = this.stack.length === (index + 1);
-        this.stack.splice(0, index + 1);
-        return isMostRecent;
-    }
-    countActivePromises() {
-        return this.stack.length;
-    }
-    addModifiedElement(element, modelName = null) {
-        this.stack.forEach((reRenderPromise) => {
-            reRenderPromise.addModifiedElement(element, modelName);
-        });
-    }
-}
-_PromiseStack_instances = new WeakSet(), _PromiseStack_findPromiseIndex = function _PromiseStack_findPromiseIndex(promise) {
-    return this.stack.findIndex((item) => item.promise === promise);
-};
-class ReRenderPromise {
-    constructor(promise, unsyncedInputContainer) {
+class BackendRequest {
+    constructor(promise) {
         this.promise = promise;
-        this.unsyncedInputContainer = unsyncedInputContainer;
-    }
-    addModifiedElement(element, modelName = null) {
-        this.unsyncedInputContainer.add(element, modelName);
     }
 }
 const parseLoadingAction = function (action, isLoading) {
