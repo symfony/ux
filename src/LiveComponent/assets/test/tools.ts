@@ -32,7 +32,8 @@ export function shutdownTest() {
     unmatchedFetchErrors.forEach((unmatchedFetchError) => {
         const urlParams = new URLSearchParams(unmatchedFetchError.url.substring(unmatchedFetchError.url.indexOf('?')));
         const requestInfo = [];
-        requestInfo.push(` METHOD: ${unmatchedFetchError.method}`);
+        requestInfo.push(` URL: ${unmatchedFetchError.url}`)
+        requestInfo.push(`  METHOD: ${unmatchedFetchError.method}`);
         requestInfo.push(`  HEADERS: ${JSON.stringify(unmatchedFetchError.headers)}`);
         requestInfo.push(`  DATA: ${unmatchedFetchError.method === 'GET' ? urlParams.get('data') : unmatchedFetchError.body}`);
 
@@ -112,8 +113,7 @@ class MockedAjaxCall {
     method: string;
     test: FunctionalTest;
     expectedSentData?: any;
-    expectedActionName?: string;
-    expectedActionArgs: any = null;
+    expectedActions: Array<{ name: string, args: any }> = [];
     expectedHeaders: any = {};
     changeDataCallback?: (data: any) => void;
     template?: (data: any) => string
@@ -156,10 +156,12 @@ class MockedAjaxCall {
         return this;
     }
 
-    expectActionCalled(actionName: string, args: any = null): MockedAjaxCall {
+    expectActionCalled(actionName: string, args: any = {}): MockedAjaxCall {
         this.checkInitialization('expectActionName');
-        this.expectedActionName = actionName;
-        this.expectedActionArgs = args;
+        this.expectedActions.push({
+            name: actionName,
+            args: args
+        })
 
         return this;
     }
@@ -228,16 +230,20 @@ class MockedAjaxCall {
 
     getVisualSummary(): string {
         const requestInfo = [];
-        requestInfo.push(` METHOD: ${this.method}`);
+        if (this.method === 'GET') {
+            requestInfo.push(` URL MATCH: ${this.getMockMatcher().url}`);
+        }
+        requestInfo.push(`  METHOD: ${this.method}`);
         if (Object.keys(this.expectedHeaders).length > 0) {
             requestInfo.push(`  HEADERS: ${JSON.stringify(this.expectedHeaders)}`);
         }
-        requestInfo.push(`  DATA: ${JSON.stringify(this.expectedSentData)}`);
-        if (this.expectedActionName) {
-            requestInfo.push(`  Expected URL to contain action /${this.expectedActionName}`)
-            if (this.expectedActionArgs) {
-                requestInfo.push(`  Expected action arguments in URL matching ${this.calculateArgsQueryString()}`)
-            }
+        if (this.method === 'GET') {
+            requestInfo.push(`  DATA: ${JSON.stringify(this.expectedSentData)}`);
+        } else {
+            requestInfo.push(`  DATA: ${JSON.stringify(this.getRequestBody())}`);
+        }
+        if (this.expectedActions.length === 1) {
+            requestInfo.push(`  Expected URL to contain action /${this.expectedActions[0].name}`)
         }
 
         return requestInfo.join("\n");
@@ -259,25 +265,23 @@ class MockedAjaxCall {
             const params = new URLSearchParams({
                 data: JSON.stringify(this.expectedSentData)
             });
-            matcherObject.url = `end:?${params.toString()}`;
+            matcherObject.functionMatcher = (url: string) => {
+                return url.includes(`?${params.toString()}`);
+            };
         } else {
-            matcherObject.body = this.expectedSentData;
-            if (this.expectedActionName) {
-                matcherObject.functionMatcher = (url: string) => {
-                    // match the "/actionName" part in the URL
-                    if (!url.match(new RegExp(`/${this.expectedActionName}?`))) {
-                        return false;
-                    }
+            // match the body, by without "updatedModels" which is not important
+            // and also difficult/tedious to always assert
+            matcherObject.functionMatcher = (url: string, request: any) => {
+                const body = JSON.parse(request.body);
+                delete body.updatedModels;
 
-                    // look for action arguments
-                    if (this.expectedActionArgs) {
-                        if (!url.includes(this.calculateArgsQueryString())) {
-                            return false;
-                        }
-                    }
+                return JSON.stringify(body) === JSON.stringify(this.getRequestBody());
+            };
 
-                    return true;
-                }
+            if (this.expectedActions.length === 1) {
+                matcherObject.url = `end:/${this.expectedActions[0].name}`;
+            } else if (this.expectedActions.length > 1) {
+                matcherObject.url = `end:/_batch`;
             }
         }
 
@@ -287,11 +291,22 @@ class MockedAjaxCall {
         return matcherObject;
     }
 
-    private calculateArgsQueryString(): string {
-        const urlParams = new URLSearchParams();
-        urlParams.set('args', new URLSearchParams(this.expectedActionArgs).toString());
+    private getRequestBody(): any {
+        if (this.method === 'GET') {
+            return null;
+        }
 
-        return urlParams.toString();
+        const body: any = {
+            data: this.expectedSentData
+        };
+
+        if (this.expectedActions.length === 1) {
+            body.args = this.expectedActions[0].args;
+        } else if (this.expectedActions.length > 1) {
+            body.actions = this.expectedActions;
+        }
+
+        return body;
     }
 
     private checkInitialization = (method: string): void => {

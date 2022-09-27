@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentValidator;
 use Symfony\UX\LiveComponent\ComponentValidatorInterface;
+use Symfony\UX\LiveComponent\Controller\BatchActionController;
 use Symfony\UX\LiveComponent\EventListener\AddLiveAttributesSubscriber;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
 use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
@@ -67,6 +68,13 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('serializer'),
                 new Reference('property_accessor'),
                 '%kernel.secret%',
+            ])
+        ;
+
+        $container->register('ux.live_component.batch_action_controller', BatchActionController::class)
+            ->setPublic(true)
+            ->setArguments([
+                new Reference('http_kernel'),
             ])
         ;
 

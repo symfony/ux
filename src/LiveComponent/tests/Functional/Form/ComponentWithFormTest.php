@@ -50,7 +50,7 @@ class ComponentWithFormTest extends KernelTestCase
 
             // post to action, which will add a new embedded comment
             ->post('/_components/form_with_collection_type/addComment', [
-                'body' => json_encode($dehydrated),
+                'body' => json_encode(['data' => $dehydrated]),
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
@@ -85,8 +85,8 @@ class ComponentWithFormTest extends KernelTestCase
             })
 
             // post to action, which will remove the original embedded comment
-            ->post('/_components/form_with_collection_type/removeComment?'.http_build_query(['args' => 'index=0']), [
-                'body' => json_encode($dehydrated),
+            ->post('/_components/form_with_collection_type/removeComment', [
+                'body' => json_encode(['data' => $dehydrated, 'args' => ['index' => '0']]),
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
@@ -265,8 +265,8 @@ class ComponentWithFormTest extends KernelTestCase
                 $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
             })
             // post to action, which will add a new embedded comment
-            ->post('/_components/form_with_live_collection_type/addCollectionItem?'.http_build_query(['args' => 'name=blog_post_form[comments]']), [
-                'body' => json_encode($dehydrated),
+            ->post('/_components/form_with_live_collection_type/addCollectionItem', [
+                'body' => json_encode(['data' => $dehydrated, 'args' => ['name' => 'blog_post_form[comments]']]),
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
@@ -301,8 +301,8 @@ class ComponentWithFormTest extends KernelTestCase
             })
 
             // post to action, which will remove the original embedded comment
-            ->post('/_components/form_with_live_collection_type/removeCollectionItem?'.http_build_query(['args' => 'name=blog_post_form[comments]&index=0']), [
-                'body' => json_encode($dehydrated),
+            ->post('/_components/form_with_live_collection_type/removeCollectionItem', [
+                'body' => json_encode(['data' => $dehydrated, 'args' => ['name' => 'blog_post_form[comments]', 'index' => '0']]),
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)

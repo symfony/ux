@@ -30,6 +30,7 @@ describe('LiveController CSRF Tests', () => {
 
         test.expectsAjaxCall('post')
             .expectSentData(test.initialData)
+            .expectActionCalled('save')
             .expectHeader('X-CSRF-TOKEN', '123TOKEN')
             .serverWillChangeData((data: any) => {
                 data.isSaved = true;

@@ -18,18 +18,15 @@ describe('LiveController Action Tests', () => {
         shutdownTest();
     })
 
-    it('sends an action and cancels pending (debounce) re-renders', async () => {
-        const test = await createTest({ comment: '', isSaved: false }, (data: any) => `
+    it('sends an action and renders the result', async () => {
+        const test = await createTest({ comment: 'great turtles!', isSaved: false }, (data: any) => `
             <div ${initComponent(data)}>
-                <input data-model="comment" value="${data.comment}">
-
                 ${data.isSaved ? 'Comment Saved!' : ''}
 
                 <button data-action="live#action" data-action-name="save">Save</button>
             </div>
         `);
 
-        // ONLY a post is sent, not a re-render GET
         test.expectsAjaxCall('post')
             .expectSentData({
                 comment: 'great turtles!',
@@ -42,10 +39,43 @@ describe('LiveController Action Tests', () => {
             })
             .init();
 
-        await userEvent.type(test.queryByDataModel('comment'), 'great turtles!');
         getByText(test.element, 'Save').click();
 
         await waitFor(() => expect(test.element).toHaveTextContent('Comment Saved!'));
+    });
+
+    it('immediately sends an action, includes debouncing model updates and cancels those debounce renders', async () => {
+        const test = await createTest({ comment: '', isSaved: false }, (data: any) => `
+            <div ${initComponent(data, { debounce: 10 })}>
+                <input data-model="comment" value="${data.comment}">
+
+                ${data.isSaved ? 'Comment Saved!' : ''}
+
+                <button data-action="live#action" data-action-name="save">Save</button>
+            </div>
+        `);
+
+        // JUST the POST request: no other GET requests
+        test.expectsAjaxCall('post')
+            .expectSentData({
+                comment: 'great tortugas!',
+                isSaved: false
+            })
+            .expectActionCalled('save')
+            .serverWillChangeData((data: any) => {
+                // server marks component as "saved"
+                data.isSaved = true;
+            })
+            .init();
+
+        await userEvent.type(test.queryByDataModel('comment'), 'great tortugas!');
+        // type immediately, still during the model debounce
+        getByText(test.element, 'Save').click();
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Comment Saved!'));
+
+        // wait long enough for the debounced model update to happen, if it wasn't canceled
+        await (new Promise(resolve => setTimeout(resolve, 50)));
     });
 
     it('Sends action with named args', async () => {
@@ -60,7 +90,7 @@ describe('LiveController Action Tests', () => {
         // ONLY a post is sent, not a re-render GET
         test.expectsAjaxCall('post')
             .expectSentData({ isSaved: false })
-            .expectActionCalled('sendNamedArgs', {a: 1, b: 2, c: 3})
+            .expectActionCalled('sendNamedArgs', {a: '1', b: '2', c: '3'})
             .serverWillChangeData((data: any) => {
                 // server marks component as "saved"
                 data.isSaved = true;
@@ -102,9 +132,9 @@ describe('LiveController Action Tests', () => {
         await waitFor(() => expect(test.element).toHaveTextContent('Food: pizza'));
    });
 
-    it('prevents re-render model updates while action Ajax is pending', async () => {
+    it('makes model updates wait until action Ajax call finishes', async () => {
         const test = await createTest({ comment: 'donut', isSaved: false }, (data: any) => `
-            <div ${initComponent(data)}>
+            <div ${initComponent(data, { debounce: 50 })}>
                 <input data-model="comment" value="${data.comment}">
 
                 ${data.isSaved ? 'Comment Saved!' : ''}
@@ -112,7 +142,6 @@ describe('LiveController Action Tests', () => {
                 <span>${data.comment}</span>
 
                 <button data-action="live#action" data-action-name="save">Save</button>
-                <button data-action="live#$render">Reload</button>
             </div>
         `);
 
@@ -120,12 +149,21 @@ describe('LiveController Action Tests', () => {
         test.expectsAjaxCall('post')
             .expectSentData(test.initialData)
             .expectActionCalled('save')
-            .delayResponse(1000) // longer than debounce, so updating comment could potentially send a request
+            .delayResponse(100) // longer than debounce, so updating comment could potentially send a request
             .serverWillChangeData((data: any) => {
                 // server marks component as "saved"
                 data.isSaved = true;
             })
             .init();
+
+        // the model re-render shouldn't happen until after the action ajax finishes,
+        // which will take 100ms. So, don't start expecting it until nearly then
+        // but after the model debounce
+        setTimeout(() => {
+            test.expectsAjaxCall('get')
+                .expectSentData({comment: 'donut holes', isSaved: true})
+                .init();
+        }, 75)
 
         // save first, then type into the box
         getByText(test.element, 'Save').click();
@@ -134,19 +172,35 @@ describe('LiveController Action Tests', () => {
         await waitFor(() => expect(test.element).toHaveTextContent('Comment Saved!'));
         // render has not happened yet
         expect(test.element).not.toHaveTextContent('donut holes');
-
-        // trigger a render, it should now reflect the changed value
-        test.expectsAjaxCall('get')
-            .expectSentData({comment: 'donut holes', isSaved: true})
-            .init();
-        getByText(test.element, 'Reload').click();
+        // but soon the re-render does happen
         await waitFor(() => expect(test.element).toHaveTextContent('donut holes'));
+    });
 
-        // now check that model updating works again
-        test.expectsAjaxCall('get')
-            .expectSentData({comment: 'donut holes are delicious', isSaved: true})
+    it('batches multiple actions together', async () => {
+        const test = await createTest({ isSaved: false }, (data: any) => `
+            <div ${initComponent(data)}>
+                ${data.isSaved ? 'Component Saved!' : ''}
+                <button data-action="live#action" data-action-name="debounce(10)|save">Save</button>
+                <button data-action="live#action" data-action-name="debounce(10)|sync(syncAll=1)">Sync</button>
+            </div>
+        `);
+
+        // 1 request with all 3 actions
+        test.expectsAjaxCall('post')
+            .expectSentData(test.initialData)
+            // 3 actions called
+            .expectActionCalled('save')
+            .expectActionCalled('sync', { syncAll: '1' })
+            .expectActionCalled('save')
+            .serverWillChangeData((data: any) => {
+                data.isSaved = true;
+            })
             .init();
-        await userEvent.type(test.queryByDataModel('comment'), ' are delicious');
-        await waitFor(() => expect(test.element).toHaveTextContent('donut holes are delicious'));
+
+        getByText(test.element, 'Save').click();
+        getByText(test.element, 'Sync').click();
+        getByText(test.element, 'Save').click();
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Component Saved!'));
     });
 });

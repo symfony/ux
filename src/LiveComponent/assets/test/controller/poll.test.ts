@@ -11,6 +11,7 @@
 
 import { shutdownTest, createTest, initComponent } from '../tools';
 import { waitFor } from '@testing-library/dom';
+import userEvent from '@testing-library/user-event';
 
 describe('LiveController polling Tests', () => {
     afterEach(() => {
@@ -111,8 +112,6 @@ describe('LiveController polling Tests', () => {
         });
     });
 
-    // check polling stops after disconnect
-
     it('polling should stop if data-poll is removed', async () => {
         const test = await createTest({ keepPolling: true, renderCount: 0 }, (data: any) => `
             <div ${initComponent(data)} ${data.keepPolling ? 'data-poll="delay(500)|$render"' : ''}>
@@ -185,4 +184,42 @@ describe('LiveController polling Tests', () => {
             timeout: 1500
         });
    });
+
+    it('waits to send the request if request is already happening', async () => {
+        const test = await createTest({ renderCount: 0, name: 'Ryan' }, (data: any) => `
+            <div ${initComponent(data, { debounce: 1 })} data-poll="delay(50)|$render">
+                <input
+                    data-model="name"
+                    value="${data.name}"
+                >
+
+                <span>Name: ${data.name}</span>
+                <span>Render count: ${data.renderCount}</span>
+            </div>
+        `);
+
+        // First request, from typing (debouncing is set to 1ms)
+        test.expectsAjaxCall('get')
+            .expectSentData({ renderCount: 0, name: 'Ryan Weaver'})
+            .serverWillChangeData((data: any) => {
+                data.renderCount = 1;
+            })
+            .delayResponse(100)
+            .init();
+
+        await userEvent.type(test.queryByDataModel('name'), ' Weaver');
+
+        setTimeout(() => {
+            // first poll, should happen after 50 ms, but needs to wait the full 100
+            test.expectsAjaxCall('get')
+                .expectSentData({renderCount: 1, name: 'Ryan Weaver'})
+                .serverWillChangeData((data: any) => {
+                    data.renderCount = 2;
+                })
+                .init();
+        }, 75)
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'));
+        await waitFor(() => expect(test.element).toHaveTextContent('Render count: 2'));
+    });
 });

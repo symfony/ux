@@ -127,55 +127,6 @@ describe('LiveController data-model Tests', () => {
         expect(test.controller.dataValue).toEqual({name: 'Jan'});
     });
 
-
-    it('only uses the most recent render call result', async () => {
-        const test = await createTest({ name: 'Ryan' }, (data: any) => `
-            <div ${initComponent(data)}>
-                <input
-                    data-model="name"
-                    value="${data.name}"
-                >
-                
-                Name is: ${data.name}
-            </div>
-        `);
-
-        let renderCount = 0;
-        test.element.addEventListener('live:render', () => {
-            renderCount++;
-        })
-
-        const requests: Array<{letters: string, delay: number}> = [
-            { letters: 'g', delay: 650 },
-            { letters: 'gu', delay: 250 },
-            { letters: 'guy', delay: 150 },
-        ];
-        requests.forEach((request) => {
-            test.expectsAjaxCall('get')
-                .expectSentData({ name: `Ryan${request.letters}` })
-                .delayResponse(request.delay)
-                .init();
-        });
-
-        await userEvent.type(test.queryByDataModel('name'), 'guy', {
-            // This will result in this sequence:
-            //   A) "g" starts     200ms
-            //   B) "gu" starts    400ms
-            //   C) "guy" starts   600ms
-            //   D) "gu" finishes  650ms (is ignored)
-            //   E) "guy" finishes 750ms (is used)
-            //   F) "g" finishes   850ms (is ignored)
-            delay: 200
-        });
-
-        await waitFor(() => expect(test.element).toHaveTextContent('Name is: Ryanguy'));
-        expect(test.queryByDataModel('name')).toHaveValue('Ryanguy');
-        expect(test.controller.dataValue).toEqual({name: 'Ryanguy'});
-
-        // only 1 render should have ultimately occurred
-        expect(renderCount).toEqual(1);
-    });
-
     it('falls back to using the name attribute when no data-model is present and <form data-model> is ancestor', async () => {
         const test = await createTest({ color: '' }, (data: any) => `
             <div ${initComponent(data)}>

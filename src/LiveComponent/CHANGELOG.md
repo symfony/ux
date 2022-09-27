@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2.5.0
+
+-   [BEHAVIOR CHANGE] Previously, Ajax calls could happen in parallel (if
+    you changed a model then triggered an action before the model update Ajax
+    call finished, the action Ajax call would being in parallel). Now, if
+    an Ajax call is currently happening, any future requests will wait until
+    it finishes. Then, all queued changes (potentially multiple model updates
+    or actions) will be sent all at once on the next request.
+
 ## 2.4.0
 
 -   [BC BREAK] Previously, the `id` attribute was used with `morphdom` as the
