@@ -26,6 +26,12 @@
     <input data-model="firstName">
     ```
 
+-   Added the ability to add `data-loading` behavior, which is only activated
+    when a specific **action** is triggered - e.g. `<span data-loading="action(save)|show">Loading</span>`.
+
+-   Added the ability to add `data-loading` behavior, which is only activated
+    when a specific **model** has been updated - e.g. `<span data-loading="model(firstName)|show">Loading</span>`.
+
 ## 2.4.0
 
 -   [BC BREAK] Previously, the `id` attribute was used with `morphdom` as the

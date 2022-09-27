@@ -480,6 +480,44 @@ changes until loading has taken longer than a certain amount of time:
     <!-- Show after 500ms of loading -->
     <div data-loading="delay(500)|show">Loading</div>
 
+Targeting Loading for a Specific Action
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.5
+
+    The ``action()`` modifier was introduced in Live Components 2.5.
+
+To only toggle the loading behavior when a specific action is triggered,
+use the ``action()`` modifier with the name of the action - e.g. ``saveForm()``:
+
+.. code-block:: twig
+
+    <!-- show only when the "saveForm" action is triggering -->
+    <span data-loading="action(saveForm)|show">Loading</span>
+    <!-- multiple modifiers -->
+    <div data-loading="action(saveForm)|delay|addClass(opacity-50)">...</div>
+
+Targeting Loading When a Specific Model Changes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.5
+
+    The ``model()`` modifier was introduced in Live Components 2.5.
+
+You can also toggle the loading behavior only if a specific model value
+was just changed using the ``model()`` modifier:
+
+.. code-block:: twig
+
+    <input data-model="email" type="email">
+
+    <span data-loading="model(email)|show">
+        Checking if email is available...
+    </span>
+
+    <!-- multiple modifiers & child properties -->
+    <span data-loading="model(user.email)|delay|addClass(opacity-50)">...</span>
+
 .. _actions:
 
 Actions

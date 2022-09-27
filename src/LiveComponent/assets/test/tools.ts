@@ -112,11 +112,11 @@ class FunctionalTest {
 class MockedAjaxCall {
     method: string;
     test: FunctionalTest;
-    expectedSentData?: any;
-    expectedActions: Array<{ name: string, args: any }> = [];
-    expectedHeaders: any = {};
-    changeDataCallback?: (data: any) => void;
-    template?: (data: any) => string
+    private expectedSentData?: any;
+    private expectedActions: Array<{ name: string, args: any }> = [];
+    private expectedHeaders: any = {};
+    private changeDataCallback?: (data: any) => void;
+    private template?: (data: any) => string
     options: any = {};
     fetchMock?: typeof fetchMock;
     routeName?: string;
