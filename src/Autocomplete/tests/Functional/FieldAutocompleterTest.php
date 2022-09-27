@@ -79,7 +79,7 @@ class FieldAutocompleterTest extends KernelTestCase
         ;
     }
 
-    public function testItCheckMaxResultsOption() : void
+    public function testItCheckMaxResultsOption(): void
     {
         CategoryFactory::createMany(30, ['name' => 'foo']);
 

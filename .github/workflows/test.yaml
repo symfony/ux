@@ -10,9 +10,9 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
-                  tools: php-cs-fixer, cs2pr
+                  tools: php-cs-fixer
             - name: php-cs-fixer
-              run: php-cs-fixer fix --dry-run --format=checkstyle | cs2pr
+              run: php-cs-fixer fix --dry-run --diff
 
     coding-style-js:
         runs-on: ubuntu-latest
