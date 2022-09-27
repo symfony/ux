@@ -175,7 +175,7 @@ called instead of setting the property directly.
 Customize the Twig Template
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-You can customize the template used to render the template by passing it
+You can customize the template used to render the component by passing it
 as the second argument to the ``AsTwigComponent`` attribute:
 
 .. code-block:: diff
