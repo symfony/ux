@@ -16,6 +16,7 @@ declare const Turbo: any;
 export default class Component {
     readonly element: HTMLElement;
     private readonly backend: BackendInterface;
+    id: string|null;
 
     readonly valueStore: ValueStore;
     private readonly unsyncedInputsTracker: UnsyncedInputsTracker;
@@ -24,7 +25,6 @@ export default class Component {
 
     defaultDebounce = 150;
 
-    private originalData = {};
     private backendRequest: BackendRequest|null;
     /** Actions that are waiting to be executed */
     private pendingActions: BackendAction[] = [];
@@ -33,23 +33,25 @@ export default class Component {
     /** Current "timeout" before the pending request should be sent. */
     private requestDebounceTimeout: number | null = null;
 
+    private children: Map<string, Component> = new Map();
+    private parent: Component|null = null;
+
     /**
      * @param element The root element
      * @param data    Component data
+     * @param id      Some unique id to identify this component. Needed to be a child component
      * @param backend Backend instance for updating
      * @param modelElementResolver Class to get "model" name from any element.
      */
-    constructor(element: HTMLElement, data: any, backend: BackendInterface, modelElementResolver: ModelElementResolver) {
+    constructor(element: HTMLElement, data: any, id: string|null, backend: BackendInterface, modelElementResolver: ModelElementResolver) {
         this.element = element;
         this.backend = backend;
+        this.id = id;
 
         this.valueStore = new ValueStore(data);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(element, modelElementResolver);
         this.hooks = new HookManager();
         this.pollingDirector = new PollingDirectory(this);
-
-        // deep clone the data
-        this.snapshotOriginalData();
     }
 
     connect(): void {
@@ -136,6 +138,32 @@ export default class Component {
 
     clearPolling(): void {
         this.pollingDirector.clearPolling();
+    }
+
+    addChild(component: Component): void {
+        if (!component.id) {
+            throw new Error('Children components must have an id.');
+        }
+
+        this.children.set(component.id, component);
+        component.parent = this;
+    }
+
+    removeChild(child: Component): void {
+        if (!child.id) {
+            throw new Error('Children components must have an id.');
+        }
+
+        this.children.delete(child.id);
+        child.parent = null;
+    }
+
+    getParent(): Component|null {
+        return this.parent;
+    }
+
+    getChildren(): Map<string, Component> {
+        return new Map(this.children);
     }
 
     private tryStartingRequest(): void {
@@ -236,15 +264,9 @@ export default class Component {
             newElement,
             this.unsyncedInputsTracker.getUnsyncedInputs(),
             (element: HTMLElement) => getValueFromElement(element, this.valueStore),
-            this.originalData,
-            this.valueStore.all(),
-            newDataFromServer
         );
         // TODO: could possibly do this by listening to the dataValue value change
         this.valueStore.reinitialize(newDataFromServer);
-
-        // take a new snapshot of the "original data"
-        this.snapshotOriginalData();
 
         // reset the modified values back to their client-side version
         Object.keys(modifiedModelValues).forEach((modelName) => {
@@ -260,10 +282,6 @@ export default class Component {
             cancelable,
             detail: payload
         }));
-    }
-
-    private snapshotOriginalData() {
-        this.originalData = JSON.parse(JSON.stringify(this.valueStore.all()));
     }
 
     private caculateDebounce(debounce: number|boolean): number {
@@ -343,9 +361,16 @@ export default class Component {
     }
 }
 
-export function createComponent(element: HTMLElement, data: any, backend: BackendInterface, modelElementResolver: ModelElementResolver): Component {
-    const component = new Component(element, data, backend, modelElementResolver);
-
+/**
+ * Makes the Component feel more like a JS-version of the PHP component:
+ *
+ *      // set model like properties
+ *      component.firstName = 'Ryan';
+ *
+ *      // call a live action called "saveStatus" with a "status" arg
+ *      component.saveStatus({ status: 'published' });
+ */
+export function proxifyComponent(component: Component): Component {
     return new Proxy(component, {
         get(component: Component, prop: string|symbol): any {
             // string check is to handle symbols

@@ -159,6 +159,8 @@ export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissin
  *      B) NOT also live inside a child "live controller" element
  */
 export function elementBelongsToThisController(element: Element, controller: LiveController): boolean {
+    // TODO fix this
+    return true;
     if (controller.element !== element && !controller.element.contains(element)) {
         return false;
     }

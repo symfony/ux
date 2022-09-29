@@ -8,9 +8,11 @@ import {
     getValueFromElement,
     elementBelongsToThisController,
 } from './dom_utils';
-import Component, {createComponent} from "./Component";
+import Component, {proxifyComponent} from "./Component";
 import Backend from "./Backend";
-import {DataModelElementResolver} from "./Component/ModelElementResolver";
+import {
+    DataModelElementResolver,
+} from "./Component/ModelElementResolver";
 import LoadingHelper from "./LoadingHelper";
 
 interface UpdateModelOptions {
@@ -18,18 +20,20 @@ interface UpdateModelOptions {
     debounce?: number|boolean;
 }
 
-export interface LiveController {
-    dataValue: any;
-    element: Element,
-    childComponentControllers: Array<LiveController>
+export interface LiveEvent extends CustomEvent {
+    detail: {
+        controller: LiveController,
+        component: Component
+    },
 }
 
-export default class extends Controller implements LiveController {
+export default class LiveController extends Controller {
     static values = {
         url: String,
         data: Object,
         csrf: String,
         debounce: { type: Number, default: 150 },
+        id: String,
     }
 
     readonly urlValue!: string;
@@ -37,31 +41,44 @@ export default class extends Controller implements LiveController {
     readonly csrfValue!: string;
     readonly hasDebounceValue: boolean;
     readonly debounceValue: number;
+    readonly idValue: string;
 
-    component: Component;
+    /** The component, wrapped in the convenience Proxy */
+    private proxiedComponent: Component;
+    /** The raw Component object */
+    private component: Component;
+
     isConnected = false;
-    childComponentControllers: Array<LiveController> = [];
     pendingActionTriggerModelElement: HTMLElement|null = null;
 
     private elementEventListeners: Array<{ event: string, callback: (event: any) => void }> = [
-         { event: 'input', callback: (event) => this.handleInputEvent(event) },
-         { event: 'change', callback: (event) => this.handleChangeEvent(event) },
+        { event: 'input', callback: (event) => this.handleInputEvent(event) },
+        { event: 'change', callback: (event) => this.handleChangeEvent(event) },
+        { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
      ];
 
     initialize() {
-        this.handleConnectedControllerEvent = this.handleConnectedControllerEvent.bind(this);
-        this.handleDisconnectedControllerEvent = this.handleDisconnectedControllerEvent.bind(this);
+        this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
 
         if (!(this.element instanceof HTMLElement)) {
             throw new Error('Invalid Element Type');
         }
 
-        this.component = createComponent(
+
+        const id = this.idValue || null;
+
+        this.component = new Component(
             this.element,
             this.dataValue,
+            id,
             new Backend(this.urlValue, this.csrfValue),
             new DataModelElementResolver(),
         );
+        this.proxiedComponent = proxifyComponent(this.component);
+
+        // @ts-ignore Adding the dynamic property
+        this.element.__component = this.proxiedComponent;
+
         if (this.hasDebounceValue) {
             this.component.defaultDebounce = this.debounceValue;
         }
@@ -100,9 +117,7 @@ export default class extends Controller implements LiveController {
             throw new Error('Invalid Element Type');
         }
 
-        this.element.addEventListener('live:connect', this.handleConnectedControllerEvent);
-
-        this._dispatchEvent('live:connect', { controller: this });
+        this._dispatchEvent('live:connect');
     }
 
     disconnect() {
@@ -112,11 +127,8 @@ export default class extends Controller implements LiveController {
             this.component.element.removeEventListener(event, callback);
         });
 
-        this.element.removeEventListener('live:connect', this.handleConnectedControllerEvent);
-        this.element.removeEventListener('live:disconnect', this.handleDisconnectedControllerEvent);
-
-        this._dispatchEvent('live:disconnect', { controller: this });
         this.isConnected = false;
+        this._dispatchEvent('live:disconnect');
     }
 
     /**
@@ -334,37 +346,49 @@ export default class extends Controller implements LiveController {
         this.component.set(modelDirective.action, finalValue, shouldRender, debounce);
     }
 
-    handleConnectedControllerEvent(event: any) {
+    handleConnectedControllerEvent(event: LiveEvent) {
         if (event.target === this.element) {
             return;
         }
 
-        this.childComponentControllers.push(event.detail.controller);
+        const childController = event.detail.controller;
+        if (childController.component.getParent()) {
+            // child already has a parent - we are a grandparent
+            return;
+        }
+
+        this.component.addChild(childController.component);
+
         // live:disconnect needs to be registered on the child element directly
         // that's because if the child component is removed from the DOM, then
         // the parent controller is no longer an ancestor, so the live:disconnect
         // event would not bubble up to it.
-        event.detail.controller.element.addEventListener('live:disconnect', this.handleDisconnectedControllerEvent);
+        // @ts-ignore TS doesn't like the LiveEvent arg in the listener, not sure how to fix
+        childController.element.addEventListener('live:disconnect', this.handleDisconnectedChildControllerEvent);
     }
 
-    handleDisconnectedControllerEvent(event: any) {
-        if (event.target === this.element) {
+    handleDisconnectedChildControllerEvent(event: LiveEvent): void {
+        const childController = event.detail.controller;
+
+        // @ts-ignore TS doesn't like the LiveEvent arg in the listener, not sure how to fix
+        childController.element.removeEventListener('live:disconnect', this.handleDisconnectedChildControllerEvent);
+
+        // this shouldn't happen: but double-check we're the parent
+        if (childController.component.getParent() !== this.component) {
             return;
         }
 
-        const index = this.childComponentControllers.indexOf(event.detail.controller);
-
-        // Remove value from an array
-        if (index > -1) {
-            this.childComponentControllers.splice(index, 1);
-        }
+        this.component.removeChild(childController.component);
     }
 
-    _dispatchEvent(name: string, payload: any = null, canBubble = true, cancelable = false) {
+    _dispatchEvent(name: string, detail: any = {}, canBubble = true, cancelable = false) {
+        detail.controller = this;
+        detail.component = this.proxiedComponent;
+
         return this.element.dispatchEvent(new CustomEvent(name, {
             bubbles: canBubble,
             cancelable,
-            detail: payload
+            detail
         }));
     }
 

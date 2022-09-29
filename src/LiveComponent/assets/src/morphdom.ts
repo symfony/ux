@@ -4,16 +4,12 @@ cloneHTMLElement,
 } from "./dom_utils";
 import morphdom from "morphdom";
 import { normalizeAttributesForComparison } from "./normalize_attributes_for_comparison";
-import { haveRenderedValuesChanged } from "./have_rendered_values_changed";
 
 export function executeMorphdom(
     rootFromElement: HTMLElement,
     rootToElement: HTMLElement,
     modifiedElements: Array<HTMLElement>,
     getElementValue: (element: HTMLElement) => any,
-    rootFromOriginalData: any,
-    rootFromCurrentData: any,
-    rootToCurrentData: any,
 ) {
     // make sure everything is in non-loading state, the same as the HTML currently on the page
     morphdom(rootFromElement, rootToElement, {
@@ -56,8 +52,8 @@ export function executeMorphdom(
             if (controllerName
                 && controllerName.split(' ').indexOf('live') !== -1
                 && fromEl !== rootFromElement
-                && !shouldChildLiveElementUpdate(rootFromOriginalData, rootFromCurrentData, rootToCurrentData)
             ) {
+                // TODO: add new child logic here
                 return false;
             }
 
@@ -74,21 +70,4 @@ export function executeMorphdom(
             return !node.hasAttribute('data-live-ignore');
         }
     });
-}
-
-/**
- * Determines if a child live element should be re-rendered.
- *
- * This is called when this element re-renders and detects that
- * a child element is inside. Normally, in that case, we do not
- * re-render the child element. However, if we detect that the
- * "data" on the child element has changed from its initial data,
- * then this will trigger a re-render.
- */
-const shouldChildLiveElementUpdate = function(rootFromOriginalData: any, rootFromCurrentData: any, rootToCurrentData: any): boolean {
-    return haveRenderedValuesChanged(
-        rootFromOriginalData,
-        rootFromCurrentData,
-        rootToCurrentData
-    );
 }

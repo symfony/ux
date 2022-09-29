@@ -1,4 +1,4 @@
-import Component, {createComponent} from "../../src/Component";
+import Component, {proxifyComponent} from "../../src/Component";
 import {BackendAction, BackendInterface} from "../../src/Backend";
 import {
     DataModelElementResolver
@@ -27,13 +27,15 @@ describe('Component class', () => {
                 }
             }
 
+            const component = new Component(
+                document.createElement('div'),
+                {firstName: ''},
+                null,
+                backend,
+                new DataModelElementResolver()
+            );
             return {
-                proxy: createComponent(
-                    document.createElement('div'),
-                    {firstName: ''},
-                    backend,
-                    new DataModelElementResolver()
-                ),
+                proxy: proxifyComponent(component),
                 backend
             }
         }
