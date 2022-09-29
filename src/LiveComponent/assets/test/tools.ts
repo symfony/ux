@@ -396,5 +396,6 @@ export function initComponent(data: any, controllerValues: any = {}) {
         ${controllerValues.debounce ? `data-live-debounce-value="${controllerValues.debounce}"` : ''}
         ${controllerValues.csrf ? `data-live-csrf-value="${controllerValues.csrf}"` : ''}
         ${controllerValues.id ? `data-live-id-value="${controllerValues.id}"` : ''}
+        ${controllerValues.fingerprint ? `data-live-fingerprint-value="${controllerValues.fingerprint}"` : ''}
     `;
 }

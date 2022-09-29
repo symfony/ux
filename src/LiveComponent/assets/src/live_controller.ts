@@ -8,12 +8,12 @@ import {
     getValueFromElement,
     elementBelongsToThisComponent,
 } from './dom_utils';
-import Component, {proxifyComponent} from "./Component";
-import Backend from "./Backend";
+import Component, {proxifyComponent} from './Component';
+import Backend from './Backend';
 import {
     DataModelElementResolver,
-} from "./Component/ModelElementResolver";
-import LoadingHelper from "./LoadingHelper";
+} from './Component/ModelElementResolver';
+import LoadingHelper from './LoadingHelper';
 
 interface UpdateModelOptions {
     dispatch?: boolean;
@@ -40,6 +40,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
         csrf: String,
         debounce: { type: Number, default: 150 },
         id: String,
+        fingerprint: String,
     }
 
     readonly urlValue!: string;
@@ -49,6 +50,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
     readonly hasDebounceValue: boolean;
     readonly debounceValue: number;
     readonly idValue: string;
+    readonly fingerprintValue: string
 
     /** The component, wrapped in the convenience Proxy */
     private proxiedComponent: Component;
@@ -73,6 +75,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
             this.element,
             this.propsValue,
             this.dataValue,
+            this.fingerprintValue,
             id,
             new Backend(this.urlValue, this.csrfValue),
             new DataModelElementResolver(),

@@ -1,9 +1,9 @@
-import Component, {proxifyComponent} from "../../src/Component";
-import {BackendAction, BackendInterface} from "../../src/Backend";
+import Component, {proxifyComponent} from '../../src/Component';
+import {BackendAction, BackendInterface} from '../../src/Backend';
 import {
     DataModelElementResolver
-} from "../../src/Component/ModelElementResolver";
-import BackendRequest from "../../src/BackendRequest";
+} from '../../src/Component/ModelElementResolver';
+import BackendRequest from '../../src/BackendRequest';
 import { Response } from 'node-fetch';
 
 describe('Component class', () => {
@@ -15,7 +15,7 @@ describe('Component class', () => {
         const makeDummyComponent = (): { proxy: Component, backend: MockBackend } => {
             const backend: MockBackend = {
                 actions: [],
-                makeRequest(data: any, actions: BackendAction[], updatedModels: string[]): BackendRequest {
+                makeRequest(data: any, actions: BackendAction[]): BackendRequest {
                     this.actions = actions;
 
                     return new BackendRequest(
@@ -31,6 +31,7 @@ describe('Component class', () => {
                 document.createElement('div'),
                 {},
                 {firstName: ''},
+                null,
                 null,
                 backend,
                 new DataModelElementResolver()

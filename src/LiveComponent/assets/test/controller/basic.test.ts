@@ -9,8 +9,9 @@
 
 'use strict';
 
-import { shutdownTest, startStimulus } from '../tools';
+import {createTest, initComponent, shutdownTest, startStimulus} from '../tools';
 import { htmlToElement } from '../../src/dom_utils';
+import Component from "../../src/Component";
 
 describe('LiveController Basic Tests', () => {
     afterEach(() => {
@@ -29,5 +30,16 @@ describe('LiveController Basic Tests', () => {
         // smoke test
         expect(element).toHaveAttribute('data-controller', 'live');
         expect(eventTriggered).toStrictEqual(true);
+    });
+
+    it('creates the Component object', async () => {
+        const test = await createTest({ firstName: 'Ryan' }, (data: any) => `
+            <div ${initComponent(data, { debounce: 115, id: 'the-id', fingerprint: 'the-fingerprint' })}></div>
+        `);
+
+        expect(test.controller.component).toBeInstanceOf(Component);
+        expect(test.controller.component.defaultDebounce).toEqual(115);
+        expect(test.controller.component.id).toEqual('the-id');
+        expect(test.controller.component.fingerprint).toEqual('the-fingerprint');
     });
 });

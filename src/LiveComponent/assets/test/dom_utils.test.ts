@@ -219,6 +219,7 @@ describe('elementBelongsToThisComponent', () => {
             htmlToElement(html),
             {},
             {},
+            null,
             'some-id-' + Math.floor((Math.random() * 100)),
             new Backend(''),
             new DataModelElementResolver()

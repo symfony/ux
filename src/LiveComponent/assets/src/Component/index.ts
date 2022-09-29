@@ -1,15 +1,15 @@
 import {BackendAction, BackendInterface} from '../Backend';
 import ValueStore from './ValueStore';
 import { normalizeModelName } from '../string_utils';
-import BackendRequest from "../BackendRequest";
+import BackendRequest from '../BackendRequest';
 import {
     getValueFromElement, htmlToElement,
-} from "../dom_utils";
-import {executeMorphdom} from "../morphdom";
-import UnsyncedInputsTracker from "./UnsyncedInputsTracker";
-import {ModelElementResolver} from "./ModelElementResolver";
-import HookManager from "../HookManager";
-import PollingDirectory from "../PollingDirector";
+} from '../dom_utils';
+import {executeMorphdom} from '../morphdom';
+import UnsyncedInputsTracker from './UnsyncedInputsTracker';
+import {ModelElementResolver} from './ModelElementResolver';
+import HookManager from '../HookManager';
+import PollingDirectory from '../PollingDirector';
 
 declare const Turbo: any;
 
@@ -17,6 +17,15 @@ export default class Component {
     readonly element: HTMLElement;
     private readonly backend: BackendInterface;
     id: string|null;
+
+    /**
+     * A fingerprint that identifies the props/input that was used on
+     * the server to create this component, especially if it was a
+     * child component. This is sent back to the server and can be used
+     * to determine if any "input" to the child component changed and thus,
+     * if the child component needs to be re-rendered.
+     */
+    fingerprint: string|null;
 
     readonly valueStore: ValueStore;
     private readonly unsyncedInputsTracker: UnsyncedInputsTracker;
@@ -40,14 +49,16 @@ export default class Component {
      * @param element The root element
      * @param props   Readonly component props
      * @param data    Modifiable component data/state
+     * @param fingerprint
      * @param id      Some unique id to identify this component. Needed to be a child component
      * @param backend Backend instance for updating
      * @param modelElementResolver Class to get "model" name from any element.
      */
-    constructor(element: HTMLElement, props: any, data: any, id: string|null, backend: BackendInterface, modelElementResolver: ModelElementResolver) {
+    constructor(element: HTMLElement, props: any, data: any, fingerprint: string|null, id: string|null, backend: BackendInterface, modelElementResolver: ModelElementResolver) {
         this.element = element;
         this.backend = backend;
         this.id = id;
+        this.fingerprint = fingerprint;
 
         this.valueStore = new ValueStore(props, data);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, modelElementResolver);
