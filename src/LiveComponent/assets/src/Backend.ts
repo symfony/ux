@@ -1,7 +1,7 @@
 import BackendRequest from './BackendRequest';
 
 export interface BackendInterface {
-    makeRequest(data: any, actions: BackendAction[], updatedModels: string[]): BackendRequest;
+    makeRequest(data: any, actions: BackendAction[], updatedModels: string[], childrenFingerprints: any): BackendRequest;
 }
 
 export interface BackendAction {
@@ -11,14 +11,14 @@ export interface BackendAction {
 
 export default class implements BackendInterface {
     private url: string;
-    private csrfToken: string|null;
+    private readonly csrfToken: string|null;
 
     constructor(url: string, csrfToken: string|null = null) {
         this.url = url;
         this.csrfToken = csrfToken;
     }
 
-    makeRequest(data: any, actions: BackendAction[], updatedModels: string[]): BackendRequest {
+    makeRequest(data: any, actions: BackendAction[], updatedModels: string[], childrenFingerprints: any): BackendRequest {
         const splitUrl = this.url.split('?');
         let [url] = splitUrl
         const [, queryString] = splitUrl;
@@ -29,8 +29,9 @@ export default class implements BackendInterface {
             'Accept': 'application/vnd.live-component+html',
         };
 
-        if (actions.length === 0 && this.willDataFitInUrl(JSON.stringify(data), params)) {
+        if (actions.length === 0 && this.willDataFitInUrl(JSON.stringify(data), params, JSON.stringify(childrenFingerprints))) {
             params.set('data', JSON.stringify(data));
+            params.set('childrenFingerprints', JSON.stringify(childrenFingerprints));
             updatedModels.forEach((model) => {
                 params.append('updatedModels[]', model);
             });
@@ -39,7 +40,12 @@ export default class implements BackendInterface {
             fetchOptions.method = 'POST';
             fetchOptions.headers['Content-Type'] = 'application/json';
             const requestData: any = { data };
-            requestData.updatedModels = updatedModels;
+            if (updatedModels) {
+                requestData.updatedModels = updatedModels;
+            }
+            if (childrenFingerprints) {
+                requestData.childrenFingerprints = childrenFingerprints;
+            }
 
             if (actions.length > 0) {
                 // one or more ACTIONs
@@ -70,8 +76,8 @@ export default class implements BackendInterface {
         );
     }
 
-    private willDataFitInUrl(dataJson: string, params: URLSearchParams) {
-        const urlEncodedJsonData = new URLSearchParams(dataJson).toString();
+    private willDataFitInUrl(dataJson: string, params: URLSearchParams, childrenFingerprintsJson: string) {
+        const urlEncodedJsonData = new URLSearchParams(dataJson + childrenFingerprintsJson).toString();
 
         // if the URL gets remotely close to 2000 chars, it may not fit
         return (urlEncodedJsonData + params.toString()).length < 1500;

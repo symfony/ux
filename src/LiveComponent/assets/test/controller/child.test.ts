@@ -11,7 +11,7 @@
 
 import { createTest, initComponent, shutdownTest } from '../tools';
 import {getByTestId, waitFor} from '@testing-library/dom';
-import Component from "../../src/Component";
+import Component from '../../src/Component';
 
 describe('LiveController parent -> child component tests', () => {
     afterEach(() => {
@@ -25,7 +25,7 @@ describe('LiveController parent -> child component tests', () => {
 
         const test = await createTest({}, (data: any) => `
             <div ${initComponent(data)}>
-                ${childTemplate({food: 'pizza'})}
+                ${childTemplate({})}
             </div>
         `);
 
@@ -65,5 +65,25 @@ describe('LiveController parent -> child component tests', () => {
         await waitFor(() => expect(parentComponent.getChildren().size).toEqual(1));
         expect(parentComponent.getChildren().get('the-child-id')).toEqual(childComponent);
         expect(childComponent.getParent()).toEqual(parentComponent);
+    });
+
+    it('sends a map of child fingerprints on re-render', async () => {
+        const test = await createTest({}, (data: any) => `
+            <div ${initComponent(data)}>
+                <div ${initComponent({}, {id: 'the-child-id1', fingerprint: 'child-fingerprint1'})}>Child1</div>
+                <div ${initComponent({}, {id: 'the-child-id2', fingerprint: 'child-fingerprint2'})}>Child2</div>
+            </div>
+        `);
+
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .expectChildFingerprints({
+                'the-child-id1': 'child-fingerprint1',
+                'the-child-id2': 'child-fingerprint2'
+            })
+            .init();
+
+        test.component.render();
+        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
     });
 });

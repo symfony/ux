@@ -193,7 +193,8 @@ export default class Component {
         this.backendRequest = this.backend.makeRequest(
             this.valueStore.all(),
             this.pendingActions,
-            this.valueStore.updatedModels
+            this.valueStore.updatedModels,
+            this.getChildrenFingerprints()
         );
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
 
@@ -370,6 +371,20 @@ export default class Component {
             }
         });
         modal.focus();
+    }
+
+    private getChildrenFingerprints(): any {
+        const fingerprints: any = {};
+
+        this.children.forEach((child) => {
+            if (!child.id) {
+                throw new Error('missing id');
+            }
+
+            fingerprints[child.id] = child.fingerprint;
+        });
+
+        return fingerprints;
     }
 }
 

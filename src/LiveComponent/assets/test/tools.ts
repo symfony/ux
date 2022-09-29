@@ -38,7 +38,7 @@ export function shutdownTest() {
         requestInfo.push(`  HEADERS: ${JSON.stringify(unmatchedFetchError.headers)}`);
         requestInfo.push(`  DATA: ${unmatchedFetchError.method === 'GET' ? urlParams.get('data') : unmatchedFetchError.body}`);
 
-        console.log(`UNMATCHED request was made with the following info:`, "\n", requestInfo.join("\n"));
+        console.log('UNMATCHED request was made with the following info:', '\n', requestInfo.join('\n'));
     });
     unmatchedFetchErrors = [];
 
@@ -118,6 +118,7 @@ class MockedAjaxCall {
     private expectedSentData?: any;
     private expectedActions: Array<{ name: string, args: any }> = [];
     private expectedHeaders: any = {};
+    private expectedChildFingerprints: any = null;
     private changeDataCallback?: (data: any) => void;
     private template?: (data: any) => string
     options: any = {};
@@ -138,6 +139,14 @@ class MockedAjaxCall {
         this.checkInitialization('expectSentData');
 
         this.expectedSentData = data;
+
+        return this;
+    }
+
+    expectChildFingerprints = (fingerprints: any): MockedAjaxCall => {
+        this.checkInitialization('expectSentData');
+
+        this.expectedChildFingerprints = fingerprints;
 
         return this;
     }
@@ -245,15 +254,20 @@ class MockedAjaxCall {
         } else {
             requestInfo.push(`  DATA: ${JSON.stringify(this.getRequestBody())}`);
         }
+
+        if (this.expectedChildFingerprints) {
+            requestInfo.push(`  CHILD FINGERPRINTS: ${JSON.stringify(this.expectedChildFingerprints)}`)
+        }
+
         if (this.expectedActions.length === 1) {
             requestInfo.push(`  Expected URL to contain action /${this.expectedActions[0].name}`)
         }
 
-        return requestInfo.join("\n");
+        return requestInfo.join('\n');
     }
 
     // https://www.wheresrhys.co.uk/fetch-mock/#api-mockingmock_matcher
-    private getMockMatcher(forError = false): any {
+    private getMockMatcher(createMatchForShowingError = false): any {
         if (!this.expectedSentData) {
             throw new Error('expectedSentData not set yet');
         }
@@ -265,15 +279,23 @@ class MockedAjaxCall {
         }
 
         if (this.method === 'GET') {
-            const params = new URLSearchParams({
+            const paramsData: any = {
                 data: JSON.stringify(this.expectedSentData)
-            });
-            if (forError) {
+            };
+            if (this.expectedChildFingerprints) {
+                paramsData.childrenFingerprints = JSON.stringify(this.expectedChildFingerprints);
+            }
+            const params = new URLSearchParams(paramsData);
+            if (createMatchForShowingError) {
                 // simplified version for error reporting
                 matcherObject.url = `?${params.toString()}`;
             } else {
                 matcherObject.functionMatcher = (url: string) => {
-                    return url.includes(`?${params.toString()}`);
+                    const actualUrl = new URL(url);
+                    const actualParams = new URLSearchParams(actualUrl.search);
+                    actualParams.delete('updatedModels');
+
+                    return actualParams.toString() === params.toString();
                 };
             }
         } else {
@@ -289,7 +311,7 @@ class MockedAjaxCall {
             if (this.expectedActions.length === 1) {
                 matcherObject.url = `end:/${this.expectedActions[0].name}`;
             } else if (this.expectedActions.length > 1) {
-                matcherObject.url = `end:/_batch`;
+                matcherObject.url = 'end:/_batch';
             }
         }
 
@@ -307,6 +329,10 @@ class MockedAjaxCall {
         const body: any = {
             data: this.expectedSentData
         };
+
+        if (this.expectedChildFingerprints) {
+            body.childrenFingerprints = this.expectedChildFingerprints;
+        }
 
         if (this.expectedActions.length === 1) {
             body.args = this.expectedActions[0].args;
