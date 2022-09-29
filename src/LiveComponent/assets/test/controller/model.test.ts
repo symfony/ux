@@ -50,7 +50,7 @@ describe('LiveController data-model Tests', () => {
 
     it('updates the data without re-rendering if "norender" is used', async () => {
         const test = await createTest({ name: 'Ryan' }, (data: any) => `
-            <div ${initComponent(data, { debounce: 1 })}>
+            <div ${initComponent(data, {}, { debounce: 1 })}>
                 <input
                     data-model="norender|name"
                     value="${data.name}"
@@ -74,7 +74,7 @@ describe('LiveController data-model Tests', () => {
 
     it('waits to update data and rerender until change event with on(change)', async () => {
         const test = await createTest({ name: 'Ryan' }, (data: any) => `
-            <div ${initComponent(data, { debounce: 1 })}>
+            <div ${initComponent(data, {}, { debounce: 1 })}>
                 <input
                     data-model="on(change)|name"
                     value="${data.name}"

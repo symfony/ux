@@ -34,7 +34,7 @@ describe('LiveController Basic Tests', () => {
 
     it('creates the Component object', async () => {
         const test = await createTest({ firstName: 'Ryan' }, (data: any) => `
-            <div ${initComponent(data, { debounce: 115, id: 'the-id', fingerprint: 'the-fingerprint' })}></div>
+            <div ${initComponent(data, {}, { debounce: 115, id: 'the-id', fingerprint: 'the-fingerprint' })}></div>
         `);
 
         expect(test.controller.component).toBeInstanceOf(Component);

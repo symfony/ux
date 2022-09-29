@@ -19,7 +19,7 @@ describe('LiveController CSRF Tests', () => {
 
     it('Sends the CSRF token on an action', async () => {
         const test = await createTest({ isSaved: 0 }, (data: any) => `
-            <div ${initComponent(data, { csrf: '123TOKEN' })}>
+            <div ${initComponent(data, {}, { csrf: '123TOKEN' })}>
                 ${data.isSaved ? 'Saved' : ''}
                 <button
                     data-action="live#action"

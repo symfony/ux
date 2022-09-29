@@ -29,9 +29,13 @@ export default class implements BackendInterface {
             'Accept': 'application/vnd.live-component+html',
         };
 
+        const hasFingerprints = Object.keys(childrenFingerprints).length > 0;
+        const hasUpdatedModels = Object.keys(updatedModels).length > 0;
         if (actions.length === 0 && this.willDataFitInUrl(JSON.stringify(data), params, JSON.stringify(childrenFingerprints))) {
             params.set('data', JSON.stringify(data));
-            params.set('childrenFingerprints', JSON.stringify(childrenFingerprints));
+            if (hasFingerprints) {
+                params.set('childrenFingerprints', JSON.stringify(childrenFingerprints));
+            }
             updatedModels.forEach((model) => {
                 params.append('updatedModels[]', model);
             });
@@ -40,10 +44,10 @@ export default class implements BackendInterface {
             fetchOptions.method = 'POST';
             fetchOptions.headers['Content-Type'] = 'application/json';
             const requestData: any = { data };
-            if (updatedModels) {
+            if (hasUpdatedModels) {
                 requestData.updatedModels = updatedModels;
             }
-            if (childrenFingerprints) {
+            if (hasFingerprints) {
                 requestData.childrenFingerprints = childrenFingerprints;
             }
 

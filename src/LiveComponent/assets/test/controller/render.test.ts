@@ -45,7 +45,7 @@ describe('LiveController rendering Tests', () => {
 
     it('conserves the value of model field that was modified after a render request', async () => {
         const test = await createTest({ title: 'greetings', comment: '' }, (data: any) => `
-            <div ${initComponent(data, { debounce: 1 })}>
+            <div ${initComponent(data, {}, { debounce: 1 })}>
                 <input data-model="title" value="${data.title}">
                 <!--
                     norender for comment to avoid triggering a 2nd Ajax call.
@@ -111,7 +111,7 @@ describe('LiveController rendering Tests', () => {
 
     it('conserves the value of an unmapped field that was modified after a render request', async () => {
         const test = await createTest({ title: 'greetings' }, (data: any) => `
-            <div ${initComponent(data, { debounce: 1 })}>
+            <div ${initComponent(data, {}, { debounce: 1 })}>
                 <input data-model="title" value="${data.title}">
                 <!-- An unmapped field -->
                 <textarea></textarea>
@@ -275,7 +275,7 @@ describe('LiveController rendering Tests', () => {
 
     it('waits for the previous request to finish & batches changes', async () => {
         const test = await createTest({ title: 'greetings', contents: '' }, (data: any) => `
-            <div ${initComponent(data, { debounce: 1 })}>
+            <div ${initComponent(data, {}, { debounce: 1 })}>
                 <input data-model="title" value="${data.title}">
                 <textarea data-model="contents">${data.contents}</textarea>
 
@@ -314,7 +314,7 @@ describe('LiveController rendering Tests', () => {
 
     it('batches re-render requests together that occurred during debounce', async () => {
         const test = await createTest({ title: 'greetings', contents: '' }, (data: any) => `
-            <div ${initComponent(data, { debounce: 50 })}>
+            <div ${initComponent(data, {}, { debounce: 50 })}>
                 <input data-model="title" value="${data.title}">
                 <textarea data-model="contents">${data.contents}</textarea>
 

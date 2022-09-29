@@ -288,12 +288,16 @@ class MockedAjaxCall {
             const params = new URLSearchParams(paramsData);
             if (createMatchForShowingError) {
                 // simplified version for error reporting
-                matcherObject.url = `?${params.toString()}`;
+                matcherObject.url = `(approximation) ?${params.toString()}`;
             } else {
                 matcherObject.functionMatcher = (url: string) => {
                     const actualUrl = new URL(url);
                     const actualParams = new URLSearchParams(actualUrl.search);
-                    actualParams.delete('updatedModels');
+                    actualParams.delete('updatedModels[]');
+                    // if we're not expecting specific child fingerprints, ignore them
+                    if (!paramsData.childrenFingerprints) {
+                        actualParams.delete('childrenFingerprints');
+                    }
 
                     return actualParams.toString() === params.toString();
                 };
@@ -414,11 +418,12 @@ const dataToJsonAttribute = (data: any): string => {
     return matches[1]
 }
 
-export function initComponent(data: any, controllerValues: any = {}) {
+export function initComponent(data: any, props: any = {}, controllerValues: any = {}) {
     return `
         data-controller="live"
         data-live-url-value="http://localhost/components/_test_component_${Math.round(Math.random() * 1000)}"
         data-live-data-value="${dataToJsonAttribute(data)}"
+        data-live-props-value="${dataToJsonAttribute(props)}"
         ${controllerValues.debounce ? `data-live-debounce-value="${controllerValues.debounce}"` : ''}
         ${controllerValues.csrf ? `data-live-csrf-value="${controllerValues.csrf}"` : ''}
         ${controllerValues.id ? `data-live-id-value="${controllerValues.id}"` : ''}
