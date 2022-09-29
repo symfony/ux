@@ -3,15 +3,17 @@ import {
     cloneHTMLElement,
     htmlToElement,
     getModelDirectiveFromElement,
-    elementBelongsToThisController,
+    elementBelongsToThisComponent,
     getElementAsTagText,
     setValueOnElement
 } from '../src/dom_utils';
 import ValueStore from '../src/Component/ValueStore';
-import { LiveController } from '../src/live_controller';
+import Component from "../src/Component";
+import Backend from "../src/Backend";
+import {DataModelElementResolver} from "../src/Component/ModelElementResolver";
 
-const createStore = function(data: any = {}): ValueStore {
-    return new ValueStore(data);
+const createStore = function(props: any = {}): ValueStore {
+    return new ValueStore(props, {});
 }
 
 describe('getValueFromElement', () => {
@@ -211,49 +213,57 @@ describe('getModelDirectiveFromInput', () => {
     });
 });
 
-describe('elementBelongsToThisController', () => {
-    const createController = (html: string, childComponentControllers: Array<LiveController> = []) => {
-        return new class implements LiveController {
-            dataValue = {};
-            childComponentControllers = childComponentControllers;
-            element = htmlToElement(html);
-        }
+describe('elementBelongsToThisComponent', () => {
+    const createComponent = (html: string, childComponents: Component[] = []) => {
+        const component = new Component(
+            htmlToElement(html),
+            {},
+            {},
+            'some-id-' + Math.floor((Math.random() * 100)),
+            new Backend(''),
+            new DataModelElementResolver()
+        );
+        childComponents.forEach((childComponent) => {
+            component.addChild(childComponent);
+        })
+
+        return component;
     };
 
     it('returns false if element lives outside of controller', () => {
         const targetElement = htmlToElement('<input name="user[firstName]">');
-        const controller = createController('<div></div>');
+        const component = createComponent('<div></div>');
 
-        expect(elementBelongsToThisController(targetElement, controller)).toBeFalsy();
+        expect(elementBelongsToThisComponent(targetElement, component)).toBeFalsy();
     });
 
     it('returns true if element lives inside of controller', () => {
         const targetElement = htmlToElement('<input name="user[firstName]">');
-        const controller = createController('<div></div>');
-        controller.element.appendChild(targetElement);
+        const component = createComponent('<div></div>');
+        component.element.appendChild(targetElement);
 
-        expect(elementBelongsToThisController(targetElement, controller)).toBeTruthy();
+        expect(elementBelongsToThisComponent(targetElement, component)).toBeTruthy();
     });
 
     it('returns false if element lives inside of child controller', () => {
         const targetElement = htmlToElement('<input name="user[firstName]">');
-        const childController = createController('<div class="child"></div>');
-        childController.element.appendChild(targetElement);
+        const childComponent = createComponent('<div class="child"></div>');
+        childComponent.element.appendChild(targetElement);
 
-        const controller = createController('<div class="parent"></div>', [childController]);
-        controller.element.appendChild(childController.element);
+        const component = createComponent('<div class="parent"></div>', [childComponent]);
+        component.element.appendChild(childComponent.element);
 
-        expect(elementBelongsToThisController(targetElement, childController)).toBeTruthy();
-        expect(elementBelongsToThisController(targetElement, controller)).toBeFalsy();
+        expect(elementBelongsToThisComponent(targetElement, childComponent)).toBeTruthy();
+        expect(elementBelongsToThisComponent(targetElement, component)).toBeFalsy();
     });
 
     it('returns false if element *is* a child controller element', () => {
-        const childController = createController('<div class="child"></div>');
+        const childComponent = createComponent('<div class="child"></div>');
 
-        const controller = createController('<div class="parent"></div>', [childController]);
-        controller.element.appendChild(childController.element);
+        const component = createComponent('<div class="parent"></div>', [childComponent]);
+        component.element.appendChild(childComponent.element);
 
-        expect(elementBelongsToThisController(childController.element, controller)).toBeFalsy();
+        expect(elementBelongsToThisComponent(childComponent.element, component)).toBeFalsy();
     });
 });
 

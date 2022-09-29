@@ -1,8 +1,16 @@
 import ValueStore from '../src/Component/ValueStore';
 
 describe('ValueStore', () => {
-    it('get() returns simple data', () => {
+    it('get() returns simple props', () => {
         const container = new ValueStore({
+            firstName: 'Ryan'
+        }, {});
+
+        expect(container.get('firstName')).toEqual('Ryan');
+    });
+
+    it('get() returns simple data', () => {
+        const container = new ValueStore({}, {
             firstName: 'Ryan'
         });
 
@@ -10,13 +18,13 @@ describe('ValueStore', () => {
     });
 
     it('get() returns undefined if not set', () => {
-        const container = new ValueStore({});
+        const container = new ValueStore({}, {});
 
         expect(container.get('firstName')).toBeUndefined();
     });
 
     it('get() returns deep data from property path', () => {
-        const container = new ValueStore({
+        const container = new ValueStore({}, {
             user: {
                 firstName: 'Ryan'
             }
@@ -26,7 +34,7 @@ describe('ValueStore', () => {
     });
 
     it('has() returns true if path exists', () => {
-        const container = new ValueStore({
+        const container = new ValueStore({}, {
             user: {
                 firstName: 'Ryan'
             }
@@ -36,7 +44,7 @@ describe('ValueStore', () => {
     });
 
     it('has() returns false if path does not exist', () => {
-        const container = new ValueStore({
+        const container = new ValueStore({}, {
             user: {
                 firstName: 'Ryan'
             }
@@ -46,7 +54,7 @@ describe('ValueStore', () => {
     });
 
     it('set() overrides simple data', () => {
-        const container = new ValueStore({
+        const container = new ValueStore({}, {
             firstName: 'Kevin'
         });
 
@@ -56,7 +64,7 @@ describe('ValueStore', () => {
     });
 
     it('set() overrides deep data', () => {
-        const container = new ValueStore({
+        const container = new ValueStore({}, {
             user: {
                 firstName: 'Ryan'
             }
@@ -68,7 +76,7 @@ describe('ValueStore', () => {
     });
 
     it('set() errors if setting key that does not exist', () => {
-        const container = new ValueStore({});
+        const container = new ValueStore({}, {});
 
         expect(() => {
             container.set('firstName', 'Ryan');
@@ -76,7 +84,7 @@ describe('ValueStore', () => {
     });
 
     it('set() errors if setting deep data without parent', () => {
-        const container = new ValueStore({});
+        const container = new ValueStore({}, {});
 
         expect(() => {
             container.set('user.firstName', 'Ryan');
@@ -84,7 +92,7 @@ describe('ValueStore', () => {
     });
 
     it('set() errors if setting deep data that does not exist', () => {
-        const container = new ValueStore({
+        const container = new ValueStore({}, {
             user: {}
         });
 
@@ -94,12 +102,20 @@ describe('ValueStore', () => {
     });
 
     it('set() errors if setting deep data on a non-object', () => {
-        const container = new ValueStore({
+        const container = new ValueStore({}, {
             user: 'Kevin'
         });
 
         expect(() => {
             container.set('user.firstName', 'Ryan');
         }).toThrow('The parent "user" data does not appear to be an object');
+    });
+
+    it('all() returns props + data', () => {
+        const container = new ValueStore(
+            { city: 'Grand Rapids' },
+            { user: 'Kevin' });
+
+        expect(container.all()).toEqual({ city: 'Grand Rapids', user: 'Kevin'});
     });
 });

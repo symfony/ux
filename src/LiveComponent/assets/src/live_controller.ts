@@ -6,7 +6,7 @@ import {
     getElementAsTagText,
     setValueOnElement,
     getValueFromElement,
-    elementBelongsToThisController,
+    elementBelongsToThisComponent,
 } from './dom_utils';
 import Component, {proxifyComponent} from "./Component";
 import Backend from "./Backend";
@@ -27,17 +27,24 @@ export interface LiveEvent extends CustomEvent {
     },
 }
 
-export default class LiveController extends Controller {
+export interface LiveController {
+    element: HTMLElement,
+    component: Component
+}
+
+export default class extends Controller<HTMLElement> implements LiveController {
     static values = {
         url: String,
         data: Object,
+        props: Object,
         csrf: String,
         debounce: { type: Number, default: 150 },
         id: String,
     }
 
     readonly urlValue!: string;
-    dataValue!: any;
+    readonly dataValue!: any;
+    readonly propsValue!: any;
     readonly csrfValue!: string;
     readonly hasDebounceValue: boolean;
     readonly debounceValue: number;
@@ -46,7 +53,7 @@ export default class LiveController extends Controller {
     /** The component, wrapped in the convenience Proxy */
     private proxiedComponent: Component;
     /** The raw Component object */
-    private component: Component;
+    component: Component;
 
     isConnected = false;
     pendingActionTriggerModelElement: HTMLElement|null = null;
@@ -60,15 +67,11 @@ export default class LiveController extends Controller {
     initialize() {
         this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
 
-        if (!(this.element instanceof HTMLElement)) {
-            throw new Error('Invalid Element Type');
-        }
-
-
         const id = this.idValue || null;
 
         this.component = new Component(
             this.element,
+            this.propsValue,
             this.dataValue,
             id,
             new Backend(this.urlValue, this.csrfValue),
@@ -272,7 +275,7 @@ export default class LiveController extends Controller {
      *                  If not passed, the model will always be updated.
      */
     private updateModelFromElementEvent(element: Element, eventName: string|null) {
-        if (!elementBelongsToThisController(element, this)) {
+        if (!elementBelongsToThisComponent(element, this.component)) {
             return;
         }
 

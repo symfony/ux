@@ -1,7 +1,9 @@
-import {ModelElementResolver} from "./ModelElementResolver";
+import {ModelElementResolver} from './ModelElementResolver';
+import {elementBelongsToThisComponent} from '../dom_utils';
+import Component from './index';
 
 export default class {
-    private readonly element: HTMLElement;
+    private readonly component: Component;
     private readonly modelElementResolver: ModelElementResolver;
     /** Fields that have changed, but whose value is not set back onto the value store */
     private readonly unsyncedInputs: UnsyncedInputContainer;
@@ -10,21 +12,21 @@ export default class {
         { event: 'input', callback: (event) => this.handleInputEvent(event) },
     ];
 
-    constructor(element: HTMLElement, modelElementResolver: ModelElementResolver) {
-        this.element = element;
+    constructor(component: Component, modelElementResolver: ModelElementResolver) {
+        this.component = component;
         this.modelElementResolver = modelElementResolver;
         this.unsyncedInputs = new UnsyncedInputContainer();
     }
 
     activate(): void {
         this.elementEventListeners.forEach(({event, callback}) => {
-            this.element.addEventListener(event, callback);
+            this.component.element.addEventListener(event, callback);
         });
     }
 
     deactivate(): void {
         this.elementEventListeners.forEach(({event, callback}) => {
-            this.element.removeEventListener(event, callback);
+            this.component.element.removeEventListener(event, callback);
         });
     }
 
@@ -42,10 +44,9 @@ export default class {
     }
 
     private updateModelFromElement(element: Element) {
-        // TODO: put back this child element check
-        // if (!elementBelongsToThisController(element, this)) {
-        //     return;
-        // }
+        if (!elementBelongsToThisComponent(element, this.component)) {
+            return;
+        }
 
         if (!(element instanceof HTMLElement)) {
             throw new Error('Could not update model for non HTMLElement');

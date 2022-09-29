@@ -38,18 +38,19 @@ export default class Component {
 
     /**
      * @param element The root element
-     * @param data    Component data
+     * @param props   Readonly component props
+     * @param data    Modifiable component data/state
      * @param id      Some unique id to identify this component. Needed to be a child component
      * @param backend Backend instance for updating
      * @param modelElementResolver Class to get "model" name from any element.
      */
-    constructor(element: HTMLElement, data: any, id: string|null, backend: BackendInterface, modelElementResolver: ModelElementResolver) {
+    constructor(element: HTMLElement, props: any, data: any, id: string|null, backend: BackendInterface, modelElementResolver: ModelElementResolver) {
         this.element = element;
         this.backend = backend;
         this.id = id;
 
-        this.valueStore = new ValueStore(data);
-        this.unsyncedInputsTracker = new UnsyncedInputsTracker(element, modelElementResolver);
+        this.valueStore = new ValueStore(props, data);
+        this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, modelElementResolver);
         this.hooks = new HookManager();
         this.pollingDirector = new PollingDirectory(this);
     }
@@ -104,7 +105,7 @@ export default class Component {
         this.debouncedStartRequest(debounce);
     }
 
-    get(model: string): any {
+    getData(model: string): any {
         const modelName = normalizeModelName(model);
         if (!this.valueStore.has(modelName)) {
             throw new Error(`Invalid model "${model}".`);
@@ -266,7 +267,7 @@ export default class Component {
             (element: HTMLElement) => getValueFromElement(element, this.valueStore),
         );
         // TODO: could possibly do this by listening to the dataValue value change
-        this.valueStore.reinitialize(newDataFromServer);
+        this.valueStore.reinitializeData(newDataFromServer);
 
         // reset the modified values back to their client-side version
         Object.keys(modifiedModelValues).forEach((modelName) => {
@@ -388,7 +389,7 @@ export function proxifyComponent(component: Component): Component {
 
             // return model
             if (component.valueStore.has(prop)) {
-                return component.get(prop)
+                return component.getData(prop)
             }
 
             // try to call an action

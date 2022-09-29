@@ -29,6 +29,7 @@ describe('Component class', () => {
 
             const component = new Component(
                 document.createElement('div'),
+                {},
                 {firstName: ''},
                 null,
                 backend,
@@ -68,7 +69,7 @@ describe('Component class', () => {
             const { proxy } = makeDummyComponent();
             // @ts-ignore
             proxy.firstName = 'Ryan';
-            expect(proxy.get('firstName')).toBe('Ryan');
+            expect(proxy.getData('firstName')).toBe('Ryan');
         });
 
         it('calls an action on a component', async () => {

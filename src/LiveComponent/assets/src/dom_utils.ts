@@ -1,7 +1,7 @@
 import ValueStore from './Component/ValueStore';
 import { Directive, parseDirectives } from './directives_parser';
-import { LiveController } from './live_controller';
 import { normalizeModelName } from './string_utils';
+import Component from "./Component";
 
 /**
  * Return the "value" of any given element.
@@ -152,32 +152,34 @@ export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissin
 }
 
 /**
- * Does the given element "belong" to the given live controller.
+ * Does the given element "belong" to the given component.
  *
  * To "belong" the element needs to:
- *      A) Live inside the controller element (of course)
- *      B) NOT also live inside a child "live controller" element
+ *      A) Live inside the component element (of course)
+ *      B) NOT also live inside a child component
  */
-export function elementBelongsToThisController(element: Element, controller: LiveController): boolean {
-    // TODO fix this
-    return true;
-    if (controller.element !== element && !controller.element.contains(element)) {
+export function elementBelongsToThisComponent(element: Element, component: Component): boolean {
+    if (component.element === element) {
+        return true;
+    }
+
+    if (!component.element.contains(element)) {
         return false;
     }
 
-    let foundChildController = false;
-    controller.childComponentControllers.forEach((childComponentController) => {
-        if (foundChildController) {
+    let foundChildComponent = false;
+    component.getChildren().forEach((childComponent) => {
+        if (foundChildComponent) {
             // return early
             return;
         }
 
-        if (childComponentController.element === element || childComponentController.element.contains(element)) {
-            foundChildController = true;
+        if (childComponent.element === element || childComponent.element.contains(element)) {
+            foundChildComponent = true;
         }
     });
 
-    return !foundChildController;
+    return !foundChildComponent;
 }
 
 export function cloneHTMLElement(element: HTMLElement): HTMLElement {

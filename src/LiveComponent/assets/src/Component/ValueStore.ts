@@ -3,14 +3,16 @@ import { normalizeModelName } from '../string_utils';
 
 export default class {
     updatedModels: string[] = [];
+    private props: any = {};
     private data: any = {};
 
-    constructor(data: any) {
+    constructor(props: any, data: any) {
+        this.props = props;
         this.data = data;
     }
 
     /**
-     * Returns the data with the given name.
+     * Returns the data or props with the given name.
      *
      * This allows for non-normalized model names - e.g.
      * user[firstName] -> user.firstName and also will fetch
@@ -19,7 +21,13 @@ export default class {
     get(name: string): any {
         const normalizedName = normalizeModelName(name);
 
-        return getDeepData(this.data, normalizedName);
+        const result = getDeepData(this.data, normalizedName);
+
+        if (result !== undefined) {
+            return result;
+        }
+
+        return getDeepData(this.props, normalizedName);
     }
 
     has(name: string): boolean {
@@ -40,20 +48,11 @@ export default class {
         this.data = setDeepData(this.data, normalizedName, value);
     }
 
-    /**
-     * Checks if the given name/propertyPath is for a valid top-level key.
-     */
-    hasAtTopLevel(name: string): boolean {
-        const parts = name.split('.');
-
-        return this.data[parts[0]] !== undefined;
-    }
-
     all(): any {
-        return this.data;
+        return { ...this.props, ...this.data };
     }
 
-    reinitialize(data: any) {
+    reinitializeData(data: any) {
         this.data = data;
     }
 }
