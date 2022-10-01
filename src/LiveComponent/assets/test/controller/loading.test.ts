@@ -9,13 +9,13 @@
 
 'use strict';
 
-import {createTest, initComponent, shutdownTest} from '../tools';
+import {createTest, initComponent, shutdownTests} from '../tools';
 import {getByTestId, getByText, waitFor} from '@testing-library/dom';
 import userEvent from "@testing-library/user-event";
 
 describe('LiveController data-loading Tests', () => {
     afterEach(() => {
-        shutdownTest();
+        shutdownTests();
     })
 
     it('executes basic loading functionality on an element', async () => {

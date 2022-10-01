@@ -5,7 +5,7 @@ import fetchMock from 'fetch-mock-jest';
 import { htmlToElement } from '../src/dom_utils';
 import Component from '../src/Component';
 
-let activeTest: FunctionalTest|null = null;
+let activeTests: FunctionalTest[] = [];
 let unmatchedFetchErrors: Array<{url: string, method: string, body: any, headers: any}> = [];
 
 // manually error on unmatched request for readability
@@ -17,19 +17,35 @@ fetchMock.catch((url: string, response: any) => {
         body: response.body,
         headers: response.headers,
     });
+
+    return response;
 });
 
 let application: Application;
 
-export function shutdownTest() {
-    if (!activeTest) {
+export function shutdownTests() {
+    if (activeTests.length === 0) {
         // no test was run, apparently
         return;
     }
 
-    const test = activeTest;
-    activeTest = null;
+    const tests = activeTests;
+    activeTests = [];
+    tests.forEach((test) => {
+        shutdownTest(test);
+    });
 
+    // only possible if someone uses fetchMock directly, but here just in case
+    if (!fetchMock.done()) {
+        fetchMock.reset();
+
+        throw new Error('Some mocked requests were never called.');
+    }
+
+    fetchMock.reset();
+}
+
+const shutdownTest = function(test: FunctionalTest) {
     unmatchedFetchErrors.forEach((unmatchedFetchError) => {
         const urlParams = new URLSearchParams(unmatchedFetchError.url.substring(unmatchedFetchError.url.indexOf('?')));
         const requestInfo = [];
@@ -60,31 +76,23 @@ export function shutdownTest() {
 
         throw new Error('Some mocked requests were never called or unexpected calls were made.');
     }
-
-    // only possible if someone uses fetchMock directly, but here just in case
-    if (!fetchMock.done()) {
-        fetchMock.reset();
-
-        throw new Error('Some mocked requests were never called.');
-    }
-
-    fetchMock.reset();
 }
 
 class FunctionalTest {
-    controller: LiveController;
     component: Component;
     element: HTMLElement;
     initialData: any;
+    props: any = {};
     template: (data: any) => string;
     mockedAjaxCalls: Array<MockedAjaxCall> = [];
+    id: number;
 
-    constructor(controller: LiveController, element: HTMLElement, initialData: any, template: (data: any) => string) {
-        this.controller = controller;
-        this.component = controller.component;
+    constructor(component: Component, element: HTMLElement, initialData: any, template: (data: any) => string) {
+        this.component = component;
         this.element = element;
         this.initialData = initialData;
         this.template = template;
+        this.id = Math.floor(1000*Math.random());
     }
 
     expectsAjaxCall = (method: string): MockedAjaxCall => {
@@ -97,7 +105,7 @@ class FunctionalTest {
     queryByDataModel(modelName: string): HTMLElement {
         const element = this.element.querySelector(`[data-model$="${modelName}"]`);
         if (!element) {
-            throw new Error(`Could not find element with data-model="${modelName}"`);
+            throw new Error(`Could not find element with data-model="${modelName}" inside ${this.element.outerHTML}`);
         }
 
         return element as HTMLElement;
@@ -319,7 +327,7 @@ class MockedAjaxCall {
             }
         }
 
-        this.routeName = `route-${this.test.mockedAjaxCalls.length}`;
+        this.routeName = `route-${this.test.id}-${this.test.mockedAjaxCalls.length}`;
         matcherObject.name = this.routeName;
 
         return matcherObject;
@@ -357,11 +365,18 @@ class MockedAjaxCall {
 export async function createTest(data: any, template: (data: any) => string): Promise<FunctionalTest> {
     const testData = await startStimulus(template(data));
 
-    const test = new FunctionalTest(testData.controller, testData.element, data, template);
-    if (activeTest) {
-        throw new Error('Cannot create a new test: a test is already active');
-    }
-    activeTest = test;
+    const test = new FunctionalTest(testData.controller.component, testData.element, data, template);
+    activeTests.push(test);
+
+    return test;
+}
+
+/**
+ * An internal way to create a FunctionalTest: useful for child components
+ */
+export function createTestForExistingComponent(component: Component): FunctionalTest {
+    const test = new FunctionalTest(component, component.element, {}, () => '');
+    activeTests.push(test);
 
     return test;
 }

@@ -9,13 +9,13 @@
 
 'use strict';
 
-import { shutdownTest, createTest, initComponent } from '../tools';
+import { shutdownTests, createTest, initComponent } from '../tools';
 import { waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
 describe('LiveController polling Tests', () => {
     afterEach(() => {
-        shutdownTest();
+        shutdownTests();
     })
 
     it('starts a poll', async () => {

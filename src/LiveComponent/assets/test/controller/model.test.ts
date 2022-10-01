@@ -9,13 +9,13 @@
 
 'use strict';
 
-import { createTest, initComponent, shutdownTest } from '../tools';
+import { createTest, initComponent, shutdownTests } from '../tools';
 import { getByLabelText, getByTestId, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
 describe('LiveController data-model Tests', () => {
     afterEach(() => {
-        shutdownTest();
+        shutdownTests();
     })
 
     it('sends data and re-renders correctly when data-model element is changed', async () => {

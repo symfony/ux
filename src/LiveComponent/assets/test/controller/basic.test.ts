@@ -9,13 +9,13 @@
 
 'use strict';
 
-import {createTest, initComponent, shutdownTest, startStimulus} from '../tools';
+import {createTest, initComponent, shutdownTests, startStimulus} from '../tools';
 import { htmlToElement } from '../../src/dom_utils';
-import Component from "../../src/Component";
+import Component from '../../src/Component';
 
 describe('LiveController Basic Tests', () => {
     afterEach(() => {
-        shutdownTest()
+        shutdownTests()
     });
 
     it('dispatches connect event', async () => {
@@ -37,9 +37,9 @@ describe('LiveController Basic Tests', () => {
             <div ${initComponent(data, {}, { debounce: 115, id: 'the-id', fingerprint: 'the-fingerprint' })}></div>
         `);
 
-        expect(test.controller.component).toBeInstanceOf(Component);
-        expect(test.controller.component.defaultDebounce).toEqual(115);
-        expect(test.controller.component.id).toEqual('the-id');
-        expect(test.controller.component.fingerprint).toEqual('the-fingerprint');
+        expect(test.component).toBeInstanceOf(Component);
+        expect(test.component.defaultDebounce).toEqual(115);
+        expect(test.component.id).toEqual('the-id');
+        expect(test.component.fingerprint).toEqual('the-fingerprint');
     });
 });

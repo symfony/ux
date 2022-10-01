@@ -178,6 +178,32 @@ export default class Component {
         return new Map(this.children);
     }
 
+    updateFromNewElement(toEl: HTMLElement): boolean {
+        // TODO: need a driver here to be agnostic of markup
+        const propsString = toEl.dataset.livePropsValue;
+
+        // if no props are on the element, use the existing element completely
+        // this means the parent is signaling that the child does not need to be re-rendered
+        if (propsString === undefined) {
+            return false;
+        }
+
+        // push props directly down onto the value store
+        const props = JSON.parse(propsString);
+        const isChanged = this.valueStore.reinitializeProps(props);
+
+        const fingerprint = toEl.dataset.liveFingerprintValue;
+        if (fingerprint !== undefined) {
+            this.fingerprint = fingerprint;
+        }
+
+        if (isChanged) {
+            this.render();
+        }
+
+        return false;
+    }
+
     private tryStartingRequest(): void {
         if (!this.backendRequest) {
             this.performRequest()
@@ -277,6 +303,7 @@ export default class Component {
             newElement,
             this.unsyncedInputsTracker.getUnsyncedInputs(),
             (element: HTMLElement) => getValueFromElement(element, this.valueStore),
+            Array.from(this.getChildren().values())
         );
         // TODO: could possibly do this by listening to the dataValue value change
         this.valueStore.reinitializeData(newDataFromServer);
@@ -297,7 +324,7 @@ export default class Component {
         }));
     }
 
-    private caculateDebounce(debounce: number|boolean): number {
+    private calculateDebounce(debounce: number|boolean): number {
         if (debounce === true) {
             return this.defaultDebounce;
         }
@@ -320,7 +347,7 @@ export default class Component {
         this.clearRequestDebounceTimeout();
         this.requestDebounceTimeout = window.setTimeout(() => {
             this.render();
-        }, this.caculateDebounce(debounce));
+        }, this.calculateDebounce(debounce));
     }
 
     // inspired by Livewire!

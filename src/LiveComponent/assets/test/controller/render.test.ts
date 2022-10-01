@@ -9,7 +9,7 @@
 
 'use strict';
 
-import { shutdownTest, createTest, initComponent } from '../tools';
+import { shutdownTests, createTest, initComponent } from '../tools';
 import { createEvent, fireEvent, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock-jest';
@@ -17,7 +17,7 @@ import { htmlToElement } from '../../src/dom_utils';
 
 describe('LiveController rendering Tests', () => {
     afterEach(() => {
-        shutdownTest();
+        shutdownTests();
     })
 
     it('can re-render via an Ajax call', async () => {
@@ -230,7 +230,7 @@ describe('LiveController rendering Tests', () => {
             .delayResponse(100)
             .init();
 
-        test.controller.$render();
+        test.component.render();
         // trigger disconnect
         test.element.removeAttribute('data-controller')
 
@@ -254,7 +254,7 @@ describe('LiveController rendering Tests', () => {
             .delayResponse(100)
             .init();
 
-        test.controller.$render();
+        test.component.render();
 
         // trigger controller disconnect
         test.element.removeAttribute('data-controller')
@@ -265,7 +265,7 @@ describe('LiveController rendering Tests', () => {
 
         // trigger connect
         test.element.setAttribute('data-controller', 'live')
-        test.controller.$render();
+        test.component.render();
         // wait for the fetch to finish
         await fetchMock.flush();
 

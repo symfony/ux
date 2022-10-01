@@ -6,6 +6,7 @@ export default class {
     private props: any = {};
     private data: any = {};
 
+    // TODO: consider removing props from ValueStore & component: only leaving in live_controller
     constructor(props: any, data: any) {
         this.props = props;
         this.data = data;
@@ -52,7 +53,20 @@ export default class {
         return { ...this.props, ...this.data };
     }
 
-    reinitializeData(data: any) {
+    reinitializeData(data: any): void {
         this.data = data;
+    }
+
+    /**
+     * Returns true if any of the props changed.
+     */
+    reinitializeProps(props: any): boolean {
+        if (JSON.stringify(props) == JSON.stringify(this.props)) {
+            return false;
+        }
+
+        this.props = props;
+
+        return true;
     }
 }

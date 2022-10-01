@@ -9,12 +9,12 @@
 
 'use strict';
 
-import { createTest, initComponent, shutdownTest } from '../tools';
+import { createTest, initComponent, shutdownTests } from '../tools';
 import { getByText, waitFor } from '@testing-library/dom';
 
 describe('LiveController Error Handling', () => {
     afterEach(() => {
-        shutdownTest();
+        shutdownTests();
     })
 
     it('displays an error modal on 500 errors', async () => {

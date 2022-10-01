@@ -1,7 +1,7 @@
 import ValueStore from './Component/ValueStore';
 import { Directive, parseDirectives } from './directives_parser';
 import { normalizeModelName } from './string_utils';
-import Component from "./Component";
+import Component from './Component';
 
 /**
  * Return the "value" of any given element.
@@ -208,6 +208,21 @@ export function htmlToElement(html: string): HTMLElement {
     }
 
     return child;
+}
+
+// Inspired by https://stackoverflow.com/questions/13389751/change-tag-using-javascript
+export function cloneElementWithNewTagName(element: Element, newTag: string): HTMLElement {
+    const originalTag = element.tagName
+    const startRX = new RegExp('^<'+originalTag, 'i')
+    const endRX = new RegExp(originalTag+'>$', 'i')
+    const startSubst = '<'+newTag
+    const endSubst = newTag+'>'
+
+    const newHTML = element.outerHTML
+        .replace(startRX, startSubst)
+        .replace(endRX, endSubst);
+
+    return htmlToElement(newHTML);
 }
 
 /**
