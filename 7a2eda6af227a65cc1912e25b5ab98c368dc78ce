@@ -1,0 +1,22 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2022-09-27T14:45:19Z
+
+Thanks for the review @weaverryan!
+
+On this PR, I think nothing is missing, however I thought about a usecase for a 2nd PR: I think some people would like to have both lazy-loaded and not lazy-loaded controllers/components at the same time.
+E.g.: common components like a `NavBar` or `Aside` that would be **always** shown on every pages, and specific components like a date picker that would be sometimes shown in some context.
+
+Currently, that's not possible to have both `registerVueControllerComponents` calls like this:
+```js
+registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
+registerVueControllerComponents(require.context('./vue/controllers-lazy', true, /\.vue$/, 'lazy'));
+```
+
+because `vueControllers` and `loadComponent`, which are used by the global function `resolveVueComponent()`, will be erased.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-10-03T13:08:06Z
+
+@Kocal I think you're right - but I think that will be solved by #461
