@@ -14,4 +14,4 @@ import Tab from 'bootstrap/js/dist/tab';
 
 // initialize symfony/ux-react
 registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
-registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue?$/));
+registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue?$/, 'lazy'));
