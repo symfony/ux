@@ -6,7 +6,6 @@ export default class {
     private props: any = {};
     private data: any = {};
 
-    // TODO: consider removing props from ValueStore & component: only leaving in live_controller
     constructor(props: any, data: any) {
         this.props = props;
         this.data = data;
@@ -53,7 +52,13 @@ export default class {
         return { ...this.props, ...this.data };
     }
 
+    /**
+     * Set the data to a fresh set from the server.
+     *
+     * @param data
+     */
     reinitializeData(data: any): void {
+        this.updatedModels = [];
         this.data = data;
     }
 
