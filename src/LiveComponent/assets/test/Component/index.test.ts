@@ -1,8 +1,8 @@
 import Component, {proxifyComponent} from '../../src/Component';
 import {BackendAction, BackendInterface} from '../../src/Backend';
 import {
-    DataModelElementResolver
-} from '../../src/Component/ModelElementResolver';
+    StandardElementDriver
+} from '../../src/Component/ElementDriver';
 import BackendRequest from '../../src/BackendRequest';
 import { Response } from 'node-fetch';
 
@@ -34,7 +34,7 @@ describe('Component class', () => {
                 null,
                 null,
                 backend,
-                new DataModelElementResolver()
+                new StandardElementDriver()
             );
             return {
                 proxy: proxifyComponent(component),

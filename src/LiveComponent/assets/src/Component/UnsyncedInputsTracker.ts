@@ -1,10 +1,10 @@
-import {ModelElementResolver} from './ModelElementResolver';
+import {ElementDriver} from './ElementDriver';
 import {elementBelongsToThisComponent} from '../dom_utils';
 import Component from './index';
 
 export default class {
     private readonly component: Component;
-    private readonly modelElementResolver: ModelElementResolver;
+    private readonly modelElementResolver: ElementDriver;
     /** Fields that have changed, but whose value is not set back onto the value store */
     private readonly unsyncedInputs: UnsyncedInputContainer;
 
@@ -12,7 +12,7 @@ export default class {
         { event: 'input', callback: (event) => this.handleInputEvent(event) },
     ];
 
-    constructor(component: Component, modelElementResolver: ModelElementResolver) {
+    constructor(component: Component, modelElementResolver: ElementDriver) {
         this.component = component;
         this.modelElementResolver = modelElementResolver;
         this.unsyncedInputs = new UnsyncedInputContainer();

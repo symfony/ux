@@ -7,7 +7,7 @@ import {
 } from '../dom_utils';
 import {executeMorphdom} from '../morphdom';
 import UnsyncedInputsTracker from './UnsyncedInputsTracker';
-import {ModelElementResolver} from './ModelElementResolver';
+import {ElementDriver} from './ElementDriver';
 import HookManager from '../HookManager';
 import PollingDirectory from '../PollingDirector';
 
@@ -16,6 +16,7 @@ declare const Turbo: any;
 export default class Component {
     readonly element: HTMLElement;
     private readonly backend: BackendInterface;
+    private readonly elementDriver: ElementDriver;
     id: string|null;
 
     /**
@@ -52,16 +53,17 @@ export default class Component {
      * @param fingerprint
      * @param id      Some unique id to identify this component. Needed to be a child component
      * @param backend Backend instance for updating
-     * @param modelElementResolver Class to get "model" name from any element.
+     * @param elementDriver Class to get "model" name from any element.
      */
-    constructor(element: HTMLElement, props: any, data: any, fingerprint: string|null, id: string|null, backend: BackendInterface, modelElementResolver: ModelElementResolver) {
+    constructor(element: HTMLElement, props: any, data: any, fingerprint: string|null, id: string|null, backend: BackendInterface, elementDriver: ElementDriver) {
         this.element = element;
         this.backend = backend;
+        this.elementDriver = elementDriver;
         this.id = id;
         this.fingerprint = fingerprint;
 
         this.valueStore = new ValueStore(props, data);
-        this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, modelElementResolver);
+        this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
         this.hooks = new HookManager();
         this.pollingDirector = new PollingDirectory(this);
     }
@@ -80,10 +82,11 @@ export default class Component {
     /**
      * Add a named hook to the component. Available hooks are:
      *
-     *     * render.started: (html: string, response: Response, controls: { shouldRender: boolean }) => {}
-     *     * render.finished: (component: Component) => {}
+     *     * render:started (html: string, response: Response, controls: { shouldRender: boolean }) => {}
+     *     * render:finished (component: Component) => {}
      *     * loading.state:started (element: HTMLElement, request: BackendRequest) => {}
      *     * loading.state:finished (element: HTMLElement) => {}
+     *     * model:set (model, value) => {}
      */
     on(hookName: string, callback: (...args: any[]) => void): void {
         this.hooks.register(hookName, callback);
@@ -94,17 +97,7 @@ export default class Component {
         const modelName = normalizeModelName(model);
         this.valueStore.set(modelName, value);
 
-        // if there is a "validatedFields" data, it means this component wants
-        // to track which fields have been / should be validated.
-        // in that case, when the model is updated, mark that it should be validated
-        // TODO: could this be done with a hook?
-        if (this.valueStore.has('validatedFields')) {
-            const validatedFields = [...this.valueStore.get('validatedFields')];
-            if (!validatedFields.includes(modelName)) {
-                validatedFields.push(modelName);
-            }
-            this.valueStore.set('validatedFields', validatedFields);
-        }
+        this.hooks.triggerHook('model:set', model, value);
 
         // the model's data is no longer unsynced
         this.unsyncedInputsTracker.markModelAsSynced(modelName);
@@ -179,17 +172,15 @@ export default class Component {
     }
 
     updateFromNewElement(toEl: HTMLElement): boolean {
-        // TODO: need a driver here to be agnostic of markup
-        const propsString = toEl.dataset.livePropsValue;
+        const props = this.elementDriver.getComponentProps(toEl);
 
         // if no props are on the element, use the existing element completely
         // this means the parent is signaling that the child does not need to be re-rendered
-        if (propsString === undefined) {
+        if (props === null) {
             return false;
         }
 
         // push props directly down onto the value store
-        const props = JSON.parse(propsString);
         const isChanged = this.valueStore.reinitializeProps(props);
 
         const fingerprint = toEl.dataset.liveFingerprintValue;
@@ -255,7 +246,7 @@ export default class Component {
 
     private processRerender(html: string, response: Response) {
         const controls = { shouldRender: true };
-        this.hooks.triggerHook('render.started', html, response, controls);
+        this.hooks.triggerHook('render:started', html, response, controls);
         // used to notify that the component doesn't live on the page anymore
         if (!controls.shouldRender) {
             return;
@@ -277,11 +268,6 @@ export default class Component {
         // elements to appear different unnecessarily
         this.hooks.triggerHook('loading.state:finished', this.element);
 
-        if (!this.dispatchEvent('live:render', html, true, true)) {
-            // preventDefault() was called
-            return;
-        }
-
         /**
          * For any models modified since the last request started, grab
          * their value now: we will re-set them after the new data from
@@ -296,8 +282,7 @@ export default class Component {
         // normalize new element into non-loading state before diff
         this.hooks.triggerHook('loading.state:finished', newElement);
 
-        // TODO: maybe abstract where the new data comes from
-        const newDataFromServer: any = JSON.parse(newElement.dataset.liveDataValue as string);
+        this.valueStore.reinitializeData(this.elementDriver.getComponentData(newElement));
         executeMorphdom(
             this.element,
             newElement,
@@ -305,23 +290,13 @@ export default class Component {
             (element: HTMLElement) => getValueFromElement(element, this.valueStore),
             Array.from(this.getChildren().values())
         );
-        // TODO: could possibly do this by listening to the dataValue value change
-        this.valueStore.reinitializeData(newDataFromServer);
 
         // reset the modified values back to their client-side version
         Object.keys(modifiedModelValues).forEach((modelName) => {
             this.valueStore.set(modelName, modifiedModelValues[modelName]);
         });
 
-        this.hooks.triggerHook('render.finished', this);
-    }
-
-    private dispatchEvent(name: string, payload: any = null, canBubble = true, cancelable = false) {
-        return this.element.dispatchEvent(new CustomEvent(name, {
-            bubbles: canBubble,
-            cancelable,
-            detail: payload
-        }));
+        this.hooks.triggerHook('render:finished', this);
     }
 
     private calculateDebounce(debounce: number|boolean): number {

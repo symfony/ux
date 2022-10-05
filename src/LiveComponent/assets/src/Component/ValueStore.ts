@@ -63,6 +63,10 @@ export default class {
     }
 
     /**
+     * Set the props to a fresh set from the server.
+     *
+     * Props can only change as a result of a parent component re-rendering.
+     *
      * Returns true if any of the props changed.
      */
     reinitializeProps(props: any): boolean {

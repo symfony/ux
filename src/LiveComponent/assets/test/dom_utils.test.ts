@@ -10,7 +10,7 @@ import {
 import ValueStore from '../src/Component/ValueStore';
 import Component from "../src/Component";
 import Backend from "../src/Backend";
-import {DataModelElementResolver} from "../src/Component/ModelElementResolver";
+import {StandardElementDriver} from "../src/Component/ElementDriver";
 
 const createStore = function(props: any = {}): ValueStore {
     return new ValueStore(props, {});
@@ -222,7 +222,7 @@ describe('elementBelongsToThisComponent', () => {
             null,
             'some-id-' + Math.floor((Math.random() * 100)),
             new Backend(''),
-            new DataModelElementResolver()
+            new StandardElementDriver()
         );
         childComponents.forEach((childComponent) => {
             component.addChild(childComponent);

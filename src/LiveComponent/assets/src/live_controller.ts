@@ -11,9 +11,10 @@ import {
 import Component, {proxifyComponent} from './Component';
 import Backend from './Backend';
 import {
-    DataModelElementResolver,
-} from './Component/ModelElementResolver';
-import LoadingHelper from './LoadingHelper';
+    StandardElementDriver,
+} from './Component/ElementDriver';
+import LoadingPlugin from './Component/plugins/LoadingPlugin';
+import ValidatedFieldsPlugin from './Component/plugins/ValidatedFieldsPlugin';
 
 interface UpdateModelOptions {
     dispatch?: boolean;
@@ -78,7 +79,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
             this.fingerprintValue,
             id,
             new Backend(this.urlValue, this.csrfValue),
-            new DataModelElementResolver(),
+            new StandardElementDriver(),
         );
         this.proxiedComponent = proxifyComponent(this.component);
 
@@ -89,19 +90,23 @@ export default class extends Controller<HTMLElement> implements LiveController {
             this.component.defaultDebounce = this.debounceValue;
         }
         // after we finish rendering, re-set the "value" of model fields
-        this.component.on('render.finished', () => {
+        this.component.on('render:finished', () => {
             this.synchronizeValueOfModelFields();
 
             // re-start polling, in case polling changed
+            // TODO: moving polling to plugin
             this.initializePolling();
         });
-        this.component.on('render.started', (html: string, response: Response, controls: { shouldRender: boolean }) => {
+        this.component.on('render:started', (html: string, response: Response, controls: { shouldRender: boolean }) => {
             if (!this.isConnected) {
                 controls.shouldRender = false;
             }
         });
-        const loadingHelper = new LoadingHelper();
+        const loadingHelper = new LoadingPlugin();
         loadingHelper.attachToComponent(this.component);
+
+        const validatedFieldsPlugin = new ValidatedFieldsPlugin();
+        validatedFieldsPlugin.attachToComponent(this.component);
 
         this.synchronizeValueOfModelFields();
     }
@@ -439,7 +444,6 @@ export default class extends Controller<HTMLElement> implements LiveController {
      * This method will set the "value" of that element to the value of
      * the "firstName" model.
      */
-    // TODO: call this when needed
     synchronizeValueOfModelFields(): void {
         this.component.element.querySelectorAll('[data-model]').forEach((element: Element) => {
             if (!(element instanceof HTMLElement)) {

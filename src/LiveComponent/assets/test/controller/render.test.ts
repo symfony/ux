@@ -10,7 +10,7 @@
 'use strict';
 
 import { shutdownTests, createTest, initComponent } from '../tools';
-import { createEvent, fireEvent, getByText, waitFor } from '@testing-library/dom';
+import { getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock-jest';
 import { htmlToElement } from '../../src/dom_utils';
