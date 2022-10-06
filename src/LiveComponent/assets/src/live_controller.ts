@@ -50,7 +50,6 @@ export default class extends Controller<HTMLElement> implements LiveController {
     readonly csrfValue!: string;
     readonly hasDebounceValue: boolean;
     readonly debounceValue: number;
-    readonly idValue: string;
     readonly fingerprintValue: string
 
     /** The component, wrapped in the convenience Proxy */
@@ -70,7 +69,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
     initialize() {
         this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
 
-        const id = this.idValue || null;
+        const id = this.element.dataset.liveId || null;
 
         this.component = new Component(
             this.element,

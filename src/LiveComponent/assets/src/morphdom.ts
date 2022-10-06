@@ -20,7 +20,7 @@ export function executeMorphdom(
     childComponents.forEach((childComponent) => {
         childComponentMap.set(childComponent.element, childComponent);
         // TODO: add driver to make this agnostic
-        const childComponentToElement = rootToElement.querySelector(`[data-live-id-value=${childComponent.id}]`)
+        const childComponentToElement = rootToElement.querySelector(`[data-live-id=${childComponent.id}]`)
         if (childComponentToElement && childComponentToElement.tagName !== childComponent.element.tagName) {
             // we need to "correct" the tag name for the child to match the "from"
             // so that we always get a "diff", not a remove/add
@@ -36,12 +36,7 @@ export function executeMorphdom(
             }
 
             // TODO: abstract out to make this function agnostic of markup
-            if (node.dataset.liveId) {
-                return node.dataset.liveId;
-            }
-
-            // TODO: do we really need data-live-id and data-live-value-id?
-            return node.dataset.liveIdValue
+            return node.dataset.liveId;
         },
         onBeforeElUpdated: (fromEl, toEl) => {
             if (fromEl === rootFromElement) {

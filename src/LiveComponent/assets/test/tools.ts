@@ -441,7 +441,7 @@ export function initComponent(data: any, props: any = {}, controllerValues: any 
         data-live-props-value="${dataToJsonAttribute(props)}"
         ${controllerValues.debounce ? `data-live-debounce-value="${controllerValues.debounce}"` : ''}
         ${controllerValues.csrf ? `data-live-csrf-value="${controllerValues.csrf}"` : ''}
-        ${controllerValues.id ? `data-live-id-value="${controllerValues.id}"` : ''}
+        ${controllerValues.id ? `data-live-id="${controllerValues.id}"` : ''}
         ${controllerValues.fingerprint ? `data-live-fingerprint-value="${controllerValues.fingerprint}"` : ''}
     `;
 }
