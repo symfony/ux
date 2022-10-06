@@ -7,9 +7,9 @@ import {
 } from '../dom_utils';
 import {executeMorphdom} from '../morphdom';
 import UnsyncedInputsTracker from './UnsyncedInputsTracker';
-import {ElementDriver} from './ElementDriver';
+import { ElementDriver } from './ElementDriver';
 import HookManager from '../HookManager';
-import PollingDirectory from '../PollingDirector';
+import { PluginInterface } from './plugins/PluginInterface';
 
 declare const Turbo: any;
 
@@ -31,7 +31,7 @@ export default class Component {
     readonly valueStore: ValueStore;
     private readonly unsyncedInputsTracker: UnsyncedInputsTracker;
     private hooks: HookManager;
-    private pollingDirector: PollingDirectory;
+
 
     defaultDebounce = 150;
 
@@ -65,16 +65,19 @@ export default class Component {
         this.valueStore = new ValueStore(props, data);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
         this.hooks = new HookManager();
-        this.pollingDirector = new PollingDirectory(this);
+    }
+
+    addPlugin(plugin: PluginInterface) {
+        plugin.attachToComponent(this);
     }
 
     connect(): void {
-        this.pollingDirector.startAllPolling();
+        this.hooks.triggerHook('connect', this);
         this.unsyncedInputsTracker.activate();
     }
 
     disconnect(): void {
-        this.pollingDirector.stopAllPolling();
+        this.hooks.triggerHook('disconnect', this);
         this.clearRequestDebounceTimeout();
         this.unsyncedInputsTracker.deactivate();
     }
@@ -82,11 +85,13 @@ export default class Component {
     /**
      * Add a named hook to the component. Available hooks are:
      *
+     *     * connect (component: Component) => {}
+     *     * disconnect (component: Component) => {}
      *     * render:started (html: string, response: Response, controls: { shouldRender: boolean }) => {}
      *     * render:finished (component: Component) => {}
      *     * loading.state:started (element: HTMLElement, request: BackendRequest) => {}
      *     * loading.state:finished (element: HTMLElement) => {}
-     *     * model:set (model, value) => {}
+     *     * model:set (model: string, value: any) => {}
      */
     on(hookName: string, callback: (...args: any[]) => void): void {
         this.hooks.register(hookName, callback);
@@ -135,14 +140,6 @@ export default class Component {
 
     getUnsyncedModels(): string[] {
         return this.unsyncedInputsTracker.getModifiedModels();
-    }
-
-    addPoll(actionName: string, duration: number) {
-        this.pollingDirector.addPoll(actionName, duration);
-    }
-
-    clearPolling(): void {
-        this.pollingDirector.clearPolling();
     }
 
     addChild(component: Component): void {

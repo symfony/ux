@@ -6,13 +6,14 @@ import {
 import { combineSpacedArray}  from '../../string_utils';
 import BackendRequest from '../../BackendRequest';
 import Component from '../../Component';
+import { PluginInterface } from './PluginInterface';
 
 interface ElementLoadingDirectives {
     element: HTMLElement|SVGElement,
     directives: Directive[]
 }
 
-export default class LoadingPlugin {
+export default class implements PluginInterface {
     attachToComponent(component: Component): void {
         component.on('loading.state:started', (element: HTMLElement, request: BackendRequest) => {
             this.startLoading(element, request);

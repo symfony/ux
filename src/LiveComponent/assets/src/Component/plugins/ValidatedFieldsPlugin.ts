@@ -1,7 +1,8 @@
 import Component from '../index';
 import ValueStore from '../ValueStore';
+import { PluginInterface } from './PluginInterface';
 
-export default class ValidatedFieldsPlugin {
+export default class implements PluginInterface {
     attachToComponent(component: Component): void {
         component.on('model:set', (modelName: string) => {
             this.handleModelSet(modelName, component.valueStore);

@@ -4,17 +4,18 @@ import { normalizeModelName } from './string_utils';
 import {
     getModelDirectiveFromElement,
     getElementAsTagText,
-    setValueOnElement,
     getValueFromElement,
     elementBelongsToThisComponent,
 } from './dom_utils';
 import Component, {proxifyComponent} from './Component';
 import Backend from './Backend';
-import {
-    StandardElementDriver,
-} from './Component/ElementDriver';
+import { StandardElementDriver } from './Component/ElementDriver';
 import LoadingPlugin from './Component/plugins/LoadingPlugin';
 import ValidatedFieldsPlugin from './Component/plugins/ValidatedFieldsPlugin';
+import PageUnloadingPlugin from './Component/plugins/PageUnloadingPlugin';
+import PollingPlugin from './Component/plugins/PollingPlugin';
+import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModelFieldsPlugin';
+import {PluginInterface} from './Component/plugins/PluginInterface';
 
 interface UpdateModelOptions {
     dispatch?: boolean;
@@ -32,7 +33,6 @@ export interface LiveController {
     element: HTMLElement,
     component: Component
 }
-
 export default class extends Controller<HTMLElement> implements LiveController {
     static values = {
         url: String,
@@ -56,15 +56,13 @@ export default class extends Controller<HTMLElement> implements LiveController {
     private proxiedComponent: Component;
     /** The raw Component object */
     component: Component;
-
-    isConnected = false;
     pendingActionTriggerModelElement: HTMLElement|null = null;
 
     private elementEventListeners: Array<{ event: string, callback: (event: any) => void }> = [
         { event: 'input', callback: (event) => this.handleInputEvent(event) },
         { event: 'change', callback: (event) => this.handleChangeEvent(event) },
         { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
-     ];
+    ];
 
     initialize() {
         this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
@@ -88,44 +86,25 @@ export default class extends Controller<HTMLElement> implements LiveController {
         if (this.hasDebounceValue) {
             this.component.defaultDebounce = this.debounceValue;
         }
-        // after we finish rendering, re-set the "value" of model fields
-        this.component.on('render:finished', () => {
-            this.synchronizeValueOfModelFields();
 
-            // re-start polling, in case polling changed
-            // TODO: moving polling to plugin
-            this.initializePolling();
+        const plugins: PluginInterface[] = [
+            new LoadingPlugin(),
+            new ValidatedFieldsPlugin(),
+            new PageUnloadingPlugin(),
+            new PollingPlugin(),
+            new SetValueOntoModelFieldsPlugin(),
+        ];
+        plugins.forEach((plugin) => {
+            this.component.addPlugin(plugin);
         });
-        this.component.on('render:started', (html: string, response: Response, controls: { shouldRender: boolean }) => {
-            if (!this.isConnected) {
-                controls.shouldRender = false;
-            }
-        });
-        const loadingHelper = new LoadingPlugin();
-        loadingHelper.attachToComponent(this.component);
-
-        const validatedFieldsPlugin = new ValidatedFieldsPlugin();
-        validatedFieldsPlugin.attachToComponent(this.component);
-
-        this.synchronizeValueOfModelFields();
     }
 
     connect() {
-        this.isConnected = true;
         this.component.connect();
-        this.initializePolling();
 
         this.elementEventListeners.forEach(({event, callback}) => {
             this.component.element.addEventListener(event, callback);
         });
-
-        // hide "loading" elements to begin with
-        // This is done with CSS, but only for the most basic cases
-
-        // helps typescript be sure this is an HTMLElement, not just Element
-        if (!(this.element instanceof HTMLElement)) {
-            throw new Error('Invalid Element Type');
-        }
 
         this._dispatchEvent('live:connect');
     }
@@ -137,7 +116,6 @@ export default class extends Controller<HTMLElement> implements LiveController {
             this.component.element.removeEventListener(event, callback);
         });
 
-        this.isConnected = false;
         this._dispatchEvent('live:disconnect');
     }
 
@@ -172,7 +150,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
                 event.preventDefault();
             });
             validModifiers.set('stop', () => {
-                    event.stopPropagation();
+                event.stopPropagation();
             });
             validModifiers.set('self', () => {
                 if (event.target !== event.currentTarget) {
@@ -400,80 +378,5 @@ export default class extends Controller<HTMLElement> implements LiveController {
             cancelable,
             detail
         }));
-    }
-
-    private initializePolling(): void {
-        this.component.clearPolling();
-
-        if ((this.element as HTMLElement).dataset.poll === undefined) {
-            return;
-        }
-
-        const rawPollConfig = (this.element as HTMLElement).dataset.poll;
-        const directives = parseDirectives(rawPollConfig || '$render');
-
-        directives.forEach((directive) => {
-            let duration = 2000;
-
-            directive.modifiers.forEach((modifier) => {
-                switch (modifier.name) {
-                    case 'delay':
-                        if (modifier.value) {
-                            duration = parseInt(modifier.value);
-                        }
-
-                         break;
-                    default:
-                        console.warn(`Unknown modifier "${modifier.name}" in data-poll "${rawPollConfig}".`);
-                }
-            });
-
-            this.component.addPoll(directive.action, duration);
-        });
-    }
-
-    /**
-     * Sets the "value" of all model fields to the component data.
-     *
-     * This is called when the component initializes and after re-render.
-     * Take the following element:
-     *
-     *      <input data-model="firstName">
-     *
-     * This method will set the "value" of that element to the value of
-     * the "firstName" model.
-     */
-    synchronizeValueOfModelFields(): void {
-        this.component.element.querySelectorAll('[data-model]').forEach((element: Element) => {
-            if (!(element instanceof HTMLElement)) {
-                throw new Error('Invalid element using data-model.');
-            }
-
-            if (element instanceof HTMLFormElement) {
-                return;
-            }
-
-            const modelDirective = getModelDirectiveFromElement(element);
-            if (!modelDirective) {
-                return;
-            }
-
-            const modelName = modelDirective.action;
-
-            // skip any elements whose model name is currently in an unsynced state
-            if (this.component.getUnsyncedModels().includes(modelName)) {
-                return;
-            }
-
-            if (this.component.valueStore.has(modelName)) {
-                setValueOnElement(element, this.component.valueStore.get(modelName))
-            }
-
-            // for select elements without a blank value, one might be selected automatically
-            // https://github.com/symfony/ux/issues/469
-            if (element instanceof HTMLSelectElement && !element.multiple) {
-                this.component.valueStore.set(modelName, getValueFromElement(element, this.component.valueStore));
-            }
-        })
     }
 }
