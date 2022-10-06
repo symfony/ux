@@ -1,6 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
 import { parseDirectives, DirectiveModifier } from './directives_parser';
-import { normalizeModelName } from './string_utils';
 import {
     getModelDirectiveFromElement,
     getElementAsTagText,
@@ -16,11 +15,6 @@ import PageUnloadingPlugin from './Component/plugins/PageUnloadingPlugin';
 import PollingPlugin from './Component/plugins/PollingPlugin';
 import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModelFieldsPlugin';
 import {PluginInterface} from './Component/plugins/PluginInterface';
-
-interface UpdateModelOptions {
-    dispatch?: boolean;
-    debounce?: number|boolean;
-}
 
 export interface LiveEvent extends CustomEvent {
     detail: {
@@ -175,14 +169,12 @@ export default class extends Controller<HTMLElement> implements LiveController {
 
             this.component.action(directive.action, directive.named, debounce);
 
-            // TODO: fix this
             // possible case where this element is also a "model" element
             // if so, to be safe, slightly delay the action so that the
             // change/input listener on LiveController can process the
             // model change *before* sending the action
             if (getModelDirectiveFromElement(event.currentTarget, false)) {
                 this.pendingActionTriggerModelElement = event.currentTarget;
-                //this.#clearRequestDebounceTimeout();
             }
         })
     }
@@ -205,23 +197,10 @@ export default class extends Controller<HTMLElement> implements LiveController {
      * @param {string} model The model to update
      * @param {any} value The new value
      * @param {boolean} shouldRender Whether a re-render should be triggered
-     * @param {string|null} extraModelName Another model name that this might go by in a parent component.
-     * @param {UpdateModelOptions} options
+     * @param {number|boolean} debounce
      */
-    $updateModel(model: string, value: any, shouldRender = true, extraModelName: string|null = null, options: UpdateModelOptions = {}) {
-        const modelName = normalizeModelName(model);
-        const normalizedExtraModelName = extraModelName ? normalizeModelName(extraModelName) : null;
-
-        // TODO: support this again
-        if (options.dispatch !== false) {
-            this._dispatchEvent('live:update-model', {
-                modelName,
-                extraModelName: normalizedExtraModelName,
-                value
-            });
-        }
-
-        this.component.set(model, value, shouldRender, options.debounce);
+    $updateModel(model: string, value: any, shouldRender = true, debounce: number|boolean = true) {
+        this.component.set(model, value, shouldRender, debounce);
     }
 
     private handleInputEvent(event: Event) {
