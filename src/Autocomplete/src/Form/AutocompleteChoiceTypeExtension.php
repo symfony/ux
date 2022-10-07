@@ -71,6 +71,10 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             $values['max-results'] = $options['max_results'];
         }
 
+        if ($options['min_characters']) {
+            $values['min-characters'] = $options['min_characters'];
+        }
+
         $values['no-results-found-text'] = $this->trans($options['no_results_found_text']);
         $values['no-more-results-text'] = $this->trans($options['no_more_results_text']);
 
@@ -91,6 +95,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             'allow_options_create' => false,
             'no_results_found_text' => 'No results found',
             'no_more_results_text' => 'No more results',
+            'min_characters' => 3,
             'max_results' => 10,
         ]);
 

@@ -42,6 +42,7 @@ class CategoryAutocompleteType extends AbstractType
                 'data-controller' => 'custom-autocomplete',
             ],
             'max_results' => 5,
+            'min_characters' => 2,
         ]);
     }
 

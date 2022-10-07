@@ -8,6 +8,7 @@ export default class extends Controller {
         optionsAsHtml: Boolean,
         noResultsFoundText: String,
         noMoreResultsText: String,
+        minCharacters: Number,
         tomSelectOptions: Object,
     }
 
@@ -15,6 +16,7 @@ export default class extends Controller {
     readonly optionsAsHtmlValue: boolean;
     readonly noMoreResultsTextValue: string;
     readonly noResultsFoundTextValue: string;
+    readonly minCharactersValue: number;
     readonly tomSelectOptionsValue: object;
     tomSelect: TomSelect;
 
@@ -30,7 +32,7 @@ export default class extends Controller {
 
     connect() {
         if (this.urlValue) {
-            this.tomSelect = this.#createAutocompleteWithRemoteData(this.urlValue);
+            this.tomSelect = this.#createAutocompleteWithRemoteData(this.urlValue, this.minCharactersValue);
 
             return;
         }
@@ -124,7 +126,7 @@ export default class extends Controller {
         return this.#createTomSelect(config);
     }
 
-    #createAutocompleteWithRemoteData(autocompleteEndpointUrl: string): TomSelect {
+    #createAutocompleteWithRemoteData(autocompleteEndpointUrl: string, minCharacterLength: number): TomSelect {
         const config: Partial<TomSettings> = this.#mergeObjects(this.#getCommonConfig(), {
             firstUrl: (query: string) => {
                 const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
@@ -141,6 +143,11 @@ export default class extends Controller {
                     // important: next_url must be set before invoking callback()
                     .then(json => { this.setNextUrl(query, json.next_page); callback(json.results) })
                     .catch(() => callback());
+            },
+            shouldLoad: function (query: string) {
+                const minLength = minCharacterLength || 3;
+
+                return query.length >= minLength;
             },
             // avoid extra filtering after results are returned
             score: function(search: string) {
