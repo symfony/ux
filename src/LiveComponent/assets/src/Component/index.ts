@@ -10,6 +10,7 @@ import UnsyncedInputsTracker from './UnsyncedInputsTracker';
 import { ElementDriver } from './ElementDriver';
 import HookManager from '../HookManager';
 import { PluginInterface } from './plugins/PluginInterface';
+import BackendResponse from '../BackendResponse';
 
 declare const Turbo: any;
 
@@ -42,6 +43,8 @@ export default class Component {
     private isRequestPending = false;
     /** Current "timeout" before the pending request should be sent. */
     private requestDebounceTimeout: number | null = null;
+    private nextRequestPromise: Promise<BackendResponse>;
+    private nextRequestPromiseResolve: (response: BackendResponse) => any;
 
     private children: Map<string, Component> = new Map();
     private parent: Component|null = null;
@@ -65,6 +68,7 @@ export default class Component {
         this.valueStore = new ValueStore(props, data);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
         this.hooks = new HookManager();
+        this.resetPromise();
     }
 
     addPlugin(plugin: PluginInterface) {
@@ -87,7 +91,7 @@ export default class Component {
      *
      *     * connect (component: Component) => {}
      *     * disconnect (component: Component) => {}
-     *     * render:started (html: string, response: Response, controls: { shouldRender: boolean }) => {}
+     *     * render:started (html: string, response: BackendResponse, controls: { shouldRender: boolean }) => {}
      *     * render:finished (component: Component) => {}
      *     * loading.state:started (element: HTMLElement, request: BackendRequest) => {}
      *     * loading.state:finished (element: HTMLElement) => {}
@@ -97,8 +101,8 @@ export default class Component {
         this.hooks.register(hookName, callback);
     }
 
-    // TODO: return a promise
-    set(model: string, value: any, reRender = false, debounce: number|boolean = false): void {
+    set(model: string, value: any, reRender = false, debounce: number|boolean = false): Promise<BackendResponse> {
+        const promise = this.nextRequestPromise;
         const modelName = normalizeModelName(model);
         this.valueStore.set(modelName, value);
 
@@ -107,11 +111,11 @@ export default class Component {
         // the model's data is no longer unsynced
         this.unsyncedInputsTracker.markModelAsSynced(modelName);
 
-        if (!reRender) {
-            return;
+        if (reRender) {
+            this.debouncedStartRequest(debounce);
         }
 
-        this.debouncedStartRequest(debounce);
+        return promise;
     }
 
     getData(model: string): any {
@@ -123,19 +127,23 @@ export default class Component {
         return this.valueStore.get(modelName);
     }
 
-    // TODO: return promise
-    action(name: string, args: any, debounce: number|boolean = false): void {
+    action(name: string, args: any, debounce: number|boolean = false): Promise<BackendResponse> {
+        const promise = this.nextRequestPromise;
         this.pendingActions.push({
             name,
             args
         });
 
         this.debouncedStartRequest(debounce);
+
+        return promise;
     }
 
-    // TODO return a promise
-    render(): void {
+    render(): Promise<BackendResponse> {
+        const promise = this.nextRequestPromise;
         this.tryStartingRequest();
+
+        return promise;
     }
 
     getUnsyncedModels(): string[] {
@@ -203,7 +211,12 @@ export default class Component {
         this.isRequestPending = true;
     }
 
-    private performRequest(): BackendRequest {
+    private performRequest(): void {
+        // grab the resolve() function for the current promise
+        const thisPromiseResolve = this.nextRequestPromiseResolve;
+        // then create a fresh Promise, so any future .then() apply to it
+        this.resetPromise();
+
         this.backendRequest = this.backend.makeRequest(
             this.valueStore.all(),
             this.pendingActions,
@@ -217,15 +230,17 @@ export default class Component {
         this.isRequestPending = false;
 
         this.backendRequest.promise.then(async (response) => {
-            const html = await response.text();
+            const backendResponse = new BackendResponse(response);
+            thisPromiseResolve(backendResponse);
+            const html = await backendResponse.getBody();
             // if the response does not contain a component, render as an error
-            if (response.headers.get('Content-Type') !== 'application/vnd.live-component+html') {
+            if (backendResponse.response.headers.get('Content-Type') !== 'application/vnd.live-component+html') {
                 this.renderError(html);
 
                 return response;
             }
 
-            this.processRerender(html, response);
+            this.processRerender(html, backendResponse);
 
             this.backendRequest = null;
 
@@ -237,24 +252,22 @@ export default class Component {
 
             return response;
         });
-
-        return this.backendRequest;
     }
 
-    private processRerender(html: string, response: Response) {
+    private processRerender(html: string, backendResponse: BackendResponse) {
         const controls = { shouldRender: true };
-        this.hooks.triggerHook('render:started', html, response, controls);
+        this.hooks.triggerHook('render:started', html, backendResponse, controls);
         // used to notify that the component doesn't live on the page anymore
         if (!controls.shouldRender) {
             return;
         }
 
-        if (response.headers.get('Location')) {
+        if (backendResponse.response.headers.get('Location')) {
             // action returned a redirect
             if (typeof Turbo !== 'undefined') {
-                Turbo.visit(response.headers.get('Location'));
+                Turbo.visit(backendResponse.response.headers.get('Location'));
             } else {
-                window.location.href = response.headers.get('Location') || '';
+                window.location.href = backendResponse.response.headers.get('Location') || '';
             }
 
             return;
@@ -384,6 +397,12 @@ export default class Component {
         });
 
         return fingerprints;
+    }
+
+    private resetPromise(): void {
+        this.nextRequestPromise = new Promise((resolve) => {
+            this.nextRequestPromiseResolve = resolve;
+        });
     }
 }
 

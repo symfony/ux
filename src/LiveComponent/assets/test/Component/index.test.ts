@@ -5,37 +5,71 @@ import {
 } from '../../src/Component/ElementDriver';
 import BackendRequest from '../../src/BackendRequest';
 import { Response } from 'node-fetch';
+import {waitFor} from '@testing-library/dom';
+import BackendResponse from "../../src/BackendResponse";
+
+interface MockBackend extends BackendInterface {
+    actions: BackendAction[],
+}
+
+const makeTestComponent = (): { component: Component, backend: MockBackend } => {
+    const backend: MockBackend = {
+        actions: [],
+        makeRequest(data: any, actions: BackendAction[]): BackendRequest {
+            this.actions = actions;
+
+            return new BackendRequest(
+                // @ts-ignore Response doesn't quite match the underlying interface
+                new Promise((resolve) => resolve(new Response('<div data-live-data-value="{}"></div>'))),
+                [],
+                []
+            )
+        }
+    }
+
+    const component = new Component(
+        document.createElement('div'),
+        {},
+        {firstName: ''},
+        null,
+        null,
+        backend,
+        new StandardElementDriver()
+    );
+
+    return {
+        component,
+        backend
+    }
+}
 
 describe('Component class', () => {
+    describe('set() method', () => {
+        it('returns a Promise that eventually resolves', async () => {
+            const { component } = makeTestComponent();
+
+            let backendResponse: BackendResponse|null = null;
+
+            // set model but no re-render
+            const promise = component.set('firstName', 'Ryan', false);
+            // when this promise IS finally resolved, set the flag to true
+            promise.then((response) => backendResponse = response);
+            // it should not have happened yet
+            expect(backendResponse).toBeNull();
+
+            // set model WITH re-render
+            component.set('firstName', 'Ryan', true);
+            // it's still not *instantly* resolve - it'll
+            expect(backendResponse).toBeNull();
+            await waitFor(() => expect(backendResponse).not.toBeNull());
+            // @ts-ignore
+            expect(await backendResponse?.getBody()).toEqual('<div data-live-data-value="{}"></div>');
+        });
+    });
+
     describe('Proxy wrapper', () => {
-        interface MockBackend extends BackendInterface {
-            actions: BackendAction[],
-        }
-
         const makeDummyComponent = (): { proxy: Component, backend: MockBackend } => {
-            const backend: MockBackend = {
-                actions: [],
-                makeRequest(data: any, actions: BackendAction[]): BackendRequest {
-                    this.actions = actions;
-
-                    return new BackendRequest(
-                        // @ts-ignore Response doesn't quite match the underlying interface
-                        new Promise((resolve) => resolve(new Response('<div data-live-data-value="{}"></div>'))),
-                        [],
-                        []
-                    )
-                }
-            }
-
-            const component = new Component(
-                document.createElement('div'),
-                {},
-                {firstName: ''},
-                null,
-                null,
-                backend,
-                new StandardElementDriver()
-            );
+            const { backend, component} = makeTestComponent();
             return {
                 proxy: proxifyComponent(component),
                 backend
@@ -85,5 +119,5 @@ describe('Component class', () => {
             expect(backend.actions[0].name).toBe('save');
             expect(backend.actions[0].args).toEqual({ foo: 'bar', secondArg: 'secondValue' });
         });
-    })
+    });
 });
