@@ -51,11 +51,15 @@ describe('LiveController parent -> child component tests', () => {
 
         const parentComponent = test.component;
         const childComponent = getComponent(getByTestId(test.element, 'child'));
+        // setting a marker to help verify THIS exact Component instance continues to be used
+        childComponent.fingerprint = 'FOO-FINGERPRINT';
 
         // check that the relationships all loaded correctly
         expect(parentComponent.getChildren().size).toEqual(1);
-        expect(parentComponent.getChildren().get('the-child-id')).toEqual(childComponent);
-        expect(childComponent.getParent()).toEqual(parentComponent);
+        // check fingerprint instead of checking object equality with childComponent
+        // because childComponent is actually the proxied Component
+        expect(parentComponent.getChildren().get('the-child-id')?.fingerprint).toEqual('FOO-FINGERPRINT');
+        expect(childComponent.getParent()).toBe(parentComponent);
 
         // remove the child
         childComponent.element.remove();
@@ -66,7 +70,7 @@ describe('LiveController parent -> child component tests', () => {
         // now put it back!
         test.element.appendChild(childComponent.element);
         await waitFor(() => expect(parentComponent.getChildren().size).toEqual(1));
-        expect(parentComponent.getChildren().get('the-child-id')).toEqual(childComponent);
+        expect(parentComponent.getChildren().get('the-child-id')?.fingerprint).toEqual('FOO-FINGERPRINT');
         expect(childComponent.getParent()).toEqual(parentComponent);
 
         // now remove the whole darn thing!
@@ -78,7 +82,7 @@ describe('LiveController parent -> child component tests', () => {
         // put it *all* back
         document.body.appendChild(test.element);
         await waitFor(() => expect(parentComponent.getChildren().size).toEqual(1));
-        expect(parentComponent.getChildren().get('the-child-id')).toEqual(childComponent);
+        expect(parentComponent.getChildren().get('the-child-id')?.fingerprint).toEqual('FOO-FINGERPRINT');
         expect(childComponent.getParent()).toEqual(parentComponent);
     });
 

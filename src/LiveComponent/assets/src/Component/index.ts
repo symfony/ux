@@ -298,7 +298,9 @@ export default class Component {
             newElement,
             this.unsyncedInputsTracker.getUnsyncedInputs(),
             (element: HTMLElement) => getValueFromElement(element, this.valueStore),
-            Array.from(this.getChildren().values())
+            Array.from(this.getChildren().values()),
+            this.elementDriver.findChildComponentElement,
+            this.elementDriver.getKeyFromElement
         );
 
         // reset the modified values back to their client-side version
