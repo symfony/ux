@@ -13,6 +13,7 @@ namespace Symfony\UX\Autocomplete\Tests\Functional;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\CategoryFactory;
+use Symfony\UX\Autocomplete\Tests\Fixtures\Factory\IngredientFactory;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -58,6 +59,36 @@ class AutocompleteFormRenderingTest extends KernelTestCase
             // the one option + placeholder now shows up
             ->assertElementCount('#product_category_autocomplete option', 2)
             ->assertContains('First cat')
+        ;
+    }
+
+    public function testProperlyLoadsChoicesWithIdValueObjects()
+    {
+        $ingredient1 = IngredientFactory::createOne(['name' => 'Flour']);
+        $ingredient2 = IngredientFactory::createOne(['name' => 'Sugar']);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test-form')
+            ->assertElementCount('#product_ingredients_autocomplete option', 0)
+            ->assertNotContains('Flour')
+            ->assertNotContains('Sugar')
+            ->post('/test-form', [
+                'body' => [
+                    'product' => [
+                        'ingredients' => [
+                            'autocomplete' => [
+                                (string) $ingredient1->getId(),
+                                (string) $ingredient2->getId(),
+                            ],
+                        ],
+                    ],
+                ],
+            ])
+            // assert that selected options are not lost
+            ->assertElementCount('#product_ingredients_autocomplete option', 2)
+            ->assertContains('Flour')
+            ->assertContains('Sugar')
         ;
     }
 }

@@ -42,6 +42,7 @@
         "symfony/security-bundle": "^5.4|^6.0",
         "symfony/security-csrf": "^5.4|^6.0",
         "symfony/twig-bundle": "^5.4|^6.0",
+        "symfony/uid": "^5.4|^6.0",
         "zenstruck/browser": "^1.1",
         "zenstruck/foundry": "^1.19"
     },

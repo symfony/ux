@@ -15,6 +15,7 @@ class ProductType extends AbstractType
     {
         $builder
             ->add('category', CategoryAutocompleteType::class)
+            ->add('ingredients', IngredientAutocompleteType::class)
             ->add('portionSize', ChoiceType::class, [
                 'choices' => [
                     'extra small <span>🥨</span>' => 'xs',
