@@ -11,6 +11,10 @@
 
 namespace Symfony\UX\Autocomplete\Form;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\Parameter;
+use Doctrine\ORM\Utility\PersisterHelper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
@@ -53,9 +57,34 @@ final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
         if (!isset($data['autocomplete']) || '' === $data['autocomplete']) {
             $options['choices'] = [];
         } else {
-            $options['choices'] = $options['em']->getRepository($options['class'])->findBy([
-                $options['id_reader']->getIdField() => $data['autocomplete'],
-            ]);
+            /** @var EntityManagerInterface $em */
+            $em = $options['em'];
+            $repository = $em->getRepository($options['class']);
+
+            $idField = $options['id_reader']->getIdField();
+            $idType = PersisterHelper::getTypeOfField($idField, $em->getClassMetadata($options['class']), $em)[0];
+
+            if ($options['multiple']) {
+                $params = [];
+                $idx = 0;
+
+                foreach ($data['autocomplete'] as $id) {
+                    $params[":id_$idx"] = new Parameter("id_$idx", $id, $idType);
+                    ++$idx;
+                }
+
+                $options['choices'] = $repository->createQueryBuilder('o')
+                    ->where(sprintf("o.$idField IN (%s)", implode(', ', array_keys($params))))
+                    ->setParameters(new ArrayCollection($params))
+                    ->getQuery()
+                    ->getResult();
+            } else {
+                $options['choices'] = $repository->createQueryBuilder('o')
+                    ->where("o.$idField = :id")
+                    ->setParameter('id', $data['autocomplete'], $idType)
+                    ->getQuery()
+                    ->getResult();
+            }
         }
 
         // reset some critical lazy options
