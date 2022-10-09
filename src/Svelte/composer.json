@@ -1,0 +1,50 @@
+{
+    "name": "symfony/ux-svelte",
+    "type": "symfony-bundle",
+    "description": "Integration of Svelte in Symfony",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Titouan Galopin",
+            "email": "galopintitouan@gmail.com"
+        },
+        {
+            "name": "Thomas Choquet",
+            "email": "thomas.choquet.pro@gmail.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Svelte\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Svelte\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "symfony/webpack-encore-bundle": "^1.15"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "^5.4|^6.2",
+        "symfony/phpunit-bridge": "^5.4|^6.2",
+        "symfony/twig-bundle": "^5.4|^6.2",
+        "symfony/var-dumper": "^5.4|^6.2"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}
