@@ -88,6 +88,55 @@ For example:
 
     <div {{ vue_component('MyComponent', { 'name': app.user.fullName }) }}></div>
 
+Events
+~~~~~~
+
+The event ``vue:before-mount`` is called before a component is mounted on the page. This is the event to listen if you need to modifiy the Vue application (e.g.: add plugins, add global directives, ...):
+
+.. code-block:: js
+
+    document.addEventListener('vue:before-mount', (event) => {
+        const {
+            componentName, // The Vue component's name
+            component, // The resolved Vue component
+            props, // The props that will be injected to the component
+            app, // The Vue application instance
+        } = event.detail;
+
+        // Example with Vue Router
+        const router = VueRouter.createRouter({
+            routes: [
+                /* ... */
+            ],
+        });
+
+        app.use(router);
+    });
+
+The event ``vue:before-mount`` is called when a component has been mounted on the page:
+
+.. code-block:: js
+
+    document.addEventListener('vue:mount', (event) => {
+        const {
+            componentName, // The Vue component's name
+            component, // The resolved Vue component
+            props, // The props that are injected to the component
+        } = event.detail;
+    });
+
+The event ``vue:unmount`` is called when a component has been unmounted on the page:
+
+.. code-block:: js
+
+    document.addEventListener('vue:unmount', (event) => {
+        const {
+            componentName, // The Vue component's name
+            props, // The props that were injected to the component
+        } = event.detail;
+    });
+
+
 Backward Compatibility promise
 ------------------------------
 
