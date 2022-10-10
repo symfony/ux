@@ -23,11 +23,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Symfony\\UX\\Svelte\\": ""
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+            "Symfony\\UX\\Svelte\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Svelte\\Tests\\": "tests/"
+        }
     },
     "require": {
         "symfony/webpack-encore-bundle": "^1.11"

@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Svelte\Tests;
+namespace Symfony\UX\Svelte\Tests\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Svelte\Tests\Kernel\TwigAppKernel;
