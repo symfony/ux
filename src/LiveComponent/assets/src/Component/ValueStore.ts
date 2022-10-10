@@ -38,14 +38,20 @@ export default class {
      * Sets data back onto the value store.
      *
      * The name can be in the non-normalized format.
+     *
+     * Returns true if the new value is different than the existing value.
      */
-    set(name: string, value: any): void {
+    set(name: string, value: any): boolean {
         const normalizedName = normalizeModelName(name);
-        if (!this.updatedModels.includes(normalizedName)) {
+        const currentValue = this.get(name);
+
+        if (currentValue !== value && !this.updatedModels.includes(normalizedName)) {
             this.updatedModels.push(normalizedName);
         }
 
         this.data = setDeepData(this.data, normalizedName, value);
+
+        return currentValue !== value;
     }
 
     all(): any {

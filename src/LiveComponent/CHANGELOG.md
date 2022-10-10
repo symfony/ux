@@ -26,6 +26,18 @@
     <input data-model="firstName">
     ```
 
+-   [BEHAVIOR CHANGE] The way that child components re-render when a parent re-renders
+    has changed, but shouldn't be drastically different. Child components will now
+    avoid re-rendering if no "input" to the component changed *and* will maintain
+    any writable `LiveProp` values after the re-render. Also, the re-render happens
+    in a separate Ajax call after the parent has finished re-rendering.
+
+-   [BEHAVIOR CHANGE] If a model is updated, but the new value is equal to the old
+    one, a re-render will now be avoided.
+
+-   [BC BREAK] The `live:update-model` and `live:render` events are not longer
+    dispatched. You can now use the hook system directly on the `Component` object.
+
 -   Added the ability to add `data-loading` behavior, which is only activated
     when a specific **action** is triggered - e.g. `<span data-loading="action(save)|show">Loading</span>`.
 

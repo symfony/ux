@@ -104,14 +104,15 @@ export default class Component {
     set(model: string, value: any, reRender = false, debounce: number|boolean = false): Promise<BackendResponse> {
         const promise = this.nextRequestPromise;
         const modelName = normalizeModelName(model);
-        this.valueStore.set(modelName, value);
+        const isChanged = this.valueStore.set(modelName, value);
 
         this.hooks.triggerHook('model:set', model, value);
 
         // the model's data is no longer unsynced
         this.unsyncedInputsTracker.markModelAsSynced(modelName);
 
-        if (reRender) {
+        // don't bother re-rendering if the value didn't change
+        if (reRender && isChanged) {
             this.debouncedStartRequest(debounce);
         }
 

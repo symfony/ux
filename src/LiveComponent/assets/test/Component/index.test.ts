@@ -6,7 +6,7 @@ import {
 import BackendRequest from '../../src/BackendRequest';
 import { Response } from 'node-fetch';
 import {waitFor} from '@testing-library/dom';
-import BackendResponse from "../../src/BackendResponse";
+import BackendResponse from '../../src/BackendResponse';
 
 interface MockBackend extends BackendInterface {
     actions: BackendAction[],
@@ -58,7 +58,7 @@ describe('Component class', () => {
             expect(backendResponse).toBeNull();
 
             // set model WITH re-render
-            component.set('firstName', 'Ryan', true);
+            component.set('firstName', 'Kevin', true);
             // it's still not *instantly* resolve - it'll
             expect(backendResponse).toBeNull();
             await waitFor(() => expect(backendResponse).not.toBeNull());

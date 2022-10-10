@@ -292,6 +292,13 @@ export default class extends Controller<HTMLElement> implements LiveController {
             shouldRender = false;
         }
 
+        // just in case, if a "change" event is happening, and this field
+        // targets "input", set the model to be safe. This helps when people
+        // manually trigger field updates by dispatching a "change" event
+        if (eventName === 'change' && targetEventName === 'input') {
+            targetEventName = 'change';
+        }
+
         // e.g. we are targeting "change" and this is the "input" event
         // so do *not* update the model yet
         if (eventName && targetEventName !== eventName) {

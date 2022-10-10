@@ -384,31 +384,61 @@ live property on your component to the value ``edit``. The
 ``data-action="live#update"`` is Stimulus code that triggers
 the update.
 
-Updating a Field via Custom JavaScript
---------------------------------------
+Working with the Component in JavaScript
+----------------------------------------
 
-Sometimes you might want to change the value of a field via your own
-custom JavaScript. Suppose you have the following field inside your component:
+Want to change the value of a model or even trigger an action from your
+own custom JavaScript? No problem, thanks to a JavaScript ``Component``
+object, which is attached to each root component element.
 
-.. code-block:: twig
+For example, to write your custom JavaScript, you create a Stimulus
+controller and put it around (or attached to) your root component element:
 
-    <input
-        id="favorite-food"
-        data-model="favoriteFood"
-    >
+.. code-block:: javascript
 
-To set the value of this field via custom JavaScript (e.g. a Stimulus controller),
+    // assets/controllers/some-custom-controller.js
+    // ...
+
+    export default class extends Controller {
+        connect() {
+            // when the live component inside of this controller is initialized,
+            // this method will be called and you can access the Component object
+            this.element.addEventListener('live:connect', (event) => {
+                this.component = event.detail.component;
+            });
+        }
+
+        // some Stimulus action triggered, for example, on user click
+        toggleMode() {
+            // e.g. set some live property called "mode" on your component
+            this.component.set('mode', 'editing');
+            // you can also say
+            this.component.mode = 'editing';
+
+            // or call an action
+            this.action('save', { arg1: 'value1' });
+            // you can also say:
+            this.save({ arg1: 'value1'});
+        }
+    }
+
+You can also access the ``Component`` object via a special property
+on the root component element:
+
+.. code-block:: javascript
+
+    const component = document.getElementById('id-on-your-element').__component;
+    component.mode = 'editing';
+
+Finally, you can also set the value of a model field directly. However,
 be sure to *also* trigger a ``change`` event so that live components is notified
 of the change:
 
 .. code-block:: javascript
 
-    const input = document.getElementById('favorite-food');
+    const rootElement = document.getElementById('favorite-food');
     input.value = 'sushi';
 
-    element.dispatchEvent(new Event('input', { bubbles: true }));
-
-    // if you have data-model="on(change)|favoriteFood", use the "change" event
     element.dispatchEvent(new Event('change', { bubbles: true }));
 
 Loading States
@@ -1636,13 +1666,6 @@ To validate only on "change", use the ``on(change)`` modifier:
         class="{{ this.getError('post.content') ? 'has-error' : '' }}"
     >
 
-Interacting with JavaScript
----------------------------
-
-TODO:
-- events - like live:connect
-- the Component object
-
 Polling
 -------
 
@@ -1687,49 +1710,82 @@ Nested Components
 
 Need to nest one live component inside another one? No problem! As a
 rule of thumb, **each component exists in its own, isolated universe**.
-This means that nesting one component inside another could be really
-simple or a bit more complex, depending on how inter-connected you want
-your components to be.
+This means that if a parent component re-renders, it won't automatically
+cause the child to re-render (but it *may* - keep reading). Or, if
+a model in a child updates, it won't also update that model in its parent
+(but it *can* - keep reading).
 
-Here are a few helpful things to know:
+The parent-child system is *smart*. And with a few tricks, you can make
+it behave exactly like you need.
 
 Each component re-renders independent of one another
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If a parent component re-renders, the child component will *not* (most
-of the time) be updated, even though it lives inside the parent. Each
-component is its own, isolated universe.
-
-But this is not always what you want. For example, suppose you have a
-parent component that renders a form and a child component that renders
-one field in that form. When you click a "Save" button on the parent
-component, that validates the form and re-renders with errors -
-including a new ``error`` value that it passes into the child:
+If a parent component re-renders, this may or may not cause the child
+component to send its own Ajax request to re-render. What determines
+that? Let's look at an example of a todo list component with a child
+that renders the total number of todo items:
 
 .. code-block:: twig
 
-    {# templates/components/post_form.html.twig #}
+    {# templates/components/todo_list.html.twig #}
+    <div {{ attributes }}>
+        <input data-model="listName">
 
-    {{ component('textarea_field', {
-        value: this.content,
-        error: this.getError('content')
-    }) }}
+        {% for todo in todos %}
+            ...
+        {% endfor %}
 
-In this situation, when the parent component re-renders after clicking
-"Save", you *do* want the updated child component (with the validation
-error) to be rendered. And this *will* happen automatically. Why?
-because the live component system detects that the **parent component
-has changed how it's rendering the child**.
+        {{ component('todo_footer', {
+            count: todos|length
+        }) }}
+    </div>
 
-This may not always be perfect, and if your child component has its own
-``LiveProp`` that has changed since it was first rendered, that value
-will be lost when the parent component causes the child to re-render. If
-you have this situation, use ``data-model-map`` to map that child
-``LiveProp`` to a ``LiveProp`` in the parent component, and pass it into
-the child when rendering.
+Suppose the user updates the ``listName`` model and the parent component
+re-renders. In this case, the child component will *not* re-render. Why?
+Because the live components system will detect that none of the values passed
+*into* ``todo_footer`` (just ``count`` in this case). Have change. If no inputs
+to the child changed, there's no need to re-render it.
 
-Actions, methods and model updates in a child do not affect the parent
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+But if the user added a *new* todo item and the number of todos changed from
+5 to 6, this *would* change the ``count`` value that's passed into the ``todo_footer``.
+In this case, immediately after the parent component re-renders, the child
+request will make a second Ajax request to render itself. Smart!
+
+Child components keep their modifiable LiveProp values
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+But suppose that the ``todo_footer`` in the previous example also has
+an ``isVisible`` ``LiveProp(writable: true)`` property which starts as
+``true`` but can be changed (via a link click) to ``false``. Will
+re-rendering the child cause this to be reset back to its original
+value? Nope! When the child component re-renders, it will keep the
+current value for any of its writable props.
+
+What if you *do* want your entire child component to re-render (including
+resetting writable live props) when some value in the parent changes? This
+can be done by manually giving your component a ``data-live-id`` attribute
+that will change if the component should be totally re-rendered:
+
+.. code-block:: twig
+
+    {# templates/components/todo_list.html.twig #}
+    <div {{ attributes }}>
+        <!-- ... -->
+
+        {{ component('todo_footer', {
+            count: todos|length,
+            'data-live-id': 'todo-footer-'~todos|length
+        }) }}
+    </div>
+
+In this case, if the number of todos change, then the ``data-live-id``
+attribute of the component will also change. This signals that the
+component should re-render itself completely, discarding any writable
+LiveProp values.
+
+Actions in a child do not affect the parent
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Again, each component is its own, isolated universe! For example,
 suppose your child component has:
@@ -1750,42 +1806,17 @@ Suppose a child component has a:
 
 .. code-block:: html
 
-    <textarea data-model="markdown_value" data-action="live#update">
+    <textarea data-model="value" data-action="live#update">
 
 When the user changes this field, this will *only* update the
-``markdown_value`` field in the *child* component… because (yup, we're
+``value`` field in the *child* component… because (yup, we're
 saying it again): each component is its own, isolated universe.
 
 However, sometimes this isn't what you want! Sometimes, in addition to
 updating the child component's model, you *also* want to update a model
 on the *parent* component.
 
-To help with this, whenever a model updates, a ``live:update-model``
-event is dispatched. All components automatically listen to this event.
-This means that, when the ``markdown_value`` model is updated in the
-child component, *if* the parent component *also* has a model called
-``markdown_value`` it will *also* be updated. This is done as a
-"deferred" update
-(i.e. :ref:`updateDefer() <deferring-a-re-render-until-later>`).
-
-If the model name in your child component (e.g. ``markdown_value``) is
-*different* than the model name in your parent component
-(e.g. ``post.content``), you have two options. First, you can make sure
-both are set by leveraging both the ``data-model`` and ``name``
-attributes:
-
-.. code-block:: twig
-
-    <textarea
-        data-model="markdown_value"
-        name="post[content]"
-    >
-
-In this situation, the ``markdown_value`` model will be updated on the
-child component (because ``data-model`` takes precedence over ``name``).
-But if any parent components have a ``markdown_value`` model *or* a
-``post.content`` model (normalized from ``post[content``]`), their model
-will also be updated.
+TODO: still need to update this:
 
 A second option is to wrap your child element in a special
 ``data-model-map`` element:

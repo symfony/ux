@@ -11,7 +11,7 @@
 
 import {createTest, initComponent, shutdownTests} from '../tools';
 import {getByTestId, getByText, waitFor} from '@testing-library/dom';
-import userEvent from "@testing-library/user-event";
+import userEvent from '@testing-library/user-event';
 
 describe('LiveController data-loading Tests', () => {
     afterEach(() => {

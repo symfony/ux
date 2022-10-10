@@ -686,4 +686,33 @@ describe('LiveController data-model Tests', () => {
         expect(unmappedTextarea.value).toEqual('no data-model here!');
         expect(unmappedTextarea.getAttribute('class')).toEqual('changed-class');
     });
+
+    it('allows model fields to be manually set as long as change event is dispatched', async () => {
+        const test = await createTest({ food: '' }, (data: any) => `
+            <div ${initComponent(data)}>
+                <!-- specifically using on(input) then we will trigger a "change" event -->
+                <select data-model="on(input)|food" data-testid="food-select">
+                    <option value="">choose a food</option>
+                    <option value="carrot">🥕</option>
+                    <option value="brocolli">🥦</option>
+                </select>
+
+                Food: ${data.food}
+            </div>
+        `);
+
+        test.expectsAjaxCall('get')
+            .expectSentData({ food: 'carrot' })
+            .init();
+
+        const foodSelect = getByTestId(test.element, 'food-select');
+        if (!(foodSelect instanceof HTMLSelectElement)) {
+            throw new Error('wrong type');
+        }
+
+        foodSelect.value = 'carrot';
+        foodSelect.dispatchEvent(new Event('change', { bubbles: true }));
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Food: carrot'));
+    });
 });
