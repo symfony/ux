@@ -24,21 +24,24 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
     public function testInitLiveComponent(): void
     {
         $response = $this->browser()
-            ->visit('/render-template/template1')
+            ->visit('/render-template/render_component_with_writable_props')
             ->assertSuccessful()
             ->response()
             ->assertHtml()
         ;
 
         $div = $response->crawler()->filter('div');
+        $props = json_decode($div->attr('data-live-props-value'), true);
         $data = json_decode($div->attr('data-live-data-value'), true);
 
         $this->assertSame('live', $div->attr('data-controller'));
-        $this->assertSame('/_components/component2', $div->attr('data-live-url-value'));
+        $this->assertSame('/_components/component_with_writable_props', $div->attr('data-live-url-value'));
         $this->assertNotNull($div->attr('data-live-csrf-value'));
-        $this->assertCount(2, $data);
+        $this->assertCount(2, $props);
+        $this->assertSame(5, $props['max']);
+        $this->assertCount(1, $data);
         $this->assertSame(1, $data['count']);
-        $this->assertArrayHasKey('_checksum', $data);
+        $this->assertArrayHasKey('_checksum', $props);
     }
 
     public function testCanUseCustomAttributes(): void
@@ -51,12 +54,12 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         ;
 
         $div = $response->crawler()->filter('div');
-        $data = json_decode($div->attr('data-live-data-value'), true);
+        $props = json_decode($div->attr('data-live-props-value'), true);
 
         $this->assertSame('live', $div->attr('data-controller'));
         $this->assertSame('/_components/custom_attributes', $div->attr('data-live-url-value'));
         $this->assertNotNull($div->attr('data-live-csrf-value'));
-        $this->assertArrayHasKey('_checksum', $data);
+        $this->assertArrayHasKey('_checksum', $props);
     }
 
     public function testCanDisableCsrf(): void

@@ -16,6 +16,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Symfony\UX\LiveComponent\DehydratedComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
@@ -82,13 +83,15 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
     {
         $name = $mounted->getName();
         $url = $this->container->get(UrlGeneratorInterface::class)->generate('live_component', ['component' => $name]);
-        $data = $this->container->get(LiveComponentHydrator::class)->dehydrate($mounted);
+        /** @var DehydratedComponent $dehydratedComponent */
+        $dehydratedComponent = $this->container->get(LiveComponentHydrator::class)->dehydrate($mounted);
         $twig = $this->container->get(Environment::class);
 
         $attributes = [
             'data-controller' => 'live',
             'data-live-url-value' => twig_escape_filter($twig, $url, 'html_attr'),
-            'data-live-data-value' => twig_escape_filter($twig, json_encode($data, \JSON_THROW_ON_ERROR), 'html_attr'),
+            'data-live-data-value' => twig_escape_filter($twig, json_encode($dehydratedComponent->getData(), \JSON_THROW_ON_ERROR), 'html_attr'),
+            'data-live-props-value' => twig_escape_filter($twig, json_encode($dehydratedComponent->getProps(), \JSON_THROW_ON_ERROR), 'html_attr'),
         ];
 
         if ($this->container->has(CsrfTokenManagerInterface::class) && $metadata->get('csrf')) {

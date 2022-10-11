@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests;
 
+use Symfony\UX\LiveComponent\DehydratedComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\MountedComponent;
@@ -40,7 +41,7 @@ trait LiveComponentTestHelper
         return $this->factory()->create($name, $data);
     }
 
-    private function dehydrateComponent(MountedComponent $mounted): array
+    private function dehydrateComponent(MountedComponent $mounted): DehydratedComponent
     {
         return $this->hydrator()->dehydrate($mounted);
     }

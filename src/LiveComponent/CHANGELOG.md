@@ -38,7 +38,13 @@
 -   [BC BREAK] The `live:update-model` and `live:render` events are not longer
     dispatched. You can now use the hook system directly on the `Component` object.
 
--   Added the ability to add `data-loading` behavior, which is only activated
+-   [BC BREAK] The `LiveComponentHydrator::dehydrate()` method now returns a
+    `DehydratedComponent` object.
+
+-   Added a new JavaScript `Component` object, which is attached to the `__component`
+    property of all root component elements.
+
+-   the ability to add `data-loading` behavior, which is only activated
     when a specific **action** is triggered - e.g. `<span data-loading="action(save)|show">Loading</span>`.
 
 -   Added the ability to add `data-loading` behavior, which is only activated

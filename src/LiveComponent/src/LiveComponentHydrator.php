@@ -31,9 +31,6 @@ use Symfony\UX\TwigComponent\MountedComponent;
 final class LiveComponentHydrator
 {
     public const LIVE_CONTEXT = 'live-component';
-    private const CHECKSUM_KEY = '_checksum';
-    private const EXPOSED_PROP_KEY = '_id';
-    private const ATTRIBUTES_KEY = '_attributes';
 
     public function __construct(
         private NormalizerInterface|DenormalizerInterface $normalizer,
@@ -42,7 +39,7 @@ final class LiveComponentHydrator
     ) {
     }
 
-    public function dehydrate(MountedComponent $mounted): array
+    public function dehydrate(MountedComponent $mounted): DehydratedComponent
     {
         $component = $mounted->getComponent();
 
@@ -50,8 +47,9 @@ final class LiveComponentHydrator
             $component->{$method->name}();
         }
 
+        $props = [];
         $data = [];
-        $readonlyProperties = [];
+        $exposedData = [];
         $frontendPropertyNames = [];
 
         foreach (AsLiveComponent::liveProps($component) as $context) {
@@ -72,10 +70,6 @@ final class LiveComponentHydrator
 
             $frontendPropertyNames[$frontendName] = $name;
 
-            if ($liveProp->isReadonly()) {
-                $readonlyProperties[] = $frontendName;
-            }
-
             // TODO: improve error message if not readable
             $value = $this->propertyAccessor->getValue($component, $name);
             $dehydratedValue = null;
@@ -87,37 +81,30 @@ final class LiveComponentHydrator
                 $dehydratedValue = $this->normalizer->normalize($dehydratedValue, 'json', [self::LIVE_CONTEXT => true]);
             }
 
-            if (\count($liveProp->exposed()) > 0) {
-                $data[$frontendName] = [
-                    self::EXPOSED_PROP_KEY => $dehydratedValue,
-                ];
-
-                foreach ($liveProp->exposed() as $propertyPath) {
-                    $value = $this->propertyAccessor->getValue($component, sprintf('%s.%s', $name, $propertyPath));
-                    $data[$frontendName][$propertyPath] = \is_object($value) ? $this->normalizer->normalize($value, 'json', [self::LIVE_CONTEXT => true]) : $value;
-                }
+            if ($liveProp->isReadonly()) {
+                $props[$frontendName] = $dehydratedValue;
             } else {
                 $data[$frontendName] = $dehydratedValue;
             }
+
+            // exposed properties are currently always writable, so data
+            if ($liveProp->exposed()) {
+                $exposedData[$frontendName] = [];
+                foreach ($liveProp->exposed() as $propertyPath) {
+                    $value = $this->propertyAccessor->getValue($component, sprintf('%s.%s', $name, $propertyPath));
+                    $exposedData[$frontendName][$propertyPath] = \is_object($value) ? $this->normalizer->normalize($value, 'json', [self::LIVE_CONTEXT => true]) : $value;
+                }
+            }
         }
 
-        if ($attributes = $mounted->getAttributes()->all()) {
-            $data[self::ATTRIBUTES_KEY] = $attributes;
-            $readonlyProperties[] = self::ATTRIBUTES_KEY;
-        }
+        $attributes = $mounted->getAttributes()->all();
 
-        $data[self::CHECKSUM_KEY] = $this->computeChecksum($data, $readonlyProperties);
-
-        return $data;
+        return new DehydratedComponent($props, $data, $exposedData, $attributes, $this->secret);
     }
 
     public function hydrate(object $component, array $data, string $componentName): MountedComponent
     {
         $readonlyProperties = [];
-
-        if (isset($data[self::ATTRIBUTES_KEY])) {
-            $readonlyProperties[] = self::ATTRIBUTES_KEY;
-        }
 
         /** @var LivePropContext[] $propertyContexts */
         $propertyContexts = iterator_to_array(AsLiveComponent::liveProps($component));
@@ -136,12 +123,13 @@ final class LiveComponentHydrator
                 $readonlyProperties[] = $liveProp->calculateFieldName($component, $name);
             }
         }
+        $dehydratedComponent = DehydratedComponent::createFromCombinedData($data, $readonlyProperties, $this->secret);
 
-        $this->verifyChecksum($data, $readonlyProperties);
+        if (!$dehydratedComponent->isChecksumValid($data)) {
+            throw new UnprocessableEntityHttpException('Invalid or missing checksum. This usually means that you tried to change a property that is not writable: true.');
+        }
 
-        $attributes = new ComponentAttributes($data[self::ATTRIBUTES_KEY] ?? []);
-
-        unset($data[self::CHECKSUM_KEY], $data[self::ATTRIBUTES_KEY]);
+        $attributes = new ComponentAttributes($dehydratedComponent->getAttributes());
 
         foreach ($propertyContexts as $context) {
             $property = $context->reflectionProperty();
@@ -149,52 +137,44 @@ final class LiveComponentHydrator
             $name = $property->getName();
             $frontendName = $liveProp->calculateFieldName($component, $name);
 
-            if (!\array_key_exists($frontendName, $data)) {
+            if (!$dehydratedComponent->has($frontendName)) {
                 // this property was not sent
                 continue;
             }
 
-            $dehydratedValue = $data[$frontendName];
-
-            // if there are exposed keys, then the main value should be hidden
-            // in an array under self::EXPOSED_PROP_KEY. But if the value is
-            // *not* an array, then use the main value. This could mean that,
-            // for example, in a "post.title" situation, the "post" itself was changed.
-            if (\count($liveProp->exposed()) > 0 && isset($dehydratedValue[self::EXPOSED_PROP_KEY])) {
-                $dehydratedValue = $dehydratedValue[self::EXPOSED_PROP_KEY];
-                unset($data[$frontendName][self::EXPOSED_PROP_KEY]);
-            }
-
-            $value = $dehydratedValue;
+            $value = $dehydratedComponent->get($frontendName);
             $type = $property->getType() instanceof \ReflectionNamedType ? $property->getType() : null;
 
             if ($method = $liveProp->hydrateMethod()) {
                 // TODO: Error checking
-                $value = $component->$method($dehydratedValue);
+                $value = $component->$method($value);
             } elseif (!$value && $type && $type->allowsNull() && is_a($type->getName(), \BackedEnum::class, true) && !\in_array($value, array_map(fn (\BackedEnum $e) => $e->value, $type->getName()::cases()))) {
                 $value = null;
             } elseif (null !== $value && $type && !$type->isBuiltin()) {
                 $value = $this->normalizer->denormalize($value, $type->getName(), 'json', [self::LIVE_CONTEXT => true]);
             }
 
-            foreach ($liveProp->exposed() as $exposedProperty) {
-                $propertyPath = self::transformToArrayPath("{$name}.$exposedProperty");
+            if ($dehydratedComponent->hasExposed($frontendName)) {
+                $exposedData = $dehydratedComponent->getExposed($frontendName);
+                foreach ($liveProp->exposed() as $exposedProperty) {
+                    $propertyPath = self::transformToArrayPath($exposedProperty);
 
-                if (!$this->propertyAccessor->isReadable($data, $propertyPath)) {
-                    continue;
-                }
+                    if (!$this->propertyAccessor->isReadable($exposedData, $propertyPath)) {
+                        continue;
+                    }
 
-                // easy way to read off of the array
-                $exposedPropertyData = $this->propertyAccessor->getValue($data, $propertyPath);
+                    // easy way to read off of the array
+                    $exposedPropertyData = $this->propertyAccessor->getValue($exposedData, $propertyPath);
 
-                try {
-                    $this->propertyAccessor->setValue(
-                        $value,
-                        $exposedProperty,
-                        $exposedPropertyData
-                    );
-                } catch (UnexpectedTypeException $e) {
-                    throw new \LogicException(sprintf('Unable to set the exposed field "%s" onto the "%s" property because it has an invalid type (%s).', $exposedProperty, $name, get_debug_type($value)), 0, $e);
+                    try {
+                        $this->propertyAccessor->setValue(
+                            $value,
+                            $exposedProperty,
+                            $exposedPropertyData
+                        );
+                    } catch (UnexpectedTypeException $e) {
+                        throw new \LogicException(sprintf('Unable to set the exposed field "%s" onto the "%s" property because it has an invalid type (%s).', $exposedProperty, $name, get_debug_type($value)), 0, $e);
+                    }
                 }
             }
 
@@ -207,36 +187,6 @@ final class LiveComponentHydrator
         }
 
         return new MountedComponent($componentName, $component, $attributes);
-    }
-
-    private function computeChecksum(array $data, array $readonlyProperties): string
-    {
-        // filter to only readonly properties
-        $properties = array_filter($data, static fn ($key) => \in_array($key, $readonlyProperties, true), \ARRAY_FILTER_USE_KEY);
-
-        // for read-only properties with "exposed" sub-parts,
-        // only use the main value
-        foreach ($properties as $key => $val) {
-            if (\in_array($key, $readonlyProperties) && \is_array($val) && isset($val[self::EXPOSED_PROP_KEY])) {
-                $properties[$key] = $val[self::EXPOSED_PROP_KEY];
-            }
-        }
-
-        // sort so it is always consistent (frontend could have re-ordered data)
-        ksort($properties);
-
-        return base64_encode(hash_hmac('sha256', http_build_query($properties), $this->secret, true));
-    }
-
-    private function verifyChecksum(array $data, array $readonlyProperties): void
-    {
-        if (!\array_key_exists(self::CHECKSUM_KEY, $data)) {
-            throw new UnprocessableEntityHttpException('No checksum!');
-        }
-
-        if (!hash_equals($this->computeChecksum($data, $readonlyProperties), $data[self::CHECKSUM_KEY])) {
-            throw new UnprocessableEntityHttpException('Invalid checksum. This usually means that you tried to change a property that is not writable: true.');
-        }
     }
 
     /**
