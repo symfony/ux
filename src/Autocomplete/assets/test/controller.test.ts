@@ -138,6 +138,35 @@ describe('AutocompleteController', () => {
         });
     });
 
+    it('limits updates when min-characters', async () => {
+        const container = mountDOM(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="check autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+                data-autocomplete-min-characters-value="3"
+            ></select>
+        `);
+
+        application = startStimulus();
+
+        await waitFor(() => {
+            expect(getByTestId(container, 'main-element')).toHaveClass('connected');
+        });
+
+        const tomSelect = getByTestId(container, 'main-element').tomSelect;
+        const controlInput = tomSelect.control_input;
+
+        controlInput.value = 'fo';
+        controlInput.dispatchEvent(new Event('input'));
+
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(0);
+        });
+    });
+
     it('adds live-component support', async () => {
         const container = mountDOM(`
             <div>

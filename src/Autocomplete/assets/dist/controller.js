@@ -39,7 +39,7 @@ class default_1 extends Controller {
     }
     connect() {
         if (this.urlValue) {
-            this.tomSelect = __classPrivateFieldGet(this, _instances, "m", _createAutocompleteWithRemoteData).call(this, this.urlValue);
+            this.tomSelect = __classPrivateFieldGet(this, _instances, "m", _createAutocompleteWithRemoteData).call(this, this.urlValue, this.minCharactersValue);
             return;
         }
         if (this.optionsAsHtmlValue) {
@@ -121,7 +121,7 @@ _instances = new WeakSet(), _getCommonConfig = function _getCommonConfig() {
         },
     });
     return __classPrivateFieldGet(this, _instances, "m", _createTomSelect).call(this, config);
-}, _createAutocompleteWithRemoteData = function _createAutocompleteWithRemoteData(autocompleteEndpointUrl) {
+}, _createAutocompleteWithRemoteData = function _createAutocompleteWithRemoteData(autocompleteEndpointUrl, minCharacterLength) {
     const config = __classPrivateFieldGet(this, _instances, "m", _mergeObjects).call(this, __classPrivateFieldGet(this, _instances, "m", _getCommonConfig).call(this), {
         firstUrl: (query) => {
             const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
@@ -133,6 +133,10 @@ _instances = new WeakSet(), _getCommonConfig = function _getCommonConfig() {
                 .then(response => response.json())
                 .then(json => { this.setNextUrl(query, json.next_page); callback(json.results); })
                 .catch(() => callback());
+        },
+        shouldLoad: function (query) {
+            const minLength = minCharacterLength || 3;
+            return query.length >= minLength;
         },
         score: function (search) {
             return function (item) {
@@ -173,6 +177,7 @@ default_1.values = {
     optionsAsHtml: Boolean,
     noResultsFoundText: String,
     noMoreResultsText: String,
+    minCharacters: Number,
     tomSelectOptions: Object,
 };
 
