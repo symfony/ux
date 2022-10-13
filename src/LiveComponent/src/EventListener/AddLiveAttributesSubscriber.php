@@ -18,8 +18,10 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\DehydratedComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
+use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\EventListener\PreRenderEvent;
 use Symfony\UX\TwigComponent\MountedComponent;
 use Twig\Environment;
@@ -54,6 +56,9 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
         $variables = $event->getVariables();
         $attributesKey = $metadata->getAttributesVar();
 
+        // the original ComponentAttributes have already been processed and set
+        // onto the variables. So, we manually merge our new attributes in and
+        // override that variable.
         if (isset($variables[$attributesKey]) && $variables[$attributesKey] instanceof ComponentAttributes) {
             // merge with existing attributes if available
             $attributes = $attributes->defaults($variables[$attributesKey]->all());
@@ -75,6 +80,8 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
             LiveComponentHydrator::class,
             UrlGeneratorInterface::class,
             Environment::class,
+            ComponentStack::class,
+            DeterministicTwigIdCalculator::class,
             '?'.CsrfTokenManagerInterface::class,
         ];
     }
@@ -98,6 +105,12 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
             $attributes['data-live-csrf-value'] = $this->container->get(CsrfTokenManagerInterface::class)
                 ->getToken($name)->getValue()
             ;
+        }
+
+        if ($this->container->get(ComponentStack::class)->hasParentComponent()) {
+            $id = $this->container->get(DeterministicTwigIdCalculator::class)->calculateDeterministicId();
+
+            $attributes['data-live-id'] = $id;
         }
 
         return new ComponentAttributes($attributes);

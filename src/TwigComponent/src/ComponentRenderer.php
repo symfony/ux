@@ -33,7 +33,8 @@ final class ComponentRenderer implements ComponentRendererInterface
         private Environment $twig,
         private EventDispatcherInterface $dispatcher,
         private ComponentFactory $factory,
-        private PropertyAccessorInterface $propertyAccessor
+        private PropertyAccessorInterface $propertyAccessor,
+        private ComponentStack $componentStack
     ) {
     }
 
@@ -44,9 +45,15 @@ final class ComponentRenderer implements ComponentRendererInterface
 
     public function render(MountedComponent $mounted): string
     {
+        $this->componentStack->push($mounted);
+
         $event = $this->preRender($mounted);
 
-        return $this->twig->render($event->getTemplate(), $event->getVariables());
+        try {
+            return $this->twig->render($event->getTemplate(), $event->getVariables());
+        } finally {
+            $this->componentStack->pop();
+        }
     }
 
     public function embeddedContext(string $name, array $props, array $context): array

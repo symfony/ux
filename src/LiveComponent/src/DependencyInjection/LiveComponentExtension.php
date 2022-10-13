@@ -25,10 +25,12 @@ use Symfony\UX\LiveComponent\EventListener\AddLiveAttributesSubscriber;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
 use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
 use Symfony\UX\LiveComponent\Twig\LiveComponentExtension as LiveComponentTwigExtension;
 use Symfony\UX\LiveComponent\Twig\LiveComponentRuntime;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
+use Symfony\UX\TwigComponent\ComponentStack;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -106,8 +108,12 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         $container->register('ux.live_component.add_attributes_subscriber', AddLiveAttributesSubscriber::class)
             ->addTag('kernel.event_subscriber')
             ->addTag('container.service_subscriber', ['key' => LiveComponentHydrator::class, 'id' => 'ux.live_component.component_hydrator'])
+            ->addTag('container.service_subscriber', ['key' => ComponentStack::class, 'id' => 'ux.twig_component.component_stack'])
+            ->addTag('container.service_subscriber', ['key' => DeterministicTwigIdCalculator::class, 'id' => 'ux.live_component.deterministic_id_calculator'])
             ->addTag('container.service_subscriber') // csrf, twig & router
         ;
+
+        $container->register('ux.live_component.deterministic_id_calculator', DeterministicTwigIdCalculator::class);
 
         $container->setAlias(ComponentValidatorInterface::class, ComponentValidator::class);
 

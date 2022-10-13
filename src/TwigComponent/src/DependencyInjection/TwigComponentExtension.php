@@ -23,6 +23,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
+use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 
@@ -56,12 +57,15 @@ final class TwigComponentExtension extends Extension
             ])
         ;
 
+        $container->register('ux.twig_component.component_stack', ComponentStack::class);
+
         $container->register('ux.twig_component.component_renderer', ComponentRenderer::class)
             ->setArguments([
                 new Reference('twig'),
                 new Reference('event_dispatcher'),
                 new Reference('ux.twig_component.component_factory'),
                 new Reference('property_accessor'),
+                new Reference('ux.twig_component.component_stack'),
             ])
         ;
 
