@@ -46,7 +46,7 @@ class DeterministicTwigIdCalculator
             throw new \LogicException('Could not determine which Twig template is rendering');
         }
 
-        $fileAndLine = sprintf('%s-%d', $error->getSourceContext()?->getPath(), $error->getTemplateLine());
+        $fileAndLine = sprintf('%s-%d', $error->getSourceContext()?->getName(), $error->getTemplateLine());
         if (!isset($this->lineAndFileCounts[$fileAndLine])) {
             $this->lineAndFileCounts[$fileAndLine] = 0;
         }

@@ -90,7 +90,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $ul = $response->crawler()->filter('ul');
         $lis = $ul->children('li');
         // deterministic id: should not change, and counter should increase
-        $this->assertSame('live-3746186443-0', $lis->first()->attr('data-live-id'));
-        $this->assertSame('live-3746186443-1', $lis->last()->attr('data-live-id'));
+        $this->assertSame('live-2816377500-0', $lis->first()->attr('data-live-id'));
+        $this->assertSame('live-2816377500-1', $lis->last()->attr('data-live-id'));
     }
 }
