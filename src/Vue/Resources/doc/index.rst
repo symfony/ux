@@ -105,6 +105,7 @@ The event ``vue:before-mount`` is called before a component is mounted on the pa
 
         // Example with Vue Router
         const router = VueRouter.createRouter({
+            history: VueRouter.createWebHashHistory(),
             routes: [
                 /* ... */
             ],
@@ -113,7 +114,12 @@ The event ``vue:before-mount`` is called before a component is mounted on the pa
         app.use(router);
     });
 
-The event ``vue:before-mount`` is called when a component has been mounted on the page:
+.. note::
+   When using Vue Router, you can use "hash" or "memory" history mode
+   to prevent your Vue routes from being served through Symfony controllers.
+   If you want to use web history mode, see :ref:`Web History mode with Vue Router`
+
+The event ``vue:mount`` is called when a component has been mounted on the page:
 
 .. code-block:: js
 
@@ -136,6 +142,35 @@ The event ``vue:unmount`` is called when a component has been unmounted on the p
         } = event.detail;
     });
 
+Web History mode with Vue Router
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To use "web" history mode with Vue Router, a catch-all route will be needed
+which should render the same template and Vue component:
+
+.. code-block:: php
+
+    #Route('/survey/{path<.+>}')
+    public function survey($path = ''): Response
+    {
+        // render the template
+    }
+    
+This controller will catch any URL that starts with `/survey`. This prefix can then be
+used for all the Vue routes:
+
+.. code-block:: js
+
+    const router = VueRouter.createRouter({
+        history: VueRouter.createWebHistory(),
+        routes: [
+            { path: '/survey/list', component: ListSurveys },
+            { path: '/survey/create', component: CreateSurvey },
+            { path: '/survey/edit/:surveyId', component: EditSurvey },
+        ],
+    });
+
+    app.use(router);
 
 Backward Compatibility promise
 ------------------------------
