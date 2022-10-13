@@ -31,8 +31,8 @@
         "symfony/string": "^5.4|^6.0"
     },
     "require-dev": {
-        "doctrine/doctrine-bundle": "^2.0",
-        "doctrine/orm": "^2.7",
+        "doctrine/doctrine-bundle": "^2.4",
+        "doctrine/orm": "^2.9",
         "mtdowling/jmespath.php": "2.6.x-dev",
         "symfony/form": "^5.4|^6.0",
         "symfony/framework-bundle": "^5.4|^6.0",
@@ -45,6 +45,9 @@
         "symfony/uid": "^5.4|^6.0",
         "zenstruck/browser": "^1.1",
         "zenstruck/foundry": "^1.19"
+    },
+    "conflict": {
+        "doctrine/orm": "2.9.0 || 2.9.1"
     },
     "config": {
         "sort-packages": true

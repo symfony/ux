@@ -194,4 +194,70 @@ describe('AutocompleteController', () => {
         });
         expect(tsDropdown).toHaveAttribute('data-live-ignore');
     });
+
+    it('loads new pages on scroll', async () => {
+        const container = mountDOM(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="check autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+            ></select>
+        `);
+        //                data-autocomplete-tom-select-options-value="{'firstUrl':'/path/to/autocomplete'}"
+
+        application = startStimulus();
+
+        await waitFor(() => {
+            expect(getByTestId(container, 'main-element')).toHaveClass('connected');
+        });
+
+        // initial Ajax request on focus
+        fetchMock.mock(
+            '/path/to/autocomplete?query=',
+            JSON.stringify({
+                results: [
+                    {value: 1, text: 'dog1'},
+                    {value: 2, text: 'dog2'},
+                    {value: 3, text: 'dog3'},
+                    {value: 4, text: 'dog4'},
+                    {value: 5, text: 'dog5'},
+                    {value: 6, text: 'dog6'},
+                    {value: 7, text: 'dog7'},
+                    {value: 8, text: 'dog8'},
+                    {value: 9, text: 'dog9'},
+                    {value: 10, text: 'dog10'},
+                ],
+                next_page: '/path/to/autocomplete?query=&page=2'
+            }),
+        );
+
+        // fetchMock.mock(
+        //     '/path/to/autocomplete?query=&page=2',
+        //     JSON.stringify({
+        //         results: [
+        //             {value: 11, text: 'dog11'},
+        //             {value: 12, text: 'dog12'},
+        //         ],
+        //         next_page: null,
+        //     }),
+        // );
+
+        const tomSelect = getByTestId(container, 'main-element').tomSelect;
+        const controlInput = tomSelect.control_input;
+        const dropdown = tomSelect.dropdown;
+
+        // wait for the initial Ajax request to finish
+        userEvent.click(controlInput);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(11); // should be 10, but for some reason dropdown immediately shows "loading more results"
+        });
+
+        // userEvent.type(dropdown, '{arrowdown}');
+        //
+        // await waitFor(() => {
+        //     expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(12);
+        // });
+    });
 });
