@@ -64,7 +64,6 @@ class ComponentValidator implements ComponentValidatorInterface, ServiceSubscrib
         $propertyParts = explode('.', $propertyPath);
         $propertyName = $propertyParts[0];
 
-        /** @var $errors */
         $errors = $this->getValidator()->validateProperty($component, $propertyName);
 
         $errorsForPath = [];
