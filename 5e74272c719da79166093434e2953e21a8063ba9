@@ -1,0 +1,56 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2022-10-13T06:13:26Z
+
+Hm, CI doesn't test autocomplete at all :scream:
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-10-13T13:25:16Z
+
+> Hm, CI doesn't test autocomplete at all 😱
+
+🤦  I have an old branch locally that dynamically creates CI jobs by scanning all of the component directories, instead of relying on remember to add the hardcoded config to the CI. That needs to get finished
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-10-13T13:33:59Z
+
+> Wanted to do the functional test which tries to scroll the options dropdown, but I don't know if this possible, because didn't find a way :)
+
+Hmm, yea, this would test the JavaScript itself to make sure that it, on scroll down, makes the correct request to the next page. That *would* be nice to have. The test would live here - https://github.com/symfony/ux/blob/2.x/src/Autocomplete/assets/test/controller.test.ts - what I would attempt to do is:
+
+A) Type in the box, wait for the results to appear
+B) Then use [type](https://testing-library.com/docs/ecosystem-user-event/#typeelement-text-options) with `{arrowdown}` several times to "move down to the bottom of the list". Then, we wait to see if the second Ajax request is made.
+
+Let me know if that works or if I can help with that part.
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-10-14T04:53:30Z
+
+> > Wanted to do the functional test which tries to scroll the options dropdown, but I don't know if this possible, because didn't find a way :)
+>
+> Hmm, yea, this would test the JavaScript itself to make sure that it, on scroll down, makes the correct request to the next page. That _would_ be nice to have. The test would live here - https://github.com/symfony/ux/blob/2.x/src/Autocomplete/assets/test/controller.test.ts - what I would attempt to do is:
+>
+> A) Type in the box, wait for the results to appear B) Then use [type](https://testing-library.com/docs/ecosystem-user-event/#typeelement-text-options) with `{arrowdown}` several times to "move down to the bottom of the list". Then, we wait to see if the second Ajax request is made.
+>
+> Let me know if that works or if I can help with that part.
+
+Okay, so probably I'll need help with this. I've added the code that I've tried for the test but it does not work as expected:
+ - on focusing input for some reason the "loading more results" is immediately added to the options dropdown;
+ - triggering arrow down (tried to write trigger statement even more than 10 times) does not trigger the ajax request to load next page.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-10-14T13:47:47Z
+
+Got the test passing. You did the hard work, but I gave you some bad advice! Apparently TomSelect entirely uses the `scroll` event and "scroll position" to determine when the next page should be loaded. So a little extra work was needed to fake / short-circuit some of that. But then, the test fell into place nicely with all the pieces you had :).
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-10-14T13:51:20Z
+
+> Got the test passing. You did the hard work, but I gave you some bad advice! Apparently TomSelect entirely uses the `scroll` event and "scroll position" to determine when the next page should be loaded. So a little extra work was needed to fake / short-circuit some of that. But then, the test fell into place nicely with all the pieces you had :).
+
+Nice, thanks :)
