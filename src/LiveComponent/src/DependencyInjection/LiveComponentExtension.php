@@ -22,6 +22,7 @@ use Symfony\UX\LiveComponent\ComponentValidator;
 use Symfony\UX\LiveComponent\ComponentValidatorInterface;
 use Symfony\UX\LiveComponent\Controller\BatchActionController;
 use Symfony\UX\LiveComponent\EventListener\AddLiveAttributesSubscriber;
+use Symfony\UX\LiveComponent\EventListener\InterceptChildComponentRenderSubscriber;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
 use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
@@ -29,6 +30,7 @@ use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
 use Symfony\UX\LiveComponent\Twig\LiveComponentExtension as LiveComponentTwigExtension;
 use Symfony\UX\LiveComponent\Twig\LiveComponentRuntime;
 use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
+use Symfony\UX\LiveComponent\Util\TwigAttributeHelper;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentStack;
@@ -89,6 +91,18 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->addTag('container.service_subscriber') // csrf
         ;
 
+        $container->register('ux.live_component.intercept_child_component_render_subscriber', InterceptChildComponentRenderSubscriber::class)
+            ->setArguments([
+                new Reference('ux.twig_component.component_stack'),
+                new Reference('ux.live_component.deterministic_id_calculator'),
+                new Reference('ux.live_component.fingerprint_calculator'),
+                new Reference('ux.live_component.attribute_helper'),
+                new Reference('ux.twig_component.component_factory'),
+                new Reference('ux.live_component.component_hydrator'),
+            ])
+            ->addTag('kernel.event_subscriber');
+        ;
+
         $container->register('ux.live_component.twig.component_extension', LiveComponentTwigExtension::class)
             ->addTag('twig.extension')
         ;
@@ -106,13 +120,17 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->addTag('container.service_subscriber', ['key' => 'validator', 'id' => 'validator'])
         ;
 
+        $container->register('ux.live_component.attribute_helper', TwigAttributeHelper::class)
+            ->setArguments([new Reference('twig')]);
+
         $container->register('ux.live_component.add_attributes_subscriber', AddLiveAttributesSubscriber::class)
             ->addTag('kernel.event_subscriber')
             ->addTag('container.service_subscriber', ['key' => LiveComponentHydrator::class, 'id' => 'ux.live_component.component_hydrator'])
             ->addTag('container.service_subscriber', ['key' => ComponentStack::class, 'id' => 'ux.twig_component.component_stack'])
+            ->addTag('container.service_subscriber', ['key' => TwigAttributeHelper::class, 'id' => 'ux.live_component.attribute_helper'])
             ->addTag('container.service_subscriber', ['key' => DeterministicTwigIdCalculator::class, 'id' => 'ux.live_component.deterministic_id_calculator'])
             ->addTag('container.service_subscriber', ['key' => FingerprintCalculator::class, 'id' => 'ux.live_component.fingerprint_calculator'])
-            ->addTag('container.service_subscriber') // csrf, twig & router
+            ->addTag('container.service_subscriber') // csrf & router
         ;
 
         $container->register('ux.live_component.deterministic_id_calculator', DeterministicTwigIdCalculator::class);

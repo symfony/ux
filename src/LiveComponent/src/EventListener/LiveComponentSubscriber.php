@@ -326,7 +326,10 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             $componentName
         );
 
-        $mountedComponent->addExtraMetadata('childrenFingerprints', $this->parseDataFor($request)['childrenFingerprints']);
+        $mountedComponent->addExtraMetadata(
+            InterceptChildComponentRenderSubscriber::CHILDREN_FINGERPRINTS_METADATA_KEY,
+            $this->parseDataFor($request)['childrenFingerprints']
+        );
 
         return $mountedComponent;
     }

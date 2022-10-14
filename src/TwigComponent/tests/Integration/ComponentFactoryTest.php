@@ -156,7 +156,7 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testInputPropsStoredOnMountedComponent(): void
     {
-        $mountedComponent = $this->factory()->create('component', ['propA' => 'A', 'propB' => 'B']);
+        $mountedComponent = $this->factory()->create('component_a', ['propA' => 'A', 'propB' => 'B']);
         $this->assertSame(['propA' => 'A', 'propB' => 'B'], $mountedComponent->getInputProps());
     }
 

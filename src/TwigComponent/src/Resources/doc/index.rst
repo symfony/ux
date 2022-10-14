@@ -642,7 +642,7 @@ Subscribing to the ``PreRenderEvent`` gives the ability to modify
 the twig template and twig variables before components are rendered::
 
     use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-    use Symfony\UX\TwigComponent\EventListener\PreRenderEvent;
+    use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 
     class HookIntoTwigPreRenderSubscriber implements EventSubscriberInterface
     {

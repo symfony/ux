@@ -42,7 +42,7 @@
         "symfony/security-csrf": "^5.4|^6.0",
         "symfony/twig-bundle": "^5.4|^6.0",
         "symfony/validator": "^5.4|^6.0",
-        "zenstruck/browser": "^0.9.1",
+        "zenstruck/browser": "^1.2.0",
         "zenstruck/foundry": "^1.10"
     },
     "conflict": {

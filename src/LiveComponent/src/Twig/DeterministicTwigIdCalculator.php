@@ -37,7 +37,7 @@ class DeterministicTwigIdCalculator
      * get the same value back if you call it 3 times on a future request for
      * that same file & line.
      */
-    public function calculateDeterministicId(): string
+    public function calculateDeterministicId(bool $increment = true): string
     {
         $error = new Error('');
         $error->guess();
@@ -56,7 +56,10 @@ class DeterministicTwigIdCalculator
             crc32($fileAndLine),
             $this->lineAndFileCounts[$fileAndLine]
         );
-        ++$this->lineAndFileCounts[$fileAndLine];
+
+        if ($increment) {
+            ++$this->lineAndFileCounts[$fileAndLine];
+        }
 
         return $id;
     }

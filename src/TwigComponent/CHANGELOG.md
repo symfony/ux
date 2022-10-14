@@ -2,6 +2,9 @@
 
 ## 2.5
 
+-   The `PreRenderEvent` namespace was changed from `Symfony\UX\TwigComponent\EventListener`
+    to `Symfony\UX\TwigComponent\Event`.
+
 -   Add new autowireable `ComponentRendererInterface`
 
 ## 2.2

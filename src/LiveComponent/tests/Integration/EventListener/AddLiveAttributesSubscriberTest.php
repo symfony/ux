@@ -3,7 +3,7 @@
 namespace Symfony\UX\LiveComponent\Tests\Integration\EventListener;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\UX\TwigComponent\EventListener\PreRenderEvent;
+use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
 
