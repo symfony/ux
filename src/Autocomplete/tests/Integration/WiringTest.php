@@ -44,6 +44,33 @@ class WiringTest extends KernelTestCase
         /** @var AutocompleteResultsExecutor $executor */
         $executor = $kernel->getContainer()->get('public.results_executor');
         $autocompleter = $kernel->getContainer()->get(CustomProductAutocompleter::class);
-        $this->assertCount(3, $executor->fetchResults($autocompleter, ''));
+        $data = $executor->fetchResults($autocompleter, '', 1);
+        $this->assertCount(3, $data->results);
+        $this->assertFalse($data->hasNextPage);
+    }
+
+    public function testWiringWithManyResults(): void
+    {
+        $kernel = new Kernel('test', true);
+        $kernel->disableForms();
+        $kernel->boot();
+
+        ProductFactory::createMany(22);
+
+        /** @var AutocompleteResultsExecutor $executor */
+        $executor = $kernel->getContainer()->get('public.results_executor');
+        $autocompleter = $kernel->getContainer()->get(CustomProductAutocompleter::class);
+        $data = $executor->fetchResults($autocompleter, '', 1);
+        $this->assertCount(10, $data->results);
+        $this->assertTrue($data->hasNextPage);
+        $data = $executor->fetchResults($autocompleter, '', 2);
+        $this->assertCount(10, $data->results);
+        $this->assertTrue($data->hasNextPage);
+        $data = $executor->fetchResults($autocompleter, '', 3);
+        $this->assertCount(2, $data->results);
+        $this->assertFalse($data->hasNextPage);
+        $data = $executor->fetchResults($autocompleter, '', 4);
+        $this->assertCount(0, $data->results);
+        $this->assertFalse($data->hasNextPage);
     }
 }

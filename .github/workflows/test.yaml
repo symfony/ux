@@ -138,6 +138,15 @@ jobs:
               working-directory: src/LiveComponent
               run: php vendor/bin/simple-phpunit
 
+            - name: Autocomplete Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                working-directory: src/Autocomplete
+                dependency-versions: lowest
+            - name: Autocomplete Tests
+              working-directory: src/Autocomplete
+              run: php vendor/bin/simple-phpunit
+
     tests-php-high-deps:
         runs-on: ubuntu-latest
         steps:
@@ -201,6 +210,14 @@ jobs:
                   working-directory: src/React
             - name: React Tests
               working-directory: src/React
+              run: php vendor/bin/simple-phpunit
+
+            - name: Autocomplete Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                working-directory: src/Autocomplete
+            - name: Autocomplete Tests
+              working-directory: src/Autocomplete
               run: php vendor/bin/simple-phpunit
 
     tests-php81-high-deps:

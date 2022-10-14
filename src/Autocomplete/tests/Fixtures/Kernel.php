@@ -89,6 +89,7 @@ final class Kernel extends BaseKernel
                         'is_bundle' => false,
                         'dir' => '%kernel.project_dir%/tests/Fixtures/Entity',
                         'prefix' => 'Symfony\UX\Autocomplete\Tests\Fixtures\Entity',
+                        'type' => 'attribute',
                         'alias' => 'Test',
                     ],
                 ],
@@ -96,6 +97,7 @@ final class Kernel extends BaseKernel
         ]);
 
         $c->extension('security', [
+            'enable_authenticator_manager' => true,
             'password_hashers' => [
                 PasswordAuthenticatedUserInterface::class => 'plaintext'
             ],
