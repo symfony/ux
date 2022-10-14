@@ -205,7 +205,12 @@ describe('AutocompleteController', () => {
                 data-autocomplete-url-value="/path/to/autocomplete"
             ></select>
         `);
-        //                data-autocomplete-tom-select-options-value="{'firstUrl':'/path/to/autocomplete'}"
+        document.addEventListener('autocomplete:pre-connect', (event) => {
+            const options = event.detail.options;
+            // make it so that as soon as we trigger a scroll, tomselect thinks
+            // more need to be loaded
+            options.shouldLoadMore = () => true;
+        });
 
         application = startStimulus();
 
@@ -233,31 +238,35 @@ describe('AutocompleteController', () => {
             }),
         );
 
-        // fetchMock.mock(
-        //     '/path/to/autocomplete?query=&page=2',
-        //     JSON.stringify({
-        //         results: [
-        //             {value: 11, text: 'dog11'},
-        //             {value: 12, text: 'dog12'},
-        //         ],
-        //         next_page: null,
-        //     }),
-        // );
-
         const tomSelect = getByTestId(container, 'main-element').tomSelect;
         const controlInput = tomSelect.control_input;
-        const dropdown = tomSelect.dropdown;
 
         // wait for the initial Ajax request to finish
         userEvent.click(controlInput);
         await waitFor(() => {
             expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(11); // should be 10, but for some reason dropdown immediately shows "loading more results"
         });
+        const dropdownContent = container.querySelector('.ts-dropdown-content');
+        if (!dropdownContent) {
+            throw new Error('cannot find dropdown content element');
+        }
 
-        // userEvent.type(dropdown, '{arrowdown}');
-        //
-        // await waitFor(() => {
-        //     expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(12);
-        // });
+        fetchMock.mock(
+            '/path/to/autocomplete?query=&page=2',
+            JSON.stringify({
+                results: [
+                    {value: 11, text: 'dog11'},
+                    {value: 12, text: 'dog12'},
+                ],
+                next_page: null,
+            }),
+        );
+
+        // trigger a scroll, this will cause TomSelect to check "shouldLoadMore"
+        dropdownContent.dispatchEvent(new Event('scroll'));
+
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(12);
+        });
     });
 });
