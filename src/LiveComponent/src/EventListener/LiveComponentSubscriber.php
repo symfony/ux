@@ -74,8 +74,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         }
 
         // the default "action" is get, which does nothing
-        $action = $request->get('action', 'get');
-        $componentName = (string) $request->get('component');
+        $action = $request->attributes->get('action', 'get');
+        $componentName = (string) $request->attributes->get('component');
 
         $request->attributes->set('_component_name', $componentName);
 
