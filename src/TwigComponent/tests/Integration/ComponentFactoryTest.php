@@ -154,6 +154,12 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->factory()->get('invalid');
     }
 
+    public function testInputPropsStoredOnMountedComponent(): void
+    {
+        $mountedComponent = $this->factory()->create('component', ['propA' => 'A', 'propB' => 'B']);
+        $this->assertSame(['propA' => 'A', 'propB' => 'B'], $mountedComponent->getInputProps());
+    }
+
     private function factory(): ComponentFactory
     {
         return self::getContainer()->get('ux.twig_component.component_factory');

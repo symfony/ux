@@ -48,6 +48,7 @@ final class ComponentFactory
      */
     public function create(string $name, array $data = []): MountedComponent
     {
+        $originalData = $data;
         $component = $this->getComponent($name);
         $data = $this->preMount($component, $data);
 
@@ -80,7 +81,12 @@ final class ComponentFactory
             }
         }
 
-        return new MountedComponent($name, $component, new ComponentAttributes(array_merge($attributes, $data)));
+        return new MountedComponent(
+            $name,
+            $component,
+            new ComponentAttributes(array_merge($attributes, $data)),
+            $originalData
+        );
     }
 
     /**
