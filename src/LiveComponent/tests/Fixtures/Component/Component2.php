@@ -33,7 +33,7 @@ final class Component2
 
     public bool $postHydrateCalled = false;
 
-    public bool $beforeReRenderCalled = false;
+    public bool $preReRenderCalled = false;
 
     public function defaultAction(): void
     {
@@ -64,8 +64,8 @@ final class Component2
     }
 
     #[PreReRender]
-    public function beforeReRenderMethod(): void
+    public function preReRenderMethod(): void
     {
-        $this->beforeReRenderCalled = true;
+        $this->preReRenderCalled = true;
     }
 }

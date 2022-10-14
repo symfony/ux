@@ -153,17 +153,17 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testBeforeReRenderHookOnlyExecutedDuringAjax(): void
+    public function testPreReRenderHookOnlyExecutedDuringAjax(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'))->all();
 
         $this->browser()
             ->visit('/render-template/render_component2')
             ->assertSuccessful()
-            ->assertSee('BeforeReRenderCalled: No')
+            ->assertSee('PreReRenderCalled: No')
             ->get('/_components/component2?data='.urlencode(json_encode($dehydrated)))
             ->assertSuccessful()
-            ->assertSee('BeforeReRenderCalled: Yes')
+            ->assertSee('PreReRenderCalled: Yes')
         ;
     }
 
