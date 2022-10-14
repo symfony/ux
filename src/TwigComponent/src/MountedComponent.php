@@ -21,6 +21,13 @@ namespace Symfony\UX\TwigComponent;
 final class MountedComponent
 {
     /**
+     * Any extra metadata that might be useful to set.
+     *
+     * @var array<string, string>
+     */
+    private array $extraMetadata = [];
+
+    /**
      * @param array|null $inputProps if the component was just originally created,
      *                               (not hydrated from a request), this is the
      *                               array of initial props used to create the component
@@ -55,5 +62,24 @@ final class MountedComponent
         }
 
         return $this->inputProps;
+    }
+
+    public function addExtraMetadata(string $key, mixed $metadata): void
+    {
+        $this->extraMetadata[$key] = $metadata;
+    }
+
+    public function hasExtraMetadata(string $key): bool
+    {
+        return array_key_exists($key, $this->extraMetadata);
+    }
+
+    public function getExtraMetadata(string $key): mixed
+    {
+        if (!$this->hasExtraMetadata($key)) {
+            throw new \InvalidArgumentException(sprintf('No extra metadata for key "%s" found.', $key));
+        }
+
+        return $this->extraMetadata[$key];
     }
 }

@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\EventListener;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -198,16 +199,18 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
      *     data: array,
      *     args: array,
      *     actions: array
+     *     childrenFingerprints: array
      * }
      */
-    private function parseDataFor(Request $request): array
+    private static function parseDataFor(Request $request): array
     {
         if (!$request->attributes->has('_live_request_data')) {
             if ($request->query->has('data')) {
                 $liveRequestData = [
-                    'data' => json_decode($request->query->get('data'), true, 512, \JSON_THROW_ON_ERROR),
+                    'data' => self::parseJsonFromQuery($request, 'data'),
                     'args' => [],
                     'actions' => [],
+                    'childrenFingerprints' => self::parseJsonFromQuery($request, 'childrenFingerprints'),
                 ];
             } else {
                 $requestData = $request->toArray();
@@ -216,6 +219,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                     'data' => $requestData['data'] ?? [],
                     'args' => $requestData['args'] ?? [],
                     'actions' => $requestData['actions'] ?? [],
+                    'childrenFingerprints' => $requestData['childrenFingerprints'] ?? []
                 ];
             }
 
@@ -322,6 +326,21 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             $componentName
         );
 
+        $mountedComponent->addExtraMetadata('childrenFingerprints', $this->parseDataFor($request)['childrenFingerprints']);
+
         return $mountedComponent;
+    }
+
+    private static function parseJsonFromQuery(Request $request, string $key): array
+    {
+        if (!$request->query->has($key)) {
+            return [];
+        }
+
+        try {
+            return json_decode($request->query->get($key), true, 512, \JSON_THROW_ON_ERROR);
+        } catch (\JsonException $exception) {
+            throw new JsonException(sprintf('Invalid JSON on query string %s.', $key), 0, $exception);
+        }
     }
 }
