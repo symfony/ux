@@ -15,6 +15,20 @@ import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import AutocompleteController from '../src/controller';
 import fetchMock from 'fetch-mock-jest';
 import userEvent from '@testing-library/user-event';
+import TomSelect from 'tom-select';
+
+const getTomSelectInstance = (container: HTMLElement): TomSelect => {
+    const element = container.querySelector('[data-controller*="autocomplete"]');
+
+    if (!element) {
+        throw new Error('Cannot find data-controller="autocomplete" element');
+    }
+    if ('tomSelect' in element) {
+        return element.tomSelect;
+    }
+
+    throw new Error('Cannot find tomSelect instance');
+}
 
 // Controller used to check the actual controller was properly booted
 class CheckController extends Controller {
@@ -69,7 +83,7 @@ describe('AutocompleteController', () => {
             expect(getByTestId(container, 'main-element')).toHaveClass('connected');
         });
 
-        const tomSelect = getByTestId(container, 'main-element').tomSelect;
+        const tomSelect = getTomSelectInstance(container);
         expect(tomSelect.input).toBe(getByTestId(container, 'main-element'));
     });
 
@@ -119,7 +133,7 @@ describe('AutocompleteController', () => {
             }),
         );
 
-        const tomSelect = getByTestId(container, 'main-element').tomSelect;
+        const tomSelect = getTomSelectInstance(container);
         const controlInput = tomSelect.control_input;
 
         // wait for the initial Ajax request to finish
@@ -156,7 +170,7 @@ describe('AutocompleteController', () => {
             expect(getByTestId(container, 'main-element')).toHaveClass('connected');
         });
 
-        const tomSelect = getByTestId(container, 'main-element').tomSelect;
+        const tomSelect = getTomSelectInstance(container);
         const controlInput = tomSelect.control_input;
 
         controlInput.value = 'fo';
@@ -238,7 +252,7 @@ describe('AutocompleteController', () => {
             }),
         );
 
-        const tomSelect = getByTestId(container, 'main-element').tomSelect;
+        const tomSelect = getTomSelectInstance(container);
         const controlInput = tomSelect.control_input;
 
         // wait for the initial Ajax request to finish
