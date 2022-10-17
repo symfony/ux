@@ -21,12 +21,10 @@ final class DeterministicTwigIdCalculatorTest extends KernelTestCase
 {
     public function testReturnsDeterministicId(): void
     {
-        $twigExtension = new class() extends AbstractExtension {
-            private DeterministicTwigIdCalculator $deterministicIdCalculator;
-
-            public function __construct()
+        $deterministicIdCalculator = new DeterministicTwigIdCalculator();
+        $twigExtension = new class($deterministicIdCalculator) extends AbstractExtension {
+            public function __construct(private DeterministicTwigIdCalculator $deterministicIdCalculator)
             {
-                $this->deterministicIdCalculator = new DeterministicTwigIdCalculator();
             }
 
             public function getFunctions(): array
@@ -47,7 +45,12 @@ final class DeterministicTwigIdCalculatorTest extends KernelTestCase
         $twig->addExtension($twigExtension);
 
         $rendered = $twig->render('deterministic_id.html.twig');
+        $this->assertStringContainsString('Deterministic Id Line1-1: "live-3860148629-0"', $rendered);
+        $this->assertStringContainsString('Deterministic Id Line1-2: "live-3860148629-1"', $rendered);
+        $this->assertStringContainsString('Deterministic Id Line3: "live-136007865-0"', $rendered);
 
+        // what if deterministic_id.html.twig is included by another file?
+        $deterministicIdCalculator->reset();
         $this->assertStringContainsString('Deterministic Id Line1-1: "live-3860148629-0"', $rendered);
         $this->assertStringContainsString('Deterministic Id Line1-2: "live-3860148629-1"', $rendered);
         $this->assertStringContainsString('Deterministic Id Line3: "live-136007865-0"', $rendered);

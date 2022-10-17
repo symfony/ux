@@ -14,6 +14,7 @@ namespace Symfony\UX\TwigComponent;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
+use Symfony\UX\TwigComponent\Event\PostRenderEvent;
 use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Twig\Environment;
@@ -62,6 +63,9 @@ final class ComponentRenderer implements ComponentRendererInterface
             return $this->twig->render($event->getTemplate(), $event->getVariables());
         } finally {
             $this->componentStack->pop();
+
+            $event = new PostRenderEvent($mounted);
+            $this->dispatcher->dispatch($event);
         }
     }
 

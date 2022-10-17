@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Twig;
 
 use Twig\Error\Error;
+use Twig\Template;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
@@ -39,14 +40,9 @@ class DeterministicTwigIdCalculator
      */
     public function calculateDeterministicId(bool $increment = true): string
     {
-        $error = new Error('');
-        $error->guess();
+        $lineData = $this->guessTemplateInfo();
 
-        if (!$error->getSourceContext()) {
-            throw new \LogicException('Could not determine which Twig template is rendering');
-        }
-
-        $fileAndLine = sprintf('%s-%d', $error->getSourceContext()?->getName(), $error->getTemplateLine());
+        $fileAndLine = sprintf('%s-%d', $lineData['name'], $lineData['line']);
         if (!isset($this->lineAndFileCounts[$fileAndLine])) {
             $this->lineAndFileCounts[$fileAndLine] = 0;
         }
@@ -62,5 +58,119 @@ class DeterministicTwigIdCalculator
         }
 
         return $id;
+    }
+
+    public function reset(): void
+    {
+        $this->lineAndFileCounts = [];
+    }
+
+    /**
+     * Adapted from Twig\Error\Error::guessTemplateInfo()
+     *
+     * Any differences are marked below.
+     *
+     * @return array{name: string, line: int}
+     */
+    private function guessTemplateInfo(): array
+    {
+        $template = null;
+        $templateClass = null;
+
+        $backtrace = debug_backtrace(\DEBUG_BACKTRACE_IGNORE_ARGS | \DEBUG_BACKTRACE_PROVIDE_OBJECT);
+        foreach ($backtrace as $trace) {
+            if (isset($trace['object']) && $trace['object'] instanceof Template) {
+                $currentClass = \get_class($trace['object']);
+                $isEmbedContainer = null === $templateClass ? false : 0 === strpos($templateClass, $currentClass);
+                // START CHANGE
+                // if statement not needed
+                //if (null === $this->name || ($this->name == $trace['object']->getTemplateName() && !$isEmbedContainer)) {
+                    $template = $trace['object'];
+                    //$templateClass = \get_class($trace['object']);
+                //}
+                // END CHANGE
+
+                // START CHANGE
+                // we want to find the FIRST matching template, not the original
+                // END CHANGE
+                break;
+            }
+        }
+
+        // update template name
+        // START CHANGE
+        // don't check name poroperty
+        //if (null !== $template && null === $this->name) {
+        if (null !== $template) {
+        // END CHANGE
+            // START CHANGE
+            // set local variable
+            $name = $template->getTemplateName();
+            // END CHANGE
+        }
+
+        // update template path if any
+        // START CHANGE
+        // if statement not needed
+        /*
+        if (null !== $template && null === $this->sourcePath) {
+            $src = $template->getSourceContext();
+            $this->sourceCode = $src->getCode();
+            $this->sourcePath = $src->getPath();
+        }
+        */
+
+        // START CHANGE
+        //if (null === $template || $this->lineno > -1) {
+        // remove lineno property check
+        if (null === $template) {
+        // END CHANGE
+            // START CHANGE
+            // throw exception instead
+            throw new \LogicException('Could not determine template while generating deterministic id.');
+            //return;
+            //
+        }
+
+        $r = new \ReflectionObject($template);
+        $file = $r->getFileName();
+
+        // START CHANGE
+        //$exceptions = [$e = $this];
+        $exceptions = [new Error('')];
+        // not other exceptions to check
+        /*
+        while ($e = $e->getPrevious()) {
+            $exceptions[] = $e;
+        }
+        */
+        // END CHANGE
+
+        while ($e = array_pop($exceptions)) {
+            $traces = $e->getTrace();
+            array_unshift($traces, ['file' => $e->getFile(), 'line' => $e->getLine()]);
+
+            while ($trace = array_shift($traces)) {
+                if (!isset($trace['file']) || !isset($trace['line']) || $file != $trace['file']) {
+                    continue;
+                }
+
+                foreach ($template->getDebugInfo() as $codeLine => $templateLine) {
+                    if ($codeLine <= $trace['line']) {
+                        // update template line
+                        // START CHANGE
+                        // set local variable
+                        $lineno = $templateLine;
+
+                        // return the values
+                        return ['name' => $name, 'line' => $lineno];
+                        //return;
+                        // END CHANGE
+                    }
+                }
+            }
+        }
+
+        throw new \LogicException(sprintf('Could not find line number in template "%s" while generating deterministic id.', $name));
     }
 }
