@@ -219,7 +219,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                     'data' => $requestData['data'] ?? [],
                     'args' => $requestData['args'] ?? [],
                     'actions' => $requestData['actions'] ?? [],
-                    'childrenFingerprints' => $requestData['childrenFingerprints'] ?? []
+                    'childrenFingerprints' => $requestData['childrenFingerprints'] ?? [],
                 ];
             }
 
@@ -318,7 +318,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private function hydrateComponent(object $component, string $componentName, Request $request): MountedComponent
     {
         $hydrator = $this->container->get(LiveComponentHydrator::class);
-        assert($hydrator instanceof LiveComponentHydrator);
+        \assert($hydrator instanceof LiveComponentHydrator);
 
         $mountedComponent = $hydrator->hydrate(
             $component,

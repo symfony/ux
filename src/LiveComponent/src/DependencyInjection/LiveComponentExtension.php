@@ -102,7 +102,6 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('ux.live_component.component_hydrator'),
             ])
             ->addTag('kernel.event_subscriber');
-        ;
 
         $container->register('ux.live_component.reset_deterministic_id_subscriber', ResetDeterministicIdSubscriber::class)
             ->setArguments([
@@ -110,7 +109,6 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('ux.twig_component.component_stack'),
             ])
             ->addTag('kernel.event_subscriber');
-        ;
 
         $container->register('ux.live_component.twig.component_extension', LiveComponentTwigExtension::class)
             ->addTag('twig.extension')

@@ -26,6 +26,7 @@ use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
  * @experimental
+ *
  * @internal
  */
 class InterceptChildComponentRenderSubscriber implements EventSubscriberInterface
@@ -39,17 +40,17 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
         private TwigAttributeHelper $twigAttributeHelper,
         private ComponentFactory $componentFactory,
         private LiveComponentHydrator $liveComponentHydrator,
-    )
-    {
+    ) {
     }
 
     public function preComponentCreated(PreCreateForRenderEvent $event): void
     {
-        if (!$this->componentStack->hasParentComponent()) {
+        // if there is already a component, that's a parent. Else, this is not a child.
+        if (!$this->componentStack->getCurrentComponent()) {
             return;
         }
 
-        $parentComponent = $this->componentStack->getParentComponent();
+        $parentComponent = $this->componentStack->getCurrentComponent();
         if (!$parentComponent->hasExtraMetadata(self::CHILDREN_FINGERPRINTS_METADATA_KEY)) {
             return;
         }
@@ -66,7 +67,7 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
         // increment the internal counter now to keep "counter" consistency if we're
         // in a loop of children being rendered on the same line
         // we need to do this because this component will *not* ever hit
-        // AddLiveAttributesSubscriber where the counter is normally incrememented
+        // AddLiveAttributesSubscriber where the counter is normally incremented
         $this->deterministicTwigIdCalculator->calculateDeterministicId(increment: true);
 
         $newPropsFingerprint = $this->fingerprintCalculator->calculateFingerprint($event->getProps());
@@ -106,7 +107,7 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
     public static function getSubscribedEvents(): array
     {
         return [
-            PreCreateForRenderEvent::class => 'preComponentCreated'
+            PreCreateForRenderEvent::class => 'preComponentCreated',
         ];
     }
 }

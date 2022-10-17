@@ -19,14 +19,13 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\DehydratedComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
-use Symfony\UX\LiveComponent\Util\TwigAttributeHelper;
 use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
+use Symfony\UX\LiveComponent\Util\TwigAttributeHelper;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Symfony\UX\TwigComponent\MountedComponent;
-use Twig\Environment;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>

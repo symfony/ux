@@ -66,7 +66,7 @@ class DeterministicTwigIdCalculator
     }
 
     /**
-     * Adapted from Twig\Error\Error::guessTemplateInfo()
+     * Adapted from Twig\Error\Error::guessTemplateInfo().
      *
      * Any differences are marked below.
      *
@@ -84,10 +84,10 @@ class DeterministicTwigIdCalculator
                 $isEmbedContainer = null === $templateClass ? false : 0 === strpos($templateClass, $currentClass);
                 // START CHANGE
                 // if statement not needed
-                //if (null === $this->name || ($this->name == $trace['object']->getTemplateName() && !$isEmbedContainer)) {
-                    $template = $trace['object'];
-                    //$templateClass = \get_class($trace['object']);
-                //}
+                // if (null === $this->name || ($this->name == $trace['object']->getTemplateName() && !$isEmbedContainer)) {
+                $template = $trace['object'];
+                // $templateClass = \get_class($trace['object']);
+                // }
                 // END CHANGE
 
                 // START CHANGE
@@ -100,9 +100,9 @@ class DeterministicTwigIdCalculator
         // update template name
         // START CHANGE
         // don't check name poroperty
-        //if (null !== $template && null === $this->name) {
+        // if (null !== $template && null === $this->name) {
         if (null !== $template) {
-        // END CHANGE
+            // END CHANGE
             // START CHANGE
             // set local variable
             $name = $template->getTemplateName();
@@ -121,14 +121,14 @@ class DeterministicTwigIdCalculator
         */
 
         // START CHANGE
-        //if (null === $template || $this->lineno > -1) {
+        // if (null === $template || $this->lineno > -1) {
         // remove lineno property check
         if (null === $template) {
-        // END CHANGE
+            // END CHANGE
             // START CHANGE
             // throw exception instead
             throw new \LogicException('Could not determine template while generating deterministic id.');
-            //return;
+            // return;
             //
         }
 
@@ -136,7 +136,7 @@ class DeterministicTwigIdCalculator
         $file = $r->getFileName();
 
         // START CHANGE
-        //$exceptions = [$e = $this];
+        // $exceptions = [$e = $this];
         $exceptions = [new Error('')];
         // not other exceptions to check
         /*
@@ -164,7 +164,7 @@ class DeterministicTwigIdCalculator
 
                         // return the values
                         return ['name' => $name, 'line' => $lineno];
-                        //return;
+                        // return;
                         // END CHANGE
                     }
                 }

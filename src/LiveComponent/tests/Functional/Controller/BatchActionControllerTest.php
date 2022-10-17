@@ -12,9 +12,9 @@
 namespace Symfony\UX\LiveComponent\Tests\Functional\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\KernelBrowser;
-use Zenstruck\Browser\Response\HtmlResponse;
 use Zenstruck\Browser\Test\HasBrowser;
 
 /**
@@ -34,8 +34,8 @@ final class BatchActionControllerTest extends KernelTestCase
             ->get('/_components/with_actions', ['json' => ['data' => $dehydrated]])
             ->assertSuccessful()
             ->assertSee('initial')
-            ->use(function (HtmlResponse $response, KernelBrowser $browser) {
-                $rootElement = $response->crawler()->filter('ul')->first();
+            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+                $rootElement = $crawler->filter('ul')->first();
                 $liveData = json_decode($rootElement->attr('data-live-data-value'), true);
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
@@ -44,13 +44,13 @@ final class BatchActionControllerTest extends KernelTestCase
                         'data' => $liveData + $liveProps,
                         'args' => ['what' => 'first'],
                     ],
-                    'headers' => ['X-CSRF-TOKEN' => $response->crawler()->filter('ul')->first()->attr('data-live-csrf-value')],
+                    'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
             })
             ->assertSee('initial')
             ->assertSee('first')
-            ->use(function (HtmlResponse $response, KernelBrowser $browser) {
-                $rootElement = $response->crawler()->filter('ul')->first();
+            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+                $rootElement = $crawler->filter('ul')->first();
                 $liveData = json_decode($rootElement->attr('data-live-data-value'), true);
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
@@ -63,7 +63,7 @@ final class BatchActionControllerTest extends KernelTestCase
                             ['name' => 'add', 'args' => ['what' => 'fourth']],
                         ],
                     ],
-                    'headers' => ['X-CSRF-TOKEN' => $response->crawler()->filter('ul')->first()->attr('data-live-csrf-value')],
+                    'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
             })
             ->assertSee('initial')
@@ -96,8 +96,8 @@ final class BatchActionControllerTest extends KernelTestCase
             ->get('/_components/with_actions', ['json' => ['data' => $dehydrated]])
             ->assertSuccessful()
             ->interceptRedirects()
-            ->use(function (HtmlResponse $response, KernelBrowser $browser) {
-                $rootElement = $response->crawler()->filter('ul')->first();
+            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+                $rootElement = $crawler->filter('ul')->first();
                 $liveData = json_decode($rootElement->attr('data-live-data-value'), true);
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
@@ -110,7 +110,7 @@ final class BatchActionControllerTest extends KernelTestCase
                             ['name' => 'add', 'args' => ['what' => 'fourth']],
                         ],
                     ],
-                    'headers' => ['X-CSRF-TOKEN' => $response->crawler()->filter('ul')->first()->attr('data-live-csrf-value')],
+                    'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
             })
             ->assertRedirectedTo('/')
@@ -124,8 +124,8 @@ final class BatchActionControllerTest extends KernelTestCase
         $this->browser()
             ->get('/_components/with_actions', ['json' => ['data' => $dehydrated]])
             ->assertSuccessful()
-            ->use(function (HtmlResponse $response, KernelBrowser $browser) {
-                $rootElement = $response->crawler()->filter('ul')->first();
+            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+                $rootElement = $crawler->filter('ul')->first();
                 $liveData = json_decode($rootElement->attr('data-live-data-value'), true);
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
@@ -138,7 +138,7 @@ final class BatchActionControllerTest extends KernelTestCase
                             ['name' => 'add', 'args' => ['what' => 'fourth']],
                         ],
                     ],
-                    'headers' => ['X-CSRF-TOKEN' => $response->crawler()->filter('ul')->first()->attr('data-live-csrf-value')],
+                    'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
             })
             ->assertStatus(500)
@@ -153,8 +153,8 @@ final class BatchActionControllerTest extends KernelTestCase
         $this->browser()
             ->get('/_components/with_actions', ['json' => ['data' => $dehydrated]])
             ->assertSuccessful()
-            ->use(function (HtmlResponse $response, KernelBrowser $browser) {
-                $rootElement = $response->crawler()->filter('ul')->first();
+            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+                $rootElement = $crawler->filter('ul')->first();
                 $liveData = json_decode($rootElement->attr('data-live-data-value'), true);
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
@@ -167,7 +167,7 @@ final class BatchActionControllerTest extends KernelTestCase
                             ['name' => 'add', 'args' => ['what' => 'fourth']],
                         ],
                     ],
-                    'headers' => ['X-CSRF-TOKEN' => $response->crawler()->filter('ul')->first()->attr('data-live-csrf-value')],
+                    'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
             })
             ->assertStatus(404)

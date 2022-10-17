@@ -71,7 +71,7 @@ final class MountedComponent
 
     public function hasExtraMetadata(string $key): bool
     {
-        return array_key_exists($key, $this->extraMetadata);
+        return \array_key_exists($key, $this->extraMetadata);
     }
 
     public function getExtraMetadata(string $key): mixed

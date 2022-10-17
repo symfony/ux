@@ -21,6 +21,7 @@ final class TodoListComponent
     #[LiveProp(writable: true)]
     public string $name = '';
 
+    #[LiveProp]
     public array $items = [];
 
     use DefaultActionTrait;

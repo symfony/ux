@@ -23,14 +23,13 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
     public function testInitLiveComponent(): void
     {
-        $response = $this->browser()
+        $div = $this->browser()
             ->visit('/render-template/render_component_with_writable_props')
             ->assertSuccessful()
-            ->response()
-            ->assertHtml()
+            ->crawler()
+            ->filter('div')
         ;
 
-        $div = $response->crawler()->filter('div');
         $props = json_decode($div->attr('data-live-props-value'), true);
         $data = json_decode($div->attr('data-live-data-value'), true);
 
@@ -46,14 +45,13 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
     public function testCanUseCustomAttributes(): void
     {
-        $response = $this->browser()
+        $div = $this->browser()
             ->visit('/render-template/render_custom_attributes')
             ->assertSuccessful()
-            ->response()
-            ->assertHtml()
+            ->crawler()
+            ->filter('div')
         ;
 
-        $div = $response->crawler()->filter('div');
         $props = json_decode($div->attr('data-live-props-value'), true);
 
         $this->assertSame('live', $div->attr('data-controller'));
@@ -64,14 +62,12 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
     public function testCanDisableCsrf(): void
     {
-        $response = $this->browser()
+        $div = $this->browser()
             ->visit('/render-template/csrf')
             ->assertSuccessful()
-            ->response()
-            ->assertHtml()
+            ->crawler()
+            ->filter('div')
         ;
-
-        $div = $response->crawler()->filter('div');
 
         $this->assertSame('live', $div->attr('data-controller'));
         $this->assertSame('/_components/disabled_csrf', $div->attr('data-live-url-value'));
@@ -80,14 +76,13 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
     public function testItAddsIdAndFingerprintToChildComponent(): void
     {
-        $response = $this->browser()
+        $ul = $this->browser()
             ->visit('/render-template/render_todo_list')
             ->assertSuccessful()
-            ->response()
-            ->assertHtml()
+            ->crawler()
+            ->filter('ul')
         ;
 
-        $ul = $response->crawler()->filter('ul');
         $lis = $ul->children('li');
         // deterministic id: should not change, and counter should increase
         $this->assertSame('live-2816377500-0', $lis->first()->attr('data-live-id'));
