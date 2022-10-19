@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-08-22T15:27:19Z
+
+Thanks for this - nice catch. I believe the original code was added to fix a js error that might happen if our component kept running and tried to operate on elements that no longer appeared on the page after navigation… but I can’t remember correctly, and that commit appears to go back to the “initial commit” commit :/.
+
+So I like your solution, but I’m also not familiar with these events. Also, one post I found says to use the page visibility api - https://www.igvita.com/2015/11/20/dont-lose-user-and-app-state-use-page-visibility/
+
+And, I have one other possible idea. If the original intent was to avoid mutating some elements… when they are no longer on the page, could this be accomplished by connect() and disconnect()? In those methods, we store the state of the component (connected or not) and then skip the rendering if we are not connected?
+
+---------------------------------------------------------------------------
+
+by 1ed at 2022-10-18T19:46:23Z
+
+I added a new commit to use connect disconnect, but I don't know how to test this properly, the previous test fails because it used page events. Maybe this something that should be tested by e2e test in a browser? I also added how to reproduce this on the 2.x branch (turbo should be disabled) to the description.
+
+I had an other issue too: https://github.com/symfony/ux/commit/4e846d8688e8df773bd4e6861933561ec65d2455#diff-565bf0a4d7c4e904b165c4a2bc70ccb6101d31119b4a88ff0d9ed828537a33dfR3 this file is missing from the repository so the build can not run, or am I missing something?
+
+---------------------------------------------------------------------------
+
+by 1ed at 2022-10-19T07:34:07Z
+
+Tests fixed by triggering controller connect/disconnect.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-10-19T14:44:02Z
+
+> I had an other issue too: https://github.com/symfony/ux/commit/4e846d8688e8df773bd4e6861933561ec65d2455#diff-565bf0a4d7c4e904b165c4a2bc70ccb6101d31119b4a88ff0d9ed828537a33dfR3 this file is missing from the repository so the build can not run, or am I missing something?
+
+thanks for mentioning that - it was a bad commit by me. Fixed now.
