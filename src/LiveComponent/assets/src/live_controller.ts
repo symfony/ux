@@ -1,12 +1,15 @@
 import { Controller } from '@hotwired/stimulus';
-import { parseDirectives, DirectiveModifier } from './directives_parser';
+import {
+    parseDirectives,
+    DirectiveModifier,
+} from './Directive/directives_parser';
 import {
     getModelDirectiveFromElement,
     getElementAsTagText,
     getValueFromElement,
-    elementBelongsToThisComponent,
+    elementBelongsToThisComponent, getAllModelDirectiveFromElements,
 } from './dom_utils';
-import Component, {proxifyComponent} from './Component';
+import Component, { proxifyComponent } from './Component';
 import Backend from './Backend';
 import { StandardElementDriver } from './Component/ElementDriver';
 import LoadingPlugin from './Component/plugins/LoadingPlugin';
@@ -15,6 +18,7 @@ import PageUnloadingPlugin from './Component/plugins/PageUnloadingPlugin';
 import PollingPlugin from './Component/plugins/PollingPlugin';
 import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModelFieldsPlugin';
 import {PluginInterface} from './Component/plugins/PluginInterface';
+import getModelBinding from './Directive/get_model_binding';
 
 export interface LiveEvent extends CustomEvent {
     detail: {
@@ -254,70 +258,44 @@ export default class extends Controller<HTMLElement> implements LiveController {
             return;
         }
 
-        let shouldRender = true;
-        let targetEventName = 'input';
-        let debounce: number|boolean = false;
-
-        modelDirective.modifiers.forEach((modifier) => {
-            switch (modifier.name) {
-                case 'on':
-                    if (!modifier.value) {
-                        throw new Error(`The "on" modifier in ${modelDirective.getString()} requires a value - e.g. on(change).`);
-                    }
-                    if (!['input', 'change'].includes(modifier.value)) {
-                        throw new Error(`The "on" modifier in ${modelDirective.getString()} only accepts the arguments "input" or "change".`);
-                    }
-
-                    targetEventName = modifier.value;
-
-                    break;
-                case 'norender':
-                    shouldRender = false;
-
-                    break;
-
-                case 'debounce':
-                    debounce = modifier.value ? parseInt(modifier.value) : true;
-
-                    break;
-                default:
-                    console.warn(`Unknown modifier "${modifier.name}" in data-model="${modelDirective.getString()}".`);
-            }
-        });
+        const modelBinding = getModelBinding(modelDirective);
+        if (!modelBinding.targetEventName) {
+            modelBinding.targetEventName = 'input';
+        }
 
         // rare case where the same event+element triggers a model
         // update *and* an action. The action is already scheduled
         // to occur, so we do not need to *also* trigger a re-render.
         if (this.pendingActionTriggerModelElement === element) {
-            shouldRender = false;
+            modelBinding.shouldRender = false;
         }
 
         // just in case, if a "change" event is happening, and this field
         // targets "input", set the model to be safe. This helps when people
         // manually trigger field updates by dispatching a "change" event
-        if (eventName === 'change' && targetEventName === 'input') {
-            targetEventName = 'change';
+        if (eventName === 'change' && modelBinding.targetEventName === 'input') {
+            modelBinding.targetEventName = 'change';
         }
 
         // e.g. we are targeting "change" and this is the "input" event
         // so do *not* update the model yet
-        if (eventName && targetEventName !== eventName) {
+        if (eventName && modelBinding.targetEventName !== eventName) {
             return;
         }
 
-        if (false === debounce) {
-            if (targetEventName === 'input') {
+        if (false === modelBinding.debounce) {
+            if (modelBinding.targetEventName === 'input') {
                 // true debounce will cause default to be used
-                debounce = true;
+                modelBinding.debounce = true;
             } else {
                 // for change, add no debounce
-                debounce = 0;
+                modelBinding.debounce = 0;
             }
         }
 
         const finalValue = getValueFromElement(element, this.component.valueStore);
 
-        this.component.set(modelDirective.action, finalValue, shouldRender, debounce);
+        this.component.set(modelBinding.modelName, finalValue, modelBinding.shouldRender, modelBinding.debounce);
     }
 
     handleConnectedControllerEvent(event: LiveEvent) {
@@ -331,7 +309,13 @@ export default class extends Controller<HTMLElement> implements LiveController {
             return;
         }
 
-        this.component.addChild(childController.component);
+        const modelDirectives = getAllModelDirectiveFromElements(childController.element);
+        const modelBindings = modelDirectives.map(getModelBinding);
+
+        this.component.addChild(
+            childController.component,
+            modelBindings
+        );
 
         // live:disconnect needs to be registered on the child element directly
         // that's because if the child component is removed from the DOM, then

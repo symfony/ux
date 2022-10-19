@@ -246,7 +246,7 @@ ExposeInTemplate Attribute
 
 .. versionadded:: 2.3
 
-    The ``ExposeInTemplate`` attribute now be used on public methods.
+    The ``ExposeInTemplate`` attribute can now be used on public methods.
 
 All public component properties are available directly in your component
 template. You can use the ``ExposeInTemplate`` attribute to expose
@@ -688,7 +688,18 @@ PreCreateForRenderEvent
 Subscribing to the ``PreCreateForRenderEvent`` gives the ability to be
 notified before a component object is created or hydrated, at the
 very start of the rendering process. You have access to the component
-name, input props and can interrupt the process by setting HTML.
+name, input props and can interrupt the process by setting HTML. This
+event is not triggered during a re-render.
+
+PreMountEvent and PostMountEvent
+--------------------------------
+
+.. versionadded:: 2.1
+
+    The ``PreMountEvent`` and ``PostMountEvent`` ere added in TwigComponents 2.5.
+
+To run code just before or after a component's data is mounted, you can
+listen to ``PreMountEvent`` or ``PostMountEvent``.
 
 Nested Components
 -----------------

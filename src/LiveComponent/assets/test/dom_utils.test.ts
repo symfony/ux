@@ -8,9 +8,9 @@ import {
     setValueOnElement
 } from '../src/dom_utils';
 import ValueStore from '../src/Component/ValueStore';
-import Component from "../src/Component";
-import Backend from "../src/Backend";
-import {StandardElementDriver} from "../src/Component/ElementDriver";
+import Component from '../src/Component';
+import Backend from '../src/Backend';
+import {StandardElementDriver} from '../src/Component/ElementDriver';
 
 const createStore = function(props: any = {}): ValueStore {
     return new ValueStore(props, {});

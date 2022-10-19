@@ -11,8 +11,19 @@ import { ElementDriver } from './ElementDriver';
 import HookManager from '../HookManager';
 import { PluginInterface } from './plugins/PluginInterface';
 import BackendResponse from '../BackendResponse';
+import { ModelBinding } from '../Directive/get_model_binding';
 
 declare const Turbo: any;
+
+class ChildComponentWrapper {
+    component: Component;
+    modelBindings: ModelBinding[];
+
+    constructor(component: Component, modelBindings: ModelBinding[]) {
+        this.component = component;
+        this.modelBindings = modelBindings;
+    }
+}
 
 export default class Component {
     readonly element: HTMLElement;
@@ -46,7 +57,7 @@ export default class Component {
     private nextRequestPromise: Promise<BackendResponse>;
     private nextRequestPromiseResolve: (response: BackendResponse) => any;
 
-    private children: Map<string, Component> = new Map();
+    private children: Map<string, ChildComponentWrapper> = new Map();
     private parent: Component|null = null;
 
     /**
@@ -69,6 +80,8 @@ export default class Component {
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
         this.hooks = new HookManager();
         this.resetPromise();
+
+        this.onChildComponentModelUpdate = this.onChildComponentModelUpdate.bind(this);
     }
 
     addPlugin(plugin: PluginInterface) {
@@ -95,10 +108,14 @@ export default class Component {
      *     * render:finished (component: Component) => {}
      *     * loading.state:started (element: HTMLElement, request: BackendRequest) => {}
      *     * loading.state:finished (element: HTMLElement) => {}
-     *     * model:set (model: string, value: any) => {}
+     *     * model:set (model: string, value: any, component: Component) => {}
      */
     on(hookName: string, callback: (...args: any[]) => void): void {
         this.hooks.register(hookName, callback);
+    }
+
+    off(hookName: string, callback: (...args: any[]) => void): void {
+        this.hooks.unregister(hookName, callback);
     }
 
     set(model: string, value: any, reRender = false, debounce: number|boolean = false): Promise<BackendResponse> {
@@ -106,7 +123,7 @@ export default class Component {
         const modelName = normalizeModelName(model);
         const isChanged = this.valueStore.set(modelName, value);
 
-        this.hooks.triggerHook('model:set', model, value);
+        this.hooks.triggerHook('model:set', model, value, this);
 
         // the model's data is no longer unsynced
         this.unsyncedInputsTracker.markModelAsSynced(modelName);
@@ -151,13 +168,14 @@ export default class Component {
         return this.unsyncedInputsTracker.getModifiedModels();
     }
 
-    addChild(component: Component): void {
-        if (!component.id) {
+    addChild(child: Component, modelBindings: ModelBinding[] = []): void {
+        if (!child.id) {
             throw new Error('Children components must have an id.');
         }
 
-        this.children.set(component.id, component);
-        component.parent = this;
+        this.children.set(child.id, new ChildComponentWrapper(child, modelBindings));
+        child.parent = this;
+        child.on('model:set', this.onChildComponentModelUpdate);
     }
 
     removeChild(child: Component): void {
@@ -167,6 +185,7 @@ export default class Component {
 
         this.children.delete(child.id);
         child.parent = null;
+        child.off('model:set', this.onChildComponentModelUpdate);
     }
 
     getParent(): Component|null {
@@ -174,9 +193,19 @@ export default class Component {
     }
 
     getChildren(): Map<string, Component> {
-        return new Map(this.children);
+        const children: Map<string, Component> = new Map();
+        this.children.forEach((childComponent, id) => {
+            children.set(id, childComponent.component);
+        });
+
+        return children;
     }
 
+    /**
+     * Called during morphdom: read props from toEl and re-render if necessary.
+     *
+     * @param toEl
+     */
     updateFromNewElement(toEl: HTMLElement): boolean {
         const props = this.elementDriver.getComponentProps(toEl);
 
@@ -199,6 +228,36 @@ export default class Component {
         }
 
         return false;
+    }
+
+    /**
+     * Handles data-model binding from a parent component onto a child.
+     */
+    onChildComponentModelUpdate(modelName: string, value: any, childComponent: Component): void {
+        if (!childComponent.id) {
+            throw new Error('Missing id');
+        }
+
+        const childWrapper = this.children.get(childComponent.id);
+        if (!childWrapper) {
+            throw new Error('Missing child');
+        }
+
+        childWrapper.modelBindings.forEach((modelBinding) => {
+            const childModelName = modelBinding.innerModelName || 'value';
+
+            // skip, unless childModelName matches the model that just changed
+            if (childModelName !== modelName) {
+                return;
+            }
+
+            this.set(
+                modelBinding.modelName,
+                value,
+                modelBinding.shouldRender,
+                modelBinding.debounce
+            );
+        });
     }
 
     private tryStartingRequest(): void {
@@ -391,7 +450,8 @@ export default class Component {
     private getChildrenFingerprints(): any {
         const fingerprints: any = {};
 
-        this.children.forEach((child) => {
+        this.children.forEach((childComponent) => {
+            const child = childComponent.component;
             if (!child.id) {
                 throw new Error('missing id');
             }

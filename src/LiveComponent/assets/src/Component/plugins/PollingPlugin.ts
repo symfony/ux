@@ -1,5 +1,5 @@
 import Component from '../index';
-import { parseDirectives } from '../../directives_parser';
+import { parseDirectives } from '../../Directive/directives_parser';
 import PollingDirector from '../../PollingDirector';
 import { PluginInterface } from './PluginInterface';
 

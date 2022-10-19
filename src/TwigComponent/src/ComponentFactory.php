@@ -11,9 +11,12 @@
 
 namespace Symfony\UX\TwigComponent;
 
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Event\PostMountEvent;
+use Symfony\UX\TwigComponent\Event\PreMountEvent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -30,6 +33,7 @@ final class ComponentFactory
     public function __construct(
         private ServiceLocator $components,
         private PropertyAccessorInterface $propertyAccessor,
+        private EventDispatcherInterface $eventDispatcher,
         private array $config
     ) {
     }
@@ -137,6 +141,10 @@ final class ComponentFactory
 
     private function preMount(object $component, array $data): array
     {
+        $event = new PreMountEvent($component, $data);
+        $this->eventDispatcher->dispatch($event);
+        $data = $event->getData();
+
         foreach (AsTwigComponent::preMountMethods($component) as $method) {
             $data = $component->{$method->name}($data);
         }
@@ -146,6 +154,10 @@ final class ComponentFactory
 
     private function postMount(object $component, array $data): array
     {
+        $event = new PostMountEvent($component, $data);
+        $this->eventDispatcher->dispatch($event);
+        $data = $event->getData();
+
         foreach (AsTwigComponent::postMountMethods($component) as $method) {
             $data = $component->{$method->name}($data);
         }

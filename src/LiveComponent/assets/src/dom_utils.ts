@@ -1,5 +1,5 @@
 import ValueStore from './Component/ValueStore';
-import { Directive, parseDirectives } from './directives_parser';
+import { Directive, parseDirectives } from './Directive/directives_parser';
 import { normalizeModelName } from './string_utils';
 import Component from './Component';
 
@@ -111,18 +111,33 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
     (element as HTMLInputElement).value = value
 }
 
-export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissing = true): null|Directive {
-    if (element.dataset.model) {
-        const directives = parseDirectives(element.dataset.model);
-        const directive = directives[0];
+/**
+ * Fetches *all* "data-model" directives for a given element.
+ *
+ * @param element
+ */
+export function getAllModelDirectiveFromElements(element: HTMLElement): Directive[] {
+    if (!element.dataset.model) {
+        return [];
+    }
 
+    const directives = parseDirectives(element.dataset.model);
+
+    directives.forEach((directive) => {
         if (directive.args.length > 0 || directive.named.length > 0) {
             throw new Error(`The data-model="${element.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
         }
 
         directive.action = normalizeModelName(directive.action);
+    });
 
-        return directive;
+    return directives;
+}
+
+export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissing = true): null|Directive {
+    const dataModelDirectives = getAllModelDirectiveFromElements(element);
+    if (dataModelDirectives.length > 0) {
+        return dataModelDirectives[0];
     }
 
     if (element.getAttribute('name')) {

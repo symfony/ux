@@ -103,12 +103,22 @@ class FunctionalTest {
     }
 
     queryByDataModel(modelName: string): HTMLElement {
-        const element = this.element.querySelector(`[data-model$="${modelName}"]`);
-        if (!element) {
+        const elements = this.element.querySelectorAll(`[data-model$="${modelName}"]`);
+        let matchedElement: null|Element = null;
+
+        // skip any elements that are actually controllers
+        // these are child component bindings, not real fields
+        elements.forEach((element) => {
+            if (!element.hasAttribute('data-controller')) {
+                matchedElement = element;
+            }
+        });
+
+        if (!matchedElement) {
             throw new Error(`Could not find element with data-model="${modelName}" inside ${this.element.outerHTML}`);
         }
 
-        return element as HTMLElement;
+        return matchedElement as HTMLElement;
     }
 
     queryByNameAttribute(modelName: string): HTMLElement {
@@ -444,4 +454,18 @@ export function initComponent(data: any, props: any = {}, controllerValues: any 
         ${controllerValues.id ? `data-live-id="${controllerValues.id}"` : ''}
         ${controllerValues.fingerprint ? `data-live-fingerprint-value="${controllerValues.fingerprint}"` : ''}
     `;
+}
+
+export function getComponent(element: HTMLElement|null) {
+    if (!element) {
+        throw new Error('could not find element');
+    }
+
+    // @ts-ignore
+    const component = element.__component;
+    if (!(component instanceof Component)) {
+        throw new Error('missing component');
+    }
+
+    return component;
 }

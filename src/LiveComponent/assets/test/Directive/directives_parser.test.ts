@@ -1,4 +1,4 @@
-import {Directive, parseDirectives} from '../src/directives_parser';
+import {Directive, parseDirectives} from '../../src/Directive/directives_parser';
 
 const assertDirectiveEquals = function(actual: Directive, expected: any) {
     // normalize this so that it doesn't trip up the comparison

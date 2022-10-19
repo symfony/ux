@@ -142,7 +142,7 @@ describe('LiveController data-model Tests', () => {
         `);
 
         test.expectsAjaxCall('get')
-            .expectSentData({ color: `orange` })
+            .expectSentData({ color: 'orange' })
             .init();
 
         await userEvent.type(test.queryByNameAttribute('color'), 'orange');

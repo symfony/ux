@@ -441,6 +441,40 @@ of the change:
 
     element.dispatchEvent(new Event('change', { bubbles: true }));
 
+JavaScript Component Hooks
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The JavaScript ``Component`` object has a number of hooks that you can
+use to run code during the lifecycle of your component. To hook into the
+component system from Stimulus:
+
+.. code-block:: javascript
+
+    // assets/controllers/some-custom-controller.js
+    // ...
+
+    export default class extends Controller {
+        connect() {
+            this.element.addEventListener('live:connect', (event) => {
+                this.component = event.detail.component;
+
+                this.component.on('render:finished', (component) => {
+                    // do something after the component re-renders
+                });
+            });
+        }
+    }
+
+The following hooks are available (along with the arguments that are passed):
+
+* ``connect`` args ``(component: Component)``
+* ``disconnect`` args ``(component: Component)``
+* ``render:started`` args ``(html: string, response: BackendResponse, controls: { shouldRender: boolean })``
+* ``render:finished`` args ``(component: Component)``
+* ``loading.state:started`` args ``(element: HTMLElement, request: BackendRequest)``
+* ``loading.state:finished`` args ``(element: HTMLElement)``
+* ``model:set`` args ``(model: string, value: any, component: Component)``
+
 Loading States
 --------------
 
@@ -1799,48 +1833,73 @@ action in the *child* component only, even if the ``save`` action
 actually only exists in the parent. The same is true for ``data-model``,
 though there is some special handling for this case (see next point).
 
-If a child model updates, it will attempt to update the parent model
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Updating a Parent Model from a Child
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Suppose a child component has a:
 
 .. code-block:: html
 
-    <textarea data-model="value" data-action="live#update">
+    <textarea data-model="value">
 
 When the user changes this field, this will *only* update the
 ``value`` field in the *child* component… because (yup, we're
 saying it again): each component is its own, isolated universe.
 
-However, sometimes this isn't what you want! Sometimes, in addition to
-updating the child component's model, you *also* want to update a model
-on the *parent* component.
-
-TODO: still need to update this:
-
-A second option is to wrap your child element in a special
-``data-model-map`` element:
+However, sometimes this isn't what you want! Sometimes, when a
+child model changes, that should also update a model on the
+parent. To do this, pass a ``dataModel`` (or ``data-model``)
+attribute to the child:
 
 .. code-block:: twig
 
     {# templates/components/post_form.html.twig #}
 
-    <div data-model-map="from(markdown_value)|post.content">
-        {{ component('textarea_field', {
-            value: this.content,
-            error: this.getError('content')
-        }) }}
-    </div>
+    {{ component('textarea_field', {
+        dataModel: 'value:content',
+        error: this.getError('content'),
+    }) }}
 
-Thanks to the ``data-model-map``, whenever the ``markdown_value`` model
-updates in the child component, the ``post.content`` model will be
-updated in the parent component.
+This does two things:
+
+#. A prop called ``value`` will be passed into ``textarea_field``
+   set to ``content`` from the parent component (i.e. the same
+   as manually passing ``value: content`` into the component).
+
+#. When the ``value`` prop changes inside of ``textarea_field``,
+   the ``content`` prop will change on the parent component.
+
+This result is that, when ``value`` changes, the parent component
+will also re-render, thanks to the fact that its ``content`` prop
+changed.
 
 .. note::
 
-    If you *change* a ``LiveProp`` of a child component on the server
+    If you change a ``LiveProp`` of a child component on the *server*
     (e.g. during re-rendering or via an action), that change will
     *not* be reflected on any parent components that share that model.
+
+If the child component model is called ``value``, you can also shorten
+the syntax:
+
+.. code-block:: twig
+
+    <!-- same as "value:content" -->
+    {{ component('textarea_field', {
+        dataModel: 'content',
+    }) }}
+
+If your child component has multiple models, separate each with a space:
+
+.. code-block:: twig
+
+    {{ component('textarea_field', {
+        dataModel: 'user.firstName:first user.lastName:last',
+    }) }}
+
+In this case, the child component will receive ``first`` and ``last``
+props. And, when those update, the ``user.firstName`` and ``user.lastName``
+models will be updated on the parent.
 
 Full Embedded Component Example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1908,8 +1967,8 @@ In the ``EditPostComponent`` template, you render the
 
             {{ component('markdown_textarea', {
                 name: 'post[content]',
+                dataModel: 'value:post.content',
                 label: 'Content',
-                value: post.content
             }) }}
 
             <button
@@ -1934,9 +1993,7 @@ In the ``EditPostComponent`` template, you render the
 
 Notice that ``MarkdownTextareaComponent`` allows a dynamic ``name``
 attribute to be passed in. This makes that component re-usable in any
-form. But it also makes sure that when the ``textarea`` changes, both
-the ``value`` model in ``MarkdownTextareaComponent`` *and* the
-``post.content`` model in ``EditPostComponent`` will be updated.
+form.
 
 Rendering Quirks with List of Embedded Components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

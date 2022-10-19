@@ -9,31 +9,11 @@
 
 'use strict';
 
-import {
-    createTestForExistingComponent,
-    createTest,
-    initComponent,
-    shutdownTests
-} from '../tools';
-import {getByTestId, waitFor} from '@testing-library/dom';
-import Component from '../../src/Component';
+import { createTestForExistingComponent, createTest, initComponent, shutdownTests, getComponent } from '../tools';
+import { getByTestId, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
-const getComponent = function(element: HTMLElement|null) {
-    if (!element) {
-        throw new Error('could not find element');
-    }
-
-    // @ts-ignore
-    const component = element.__component;
-    if (!(component instanceof Component)) {
-        throw new Error('missing component');
-    }
-
-    return component;
-}
-
-describe('LiveController parent -> child component tests', () => {
+describe('Component parent -> child initialization and rendering tests', () => {
     afterEach(() => {
         shutdownTests();
     })
