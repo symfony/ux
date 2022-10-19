@@ -321,7 +321,7 @@ Other times, you might want to update the internal value of a property,
 but wait until later to re-render the component (e.g. until a button is
 clicked). To do that, use ``norender`` modifier:
 
-.. code-block:: diff
+.. code-block:: twig
 
     <input data-model="norender|max">
 
@@ -346,7 +346,7 @@ rely on the ``name`` attribute.
 To activate this, you must add a ``data-model`` attribute to
 the ``<form>`` element:
 
-.. code-block:: diff
+.. code-block:: twig
 
     <div {{ attributes }}>
         <form data-model="*">
@@ -370,7 +370,7 @@ Updating a Model Manually
 You can also change the value of a model more directly, without
 using a form field:
 
-.. code-block:: diff
+.. code-block:: twig
 
     <button
         type="button
