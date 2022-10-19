@@ -231,14 +231,46 @@ describe('LiveController rendering Tests', () => {
             .init();
 
         test.controller.$render();
-        // imitate navigating away
-        fireEvent(window, createEvent('beforeunload', window));
+        // trigger disconnect
+        test.element.removeAttribute('data-controller')
 
         // wait for the fetch to finish
         await fetchMock.flush();
 
         // the re-render should not have happened
         expect(test.element).not.toHaveTextContent('Hello');
+    });
+
+    it('renders if the page is navigating away and back', async () => {
+        const test = await createTest({greeting: 'aloha!'}, (data: any) => `
+            <div ${initComponent(data)}>${data.greeting}</div>
+        `);
+
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data) => {
+                data.greeting = 'Hello';
+            })
+            .delayResponse(100)
+            .init();
+
+        test.controller.$render();
+
+        // trigger controller disconnect
+        test.element.removeAttribute('data-controller')
+        // wait for the fetch to finish
+        await fetchMock.flush();
+
+        expect(test.element).toHaveTextContent('aloha!')
+
+        // trigger connect
+        test.element.setAttribute('data-controller', 'live')
+        test.controller.$render();
+        // wait for the fetch to finish
+        await fetchMock.flush();
+
+        // the re-render should have happened
+        expect(test.element).toHaveTextContent('Hello');
     });
 
     it('waits for the previous request to finish & batches changes', async () => {
