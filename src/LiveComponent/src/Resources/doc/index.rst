@@ -373,7 +373,7 @@ using a form field:
 .. code-block:: twig
 
     <button
-        type="button
+        type="button"
         data-model="mode"
         data-value="edit"
         data-action="live#update"
