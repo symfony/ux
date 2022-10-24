@@ -39,7 +39,7 @@ describe('DropzoneController', () => {
                 <input type="file"
                        style="display: none"
                        data-dropzone-target="input"
-                       data-testid="input" />
+                       data-testid="input" multiple />
         
                 <div class="dropzone-placeholder" 
                      data-dropzone-target="placeholder" 
@@ -105,7 +105,7 @@ describe('DropzoneController', () => {
         expect(dispatched).toBe(true);
     });
 
-    it('file chosen', async () => {
+    it('single file chosen', async () => {
         startStimulus();
         await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'block' }));
 
@@ -126,6 +126,35 @@ describe('DropzoneController', () => {
 
         // The event should have been dispatched
         expect(dispatched).not.toBeNull();
-        expect(dispatched.detail).toStrictEqual(file);
+        expect(dispatched.detail[0]).toStrictEqual(file);
+    });
+
+    it('multiple files chosen', async () => {
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'block' }));
+
+        // Attach a listener to ensure the event is dispatched
+        let dispatched = null;
+        getByTestId(container, 'container').addEventListener('dropzone:change', (event) => (dispatched = event));
+
+        // Select the file
+        const input = getByTestId(container, 'input');
+        const files = [
+            new File(['hello'], 'hello.png', { type: 'image/png' }),
+            new File(['again'], 'again.png', { type: 'image/png' }),
+        ]
+
+        user.upload(input, files);
+        expect(input.files[0]).toStrictEqual(files[0]);
+        expect(input.files[1]).toStrictEqual(files[1]);
+
+        // The dropzone should be in preview mode
+        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
+        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
+
+        // The event should have been dispatched
+        expect(dispatched).not.toBeNull();
+        expect(dispatched.detail[0]).toStrictEqual(files[0]);
+        expect(dispatched.detail[1]).toStrictEqual(files[1]);
     });
 });

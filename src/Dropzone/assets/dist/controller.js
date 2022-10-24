@@ -15,22 +15,25 @@ class default_1 extends Controller {
         this.previewImageTarget.style.display = 'none';
         this.previewImageTarget.style.backgroundImage = 'none';
         this.previewFilenameTarget.textContent = '';
+        document.querySelectorAll('.dropzone-preview-image-container').forEach((e) => e.remove());
         this.dispatchEvent('clear');
     }
     onInputChange(event) {
-        const file = event.target.files[0];
-        if (typeof file === 'undefined') {
-            return;
+        for (const fileItem in event.target.files) {
+            const file = event.target.files[fileItem];
+            if (typeof file === 'undefined') {
+                return;
+            }
+            this.inputTarget.style.display = 'none';
+            this.placeholderTarget.style.display = 'none';
+            this.previewFilenameTarget.textContent = file.name;
+            this.previewTarget.style.display = 'flex';
+            this.previewImageTarget.style.display = 'none';
+            if (file.type && file.type.indexOf('image') !== -1) {
+                this._populateImagePreview(file);
+            }
         }
-        this.inputTarget.style.display = 'none';
-        this.placeholderTarget.style.display = 'none';
-        this.previewFilenameTarget.textContent = file.name;
-        this.previewTarget.style.display = 'flex';
-        this.previewImageTarget.style.display = 'none';
-        if (file.type && file.type.indexOf('image') !== -1) {
-            this._populateImagePreview(file);
-        }
-        this.dispatchEvent('change', file);
+        this.dispatchEvent('change', event.target.files);
     }
     _populateImagePreview(file) {
         if (typeof FileReader === 'undefined') {

@@ -42,31 +42,34 @@ export default class extends Controller {
         this.previewImageTarget.style.display = 'none';
         this.previewImageTarget.style.backgroundImage = 'none';
         this.previewFilenameTarget.textContent = '';
+        document.querySelectorAll('.dropzone-preview-image-container').forEach((e) => e.remove());
 
         this.dispatchEvent('clear');
     }
 
     onInputChange(event: any) {
-        const file = event.target.files[0];
-        if (typeof file === 'undefined') {
-            return;
+        for (const fileItem in event.target.files) {
+            const file = event.target.files[fileItem];
+            if (typeof file === 'undefined') {
+                return;
+            }
+
+            // Hide the input and placeholder
+            this.inputTarget.style.display = 'none';
+            this.placeholderTarget.style.display = 'none';
+
+            // Show the filename in preview
+            this.previewFilenameTarget.textContent = file.name;
+            this.previewTarget.style.display = 'flex';
+
+            // If the file is an image, load it and display it as preview
+            this.previewImageTarget.style.display = 'none';
+            if (file.type && file.type.indexOf('image') !== -1) {
+                this._populateImagePreview(file);
+            }
         }
 
-        // Hide the input and placeholder
-        this.inputTarget.style.display = 'none';
-        this.placeholderTarget.style.display = 'none';
-
-        // Show the filename in preview
-        this.previewFilenameTarget.textContent = file.name;
-        this.previewTarget.style.display = 'flex';
-
-        // If the file is an image, load it and display it as preview
-        this.previewImageTarget.style.display = 'none';
-        if (file.type && file.type.indexOf('image') !== -1) {
-            this._populateImagePreview(file);
-        }
-
-        this.dispatchEvent('change', file);
+        this.dispatchEvent('change', event.target.files);
     }
 
     _populateImagePreview(file: Blob) {
