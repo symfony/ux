@@ -1,0 +1,43 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-10-25T12:57:05Z
+
+@kbond WDYT? If you're 👍 , probably we should create an interface and make that autowireable? I think the interface would have `render()` and `createAndRender()`, but not sure about `embeddedContext()`.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-10-25T13:31:01Z
+
+I'm 👍🏻 - this has been asked for a couple different times.
+
+Agreed, let's make a `ComponentRendererInterface` - @WebMamba, would you like to create this? Let's leave `embeddedContext()` off the interface for now.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2022-10-25T16:25:57Z
+
+Hi ! Thanks @weaverryan and @kbond for your returns. I just push the interface. Maybe we should comment some docs for the function in the interface.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2022-10-25T16:41:10Z
+
+Thanks for your review @kbond ! 😁
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2022-10-26T21:30:09Z
+
+thanks, @weaverryan for your reviews. sorry I wasn't really inspired by the PHPdoc 😁
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2022-10-29T09:53:57Z
+
+Hey @weaverryan and @kbond what's need to be done to get it merge ? Do I target the write branch ?
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-10-29T12:02:55Z
+
+All's good! I'll merge later today.
