@@ -25,7 +25,7 @@ use Twig\Extension\EscaperExtension;
  *
  * @internal
  */
-final class ComponentRenderer
+final class ComponentRenderer implements ComponentRendererInterface
 {
     private bool $safeClassesRegistered = false;
 

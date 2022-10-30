@@ -22,6 +22,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
+use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 
@@ -63,6 +64,8 @@ final class TwigComponentExtension extends Extension
                 new Reference('property_accessor'),
             ])
         ;
+
+        $container->setAlias(ComponentRendererInterface::class, 'ux.twig_component.component_renderer');
 
         $container->register('ux.twig_component.twig.component_extension', ComponentExtension::class)
             ->addTag('twig.extension')

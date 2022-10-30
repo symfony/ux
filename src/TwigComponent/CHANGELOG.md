@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.5
+
+-   Add new autowireable `ComponentRendererInterface`
+
 ## 2.2
 
 -   Allow to pass stringable object as non mapped component attribute.
