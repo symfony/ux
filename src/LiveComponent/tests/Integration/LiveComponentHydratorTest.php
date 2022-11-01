@@ -59,16 +59,19 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertSame($prop4, $component->prop4);
 
         $dehydrated = $this->dehydrateComponent($mounted);
+        $props = $dehydrated->getProps();
+        $data = $dehydrated->getData();
 
-        $this->assertSame($prop1->id, $dehydrated['prop1']);
-        $this->assertSame($prop2->format('c'), $dehydrated['prop2']);
-        $this->assertSame($prop3, $dehydrated['prop3']);
-        $this->assertArrayHasKey('_checksum', $dehydrated);
-        $this->assertArrayNotHasKey('prop4', $dehydrated);
+        $this->assertSame($prop1->id, $props['prop1']);
+        $this->assertSame($prop2->format('c'), $props['prop2']);
+        $this->assertSame($prop3, $data['prop3']);
+        $this->assertArrayHasKey('_checksum', $props);
+        $this->assertArrayNotHasKey('prop4', $props);
+        $this->assertArrayNotHasKey('prop4', $data);
 
         $component = $this->getComponent('component1');
 
-        $this->hydrateComponent($component, $dehydrated, $mounted->getName());
+        $this->hydrateComponent($component, $dehydrated->all(), $mounted->getName());
 
         $this->assertSame($prop1->id, $component->prop1->id);
         $this->assertSame($prop2->format('c'), $component->prop2->format('c'));
@@ -84,7 +87,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             'prop3' => 'value3',
         ]);
 
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted)->all();
         $dehydrated['prop3'] = 'new value';
 
         $component = $this->getComponent('component1');
@@ -102,7 +105,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             'prop3' => 'value3',
         ]);
 
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted)->all();
         $dehydrated['prop2'] = (new \DateTime())->format('c');
 
         $component = $this->getComponent('component1');
@@ -139,7 +142,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertFalse($component->preDehydrateCalled);
         $this->assertFalse($component->postHydrateCalled);
 
-        $data = $this->dehydrateComponent($mounted);
+        $data = $this->dehydrateComponent($mounted)->all();
 
         $this->assertTrue($component->preDehydrateCalled);
         $this->assertFalse($component->postHydrateCalled);
@@ -170,7 +173,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->assertSame($entity->id, $component->prop1->id);
 
-        $data = $this->dehydrateComponent($mounted);
+        $data = $this->dehydrateComponent($mounted)->all();
 
         $this->assertSame($entity->id, $data['prop1']);
 
@@ -183,7 +186,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->assertNull($component->prop1);
 
-        $data = $this->dehydrateComponent($mounted);
+        $data = $this->dehydrateComponent($mounted)->all();
 
         $this->assertNull($data['prop1']);
     }
@@ -191,7 +194,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     public function testCorrectlyUsesCustomFrontendNameInDehydrateAndHydrate(): void
     {
         $mounted = $this->mountComponent('component3', ['prop1' => 'value1', 'prop2' => 'value2']);
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted)->all();
 
         $this->assertArrayNotHasKey('prop1', $dehydrated);
         $this->assertArrayNotHasKey('prop2', $dehydrated);
@@ -219,7 +222,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->assertSame($array, $component->prop);
 
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted)->all();
 
         $this->assertArrayHasKey('prop', $dehydrated);
         $this->assertSame($array, $dehydrated['prop']);
@@ -243,7 +246,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->assertSame([], $component->prop);
 
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted)->all();
 
         $this->assertArrayHasKey('prop', $dehydrated);
         $this->assertSame([], $dehydrated['prop']);
@@ -264,7 +267,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->assertSame($attributes, $mounted->getAttributes()->all());
 
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted)->all();
 
         $this->assertArrayHasKey('_attributes', $dehydrated);
         $this->assertSame($attributes, $dehydrated['_attributes']);
@@ -280,7 +283,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->assertSame([], $mounted->getAttributes()->all());
 
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted)->all();
 
         $this->assertArrayNotHasKey('_attributes', $dehydrated);
 
@@ -296,7 +299,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     {
         $mounted = $this->mountComponent('with_enum');
 
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted)->all();
 
         $this->assertNull($dehydrated['int']);
         $this->assertNull($dehydrated['string']);
@@ -356,7 +359,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             'embeddable2' => new Embeddable2('qux'),
         ]);
 
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted)->all();
 
         $this->assertSame('500|CAD', $dehydrated['money']);
         $this->assertSame(['degrees' => 30, 'uom' => 'C'], $dehydrated['temperature']);

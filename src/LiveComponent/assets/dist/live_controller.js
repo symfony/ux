@@ -1,31 +1,418 @@
 import { Controller } from '@hotwired/stimulus';
 
-/******************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-
-function __classPrivateFieldGet(receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+function parseDirectives(content) {
+    const directives = [];
+    if (!content) {
+        return directives;
+    }
+    let currentActionName = '';
+    let currentArgumentName = '';
+    let currentArgumentValue = '';
+    let currentArguments = [];
+    let currentNamedArguments = {};
+    let currentModifiers = [];
+    let state = 'action';
+    const getLastActionName = function () {
+        if (currentActionName) {
+            return currentActionName;
+        }
+        if (directives.length === 0) {
+            throw new Error('Could not find any directives');
+        }
+        return directives[directives.length - 1].action;
+    };
+    const pushInstruction = function () {
+        directives.push({
+            action: currentActionName,
+            args: currentArguments,
+            named: currentNamedArguments,
+            modifiers: currentModifiers,
+            getString: () => {
+                return content;
+            }
+        });
+        currentActionName = '';
+        currentArgumentName = '';
+        currentArgumentValue = '';
+        currentArguments = [];
+        currentNamedArguments = {};
+        currentModifiers = [];
+        state = 'action';
+    };
+    const pushArgument = function () {
+        const mixedArgTypesError = () => {
+            throw new Error(`Normal and named arguments cannot be mixed inside "${currentActionName}()"`);
+        };
+        if (currentArgumentName) {
+            if (currentArguments.length > 0) {
+                mixedArgTypesError();
+            }
+            currentNamedArguments[currentArgumentName.trim()] = currentArgumentValue;
+        }
+        else {
+            if (Object.keys(currentNamedArguments).length > 0) {
+                mixedArgTypesError();
+            }
+            currentArguments.push(currentArgumentValue.trim());
+        }
+        currentArgumentName = '';
+        currentArgumentValue = '';
+    };
+    const pushModifier = function () {
+        if (currentArguments.length > 1) {
+            throw new Error(`The modifier "${currentActionName}()" does not support multiple arguments.`);
+        }
+        if (Object.keys(currentNamedArguments).length > 0) {
+            throw new Error(`The modifier "${currentActionName}()" does not support named arguments.`);
+        }
+        currentModifiers.push({
+            name: currentActionName,
+            value: currentArguments.length > 0 ? currentArguments[0] : null,
+        });
+        currentActionName = '';
+        currentArgumentName = '';
+        currentArguments = [];
+        state = 'action';
+    };
+    for (let i = 0; i < content.length; i++) {
+        const char = content[i];
+        switch (state) {
+            case 'action':
+                if (char === '(') {
+                    state = 'arguments';
+                    break;
+                }
+                if (char === ' ') {
+                    if (currentActionName) {
+                        pushInstruction();
+                    }
+                    break;
+                }
+                if (char === '|') {
+                    pushModifier();
+                    break;
+                }
+                currentActionName += char;
+                break;
+            case 'arguments':
+                if (char === ')') {
+                    pushArgument();
+                    state = 'after_arguments';
+                    break;
+                }
+                if (char === ',') {
+                    pushArgument();
+                    break;
+                }
+                if (char === '=') {
+                    currentArgumentName = currentArgumentValue;
+                    currentArgumentValue = '';
+                    break;
+                }
+                currentArgumentValue += char;
+                break;
+            case 'after_arguments':
+                if (char === '|') {
+                    pushModifier();
+                    break;
+                }
+                if (char !== ' ') {
+                    throw new Error(`Missing space after ${getLastActionName()}()`);
+                }
+                pushInstruction();
+                break;
+        }
+    }
+    switch (state) {
+        case 'action':
+        case 'after_arguments':
+            if (currentActionName) {
+                pushInstruction();
+            }
+            break;
+        default:
+            throw new Error(`Did you forget to add a closing ")" after "${currentActionName}"?`);
+    }
+    return directives;
 }
 
-function __classPrivateFieldSet(receiver, state, value, kind, f) {
-    if (kind === "m") throw new TypeError("Private method is not writable");
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
-    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+function combineSpacedArray(parts) {
+    const finalParts = [];
+    parts.forEach((part) => {
+        finalParts.push(...part.split(' '));
+    });
+    return finalParts;
+}
+function normalizeModelName(model) {
+    return model
+        .replace(/\[]$/, '')
+        .split('[')
+        .map(function (s) {
+        return s.replace(']', '');
+    })
+        .join('.');
+}
+
+function getValueFromElement(element, valueStore) {
+    if (element instanceof HTMLInputElement) {
+        if (element.type === 'checkbox') {
+            const modelNameData = getModelDirectiveFromElement(element);
+            if (modelNameData === null) {
+                return null;
+            }
+            const modelValue = valueStore.get(modelNameData.action);
+            if (Array.isArray(modelValue)) {
+                return getMultipleCheckboxValue(element, modelValue);
+            }
+            return element.checked ? inputValue(element) : null;
+        }
+        return inputValue(element);
+    }
+    if (element instanceof HTMLSelectElement) {
+        if (element.multiple) {
+            return Array.from(element.selectedOptions).map(el => el.value);
+        }
+        return element.value;
+    }
+    if (element.dataset.value) {
+        return element.dataset.value;
+    }
+    if ('value' in element) {
+        return element.value;
+    }
+    if (element.hasAttribute('value')) {
+        return element.getAttribute('value');
+    }
+    return null;
+}
+function setValueOnElement(element, value) {
+    if (element instanceof HTMLInputElement) {
+        if (element.type === 'file') {
+            return;
+        }
+        if (element.type === 'radio') {
+            element.checked = element.value == value;
+            return;
+        }
+        if (element.type === 'checkbox') {
+            if (Array.isArray(value)) {
+                let valueFound = false;
+                value.forEach(val => {
+                    if (val == element.value) {
+                        valueFound = true;
+                    }
+                });
+                element.checked = valueFound;
+            }
+            else {
+                element.checked = element.value == value;
+            }
+            return;
+        }
+    }
+    if (element instanceof HTMLSelectElement) {
+        const arrayWrappedValue = [].concat(value).map(value => {
+            return value + '';
+        });
+        Array.from(element.options).forEach(option => {
+            option.selected = arrayWrappedValue.includes(option.value);
+        });
+        return;
+    }
+    value = value === undefined ? '' : value;
+    element.value = value;
+}
+function getAllModelDirectiveFromElements(element) {
+    if (!element.dataset.model) {
+        return [];
+    }
+    const directives = parseDirectives(element.dataset.model);
+    directives.forEach((directive) => {
+        if (directive.args.length > 0 || directive.named.length > 0) {
+            throw new Error(`The data-model="${element.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
+        }
+        directive.action = normalizeModelName(directive.action);
+    });
+    return directives;
+}
+function getModelDirectiveFromElement(element, throwOnMissing = true) {
+    const dataModelDirectives = getAllModelDirectiveFromElements(element);
+    if (dataModelDirectives.length > 0) {
+        return dataModelDirectives[0];
+    }
+    if (element.getAttribute('name')) {
+        const formElement = element.closest('form');
+        if (formElement && ('model' in formElement.dataset)) {
+            const directives = parseDirectives(formElement.dataset.model || '*');
+            const directive = directives[0];
+            if (directive.args.length > 0 || directive.named.length > 0) {
+                throw new Error(`The data-model="${formElement.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
+            }
+            directive.action = normalizeModelName(element.getAttribute('name'));
+            return directive;
+        }
+    }
+    if (!throwOnMissing) {
+        return null;
+    }
+    throw new Error(`Cannot determine the model name for "${getElementAsTagText(element)}": the element must either have a "data-model" (or "name" attribute living inside a <form data-model="*">).`);
+}
+function elementBelongsToThisComponent(element, component) {
+    if (component.element === element) {
+        return true;
+    }
+    if (!component.element.contains(element)) {
+        return false;
+    }
+    let foundChildComponent = false;
+    component.getChildren().forEach((childComponent) => {
+        if (foundChildComponent) {
+            return;
+        }
+        if (childComponent.element === element || childComponent.element.contains(element)) {
+            foundChildComponent = true;
+        }
+    });
+    return !foundChildComponent;
+}
+function cloneHTMLElement(element) {
+    const newElement = element.cloneNode(true);
+    if (!(newElement instanceof HTMLElement)) {
+        throw new Error('Could not clone element');
+    }
+    return newElement;
+}
+function htmlToElement(html) {
+    const template = document.createElement('template');
+    html = html.trim();
+    template.innerHTML = html;
+    const child = template.content.firstChild;
+    if (!child) {
+        throw new Error('Child not found');
+    }
+    if (!(child instanceof HTMLElement)) {
+        throw new Error(`Created element is not an Element from HTML: ${html.trim()}`);
+    }
+    return child;
+}
+function cloneElementWithNewTagName(element, newTag) {
+    const originalTag = element.tagName;
+    const startRX = new RegExp('^<' + originalTag, 'i');
+    const endRX = new RegExp(originalTag + '>$', 'i');
+    const startSubst = '<' + newTag;
+    const endSubst = newTag + '>';
+    const newHTML = element.outerHTML
+        .replace(startRX, startSubst)
+        .replace(endRX, endSubst);
+    return htmlToElement(newHTML);
+}
+function getElementAsTagText(element) {
+    return element.innerHTML ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML)) : element.outerHTML;
+}
+const getMultipleCheckboxValue = function (element, currentValues) {
+    const value = inputValue(element);
+    const index = currentValues.indexOf(value);
+    if (element.checked) {
+        if (index === -1) {
+            currentValues.push(value);
+        }
+        return currentValues;
+    }
+    if (index > -1) {
+        currentValues.splice(index, 1);
+    }
+    return currentValues;
+};
+const inputValue = function (element) {
+    return element.dataset.value ? element.dataset.value : element.value;
+};
+
+function getDeepData(data, propertyPath) {
+    const { currentLevelData, finalKey } = parseDeepData(data, propertyPath);
+    if (currentLevelData === undefined) {
+        return undefined;
+    }
+    return currentLevelData[finalKey];
+}
+const parseDeepData = function (data, propertyPath) {
+    const finalData = JSON.parse(JSON.stringify(data));
+    let currentLevelData = finalData;
+    const parts = propertyPath.split('.');
+    for (let i = 0; i < parts.length - 1; i++) {
+        currentLevelData = currentLevelData[parts[i]];
+    }
+    const finalKey = parts[parts.length - 1];
+    return {
+        currentLevelData,
+        finalData,
+        finalKey,
+        parts
+    };
+};
+function setDeepData(data, propertyPath, value) {
+    const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath);
+    if (typeof currentLevelData !== 'object') {
+        const lastPart = parts.pop();
+        if (typeof currentLevelData === 'undefined') {
+            throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not exist. Did you forget to expose "${parts[0]}" as a LiveProp?`);
+        }
+        throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
+    }
+    if (currentLevelData[finalKey] === undefined) {
+        const lastPart = parts.pop();
+        if (parts.length > 0) {
+            throw new Error(`The model name ${propertyPath} was never initialized. Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
+        }
+        else {
+            throw new Error(`The model name "${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp? Available models values are: ${Object.keys(data).length > 0 ? Object.keys(data).join(', ') : '(none)'}`);
+        }
+    }
+    currentLevelData[finalKey] = value;
+    return finalData;
+}
+
+class ValueStore {
+    constructor(props, data) {
+        this.updatedModels = [];
+        this.props = {};
+        this.data = {};
+        this.props = props;
+        this.data = data;
+    }
+    get(name) {
+        const normalizedName = normalizeModelName(name);
+        const result = getDeepData(this.data, normalizedName);
+        if (result !== undefined) {
+            return result;
+        }
+        return getDeepData(this.props, normalizedName);
+    }
+    has(name) {
+        return this.get(name) !== undefined;
+    }
+    set(name, value) {
+        const normalizedName = normalizeModelName(name);
+        const currentValue = this.get(name);
+        if (currentValue !== value && !this.updatedModels.includes(normalizedName)) {
+            this.updatedModels.push(normalizedName);
+        }
+        this.data = setDeepData(this.data, normalizedName, value);
+        return currentValue !== value;
+    }
+    all() {
+        return Object.assign(Object.assign({}, this.props), this.data);
+    }
+    reinitializeData(data) {
+        this.updatedModels = [];
+        this.data = data;
+    }
+    reinitializeProps(props) {
+        if (JSON.stringify(props) == JSON.stringify(this.props)) {
+            return false;
+        }
+        this.props = props;
+        return true;
+    }
 }
 
 var DOCUMENT_FRAGMENT_NODE = 11;
@@ -782,184 +1169,6 @@ function morphdomFactory(morphAttrs) {
 
 var morphdom = morphdomFactory(morphAttrs);
 
-function parseDirectives(content) {
-    const directives = [];
-    if (!content) {
-        return directives;
-    }
-    let currentActionName = '';
-    let currentArgumentName = '';
-    let currentArgumentValue = '';
-    let currentArguments = [];
-    let currentNamedArguments = {};
-    let currentModifiers = [];
-    let state = 'action';
-    const getLastActionName = function () {
-        if (currentActionName) {
-            return currentActionName;
-        }
-        if (directives.length === 0) {
-            throw new Error('Could not find any directives');
-        }
-        return directives[directives.length - 1].action;
-    };
-    const pushInstruction = function () {
-        directives.push({
-            action: currentActionName,
-            args: currentArguments,
-            named: currentNamedArguments,
-            modifiers: currentModifiers,
-            getString: () => {
-                return content;
-            }
-        });
-        currentActionName = '';
-        currentArgumentName = '';
-        currentArgumentValue = '';
-        currentArguments = [];
-        currentNamedArguments = {};
-        currentModifiers = [];
-        state = 'action';
-    };
-    const pushArgument = function () {
-        const mixedArgTypesError = () => {
-            throw new Error(`Normal and named arguments cannot be mixed inside "${currentActionName}()"`);
-        };
-        if (currentArgumentName) {
-            if (currentArguments.length > 0) {
-                mixedArgTypesError();
-            }
-            currentNamedArguments[currentArgumentName.trim()] = currentArgumentValue;
-        }
-        else {
-            if (Object.keys(currentNamedArguments).length > 0) {
-                mixedArgTypesError();
-            }
-            currentArguments.push(currentArgumentValue.trim());
-        }
-        currentArgumentName = '';
-        currentArgumentValue = '';
-    };
-    const pushModifier = function () {
-        if (currentArguments.length > 1) {
-            throw new Error(`The modifier "${currentActionName}()" does not support multiple arguments.`);
-        }
-        if (Object.keys(currentNamedArguments).length > 0) {
-            throw new Error(`The modifier "${currentActionName}()" does not support named arguments.`);
-        }
-        currentModifiers.push({
-            name: currentActionName,
-            value: currentArguments.length > 0 ? currentArguments[0] : null,
-        });
-        currentActionName = '';
-        currentArgumentName = '';
-        currentArguments = [];
-        state = 'action';
-    };
-    for (let i = 0; i < content.length; i++) {
-        const char = content[i];
-        switch (state) {
-            case 'action':
-                if (char === '(') {
-                    state = 'arguments';
-                    break;
-                }
-                if (char === ' ') {
-                    if (currentActionName) {
-                        pushInstruction();
-                    }
-                    break;
-                }
-                if (char === '|') {
-                    pushModifier();
-                    break;
-                }
-                currentActionName += char;
-                break;
-            case 'arguments':
-                if (char === ')') {
-                    pushArgument();
-                    state = 'after_arguments';
-                    break;
-                }
-                if (char === ',') {
-                    pushArgument();
-                    break;
-                }
-                if (char === '=') {
-                    currentArgumentName = currentArgumentValue;
-                    currentArgumentValue = '';
-                    break;
-                }
-                currentArgumentValue += char;
-                break;
-            case 'after_arguments':
-                if (char === '|') {
-                    pushModifier();
-                    break;
-                }
-                if (char !== ' ') {
-                    throw new Error(`Missing space after ${getLastActionName()}()`);
-                }
-                pushInstruction();
-                break;
-        }
-    }
-    switch (state) {
-        case 'action':
-        case 'after_arguments':
-            if (currentActionName) {
-                pushInstruction();
-            }
-            break;
-        default:
-            throw new Error(`Did you forget to add a closing ")" after "${currentActionName}"?`);
-    }
-    return directives;
-}
-
-function combineSpacedArray(parts) {
-    const finalParts = [];
-    parts.forEach((part) => {
-        finalParts.push(...part.split(' '));
-    });
-    return finalParts;
-}
-function normalizeModelName(model) {
-    return model
-        .replace(/\[]$/, '')
-        .split('[')
-        .map(function (s) {
-        return s.replace(']', '');
-    })
-        .join('.');
-}
-
-function haveRenderedValuesChanged(originalDataJson, currentDataJson, newDataJson) {
-    if (originalDataJson === newDataJson) {
-        return false;
-    }
-    if (currentDataJson === newDataJson) {
-        return false;
-    }
-    const originalData = JSON.parse(originalDataJson);
-    const newData = JSON.parse(newDataJson);
-    const changedKeys = Object.keys(newData);
-    Object.entries(originalData).forEach(([key, value]) => {
-        if (value === newData[key]) {
-            changedKeys.splice(changedKeys.indexOf(key), 1);
-        }
-    });
-    const currentData = JSON.parse(currentDataJson);
-    let keyHasChanged = false;
-    changedKeys.forEach((key) => {
-        if (currentData[key] !== newData[key]) {
-            keyHasChanged = true;
-        }
-    });
-    return keyHasChanged;
-}
-
 function normalizeAttributesForComparison(element) {
     const isFileInput = element instanceof HTMLInputElement && element.type === 'file';
     if (!isFileInput) {
@@ -975,234 +1184,135 @@ function normalizeAttributesForComparison(element) {
     });
 }
 
-function getDeepData(data, propertyPath) {
-    const { currentLevelData, finalKey } = parseDeepData(data, propertyPath);
-    return currentLevelData[finalKey];
-}
-const parseDeepData = function (data, propertyPath) {
-    const finalData = JSON.parse(JSON.stringify(data));
-    let currentLevelData = finalData;
-    const parts = propertyPath.split('.');
-    for (let i = 0; i < parts.length - 1; i++) {
-        currentLevelData = currentLevelData[parts[i]];
-    }
-    const finalKey = parts[parts.length - 1];
-    return {
-        currentLevelData,
-        finalData,
-        finalKey,
-        parts
-    };
-};
-function setDeepData(data, propertyPath, value) {
-    const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath);
-    if (typeof currentLevelData !== 'object') {
-        const lastPart = parts.pop();
-        if (typeof currentLevelData === 'undefined') {
-            throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not exist. Did you forget to expose "${parts[0]}" as a LiveProp?`);
+function executeMorphdom(rootFromElement, rootToElement, modifiedElements, getElementValue, childComponents, findChildComponent, getKeyFromElement) {
+    const childComponentMap = new Map();
+    childComponents.forEach((childComponent) => {
+        childComponentMap.set(childComponent.element, childComponent);
+        if (!childComponent.id) {
+            throw new Error('Child is missing id.');
         }
-        throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
-    }
-    if (currentLevelData[finalKey] === undefined) {
-        const lastPart = parts.pop();
-        if (parts.length > 0) {
-            throw new Error(`The model name ${propertyPath} was never initialized. Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
-        }
-        else {
-            throw new Error(`The model name "${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp? Available models values are: ${Object.keys(data).length > 0 ? Object.keys(data).join(', ') : '(none)'}`);
-        }
-    }
-    currentLevelData[finalKey] = value;
-    return finalData;
-}
-
-class ValueStore {
-    constructor(liveController) {
-        this.updatedModels = [];
-        this.controller = liveController;
-    }
-    get(name) {
-        const normalizedName = normalizeModelName(name);
-        return getDeepData(this.controller.dataValue, normalizedName);
-    }
-    has(name) {
-        return this.get(name) !== undefined;
-    }
-    set(name, value) {
-        const normalizedName = normalizeModelName(name);
-        if (!this.updatedModels.includes(normalizedName)) {
-            this.updatedModels.push(normalizedName);
-        }
-        this.controller.dataValue = setDeepData(this.controller.dataValue, normalizedName, value);
-    }
-    hasAtTopLevel(name) {
-        const parts = name.split('.');
-        return this.controller.dataValue[parts[0]] !== undefined;
-    }
-    asJson() {
-        return JSON.stringify(this.controller.dataValue);
-    }
-    all() {
-        return this.controller.dataValue;
-    }
-    areAnyModelsUpdated(targetedModels) {
-        return (this.updatedModels.filter(modelName => targetedModels.includes(modelName))).length > 0;
-    }
-}
-
-function getValueFromElement(element, valueStore) {
-    if (element instanceof HTMLInputElement) {
-        if (element.type === 'checkbox') {
-            const modelNameData = getModelDirectiveFromElement(element);
-            if (modelNameData === null) {
-                return null;
-            }
-            const modelValue = valueStore.get(modelNameData.action);
-            if (Array.isArray(modelValue)) {
-                return getMultipleCheckboxValue(element, modelValue);
-            }
-            return element.checked ? inputValue(element) : null;
-        }
-        return inputValue(element);
-    }
-    if (element instanceof HTMLSelectElement) {
-        if (element.multiple) {
-            return Array.from(element.selectedOptions).map(el => el.value);
-        }
-        return element.value;
-    }
-    if (element.dataset.value) {
-        return element.dataset.value;
-    }
-    if ('value' in element) {
-        return element.value;
-    }
-    if (element.hasAttribute('value')) {
-        return element.getAttribute('value');
-    }
-    return null;
-}
-function setValueOnElement(element, value) {
-    if (element instanceof HTMLInputElement) {
-        if (element.type === 'file') {
-            return;
-        }
-        if (element.type === 'radio') {
-            element.checked = element.value == value;
-            return;
-        }
-        if (element.type === 'checkbox') {
-            if (Array.isArray(value)) {
-                let valueFound = false;
-                value.forEach(val => {
-                    if (val == element.value) {
-                        valueFound = true;
-                    }
-                });
-                element.checked = valueFound;
-            }
-            else {
-                element.checked = element.value == value;
-            }
-            return;
-        }
-    }
-    if (element instanceof HTMLSelectElement) {
-        const arrayWrappedValue = [].concat(value).map(value => {
-            return value + '';
-        });
-        Array.from(element.options).forEach(option => {
-            option.selected = arrayWrappedValue.includes(option.value);
-        });
-        return;
-    }
-    value = value === undefined ? '' : value;
-    element.value = value;
-}
-function getModelDirectiveFromElement(element, throwOnMissing = true) {
-    if (element.dataset.model) {
-        const directives = parseDirectives(element.dataset.model);
-        const directive = directives[0];
-        if (directive.args.length > 0 || directive.named.length > 0) {
-            throw new Error(`The data-model="${element.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
-        }
-        directive.action = normalizeModelName(directive.action);
-        return directive;
-    }
-    if (element.getAttribute('name')) {
-        const formElement = element.closest('form');
-        if (formElement && ('model' in formElement.dataset)) {
-            const directives = parseDirectives(formElement.dataset.model || '*');
-            const directive = directives[0];
-            if (directive.args.length > 0 || directive.named.length > 0) {
-                throw new Error(`The data-model="${formElement.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
-            }
-            directive.action = normalizeModelName(element.getAttribute('name'));
-            return directive;
-        }
-    }
-    if (!throwOnMissing) {
-        return null;
-    }
-    throw new Error(`Cannot determine the model name for "${getElementAsTagText(element)}": the element must either have a "data-model" (or "name" attribute living inside a <form data-model="*">).`);
-}
-function elementBelongsToThisController(element, controller) {
-    if (controller.element !== element && !controller.element.contains(element)) {
-        return false;
-    }
-    let foundChildController = false;
-    controller.childComponentControllers.forEach((childComponentController) => {
-        if (foundChildController) {
-            return;
-        }
-        if (childComponentController.element === element || childComponentController.element.contains(element)) {
-            foundChildController = true;
+        const childComponentToElement = findChildComponent(childComponent.id, rootToElement);
+        if (childComponentToElement && childComponentToElement.tagName !== childComponent.element.tagName) {
+            const newTag = cloneElementWithNewTagName(childComponentToElement, childComponent.element.tagName);
+            rootToElement.replaceChild(newTag, childComponentToElement);
         }
     });
-    return !foundChildController;
-}
-function cloneHTMLElement(element) {
-    const newElement = element.cloneNode(true);
-    if (!(newElement instanceof HTMLElement)) {
-        throw new Error('Could not clone element');
-    }
-    return newElement;
-}
-function htmlToElement(html) {
-    const template = document.createElement('template');
-    html = html.trim();
-    template.innerHTML = html;
-    const child = template.content.firstChild;
-    if (!child) {
-        throw new Error('Child not found');
-    }
-    if (!(child instanceof HTMLElement)) {
-        throw new Error(`Created element is not an Element from HTML: ${html.trim()}`);
-    }
-    return child;
-}
-function getElementAsTagText(element) {
-    return element.innerHTML ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML)) : element.outerHTML;
-}
-const getMultipleCheckboxValue = function (element, currentValues) {
-    const value = inputValue(element);
-    const index = currentValues.indexOf(value);
-    if (element.checked) {
-        if (index === -1) {
-            currentValues.push(value);
+    morphdom(rootFromElement, rootToElement, {
+        getNodeKey: (node) => {
+            if (!(node instanceof HTMLElement)) {
+                return;
+            }
+            return getKeyFromElement(node);
+        },
+        onBeforeElUpdated: (fromEl, toEl) => {
+            if (fromEl === rootFromElement) {
+                return true;
+            }
+            if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
+                return false;
+            }
+            const childComponent = childComponentMap.get(fromEl) || false;
+            if (childComponent) {
+                return childComponent.updateFromNewElement(toEl);
+            }
+            if (modifiedElements.includes(fromEl)) {
+                setValueOnElement(toEl, getElementValue(fromEl));
+            }
+            if (fromEl.isEqualNode(toEl)) {
+                const normalizedFromEl = cloneHTMLElement(fromEl);
+                normalizeAttributesForComparison(normalizedFromEl);
+                const normalizedToEl = cloneHTMLElement(toEl);
+                normalizeAttributesForComparison(normalizedToEl);
+                if (normalizedFromEl.isEqualNode(normalizedToEl)) {
+                    return false;
+                }
+            }
+            return !fromEl.hasAttribute('data-live-ignore');
+        },
+        onBeforeNodeDiscarded(node) {
+            if (!(node instanceof HTMLElement)) {
+                return true;
+            }
+            return !node.hasAttribute('data-live-ignore');
         }
-        return currentValues;
-    }
-    if (index > -1) {
-        currentValues.splice(index, 1);
-    }
-    return currentValues;
-};
-const inputValue = function (element) {
-    return element.dataset.value ? element.dataset.value : element.value;
-};
+    });
+}
+
+/******************************************************************************
+Copyright (c) Microsoft Corporation.
+
+Permission to use, copy, modify, and/or distribute this software for any
+purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+PERFORMANCE OF THIS SOFTWARE.
+***************************************************************************** */
+
+function __classPrivateFieldGet(receiver, state, kind, f) {
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
+    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
+}
+
+function __classPrivateFieldSet(receiver, state, value, kind, f) {
+    if (kind === "m") throw new TypeError("Private method is not writable");
+    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
+    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
+    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
+}
 
 var _UnsyncedInputContainer_mappedFields, _UnsyncedInputContainer_unmappedFields;
+class UnsyncedInputsTracker {
+    constructor(component, modelElementResolver) {
+        this.elementEventListeners = [
+            { event: 'input', callback: (event) => this.handleInputEvent(event) },
+        ];
+        this.component = component;
+        this.modelElementResolver = modelElementResolver;
+        this.unsyncedInputs = new UnsyncedInputContainer();
+    }
+    activate() {
+        this.elementEventListeners.forEach(({ event, callback }) => {
+            this.component.element.addEventListener(event, callback);
+        });
+    }
+    deactivate() {
+        this.elementEventListeners.forEach(({ event, callback }) => {
+            this.component.element.removeEventListener(event, callback);
+        });
+    }
+    markModelAsSynced(modelName) {
+        this.unsyncedInputs.markModelAsSynced(modelName);
+    }
+    handleInputEvent(event) {
+        const target = event.target;
+        if (!target) {
+            return;
+        }
+        this.updateModelFromElement(target);
+    }
+    updateModelFromElement(element) {
+        if (!elementBelongsToThisComponent(element, this.component)) {
+            return;
+        }
+        if (!(element instanceof HTMLElement)) {
+            throw new Error('Could not update model for non HTMLElement');
+        }
+        const modelName = this.modelElementResolver.getModelName(element);
+        this.unsyncedInputs.add(element, modelName);
+    }
+    getUnsyncedInputs() {
+        return this.unsyncedInputs.all();
+    }
+    getModifiedModels() {
+        return Array.from(this.unsyncedInputs.getModifiedModels());
+    }
+}
 class UnsyncedInputContainer {
     constructor() {
         _UnsyncedInputContainer_mappedFields.set(this, void 0);
@@ -1228,588 +1338,262 @@ class UnsyncedInputContainer {
 }
 _UnsyncedInputContainer_mappedFields = new WeakMap(), _UnsyncedInputContainer_unmappedFields = new WeakMap();
 
-var _instances, _startPendingRequest, _makeRequest, _processRerender, _clearRequestDebounceTimeout;
-const DEFAULT_DEBOUNCE = 150;
-class default_1 extends Controller {
+class HookManager {
     constructor() {
-        super(...arguments);
-        _instances.add(this);
-        this.pendingActions = [];
-        this.isRerenderRequested = false;
-        this.requestDebounceTimeout = null;
-        this.pollingIntervals = [];
-        this.isConnected = false;
-        this.originalDataJSON = '{}';
-        this.mutationObserver = null;
-        this.childComponentControllers = [];
-        this.pendingActionTriggerModelElement = null;
+        this.hooks = new Map();
     }
-    initialize() {
-        this.handleUpdateModelEvent = this.handleUpdateModelEvent.bind(this);
-        this.handleInputEvent = this.handleInputEvent.bind(this);
-        this.handleChangeEvent = this.handleChangeEvent.bind(this);
-        this.handleConnectedControllerEvent = this.handleConnectedControllerEvent.bind(this);
-        this.handleDisconnectedControllerEvent = this.handleDisconnectedControllerEvent.bind(this);
-        this.valueStore = new ValueStore(this);
-        this.originalDataJSON = this.valueStore.asJson();
-        this.unsyncedInputs = new UnsyncedInputContainer();
-        this._exposeOriginalData();
-        this.synchronizeValueOfModelFields();
+    register(hookName, callback) {
+        const hooks = this.hooks.get(hookName) || [];
+        hooks.push(callback);
+        this.hooks.set(hookName, hooks);
+    }
+    unregister(hookName, callback) {
+        const hooks = this.hooks.get(hookName) || [];
+        const index = hooks.indexOf(callback);
+        if (index === -1) {
+            return;
+        }
+        hooks.splice(index, 1);
+        this.hooks.set(hookName, hooks);
+    }
+    triggerHook(hookName, ...args) {
+        const hooks = this.hooks.get(hookName) || [];
+        hooks.forEach((callback) => {
+            callback(...args);
+        });
+    }
+}
+
+class BackendResponse {
+    constructor(response) {
+        this.response = response;
+    }
+    async getBody() {
+        if (!this.body) {
+            this.body = await this.response.text();
+        }
+        return this.body;
+    }
+}
+
+class ChildComponentWrapper {
+    constructor(component, modelBindings) {
+        this.component = component;
+        this.modelBindings = modelBindings;
+    }
+}
+class Component {
+    constructor(element, props, data, fingerprint, id, backend, elementDriver) {
+        this.defaultDebounce = 150;
+        this.pendingActions = [];
+        this.isRequestPending = false;
+        this.requestDebounceTimeout = null;
+        this.children = new Map();
+        this.parent = null;
+        this.element = element;
+        this.backend = backend;
+        this.elementDriver = elementDriver;
+        this.id = id;
+        this.fingerprint = fingerprint;
+        this.valueStore = new ValueStore(props, data);
+        this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
+        this.hooks = new HookManager();
+        this.resetPromise();
+        this.onChildComponentModelUpdate = this.onChildComponentModelUpdate.bind(this);
+    }
+    addPlugin(plugin) {
+        plugin.attachToComponent(this);
     }
     connect() {
-        this.isConnected = true;
-        this._onLoadingFinish();
-        if (!(this.element instanceof HTMLElement)) {
-            throw new Error('Invalid Element Type');
-        }
-        this._initiatePolling();
-        this._startAttributesMutationObserver();
-        this.element.addEventListener('live:update-model', this.handleUpdateModelEvent);
-        this.element.addEventListener('input', this.handleInputEvent);
-        this.element.addEventListener('change', this.handleChangeEvent);
-        this.element.addEventListener('live:connect', this.handleConnectedControllerEvent);
-        this._dispatchEvent('live:connect', { controller: this });
+        this.hooks.triggerHook('connect', this);
+        this.unsyncedInputsTracker.activate();
     }
     disconnect() {
-        this._stopAllPolling();
-        __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
-        this.element.removeEventListener('live:update-model', this.handleUpdateModelEvent);
-        this.element.removeEventListener('input', this.handleInputEvent);
-        this.element.removeEventListener('change', this.handleChangeEvent);
-        this.element.removeEventListener('live:connect', this.handleConnectedControllerEvent);
-        this.element.removeEventListener('live:disconnect', this.handleDisconnectedControllerEvent);
-        this._dispatchEvent('live:disconnect', { controller: this });
-        if (this.mutationObserver) {
-            this.mutationObserver.disconnect();
-        }
-        this.isConnected = false;
+        this.hooks.triggerHook('disconnect', this);
+        this.clearRequestDebounceTimeout();
+        this.unsyncedInputsTracker.deactivate();
     }
-    update(event) {
-        if (event.type === 'input' || event.type === 'change') {
-            throw new Error(`Since LiveComponents 2.3, you no longer need data-action="live#update" on form elements. Found on element: ${getElementAsTagText(event.target)}`);
-        }
-        this._updateModelFromElement(event.target, null);
+    on(hookName, callback) {
+        this.hooks.register(hookName, callback);
     }
-    action(event) {
-        const rawAction = event.currentTarget.dataset.actionName;
-        const directives = parseDirectives(rawAction);
-        directives.forEach((directive) => {
-            this.pendingActions.push({
-                name: directive.action,
-                args: directive.named
-            });
-            let handled = false;
-            const validModifiers = new Map();
-            validModifiers.set('prevent', () => {
-                event.preventDefault();
-            });
-            validModifiers.set('stop', () => {
-                event.stopPropagation();
-            });
-            validModifiers.set('self', () => {
-                if (event.target !== event.currentTarget) {
-                    return;
-                }
-            });
-            validModifiers.set('debounce', (modifier) => {
-                const length = modifier.value ? parseInt(modifier.value) : this.getDefaultDebounce();
-                __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
-                this.requestDebounceTimeout = window.setTimeout(() => {
-                    this.requestDebounceTimeout = null;
-                    __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
-                }, length);
-                handled = true;
-            });
-            directive.modifiers.forEach((modifier) => {
-                var _a;
-                if (validModifiers.has(modifier.name)) {
-                    const callable = (_a = validModifiers.get(modifier.name)) !== null && _a !== void 0 ? _a : (() => { });
-                    callable(modifier);
-                    return;
-                }
-                console.warn(`Unknown modifier ${modifier.name} in action "${rawAction}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
-            });
-            if (!handled) {
-                if (getModelDirectiveFromElement(event.currentTarget, false)) {
-                    this.pendingActionTriggerModelElement = event.currentTarget;
-                    __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
-                    window.setTimeout(() => {
-                        this.pendingActionTriggerModelElement = null;
-                        __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
-                    }, 10);
-                    return;
-                }
-                __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
-            }
-        });
+    off(hookName, callback) {
+        this.hooks.unregister(hookName, callback);
     }
-    $render() {
-        this.isRerenderRequested = true;
-        __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
-    }
-    _updateModelFromElement(element, eventName) {
-        if (!elementBelongsToThisController(element, this)) {
-            return;
-        }
-        if (!(element instanceof HTMLElement)) {
-            throw new Error('Could not update model for non HTMLElement');
-        }
-        const modelDirective = getModelDirectiveFromElement(element, false);
-        if (eventName === 'input') {
-            const modelName = modelDirective ? modelDirective.action : null;
-            this.unsyncedInputs.add(element, modelName);
-        }
-        if (!modelDirective) {
-            return;
-        }
-        let shouldRender = true;
-        let targetEventName = 'input';
-        let debounce = null;
-        modelDirective.modifiers.forEach((modifier) => {
-            switch (modifier.name) {
-                case 'on':
-                    if (!modifier.value) {
-                        throw new Error(`The "on" modifier in ${modelDirective.getString()} requires a value - e.g. on(change).`);
-                    }
-                    if (!['input', 'change'].includes(modifier.value)) {
-                        throw new Error(`The "on" modifier in ${modelDirective.getString()} only accepts the arguments "input" or "change".`);
-                    }
-                    targetEventName = modifier.value;
-                    break;
-                case 'norender':
-                    shouldRender = false;
-                    break;
-                case 'debounce':
-                    debounce = modifier.value ? parseInt(modifier.value) : this.getDefaultDebounce();
-                    break;
-                default:
-                    console.warn(`Unknown modifier "${modifier.name}" in data-model="${modelDirective.getString()}".`);
-            }
-        });
-        if (this.pendingActionTriggerModelElement === element) {
-            shouldRender = false;
-        }
-        if (eventName && targetEventName !== eventName) {
-            return;
-        }
-        if (null === debounce) {
-            if (targetEventName === 'input') {
-                debounce = this.getDefaultDebounce();
-            }
-            else {
-                debounce = 0;
-            }
-        }
-        const finalValue = getValueFromElement(element, this.valueStore);
-        this.$updateModel(modelDirective.action, finalValue, shouldRender, element.hasAttribute('name') ? element.getAttribute('name') : null, {
-            debounce
-        });
-    }
-    $updateModel(model, value, shouldRender = true, extraModelName = null, options = {}) {
+    set(model, value, reRender = false, debounce = false) {
+        const promise = this.nextRequestPromise;
         const modelName = normalizeModelName(model);
-        const normalizedExtraModelName = extraModelName ? normalizeModelName(extraModelName) : null;
-        if (this.valueStore.has('validatedFields')) {
-            const validatedFields = [...this.valueStore.get('validatedFields')];
-            if (validatedFields.indexOf(modelName) === -1) {
-                validatedFields.push(modelName);
+        const isChanged = this.valueStore.set(modelName, value);
+        this.hooks.triggerHook('model:set', model, value, this);
+        this.unsyncedInputsTracker.markModelAsSynced(modelName);
+        if (reRender && isChanged) {
+            this.debouncedStartRequest(debounce);
+        }
+        return promise;
+    }
+    getData(model) {
+        const modelName = normalizeModelName(model);
+        if (!this.valueStore.has(modelName)) {
+            throw new Error(`Invalid model "${model}".`);
+        }
+        return this.valueStore.get(modelName);
+    }
+    action(name, args, debounce = false) {
+        const promise = this.nextRequestPromise;
+        this.pendingActions.push({
+            name,
+            args
+        });
+        this.debouncedStartRequest(debounce);
+        return promise;
+    }
+    render() {
+        const promise = this.nextRequestPromise;
+        this.tryStartingRequest();
+        return promise;
+    }
+    getUnsyncedModels() {
+        return this.unsyncedInputsTracker.getModifiedModels();
+    }
+    addChild(child, modelBindings = []) {
+        if (!child.id) {
+            throw new Error('Children components must have an id.');
+        }
+        this.children.set(child.id, new ChildComponentWrapper(child, modelBindings));
+        child.parent = this;
+        child.on('model:set', this.onChildComponentModelUpdate);
+    }
+    removeChild(child) {
+        if (!child.id) {
+            throw new Error('Children components must have an id.');
+        }
+        this.children.delete(child.id);
+        child.parent = null;
+        child.off('model:set', this.onChildComponentModelUpdate);
+    }
+    getParent() {
+        return this.parent;
+    }
+    getChildren() {
+        const children = new Map();
+        this.children.forEach((childComponent, id) => {
+            children.set(id, childComponent.component);
+        });
+        return children;
+    }
+    updateFromNewElement(toEl) {
+        const props = this.elementDriver.getComponentProps(toEl);
+        if (props === null) {
+            return false;
+        }
+        const isChanged = this.valueStore.reinitializeProps(props);
+        const fingerprint = toEl.dataset.liveFingerprintValue;
+        if (fingerprint !== undefined) {
+            this.fingerprint = fingerprint;
+        }
+        if (isChanged) {
+            this.render();
+        }
+        return false;
+    }
+    onChildComponentModelUpdate(modelName, value, childComponent) {
+        if (!childComponent.id) {
+            throw new Error('Missing id');
+        }
+        const childWrapper = this.children.get(childComponent.id);
+        if (!childWrapper) {
+            throw new Error('Missing child');
+        }
+        childWrapper.modelBindings.forEach((modelBinding) => {
+            const childModelName = modelBinding.innerModelName || 'value';
+            if (childModelName !== modelName) {
+                return;
             }
-            this.valueStore.set('validatedFields', validatedFields);
+            this.set(modelBinding.modelName, value, modelBinding.shouldRender, modelBinding.debounce);
+        });
+    }
+    tryStartingRequest() {
+        if (!this.backendRequest) {
+            this.performRequest();
+            return;
         }
-        if (options.dispatch !== false) {
-            this._dispatchEvent('live:update-model', {
-                modelName,
-                extraModelName: normalizedExtraModelName,
-                value
-            });
-        }
-        this.valueStore.set(modelName, value);
-        this.unsyncedInputs.markModelAsSynced(modelName);
-        if (shouldRender) {
-            let debounce = this.getDefaultDebounce();
-            if (options.debounce !== undefined && options.debounce !== null) {
-                debounce = options.debounce;
+        this.isRequestPending = true;
+    }
+    performRequest() {
+        const thisPromiseResolve = this.nextRequestPromiseResolve;
+        this.resetPromise();
+        this.backendRequest = this.backend.makeRequest(this.valueStore.all(), this.pendingActions, this.valueStore.updatedModels, this.getChildrenFingerprints());
+        this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
+        this.pendingActions = [];
+        this.valueStore.updatedModels = [];
+        this.isRequestPending = false;
+        this.backendRequest.promise.then(async (response) => {
+            const backendResponse = new BackendResponse(response);
+            thisPromiseResolve(backendResponse);
+            const html = await backendResponse.getBody();
+            if (backendResponse.response.headers.get('Content-Type') !== 'application/vnd.live-component+html') {
+                this.renderError(html);
+                return response;
             }
-            __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
-            this.requestDebounceTimeout = window.setTimeout(() => {
-                this.requestDebounceTimeout = null;
-                this.isRerenderRequested = true;
-                __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
-            }, debounce);
-        }
+            this.processRerender(html, backendResponse);
+            this.backendRequest = null;
+            if (this.isRequestPending) {
+                this.isRequestPending = false;
+                this.performRequest();
+            }
+            return response;
+        });
     }
-    _onLoadingStart() {
-        this._handleLoadingToggle(true);
-    }
-    _onLoadingFinish(targetElement = null) {
-        this._handleLoadingToggle(false, targetElement);
-    }
-    _handleLoadingToggle(isLoading, targetElement = null) {
-        if (isLoading) {
-            this._addAttributes(this.element, ['busy']);
+    processRerender(html, backendResponse) {
+        const controls = { shouldRender: true };
+        this.hooks.triggerHook('render:started', html, backendResponse, controls);
+        if (!controls.shouldRender) {
+            return;
         }
-        else {
-            this._removeAttributes(this.element, ['busy']);
-        }
-        this._getLoadingDirectives(targetElement).forEach(({ element, directives }) => {
-            if (isLoading) {
-                this._addAttributes(element, ['data-live-is-loading']);
+        if (backendResponse.response.headers.get('Location')) {
+            if (typeof Turbo !== 'undefined') {
+                Turbo.visit(backendResponse.response.headers.get('Location'));
             }
             else {
-                this._removeAttributes(element, ['data-live-is-loading']);
+                window.location.href = backendResponse.response.headers.get('Location') || '';
             }
-            directives.forEach((directive) => {
-                this._handleLoadingDirective(element, isLoading, directive);
-            });
-        });
-    }
-    _handleLoadingDirective(element, isLoading, directive) {
-        const finalAction = parseLoadingAction(directive.action, isLoading);
-        const targetedActions = [];
-        const targetedModels = [];
-        let delay = 0;
-        const validModifiers = new Map();
-        validModifiers.set('delay', (modifier) => {
-            if (!isLoading) {
-                return;
-            }
-            delay = modifier.value ? parseInt(modifier.value) : 200;
-        });
-        validModifiers.set('action', (modifier) => {
-            if (!modifier.value) {
-                throw new Error(`The "action" in data-loading must have an action name - e.g. action(foo). It's missing for "${directive.getString()}"`);
-            }
-            targetedActions.push(modifier.value);
-        });
-        validModifiers.set('model', (modifier) => {
-            if (!modifier.value) {
-                throw new Error(`The "model" in data-loading must have an action name - e.g. model(foo). It's missing for "${directive.getString()}"`);
-            }
-            targetedModels.push(modifier.value);
-        });
-        directive.modifiers.forEach((modifier) => {
-            var _a;
-            if (validModifiers.has(modifier.name)) {
-                const callable = (_a = validModifiers.get(modifier.name)) !== null && _a !== void 0 ? _a : (() => { });
-                callable(modifier);
-                return;
-            }
-            throw new Error(`Unknown modifier "${modifier.name}" used in data-loading="${directive.getString()}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
-        });
-        if (isLoading && targetedActions.length > 0 && this.backendRequest && !this.backendRequest.containsOneOfActions(targetedActions)) {
             return;
         }
-        if (isLoading && targetedModels.length > 0 && !this.valueStore.areAnyModelsUpdated(targetedModels)) {
-            return;
-        }
-        let loadingDirective;
-        switch (finalAction) {
-            case 'show':
-                loadingDirective = () => {
-                    this._showElement(element);
-                };
-                break;
-            case 'hide':
-                loadingDirective = () => this._hideElement(element);
-                break;
-            case 'addClass':
-                loadingDirective = () => this._addClass(element, directive.args);
-                break;
-            case 'removeClass':
-                loadingDirective = () => this._removeClass(element, directive.args);
-                break;
-            case 'addAttribute':
-                loadingDirective = () => this._addAttributes(element, directive.args);
-                break;
-            case 'removeAttribute':
-                loadingDirective = () => this._removeAttributes(element, directive.args);
-                break;
-            default:
-                throw new Error(`Unknown data-loading action "${finalAction}"`);
-        }
-        if (delay) {
-            window.setTimeout(() => {
-                if (this.isRequestActive()) {
-                    loadingDirective();
-                }
-            }, delay);
-            return;
-        }
-        loadingDirective();
-    }
-    _getLoadingDirectives(targetElement = null) {
-        const loadingDirectives = [];
-        const element = targetElement || this.element;
-        element.querySelectorAll('[data-loading]').forEach((element => {
-            if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
-                throw new Error('Invalid Element Type');
-            }
-            const directives = parseDirectives(element.dataset.loading || 'show');
-            loadingDirectives.push({
-                element,
-                directives,
-            });
-        }));
-        return loadingDirectives;
-    }
-    _showElement(element) {
-        element.style.display = 'inline-block';
-    }
-    _hideElement(element) {
-        element.style.display = 'none';
-    }
-    _addClass(element, classes) {
-        element.classList.add(...combineSpacedArray(classes));
-    }
-    _removeClass(element, classes) {
-        element.classList.remove(...combineSpacedArray(classes));
-        if (element.classList.length === 0) {
-            this._removeAttributes(element, ['class']);
-        }
-    }
-    _addAttributes(element, attributes) {
-        attributes.forEach((attribute) => {
-            element.setAttribute(attribute, '');
+        this.hooks.triggerHook('loading.state:finished', this.element);
+        const modifiedModelValues = {};
+        this.valueStore.updatedModels.forEach((modelName) => {
+            modifiedModelValues[modelName] = this.valueStore.get(modelName);
         });
-    }
-    _removeAttributes(element, attributes) {
-        attributes.forEach((attribute) => {
-            element.removeAttribute(attribute);
+        const newElement = htmlToElement(html);
+        this.hooks.triggerHook('loading.state:finished', newElement);
+        this.valueStore.reinitializeData(this.elementDriver.getComponentData(newElement));
+        executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), Array.from(this.getChildren().values()), this.elementDriver.findChildComponentElement, this.elementDriver.getKeyFromElement);
+        Object.keys(modifiedModelValues).forEach((modelName) => {
+            this.valueStore.set(modelName, modifiedModelValues[modelName]);
         });
+        this.hooks.triggerHook('render:finished', this);
     }
-    _willDataFitInUrl(dataJson, params) {
-        const urlEncodedJsonData = new URLSearchParams(dataJson).toString();
-        return (urlEncodedJsonData + params.toString()).length < 1500;
-    }
-    _executeMorphdom(newHtml, modifiedElements) {
-        const newElement = htmlToElement(newHtml);
-        this._onLoadingFinish(newElement);
-        morphdom(this.element, newElement, {
-            getNodeKey: (node) => {
-                if (!(node instanceof HTMLElement)) {
-                    return;
-                }
-                return node.dataset.liveId;
-            },
-            onBeforeElUpdated: (fromEl, toEl) => {
-                if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
-                    return false;
-                }
-                if (modifiedElements.includes(fromEl)) {
-                    setValueOnElement(toEl, getValueFromElement(fromEl, this.valueStore));
-                }
-                if (fromEl.isEqualNode(toEl)) {
-                    const normalizedFromEl = cloneHTMLElement(fromEl);
-                    normalizeAttributesForComparison(normalizedFromEl);
-                    const normalizedToEl = cloneHTMLElement(toEl);
-                    normalizeAttributesForComparison(normalizedToEl);
-                    if (normalizedFromEl.isEqualNode(normalizedToEl)) {
-                        return false;
-                    }
-                }
-                const controllerName = fromEl.hasAttribute('data-controller') ? fromEl.getAttribute('data-controller') : null;
-                if (controllerName
-                    && controllerName.split(' ').indexOf('live') !== -1
-                    && fromEl !== this.element
-                    && !this._shouldChildLiveElementUpdate(fromEl, toEl)) {
-                    return false;
-                }
-                return !fromEl.hasAttribute('data-live-ignore');
-            },
-            onBeforeNodeDiscarded(node) {
-                if (!(node instanceof HTMLElement)) {
-                    return true;
-                }
-                return !node.hasAttribute('data-live-ignore');
-            }
-        });
-        this._exposeOriginalData();
-    }
-    handleConnectedControllerEvent(event) {
-        if (event.target === this.element) {
-            return;
+    calculateDebounce(debounce) {
+        if (debounce === true) {
+            return this.defaultDebounce;
         }
-        this.childComponentControllers.push(event.detail.controller);
-        event.detail.controller.element.addEventListener('live:disconnect', this.handleDisconnectedControllerEvent);
-    }
-    handleDisconnectedControllerEvent(event) {
-        if (event.target === this.element) {
-            return;
+        if (debounce === false) {
+            return 0;
         }
-        const index = this.childComponentControllers.indexOf(event.detail.controller);
-        if (index > -1) {
-            this.childComponentControllers.splice(index, 1);
+        return debounce;
+    }
+    clearRequestDebounceTimeout() {
+        if (this.requestDebounceTimeout) {
+            clearTimeout(this.requestDebounceTimeout);
+            this.requestDebounceTimeout = null;
         }
     }
-    handleUpdateModelEvent(event) {
-        if (event.target === this.element) {
-            return;
-        }
-        this._handleChildComponentUpdateModel(event);
+    debouncedStartRequest(debounce) {
+        this.clearRequestDebounceTimeout();
+        this.requestDebounceTimeout = window.setTimeout(() => {
+            this.render();
+        }, this.calculateDebounce(debounce));
     }
-    handleInputEvent(event) {
-        const target = event.target;
-        if (!target) {
-            return;
-        }
-        this._updateModelFromElement(target, 'input');
-    }
-    handleChangeEvent(event) {
-        const target = event.target;
-        if (!target) {
-            return;
-        }
-        this._updateModelFromElement(target, 'change');
-    }
-    _initiatePolling() {
-        this._stopAllPolling();
-        if (this.element.dataset.poll === undefined) {
-            return;
-        }
-        const rawPollConfig = this.element.dataset.poll;
-        const directives = parseDirectives(rawPollConfig || '$render');
-        directives.forEach((directive) => {
-            let duration = 2000;
-            directive.modifiers.forEach((modifier) => {
-                switch (modifier.name) {
-                    case 'delay':
-                        if (modifier.value) {
-                            duration = parseInt(modifier.value);
-                        }
-                        break;
-                    default:
-                        console.warn(`Unknown modifier "${modifier.name}" in data-poll "${rawPollConfig}".`);
-                }
-            });
-            this._startPoll(directive.action, duration);
-        });
-    }
-    _startPoll(actionName, duration) {
-        let callback;
-        if (actionName.charAt(0) === '$') {
-            callback = () => {
-                this[actionName]();
-            };
-        }
-        else {
-            callback = () => {
-                this.pendingActions.push({ name: actionName, args: {} });
-                __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
-            };
-        }
-        const timer = setInterval(() => {
-            callback();
-        }, duration);
-        this.pollingIntervals.push(timer);
-    }
-    _dispatchEvent(name, payload = null, canBubble = true, cancelable = false) {
-        return this.element.dispatchEvent(new CustomEvent(name, {
-            bubbles: canBubble,
-            cancelable,
-            detail: payload
-        }));
-    }
-    _handleChildComponentUpdateModel(event) {
-        const mainModelName = event.detail.modelName;
-        const potentialModelNames = [
-            { name: mainModelName, required: false },
-        ];
-        if (event.detail.extraModelName) {
-            potentialModelNames.push({ name: event.detail.extraModelName, required: false });
-        }
-        const modelMapElement = event.target.closest('[data-model-map]');
-        if (this.element.contains(modelMapElement)) {
-            const directives = parseDirectives(modelMapElement.dataset.modelMap);
-            directives.forEach((directive) => {
-                let from = null;
-                directive.modifiers.forEach((modifier) => {
-                    switch (modifier.name) {
-                        case 'from':
-                            if (!modifier.value) {
-                                throw new Error(`The from() modifier requires a model name in data-model-map="${modelMapElement.dataset.modelMap}"`);
-                            }
-                            from = modifier.value;
-                            break;
-                        default:
-                            console.warn(`Unknown modifier "${modifier.name}" in data-model-map="${modelMapElement.dataset.modelMap}".`);
-                    }
-                });
-                if (!from) {
-                    throw new Error(`Missing from() modifier in data-model-map="${modelMapElement.dataset.modelMap}". The format should be "from(childModelName)|parentModelName"`);
-                }
-                if (from !== mainModelName) {
-                    return;
-                }
-                potentialModelNames.push({ name: directive.action, required: true });
-            });
-        }
-        potentialModelNames.reverse();
-        let foundModelName = null;
-        potentialModelNames.forEach((potentialModel) => {
-            if (foundModelName) {
-                return;
-            }
-            if (this.valueStore.hasAtTopLevel(potentialModel.name)) {
-                foundModelName = potentialModel.name;
-                return;
-            }
-            if (potentialModel.required) {
-                throw new Error(`The model name "${potentialModel.name}" does not exist! Found in data-model-map="from(${mainModelName})|${potentialModel.name}"`);
-            }
-        });
-        if (!foundModelName) {
-            return;
-        }
-        this.$updateModel(foundModelName, event.detail.value, false, null, {
-            dispatch: false
-        });
-    }
-    _shouldChildLiveElementUpdate(fromEl, toEl) {
-        if (!fromEl.dataset.originalData) {
-            throw new Error('Missing From Element originalData');
-        }
-        if (!fromEl.dataset.liveDataValue) {
-            throw new Error('Missing From Element liveDataValue');
-        }
-        if (!toEl.dataset.liveDataValue) {
-            throw new Error('Missing To Element liveDataValue');
-        }
-        return haveRenderedValuesChanged(fromEl.dataset.originalData, fromEl.dataset.liveDataValue, toEl.dataset.liveDataValue);
-    }
-    _exposeOriginalData() {
-        if (!(this.element instanceof HTMLElement)) {
-            throw new Error('Invalid Element Type');
-        }
-        this.element.dataset.originalData = this.originalDataJSON;
-    }
-    _startAttributesMutationObserver() {
-        if (!(this.element instanceof HTMLElement)) {
-            throw new Error('Invalid Element Type');
-        }
-        const element = this.element;
-        this.mutationObserver = new MutationObserver((mutations) => {
-            mutations.forEach((mutation) => {
-                if (mutation.type === 'attributes') {
-                    if (!element.dataset.originalData) {
-                        this.originalDataJSON = this.valueStore.asJson();
-                        this._exposeOriginalData();
-                    }
-                    this._initiatePolling();
-                }
-            });
-        });
-        this.mutationObserver.observe(this.element, {
-            attributes: true
-        });
-    }
-    getDefaultDebounce() {
-        return this.hasDebounceValue ? this.debounceValue : DEFAULT_DEBOUNCE;
-    }
-    _stopAllPolling() {
-        this.pollingIntervals.forEach((interval) => {
-            clearInterval(interval);
-        });
-    }
-    async renderError(html) {
+    renderError(html) {
         let modal = document.getElementById('live-component-error');
         if (modal) {
             modal.innerHTML = '';
@@ -1851,139 +1635,307 @@ class default_1 extends Controller {
         });
         modal.focus();
     }
-    synchronizeValueOfModelFields() {
-        this.element.querySelectorAll('[data-model]').forEach((element) => {
-            if (!(element instanceof HTMLElement)) {
-                throw new Error('Invalid element using data-model.');
+    getChildrenFingerprints() {
+        const fingerprints = {};
+        this.children.forEach((childComponent) => {
+            const child = childComponent.component;
+            if (!child.id) {
+                throw new Error('missing id');
             }
-            if (element instanceof HTMLFormElement) {
-                return;
-            }
-            const modelDirective = getModelDirectiveFromElement(element);
-            if (!modelDirective) {
-                return;
-            }
-            const modelName = modelDirective.action;
-            if (this.unsyncedInputs.getModifiedModels().includes(modelName)) {
-                return;
-            }
-            if (this.valueStore.has(modelName)) {
-                setValueOnElement(element, this.valueStore.get(modelName));
-            }
-            if (element instanceof HTMLSelectElement && !element.multiple) {
-                this.valueStore.set(modelName, getValueFromElement(element, this.valueStore));
-            }
+            fingerprints[child.id] = child.fingerprint;
         });
+        return fingerprints;
     }
-    isRequestActive() {
-        return !!this.backendRequest;
+    resetPromise() {
+        this.nextRequestPromise = new Promise((resolve) => {
+            this.nextRequestPromiseResolve = resolve;
+        });
     }
 }
-_instances = new WeakSet(), _startPendingRequest = function _startPendingRequest() {
-    if (!this.backendRequest && (this.pendingActions.length > 0 || this.isRerenderRequested)) {
-        __classPrivateFieldGet(this, _instances, "m", _makeRequest).call(this);
-    }
-}, _makeRequest = function _makeRequest() {
-    const splitUrl = this.urlValue.split('?');
-    let [url] = splitUrl;
-    const [, queryString] = splitUrl;
-    const params = new URLSearchParams(queryString || '');
-    const actions = this.pendingActions;
-    this.pendingActions = [];
-    this.isRerenderRequested = false;
-    __classPrivateFieldGet(this, _instances, "m", _clearRequestDebounceTimeout).call(this);
-    const fetchOptions = {};
-    fetchOptions.headers = {
-        'Accept': 'application/vnd.live-component+html',
-    };
-    const updatedModels = this.valueStore.updatedModels;
-    if (actions.length === 0 && this._willDataFitInUrl(this.valueStore.asJson(), params)) {
-        params.set('data', this.valueStore.asJson());
-        updatedModels.forEach((model) => {
-            params.append('updatedModels[]', model);
-        });
-        fetchOptions.method = 'GET';
-    }
-    else {
-        fetchOptions.method = 'POST';
-        fetchOptions.headers['Content-Type'] = 'application/json';
-        const requestData = { data: this.valueStore.all() };
-        requestData.updatedModels = updatedModels;
-        if (actions.length > 0) {
-            if (this.csrfValue) {
-                fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfValue;
+function proxifyComponent(component) {
+    return new Proxy(component, {
+        get(component, prop) {
+            if (prop in component || typeof prop !== 'string') {
+                if (typeof component[prop] === 'function') {
+                    const callable = component[prop];
+                    return (...args) => {
+                        return callable.apply(component, args);
+                    };
+                }
+                return Reflect.get(component, prop);
             }
-            if (actions.length === 1) {
-                requestData.args = actions[0].args;
-                url += `/${encodeURIComponent(actions[0].name)}`;
+            if (component.valueStore.has(prop)) {
+                return component.getData(prop);
             }
-            else {
-                url += '/_batch';
-                requestData.actions = actions;
+            return (args) => {
+                return component.action.apply(component, [prop, args]);
+            };
+        },
+        set(target, property, value) {
+            if (property in target) {
+                target[property] = value;
+                return true;
             }
-        }
-        fetchOptions.body = JSON.stringify(requestData);
-    }
-    const paramsString = params.toString();
-    const thisPromise = fetch(`${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`, fetchOptions);
-    this.backendRequest = new BackendRequest(thisPromise, actions.map(action => action.name));
-    this._onLoadingStart();
-    this.valueStore.updatedModels = [];
-    thisPromise.then(async (response) => {
-        const html = await response.text();
-        if (response.headers.get('Content-Type') !== 'application/vnd.live-component+html') {
-            this.renderError(html);
-            return;
-        }
-        __classPrivateFieldGet(this, _instances, "m", _processRerender).call(this, html, response);
-        this.backendRequest = null;
-        __classPrivateFieldGet(this, _instances, "m", _startPendingRequest).call(this);
+            target.set(property, value);
+            return true;
+        },
     });
-}, _processRerender = function _processRerender(html, response) {
-    if (!this.isConnected) {
-        return;
-    }
-    if (response.headers.get('Location')) {
-        if (typeof Turbo !== 'undefined') {
-            Turbo.visit(response.headers.get('Location'));
-        }
-        else {
-            window.location.href = response.headers.get('Location') || '';
-        }
-        return;
-    }
-    this._onLoadingFinish();
-    if (!this._dispatchEvent('live:render', html, true, true)) {
-        return;
-    }
-    const modifiedModelValues = {};
-    this.valueStore.updatedModels.forEach((modelName) => {
-        modifiedModelValues[modelName] = this.valueStore.get(modelName);
-    });
-    this._executeMorphdom(html, this.unsyncedInputs.all());
-    Object.keys(modifiedModelValues).forEach((modelName) => {
-        this.valueStore.set(modelName, modifiedModelValues[modelName]);
-    });
-    this.synchronizeValueOfModelFields();
-}, _clearRequestDebounceTimeout = function _clearRequestDebounceTimeout() {
-    if (this.requestDebounceTimeout) {
-        clearTimeout(this.requestDebounceTimeout);
-        this.requestDebounceTimeout = null;
-    }
-};
-default_1.values = {
-    url: String,
-    data: Object,
-    csrf: String,
-    debounce: Number,
-};
+}
+
 class BackendRequest {
-    constructor(promise, actions) {
+    constructor(promise, actions, updateModels) {
+        this.isResolved = false;
         this.promise = promise;
+        this.promise.then((response) => {
+            this.isResolved = true;
+            return response;
+        });
         this.actions = actions;
+        this.updatedModels = updateModels;
     }
     containsOneOfActions(targetedActions) {
         return (this.actions.filter(action => targetedActions.includes(action))).length > 0;
+    }
+    areAnyModelsUpdated(targetedModels) {
+        return (this.updatedModels.filter(model => targetedModels.includes(model))).length > 0;
+    }
+}
+
+class Backend {
+    constructor(url, csrfToken = null) {
+        this.url = url;
+        this.csrfToken = csrfToken;
+    }
+    makeRequest(data, actions, updatedModels, childrenFingerprints) {
+        const splitUrl = this.url.split('?');
+        let [url] = splitUrl;
+        const [, queryString] = splitUrl;
+        const params = new URLSearchParams(queryString || '');
+        const fetchOptions = {};
+        fetchOptions.headers = {
+            'Accept': 'application/vnd.live-component+html',
+        };
+        const hasFingerprints = Object.keys(childrenFingerprints).length > 0;
+        const hasUpdatedModels = Object.keys(updatedModels).length > 0;
+        if (actions.length === 0 && this.willDataFitInUrl(JSON.stringify(data), params, JSON.stringify(childrenFingerprints))) {
+            params.set('data', JSON.stringify(data));
+            if (hasFingerprints) {
+                params.set('childrenFingerprints', JSON.stringify(childrenFingerprints));
+            }
+            updatedModels.forEach((model) => {
+                params.append('updatedModels[]', model);
+            });
+            fetchOptions.method = 'GET';
+        }
+        else {
+            fetchOptions.method = 'POST';
+            fetchOptions.headers['Content-Type'] = 'application/json';
+            const requestData = { data };
+            if (hasUpdatedModels) {
+                requestData.updatedModels = updatedModels;
+            }
+            if (hasFingerprints) {
+                requestData.childrenFingerprints = childrenFingerprints;
+            }
+            if (actions.length > 0) {
+                if (this.csrfToken) {
+                    fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
+                }
+                if (actions.length === 1) {
+                    requestData.args = actions[0].args;
+                    url += `/${encodeURIComponent(actions[0].name)}`;
+                }
+                else {
+                    url += '/_batch';
+                    requestData.actions = actions;
+                }
+            }
+            fetchOptions.body = JSON.stringify(requestData);
+        }
+        const paramsString = params.toString();
+        return new BackendRequest(fetch(`${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`, fetchOptions), actions.map((backendAction) => backendAction.name), updatedModels);
+    }
+    willDataFitInUrl(dataJson, params, childrenFingerprintsJson) {
+        const urlEncodedJsonData = new URLSearchParams(dataJson + childrenFingerprintsJson).toString();
+        return (urlEncodedJsonData + params.toString()).length < 1500;
+    }
+}
+
+class StandardElementDriver {
+    getModelName(element) {
+        const modelDirective = getModelDirectiveFromElement(element, false);
+        if (!modelDirective) {
+            return null;
+        }
+        return modelDirective.action;
+    }
+    getComponentData(rootElement) {
+        if (!rootElement.dataset.liveDataValue) {
+            return null;
+        }
+        return JSON.parse(rootElement.dataset.liveDataValue);
+    }
+    getComponentProps(rootElement) {
+        if (!rootElement.dataset.livePropsValue) {
+            return null;
+        }
+        return JSON.parse(rootElement.dataset.livePropsValue);
+    }
+    findChildComponentElement(id, element) {
+        return element.querySelector(`[data-live-id=${id}]`);
+    }
+    getKeyFromElement(element) {
+        return element.dataset.liveId || null;
+    }
+}
+
+class LoadingPlugin {
+    attachToComponent(component) {
+        component.on('loading.state:started', (element, request) => {
+            this.startLoading(element, request);
+        });
+        component.on('loading.state:finished', (element) => {
+            this.finishLoading(element);
+        });
+        this.finishLoading(component.element);
+    }
+    startLoading(targetElement, backendRequest) {
+        this.handleLoadingToggle(true, targetElement, backendRequest);
+    }
+    finishLoading(targetElement) {
+        this.handleLoadingToggle(false, targetElement, null);
+    }
+    handleLoadingToggle(isLoading, targetElement, backendRequest) {
+        if (isLoading) {
+            this.addAttributes(targetElement, ['busy']);
+        }
+        else {
+            this.removeAttributes(targetElement, ['busy']);
+        }
+        this.getLoadingDirectives(targetElement).forEach(({ element, directives }) => {
+            if (isLoading) {
+                this.addAttributes(element, ['data-live-is-loading']);
+            }
+            else {
+                this.removeAttributes(element, ['data-live-is-loading']);
+            }
+            directives.forEach((directive) => {
+                this.handleLoadingDirective(element, isLoading, directive, backendRequest);
+            });
+        });
+    }
+    handleLoadingDirective(element, isLoading, directive, backendRequest) {
+        const finalAction = parseLoadingAction(directive.action, isLoading);
+        const targetedActions = [];
+        const targetedModels = [];
+        let delay = 0;
+        const validModifiers = new Map();
+        validModifiers.set('delay', (modifier) => {
+            if (!isLoading) {
+                return;
+            }
+            delay = modifier.value ? parseInt(modifier.value) : 200;
+        });
+        validModifiers.set('action', (modifier) => {
+            if (!modifier.value) {
+                throw new Error(`The "action" in data-loading must have an action name - e.g. action(foo). It's missing for "${directive.getString()}"`);
+            }
+            targetedActions.push(modifier.value);
+        });
+        validModifiers.set('model', (modifier) => {
+            if (!modifier.value) {
+                throw new Error(`The "model" in data-loading must have an action name - e.g. model(foo). It's missing for "${directive.getString()}"`);
+            }
+            targetedModels.push(modifier.value);
+        });
+        directive.modifiers.forEach((modifier) => {
+            var _a;
+            if (validModifiers.has(modifier.name)) {
+                const callable = (_a = validModifiers.get(modifier.name)) !== null && _a !== void 0 ? _a : (() => { });
+                callable(modifier);
+                return;
+            }
+            throw new Error(`Unknown modifier "${modifier.name}" used in data-loading="${directive.getString()}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
+        });
+        if (isLoading && targetedActions.length > 0 && backendRequest && !backendRequest.containsOneOfActions(targetedActions)) {
+            return;
+        }
+        if (isLoading && targetedModels.length > 0 && backendRequest && !backendRequest.areAnyModelsUpdated(targetedModels)) {
+            return;
+        }
+        let loadingDirective;
+        switch (finalAction) {
+            case 'show':
+                loadingDirective = () => {
+                    this.showElement(element);
+                };
+                break;
+            case 'hide':
+                loadingDirective = () => this.hideElement(element);
+                break;
+            case 'addClass':
+                loadingDirective = () => this.addClass(element, directive.args);
+                break;
+            case 'removeClass':
+                loadingDirective = () => this.removeClass(element, directive.args);
+                break;
+            case 'addAttribute':
+                loadingDirective = () => this.addAttributes(element, directive.args);
+                break;
+            case 'removeAttribute':
+                loadingDirective = () => this.removeAttributes(element, directive.args);
+                break;
+            default:
+                throw new Error(`Unknown data-loading action "${finalAction}"`);
+        }
+        if (delay) {
+            window.setTimeout(() => {
+                if (backendRequest && !backendRequest.isResolved) {
+                    loadingDirective();
+                }
+            }, delay);
+            return;
+        }
+        loadingDirective();
+    }
+    getLoadingDirectives(element) {
+        const loadingDirectives = [];
+        element.querySelectorAll('[data-loading]').forEach((element => {
+            if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
+                throw new Error('Invalid Element Type');
+            }
+            const directives = parseDirectives(element.dataset.loading || 'show');
+            loadingDirectives.push({
+                element,
+                directives,
+            });
+        }));
+        return loadingDirectives;
+    }
+    showElement(element) {
+        element.style.display = 'inline-block';
+    }
+    hideElement(element) {
+        element.style.display = 'none';
+    }
+    addClass(element, classes) {
+        element.classList.add(...combineSpacedArray(classes));
+    }
+    removeClass(element, classes) {
+        element.classList.remove(...combineSpacedArray(classes));
+        if (element.classList.length === 0) {
+            this.removeAttributes(element, ['class']);
+        }
+    }
+    addAttributes(element, attributes) {
+        attributes.forEach((attribute) => {
+            element.setAttribute(attribute, '');
+        });
+    }
+    removeAttributes(element, attributes) {
+        attributes.forEach((attribute) => {
+            element.removeAttribute(attribute);
+        });
     }
 }
 const parseLoadingAction = function (action, isLoading) {
@@ -2002,6 +1954,388 @@ const parseLoadingAction = function (action, isLoading) {
             return isLoading ? 'removeAttribute' : 'addAttribute';
     }
     throw new Error(`Unknown data-loading action "${action}"`);
+};
+
+class ValidatedFieldsPlugin {
+    attachToComponent(component) {
+        component.on('model:set', (modelName) => {
+            this.handleModelSet(modelName, component.valueStore);
+        });
+    }
+    handleModelSet(modelName, valueStore) {
+        if (valueStore.has('validatedFields')) {
+            const validatedFields = [...valueStore.get('validatedFields')];
+            if (!validatedFields.includes(modelName)) {
+                validatedFields.push(modelName);
+            }
+            valueStore.set('validatedFields', validatedFields);
+        }
+    }
+}
+
+class PageUnloadingPlugin {
+    constructor() {
+        this.isConnected = false;
+    }
+    attachToComponent(component) {
+        component.on('render:started', (html, response, controls) => {
+            if (!this.isConnected) {
+                controls.shouldRender = false;
+            }
+        });
+        component.on('connect', () => {
+            this.isConnected = true;
+        });
+        component.on('disconnect', () => {
+            this.isConnected = false;
+        });
+    }
+}
+
+class PollingDirector {
+    constructor(component) {
+        this.isPollingActive = true;
+        this.pollingIntervals = [];
+        this.component = component;
+    }
+    addPoll(actionName, duration) {
+        this.polls.push({ actionName, duration });
+        if (this.isPollingActive) {
+            this.initiatePoll(actionName, duration);
+        }
+    }
+    startAllPolling() {
+        if (this.isPollingActive) {
+            return;
+        }
+        this.isPollingActive = true;
+        this.polls.forEach(({ actionName, duration }) => {
+            this.initiatePoll(actionName, duration);
+        });
+    }
+    stopAllPolling() {
+        this.isPollingActive = false;
+        this.pollingIntervals.forEach((interval) => {
+            clearInterval(interval);
+        });
+    }
+    clearPolling() {
+        this.stopAllPolling();
+        this.polls = [];
+        this.startAllPolling();
+    }
+    initiatePoll(actionName, duration) {
+        let callback;
+        if (actionName === '$render') {
+            callback = () => {
+                this.component.render();
+            };
+        }
+        else {
+            callback = () => {
+                this.component.action(actionName, {}, 0);
+            };
+        }
+        const timer = setInterval(() => {
+            callback();
+        }, duration);
+        this.pollingIntervals.push(timer);
+    }
+}
+
+class PollingPlugin {
+    attachToComponent(component) {
+        this.element = component.element;
+        this.pollingDirector = new PollingDirector(component);
+        this.initializePolling();
+        component.on('connect', () => {
+            this.pollingDirector.startAllPolling();
+        });
+        component.on('disconnect', () => {
+            this.pollingDirector.stopAllPolling();
+        });
+        component.on('render:finished', () => {
+            this.initializePolling();
+        });
+    }
+    addPoll(actionName, duration) {
+        this.pollingDirector.addPoll(actionName, duration);
+    }
+    clearPolling() {
+        this.pollingDirector.clearPolling();
+    }
+    initializePolling() {
+        this.clearPolling();
+        if (this.element.dataset.poll === undefined) {
+            return;
+        }
+        const rawPollConfig = this.element.dataset.poll;
+        const directives = parseDirectives(rawPollConfig || '$render');
+        directives.forEach((directive) => {
+            let duration = 2000;
+            directive.modifiers.forEach((modifier) => {
+                switch (modifier.name) {
+                    case 'delay':
+                        if (modifier.value) {
+                            duration = parseInt(modifier.value);
+                        }
+                        break;
+                    default:
+                        console.warn(`Unknown modifier "${modifier.name}" in data-poll "${rawPollConfig}".`);
+                }
+            });
+            this.addPoll(directive.action, duration);
+        });
+    }
+}
+
+class SetValueOntoModelFieldsPlugin {
+    attachToComponent(component) {
+        this.synchronizeValueOfModelFields(component);
+        component.on('render:finished', () => {
+            this.synchronizeValueOfModelFields(component);
+        });
+    }
+    synchronizeValueOfModelFields(component) {
+        component.element.querySelectorAll('[data-model]').forEach((element) => {
+            if (!(element instanceof HTMLElement)) {
+                throw new Error('Invalid element using data-model.');
+            }
+            if (element instanceof HTMLFormElement) {
+                return;
+            }
+            const modelDirective = getModelDirectiveFromElement(element);
+            if (!modelDirective) {
+                return;
+            }
+            const modelName = modelDirective.action;
+            if (component.getUnsyncedModels().includes(modelName)) {
+                return;
+            }
+            if (component.valueStore.has(modelName)) {
+                setValueOnElement(element, component.valueStore.get(modelName));
+            }
+            if (element instanceof HTMLSelectElement && !element.multiple) {
+                component.valueStore.set(modelName, getValueFromElement(element, component.valueStore));
+            }
+        });
+    }
+}
+
+function getModelBinding (modelDirective) {
+    let shouldRender = true;
+    let targetEventName = null;
+    let debounce = false;
+    modelDirective.modifiers.forEach((modifier) => {
+        switch (modifier.name) {
+            case 'on':
+                if (!modifier.value) {
+                    throw new Error(`The "on" modifier in ${modelDirective.getString()} requires a value - e.g. on(change).`);
+                }
+                if (!['input', 'change'].includes(modifier.value)) {
+                    throw new Error(`The "on" modifier in ${modelDirective.getString()} only accepts the arguments "input" or "change".`);
+                }
+                targetEventName = modifier.value;
+                break;
+            case 'norender':
+                shouldRender = false;
+                break;
+            case 'debounce':
+                debounce = modifier.value ? parseInt(modifier.value) : true;
+                break;
+            default:
+                throw new Error(`Unknown modifier "${modifier.name}" in data-model="${modelDirective.getString()}".`);
+        }
+    });
+    const [modelName, innerModelName] = modelDirective.action.split(':');
+    return {
+        modelName,
+        innerModelName: innerModelName || null,
+        shouldRender,
+        debounce,
+        targetEventName
+    };
+}
+
+class default_1 extends Controller {
+    constructor() {
+        super(...arguments);
+        this.pendingActionTriggerModelElement = null;
+        this.elementEventListeners = [
+            { event: 'input', callback: (event) => this.handleInputEvent(event) },
+            { event: 'change', callback: (event) => this.handleChangeEvent(event) },
+            { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
+        ];
+    }
+    initialize() {
+        this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
+        const id = this.element.dataset.liveId || null;
+        this.component = new Component(this.element, this.propsValue, this.dataValue, this.fingerprintValue, id, new Backend(this.urlValue, this.csrfValue), new StandardElementDriver());
+        this.proxiedComponent = proxifyComponent(this.component);
+        this.element.__component = this.proxiedComponent;
+        if (this.hasDebounceValue) {
+            this.component.defaultDebounce = this.debounceValue;
+        }
+        const plugins = [
+            new LoadingPlugin(),
+            new ValidatedFieldsPlugin(),
+            new PageUnloadingPlugin(),
+            new PollingPlugin(),
+            new SetValueOntoModelFieldsPlugin(),
+        ];
+        plugins.forEach((plugin) => {
+            this.component.addPlugin(plugin);
+        });
+    }
+    connect() {
+        this.component.connect();
+        this.elementEventListeners.forEach(({ event, callback }) => {
+            this.component.element.addEventListener(event, callback);
+        });
+        this._dispatchEvent('live:connect');
+    }
+    disconnect() {
+        this.component.disconnect();
+        this.elementEventListeners.forEach(({ event, callback }) => {
+            this.component.element.removeEventListener(event, callback);
+        });
+        this._dispatchEvent('live:disconnect');
+    }
+    update(event) {
+        if (event.type === 'input' || event.type === 'change') {
+            throw new Error(`Since LiveComponents 2.3, you no longer need data-action="live#update" on form elements. Found on element: ${getElementAsTagText(event.target)}`);
+        }
+        this.updateModelFromElementEvent(event.target, null);
+    }
+    action(event) {
+        const rawAction = event.currentTarget.dataset.actionName;
+        const directives = parseDirectives(rawAction);
+        let debounce = false;
+        directives.forEach((directive) => {
+            const validModifiers = new Map();
+            validModifiers.set('prevent', () => {
+                event.preventDefault();
+            });
+            validModifiers.set('stop', () => {
+                event.stopPropagation();
+            });
+            validModifiers.set('self', () => {
+                if (event.target !== event.currentTarget) {
+                    return;
+                }
+            });
+            validModifiers.set('debounce', (modifier) => {
+                debounce = modifier.value ? parseInt(modifier.value) : true;
+            });
+            directive.modifiers.forEach((modifier) => {
+                var _a;
+                if (validModifiers.has(modifier.name)) {
+                    const callable = (_a = validModifiers.get(modifier.name)) !== null && _a !== void 0 ? _a : (() => { });
+                    callable(modifier);
+                    return;
+                }
+                console.warn(`Unknown modifier ${modifier.name} in action "${rawAction}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
+            });
+            this.component.action(directive.action, directive.named, debounce);
+            if (getModelDirectiveFromElement(event.currentTarget, false)) {
+                this.pendingActionTriggerModelElement = event.currentTarget;
+            }
+        });
+    }
+    $render() {
+        this.component.render();
+    }
+    $updateModel(model, value, shouldRender = true, debounce = true) {
+        this.component.set(model, value, shouldRender, debounce);
+    }
+    handleInputEvent(event) {
+        const target = event.target;
+        if (!target) {
+            return;
+        }
+        this.updateModelFromElementEvent(target, 'input');
+    }
+    handleChangeEvent(event) {
+        const target = event.target;
+        if (!target) {
+            return;
+        }
+        this.updateModelFromElementEvent(target, 'change');
+    }
+    updateModelFromElementEvent(element, eventName) {
+        if (!elementBelongsToThisComponent(element, this.component)) {
+            return;
+        }
+        if (!(element instanceof HTMLElement)) {
+            throw new Error('Could not update model for non HTMLElement');
+        }
+        const modelDirective = getModelDirectiveFromElement(element, false);
+        if (!modelDirective) {
+            return;
+        }
+        const modelBinding = getModelBinding(modelDirective);
+        if (!modelBinding.targetEventName) {
+            modelBinding.targetEventName = 'input';
+        }
+        if (this.pendingActionTriggerModelElement === element) {
+            modelBinding.shouldRender = false;
+        }
+        if (eventName === 'change' && modelBinding.targetEventName === 'input') {
+            modelBinding.targetEventName = 'change';
+        }
+        if (eventName && modelBinding.targetEventName !== eventName) {
+            return;
+        }
+        if (false === modelBinding.debounce) {
+            if (modelBinding.targetEventName === 'input') {
+                modelBinding.debounce = true;
+            }
+            else {
+                modelBinding.debounce = 0;
+            }
+        }
+        const finalValue = getValueFromElement(element, this.component.valueStore);
+        this.component.set(modelBinding.modelName, finalValue, modelBinding.shouldRender, modelBinding.debounce);
+    }
+    handleConnectedControllerEvent(event) {
+        if (event.target === this.element) {
+            return;
+        }
+        const childController = event.detail.controller;
+        if (childController.component.getParent()) {
+            return;
+        }
+        const modelDirectives = getAllModelDirectiveFromElements(childController.element);
+        const modelBindings = modelDirectives.map(getModelBinding);
+        this.component.addChild(childController.component, modelBindings);
+        childController.element.addEventListener('live:disconnect', this.handleDisconnectedChildControllerEvent);
+    }
+    handleDisconnectedChildControllerEvent(event) {
+        const childController = event.detail.controller;
+        childController.element.removeEventListener('live:disconnect', this.handleDisconnectedChildControllerEvent);
+        if (childController.component.getParent() !== this.component) {
+            return;
+        }
+        this.component.removeChild(childController.component);
+    }
+    _dispatchEvent(name, detail = {}, canBubble = true, cancelable = false) {
+        detail.controller = this;
+        detail.component = this.proxiedComponent;
+        return this.element.dispatchEvent(new CustomEvent(name, {
+            bubbles: canBubble,
+            cancelable,
+            detail
+        }));
+    }
+}
+default_1.values = {
+    url: String,
+    data: Object,
+    props: Object,
+    csrf: String,
+    debounce: { type: Number, default: 150 },
+    id: String,
+    fingerprint: String,
 };
 
 export { default_1 as default };

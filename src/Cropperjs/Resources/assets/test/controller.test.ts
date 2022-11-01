@@ -52,7 +52,7 @@ describe('CropperjsController', () => {
                     data-cropperjs-public-url-value="https://symfony.com/logos/symfony_black_02.png"
                     data-cropperjs-options-value="${dataToJsonAttribute({
                         viewMode: 1,
-                        dragMode: "move"
+                        dragMode: 'move'
                     })}"
                 >
             </div>

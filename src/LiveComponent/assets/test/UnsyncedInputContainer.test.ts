@@ -1,4 +1,4 @@
-import UnsyncedInputContainer from '../src/UnsyncedInputContainer';
+import { UnsyncedInputContainer } from '../src/Component/UnsyncedInputsTracker';
 import { htmlToElement } from '../src/dom_utils';
 
 describe('UnsyncedInputContainer', () => {

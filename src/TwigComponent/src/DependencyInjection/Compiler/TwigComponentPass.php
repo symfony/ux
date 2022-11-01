@@ -47,7 +47,7 @@ final class TwigComponentPass implements CompilerPassInterface
         }
 
         $container->findDefinition('ux.twig_component.component_factory')
-            ->setArgument(2, $componentConfig)
+            ->setArgument(3, $componentConfig)
         ;
     }
 }

@@ -11,7 +11,7 @@
 
 declare(strict_types=1);
 
-namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
+namespace Symfony\UX\LiveComponent\Tests\Functional\Form;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
@@ -19,7 +19,6 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\FormWithCollectionTypeComponent;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Form\BlogPostFormType;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
-use Zenstruck\Browser\Response\HtmlResponse;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -36,16 +35,16 @@ class ComponentWithFormTest extends KernelTestCase
 
     public function testFormValuesRebuildAfterFormChanges(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'))->all();
         $token = null;
 
         $this->browser()
             ->get('/_components/form_with_collection_type?data='.urlencode(json_encode($dehydrated)))
-            ->use(function (HtmlResponse $response) use (&$dehydrated, &$token) {
+            ->use(function (Crawler $crawler) use (&$dehydrated, &$token) {
                 // mimic user typing
                 $dehydrated['blog_post_form']['content'] = 'changed description by user';
                 $dehydrated['validatedFields'] = ['blog_post_form.content'];
-                $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
+                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
             })
 
             // post to action, which will add a new embedded comment
@@ -67,6 +66,7 @@ class ComponentWithFormTest extends KernelTestCase
             ->use(function (Crawler $crawler) use (&$dehydrated, &$token) {
                 $div = $crawler->filter('[data-controller="live"]');
                 $liveData = json_decode($div->attr('data-live-data-value'), true);
+                $liveProps = json_decode($div->attr('data-live-props-value'), true);
                 // make sure the 2nd collection type was initialized, that it didn't
                 // just "keep" the empty array that we set it to in the component
                 $this->assertEquals(
@@ -78,7 +78,7 @@ class ComponentWithFormTest extends KernelTestCase
                 );
 
                 // grab the latest live data
-                $dehydrated = $liveData;
+                $dehydrated = $liveProps + $liveData;
                 // fake that this field was being validated
                 $dehydrated['validatedFields'][] = 'blog_post_form.0.comments.content';
                 $token = $div->attr('data-live-csrf-value');
@@ -124,7 +124,7 @@ class ComponentWithFormTest extends KernelTestCase
         // component should recognize that it is already submitted
         $this->assertTrue($component->isValidated);
 
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted)->all();
         $dehydrated['blog_post_form']['content'] = 'changed description';
         $dehydrated['validatedFields'][] = 'blog_post_form.content';
 
@@ -150,7 +150,7 @@ class ComponentWithFormTest extends KernelTestCase
             ]
         );
 
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted)->all();
         $bareForm = [
             'text' => '',
             'textarea' => '',
@@ -173,9 +173,9 @@ class ComponentWithFormTest extends KernelTestCase
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" />')
             ->assertContains('<input type="checkbox" id="form_checkbox" name="form[checkbox]" required="required" value="1" />')
             ->assertContains('<input type="checkbox" id="form_checkbox_checked" name="form[checkbox_checked]" required="required" value="1" checked="checked" />')
-            ->use(function (HtmlResponse $response) use (&$dehydrated, &$bareForm) {
+            ->use(function (Crawler $crawler) use (&$dehydrated, &$bareForm) {
                 $data = json_decode(
-                    $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
+                    $crawler->filter('div')->first()->attr('data-live-data-value'),
                     true
                 );
                 self::assertEquals($bareForm, $data['form']);
@@ -188,9 +188,9 @@ class ComponentWithFormTest extends KernelTestCase
             ->get('/_components/form_with_many_different_fields_type?data='.urlencode(json_encode($dehydrated)))
             ->assertContains('<input type="checkbox" id="form_choice_multiple_1" name="form[choice_multiple][]" value="2" checked="checked" />')
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" checked="checked" />')
-            ->use(function (HtmlResponse $response) use (&$dehydrated, &$bareForm) {
+            ->use(function (Crawler $crawler) use (&$dehydrated, &$bareForm) {
                 $data = json_decode(
-                    $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
+                    $crawler->filter('div')->first()->attr('data-live-data-value'),
                     true
                 );
                 self::assertEquals($bareForm, $data['form']);
@@ -209,9 +209,9 @@ class ComponentWithFormTest extends KernelTestCase
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" />')
             ->assertContains('<input type="checkbox" id="form_checkbox" name="form[checkbox]" required="required" value="1" checked="checked" />')
             ->assertContains('<input type="checkbox" id="form_checkbox_checked" name="form[checkbox_checked]" required="required" value="1" />')
-            ->use(function (HtmlResponse $response) use (&$dehydrated, &$bareForm) {
+            ->use(function (Crawler $crawler) use (&$dehydrated, &$bareForm) {
                 $data = json_decode(
-                    $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
+                    $crawler->filter('div')->first()->attr('data-live-data-value'),
                     true
                 );
                 self::assertEquals($bareForm, $data['form']);
@@ -224,9 +224,9 @@ class ComponentWithFormTest extends KernelTestCase
             ->get('/_components/form_with_many_different_fields_type?data='.urlencode(json_encode($dehydrated)))
             ->assertContains('<option value="2" selected="selected">')
             ->assertContains('<option value="1" selected="selected">')
-            ->use(function (HtmlResponse $response) use ($bareForm) {
+            ->use(function (Crawler $crawler) use ($bareForm) {
                 $data = json_decode(
-                    $response->crawler()->filter('div')->first()->attr('data-live-data-value'),
+                    $crawler->filter('div')->first()->attr('data-live-data-value'),
                     true
                 );
                 self::assertEquals($bareForm, $data['form']);
@@ -236,15 +236,15 @@ class ComponentWithFormTest extends KernelTestCase
 
     public function testLiveCollectionTypeAddButtonsByDefault(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'))->all();
 
         $this->browser()
             ->get('/_components/form_with_live_collection_type?data='.urlencode(json_encode($dehydrated)))
-            ->use(function (HtmlResponse $response) use (&$dehydrated, &$token) {
+            ->use(function (Crawler $crawler) use (&$dehydrated, &$token) {
                 // mimic user typing
                 $dehydrated['blog_post_form']['content'] = 'changed description by user';
                 $dehydrated['validatedFields'] = ['blog_post_form.content'];
-                $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
+                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
             })
             ->assertContains('<button type="button" id="blog_post_form_comments_add"')
             ->assertContains('<button type="button" id="blog_post_form_comments_0_delete"')
@@ -253,16 +253,16 @@ class ComponentWithFormTest extends KernelTestCase
 
     public function testLiveCollectionTypeFieldsAddedAndRemoved(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'))->all();
         $token = null;
 
         $this->browser()
             ->get('/_components/form_with_live_collection_type?data='.urlencode(json_encode($dehydrated)))
-            ->use(function (HtmlResponse $response) use (&$dehydrated, &$token) {
+            ->use(function (Crawler $crawler) use (&$dehydrated, &$token) {
                 // mimic user typing
                 $dehydrated['blog_post_form']['content'] = 'changed description by user';
                 $dehydrated['validatedFields'] = ['blog_post_form.content'];
-                $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
+                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
             })
             // post to action, which will add a new embedded comment
             ->post('/_components/form_with_live_collection_type/addCollectionItem', [
@@ -283,6 +283,7 @@ class ComponentWithFormTest extends KernelTestCase
             ->use(function (Crawler $crawler) use (&$dehydrated, &$token) {
                 $div = $crawler->filter('[data-controller="live"]');
                 $liveData = json_decode($div->attr('data-live-data-value'), true);
+                $liveProps = json_decode($div->attr('data-live-props-value'), true);
                 // make sure the 2nd collection type was initialized, that it didn't
                 // just "keep" the empty array that we set it to in the component
                 $this->assertEquals(
@@ -294,7 +295,7 @@ class ComponentWithFormTest extends KernelTestCase
                 );
 
                 // grab the latest live data
-                $dehydrated = $liveData;
+                $dehydrated = $liveData + $liveProps;
                 // fake that this field was being validated
                 $dehydrated['validatedFields'][] = 'blog_post_form.0.comments.content';
                 $token = $div->attr('data-live-csrf-value');
@@ -324,7 +325,7 @@ class ComponentWithFormTest extends KernelTestCase
 
     public function testDataModelAttributeAutomaticallyAdded(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'))->all();
 
         $this->browser()
             ->get('/_components/form_with_collection_type?data='.urlencode(json_encode($dehydrated)))

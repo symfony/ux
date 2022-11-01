@@ -9,13 +9,13 @@
 
 'use strict';
 
-import { createTest, initComponent, shutdownTest } from '../tools';
+import { createTest, initComponent, shutdownTests } from '../tools';
 import { getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
 describe('LiveController Action Tests', () => {
     afterEach(() => {
-        shutdownTest();
+        shutdownTests();
     })
 
     it('sends an action and renders the result', async () => {
@@ -46,7 +46,7 @@ describe('LiveController Action Tests', () => {
 
     it('immediately sends an action, includes debouncing model updates and cancels those debounce renders', async () => {
         const test = await createTest({ comment: '', isSaved: false }, (data: any) => `
-            <div ${initComponent(data, { debounce: 10 })}>
+            <div ${initComponent(data, {}, { debounce: 10 })}>
                 <input data-model="comment" value="${data.comment}">
 
                 ${data.isSaved ? 'Comment Saved!' : ''}
@@ -134,7 +134,7 @@ describe('LiveController Action Tests', () => {
 
     it('makes model updates wait until action Ajax call finishes', async () => {
         const test = await createTest({ comment: 'donut', isSaved: false }, (data: any) => `
-            <div ${initComponent(data, { debounce: 50 })}>
+            <div ${initComponent(data, {}, { debounce: 50 })}>
                 <input data-model="comment" value="${data.comment}">
 
                 ${data.isSaved ? 'Comment Saved!' : ''}
@@ -167,7 +167,10 @@ describe('LiveController Action Tests', () => {
 
         // save first, then type into the box
         getByText(test.element, 'Save').click();
-        await userEvent.type(test.queryByDataModel('comment'), ' holes');
+        // slight pause (should allow action request to start), then start typing
+        setTimeout(() => {
+            userEvent.type(test.queryByDataModel('comment'), ' holes');
+        }, 10);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Comment Saved!'));
         // render has not happened yet

@@ -1,6 +1,10 @@
 export function getDeepData(data: any, propertyPath: string) {
     const { currentLevelData, finalKey } = parseDeepData(data, propertyPath);
 
+    if (currentLevelData === undefined) {
+        return undefined;
+    }
+
     return currentLevelData[finalKey];
 }
 

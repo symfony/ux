@@ -3,8 +3,9 @@ import LiveController from '../src/live_controller';
 import { waitFor } from '@testing-library/dom';
 import fetchMock from 'fetch-mock-jest';
 import { htmlToElement } from '../src/dom_utils';
+import Component from '../src/Component';
 
-let activeTest: FunctionalTest|null = null;
+let activeTests: FunctionalTest[] = [];
 let unmatchedFetchErrors: Array<{url: string, method: string, body: any, headers: any}> = [];
 
 // manually error on unmatched request for readability
@@ -16,19 +17,35 @@ fetchMock.catch((url: string, response: any) => {
         body: response.body,
         headers: response.headers,
     });
+
+    return response;
 });
 
 let application: Application;
 
-export function shutdownTest() {
-    if (!activeTest) {
+export function shutdownTests() {
+    if (activeTests.length === 0) {
         // no test was run, apparently
         return;
     }
 
-    const test = activeTest;
-    activeTest = null;
+    const tests = activeTests;
+    activeTests = [];
+    tests.forEach((test) => {
+        shutdownTest(test);
+    });
 
+    // only possible if someone uses fetchMock directly, but here just in case
+    if (!fetchMock.done()) {
+        fetchMock.reset();
+
+        throw new Error('Some mocked requests were never called.');
+    }
+
+    fetchMock.reset();
+}
+
+const shutdownTest = function(test: FunctionalTest) {
     unmatchedFetchErrors.forEach((unmatchedFetchError) => {
         const urlParams = new URLSearchParams(unmatchedFetchError.url.substring(unmatchedFetchError.url.indexOf('?')));
         const requestInfo = [];
@@ -37,7 +54,7 @@ export function shutdownTest() {
         requestInfo.push(`  HEADERS: ${JSON.stringify(unmatchedFetchError.headers)}`);
         requestInfo.push(`  DATA: ${unmatchedFetchError.method === 'GET' ? urlParams.get('data') : unmatchedFetchError.body}`);
 
-        console.log(`UNMATCHED request was made with the following info:`, "\n", requestInfo.join("\n"));
+        console.log('UNMATCHED request was made with the following info:', '\n', requestInfo.join('\n'));
     });
     unmatchedFetchErrors = [];
 
@@ -59,29 +76,23 @@ export function shutdownTest() {
 
         throw new Error('Some mocked requests were never called or unexpected calls were made.');
     }
-
-    // only possible if someone uses fetchMock directly, but here just in case
-    if (!fetchMock.done()) {
-        fetchMock.reset();
-
-        throw new Error('Some mocked requests were never called.');
-    }
-
-    fetchMock.reset();
 }
 
 class FunctionalTest {
-    controller: LiveController;
+    component: Component;
     element: HTMLElement;
     initialData: any;
+    props: any = {};
     template: (data: any) => string;
     mockedAjaxCalls: Array<MockedAjaxCall> = [];
+    id: number;
 
-    constructor(controller: LiveController, element: HTMLElement, initialData: any, template: (data: any) => string) {
-        this.controller = controller;
+    constructor(component: Component, element: HTMLElement, initialData: any, template: (data: any) => string) {
+        this.component = component;
         this.element = element;
         this.initialData = initialData;
         this.template = template;
+        this.id = Math.floor(1000*Math.random());
     }
 
     expectsAjaxCall = (method: string): MockedAjaxCall => {
@@ -92,12 +103,22 @@ class FunctionalTest {
     }
 
     queryByDataModel(modelName: string): HTMLElement {
-        const element = this.element.querySelector(`[data-model$="${modelName}"]`);
-        if (!element) {
-            throw new Error(`Could not find element with data-model="${modelName}"`);
+        const elements = this.element.querySelectorAll(`[data-model$="${modelName}"]`);
+        let matchedElement: null|Element = null;
+
+        // skip any elements that are actually controllers
+        // these are child component bindings, not real fields
+        elements.forEach((element) => {
+            if (!element.hasAttribute('data-controller')) {
+                matchedElement = element;
+            }
+        });
+
+        if (!matchedElement) {
+            throw new Error(`Could not find element with data-model="${modelName}" inside ${this.element.outerHTML}`);
         }
 
-        return element as HTMLElement;
+        return matchedElement as HTMLElement;
     }
 
     queryByNameAttribute(modelName: string): HTMLElement {
@@ -115,6 +136,7 @@ class MockedAjaxCall {
     private expectedSentData?: any;
     private expectedActions: Array<{ name: string, args: any }> = [];
     private expectedHeaders: any = {};
+    private expectedChildFingerprints: any = null;
     private changeDataCallback?: (data: any) => void;
     private template?: (data: any) => string
     options: any = {};
@@ -135,6 +157,14 @@ class MockedAjaxCall {
         this.checkInitialization('expectSentData');
 
         this.expectedSentData = data;
+
+        return this;
+    }
+
+    expectChildFingerprints = (fingerprints: any): MockedAjaxCall => {
+        this.checkInitialization('expectSentData');
+
+        this.expectedChildFingerprints = fingerprints;
 
         return this;
     }
@@ -231,7 +261,7 @@ class MockedAjaxCall {
     getVisualSummary(): string {
         const requestInfo = [];
         if (this.method === 'GET') {
-            requestInfo.push(` URL MATCH: ${this.getMockMatcher().url}`);
+            requestInfo.push(` URL MATCH: end:${this.getMockMatcher(true).url}`);
         }
         requestInfo.push(`  METHOD: ${this.method}`);
         if (Object.keys(this.expectedHeaders).length > 0) {
@@ -242,15 +272,20 @@ class MockedAjaxCall {
         } else {
             requestInfo.push(`  DATA: ${JSON.stringify(this.getRequestBody())}`);
         }
+
+        if (this.expectedChildFingerprints) {
+            requestInfo.push(`  CHILD FINGERPRINTS: ${JSON.stringify(this.expectedChildFingerprints)}`)
+        }
+
         if (this.expectedActions.length === 1) {
             requestInfo.push(`  Expected URL to contain action /${this.expectedActions[0].name}`)
         }
 
-        return requestInfo.join("\n");
+        return requestInfo.join('\n');
     }
 
     // https://www.wheresrhys.co.uk/fetch-mock/#api-mockingmock_matcher
-    private getMockMatcher(): any {
+    private getMockMatcher(createMatchForShowingError = false): any {
         if (!this.expectedSentData) {
             throw new Error('expectedSentData not set yet');
         }
@@ -262,12 +297,29 @@ class MockedAjaxCall {
         }
 
         if (this.method === 'GET') {
-            const params = new URLSearchParams({
+            const paramsData: any = {
                 data: JSON.stringify(this.expectedSentData)
-            });
-            matcherObject.functionMatcher = (url: string) => {
-                return url.includes(`?${params.toString()}`);
             };
+            if (this.expectedChildFingerprints) {
+                paramsData.childrenFingerprints = JSON.stringify(this.expectedChildFingerprints);
+            }
+            const params = new URLSearchParams(paramsData);
+            if (createMatchForShowingError) {
+                // simplified version for error reporting
+                matcherObject.url = `(approximation) ?${params.toString()}`;
+            } else {
+                matcherObject.functionMatcher = (url: string) => {
+                    const actualUrl = new URL(url);
+                    const actualParams = new URLSearchParams(actualUrl.search);
+                    actualParams.delete('updatedModels[]');
+                    // if we're not expecting specific child fingerprints, ignore them
+                    if (!paramsData.childrenFingerprints) {
+                        actualParams.delete('childrenFingerprints');
+                    }
+
+                    return actualParams.toString() === params.toString();
+                };
+            }
         } else {
             // match the body, by without "updatedModels" which is not important
             // and also difficult/tedious to always assert
@@ -281,11 +333,11 @@ class MockedAjaxCall {
             if (this.expectedActions.length === 1) {
                 matcherObject.url = `end:/${this.expectedActions[0].name}`;
             } else if (this.expectedActions.length > 1) {
-                matcherObject.url = `end:/_batch`;
+                matcherObject.url = 'end:/_batch';
             }
         }
 
-        this.routeName = `route-${this.test.mockedAjaxCalls.length}`;
+        this.routeName = `route-${this.test.id}-${this.test.mockedAjaxCalls.length}`;
         matcherObject.name = this.routeName;
 
         return matcherObject;
@@ -299,6 +351,10 @@ class MockedAjaxCall {
         const body: any = {
             data: this.expectedSentData
         };
+
+        if (this.expectedChildFingerprints) {
+            body.childrenFingerprints = this.expectedChildFingerprints;
+        }
 
         if (this.expectedActions.length === 1) {
             body.args = this.expectedActions[0].args;
@@ -319,11 +375,18 @@ class MockedAjaxCall {
 export async function createTest(data: any, template: (data: any) => string): Promise<FunctionalTest> {
     const testData = await startStimulus(template(data));
 
-    const test = new FunctionalTest(testData.controller, testData.element, data, template);
-    if (activeTest) {
-        throw new Error('Cannot create a new test: a test is already active');
-    }
-    activeTest = test;
+    const test = new FunctionalTest(testData.controller.component, testData.element, data, template);
+    activeTests.push(test);
+
+    return test;
+}
+
+/**
+ * An internal way to create a FunctionalTest: useful for child components
+ */
+export function createTestForExistingComponent(component: Component): FunctionalTest {
+    const test = new FunctionalTest(component, component.element, {}, () => '');
+    activeTests.push(test);
 
     return test;
 }
@@ -380,12 +443,29 @@ const dataToJsonAttribute = (data: any): string => {
     return matches[1]
 }
 
-export function initComponent(data: any, controllerValues: any = {}) {
+export function initComponent(data: any, props: any = {}, controllerValues: any = {}) {
     return `
         data-controller="live"
         data-live-url-value="http://localhost/components/_test_component_${Math.round(Math.random() * 1000)}"
         data-live-data-value="${dataToJsonAttribute(data)}"
+        data-live-props-value="${dataToJsonAttribute(props)}"
         ${controllerValues.debounce ? `data-live-debounce-value="${controllerValues.debounce}"` : ''}
         ${controllerValues.csrf ? `data-live-csrf-value="${controllerValues.csrf}"` : ''}
+        ${controllerValues.id ? `data-live-id="${controllerValues.id}"` : ''}
+        ${controllerValues.fingerprint ? `data-live-fingerprint-value="${controllerValues.fingerprint}"` : ''}
     `;
+}
+
+export function getComponent(element: HTMLElement|null) {
+    if (!element) {
+        throw new Error('could not find element');
+    }
+
+    // @ts-ignore
+    const component = element.__component;
+    if (!(component instanceof Component)) {
+        throw new Error('missing component');
+    }
+
+    return component;
 }

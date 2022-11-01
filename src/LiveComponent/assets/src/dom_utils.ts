@@ -1,7 +1,7 @@
-import ValueStore from './ValueStore';
-import { Directive, parseDirectives } from './directives_parser';
-import { LiveController } from './live_controller';
+import ValueStore from './Component/ValueStore';
+import { Directive, parseDirectives } from './Directive/directives_parser';
 import { normalizeModelName } from './string_utils';
+import Component from './Component';
 
 /**
  * Return the "value" of any given element.
@@ -111,18 +111,33 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
     (element as HTMLInputElement).value = value
 }
 
-export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissing = true): null|Directive {
-    if (element.dataset.model) {
-        const directives = parseDirectives(element.dataset.model);
-        const directive = directives[0];
+/**
+ * Fetches *all* "data-model" directives for a given element.
+ *
+ * @param element
+ */
+export function getAllModelDirectiveFromElements(element: HTMLElement): Directive[] {
+    if (!element.dataset.model) {
+        return [];
+    }
 
+    const directives = parseDirectives(element.dataset.model);
+
+    directives.forEach((directive) => {
         if (directive.args.length > 0 || directive.named.length > 0) {
             throw new Error(`The data-model="${element.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
         }
 
         directive.action = normalizeModelName(directive.action);
+    });
 
-        return directive;
+    return directives;
+}
+
+export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissing = true): null|Directive {
+    const dataModelDirectives = getAllModelDirectiveFromElements(element);
+    if (dataModelDirectives.length > 0) {
+        return dataModelDirectives[0];
     }
 
     if (element.getAttribute('name')) {
@@ -152,30 +167,34 @@ export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissin
 }
 
 /**
- * Does the given element "belong" to the given live controller.
+ * Does the given element "belong" to the given component.
  *
  * To "belong" the element needs to:
- *      A) Live inside the controller element (of course)
- *      B) NOT also live inside a child "live controller" element
+ *      A) Live inside the component element (of course)
+ *      B) NOT also live inside a child component
  */
-export function elementBelongsToThisController(element: Element, controller: LiveController): boolean {
-    if (controller.element !== element && !controller.element.contains(element)) {
+export function elementBelongsToThisComponent(element: Element, component: Component): boolean {
+    if (component.element === element) {
+        return true;
+    }
+
+    if (!component.element.contains(element)) {
         return false;
     }
 
-    let foundChildController = false;
-    controller.childComponentControllers.forEach((childComponentController) => {
-        if (foundChildController) {
+    let foundChildComponent = false;
+    component.getChildren().forEach((childComponent) => {
+        if (foundChildComponent) {
             // return early
             return;
         }
 
-        if (childComponentController.element === element || childComponentController.element.contains(element)) {
-            foundChildController = true;
+        if (childComponent.element === element || childComponent.element.contains(element)) {
+            foundChildComponent = true;
         }
     });
 
-    return !foundChildController;
+    return !foundChildComponent;
 }
 
 export function cloneHTMLElement(element: HTMLElement): HTMLElement {
@@ -204,6 +223,21 @@ export function htmlToElement(html: string): HTMLElement {
     }
 
     return child;
+}
+
+// Inspired by https://stackoverflow.com/questions/13389751/change-tag-using-javascript
+export function cloneElementWithNewTagName(element: Element, newTag: string): HTMLElement {
+    const originalTag = element.tagName
+    const startRX = new RegExp('^<'+originalTag, 'i')
+    const endRX = new RegExp(originalTag+'>$', 'i')
+    const startSubst = '<'+newTag
+    const endSubst = newTag+'>'
+
+    const newHTML = element.outerHTML
+        .replace(startRX, startSubst)
+        .replace(endRX, endSubst);
+
+    return htmlToElement(newHTML);
 }
 
 /**

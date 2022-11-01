@@ -34,7 +34,7 @@ const startStimulus = () => {
 };
 
 const Hello = {
-    template: "<h1>Hello {{ name ?? 'world' }}</h1>",
+    template: '<h1>Hello {{ name ?? \'world\' }}</h1>',
     props: ['name']
 };
 

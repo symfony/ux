@@ -32,7 +32,7 @@ final class Entity2Normalizer implements NormalizerInterface, DenormalizerInterf
         return $this->doctrine->getRepository(Entity2::class)->find($id);
     }
 
-    public function supportsDenormalization(mixed $data, string $type, string $format = null)
+    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = [])
     {
         return Entity2::class === $type;
     }
@@ -42,7 +42,7 @@ final class Entity2Normalizer implements NormalizerInterface, DenormalizerInterf
         return 'entity2:'.$object->id;
     }
 
-    public function supportsNormalization(mixed $data, string $format = null)
+    public function supportsNormalization(mixed $data, string $format = null, array $context = [])
     {
         return $data instanceof Entity2;
     }

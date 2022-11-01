@@ -5,9 +5,9 @@ class default_1 extends Controller {
     initialize() {
         const errorMessages = [];
         if (!this.hasHubValue)
-            errorMessages.push(`A "hub" value pointing to the Mercure hub must be provided.`);
+            errorMessages.push('A "hub" value pointing to the Mercure hub must be provided.');
         if (!this.hasTopicValue)
-            errorMessages.push(`A "topic" value must be provided.`);
+            errorMessages.push('A "topic" value must be provided.');
         if (errorMessages.length)
             throw new Error(errorMessages.join(' '));
         const u = new URL(this.hubValue);

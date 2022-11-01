@@ -16,12 +16,16 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Symfony\UX\LiveComponent\DehydratedComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
+use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
+use Symfony\UX\LiveComponent\Util\TwigAttributeHelper;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
-use Symfony\UX\TwigComponent\EventListener\PreRenderEvent;
+use Symfony\UX\TwigComponent\ComponentStack;
+use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Symfony\UX\TwigComponent\MountedComponent;
-use Twig\Environment;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -53,6 +57,9 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
         $variables = $event->getVariables();
         $attributesKey = $metadata->getAttributesVar();
 
+        // the original ComponentAttributes have already been processed and set
+        // onto the variables. So, we manually merge our new attributes in and
+        // override that variable.
         if (isset($variables[$attributesKey]) && $variables[$attributesKey] instanceof ComponentAttributes) {
             // merge with existing attributes if available
             $attributes = $attributes->defaults($variables[$attributesKey]->all());
@@ -73,7 +80,10 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
         return [
             LiveComponentHydrator::class,
             UrlGeneratorInterface::class,
-            Environment::class,
+            TwigAttributeHelper::class,
+            ComponentStack::class,
+            DeterministicTwigIdCalculator::class,
+            FingerprintCalculator::class,
             '?'.CsrfTokenManagerInterface::class,
         ];
     }
@@ -82,19 +92,30 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
     {
         $name = $mounted->getName();
         $url = $this->container->get(UrlGeneratorInterface::class)->generate('live_component', ['component' => $name]);
-        $data = $this->container->get(LiveComponentHydrator::class)->dehydrate($mounted);
-        $twig = $this->container->get(Environment::class);
+        /** @var DehydratedComponent $dehydratedComponent */
+        $dehydratedComponent = $this->container->get(LiveComponentHydrator::class)->dehydrate($mounted);
+        /** @var TwigAttributeHelper $helper */
+        $helper = $this->container->get(TwigAttributeHelper::class);
 
         $attributes = [
             'data-controller' => 'live',
-            'data-live-url-value' => twig_escape_filter($twig, $url, 'html_attr'),
-            'data-live-data-value' => twig_escape_filter($twig, json_encode($data, \JSON_THROW_ON_ERROR), 'html_attr'),
+            'data-live-url-value' => $helper->escapeAttribute($url),
+            'data-live-data-value' => $helper->escapeAttribute(json_encode($dehydratedComponent->getData(), \JSON_THROW_ON_ERROR)),
+            'data-live-props-value' => $helper->escapeAttribute(json_encode($dehydratedComponent->getProps(), \JSON_THROW_ON_ERROR)),
         ];
 
         if ($this->container->has(CsrfTokenManagerInterface::class) && $metadata->get('csrf')) {
             $attributes['data-live-csrf-value'] = $this->container->get(CsrfTokenManagerInterface::class)
                 ->getToken($name)->getValue()
             ;
+        }
+
+        if ($this->container->get(ComponentStack::class)->hasParentComponent()) {
+            $id = $this->container->get(DeterministicTwigIdCalculator::class)->calculateDeterministicId();
+            $attributes['data-live-id'] = $helper->escapeAttribute($id);
+
+            $fingerprint = $this->container->get(FingerprintCalculator::class)->calculateFingerprint($mounted->getInputProps());
+            $attributes['data-live-value-fingerprint'] = $helper->escapeAttribute($fingerprint);
         }
 
         return new ComponentAttributes($attributes);

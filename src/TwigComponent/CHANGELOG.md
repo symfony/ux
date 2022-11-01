@@ -2,7 +2,16 @@
 
 ## 2.5
 
+-   [BC BREAK] The `PreRenderEvent` namespace was changed from `Symfony\UX\TwigComponent\EventListener`
+    to `Symfony\UX\TwigComponent\Event`.
+
 -   Add new autowireable `ComponentRendererInterface`
+
+-   Added `PostRenderEvent` and `PreCreateForRenderEvent` which are dispatched just
+    before or after a component is rendered.
+
+-   Added `PostMountEvent` and `PreMountEvent` which are dispatched just before
+    or after the component's data is mounted.
 
 ## 2.2
 

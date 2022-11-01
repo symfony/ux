@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent\EventListener;
+namespace Symfony\UX\TwigComponent\Event;
 
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\UX\TwigComponent\ComponentMetadata;
