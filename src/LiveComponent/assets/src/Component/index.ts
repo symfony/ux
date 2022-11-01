@@ -194,13 +194,6 @@ export default class Component {
             return;
         }
 
-        // check if the page is navigating away
-        //if (this.isWindowUnloaded) {
-        // TODO: bring back windowUnloaded
-        if (html === 'fooobar') {
-            return;
-        }
-
         if (response.headers.get('Location')) {
             // action returned a redirect
             if (typeof Turbo !== 'undefined') {
