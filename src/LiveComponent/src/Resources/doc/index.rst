@@ -500,8 +500,8 @@ can control via a ``data-rerender`` attribute.
     new one. This works will with Stimulus because the ``connect()``
     method will be called again.
 
-``data-rerender="if(modelName)"``
-    Do a ``complete`` re-render but *only* if the ``modelName`` LiveProp
+``data-rerender="if(propName)"``
+    Do a ``complete`` re-render but *only* if the ``propName`` LiveProp
     changed since the last re-render. This is useful to completely
     re-render an element (e.g. a date picker) but *only* if the value
     of the date picker changed (to avoid the date picker JavaScript from
@@ -510,19 +510,20 @@ can control via a ``data-rerender`` attribute.
 
 You can also specify "targets" for the re-render:
 
-``data-rerender="children|always"``
+``data-rerender="children"``
     Always re-render this element, but *only* the children. Avoid making
     any changes to the parent element that holds this attribute. This is
     useful to add to modal wrappers so that, if the modal is open, re-rendering
-    won't override the classes that caused it to display as open.
+    won't override the classes that caused it to display as open. Note: ``children``
+    are always re-rendered using the normal, "diff" mode.
 
-``data-rerender="self|if(someModel)"``
+``data-rerender="self|if(someProp)"``
     Only re-render the parent element that holds this attribute and only
-    if the ``someModel`` LiveProp changed. This could be useful if you're
+    if the ``someProp`` LiveProp changed. This could be useful if you're
     rendering a chart
 
 You can even specify multiple directives separated by a space:
-``data-rerender="children|if(someModel) self|always"``.
+``data-rerender="children|if(someProp) self|always"``.
 
 .. note::
 
