@@ -475,6 +475,99 @@ The following hooks are available (along with the arguments that are passed):
 * ``loading.state:finished`` args ``(element: HTMLElement)``
 * ``model:set`` args ``(model: string, value: any, component: Component)``
 
+Handling Re-Rendering & Custom JavaScript
+------------------------------------------
+
+A common use-case for live components is to initialize extra JavaScript
+after the component renders - e.g. to transform a date field into a
+date picker, open a modal or many other things. This is best done via
+a Stimulus controller.
+
+However, if that JavaScript makes changes to your markup - like adding classes
+or elements - this will causes a problem: when the component re-renders, it will
+"replace" those changes with the fresh HTML from the server. Suddenly, your
+cool date picker widget stops working!
+
+To solve this, live components has a smart "re-rendering" mode that you
+can control via a ``data-rerender`` attribute.
+
+``data-rerender="never"``
+    Never re-render this element: leave it completely alone.
+
+``data-rerender="always"``
+    Always re-render this element. This implies that the ``complete``
+    mode should be used, which totally replaces the element with a
+    new one. This works will with Stimulus because the ``connect()``
+    method will be called again.
+
+``data-rerender="if(modelName)"``
+    Do a ``complete`` re-render but *only* if the ``modelName`` LiveProp
+    changed since the last re-render. This is useful to completely
+    re-render an element (e.g. a date picker) but *only* if the value
+    of the date picker changed (to avoid the date picker JavaScript from
+    needlessly being reinitialized on *every* re-render. To re-render if
+    any of multiple models change, pass all of them: ``if(user.firstName, user.lastName)``.
+
+You can also specify "targets" for the re-render:
+
+``data-rerender="children|always"``
+    Always re-render this element, but *only* the children. Avoid making
+    any changes to the parent element that holds this attribute. This is
+    useful to add to modal wrappers so that, if the modal is open, re-rendering
+    won't override the classes that caused it to display as open.
+
+``data-rerender="self|if(someModel)"``
+    Only re-render the parent element that holds this attribute and only
+    if the ``someModel`` LiveProp changed. This could be useful if you're
+    rendering a chart
+
+You can even specify multiple directives separated by a space:
+``data-rerender="children|if(someModel) self|always"``.
+
+.. note::
+
+    Want to get geeky & technical? The full, format of
+    ``data-rerender`` is: ``{target}|{mode}|{when}``:
+
+        - ``target`` includes ``self``, ``children``, ``all`` (default)
+        - ``mode`` includes ``diff`` & ``complete`` (default). ``diff`` is the
+          default mode used by live components where the new element is
+          "morphed" onto the existing element by applying a diff of changes. However,
+          as soon as you specify ``data-render``, ``complete`` becomes the default
+          if not specified.
+        - ``when`` (*required*) includes ``never``, ``always``, ``if``
+
+    If only one target (e.g. ``self``) is included in the ``data-rerender``, then
+    it's assumed that the other target (e.g. ``children``) should never be
+    re-rendered. In other words, using ``self|always`` implies also ``children|never``.
+
+TODO: add examples
+
+A) Datepicker
+B) Modal
+C) Chart that animates on change (with & without UX chart.js?)
+
+TODO: deprecate or at least move ``data-live-ignore`` docs up here
+
+JavaScript: Date Picker Example
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Suppose you have a ``date-picker`` custom Stimulus controller that
+some fancy date picker, like ``flatpickr``. To avoid removing the
+date picker markup on re-render, we want to
+
+.. code-block:: twig
+
+    <div data-render"">
+        <input
+            type="date"
+            data-model="startDate"
+            data-controller="date-picker"
+        >
+    </div>
+
+TODO: finish & also show with form component
+
 Loading States
 --------------
 
