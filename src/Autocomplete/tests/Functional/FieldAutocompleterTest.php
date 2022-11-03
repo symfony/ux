@@ -18,7 +18,6 @@ use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-// tests CategoryAutocompleteType
 class FieldAutocompleterTest extends KernelTestCase
 {
     use Factories;
@@ -86,6 +85,18 @@ class FieldAutocompleterTest extends KernelTestCase
         $this->browser()
             ->throwExceptions()
             ->get('/test/autocomplete/category_autocomplete_type?query=foo')
+            ->assertSuccessful()
+            ->assertJsonMatches('length(results)', 5)
+        ;
+    }
+
+    public function testItWorksWithoutAChoiceLabel(): void
+    {
+        CategoryFactory::createMany(5, ['name' => 'foo']);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_no_choice_label_autocomplete_type?query=foo')
             ->assertSuccessful()
             ->assertJsonMatches('length(results)', 5)
         ;
