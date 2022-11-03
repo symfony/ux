@@ -15,6 +15,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
 use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
+use Symfony\UX\LiveComponent\Util\JsonUtil;
 use Symfony\UX\LiveComponent\Util\TwigAttributeHelper;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentStack;
@@ -99,7 +100,7 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
             '<div data-live-id="%s" data-live-fingerprint-value="%s" data-live-props-value="%s"></div>',
             $this->twigAttributeHelper->escapeAttribute($deterministicId),
             $this->twigAttributeHelper->escapeAttribute($newPropsFingerprint),
-            $this->twigAttributeHelper->escapeAttribute(json_encode($dehydratedComponent->getProps(), \JSON_THROW_ON_ERROR))
+            $this->twigAttributeHelper->escapeAttribute(JsonUtil::encodeObject($dehydratedComponent->getProps()))
         );
         $event->setRenderedString($rendered);
     }
