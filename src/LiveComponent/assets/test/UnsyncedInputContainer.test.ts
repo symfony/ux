@@ -9,10 +9,10 @@ describe('UnsyncedInputContainer', () => {
         container.add(element1);
         container.add(element2, 'some_model');
 
-        expect(container.all()).toEqual([element1, element2]);
+        expect(container.allUnsyncedInputs()).toEqual([element1, element2]);
     });
 
-    it('markModelAsSynced removes items added to it', () => {
+    it('markModelAsSynced removes unsynced models but not fields', () => {
         const container = new UnsyncedInputContainer();
         const element1 = htmlToElement('<span>element1</span');
         const element2 = htmlToElement('<span>element2</span');
@@ -23,7 +23,7 @@ describe('UnsyncedInputContainer', () => {
 
         container.markModelAsSynced('some_model2');
 
-        expect(container.all()).toEqual([element1, element3]);
+        expect(container.allUnsyncedInputs()).toEqual([element1, element2, element3]);
     });
 
     it('returns modified models via getModifiedModels()', () => {
@@ -36,6 +36,21 @@ describe('UnsyncedInputContainer', () => {
         container.add(element3, 'some_model3');
 
         container.markModelAsSynced('some_model2');
-        expect(container.getModifiedModels()).toEqual(['some_model3'])
+        expect(container.getUnsyncedModelNames()).toEqual(['some_model3'])
+    });
+
+    it('resetUnsyncedFields removes all model fields except those unsynced', () => {
+        const container = new UnsyncedInputContainer();
+        const element1 = htmlToElement('<span>element1</span');
+        const element2 = htmlToElement('<span>element2</span');
+        const element3 = htmlToElement('<span>element3</span');
+        container.add(element1);
+        container.add(element2, 'some_model2');
+        container.add(element3, 'some_model3');
+
+        container.markModelAsSynced('some_model2');
+
+        container.resetUnsyncedFields();
+        expect(container.allUnsyncedInputs()).toEqual([element1, element3]);
     });
 });
