@@ -20,6 +20,7 @@ use Symfony\UX\LiveComponent\DehydratedComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
 use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
+use Symfony\UX\LiveComponent\Util\JsonUtil;
 use Symfony\UX\LiveComponent\Util\TwigAttributeHelper;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
@@ -100,8 +101,8 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
         $attributes = [
             'data-controller' => 'live',
             'data-live-url-value' => $helper->escapeAttribute($url),
-            'data-live-data-value' => $helper->escapeAttribute(json_encode($dehydratedComponent->getData(), \JSON_THROW_ON_ERROR)),
-            'data-live-props-value' => $helper->escapeAttribute(json_encode($dehydratedComponent->getProps(), \JSON_THROW_ON_ERROR)),
+            'data-live-data-value' => $helper->escapeAttribute(JsonUtil::encodeObject($dehydratedComponent->getData())),
+            'data-live-props-value' => $helper->escapeAttribute(JsonUtil::encodeObject($dehydratedComponent->getProps())),
         ];
 
         if ($this->container->has(CsrfTokenManagerInterface::class) && $metadata->get('csrf')) {

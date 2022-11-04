@@ -85,8 +85,8 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
         $lis = $ul->children('li');
         // deterministic id: should not change, and counter should increase
-        $this->assertSame('live-2816377500-0', $lis->first()->attr('data-live-id'));
-        $this->assertSame('live-2816377500-2', $lis->last()->attr('data-live-id'));
+        $this->assertSame('live-3649730296-0', $lis->first()->attr('data-live-id'));
+        $this->assertSame('live-3649730296-2', $lis->last()->attr('data-live-id'));
 
         // fingerprints
         // first and last both have the same input - thus fingerprint
