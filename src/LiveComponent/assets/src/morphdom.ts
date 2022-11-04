@@ -12,7 +12,7 @@ import Component from './Component';
 export function executeMorphdom(
     rootFromElement: HTMLElement,
     rootToElement: HTMLElement,
-    modifiedElements: Array<HTMLElement>,
+    modifiedFieldElements: Array<HTMLElement>,
     getElementValue: (element: HTMLElement) => any,
     childComponents: Component[],
     findChildComponent: (id: string, element: HTMLElement) => HTMLElement|null,
@@ -57,7 +57,7 @@ export function executeMorphdom(
 
             // if this field's value has been modified since this HTML was
             // requested, set the toEl's value to match the fromEl
-            if (modifiedElements.includes(fromEl)) {
+            if (modifiedFieldElements.includes(fromEl)) {
                 setValueOnElement(toEl, getElementValue(fromEl))
             }
 

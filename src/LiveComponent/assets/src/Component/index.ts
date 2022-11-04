@@ -164,8 +164,12 @@ export default class Component {
         return promise;
     }
 
+    /**
+     * Returns an array of models the user has modified, but whose model has not
+     * yet been updated.
+     */
     getUnsyncedModels(): string[] {
-        return this.unsyncedInputsTracker.getModifiedModels();
+        return this.unsyncedInputsTracker.getUnsyncedModels();
     }
 
     addChild(child: Component, modelBindings: ModelBinding[] = []): void {
@@ -276,6 +280,10 @@ export default class Component {
         const thisPromiseResolve = this.nextRequestPromiseResolve;
         // then create a fresh Promise, so any future .then() apply to it
         this.resetPromise();
+
+        // any fields that were modified will now be sent on this request:
+        // they are now "in sync" (with some exceptions noted inside)
+        this.unsyncedInputsTracker.resetUnsyncedFields();
 
         this.backendRequest = this.backend.makeRequest(
             this.valueStore.all(),

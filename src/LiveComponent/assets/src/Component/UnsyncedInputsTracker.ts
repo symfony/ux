@@ -58,49 +58,87 @@ export default class {
     }
 
     getUnsyncedInputs(): HTMLElement[] {
-        return this.unsyncedInputs.all();
+        return this.unsyncedInputs.allUnsyncedInputs();
     }
 
-    getModifiedModels(): string[] {
-        return Array.from(this.unsyncedInputs.getModifiedModels());
+    getUnsyncedModels(): string[] {
+        return Array.from(this.unsyncedInputs.getUnsyncedModelNames());
+    }
+
+    resetUnsyncedFields(): void {
+        this.unsyncedInputs.resetUnsyncedFields();
     }
 }
 
 /**
  * Tracks field & models whose values are "unsynced".
  *
- * Unsynced means that the value has been updated inside of
+ * For a model, unsynced means that the value has been updated inside of
  * a field (e.g. an input), but that this new value hasn't
  * yet been set onto the actual model data. It is "unsynced"
  * from the underlying model data.
+ *
+ * For a field, unsynced means that it is "modified on the client side". In
+ * other words, the field's value in the browser would be different than the
+ * one returned from the server. This can happen because a field has no model
+ * (and so it is permanently unsynced once changed) or the field has been changed
+ * and the corresponding model has not yet been sent to the server.
+ *
+ * Note: a "model" can become synced when that value is set back
+ * onto the data store. But the corresponding field will
+ * remain unsynced until the next Ajax call starts.
  */
 export class UnsyncedInputContainer {
-    #mappedFields: Map<string, HTMLElement>;
-    #unmappedFields: Array<HTMLElement> = [];
+    private unsyncedModelFields: Map<string, HTMLElement>;
+    private unsyncedNonModelFields: Array<HTMLElement> = [];
+    private unsyncedModelNames: Array<string> = [];
 
     constructor() {
-        this.#mappedFields = new Map();
+        this.unsyncedModelFields = new Map();
     }
 
     add(element: HTMLElement, modelName: string|null = null) {
         if (modelName) {
-            this.#mappedFields.set(modelName, element);
+            this.unsyncedModelFields.set(modelName, element);
+            if (!this.unsyncedModelNames.includes(modelName)) {
+                this.unsyncedModelNames.push(modelName);
+            }
 
             return;
         }
 
-        this.#unmappedFields.push(element);
+        this.unsyncedNonModelFields.push(element);
     }
 
-    all(): HTMLElement[] {
-        return [...this.#unmappedFields, ...this.#mappedFields.values()]
+    /**
+     * Mark all fields as synced, except for those not bound to a model or whose
+     * values are still dirty.
+     */
+    resetUnsyncedFields(): void {
+        // clear out all unsynced fields, except those where the value is still unsynced
+        this.unsyncedModelFields.forEach((value, key) => {
+            if (!this.unsyncedModelNames.includes(key)) {
+                this.unsyncedModelFields.delete(key);
+            }
+        });
+    }
+
+    allUnsyncedInputs(): HTMLElement[] {
+        return [...this.unsyncedNonModelFields, ...this.unsyncedModelFields.values()]
     }
 
     markModelAsSynced(modelName: string): void {
-        this.#mappedFields.delete(modelName);
+        const index = this.unsyncedModelNames.indexOf(modelName);
+        if (index !== -1) {
+            this.unsyncedModelNames.splice(index, 1);
+        }
     }
 
-    getModifiedModels(): string[] {
-        return Array.from(this.#mappedFields.keys());
+    /**
+     * Returns a list of models whose fields have been modified, but whose values
+     * have not yet been set onto the data store.
+     */
+    getUnsyncedModelNames(): string[] {
+        return this.unsyncedModelNames;
     }
 }

@@ -1184,7 +1184,7 @@ function normalizeAttributesForComparison(element) {
     });
 }
 
-function executeMorphdom(rootFromElement, rootToElement, modifiedElements, getElementValue, childComponents, findChildComponent, getKeyFromElement) {
+function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, getElementValue, childComponents, findChildComponent, getKeyFromElement) {
     const childComponentMap = new Map();
     childComponents.forEach((childComponent) => {
         childComponentMap.set(childComponent.element, childComponent);
@@ -1215,7 +1215,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedElements, getEl
             if (childComponent) {
                 return childComponent.updateFromNewElement(toEl);
             }
-            if (modifiedElements.includes(fromEl)) {
+            if (modifiedFieldElements.includes(fromEl)) {
                 setValueOnElement(toEl, getElementValue(fromEl));
             }
             if (fromEl.isEqualNode(toEl)) {
@@ -1238,35 +1238,6 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedElements, getEl
     });
 }
 
-/******************************************************************************
-Copyright (c) Microsoft Corporation.
-
-Permission to use, copy, modify, and/or distribute this software for any
-purpose with or without fee is hereby granted.
-
-THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
-REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
-AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
-INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
-LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
-OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-PERFORMANCE OF THIS SOFTWARE.
-***************************************************************************** */
-
-function __classPrivateFieldGet(receiver, state, kind, f) {
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a getter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
-    return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
-}
-
-function __classPrivateFieldSet(receiver, state, value, kind, f) {
-    if (kind === "m") throw new TypeError("Private method is not writable");
-    if (kind === "a" && !f) throw new TypeError("Private accessor was defined without a setter");
-    if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot write private member to an object whose class did not declare it");
-    return (kind === "a" ? f.call(receiver, value) : f ? f.value = value : state.set(receiver, value)), value;
-}
-
-var _UnsyncedInputContainer_mappedFields, _UnsyncedInputContainer_unmappedFields;
 class UnsyncedInputsTracker {
     constructor(component, modelElementResolver) {
         this.elementEventListeners = [
@@ -1307,36 +1278,51 @@ class UnsyncedInputsTracker {
         this.unsyncedInputs.add(element, modelName);
     }
     getUnsyncedInputs() {
-        return this.unsyncedInputs.all();
+        return this.unsyncedInputs.allUnsyncedInputs();
     }
-    getModifiedModels() {
-        return Array.from(this.unsyncedInputs.getModifiedModels());
+    getUnsyncedModels() {
+        return Array.from(this.unsyncedInputs.getUnsyncedModelNames());
+    }
+    resetUnsyncedFields() {
+        this.unsyncedInputs.resetUnsyncedFields();
     }
 }
 class UnsyncedInputContainer {
     constructor() {
-        _UnsyncedInputContainer_mappedFields.set(this, void 0);
-        _UnsyncedInputContainer_unmappedFields.set(this, []);
-        __classPrivateFieldSet(this, _UnsyncedInputContainer_mappedFields, new Map(), "f");
+        this.unsyncedNonModelFields = [];
+        this.unsyncedModelNames = [];
+        this.unsyncedModelFields = new Map();
     }
     add(element, modelName = null) {
         if (modelName) {
-            __classPrivateFieldGet(this, _UnsyncedInputContainer_mappedFields, "f").set(modelName, element);
+            this.unsyncedModelFields.set(modelName, element);
+            if (!this.unsyncedModelNames.includes(modelName)) {
+                this.unsyncedModelNames.push(modelName);
+            }
             return;
         }
-        __classPrivateFieldGet(this, _UnsyncedInputContainer_unmappedFields, "f").push(element);
+        this.unsyncedNonModelFields.push(element);
     }
-    all() {
-        return [...__classPrivateFieldGet(this, _UnsyncedInputContainer_unmappedFields, "f"), ...__classPrivateFieldGet(this, _UnsyncedInputContainer_mappedFields, "f").values()];
+    resetUnsyncedFields() {
+        this.unsyncedModelFields.forEach((value, key) => {
+            if (!this.unsyncedModelNames.includes(key)) {
+                this.unsyncedModelFields.delete(key);
+            }
+        });
+    }
+    allUnsyncedInputs() {
+        return [...this.unsyncedNonModelFields, ...this.unsyncedModelFields.values()];
     }
     markModelAsSynced(modelName) {
-        __classPrivateFieldGet(this, _UnsyncedInputContainer_mappedFields, "f").delete(modelName);
+        const index = this.unsyncedModelNames.indexOf(modelName);
+        if (index !== -1) {
+            this.unsyncedModelNames.splice(index, 1);
+        }
     }
-    getModifiedModels() {
-        return Array.from(__classPrivateFieldGet(this, _UnsyncedInputContainer_mappedFields, "f").keys());
+    getUnsyncedModelNames() {
+        return this.unsyncedModelNames;
     }
 }
-_UnsyncedInputContainer_mappedFields = new WeakMap(), _UnsyncedInputContainer_unmappedFields = new WeakMap();
 
 class HookManager {
     constructor() {
@@ -1452,7 +1438,7 @@ class Component {
         return promise;
     }
     getUnsyncedModels() {
-        return this.unsyncedInputsTracker.getModifiedModels();
+        return this.unsyncedInputsTracker.getUnsyncedModels();
     }
     addChild(child, modelBindings = []) {
         if (!child.id) {
@@ -1521,6 +1507,7 @@ class Component {
     performRequest() {
         const thisPromiseResolve = this.nextRequestPromiseResolve;
         this.resetPromise();
+        this.unsyncedInputsTracker.resetUnsyncedFields();
         this.backendRequest = this.backend.makeRequest(this.valueStore.all(), this.pendingActions, this.valueStore.updatedModels, this.getChildrenFingerprints());
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
         this.pendingActions = [];

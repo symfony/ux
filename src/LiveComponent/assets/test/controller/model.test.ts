@@ -687,6 +687,59 @@ describe('LiveController data-model Tests', () => {
         expect(unmappedTextarea.getAttribute('class')).toEqual('changed-class');
     });
 
+    it('keeps the unsynced value of a model field mapped via a form', async () => {
+        const test = await createTest({
+            comment: 'Live components',
+        }, (data: any) => `
+            <div ${initComponent(data)}>
+                <form data-model>
+                    <textarea name="comment" data-testid="comment">${data.comment}</textarea>
+               </form>
+
+               <button data-action="live#$render">Reload</button>
+           </div>
+       `);
+
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data) => {
+                data.comment = 'server tries to change comment, but it will be modified client side';
+            })
+            // delay slightly so we can type in the textarea
+            .delayResponse(10)
+            .init();
+
+        getByText(test.element, 'Reload').click();
+        // mimic changing the field, but without (yet) triggering the change event
+        const commentField = getByTestId(test.element, 'comment');
+        if (!(commentField instanceof HTMLTextAreaElement)) {
+            throw new Error('wrong type');
+        }
+        userEvent.type(commentField, ' ftw!');
+
+        // wait for loading start and end
+        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
+        await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
+
+        expect(commentField).toHaveValue('Live components ftw!');
+
+        // refresh again, the value should now be in sync and accept the changed
+        // value from the server
+        test.expectsAjaxCall('get')
+            .expectSentData({ comment: 'Live components ftw!' })
+            .serverWillChangeData((data) => {
+                data.comment = 'server changed comment';
+            })
+            .init();
+
+        getByText(test.element, 'Reload').click();
+        // wait for loading start and end
+        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
+        await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
+
+        expect(commentField).toHaveValue('server changed comment');
+    });
+
     it('allows model fields to be manually set as long as change event is dispatched', async () => {
         const test = await createTest({ food: '' }, (data: any) => `
             <div ${initComponent(data)}>
