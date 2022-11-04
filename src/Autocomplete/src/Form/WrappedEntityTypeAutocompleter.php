@@ -4,6 +4,7 @@ namespace Symfony\UX\Autocomplete\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Component\Form\ChoiceList\Factory\Cache\ChoiceLabel;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -77,6 +78,10 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
 
         if (\is_string($choiceLabel) || $choiceLabel instanceof PropertyPathInterface) {
             return $this->propertyAccessor->getValue($entity, $choiceLabel);
+        }
+
+        if ($choiceLabel instanceof ChoiceLabel) {
+            $choiceLabel = $choiceLabel->getOption();
         }
 
         // 0 hardcoded as the "index", should not be relevant
