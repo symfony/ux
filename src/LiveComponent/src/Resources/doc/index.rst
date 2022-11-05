@@ -439,7 +439,7 @@ of the change:
     const rootElement = document.getElementById('favorite-food');
     input.value = 'sushi';
 
-    element.dispatchEvent(new Event('change', { bubbles: true }));
+    input.dispatchEvent(new Event('change', { bubbles: true }));
 
 JavaScript Component Hooks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
