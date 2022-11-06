@@ -13,6 +13,8 @@
 -   Added `PostMountEvent` and `PreMountEvent` which are dispatched just before
     or after the component's data is mounted.
 
+-   Added Twig template namespaces - #460.
+
 ## 2.2
 
 -   Allow to pass stringable object as non mapped component attribute.
