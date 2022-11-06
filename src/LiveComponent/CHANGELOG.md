@@ -35,6 +35,9 @@
 -   [BEHAVIOR CHANGE] If a model is updated, but the new value is equal to the old
     one, a re-render will now be avoided.
 
+-   [BEHAVIOR CHANGE] Priority of `DoctrineObjectNormalizer` changed from 100 to -100
+    so that any custom normalizers are used before trying `DoctrineObjectNormalizer`.
+
 -   [BC BREAK] The `live:update-model` and `live:render` events are not longer
     dispatched. You can now use the "hook" system directly on the `Component` object/
 
@@ -49,6 +52,11 @@
 
 -   Added the ability to add `data-loading` behavior, which is only activated
     when a specific **model** has been updated - e.g. `<span data-loading="model(firstName)|show">Loading</span>`.
+
+-   Unexpected Ajax errors are now displayed in a modal to ease debugging! #467.
+
+-   Fixed bug where sometimes a live component was broken after hitting "Back:
+    in your browser - #436.
 
 ## 2.4.0
 
