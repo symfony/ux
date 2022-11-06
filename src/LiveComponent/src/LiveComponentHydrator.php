@@ -148,6 +148,8 @@ final class LiveComponentHydrator
             if ($method = $liveProp->hydrateMethod()) {
                 // TODO: Error checking
                 $value = $component->$method($value);
+            } elseif (\is_string($value) && $type && \in_array($type->getName(), ['int', 'float', 'bool'], true)) {
+                $value = self::coerceScalarValue($value, $type);
             } elseif (!$value && $type && $type->allowsNull() && is_a($type->getName(), \BackedEnum::class, true) && !\in_array($value, array_map(fn (\BackedEnum $e) => $e->value, $type->getName()::cases()))) {
                 $value = null;
             } elseif (null !== $value && $type && !$type->isBuiltin()) {
@@ -187,6 +189,21 @@ final class LiveComponentHydrator
         }
 
         return new MountedComponent($componentName, $component, $attributes);
+    }
+
+    private static function coerceScalarValue(string $value, \ReflectionNamedType $type): int|float|bool|null
+    {
+        $value = trim($value);
+
+        if ('' === $value && $type->allowsNull()) {
+            return null;
+        }
+
+        return match ($type->getName()) {
+            'int' => (int) $value,
+            'float' => (float) $value,
+            'bool' => (bool) $value,
+        };
     }
 
     /**
