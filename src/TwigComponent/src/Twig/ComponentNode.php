@@ -4,7 +4,7 @@ namespace Symfony\UX\TwigComponent\Twig;
 
 use Twig\Compiler;
 use Twig\Node\EmbedNode;
-use Twig\Node\Expression\ArrayExpression;
+use Twig\Node\Expression\AbstractExpression;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -16,7 +16,7 @@ use Twig\Node\Expression\ArrayExpression;
  */
 final class ComponentNode extends EmbedNode
 {
-    public function __construct(string $component, string $template, int $index, ArrayExpression $variables, bool $only, int $lineno, string $tag)
+    public function __construct(string $component, string $template, int $index, AbstractExpression $variables, bool $only, int $lineno, string $tag)
     {
         parent::__construct($template, $index, $variables, $only, false, $lineno, $tag);
 
