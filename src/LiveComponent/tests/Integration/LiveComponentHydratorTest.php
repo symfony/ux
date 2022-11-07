@@ -31,6 +31,7 @@ use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
 use function Zenstruck\Foundry\create;
+use function Zenstruck\Foundry\factory;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -62,7 +63,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $props = $dehydrated->getProps();
         $data = $dehydrated->getData();
 
-        $this->assertSame($prop1->id, $props['prop1']);
+        $this->assertSame('@'.$prop1->id, $props['prop1']);
         $this->assertSame($prop2->format('c'), $props['prop2']);
         $this->assertSame($prop3, $data['prop3']);
         $this->assertArrayHasKey('_checksum', $props);
@@ -159,6 +160,21 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertTrue($component->postHydrateCalled);
     }
 
+    public function testCanDehydrateAndHydrateNonPersistedEntity(): void
+    {
+        $entity = factory(Entity1::class, ['title' => 'foo'])->withoutPersisting()->create()->object();
+
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component1', [
+            'prop1' => $entity,
+            'prop2' => new \DateTime(),
+        ]))->all();
+
+        $component = $this->hydrateComponent($this->getComponent('component1'), $dehydrated, 'component1')->getComponent();
+
+        $this->assertFalse(isset($component->prop1->id));
+        $this->assertSame('foo', $component->prop1->title);
+    }
+
     public function testDeletingEntityBetweenDehydrationAndHydrationSetsItToNull(): void
     {
         $entity = create(Entity1::class);
@@ -175,7 +191,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $data = $this->dehydrateComponent($mounted)->all();
 
-        $this->assertSame($entity->id, $data['prop1']);
+        $this->assertSame('@'.$entity->id, $data['prop1']);
 
         $entity->remove();
 
@@ -363,7 +379,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->assertSame('500|CAD', $dehydrated['money']);
         $this->assertSame(['degrees' => 30, 'uom' => 'C'], $dehydrated['temperature']);
-        $this->assertSame($entity1->id, $dehydrated['entity1']);
+        $this->assertSame('@'.$entity1->id, $dehydrated['entity1']);
         $this->assertSame('entity2:'.$entity2->id, $dehydrated['entity2']);
         $this->assertSame(['name' => 'foo'], $dehydrated['embeddable1']);
         $this->assertSame(['name' => 'qux'], $dehydrated['embeddable2']);

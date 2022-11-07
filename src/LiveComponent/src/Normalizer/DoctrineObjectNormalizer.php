@@ -47,13 +47,13 @@ final class DoctrineObjectNormalizer implements NormalizerInterface, Denormalize
 
         switch (\count($id)) {
             case 0:
-                throw new \RuntimeException("Cannot dehydrate an unpersisted entity ({$class}). If you want to allow this, add a dehydrateWith= option to LiveProp.");
+                throw new \RuntimeException("Cannot dehydrate an unpersisted entity ({$class}).");
             case 1:
-                return array_values($id)[0];
+                return '@'.array_values($id)[0];
         }
 
         // composite id
-        return $id;
+        throw new \RuntimeException('Composite identifiers not yet supported.');
     }
 
     public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
@@ -62,17 +62,21 @@ final class DoctrineObjectNormalizer implements NormalizerInterface, Denormalize
             return false;
         }
 
-        return null !== $this->objectManagerFor($data::class);
+        if (null === $om = $this->objectManagerFor($data::class)) {
+            return false;
+        }
+
+        return (bool) $om->getClassMetadata($data::class)->getIdentifierValues($data);
     }
 
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): ?object
     {
-        return null === $data ? null : $this->objectManagerFor($type)->find($type, $data);
+        return null === $data ? null : $this->objectManagerFor($type)->find($type, ltrim($data, '@'));
     }
 
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = [])
     {
-        if (true !== ($context[LiveComponentHydrator::LIVE_CONTEXT] ?? null) || !class_exists($type)) {
+        if (!\is_string($data) || !str_starts_with($data, '@') || true !== ($context[LiveComponentHydrator::LIVE_CONTEXT] ?? null) || !class_exists($type)) {
             return false;
         }
 

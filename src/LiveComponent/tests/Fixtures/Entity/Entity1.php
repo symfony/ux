@@ -23,5 +23,10 @@ class Entity1
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      */
-    public $id;
+    public ?int $id;
+
+    /**
+     * @ORM\Column(nullable=true)
+     */
+    public ?string $title = null;
 }
