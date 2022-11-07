@@ -44,6 +44,27 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('service: service a value', $output);
     }
 
+    public function testCanRenderComponentWithMoreAdvancedTwigExpressions(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('flexible_component_attributes.html.twig');
+
+        $this->assertStringContainsString('propA: A1', $output);
+        $this->assertStringContainsString('propB: B1', $output);
+        $this->assertStringContainsString('propA: A2', $output);
+        $this->assertStringContainsString('propB: B2', $output);
+        $this->assertStringContainsString('propA: A3', $output);
+        $this->assertStringContainsString('propB: B3', $output);
+        $this->assertStringContainsString('propA: A4', $output);
+        $this->assertStringContainsString('propB: B4', $output);
+        $this->assertStringContainsString('service: service a value', $output);
+    }
+
+    public function testCanNotRenderComponentWithInvalidExpressions(): void
+    {
+        $this->expectException(\TypeError::class);
+        self::getContainer()->get(Environment::class)->render('invalid_flexible_component.html.twig');
+    }
+
     public function testCanCustomizeTemplateWithAttribute(): void
     {
         $output = $this->renderComponent('component_b', ['value' => 'b value 1']);
