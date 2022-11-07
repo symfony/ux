@@ -382,4 +382,41 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertSame('foo', $component->embeddable1->name);
         $this->assertSame('qux', $component->embeddable2->name);
     }
+
+    /**
+     * @dataProvider falseyValueProvider
+     */
+    public function testCoerceFalseyValuesForScalarTypes($prop, $value, $expected): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('scalar_types'))->all();
+
+        $dehydrated[$prop] = $value;
+
+        $hydrated = $this->hydrateComponent($this->getComponent('scalar_types'), $dehydrated, 'scalar_types')
+            ->getComponent()
+        ;
+
+        $this->assertSame($expected, $hydrated->$prop);
+    }
+
+    public static function falseyValueProvider(): iterable
+    {
+        yield ['int', '', 0];
+        yield ['int', '   ', 0];
+        yield ['int', 'apple', 0];
+        yield ['float', '', 0.0];
+        yield ['float', '   ', 0.0];
+        yield ['float', 'apple', 0.0];
+        yield ['bool', '', false];
+        yield ['bool', '   ', false];
+
+        yield ['nullableInt', '', null];
+        yield ['nullableInt', '   ', null];
+        yield ['nullableInt', 'apple', 0];
+        yield ['nullableFloat', '', null];
+        yield ['nullableFloat', '   ', null];
+        yield ['nullableFloat', 'apple', 0.0];
+        yield ['nullableBool', '', null];
+        yield ['nullableBool', '   ', null];
+    }
 }
