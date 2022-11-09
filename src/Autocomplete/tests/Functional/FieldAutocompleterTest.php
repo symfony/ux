@@ -86,7 +86,7 @@ class FieldAutocompleterTest extends KernelTestCase
             ->throwExceptions()
             ->get('/test/autocomplete/category_autocomplete_type?query=foo')
             ->assertSuccessful()
-            ->assertJsonMatches('length(results)', 5)
+            ->assertJsonMatches('length(results)', 25)
         ;
     }
 
