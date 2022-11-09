@@ -77,6 +77,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
 
         $values['no-results-found-text'] = $this->trans($options['no_results_found_text']);
         $values['no-more-results-text'] = $this->trans($options['no_more_results_text']);
+        $values['preload'] = $options['preload'];
 
         foreach ($values as $name => $value) {
             $attr['data-'.$controllerName.'-'.$name.'-value'] = $value;
@@ -97,11 +98,20 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             'no_more_results_text' => 'No more results',
             'min_characters' => 3,
             'max_results' => 10,
+            'preload' => false,
         ]);
 
         // if autocomplete_url is passed, then HTML options are already supported
         $resolver->setNormalizer('options_as_html', function (Options $options, $value) {
             return null === $options['autocomplete_url'] ? $value : false;
+        });
+
+        $resolver->setNormalizer('preload', function (Options $options, $value) {
+            if (\is_bool($value)) {
+                $value = $value ? 'true' : 'false';
+            }
+
+            return $value;
         });
     }
 

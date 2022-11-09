@@ -10,6 +10,7 @@ export default class extends Controller {
         noMoreResultsText: String,
         minCharacters: Number,
         tomSelectOptions: Object,
+        preload: String,
     };
 
     readonly urlValue: string;
@@ -18,6 +19,7 @@ export default class extends Controller {
     readonly noResultsFoundTextValue: string;
     readonly minCharactersValue: number;
     readonly tomSelectOptionsValue: object;
+    readonly preloadValue: string;
     tomSelect: TomSelect;
 
     initialize() {
@@ -174,7 +176,7 @@ export default class extends Controller {
                     return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
                 },
             },
-            preload: 'focus',
+            preload: this.preload,
         });
 
         return this.#createTomSelect(config);
@@ -220,5 +222,17 @@ export default class extends Controller {
 
     #dispatchEvent(name: string, payload: any): void {
         this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
+    }
+
+    get preload() {
+        if (this.preloadValue == 'false') {
+            return false;
+        }
+
+        if (this.preloadValue == 'true') {
+            return true;
+        }
+
+        return this.preloadValue;
     }
 }
