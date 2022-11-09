@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+-   Fix issue where `max_results` was not passed as a Stimulus value (#538)
+
 ## 2.5.0
 
 -   Automatic pagination support added: if the query would return more results
