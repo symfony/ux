@@ -1517,7 +1517,8 @@ class Component {
             const backendResponse = new BackendResponse(response);
             thisPromiseResolve(backendResponse);
             const html = await backendResponse.getBody();
-            if (backendResponse.response.headers.get('Content-Type') !== 'application/vnd.live-component+html') {
+            const headers = backendResponse.response.headers;
+            if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
                 this.renderError(html);
                 return response;
             }
