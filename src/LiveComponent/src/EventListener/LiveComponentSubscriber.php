@@ -282,7 +282,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         $event->setResponse(new Response(null, 204, [
             'Location' => $response->headers->get('Location'),
-            'Content-Type' => self::HTML_CONTENT_TYPE,
         ]));
     }
 
