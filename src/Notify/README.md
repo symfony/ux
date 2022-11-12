@@ -5,7 +5,7 @@ Symfony UX Notify is a Symfony bundle integrating server-sent
 in Symfony applications using [Mercure](https://mercure.rocks/).
 It is part of [the Symfony UX initiative](https://symfony.com/ux).
 
-![Example of a native notification](https://github.com/symfony/ux/blob/2.x/src/Notify/Resources/doc/native-notification-example.png?raw=true)
+![Example of a native notification](https://github.com/symfony/ux/blob/2.x/doc/native-notification-example.png?raw=true)
 
 **This repository is a READ-ONLY sub-tree split**. See
 https://github.com/symfony/ux to create issues or submit pull requests.

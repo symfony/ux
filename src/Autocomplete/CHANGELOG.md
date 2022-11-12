@@ -1,6 +1,17 @@
 # CHANGELOG
 
-## Unreleased
+## 2.6.0
+
+-   [BC BREAK]: The path to `routes.php` changed and you should update your
+    route import accordingly:
+
+```diff
+# config/routes/ux_autocomplete.yaml
+ux_autocomplete:
+-    resource: '@AutocompleteBundle/Resources/routes.php'
++    resource: '@AutocompleteBundle/config/routes.php'
+    prefix: '/autocomplete'
+```
 
 -   Fix issue where `max_results` was not passed as a Stimulus value (#538)
 

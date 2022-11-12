@@ -26,4 +26,9 @@ final class AutocompleteBundle extends Bundle
     {
         $container->addCompilerPass(new AutocompleteFormTypePass());
     }
+
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
 }

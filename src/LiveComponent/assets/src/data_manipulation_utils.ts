@@ -9,7 +9,7 @@ export function getDeepData(data: any, propertyPath: string) {
 }
 
 // post.user.username
-const parseDeepData = function(data: any, propertyPath: string) {
+const parseDeepData = function (data: any, propertyPath: string) {
     const finalData = JSON.parse(JSON.stringify(data));
 
     let currentLevelData = finalData;
@@ -27,13 +27,13 @@ const parseDeepData = function(data: any, propertyPath: string) {
         currentLevelData,
         finalData,
         finalKey,
-        parts
-    }
-}
+        parts,
+    };
+};
 
 // post.user.username
 export function setDeepData(data: any, propertyPath: string, value: any): any {
-    const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath)
+    const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath);
 
     // make sure the currentLevelData is an object, not a scalar
     // if it is, it means the initial data didn't know that sub-properties
@@ -44,10 +44,18 @@ export function setDeepData(data: any, propertyPath: string, value: any): any {
         const lastPart = parts.pop();
 
         if (typeof currentLevelData === 'undefined') {
-            throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not exist. Did you forget to expose "${parts[0]}" as a LiveProp?`)
+            throw new Error(
+                `Cannot set data-model="${propertyPath}". The parent "${parts.join(
+                    '.'
+                )}" data does not exist. Did you forget to expose "${parts[0]}" as a LiveProp?`
+            );
         }
 
-        throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`)
+        throw new Error(
+            `Cannot set data-model="${propertyPath}". The parent "${parts.join(
+                '.'
+            )}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`
+        );
     }
 
     // represents a situation where the key you're setting *is* an object,
@@ -56,9 +64,15 @@ export function setDeepData(data: any, propertyPath: string, value: any): any {
     if (currentLevelData[finalKey] === undefined) {
         const lastPart = parts.pop();
         if (parts.length > 0) {
-            throw new Error(`The model name ${propertyPath} was never initialized. Did you forget to add exposed={"${lastPart}"} to its LiveProp?`)
+            throw new Error(
+                `The model name ${propertyPath} was never initialized. Did you forget to add exposed={"${lastPart}"} to its LiveProp?`
+            );
         } else {
-            throw new Error(`The model name "${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp? Available models values are: ${Object.keys(data).length > 0 ? Object.keys(data).join(', ') : '(none)'}`)
+            throw new Error(
+                `The model name "${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp? Available models values are: ${
+                    Object.keys(data).length > 0 ? Object.keys(data).join(', ') : '(none)'
+                }`
+            );
         }
     }
 

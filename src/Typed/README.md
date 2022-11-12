@@ -6,7 +6,7 @@ Symfony applications. It is part of [the Symfony UX initiative](https://symfony.
 Typed is a complete and easy to use animated typed texts.
 Just enter the strings you want to see typed, and it goes live without complexity.
 
-![Typed in action](Resources/doc/Animation.gif)
+![Typed in action](doc/Animation.gif)
 
 **This repository is a READ-ONLY sub-tree split**. See
 https://github.com/symfony/ux to create issues or submit pull requests.

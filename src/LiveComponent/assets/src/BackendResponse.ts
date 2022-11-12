@@ -1,5 +1,5 @@
 export default class {
-    response: Response
+    response: Response;
     private body: string;
 
     constructor(response: Response) {

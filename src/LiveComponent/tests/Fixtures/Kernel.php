@@ -25,6 +25,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\Entity2Normalizer;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\MoneyNormalizer;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Environment;
+use Zenstruck\Foundry\ZenstruckFoundryBundle;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -50,6 +51,7 @@ final class Kernel extends BaseKernel
         yield new FrameworkBundle();
         yield new TwigBundle();
         yield new DoctrineBundle();
+        yield new ZenstruckFoundryBundle();
         yield new TwigComponentBundle();
         yield new LiveComponentBundle();
     }
@@ -67,6 +69,10 @@ final class Kernel extends BaseKernel
 
         $c->extension('twig', [
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
+        ]);
+
+        $c->extension('zenstruck_foundry', [
+            'auto_refresh_proxies' => false,
         ]);
 
         $c->extension('doctrine', [
@@ -107,7 +113,8 @@ final class Kernel extends BaseKernel
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import('@LiveComponentBundle/Resources/config/routing/live_component.xml');
+        $routes->import('@LiveComponentBundle/config/routes.php')
+            ->prefix('/_components');
 
         $routes->add('template', '/render-template/{template}')->controller('kernel::renderTemplate');
         $routes->add('homepage', '/')->controller('kernel::index');

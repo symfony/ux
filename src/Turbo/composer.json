@@ -24,15 +24,14 @@
     ],
     "autoload": {
         "psr-4": {
-            "Symfony\\UX\\Turbo\\": ""
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+            "Symfony\\UX\\Turbo\\": "src/",
+            "Symfony\\UX\\Turbo\\Bridge\\Mercure\\": "src/Bridge/Mercure/src"
+        }
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\": "Tests/app/"
+            "App\\": "tests/app/",
+            "Symfony\\UX\\Turbo\\Tests\\": "tests/"
         }
     },
     "require": {
