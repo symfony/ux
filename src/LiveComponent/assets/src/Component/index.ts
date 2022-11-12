@@ -302,7 +302,8 @@ export default class Component {
             thisPromiseResolve(backendResponse);
             const html = await backendResponse.getBody();
             // if the response does not contain a component, render as an error
-            if (backendResponse.response.headers.get('Content-Type') !== 'application/vnd.live-component+html') {
+            const headers = backendResponse.response.headers;
+            if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
                 this.renderError(html);
 
                 return response;

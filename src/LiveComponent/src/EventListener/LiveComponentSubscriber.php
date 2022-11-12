@@ -47,6 +47,7 @@ use Symfony\UX\TwigComponent\MountedComponent;
 class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {
     private const HTML_CONTENT_TYPE = 'application/vnd.live-component+html';
+    private const REDIRECT_HEADER = 'X-Live-Redirect';
 
     public function __construct(private ContainerInterface $container)
     {
@@ -282,7 +283,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         $event->setResponse(new Response(null, 204, [
             'Location' => $response->headers->get('Location'),
-            'Content-Type' => self::HTML_CONTENT_TYPE,
+            self::REDIRECT_HEADER => 1,
         ]));
     }
 
