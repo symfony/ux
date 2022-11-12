@@ -14,7 +14,7 @@ import { createRoot } from 'react-dom/client';
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    readonly componentValue: string;
+    readonly componentValue?: string;
     readonly propsValue?: object;
 
     static values = {
@@ -26,6 +26,10 @@ export default class extends Controller {
         const props = this.propsValue ? this.propsValue : null;
 
         this._dispatchEvent('react:connect', { component: this.componentValue, props: props });
+
+        if (!this.componentValue) {
+            throw new Error('No component specified.');
+        }
 
         const component = window.resolveReactComponent(this.componentValue);
         this._renderReactElement(React.createElement(component, props, null));

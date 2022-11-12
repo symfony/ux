@@ -9,8 +9,20 @@
 
 'use strict';
 
+import { ComponentClass, FunctionComponent } from 'react';
+
+type Component = string | FunctionComponent<object> | ComponentClass<object, any>;
+
+declare global {
+    function resolveReactComponent(name: string): Component;
+
+    interface Window {
+        resolveReactComponent(name: string): Component;
+    }
+}
+
 export function registerReactControllerComponents(context: __WebpackModuleApi.RequireContext) {
-    const reactControllers: { [key: string]: object } = {};
+    const reactControllers: { [key: string]: Component } = {};
 
     const importAllReactComponents = (r: __WebpackModuleApi.RequireContext) => {
         r.keys().forEach((key) => (reactControllers[key] = r(key).default));
@@ -19,7 +31,7 @@ export function registerReactControllerComponents(context: __WebpackModuleApi.Re
     importAllReactComponents(context);
 
     // Expose a global React loader to allow rendering from the Stimulus controller
-    (window as any).resolveReactComponent = (name: string): object => {
+    window.resolveReactComponent = (name: string): Component => {
         const component = reactControllers[`./${name}.jsx`] || reactControllers[`./${name}.tsx`];
         if (typeof component === 'undefined') {
             throw new Error('React controller "' + name + '" does not exist');
