@@ -1337,9 +1337,6 @@ via the ``LiveCollectionType``::
                 // ...
                 ->add('comments', LiveCollectionType::class, [
                     'entry_type' => CommentFormType::class,
-                    'allow_add' => true,
-                    'allow_delete' => true,
-                    'by_reference' => false,
                 ])
             ;
         }
@@ -1386,6 +1383,108 @@ There is no need for a custom template just render the form as usual:
         {{ form(form) }}
     </div>
 
+This automatically renders add and delete buttons that are connected to the live component.
+If you want to customize how the buttons and the collection rows are rendered, you can use
+`Symfony's built-in form theming techniques`_, but you should note that, the buttons are not
+part of the form tree.
+
+.. note::
+
+    Under the hood, ``LiveCollectionType`` adds ``button_add`` and
+    ``button_delete`` fields to the form in a special way. These fields
+    are not added as regular form fields, so they are not part of the form
+    tree, but only the form view. The ``button_add`` is added to the
+    collection view variables and a ``button_delete`` is added to each
+    item view variables.
+
+Here are some examples of these techniques.
+
+If you only want to customize some attributes, the simplest to use the options in the form type::
+
+    // ...
+    ->add('comments', LiveCollectionType::class, [
+        'entry_type' => CommentFormType::class,
+        'label' => false,
+        'button_delete_options' => [
+            'label' => 'X',
+            'attr' => [
+                'class' => 'btn btn-outline-danger',
+            ],
+        ]
+    ])
+    // ...
+
+Inline rendering:
+
+.. code-block:: twig
+
+    <div {{ attributes }}>
+        {{ form_start(form) }}
+            {{ form_row(form.title)
+
+            <h3>Comments:</h3>
+            {% for key, commentForm in form.comments %}
+                {# render a delete button for every row #}
+                {{ form_row(commentForm.vars.button_delete, { label: 'X', attr: { class: 'btn btn-outline-danger' } }) }}
+
+                {# render rest of the comment form #}
+                {{ form_row(commentForm, { label: false }) }}
+            {% endfor %}
+
+            {# render the add button #}
+            {{ form_widget(form.comments.vars.button_add_prototype, { label: '+ Add comment', class: 'btn btn-outline-primary' }) }}
+
+            {# render rest of the form #}
+            {{ form_row(form) }}
+
+            <button type="submit" >Save</button>
+        {{ form_end(form) }}
+    </div>
+
+Override the specific block for comment items:
+
+.. code-block:: twig
+
+    {% form_theme form 'components/_form_theme_comment_list.html.twig' %}
+
+    <div {{ attributes }}>
+        {{ form_start(form) }}
+
+        {{ form_start(form) }}
+            {{ form_row(form.title)
+
+            <h3>Comments:</h3>
+            <ul>
+                {{ form_row(form.comments, { skip_add_button: true }) }}
+            </ul>
+
+            {# render rest of the form #}
+            {{ form_row(form) }}
+
+            <button type="submit" >Save</button>
+        {{ form_end(form) }}
+    </div>
+
+
+.. code-block:: twig
+
+    {# components/_form_theme_comment_list.html.twig #}
+    {%- block _blog_post_form_comments_entry_row -%}
+        <li class="...">
+            {{ form_row(form.content, { label: false }) }}
+            {{ form_row(button_delete_prototype, { label: 'X', attr: { class: 'btn btn-outline-danger' } }) }}
+        </li>
+    {% endblock %}
+
+
+.. note::
+
+    You may put the form theme into the component template and use `{% form_theme form _self %}`. However,
+    because the component template doesn't extend anything, it will not work as expected, you must point
+    `form_theme` to a separate template. See `How to Work with Form Themes`_.
+
+Override the generic buttons and collection entry:
+
 The ``add`` and ``delete`` buttons are rendered as separate ``ButtonType`` form
 types and can be customized like a normal form type via the ``live_collection_button_add``
 and ``live_collection_button_delete`` block prefix respectively:
@@ -1405,31 +1504,11 @@ and ``live_collection_button_delete`` block prefix respectively:
         {{ block('button_widget') }}
     {% endblock live_collection_button_add_widget %}
 
-If you only want to customize some attributes, it maybe simpler to use the options in the form type:
-
-    // ...
-    ->add('comments', LiveCollectionType::class, [
-        'entry_type' => CommentFormType::class,
-        'allow_add' => true,
-        'allow_delete' => true,
-        'by_reference' => false,
-        'label' => false,
-        'button_delete_options' => [
-            'label' => 'X',
-            'attr' => [
-                'class' => 'btn btn-outline-danger',
-            ],
-        ]
-    ])
-    // ...
-
-If you want more control over how each row is rendered you can override the blocks
-related to the ``LiveCollectionType``. This works the same way as
-`the traditional collection type`_, but you should use ``live_collection_*``
+To control how each row is rendered you can override the blocks related to the ``LiveCollectionType``. This
+works the same way as `the traditional collection type`_, but you should use ``live_collection_*``
 and ``live_collection_entry_*`` as prefixes instead.
 
-For example, let's continue our previous example and customize the rendering of the blog post comments form.
-By default, the add comment button is placed after the comments. Let's move it before them.
+For example, by default the add button is placed after the items (the comments in our case). Let's move it before them.
 
 .. code-block:: twig
 
@@ -1452,15 +1531,6 @@ Now add a div around each row:
             {%- endif -%}
         </div>
     {%- endblock -%}
-
-.. note::
-
-    Under the hood, ``LiveCollectionType`` adds ``button_add`` and
-    ``button_delete`` fields to the form in a special way. These fields
-    are not added as regular form fields, so they are not part of the form
-    tree, but only the form view. The ``button_add`` is added to the
-    collection view variables and a ``button_delete`` is added to each
-    item view variables.
 
 As another example, let's create a general bootstrap 5 theme for the live
 collection type, rendering every item in a table row:
@@ -2050,3 +2120,5 @@ bound to Symfony's BC policy for the moment.
 .. _`attributes variable`: https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes
 .. _`CollectionType`: https://symfony.com/doc/current/form/form_collections.html
 .. _`the traditional collection type`: https://symfony.com/doc/current/form/form_themes.html#fragment-naming-for-collections
+.. _`How to Work with Form Themes`: https://symfony.com/doc/current/form/form_themes.html
+.. _`Symfony's built-in form theming techniques`: https://symfony.com/doc/current/form/form_themes.html
