@@ -333,6 +333,11 @@ events that the core Stimulus controller dispatches:
         }
     }
 
+.. note::
+
+    The extending controller should be loaded eagerly (remove ``/* stimulusFetch: 'lazy' */``), so
+    it can listen to events dispatched by the original controller.
+
 Then, update your field configuration to use your new controller (it will be used
 in addition to the core Autocomplete controller):
 
@@ -341,6 +346,7 @@ in addition to the core Autocomplete controller):
     $builder
         ->add('food', EntityType::class, [
             'class' => Food::class,
+            'autocomplete' => true,
     +        'attr' => [
     +            'data-controller' => 'custom-autocomplete',
     +        ],
@@ -371,16 +377,19 @@ endpoint and then :ref:`initialize the Stimulus controller manually <manual-stim
 This only works for Doctrine entities: see `Manually using the Stimulus Controller`_
 if you're autocompleting something other than an entity.
 
-To expose the endpoint, create a class that implements ``Symfony\UX\Autocomplete\EntityAutocompleterInterface``::
+To expose the endpoint, create a class that implements ``Symfony\UX\Autocomplete\EntityAutocompleterInterface``
+and tag this service with ``ux.entity_autocompleter`` and include an ``alias``::
 
     namespace App\Autocompleter;
 
     use App\Entity\Food;
     use Doctrine\ORM\EntityRepository;
     use Doctrine\ORM\QueryBuilder;
+    use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
     use Symfony\Component\Security\Core\Security;
     use Symfony\UX\Autocomplete\EntityAutocompleterInterface;
 
+    #[AutoconfigureTag('ux.entity_autocompleter', ['alias' => 'food'])]
     class FoodAutocompleter implements EntityAutocompleterInterface
     {
         public function getEntityClass(): string
@@ -418,18 +427,6 @@ To expose the endpoint, create a class that implements ``Symfony\UX\Autocomplete
             return true;
         }
     }
-
-Next, tag this service with ``ux.entity_autocompleter`` and include an ``alias``:
-
-.. code-block:: yaml
-
-    # config/services.yaml
-    services:
-        # ...
-
-        App\Autocompleter\FoodAutocompleter:
-            tags:
-                - { name: ux.entity_autocompleter, alias: 'food' }
 
 Thanks to this, your can now autocomplete your ``Food`` entity via
 the ``ux_entity_autocomplete`` route and ``alias`` route wildcard:

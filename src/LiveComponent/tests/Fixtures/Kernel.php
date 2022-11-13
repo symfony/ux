@@ -54,6 +54,7 @@ final class Kernel extends BaseKernel
         yield new ZenstruckFoundryBundle();
         yield new TwigComponentBundle();
         yield new LiveComponentBundle();
+        yield new ZenstruckFoundryBundle();
     }
 
     protected function configureContainer(ContainerConfigurator $c): void
@@ -97,6 +98,10 @@ final class Kernel extends BaseKernel
                     ],
                 ],
             ],
+        ]);
+
+        $c->extension('zenstruck_foundry', [
+            'auto_refresh_proxies' => false,
         ]);
 
         $c->services()

@@ -123,6 +123,10 @@ final class Kernel extends BaseKernel
             ],
         ]);
 
+        $c->extension('zenstruck_foundry', [
+            'auto_refresh_proxies' => false,
+        ]);
+
         $services = $c->services();
         $services
             ->defaults()
