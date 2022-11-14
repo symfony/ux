@@ -62,6 +62,11 @@ final class MountedComponent
         return $this->inputProps;
     }
 
+    public function withProps(array $props): void
+    {
+        $this->inputProps = array_merge($this->inputProps ?? [], $props);
+    }
+
     public function addExtraMetadata(string $key, mixed $metadata): void
     {
         $this->extraMetadata[$key] = $metadata;

@@ -12,6 +12,11 @@
 namespace Symfony\UX\TwigComponent\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\TwigComponent\ComponentAttributes;
+use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\UX\TwigComponent\ComponentRenderer;
+use Symfony\UX\TwigComponent\MountedComponent;
+use Symfony\UX\TwigComponent\RenderableComponent;
 use Twig\Environment;
 
 /**
@@ -156,6 +161,28 @@ final class ComponentExtensionTest extends KernelTestCase
         $output = $this->renderComponent('foo:bar:baz');
 
         $this->assertStringContainsString('Content...', $output);
+    }
+
+    public function testRenderableComponent(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('dynamic_table_cells_alignment.html.twig');
+
+        $this->assertStringContainsString('<table><tr><td style="text-align:center">ID</td><td style="text-align:center">Name</td></tr></table>', $output);
+    }
+
+    public function testIsComponent(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('is_component.html.twig', [
+            'v1' => null,
+            'v2' => false,
+            'v3' => '',
+            'v4' => new RenderableComponent(
+                self::getContainer()->get('ux.twig_component.component_renderer'),
+                self::getContainer()->get('ux.twig_component.component_factory')->create('foo:bar:baz'),
+            ),
+        ]);
+
+        self::assertSame("no\nno\nno\nyes", $output);
     }
 
     private function renderComponent(string $name, array $data = []): string

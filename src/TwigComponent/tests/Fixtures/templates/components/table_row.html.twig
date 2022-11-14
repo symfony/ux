@@ -1,0 +1,5 @@
+<tr>
+    {%- for cell in cells -%}
+        {{ cell.withProps({ align })|raw -}}
+    {%- endfor -%}
+</tr>
