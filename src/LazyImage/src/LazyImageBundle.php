@@ -17,8 +17,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *
  * @final
- *
- * @experimental
  */
 class LazyImageBundle extends Bundle
 {

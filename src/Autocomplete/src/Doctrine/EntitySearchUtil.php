@@ -17,8 +17,6 @@ use Symfony\Component\Uid\Uuid;
 
 /**
  * Adapted from EasyCorp/EasyAdminBundle.
- *
- * @experimental
  */
 class EntitySearchUtil
 {

@@ -17,8 +17,6 @@ use Symfony\UX\Autocomplete\DependencyInjection\AutocompleteFormTypePass;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 final class AutocompleteBundle extends Bundle
 {

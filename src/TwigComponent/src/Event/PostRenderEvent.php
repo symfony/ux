@@ -14,9 +14,6 @@ namespace Symfony\UX\TwigComponent\Event;
 use Symfony\Contracts\EventDispatcher\Event;
 use Symfony\UX\TwigComponent\MountedComponent;
 
-/**
- * @experimental
- */
 final class PostRenderEvent extends Event
 {
     /**

@@ -155,7 +155,7 @@ which should render the same template and Vue component:
     {
         // render the template
     }
-    
+
 This controller will catch any URL that starts with `/survey`. This prefix can then be
 used for all the Vue routes:
 
@@ -179,11 +179,7 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
-However it is currently considered `experimental`_,
-meaning it is not bound to Symfony's BC policy for the moment.
-
 .. _`Vue.js`: https://vuejs.org/
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _ `the related section of the documentation`: https://symfony.com/doc/current/frontend/encore/vuejs.html
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html

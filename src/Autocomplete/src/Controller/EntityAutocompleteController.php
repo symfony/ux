@@ -21,8 +21,6 @@ use Symfony\UX\Autocomplete\AutocompleterRegistry;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 final class EntityAutocompleteController
 {

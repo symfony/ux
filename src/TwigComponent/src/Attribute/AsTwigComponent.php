@@ -13,8 +13,6 @@ namespace Symfony\UX\TwigComponent\Attribute;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class AsTwigComponent

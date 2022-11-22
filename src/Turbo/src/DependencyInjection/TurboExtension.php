@@ -25,8 +25,6 @@ use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
 
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
- *
- * @experimental
  */
 final class TurboExtension extends Extension
 {

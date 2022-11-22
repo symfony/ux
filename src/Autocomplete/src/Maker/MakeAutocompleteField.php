@@ -32,8 +32,6 @@ use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 class MakeAutocompleteField extends AbstractMaker
 {

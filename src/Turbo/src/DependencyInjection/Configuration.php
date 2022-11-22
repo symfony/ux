@@ -20,8 +20,6 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
  * Turbo configuration structure.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
- *
- * @experimental
  */
 final class Configuration implements ConfigurationInterface
 {

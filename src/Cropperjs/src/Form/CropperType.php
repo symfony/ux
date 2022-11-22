@@ -23,8 +23,6 @@ use Symfony\UX\Cropperjs\Model\Crop;
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *
  * @final
- *
- * @experimental
  */
 class CropperType extends AbstractType
 {

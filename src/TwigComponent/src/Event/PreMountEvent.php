@@ -15,8 +15,6 @@ use Symfony\Contracts\EventDispatcher\Event;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 final class PreMountEvent extends Event
 {

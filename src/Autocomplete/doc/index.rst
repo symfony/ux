@@ -9,9 +9,6 @@ into an Ajax-powered autocomplete smart UI control (leveraging `Tom Select`_):
    :align: center
    :width: 300
 
-**EXPERIMENTAL** This component is currently experimental and is likely
-to change, or even change drastically.
-
 Installation
 ------------
 
@@ -176,7 +173,7 @@ includes a CSS file for Tom Select which will give you basic styles.
         "tom-select/dist/css/tom-select.default.css": true
     }
 
-If you're using Bootstrap, you can get Bootstrap-ready styling by 
+If you're using Bootstrap, you can get Bootstrap-ready styling by
 changing this line to ``false``:
 
 .. code-block:: text
@@ -505,12 +502,8 @@ Backward Compatibility promise
 This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 
-However it is currently considered `experimental`_, meaning it is not bound
-to Symfony's BC policy for the moment.
-
 .. _`Tom Select`: https://tom-select.js.org/
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
 .. _`Tom Select Options`: https://tom-select.js.org/docs/#general-configuration
 .. _`controller.ts`: https://github.com/symfony/ux/blob/2.x/src/Autocomplete/assets/src/controller.ts
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`Tom Select Render Templates`: https://tom-select.js.org/docs/#render-templates

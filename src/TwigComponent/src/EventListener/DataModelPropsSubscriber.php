@@ -24,8 +24,7 @@ use Symfony\UX\TwigComponent\Util\ModelBindingParser;
  * to be passed in set to the parent component's "content" prop.
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
+
  *
  * @internal
  */

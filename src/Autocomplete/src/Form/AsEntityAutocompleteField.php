@@ -17,8 +17,6 @@ use Symfony\Component\String\UnicodeString;
  * All form types that want to expose autocomplete functionality should have this.
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class AsEntityAutocompleteField

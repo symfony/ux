@@ -20,8 +20,7 @@ use Symfony\UX\TwigComponent\Event\PreMountEvent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
+
  *
  * @internal
  */

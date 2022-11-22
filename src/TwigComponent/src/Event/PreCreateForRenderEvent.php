@@ -17,8 +17,6 @@ use Symfony\Contracts\EventDispatcher\Event;
  * Dispatched at the start of the component rendering process.
  *
  * This event occurs before the component is created & mounted.
- *
- * @experimental
  */
 final class PreCreateForRenderEvent extends Event
 {

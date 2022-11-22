@@ -789,9 +789,6 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
-However, it is currently considered `experimental`_,
-meaning it is not bound to Symfony's BC policy for the moment.
-
 Credits
 -------
 
@@ -820,7 +817,6 @@ Symfony UX Turbo has been created by `Kévin Dunglas`_. It has been inspired by
 .. _`autoconfigure option`: https://symfony.com/doc/current/service_container.html#the-autoconfigure-option
 .. _`private updates`: https://symfony.com/doc/current/mercure.html#authorization
 .. _`async dispatching with Symfony Messenger`: https://symfony.com/doc/current/mercure.html#async-dispatching
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`Kévin Dunglas`: https://dunglas.fr
 .. _`hotwired/turbo-rails`: https://github.com/hotwired/turbo-rails
 .. _`sroze/live-twig`: https://github.com/sroze/live-twig

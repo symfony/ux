@@ -21,8 +21,6 @@ use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 class AutocompleteFormTypePass implements CompilerPassInterface
 {
