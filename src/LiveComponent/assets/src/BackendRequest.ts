@@ -19,13 +19,13 @@ export default class {
      * Does this BackendRequest contain at least on action in targetedActions?
      */
     containsOneOfActions(targetedActions: string[]): boolean {
-        return (this.actions.filter(action => targetedActions.includes(action))).length > 0;
+        return this.actions.filter((action) => targetedActions.includes(action)).length > 0;
     }
 
     /**
      * Does this BackendRequest includes updates for any of these models?
      */
     areAnyModelsUpdated(targetedModels: string[]): boolean {
-        return (this.updatedModels.filter(model => targetedModels.includes(model))).length > 0;
+        return this.updatedModels.filter((model) => targetedModels.includes(model)).length > 0;
     }
 }

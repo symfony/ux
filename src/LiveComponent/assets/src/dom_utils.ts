@@ -11,7 +11,7 @@ import Component from './Component';
  * elements. In those cases, it will return the "full", final value
  * for the model, which includes previously-selected values.
  */
-export function getValueFromElement(element: HTMLElement, valueStore: ValueStore): string|string[]|null {
+export function getValueFromElement(element: HTMLElement, valueStore: ValueStore): string | string[] | null {
     if (element instanceof HTMLInputElement) {
         if (element.type === 'checkbox') {
             const modelNameData = getModelDirectiveFromElement(element);
@@ -33,7 +33,7 @@ export function getValueFromElement(element: HTMLElement, valueStore: ValueStore
     if (element instanceof HTMLSelectElement) {
         if (element.multiple) {
             // Select elements with `multiple` option require mapping chosen options to their values
-            return Array.from(element.selectedOptions).map(el => el.value);
+            return Array.from(element.selectedOptions).map((el) => el.value);
         }
 
         return element.value;
@@ -67,7 +67,7 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
         }
 
         if (element.type === 'radio') {
-            element.checked = element.value == value
+            element.checked = element.value == value;
 
             return;
         }
@@ -77,14 +77,14 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
                 // I'm purposely not using Array.includes here because it's
                 // strict, and because of Numeric/String mis-casting, I
                 // want the "includes" to be "fuzzy".
-                let valueFound = false
-                value.forEach(val => {
+                let valueFound = false;
+                value.forEach((val) => {
                     if (val == element.value) {
-                        valueFound = true
+                        valueFound = true;
                     }
-                })
+                });
 
-                element.checked = valueFound
+                element.checked = valueFound;
             } else {
                 element.checked = element.value == value;
             }
@@ -94,13 +94,13 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
     }
 
     if (element instanceof HTMLSelectElement) {
-        const arrayWrappedValue = [].concat(value).map(value => {
-            return value + ''
-        })
+        const arrayWrappedValue = [].concat(value).map((value) => {
+            return value + '';
+        });
 
-        Array.from(element.options).forEach(option => {
-            option.selected = arrayWrappedValue.includes(option.value)
-        })
+        Array.from(element.options).forEach((option) => {
+            option.selected = arrayWrappedValue.includes(option.value);
+        });
 
         return;
     }
@@ -108,7 +108,7 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
     value = value === undefined ? '' : value;
 
     // silencing the typescript warning
-    (element as HTMLInputElement).value = value
+    (element as HTMLInputElement).value = value;
 }
 
 /**
@@ -125,7 +125,9 @@ export function getAllModelDirectiveFromElements(element: HTMLElement): Directiv
 
     directives.forEach((directive) => {
         if (directive.args.length > 0 || directive.named.length > 0) {
-            throw new Error(`The data-model="${element.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
+            throw new Error(
+                `The data-model="${element.dataset.model}" format is invalid: it does not support passing arguments to the model.`
+            );
         }
 
         directive.action = normalizeModelName(directive.action);
@@ -134,7 +136,7 @@ export function getAllModelDirectiveFromElements(element: HTMLElement): Directiv
     return directives;
 }
 
-export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissing = true): null|Directive {
+export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissing = true): null | Directive {
     const dataModelDirectives = getAllModelDirectiveFromElements(element);
     if (dataModelDirectives.length > 0) {
         return dataModelDirectives[0];
@@ -144,12 +146,14 @@ export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissin
         const formElement = element.closest('form');
         // require a <form data-model="*"> around elements in order to
         // activate automatic "data binding" via the "name" attribute
-        if (formElement && ('model' in formElement.dataset)) {
+        if (formElement && 'model' in formElement.dataset) {
             const directives = parseDirectives(formElement.dataset.model || '*');
             const directive = directives[0];
 
             if (directive.args.length > 0 || directive.named.length > 0) {
-                throw new Error(`The data-model="${formElement.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
+                throw new Error(
+                    `The data-model="${formElement.dataset.model}" format is invalid: it does not support passing arguments to the model.`
+                );
             }
 
             // use the actual field's name as the "action"
@@ -163,7 +167,11 @@ export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissin
         return null;
     }
 
-    throw new Error(`Cannot determine the model name for "${getElementAsTagText(element)}": the element must either have a "data-model" (or "name" attribute living inside a <form data-model="*">).`);
+    throw new Error(
+        `Cannot determine the model name for "${getElementAsTagText(
+            element
+        )}": the element must either have a "data-model" (or "name" attribute living inside a <form data-model="*">).`
+    );
 }
 
 /**
@@ -227,15 +235,13 @@ export function htmlToElement(html: string): HTMLElement {
 
 // Inspired by https://stackoverflow.com/questions/13389751/change-tag-using-javascript
 export function cloneElementWithNewTagName(element: Element, newTag: string): HTMLElement {
-    const originalTag = element.tagName
-    const startRX = new RegExp('^<'+originalTag, 'i')
-    const endRX = new RegExp(originalTag+'>$', 'i')
-    const startSubst = '<'+newTag
-    const endSubst = newTag+'>'
+    const originalTag = element.tagName;
+    const startRX = new RegExp('^<' + originalTag, 'i');
+    const endRX = new RegExp(originalTag + '>$', 'i');
+    const startSubst = '<' + newTag;
+    const endSubst = newTag + '>';
 
-    const newHTML = element.outerHTML
-        .replace(startRX, startSubst)
-        .replace(endRX, endSubst);
+    const newHTML = element.outerHTML.replace(startRX, startSubst).replace(endRX, endSubst);
 
     return htmlToElement(newHTML);
 }
@@ -250,10 +256,12 @@ export function cloneElementWithNewTagName(element: Element, newTag: string): HT
  *      <div class="outer">
  */
 export function getElementAsTagText(element: HTMLElement): string {
-    return element.innerHTML ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML)) : element.outerHTML;
+    return element.innerHTML
+        ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML))
+        : element.outerHTML;
 }
 
-const getMultipleCheckboxValue = function(element: HTMLInputElement, currentValues: Array<string>): Array<string> {
+const getMultipleCheckboxValue = function (element: HTMLInputElement, currentValues: Array<string>): Array<string> {
     const value = inputValue(element);
     const index = currentValues.indexOf(value);
 
@@ -272,8 +280,8 @@ const getMultipleCheckboxValue = function(element: HTMLInputElement, currentValu
     }
 
     return currentValues;
-}
+};
 
-const inputValue = function(element: HTMLInputElement): string {
+const inputValue = function (element: HTMLInputElement): string {
     return element.dataset.value ? element.dataset.value : element.value;
-}
+};

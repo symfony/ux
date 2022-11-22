@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 2.6.0
+
+-   [BC BREAK]: The path to `live_component.xml` changed _and_ the import now
+    MUST have a `prefix`: you should update your route import accordingly (the
+    name of the route also changed to `ux_live_component`):
+
+```diff
+# config/routes/ux_live_component.yaml
+live_component:
+-    resource: '@LiveComponentBundle/Resources/config/routing/live_component.xml'
++    resource: '@LiveComponentBundle/config/routes.php'
++    prefix: /_components
+```
+
 ## 2.5.0
 
 -   [BEHAVIOR CHANGE] Previously, Ajax calls could happen in parallel (if

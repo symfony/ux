@@ -3,7 +3,7 @@ import Component from './Component';
 export default class {
     component: Component;
     isPollingActive = true;
-    polls: Array<{actionName: string, duration: number}>
+    polls: Array<{ actionName: string; duration: number }>;
     pollingIntervals: NodeJS.Timer[] = [];
 
     constructor(component: Component) {
@@ -24,7 +24,7 @@ export default class {
         }
 
         this.isPollingActive = true;
-        this.polls.forEach(({actionName, duration}) => {
+        this.polls.forEach(({ actionName, duration }) => {
             this.initiatePoll(actionName, duration);
         });
     }
@@ -48,11 +48,11 @@ export default class {
         if (actionName === '$render') {
             callback = () => {
                 this.component.render();
-            }
+            };
         } else {
             callback = () => {
                 this.component.action(actionName, {}, 0);
-            }
+            };
         }
 
         const timer = setInterval(() => {

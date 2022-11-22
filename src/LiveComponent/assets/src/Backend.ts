@@ -1,37 +1,50 @@
 import BackendRequest from './BackendRequest';
 
 export interface BackendInterface {
-    makeRequest(data: any, actions: BackendAction[], updatedModels: string[], childrenFingerprints: any): BackendRequest;
+    makeRequest(
+        data: any,
+        actions: BackendAction[],
+        updatedModels: string[],
+        childrenFingerprints: any
+    ): BackendRequest;
 }
 
 export interface BackendAction {
-    name: string,
-    args: Record<string, string>
+    name: string;
+    args: Record<string, string>;
 }
 
 export default class implements BackendInterface {
     private url: string;
-    private readonly csrfToken: string|null;
+    private readonly csrfToken: string | null;
 
-    constructor(url: string, csrfToken: string|null = null) {
+    constructor(url: string, csrfToken: string | null = null) {
         this.url = url;
         this.csrfToken = csrfToken;
     }
 
-    makeRequest(data: any, actions: BackendAction[], updatedModels: string[], childrenFingerprints: any): BackendRequest {
+    makeRequest(
+        data: any,
+        actions: BackendAction[],
+        updatedModels: string[],
+        childrenFingerprints: any
+    ): BackendRequest {
         const splitUrl = this.url.split('?');
-        let [url] = splitUrl
+        let [url] = splitUrl;
         const [, queryString] = splitUrl;
         const params = new URLSearchParams(queryString || '');
 
         const fetchOptions: RequestInit = {};
         fetchOptions.headers = {
-            'Accept': 'application/vnd.live-component+html',
+            Accept: 'application/vnd.live-component+html',
         };
 
         const hasFingerprints = Object.keys(childrenFingerprints).length > 0;
         const hasUpdatedModels = Object.keys(updatedModels).length > 0;
-        if (actions.length === 0 && this.willDataFitInUrl(JSON.stringify(data), params, JSON.stringify(childrenFingerprints))) {
+        if (
+            actions.length === 0 &&
+            this.willDataFitInUrl(JSON.stringify(data), params, JSON.stringify(childrenFingerprints))
+        ) {
             params.set('data', JSON.stringify(data));
             if (hasFingerprints) {
                 params.set('childrenFingerprints', JSON.stringify(childrenFingerprints));

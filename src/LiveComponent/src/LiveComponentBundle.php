@@ -30,4 +30,9 @@ final class LiveComponentBundle extends Bundle
         $container->addCompilerPass(new OptionalDependencyPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 100);
         $container->addCompilerPass(new ComponentDefaultActionPass());
     }
+
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
 }

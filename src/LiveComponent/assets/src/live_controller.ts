@@ -1,13 +1,11 @@
 import { Controller } from '@hotwired/stimulus';
-import {
-    parseDirectives,
-    DirectiveModifier,
-} from './Directive/directives_parser';
+import { parseDirectives, DirectiveModifier } from './Directive/directives_parser';
 import {
     getModelDirectiveFromElement,
     getElementAsTagText,
     getValueFromElement,
-    elementBelongsToThisComponent, getAllModelDirectiveFromElements,
+    elementBelongsToThisComponent,
+    getAllModelDirectiveFromElements,
 } from './dom_utils';
 import Component, { proxifyComponent } from './Component';
 import Backend from './Backend';
@@ -17,19 +15,19 @@ import ValidatedFieldsPlugin from './Component/plugins/ValidatedFieldsPlugin';
 import PageUnloadingPlugin from './Component/plugins/PageUnloadingPlugin';
 import PollingPlugin from './Component/plugins/PollingPlugin';
 import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModelFieldsPlugin';
-import {PluginInterface} from './Component/plugins/PluginInterface';
+import { PluginInterface } from './Component/plugins/PluginInterface';
 import getModelBinding from './Directive/get_model_binding';
 
 export interface LiveEvent extends CustomEvent {
     detail: {
-        controller: LiveController,
-        component: Component
-    },
+        controller: LiveController;
+        component: Component;
+    };
 }
 
 export interface LiveController {
-    element: HTMLElement,
-    component: Component
+    element: HTMLElement;
+    component: Component;
 }
 export default class extends Controller<HTMLElement> implements LiveController {
     static values = {
@@ -40,7 +38,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
         debounce: { type: Number, default: 150 },
         id: String,
         fingerprint: String,
-    }
+    };
 
     readonly urlValue!: string;
     readonly dataValue!: any;
@@ -48,15 +46,15 @@ export default class extends Controller<HTMLElement> implements LiveController {
     readonly csrfValue!: string;
     readonly hasDebounceValue: boolean;
     readonly debounceValue: number;
-    readonly fingerprintValue: string
+    readonly fingerprintValue: string;
 
     /** The component, wrapped in the convenience Proxy */
     private proxiedComponent: Component;
     /** The raw Component object */
     component: Component;
-    pendingActionTriggerModelElement: HTMLElement|null = null;
+    pendingActionTriggerModelElement: HTMLElement | null = null;
 
-    private elementEventListeners: Array<{ event: string, callback: (event: any) => void }> = [
+    private elementEventListeners: Array<{ event: string; callback: (event: any) => void }> = [
         { event: 'input', callback: (event) => this.handleInputEvent(event) },
         { event: 'change', callback: (event) => this.handleChangeEvent(event) },
         { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
@@ -74,7 +72,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
             this.fingerprintValue,
             id,
             new Backend(this.urlValue, this.csrfValue),
-            new StandardElementDriver(),
+            new StandardElementDriver()
         );
         this.proxiedComponent = proxifyComponent(this.component);
 
@@ -100,7 +98,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
     connect() {
         this.component.connect();
 
-        this.elementEventListeners.forEach(({event, callback}) => {
+        this.elementEventListeners.forEach(({ event, callback }) => {
             this.component.element.addEventListener(event, callback);
         });
 
@@ -110,7 +108,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
     disconnect() {
         this.component.disconnect();
 
-        this.elementEventListeners.forEach(({event, callback}) => {
+        this.elementEventListeners.forEach(({ event, callback }) => {
             this.component.element.removeEventListener(event, callback);
         });
 
@@ -124,7 +122,11 @@ export default class extends Controller<HTMLElement> implements LiveController {
      */
     update(event: any) {
         if (event.type === 'input' || event.type === 'change') {
-            throw new Error(`Since LiveComponents 2.3, you no longer need data-action="live#update" on form elements. Found on element: ${getElementAsTagText(event.target)}`);
+            throw new Error(
+                `Since LiveComponents 2.3, you no longer need data-action="live#update" on form elements. Found on element: ${getElementAsTagText(
+                    event.target
+                )}`
+            );
         }
 
         this.updateModelFromElementEvent(event.target, null);
@@ -139,8 +141,8 @@ export default class extends Controller<HTMLElement> implements LiveController {
         const rawAction = event.currentTarget.dataset.actionName;
 
         // data-action-name="prevent|debounce(1000)|save"
-        const directives = parseDirectives (rawAction);
-        let debounce: number|boolean = false;
+        const directives = parseDirectives(rawAction);
+        let debounce: number | boolean = false;
 
         directives.forEach((directive) => {
             const validModifiers: Map<string, (modifier: DirectiveModifier) => void> = new Map();
@@ -168,7 +170,11 @@ export default class extends Controller<HTMLElement> implements LiveController {
                     return;
                 }
 
-                console.warn(`Unknown modifier ${modifier.name} in action "${rawAction}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
+                console.warn(
+                    `Unknown modifier ${modifier.name} in action "${rawAction}". Available modifiers are: ${Array.from(
+                        validModifiers.keys()
+                    ).join(', ')}.`
+                );
             });
 
             this.component.action(directive.action, directive.named, debounce);
@@ -180,7 +186,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
             if (getModelDirectiveFromElement(event.currentTarget, false)) {
                 this.pendingActionTriggerModelElement = event.currentTarget;
             }
-        })
+        });
     }
 
     $render() {
@@ -203,7 +209,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
      * @param {boolean} shouldRender Whether a re-render should be triggered
      * @param {number|boolean} debounce
      */
-    $updateModel(model: string, value: any, shouldRender = true, debounce: number|boolean = true) {
+    $updateModel(model: string, value: any, shouldRender = true, debounce: number | boolean = true) {
         this.component.set(model, value, shouldRender, debounce);
     }
 
@@ -213,7 +219,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
             return;
         }
 
-        this.updateModelFromElementEvent(target, 'input')
+        this.updateModelFromElementEvent(target, 'input');
     }
 
     private handleChangeEvent(event: Event) {
@@ -222,7 +228,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
             return;
         }
 
-        this.updateModelFromElementEvent(target, 'change')
+        this.updateModelFromElementEvent(target, 'change');
     }
 
     /**
@@ -242,7 +248,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
      *                  skip updating if the on() modifier is passed (e.g. on(change)).
      *                  If not passed, the model will always be updated.
      */
-    private updateModelFromElementEvent(element: Element, eventName: string|null) {
+    private updateModelFromElementEvent(element: Element, eventName: string | null) {
         if (!elementBelongsToThisComponent(element, this.component)) {
             return;
         }
@@ -312,10 +318,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
         const modelDirectives = getAllModelDirectiveFromElements(childController.element);
         const modelBindings = modelDirectives.map(getModelBinding);
 
-        this.component.addChild(
-            childController.component,
-            modelBindings
-        );
+        this.component.addChild(childController.component, modelBindings);
 
         // live:disconnect needs to be registered on the child element directly
         // that's because if the child component is removed from the DOM, then
@@ -343,10 +346,12 @@ export default class extends Controller<HTMLElement> implements LiveController {
         detail.controller = this;
         detail.component = this.proxiedComponent;
 
-        return this.element.dispatchEvent(new CustomEvent(name, {
-            bubbles: canBubble,
-            cancelable,
-            detail
-        }));
+        return this.element.dispatchEvent(
+            new CustomEvent(name, {
+                bubbles: canBubble,
+                cancelable,
+                detail,
+            })
+        );
     }
 }

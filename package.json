@@ -1,14 +1,13 @@
 {
     "private": true,
     "workspaces": [
-        "src/**/Resources/assets",
         "src/**/assets"
     ],
     "scripts": {
         "build": "yarn rollup -c",
         "test": "yarn workspaces run jest",
         "lint": "yarn workspaces run eslint src test",
-        "format": "prettier src/*/Resources/assets/src/*.ts src/*/Resources/assets/test/*.js {,src/*/}*.{json,md} --write",
+        "format": "prettier src/*/assets/src/*.ts src/*/assets/test/*.js {,src/*/}*.{json,md} --write",
         "check-lint": "yarn lint --no-fix",
         "check-format": "yarn format --no-write --check"
     },
@@ -61,7 +60,6 @@
         "overrides": [
             {
                 "files": [
-                    "src/*/Resources/assets/test/**/*.ts",
                     "src/*/assets/test/**/*.ts"
                 ],
                 "extends": [

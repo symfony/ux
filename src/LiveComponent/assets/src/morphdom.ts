@@ -1,12 +1,6 @@
-import {
-    cloneElementWithNewTagName,
-    cloneHTMLElement,
-    setValueOnElement
-} from './dom_utils';
+import { cloneElementWithNewTagName, cloneHTMLElement, setValueOnElement } from './dom_utils';
 import morphdom from 'morphdom';
-import {
-    normalizeAttributesForComparison
-} from './normalize_attributes_for_comparison';
+import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
 import Component from './Component';
 
 export function executeMorphdom(
@@ -15,8 +9,8 @@ export function executeMorphdom(
     modifiedFieldElements: Array<HTMLElement>,
     getElementValue: (element: HTMLElement) => any,
     childComponents: Component[],
-    findChildComponent: (id: string, element: HTMLElement) => HTMLElement|null,
-    getKeyFromElement: (element: HTMLElement) => string|null,
+    findChildComponent: (id: string, element: HTMLElement) => HTMLElement | null,
+    getKeyFromElement: (element: HTMLElement) => string | null
 ) {
     const childComponentMap: Map<HTMLElement, Component> = new Map();
     childComponents.forEach((childComponent) => {
@@ -50,7 +44,7 @@ export function executeMorphdom(
                 return false;
             }
 
-            const childComponent = childComponentMap.get(fromEl) || false
+            const childComponent = childComponentMap.get(fromEl) || false;
             if (childComponent) {
                 return childComponent.updateFromNewElement(toEl);
             }
@@ -58,7 +52,7 @@ export function executeMorphdom(
             // if this field's value has been modified since this HTML was
             // requested, set the toEl's value to match the fromEl
             if (modifiedFieldElements.includes(fromEl)) {
-                setValueOnElement(toEl, getElementValue(fromEl))
+                setValueOnElement(toEl, getElementValue(fromEl));
             }
 
             // https://github.com/patrick-steele-idem/morphdom#can-i-make-morphdom-blaze-through-the-dom-tree-even-faster-yes
@@ -88,6 +82,6 @@ export function executeMorphdom(
             }
 
             return !node.hasAttribute('data-live-ignore');
-        }
+        },
     });
 }

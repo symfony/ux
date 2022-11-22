@@ -4,9 +4,9 @@ parameters:
 		- .
 	excludes_analyse:
 		- vendor/*
-		- Tests/app/var/*
+		- tests/app/var/*
 		# The Symfony Configuration API isn't good enough to be analysed
-		- DependencyInjection/Configuration.php
+		- src/DependencyInjection/Configuration.php
 	inferPrivatePropertyTypeFromConstructor: true
 	bootstrapFiles:
 		- vendor/bin/.phpunit/phpunit/vendor/autoload.php

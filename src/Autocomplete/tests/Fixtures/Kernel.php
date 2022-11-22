@@ -31,6 +31,7 @@ use Symfony\UX\Autocomplete\DependencyInjection\AutocompleteFormTypePass;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter\CustomProductAutocompleter;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Form\ProductType;
 use Twig\Environment;
+use Zenstruck\Foundry\ZenstruckFoundryBundle;
 
 final class Kernel extends BaseKernel
 {
@@ -61,6 +62,7 @@ final class Kernel extends BaseKernel
         yield new AutocompleteBundle();
         yield new SecurityBundle();
         yield new MakerBundle();
+        yield new ZenstruckFoundryBundle();
     }
 
     protected function configureContainer(ContainerConfigurator $c): void
@@ -77,6 +79,10 @@ final class Kernel extends BaseKernel
 
         $c->extension('twig', [
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
+        ]);
+
+        $c->extension('zenstruck_foundry', [
+            'auto_refresh_proxies' => false,
         ]);
 
         $c->extension('doctrine', [
@@ -144,7 +150,7 @@ final class Kernel extends BaseKernel
 
     protected function configureRoutes(RoutingConfigurator $routes): void
     {
-        $routes->import('@AutocompleteBundle/Resources/routes.php')
+        $routes->import('@AutocompleteBundle/config/routes.php')
             ->prefix('/test/autocomplete');
 
         $routes->add('test_form', '/test-form')->controller('kernel::testForm');

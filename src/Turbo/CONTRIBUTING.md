@@ -12,7 +12,7 @@ Start a Mercure Hub:
 Install the test app:
 
     $ composer install
-    $ cd Tests/app
+    $ cd tests/app
     $ yarn install
     $ yarn build
     $ php public/index.php doctrine:schema:create
