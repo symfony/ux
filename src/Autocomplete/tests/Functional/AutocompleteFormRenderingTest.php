@@ -93,4 +93,25 @@ class AutocompleteFormRenderingTest extends KernelTestCase
             ->assertContains('Sugar')
         ;
     }
+
+    public function testMultipleDoesNotFailWithoutSelectedChoices()
+    {
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test-form')
+            ->assertElementCount('#product_ingredients_autocomplete option', 0)
+            ->assertNotContains('Flour')
+            ->assertNotContains('Sugar')
+            ->post('/test-form', [
+                'body' => [
+                    'product' => [
+                        'ingredients' => [
+                            'autocomplete' => [],
+                        ],
+                    ],
+                ],
+            ])
+            ->assertElementCount('#product_ingredients_autocomplete option', 0)
+        ;
+    }
 }
