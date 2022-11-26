@@ -92,7 +92,7 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
     private function getLiveAttributes(MountedComponent $mounted, ComponentMetadata $metadata): ComponentAttributes
     {
         $name = $mounted->getName();
-        $url = $this->container->get(UrlGeneratorInterface::class)->generate('ux_live_component', ['component' => $name]);
+        $url = $this->container->get(UrlGeneratorInterface::class)->generate($metadata->get('route'), ['component' => $name]);
         /** @var DehydratedComponent $dehydratedComponent */
         $dehydratedComponent = $this->container->get(LiveComponentHydrator::class)->dehydrate($mounted);
         /** @var TwigAttributeHelper $helper */

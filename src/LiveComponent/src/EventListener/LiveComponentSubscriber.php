@@ -313,7 +313,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
     private function isLiveComponentRequest(Request $request): bool
     {
-        return 'ux_live_component' === $request->attributes->get('_route');
+        return str_starts_with($request->attributes->get('_route'), 'ux_live_component');
     }
 
     private function hydrateComponent(object $component, string $componentName, Request $request): MountedComponent
