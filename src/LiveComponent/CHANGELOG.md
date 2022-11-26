@@ -1,5 +1,19 @@
 # CHANGELOG
 
+## 2.6.0
+
+-   [BC BREAK]: The path to `live_component.xml` changed _and_ the import now
+    MUST have a `prefix`: you should update your route import accordingly (the
+    name of the route also changed to `ux_live_component`):
+
+```diff
+# config/routes/ux_live_component.yaml
+live_component:
+-    resource: '@LiveComponentBundle/Resources/config/routing/live_component.xml'
++    resource: '@LiveComponentBundle/config/routes.php'
++    prefix: /_components
+```
+
 ## 2.5.0
 
 -   [BEHAVIOR CHANGE] Previously, Ajax calls could happen in parallel (if
@@ -26,11 +40,37 @@
     <input data-model="firstName">
     ```
 
--   Added the ability to add `data-loading` behavior, which is only activated
+-   [BEHAVIOR CHANGE] The way that child components re-render when a parent re-renders
+    has changed, but shouldn't be drastically different. Child components will now
+    avoid re-rendering if no "input" to the component changed _and_ will maintain
+    any writable `LiveProp` values after the re-render. Also, the re-render happens
+    in a separate Ajax call after the parent has finished re-rendering.
+
+-   [BEHAVIOR CHANGE] If a model is updated, but the new value is equal to the old
+    one, a re-render will now be avoided.
+
+-   [BEHAVIOR CHANGE] Priority of `DoctrineObjectNormalizer` changed from 100 to -100
+    so that any custom normalizers are used before trying `DoctrineObjectNormalizer`.
+
+-   [BC BREAK] The `live:update-model` and `live:render` events are not longer
+    dispatched. You can now use the "hook" system directly on the `Component` object/
+
+-   [BC BREAK] The `LiveComponentHydrator::dehydrate()` method now returns a
+    `DehydratedComponent` object.
+
+-   Added a new JavaScript `Component` object, which is attached to the `__component`
+    property of all root component elements.
+
+-   the ability to add `data-loading` behavior, which is only activated
     when a specific **action** is triggered - e.g. `<span data-loading="action(save)|show">Loading</span>`.
 
 -   Added the ability to add `data-loading` behavior, which is only activated
     when a specific **model** has been updated - e.g. `<span data-loading="model(firstName)|show">Loading</span>`.
+
+-   Unexpected Ajax errors are now displayed in a modal to ease debugging! #467.
+
+-   Fixed bug where sometimes a live component was broken after hitting "Back:
+    in your browser - #436.
 
 ## 2.4.0
 

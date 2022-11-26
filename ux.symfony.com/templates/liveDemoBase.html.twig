@@ -12,10 +12,11 @@
     </div>
 
     {% for message in app.flashes('live_demo_success') %}
-        <div class="alert alert-success" data-turbo-cache="false">{{ message }}</div>
+        <div class="container-fluid container-xxl alert alert-success" data-turbo-cache="false">{{ message }}</div>
     {% endfor %}
 
     <div class="container-fluid container-xxl px-5 pt-5">
+
         {% block code_block_full %}
         <div class="arrow mb-3 d-none d-md-block"></div>
 

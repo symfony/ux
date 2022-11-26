@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\EventListener;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -46,6 +47,7 @@ use Symfony\UX\TwigComponent\MountedComponent;
 class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {
     private const HTML_CONTENT_TYPE = 'application/vnd.live-component+html';
+    private const REDIRECT_HEADER = 'X-Live-Redirect';
 
     public function __construct(private ContainerInterface $container)
     {
@@ -74,8 +76,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         }
 
         // the default "action" is get, which does nothing
-        $action = $request->get('action', 'get');
-        $componentName = (string) $request->get('component');
+        $action = $request->attributes->get('action', 'get');
+        $componentName = (string) $request->attributes->get('component');
 
         $request->attributes->set('_component_name', $componentName);
 
@@ -118,10 +120,10 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             $request->attributes->set('_controller', 'ux.live_component.batch_action_controller');
             $request->attributes->set('serviceId', $metadata->getServiceId());
             $request->attributes->set('actions', $data['actions']);
-            $request->attributes->set('_mounted_component', $this->container->get(LiveComponentHydrator::class)->hydrate(
+            $request->attributes->set('_mounted_component', $this->hydrateComponent(
                 $this->container->get(ComponentFactory::class)->get($componentName),
-                $data['data'],
                 $componentName,
+                $request
             ));
             $request->attributes->set('_is_live_batch_action', true);
 
@@ -162,14 +164,16 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         /*
          * Either we:
          *      A) We do NOT have a _mounted_component, so hydrate $component
+         *          (normal situation, rendering a single component)
          *      B) We DO have a _mounted_component, so no need to hydrate,
          *          but we DO need to make sure it's set as the controller.
+         *          (sub-request during batch controller)
          */
         if (!$request->attributes->has('_mounted_component')) {
-            $request->attributes->set('_mounted_component', $this->container->get(LiveComponentHydrator::class)->hydrate(
+            $request->attributes->set('_mounted_component', $this->hydrateComponent(
                 $component,
-                $this->parseDataFor($request)['data'],
-                $request->attributes->get('_component_name')
+                $request->attributes->get('_component_name'),
+                $request
             ));
         } else {
             // override the component with our already-mounted version
@@ -196,26 +200,31 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
      *     data: array,
      *     args: array,
      *     actions: array
+     *     childrenFingerprints: array
      * }
      */
-    private function parseDataFor(Request $request): array
+    private static function parseDataFor(Request $request): array
     {
         if (!$request->attributes->has('_live_request_data')) {
             if ($request->query->has('data')) {
-                return [
-                    'data' => json_decode($request->query->get('data'), true, 512, \JSON_THROW_ON_ERROR),
+                $liveRequestData = [
+                    'data' => self::parseJsonFromQuery($request, 'data'),
                     'args' => [],
                     'actions' => [],
+                    'childrenFingerprints' => self::parseJsonFromQuery($request, 'childrenFingerprints'),
+                ];
+            } else {
+                $requestData = $request->toArray();
+
+                $liveRequestData = [
+                    'data' => $requestData['data'] ?? [],
+                    'args' => $requestData['args'] ?? [],
+                    'actions' => $requestData['actions'] ?? [],
+                    'childrenFingerprints' => $requestData['childrenFingerprints'] ?? [],
                 ];
             }
 
-            $requestData = $request->toArray();
-
-            $request->attributes->set('_live_request_data', [
-                'data' => $requestData['data'] ?? [],
-                'args' => $requestData['args'] ?? [],
-                'actions' => $requestData['actions'] ?? [],
-            ]);
+            $request->attributes->set('_live_request_data', $liveRequestData);
         }
 
         return $request->attributes->get('_live_request_data');
@@ -274,7 +283,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         $event->setResponse(new Response(null, 204, [
             'Location' => $response->headers->get('Location'),
-            'Content-Type' => self::HTML_CONTENT_TYPE,
+            self::REDIRECT_HEADER => 1,
         ]));
     }
 
@@ -304,6 +313,38 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
     private function isLiveComponentRequest(Request $request): bool
     {
-        return 'live_component' === $request->attributes->get('_route');
+        return 'ux_live_component' === $request->attributes->get('_route');
+    }
+
+    private function hydrateComponent(object $component, string $componentName, Request $request): MountedComponent
+    {
+        $hydrator = $this->container->get(LiveComponentHydrator::class);
+        \assert($hydrator instanceof LiveComponentHydrator);
+
+        $mountedComponent = $hydrator->hydrate(
+            $component,
+            $this->parseDataFor($request)['data'],
+            $componentName
+        );
+
+        $mountedComponent->addExtraMetadata(
+            InterceptChildComponentRenderSubscriber::CHILDREN_FINGERPRINTS_METADATA_KEY,
+            $this->parseDataFor($request)['childrenFingerprints']
+        );
+
+        return $mountedComponent;
+    }
+
+    private static function parseJsonFromQuery(Request $request, string $key): array
+    {
+        if (!$request->query->has($key)) {
+            return [];
+        }
+
+        try {
+            return json_decode($request->query->get($key), true, 512, \JSON_THROW_ON_ERROR);
+        } catch (\JsonException $exception) {
+            throw new JsonException(sprintf('Invalid JSON on query string %s.', $key), 0, $exception);
+        }
     }
 }

@@ -19,11 +19,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Symfony\\UX\\Notify\\": "."
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+            "Symfony\\UX\\Notify\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Notify\\Tests\\": "tests/"
+        }
     },
     "require": {
         "php": ">=8.1",

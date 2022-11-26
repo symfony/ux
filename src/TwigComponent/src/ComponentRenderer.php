@@ -14,7 +14,9 @@ namespace Symfony\UX\TwigComponent;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
-use Symfony\UX\TwigComponent\EventListener\PreRenderEvent;
+use Symfony\UX\TwigComponent\Event\PostRenderEvent;
+use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
+use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Twig\Environment;
 use Twig\Extension\EscaperExtension;
 
@@ -25,7 +27,7 @@ use Twig\Extension\EscaperExtension;
  *
  * @internal
  */
-final class ComponentRenderer
+final class ComponentRenderer implements ComponentRendererInterface
 {
     private bool $safeClassesRegistered = false;
 
@@ -33,20 +35,38 @@ final class ComponentRenderer
         private Environment $twig,
         private EventDispatcherInterface $dispatcher,
         private ComponentFactory $factory,
-        private PropertyAccessorInterface $propertyAccessor
+        private PropertyAccessorInterface $propertyAccessor,
+        private ComponentStack $componentStack
     ) {
     }
 
     public function createAndRender(string $name, array $props = []): string
     {
+        $event = new PreCreateForRenderEvent($name, $props);
+        $this->dispatcher->dispatch($event);
+
+        // allow the process to be short-circuited
+        if (null !== $rendered = $event->getRenderedString()) {
+            return $rendered;
+        }
+
         return $this->render($this->factory->create($name, $props));
     }
 
     public function render(MountedComponent $mounted): string
     {
+        $this->componentStack->push($mounted);
+
         $event = $this->preRender($mounted);
 
-        return $this->twig->render($event->getTemplate(), $event->getVariables());
+        try {
+            return $this->twig->render($event->getTemplate(), $event->getVariables());
+        } finally {
+            $this->componentStack->pop();
+
+            $event = new PostRenderEvent($mounted);
+            $this->dispatcher->dispatch($event);
+        }
     }
 
     public function embeddedContext(string $name, array $props, array $context): array

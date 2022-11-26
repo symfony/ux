@@ -106,6 +106,7 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
             ->setArguments([
                 new Reference('ux.autocomplete.autocompleter_registry'),
                 new Reference('ux.autocomplete.results_executor'),
+                new Reference('router'),
             ])
             ->addTag('controller.service_arguments')
         ;

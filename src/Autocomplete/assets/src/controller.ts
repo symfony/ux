@@ -8,13 +8,15 @@ export default class extends Controller {
         optionsAsHtml: Boolean,
         noResultsFoundText: String,
         noMoreResultsText: String,
+        minCharacters: Number,
         tomSelectOptions: Object,
-    }
+    };
 
     readonly urlValue: string;
     readonly optionsAsHtmlValue: boolean;
     readonly noMoreResultsTextValue: string;
     readonly noResultsFoundTextValue: string;
+    readonly minCharactersValue: number;
     readonly tomSelectOptionsValue: object;
     tomSelect: TomSelect;
 
@@ -30,7 +32,7 @@ export default class extends Controller {
 
     connect() {
         if (this.urlValue) {
-            this.tomSelect = this.#createAutocompleteWithRemoteData(this.urlValue);
+            this.tomSelect = this.#createAutocompleteWithRemoteData(this.urlValue, this.minCharactersValue);
 
             return;
         }
@@ -51,7 +53,7 @@ export default class extends Controller {
     }
 
     #getCommonConfig(): Partial<TomSettings> {
-        const plugins: any = {}
+        const plugins: any = {};
 
         // multiple values excepted if this is NOT A select (i.e. input) or a multiple select
         const isMultiple = !this.selectElement || this.selectElement.multiple;
@@ -78,7 +80,7 @@ export default class extends Controller {
             onItemAdd: () => {
                 this.tomSelect.setTextboxValue('');
             },
-            onInitialize: function() {
+            onInitialize: function () {
                 const tomSelect = this as any;
                 tomSelect.wrapper.setAttribute('data-live-ignore', '');
             },
@@ -112,19 +114,19 @@ export default class extends Controller {
                 };
             },
             render: {
-                item: function(item: any) {
+                item: function (item: any) {
                     return `<div>${item.text}</div>`;
                 },
-                option: function(item: any) {
+                option: function (item: any) {
                     return `<div>${item.text}</div>`;
-                }
+                },
             },
         });
 
         return this.#createTomSelect(config);
     }
 
-    #createAutocompleteWithRemoteData(autocompleteEndpointUrl: string): TomSelect {
+    #createAutocompleteWithRemoteData(autocompleteEndpointUrl: string, minCharacterLength: number): TomSelect {
         const config: Partial<TomSettings> = this.#mergeObjects(this.#getCommonConfig(), {
             firstUrl: (query: string) => {
                 const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
@@ -137,22 +139,30 @@ export default class extends Controller {
             load: function (query: string, callback: (results?: any) => void) {
                 const url = this.getUrl(query);
                 fetch(url)
-                    .then(response => response.json())
+                    .then((response) => response.json())
                     // important: next_url must be set before invoking callback()
-                    .then(json => { this.setNextUrl(query, json.next_page); callback(json.results) })
+                    .then((json) => {
+                        this.setNextUrl(query, json.next_page);
+                        callback(json.results);
+                    })
                     .catch(() => callback());
             },
+            shouldLoad: function (query: string) {
+                const minLength = minCharacterLength || 3;
+
+                return query.length >= minLength;
+            },
             // avoid extra filtering after results are returned
-            score: function(search: string) {
-                return function(item: any) {
+            score: function (search: string) {
+                return function (item: any) {
                     return 1;
                 };
             },
             render: {
-                option: function(item: any) {
+                option: function (item: any) {
                     return `<div>${item.text}</div>`;
                 },
-                item: function(item: any) {
+                item: function (item: any) {
                     return `<div>${item.text}</div>`;
                 },
                 no_more_results: (): string => {
@@ -179,7 +189,7 @@ export default class extends Controller {
     /**
      * Returns the element, but only if it's a select element.
      */
-    get selectElement(): HTMLSelectElement|null {
+    get selectElement(): HTMLSelectElement | null {
         if (!(this.element instanceof HTMLSelectElement)) {
             return null;
         }
@@ -190,7 +200,7 @@ export default class extends Controller {
     /**
      * Getter to help typing.
      */
-    get formElement(): HTMLInputElement|HTMLSelectElement {
+    get formElement(): HTMLInputElement | HTMLSelectElement {
         if (!(this.element instanceof HTMLInputElement) && !(this.element instanceof HTMLSelectElement)) {
             throw new Error('Autocomplete Stimulus controller can only be used no an <input> or <select>.');
         }

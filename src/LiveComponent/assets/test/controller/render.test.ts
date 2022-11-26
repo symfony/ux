@@ -9,15 +9,15 @@
 
 'use strict';
 
-import { shutdownTest, createTest, initComponent } from '../tools';
-import { createEvent, fireEvent, getByText, waitFor } from '@testing-library/dom';
+import { shutdownTests, createTest, initComponent } from '../tools';
+import { getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import fetchMock from 'fetch-mock-jest';
 import { htmlToElement } from '../../src/dom_utils';
 
 describe('LiveController rendering Tests', () => {
     afterEach(() => {
-        shutdownTest();
+        shutdownTests();
     })
 
     it('can re-render via an Ajax call', async () => {
@@ -40,12 +40,12 @@ describe('LiveController rendering Tests', () => {
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name: Kevin'));
         // data returned from the server is used for the new "data"
-        expect(test.controller.dataValue).toEqual({firstName: 'Kevin'});
+        expect(test.component.valueStore.all()).toEqual({firstName: 'Kevin'});
     });
 
     it('conserves the value of model field that was modified after a render request', async () => {
         const test = await createTest({ title: 'greetings', comment: '' }, (data: any) => `
-            <div ${initComponent(data, { debounce: 1 })}>
+            <div ${initComponent(data, {}, { debounce: 1 })}>
                 <input data-model="title" value="${data.title}">
                 <!--
                     norender for comment to avoid triggering a 2nd Ajax call.
@@ -86,7 +86,7 @@ describe('LiveController rendering Tests', () => {
         // the server returned comment as ''. However, this model WAS set
         // during the last render, and that has not been taken into account yet.
         // and so, like with the comment textarea, the client-side value is kept
-        expect(test.controller.dataValue).toEqual({
+        expect(test.component.valueStore.all()).toEqual({
             title: 'greetings!!',
             comment: 'I had a great time'
         });
@@ -94,7 +94,7 @@ describe('LiveController rendering Tests', () => {
         // trigger render: the new comment data *will* now be sent
         test.expectsAjaxCall('get')
             // just repeat what we verified from above
-            .expectSentData(test.controller.dataValue)
+            .expectSentData(test.component.valueStore.all())
             .serverWillChangeData((data: any) => {
                 // to be EXTRA complicated, the server will change the comment
                 // on the client, we should now recognize that the latest comment
@@ -111,7 +111,7 @@ describe('LiveController rendering Tests', () => {
 
     it('conserves the value of an unmapped field that was modified after a render request', async () => {
         const test = await createTest({ title: 'greetings' }, (data: any) => `
-            <div ${initComponent(data, { debounce: 1 })}>
+            <div ${initComponent(data, {}, { debounce: 1 })}>
                 <input data-model="title" value="${data.title}">
                 <!-- An unmapped field -->
                 <textarea></textarea>
@@ -230,9 +230,9 @@ describe('LiveController rendering Tests', () => {
             .delayResponse(100)
             .init();
 
-        test.controller.$render();
-        // imitate navigating away
-        fireEvent(window, createEvent('beforeunload', window));
+        test.component.render();
+        // trigger disconnect
+        test.element.removeAttribute('data-controller')
 
         // wait for the fetch to finish
         await fetchMock.flush();
@@ -241,9 +241,41 @@ describe('LiveController rendering Tests', () => {
         expect(test.element).not.toHaveTextContent('Hello');
     });
 
+    it('renders if the page is navigating away and back', async () => {
+        const test = await createTest({greeting: 'aloha!'}, (data: any) => `
+            <div ${initComponent(data)}>${data.greeting}</div>
+        `);
+
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data) => {
+                data.greeting = 'Hello';
+            })
+            .delayResponse(100)
+            .init();
+
+        test.component.render();
+
+        // trigger controller disconnect
+        test.element.removeAttribute('data-controller')
+        // wait for the fetch to finish
+        await fetchMock.flush();
+
+        expect(test.element).toHaveTextContent('aloha!')
+
+        // trigger connect
+        test.element.setAttribute('data-controller', 'live')
+        test.component.render();
+        // wait for the fetch to finish
+        await fetchMock.flush();
+
+        // the re-render should have happened
+        expect(test.element).toHaveTextContent('Hello');
+    });
+
     it('waits for the previous request to finish & batches changes', async () => {
         const test = await createTest({ title: 'greetings', contents: '' }, (data: any) => `
-            <div ${initComponent(data, { debounce: 1 })}>
+            <div ${initComponent(data, {}, { debounce: 1 })}>
                 <input data-model="title" value="${data.title}">
                 <textarea data-model="contents">${data.contents}</textarea>
 
@@ -282,7 +314,7 @@ describe('LiveController rendering Tests', () => {
 
     it('batches re-render requests together that occurred during debounce', async () => {
         const test = await createTest({ title: 'greetings', contents: '' }, (data: any) => `
-            <div ${initComponent(data, { debounce: 50 })}>
+            <div ${initComponent(data, {}, { debounce: 50 })}>
                 <input data-model="title" value="${data.title}">
                 <textarea data-model="contents">${data.contents}</textarea>
 

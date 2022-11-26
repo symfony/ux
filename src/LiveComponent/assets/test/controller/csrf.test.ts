@@ -9,17 +9,17 @@
 
 'use strict';
 
-import { createTest, initComponent, shutdownTest } from '../tools';
+import { createTest, initComponent, shutdownTests } from '../tools';
 import { getByText, waitFor } from '@testing-library/dom';
 
 describe('LiveController CSRF Tests', () => {
     afterEach(() => {
-        shutdownTest();
+        shutdownTests();
     })
 
     it('Sends the CSRF token on an action', async () => {
         const test = await createTest({ isSaved: 0 }, (data: any) => `
-            <div ${initComponent(data, { csrf: '123TOKEN' })}>
+            <div ${initComponent(data, {}, { csrf: '123TOKEN' })}>
                 ${data.isSaved ? 'Saved' : ''}
                 <button
                     data-action="live#action"

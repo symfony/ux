@@ -12,10 +12,10 @@
 namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
-use Zenstruck\Browser\Response\HtmlResponse;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
@@ -41,7 +41,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             'prop4' => 'value4',
         ]);
 
-        $dehydrated = $this->dehydrateComponent($component);
+        $dehydrated = $this->dehydrateComponent($component)->all();
 
         $this->browser()
             ->throwExceptions()
@@ -57,7 +57,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testCanExecuteComponentAction(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'))->all();
         $token = null;
 
         $this->browser()
@@ -66,9 +66,9 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 1')
-            ->use(function (HtmlResponse $response) use (&$token) {
+            ->use(function (Crawler $crawler) use (&$token) {
                 // get a valid token to use for actions
-                $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
+                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
             })
             ->post('/_components/component2/increase', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
@@ -136,7 +136,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testDisabledCsrfTokenForComponentDoesNotFail(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('disabled_csrf'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('disabled_csrf'))->all();
 
         $this->browser()
             ->throwExceptions()
@@ -153,32 +153,32 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
-    public function testBeforeReRenderHookOnlyExecutedDuringAjax(): void
+    public function testPreReRenderHookOnlyExecutedDuringAjax(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'))->all();
 
         $this->browser()
-            ->visit('/render-template/template1')
+            ->visit('/render-template/render_component2')
             ->assertSuccessful()
-            ->assertSee('BeforeReRenderCalled: No')
+            ->assertSee('PreReRenderCalled: No')
             ->get('/_components/component2?data='.urlencode(json_encode($dehydrated)))
             ->assertSuccessful()
-            ->assertSee('BeforeReRenderCalled: Yes')
+            ->assertSee('PreReRenderCalled: Yes')
         ;
     }
 
     public function testCanRedirectFromComponentAction(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'))->all();
         $token = null;
 
         $this->browser()
             ->throwExceptions()
             ->get('/_components/component2?data='.urlencode(json_encode($dehydrated)))
             ->assertSuccessful()
-            ->use(function (HtmlResponse $response) use (&$token) {
+            ->use(function (Crawler $crawler) use (&$token) {
                 // get a valid token to use for actions
-                $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
+                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
             })
             ->interceptRedirects()
             // with no custom header, it redirects like a normal browser
@@ -203,7 +203,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testInjectsLiveArgs(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('component6'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component6'))->all();
         $token = null;
 
         $arguments = ['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3'];
@@ -215,9 +215,9 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertContains('Arg1: not provided')
             ->assertContains('Arg2: not provided')
             ->assertContains('Arg3: not provided')
-            ->use(function (HtmlResponse $response) use (&$token) {
+            ->use(function (Crawler $crawler) use (&$token) {
                 // get a valid token to use for actions
-                $token = $response->crawler()->filter('div')->first()->attr('data-live-csrf-value');
+                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
             })
             ->post('/_components/component6/inject', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
@@ -236,7 +236,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testWithNullableEntity(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_nullable_entity'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_nullable_entity'))->all();
 
         $this->browser()
             ->throwExceptions()

@@ -4,7 +4,7 @@
             v-model="search"
             class="form-control"
             type="search"
-            placeholder="This search is built in Vue!"
+            placeholder="This search is built in Vue.js!"
         />
 
         <div class="mt-3">

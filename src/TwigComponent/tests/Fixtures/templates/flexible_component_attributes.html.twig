@@ -1,0 +1,7 @@
+{% set attributes1 = {propA: 'A1', propB: 'B1' } %}
+{% set attributes3 = {propA: 'A3', propB: 'B3' } %}
+
+{{ component('component_a', attributes1) }}
+{{ component('component_a', {propA: 'A2', propB: 'B0' }|merge({propB: 'B2'})) }}
+{% component 'component_a' with attributes3 %}{% endcomponent %}
+{% component 'component_a' with ({propA: 'A4', propB: 'B0' })|merge({propB: 'B4'}) %}{% endcomponent %}

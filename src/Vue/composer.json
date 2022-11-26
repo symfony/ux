@@ -23,11 +23,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Symfony\\UX\\Vue\\": ""
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+            "Symfony\\UX\\Vue\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Vue\\Tests\\": "tests/"
+        }
     },
     "require": {
         "symfony/webpack-encore-bundle": "^1.11"

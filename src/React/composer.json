@@ -19,11 +19,13 @@
     ],
     "autoload": {
         "psr-4": {
-            "Symfony\\UX\\React\\": ""
-        },
-        "exclude-from-classmap": [
-            "/Tests/"
-        ]
+            "Symfony\\UX\\React\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\React\\Tests\\": "tests/"
+        }
     },
     "require": {
         "symfony/webpack-encore-bundle": "^1.11"

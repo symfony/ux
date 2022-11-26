@@ -26,4 +26,9 @@ final class TwigComponentBundle extends Bundle
     {
         $container->addCompilerPass(new TwigComponentPass());
     }
+
+    public function getPath(): string
+    {
+        return \dirname(__DIR__);
+    }
 }

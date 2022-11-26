@@ -66,7 +66,7 @@ jobs:
 
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
-              run: echo "::set-output name=dir::$(yarn cache dir)"
+              run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v2
               id: yarn-cache
@@ -77,15 +77,15 @@ jobs:
                       ${{ runner.os }}-yarn-
 
             - name: Install JavaScript dependencies
-              working-directory: src/Turbo/Tests/app
+              working-directory: src/Turbo/tests/app
               run: yarn install
 
             - name: Build JavaScript
-              working-directory: src/Turbo/Tests/app
+              working-directory: src/Turbo/tests/app
               run: yarn build
 
             - name: Create DB
-              working-directory: src/Turbo/Tests/app
+              working-directory: src/Turbo/tests/app
               run: php public/index.php doctrine:schema:create
 
             - name: Run tests
@@ -128,7 +128,7 @@ jobs:
 
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
-              run: echo "::set-output name=dir::$(yarn cache dir)"
+              run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v2
               id: yarn-cache
@@ -139,15 +139,15 @@ jobs:
                       ${{ runner.os }}-yarn-
 
             - name: Install JavaScript dependencies
-              working-directory: src/Turbo/Tests/app
+              working-directory: src/Turbo/tests/app
               run: yarn install
 
             - name: Build JavaScript
-              working-directory: src/Turbo/Tests/app
+              working-directory: src/Turbo/tests/app
               run: yarn build
 
             - name: Create DB
-              working-directory: src/Turbo/Tests/app
+              working-directory: src/Turbo/tests/app
               run: php public/index.php doctrine:schema:create
 
             - name: Run tests

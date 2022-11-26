@@ -20,7 +20,7 @@ jobs:
             - uses: actions/checkout@master
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
-              run: echo "::set-output name=dir::$(yarn cache dir)"
+              run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
             - uses: actions/cache@v2
               id: yarn-cache
               with:
@@ -40,7 +40,7 @@ jobs:
             - uses: actions/checkout@master
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
-              run: echo "::set-output name=dir::$(yarn cache dir)"
+              run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
             - uses: actions/cache@v2
               id: yarn-cache
               with:
@@ -138,6 +138,15 @@ jobs:
               working-directory: src/LiveComponent
               run: php vendor/bin/simple-phpunit
 
+            - name: Autocomplete Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                working-directory: src/Autocomplete
+                dependency-versions: lowest
+            - name: Autocomplete Tests
+              working-directory: src/Autocomplete
+              run: php vendor/bin/simple-phpunit
+
     tests-php-high-deps:
         runs-on: ubuntu-latest
         steps:
@@ -203,6 +212,14 @@ jobs:
               working-directory: src/React
               run: php vendor/bin/simple-phpunit
 
+            - name: Autocomplete Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                working-directory: src/Autocomplete
+            - name: Autocomplete Tests
+              working-directory: src/Autocomplete
+              run: php vendor/bin/simple-phpunit
+
     tests-php81-high-deps:
         runs-on: ubuntu-latest
         steps:
@@ -226,7 +243,7 @@ jobs:
             - uses: actions/checkout@master
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
-              run: echo "::set-output name=dir::$(yarn cache dir)"
+              run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
             - uses: actions/cache@v2
               id: yarn-cache
               with:

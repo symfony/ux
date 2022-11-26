@@ -1,0 +1,11 @@
+<div{{ attributes }}>
+    Todo List: {{ name }}
+
+    <ul>
+    {% for item in items %}
+        {{ component('todo_item', {
+            text: item.text
+        }) }}
+    {% endfor %}
+    </ul>
+</div>

@@ -29,7 +29,7 @@
         "php": ">=8.0",
         "symfony/property-access": "^5.4|^6.0",
         "symfony/serializer": "^5.4|^6.0",
-        "symfony/ux-twig-component": "^2.1"
+        "symfony/ux-twig-component": "^2.5"
     },
     "require-dev": {
         "doctrine/annotations": "^1.0",
@@ -42,7 +42,7 @@
         "symfony/security-csrf": "^5.4|^6.0",
         "symfony/twig-bundle": "^5.4|^6.0",
         "symfony/validator": "^5.4|^6.0",
-        "zenstruck/browser": "^0.9.1",
+        "zenstruck/browser": "^1.2.0",
         "zenstruck/foundry": "^1.10"
     },
     "conflict": {

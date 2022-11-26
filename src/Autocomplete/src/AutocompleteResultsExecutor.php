@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Autocomplete;
 
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
@@ -28,7 +29,7 @@ final class AutocompleteResultsExecutor
     ) {
     }
 
-    public function fetchResults(EntityAutocompleterInterface $autocompleter, string $query): array
+    public function fetchResults(EntityAutocompleterInterface $autocompleter, string $query, int $page): AutocompleteResults
     {
         if ($this->security && !$autocompleter->isGranted($this->security)) {
             throw new AccessDeniedException('Access denied from autocompleter class.');
@@ -44,16 +45,22 @@ final class AutocompleteResultsExecutor
             $queryBuilder->setMaxResults(10);
         }
 
-        $entities = $queryBuilder->getQuery()->execute();
+        $page = max(1, $page);
+
+        $queryBuilder->setFirstResult(($page - 1) * $queryBuilder->getMaxResults());
+
+        $paginator = new Paginator($queryBuilder);
+
+        $nbPages = (int) ceil($paginator->count() / $queryBuilder->getMaxResults());
 
         $results = [];
-        foreach ($entities as $entity) {
+        foreach ($paginator as $entity) {
             $results[] = [
                 'value' => $autocompleter->getValue($entity),
                 'text' => $autocompleter->getLabel($entity),
             ];
         }
 
-        return $results;
+        return new AutocompleteResults($results, $page < $nbPages);
     }
 }

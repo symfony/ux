@@ -45,7 +45,7 @@ final class AsLiveComponentTest extends TestCase
         $this->assertSame('method5', $methods[0]->getName());
     }
 
-    public function testCanGetBeforeReRenderMethods(): void
+    public function testCanGetPreReRenderMethods(): void
     {
         $methods = iterator_to_array(AsLiveComponent::preReRenderMethods(new Component5()));
 

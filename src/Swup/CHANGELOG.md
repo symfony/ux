@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.6.0
+
+-   [BC BREAK] The `assets/` directory was moved from `Resources/assets/` to `assets/`. Make
+    sure the path in your `package.json` file is updated accordingly.
+
 ## 2.0
 
 -   Support for `stimulus` version 2 was removed and support for `@hotwired/stimulus`

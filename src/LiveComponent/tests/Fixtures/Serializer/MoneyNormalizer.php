@@ -22,7 +22,7 @@ final class MoneyNormalizer implements NormalizerInterface, DenormalizerInterfac
         return new Money(...\explode('|', $data));
     }
 
-    public function supportsDenormalization(mixed $data, string $type, string $format = null)
+    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = [])
     {
         return Money::class === $type;
     }
@@ -32,7 +32,7 @@ final class MoneyNormalizer implements NormalizerInterface, DenormalizerInterfac
         return \implode('|', [$object->amount, $object->currency]);
     }
 
-    public function supportsNormalization(mixed $data, string $format = null)
+    public function supportsNormalization(mixed $data, string $format = null, array $context = [])
     {
         return $data instanceof Money;
     }
