@@ -1,7 +1,7 @@
 // Controller used to check the actual controller was properly booted
-import {Application, Controller} from "@hotwired/stimulus";
-import SvelteController from "../../src/render_controller";
-import MyComponent from "../fixtures/MyComponent.svelte";
+import {Application, Controller} from '@hotwired/stimulus';
+import SvelteController from '../../src/render_controller';
+import MyComponent from '../fixtures/MyComponent.svelte';
 
 class CheckController extends Controller {
     connect() {
