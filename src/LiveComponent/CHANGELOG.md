@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.7.0
+
+- Added a new `route` parameter to `AsLiveComponent`, which allows to choose another route for Ajax calls.
+
 ## 2.6.0
 
 -   [BC BREAK]: The path to `live_component.xml` changed _and_ the import now
