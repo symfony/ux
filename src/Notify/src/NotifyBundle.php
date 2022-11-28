@@ -17,8 +17,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * @author Mathias Arlaud <mathias.arlaud@gmail.com>
  *
  * @final
- *
- * @experimental
  */
 class NotifyBundle extends Bundle
 {

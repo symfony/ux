@@ -15,8 +15,6 @@ namespace Symfony\UX\Chartjs\Model;
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *
  * @final
- *
- * @experimental
  */
 class Chart
 {

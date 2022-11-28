@@ -11,9 +11,6 @@
 
 namespace Symfony\UX\TwigComponent;
 
-/**
- * @experimental
- */
 interface ComponentRendererInterface
 {
     /**

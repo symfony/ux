@@ -13,8 +13,7 @@ namespace Symfony\UX\TwigComponent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
+
  *
  * @immutable
  */

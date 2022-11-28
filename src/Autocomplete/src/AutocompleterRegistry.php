@@ -15,8 +15,6 @@ use Symfony\Component\DependencyInjection\ServiceLocator;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 final class AutocompleterRegistry
 {

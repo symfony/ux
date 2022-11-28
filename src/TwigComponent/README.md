@@ -1,8 +1,5 @@
 # Twig Components
 
-**EXPERIMENTAL** This component is currently experimental and is
-likely to change, or even change drastically.
-
 Twig components give you the power to bind an object to a template, making
 it easier to render and re-use small template "units" - like an "alert",
 markup for a modal, or a category sidebar. A very simple example

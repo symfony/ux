@@ -1,9 +1,6 @@
 Twig Components
 ===============
 
-**EXPERIMENTAL** This component is currently experimental and is likely
-to change, or even change drastically.
-
 Twig components give you the power to bind an object to a template,
 making it easier to render and re-use small template "units" - like an
 "alert", markup for a modal, or a category sidebar:
@@ -791,12 +788,8 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
-However it is currently considered `experimental`_,
-meaning it is not bound to Symfony's BC policy for the moment.
-
 .. _`Live Components`: https://symfony.com/bundles/ux-live-component/current/index.html
 .. _`live component`: https://symfony.com/bundles/ux-live-component/current/index.html
 .. _`Vue`: https://v3.vuejs.org/guide/computed.html
 .. _`Live Nested Components`: https://symfony.com/bundles/ux-live-component/current/index.html#nested-components
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`embed tag`: https://twig.symfony.com/doc/3.x/tags/embed.html

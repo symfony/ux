@@ -169,12 +169,8 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
-However it is currently considered `experimental`_,
-meaning it is not bound to Symfony’s BC policy for the moment.
-
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _`@symfony/stimulus-bridge`: https://github.com/symfony/stimulus-bridge
 .. _`BlurHash implementation`: https://blurha.sh
 .. _`WebpackEncoreBundle v1.10`: https://github.com/symfony/webpack-encore-bundle
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html

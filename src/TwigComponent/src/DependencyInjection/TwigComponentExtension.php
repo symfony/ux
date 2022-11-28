@@ -30,8 +30,7 @@ use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
+
  *
  * @internal
  */

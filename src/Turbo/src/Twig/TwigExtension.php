@@ -18,8 +18,6 @@ use Twig\TwigFunction;
 
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
- *
- * @experimental
  */
 final class TwigExtension extends AbstractExtension
 {

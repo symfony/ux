@@ -17,8 +17,6 @@ use Symfony\UX\Chartjs\Model\Chart;
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *
  * @final
- *
- * @experimental
  */
 class ChartBuilder implements ChartBuilderInterface
 {

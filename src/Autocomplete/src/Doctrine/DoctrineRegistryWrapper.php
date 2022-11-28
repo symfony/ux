@@ -19,8 +19,6 @@ use Symfony\Bridge\Doctrine\ManagerRegistry;
  * Small wrapper around ManagerRegistry to help if Doctrine is missing.
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 class DoctrineRegistryWrapper
 {

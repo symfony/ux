@@ -31,8 +31,6 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
  *  * sse_retry (int) retry field of the SSE
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
- *
- * @experimental
  */
 final class Broadcaster implements BroadcasterInterface
 {

@@ -13,8 +13,6 @@ namespace Symfony\UX\TwigComponent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
  */
 final class ComputedPropertiesProxy
 {

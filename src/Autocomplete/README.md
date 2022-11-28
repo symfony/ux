@@ -2,9 +2,6 @@
 
 Javascript-powered auto-completion functionality for your Symfony forms!
 
-**EXPERIMENTAL** This component is currently experimental and is
-likely to change, or even change drastically.
-
 **This repository is a READ-ONLY sub-tree split**. See
 https://github.com/symfony/ux to create issues or submit pull requests.
 

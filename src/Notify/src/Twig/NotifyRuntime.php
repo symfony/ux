@@ -19,8 +19,6 @@ use Twig\Extension\RuntimeExtensionInterface;
 
 /**
  * @author Mathias Arlaud <mathias.arlaud@gmail.com>
- *
- * @experimental
  */
 final class NotifyRuntime implements RuntimeExtensionInterface
 {

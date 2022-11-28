@@ -15,8 +15,7 @@ namespace Symfony\UX\TwigComponent\Util;
  * Parses the "data-model" format.
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
+
  *
  * @internal
  */

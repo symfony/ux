@@ -18,8 +18,6 @@ use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 final class AutocompleteResultsExecutor
 {

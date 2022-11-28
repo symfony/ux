@@ -148,12 +148,8 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
-However it is currently considered `experimental`_,
-meaning it is not bound to Symfony’s BC policy for the moment.
-
 .. _`Cropper.js`: https://fengyuanchen.github.io/cropperjs/
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _`@symfony/stimulus-bridge`: https://github.com/symfony/stimulus-bridge
 .. _`the Cropper.js options`: https://github.com/fengyuanchen/cropperjs/blob/main/README.md#options
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html

@@ -21,8 +21,6 @@ use Symfony\UX\Turbo\Bridge\Mercure\Broadcaster;
  * @Target({"CLASS"})
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
- *
- * @experimental
  */
 #[\Attribute(\Attribute::TARGET_CLASS | \Attribute::IS_REPEATABLE)]
 final class Broadcast

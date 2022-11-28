@@ -17,8 +17,6 @@ namespace Symfony\UX\TwigComponent\Attribute;
  * properties must be "accessible" (have a getter).
  *
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD)]
 final class ExposeInTemplate

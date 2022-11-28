@@ -20,8 +20,7 @@ use Twig\TwigFunction;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
+
  *
  * @internal
  */

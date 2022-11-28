@@ -24,8 +24,6 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
  * Detects changes made from Doctrine entities and broadcasts updates to the broadcasters.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
- *
- * @experimental
  */
 final class BroadcastListener implements ResetInterface
 {
