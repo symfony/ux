@@ -14,6 +14,9 @@ live_component:
 +    prefix: /_components
 ```
 
+-   Removed `Content-Type` header when returning the empty response redirect.
+-   Fixed bug when re-rendering SVG's (.#557)
+
 ## 2.5.0
 
 -   [BEHAVIOR CHANGE] Previously, Ajax calls could happen in parallel (if

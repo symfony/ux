@@ -24,6 +24,9 @@ class default_1 extends Controller {
     connect() {
         const props = this.propsValue ? this.propsValue : null;
         this._dispatchEvent('react:connect', { component: this.componentValue, props: props });
+        if (!this.componentValue) {
+            throw new Error('No component specified.');
+        }
         const component = window.resolveReactComponent(this.componentValue);
         this._renderReactElement(React.createElement(component, props, null));
         this._dispatchEvent('react:mount', {
