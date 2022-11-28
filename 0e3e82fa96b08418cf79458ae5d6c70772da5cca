@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-11-28T15:07:22Z
+
+Thanks for this! The change just affects compiling the TypeScript, correct? It doesn't affect end-users?
+
+---------------------------------------------------------------------------
+
+by daFish at 2022-11-28T15:08:56Z
+
+Exactly. I encountered the problem after an automated dependency update didn't work because I couldn't compile to Javascript anymore.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-11-28T15:10:52Z
+
+Ok, thanks! I see this is still a draft - is there more to add? Or are you waiting on those 2 linked issues to see if the problem might be resolved/altered there?
+
+---------------------------------------------------------------------------
+
+by daFish at 2022-11-28T15:11:57Z
+
+I wasn't sure if there is something else to add.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-11-28T15:16:32Z
+
+Me either! But I also didn't see what the original build failure was. But this seems reasonable.
