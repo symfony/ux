@@ -25,6 +25,6 @@
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
         "fetch-mock-jest": "^1.5.1",
-        "tom-select": "^2.0.1"
+        "tom-select": "^2.2.2"
     }
 }

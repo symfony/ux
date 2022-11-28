@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+-   Add support for recent versions of Tom Select
+
 ## 2.6.0
 
 -   [BC BREAK]: The path to `routes.php` changed and you should update your

@@ -1,6 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import TomSelect from 'tom-select';
-import { TomSettings } from 'tom-select/dist/types/types';
+import { TomSettings, TomTemplates } from 'tom-select/dist/types/types';
 
 export default class extends Controller {
     static values = {
@@ -69,12 +69,14 @@ export default class extends Controller {
             plugins.virtual_scroll = {};
         }
 
-        const config: Partial<TomSettings> = {
-            render: {
-                no_results: () => {
-                    return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
-                },
+        const render: Partial<TomTemplates> = {
+            no_results: () => {
+                return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
             },
+        };
+
+        const config: Partial<TomSettings> = {
+            render: render,
             plugins: plugins,
             // clear the text input after selecting a value
             onItemAdd: () => {
