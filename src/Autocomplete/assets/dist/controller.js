@@ -64,6 +64,13 @@ class default_1 extends Controller {
         }
         return this.element;
     }
+    get preload() {
+        if (this.preloadValue == 'false')
+            return false;
+        if (this.preloadValue == 'true')
+            return true;
+        return this.preloadValue;
+    }
 }
 _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _default_1_getCommonConfig() {
     const plugins = {};
@@ -158,7 +165,7 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
                 return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
             },
         },
-        preload: 'focus',
+        preload: this.preload,
     });
     return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createTomSelect).call(this, config);
 }, _default_1_stripTags = function _default_1_stripTags(string) {
@@ -180,6 +187,7 @@ default_1.values = {
     noMoreResultsText: String,
     minCharacters: Number,
     tomSelectOptions: Object,
+    preload: String,
 };
 
 export { default_1 as default };
