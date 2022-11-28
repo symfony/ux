@@ -18,6 +18,7 @@ ux_autocomplete:
 ```
 
 -   Fix issue where `max_results` was not passed as a Stimulus value (#538)
+-   Add all possible stylesheets for tom-select to the autoimport to choose from
 
 ## 2.5.0
 
