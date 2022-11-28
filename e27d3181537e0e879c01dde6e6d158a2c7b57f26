@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-11-21T18:11:13Z
+
+Thanks for the reproducer test - super useful. I can't think, immediately, what the problem might be - maybe something in morphdom? Unless someone beats me to it (which would be great!) I'll check it out when I have some time.
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-11-21T18:13:32Z
+
+Thought about morphdom too, but they have svg tests,so not sure how this could happen currently..
+
+---------------------------------------------------------------------------
+
+by norkunas at 2022-11-23T08:23:24Z
+
+Found the root cause and added a fix.
