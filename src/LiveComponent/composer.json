@@ -29,7 +29,9 @@
         "php": ">=8.0",
         "symfony/property-access": "^5.4|^6.0",
         "symfony/serializer": "^5.4|^6.0",
-        "symfony/ux-twig-component": "^2.5"
+        "symfony/twig-bundle": "^5.4|^6.0",
+        "symfony/ux-twig-component": "^2.5",
+        "twig/twig": "^2.0|^3.0"
     },
     "require-dev": {
         "doctrine/annotations": "^1.0",
@@ -40,7 +42,6 @@
         "symfony/framework-bundle": "^5.4|^6.0",
         "symfony/phpunit-bridge": "^6.0",
         "symfony/security-csrf": "^5.4|^6.0",
-        "symfony/twig-bundle": "^5.4|^6.0",
         "symfony/validator": "^5.4|^6.0",
         "zenstruck/browser": "^1.2.0",
         "zenstruck/foundry": "^1.10"
