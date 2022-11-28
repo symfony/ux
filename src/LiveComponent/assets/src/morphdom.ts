@@ -40,7 +40,10 @@ export function executeMorphdom(
                 return true;
             }
 
-            if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
+            if (
+                !(fromEl instanceof HTMLElement || fromEl instanceof SVGElement) ||
+                !(toEl instanceof HTMLElement || toEl instanceof SVGElement)
+            ) {
                 return false;
             }
 

@@ -1208,7 +1208,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
             if (fromEl === rootFromElement) {
                 return true;
             }
-            if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
+            if (!(fromEl instanceof HTMLElement || fromEl instanceof SVGElement) || !(toEl instanceof HTMLElement || toEl instanceof SVGElement)) {
                 return false;
             }
             const childComponent = childComponentMap.get(fromEl) || false;
