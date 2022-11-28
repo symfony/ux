@@ -21,6 +21,12 @@ export default class extends Controller {
 
     static targets = ['input', 'placeholder', 'preview', 'previewClearButton', 'previewFilename', 'previewImage'];
 
+    static values = {
+        numberOfFiles: Number
+    }
+
+    readonly numberOfFilesValue: number;
+
     connect() {
         // Reset when connecting to work with Turbolinks
         this.clear();
@@ -55,7 +61,7 @@ export default class extends Controller {
             }
 
             // Hide the input and placeholder
-            this.inputTarget.style.display = 'none';
+            //this.inputTarget.style.display = 'none'; // hide only, when max number is reached
             this.placeholderTarget.style.display = 'none';
 
             // Show the filename in preview

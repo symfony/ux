@@ -24,7 +24,6 @@ class default_1 extends Controller {
             if (typeof file === 'undefined') {
                 return;
             }
-            this.inputTarget.style.display = 'none';
             this.placeholderTarget.style.display = 'none';
             this.previewFilenameTarget.textContent = file.name;
             this.previewTarget.style.display = 'flex';
@@ -50,6 +49,9 @@ class default_1 extends Controller {
         this.dispatch(name, { detail: payload, prefix: 'dropzone' });
     }
 }
+default_1.values = {
+    numberOfFiles: Number
+};
 default_1.targets = ['input', 'placeholder', 'preview', 'previewClearButton', 'previewFilename', 'previewImage'];
 
 export { default_1 as default };
