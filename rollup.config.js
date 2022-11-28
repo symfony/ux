@@ -38,7 +38,7 @@ const wildcardExternalsPlugin = (peerDependencies) => ({
     }
 });
 
-const files = glob.sync("src/React/assets/src/*controller.ts");
+const files = glob.sync('src/*/assets/src/*controller.ts');
 const packages = files.map((file) => {
     const absolutePath = path.join(__dirname, file);
     const packageData = require(pkgUp.sync({ cwd: absolutePath }));

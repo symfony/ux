@@ -51,7 +51,6 @@ final class Kernel extends BaseKernel
         yield new FrameworkBundle();
         yield new TwigBundle();
         yield new DoctrineBundle();
-        yield new ZenstruckFoundryBundle();
         yield new TwigComponentBundle();
         yield new LiveComponentBundle();
         yield new ZenstruckFoundryBundle();

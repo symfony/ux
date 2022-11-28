@@ -14,7 +14,6 @@
                 "enabled": true,
                 "autoimport": {
                     "tom-select/dist/css/tom-select.default.css": true,
-                    "tom-select/dist/css/tom-select.bootstrap4.css": false,
                     "tom-select/dist/css/tom-select.bootstrap5.css": false
                 }
             }
@@ -22,7 +21,7 @@
     },
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "tom-select": "^2.0.1"
+        "tom-select": "^2.2.2"
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",

@@ -19,6 +19,7 @@ export default class extends Controller {
     readonly noResultsFoundTextValue: string;
     readonly minCharactersValue: number;
     readonly tomSelectOptionsValue: object;
+    readonly hasPreloadValue: boolean;
     readonly preloadValue: string;
     tomSelect: TomSelect;
 
@@ -225,6 +226,10 @@ export default class extends Controller {
     }
 
     get preload() {
+        if (!this.hasPreloadValue) {
+            return 'focus';
+        }
+
         if (this.preloadValue == 'false') {
             return false;
         }

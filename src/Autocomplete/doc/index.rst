@@ -167,27 +167,15 @@ Styling Tom Select
 In your ``assets/controllers.json`` file, you should see a line that automatically
 includes a CSS file for Tom Select which will give you basic styles.
 
-.. code-block:: text
-
-    "autoimport": {
-        "tom-select/dist/css/tom-select.default.css": true
-    }
-
-If you're using Bootstrap, you can get Bootstrap-ready styling by
-changing this line to ``false``:
+If you're using Bootstrap, set ``tom-select.default.css`` to false
+and ``tom-select.bootstrap5.css`` to true:
 
 .. code-block:: text
 
     "autoimport": {
-        "tom-select/dist/css/tom-select.default.css": false
+        "tom-select/dist/css/tom-select.default.css": false,
+        "tom-select/dist/css/tom-select.bootstrap5.css": true
     }
-
-And then importing the Bootstrap CSS file:
-
-.. code-block:: css
-
-    /* assets/styles/app.css */
-    @import 'tom-select/dist/css/tom-select.bootstrap5.css';
 
 To further customize things, you can override the classes with your own custom
 CSS and even control how individual parts of Tom Select render. See `Tom Select Render Templates`_.
@@ -382,7 +370,7 @@ This only works for Doctrine entities: see `Manually using the Stimulus Controll
 if you're autocompleting something other than an entity.
 
 To expose the endpoint, create a class that implements ``Symfony\UX\Autocomplete\EntityAutocompleterInterface``
-and tag this service with ``ux.entity_autocompleter`` and include an ``alias``::
+and tag this service with ``ux.entity_autocompleter``, including an ``alias`` option::
 
     namespace App\Autocompleter;
 

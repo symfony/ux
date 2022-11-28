@@ -144,13 +144,13 @@ function combineSpacedArray(parts) {
     return finalParts;
 }
 function normalizeModelName(model) {
-    return model
+    return (model
         .replace(/\[]$/, '')
         .split('[')
         .map(function (s) {
         return s.replace(']', '');
     })
-        .join('.');
+        .join('.'));
 }
 
 function getValueFromElement(element, valueStore) {
@@ -170,7 +170,7 @@ function getValueFromElement(element, valueStore) {
     }
     if (element instanceof HTMLSelectElement) {
         if (element.multiple) {
-            return Array.from(element.selectedOptions).map(el => el.value);
+            return Array.from(element.selectedOptions).map((el) => el.value);
         }
         return element.value;
     }
@@ -197,7 +197,7 @@ function setValueOnElement(element, value) {
         if (element.type === 'checkbox') {
             if (Array.isArray(value)) {
                 let valueFound = false;
-                value.forEach(val => {
+                value.forEach((val) => {
                     if (val == element.value) {
                         valueFound = true;
                     }
@@ -211,10 +211,10 @@ function setValueOnElement(element, value) {
         }
     }
     if (element instanceof HTMLSelectElement) {
-        const arrayWrappedValue = [].concat(value).map(value => {
+        const arrayWrappedValue = [].concat(value).map((value) => {
             return value + '';
         });
-        Array.from(element.options).forEach(option => {
+        Array.from(element.options).forEach((option) => {
             option.selected = arrayWrappedValue.includes(option.value);
         });
         return;
@@ -242,7 +242,7 @@ function getModelDirectiveFromElement(element, throwOnMissing = true) {
     }
     if (element.getAttribute('name')) {
         const formElement = element.closest('form');
-        if (formElement && ('model' in formElement.dataset)) {
+        if (formElement && 'model' in formElement.dataset) {
             const directives = parseDirectives(formElement.dataset.model || '*');
             const directive = directives[0];
             if (directive.args.length > 0 || directive.named.length > 0) {
@@ -301,13 +301,13 @@ function cloneElementWithNewTagName(element, newTag) {
     const endRX = new RegExp(originalTag + '>$', 'i');
     const startSubst = '<' + newTag;
     const endSubst = newTag + '>';
-    const newHTML = element.outerHTML
-        .replace(startRX, startSubst)
-        .replace(endRX, endSubst);
+    const newHTML = element.outerHTML.replace(startRX, startSubst).replace(endRX, endSubst);
     return htmlToElement(newHTML);
 }
 function getElementAsTagText(element) {
-    return element.innerHTML ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML)) : element.outerHTML;
+    return element.innerHTML
+        ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML))
+        : element.outerHTML;
 }
 const getMultipleCheckboxValue = function (element, currentValues) {
     const value = inputValue(element);
@@ -346,7 +346,7 @@ const parseDeepData = function (data, propertyPath) {
         currentLevelData,
         finalData,
         finalKey,
-        parts
+        parts,
     };
 };
 function setDeepData(data, propertyPath, value) {
@@ -1208,7 +1208,8 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
             if (fromEl === rootFromElement) {
                 return true;
             }
-            if (!(fromEl instanceof HTMLElement || fromEl instanceof SVGElement) || !(toEl instanceof HTMLElement || toEl instanceof SVGElement)) {
+            if (!(fromEl instanceof HTMLElement || fromEl instanceof SVGElement) ||
+                !(toEl instanceof HTMLElement || toEl instanceof SVGElement)) {
                 return false;
             }
             const childComponent = childComponentMap.get(fromEl) || false;
@@ -1234,7 +1235,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                 return true;
             }
             return !node.hasAttribute('data-live-ignore');
-        }
+        },
     });
 }
 
@@ -1682,10 +1683,10 @@ class BackendRequest {
         this.updatedModels = updateModels;
     }
     containsOneOfActions(targetedActions) {
-        return (this.actions.filter(action => targetedActions.includes(action))).length > 0;
+        return this.actions.filter((action) => targetedActions.includes(action)).length > 0;
     }
     areAnyModelsUpdated(targetedModels) {
-        return (this.updatedModels.filter(model => targetedModels.includes(model))).length > 0;
+        return this.updatedModels.filter((model) => targetedModels.includes(model)).length > 0;
     }
 }
 
@@ -1701,11 +1702,12 @@ class Backend {
         const params = new URLSearchParams(queryString || '');
         const fetchOptions = {};
         fetchOptions.headers = {
-            'Accept': 'application/vnd.live-component+html',
+            Accept: 'application/vnd.live-component+html',
         };
         const hasFingerprints = Object.keys(childrenFingerprints).length > 0;
         const hasUpdatedModels = Object.keys(updatedModels).length > 0;
-        if (actions.length === 0 && this.willDataFitInUrl(JSON.stringify(data), params, JSON.stringify(childrenFingerprints))) {
+        if (actions.length === 0 &&
+            this.willDataFitInUrl(JSON.stringify(data), params, JSON.stringify(childrenFingerprints))) {
             params.set('data', JSON.stringify(data));
             if (hasFingerprints) {
                 params.set('childrenFingerprints', JSON.stringify(childrenFingerprints));
@@ -2312,7 +2314,7 @@ class default_1 extends Controller {
         return this.element.dispatchEvent(new CustomEvent(name, {
             bubbles: canBubble,
             cancelable,
-            detail
+            detail,
         }));
     }
 }
