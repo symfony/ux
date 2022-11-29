@@ -485,6 +485,31 @@ Beyond ``url``, the Stimulus controller has various other values,
 including ``tomSelectOptions``. See the `controller.ts`_ file for
 the full list.
 
+Unit testing
+------------
+
+When writing unit tests for your form, using the ``TypeTestCase`` class, you should consider registering the needed type extension ``Symfony\UX\Autocomplete\Form\AutocompleteChoiceTypeExtension`` like so::
+
+    // tests/Form/Type/TestedTypeTest.php
+    namespace App\Tests\Form\Type;
+    
+    use Symfony\Component\Form\Test\TypeTestCase;
+    use Symfony\UX\Autocomplete\Form\AutocompleteChoiceTypeExtension;
+    
+    class TestedTypeTest extends TypeTestCase
+    {
+        protected function getTypeExtensions(): array
+        {
+            return [
+                new AutocompleteChoiceTypeExtension(),
+            ];
+        }
+    
+        // ... your tests
+    }
+
+
+
 Backward Compatibility promise
 ------------------------------
 
