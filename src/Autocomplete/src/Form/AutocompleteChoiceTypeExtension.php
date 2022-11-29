@@ -98,7 +98,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             'no_more_results_text' => 'No more results',
             'min_characters' => 3,
             'max_results' => 10,
-            'preload' => false,
+            'preload' => 'focus',
         ]);
 
         // if autocomplete_url is passed, then HTML options are already supported
