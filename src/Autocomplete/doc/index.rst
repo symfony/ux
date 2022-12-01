@@ -488,7 +488,8 @@ the full list.
 Unit testing
 ------------
 
-When writing unit tests for your form, using the ``TypeTestCase`` class, you should consider registering the needed type extension ``Symfony\UX\Autocomplete\Form\AutocompleteChoiceTypeExtension`` like so::
+When writing unit tests for your form, using the ``TypeTestCase`` class, you
+consider registering the needed type extension ``AutocompleteChoiceTypeExtension`` like so::
 
     // tests/Form/Type/TestedTypeTest.php
     namespace App\Tests\Form\Type;
@@ -507,8 +508,6 @@ When writing unit tests for your form, using the ``TypeTestCase`` class, you sho
     
         // ... your tests
     }
-
-
 
 Backward Compatibility promise
 ------------------------------
