@@ -24,8 +24,7 @@
     ],
     "autoload": {
         "psr-4": {
-            "Symfony\\UX\\Turbo\\": "src/",
-            "Symfony\\UX\\Turbo\\Bridge\\Mercure\\": "src/Bridge/Mercure/src"
+            "Symfony\\UX\\Turbo\\": "src/"
         }
     },
     "autoload-dev": {

@@ -562,9 +562,6 @@
     "symfony/ux-turbo": {
         "version": "v2.1.0"
     },
-    "symfony/ux-turbo-mercure": {
-        "version": "v2.1.0"
-    },
     "symfony/ux-twig-component": {
         "version": "v2.1.0"
     },

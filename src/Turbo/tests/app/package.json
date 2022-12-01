@@ -2,7 +2,6 @@
     "devDependencies": {
         "@hotwired/turbo": "^7.0.1",
         "@symfony/ux-turbo": "file:../../assets",
-        "@symfony/ux-turbo-mercure": "file:../../src/Bridge/Mercure/assets",
         "@symfony/webpack-encore": "^0.32.0",
         "core-js": "^3.0.0",
         "regenerator-runtime": "^0.13.2",

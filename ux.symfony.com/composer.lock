@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9e7c247a0d3a97df3ddfa7cc8c0f45af",
+    "content-hash": "6a570d9df68c24d7f0d8542793616bb9",
     "packages": [
         {
             "name": "babdev/pagerfanta-bundle",
@@ -7796,83 +7796,6 @@
             "time": "2022-09-08T14:28:44+00:00"
         },
         {
-            "name": "symfony/ux-turbo-mercure",
-            "version": "2.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/ux-turbo-mercure.git",
-                "reference": "39b3827979347c1b2168233625070df73d9a49f5"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-turbo-mercure/zipball/39b3827979347c1b2168233625070df73d9a49f5",
-                "reference": "39b3827979347c1b2168233625070df73d9a49f5",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=7.2.5",
-                "symfony/mercure-bundle": "^0.3",
-                "symfony/twig-bundle": "^5.2|^6.0",
-                "symfony/ux-turbo": "^2.0"
-            },
-            "suggest": {
-                "symfony/expression-language": "To use expression language in topics"
-            },
-            "default-branch": true,
-            "type": "library",
-            "extra": {
-                "thanks": {
-                    "name": "symfony/ux-turbo",
-                    "url": "https://github.com/symfony/ux"
-                }
-            },
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\UX\\Turbo\\Bridge\\Mercure\\": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Kévin Dunglas",
-                    "email": "kevin@dunglas.fr"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Mercure bridge for Symfony UX Turbo",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "hotwire",
-                "mercure",
-                "symfony-ux",
-                "turbo"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/ux-turbo-mercure/tree/2.x"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2022-11-01T17:19:11+00:00"
-        },
-        {
             "name": "symfony/ux-twig-component",
             "version": "2.x-dev",
             "source": {
@@ -11295,7 +11218,6 @@
         "symfony/ux-react": 20,
         "symfony/ux-swup": 20,
         "symfony/ux-turbo": 20,
-        "symfony/ux-turbo-mercure": 20,
         "symfony/ux-twig-component": 20,
         "symfony/ux-typed": 20,
         "symfony/ux-vue": 20

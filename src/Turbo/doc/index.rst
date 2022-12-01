@@ -383,9 +383,19 @@ Start by installing `the Mercure support`_ on your project:
 
 .. code-block:: terminal
 
-    $ composer require symfony/ux-turbo-mercure
-    $ yarn install --force
-    $ yarn encore dev
+    $ composer require symfony/mercure-bundle
+
+Then, enable the "mercure stream" controller in ``assets/controllers.json``:
+
+.. code-block:: diff
+
+    "@symfony/ux-turbo": {
+        "mercure-turbo-stream": {
+    +         "enabled": true,
+    -         "enabled": false,
+            "fetch": "lazy"
+        }
+    },
 
 The easiest way to have a working development (and production-ready)
 environment is to use `Symfony Docker`_, which comes with
