@@ -19,7 +19,7 @@
         "@swup/forms-plugin": "^1.0",
         "@swup/debug-plugin": "^1.0",
         "swup": "^2.0",
-        "@hotwired/stimulus": "^3.0.0"
+        "@hotwired/stimulus": "^3.2.1"
     },
     "devDependencies": {
         "@swup/fade-theme": "^1.0",
@@ -27,6 +27,6 @@
         "@swup/forms-plugin": "^1.0",
         "@swup/debug-plugin": "^1.0",
         "swup": "^2.0",
-        "@hotwired/stimulus": "^3.0.0"
+        "@hotwired/stimulus": "^3.2.1"
     }
 }

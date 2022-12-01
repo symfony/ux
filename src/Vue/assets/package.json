@@ -15,11 +15,11 @@
         }
     },
     "peerDependencies": {
-        "@hotwired/stimulus": "^3.0.0",
+        "@hotwired/stimulus": "^3.2.1",
         "vue": "^3.0"
     },
     "devDependencies": {
-        "@hotwired/stimulus": "^3.0.0",
+        "@hotwired/stimulus": "^3.2.1",
         "@types/webpack-env": "^1.16",
         "@vue/vue3-jest": "^27.0.0",
         "ts-jest": "^27.1.5",
