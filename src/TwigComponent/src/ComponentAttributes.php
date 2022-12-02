@@ -11,9 +11,10 @@
 
 namespace Symfony\UX\TwigComponent;
 
+use Symfony\WebpackEncoreBundle\Dto\AbstractStimulusDto;
+
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
-
  *
  * @immutable
  */
@@ -93,5 +94,22 @@ final class ComponentAttributes
         }
 
         return $clone;
+    }
+
+    public function add(AbstractStimulusDto $stimulusDto): self
+    {
+        $controllersAttributes = $stimulusDto->toArray();
+        $attributes = $this->attributes;
+
+        $attributes['data-controller'] = implode(' ', array_merge(
+            explode(' ', $attributes['data-controller']),
+            explode(' ', $controllersAttributes['data-controller'] ?? [])
+        ));
+        unset($controllersAttributes['data-controller']);
+
+        $clone = new self($attributes);
+
+        // add the remaining attributes for values/classes
+        return $clone->defaults($controllersAttributes);
     }
 }

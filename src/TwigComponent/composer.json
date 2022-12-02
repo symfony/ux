@@ -35,7 +35,8 @@
     "require-dev": {
         "symfony/framework-bundle": "^5.4|^6.0",
         "symfony/phpunit-bridge": "^6.0",
-        "symfony/twig-bundle": "^5.4|^6.0"
+        "symfony/twig-bundle": "^5.4|^6.0",
+        "symfony/webpack-encore-bundle": "^1.15"
     },
     "conflict": {
         "symfony/config": "<5.4.0"
