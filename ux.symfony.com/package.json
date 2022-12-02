@@ -24,7 +24,6 @@
         "@symfony/ux-react": "file:vendor/symfony/ux-react/Resources/assets",
         "@symfony/ux-swup": "file:vendor/symfony/ux-swup/Resources/assets",
         "@symfony/ux-turbo": "file:vendor/symfony/ux-turbo/Resources/assets",
-        "@symfony/ux-turbo-mercure": "file:vendor/symfony/ux-turbo-mercure/Resources/assets",
         "@symfony/ux-typed": "file:vendor/symfony/ux-typed/Resources/assets",
         "@symfony/ux-vue": "file:vendor/symfony/ux-vue/Resources/assets",
         "@symfony/webpack-encore": "^2.0.0",
