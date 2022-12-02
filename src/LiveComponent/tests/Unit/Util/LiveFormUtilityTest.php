@@ -55,6 +55,12 @@ final class LiveFormUtilityTest extends TestCase
             ],
             ['name', 'posts.1.title'],
         ];
+
+        yield 'it_removes_changed_deeper_path' => [
+            ['name', 'post.title'],
+            ['name' => 'Ryan', 'post' => 15],
+            ['name'],
+        ];
     }
 
     /**
