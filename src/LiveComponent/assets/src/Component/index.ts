@@ -300,7 +300,6 @@ export default class Component {
 
         this.backendRequest.promise.then(async (response) => {
             const backendResponse = new BackendResponse(response);
-            thisPromiseResolve(backendResponse);
             const html = await backendResponse.getBody();
 
             // if the response does not contain a component, render as an error
@@ -313,12 +312,16 @@ export default class Component {
                     this.renderError(html);
                 }
 
+                thisPromiseResolve(backendResponse);
+
                 return response;
             }
 
             this.processRerender(html, backendResponse);
-
             this.backendRequest = null;
+
+            // finally resolve this promise
+            thisPromiseResolve(backendResponse);
 
             // do we already have another request pending?
             if (this.isRequestPending) {
@@ -364,7 +367,14 @@ export default class Component {
             modifiedModelValues[modelName] = this.valueStore.get(modelName);
         });
 
-        const newElement = htmlToElement(html);
+        let newElement;
+        try {
+            newElement = htmlToElement(html);
+        } catch (error) {
+            console.error('There was a problem with the component HTML returned:');
+
+            throw error;
+        }
         // normalize new element into non-loading state before diff
         this.hooks.triggerHook('loading.state:finished', newElement);
 
