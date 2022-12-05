@@ -416,9 +416,9 @@ controller and put it around (or attached to) your root component element:
             this.component.mode = 'editing';
 
             // or call an action
-            this.action('save', { arg1: 'value1' });
+            this.component.action('save', { arg1: 'value1' });
             // you can also say:
-            this.save({ arg1: 'value1'});
+            this.component.save({ arg1: 'value1'});
         }
     }
 
@@ -1479,9 +1479,9 @@ Override the specific block for comment items:
 
 .. note::
 
-    You may put the form theme into the component template and use `{% form_theme form _self %}`. However,
+    You may put the form theme into the component template and use ``{% form_theme form _self %}``. However,
     because the component template doesn't extend anything, it will not work as expected, you must point
-    `form_theme` to a separate template. See `How to Work with Form Themes`_.
+    ``form_theme`` to a separate template. See `How to Work with Form Themes`_.
 
 Override the generic buttons and collection entry:
 
