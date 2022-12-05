@@ -476,6 +476,15 @@ The following hooks are available (along with the arguments that are passed):
 * ``loading.state:finished`` args ``(element: HTMLElement)``
 * ``model:set`` args ``(model: string, value: any, component: Component)``
 
+Adding a Stimulus Controller to your Component Root Element
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+To add a custom Stimulus controller to your root component element:
+
+.. code-block:: twig
+
+    <div {{ attributes.add(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
+
 Loading States
 --------------
 

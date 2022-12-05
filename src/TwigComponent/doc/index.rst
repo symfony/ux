@@ -551,6 +551,12 @@ Set an attribute's value to ``null`` to exclude the value when rendering:
     {# renders as: #}
     <input type="text" value="" autofocus/>
 
+To add a custom Stimulus controller to your root component element:
+
+.. code-block:: twig
+
+    <div {{ attributes.add(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
+
 .. note::
 
     You can adjust the attributes variable exposed in your template::
