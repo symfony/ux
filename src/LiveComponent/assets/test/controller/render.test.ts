@@ -365,9 +365,8 @@ describe('LiveController rendering Tests', () => {
 
         await waitFor(() => expect(test.element).toHaveTextContent('123'));
     });
-
     it('can update html containing svg', async () => {
-        const test = await createTest({ text: 'Hello' }, (data: any) => `
+        const test = await createTest({text: 'Hello'}, (data: any) => `
             <div ${initComponent(data)}>
                 ${data.text}
                 <svg xmlns="http://www.w3.org/2000/svg" width="300" height="200">
@@ -388,5 +387,25 @@ describe('LiveController rendering Tests', () => {
         getByText(test.element, 'Reload').click();
 
         await waitFor(() => expect(test.element).toHaveTextContent('123'));
+    });
+
+    it('can understand comment in the response', async () => {
+        const test = await createTest({ season: 'summer' }, (data: any) => `
+            <!-- messy comment -->
+            <div ${initComponent(data)}>
+                The season is: ${data.season}
+            </div>
+        `);
+
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data) => {
+                data.season = 'autumn';
+            })
+            .init();
+
+        await test.component.render();
+        // verify the component *did* render ok
+        expect(test.element).toHaveTextContent('The season is: autumn');
     });
 });
