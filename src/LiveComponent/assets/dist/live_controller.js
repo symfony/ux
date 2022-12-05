@@ -286,12 +286,15 @@ function htmlToElement(html) {
     const template = document.createElement('template');
     html = html.trim();
     template.innerHTML = html;
-    const child = template.content.firstChild;
+    if (template.content.childElementCount > 1) {
+        throw new Error(`Component HTML contains ${template.content.childElementCount} elements, but only 1 root element is allowed.`);
+    }
+    const child = template.content.firstElementChild;
     if (!child) {
         throw new Error('Child not found');
     }
     if (!(child instanceof HTMLElement)) {
-        throw new Error(`Created element is not an Element from HTML: ${html.trim()}`);
+        throw new Error(`Created element is not an HTMLElement: ${html.trim()}`);
     }
     return child;
 }
@@ -1194,7 +1197,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
         const childComponentToElement = findChildComponent(childComponent.id, rootToElement);
         if (childComponentToElement && childComponentToElement.tagName !== childComponent.element.tagName) {
             const newTag = cloneElementWithNewTagName(childComponentToElement, childComponent.element.tagName);
-            rootToElement.replaceChild(newTag, childComponentToElement);
+            childComponentToElement.replaceWith(newTag);
         }
     });
     morphdom(rootFromElement, rootToElement, {
@@ -1219,7 +1222,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
             if (modifiedFieldElements.includes(fromEl)) {
                 setValueOnElement(toEl, getElementValue(fromEl));
             }
-            if (fromEl.isEqualNode(toEl)) {
+            if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement && fromEl.isEqualNode(toEl)) {
                 const normalizedFromEl = cloneHTMLElement(fromEl);
                 normalizeAttributesForComparison(normalizedFromEl);
                 const normalizedToEl = cloneHTMLElement(toEl);
@@ -1424,7 +1427,7 @@ class Component {
         }
         return this.valueStore.get(modelName);
     }
-    action(name, args, debounce = false) {
+    action(name, args = {}, debounce = false) {
         const promise = this.nextRequestPromise;
         this.pendingActions.push({
             name,
@@ -1516,15 +1519,20 @@ class Component {
         this.isRequestPending = false;
         this.backendRequest.promise.then(async (response) => {
             const backendResponse = new BackendResponse(response);
-            thisPromiseResolve(backendResponse);
             const html = await backendResponse.getBody();
             const headers = backendResponse.response.headers;
             if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
-                this.renderError(html);
+                const controls = { displayError: true };
+                this.hooks.triggerHook('response:error', backendResponse, controls);
+                if (controls.displayError) {
+                    this.renderError(html);
+                }
+                thisPromiseResolve(backendResponse);
                 return response;
             }
             this.processRerender(html, backendResponse);
             this.backendRequest = null;
+            thisPromiseResolve(backendResponse);
             if (this.isRequestPending) {
                 this.isRequestPending = false;
                 this.performRequest();
@@ -1552,7 +1560,14 @@ class Component {
         this.valueStore.updatedModels.forEach((modelName) => {
             modifiedModelValues[modelName] = this.valueStore.get(modelName);
         });
-        const newElement = htmlToElement(html);
+        let newElement;
+        try {
+            newElement = htmlToElement(html);
+        }
+        catch (error) {
+            console.error('There was a problem with the component HTML returned:');
+            throw error;
+        }
         this.hooks.triggerHook('loading.state:finished', newElement);
         this.valueStore.reinitializeData(this.elementDriver.getComponentData(newElement));
         executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), Array.from(this.getChildren().values()), this.elementDriver.findChildComponentElement, this.elementDriver.getKeyFromElement);

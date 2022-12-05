@@ -23,7 +23,7 @@ export function executeMorphdom(
             // we need to "correct" the tag name for the child to match the "from"
             // so that we always get a "diff", not a remove/add
             const newTag = cloneElementWithNewTagName(childComponentToElement, childComponent.element.tagName);
-            rootToElement.replaceChild(newTag, childComponentToElement);
+            childComponentToElement.replaceWith(newTag);
         }
     });
 
