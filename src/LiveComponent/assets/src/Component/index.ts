@@ -106,6 +106,7 @@ export default class Component {
      *     * disconnect (component: Component) => {}
      *     * render:started (html: string, response: BackendResponse, controls: { shouldRender: boolean }) => {}
      *     * render:finished (component: Component) => {}
+     *     * response:error (backendResponse: BackendResponse, controls: { displayError: boolean }) => {}
      *     * loading.state:started (element: HTMLElement, request: BackendRequest) => {}
      *     * loading.state:finished (element: HTMLElement) => {}
      *     * model:set (model: string, value: any, component: Component) => {}
@@ -145,7 +146,7 @@ export default class Component {
         return this.valueStore.get(modelName);
     }
 
-    action(name: string, args: any, debounce: number|boolean = false): Promise<BackendResponse> {
+    action(name: string, args: any = {}, debounce: number|boolean = false): Promise<BackendResponse> {
         const promise = this.nextRequestPromise;
         this.pendingActions.push({
             name,
@@ -301,10 +302,16 @@ export default class Component {
             const backendResponse = new BackendResponse(response);
             thisPromiseResolve(backendResponse);
             const html = await backendResponse.getBody();
+
             // if the response does not contain a component, render as an error
             const headers = backendResponse.response.headers;
             if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
-                this.renderError(html);
+                const controls = { displayError: true };
+                this.hooks.triggerHook('response:error', backendResponse, controls);
+
+                if (controls.displayError) {
+                    this.renderError(html);
+                }
 
                 return response;
             }
