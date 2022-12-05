@@ -13,7 +13,9 @@ namespace Symfony\UX\LiveComponent;
 
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
+use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -71,7 +73,11 @@ final class LiveComponentHydrator
             $frontendPropertyNames[$frontendName] = $name;
 
             // TODO: improve error message if not readable
-            $value = $this->propertyAccessor->getValue($component, $name);
+            try {
+                $value = $this->propertyAccessor->getValue($component, $name);
+            } catch (UninitializedPropertyException $exception) {
+                throw new \LogicException(sprintf('The "%s" property on the "%s" component is uninitialized. Did you forget to pass this into the component?', $name, \get_class($component)), 0, $exception);
+            }
             $dehydratedValue = null;
 
             if ($method = $liveProp->dehydrateMethod()) {
@@ -153,7 +159,24 @@ final class LiveComponentHydrator
             } elseif (!$value && $type && $type->allowsNull() && is_a($type->getName(), \BackedEnum::class, true) && !\in_array($value, array_map(fn (\BackedEnum $e) => $e->value, $type->getName()::cases()))) {
                 $value = null;
             } elseif (null !== $value && $type && !$type->isBuiltin()) {
-                $value = $this->normalizer->denormalize($value, $type->getName(), 'json', [self::LIVE_CONTEXT => true]);
+                try {
+                    $value = $this->normalizer->denormalize($value, $type->getName(), 'json', [self::LIVE_CONTEXT => true]);
+                } catch (ExceptionInterface $exception) {
+                    $json = json_encode($value);
+                    $message = sprintf(
+                        'The normalizer was used to hydrate/denormalize the "%s" property on your "%s" live component, but it failed: %s',
+                        $name,
+                        \get_class($component),
+                        $exception->getMessage()
+                    );
+
+                    // unless the data is gigantic, include it in the error to help
+                    if (\strlen($json) < 1000) {
+                        $message .= sprintf(' The data sent from the frontend was: %s', $json);
+                    }
+
+                    throw new \LogicException($message, 0, $exception);
+                }
             }
 
             if ($dehydratedComponent->hasExposed($frontendName)) {
