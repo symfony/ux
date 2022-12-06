@@ -25,9 +25,9 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
     // if you pass in 3 "items" with data that matches what's used by default
     // in buildUrlForTodoListComponent
     private static array $actualTodoItemFingerprints = [
-        'live-3649730296-0' => 'LwqODySoRx3q+v64EzalGouzpSHWKIm0jENTUGtQloE=',
-        'live-3649730296-1' => 'gn9PcPUqL0tkeLSw0ZuhOj96dwIpiBmJPoO5NPync2o=',
-        'live-3649730296-2' => 'ndV00y/qOSH11bjOKGDJVRsxANtbudYB6K8D46viUI8=',
+        AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX . '0' => 'LwqODySoRx3q+v64EzalGouzpSHWKIm0jENTUGtQloE=',
+        AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX . '1' => 'gn9PcPUqL0tkeLSw0ZuhOj96dwIpiBmJPoO5NPync2o=',
+        AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX . '2' => 'ndV00y/qOSH11bjOKGDJVRsxANtbudYB6K8D46viUI8=',
     ];
 
     public function testItAllowsFullChildRenderOnMissingFingerprints(): void
@@ -59,7 +59,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
     public function testItRendersNewPropWhenFingerprintDoesNotMatch(): void
     {
         $fingerprints = self::$actualTodoItemFingerprints;
-        $fingerprints['live-3649730296-1'] = 'wrong fingerprint';
+        $fingerprints[AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX . '1'] = 'wrong fingerprint';
 
         $this->browser()
             ->visit($this->buildUrlForTodoListComponent($fingerprints))
@@ -74,16 +74,19 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
 
                 // 1st and 3rd render empty
                 // fingerprint changed in 2nd, so it renders new fingerprint + props
-                $this->assertStringContainsString(<<<EOF
-<ul>
-            <div data-live-id="live-3649730296-0"></div>
-            <div data-live-id="live-3649730296-1" data-live-fingerprint-value="gn9PcPUqL0tkeLSw0ZuhOj96dwIpiBmJPoO5NPync2o&#x3D;" data-live-props-value="&#x7B;&quot;_checksum&quot;&#x3A;&quot;YrPg4mHsB82fR&#x5C;&#x2F;VmTL3gJIX32kS8HvWy&#x5C;&#x2F;9uKSs&#x5C;&#x2F;aPfk&#x3D;&quot;&#x7D;"></div>
-            <div data-live-id="live-3649730296-2"></div>
-        </ul>
-EOF,
-                    $content);
-            })
-        ;
+                $this->assertStringContainsString(sprintf(
+                    '<div data-live-id="%s0"></div>',
+                    AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX
+                ), $content);
+                $this->assertStringContainsString(sprintf(
+                    '<div data-live-id="%s1" data-live-fingerprint-value="gn9PcPUqL0tkeLSw0ZuhOj96dwIpiBmJPoO5NPync2o&#x3D;" data-live-props-value="&#x7B;&quot;_checksum&quot;&#x3A;&quot;YrPg4mHsB82fR&#x5C;&#x2F;VmTL3gJIX32kS8HvWy&#x5C;&#x2F;9uKSs&#x5C;&#x2F;aPfk&#x3D;&quot;&#x7D;"></div>',
+                    AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX
+                ), $content);
+                $this->assertStringContainsString(sprintf(
+                    '<div data-live-id="%s2"></div>',
+                    AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX
+                ), $content);
+            });
     }
 
     private function buildUrlForTodoListComponent(array $childrenFingerprints): string
