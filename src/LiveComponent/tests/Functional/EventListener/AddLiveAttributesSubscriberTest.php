@@ -114,6 +114,6 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $lis = $ul->children('li');
         // deterministic id: is not used: data-live-id was passed in manually
         $this->assertSame('todo-item-1', $lis->first()->attr('data-live-id'));
-        $this->assertSame('todo-item-2', $lis->last()->attr('data-live-id'));
+        $this->assertSame('todo-item-3', $lis->last()->attr('data-live-id'));
     }
 }

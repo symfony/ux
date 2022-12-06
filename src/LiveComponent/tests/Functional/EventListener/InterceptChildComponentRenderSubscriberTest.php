@@ -56,6 +56,26 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         ;
     }
 
+    public function testItRendersEmptyElementOnMatchingFingerprintWithCustomDataLiveId(): void
+    {
+        $fingerPrintsWithCustomLiveId = [];
+        foreach (array_values(self::$actualTodoItemFingerprints) as $key => $fingerprintValue) {
+            // creating fingerprints to match todo_list.html.twig
+            $fingerPrintsWithCustomLiveId['todo-item-'.$key + 1] = $fingerprintValue;
+        }
+
+        $this->browser()
+            ->visit($this->buildUrlForTodoListComponent($fingerPrintsWithCustomLiveId, true))
+            ->assertSuccessful()
+            ->assertHtml()
+            // no lis (because we render a div always)
+            ->assertElementCount('ul li', 0)
+            // because we actually slip in a div element
+            ->assertElementCount('ul div', 3)
+            ->assertNotContains('todo item')
+        ;
+    }
+
     public function testItRendersNewPropWhenFingerprintDoesNotMatch(): void
     {
         $fingerprints = self::$actualTodoItemFingerprints;
@@ -89,7 +109,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
             });
     }
 
-    private function buildUrlForTodoListComponent(array $childrenFingerprints): string
+    private function buildUrlForTodoListComponent(array $childrenFingerprints, bool $includeLiveId = false): string
     {
         $component = $this->mountComponent('todo_list', [
             'items' => [
@@ -97,6 +117,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
                 ['text' => 'high five a friend'],
                 ['text' => 'take a nap'],
             ],
+            'includeDataLiveId' => $includeLiveId,
         ]);
 
         $dehydrated = $this->dehydrateComponent($component);
