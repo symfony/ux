@@ -96,10 +96,10 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
         // fingerprints
         // first and last both have the same input - thus fingerprint
-        $this->assertSame('sH/Rwn0x37n3KyMWQLa6OBPgglriBZqlwPLnm/EQTlE=', $lis->first()->attr('data-live-value-fingerprint'));
-        $this->assertSame('sH/Rwn0x37n3KyMWQLa6OBPgglriBZqlwPLnm/EQTlE=', $lis->last()->attr('data-live-value-fingerprint'));
+        $this->assertSame('sH/Rwn0x37n3KyMWQLa6OBPgglriBZqlwPLnm/EQTlE=', $lis->first()->attr('data-live-fingerprint-value'));
+        $this->assertSame('sH/Rwn0x37n3KyMWQLa6OBPgglriBZqlwPLnm/EQTlE=', $lis->last()->attr('data-live-fingerprint-value'));
         // middle has a different fingerprint
-        $this->assertSame('cuOKkrHC9lOmBa6dyVZ3S0REdw4CKCwJgLDdrVoTb2g=', $lis->eq(1)->attr('data-live-value-fingerprint'));
+        $this->assertSame('cuOKkrHC9lOmBa6dyVZ3S0REdw4CKCwJgLDdrVoTb2g=', $lis->eq(1)->attr('data-live-fingerprint-value'));
     }
 
     public function testItDoesNotOverrideDataLiveIdIfSpecified(): void

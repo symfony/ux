@@ -118,7 +118,7 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
             }
 
             $fingerprint = $this->container->get(FingerprintCalculator::class)->calculateFingerprint($mounted->getInputProps());
-            $attributes['data-live-value-fingerprint'] = $helper->escapeAttribute($fingerprint);
+            $attributes['data-live-fingerprint-value'] = $helper->escapeAttribute($fingerprint);
         }
 
         return new ComponentAttributes($attributes);
