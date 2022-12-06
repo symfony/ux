@@ -1594,13 +1594,16 @@ class Component {
             modal.style.backgroundColor = 'rgba(0, 0, 0, .5)';
             modal.style.zIndex = '100000';
             modal.style.position = 'fixed';
-            modal.style.width = '100vw';
-            modal.style.height = '100vh';
+            modal.style.top = '0px';
+            modal.style.bottom = '0px';
+            modal.style.left = '0px';
+            modal.style.right = '0px';
+            modal.style.display = 'flex';
+            modal.style.flexDirection = 'column';
         }
         const iframe = document.createElement('iframe');
         iframe.style.borderRadius = '5px';
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
+        iframe.style.flexGrow = '1';
         modal.appendChild(iframe);
         document.body.prepend(modal);
         document.body.style.overflow = 'hidden';
