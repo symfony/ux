@@ -1,5 +1,6 @@
 import Component from '../index';
 import {
+    elementBelongsToThisComponent,
     getModelDirectiveFromElement,
     getValueFromElement,
     setValueOnElement
@@ -35,6 +36,10 @@ export default class implements PluginInterface {
             }
 
             if (element instanceof HTMLFormElement) {
+                return;
+            }
+
+            if (!elementBelongsToThisComponent(element, component)) {
                 return;
             }
 

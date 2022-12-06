@@ -628,6 +628,45 @@ describe('LiveController data-model Tests', () => {
         expect(commentField.value).toEqual('MMMM SO GOOD');
     });
 
+    it('does not try to set the value of inputs inside a child component', async () => {
+        const test = await createTest({ comment: 'cookie', childComment: 'mmmm' }, (data: any) => `
+            <div ${initComponent(data)}>
+                <textarea data-model="comment" id="parent-comment"></textarea>
+
+                <div ${initComponent({ comment: data.childComment }, {}, {id: 'the-child-id'})}>
+                    <textarea data-model="comment" id="child-comment"></textarea>
+                </div>
+            </div>
+        `);
+
+        const commentField = test.element.querySelector('#parent-comment');
+        if (!(commentField instanceof HTMLTextAreaElement)) {
+            throw new Error('wrong type');
+        }
+        expect(commentField.value).toEqual('cookie');
+
+        const childCommentField = test.element.querySelector('#child-comment');
+        if (!(childCommentField instanceof HTMLTextAreaElement)) {
+            throw new Error('wrong type');
+        }
+        expect(childCommentField.value).toEqual('mmmm');
+
+        // NOW we will re-render
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            // change the data to be extra tricky
+            .serverWillChangeData((data) => {
+                data.comment = 'i like apples';
+            })
+            .init();
+
+        await test.component.render();
+
+        expect(commentField.value).toEqual('i like apples');
+        // child component should not have been re-rendered
+        expect(childCommentField.value).toEqual('mmmm');
+    });
+
     it('keeps the unsynced value of an input on re-render, but accepts other changes to the field', async () => {
         const test = await createTest({
             comment: 'Live components',

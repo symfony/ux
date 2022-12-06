@@ -25,9 +25,9 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
     // if you pass in 3 "items" with data that matches what's used by default
     // in buildUrlForTodoListComponent
     private static array $actualTodoItemFingerprints = [
-        AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX . '0' => 'LwqODySoRx3q+v64EzalGouzpSHWKIm0jENTUGtQloE=',
-        AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX . '1' => 'gn9PcPUqL0tkeLSw0ZuhOj96dwIpiBmJPoO5NPync2o=',
-        AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX . '2' => 'ndV00y/qOSH11bjOKGDJVRsxANtbudYB6K8D46viUI8=',
+        AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX.'0' => 'LwqODySoRx3q+v64EzalGouzpSHWKIm0jENTUGtQloE=',
+        AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX.'1' => 'gn9PcPUqL0tkeLSw0ZuhOj96dwIpiBmJPoO5NPync2o=',
+        AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX.'2' => 'ndV00y/qOSH11bjOKGDJVRsxANtbudYB6K8D46viUI8=',
     ];
 
     public function testItAllowsFullChildRenderOnMissingFingerprints(): void
@@ -79,7 +79,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
     public function testItRendersNewPropWhenFingerprintDoesNotMatch(): void
     {
         $fingerprints = self::$actualTodoItemFingerprints;
-        $fingerprints[AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX . '1'] = 'wrong fingerprint';
+        $fingerprints[AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX.'1'] = 'wrong fingerprint';
 
         $this->browser()
             ->visit($this->buildUrlForTodoListComponent($fingerprints))

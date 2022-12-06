@@ -19,13 +19,12 @@ use Zenstruck\Browser\Test\HasBrowser;
  */
 final class AddLiveAttributesSubscriberTest extends KernelTestCase
 {
+    use HasBrowser;
     /**
      * The deterministic id of the "todo_item" components in todo_list.html.twig.
      * If that template changes, this will need to be updated.
      */
     public const TODO_ITEM_DETERMINISTIC_PREFIX = 'live-289310975-';
-
-    use HasBrowser;
 
     public function testInitLiveComponent(): void
     {
@@ -91,8 +90,8 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
         $lis = $ul->children('li');
         // deterministic id: should not change, and counter should increase
-        $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX . '0', $lis->first()->attr('data-live-id'));
-        $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX . '2', $lis->last()->attr('data-live-id'));
+        $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'0', $lis->first()->attr('data-live-id'));
+        $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'2', $lis->last()->attr('data-live-id'));
 
         // fingerprints
         // first and last both have the same input - thus fingerprint
