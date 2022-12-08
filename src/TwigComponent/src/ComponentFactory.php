@@ -145,7 +145,11 @@ final class ComponentFactory
         $data = $event->getData();
 
         foreach (AsTwigComponent::preMountMethods($component) as $method) {
-            $data = $component->{$method->name}($data);
+            $newData = $component->{$method->name}($data);
+
+            if (null !== $newData) {
+                $data = $newData;
+            }
         }
 
         return $data;
@@ -158,7 +162,11 @@ final class ComponentFactory
         $data = $event->getData();
 
         foreach (AsTwigComponent::postMountMethods($component) as $method) {
-            $data = $component->{$method->name}($data);
+            $newData = $component->{$method->name}($data);
+
+            if (null !== $newData) {
+                $data = $newData;
+            }
         }
 
         return $data;

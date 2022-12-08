@@ -173,6 +173,11 @@ fresh copy of our component. That HTML will replace the current HTML. In
 other words, you just generated a new random number! That's cool, but
 let's keep going because… things get cooler.
 
+.. tip::
+
+    Need to do some extra data initialization on your component? Create
+    a ``mount()`` method or use the ``PostMount`` hook: `Twig Component mount documentation`_.
+
 LiveProps: Stateful Component Properties
 ----------------------------------------
 
@@ -2123,6 +2128,7 @@ bound to Symfony's BC policy for the moment.
 .. _`Livewire`: https://laravel-livewire.com
 .. _`Phoenix LiveView`: https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html
 .. _`Twig Component`: https://symfony.com/bundles/ux-twig-component/current/index.html
+.. _`Twig Component mount documentation`: https://symfony.com/bundles/ux-twig-component/current/index.html#the-mount-method
 .. _`Symfony form`: https://symfony.com/doc/current/forms.html
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`dependent form fields`: https://ux.symfony.com/live-component/demos/dependent-form-fields
