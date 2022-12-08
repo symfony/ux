@@ -2114,6 +2114,39 @@ To handle this, add the ``data-live-ignore`` attribute to the element:
     ``data-live-id`` attribute. During a re-render, if this value changes, all
     of the children of the element will be re-rendered, even those with ``data-live-ignore``.
 
+Define another route for your Component
+---------------------------------------
+
+The default route for live components is ``/components/{_live_component}/{_live_action}``
+If you have multiples firewalls in your app, you may want to specify another route for your component.
+It may be useful if you want to get the current logged in user in your component.
+
+To use another route, you need to declare it :
+
+.. code-block:: yaml
+
+    # config/routes/attributes.yaml
+    live_component_admin:
+        path: /admin/_components/{_live_component}/{_live_action}
+        defaults:
+            _live_action: 'get'
+
+then specify this new route to your component :
+
+.. code-block:: diff
+
+    // src/Components/RandomNumberComponent.php
+
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+    - #[AsLiveComponent('random_number')]
+    + #[AsLiveComponent('random_number', route: 'live_component_admin')]
+      class RandomNumberComponent
+      {
+          use DefaultActionTrait;
+      }
+
 Backward Compatibility promise
 ------------------------------
 
