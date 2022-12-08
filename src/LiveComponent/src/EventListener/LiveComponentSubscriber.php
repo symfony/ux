@@ -76,8 +76,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         }
 
         // the default "action" is get, which does nothing
-        $action = $request->attributes->get('action', 'get');
-        $componentName = (string) $request->attributes->get('component');
+        $action = $request->attributes->get('_live_action', 'get');
+        $componentName = (string) $request->attributes->get('_live_component');
 
         $request->attributes->set('_component_name', $componentName);
 
@@ -313,7 +313,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
     private function isLiveComponentRequest(Request $request): bool
     {
-        return str_starts_with($request->attributes->get('_route'), 'ux_live_component');
+        return $request->attributes->has('_live_component');
     }
 
     private function hydrateComponent(object $component, string $componentName, Request $request): MountedComponent

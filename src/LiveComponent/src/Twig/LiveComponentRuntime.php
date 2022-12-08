@@ -35,7 +35,7 @@ final class LiveComponentRuntime
     {
         $mounted = $this->factory->create($name, $props);
         $dehydratedComponent = $this->hydrator->dehydrate($mounted);
-        $params = ['component' => $name] + $dehydratedComponent->all();
+        $params = ['_live_component' => $name] + $dehydratedComponent->all();
 
         return $this->urlGenerator->generate('ux_live_component', $params);
     }
