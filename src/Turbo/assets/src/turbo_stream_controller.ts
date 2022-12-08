@@ -20,8 +20,8 @@ export default class extends Controller {
         hasHub: Boolean,
         hasTopic: Boolean
     };
-    es: EventSource;
-    url: string;
+    es: EventSource | undefined;
+    url: string | undefined;
 
     declare readonly topicValue: string;
     declare readonly hubValue: string;
@@ -41,12 +41,16 @@ export default class extends Controller {
     }
 
     connect() {
-        this.es = new EventSource(this.url);
-        connectStreamSource(this.es);
+        if (this.url) {
+            this.es = new EventSource(this.url);
+            connectStreamSource(this.es);
+        }
     }
 
     disconnect() {
-        this.es.close();
-        disconnectStreamSource(this.es);
+        if (this.es) {
+            this.es.close();
+            disconnectStreamSource(this.es);
+        }
     }
 }
