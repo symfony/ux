@@ -2238,7 +2238,7 @@ class default_1 extends Controller {
             this.component.element.addEventListener(event, callback);
         });
         ComponentRegistry$1.registerComponent(this.element, this.component);
-        this._dispatchEvent('live:connect');
+        this.dispatchEvent('connect');
     }
     disconnect() {
         this.component.disconnect();
@@ -2246,7 +2246,7 @@ class default_1 extends Controller {
             this.component.element.removeEventListener(event, callback);
         });
         ComponentRegistry$1.unregisterComponent(this.element);
-        this._dispatchEvent('live:disconnect');
+        this.dispatchEvent('disconnect');
     }
     update(event) {
         if (event.type === 'input' || event.type === 'change') {
@@ -2365,14 +2365,10 @@ class default_1 extends Controller {
         }
         this.component.removeChild(childController.component);
     }
-    _dispatchEvent(name, detail = {}, canBubble = true, cancelable = false) {
+    dispatchEvent(name, detail = {}, canBubble = true, cancelable = false) {
         detail.controller = this;
         detail.component = this.proxiedComponent;
-        return this.element.dispatchEvent(new CustomEvent(name, {
-            bubbles: canBubble,
-            cancelable,
-            detail,
-        }));
+        this.dispatch(name, { detail, prefix: 'live', cancelable, bubbles: canBubble });
     }
 }
 default_1.values = {

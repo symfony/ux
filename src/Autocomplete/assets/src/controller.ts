@@ -213,15 +213,15 @@ export default class extends Controller {
     }
 
     #createTomSelect(options: RecursivePartial<TomSettings>): TomSelect {
-        this.#dispatchEvent('autocomplete:pre-connect', { options });
+        this.dispatchEvent('pre-connect', { options });
         const tomSelect = new TomSelect(this.formElement, options);
-        this.#dispatchEvent('autocomplete:connect', { tomSelect, options });
+        this.dispatchEvent('connect', { tomSelect, options });
 
         return tomSelect;
     }
 
-    #dispatchEvent(name: string, payload: any): void {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
+    private dispatchEvent(name: string, payload: any): void {
+        this.dispatch(name, { detail: payload, prefix: 'autocomplete' });
     }
 
     get preload() {

@@ -75,12 +75,12 @@ export default class extends Controller {
             contentType: this.contentTypeValue,
         };
 
-        this._dispatchEvent('typed:pre-connect', { options });
+        this.dispatchEvent('pre-connect', { options });
         const typed = new Typed(this.element, options);
-        this._dispatchEvent('typed:connect', { typed, options });
+        this.dispatchEvent('connect', { typed, options });
     }
 
-    _dispatchEvent(name: string, payload: any) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
+    private dispatchEvent(name: string, payload: any) {
+        this.dispatch(name, { detail: payload, prefix: 'typed' });
     }
 }

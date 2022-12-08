@@ -10,13 +10,13 @@ class default_1 extends Controller {
             if (srcsetString) {
                 element.srcset = srcsetString;
             }
-            this._dispatchEvent('lazy-image:ready', { image: hd });
+            this.dispatchEvent('ready', { image: hd });
         });
         hd.src = this.srcValue;
         if (srcsetString) {
             hd.srcset = srcsetString;
         }
-        this._dispatchEvent('lazy-image:connect', { image: hd });
+        this.dispatchEvent('connect', { image: hd });
     }
     _calculateSrcsetString() {
         if (!this.hasSrcsetValue) {
@@ -27,8 +27,8 @@ class default_1 extends Controller {
         });
         return sets.join(', ').trimEnd();
     }
-    _dispatchEvent(name, payload) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
+    dispatchEvent(name, payload) {
+        this.dispatch(name, { detail: payload, prefix: 'lazy-image' });
     }
 }
 default_1.values = {

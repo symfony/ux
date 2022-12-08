@@ -36,7 +36,7 @@ export default class CropperController extends Controller {
         parent.appendChild(img);
 
         const options = this.optionsValue;
-        this._dispatchEvent('cropperjs:pre-connect', { options, img });
+        this.dispatchEvent('pre-connect', { options, img });
 
         // Build the cropper
         const cropper = new Cropper(img, options);
@@ -45,10 +45,10 @@ export default class CropperController extends Controller {
             (this.element as HTMLInputElement).value = JSON.stringify((event as CropEvent).detail);
         });
 
-        this._dispatchEvent('cropperjs:connect', { cropper, options, img });
+        this.dispatchEvent('connect', { cropper, options, img });
     }
 
-    _dispatchEvent(name: string, payload: any) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
+    private dispatchEvent(name: string, payload: any) {
+        this.dispatch(name, { detail: payload, prefix: 'cropperjs' });
     }
 }

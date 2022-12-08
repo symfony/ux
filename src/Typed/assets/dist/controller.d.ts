@@ -69,5 +69,5 @@ export default class extends Controller {
     readonly bindInputFocusEventsValue?: boolean;
     readonly contentTypeValue: string;
     connect(): void;
-    _dispatchEvent(name: string, payload: any): void;
+    private dispatchEvent;
 }

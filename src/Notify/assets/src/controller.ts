@@ -49,7 +49,7 @@ export default class extends Controller {
             eventSource.addEventListener('message', (event) => this._notify(JSON.parse(event.data).summary));
         });
 
-        this._dispatchEvent('notify:connect', { eventSources: this.eventSources });
+        this.dispatchEvent('connect', { eventSources: this.eventSources });
     }
 
     disconnect() {
@@ -79,7 +79,7 @@ export default class extends Controller {
         }
     }
 
-    _dispatchEvent(name: string, payload: any) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
+    private dispatchEvent(name: string, payload: any) {
+        this.dispatch(name, { detail: payload, prefix: 'notify' });
     }
 }

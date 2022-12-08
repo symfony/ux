@@ -48,5 +48,5 @@ export default class extends Controller<HTMLElement> implements LiveController {
     private updateModelFromElementEvent;
     handleConnectedControllerEvent(event: LiveEvent): void;
     handleDisconnectedChildControllerEvent(event: LiveEvent): void;
-    _dispatchEvent(name: string, detail?: any, canBubble?: boolean, cancelable?: boolean): boolean;
+    private dispatchEvent;
 }

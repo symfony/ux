@@ -10,16 +10,16 @@ class default_1 extends Controller {
         if (Array.isArray(payload.options) && 0 === payload.options.length) {
             payload.options = {};
         }
-        this._dispatchEvent('chartjs:pre-connect', { options: payload.options });
+        this.dispatchEvent('pre-connect', { options: payload.options });
         const canvasContext = this.element.getContext('2d');
         if (!canvasContext) {
             throw new Error('Could not getContext() from Element');
         }
         const chart = new Chart(canvasContext, payload);
-        this._dispatchEvent('chartjs:connect', { chart });
+        this.dispatchEvent('connect', { chart });
     }
-    _dispatchEvent(name, payload) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
+    dispatchEvent(name, payload) {
+        this.dispatch(name, { detail: payload, prefix: 'chartjs' });
     }
 }
 default_1.values = {

@@ -9,5 +9,5 @@ export default class extends Controller {
     };
     connect(): void;
     _calculateSrcsetString(): string;
-    _dispatchEvent(name: string, payload: any): void;
+    private dispatchEvent;
 }

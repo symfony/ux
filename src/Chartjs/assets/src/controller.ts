@@ -29,7 +29,7 @@ export default class extends Controller {
             payload.options = {};
         }
 
-        this._dispatchEvent('chartjs:pre-connect', { options: payload.options });
+        this.dispatchEvent('pre-connect', { options: payload.options });
 
         const canvasContext = this.element.getContext('2d');
         if (!canvasContext) {
@@ -37,10 +37,10 @@ export default class extends Controller {
         }
         const chart = new Chart(canvasContext, payload);
 
-        this._dispatchEvent('chartjs:connect', { chart });
+        this.dispatchEvent('connect', { chart });
     }
 
-    _dispatchEvent(name: string, payload: any) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
+    private dispatchEvent(name: string, payload: any) {
+        this.dispatch(name, { detail: payload, prefix: 'chartjs' });
     }
 }
