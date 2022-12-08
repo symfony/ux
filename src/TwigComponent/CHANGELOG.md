@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+-   Add `assets/src` to `.gitattributes` to exclude them from the installation
+
 ## 2.5
 
 -   [BC BREAK] The `PreRenderEvent` namespace was changed from `Symfony\UX\TwigComponent\EventListener`

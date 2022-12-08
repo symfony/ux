@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+-   Add `assets/src` to `.gitattributes` to exclude them from the installation
+
 ## 2.6.1
 
 -   The `symfony/ux-turbo-mercure` package was abandoned and moved into this package.

@@ -5,6 +5,8 @@
 -   Added a new `route` parameter to `AsLiveComponent`, which allows to choose
     another route for Ajax calls.
 
+-   Add `assets/src` to `.gitattributes` to exclude them from the installation
+
 ## 2.6.0
 
 -   [BC BREAK]: The path to `live_component.xml` changed _and_ the import now
