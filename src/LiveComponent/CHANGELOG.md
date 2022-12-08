@@ -2,7 +2,8 @@
 
 ## 2.7.0
 
-- Added a new `route` parameter to `AsLiveComponent`, which allows to choose another route for Ajax calls.
+-   Added a new `route` parameter to `AsLiveComponent`, which allows to choose
+    another route for Ajax calls.
 
 ## 2.6.0
 
