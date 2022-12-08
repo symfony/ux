@@ -26,6 +26,8 @@ class default_1 extends Controller {
 default_1.values = {
     topic: String,
     hub: String,
+    hasHub: Boolean,
+    hasTopic: Boolean
 };
 
 export { default_1 as default };

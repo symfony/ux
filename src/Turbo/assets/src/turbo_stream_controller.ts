@@ -17,11 +17,19 @@ export default class extends Controller {
     static values = {
         topic: String,
         hub: String,
+        hasHub: Boolean,
+        hasTopic: Boolean
     };
-    es;
+    es: EventSource;
+    url: string;
+
+    declare readonly topicValue: string;
+    declare readonly hubValue: string;
+    declare readonly hasHubValue: boolean;
+    declare readonly hasTopicValue: boolean;
 
     initialize() {
-        const errorMessages = [];
+        const errorMessages: string[] = [];
         if (!this.hasHubValue) errorMessages.push('A "hub" value pointing to the Mercure hub must be provided.');
         if (!this.hasTopicValue) errorMessages.push('A "topic" value must be provided.');
         if (errorMessages.length) throw new Error(errorMessages.join(' '));
