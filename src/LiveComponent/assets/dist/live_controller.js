@@ -2112,6 +2112,9 @@ class SetValueOntoModelFieldsPlugin {
             if (element instanceof HTMLFormElement) {
                 return;
             }
+            if (!elementBelongsToThisComponent(element, component)) {
+                return;
+            }
             const modelDirective = getModelDirectiveFromElement(element);
             if (!modelDirective) {
                 return;

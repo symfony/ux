@@ -20,6 +20,11 @@ use Zenstruck\Browser\Test\HasBrowser;
 final class AddLiveAttributesSubscriberTest extends KernelTestCase
 {
     use HasBrowser;
+    /**
+     * The deterministic id of the "todo_item" components in todo_list.html.twig.
+     * If that template changes, this will need to be updated.
+     */
+    public const TODO_ITEM_DETERMINISTIC_PREFIX = 'live-289310975-';
 
     public function testInitLiveComponent(): void
     {
@@ -85,14 +90,29 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
         $lis = $ul->children('li');
         // deterministic id: should not change, and counter should increase
-        $this->assertSame('live-3649730296-0', $lis->first()->attr('data-live-id'));
-        $this->assertSame('live-3649730296-2', $lis->last()->attr('data-live-id'));
+        $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'0', $lis->first()->attr('data-live-id'));
+        $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'2', $lis->last()->attr('data-live-id'));
 
         // fingerprints
         // first and last both have the same input - thus fingerprint
-        $this->assertSame('sH/Rwn0x37n3KyMWQLa6OBPgglriBZqlwPLnm/EQTlE=', $lis->first()->attr('data-live-value-fingerprint'));
-        $this->assertSame('sH/Rwn0x37n3KyMWQLa6OBPgglriBZqlwPLnm/EQTlE=', $lis->last()->attr('data-live-value-fingerprint'));
+        $this->assertSame('sH/Rwn0x37n3KyMWQLa6OBPgglriBZqlwPLnm/EQTlE=', $lis->first()->attr('data-live-fingerprint-value'));
+        $this->assertSame('sH/Rwn0x37n3KyMWQLa6OBPgglriBZqlwPLnm/EQTlE=', $lis->last()->attr('data-live-fingerprint-value'));
         // middle has a different fingerprint
-        $this->assertSame('cuOKkrHC9lOmBa6dyVZ3S0REdw4CKCwJgLDdrVoTb2g=', $lis->eq(1)->attr('data-live-value-fingerprint'));
+        $this->assertSame('cuOKkrHC9lOmBa6dyVZ3S0REdw4CKCwJgLDdrVoTb2g=', $lis->eq(1)->attr('data-live-fingerprint-value'));
+    }
+
+    public function testItDoesNotOverrideDataLiveIdIfSpecified(): void
+    {
+        $ul = $this->browser()
+            ->visit('/render-template/render_todo_list_with_live_id')
+            ->assertSuccessful()
+            ->crawler()
+            ->filter('ul')
+        ;
+
+        $lis = $ul->children('li');
+        // deterministic id: is not used: data-live-id was passed in manually
+        $this->assertSame('todo-item-1', $lis->first()->attr('data-live-id'));
+        $this->assertSame('todo-item-3', $lis->last()->attr('data-live-id'));
     }
 }

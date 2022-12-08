@@ -112,11 +112,13 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
         }
 
         if ($this->container->get(ComponentStack::class)->hasParentComponent()) {
-            $id = $this->container->get(DeterministicTwigIdCalculator::class)->calculateDeterministicId();
-            $attributes['data-live-id'] = $helper->escapeAttribute($id);
+            if (!isset($mounted->getAttributes()->all()['data-live-id'])) {
+                $id = $this->container->get(DeterministicTwigIdCalculator::class)->calculateDeterministicId();
+                $attributes['data-live-id'] = $helper->escapeAttribute($id);
+            }
 
             $fingerprint = $this->container->get(FingerprintCalculator::class)->calculateFingerprint($mounted->getInputProps());
-            $attributes['data-live-value-fingerprint'] = $helper->escapeAttribute($fingerprint);
+            $attributes['data-live-fingerprint-value'] = $helper->escapeAttribute($fingerprint);
         }
 
         return new ComponentAttributes($attributes);
