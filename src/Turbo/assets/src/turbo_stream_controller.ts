@@ -17,8 +17,6 @@ export default class extends Controller {
     static values = {
         topic: String,
         hub: String,
-        hasHub: Boolean,
-        hasTopic: Boolean
     };
     es: EventSource | undefined;
     url: string | undefined;
