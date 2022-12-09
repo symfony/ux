@@ -40,13 +40,13 @@ export default class extends Controller<HTMLElement> implements LiveController {
         fingerprint: String,
     };
 
-    readonly urlValue!: string;
-    readonly dataValue!: any;
-    readonly propsValue!: any;
-    readonly csrfValue!: string;
-    readonly hasDebounceValue: boolean;
-    readonly debounceValue: number;
-    readonly fingerprintValue: string;
+    declare readonly urlValue: string;
+    declare readonly dataValue: any;
+    declare readonly propsValue: any;
+    declare readonly csrfValue: string;
+    declare readonly hasDebounceValue: boolean;
+    declare readonly debounceValue: number;
+    declare readonly fingerprintValue: string;
 
     /** The component, wrapped in the convenience Proxy */
     private proxiedComponent: Component;

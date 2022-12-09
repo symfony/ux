@@ -12,9 +12,9 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    readonly srcValue: string;
-    readonly srcsetValue: any;
-    readonly hasSrcsetValue: boolean;
+    declare readonly srcValue: string;
+    declare readonly srcsetValue: any;
+    declare readonly hasSrcsetValue: boolean;
 
     static values = {
         src: String,

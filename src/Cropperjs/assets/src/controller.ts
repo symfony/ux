@@ -14,8 +14,8 @@ import Cropper from 'cropperjs';
 import CropEvent = Cropper.CropEvent;
 
 export default class CropperController extends Controller {
-    readonly publicUrlValue: string;
-    readonly optionsValue: object;
+    declare readonly publicUrlValue: string;
+    declare readonly optionsValue: object;
 
     static values = {
         publicUrl: String,
