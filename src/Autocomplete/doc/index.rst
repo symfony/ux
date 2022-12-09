@@ -52,7 +52,7 @@ Tom Select-powered UI control by adding the ``autocomplete`` option:
 
                 ->add('portionSize', ChoiceType::class, [
                     'choices' => [
-                        'Choose a portion size' => '',,
+                        'Choose a portion size' => '',
                         'small' => 's',
                         'medium' => 'm',
                         'large' => 'l',
