@@ -1,0 +1,57 @@
+{
+    "name": "symfony/bootstrap-table",
+    "description": "Bootstrap integration for Symfony",
+    "type": "symfony-bundle",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://symfony.com",
+    "authors": [
+        {
+            "name": "Matheo Daninos",
+            "email": "matheo.daninos@gmail.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=7.2.5",
+        "symfony/config": "^4.4.17|^5.0|^6.0",
+        "symfony/dependency-injection": "^4.4.17|^5.0|^6.0",
+        "symfony/http-kernel": "^4.4.17|^5.0|^6.0"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "4.4.17|^5.0|^6.0",
+        "symfony/phpunit-bridge": "^5.2|^6.0",
+        "symfony/twig-bundle": "^4.4.17|^5.0|^6.0",
+        "symfony/var-dumper": "^4.4.17|^5.0|^6.0",
+        "symfony/webpack-encore-bundle": "^1.11",
+        "phpunit/phpunit": "10.0.x-dev"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\BootstrapTable\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\BootstrapTable\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Matheo Daninos",
+            "email": "matheo.daninos@gmail.com"
+        }
+    ],
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}
