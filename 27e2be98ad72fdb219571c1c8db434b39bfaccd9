@@ -1,0 +1,58 @@
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-08T16:21:54Z
+
+This looks good to me! @simondaigre, can you fixup the CI and add some docs?
+
+---------------------------------------------------------------------------
+
+by simondaigre at 2022-12-08T16:55:56Z
+
+@kbond would you mind taking a look ? I can't figure out why they fail...
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-08T18:04:26Z
+
+FYI @simondaigre, for future PR's, it'll be easier to use a new branch (rather than making changes on 2.x directly).
+
+---------------------------------------------------------------------------
+
+by simondaigre at 2022-12-08T18:09:40Z
+
+Understood. Thanks for your help !
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-08T18:10:00Z
+
+CI is green.
+
+- We should add a test for this feature. @simondaigre, would you like to add this or want me to add one?
+- Can you add documentation?
+
+---------------------------------------------------------------------------
+
+by simondaigre at 2022-12-08T18:11:10Z
+
+You can add tests if you want. I'll do the docs tomorrow.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-08T18:16:02Z
+
+> You can add tests if you want.
+
+Will do, the test suite is a bit complex 😬
+
+---------------------------------------------------------------------------
+
+by simondaigre at 2022-12-08T18:31:48Z
+
+Doc updated. I have no clue to how to preview this. @weaverryan feel free to edit it if you want.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-08T19:46:28Z
+
+Tests added, @weaverryan, can you give a final review?
