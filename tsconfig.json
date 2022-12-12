@@ -9,7 +9,7 @@
         "strictPropertyInitialization": false,
         "target": "es2017",
         "removeComments": true,
-        "outDir": "dist",
+        "outDir": "types",
         "baseUrl": ".",
         "noEmit": false,
         "declaration": false,
@@ -17,6 +17,6 @@
         "allowSyntheticDefaultImports": true,
         "jsx": "react"
     },
-    "exclude": ["src/**/dist"],
-    "include": ["src/**/*"]
+    "exclude": ["src/*/assets/dist"],
+    "include": ["src/*/assets/src", "src/*/assets/test"]
 }

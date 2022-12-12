@@ -22,11 +22,11 @@ function __classPrivateFieldGet(receiver, state, kind, f) {
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 }
 
-var _instances, _getCommonConfig, _createAutocomplete, _createAutocompleteWithHtmlContents, _createAutocompleteWithRemoteData, _stripTags, _mergeObjects, _createTomSelect, _dispatchEvent;
+var _default_1_instances, _default_1_getCommonConfig, _default_1_createAutocomplete, _default_1_createAutocompleteWithHtmlContents, _default_1_createAutocompleteWithRemoteData, _default_1_stripTags, _default_1_mergeObjects, _default_1_createTomSelect, _default_1_dispatchEvent;
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
-        _instances.add(this);
+        _default_1_instances.add(this);
     }
     initialize() {
         this.element.setAttribute('data-live-ignore', '');
@@ -39,14 +39,14 @@ class default_1 extends Controller {
     }
     connect() {
         if (this.urlValue) {
-            this.tomSelect = __classPrivateFieldGet(this, _instances, "m", _createAutocompleteWithRemoteData).call(this, this.urlValue, this.minCharactersValue);
+            this.tomSelect = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createAutocompleteWithRemoteData).call(this, this.urlValue, this.minCharactersValue);
             return;
         }
         if (this.optionsAsHtmlValue) {
-            this.tomSelect = __classPrivateFieldGet(this, _instances, "m", _createAutocompleteWithHtmlContents).call(this);
+            this.tomSelect = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createAutocompleteWithHtmlContents).call(this);
             return;
         }
-        this.tomSelect = __classPrivateFieldGet(this, _instances, "m", _createAutocomplete).call(this);
+        this.tomSelect = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createAutocomplete).call(this);
     }
     disconnect() {
         this.tomSelect.revertSettings.innerHTML = this.element.innerHTML;
@@ -77,7 +77,7 @@ class default_1 extends Controller {
         return this.preloadValue;
     }
 }
-_instances = new WeakSet(), _getCommonConfig = function _getCommonConfig() {
+_default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _default_1_getCommonConfig() {
     const plugins = {};
     const isMultiple = !this.selectElement || this.selectElement.multiple;
     if (!this.formElement.disabled && !isMultiple) {
@@ -109,19 +109,19 @@ _instances = new WeakSet(), _getCommonConfig = function _getCommonConfig() {
     if (!this.selectElement && !this.urlValue) {
         config.shouldLoad = () => false;
     }
-    return __classPrivateFieldGet(this, _instances, "m", _mergeObjects).call(this, config, this.tomSelectOptionsValue);
-}, _createAutocomplete = function _createAutocomplete() {
-    const config = __classPrivateFieldGet(this, _instances, "m", _mergeObjects).call(this, __classPrivateFieldGet(this, _instances, "m", _getCommonConfig).call(this), {
+    return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, config, this.tomSelectOptionsValue);
+}, _default_1_createAutocomplete = function _default_1_createAutocomplete() {
+    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this), {
         maxOptions: this.selectElement ? this.selectElement.options.length : 50,
     });
-    return __classPrivateFieldGet(this, _instances, "m", _createTomSelect).call(this, config);
-}, _createAutocompleteWithHtmlContents = function _createAutocompleteWithHtmlContents() {
-    const config = __classPrivateFieldGet(this, _instances, "m", _mergeObjects).call(this, __classPrivateFieldGet(this, _instances, "m", _getCommonConfig).call(this), {
+    return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createTomSelect).call(this, config);
+}, _default_1_createAutocompleteWithHtmlContents = function _default_1_createAutocompleteWithHtmlContents() {
+    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this), {
         maxOptions: this.selectElement ? this.selectElement.options.length : 50,
         score: (search) => {
             const scoringFunction = this.tomSelect.getScoreFunction(search);
             return (item) => {
-                return scoringFunction(Object.assign(Object.assign({}, item), { text: __classPrivateFieldGet(this, _instances, "m", _stripTags).call(this, item.text) }));
+                return scoringFunction(Object.assign(Object.assign({}, item), { text: __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_stripTags).call(this, item.text) }));
             };
         },
         render: {
@@ -133,9 +133,9 @@ _instances = new WeakSet(), _getCommonConfig = function _getCommonConfig() {
             },
         },
     });
-    return __classPrivateFieldGet(this, _instances, "m", _createTomSelect).call(this, config);
-}, _createAutocompleteWithRemoteData = function _createAutocompleteWithRemoteData(autocompleteEndpointUrl, minCharacterLength) {
-    const config = __classPrivateFieldGet(this, _instances, "m", _mergeObjects).call(this, __classPrivateFieldGet(this, _instances, "m", _getCommonConfig).call(this), {
+    return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createTomSelect).call(this, config);
+}, _default_1_createAutocompleteWithRemoteData = function _default_1_createAutocompleteWithRemoteData(autocompleteEndpointUrl, minCharacterLength) {
+    const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this), {
         firstUrl: (query) => {
             const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
             return `${autocompleteEndpointUrl}${separator}query=${encodeURIComponent(query)}`;
@@ -175,17 +175,17 @@ _instances = new WeakSet(), _getCommonConfig = function _getCommonConfig() {
         },
         preload: this.preload,
     });
-    return __classPrivateFieldGet(this, _instances, "m", _createTomSelect).call(this, config);
-}, _stripTags = function _stripTags(string) {
+    return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createTomSelect).call(this, config);
+}, _default_1_stripTags = function _default_1_stripTags(string) {
     return string.replace(/(<([^>]+)>)/gi, '');
-}, _mergeObjects = function _mergeObjects(object1, object2) {
+}, _default_1_mergeObjects = function _default_1_mergeObjects(object1, object2) {
     return Object.assign(Object.assign({}, object1), object2);
-}, _createTomSelect = function _createTomSelect(options) {
-    __classPrivateFieldGet(this, _instances, "m", _dispatchEvent).call(this, 'autocomplete:pre-connect', { options });
+}, _default_1_createTomSelect = function _default_1_createTomSelect(options) {
+    __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_dispatchEvent).call(this, 'autocomplete:pre-connect', { options });
     const tomSelect = new TomSelect(this.formElement, options);
-    __classPrivateFieldGet(this, _instances, "m", _dispatchEvent).call(this, 'autocomplete:connect', { tomSelect, options });
+    __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_dispatchEvent).call(this, 'autocomplete:connect', { tomSelect, options });
     return tomSelect;
-}, _dispatchEvent = function _dispatchEvent(name, payload) {
+}, _default_1_dispatchEvent = function _default_1_dispatchEvent(name, payload) {
     this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
 };
 default_1.values = {

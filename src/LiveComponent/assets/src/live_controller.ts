@@ -18,6 +18,8 @@ import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModel
 import { PluginInterface } from './Component/plugins/PluginInterface';
 import getModelBinding from './Directive/get_model_binding';
 
+export { Component };
+
 export interface LiveEvent extends CustomEvent {
     detail: {
         controller: LiveController;

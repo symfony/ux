@@ -1,9 +1,9 @@
-import resolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import typescript from '@rollup/plugin-typescript';
-import glob from 'glob';
-import path from 'path';
-import pkgUp from 'pkg-up';
+const resolve = require('@rollup/plugin-node-resolve');
+const commonjs = require('@rollup/plugin-commonjs');
+const typescript = require('@rollup/plugin-typescript');
+const fs = require('fs');
+const glob = require('glob');
+const path = require('path');
 
 /**
  * Guarantees that any files imported from a peer dependency are treated as an external.
@@ -38,10 +38,34 @@ const wildcardExternalsPlugin = (peerDependencies) => ({
     }
 });
 
+/**
+ * Moves the generated TypeScript declaration files to the correct location.
+ *
+ * This could probably be configured in the TypeScript plugin.
+ */
+const moveTypescriptDeclarationsPlugin = (packagePath) => ({
+    name: 'move-ts-declarations',
+    writeBundle: async () => {
+        const files = glob.sync(path.join(packagePath, 'dist', '*', 'assets', 'src', '**/*.d.ts'));
+        files.forEach((file) => {
+            // a bit odd, but remove first 7 directories, which will leave
+            // only the relative path to the file
+            const relativePath = file.split('/').slice(7).join('/');
+
+            const targetFile = path.join(packagePath, 'dist', relativePath);
+            if (!fs.existsSync(path.dirname(targetFile))) {
+                fs.mkdirSync(path.dirname(targetFile), { recursive: true });
+            }
+            fs.renameSync(file, targetFile);
+        });
+    }
+});
+
 const files = glob.sync('src/*/assets/src/*controller.ts');
-const packages = files.map((file) => {
-    const absolutePath = path.join(__dirname, file);
-    const packageData = require(pkgUp.sync({ cwd: absolutePath }));
+module.exports = files.map((file) => {
+    const packageRoot = path.join(file, '..', '..');
+    const packagePath = path.join(packageRoot, 'package.json');
+    const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
     const peerDependencies = [
         '@hotwired/stimulus',
         ...(packageData.peerDependencies ? Object.keys(packageData.peerDependencies) : [])
@@ -50,21 +74,28 @@ const packages = files.map((file) => {
     return {
         input: file,
         output: {
-            file: path.join(absolutePath, '..', '..', 'dist', path.basename(file, '.ts') + '.js'),
+            file: path.join(packageRoot, 'dist', path.basename(file, '.ts') + '.js'),
             format: 'esm',
         },
         external: peerDependencies,
         plugins: [
             resolve(),
-            typescript(),
+            typescript({
+                filterRoot: packageRoot,
+                include: ['src/**/*.ts'],
+                compilerOptions: {
+                    outDir: 'dist',
+                    declaration: true,
+                    emitDeclarationOnly: true,
+                }
+            }),
             commonjs({
                 namedExports: {
                     'react-dom/client': ['createRoot'],
                 },
             }),
-            wildcardExternalsPlugin(peerDependencies)
+            wildcardExternalsPlugin(peerDependencies),
+            moveTypescriptDeclarationsPlugin(packageRoot),
         ],
     };
 });
-
-export default packages;
