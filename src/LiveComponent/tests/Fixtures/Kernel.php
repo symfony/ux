@@ -122,5 +122,6 @@ final class Kernel extends BaseKernel
 
         $routes->add('template', '/render-template/{template}')->controller('kernel::renderTemplate');
         $routes->add('homepage', '/')->controller('kernel::index');
+        $routes->add('alternate_live_route', '/alt/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
     }
 }

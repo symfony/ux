@@ -55,6 +55,19 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
+    public function testCanRenderComponentAsHtmlWithAlternateRoute(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'))->all();
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/alt/alternate_route?data='.urlencode(json_encode($dehydrated)))
+            ->assertSuccessful()
+            ->assertOn('/alt/alternate_route', parts: ['path'])
+            ->assertContains('From alternate route. (count: 0)')
+        ;
+    }
+
     public function testCanExecuteComponentAction(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'))->all();
@@ -77,6 +90,30 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 2')
+        ;
+    }
+
+    public function testCanExecuteComponentActionWithAlternateRoute(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'))->all();
+        $token = null;
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/alt/alternate_route?data='.urlencode(json_encode($dehydrated)))
+            ->assertSuccessful()
+            ->assertContains('count: 0')
+            ->use(function (Crawler $crawler) use (&$token) {
+                // get a valid token to use for actions
+                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
+            })
+            ->post('/alt/alternate_route/increase', [
+                'headers' => ['X-CSRF-TOKEN' => $token],
+                'body' => json_encode(['data' => $dehydrated]),
+            ])
+            ->assertSuccessful()
+            ->assertOn('/alt/alternate_route/increase')
+            ->assertContains('count: 1')
         ;
     }
 

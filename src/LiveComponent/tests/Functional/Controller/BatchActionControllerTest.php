@@ -74,6 +74,38 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
+    public function testCanBatchActionsWithAlternateRoute(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'))->all();
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/alt/alternate_route', ['json' => ['data' => $dehydrated]])
+            ->assertSuccessful()
+            ->assertSee('count: 0')
+            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+                $rootElement = $crawler->filter('div')->first();
+                $liveData = json_decode($rootElement->attr('data-live-data-value'), true);
+                $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
+
+                $browser->post('/alt/alternate_route/_batch', [
+                    'json' => [
+                        'data' => $liveData + $liveProps,
+                        'actions' => [
+                            ['name' => 'increase'],
+                            ['name' => 'increase'],
+                            ['name' => 'increase'],
+                        ],
+                    ],
+                    'headers' => ['X-CSRF-TOKEN' => $rootElement->attr('data-live-csrf-value')],
+                ]);
+            })
+            ->assertOn('/alt/alternate_route/_batch')
+            ->assertSuccessful()
+            ->assertSee('count: 3')
+        ;
+    }
+
     public function testCsrfTokenIsChecked(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'))->all();
