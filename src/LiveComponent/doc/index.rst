@@ -2117,21 +2117,21 @@ To handle this, add the ``data-live-ignore`` attribute to the element:
 Define another route for your Component
 ---------------------------------------
 
-The default route for live components is ``/components/{_live_component}/{_live_action}``
-If you have multiples firewalls in your app, you may want to specify another route for your component.
-It may be useful if you want to get the current logged in user in your component.
+The default route for live components is ``/components/{_live_component}/{_live_action}``.
+Sometimes it may be useful to customize this URL - e.g. so that the component lives
+under a specific firewall.
 
-To use another route, you need to declare it :
+To use a different route, first declare it:
 
 .. code-block:: yaml
 
-    # config/routes/attributes.yaml
+    # config/routes.yaml
     live_component_admin:
         path: /admin/_components/{_live_component}/{_live_action}
         defaults:
             _live_action: 'get'
 
-then specify this new route to your component :
+Then specify this new route on your component:
 
 .. code-block:: diff
 
