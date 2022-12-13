@@ -98,14 +98,24 @@ final class ComponentAttributes
 
     public function add(AbstractStimulusDto $stimulusDto): self
     {
+        return $this->mergeAttribute('data-controller', $stimulusDto);
+    }
+
+    public function prepend(AbstractStimulusDto $stimulusDto): self
+    {
+        return $this->mergeAttribute('data-controller', $stimulusDto, true);
+    }
+
+    private function mergeAttribute(string $name, AbstractStimulusDto $stimulusDto, bool $prepend = false): self
+    {
         $controllersAttributes = $stimulusDto->toArray();
         $attributes = $this->attributes;
 
-        $attributes['data-controller'] = implode(' ', array_merge(
-            explode(' ', $attributes['data-controller']),
-            explode(' ', $controllersAttributes['data-controller'] ?? [])
+        $attributes[$name] = implode(' ', array_merge(
+            explode(' ', $prepend ? $controllersAttributes[$name] ?? '' : $attributes[$name] ?? ''),
+            explode(' ', $prepend ? $attributes[$name] ?? '' : $controllersAttributes[$name] ?? ''),
         ));
-        unset($controllersAttributes['data-controller']);
+        unset($controllersAttributes[$name]);
 
         $clone = new self($attributes);
 

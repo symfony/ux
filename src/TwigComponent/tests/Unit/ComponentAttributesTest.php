@@ -87,4 +87,30 @@ final class ComponentAttributesTest extends TestCase
             'data-foo-name-value' => 'ryan',
         ], $attributes->all());
     }
+
+    public function testCanPrependStimulusController(): void
+    {
+        $attributes = new ComponentAttributes([
+            'class' => 'foo',
+            'data-controller' => 'live',
+            'data-live-data-value' => '{}',
+        ]);
+
+        $controllerDto = $this->createMock(AbstractStimulusDto::class);
+        $controllerDto->expects(self::once())
+            ->method('toArray')
+            ->willReturn([
+                'data-controller' => 'foo bar',
+                'data-foo-name-value' => 'ryan',
+            ]);
+
+        $attributes = $attributes->prepend($controllerDto);
+
+        $this->assertEquals([
+            'class' => 'foo',
+            'data-controller' => 'foo bar live',
+            'data-live-data-value' => '{}',
+            'data-foo-name-value' => 'ryan',
+        ], $attributes->all());
+    }
 }
