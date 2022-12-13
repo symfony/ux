@@ -39,9 +39,11 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
         ];
     }
 
-    public function finishView(FormView $view, FormInterface $form, array $options)
+    public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         if (!$options['autocomplete']) {
+            $view->vars['uses_autocomplete'] = false;
+
             return;
         }
 
@@ -83,10 +85,11 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             $attr['data-'.$controllerName.'-'.$name.'-value'] = $value;
         }
 
+        $view->vars['uses_autocomplete'] = true;
         $view->vars['attr'] = $attr;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'autocomplete' => false,
