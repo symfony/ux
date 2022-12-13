@@ -17,19 +17,19 @@ import SwupFadeTheme from '@swup/fade-theme';
 import SwupSlideTheme from '@swup/slide-theme';
 
 export default class extends Controller {
-    animateHistoryBrowsingValue: boolean;
-    hasAnimateHistoryBrowsingValue: boolean;
-    animationSelectorValue: string;
-    hasAnimationSelectorValue: boolean;
-    cacheValue: boolean;
-    hasCacheValue: boolean;
-    containersValue: string[];
-    mainElementValue: string;
-    hasMainElementValue: boolean;
-    linkSelectorValue: string;
-    hasLinkSelectorValue: boolean;
-    themeValue: string;
-    debugValue: boolean;
+    declare readonly animateHistoryBrowsingValue: boolean;
+    declare readonly hasAnimateHistoryBrowsingValue: boolean;
+    declare readonly animationSelectorValue: string;
+    declare readonly hasAnimationSelectorValue: boolean;
+    declare readonly cacheValue: boolean;
+    declare readonly hasCacheValue: boolean;
+    declare readonly containersValue: string[];
+    declare readonly mainElementValue: string;
+    declare readonly hasMainElementValue: boolean;
+    declare readonly linkSelectorValue: string;
+    declare readonly hasLinkSelectorValue: boolean;
+    declare readonly themeValue: string;
+    declare readonly debugValue: boolean;
 
     static values = {
         animateHistoryBrowsing: Boolean,

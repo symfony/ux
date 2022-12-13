@@ -15,9 +15,9 @@ import { App, createApp } from 'vue';
 export default class extends Controller<Element & { __vue_app__?: App<Element> }> {
     private props: Record<string, unknown> | null;
     private app: App<Element>;
-    readonly componentValue: string;
+    declare readonly componentValue: string;
+    declare readonly propsValue: Record<string, unknown> | null | undefined;
 
-    readonly propsValue: Record<string, unknown> | null | undefined;
     static values = {
         component: String,
         props: Object,

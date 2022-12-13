@@ -12,12 +12,12 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    readonly inputTarget: HTMLInputElement;
-    readonly placeholderTarget: HTMLDivElement;
-    readonly previewTarget: HTMLDivElement;
-    readonly previewClearButtonTarget: HTMLButtonElement;
-    readonly previewFilenameTarget: HTMLDivElement;
-    readonly previewImageTarget: HTMLDivElement;
+    declare readonly inputTarget: HTMLInputElement;
+    declare readonly placeholderTarget: HTMLDivElement;
+    declare readonly previewTarget: HTMLDivElement;
+    declare readonly previewClearButtonTarget: HTMLButtonElement;
+    declare readonly previewFilenameTarget: HTMLDivElement;
+    declare readonly previewImageTarget: HTMLDivElement;
 
     static targets = ['input', 'placeholder', 'preview', 'previewClearButton', 'previewFilename', 'previewImage'];
 

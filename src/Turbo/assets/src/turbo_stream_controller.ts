@@ -18,10 +18,16 @@ export default class extends Controller {
         topic: String,
         hub: String,
     };
-    es;
+    es: EventSource | undefined;
+    url: string | undefined;
+
+    declare readonly topicValue: string;
+    declare readonly hubValue: string;
+    declare readonly hasHubValue: boolean;
+    declare readonly hasTopicValue: boolean;
 
     initialize() {
-        const errorMessages = [];
+        const errorMessages: string[] = [];
         if (!this.hasHubValue) errorMessages.push('A "hub" value pointing to the Mercure hub must be provided.');
         if (!this.hasTopicValue) errorMessages.push('A "topic" value must be provided.');
         if (errorMessages.length) throw new Error(errorMessages.join(' '));
@@ -33,12 +39,16 @@ export default class extends Controller {
     }
 
     connect() {
-        this.es = new EventSource(this.url);
-        connectStreamSource(this.es);
+        if (this.url) {
+            this.es = new EventSource(this.url);
+            connectStreamSource(this.es);
+        }
     }
 
     disconnect() {
-        this.es.close();
-        disconnectStreamSource(this.es);
+        if (this.es) {
+            this.es.close();
+            disconnectStreamSource(this.es);
+        }
     }
 }

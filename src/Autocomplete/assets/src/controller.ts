@@ -13,14 +13,14 @@ export default class extends Controller {
         preload: String,
     };
 
-    readonly urlValue: string;
-    readonly optionsAsHtmlValue: boolean;
-    readonly noMoreResultsTextValue: string;
-    readonly noResultsFoundTextValue: string;
-    readonly minCharactersValue: number;
-    readonly tomSelectOptionsValue: object;
-    readonly hasPreloadValue: boolean;
-    readonly preloadValue: string;
+    declare readonly urlValue: string;
+    declare readonly optionsAsHtmlValue: boolean;
+    declare readonly noMoreResultsTextValue: string;
+    declare readonly noResultsFoundTextValue: string;
+    declare readonly minCharactersValue: number;
+    declare readonly tomSelectOptionsValue: object;
+    declare readonly hasPreloadValue: boolean;
+    declare readonly preloadValue: string;
     tomSelect: TomSelect;
 
     initialize() {

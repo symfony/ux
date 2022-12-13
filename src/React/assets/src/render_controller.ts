@@ -14,8 +14,8 @@ import { createRoot } from 'react-dom/client';
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    readonly componentValue?: string;
-    readonly propsValue?: object;
+    declare readonly componentValue?: string;
+    declare readonly propsValue?: object;
 
     static values = {
         component: String,
