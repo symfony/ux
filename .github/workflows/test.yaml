@@ -164,6 +164,15 @@ jobs:
               working-directory: src/Autocomplete
               run: php vendor/bin/simple-phpunit
 
+            - name: Translator Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                working-directory: src/Translator
+                dependency-versions: lowest
+            - name: Translator Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/Translator
+
     tests-php-high-deps:
         runs-on: ubuntu-latest
         steps:
@@ -260,6 +269,14 @@ jobs:
                   working-directory: src/Notify
             - name: Notify Tests
               working-directory: src/Notify
+              run: php vendor/bin/simple-phpunit
+              
+            - name: Translator Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/Translator
+            - name: Translator Tests
+              working-directory: src/Translator
               run: php vendor/bin/simple-phpunit
 
     tests-js:
