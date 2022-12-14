@@ -3,6 +3,7 @@
 ## Unreleased
 
 -   Add `assets/src` to `.gitattributes` to exclude them from the installation
+-   Support added for Chart.js version 4
 
 ## 2.6.0
 
