@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+-   Add `assets/src` to `.gitattributes` to exclude them from the installation
+
 ## 2.6.0
 
 -   [BC BREAK]: The path to `routes.php` changed and you should update your
