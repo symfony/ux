@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by 1ed at 2022-12-09T10:27:43Z
+
+If we do this please add types to `dist`. Currently I do this to have proper types:
+
+`import type Component from "@symfony/ux-live-component/src/Component"`
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-12-09T22:14:44Z
+
+Good call @1ed - I've got a PR locally to do this. I'm currently exporting only the `controller.d.ts` file (or whatever it is called in each library), as I'm thinking I want to avoid making the entire API available as types. But, perhaps that's silly for me to think about. If we do only export `controller.d.ts`, then, for your example, we would need to make sure that `live_controller.ts` exports all the "public" items.
+
+---------------------------------------------------------------------------
+
+by 1ed at 2022-12-10T09:10:15Z
+
+Thanks, it sounds great. Export only the minimal public API, like public controller properties and functions and event arguments are enough, I think, and later we can add more if needed.
+
+---------------------------------------------------------------------------
+
+by daFish at 2022-12-12T09:45:15Z
+
+I also like this idea. Would you want to add your local changes to this branch, @weaverryan? Otherwise a seperate PR would be better to have a clear scope.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-12-13T15:12:42Z
+
+I'll open a separate PR - hopefully today if my schedule stay's together :)
