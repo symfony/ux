@@ -484,6 +484,10 @@ The following hooks are available (along with the arguments that are passed):
 Adding a Stimulus Controller to your Component Root Element
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. versionadded: 2.7
+
+    The ``add()`` method was introduced in TwigComponents 2.7.
+
 To add a custom Stimulus controller to your root component element:
 
 .. code-block:: twig

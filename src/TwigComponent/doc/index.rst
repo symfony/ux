@@ -590,6 +590,10 @@ Set an attribute's value to ``null`` to exclude the value when rendering:
     {# renders as: #}
     <input type="text" value="" autofocus/>
 
+.. versionadded: 2.7
+
+    The ``add()`` method was introduced in TwigComponents 2.7.
+
 To add a custom Stimulus controller to your root component element:
 
 .. code-block:: twig
