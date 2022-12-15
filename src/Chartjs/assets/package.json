@@ -7,11 +7,19 @@
     "types": "dist/controller.d.ts",
     "symfony": {
         "controllers": {
-            "chart": {
-                "main": "dist/controller.js",
+            "chart_v3": {
+                "main": "dist/chart_v3_controller.js",
+                "name": "symfony--ux-chartjs--chart",
                 "webpackMode": "eager",
                 "fetch": "eager",
                 "enabled": true
+            },
+            "chart_v4": {
+                "main": "dist/chart_v4_controller.js",
+                "name": "symfony--ux-chartjs--chart",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": false
             }
         }
     },
