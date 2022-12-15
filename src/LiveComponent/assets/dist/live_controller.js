@@ -2349,4 +2349,4 @@ default_1.values = {
     fingerprint: String,
 };
 
-export { default_1 as default };
+export { Component, default_1 as default };
