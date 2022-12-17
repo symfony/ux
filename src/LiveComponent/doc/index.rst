@@ -236,7 +236,7 @@ For example, could we allow the user to *change* the ``$max``
 property and then re-render the component when they do? Definitely! And
 *that* is where live components really shine.
 
-Add an inputs to the template:
+Add an input to the template:
 
 .. code-block:: twig
 
