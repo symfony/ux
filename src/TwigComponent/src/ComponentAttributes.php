@@ -96,12 +96,12 @@ final class ComponentAttributes
         return $clone;
     }
 
-    public function add(AbstractStimulusDto $stimulusDto): self
+    public function appendController(AbstractStimulusDto $stimulusDto): self
     {
         return $this->mergeAttribute('data-controller', $stimulusDto);
     }
 
-    public function prepend(AbstractStimulusDto $stimulusDto): self
+    public function prependController(AbstractStimulusDto $stimulusDto): self
     {
         return $this->mergeAttribute('data-controller', $stimulusDto, true);
     }

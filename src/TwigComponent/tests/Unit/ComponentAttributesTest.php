@@ -62,7 +62,7 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(['class' => 'foo'], $attributes->without('style')->all());
     }
 
-    public function testCanAddStimulusController(): void
+    public function testCanAppendStimulusController(): void
     {
         $attributes = new ComponentAttributes([
             'class' => 'foo',
@@ -78,7 +78,7 @@ final class ComponentAttributesTest extends TestCase
                 'data-foo-name-value' => 'ryan',
             ]);
 
-        $attributes = $attributes->add($controllerDto);
+        $attributes = $attributes->appendController($controllerDto);
 
         $this->assertEquals([
             'class' => 'foo',
@@ -104,7 +104,7 @@ final class ComponentAttributesTest extends TestCase
                 'data-foo-name-value' => 'ryan',
             ]);
 
-        $attributes = $attributes->prepend($controllerDto);
+        $attributes = $attributes->prependController($controllerDto);
 
         $this->assertEquals([
             'class' => 'foo',
