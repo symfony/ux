@@ -592,13 +592,20 @@ Set an attribute's value to ``null`` to exclude the value when rendering:
 
 .. versionadded: 2.7
 
-    The ``add()`` method was introduced in TwigComponents 2.7.
+    The ``appendController()`` and ``prependController()`` methods were introduced in TwigComponents 2.7.
 
-To add a custom Stimulus controller to your root component element:
+To append or prepend a custom Stimulus controller to your root component element:
 
 .. code-block:: twig
 
-    <div {{ attributes.add(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
+    <div {{ attributes.appendController(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
+    <div {{ attributes.prependController(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
+
+.. note::
+
+    As Stimulus controllers' lifecycle methods called in the order as they appear
+    in the DOM. If the order of these calls matters for your use case, you should
+    call the appropriate method. For LiveControllers you usually need prepend.
 
 .. note::
 
