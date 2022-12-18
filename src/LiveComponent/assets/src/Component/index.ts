@@ -370,6 +370,10 @@ export default class Component {
         let newElement;
         try {
             newElement = htmlToElement(html);
+
+            if (!newElement.matches('[data-controller~=live]')) {
+                throw new Error('A live component template must contain a single root controller element.');
+            }
         } catch (error) {
             console.error('There was a problem with the component HTML returned:');
 
