@@ -32,16 +32,17 @@ class BootstrapTableExtensionTest extends TestCase
         $builder = $container->get('test.bootstrapTable.builder');
 
         $table = $builder
-            ->addColumns(['id', 'pseudo'])
+            ->addColumns([
+                ['title' => 'ID', 'field' => 'id'],
+                ['title' => 'Pseudo', 'field' => 'pseudo']
+            ])
             ->addData([
                 ['id' => 1, 'pseudo' => 'Bob'],
                 ['id' => 2, 'pseudo' => 'Kitty']
             ])
-            ->addColumnsAttributes([
-                'id' => ['data-align' => 'right']
-            ])
-            ->addTableAttributes([
-                'data-search' => 'true'
+            ->addOptions([
+                'pagination'=> 'true',
+                'search' => 'true'
             ])
             ->createTable()
         ;
@@ -55,7 +56,7 @@ class BootstrapTableExtensionTest extends TestCase
         ;
 
         $this->assertSame(
-            '<table data-toggle="table" data-search="true" ><thead><tr><th data-align="right" >id</th><th >pseudo</th></tr></thead><tbody><tr><td>1</td><td>Bob</td></tr><tr><td>2</td><td>Kitty</td></tr></tbody></table>',
+            '<table data-controller="symfony--bootstrap-table--table" data-symfony--bootstrap-table--table-rows-value="&#x5B;&#x7B;&quot;id&quot;&#x3A;1,&quot;pseudo&quot;&#x3A;&quot;Bob&quot;&#x7D;,&#x7B;&quot;id&quot;&#x3A;2,&quot;pseudo&quot;&#x3A;&quot;Kitty&quot;&#x7D;&#x5D;" data-symfony--bootstrap-table--table-columns-value="&#x5B;&#x7B;&quot;title&quot;&#x3A;&quot;ID&quot;,&quot;field&quot;&#x3A;&quot;id&quot;&#x7D;,&#x7B;&quot;title&quot;&#x3A;&quot;Pseudo&quot;,&quot;field&quot;&#x3A;&quot;pseudo&quot;&#x7D;&#x5D;" data-symfony--bootstrap-table--table-options-value="&#x7B;&quot;pagination&quot;&#x3A;&quot;true&quot;,&quot;search&quot;&#x3A;&quot;true&quot;&#x7D;"></table>',
             $rendered);
     }
 }
