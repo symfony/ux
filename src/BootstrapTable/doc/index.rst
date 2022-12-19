@@ -33,33 +33,30 @@ Usage
 To use Symfony UX Bootstrap Table, inject the ``TableBuilderInterface`` service
 and create table in PHP::
 
-    // ...
-    use Symfony\UX\BootstrapTable\Builder\TableBuilderInterface;
+    $table = $tableBuilder
+            ->addColumns([
+                ['title' => 'ID', 'field' => 'id'],
+                ['title' => 'Pseudo', 'field' => 'pseudo'],
+                ['title' => 'Age', 'field' => 'age'],
+                ['title' => 'Gender', 'field' => 'gender']
+            ])
+            ->addData([
+                ['id' => 1, 'pseudo' => 'Bob', 'age' => 23, 'gender' => 'M'],
+                ['id' => 2, 'pseudo' => 'Kitty', 'age' => 36, 'gender' => 'F'],
+                ['id' => 3, 'pseudo' => 'Spongy', 'age' => 34, 'gender' => 'M'],
+                ['id' => 4, 'pseudo' => 'Slurp', 'age' => 20, 'gender' => 'F'],
+                ['id' => 5, 'pseudo' => 'Zoom', 'age' => 29, 'gender' => 'M'],
+            ])
+            ->addOptions([
+                'pagination'=> 'true',
+                'search' => 'true']
+            )
+            ->createTable()
+        ;
 
-    class HomeController extends AbstractController
-    {
-        #[Route("/", name: "app_index")]
-        public function index(TableBuilderInterface $tableBuilder): Response
-        {
-            $table = $tableBuilder
-                ->addColumns(['id', 'pseudo'])
-                ->addData([
-                    ['id' => 1, 'pseudo' => 'Bob'],
-                    ['id' => 2, 'pseudo' => 'Kitty']
-                ])
-                ->addColumnsAttributes([
-                    'id' => ['data-align' => 'right']
-                ])
-                ->addTableAttributes([
-                    'data-search' => 'true'
-                ])
-                ->createTable()
-            ;
-
-            return $this->render('index.html.twig', [
-                'table' => $table
-            ]);
-        }
+        return $this->render('index.html.twig', [
+            'table' => $table,
+        ]);
     }
 
 All options and data are provided as-is to Bootstrap Table. You can read

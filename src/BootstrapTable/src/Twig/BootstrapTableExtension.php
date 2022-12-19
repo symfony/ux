@@ -12,6 +12,7 @@
 namespace Symfony\UX\BootstrapTable\Twig;
 
 use Symfony\UX\BootstrapTable\Model\Table;
+use Symfony\WebpackEncoreBundle\Dto\StimulusControllersDto;
 use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
@@ -19,6 +20,7 @@ use Twig\TwigFunction;
 
 /**
  * @author Mathéo Daninos <mathéo.daninos@gmail.com>
+ *
  */
 class BootstrapTableExtension extends AbstractExtension
 {
@@ -32,67 +34,15 @@ class BootstrapTableExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('render_table', [$this, 'renderTable'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('render_table', [$this, 'renderTable'], ['needs_environment' => true, 'is_safe' => ['html']])
         ];
     }
 
     public function renderTable(Environment $environment, Table $table): string
     {
-        $rendered = '<table data-toggle="table" ';
-        $rendered .= $this->renderTableAttributes($table->getTableAttributes()).'>';
-        $rendered .= $this->renderTableHeader($table);
-        $rendered .= $this->renderTableBody($table->getColumns(), $table->getData());
-        $rendered .= '</table>';
+        $dto = new StimulusControllersDto($environment);
+        $dto->addController('symfony/bootstrap-table/table', $table->renderView());
 
-        return $rendered;
-    }
-
-    private function renderTableHeader(Table $table): string
-    {
-        $renderedCols = '';
-        foreach ($table->getColumns() as $col) {
-            $renderedCols .= '<th '.$this->renderColumnsAttributes($col, $table->getColumnsAttributes()).'>'.$col.'</th>';
-        }
-
-        return '<thead><tr>'.$renderedCols.'</tr></thead>';
-    }
-
-    private function renderColumnsAttributes(string $column, array $columnsAttributes): string
-    {
-        $results = '';
-
-        if (!isset($columnsAttributes[$column])) {
-            return '';
-        }
-
-        foreach ($columnsAttributes[$column] as $key => $value) {
-            $results .= $key.'="'.$value.'" ';
-        }
-
-        return $results;
-    }
-
-    private function renderTableBody(array $cols, array $data): string
-    {
-        $content = '';
-        foreach ($data as $row) {
-            $renderedRow = '<tr>';
-            foreach ($cols as $col) {
-                $renderedRow .= '<td>'.$row[$col].'</td>';
-            }
-            $content .= $renderedRow.'</tr>';
-        }
-
-        return '<tbody>'.$content.'</tbody>';
-    }
-
-    private function renderTableAttributes(array $attributes): string
-    {
-        $result = '';
-        foreach ($attributes as $key => $value) {
-            $result .= $key.'="'.$value.'" ';
-        }
-
-        return $result;
+        return '<table ' . $dto . '></table>';
     }
 }

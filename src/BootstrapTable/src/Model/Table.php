@@ -20,15 +20,13 @@ class Table
 {
     private $data = [];
     private $columns = [];
-    private $tableAttributes = [];
-    private $columnsAttributes = [];
+    private $options = [];
 
-    public function __construct($data = [], $columns = [], $tableAttributes = [], $columnsAttributes = [])
+    public function __construct($data = [], $columns = [], $options = [])
     {
         $this->data = $data;
         $this->columns = $columns;
-        $this->tableAttributes = $tableAttributes;
-        $this->columnsAttributes = $columnsAttributes;
+        $this->options = $options;
     }
 
     public function setData(array $data): self
@@ -55,23 +53,17 @@ class Table
         return $this->columns;
     }
 
-    public function getTableAttributes(): array
+    public function getOptions(): array
     {
-        return $this->tableAttributes;
+        return $this->options;
     }
 
-    public function setTableAttributes(array $tableAttributes): void
+    public function renderView(): array
     {
-        $this->tableAttributes = $tableAttributes;
-    }
-
-    public function getColumnsAttributes(): array
-    {
-        return $this->columnsAttributes;
-    }
-
-    public function setColumnsAttributes(array $columnsAttributes): void
-    {
-        $this->columnsAttributes = $columnsAttributes;
+        return [
+            'rows' => $this->data,
+            'columns' => $this->columns,
+            'options' => $this->options
+        ];
     }
 }

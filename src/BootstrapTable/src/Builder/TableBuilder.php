@@ -20,12 +20,11 @@ class TableBuilder implements TableBuilderInterface
 {
     public $data = [];
     public $columns = [];
-    public $tableAttributes = [];
-    public $columnsAttributes = [];
+    public $options = [];
 
     public function createTable(): Table
     {
-        return new Table($this->data, $this->columns, $this->tableAttributes, $this->columnsAttributes);
+        return new Table($this->data, $this->columns, $this->options);
     }
 
     public function addData(array $data): TableBuilderInterface
@@ -42,16 +41,10 @@ class TableBuilder implements TableBuilderInterface
         return $this;
     }
 
-    public function addTableAttributes(array $tableAttributes): TableBuilderInterface
-    {
-        $this->tableAttributes = $tableAttributes;
 
-        return $this;
-    }
-
-    public function addColumnsAttributes(array $columnsAttributes): TableBuilderInterface
+    public function addOptions(array $options): TableBuilderInterface
     {
-        $this->columnsAttributes = $columnsAttributes;
+        $this->options = $options;
 
         return $this;
     }

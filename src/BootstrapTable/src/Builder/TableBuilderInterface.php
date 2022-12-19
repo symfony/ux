@@ -20,11 +20,9 @@ interface TableBuilderInterface
 {
     public function createTable(): Table;
 
-    public function addData(array $data): self;
+    public function addData(array $data): TableBuilderInterface;
 
-    public function addColumns(array $columns): self;
+    public function addColumns(array $columns): TableBuilderInterface;
 
-    public function addTableAttributes(array $tableAttributes): self;
-
-    public function addColumnsAttributes(array $columnsAttributes): self;
+    public function addOptions(array $options): TableBuilderInterface;
 }
