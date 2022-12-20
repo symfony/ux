@@ -1183,7 +1183,7 @@ Using Actions to Change your Form: CollectionType
 
 Symfony's `CollectionType`_ can be used to embed a collection of
 embedded forms including allowing the user to dynamically add or remove
-them. Live components can accomplish make this all possible while
+them. Live components make this all possible while
 writing zero JavaScript.
 
 For example, imagine a "Blog Post" form with an embedded "Comment" forms
