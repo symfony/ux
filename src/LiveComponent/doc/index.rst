@@ -416,14 +416,11 @@ controller and put it around (or attached to) your root component element:
 
     // assets/controllers/some-custom-controller.js
     // ...
+    import { getComponent } from '@symfony/ux-live-component';
 
     export default class extends Controller {
-        connect() {
-            // when the live component inside of this controller is initialized,
-            // this method will be called and you can access the Component object
-            this.element.addEventListener('live:connect', (event) => {
-                this.component = event.detail.component;
-            });
+        async initialize() {
+            this.component = await getComponent(this.element);
         }
 
         // some Stimulus action triggered, for example, on user click
@@ -441,11 +438,13 @@ controller and put it around (or attached to) your root component element:
     }
 
 You can also access the ``Component`` object via a special property
-on the root component element:
+on the root component element, though ``getComponent()`` is the
+recommended way, as it will work even if the component is not yet
+initialized:
 
 .. code-block:: javascript
 
-    const component = document.getElementById('id-on-your-element').__component;
+    const component = document.getElementById('id-of-your-element').__component;
     component.mode = 'editing';
 
 Finally, you can also set the value of a model field directly. However,
@@ -470,15 +469,14 @@ component system from Stimulus:
 
     // assets/controllers/some-custom-controller.js
     // ...
+    import { getComponent } from '@symfony/ux-live-component';
 
     export default class extends Controller {
-        connect() {
-            this.element.addEventListener('live:connect', (event) => {
-                this.component = event.detail.component;
+        async initialize() {
+            this.component = await getComponent(this.element);
 
-                this.component.on('render:finished', (component) => {
-                    // do something after the component re-renders
-                });
+            this.component.on('render:finished', (component) => {
+                // do something after the component re-renders
             });
         }
     }
