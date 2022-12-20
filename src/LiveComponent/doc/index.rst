@@ -2121,6 +2121,10 @@ To handle this, add the ``data-live-ignore`` attribute to the element:
 Define another route for your Component
 ---------------------------------------
 
+.. versionadded:: 2.7
+
+    The ``route`` option  was added in LiveComponents 2.7.
+
 The default route for live components is ``/components/{_live_component}/{_live_action}``.
 Sometimes it may be useful to customize this URL - e.g. so that the component lives
 under a specific firewall.
