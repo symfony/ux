@@ -10,7 +10,7 @@
 'use strict';
 
 import AbstractChartController from './abstract_controller';
-import Chart from 'chart.js/auto';
+import Chart from 'chart.js/auto/auto.cjs';
 import { ChartConfiguration, ChartItem } from 'chart.js';
 
 export default class extends AbstractChartController {
