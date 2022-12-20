@@ -235,13 +235,39 @@ jobs:
               working-directory: src/Notify
               run: php vendor/bin/simple-phpunit
 
-    tests-js:
+    tests-js-low-deps:
+        runs-on: ubuntu-latest
+        steps:
+            -   uses: actions/checkout@master
+
+            -   name: Get yarn cache directory path
+                id: yarn-cache-dir-path
+                run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+            -   uses: actions/cache@v2
+                id: yarn-cache
+                with:
+                    path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+                    key: ${{ runner.os }}-low-yarn-${{ hashFiles('**/package.json') }}
+                    restore-keys: |
+                        ${{ runner.os }}-low-yarn-
+
+            -   name: Force Lowest Dependencies
+                run: node ./src/Chartjs/assets/scripts/force-lowest-dependencies.js
+
+            -   run: yarn
+
+            -   run: yarn test
+
+    tests-js-high-deps:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
+
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
               run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
             - uses: actions/cache@v2
               id: yarn-cache
               with:
@@ -249,5 +275,7 @@ jobs:
                   key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}
                   restore-keys: |
                       ${{ runner.os }}-yarn-
+
             - run: yarn
+
             - run: yarn test
