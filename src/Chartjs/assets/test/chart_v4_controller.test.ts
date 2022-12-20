@@ -9,24 +9,11 @@
 
 'use strict';
 
-import { Application, Controller } from '@hotwired/stimulus';
+import { Application } from '@hotwired/stimulus';
+import { CheckController } from './chart_check_controller';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
-import ChartjsController from '../src/controller';
-
-// Controller used to check the actual controller was properly booted
-class CheckController extends Controller {
-    connect() {
-        this.element.addEventListener('chartjs:pre-connect', () => {
-            this.element.classList.add('pre-connected');
-        });
-
-        this.element.addEventListener('chartjs:connect', (event) => {
-            this.element.classList.add('connected');
-            this.element.chart = event.detail.chart;
-        });
-    }
-}
+import ChartjsController from '../src/chart_v4_controller';
 
 const startStimulus = () => {
     const application = Application.start();
