@@ -45,7 +45,7 @@ This brings the familiar "component" system from client-side frameworks
 into Symfony. Combine this with `Live Components`_, to create
 an interactive frontend with automatic, Ajax-powered rendering.
 
-Want a demo? Check out https://github.com/weaverryan/live-demo.
+Want a demo? Check out https://ux.symfony.com/twig-component#demo
 
 Installation
 ------------
