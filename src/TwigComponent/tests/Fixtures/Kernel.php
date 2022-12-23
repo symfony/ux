@@ -40,6 +40,7 @@ final class Kernel extends BaseKernel
             'test' => true,
             'router' => ['utf8' => true],
             'secrets' => false,
+            'http_method_override' => false,
         ]);
         $c->extension('twig', [
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
