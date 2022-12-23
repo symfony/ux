@@ -78,13 +78,29 @@ final class ComponentAttributesTest extends TestCase
                 'data-foo-name-value' => 'ryan',
             ]);
 
-        $attributes = $attributes->appendController($controllerDto);
+        $attributes = $attributes->append($controllerDto);
 
         $this->assertEquals([
             'class' => 'foo',
             'data-controller' => 'live foo bar',
             'data-live-data-value' => '{}',
             'data-foo-name-value' => 'ryan',
+        ], $attributes->all());
+    }
+
+    public function testCanAppendArrayOfAttributes(): void
+    {
+        $attributes = new ComponentAttributes([
+            'class' => 'foo',
+            'data-keep' => 'keep-it',
+        ]);
+
+        $attributes = $attributes->append(['data-add' => 'add-it', 'class' => 'bar']);
+
+        $this->assertEquals([
+            'class' => 'foo bar',
+            'data-keep' => 'keep-it',
+            'data-add' => 'add-it',
         ], $attributes->all());
     }
 
@@ -104,13 +120,29 @@ final class ComponentAttributesTest extends TestCase
                 'data-foo-name-value' => 'ryan',
             ]);
 
-        $attributes = $attributes->prependController($controllerDto);
+        $attributes = $attributes->prepend($controllerDto);
 
         $this->assertEquals([
             'class' => 'foo',
             'data-controller' => 'foo bar live',
             'data-live-data-value' => '{}',
             'data-foo-name-value' => 'ryan',
+        ], $attributes->all());
+    }
+
+    public function testCanPrependArrayOfAttributes(): void
+    {
+        $attributes = new ComponentAttributes([
+            'class' => 'foo',
+            'data-keep' => 'keep-it',
+        ]);
+
+        $attributes = $attributes->prepend(['data-add' => 'add-it', 'class' => 'bar']);
+
+        $this->assertEquals([
+            'class' => 'bar foo',
+            'data-keep' => 'keep-it',
+            'data-add' => 'add-it',
         ], $attributes->all());
     }
 }

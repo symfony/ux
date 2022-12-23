@@ -96,30 +96,41 @@ final class ComponentAttributes
         return $clone;
     }
 
-    public function appendController(AbstractStimulusDto $stimulusDto): self
+    /**
+     * @param array<string, string>|AbstractStimulusDto $attributes
+     */
+    public function append(array|AbstractStimulusDto $attributes): self
     {
-        return $this->mergeAttribute('data-controller', $stimulusDto);
+        return $this->mergeAttribute($attributes);
     }
 
-    public function prependController(AbstractStimulusDto $stimulusDto): self
+    /**
+     * @param array<string, string>|AbstractStimulusDto $attributes
+     */
+    public function prepend(array|AbstractStimulusDto $attributes): self
     {
-        return $this->mergeAttribute('data-controller', $stimulusDto, true);
+        return $this->mergeAttribute($attributes, true);
     }
 
-    private function mergeAttribute(string $name, AbstractStimulusDto $stimulusDto, bool $prepend = false): self
+    /**
+     * @param array<string, string>|AbstractStimulusDto $other
+     */
+    private function mergeAttribute(array|AbstractStimulusDto $other, bool $prepend = false): self
     {
-        $controllersAttributes = $stimulusDto->toArray();
-        $attributes = $this->attributes;
+        $otherAttributes = $other instanceof AbstractStimulusDto ? $other->toArray() : $other;
+        $selfAttributes = $this->attributes;
 
-        $attributes[$name] = implode(' ', array_merge(
-            explode(' ', $prepend ? $controllersAttributes[$name] ?? '' : $attributes[$name] ?? ''),
-            explode(' ', $prepend ? $attributes[$name] ?? '' : $controllersAttributes[$name] ?? ''),
-        ));
-        unset($controllersAttributes[$name]);
+        $attributes = array_merge($selfAttributes, $otherAttributes);
+        foreach ($selfAttributes as $name => $attr) {
+            $attributes[$name] =
+                trim(
+                    ($prepend ? $otherAttributes[$name] ?? '' : $attr)
+                    .' '.
+                    ($prepend ? $attr : $otherAttributes[$name] ?? ''),
+                    ' '
+                );
+        }
 
-        $clone = new self($attributes);
-
-        // add the remaining attributes for values/classes
-        return $clone->defaults($controllersAttributes);
+        return new self($attributes);
     }
 }

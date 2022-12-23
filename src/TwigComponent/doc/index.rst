@@ -590,16 +590,16 @@ Set an attribute's value to ``null`` to exclude the value when rendering:
     {# renders as: #}
     <input type="text" value="" autofocus/>
 
-.. versionadded: 2.7
+.. versionadded:: 2.7
 
-    The ``appendController()`` and ``prependController()`` methods were introduced in TwigComponents 2.7.
+    The ``append()`` and ``prepend()`` methods were introduced in TwigComponents 2.7.
 
 To append or prepend a custom Stimulus controller to your root component element:
 
 .. code-block:: twig
 
-    <div {{ attributes.appendController(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
-    <div {{ attributes.prependController(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
+    <div {{ attributes.append(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
+    <div {{ attributes.prepend(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
 
 .. note::
 

@@ -3,6 +3,8 @@
 ## Unreleased
 
 -   Add `assets/src` to `.gitattributes` to exclude them from the installation
+-   Add `ComponentAttributes::append` and `ComponentAttributes::prepend` to eg. prepend a stimulus
+    controller in templates like `<div {{ attributes.prepend(stimulus_controller('my-controller')) }}>`
 
 ## 2.5
 
