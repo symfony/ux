@@ -158,5 +158,8 @@ final class Kernel extends BaseKernel
             ->prefix('/test/autocomplete');
 
         $routes->add('test_form', '/test-form')->controller('kernel::testForm');
+
+        $routes->add('ux_autocomplete_alternate', '/alt/test/autocomplete/{alias}')
+            ->controller('ux.autocomplete.entity_autocomplete_controller');
     }
 }

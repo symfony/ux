@@ -159,6 +159,34 @@ After creating this class, use it in your form:
     these won't be used during the Ajax call to fetch results. Instead, include
     all options inside the custom class (``FoodAutocompleteField``).
 
+.. note::
+
+    .. versionadded:: Unreleased
+    The default route for Autocomplete components is ``/autocomplete/{alias}/``
+    Sometimes it may be useful to customize this URL - e.g. so that the component lives
+    under a specific firewall.
+
+    To use another route, you need to declare it :
+
+    .. code-block:: yaml
+        # config/routes/attributes.yaml
+        ux_entity_autocomplete_admin:
+          controller: ux.autocomplete.entity_autocomplete_controller
+          path: '/admin/autocomplete/{alias}'
+
+    then specify this new route to your component :
+
+    .. code-block:: diff
+        // src/Form/FoodAutocompleteField.php
+        use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
+        - #[AsEntityAutocompleteField]
+        + #[AsEntityAutocompleteField(route: 'ux_entity_autocomplete_admin')]
+          class FoodAutocompleteField
+          {
+              // ...
+          }
+
+
 Congratulations! Your ``EntityType`` is now Ajax-powered!
 
 Styling Tom Select
@@ -493,10 +521,10 @@ consider registering the needed type extension ``AutocompleteChoiceTypeExtension
 
     // tests/Form/Type/TestedTypeTest.php
     namespace App\Tests\Form\Type;
-    
+
     use Symfony\Component\Form\Test\TypeTestCase;
     use Symfony\UX\Autocomplete\Form\AutocompleteChoiceTypeExtension;
-    
+
     class TestedTypeTest extends TypeTestCase
     {
         protected function getTypeExtensions(): array
@@ -505,7 +533,7 @@ consider registering the needed type extension ``AutocompleteChoiceTypeExtension
                 new AutocompleteChoiceTypeExtension(),
             ];
         }
-    
+
         // ... your tests
     }
 
