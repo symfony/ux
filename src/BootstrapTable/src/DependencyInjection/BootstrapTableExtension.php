@@ -17,13 +17,12 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\UX\BootstrapTable\Builder\TableBuilder;
 use Symfony\UX\BootstrapTable\Builder\TableBuilderInterface;
-use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Symfony\UX\BootstrapTable\Twig\BootstrapTableExtension as TwigExtension;
+use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Twig\Environment;
 
 /**
  * @author Mathéo Daninos <mathéo.daninos@gmail.com>
- *
  */
 class BootstrapTableExtension extends Extension
 {

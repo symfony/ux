@@ -20,7 +20,6 @@ use Twig\TwigFunction;
 
 /**
  * @author Mathéo Daninos <mathéo.daninos@gmail.com>
- *
  */
 class BootstrapTableExtension extends AbstractExtension
 {
@@ -34,7 +33,7 @@ class BootstrapTableExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('render_table', [$this, 'renderTable'], ['needs_environment' => true, 'is_safe' => ['html']])
+            new TwigFunction('render_table', [$this, 'renderTable'], ['needs_environment' => true, 'is_safe' => ['html']]),
         ];
     }
 
@@ -43,6 +42,6 @@ class BootstrapTableExtension extends AbstractExtension
         $dto = new StimulusControllersDto($environment);
         $dto->addController('symfony/bootstrap-table/table', $table->renderView());
 
-        return '<table ' . $dto . '></table>';
+        return '<table '.$dto.'></table>';
     }
 }

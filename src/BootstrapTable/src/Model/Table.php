@@ -63,7 +63,7 @@ class Table
         return [
             'rows' => $this->data,
             'columns' => $this->columns,
-            'options' => $this->options
+            'options' => $this->options,
         ];
     }
 }

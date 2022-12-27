@@ -41,7 +41,6 @@ class TableBuilder implements TableBuilderInterface
         return $this;
     }
 
-
     public function addOptions(array $options): TableBuilderInterface
     {
         $this->options = $options;
