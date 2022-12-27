@@ -10,10 +10,8 @@
 'use strict';
 
 import { Controller } from '@hotwired/stimulus';
-import "bootstrap-table";
-import $ from "jquery";
-
-type Option = {[k: string]: string};
+import 'bootstrap-table';
+import $ from 'jquery';
 
 export default class extends Controller {
     readonly rowsValue: any;
@@ -26,7 +24,7 @@ export default class extends Controller {
         options: {string: Option}
     }
 
-    readonly bootstrapTable: Function;
+    readonly bootstrapTable: (options: any) => void;
 
     connect() {
         if (!(this.element instanceof HTMLTableElement)) {
