@@ -18,7 +18,6 @@ use Twig\Environment;
 
 /**
  * @author Mathéo Daninos <mathéo.daninos@gmail.com>
- *
  */
 class BootstrapTableExtensionTest extends TestCase
 {
@@ -34,15 +33,15 @@ class BootstrapTableExtensionTest extends TestCase
         $table = $builder
             ->addColumns([
                 ['title' => 'ID', 'field' => 'id'],
-                ['title' => 'Pseudo', 'field' => 'pseudo']
+                ['title' => 'Pseudo', 'field' => 'pseudo'],
             ])
             ->addData([
                 ['id' => 1, 'pseudo' => 'Bob'],
-                ['id' => 2, 'pseudo' => 'Kitty']
+                ['id' => 2, 'pseudo' => 'Kitty'],
             ])
             ->addOptions([
-                'pagination'=> 'true',
-                'search' => 'true'
+                'pagination' => 'true',
+                'search' => 'true',
             ])
             ->createTable()
         ;

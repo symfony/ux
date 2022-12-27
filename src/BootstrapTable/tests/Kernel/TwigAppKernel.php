@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\BootstrapTable\Tests\Kernel;
 
-
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
@@ -22,7 +21,6 @@ use Symfony\WebpackEncoreBundle\WebpackEncoreBundle;
 
 /**
  * @author Mathéo Daninos <mathéo.daninos@gmail.com>
- *
  */
 class TwigAppKernel extends Kernel
 {
