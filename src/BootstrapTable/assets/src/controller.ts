@@ -21,8 +21,8 @@ export default class extends Controller {
     static values = {
         rows: Array,
         columns: Array,
-        options: {string: Option}
-    }
+        options: { string: Option },
+    };
 
     readonly bootstrapTable: (options: any) => void;
 
@@ -31,15 +31,23 @@ export default class extends Controller {
             throw new Error('invalid Element');
         }
 
-        this._dispatchEvent('bootstrap-table:pre-connect', { data: this.rowsValue, columns: this.columnsValue, options: this.optionsValue });
+        this._dispatchEvent('bootstrap-table:pre-connect', {
+            data: this.rowsValue,
+            columns: this.columnsValue,
+            options: this.optionsValue,
+        });
 
         $(this.element).bootstrapTable({
             columns: this.columnsValue,
             data: this.rowsValue,
-            ...this.optionsValue
+            ...this.optionsValue,
         });
 
-        this._dispatchEvent('bootstrap-table:post-connect', { data: this.rowsValue, columns: this.columnsValue, options: this.optionsValue });
+        this._dispatchEvent('bootstrap-table:post-connect', {
+            data: this.rowsValue,
+            columns: this.columnsValue,
+            options: this.optionsValue,
+        });
     }
 
     _dispatchEvent(name: string, payload: any) {
