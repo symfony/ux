@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import TomSelect from 'tom-select';
-import { TomSettings, TomTemplates } from 'tom-select/dist/types/types';
+import { TPluginHash } from 'tom-select/dist/types/contrib/microplugin';
+import { RecursivePartial, TomSettings, TomTemplates } from 'tom-select/dist/types/types';
 
 export default class extends Controller {
     static values = {
@@ -8,7 +9,7 @@ export default class extends Controller {
         optionsAsHtml: Boolean,
         noResultsFoundText: String,
         noMoreResultsText: String,
-        minCharacters: Number,
+        minCharacters: { type: Number, default: 3 },
         tomSelectOptions: Object,
         preload: String,
     };
@@ -56,7 +57,7 @@ export default class extends Controller {
     }
 
     #getCommonConfig(): Partial<TomSettings> {
-        const plugins: any = {};
+        const plugins: TPluginHash = {};
 
         // multiple values excepted if this is NOT A select (i.e. input) or a multiple select
         const isMultiple = !this.selectElement || this.selectElement.multiple;
@@ -78,9 +79,9 @@ export default class extends Controller {
             },
         };
 
-        const config: Partial<TomSettings> = {
-            render: render,
-            plugins: plugins,
+        const config: RecursivePartial<TomSettings> = {
+            render,
+            plugins,
             // clear the text input after selecting a value
             onItemAdd: () => {
                 this.tomSelect.setTextboxValue('');
@@ -132,7 +133,7 @@ export default class extends Controller {
     }
 
     #createAutocompleteWithRemoteData(autocompleteEndpointUrl: string, minCharacterLength: number): TomSelect {
-        const config: Partial<TomSettings> = this.#mergeObjects(this.#getCommonConfig(), {
+        const config: RecursivePartial<TomSettings> = this.#mergeObjects(this.#getCommonConfig(), {
             firstUrl: (query: string) => {
                 const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
 
@@ -153,9 +154,7 @@ export default class extends Controller {
                     .catch(() => callback());
             },
             shouldLoad: function (query: string) {
-                const minLength = minCharacterLength || 3;
-
-                return query.length >= minLength;
+                return query.length >= minCharacterLength;
             },
             // avoid extra filtering after results are returned
             score: function (search: string) {
@@ -213,7 +212,7 @@ export default class extends Controller {
         return this.element;
     }
 
-    #createTomSelect(options: Partial<TomSettings>): TomSelect {
+    #createTomSelect(options: RecursivePartial<TomSettings>): TomSelect {
         this.#dispatchEvent('autocomplete:pre-connect', { options });
         const tomSelect = new TomSelect(this.formElement, options);
         this.#dispatchEvent('autocomplete:connect', { tomSelect, options });

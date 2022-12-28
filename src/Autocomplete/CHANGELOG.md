@@ -3,6 +3,8 @@
 ## Unreleased
 
 -   Add `assets/src` to `.gitattributes` to exclude them from the installation
+-   Fix minCharacters option default value handling when using a falsy value like 0.
+-   Fix TypeScript types
 
 ## 2.6.0
 
