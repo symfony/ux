@@ -61,7 +61,7 @@ export default class implements PluginInterface {
 
             // for select elements without a blank value, one might be selected automatically
             // https://github.com/symfony/ux/issues/469
-            if (element instanceof HTMLSelectElement && !element.multiple) {
+            if (element instanceof HTMLSelectElement && !element.multiple && element.length > 0) {
                 component.valueStore.set(modelName, getValueFromElement(element, component.valueStore));
             }
         })
