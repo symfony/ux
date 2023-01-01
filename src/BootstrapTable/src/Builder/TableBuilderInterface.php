@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\BootstrapTable\Builder;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\UX\BootstrapTable\Model\Table;
 
 /**
@@ -25,4 +26,16 @@ interface TableBuilderInterface
     public function addColumns(array $columns): self;
 
     public function addOptions(array $options): self;
+
+    public function setSort(string $field, string $direction): self;
+
+    public function setSearch(string $search): self;
+
+    public function enablePagination(): self;
+
+    public function setCurrentPage(int $currentPage): self;
+
+    public function setItemPerPage(int $itemsPerPage): self;
+
+    public function handleRequest(Request $request): self;
 }
