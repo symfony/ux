@@ -3,5 +3,37 @@
     "license": "MIT",
     "require-dev": {
         "symfony/filesystem": "^5.2|^6.0"
+    },
+    "replace": {
+        "symfony/ux-autocomplete": "self.version",
+        "symfony/ux-chartjs": "self.version",
+        "symfony/ux-cropperjs": "self.version",
+        "symfony/ux-dropzone": "self.version",
+        "symfony/ux-lazy-image": "self.version",
+        "symfony/ux-live-component": "self.version",
+        "symfony/ux-notify": "self.version",
+        "symfony/ux-react": "self.version",
+        "symfony/ux-swup": "self.version",
+        "symfony/ux-turbo": "self.version",
+        "symfony/ux-twig-component": "self.version",
+        "symfony/ux-typed": "self.version",
+        "symfony/ux-vue": "self.version"
+    },
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Autocomplete\\": "src/Autocomplete/src/",
+            "Symfony\\UX\\Chartjs\\": "src/Chartjs/src/",
+            "Symfony\\UX\\Cropperjs\\": "src/Cropperjs/src/",
+            "Symfony\\UX\\Dropzone\\": "src/Dropzone/src/",
+            "Symfony\\UX\\LazyImage\\": "src/LazyImage/src/",
+            "Symfony\\UX\\LiveComponent\\": "src/LiveComponent/src/",
+            "Symfony\\UX\\Notify\\": "src/Notify/src/",
+            "Symfony\\UX\\React\\": "src/React/src/",
+            "Symfony\\UX\\Swup\\": "src/Swup/src/",
+            "Symfony\\UX\\Turbo\\": "src/Turbo/src/",
+            "Symfony\\UX\\TwigComponent\\": "src/TwigComponent/src/",
+            "Symfony\\UX\\Typed\\": "src/Typed/src/",
+            "Symfony\\UX\\Vue\\": "src/Vue/src/"
+        }
     }
 }
