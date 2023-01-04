@@ -131,7 +131,7 @@ EOF)
         );
         $generator->generateClass(
             $classDetails->getFullName(),
-            __DIR__.'./skeletons/AutocompleteField.tpl.php',
+            __DIR__.'/skeletons/AutocompleteField.tpl.php',
             [
                 'variables' => $variables,
             ]
