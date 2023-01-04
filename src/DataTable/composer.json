@@ -1,0 +1,54 @@
+{
+    "name": "symfony/ux-datatable",
+    "type": "symfony-bundle",
+    "description": "Simple-DataTables integration for Symfony",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matheo Daninos",
+            "email": "matheo.daninos@gmail.com"
+        },
+        {
+            "name": "Thierry Raoux",
+            "email": "thi.raoux@gmail.com"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\DataTable\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\DataTable\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=7.2.5",
+        "symfony/config": "^4.4.17|^5.0|^6.0",
+        "symfony/dependency-injection": "^4.4.17|^5.0|^6.0",
+        "symfony/http-kernel": "^4.4.17|^5.0|^6.0"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "4.4.17|^5.0|^6.0",
+        "symfony/phpunit-bridge": "^5.2|^6.0",
+        "symfony/twig-bundle": "^4.4.17|^5.0|^6.0",
+        "symfony/var-dumper": "^4.4.17|^5.0|^6.0",
+        "symfony/webpack-encore-bundle": "^1.11"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}

@@ -1,0 +1,24 @@
+{
+    "name": "@symfony/ux-datatable",
+    "description": "Simple-DataTables integration for Symfony",
+    "license": "MIT",
+    "version": "0.1.2",
+    "symfony": {
+        "controllers": {
+            "table": {
+                "main": "dist/controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        }
+    },
+    "peerDependencies": {
+        "simple-datatables": "^5.0.0",
+        "@hotwired/stimulus": "^3.0.0"
+    },
+    "devDependencies": {
+        "simple-datatables": "^5.0.0",
+        "@hotwired/stimulus": "^3.0.0"
+    }
+}
