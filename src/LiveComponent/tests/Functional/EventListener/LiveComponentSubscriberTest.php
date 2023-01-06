@@ -235,6 +235,8 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ])
             ->assertStatus(204)
             ->assertHeaderEquals('Location', '/')
+            ->assertHeaderContains('X-Live-Redirect', '1')
+            ->assertHeaderEquals('X-Custom-Header', '1')
         ;
     }
 

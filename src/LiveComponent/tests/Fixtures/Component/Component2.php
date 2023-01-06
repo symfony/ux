@@ -48,7 +48,7 @@ final class Component2
     #[LiveAction]
     public function redirect(UrlGeneratorInterface $urlGenerator): RedirectResponse
     {
-        return new RedirectResponse($urlGenerator->generate('homepage'));
+        return new RedirectResponse($urlGenerator->generate('homepage'), 302, ['X-Custom-Header' => '1']);
     }
 
     #[PreDehydrate]
