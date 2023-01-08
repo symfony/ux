@@ -7,7 +7,10 @@ export default class extends Controller {
         optionsAsHtml: BooleanConstructor;
         noResultsFoundText: StringConstructor;
         noMoreResultsText: StringConstructor;
-        minCharacters: NumberConstructor;
+        minCharacters: {
+            type: NumberConstructor;
+            default: number;
+        };
         tomSelectOptions: ObjectConstructor;
         preload: StringConstructor;
     };
