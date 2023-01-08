@@ -281,10 +281,13 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $event->setResponse(new Response(null, 204, [
-            'Location' => $response->headers->get('Location'),
-            self::REDIRECT_HEADER => 1,
-        ]));
+        $responseNoContent = new Response(null, Response::HTTP_NO_CONTENT, [
+            self::REDIRECT_HEADER => '1',
+        ]);
+
+        $responseNoContent->headers->add($response->headers->all());
+
+        $event->setResponse($responseNoContent);
     }
 
     public static function getSubscribedEvents(): array
