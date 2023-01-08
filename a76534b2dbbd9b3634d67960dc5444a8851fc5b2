@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-12-20T02:58:44Z
+
+I think the recommended way is to install it into a `tools/` directory, right? https://github.com/PHP-CS-Fixer/PHP-CS-Fixer#installation
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-20T03:06:15Z
+
+The shim is new maybe? I only learned of it from the recipe (https://github.com/symfony/recipes/pull/1112) that was merged yesterday.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-12-20T03:08:30Z
+
+This was the first I had heard of it. It seems like a good idea - is there some docs or mention of using this? And how it fits into best-practices?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-20T05:08:37Z
+
+As you know, installing this kind of tools into a separate composer.json (ie: in `tools/...` directory) allows to not pollute your app's deps/dev-deps with the tool's dependencies.
+
+However I'm not a big fan of having multiple `composer.json` in a single project, and you can face some problems if you try to load/interpret your code with the tool (I remember to face this kind of issue because the are two autoloaders, but I may be wrong).
+
+This is something that can be _easily_ fixed by using a .phar, which can be installed through a shim-version of the package.
+
+To me the given installation methods for PHP-CS-Fixer are "wrong", `composer require --dev friendsofphp/php-cs-fixer` should download a `.phar` and that's all, no other dependencies, like PHPStan and Rector do since a long time.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-29T07:52:59Z
+
+Hi @weaverryan @kbond, is installing the shim still okay?
