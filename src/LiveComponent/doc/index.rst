@@ -91,6 +91,19 @@ Now install the library with:
 Also make sure you have at least version 3.2 of
 ``@symfony/stimulus-bridge`` in your ``package.json`` file.
 
+In case your project `localizes its URLs`_ by adding the special
+``{_locale}`` parameter to its routes' paths, you need to do the same
+with your UX Live Components route:
+
+.. code-block:: diff
+
+      // config/routes/ux_live_component.yaml
+
+      live_component:
+          resource: '@LiveComponentBundle/config/routes.php'
+        - prefix: /_components
+        + prefix: /{_locale}/_components
+
 That's it! We're ready!
 
 Making your Component "Live"
@@ -2174,6 +2187,7 @@ bound to Symfony's BC policy for the moment.
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`dependent form fields`: https://ux.symfony.com/live-component/demos/dependent-form-fields
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _`localizes its URLs`: https://symfony.com/doc/current/translation/locale.html#translation-locale-url
 .. _`attributes variable`: https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes
 .. _`CollectionType`: https://symfony.com/doc/current/form/form_collections.html
 .. _`the traditional collection type`: https://symfony.com/doc/current/form/form_themes.html#fragment-naming-for-collections
