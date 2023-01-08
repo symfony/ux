@@ -10,9 +10,9 @@ jobs:
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
-                  tools: php-cs-fixer
+            - uses: ramsey/composer-install@v2
             - name: php-cs-fixer
-              run: php-cs-fixer fix --dry-run --diff
+              run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
 
     coding-style-js:
         runs-on: ubuntu-latest
