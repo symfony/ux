@@ -684,7 +684,7 @@ The ``prevent`` modifier would prevent the form from submitting
 you click really fast 5 times, only one Ajax request will be made!
 
 Actions & Services
-^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~
 
 One really neat thing about component actions is that they are *real*
 Symfony controllers. Internally, they are processed identically to a
@@ -713,7 +713,7 @@ This means that, for example, you can use action autowiring::
     }
 
 Actions & Arguments
-^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 2.1
 
