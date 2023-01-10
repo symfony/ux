@@ -92,8 +92,8 @@ Also make sure you have at least version 3.2 of
 ``@symfony/stimulus-bridge`` in your ``package.json`` file.
 
 In case your project `localizes its URLs`_ by adding the special
-``{_locale}`` parameter to its routes' paths, you need to do the same
-with your UX Live Components route:
+``{_locale}`` parameter to the paths of its route definitions,
+you need to do the same with the UX Live Components route definition:
 
 .. code-block:: diff
 
@@ -101,8 +101,8 @@ with your UX Live Components route:
 
       live_component:
           resource: '@LiveComponentBundle/config/routes.php'
-        - prefix: /_components
-        + prefix: /{_locale}/_components
+    -     prefix: /_components
+    +     prefix: /{_locale}/_components
 
 That's it! We're ready!
 
