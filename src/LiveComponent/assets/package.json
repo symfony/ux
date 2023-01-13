@@ -7,7 +7,7 @@
     "license": "MIT",
     "symfony": {
         "controllers": {
-            "typed": {
+            "live": {
                 "main": "dist/live_controller.js",
                 "name": "live",
                 "webpackMode": "eager",

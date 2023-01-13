@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.8.0
+
+-   [BC BREAK]: The "key" used to load the controller in your `assets/controllers.json`
+    file changed from `typed` to `live`. Update your `assets/controllers.json`
+    file to change this key.
+
 ## 2.7.0
 
 -   Added a new `route` parameter to `AsLiveComponent`, which allows to choose
