@@ -206,7 +206,7 @@ export default class extends Controller {
      */
     get formElement(): HTMLInputElement | HTMLSelectElement {
         if (!(this.element instanceof HTMLInputElement) && !(this.element instanceof HTMLSelectElement)) {
-            throw new Error('Autocomplete Stimulus controller can only be used no an <input> or <select>.');
+            throw new Error('Autocomplete Stimulus controller can only be used on an <input> or <select>.');
         }
 
         return this.element;
