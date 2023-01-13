@@ -21,11 +21,13 @@ Then install the bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-react
 
-    # Don't forget to install the JavaScript dependencies as well and compile
+    # install a few React packages & compile
+    $ npm install react @babel/preset-react -D
     $ npm install --force
     $ npm run watch
 
     # or use yarn
+    $ yarn add react @babel/preset-react --dev
     $ yarn install --force
     $ yarn watch
 
@@ -47,6 +49,14 @@ You also need to add the following lines at the end to your ``assets/app.js`` fi
     // they are not necessary.
     registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
 
+Make sure that you have the React preset enabled for Webpack:
+
+.. code-block:: diff
+
+    // webpack.config.js
+    // ...
+
+    + .enableReactPreset()
 
 Usage
 -----
