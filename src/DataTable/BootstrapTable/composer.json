@@ -1,0 +1,36 @@
+{
+    "name": "symfony/bootstrap-table",
+    "description": "integration of BootstrapTable library with symfony",
+    "type": "symfony-bundle",
+    "license": "MIT",
+    "require": {
+        "php": ">=7.2.5",
+        "symfony/data-table-core": "@dev"
+    },
+    "require-dev": {
+        "symfony/webpack-encore-bundle": "^1.11"
+    },
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\DataTable\\BootstrapTable\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\DataTable\\BootstrapTable\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Matheo Daninos",
+            "email": "matheo.daninos@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "repositories": [
+        {
+            "type": "path",
+            "url": "../Core"
+        }
+    ]
+}

@@ -1,0 +1,31 @@
+{
+  "name": "@symfony/ux-bootstrap-table",
+  "description": "Bootstrap Table integration for Symfony",
+  "license": "MIT",
+  "version": "0.1.1",
+  "symfony": {
+    "controllers": {
+      "table": {
+        "main": "dist/controller.js",
+        "webpackMode": "eager",
+        "fetch": "eager",
+        "enabled": true
+      }
+    }
+  },
+  "peerDependencies": {
+    "@hotwired/stimulus": "^3.0.0",
+    "@popperjs/core": "^2.11.6",
+    "bootstrap": "^5.2.3",
+    "bootstrap-table": "^1.21.1",
+    "jquery": "^3.6.1"
+  },
+  "devDependencies": {
+    "@hotwired/stimulus": "^3.0.0",
+    "@popperjs/core": "^2.11.6",
+    "@types/jquery": "^3.5.14",
+    "bootstrap": "^5.2.3",
+    "bootstrap-table": "^1.21.1",
+    "jquery": "^3.6.1"
+  }
+}

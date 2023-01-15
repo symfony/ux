@@ -1,0 +1,37 @@
+{
+    "name": "symfony/data-table-core",
+    "description": "DataTable core package",
+    "type": "symfony-bundle",
+    "require": {
+        "php": ">=7.2.5",
+        "symfony/config": "6.2.*",
+        "symfony/dependency-injection": "6.2.*",
+        "symfony/http-kernel": "6.2.*",
+        "symfony/twig-bundle": "6.2.*"
+
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "6.2.*",
+        "symfony/phpunit-bridge": "6.2.*",
+        "phpunit/phpunit": "10.0.x-dev",
+        "symfony/var-dumper": "6.2.*"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\DataTable\\Core\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\DataTable\\Core\\Tests\\": "tests/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Matheo Daninos",
+            "email": "matheo.daninos@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev"
+}
