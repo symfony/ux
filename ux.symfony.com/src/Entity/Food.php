@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\FoodRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: FoodRepository::class)]
 class Food
@@ -14,6 +15,7 @@ class Food
     private ?int $id = null;
 
     #[ORM\Column()]
+    #[Assert\NotBlank]
     private ?string $name = null;
 
     #[ORM\Column()]

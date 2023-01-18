@@ -27,7 +27,7 @@ describe('Component parent -> child data-model binding tests', () => {
             <div ${initComponent(data)}>
                 Food Name ${data.foodName}
                 <div
-                    ${initComponent({ value: '' }, {}, {id: 'the-child-id'})}
+                    ${initComponent({ value: '' }, {id: 'the-child-id'})}
                     data-model="foodName:value"
                     data-testid="child"
                 >
@@ -38,6 +38,14 @@ describe('Component parent -> child data-model binding tests', () => {
 
         test.expectsAjaxCall('get')
             .expectSentData({ foodName: 'ice cream' })
+            // mimic that the data on the child props have not changed, so we
+            // render a simple placeholder
+            .willReturn((data: any) => `
+                <div ${initComponent(data)}>
+                    Food Name ${data.foodName}
+                    <div data-live-id="the-child-id">
+                </div>
+            `)
             .init();
 
         // type into the child component
@@ -53,7 +61,7 @@ describe('Component parent -> child data-model binding tests', () => {
             <div ${initComponent(data)}>
                 Food Name ${data.foodName}
                 <div
-                    ${initComponent({ value: '' }, {}, {id: 'the-child-id'})}
+                    ${initComponent({ value: '' }, {id: 'the-child-id'})}
                     data-model="foodName"
                     data-testid="child"
                 >
@@ -64,6 +72,14 @@ describe('Component parent -> child data-model binding tests', () => {
 
         test.expectsAjaxCall('get')
             .expectSentData({ foodName: 'ice cream' })
+            // mimic that the data on the child props have not changed, so we
+            // render a simple placeholder
+            .willReturn((data: any) => `
+                <div ${initComponent(data)}>
+                    Food Name ${data.foodName}
+                    <div data-live-id="the-child-id">
+                </div>
+            `)
             .init();
 
         // type into the child component
@@ -79,7 +95,7 @@ describe('Component parent -> child data-model binding tests', () => {
             <div ${initComponent(data)}>
                 Food Name ${data.foodName}
                 <div
-                    ${initComponent({ value: '' }, {}, {id: 'the-child-id'})}
+                    ${initComponent({ value: '' }, {id: 'the-child-id'})}
                     data-model="norender|foodName"
                     data-testid="child"
                 >
@@ -105,7 +121,7 @@ describe('Component parent -> child data-model binding tests', () => {
             <div ${initComponent(data)}>
                 Food Name ${data.foodName}
                 <div
-                    ${initComponent({ value: '' }, {}, {id: 'the-child-id'})}
+                    ${initComponent({ value: '' }, {id: 'the-child-id'})}
                     data-model="foodName:value"
                     data-testid="child"
                 >
@@ -116,6 +132,14 @@ describe('Component parent -> child data-model binding tests', () => {
 
         test.expectsAjaxCall('get')
             .expectSentData({ foodName: 'ice cream' })
+            // mimic that the data on the child props have not changed, so we
+            // render a simple placeholder
+            .willReturn((data: any) => `
+                <div ${initComponent(data)}>
+                    Food Name ${data.foodName}
+                    <div data-live-id="the-child-id">
+                </div>
+            `)
             .init();
 
         // type into the child component
@@ -131,7 +155,7 @@ describe('Component parent -> child data-model binding tests', () => {
         otherContainer.appendChild(getByTestId(test.element, 'child'));
 
         // type into the child component
-        await userEvent.type(inputElement, ' sandwhich');
+        await userEvent.type(inputElement, ' sandwich');
         // wait for a potential Ajax call to start
         await (new Promise(resolve => setTimeout(resolve, 50)));
         expect(test.element).not.toHaveAttribute('busy');

@@ -28,4 +28,34 @@ final class TwigAttributeHelper
     {
         return twig_escape_filter($this->twig, $value, 'html_attr');
     }
+
+    public function addLiveController(array &$attributes): void
+    {
+        $attributes['data-controller'] = 'live';
+    }
+
+    public function addLiveId(string $id, array &$attributes): void
+    {
+        $attributes['data-live-id'] = $this->escapeAttribute($id);
+    }
+
+    public function addFingerprint(string $fingerprint, array &$attributes): void
+    {
+        $attributes['data-live-fingerprint-value'] = $this->escapeAttribute($fingerprint);
+    }
+
+    public function addProps(array $dehydratedProps, array &$attributes): void
+    {
+        $attributes['data-live-props-value'] = $this->escapeAttribute(JsonUtil::encodeObject($dehydratedProps));
+    }
+
+    public function addLiveUrl(string $url, array &$attributes): void
+    {
+        $attributes['data-live-url-value'] = $this->escapeAttribute($url);
+    }
+
+    public function addLiveCsrf(string $csrf, array &$attributes): void
+    {
+        $attributes['data-live-csrf-value'] = $this->escapeAttribute($csrf);
+    }
 }

@@ -1,5 +1,24 @@
 # CHANGELOG
 
+## 2.8.0
+
+-   [BC BREAK]: The `exposed` option was changed to `writable` in `LiveProp`:
+
+```diff
+-#[LiveProp(exposed: ['email', 'plainPassword'])]
++#[LiveProp(writable: ['email', 'plainPassword'])]
+public User $user;
+```
+
+-   Non-persisted entity objects can now be used with `LiveProp`: it will be
+    serialized using the serializer.
+
+-   Better support for using arrays with `LiveProp`.
+
+-   Added support for setting `writable` to a property that is an object
+    (previously, only scalar values were supported). The object is passed
+    through the serializer.
+
 ## 2.7.0
 
 -   [BC BREAK]: The "key" used to load the controller in your `assets/controllers.json`

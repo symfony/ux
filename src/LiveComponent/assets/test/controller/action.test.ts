@@ -46,7 +46,7 @@ describe('LiveController Action Tests', () => {
 
     it('immediately sends an action, includes debouncing model updates and cancels those debounce renders', async () => {
         const test = await createTest({ comment: '', isSaved: false }, (data: any) => `
-            <div ${initComponent(data, {}, { debounce: 10 })}>
+            <div ${initComponent(data, { debounce: 10 })}>
                 <input data-model="comment" value="${data.comment}">
 
                 ${data.isSaved ? 'Comment Saved!' : ''}
@@ -134,7 +134,7 @@ describe('LiveController Action Tests', () => {
 
     it('makes model updates wait until action Ajax call finishes', async () => {
         const test = await createTest({ comment: 'donut', isSaved: false }, (data: any) => `
-            <div ${initComponent(data, {}, { debounce: 50 })}>
+            <div ${initComponent(data, { debounce: 50 })}>
                 <input data-model="comment" value="${data.comment}">
 
                 ${data.isSaved ? 'Comment Saved!' : ''}

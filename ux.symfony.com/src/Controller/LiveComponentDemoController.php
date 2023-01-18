@@ -66,4 +66,13 @@ class LiveComponentDemoController extends AbstractController
             'foods' => $foodRepository->findAll(),
         ]);
     }
+
+    #[Route('/inline-edit', name: 'app_live_components_demo_inline_edit')]
+    public function inlineEdit(LiveDemoRepository $liveDemoRepository, FoodRepository $foodRepository): Response
+    {
+        return $this->render('live_component_demo/inline_edit.html.twig', parameters: [
+            'demo' => $liveDemoRepository->find('inline_edit'),
+            'food' => $foodRepository->findOneBy([]),
+        ]);
+    }
 }

@@ -33,6 +33,9 @@ final class PreCreateForRenderEvent extends Event
         return $this->name;
     }
 
+    /**
+     * @return array the array of data passed to originally create this component
+     */
     public function getProps(): array
     {
         return $this->props;

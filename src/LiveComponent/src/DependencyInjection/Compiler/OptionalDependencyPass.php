@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\UX\LiveComponent\Normalizer\DoctrineObjectNormalizer;
 
 /**
@@ -22,6 +23,7 @@ final class OptionalDependencyPass implements CompilerPassInterface
         if ($container->hasDefinition('doctrine')) {
             $container->register('ux.live_component.doctrine_object_normalizer', DoctrineObjectNormalizer::class)
                 ->setArguments([new IteratorArgument([new Reference('doctrine')])]) // todo add other object managers (mongo)
+                ->addTag('container.service_subscriber', ['key' => DenormalizerInterface::class, 'id' => 'serializer'])
                 ->addTag('serializer.normalizer', ['priority' => -100])
             ;
         }

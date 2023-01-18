@@ -51,8 +51,19 @@ final class ComponentFactory
      */
     public function create(string $name, array $data = []): MountedComponent
     {
+        return $this->mountFromObject(
+            $this->getComponent($name),
+            $data,
+            $this->metadataFor($name)
+        );
+    }
+
+    /**
+     * @internal
+     */
+    public function mountFromObject(object $component, array $data, ComponentMetadata $componentMetadata): MountedComponent
+    {
         $originalData = $data;
-        $component = $this->getComponent($name);
         $data = $this->preMount($component, $data);
 
         $this->mount($component, $data);
@@ -69,7 +80,7 @@ final class ComponentFactory
         $data = $this->postMount($component, $data);
 
         // create attributes from "attributes" key if exists
-        $attributesVar = $this->metadataFor($name)->getAttributesVar();
+        $attributesVar = $componentMetadata->getAttributesVar();
         $attributes = $data[$attributesVar] ?? [];
         unset($data[$attributesVar]);
 
@@ -85,7 +96,7 @@ final class ComponentFactory
         }
 
         return new MountedComponent(
-            $name,
+            $componentMetadata->getName(),
             $component,
             new ComponentAttributes(array_merge($attributes, $data)),
             $originalData

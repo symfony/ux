@@ -27,7 +27,7 @@ final class BatchActionControllerTest extends KernelTestCase
 
     public function testCanBatchActions(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
         $this->browser()
             ->throwExceptions()
@@ -36,12 +36,11 @@ final class BatchActionControllerTest extends KernelTestCase
             ->assertSee('initial')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
-                $liveData = json_decode($rootElement->attr('data-live-data-value'), true);
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
                 $browser->post('/_components/with_actions/add', [
                     'json' => [
-                        'data' => $liveData + $liveProps,
+                        'data' => $liveProps,
                         'args' => ['what' => 'first'],
                     ],
                     'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
@@ -51,12 +50,11 @@ final class BatchActionControllerTest extends KernelTestCase
             ->assertSee('first')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
-                $liveData = json_decode($rootElement->attr('data-live-data-value'), true);
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
                 $browser->post('/_components/with_actions/_batch', [
                     'json' => [
-                        'data' => $liveData + $liveProps,
+                        'data' => $liveProps,
                         'actions' => [
                             ['name' => 'add', 'args' => ['what' => 'second']],
                             ['name' => 'add', 'args' => ['what' => 'third']],
@@ -76,7 +74,7 @@ final class BatchActionControllerTest extends KernelTestCase
 
     public function testCanBatchActionsWithAlternateRoute(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'));
 
         $this->browser()
             ->throwExceptions()
@@ -85,12 +83,11 @@ final class BatchActionControllerTest extends KernelTestCase
             ->assertSee('count: 0')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('div')->first();
-                $liveData = json_decode($rootElement->attr('data-live-data-value'), true);
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
                 $browser->post('/alt/alternate_route/_batch', [
                     'json' => [
-                        'data' => $liveData + $liveProps,
+                        'data' => $liveProps,
                         'actions' => [
                             ['name' => 'increase'],
                             ['name' => 'increase'],
@@ -108,7 +105,7 @@ final class BatchActionControllerTest extends KernelTestCase
 
     public function testCsrfTokenIsChecked(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
         $this->browser()
             ->post('/_components/with_actions/_batch', ['json' => [
@@ -121,7 +118,7 @@ final class BatchActionControllerTest extends KernelTestCase
 
     public function testRedirect(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
         $this->browser()
             ->throwExceptions()
@@ -130,12 +127,11 @@ final class BatchActionControllerTest extends KernelTestCase
             ->interceptRedirects()
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
-                $liveData = json_decode($rootElement->attr('data-live-data-value'), true);
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
                 $browser->post('/_components/with_actions/_batch', [
                     'json' => [
-                        'data' => $liveData + $liveProps,
+                        'data' => $liveProps,
                         'actions' => [
                             ['name' => 'add', 'args' => ['what' => 'second']],
                             ['name' => 'redirect'],
@@ -151,19 +147,18 @@ final class BatchActionControllerTest extends KernelTestCase
 
     public function testException(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
         $this->browser()
             ->get('/_components/with_actions', ['json' => ['data' => $dehydrated]])
             ->assertSuccessful()
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
-                $liveData = json_decode($rootElement->attr('data-live-data-value'), true);
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
                 $browser->post('/_components/with_actions/_batch', [
                     'json' => [
-                        'data' => $liveData + $liveProps,
+                        'data' => $liveProps,
                         'actions' => [
                             ['name' => 'add', 'args' => ['what' => 'second']],
                             ['name' => 'exception'],
@@ -180,19 +175,18 @@ final class BatchActionControllerTest extends KernelTestCase
 
     public function testCannotBatchWithNonLiveAction(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
         $this->browser()
             ->get('/_components/with_actions', ['json' => ['data' => $dehydrated]])
             ->assertSuccessful()
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
-                $liveData = json_decode($rootElement->attr('data-live-data-value'), true);
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
                 $browser->post('/_components/with_actions/_batch', [
                     'json' => [
-                        'data' => $liveData + $liveProps,
+                        'data' => $liveProps,
                         'actions' => [
                             ['name' => 'add', 'args' => ['what' => 'second']],
                             ['name' => 'nonLive'],

@@ -41,7 +41,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             'prop4' => 'value4',
         ]);
 
-        $dehydrated = $this->dehydrateComponent($component)->all();
+        $dehydrated = $this->dehydrateComponent($component);
 
         $this->browser()
             ->throwExceptions()
@@ -57,7 +57,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testCanRenderComponentAsHtmlWithAlternateRoute(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'));
 
         $this->browser()
             ->throwExceptions()
@@ -70,7 +70,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testCanExecuteComponentAction(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
         $token = null;
 
         $this->browser()
@@ -95,7 +95,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testCanExecuteComponentActionWithAlternateRoute(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'));
         $token = null;
 
         $this->browser()
@@ -173,7 +173,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testDisabledCsrfTokenForComponentDoesNotFail(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('disabled_csrf'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('disabled_csrf'));
 
         $this->browser()
             ->throwExceptions()
@@ -192,7 +192,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testPreReRenderHookOnlyExecutedDuringAjax(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
 
         $this->browser()
             ->visit('/render-template/render_component2')
@@ -206,7 +206,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testCanRedirectFromComponentAction(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
         $token = null;
 
         $this->browser()
@@ -242,7 +242,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testInjectsLiveArgs(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('component6'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('component6'));
         $token = null;
 
         $arguments = ['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3'];
@@ -275,7 +275,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testWithNullableEntity(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_nullable_entity'))->all();
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_nullable_entity'));
 
         $this->browser()
             ->throwExceptions()

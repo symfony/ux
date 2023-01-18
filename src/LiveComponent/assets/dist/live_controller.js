@@ -375,46 +375,68 @@ function setDeepData(data, propertyPath, value) {
 }
 
 class ValueStore {
-    constructor(props, data) {
+    constructor(props) {
+        this.$identifierKey = '@id';
         this.updatedModels = [];
         this.props = {};
-        this.data = {};
         this.props = props;
-        this.data = data;
     }
     get(name) {
         const normalizedName = normalizeModelName(name);
-        const result = getDeepData(this.data, normalizedName);
-        if (result !== undefined) {
-            return result;
+        const value = getDeepData(this.props, normalizedName);
+        if (null === value) {
+            return value;
         }
-        return getDeepData(this.props, normalizedName);
+        if (this.isPropNameTopLevel(normalizedName) && typeof value === 'object' && value[this.$identifierKey] !== undefined) {
+            return value[this.$identifierKey];
+        }
+        return value;
     }
     has(name) {
         return this.get(name) !== undefined;
     }
     set(name, value) {
-        const normalizedName = normalizeModelName(name);
-        const currentValue = this.get(name);
+        let normalizedName = normalizeModelName(name);
+        if (this.isPropNameTopLevel(normalizedName)
+            && this.props[normalizedName] !== null
+            && typeof this.props[normalizedName] === 'object'
+            && this.props[normalizedName][this.$identifierKey] !== undefined) {
+            normalizedName = normalizedName + '.' + this.$identifierKey;
+        }
+        const currentValue = this.get(normalizedName);
         if (currentValue !== value && !this.updatedModels.includes(normalizedName)) {
             this.updatedModels.push(normalizedName);
         }
-        this.data = setDeepData(this.data, normalizedName, value);
+        this.props = setDeepData(this.props, normalizedName, value);
         return currentValue !== value;
     }
     all() {
-        return Object.assign(Object.assign({}, this.props), this.data);
+        return Object.assign({}, this.props);
     }
-    reinitializeData(data) {
+    reinitializeAllProps(props) {
         this.updatedModels = [];
-        this.data = data;
-    }
-    reinitializeProps(props) {
-        if (JSON.stringify(props) == JSON.stringify(this.props)) {
-            return false;
-        }
         this.props = props;
-        return true;
+    }
+    reinitializeProvidedProps(props) {
+        let changed = false;
+        for (const [key, value] of Object.entries(props)) {
+            const currentIdentifier = this.get(key);
+            const newIdentifier = this.findIdentifier(value);
+            if (currentIdentifier !== newIdentifier) {
+                changed = true;
+                this.props[key] = value;
+            }
+        }
+        return changed;
+    }
+    isPropNameTopLevel(key) {
+        return key.indexOf('.') === -1;
+    }
+    findIdentifier(value) {
+        if (typeof value !== 'object' || value[this.$identifierKey] === undefined) {
+            return value;
+        }
+        return value[this.$identifierKey];
     }
 }
 
@@ -1373,7 +1395,7 @@ class ChildComponentWrapper {
     }
 }
 class Component {
-    constructor(element, props, data, fingerprint, id, backend, elementDriver) {
+    constructor(element, props, fingerprint, id, backend, elementDriver) {
         this.defaultDebounce = 150;
         this.pendingActions = [];
         this.isRequestPending = false;
@@ -1385,7 +1407,7 @@ class Component {
         this.elementDriver = elementDriver;
         this.id = id;
         this.fingerprint = fingerprint;
-        this.valueStore = new ValueStore(props, data);
+        this.valueStore = new ValueStore(props);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
         this.hooks = new HookManager();
         this.resetPromise();
@@ -1475,7 +1497,7 @@ class Component {
         if (props === null) {
             return false;
         }
-        const isChanged = this.valueStore.reinitializeProps(props);
+        const isChanged = this.valueStore.reinitializeProvidedProps(props);
         const fingerprint = toEl.dataset.liveFingerprintValue;
         if (fingerprint !== undefined) {
             this.fingerprint = fingerprint;
@@ -1572,7 +1594,7 @@ class Component {
             throw error;
         }
         this.hooks.triggerHook('loading.state:finished', newElement);
-        this.valueStore.reinitializeData(this.elementDriver.getComponentData(newElement));
+        this.valueStore.reinitializeAllProps(this.elementDriver.getComponentProps(newElement));
         executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), Array.from(this.getChildren().values()), this.elementDriver.findChildComponentElement, this.elementDriver.getKeyFromElement);
         Object.keys(modifiedModelValues).forEach((modelName) => {
             this.valueStore.set(modelName, modifiedModelValues[modelName]);
@@ -1779,12 +1801,6 @@ class StandardElementDriver {
             return null;
         }
         return modelDirective.action;
-    }
-    getComponentData(rootElement) {
-        if (!rootElement.dataset.liveDataValue) {
-            return null;
-        }
-        return JSON.parse(rootElement.dataset.liveDataValue);
     }
     getComponentProps(rootElement) {
         if (!rootElement.dataset.livePropsValue) {
@@ -2215,7 +2231,7 @@ class default_1 extends Controller {
     initialize() {
         this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
         const id = this.element.dataset.liveId || null;
-        this.component = new Component(this.element, this.propsValue, this.dataValue, this.fingerprintValue, id, new Backend(this.urlValue, this.csrfValue), new StandardElementDriver());
+        this.component = new Component(this.element, this.propsValue, this.fingerprintValue, id, new Backend(this.urlValue, this.csrfValue), new StandardElementDriver());
         this.proxiedComponent = proxifyComponent(this.component);
         this.element.__component = this.proxiedComponent;
         if (this.hasDebounceValue) {
@@ -2290,10 +2306,10 @@ class default_1 extends Controller {
         });
     }
     $render() {
-        this.component.render();
+        return this.component.render();
     }
     $updateModel(model, value, shouldRender = true, debounce = true) {
-        this.component.set(model, value, shouldRender, debounce);
+        return this.component.set(model, value, shouldRender, debounce);
     }
     handleInputEvent(event) {
         const target = event.target;
@@ -2373,7 +2389,6 @@ class default_1 extends Controller {
 }
 default_1.values = {
     url: String,
-    data: Object,
     props: Object,
     csrf: String,
     debounce: { type: Number, default: 150 },

@@ -63,20 +63,19 @@ export default class Component {
     /**
      * @param element The root element
      * @param props   Readonly component props
-     * @param data    Modifiable component data/state
      * @param fingerprint
      * @param id      Some unique id to identify this component. Needed to be a child component
      * @param backend Backend instance for updating
      * @param elementDriver Class to get "model" name from any element.
      */
-    constructor(element: HTMLElement, props: any, data: any, fingerprint: string|null, id: string|null, backend: BackendInterface, elementDriver: ElementDriver) {
+    constructor(element: HTMLElement, props: any, fingerprint: string|null, id: string|null, backend: BackendInterface, elementDriver: ElementDriver) {
         this.element = element;
         this.backend = backend;
         this.elementDriver = elementDriver;
         this.id = id;
         this.fingerprint = fingerprint;
 
-        this.valueStore = new ValueStore(props, data);
+        this.valueStore = new ValueStore(props);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
         this.hooks = new HookManager();
         this.resetPromise();
@@ -221,7 +220,7 @@ export default class Component {
         }
 
         // push props directly down onto the value store
-        const isChanged = this.valueStore.reinitializeProps(props);
+        const isChanged = this.valueStore.reinitializeProvidedProps(props);
 
         const fingerprint = toEl.dataset.liveFingerprintValue;
         if (fingerprint !== undefined) {
@@ -382,7 +381,7 @@ export default class Component {
         // normalize new element into non-loading state before diff
         this.hooks.triggerHook('loading.state:finished', newElement);
 
-        this.valueStore.reinitializeData(this.elementDriver.getComponentData(newElement));
+        this.valueStore.reinitializeAllProps(this.elementDriver.getComponentProps(newElement));
         executeMorphdom(
             this.element,
             newElement,

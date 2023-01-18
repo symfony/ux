@@ -443,11 +443,10 @@ const dataToJsonAttribute = (data: any): string => {
     return matches[1]
 }
 
-export function initComponent(data: any, props: any = {}, controllerValues: any = {}) {
+export function initComponent(props: any = {}, controllerValues: any = {}) {
     return `
         data-controller="live"
         data-live-url-value="http://localhost/components/_test_component_${Math.round(Math.random() * 1000)}"
-        data-live-data-value="${dataToJsonAttribute(data)}"
         data-live-props-value="${dataToJsonAttribute(props)}"
         ${controllerValues.debounce ? `data-live-debounce-value="${controllerValues.debounce}"` : ''}
         ${controllerValues.csrf ? `data-live-csrf-value="${controllerValues.csrf}"` : ''}

@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Twig;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\TwigComponent\ComponentFactory;
 
 /**
@@ -28,14 +29,19 @@ final class LiveComponentRuntime
         private LiveComponentHydrator $hydrator,
         private ComponentFactory $factory,
         private UrlGeneratorInterface $urlGenerator,
+        private LiveComponentMetadataFactory $metadataFactory,
     ) {
     }
 
     public function getComponentUrl(string $name, array $props = []): string
     {
         $mounted = $this->factory->create($name, $props);
-        $dehydratedComponent = $this->hydrator->dehydrate($mounted);
-        $params = ['_live_component' => $name] + $dehydratedComponent->all();
+        $props = $this->hydrator->dehydrate(
+            $mounted->getComponent(),
+            $mounted->getAttributes(),
+            $this->metadataFactory->getMetadata($mounted->getName())
+        );
+        $params = ['_live_component' => $name] + ['data' => json_encode($props)];
 
         $metadata = $this->factory->metadataFor($mounted->getName());
 
