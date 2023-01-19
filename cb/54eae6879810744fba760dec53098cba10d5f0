@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2022-12-09T11:41:58Z
+
+Just interested: why not using `dispatchEvent` method that exists in stimulus controllers and implementing a custom method for this? :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2022-12-12T16:45:58Z
+
+Lol, good question. Two reasons: 1) Until about a week ago I didn't know this existed! And, related, (2), this `dispatch()` method was added in Turbo 3, so many of the packages predate that. But, indeed, it looks like we can start using it now by passing `false` for the prefix option. Good call
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-01-18T20:11:18Z
+
+This is now ready for a quick look-over - all of the new ways to dispatch the events *should* result in the same event name & target as before, unless I've done something silly or copy-pasta'ed something poorly.
