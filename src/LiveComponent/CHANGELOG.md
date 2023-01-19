@@ -1,17 +1,27 @@
 # CHANGELOG
 
-## 2.8.0
+## 2.7.0
 
 -   [BC BREAK]: The "key" used to load the controller in your `assets/controllers.json`
     file changed from `typed` to `live`. Update your `assets/controllers.json`
     file to change this key.
 
-## 2.7.0
+-   Add a strategy for adding a Stimulus controller to a Twig component - #589.
+
+-   Added a new `getCompontent()` function in JavaScript as the best way to find
+    a Component object for a given element.
+
+-   Fixed various bugs related to child component handling - #596
 
 -   Added a new `route` parameter to `AsLiveComponent`, which allows to choose
     another route for Ajax calls.
 
--   Add `assets/src` to `.gitattributes` to exclude them from the installation
+-   Add `assets/src` to `.gitattributes` to exclude source TypeScript files from
+    installing.
+
+-   TypeScript types are now included.
+
+-   Added new `response:error` JavaScript component hook for custom handling Ajax errors - #587.
 
 ## 2.6.0
 

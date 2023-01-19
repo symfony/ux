@@ -1,8 +1,8 @@
 # CHANGELOG
 
-## Unreleased
+## 2.7.0
 
--   Add `assets/src` to `.gitattributes` to exclude them from the installation
+-   `PreMount` and `PostMount` hooks can now return nothing.
 
 ## 2.5
 
