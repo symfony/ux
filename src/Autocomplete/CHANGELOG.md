@@ -5,6 +5,9 @@
 -   Add `assets/src` to `.gitattributes` to exclude them from the installation
 -   Fix minCharacters option default value handling when using a falsy value like 0.
 -   Fix TypeScript types
+-   Add a new `route` parameter to `AsEntityAutocompleteField`, which allows to choose another route for Ajax calls.
+-   Fix minCharacters option default value handling when using a falsy value like 0.
+-   Fix TypeScript types
 
 ## 2.6.0
 

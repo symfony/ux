@@ -23,12 +23,18 @@ class AsEntityAutocompleteField
 {
     public function __construct(
         private ?string $alias = null,
+        private string $route = 'ux_entity_autocomplete',
     ) {
     }
 
     public function getAlias(): ?string
     {
         return $this->alias;
+    }
+
+    public function getRoute(): string
+    {
+        return $this->route;
     }
 
     public static function shortName(string $class): string

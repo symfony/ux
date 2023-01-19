@@ -104,4 +104,22 @@ class CustomAutocompleterTest extends KernelTestCase
             ->assertStatus(404)
         ;
     }
+
+    public function testItWorksWithCustomRoute(): void
+    {
+        $product = ProductFactory::createOne(['name' => 'foo']);
+        ProductFactory::createOne(['name' => 'bar']);
+        ProductFactory::createOne(['name' => 'foo and bar']);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/alt/test/autocomplete/custom_product')
+            ->assertSuccessful()
+            ->assertJsonMatches('length(results)', 3)
+            ->assertJsonMatches('results[0].value', $product->getId())
+            ->assertJsonMatches('results[0].text', 'foo')
+            ->get('/test/autocomplete/custom_product?query=bar')
+            ->assertJsonMatches('length(results)', 2)
+        ;
+    }
 }

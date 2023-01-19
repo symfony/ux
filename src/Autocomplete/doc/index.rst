@@ -277,6 +277,34 @@ all of the options - separated by the ``delimiter`` - will be sent as a string.
 You *can* add autocompletion to this via the ``autocomplete_url`` option - but you'll
 likely need to create your own :ref:`custom autocomplete endpoint <custom-autocomplete-endpoint>`.
 
+Customizing the AJAX URL/Route
+------------------------------
+
+.. versionadded:: 2.7
+
+    The ability to specify the route was added in Twig Components 2.7.
+
+The default route for the Ajax calls used by the Autocomplete component is ``/autocomplete/{alias}/``.
+Sometimes it may be useful to customize this URL - e.g. so that the URL lives
+under a specific firewall.
+
+To use another route, first declare it:
+
+.. code-block:: yaml
+
+    # config/routes/attributes.yaml
+    ux_entity_autocomplete_admin:
+        controller: ux.autocomplete.entity_autocomplete_controller
+        path: '/admin/autocomplete/{alias}'
+
+Then specify this new route on the attribute::
+
+    // src/Form/FoodAutocompleteField.php
+
+    #[AsEntityAutocompleteField(route: 'ux_entity_autocomplete_admin')]
+    class FoodAutocompleteField
+    // ...
+
 Extending Tom Select
 --------------------
 
@@ -493,10 +521,10 @@ consider registering the needed type extension ``AutocompleteChoiceTypeExtension
 
     // tests/Form/Type/TestedTypeTest.php
     namespace App\Tests\Form\Type;
-    
+
     use Symfony\Component\Form\Test\TypeTestCase;
     use Symfony\UX\Autocomplete\Form\AutocompleteChoiceTypeExtension;
-    
+
     class TestedTypeTest extends TypeTestCase
     {
         protected function getTypeExtensions(): array
@@ -505,7 +533,7 @@ consider registering the needed type extension ``AutocompleteChoiceTypeExtension
                 new AutocompleteChoiceTypeExtension(),
             ];
         }
-    
+
         // ... your tests
     }
 
