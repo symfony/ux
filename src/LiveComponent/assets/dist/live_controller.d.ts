@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import Component from './Component';
 export { Component };
+export declare const getComponent: (element: HTMLElement) => Promise<Component>;
 export interface LiveEvent extends CustomEvent {
     detail: {
         controller: LiveController;

@@ -17,8 +17,10 @@ import PollingPlugin from './Component/plugins/PollingPlugin';
 import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModelFieldsPlugin';
 import { PluginInterface } from './Component/plugins/PluginInterface';
 import getModelBinding from './Directive/get_model_binding';
+import ComponentRegistry from './ComponentRegistry';
 
 export { Component };
+export const getComponent = (element: HTMLElement): Promise<Component> => ComponentRegistry.getComponent(element);
 
 export interface LiveEvent extends CustomEvent {
     detail: {
@@ -104,6 +106,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
             this.component.element.addEventListener(event, callback);
         });
 
+        ComponentRegistry.registerComponent(this.element, this.component);
         this._dispatchEvent('live:connect');
     }
 
@@ -114,6 +117,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
             this.component.element.removeEventListener(event, callback);
         });
 
+        ComponentRegistry.unregisterComponent(this.element);
         this._dispatchEvent('live:disconnect');
     }
 

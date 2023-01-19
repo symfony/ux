@@ -12,6 +12,7 @@
 import {createTest, initComponent, shutdownTests, startStimulus} from '../tools';
 import { htmlToElement } from '../../src/dom_utils';
 import Component from '../../src/Component';
+import { getComponent } from '../../src/live_controller';
 
 describe('LiveController Basic Tests', () => {
     afterEach(() => {
@@ -41,5 +42,6 @@ describe('LiveController Basic Tests', () => {
         expect(test.component.defaultDebounce).toEqual(115);
         expect(test.component.id).toEqual('the-id');
         expect(test.component.fingerprint).toEqual('the-fingerprint');
+        await expect(getComponent(test.element)).resolves.toBe(test.component);
     });
 });

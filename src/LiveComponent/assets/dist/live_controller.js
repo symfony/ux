@@ -1563,6 +1563,9 @@ class Component {
         let newElement;
         try {
             newElement = htmlToElement(html);
+            if (!newElement.matches('[data-controller~=live]')) {
+                throw new Error('A live component template must contain a single root controller element.');
+            }
         }
         catch (error) {
             console.error('There was a problem with the component HTML returned:');
@@ -2168,6 +2171,37 @@ function getModelBinding (modelDirective) {
     };
 }
 
+const ComponentRegistry = class {
+    constructor() {
+        this.components = new WeakMap();
+    }
+    registerComponent(element, definition) {
+        this.components.set(element, definition);
+    }
+    unregisterComponent(element) {
+        this.components.delete(element);
+    }
+    getComponent(element) {
+        return new Promise((resolve, reject) => {
+            let count = 0;
+            const maxCount = 10;
+            const interval = setInterval(() => {
+                const component = this.components.get(element);
+                if (component) {
+                    resolve(component);
+                }
+                count++;
+                if (count > maxCount) {
+                    clearInterval(interval);
+                    reject(new Error(`Component not found for element ${getElementAsTagText(element)}`));
+                }
+            }, 5);
+        });
+    }
+};
+var ComponentRegistry$1 = new ComponentRegistry();
+
+const getComponent = (element) => ComponentRegistry$1.getComponent(element);
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
@@ -2203,6 +2237,7 @@ class default_1 extends Controller {
         this.elementEventListeners.forEach(({ event, callback }) => {
             this.component.element.addEventListener(event, callback);
         });
+        ComponentRegistry$1.registerComponent(this.element, this.component);
         this._dispatchEvent('live:connect');
     }
     disconnect() {
@@ -2210,6 +2245,7 @@ class default_1 extends Controller {
         this.elementEventListeners.forEach(({ event, callback }) => {
             this.component.element.removeEventListener(event, callback);
         });
+        ComponentRegistry$1.unregisterComponent(this.element);
         this._dispatchEvent('live:disconnect');
     }
     update(event) {
@@ -2349,4 +2385,4 @@ default_1.values = {
     fingerprint: String,
 };
 
-export { Component, default_1 as default };
+export { Component, default_1 as default, getComponent };
