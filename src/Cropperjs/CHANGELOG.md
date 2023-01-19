@@ -1,8 +1,13 @@
 # CHANGELOG
 
-## Unreleased
+## 2.7.0
 
--   Add `assets/src` to `.gitattributes` to exclude them from the installation
+-   The JavaScript events now bubble up.
+
+-   Add `assets/src` to `.gitattributes` to exclude source TypeScript files from
+    installing.
+
+-   TypeScript types are now included.
 
 ## 2.6.0
 

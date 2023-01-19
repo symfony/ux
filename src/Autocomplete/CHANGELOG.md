@@ -1,13 +1,20 @@
 # CHANGELOG
 
-## Unreleased
+## 2.7.0
 
 -   Add `assets/src` to `.gitattributes` to exclude them from the installation
+
 -   Fix minCharacters option default value handling when using a falsy value like 0.
+
 -   Fix TypeScript types
+
 -   Add a new `route` parameter to `AsEntityAutocompleteField`, which allows to choose another route for Ajax calls.
+
 -   Fix minCharacters option default value handling when using a falsy value like 0.
+
 -   Fix TypeScript types
+
+-   Add a way to detect if a field is an "autocomplete" field in form themes - #608
 
 ## 2.6.0
 
