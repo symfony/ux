@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-01-13T21:04:16Z
+
+Ok, final version of this is up. I simplified the export for userland to just the `getComponent` function.
