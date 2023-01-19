@@ -159,34 +159,6 @@ After creating this class, use it in your form:
     these won't be used during the Ajax call to fetch results. Instead, include
     all options inside the custom class (``FoodAutocompleteField``).
 
-.. note::
-
-    .. versionadded:: Unreleased
-    The default route for Autocomplete components is ``/autocomplete/{alias}/``
-    Sometimes it may be useful to customize this URL - e.g. so that the component lives
-    under a specific firewall.
-
-    To use another route, you need to declare it :
-
-    .. code-block:: yaml
-        # config/routes/attributes.yaml
-        ux_entity_autocomplete_admin:
-          controller: ux.autocomplete.entity_autocomplete_controller
-          path: '/admin/autocomplete/{alias}'
-
-    then specify this new route to your component :
-
-    .. code-block:: diff
-        // src/Form/FoodAutocompleteField.php
-        use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
-        - #[AsEntityAutocompleteField]
-        + #[AsEntityAutocompleteField(route: 'ux_entity_autocomplete_admin')]
-          class FoodAutocompleteField
-          {
-              // ...
-          }
-
-
 Congratulations! Your ``EntityType`` is now Ajax-powered!
 
 Styling Tom Select
@@ -304,6 +276,34 @@ all of the options - separated by the ``delimiter`` - will be sent as a string.
 
 You *can* add autocompletion to this via the ``autocomplete_url`` option - but you'll
 likely need to create your own :ref:`custom autocomplete endpoint <custom-autocomplete-endpoint>`.
+
+Customizing the AJAX URL/Route
+------------------------------
+
+.. versionadded:: 2.7
+
+    The ability to specify the route was added in Twig Components 2.7.
+
+The default route for the Ajax calls used by the Autocomplete component is ``/autocomplete/{alias}/``.
+Sometimes it may be useful to customize this URL - e.g. so that the URL lives
+under a specific firewall.
+
+To use another route, first declare it:
+
+.. code-block:: yaml
+
+    # config/routes/attributes.yaml
+    ux_entity_autocomplete_admin:
+        controller: ux.autocomplete.entity_autocomplete_controller
+        path: '/admin/autocomplete/{alias}'
+
+Then specify this new route on the attribute::
+
+    // src/Form/FoodAutocompleteField.php
+
+    #[AsEntityAutocompleteField(route: 'ux_entity_autocomplete_admin')]
+    class FoodAutocompleteField
+    // ...
 
 Extending Tom Select
 --------------------
