@@ -13,5 +13,5 @@ export default class extends Controller<Element & {
     };
     connect(): void;
     disconnect(): void;
-    _dispatchEvent(name: string, payload: any): void;
+    private dispatchEvent;
 }

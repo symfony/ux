@@ -10,5 +10,5 @@ export default class extends Controller {
     connect(): void;
     disconnect(): void;
     _renderReactElement(reactElement: ReactElement): void;
-    _dispatchEvent(name: string, payload: any): void;
+    private dispatchEvent;
 }

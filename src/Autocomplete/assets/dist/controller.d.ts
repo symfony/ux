@@ -28,5 +28,6 @@ export default class extends Controller {
     disconnect(): void;
     get selectElement(): HTMLSelectElement | null;
     get formElement(): HTMLInputElement | HTMLSelectElement;
+    private dispatchEvent;
     get preload(): string | boolean;
 }

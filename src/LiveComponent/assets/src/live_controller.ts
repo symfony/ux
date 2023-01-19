@@ -107,7 +107,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
         });
 
         ComponentRegistry.registerComponent(this.element, this.component);
-        this._dispatchEvent('live:connect');
+        this.dispatchEvent('connect');
     }
 
     disconnect() {
@@ -118,7 +118,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
         });
 
         ComponentRegistry.unregisterComponent(this.element);
-        this._dispatchEvent('live:disconnect');
+        this.dispatchEvent('disconnect');
     }
 
     /**
@@ -348,16 +348,10 @@ export default class extends Controller<HTMLElement> implements LiveController {
         this.component.removeChild(childController.component);
     }
 
-    _dispatchEvent(name: string, detail: any = {}, canBubble = true, cancelable = false) {
+    private dispatchEvent(name: string, detail: any = {}, canBubble = true, cancelable = false) {
         detail.controller = this;
         detail.component = this.proxiedComponent;
 
-        return this.element.dispatchEvent(
-            new CustomEvent(name, {
-                bubbles: canBubble,
-                cancelable,
-                detail,
-            })
-        );
+        this.dispatch(name, { detail, prefix: 'live', cancelable, bubbles: canBubble });
     }
 }

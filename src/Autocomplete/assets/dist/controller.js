@@ -22,7 +22,7 @@ function __classPrivateFieldGet(receiver, state, kind, f) {
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 }
 
-var _default_1_instances, _default_1_getCommonConfig, _default_1_createAutocomplete, _default_1_createAutocompleteWithHtmlContents, _default_1_createAutocompleteWithRemoteData, _default_1_stripTags, _default_1_mergeObjects, _default_1_createTomSelect, _default_1_dispatchEvent;
+var _default_1_instances, _default_1_getCommonConfig, _default_1_createAutocomplete, _default_1_createAutocompleteWithHtmlContents, _default_1_createAutocompleteWithRemoteData, _default_1_stripTags, _default_1_mergeObjects, _default_1_createTomSelect;
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
@@ -63,6 +63,9 @@ class default_1 extends Controller {
             throw new Error('Autocomplete Stimulus controller can only be used on an <input> or <select>.');
         }
         return this.element;
+    }
+    dispatchEvent(name, payload) {
+        this.dispatch(name, { detail: payload, prefix: 'autocomplete' });
     }
     get preload() {
         if (!this.hasPreloadValue) {
@@ -180,12 +183,10 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
 }, _default_1_mergeObjects = function _default_1_mergeObjects(object1, object2) {
     return Object.assign(Object.assign({}, object1), object2);
 }, _default_1_createTomSelect = function _default_1_createTomSelect(options) {
-    __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_dispatchEvent).call(this, 'autocomplete:pre-connect', { options });
+    this.dispatchEvent('pre-connect', { options });
     const tomSelect = new TomSelect(this.formElement, options);
-    __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_dispatchEvent).call(this, 'autocomplete:connect', { tomSelect, options });
+    this.dispatchEvent('connect', { tomSelect, options });
     return tomSelect;
-}, _default_1_dispatchEvent = function _default_1_dispatchEvent(name, payload) {
-    this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
 };
 default_1.values = {
     url: String,

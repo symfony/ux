@@ -82,14 +82,14 @@ export default class extends Controller {
             options.plugins.push(new SwupDebugPlugin());
         }
 
-        this._dispatchEvent('swup:pre-connect', { options });
+        this.dispatchEvent('pre-connect', { options });
 
         const swup = new Swup(options);
 
-        this._dispatchEvent('swup:connect', { swup, options });
+        this.dispatchEvent('connect', { swup, options });
     }
 
-    _dispatchEvent(name: string, payload: any) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
+    private dispatchEvent(name: string, payload: any) {
+        this.dispatch(name, { detail: payload, prefix: 'swup' });
     }
 }

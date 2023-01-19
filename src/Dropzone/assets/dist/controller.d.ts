@@ -11,5 +11,5 @@ export default class extends Controller {
     clear(): void;
     onInputChange(event: any): void;
     _populateImagePreview(file: Blob): void;
-    _dispatchEvent(name: string, payload?: any): void;
+    private dispatchEvent;
 }

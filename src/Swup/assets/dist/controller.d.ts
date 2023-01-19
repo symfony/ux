@@ -24,5 +24,5 @@ export default class extends Controller {
         mainElement: StringConstructor;
     };
     connect(): void;
-    _dispatchEvent(name: string, payload: any): void;
+    private dispatchEvent;
 }

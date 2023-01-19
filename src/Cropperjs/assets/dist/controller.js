@@ -12,15 +12,15 @@ class CropperController extends Controller {
         }
         parent.appendChild(img);
         const options = this.optionsValue;
-        this._dispatchEvent('cropperjs:pre-connect', { options, img });
+        this.dispatchEvent('pre-connect', { options, img });
         const cropper = new Cropper(img, options);
         img.addEventListener('crop', (event) => {
             this.element.value = JSON.stringify(event.detail);
         });
-        this._dispatchEvent('cropperjs:connect', { cropper, options, img });
+        this.dispatchEvent('connect', { cropper, options, img });
     }
-    _dispatchEvent(name, payload) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
+    dispatchEvent(name, payload) {
+        this.dispatch(name, { detail: payload, prefix: 'cropperjs' });
     }
 }
 CropperController.values = {

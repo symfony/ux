@@ -23,12 +23,12 @@ class default_1 extends Controller {
             bindInputFocusEvents: this.bindInputFocusEventsValue,
             contentType: this.contentTypeValue,
         };
-        this._dispatchEvent('typed:pre-connect', { options });
+        this.dispatchEvent('pre-connect', { options });
         const typed = new Typed(this.element, options);
-        this._dispatchEvent('typed:connect', { typed, options });
+        this.dispatchEvent('connect', { typed, options });
     }
-    _dispatchEvent(name, payload) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
+    dispatchEvent(name, payload) {
+        this.dispatch(name, { detail: payload, prefix: 'typed' });
     }
 }
 default_1.values = {

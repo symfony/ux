@@ -9,5 +9,5 @@ export default class extends Controller {
     connect(): void;
     disconnect(): void;
     _notify(content: string | undefined): void;
-    _dispatchEvent(name: string, payload: any): void;
+    private dispatchEvent;
 }

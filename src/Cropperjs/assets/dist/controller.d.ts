@@ -7,5 +7,5 @@ export default class CropperController extends Controller {
         options: ObjectConstructor;
     };
     connect(): void;
-    _dispatchEvent(name: string, payload: any): void;
+    private dispatchEvent;
 }

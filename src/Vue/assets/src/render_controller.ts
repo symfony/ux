@@ -26,7 +26,7 @@ export default class extends Controller<Element & { __vue_app__?: App<Element> }
     connect() {
         this.props = this.propsValue ?? null;
 
-        this._dispatchEvent('vue:connect', { componentName: this.componentValue, props: this.props });
+        this.dispatchEvent('connect', { componentName: this.componentValue, props: this.props });
 
         const component = window.resolveVueComponent(this.componentValue);
 
@@ -36,7 +36,7 @@ export default class extends Controller<Element & { __vue_app__?: App<Element> }
             this.element.__vue_app__.unmount();
         }
 
-        this._dispatchEvent('vue:before-mount', {
+        this.dispatchEvent('before-mount', {
             componentName: this.componentValue,
             component: component,
             props: this.props,
@@ -45,7 +45,7 @@ export default class extends Controller<Element & { __vue_app__?: App<Element> }
 
         this.app.mount(this.element);
 
-        this._dispatchEvent('vue:mount', {
+        this.dispatchEvent('mount', {
             componentName: this.componentValue,
             component: component,
             props: this.props,
@@ -55,13 +55,13 @@ export default class extends Controller<Element & { __vue_app__?: App<Element> }
     disconnect() {
         this.app.unmount();
 
-        this._dispatchEvent('vue:unmount', {
+        this.dispatchEvent('unmount', {
             componentName: this.componentValue,
             props: this.props,
         });
     }
 
-    _dispatchEvent(name: string, payload: any) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
+    private dispatchEvent(name: string, payload: any) {
+        this.dispatch(name, { detail: payload, prefix: 'vue' });
     }
 }

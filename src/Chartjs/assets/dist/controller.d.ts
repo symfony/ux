@@ -5,5 +5,5 @@ export default class extends Controller {
         view: ObjectConstructor;
     };
     connect(): void;
-    _dispatchEvent(name: string, payload: any): void;
+    private dispatchEvent;
 }

@@ -25,7 +25,7 @@ export default class extends Controller {
     connect() {
         const props = this.propsValue ? this.propsValue : null;
 
-        this._dispatchEvent('react:connect', { component: this.componentValue, props: props });
+        this.dispatchEvent('connect', { component: this.componentValue, props: props });
 
         if (!this.componentValue) {
             throw new Error('No component specified.');
@@ -34,7 +34,7 @@ export default class extends Controller {
         const component = window.resolveReactComponent(this.componentValue);
         this._renderReactElement(React.createElement(component, props, null));
 
-        this._dispatchEvent('react:mount', {
+        this.dispatchEvent('mount', {
             componentName: this.componentValue,
             component: component,
             props: props,
@@ -43,7 +43,7 @@ export default class extends Controller {
 
     disconnect() {
         (this.element as any).root.unmount();
-        this._dispatchEvent('react:unmount', {
+        this.dispatchEvent('unmount', {
             component: this.componentValue,
             props: this.propsValue ? this.propsValue : null,
         });
@@ -60,7 +60,7 @@ export default class extends Controller {
         element.root.render(reactElement);
     }
 
-    _dispatchEvent(name: string, payload: any) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
+    private dispatchEvent(name: string, payload: any) {
+        this.dispatch(name, { detail: payload, prefix: 'react' });
     }
 }

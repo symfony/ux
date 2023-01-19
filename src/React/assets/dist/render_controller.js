@@ -23,13 +23,13 @@ if (process.env.NODE_ENV === 'production') {
 class default_1 extends Controller {
     connect() {
         const props = this.propsValue ? this.propsValue : null;
-        this._dispatchEvent('react:connect', { component: this.componentValue, props: props });
+        this.dispatchEvent('connect', { component: this.componentValue, props: props });
         if (!this.componentValue) {
             throw new Error('No component specified.');
         }
         const component = window.resolveReactComponent(this.componentValue);
         this._renderReactElement(React.createElement(component, props, null));
-        this._dispatchEvent('react:mount', {
+        this.dispatchEvent('mount', {
             componentName: this.componentValue,
             component: component,
             props: props,
@@ -37,7 +37,7 @@ class default_1 extends Controller {
     }
     disconnect() {
         this.element.root.unmount();
-        this._dispatchEvent('react:unmount', {
+        this.dispatchEvent('unmount', {
             component: this.componentValue,
             props: this.propsValue ? this.propsValue : null,
         });
@@ -49,8 +49,8 @@ class default_1 extends Controller {
         }
         element.root.render(reactElement);
     }
-    _dispatchEvent(name, payload) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
+    dispatchEvent(name, payload) {
+        this.dispatch(name, { detail: payload, prefix: 'react' });
     }
 }
 default_1.values = {
