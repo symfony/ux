@@ -70,7 +70,7 @@ final class Broadcaster implements BroadcasterInterface
             throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s" as option "rendered_action" is missing.', $entityClass));
         }
 
-        if (!isset($options['topic']) && !isset($options['id'])) {
+        if (!isset($options['topics']) && !isset($options['id'])) {
             throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s": either option "topics" or "id" is missing, or the PropertyAccess component is not installed. Try running "composer require property-access".', $entityClass));
         }
 
