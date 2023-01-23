@@ -25,7 +25,7 @@ export default class extends Controller<Element & { root?: SvelteComponent }> {
         this.props = this.propsValue ?? undefined;
         this.intro = this.introValue ?? undefined;
 
-        this._dispatchEvent('svelte:connect');
+        this.dispatchEvent('connect');
 
         const Component = window.resolveSvelteComponent(this.componentValue);
 
@@ -40,14 +40,14 @@ export default class extends Controller<Element & { root?: SvelteComponent }> {
 
         this.element.root = this.app;
 
-        this._dispatchEvent('svelte:mount', {
+        this.dispatchEvent('mount', {
             component: Component,
         });
     }
 
     disconnect() {
         this._destroyIfExists();
-        this._dispatchEvent('svelte:unmount');
+        this.dispatchEvent('unmount');
     }
 
     _destroyIfExists() {
@@ -57,13 +57,13 @@ export default class extends Controller<Element & { root?: SvelteComponent }> {
         }
     }
 
-    _dispatchEvent(name: string, payload: object = {}) {
+    private dispatchEvent(name: string, payload: object = {}) {
         const detail = {
             componentName: this.componentValue,
             props: this.props,
             intro: this.intro,
             ...payload,
         };
-        this.element.dispatchEvent(new CustomEvent(name, { detail, bubbles: true }));
+        this.dispatch(name, { detail, prefix: 'svelte' });
     }
 }
