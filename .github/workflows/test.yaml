@@ -110,6 +110,15 @@ jobs:
               run: php vendor/bin/simple-phpunit
               working-directory: src/React
 
+            - name: Svelte Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/Svelte
+                  dependency-versions: lowest
+            - name: Svelte Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/Svelte
+
     tests-php8-low-deps:
         runs-on: ubuntu-latest
         steps:
@@ -216,6 +225,14 @@ jobs:
                 working-directory: src/Autocomplete
             - name: Autocomplete Tests
               working-directory: src/Autocomplete
+              run: php vendor/bin/simple-phpunit
+
+            - name: Svelte Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                working-directory: src/Svelte
+            - name: Svelte Tests
+              working-directory: src/Svelte
               run: php vendor/bin/simple-phpunit
 
     tests-php81-high-deps:
