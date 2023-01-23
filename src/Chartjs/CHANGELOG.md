@@ -2,7 +2,7 @@
 
 ## 2.7.0
 
--   The `chart:connect` JavaScript event now bubbles up.
+-   The `chartjs:connect` JavaScript event now bubbles up.
 
 -   Add `assets/src` to `.gitattributes` to exclude source TypeScript files from
     installing.
