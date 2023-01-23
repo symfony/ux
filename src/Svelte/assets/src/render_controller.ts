@@ -5,13 +5,13 @@ import { SvelteComponent } from 'svelte';
 
 export default class extends Controller<Element & { root?: SvelteComponent }> {
     private app: SvelteComponent;
-    readonly componentValue: string;
+    declare readonly componentValue: string;
 
     private props: Record<string, any> | undefined;
     private intro: boolean | undefined;
 
-    readonly propsValue: Record<string, unknown> | null | undefined;
-    readonly introValue: boolean | undefined;
+    declare readonly propsValue: Record<string, unknown> | null | undefined;
+    declare readonly introValue: boolean | undefined;
 
     static values = {
         component: String,
