@@ -50,13 +50,13 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
             return $queryBuilder;
         }
 
+        // Applying max result limit or not
+        $queryBuilder->setMaxResults($this->getMaxResults());
+
         // avoid filtering if there is no query
         if (!$query) {
             return $queryBuilder;
         }
-
-        // Applying max result limit or not
-        $queryBuilder->setMaxResults($this->getMaxResults());
 
         $this->entitySearchUtil->addSearchClause(
             $queryBuilder,
