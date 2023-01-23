@@ -63,30 +63,9 @@ Enable it in your ``webpack.config.js`` file :
 
     // webpack.config.js
     Encore
-        .addLoader(
-            {
-                test: /\.svelte$/,
-                loader: "svelte-loader",
-                // Additional options to enable hot reload
-                options: {
-                    compilerOptions: {
-                        dev: !Encore.isProduction(),
-                    },
-                    hotReload: !Encore.isProduction(),
-                },
-            },
-            {
-                // required to prevent errors from Svelte on Webpack 5+, omit on Webpack 4
-                test: /node_modules\/svelte\/.*\.mjs$/,
-                resolve: {
-                    fullySpecified: false
-                }
-            }
-        );
-
-
-
-
+        // ...
+        .enableSvelte()
+    ;
 
 Usage
 -----
