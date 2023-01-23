@@ -41,7 +41,7 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
         }
 
         // Use the provided URL, or auto-generate from the provided alias
-        $autocompleteUrl = $options['autocomplete_url'] ?? $this->urlGenerator->generate('ux_entity_autocomplete', [
+        $autocompleteUrl = $options['autocomplete_url'] ?? $this->urlGenerator->generate($attribute->getRoute(), [
             'alias' => $attribute->getAlias() ?: AsEntityAutocompleteField::shortName(\get_class($formType)),
         ]);
 

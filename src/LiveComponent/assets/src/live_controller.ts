@@ -17,6 +17,10 @@ import PollingPlugin from './Component/plugins/PollingPlugin';
 import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModelFieldsPlugin';
 import { PluginInterface } from './Component/plugins/PluginInterface';
 import getModelBinding from './Directive/get_model_binding';
+import ComponentRegistry from './ComponentRegistry';
+
+export { Component };
+export const getComponent = (element: HTMLElement): Promise<Component> => ComponentRegistry.getComponent(element);
 
 export interface LiveEvent extends CustomEvent {
     detail: {
@@ -40,13 +44,13 @@ export default class extends Controller<HTMLElement> implements LiveController {
         fingerprint: String,
     };
 
-    readonly urlValue!: string;
-    readonly dataValue!: any;
-    readonly propsValue!: any;
-    readonly csrfValue!: string;
-    readonly hasDebounceValue: boolean;
-    readonly debounceValue: number;
-    readonly fingerprintValue: string;
+    declare readonly urlValue: string;
+    declare readonly dataValue: any;
+    declare readonly propsValue: any;
+    declare readonly csrfValue: string;
+    declare readonly hasDebounceValue: boolean;
+    declare readonly debounceValue: number;
+    declare readonly fingerprintValue: string;
 
     /** The component, wrapped in the convenience Proxy */
     private proxiedComponent: Component;
@@ -102,7 +106,8 @@ export default class extends Controller<HTMLElement> implements LiveController {
             this.component.element.addEventListener(event, callback);
         });
 
-        this._dispatchEvent('live:connect');
+        ComponentRegistry.registerComponent(this.element, this.component);
+        this.dispatchEvent('connect');
     }
 
     disconnect() {
@@ -112,7 +117,8 @@ export default class extends Controller<HTMLElement> implements LiveController {
             this.component.element.removeEventListener(event, callback);
         });
 
-        this._dispatchEvent('live:disconnect');
+        ComponentRegistry.unregisterComponent(this.element);
+        this.dispatchEvent('disconnect');
     }
 
     /**
@@ -342,16 +348,10 @@ export default class extends Controller<HTMLElement> implements LiveController {
         this.component.removeChild(childController.component);
     }
 
-    _dispatchEvent(name: string, detail: any = {}, canBubble = true, cancelable = false) {
+    private dispatchEvent(name: string, detail: any = {}, canBubble = true, cancelable = false) {
         detail.controller = this;
         detail.component = this.proxiedComponent;
 
-        return this.element.dispatchEvent(
-            new CustomEvent(name, {
-                bubbles: canBubble,
-                cancelable,
-                detail,
-            })
-        );
+        this.dispatch(name, { detail, prefix: 'live', cancelable, bubbles: canBubble });
     }
 }

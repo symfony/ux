@@ -9,9 +9,6 @@ into an Ajax-powered autocomplete smart UI control (leveraging `Tom Select`_):
    :align: center
    :width: 300
 
-**EXPERIMENTAL** This component is currently experimental and is likely
-to change, or even change drastically.
-
 Installation
 ------------
 
@@ -55,7 +52,7 @@ Tom Select-powered UI control by adding the ``autocomplete`` option:
 
                 ->add('portionSize', ChoiceType::class, [
                     'choices' => [
-                        'Choose a portion size' => '',,
+                        'Choose a portion size' => '',
                         'small' => 's',
                         'medium' => 'm',
                         'large' => 'l',
@@ -170,27 +167,15 @@ Styling Tom Select
 In your ``assets/controllers.json`` file, you should see a line that automatically
 includes a CSS file for Tom Select which will give you basic styles.
 
-.. code-block:: text
-
-    "autoimport": {
-        "tom-select/dist/css/tom-select.default.css": true
-    }
-
-If you're using Bootstrap, you can get Bootstrap-ready styling by 
-changing this line to ``false``:
+If you're using Bootstrap, set ``tom-select.default.css`` to false
+and ``tom-select.bootstrap5.css`` to true:
 
 .. code-block:: text
 
     "autoimport": {
-        "tom-select/dist/css/tom-select.default.css": false
+        "tom-select/dist/css/tom-select.default.css": false,
+        "tom-select/dist/css/tom-select.bootstrap5.css": true
     }
-
-And then importing the Bootstrap CSS file:
-
-.. code-block:: css
-
-    /* assets/styles/app.css */
-    @import 'tom-select/dist/css/tom-select.bootstrap5.css';
 
 To further customize things, you can override the classes with your own custom
 CSS and even control how individual parts of Tom Select render. See `Tom Select Render Templates`_.
@@ -263,6 +248,10 @@ to the options above, you can also pass:
 ``max_results`` (default: 10)
     Allow you to control the max number of results returned by the automatic autocomplete endpoint.
 
+``preload`` (default: ``focus``)
+    Set to ``focus`` to call the ``load`` function when control receives focus.
+    Set to ``true`` to call the ``load`` upon control initialization (with an empty search).
+
 Using with a TextType Field
 ---------------------------
 
@@ -287,6 +276,34 @@ all of the options - separated by the ``delimiter`` - will be sent as a string.
 
 You *can* add autocompletion to this via the ``autocomplete_url`` option - but you'll
 likely need to create your own :ref:`custom autocomplete endpoint <custom-autocomplete-endpoint>`.
+
+Customizing the AJAX URL/Route
+------------------------------
+
+.. versionadded:: 2.7
+
+    The ability to specify the route was added in Twig Components 2.7.
+
+The default route for the Ajax calls used by the Autocomplete component is ``/autocomplete/{alias}/``.
+Sometimes it may be useful to customize this URL - e.g. so that the URL lives
+under a specific firewall.
+
+To use another route, first declare it:
+
+.. code-block:: yaml
+
+    # config/routes/attributes.yaml
+    ux_entity_autocomplete_admin:
+        controller: ux.autocomplete.entity_autocomplete_controller
+        path: '/admin/autocomplete/{alias}'
+
+Then specify this new route on the attribute::
+
+    // src/Form/FoodAutocompleteField.php
+
+    #[AsEntityAutocompleteField(route: 'ux_entity_autocomplete_admin')]
+    class FoodAutocompleteField
+    // ...
 
 Extending Tom Select
 --------------------
@@ -336,6 +353,11 @@ events that the core Stimulus controller dispatches:
         }
     }
 
+.. note::
+
+    The extending controller should be loaded eagerly (remove ``/* stimulusFetch: 'lazy' */``), so
+    it can listen to events dispatched by the original controller.
+
 Then, update your field configuration to use your new controller (it will be used
 in addition to the core Autocomplete controller):
 
@@ -344,6 +366,7 @@ in addition to the core Autocomplete controller):
     $builder
         ->add('food', EntityType::class, [
             'class' => Food::class,
+            'autocomplete' => true,
     +        'attr' => [
     +            'data-controller' => 'custom-autocomplete',
     +        ],
@@ -374,16 +397,19 @@ endpoint and then :ref:`initialize the Stimulus controller manually <manual-stim
 This only works for Doctrine entities: see `Manually using the Stimulus Controller`_
 if you're autocompleting something other than an entity.
 
-To expose the endpoint, create a class that implements ``Symfony\UX\Autocomplete\EntityAutocompleterInterface``::
+To expose the endpoint, create a class that implements ``Symfony\UX\Autocomplete\EntityAutocompleterInterface``
+and tag this service with ``ux.entity_autocompleter``, including an ``alias`` option::
 
     namespace App\Autocompleter;
 
     use App\Entity\Food;
     use Doctrine\ORM\EntityRepository;
     use Doctrine\ORM\QueryBuilder;
+    use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
     use Symfony\Component\Security\Core\Security;
     use Symfony\UX\Autocomplete\EntityAutocompleterInterface;
 
+    #[AutoconfigureTag('ux.entity_autocompleter', ['alias' => 'food'])]
     class FoodAutocompleter implements EntityAutocompleterInterface
     {
         public function getEntityClass(): string
@@ -421,18 +447,6 @@ To expose the endpoint, create a class that implements ``Symfony\UX\Autocomplete
             return true;
         }
     }
-
-Next, tag this service with ``ux.entity_autocompleter`` and include an ``alias``:
-
-.. code-block:: yaml
-
-    # config/services.yaml
-    services:
-        # ...
-
-        App\Autocompleter\FoodAutocompleter:
-            tags:
-                - { name: ux.entity_autocompleter, alias: 'food' }
 
 Thanks to this, your can now autocomplete your ``Food`` entity via
 the ``ux_entity_autocomplete`` route and ``alias`` route wildcard:
@@ -499,18 +513,38 @@ Beyond ``url``, the Stimulus controller has various other values,
 including ``tomSelectOptions``. See the `controller.ts`_ file for
 the full list.
 
+Unit testing
+------------
+
+When writing unit tests for your form, using the ``TypeTestCase`` class, you
+consider registering the needed type extension ``AutocompleteChoiceTypeExtension`` like so::
+
+    // tests/Form/Type/TestedTypeTest.php
+    namespace App\Tests\Form\Type;
+
+    use Symfony\Component\Form\Test\TypeTestCase;
+    use Symfony\UX\Autocomplete\Form\AutocompleteChoiceTypeExtension;
+
+    class TestedTypeTest extends TypeTestCase
+    {
+        protected function getTypeExtensions(): array
+        {
+            return [
+                new AutocompleteChoiceTypeExtension(),
+            ];
+        }
+
+        // ... your tests
+    }
+
 Backward Compatibility promise
 ------------------------------
 
 This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 
-However it is currently considered `experimental`_, meaning it is not bound
-to Symfony's BC policy for the moment.
-
 .. _`Tom Select`: https://tom-select.js.org/
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
 .. _`Tom Select Options`: https://tom-select.js.org/docs/#general-configuration
 .. _`controller.ts`: https://github.com/symfony/ux/blob/2.x/src/Autocomplete/assets/src/controller.ts
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`Tom Select Render Templates`: https://tom-select.js.org/docs/#render-templates

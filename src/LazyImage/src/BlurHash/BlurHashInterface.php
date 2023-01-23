@@ -13,8 +13,6 @@ namespace Symfony\UX\LazyImage\BlurHash;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
- *
- * @experimental
  */
 interface BlurHashInterface
 {

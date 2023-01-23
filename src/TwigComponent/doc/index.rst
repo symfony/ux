@@ -1,9 +1,6 @@
 Twig Components
 ===============
 
-**EXPERIMENTAL** This component is currently experimental and is likely
-to change, or even change drastically.
-
 Twig components give you the power to bind an object to a template,
 making it easier to render and re-use small template "units" - like an
 "alert", markup for a modal, or a category sidebar:
@@ -48,7 +45,7 @@ This brings the familiar "component" system from client-side frameworks
 into Symfony. Combine this with `Live Components`_, to create
 an interactive frontend with automatic, Ajax-powered rendering.
 
-Want a demo? Check out https://github.com/weaverryan/live-demo.
+Want a demo? Check out https://ux.symfony.com/twig-component#demo
 
 Installation
 ------------
@@ -237,6 +234,121 @@ If an option name matches an argument name in ``mount()``, the option is
 passed as that argument and the component system will *not* try to set
 it directly on a property.
 
+PreMount Hook
+~~~~~~~~~~~~~
+
+If you need to modify/validate data before it's *mounted* on the
+component use a ``PreMount`` hook::
+
+    // src/Components/AlertComponent.php
+
+    use Symfony\UX\TwigComponent\Attribute\PreMount;
+    // ...
+
+    #[AsTwigComponent('alert')]
+    class AlertComponent
+    {
+        public string $message;
+        public string $type = 'success';
+
+        #[PreMount]
+        public function preMount(array $data): array
+        {
+            // validate data
+            $resolver = new OptionsResolver();
+            $resolver->setDefaults(['type' => 'success']);
+            $resolver->setAllowedValues('type', ['success', 'danger']);
+            $resolver->setRequired('message');
+            $resolver->setAllowedTypes('message', 'string');
+
+            return $resolver->resolve($data)
+        }
+
+        // ...
+    }
+
+.. note::
+
+    If your component has multiple ``PreMount`` hooks, and you'd like to control
+    the order in which they're called, use the ``priority`` attribute parameter:
+    ``PreMount(priority: 10)`` (higher called earlier).
+
+PostMount Hook
+~~~~~~~~~~~~~~
+
+.. versionadded:: 2.1
+
+    The ``PostMount`` hook was added in TwigComponents 2.1.
+
+When a component is mounted with the passed data, if an item cannot be
+mounted on the component, an exception is thrown. You can intercept this
+behavior and "catch" this extra data with a ``PostMount`` hook method. This
+method accepts the extra data as an argument and must return an array. If
+the returned array is empty, the exception will be avoided::
+
+    // src/Components/AlertComponent.php
+
+    use Symfony\UX\TwigComponent\Attribute\PostMount;
+    // ...
+
+    #[AsTwigComponent('alert')]
+    class AlertComponent
+    {
+        #[PostMount]
+        public function postMount(): array
+        {
+            if (str_contains($this->message, 'danger')) {
+                $this->type = 'danger';
+            }
+        }
+        // ...
+    }
+
+A ``PostMount`` method can also receive an array ``$data`` argument, which
+will contain any props passed to the component that have *not* yet been processed,
+i.e. because they don't correspond to any property. You can handle and remove those
+here. For example, imagine an extra ``autoChooseType`` prop were passed when
+creating the ``alert`` component::
+
+    {{ component('alert', {
+        message: 'Danger Will Robinson!',
+        autoChooseType: true,
+    }) }}
+
+You can handle this prop via a ``#[PostMount]`` hook::
+
+    // src/Components/AlertComponent.php
+
+    #[AsTwigComponent('alert')]
+    class AlertComponent
+    {
+        public string $message;
+        public string $type = 'success';
+
+        #[PostMount]
+        public function processAutoChooseType(array $data): array
+        {
+            if (array_key_exists('autoChooseType', $data) && $data['autoChooseType']) {
+                if (str_contains($this->message, 'danger')) {
+                    $this->type = 'danger';
+                }
+
+                // remove the autoChooseType prop from the data array
+                unset($data['autoChooseType']);
+            }
+
+            // any remaining data will become attributes on the component
+            return $data;
+        }
+        // ...
+    }
+
+.. note::
+
+    If your component has multiple ``PostMount`` hooks, and you'd like to control
+    the order in which they're called, use the ``priority`` attribute parameter:
+    ``PostMount(priority: 10)`` (higher called earlier).
+
 ExposeInTemplate Attribute
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -315,82 +427,6 @@ required parameters.
 
     When using ``ExposeInTemplate`` on a method the value is fetched eagerly
     before rendering.
-
-PreMount Hook
-~~~~~~~~~~~~~
-
-If you need to modify/validate data before it's *mounted* on the
-component use a ``PreMount`` hook::
-
-    // src/Components/AlertComponent.php
-
-    use Symfony\UX\TwigComponent\Attribute\PreMount;
-    // ...
-
-    #[AsTwigComponent('alert')]
-    class AlertComponent
-    {
-        public string $message;
-        public string $type = 'success';
-
-        #[PreMount]
-        public function preMount(array $data): array
-        {
-            // validate data
-            $resolver = new OptionsResolver();
-            $resolver->setDefaults(['type' => 'success']);
-            $resolver->setAllowedValues('type', ['success', 'danger']);
-            $resolver->setRequired('message');
-            $resolver->setAllowedTypes('message', 'string');
-
-            return $resolver->resolve($data)
-        }
-
-        // ...
-    }
-
-.. note::
-
-    If your component has multiple ``PreMount`` hooks, and you'd like to control
-    the order in which they're called, use the ``priority`` attribute parameter:
-    ``PreMount(priority: 10)`` (higher called earlier).
-
-PostMount Hook
-~~~~~~~~~~~~~~
-
-.. versionadded:: 2.1
-
-    The ``PostMount`` hook was added in TwigComponents 2.1.
-
-When a component is mounted with the passed data, if an item cannot be
-mounted on the component, an exception is thrown. You can intercept this
-behavior and "catch" this extra data with a ``PostMount`` hook method. This
-method accepts the extra data as an argument and must return an array. If
-the returned array is empty, the exception will be avoided::
-
-    // src/Components/AlertComponent.php
-
-    use Symfony\UX\TwigComponent\Attribute\PostMount;
-    // ...
-
-    #[AsTwigComponent('alert')]
-    class AlertComponent
-    {
-        #[PostMount]
-        public function postMount(array $data): array
-        {
-            // do something with the "extra" data
-
-            return $data;
-        }
-        // ...
-    }
-
-.. note::
-
-    If your component has multiple ``PostMount`` hooks, and you'd like to control
-    the order in which they're called, use the ``priority`` attribute parameter:
-    ``PostMount(priority: 10)`` (higher called earlier).
 
 Fetching Services
 -----------------
@@ -553,6 +589,16 @@ Set an attribute's value to ``null`` to exclude the value when rendering:
 
     {# renders as: #}
     <input type="text" value="" autofocus/>
+
+.. versionadded: 2.7
+
+    The ``add()`` method was introduced in TwigComponents 2.7.
+
+To add a custom Stimulus controller to your root component element:
+
+.. code-block:: twig
+
+    <div {{ attributes.add(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
 
 .. note::
 
@@ -791,12 +837,8 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
-However it is currently considered `experimental`_,
-meaning it is not bound to Symfony's BC policy for the moment.
-
 .. _`Live Components`: https://symfony.com/bundles/ux-live-component/current/index.html
 .. _`live component`: https://symfony.com/bundles/ux-live-component/current/index.html
 .. _`Vue`: https://v3.vuejs.org/guide/computed.html
 .. _`Live Nested Components`: https://symfony.com/bundles/ux-live-component/current/index.html#nested-components
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`embed tag`: https://twig.symfony.com/doc/3.x/tags/embed.html

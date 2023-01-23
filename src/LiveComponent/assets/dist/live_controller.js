@@ -144,13 +144,13 @@ function combineSpacedArray(parts) {
     return finalParts;
 }
 function normalizeModelName(model) {
-    return model
+    return (model
         .replace(/\[]$/, '')
         .split('[')
         .map(function (s) {
         return s.replace(']', '');
     })
-        .join('.');
+        .join('.'));
 }
 
 function getValueFromElement(element, valueStore) {
@@ -170,7 +170,7 @@ function getValueFromElement(element, valueStore) {
     }
     if (element instanceof HTMLSelectElement) {
         if (element.multiple) {
-            return Array.from(element.selectedOptions).map(el => el.value);
+            return Array.from(element.selectedOptions).map((el) => el.value);
         }
         return element.value;
     }
@@ -197,7 +197,7 @@ function setValueOnElement(element, value) {
         if (element.type === 'checkbox') {
             if (Array.isArray(value)) {
                 let valueFound = false;
-                value.forEach(val => {
+                value.forEach((val) => {
                     if (val == element.value) {
                         valueFound = true;
                     }
@@ -211,10 +211,10 @@ function setValueOnElement(element, value) {
         }
     }
     if (element instanceof HTMLSelectElement) {
-        const arrayWrappedValue = [].concat(value).map(value => {
+        const arrayWrappedValue = [].concat(value).map((value) => {
             return value + '';
         });
-        Array.from(element.options).forEach(option => {
+        Array.from(element.options).forEach((option) => {
             option.selected = arrayWrappedValue.includes(option.value);
         });
         return;
@@ -242,7 +242,7 @@ function getModelDirectiveFromElement(element, throwOnMissing = true) {
     }
     if (element.getAttribute('name')) {
         const formElement = element.closest('form');
-        if (formElement && ('model' in formElement.dataset)) {
+        if (formElement && 'model' in formElement.dataset) {
             const directives = parseDirectives(formElement.dataset.model || '*');
             const directive = directives[0];
             if (directive.args.length > 0 || directive.named.length > 0) {
@@ -286,12 +286,15 @@ function htmlToElement(html) {
     const template = document.createElement('template');
     html = html.trim();
     template.innerHTML = html;
-    const child = template.content.firstChild;
+    if (template.content.childElementCount > 1) {
+        throw new Error(`Component HTML contains ${template.content.childElementCount} elements, but only 1 root element is allowed.`);
+    }
+    const child = template.content.firstElementChild;
     if (!child) {
         throw new Error('Child not found');
     }
     if (!(child instanceof HTMLElement)) {
-        throw new Error(`Created element is not an Element from HTML: ${html.trim()}`);
+        throw new Error(`Created element is not an HTMLElement: ${html.trim()}`);
     }
     return child;
 }
@@ -301,13 +304,13 @@ function cloneElementWithNewTagName(element, newTag) {
     const endRX = new RegExp(originalTag + '>$', 'i');
     const startSubst = '<' + newTag;
     const endSubst = newTag + '>';
-    const newHTML = element.outerHTML
-        .replace(startRX, startSubst)
-        .replace(endRX, endSubst);
+    const newHTML = element.outerHTML.replace(startRX, startSubst).replace(endRX, endSubst);
     return htmlToElement(newHTML);
 }
 function getElementAsTagText(element) {
-    return element.innerHTML ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML)) : element.outerHTML;
+    return element.innerHTML
+        ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML))
+        : element.outerHTML;
 }
 const getMultipleCheckboxValue = function (element, currentValues) {
     const value = inputValue(element);
@@ -346,7 +349,7 @@ const parseDeepData = function (data, propertyPath) {
         currentLevelData,
         finalData,
         finalKey,
-        parts
+        parts,
     };
 };
 function setDeepData(data, propertyPath, value) {
@@ -1194,7 +1197,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
         const childComponentToElement = findChildComponent(childComponent.id, rootToElement);
         if (childComponentToElement && childComponentToElement.tagName !== childComponent.element.tagName) {
             const newTag = cloneElementWithNewTagName(childComponentToElement, childComponent.element.tagName);
-            rootToElement.replaceChild(newTag, childComponentToElement);
+            childComponentToElement.replaceWith(newTag);
         }
     });
     morphdom(rootFromElement, rootToElement, {
@@ -1208,7 +1211,8 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
             if (fromEl === rootFromElement) {
                 return true;
             }
-            if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
+            if (!(fromEl instanceof HTMLElement || fromEl instanceof SVGElement) ||
+                !(toEl instanceof HTMLElement || toEl instanceof SVGElement)) {
                 return false;
             }
             const childComponent = childComponentMap.get(fromEl) || false;
@@ -1218,7 +1222,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
             if (modifiedFieldElements.includes(fromEl)) {
                 setValueOnElement(toEl, getElementValue(fromEl));
             }
-            if (fromEl.isEqualNode(toEl)) {
+            if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement && fromEl.isEqualNode(toEl)) {
                 const normalizedFromEl = cloneHTMLElement(fromEl);
                 normalizeAttributesForComparison(normalizedFromEl);
                 const normalizedToEl = cloneHTMLElement(toEl);
@@ -1234,7 +1238,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                 return true;
             }
             return !node.hasAttribute('data-live-ignore');
-        }
+        },
     });
 }
 
@@ -1423,7 +1427,7 @@ class Component {
         }
         return this.valueStore.get(modelName);
     }
-    action(name, args, debounce = false) {
+    action(name, args = {}, debounce = false) {
         const promise = this.nextRequestPromise;
         this.pendingActions.push({
             name,
@@ -1515,15 +1519,20 @@ class Component {
         this.isRequestPending = false;
         this.backendRequest.promise.then(async (response) => {
             const backendResponse = new BackendResponse(response);
-            thisPromiseResolve(backendResponse);
             const html = await backendResponse.getBody();
             const headers = backendResponse.response.headers;
             if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
-                this.renderError(html);
+                const controls = { displayError: true };
+                this.hooks.triggerHook('response:error', backendResponse, controls);
+                if (controls.displayError) {
+                    this.renderError(html);
+                }
+                thisPromiseResolve(backendResponse);
                 return response;
             }
             this.processRerender(html, backendResponse);
             this.backendRequest = null;
+            thisPromiseResolve(backendResponse);
             if (this.isRequestPending) {
                 this.isRequestPending = false;
                 this.performRequest();
@@ -1551,7 +1560,17 @@ class Component {
         this.valueStore.updatedModels.forEach((modelName) => {
             modifiedModelValues[modelName] = this.valueStore.get(modelName);
         });
-        const newElement = htmlToElement(html);
+        let newElement;
+        try {
+            newElement = htmlToElement(html);
+            if (!newElement.matches('[data-controller~=live]')) {
+                throw new Error('A live component template must contain a single root controller element.');
+            }
+        }
+        catch (error) {
+            console.error('There was a problem with the component HTML returned:');
+            throw error;
+        }
         this.hooks.triggerHook('loading.state:finished', newElement);
         this.valueStore.reinitializeData(this.elementDriver.getComponentData(newElement));
         executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), Array.from(this.getChildren().values()), this.elementDriver.findChildComponentElement, this.elementDriver.getKeyFromElement);
@@ -1593,13 +1612,16 @@ class Component {
             modal.style.backgroundColor = 'rgba(0, 0, 0, .5)';
             modal.style.zIndex = '100000';
             modal.style.position = 'fixed';
-            modal.style.width = '100vw';
-            modal.style.height = '100vh';
+            modal.style.top = '0px';
+            modal.style.bottom = '0px';
+            modal.style.left = '0px';
+            modal.style.right = '0px';
+            modal.style.display = 'flex';
+            modal.style.flexDirection = 'column';
         }
         const iframe = document.createElement('iframe');
         iframe.style.borderRadius = '5px';
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
+        iframe.style.flexGrow = '1';
         modal.appendChild(iframe);
         document.body.prepend(modal);
         document.body.style.overflow = 'hidden';
@@ -1682,10 +1704,10 @@ class BackendRequest {
         this.updatedModels = updateModels;
     }
     containsOneOfActions(targetedActions) {
-        return (this.actions.filter(action => targetedActions.includes(action))).length > 0;
+        return this.actions.filter((action) => targetedActions.includes(action)).length > 0;
     }
     areAnyModelsUpdated(targetedModels) {
-        return (this.updatedModels.filter(model => targetedModels.includes(model))).length > 0;
+        return this.updatedModels.filter((model) => targetedModels.includes(model)).length > 0;
     }
 }
 
@@ -1701,11 +1723,12 @@ class Backend {
         const params = new URLSearchParams(queryString || '');
         const fetchOptions = {};
         fetchOptions.headers = {
-            'Accept': 'application/vnd.live-component+html',
+            Accept: 'application/vnd.live-component+html',
         };
         const hasFingerprints = Object.keys(childrenFingerprints).length > 0;
         const hasUpdatedModels = Object.keys(updatedModels).length > 0;
-        if (actions.length === 0 && this.willDataFitInUrl(JSON.stringify(data), params, JSON.stringify(childrenFingerprints))) {
+        if (actions.length === 0 &&
+            this.willDataFitInUrl(JSON.stringify(data), params, JSON.stringify(childrenFingerprints))) {
             params.set('data', JSON.stringify(data));
             if (hasFingerprints) {
                 params.set('childrenFingerprints', JSON.stringify(childrenFingerprints));
@@ -2092,6 +2115,9 @@ class SetValueOntoModelFieldsPlugin {
             if (element instanceof HTMLFormElement) {
                 return;
             }
+            if (!elementBelongsToThisComponent(element, component)) {
+                return;
+            }
             const modelDirective = getModelDirectiveFromElement(element);
             if (!modelDirective) {
                 return;
@@ -2145,6 +2171,37 @@ function getModelBinding (modelDirective) {
     };
 }
 
+const ComponentRegistry = class {
+    constructor() {
+        this.components = new WeakMap();
+    }
+    registerComponent(element, definition) {
+        this.components.set(element, definition);
+    }
+    unregisterComponent(element) {
+        this.components.delete(element);
+    }
+    getComponent(element) {
+        return new Promise((resolve, reject) => {
+            let count = 0;
+            const maxCount = 10;
+            const interval = setInterval(() => {
+                const component = this.components.get(element);
+                if (component) {
+                    resolve(component);
+                }
+                count++;
+                if (count > maxCount) {
+                    clearInterval(interval);
+                    reject(new Error(`Component not found for element ${getElementAsTagText(element)}`));
+                }
+            }, 5);
+        });
+    }
+};
+var ComponentRegistry$1 = new ComponentRegistry();
+
+const getComponent = (element) => ComponentRegistry$1.getComponent(element);
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
@@ -2180,14 +2237,16 @@ class default_1 extends Controller {
         this.elementEventListeners.forEach(({ event, callback }) => {
             this.component.element.addEventListener(event, callback);
         });
-        this._dispatchEvent('live:connect');
+        ComponentRegistry$1.registerComponent(this.element, this.component);
+        this.dispatchEvent('connect');
     }
     disconnect() {
         this.component.disconnect();
         this.elementEventListeners.forEach(({ event, callback }) => {
             this.component.element.removeEventListener(event, callback);
         });
-        this._dispatchEvent('live:disconnect');
+        ComponentRegistry$1.unregisterComponent(this.element);
+        this.dispatchEvent('disconnect');
     }
     update(event) {
         if (event.type === 'input' || event.type === 'change') {
@@ -2306,14 +2365,10 @@ class default_1 extends Controller {
         }
         this.component.removeChild(childController.component);
     }
-    _dispatchEvent(name, detail = {}, canBubble = true, cancelable = false) {
+    dispatchEvent(name, detail = {}, canBubble = true, cancelable = false) {
         detail.controller = this;
         detail.component = this.proxiedComponent;
-        return this.element.dispatchEvent(new CustomEvent(name, {
-            bubbles: canBubble,
-            cancelable,
-            detail
-        }));
+        this.dispatch(name, { detail, prefix: 'live', cancelable, bubbles: canBubble });
     }
 }
 default_1.values = {
@@ -2326,4 +2381,4 @@ default_1.values = {
     fingerprint: String,
 };
 
-export { default_1 as default };
+export { Component, default_1 as default, getComponent };

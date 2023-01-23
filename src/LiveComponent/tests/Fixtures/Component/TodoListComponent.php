@@ -24,5 +24,8 @@ final class TodoListComponent
     #[LiveProp]
     public array $items = [];
 
+    #[LiveProp(writable: true)]
+    public $includeDataLiveId = false;
+
     use DefaultActionTrait;
 }

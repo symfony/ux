@@ -15,12 +15,16 @@ class default_1 extends Controller {
         this.url = u.toString();
     }
     connect() {
-        this.es = new EventSource(this.url);
-        connectStreamSource(this.es);
+        if (this.url) {
+            this.es = new EventSource(this.url);
+            connectStreamSource(this.es);
+        }
     }
     disconnect() {
-        this.es.close();
-        disconnectStreamSource(this.es);
+        if (this.es) {
+            this.es.close();
+            disconnectStreamSource(this.es);
+        }
     }
 }
 default_1.values = {

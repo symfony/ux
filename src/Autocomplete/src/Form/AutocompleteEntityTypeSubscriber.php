@@ -73,11 +73,15 @@ final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
                     ++$idx;
                 }
 
-                $options['choices'] = $repository->createQueryBuilder('o')
-                    ->where(sprintf("o.$idField IN (%s)", implode(', ', array_keys($params))))
-                    ->setParameters(new ArrayCollection($params))
-                    ->getQuery()
-                    ->getResult();
+                $queryBuilder = $repository->createQueryBuilder('o');
+
+                if ($params) {
+                    $queryBuilder
+                        ->where(sprintf("o.$idField IN (%s)", implode(', ', array_keys($params))))
+                        ->setParameters(new ArrayCollection($params));
+                }
+
+                $options['choices'] = $queryBuilder->getQuery()->getResult();
             } else {
                 $options['choices'] = $repository->createQueryBuilder('o')
                     ->where("o.$idField = :id")

@@ -20,8 +20,6 @@ use Twig\TwigFunction;
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *
  * @final
- *
- * @experimental
  */
 class ReactComponentExtension extends AbstractExtension
 {

@@ -181,6 +181,26 @@ describe('AutocompleteController', () => {
         });
     });
 
+    it('min-characters can be a falsy value', async () => {
+        const container = mountDOM(`
+            <select
+                data-testid="main-element"
+                data-controller="check autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+                data-autocomplete-min-characters-value="0"
+            ></select>
+        `);
+
+        application = startStimulus();
+
+        await waitFor(() => {
+            expect(getByTestId(container, 'main-element')).toHaveClass('connected');
+        });
+        const tomSelect = getTomSelectInstance(container);
+
+        expect(tomSelect.settings.shouldLoad('')).toBeTruthy()
+    })
+
     it('adds live-component support', async () => {
         const container = mountDOM(`
             <div>

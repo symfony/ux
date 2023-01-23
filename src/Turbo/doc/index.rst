@@ -383,9 +383,19 @@ Start by installing `the Mercure support`_ on your project:
 
 .. code-block:: terminal
 
-    $ composer require symfony/ux-turbo-mercure
-    $ yarn install --force
-    $ yarn encore dev
+    $ composer require symfony/mercure-bundle
+
+Then, enable the "mercure stream" controller in ``assets/controllers.json``:
+
+.. code-block:: diff
+
+    "@symfony/ux-turbo": {
+        "mercure-turbo-stream": {
+    +         "enabled": true,
+    -         "enabled": false,
+            "fetch": "lazy"
+        }
+    },
 
 The easiest way to have a working development (and production-ready)
 environment is to use `Symfony Docker`_, which comes with
@@ -789,9 +799,6 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
-However, it is currently considered `experimental`_,
-meaning it is not bound to Symfony's BC policy for the moment.
-
 Credits
 -------
 
@@ -820,7 +827,6 @@ Symfony UX Turbo has been created by `Kévin Dunglas`_. It has been inspired by
 .. _`autoconfigure option`: https://symfony.com/doc/current/service_container.html#the-autoconfigure-option
 .. _`private updates`: https://symfony.com/doc/current/mercure.html#authorization
 .. _`async dispatching with Symfony Messenger`: https://symfony.com/doc/current/mercure.html#async-dispatching
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`Kévin Dunglas`: https://dunglas.fr
 .. _`hotwired/turbo-rails`: https://github.com/hotwired/turbo-rails
 .. _`sroze/live-twig`: https://github.com/sroze/live-twig

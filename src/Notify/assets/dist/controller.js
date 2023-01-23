@@ -27,7 +27,7 @@ class default_1 extends Controller {
         this.eventSources.forEach((eventSource) => {
             eventSource.addEventListener('message', (event) => this._notify(JSON.parse(event.data).summary));
         });
-        this._dispatchEvent('notify:connect', { eventSources: this.eventSources });
+        this.dispatchEvent('connect', { eventSources: this.eventSources });
     }
     disconnect() {
         this.eventSources.forEach((eventSource) => {
@@ -51,8 +51,8 @@ class default_1 extends Controller {
             });
         }
     }
-    _dispatchEvent(name, payload) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
+    dispatchEvent(name, payload) {
+        this.dispatch(name, { detail: payload, prefix: 'notify' });
     }
 }
 default_1.values = {

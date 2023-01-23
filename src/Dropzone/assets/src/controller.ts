@@ -12,12 +12,12 @@
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
-    readonly inputTarget: HTMLInputElement;
-    readonly placeholderTarget: HTMLDivElement;
-    readonly previewTarget: HTMLDivElement;
-    readonly previewClearButtonTarget: HTMLButtonElement;
-    readonly previewFilenameTarget: HTMLDivElement;
-    readonly previewImageTarget: HTMLDivElement;
+    declare readonly inputTarget: HTMLInputElement;
+    declare readonly placeholderTarget: HTMLDivElement;
+    declare readonly previewTarget: HTMLDivElement;
+    declare readonly previewClearButtonTarget: HTMLButtonElement;
+    declare readonly previewFilenameTarget: HTMLDivElement;
+    declare readonly previewImageTarget: HTMLDivElement;
 
     static targets = ['input', 'placeholder', 'preview', 'previewClearButton', 'previewFilename', 'previewImage'];
 
@@ -31,7 +31,7 @@ export default class extends Controller {
         // Listen on input change and display preview
         this.inputTarget.addEventListener('change', (event) => this.onInputChange(event));
 
-        this._dispatchEvent('dropzone:connect');
+        this.dispatchEvent('connect');
     }
 
     clear() {
@@ -43,7 +43,7 @@ export default class extends Controller {
         this.previewImageTarget.style.backgroundImage = 'none';
         this.previewFilenameTarget.textContent = '';
 
-        this._dispatchEvent('dropzone:clear');
+        this.dispatchEvent('clear');
     }
 
     onInputChange(event: any) {
@@ -66,7 +66,7 @@ export default class extends Controller {
             this._populateImagePreview(file);
         }
 
-        this._dispatchEvent('dropzone:change', file);
+        this.dispatchEvent('change', file);
     }
 
     _populateImagePreview(file: Blob) {
@@ -85,7 +85,7 @@ export default class extends Controller {
         reader.readAsDataURL(file);
     }
 
-    _dispatchEvent(name: string, payload: any = {}) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
+    private dispatchEvent(name: string, payload: any = {}) {
+        this.dispatch(name, { detail: payload, prefix: 'dropzone' });
     }
 }

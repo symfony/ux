@@ -23,7 +23,7 @@ export function executeMorphdom(
             // we need to "correct" the tag name for the child to match the "from"
             // so that we always get a "diff", not a remove/add
             const newTag = cloneElementWithNewTagName(childComponentToElement, childComponent.element.tagName);
-            rootToElement.replaceChild(newTag, childComponentToElement);
+            childComponentToElement.replaceWith(newTag);
         }
     });
 
@@ -40,7 +40,10 @@ export function executeMorphdom(
                 return true;
             }
 
-            if (!(fromEl instanceof HTMLElement) || !(toEl instanceof HTMLElement)) {
+            if (
+                !(fromEl instanceof HTMLElement || fromEl instanceof SVGElement) ||
+                !(toEl instanceof HTMLElement || toEl instanceof SVGElement)
+            ) {
                 return false;
             }
 
@@ -56,7 +59,7 @@ export function executeMorphdom(
             }
 
             // https://github.com/patrick-steele-idem/morphdom#can-i-make-morphdom-blaze-through-the-dom-tree-even-faster-yes
-            if (fromEl.isEqualNode(toEl)) {
+            if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement && fromEl.isEqualNode(toEl)) {
                 // the nodes are equal, but the "value" on some might differ
                 // lets try to quickly compare a bit more deeply
                 const normalizedFromEl = cloneHTMLElement(fromEl);

@@ -39,9 +39,11 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
         ];
     }
 
-    public function finishView(FormView $view, FormInterface $form, array $options)
+    public function finishView(FormView $view, FormInterface $form, array $options): void
     {
         if (!$options['autocomplete']) {
+            $view->vars['uses_autocomplete'] = false;
+
             return;
         }
 
@@ -77,15 +79,17 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
 
         $values['no-results-found-text'] = $this->trans($options['no_results_found_text']);
         $values['no-more-results-text'] = $this->trans($options['no_more_results_text']);
+        $values['preload'] = $options['preload'];
 
         foreach ($values as $name => $value) {
             $attr['data-'.$controllerName.'-'.$name.'-value'] = $value;
         }
 
+        $view->vars['uses_autocomplete'] = true;
         $view->vars['attr'] = $attr;
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'autocomplete' => false,
@@ -97,11 +101,20 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             'no_more_results_text' => 'No more results',
             'min_characters' => 3,
             'max_results' => 10,
+            'preload' => 'focus',
         ]);
 
         // if autocomplete_url is passed, then HTML options are already supported
         $resolver->setNormalizer('options_as_html', function (Options $options, $value) {
             return null === $options['autocomplete_url'] ? $value : false;
+        });
+
+        $resolver->setNormalizer('preload', function (Options $options, $value) {
+            if (\is_bool($value)) {
+                $value = $value ? 'true' : 'false';
+            }
+
+            return $value;
         });
     }
 

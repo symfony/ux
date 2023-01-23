@@ -4,6 +4,8 @@
     "license": "MIT",
     "private": true,
     "version": "0.1.0",
+    "main": "dist/turbo_controller.js",
+    "types": "dist/turbo_controller.d.ts",
     "symfony": {
         "controllers": {
             "turbo-core": {
@@ -11,6 +13,11 @@
                 "webpackMode": "eager",
                 "fetch": "eager",
                 "enabled": true
+            },
+            "mercure-turbo-stream": {
+                "main": "dist/turbo_stream_controller.js",
+                "fetch": "eager",
+                "enabled": false
             }
         }
     },
@@ -20,6 +27,7 @@
     },
     "devDependencies": {
         "@hotwired/turbo": "^7.1.0",
-        "@hotwired/stimulus": "^3.0.0"
+        "@hotwired/stimulus": "^3.0.0",
+        "jest-canvas-mock": "^2.3.0"
     }
 }

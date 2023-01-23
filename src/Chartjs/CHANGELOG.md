@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 2.7.0
+
+-   The `chart:connect` JavaScript event now bubbles up.
+
+-   Add `assets/src` to `.gitattributes` to exclude source TypeScript files from
+    installing.
+
+-   TypeScript types are now included.
+
 ## 2.6.0
 
 -   [BC BREAK] The `assets/` directory was moved from `Resources/assets/` to `assets/`. Make

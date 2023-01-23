@@ -34,8 +34,6 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\abstract_
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 final class AutocompleteExtension extends Extension implements PrependExtensionInterface
 {

@@ -3,9 +3,11 @@
 
     <ul>
     {% for item in items %}
-        {{ component('todo_item', {
-            text: item.text
-        }) }}
+        {% set componentProps = { text: item.text } %}
+        {% if includeDataLiveId %}
+            {% set componentProps = componentProps|merge({'data-live-id': ('todo-item-' ~ loop.index) }) %}
+        {% endif %}
+        {{ component('todo_item', componentProps) }}
     {% endfor %}
     </ul>
 </div>

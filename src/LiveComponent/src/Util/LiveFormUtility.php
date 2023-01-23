@@ -33,6 +33,11 @@ final class LiveFormUtility
             $parts = explode('.', $path);
             while (\count($parts) > 0) {
                 $part = $parts[0];
+
+                if (!\is_array($data)) {
+                    return false;
+                }
+
                 if (!\array_key_exists($part, $data)) {
                     return false;
                 }

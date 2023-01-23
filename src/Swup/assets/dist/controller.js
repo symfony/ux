@@ -40,12 +40,12 @@ class default_1 extends Controller {
         if (this.debugValue) {
             options.plugins.push(new SwupDebugPlugin());
         }
-        this._dispatchEvent('swup:pre-connect', { options });
+        this.dispatchEvent('pre-connect', { options });
         const swup = new Swup(options);
-        this._dispatchEvent('swup:connect', { swup, options });
+        this.dispatchEvent('connect', { swup, options });
     }
-    _dispatchEvent(name, payload) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
+    dispatchEvent(name, payload) {
+        this.dispatch(name, { detail: payload, prefix: 'swup' });
     }
 }
 default_1.values = {

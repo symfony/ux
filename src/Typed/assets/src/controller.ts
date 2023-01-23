@@ -34,24 +34,24 @@ export default class extends Controller {
         contentType: { type: String, default: 'html' },
     };
 
-    readonly stringsValue!: string[];
-    readonly typeSpeedValue: number;
-    readonly smartBackspaceValue: boolean;
-    readonly startDelayValue?: number;
-    readonly backSpeedValue?: number;
-    readonly shuffleValue?: boolean;
-    readonly backDelayValue: number;
-    readonly fadeOutValue?: boolean;
-    readonly fadeOutClassValue: string;
-    readonly fadeOutDelayValue: number;
-    readonly loopValue?: boolean;
-    readonly loopCountValue: number;
-    readonly showCursorValue: boolean;
-    readonly cursorCharValue: string;
-    readonly autoInsertCssValue: boolean;
-    readonly attrValue?: string;
-    readonly bindInputFocusEventsValue?: boolean;
-    readonly contentTypeValue: string;
+    declare readonly stringsValue: string[];
+    declare readonly typeSpeedValue: number;
+    declare readonly smartBackspaceValue: boolean;
+    declare readonly startDelayValue?: number;
+    declare readonly backSpeedValue?: number;
+    declare readonly shuffleValue?: boolean;
+    declare readonly backDelayValue: number;
+    declare readonly fadeOutValue?: boolean;
+    declare readonly fadeOutClassValue: string;
+    declare readonly fadeOutDelayValue: number;
+    declare readonly loopValue?: boolean;
+    declare readonly loopCountValue: number;
+    declare readonly showCursorValue: boolean;
+    declare readonly cursorCharValue: string;
+    declare readonly autoInsertCssValue: boolean;
+    declare readonly attrValue?: string;
+    declare readonly bindInputFocusEventsValue?: boolean;
+    declare readonly contentTypeValue: string;
 
     connect() {
         const options = {
@@ -75,12 +75,12 @@ export default class extends Controller {
             contentType: this.contentTypeValue,
         };
 
-        this._dispatchEvent('typed:pre-connect', { options });
+        this.dispatchEvent('pre-connect', { options });
         const typed = new Typed(this.element, options);
-        this._dispatchEvent('typed:connect', { typed, options });
+        this.dispatchEvent('connect', { typed, options });
     }
 
-    _dispatchEvent(name: string, payload: any) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
+    private dispatchEvent(name: string, payload: any) {
+        this.dispatch(name, { detail: payload, prefix: 'typed' });
     }
 }

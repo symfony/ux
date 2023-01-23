@@ -106,6 +106,7 @@ export default class Component {
      *     * disconnect (component: Component) => {}
      *     * render:started (html: string, response: BackendResponse, controls: { shouldRender: boolean }) => {}
      *     * render:finished (component: Component) => {}
+     *     * response:error (backendResponse: BackendResponse, controls: { displayError: boolean }) => {}
      *     * loading.state:started (element: HTMLElement, request: BackendRequest) => {}
      *     * loading.state:finished (element: HTMLElement) => {}
      *     * model:set (model: string, value: any, component: Component) => {}
@@ -145,7 +146,7 @@ export default class Component {
         return this.valueStore.get(modelName);
     }
 
-    action(name: string, args: any, debounce: number|boolean = false): Promise<BackendResponse> {
+    action(name: string, args: any = {}, debounce: number|boolean = false): Promise<BackendResponse> {
         const promise = this.nextRequestPromise;
         this.pendingActions.push({
             name,
@@ -299,19 +300,28 @@ export default class Component {
 
         this.backendRequest.promise.then(async (response) => {
             const backendResponse = new BackendResponse(response);
-            thisPromiseResolve(backendResponse);
             const html = await backendResponse.getBody();
+
             // if the response does not contain a component, render as an error
             const headers = backendResponse.response.headers;
             if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
-                this.renderError(html);
+                const controls = { displayError: true };
+                this.hooks.triggerHook('response:error', backendResponse, controls);
+
+                if (controls.displayError) {
+                    this.renderError(html);
+                }
+
+                thisPromiseResolve(backendResponse);
 
                 return response;
             }
 
             this.processRerender(html, backendResponse);
-
             this.backendRequest = null;
+
+            // finally resolve this promise
+            thisPromiseResolve(backendResponse);
 
             // do we already have another request pending?
             if (this.isRequestPending) {
@@ -357,7 +367,18 @@ export default class Component {
             modifiedModelValues[modelName] = this.valueStore.get(modelName);
         });
 
-        const newElement = htmlToElement(html);
+        let newElement;
+        try {
+            newElement = htmlToElement(html);
+
+            if (!newElement.matches('[data-controller~=live]')) {
+                throw new Error('A live component template must contain a single root controller element.');
+            }
+        } catch (error) {
+            console.error('There was a problem with the component HTML returned:');
+
+            throw error;
+        }
         // normalize new element into non-loading state before diff
         this.hooks.triggerHook('loading.state:finished', newElement);
 
@@ -418,14 +439,17 @@ export default class Component {
             modal.style.backgroundColor = 'rgba(0, 0, 0, .5)';
             modal.style.zIndex = '100000';
             modal.style.position = 'fixed';
-            modal.style.width = '100vw';
-            modal.style.height = '100vh';
+            modal.style.top = '0px';
+            modal.style.bottom = '0px';
+            modal.style.left = '0px';
+            modal.style.right = '0px';
+            modal.style.display = 'flex';
+            modal.style.flexDirection = 'column';
         }
 
         const iframe = document.createElement('iframe');
         iframe.style.borderRadius = '5px';
-        iframe.style.width = '100%';
-        iframe.style.height = '100%';
+        iframe.style.flexGrow = '1';
         modal.appendChild(iframe);
 
         document.body.prepend(modal);

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.7.0
+
+-   `PreMount` and `PostMount` hooks can now return nothing.
+
 ## 2.5
 
 -   [BC BREAK] The `PreRenderEvent` namespace was changed from `Symfony\UX\TwigComponent\EventListener`

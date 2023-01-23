@@ -16,8 +16,6 @@ use Doctrine\Persistence\ObjectManager;
 
 /**
  * Adapted from EasyCorp/EasyAdminBundle EntityFactory.
- *
- * @experimental
  */
 class EntityMetadataFactory
 {

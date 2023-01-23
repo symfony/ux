@@ -5,7 +5,7 @@ class default_1 extends Controller {
         this.clear();
         this.previewClearButtonTarget.addEventListener('click', () => this.clear());
         this.inputTarget.addEventListener('change', (event) => this.onInputChange(event));
-        this._dispatchEvent('dropzone:connect');
+        this.dispatchEvent('connect');
     }
     clear() {
         this.inputTarget.value = '';
@@ -15,7 +15,7 @@ class default_1 extends Controller {
         this.previewImageTarget.style.display = 'none';
         this.previewImageTarget.style.backgroundImage = 'none';
         this.previewFilenameTarget.textContent = '';
-        this._dispatchEvent('dropzone:clear');
+        this.dispatchEvent('clear');
     }
     onInputChange(event) {
         const file = event.target.files[0];
@@ -30,7 +30,7 @@ class default_1 extends Controller {
         if (file.type && file.type.indexOf('image') !== -1) {
             this._populateImagePreview(file);
         }
-        this._dispatchEvent('dropzone:change', file);
+        this.dispatchEvent('change', file);
     }
     _populateImagePreview(file) {
         if (typeof FileReader === 'undefined') {
@@ -43,8 +43,8 @@ class default_1 extends Controller {
         });
         reader.readAsDataURL(file);
     }
-    _dispatchEvent(name, payload = {}) {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload }));
+    dispatchEvent(name, payload = {}) {
+        this.dispatch(name, { detail: payload, prefix: 'dropzone' });
     }
 }
 default_1.targets = ['input', 'placeholder', 'preview', 'previewClearButton', 'previewFilename', 'previewImage'];

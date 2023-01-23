@@ -15,8 +15,6 @@ use Doctrine\Persistence\Mapping\ClassMetadata;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 class EntityMetadata
 {

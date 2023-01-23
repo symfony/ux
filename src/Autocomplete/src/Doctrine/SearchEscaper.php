@@ -15,8 +15,6 @@ use Doctrine\ORM\Query\Lexer;
 
 /**
  * Adapted from EasyCorp/EasyAdminBundle Escaper.
- *
- * @experimental
  */
 class SearchEscaper
 {

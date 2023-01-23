@@ -26,5 +26,6 @@ final class LiveComponentExtensionTest extends KernelTestCase
 
         $this->assertStringContainsString('/_components/component1?prop2=2022-10-06T00:00:00', $rendered);
         $this->assertStringContainsString('_checksum=', $rendered);
+        $this->assertStringContainsString('/alt/alternate_route?', $rendered);
     }
 }

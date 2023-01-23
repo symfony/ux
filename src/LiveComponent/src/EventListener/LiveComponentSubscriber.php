@@ -76,8 +76,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         }
 
         // the default "action" is get, which does nothing
-        $action = $request->attributes->get('action', 'get');
-        $componentName = (string) $request->attributes->get('component');
+        $action = $request->attributes->get('_live_action', 'get');
+        $componentName = (string) $request->attributes->get('_live_component');
 
         $request->attributes->set('_component_name', $componentName);
 
@@ -281,10 +281,13 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $event->setResponse(new Response(null, 204, [
-            'Location' => $response->headers->get('Location'),
-            self::REDIRECT_HEADER => 1,
-        ]));
+        $responseNoContent = new Response(null, Response::HTTP_NO_CONTENT, [
+            self::REDIRECT_HEADER => '1',
+        ]);
+
+        $responseNoContent->headers->add($response->headers->all());
+
+        $event->setResponse($responseNoContent);
     }
 
     public static function getSubscribedEvents(): array
@@ -313,7 +316,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
     private function isLiveComponentRequest(Request $request): bool
     {
-        return 'ux_live_component' === $request->attributes->get('_route');
+        return $request->attributes->has('_live_component');
     }
 
     private function hydrateComponent(object $component, string $componentName, Request $request): MountedComponent

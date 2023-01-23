@@ -220,14 +220,20 @@ export function htmlToElement(html: string): HTMLElement {
     html = html.trim();
     template.innerHTML = html;
 
-    const child = template.content.firstChild;
+    if (template.content.childElementCount > 1) {
+        throw new Error(
+            `Component HTML contains ${template.content.childElementCount} elements, but only 1 root element is allowed.`
+        );
+    }
+
+    const child = template.content.firstElementChild;
     if (!child) {
         throw new Error('Child not found');
     }
 
     // enforcing this for type simplicity: in practice, this is only use for HTMLElements
     if (!(child instanceof HTMLElement)) {
-        throw new Error(`Created element is not an Element from HTML: ${html.trim()}`);
+        throw new Error(`Created element is not an HTMLElement: ${html.trim()}`);
     }
 
     return child;

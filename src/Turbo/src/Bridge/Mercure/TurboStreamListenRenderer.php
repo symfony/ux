@@ -18,7 +18,7 @@ use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Twig\Environment;
 
 /**
- * Renders the attributes to load the "turbo-stream-mercure" controller.
+ * Renders the attributes to load the "mercure-turbo-stream" controller.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
  */
@@ -52,7 +52,7 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
 
         return $this->stimulusTwigExtension->renderStimulusController(
             $env,
-            'symfony/ux-turbo-mercure/turbo-stream',
+            'symfony/ux-turbo/mercure-turbo-stream',
             ['topic' => $topic, 'hub' => $this->hub->getPublicUrl()]
         );
     }

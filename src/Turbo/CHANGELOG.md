@@ -1,5 +1,27 @@
 # CHANGELOG
 
+## 2.7.0
+
+-   Add `assets/src` to `.gitattributes` to exclude source TypeScript files from
+    installing.
+
+-   TypeScript types are now included.
+
+## 2.6.1
+
+-   The `symfony/ux-turbo-mercure` package was abandoned and moved into this package.
+    If you were previously using `symfony/ux-turbo-mercure`, you can remove it
+    and only install mecure-bundle:
+
+    ```
+    composer require symfony/mercure-bundle
+    composer remove symfony/ux-turbo-mercure
+    ```
+
+    After upgrading this package to 2.6.1, you should have a new entry in
+    `assets/controllers.json` called `mercure-turbo-stream`. Change
+    `enabled: false` to `enabled: true`.
+
 ## 2.6.0
 
 -   [BC BREAK] The `assets/` directory was moved from `Resources/assets/` to `assets/`. Make

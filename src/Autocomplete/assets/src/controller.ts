@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import TomSelect from 'tom-select';
-import { TomSettings } from 'tom-select/dist/types/types';
+import { TPluginHash } from 'tom-select/dist/types/contrib/microplugin';
+import { RecursivePartial, TomSettings, TomTemplates } from 'tom-select/dist/types/types';
 
 export default class extends Controller {
     static values = {
@@ -8,16 +9,19 @@ export default class extends Controller {
         optionsAsHtml: Boolean,
         noResultsFoundText: String,
         noMoreResultsText: String,
-        minCharacters: Number,
+        minCharacters: { type: Number, default: 3 },
         tomSelectOptions: Object,
+        preload: String,
     };
 
-    readonly urlValue: string;
-    readonly optionsAsHtmlValue: boolean;
-    readonly noMoreResultsTextValue: string;
-    readonly noResultsFoundTextValue: string;
-    readonly minCharactersValue: number;
-    readonly tomSelectOptionsValue: object;
+    declare readonly urlValue: string;
+    declare readonly optionsAsHtmlValue: boolean;
+    declare readonly noMoreResultsTextValue: string;
+    declare readonly noResultsFoundTextValue: string;
+    declare readonly minCharactersValue: number;
+    declare readonly tomSelectOptionsValue: object;
+    declare readonly hasPreloadValue: boolean;
+    declare readonly preloadValue: string;
     tomSelect: TomSelect;
 
     initialize() {
@@ -53,7 +57,7 @@ export default class extends Controller {
     }
 
     #getCommonConfig(): Partial<TomSettings> {
-        const plugins: any = {};
+        const plugins: TPluginHash = {};
 
         // multiple values excepted if this is NOT A select (i.e. input) or a multiple select
         const isMultiple = !this.selectElement || this.selectElement.multiple;
@@ -69,13 +73,15 @@ export default class extends Controller {
             plugins.virtual_scroll = {};
         }
 
-        const config: Partial<TomSettings> = {
-            render: {
-                no_results: () => {
-                    return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
-                },
+        const render: Partial<TomTemplates> = {
+            no_results: () => {
+                return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
             },
-            plugins: plugins,
+        };
+
+        const config: RecursivePartial<TomSettings> = {
+            render,
+            plugins,
             // clear the text input after selecting a value
             onItemAdd: () => {
                 this.tomSelect.setTextboxValue('');
@@ -127,7 +133,7 @@ export default class extends Controller {
     }
 
     #createAutocompleteWithRemoteData(autocompleteEndpointUrl: string, minCharacterLength: number): TomSelect {
-        const config: Partial<TomSettings> = this.#mergeObjects(this.#getCommonConfig(), {
+        const config: RecursivePartial<TomSettings> = this.#mergeObjects(this.#getCommonConfig(), {
             firstUrl: (query: string) => {
                 const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
 
@@ -148,9 +154,7 @@ export default class extends Controller {
                     .catch(() => callback());
             },
             shouldLoad: function (query: string) {
-                const minLength = minCharacterLength || 3;
-
-                return query.length >= minLength;
+                return query.length >= minCharacterLength;
             },
             // avoid extra filtering after results are returned
             score: function (search: string) {
@@ -172,7 +176,7 @@ export default class extends Controller {
                     return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
                 },
             },
-            preload: 'focus',
+            preload: this.preload,
         });
 
         return this.#createTomSelect(config);
@@ -202,21 +206,37 @@ export default class extends Controller {
      */
     get formElement(): HTMLInputElement | HTMLSelectElement {
         if (!(this.element instanceof HTMLInputElement) && !(this.element instanceof HTMLSelectElement)) {
-            throw new Error('Autocomplete Stimulus controller can only be used no an <input> or <select>.');
+            throw new Error('Autocomplete Stimulus controller can only be used on an <input> or <select>.');
         }
 
         return this.element;
     }
 
-    #createTomSelect(options: Partial<TomSettings>): TomSelect {
-        this.#dispatchEvent('autocomplete:pre-connect', { options });
+    #createTomSelect(options: RecursivePartial<TomSettings>): TomSelect {
+        this.dispatchEvent('pre-connect', { options });
         const tomSelect = new TomSelect(this.formElement, options);
-        this.#dispatchEvent('autocomplete:connect', { tomSelect, options });
+        this.dispatchEvent('connect', { tomSelect, options });
 
         return tomSelect;
     }
 
-    #dispatchEvent(name: string, payload: any): void {
-        this.element.dispatchEvent(new CustomEvent(name, { detail: payload, bubbles: true }));
+    private dispatchEvent(name: string, payload: any): void {
+        this.dispatch(name, { detail: payload, prefix: 'autocomplete' });
+    }
+
+    get preload() {
+        if (!this.hasPreloadValue) {
+            return 'focus';
+        }
+
+        if (this.preloadValue == 'false') {
+            return false;
+        }
+
+        if (this.preloadValue == 'true') {
+            return true;
+        }
+
+        return this.preloadValue;
     }
 }

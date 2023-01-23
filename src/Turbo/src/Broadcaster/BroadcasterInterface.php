@@ -15,8 +15,6 @@ namespace Symfony\UX\Turbo\Broadcaster;
  * Broadcasts an update of an entity.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
- *
- * @experimental
  */
 interface BroadcasterInterface
 {

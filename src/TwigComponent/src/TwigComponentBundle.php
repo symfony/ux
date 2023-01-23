@@ -17,8 +17,6 @@ use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
  */
 final class TwigComponentBundle extends Bundle
 {

@@ -16,8 +16,6 @@ use Twig\TwigFunction;
 
 /**
  * @author Mathias Arlaud <mathias.arlaud@gmail.com>
- *
- * @experimental
  */
 final class NotifyExtension extends AbstractExtension
 {

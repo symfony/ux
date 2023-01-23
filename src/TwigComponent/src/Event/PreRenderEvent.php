@@ -17,8 +17,6 @@ use Symfony\UX\TwigComponent\MountedComponent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
  */
 final class PreRenderEvent extends Event
 {

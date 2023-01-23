@@ -91,6 +91,19 @@ Now install the library with:
 Also make sure you have at least version 3.2 of
 ``@symfony/stimulus-bridge`` in your ``package.json`` file.
 
+In case your project `localizes its URLs`_ by adding the special
+``{_locale}`` parameter to the paths of its route definitions,
+you need to do the same with the UX Live Components route definition:
+
+.. code-block:: diff
+
+      // config/routes/ux_live_component.yaml
+
+      live_component:
+          resource: '@LiveComponentBundle/config/routes.php'
+    -     prefix: /_components
+    +     prefix: /{_locale}/_components
+
 That's it! We're ready!
 
 Making your Component "Live"
@@ -173,6 +186,11 @@ fresh copy of our component. That HTML will replace the current HTML. In
 other words, you just generated a new random number! That's cool, but
 let's keep going because… things get cooler.
 
+.. tip::
+
+    Need to do some extra data initialization on your component? Create
+    a ``mount()`` method or use the ``PostMount`` hook: `Twig Component mount documentation`_.
+
 LiveProps: Stateful Component Properties
 ----------------------------------------
 
@@ -231,7 +249,7 @@ For example, could we allow the user to *change* the ``$max``
 property and then re-render the component when they do? Definitely! And
 *that* is where live components really shine.
 
-Add an inputs to the template:
+Add an input to the template:
 
 .. code-block:: twig
 
@@ -398,14 +416,11 @@ controller and put it around (or attached to) your root component element:
 
     // assets/controllers/some-custom-controller.js
     // ...
+    import { getComponent } from '@symfony/ux-live-component';
 
     export default class extends Controller {
-        connect() {
-            // when the live component inside of this controller is initialized,
-            // this method will be called and you can access the Component object
-            this.element.addEventListener('live:connect', (event) => {
-                this.component = event.detail.component;
-            });
+        async initialize() {
+            this.component = await getComponent(this.element);
         }
 
         // some Stimulus action triggered, for example, on user click
@@ -416,18 +431,20 @@ controller and put it around (or attached to) your root component element:
             this.component.mode = 'editing';
 
             // or call an action
-            this.action('save', { arg1: 'value1' });
+            this.component.action('save', { arg1: 'value1' });
             // you can also say:
-            this.save({ arg1: 'value1'});
+            this.component.save({ arg1: 'value1'});
         }
     }
 
 You can also access the ``Component`` object via a special property
-on the root component element:
+on the root component element, though ``getComponent()`` is the
+recommended way, as it will work even if the component is not yet
+initialized:
 
 .. code-block:: javascript
 
-    const component = document.getElementById('id-on-your-element').__component;
+    const component = document.getElementById('id-of-your-element').__component;
     component.mode = 'editing';
 
 Finally, you can also set the value of a model field directly. However,
@@ -452,15 +469,14 @@ component system from Stimulus:
 
     // assets/controllers/some-custom-controller.js
     // ...
+    import { getComponent } from '@symfony/ux-live-component';
 
     export default class extends Controller {
-        connect() {
-            this.element.addEventListener('live:connect', (event) => {
-                this.component = event.detail.component;
+        async initialize() {
+            this.component = await getComponent(this.element);
 
-                this.component.on('render:finished', (component) => {
-                    // do something after the component re-renders
-                });
+            this.component.on('render:finished', (component) => {
+                // do something after the component re-renders
             });
         }
     }
@@ -471,9 +487,23 @@ The following hooks are available (along with the arguments that are passed):
 * ``disconnect`` args ``(component: Component)``
 * ``render:started`` args ``(html: string, response: BackendResponse, controls: { shouldRender: boolean })``
 * ``render:finished`` args ``(component: Component)``
+* ``response:error`` args ``(backendResponse: BackendResponse, controls: { displayError: boolean })``
 * ``loading.state:started`` args ``(element: HTMLElement, request: BackendRequest)``
 * ``loading.state:finished`` args ``(element: HTMLElement)``
 * ``model:set`` args ``(model: string, value: any, component: Component)``
+
+Adding a Stimulus Controller to your Component Root Element
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded: 2.7
+
+    The ``add()`` method was introduced in TwigComponents 2.7.
+
+To add a custom Stimulus controller to your root component element:
+
+.. code-block:: twig
+
+    <div {{ attributes.add(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
 
 Loading States
 --------------
@@ -652,7 +682,7 @@ The ``prevent`` modifier would prevent the form from submitting
 you click really fast 5 times, only one Ajax request will be made!
 
 Actions & Services
-^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~
 
 One really neat thing about component actions is that they are *real*
 Symfony controllers. Internally, they are processed identically to a
@@ -681,7 +711,7 @@ This means that, for example, you can use action autowiring::
     }
 
 Actions & Arguments
-^^^^^^^^^^^^^^^^^^^
+~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 2.1
 
@@ -1164,7 +1194,7 @@ Using Actions to Change your Form: CollectionType
 
 Symfony's `CollectionType`_ can be used to embed a collection of
 embedded forms including allowing the user to dynamically add or remove
-them. Live components can accomplish make this all possible while
+them. Live components make this all possible while
 writing zero JavaScript.
 
 For example, imagine a "Blog Post" form with an embedded "Comment" forms
@@ -1479,9 +1509,9 @@ Override the specific block for comment items:
 
 .. note::
 
-    You may put the form theme into the component template and use `{% form_theme form _self %}`. However,
+    You may put the form theme into the component template and use ``{% form_theme form _self %}``. However,
     because the component template doesn't extend anything, it will not work as expected, you must point
-    `form_theme` to a separate template. See `How to Work with Form Themes`_.
+    ``form_theme`` to a separate template. See `How to Work with Form Themes`_.
 
 Override the generic buttons and collection entry:
 
@@ -2099,6 +2129,43 @@ To handle this, add the ``data-live-ignore`` attribute to the element:
     ``data-live-id`` attribute. During a re-render, if this value changes, all
     of the children of the element will be re-rendered, even those with ``data-live-ignore``.
 
+Define another route for your Component
+---------------------------------------
+
+.. versionadded:: 2.7
+
+    The ``route`` option  was added in LiveComponents 2.7.
+
+The default route for live components is ``/components/{_live_component}/{_live_action}``.
+Sometimes it may be useful to customize this URL - e.g. so that the component lives
+under a specific firewall.
+
+To use a different route, first declare it:
+
+.. code-block:: yaml
+
+    # config/routes.yaml
+    live_component_admin:
+        path: /admin/_components/{_live_component}/{_live_action}
+        defaults:
+            _live_action: 'get'
+
+Then specify this new route on your component:
+
+.. code-block:: diff
+
+    // src/Components/RandomNumberComponent.php
+
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+    - #[AsLiveComponent('random_number')]
+    + #[AsLiveComponent('random_number', route: 'live_component_admin')]
+      class RandomNumberComponent
+      {
+          use DefaultActionTrait;
+      }
+
 Backward Compatibility promise
 ------------------------------
 
@@ -2113,10 +2180,12 @@ bound to Symfony's BC policy for the moment.
 .. _`Livewire`: https://laravel-livewire.com
 .. _`Phoenix LiveView`: https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html
 .. _`Twig Component`: https://symfony.com/bundles/ux-twig-component/current/index.html
+.. _`Twig Component mount documentation`: https://symfony.com/bundles/ux-twig-component/current/index.html#the-mount-method
 .. _`Symfony form`: https://symfony.com/doc/current/forms.html
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`dependent form fields`: https://ux.symfony.com/live-component/demos/dependent-form-fields
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _`localizes its URLs`: https://symfony.com/doc/current/translation/locale.html#translation-locale-url
 .. _`attributes variable`: https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes
 .. _`CollectionType`: https://symfony.com/doc/current/form/form_collections.html
 .. _`the traditional collection type`: https://symfony.com/doc/current/form/form_themes.html#fragment-naming-for-collections

@@ -1,5 +1,21 @@
 # CHANGELOG
 
+## 2.7.0
+
+-   Add `assets/src` to `.gitattributes` to exclude them from the installation
+
+-   Fix minCharacters option default value handling when using a falsy value like 0.
+
+-   Fix TypeScript types
+
+-   Add a new `route` parameter to `AsEntityAutocompleteField`, which allows to choose another route for Ajax calls.
+
+-   Fix minCharacters option default value handling when using a falsy value like 0.
+
+-   Fix TypeScript types
+
+-   Add a way to detect if a field is an "autocomplete" field in form themes - #608
+
 ## 2.6.0
 
 -   [BC BREAK]: The path to `routes.php` changed and you should update your
@@ -13,7 +29,12 @@ ux_autocomplete:
     prefix: '/autocomplete'
 ```
 
--   Fix issue where `max_results` was not passed as a Stimulus value (#538)
+-   Add support for `tom-select` version `2.2.2` and made this the minimum-supported
+    version.
+-   Added support for the `preload` TomSelect option.
+-   Fix don't add WHERE IN criteria without params (#561).
+-   Fix issue where `max_results` was not passed as a Stimulus value (#538).
+-   Add all possible stylesheets for tom-select to the autoimport to choose from.
 
 ## 2.5.0
 

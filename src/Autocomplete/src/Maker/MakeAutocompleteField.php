@@ -32,8 +32,6 @@ use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 class MakeAutocompleteField extends AbstractMaker
 {
@@ -133,7 +131,7 @@ EOF)
         );
         $generator->generateClass(
             $classDetails->getFullName(),
-            __DIR__.'./skeletons/AutocompleteField.tpl.php',
+            __DIR__.'/skeletons/AutocompleteField.tpl.php',
             [
                 'variables' => $variables,
             ]
