@@ -297,7 +297,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             ControllerEvent::class => 'onKernelController',
             ViewEvent::class => 'onKernelView',
             ResponseEvent::class => 'onKernelResponse',
-            ExceptionEvent::class => 'onKernelException',
+            // priority so that the exception is processed before it can be logged as an error
+            ExceptionEvent::class => ['onKernelException', 20],
         ];
     }
 
