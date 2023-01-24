@@ -32,7 +32,7 @@
         }
     },
     "require": {
-        "symfony/webpack-encore-bundle": "^1.11"
+        "symfony/webpack-encore-bundle": "^1.15"
     },
     "require-dev": {
         "symfony/framework-bundle": "^4.4|^5.0|^6.0",
