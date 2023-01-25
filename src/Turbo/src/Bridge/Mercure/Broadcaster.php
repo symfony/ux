@@ -97,6 +97,10 @@ final class Broadcaster implements BroadcasterInterface
         $options['topics'] = $topics;
 
         if (0 === \count($options['topics'])) {
+            if (!isset($options['id'])) {
+                throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s": the option "topics" is empty and "id" is missing.', $entityClass));
+            }
+
             $options['topics'] = (array) sprintf(self::TOPIC_PATTERN, rawurlencode($entityClass), rawurlencode(implode('-', (array) $options['id'])));
         }
 
