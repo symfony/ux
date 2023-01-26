@@ -9,7 +9,6 @@
         "controllers": {
             "svelte": {
                 "main": "dist/render_controller.js",
-                "webpackMode": "eager",
                 "fetch": "eager",
                 "enabled": true
             }

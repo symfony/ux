@@ -71,16 +71,14 @@ Usage
 -----
 
 UX Svelte works by using a system of **Svelte controller components**: Svelte components that
-are registered using ``registerSvelteControllerComponents`` and that are meant to be rendered
+are registered using ``registerSvelteControllerComponents()`` and that are meant to be rendered
 from Twig.
 
-When using the ``registerSvelteControllerComponents`` configuration shown previously, all
+When using the ``registerSvelteControllerComponents()`` configuration shown previously, all
 Svelte components located in the directory ``assets/svelte/controllers`` are registered as
 Svelte controller components.
 
-
-You can then render any Svelte controller component in Twig using the ``svelte_component``.
-For example:
+You can then render any Svelte controller component in Twig using the ``svelte_component()`` function:
 
 .. code-block:: javascript
 
@@ -105,11 +103,7 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
-However it is currently considered `experimental`_,
-meaning it is not bound to Symfony's BC policy for the moment.
-
 .. _`Svelte`: https://svelte.dev/
 .. _`svelte-loader`: https://github.com/sveltejs/svelte-loader/blob/master/README.md
 .. _`the Symfony UX initiative`: https://symfony.com/ux
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html

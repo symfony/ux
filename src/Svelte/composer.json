@@ -35,10 +35,10 @@
         "symfony/webpack-encore-bundle": "^1.15"
     },
     "require-dev": {
-        "symfony/framework-bundle": "^4.4|^5.0|^6.0",
-        "symfony/phpunit-bridge": "^5.2|^6.0",
-        "symfony/twig-bundle": "^4.4|^5.0|^6.0",
-        "symfony/var-dumper": "^4.4|^5.0|^6.0"
+        "symfony/framework-bundle": "^5.4|^6.2",
+        "symfony/phpunit-bridge": "^5.4|^6.2",
+        "symfony/twig-bundle": "^5.4|^6.2",
+        "symfony/var-dumper": "^5.4|^6.2"
     },
     "extra": {
         "thanks": {

@@ -5,3 +5,4 @@
 /assets/jest.config.js export-ignore
 /assets/test export-ignore
 /tests export-ignore
+/assets/src/*.ts export-ignore

@@ -16,7 +16,7 @@ import {createRequireContextPolyfill} from './util/require_context_poylfill';
 require.context = createRequireContextPolyfill(__dirname);
 
 describe('registerReactControllerComponents', () => {
-    it('test', () => {
+    it('registers controllers from require context', () => {
         registerSvelteControllerComponents(require.context('./fixtures', true, /\.svelte$/));
         const resolveComponent = (window as any).resolveSvelteComponent;
 

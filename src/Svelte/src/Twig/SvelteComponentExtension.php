@@ -21,8 +21,6 @@ use Twig\TwigFunction;
  * @author Thomas Choquet <thomas.choquet.pro@gmail.com>
  *
  * @final
- *
- * @experimental
  */
 class SvelteComponentExtension extends AbstractExtension
 {

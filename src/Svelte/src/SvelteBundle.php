@@ -18,8 +18,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  * @author Thomas Choquet <thomas.choquet.pro@gmail.com>
  *
  * @final
- *
- * @experimental
  */
 class SvelteBundle extends Bundle
 {
