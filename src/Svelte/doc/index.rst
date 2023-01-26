@@ -96,6 +96,27 @@ You can then render any Svelte controller component in Twig using the ``svelte_c
 
     <div {{ svelte_component('MyComponent', { 'name': app.user.fullName }) }}></div>
 
+If your Svelte component has a transition that you want to play on initial render, you can use
+the third argument ``intro`` of the ``svelte_component()`` function like you would do with the
+Svelte client-side component API:
+
+.. code-block:: javascript
+
+    // assets/svelte/controllers/MyAnimatedComponent.svelte
+    <script>
+        import { fade } from 'svelte/transition';
+        export let name = "Svelte";
+    </script>
+
+    <div transition:fade>Hello {name}</div>
+
+
+.. code-block:: twig
+
+    {# templates/home.html.twig #}
+
+    <div {{ svelte_component('MyAnimatedComponent', { 'name': app.user.fullName }, true) }}></div>
+
 Backward Compatibility promise
 ------------------------------
 
