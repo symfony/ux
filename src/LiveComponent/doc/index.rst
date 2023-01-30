@@ -888,7 +888,7 @@ write your form controller logic::
                 return $this->redirectToRoute('app_post_index');
             }
 
-            return $this->renderForm('post/edit.html.twig', [
+            return $this->render('post/edit.html.twig', [
                 'post' => $post,
                 'form' => $form,
             ]);
