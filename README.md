@@ -37,6 +37,18 @@ do in JavaScript could be done streamlined as a UX package.
 We have some ideas, and we will release more packages in the coming days. The rest
 is on you: let's create an amazing ecosystem together!
 
+## Sponsor
+
+The Symfony UX packages are [backed][1] by [Mercure.rocks][2].
+
+Create real-time experiences in minutes! Mercure.rocks provides a realtime API service
+that is tightly integrated with Symfony: create UIs that update in live with UX Turbo,
+send notifications with the Notifier component, expose async APIs with API Platform and
+create low level stuffs with the Mercure component. We maintain and scale the complex
+infrastructure for you!
+
+Help Symfony by [sponsoring][3] its development!
+
 ## Contributing
 
 If you want to test your code in an existing project that uses Symfony UX packages,
@@ -51,3 +63,7 @@ $ composer install
 # And link Symfony UX packages to your project
 $ php link /path/to/your/project
 ```
+
+[1]: https://symfony.com/backers
+[2]: https://mercure.rocks
+[3]: https://symfony.com/sponsor
