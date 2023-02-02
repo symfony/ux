@@ -40,6 +40,8 @@ A real-time product search component might look like this::
 .. code-block:: twig
 
     {# templates/components/product_search.html.twig #}
+    {# for the Live Component to work, there must be a single root element
+       (e.g. a <div>) where the attributes are applied to #}
     <div {{ attributes }}>
         <input
             type="search"
@@ -63,6 +65,14 @@ A real-time product search component might look like this::
 
     The ability to initialize live component with the ``attributes`` twig variable was added in LiveComponents
     2.1. Previously, the ``init_live_component()`` function was required (this function was removed in 2.1).
+
+Done! Now render it wherever you want:
+
+.. code-block:: twig
+
+    {# the argument is the name of the live component,
+       which is defined in the #[AsLiveComponent] attribute #}
+    {{ component('product_search') }}
 
 As a user types into the box, the component will automatically re-render
 and show the new results!
