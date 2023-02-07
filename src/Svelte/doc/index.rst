@@ -52,10 +52,10 @@ the `svelte-loader`_ library in your project :
 
 .. code-block:: terminal
 
-    $ npm install svelte-loader@^3.0.0 --save-dev
+    $ npm install svelte svelte-loader --save-dev
 
     # or use yarn
-    $ yarn add svelte-loader@^3.0.0 --dev
+    $ yarn add svelte svelte-loader --dev
 
 Enable it in your ``webpack.config.js`` file :
 
