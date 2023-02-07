@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'src/Controller/PackageController.php' } %}
+    {% component code_block with { filename: 'src/Controller/SwupController.php' } %}
         {% block content %}
             {{- source('@code_snippets/_SwupController.php')|cleanup_php_file(removeClass=true) -}}
         {% endblock %}
@@ -25,7 +25,7 @@
 {% endblock %}
 
 {% block code_block_right %}
-    {% component code_block with { filename: 'templates/packages/index.html.twig' } %}
+    {% component code_block with { filename: 'templates/swup.html.twig' } %}
         {% block content %}
             {{- source('@code_snippets/_swup.html.twig') -}}
         {% endblock %}
