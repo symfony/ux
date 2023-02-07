@@ -106,7 +106,7 @@ Turbo Drive also converts form submissions to AJAX calls. To get it to
 work, you *do* need to adjust your code to return a 422 status code on a
 validation error (instead of a 200).
 
-If you're using Symfony 5.3, the new ``renderForm()`` shortcut takes
+If you're using Symfony 6.2+, the ``render()`` method takes
 care of this automatically::
 
     #[Route('/product/new', name: 'product_new')]
@@ -123,12 +123,12 @@ care of this automatically::
             return $this->redirectToRoute('product_list');
         }
 
-        return $this->renderForm('product/new.html.twig', [
+        return $this->render('product/new.html.twig', [
             'form' => $form,
         ]);
     }
 
-If you're *not* using the ``renderForm()`` shortcut, adjust your code
+If you're *not* using Symfony 6.2+, adjust your code
 manually:
 
 .. code-block:: diff
@@ -345,8 +345,8 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
                 return $this->redirectToRoute('task_success', [], Response::HTTP_SEE_OTHER);
             }
 
-            // Symfony 5.3+
-            return $this->renderForm('task/new.html.twig', [
+            // Symfony 6.2+
+            return $this->render('task/new.html.twig', [
                 'form' => $form,
             ]);
         }
@@ -425,6 +425,7 @@ Let's create our chat::
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\Component\Mercure\HubInterface;
+    use Symfony\Component\Mercure\Update;
 
     class ChatController extends AbstractController
     {
@@ -453,7 +454,7 @@ Let's create our chat::
                 $form = $emptyForm;
             }
 
-            return $this->renderForm('chat/index.html.twig', [
+            return $this->render('chat/index.html.twig', [
                 'form' => $form,
              ]);
         }
