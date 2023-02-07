@@ -28,7 +28,6 @@ class DropzoneType extends AbstractType
             'attr' => [
                 'placeholder' => 'Drag and drop or browse',
             ],
-            'multiple' => false,
         ]);
     }
 

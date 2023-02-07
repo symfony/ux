@@ -2,7 +2,6 @@
     {%- set dataController = (attr['data-controller']|default('') ~ ' symfony--ux-dropzone--dropzone')|trim -%}
     {%- set attr = attr|merge({ 'data-controller': '', class: (attr.class|default('') ~ ' dropzone-input')|trim}) -%}
 
-
     <div class="dropzone-container" data-controller="{{ dataController }}">
         <input type="file" {{ block('widget_attributes') }} data-symfony--ux-dropzone--dropzone-target="input" />
 

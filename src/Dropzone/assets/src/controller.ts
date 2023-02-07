@@ -21,12 +21,6 @@ export default class extends Controller {
 
     static targets = ['input', 'placeholder', 'preview', 'previewClearButton', 'previewFilename', 'previewImage'];
 
-    static values = {
-        numberOfFiles: Number
-    }
-
-    readonly numberOfFilesValue: number;
-
     connect() {
         // Reset when connecting to work with Turbolinks
         this.clear();
