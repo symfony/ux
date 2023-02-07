@@ -248,6 +248,9 @@ to the options above, you can also pass:
 ``max_results`` (default: 10)
     Allow you to control the max number of results returned by the automatic autocomplete endpoint.
 
+``min_characters`` (default: 3)
+    Allow you to control the min number of characters to load results.
+
 ``preload`` (default: ``focus``)
     Set to ``focus`` to call the ``load`` function when control receives focus.
     Set to ``true`` to call the ``load`` upon control initialization (with an empty search).
