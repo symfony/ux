@@ -11,8 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class _SwupController extends AbstractController
 {
-    #[Route('/packages/{page<\d+>}', name: 'app_swup')]
-    public function packagesIndex(PackageRepository $packageRepository, int $page = 1): Response
+    #[Route('/swup/{page<\d+>}', name: 'app_swup')]
+    public function swup(PackageRepository $packageRepository, int $page = 1): Response
     {
         // this is a normal Symfony controller and pagination links are just an example:
         // swup works with any "a" tags, so you don't have to make any changes in your code.
