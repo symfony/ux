@@ -55,7 +55,7 @@ export default class extends Controller {
             }
 
             // Hide the input and placeholder
-            //this.inputTarget.style.display = 'none'; // hide only, when max number is reached
+            this.inputTarget.style.display = 'none';
             this.placeholderTarget.style.display = 'none';
 
             // Show the filename in preview
