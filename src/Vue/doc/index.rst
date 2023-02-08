@@ -14,22 +14,34 @@ Installation
 ------------
 
 Before you start, make sure you have `Symfony UX configured in your app`_.
-
 Then install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
     $ composer require symfony/ux-vue
 
-    # Don't forget to install the JavaScript dependencies as well and compile
-    $ npm install --force
+Next, in ``webpack.config.js``, enable React support:
+
+.. code-block:: javascript
+
+    // webpack.config.js
+    // ...
+
+    Encore
+        // ...
+        .enableVueLoader()
+    ;
+
+Install a package to help Vue:
+
+    $ npm install -D vue-loader --force
     $ npm run watch
 
     # or use yarn
-    $ yarn install --force
+    $ yarn add vue-loader --dev --force
     $ yarn watch
 
-You also need to add the following lines at the end to your ``assets/app.js`` file:
+Finally, to load your Vue components, add the following lines to ``assets/app.js``:
 
 .. code-block:: javascript
 
@@ -51,6 +63,8 @@ You also need to add the following lines at the end to your ``assets/app.js`` fi
     // and improve performances, you can use the following line instead:
     //registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/, 'lazy'));
 
+That's it! Create an `assets/vue/controllers/` directory and start creating your
+Vue components.
 
 Usage
 -----

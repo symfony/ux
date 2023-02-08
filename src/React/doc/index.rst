@@ -14,22 +14,34 @@ Installation
 ------------
 
 Before you start, make sure you have `Symfony UX configured in your app`_.
-
 Then install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
     $ composer require symfony/ux-react
 
-    # Don't forget to install the JavaScript dependencies as well and compile
-    $ npm install --force
+Next, in ``webpack.config.js``, enable React support:
+
+.. code-block:: javascript
+
+    // webpack.config.js
+    // ...
+
+    Encore
+        // ...
+        .enableReactPreset()
+    ;
+
+Install a package to help React:
+
+    $ npm install -D @babel/preset-react --force
     $ npm run watch
 
     # or use yarn
-    $ yarn install --force
+    $ yarn add @babel/preset-react --dev --force
     $ yarn watch
 
-You also need to add the following lines at the end to your ``assets/app.js`` file:
+Finally, to load your React components, add the following lines to ``assets/app.js``:
 
 .. code-block:: javascript
 
@@ -47,6 +59,8 @@ You also need to add the following lines at the end to your ``assets/app.js`` fi
     // they are not necessary.
     registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
 
+That's it! Create an `assets/react/controllers/` directory and start creating your
+React components.
 
 Usage
 -----

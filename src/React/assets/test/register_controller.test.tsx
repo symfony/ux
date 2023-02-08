@@ -24,4 +24,11 @@ describe('registerReactControllerComponents', () => {
         expect(resolveComponent('MyTsxComponent')).toBe(MyTsxComponent);
         expect(resolveComponent('MyJsxComponent')).not.toBeUndefined();
     });
+
+    it('errors with a bad name', () => {
+        registerReactControllerComponents(require.context('./fixtures', true, /\.(j|t)sx$/));
+        const resolveComponent = (window as any).resolveReactComponent;
+
+        expect(() => resolveComponent('MyABCComponent')).toThrow('React controller "MyABCComponent" does not exist. Possible values: MyJsxComponent, MyTsxComponent');
+    });
 });
