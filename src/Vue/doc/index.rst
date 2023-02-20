@@ -20,7 +20,7 @@ Then install the bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-vue
 
-Next, in ``webpack.config.js``, enable React support:
+Next, in ``webpack.config.js``, enable Vue.js support:
 
 .. code-block:: javascript
 
@@ -34,10 +34,17 @@ Next, in ``webpack.config.js``, enable React support:
 
 Install a package to help Vue:
 
+With NPM:
+
+.. code-block:: terminal
+
     $ npm install -D vue-loader --force
     $ npm run watch
+    
+With Yarn:
 
-    # or use yarn
+.. code-block:: terminal
+
     $ yarn add vue-loader --dev --force
     $ yarn watch
 
