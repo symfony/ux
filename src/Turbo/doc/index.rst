@@ -367,6 +367,77 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
 Supported actions are ``append``, ``prepend``, ``replace``, ``update``
 and ``remove``. `Read the Turbo Streams documentation for more details`_.
 
+Resetting the Form
+~~~~~~~~~~~~~~~~~~
+
+When you return a Turbo stream, *only* the elements in that stream template will
+be updated. This means that if you want to reset the form, you need to include
+a new form in the stream template.
+
+To do that, first isolate your form rendering into a template partial so you can
+reuse it. Also surround the form by an element with an ``id`` so you can target
+it from the stream:
+
+.. code-block:: twig
+
+    {# templates/task/_form.html.twig #}
+
+    <div id="task-form">
+        {# render your form however you want #}
+        {{ form(form) }}
+    </div>
+
+Include this from your existing template (e.g. `new.html.twig`) to render it.
+Now, create a "fresh" form and pass it into your stream:
+
+.. code-block:: diff
+
+    // src/Controller/TaskController.php
+    // ...
+
+    class TaskController extends AbstractController
+    {
+        public function new(Request $request): Response
+        {
+            $form = $this->createForm(TaskType::class, new Task());
+
++            $emptyForm = clone $form ;
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                // ...
+
+                if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
+                    $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
+
+                    return $this->render('task/success.stream.html.twig', [
+                        'task' => $task,
++                        'form' => $emptyForm,
+                    ]);
+                }
+
+                // ...
+                return $this->redirectToRoute('task_success', [], Response::HTTP_SEE_OTHER);
+            }
+
+            return $this->render('task/new.html.twig', [
+                'form' => $form,
+            ]);
+        }
+    }
+
+Now, in your stream template, "replace" the entire form:
+
+.. code-block:: twig
+
+    {# success.stream.html.twig #}
+
+    <turbo-stream action="replace" target="task-form">
+        <template>
+            {{ include('task/_form.html.twig') }}
+        </template>
+    </turbo-stream>
+
 .. _chat-example:
 
 Sending Async Changes using Mercure: a Chat
