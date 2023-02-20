@@ -34,10 +34,13 @@ Next, in ``webpack.config.js``, enable React support:
 
 Install a package to help React:
 
+.. code-block:: terminal
+
     $ npm install -D @babel/preset-react --force
     $ npm run watch
 
     # or use yarn
+    
     $ yarn add @babel/preset-react --dev --force
     $ yarn watch
 
