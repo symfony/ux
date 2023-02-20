@@ -7,7 +7,11 @@ function registerVueControllerComponents(context) {
     }, {});
     function loadComponent(name) {
         const componentPath = `./${name}.vue`;
-        if (componentPath in vueControllers && typeof vueControllers[componentPath] === 'undefined') {
+        if (!(componentPath in vueControllers)) {
+            const possibleValues = Object.keys(vueControllers).map((key) => key.replace('./', '').replace('.vue', ''));
+            throw new Error(`Vue controller "${name}" does not exist. Possible values: ${possibleValues.join(', ')}`);
+        }
+        if (typeof vueControllers[componentPath] === 'undefined') {
             const module = context(componentPath);
             if (module.default) {
                 vueControllers[componentPath] = module.default;

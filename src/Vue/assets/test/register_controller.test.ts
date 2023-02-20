@@ -17,7 +17,7 @@ import Goodbye from './fixtures-lazy/Goodbye.vue'
 require.context = createRequireContextPolyfill(__dirname);
 
 describe('registerVueControllerComponents', () => {
-    it('test should resolve components synchronously', () => {
+    it('should resolve components synchronously', () => {
         registerVueControllerComponents(require.context('./fixtures', true, /\.vue$/));
         const resolveComponent = window.resolveVueComponent;
 
@@ -25,11 +25,18 @@ describe('registerVueControllerComponents', () => {
         expect(resolveComponent('Hello')).toBe(Hello);
     });
 
-    it('test should resolve lazy components asynchronously', () => {
+    it('should resolve lazy components asynchronously', () => {
         registerVueControllerComponents(require.context('./fixtures-lazy', true, /\.vue$/, 'lazy'));
         const resolveComponent = window.resolveVueComponent;
 
         expect(resolveComponent).not.toBeUndefined();
         expect(resolveComponent('Goodbye')).toBe(Goodbye);
+    });
+
+    it('errors with a bad name', () => {
+        registerVueControllerComponents(require.context('./fixtures', true, /\.vue$/));
+        const resolveComponent = window.resolveVueComponent;
+
+        expect(() => resolveComponent('Helloooo')).toThrow('Vue controller "Helloooo" does not exist. Possible values: Hello');
     });
 });

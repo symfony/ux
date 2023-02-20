@@ -28,8 +28,13 @@ export function registerVueControllerComponents(context: __WebpackModuleApi.Requ
 
     function loadComponent(name: string): object | never {
         const componentPath = `./${name}.vue`;
+        if (!(componentPath in vueControllers)) {
+            const possibleValues = Object.keys(vueControllers).map((key) => key.replace('./', '').replace('.vue', ''));
 
-        if (componentPath in vueControllers && typeof vueControllers[componentPath] === 'undefined') {
+            throw new Error(`Vue controller "${name}" does not exist. Possible values: ${possibleValues.join(', ')}`);
+        }
+
+        if (typeof vueControllers[componentPath] === 'undefined') {
             const module = context(componentPath);
             if (module.default) {
                 vueControllers[componentPath] = module.default;
