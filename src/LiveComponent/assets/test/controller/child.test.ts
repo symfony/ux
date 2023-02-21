@@ -20,7 +20,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
 
     it('adds & removes the child correctly', async () => {
         const childTemplate = (data: any) => `
-            <div ${initComponent(data, {}, {id: 'the-child-id'})} data-testid="child"></div>
+            <div ${initComponent(data, {id: 'the-child-id'})} data-testid="child"></div>
         `;
 
         const test = await createTest({}, (data: any) => `
@@ -69,8 +69,8 @@ describe('Component parent -> child initialization and rendering tests', () => {
     it('sends a map of child fingerprints on re-render', async () => {
         const test = await createTest({}, (data: any) => `
             <div ${initComponent(data)}>
-                <div ${initComponent({}, {}, {id: 'the-child-id1', fingerprint: 'child-fingerprint1'})}>Child1</div>
-                <div ${initComponent({}, {}, {id: 'the-child-id2', fingerprint: 'child-fingerprint2'})}>Child2</div>
+                <div ${initComponent({}, {id: 'the-child-id1', fingerprint: 'child-fingerprint1'})}>Child1</div>
+                <div ${initComponent({}, {id: 'the-child-id2', fingerprint: 'child-fingerprint2'})}>Child2</div>
             </div>
         `);
 
@@ -90,7 +90,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
         const test = await createTest({renderChild: true}, (data: any) => `
             <div ${initComponent(data)}>
                 ${data.renderChild
-                    ? `<div ${initComponent({}, {}, {id: 'the-child-id'})} data-testid="child">Child Component</div>`
+                    ? `<div ${initComponent({}, {id: 'the-child-id'})} data-testid="child">Child Component</div>`
                     : ''
                 }
             </div>
@@ -117,7 +117,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
         const test = await createTest({renderChild: false}, (data: any) => `
            <div ${initComponent(data)}>
                ${data.renderChild
-            ? `<div ${initComponent({}, {}, {id: 'the-child-id'})} data-testid="child">Child Component</div>`
+            ? `<div ${initComponent({}, {id: 'the-child-id'})} data-testid="child">Child Component</div>`
             : ''
         }
            </div>
@@ -142,12 +142,12 @@ describe('Component parent -> child initialization and rendering tests', () => {
 
     it('existing child component that has no props is ignored', async () => {
         const originalChild = `
-            <div ${initComponent({}, {}, {id: 'the-child-id'})}>
+            <div ${initComponent({}, {id: 'the-child-id'})}>
                 Original Child Component
             </div>
         `;
         const updatedChild = `
-            <div ${initComponent({}, {}, {id: 'the-child-id'})}>
+            <div ${initComponent({}, {id: 'the-child-id'})}>
                 Updated Child Component
             </div>
         `;
@@ -177,8 +177,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
     it('existing child component gets props & triggers re-render', async () => {
         const childTemplate = (data: any) => `
             <div ${initComponent(
-                { fullName: data.fullName },
-                { toUppercase: data.toUppercase },
+                { toUppercase: data.toUppercase, fullName: data.fullName },
                 { id: 'the-child-id', fingerprint: 'original fingerprint'}
             )} data-testid="child-component">
                 <input data-model="norender|fullName">
@@ -189,8 +188,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
         // a simpler version of the child is returned from the prent component's re-render
         const childReturnedFromParentCall = `
             <div ${initComponent(
-                { firstName: 'Ryan' } /* will be ignored */,
-                { toUppercase: true }, // new prop value
+                { toUppercase: true }, // new prop value (firstName is not sent as it is writable)
                 { id: 'the-child-id', fingerprint: 'updated fingerprint'}
             )}><!-- no body needed --></div>
         `;
@@ -271,13 +269,13 @@ describe('Component parent -> child initialization and rendering tests', () => {
 
     it('existing child gets new props even though the element type differs', async () => {
         const realChildTemplate = (data: any) => `
-            <span ${initComponent({}, { prop1: data.prop1 }, { id: 'child-id' })} data-testid="child-component">
+            <span ${initComponent({ prop1: data.prop1 }, { id: 'child-id' })} data-testid="child-component">
                 Child prop1: ${data.prop1}
             </span>
         `;
         // the empty-ish child element used on re-render
         const parentReRenderedChildTemplate = (data: any) => `
-            <div ${initComponent({}, { prop1: data.prop1 }, { id: 'child-id' })} data-testid="child-component"></div>
+            <div ${initComponent({ prop1: data.prop1 }, { id: 'child-id' })} data-testid="child-component"></div>
         `;
 
         const test = await createTest({prop1: 'original_prop', useRealChild: true}, (data: any) => `
@@ -328,12 +326,12 @@ describe('Component parent -> child initialization and rendering tests', () => {
 
     it('replaces old child with new child if the "id" changes', async () => {
         const originalChildTemplate = `
-            <span ${initComponent({}, {}, { id: 'original-child-id' })} data-testid="child-component">
+            <span ${initComponent({}, { id: 'original-child-id' })} data-testid="child-component">
                 Original Child
             </span>
         `;
         const reRenderedChildTemplate = `
-            <span ${initComponent({}, {}, { id: 'new-child-id' })} data-testid="child-component">
+            <span ${initComponent({}, { id: 'new-child-id' })} data-testid="child-component">
                 New Child
             </span>
         `;
@@ -367,13 +365,13 @@ describe('Component parent -> child initialization and rendering tests', () => {
 
     it('tracks various children correctly, even if position changes', async () => {
         const childTemplate = (data: any) => `
-            <span ${initComponent({}, { number: data.number, value: data.value }, { id: `child-id-${data.number}` })} data-testid="child-component-${data.number}">
+            <span ${initComponent({ number: data.number, value: data.value }, { id: `child-id-${data.number}` })} data-testid="child-component-${data.number}">
                 Child number: ${data.number} value "${data.value}"
             </span>
         `;
         // the empty-ish child element used on re-render
         const childRenderedFromParentTemplate = (data: any) => `
-            <span ${initComponent({}, { number: data.number, value: data.value }, { id: `child-id-${data.number}` })} data-testid="child-component-${data.number}"></span>
+            <span ${initComponent({ number: data.number, value: data.value }, { id: `child-id-${data.number}` })} data-testid="child-component-${data.number}"></span>
         `;
 
         const test = await createTest({}, (data: any) => `

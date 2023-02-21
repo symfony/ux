@@ -11,8 +11,9 @@
 
 namespace Symfony\UX\LiveComponent\Tests;
 
-use Symfony\UX\LiveComponent\DehydratedComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\MountedComponent;
 
@@ -41,13 +42,23 @@ trait LiveComponentTestHelper
         return $this->factory()->create($name, $data);
     }
 
-    private function dehydrateComponent(MountedComponent $mounted): DehydratedComponent
+    private function dehydrateComponent(MountedComponent $mounted): array
     {
-        return $this->hydrator()->dehydrate($mounted);
+        $liveMetadataFactory = self::getContainer()->get('ux.live_component.metadata_factory');
+        \assert($liveMetadataFactory instanceof LiveComponentMetadataFactory);
+
+        return $this->hydrator()->dehydrate(
+            $mounted->getComponent(),
+            $mounted->getAttributes(),
+            $liveMetadataFactory->getMetadata($mounted->getName())
+        );
     }
 
-    private function hydrateComponent(object $component, array $data, string $name): MountedComponent
+    private function hydrateComponent(object $component, array $data, string $name): ComponentAttributes
     {
-        return $this->hydrator()->hydrate($component, $data, $name);
+        $liveMetadataFactory = self::getContainer()->get('ux.live_component.metadata_factory');
+        \assert($liveMetadataFactory instanceof LiveComponentMetadataFactory);
+
+        return $this->hydrator()->hydrate($component, $data, $liveMetadataFactory->getMetadata($name));
     }
 }

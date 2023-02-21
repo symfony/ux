@@ -35,6 +35,7 @@ class RegistrationFormComponent extends AbstractController
         // save to the database
         // or, instead of creating a LiveAction, allow the form to submit
         // to a normal controller: that's even better.
+        // $newUser = $this->getFormInstance()->getData();
 
         $this->newUserEmail = $this->getFormInstance()
             ->get('email')

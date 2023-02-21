@@ -22,7 +22,7 @@ export default class Component {
     private nextRequestPromiseResolve;
     private children;
     private parent;
-    constructor(element: HTMLElement, props: any, data: any, fingerprint: string | null, id: string | null, backend: BackendInterface, elementDriver: ElementDriver);
+    constructor(element: HTMLElement, props: any, fingerprint: string | null, id: string | null, backend: BackendInterface, elementDriver: ElementDriver);
     addPlugin(plugin: PluginInterface): void;
     connect(): void;
     disconnect(): void;

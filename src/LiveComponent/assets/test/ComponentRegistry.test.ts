@@ -20,7 +20,6 @@ const createComponent = (element: HTMLElement): Component => {
     return new Component(
         element,
         {},
-        {},
         null,
         null,
         backend,

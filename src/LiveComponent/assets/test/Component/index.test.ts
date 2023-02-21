@@ -20,7 +20,7 @@ const makeTestComponent = (): { component: Component, backend: MockBackend } => 
 
             return new BackendRequest(
                 // @ts-ignore Response doesn't quite match the underlying interface
-                new Promise((resolve) => resolve(new Response('<div data-live-data-value="{}"></div>'))),
+                new Promise((resolve) => resolve(new Response('<div data-live-props-value="{}"></div>'))),
                 [],
                 []
             )
@@ -29,7 +29,6 @@ const makeTestComponent = (): { component: Component, backend: MockBackend } => 
 
     const component = new Component(
         document.createElement('div'),
-        {},
         {firstName: ''},
         null,
         null,
@@ -63,7 +62,7 @@ describe('Component class', () => {
             expect(backendResponse).toBeNull();
             await waitFor(() => expect(backendResponse).not.toBeNull());
             // @ts-ignore
-            expect(await backendResponse?.getBody()).toEqual('<div data-live-data-value="{}"></div>');
+            expect(await backendResponse?.getBody()).toEqual('<div data-live-props-value="{}"></div>');
         });
     });
 

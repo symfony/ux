@@ -20,15 +20,6 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component5;
  */
 final class AsLiveComponentTest extends TestCase
 {
-    public function testCanGetLiveProps(): void
-    {
-        $props = iterator_to_array(AsLiveComponent::liveProps(new Component5()));
-
-        $this->assertCount(2, $props);
-        $this->assertSame('prop1', $props[0]->reflectionProperty()->getName());
-        $this->assertSame('prop3', $props[1]->reflectionProperty()->getName());
-    }
-
     public function testCanGetPreDehydrateMethods(): void
     {
         $methods = iterator_to_array(AsLiveComponent::preDehydrateMethods(new Component5()));

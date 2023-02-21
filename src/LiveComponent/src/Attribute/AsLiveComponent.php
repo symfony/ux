@@ -48,31 +48,6 @@ final class AsLiveComponent extends AsTwigComponent
 
     /**
      * @internal
-     *
-     * @return LivePropContext[]
-     */
-    public static function liveProps(object $component): \Traversable
-    {
-        $properties = [];
-
-        foreach (self::propertiesFor($component) as $property) {
-            if (!$attribute = $property->getAttributes(LiveProp::class)[0] ?? null) {
-                continue;
-            }
-
-            if (\in_array($property->getName(), $properties, true)) {
-                // property name was already used
-                continue;
-            }
-
-            $properties[] = $property->getName();
-
-            yield new LivePropContext($attribute->newInstance(), $property);
-        }
-    }
-
-    /**
-     * @internal
      */
     public static function isActionAllowed(object $component, string $action): bool
     {
@@ -113,21 +88,5 @@ final class AsLiveComponent extends AsTwigComponent
     public static function preDehydrateMethods(object $component): \Traversable
     {
         yield from self::attributeMethodsFor(PreDehydrate::class, $component);
-    }
-
-    /**
-     * @return \ReflectionProperty[]
-     */
-    private static function propertiesFor(object $object): \Traversable
-    {
-        $class = $object instanceof \ReflectionClass ? $object : new \ReflectionClass($object);
-
-        foreach ($class->getProperties() as $property) {
-            yield $property;
-        }
-
-        if ($parent = $class->getParentClass()) {
-            yield from self::propertiesFor($parent);
-        }
     }
 }

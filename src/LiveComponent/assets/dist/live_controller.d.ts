@@ -15,7 +15,6 @@ export interface LiveController {
 export default class extends Controller<HTMLElement> implements LiveController {
     static values: {
         url: StringConstructor;
-        data: ObjectConstructor;
         props: ObjectConstructor;
         csrf: StringConstructor;
         debounce: {
@@ -26,7 +25,6 @@ export default class extends Controller<HTMLElement> implements LiveController {
         fingerprint: StringConstructor;
     };
     readonly urlValue: string;
-    readonly dataValue: any;
     readonly propsValue: any;
     readonly csrfValue: string;
     readonly hasDebounceValue: boolean;
@@ -41,8 +39,8 @@ export default class extends Controller<HTMLElement> implements LiveController {
     disconnect(): void;
     update(event: any): void;
     action(event: any): void;
-    $render(): void;
-    $updateModel(model: string, value: any, shouldRender?: boolean, debounce?: number | boolean): void;
+    $render(): Promise<import("./BackendResponse").default>;
+    $updateModel(model: string, value: any, shouldRender?: boolean, debounce?: number | boolean): Promise<import("./BackendResponse").default>;
     private handleInputEvent;
     private handleChangeEvent;
     private updateModelFromElementEvent;

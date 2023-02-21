@@ -187,7 +187,7 @@ describe('LiveController polling Tests', () => {
 
     it('waits to send the request if request is already happening', async () => {
         const test = await createTest({ renderCount: 0, name: 'Ryan' }, (data: any) => `
-            <div ${initComponent(data, {}, { debounce: 1 })} data-poll="delay(50)|$render">
+            <div ${initComponent(data, { debounce: 1 })} data-poll="delay(50)|$render">
                 <input
                     data-model="name"
                     value="${data.name}"

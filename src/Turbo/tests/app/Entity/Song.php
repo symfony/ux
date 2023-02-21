@@ -16,6 +16,7 @@ use Symfony\UX\Turbo\Attribute\Broadcast;
 
 /**
  * @ORM\Entity
+ *
  * @Broadcast(topics={"@='songs_by_artist_' ~ (entity.artist ? entity.artist.id : null)", "songs"})
  *
  * @author Rick Kuipers <rick@levelup-it.com>
@@ -25,7 +26,9 @@ class Song
 {
     /**
      * @ORM\Column(type="integer")
+     *
      * @ORM\Id
+     *
      * @ORM\GeneratedValue(strategy="AUTO")
      *
      * @var int|null

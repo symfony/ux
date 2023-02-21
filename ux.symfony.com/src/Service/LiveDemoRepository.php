@@ -33,8 +33,14 @@ class LiveDemoRepository
             new LiveDemo(
                 'voting',
                 name: 'Up & Down Voting',
-                description: 'Save up & down votes live in pure Twig & PHP',
+                description: 'Save up & down votes live in pure Twig & PHP.',
                 route: 'app_live_components_demo_voting',
+            ),
+            new LiveDemo(
+                'inline_edit',
+                name: 'Inline Editing',
+                description: 'Activate an inline editing form with validation.',
+                route: 'app_live_components_demo_inline_edit',
             ),
         ];
     }

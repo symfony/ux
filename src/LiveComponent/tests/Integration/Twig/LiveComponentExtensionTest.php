@@ -24,8 +24,7 @@ final class LiveComponentExtensionTest extends KernelTestCase
             'date' => new \DateTime('2022-10-06-0'),
         ]);
 
-        $this->assertStringContainsString('/_components/component1?prop2=2022-10-06T00:00:00', $rendered);
-        $this->assertStringContainsString('_checksum=', $rendered);
+        $this->assertStringContainsString('/_components/component1?data=%7B%22prop1%22:null,%22prop2%22:%222022-10-06T00:00:00%2B00:00%22,%22prop3%22:null,', $rendered);
         $this->assertStringContainsString('/alt/alternate_route?', $rendered);
     }
 }

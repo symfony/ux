@@ -17,17 +17,21 @@ namespace Symfony\UX\LiveComponent\Attribute;
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class LiveProp
 {
-    private bool $writable;
+    /**
+     * Mark that a property could be completely changed to another. Usage:
+     *      #[LiveProp(writable: [LiveProp::IDENTITY])].
+     */
+    public const IDENTITY = '@identity';
 
-    /** @var string[] */
-    private array $exposed;
+    /** @var bool|string[] */
+    private bool|array $writable;
 
     private ?string $hydrateWith;
 
     private ?string $dehydrateWith;
 
     /**
-     *The "frontend" field name that should be used for this property.
+     * The "frontend" field name that should be used for this property.
      *
      * This can be used, for example, to have a property called "foo", which actually
      * maps to a frontend data model called "bar".
@@ -38,14 +42,12 @@ final class LiveProp
     private ?string $fieldName;
 
     public function __construct(
-        bool $writable = false,
-        array $exposed = [],
+        bool|array $writable = false,
         ?string $hydrateWith = null,
         ?string $dehydrateWith = null,
         ?string $fieldName = null
     ) {
         $this->writable = $writable;
-        $this->exposed = $exposed;
         $this->hydrateWith = $hydrateWith;
         $this->dehydrateWith = $dehydrateWith;
         $this->fieldName = $fieldName;
@@ -54,17 +56,27 @@ final class LiveProp
     /**
      * @internal
      */
-    public function isReadonly(): bool
+    public function isIdentityWritable(): bool
     {
-        return !$this->writable;
+        if (\is_bool($this->writable)) {
+            return $this->writable;
+        }
+
+        return \in_array(self::IDENTITY, $this->writable, true);
     }
 
     /**
      * @internal
      */
-    public function exposed(): array
+    public function writablePaths(): array
     {
-        return $this->exposed;
+        if (\is_bool($this->writable)) {
+            return [];
+        }
+
+        return array_values(array_filter($this->writable, function ($item) {
+            return self::IDENTITY !== $item;
+        }));
     }
 
     /**

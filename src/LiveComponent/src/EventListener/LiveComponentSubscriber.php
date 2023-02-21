@@ -31,6 +31,8 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
+use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\ComponentRenderer;
@@ -59,6 +61,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             ComponentRenderer::class,
             ComponentFactory::class,
             LiveComponentHydrator::class,
+            LiveComponentMetadataFactory::class,
             '?'.CsrfTokenManagerInterface::class,
         ];
     }
@@ -109,7 +112,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         if (
             $this->container->has(CsrfTokenManagerInterface::class) &&
             $metadata->get('csrf') &&
-            !$this->container->get(CsrfTokenManagerInterface::class)->isTokenValid(new CsrfToken($componentName, $request->headers->get('X-CSRF-TOKEN')))) {
+            !$this->container->get(CsrfTokenManagerInterface::class)->isTokenValid(new CsrfToken(LiveControllerAttributesCreator::getCsrfTokeName($componentName), $request->headers->get('X-CSRF-TOKEN')))) {
             throw new BadRequestHttpException('Invalid CSRF token.');
         }
 
@@ -324,12 +327,16 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     {
         $hydrator = $this->container->get(LiveComponentHydrator::class);
         \assert($hydrator instanceof LiveComponentHydrator);
+        $metadataFactory = $this->container->get(LiveComponentMetadataFactory::class);
+        \assert($metadataFactory instanceof LiveComponentMetadataFactory);
 
-        $mountedComponent = $hydrator->hydrate(
+        $componentAttributes = $hydrator->hydrate(
             $component,
             $this->parseDataFor($request)['data'],
-            $componentName
+            $metadataFactory->getMetadata($componentName)
         );
+
+        $mountedComponent = new MountedComponent($componentName, $component, $componentAttributes);
 
         $mountedComponent->addExtraMetadata(
             InterceptChildComponentRenderSubscriber::CHILDREN_FINGERPRINTS_METADATA_KEY,

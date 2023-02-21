@@ -45,8 +45,7 @@ A real-time product search component might look like this::
     <div {{ attributes }}>
         <input
             type="search"
-            data-name="query"
-            value="{{ query }}"
+            data-model="query"
         >
 
         <ul>
@@ -77,7 +76,7 @@ Done! Now render it wherever you want:
 As a user types into the box, the component will automatically re-render
 and show the new results!
 
-Want a demo? Check out https://ux.symfony.com/live-component#demo
+Want some demos? Check out https://ux.symfony.com/live-component#demo
 
 Installation
 ------------
@@ -391,6 +390,122 @@ The ``*`` value of ``data-model`` is not necessary, but is
 commonly used. You can also use the normal modifiers, like
 ``data-model="on(change)|*"`` to, for example, only send
 model updates for the ``change`` event of each field inside.
+
+LiveProp for Entities & More Complex Data
+-----------------------------------------
+
+You can also add the ``LiveProp`` attribute above more complex data,
+like entities or other objects. For example::
+
+    use App\Entity\Post;
+
+    #[AsLiveComponent('edit_post')]
+    class EditPostComponent
+    {
+        #[LiveProp]
+        public Post $post;
+    }
+
+To send the ``$post`` property to the frontend, it is "dehydrated" to a scalar value.
+For persisted entities, the data is dehydrated to its ``id`` and only that is passed
+to the frontend. For unsaved entities - or any other objects - the value is passed
+through Symfony's serializer.
+
+When Ajax requests are sent to the frontend, the data is then *hydrated* back
+into the original values.
+
+.. caution::
+
+    Dehydrated data is passed to the frontend so it's readable by the user.
+    If your object is dehydrated via the serializer, be sure no sensitive
+    data is exposed.
+
+To control (de)hydration, set the ``hydrateWith`` and ``dehydrateWith`` options
+on ``LiveProp``.
+
+Writable Object Properties or Array Keys
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, the user can't change the *properties* of an object ``LiveProp``
+(or the keys of an array). But, you can allow this by setting
+``writable`` to property names that *should* be writable::
+
+    use App\Entity\Post;
+
+    #[AsLiveComponent('edit_post')]
+    class EditPostComponent
+    {
+        #[LiveProp(writable: ['title', 'content'])]
+        public Post $post;
+
+        #[LiveProp(writable: ['allow_markdown'])]
+        public array $options = ['allow_markdown' => true, 'allow_html' => false]
+    }
+
+Now ``post.title``, ``post.content`` or ``options.allow_markdown`` can be used like
+normal model names:
+
+.. code-block:: twig
+
+    <div {{ attributes }}>
+        <input data-model="post.title">
+        <textarea data-model="post.content"></textarea>
+
+        Allow Markdown?
+        <input type="checkbox" data-model="options.allow_markdown">
+
+        Preview:
+        <div>
+            <h3>{{ post.title }}</h3>
+            {{ post.content|markdown_to_html }}
+        </div>
+    </div>
+
+Any other properties on the object (or keys on the array) will be read-only.
+
+For arrays, you can set ``writable: true`` to allow *any* key in the array to be
+changed, added or removed::
+
+    #[LiveProp(writable: true)]
+    public array $options = ['allow_markdown' => true, 'allow_html' => false];
+
+    #[LiveProp(writable: true)]
+    public array $todoItems = ['Train tiger', 'Feed tiger', 'Pet tiger'];
+
+Allowing an Entity to be Changed to Another
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+What if, instead of changing a *property* on an entity, you want to allow
+the user to switch the *entity* to another? For example:
+
+.. code-block:: twig
+
+    <select data-model="post">
+        {% for post in posts %}
+            <option data-model="{{ post.id }}">{{ post.title }}</option>
+        {% endfor %}
+    </select>
+
+To make the ``post`` property itself writable, use ``writable: true``::
+
+    #[LiveProp(writable: true)]
+    public Post $post;
+
+.. caution::
+
+    This will allow the user to change the ``Post`` to *any* entity in
+    the database. See: https://github.com/symfony/ux/issues/424 for more
+    info.
+
+If you want the user to be able to change the ``Post`` *and* certain
+properties, use the special ``LiveProp::IDENTITY`` constant::
+
+    #[LiveProp(writable: [LiveProp::IDENTITY, 'title', 'content'])]
+    public Post $post;
+
+Note that being able to change the "identity" of an object is something
+that works only for objects that are dehydrated to a scalar value (like
+persisted entities, which dehydrate to an ``id``).
 
 Updating a Model Manually
 -------------------------
@@ -956,7 +1071,7 @@ make it easy to deal with forms::
          * with that data. The value - data - could be anything.
          */
         #[LiveProp(fieldName: 'data')]
-        public ?Post $post = null;
+        public Post $post;
 
         /**
          * Used to re-create the PostType form for re-rendering.
@@ -1022,50 +1137,30 @@ This is possible thanks to the team work of two pieces:
    yet by the user, its validation errors are cleared so that they
    aren't displayed.
 
-Handling "Cannot dehydrate an unpersisted entity" Errors.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Easier "New Form" Component
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you're building a form to create a *new* entity, then when you render
-the component, you may be passing a new, non-persisted entity, to your
-component:
+The previous component could be used to edit an existing post or create
+a new post. But, the way it's currently written, a ``post`` object *must*
+be passed to the ``component()`` function so the `$post` property is set.
+But you can make that optional by adding a ``mount()`` method::
 
-.. code-block:: twig
+    #[AsLiveComponent('post_form')]
+    class PostFormComponent extends AbstractController
+    {
+        // ...
+        #[LiveProp(fieldName: 'data')]
+        public Post $post;
 
-    {# templates/post/new.html.twig #}
+        public function mount(Post $post = null)
+        {
+            $this->post = $post ?? new Post();
+        }
+    }
 
-    <h1>Create new Post</h1>
-
-    {{ component('post_form', {
-        post: post,
-        form: form
-    }) }}
-
-If you do this, you'll likely see this error:
-
-    Cannot dehydrate an unpersisted entity
-    ``App\Entity\Post``. If you want to allow
-    this, add a ``dehydrateWith=`` option to ``LiveProp``
-
-The problem is that the Live component system doesn't know how to
-transform this object into something that can be sent to the frontend,
-called "dehydration". If an entity has already been saved to the
-database, its "id" is sent to the frontend. But if the entity hasn't
-been saved yet, that's not possible.
-
-The solution is to pass ``null`` to your component instead of a
-non-persisted entity object:
-
-.. code-block:: diff
-
-      {{ component('post_form', {
-    -     post: post,
-    +     post: post.id ? post : null,
-          form: form
-      }) }}
-
-If you need to (e.g. to render the form with default values),
-you can re-create your ``new Post()`` inside of your component's
-``createForm()`` method before calling ``createForm()``.
+If a ``post`` variable is passed to ``component()``, then it will
+be passed to the ``mount()`` method where you either use it, or
+create a new ``Post``.
 
 Form Rendering Problems
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -1516,7 +1611,6 @@ Override the specific block for comment items:
         </li>
     {% endblock %}
 
-
 .. note::
 
     You may put the form theme into the component template and use ``{% form_theme form _self %}``. However,
@@ -1627,76 +1721,8 @@ then render it manually after:
 
     {{ form_widget(form.todoItems.vars.button_add, { label: '+ Add Item', attr: { class: 'btn btn-outline-primary' } }) }}
 
-Modifying Nested Object Properties with the "exposed" Option
-------------------------------------------------------------
-
-Let's look again at a component to edit a ``Post`` Doctrine entity::
-
-    namespace App\Twig\Components;
-
-    use App\Entity\Post;
-    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-    use Symfony\UX\LiveComponent\Attribute\LiveProp;
-
-    #[AsLiveComponent('edit_post')]
-    class EditPostComponent
-    {
-        #[LiveProp]
-        public Post $post;
-    }
-
-This time, let's render an HTML form (without Symfony's Form component)
-along with a "preview" area where the user can see, as they type, what th
-post will look like (including rendered the ``content`` through a Markdown
-filter from the ``twig/markdown-extra`` library):
-
-.. code-block:: twig
-
-    <div {{ attributes }}>
-        <input data-model="post.title">
-
-       <textarea data-model="post.content"></textarea>
-
-        <div data-loading="addClass(low-opacity)">
-            <h3>{{ post.title }}</h3>
-            {{ post.content|markdown_to_html }}
-        </div>
-    </div>
-
-This is pretty straightforward, except for one thing: the ``data-model``
-attributes (e.g. ``post.content`` aren't targeting properties on the component
-class itself, they're targeting *nested* properties within the ``$post``
-property object.
-
-Out-of-the-box, modifying nested properties is *not* allowed. However,
-you can enable it via the ``exposed`` option:
-
-.. code-block:: diff
-
-      // ...
-
-      class EditPostComponent
-      {
-    -     #[LiveProp]
-    +     #[LiveProp(exposed: ['title', 'content'])]
-          public Post $post;
-
-          // ...
-      }
-
-Now, both the ``title`` and the ``content`` properties of the
-``$post`` property *can* be modified by the user. However, notice that
-the ``LiveProp`` does *not* have ``writable=true``. This means that
-while the ``title`` and ``content`` properties can be changed, the
-``Post`` object itself **cannot** be changed. In other words, if the
-component was originally created with a Post object with id=2, a bad
-user could *not* make a request that renders the component with id=3.
-Your component is protected from someone changing to see the form for a
-different ``Post`` object, unless you add ``writable=true`` to this
-property.
-
 Validation (without a Form)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+---------------------------
 
 .. note::
 
@@ -1720,7 +1746,7 @@ need::
     {
         use ValidatableComponentTrait;
 
-        #[LiveProp(exposed: ['email', 'plainPassword'])]
+        #[LiveProp(writable: ['email', 'plainPassword'])]
         #[Assert\Valid]
         public User $user;
 
@@ -1792,7 +1818,7 @@ it has been validated. This means that, if you edit a field and the
 component re-renders, it will be validated again.
 
 Real-Time Validation on Change
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------
 
 As soon as validation is enabled, each field will be validated the
 moment that its model is updated. By default, that happens in the
@@ -2029,7 +2055,7 @@ you have an ``EditPostComponent``::
     #[AsLiveComponent('edit_post')]
     final class EditPostComponent extends AbstractController
     {
-        #[LiveProp(exposed: ['title', 'content'])]
+        #[LiveProp(writable: ['title', 'content'])]
         public Post $post;
 
         #[LiveAction]

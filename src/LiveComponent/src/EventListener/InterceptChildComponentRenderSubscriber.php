@@ -11,13 +11,12 @@
 
 namespace Symfony\UX\LiveComponent\EventListener;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
-use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
-use Symfony\UX\LiveComponent\Util\JsonUtil;
-use Symfony\UX\LiveComponent\Util\TwigAttributeHelper;
-use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\UX\LiveComponent\Util\ChildComponentPartialRenderer;
+use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
 
@@ -30,28 +29,23 @@ use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
  *
  * @internal
  */
-class InterceptChildComponentRenderSubscriber implements EventSubscriberInterface
+class InterceptChildComponentRenderSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {
     public const CHILDREN_FINGERPRINTS_METADATA_KEY = 'children_fingerprints';
 
     public function __construct(
         private ComponentStack $componentStack,
-        private DeterministicTwigIdCalculator $deterministicTwigIdCalculator,
-        private FingerprintCalculator $fingerprintCalculator,
-        private TwigAttributeHelper $twigAttributeHelper,
-        private ComponentFactory $componentFactory,
-        private LiveComponentHydrator $liveComponentHydrator,
+        private ContainerInterface $container,
     ) {
     }
 
     public function preComponentCreated(PreCreateForRenderEvent $event): void
     {
         // if there is already a component, that's a parent. Else, this is not a child.
-        if (!$this->componentStack->getCurrentComponent()) {
+        if (null === $parentComponent = $this->componentStack->getCurrentComponent()) {
             return;
         }
 
-        $parentComponent = $this->componentStack->getCurrentComponent();
         if (!$parentComponent->hasExtraMetadata(self::CHILDREN_FINGERPRINTS_METADATA_KEY)) {
             return;
         }
@@ -59,7 +53,7 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
         $childFingerprints = $parentComponent->getExtraMetadata(self::CHILDREN_FINGERPRINTS_METADATA_KEY);
 
         // get the deterministic id for this child, but without incrementing the counter yet
-        $deterministicId = $event->getProps()['data-live-id'] ?? $this->deterministicTwigIdCalculator->calculateDeterministicId(increment: false);
+        $deterministicId = $event->getProps()['data-live-id'] ?? $this->getDeterministicIdCalculator()->calculateDeterministicId(increment: false);
         if (!isset($childFingerprints[$deterministicId])) {
             // child fingerprint wasn't set, it is likely a new child, allow it to render fully
             return;
@@ -69,40 +63,26 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
         // in a loop of children being rendered on the same line
         // we need to do this because this component will *not* ever hit
         // AddLiveAttributesSubscriber where the counter is normally incremented
-        $this->deterministicTwigIdCalculator->calculateDeterministicId(increment: true);
+        $this->getDeterministicIdCalculator()->calculateDeterministicId(increment: true);
 
-        $newPropsFingerprint = $this->fingerprintCalculator->calculateFingerprint($event->getProps());
+        $childPartialRenderer = $this->container->get(ChildComponentPartialRenderer::class);
+        \assert($childPartialRenderer instanceof ChildComponentPartialRenderer);
 
-        if ($childFingerprints[$deterministicId] === $newPropsFingerprint) {
-            // the props passed to create this child have *not* changed
-            // return an empty element so the frontend knows to keep the current child
-
-            $rendered = sprintf(
-                '<div data-live-id="%s"></div>',
-                $this->twigAttributeHelper->escapeAttribute($deterministicId)
-            );
-            $event->setRenderedString($rendered);
-
-            return;
-        }
-
-        /*
-         * The props passed to create this child HAVE changed.
-         * Send back a fake element with:
-         *      * data-live-id
-         *      * data-live-fingerprint-value (new fingerprint)
-         *      * data-live-props-value (new dehydrated props)
-         */
-        $mounted = $this->componentFactory->create($event->getName(), $event->getProps());
-        $dehydratedComponent = $this->liveComponentHydrator->dehydrate($mounted);
-
-        $rendered = sprintf(
-            '<div data-live-id="%s" data-live-fingerprint-value="%s" data-live-props-value="%s"></div>',
-            $this->twigAttributeHelper->escapeAttribute($deterministicId),
-            $this->twigAttributeHelper->escapeAttribute($newPropsFingerprint),
-            $this->twigAttributeHelper->escapeAttribute(JsonUtil::encodeObject($dehydratedComponent->getProps()))
+        $rendered = $childPartialRenderer->renderChildComponent(
+            $deterministicId,
+            $childFingerprints[$deterministicId],
+            $event->getName(),
+            $event->getProps(),
         );
         $event->setRenderedString($rendered);
+    }
+
+    public static function getSubscribedServices(): array
+    {
+        return [
+            DeterministicTwigIdCalculator::class,
+            ChildComponentPartialRenderer::class,
+        ];
     }
 
     public static function getSubscribedEvents(): array
@@ -110,5 +90,15 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
         return [
             PreCreateForRenderEvent::class => 'preComponentCreated',
         ];
+    }
+
+    private function getDeterministicIdCalculator(): DeterministicTwigIdCalculator
+    {
+        return $this->container->get(DeterministicTwigIdCalculator::class);
+    }
+
+    private function getAttributesCreator(): LiveControllerAttributesCreator
+    {
+        return $this->container->get(LiveControllerAttributesCreator::class);
     }
 }

@@ -1,0 +1,53 @@
+<div {{ attributes }}>
+    {% if flashMessage %}
+        <div class="alert alert-success">{{ flashMessage }}</div>
+    {% endif %}
+
+    <div class="d-inline-flex">
+        {% if isEditing %}
+            {# The form isn't used, but allows the user to hit enter to save. #}
+            <form class="row g-3">
+                <div class="input-group mb-3 col">
+                    {% set error = this.getError('food.name') %}
+
+                    <div class="form-floating">
+                        <input
+                            type="text"
+                            data-model="food.name"
+                            class="form-control form-control-lg{{ error ? ' is-invalid' }}"
+                            autofocus
+                            id="food_name"
+                        />
+                        <label for="food_name">Food name</label>
+                    </div>
+
+                    <button
+                        data-action="live#action"
+                        data-action-name="prevent|save"
+                        class="btn btn-outline btn-outline-{{ error ? 'danger' : 'secondary' }}"
+                    >Save</button>
+
+                    {% if this.getError('food.name') %}
+                        <div class="invalid-feedback">{{ this.getError('food.name').message }}</div>
+                    {% endif %}
+                </div>
+                <div class="form-text">Clear the field to trigger validation!</div>
+            </form>
+        {% else %}
+            <h2>{{ food.name }}</h2>
+            <button
+                data-action="live#action"
+                data-action-name="activateEditing"
+                class="btn btn-link"
+                title="Click to edit!"
+            >
+                <small class="fa fa-pencil"></small>
+            </button>
+        {% endif %}
+    </div>
+
+    <hr>
+    <p>
+        The <strong>{{ food.name }}</strong> has {{ food.votes }} votes! Yum!
+    </p>
+</div>

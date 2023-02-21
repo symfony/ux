@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
@@ -27,14 +28,16 @@ use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
 use Symfony\UX\LiveComponent\EventListener\ResetDeterministicIdSubscriber;
 use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
 use Symfony\UX\LiveComponent\Twig\LiveComponentExtension as LiveComponentTwigExtension;
 use Symfony\UX\LiveComponent\Twig\LiveComponentRuntime;
+use Symfony\UX\LiveComponent\Util\ChildComponentPartialRenderer;
 use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
+use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
 use Symfony\UX\LiveComponent\Util\TwigAttributeHelper;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
-use Symfony\UX\TwigComponent\ComponentStack;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -73,6 +76,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->setArguments([
                 new Reference('serializer'),
                 new Reference('property_accessor'),
+                new Reference('property_info'),
                 '%kernel.secret%',
             ])
         ;
@@ -89,19 +93,27 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
             ->addTag('container.service_subscriber', ['key' => ComponentRenderer::class, 'id' => 'ux.twig_component.component_renderer'])
             ->addTag('container.service_subscriber', ['key' => LiveComponentHydrator::class, 'id' => 'ux.live_component.component_hydrator'])
+            ->addTag('container.service_subscriber', ['key' => LiveComponentMetadataFactory::class, 'id' => 'ux.live_component.metadata_factory'])
             ->addTag('container.service_subscriber') // csrf
         ;
 
         $container->register('ux.live_component.intercept_child_component_render_subscriber', InterceptChildComponentRenderSubscriber::class)
             ->setArguments([
                 new Reference('ux.twig_component.component_stack'),
-                new Reference('ux.live_component.deterministic_id_calculator'),
+            ])
+            ->addTag('container.service_subscriber', ['key' => DeterministicTwigIdCalculator::class, 'id' => 'ux.live_component.deterministic_id_calculator'])
+            ->addTag('container.service_subscriber', ['key' => ChildComponentPartialRenderer::class, 'id' => 'ux.live_component.child_component_partial_renderer'])
+            ->addTag('kernel.event_subscriber');
+
+        $container->register('ux.live_component.child_component_partial_renderer', ChildComponentPartialRenderer::class)
+            ->setArguments([
                 new Reference('ux.live_component.fingerprint_calculator'),
                 new Reference('ux.live_component.attribute_helper'),
-                new Reference('ux.twig_component.component_factory'),
-                new Reference('ux.live_component.component_hydrator'),
             ])
-            ->addTag('kernel.event_subscriber');
+            ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
+            ->addTag('container.service_subscriber', ['key' => LiveComponentMetadataFactory::class, 'id' => 'ux.live_component.metadata_factory'])
+            ->addTag('container.service_subscriber', ['key' => LiveComponentHydrator::class, 'id' => 'ux.live_component.component_hydrator'])
+        ;
 
         $container->register('ux.live_component.reset_deterministic_id_subscriber', ResetDeterministicIdSubscriber::class)
             ->setArguments([
@@ -119,8 +131,15 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('ux.live_component.component_hydrator'),
                 new Reference('ux.twig_component.component_factory'),
                 new Reference('router'),
+                new Reference('ux.live_component.metadata_factory'),
             ])
             ->addTag('twig.runtime')
+        ;
+
+        $container->register('ux.live_component.metadata_factory', LiveComponentMetadataFactory::class)
+            ->setArguments([
+                new Reference('ux.twig_component.component_factory'),
+            ])
         ;
 
         $container->register(ComponentValidator::class)
@@ -130,14 +149,22 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         $container->register('ux.live_component.attribute_helper', TwigAttributeHelper::class)
             ->setArguments([new Reference('twig')]);
 
+        $container->register('ux.live_component.live_controller_attributes_creator', LiveControllerAttributesCreator::class)
+            ->setArguments([
+                new Reference('ux.live_component.metadata_factory'),
+                new Reference('ux.live_component.component_hydrator'),
+                new Reference('ux.live_component.attribute_helper'),
+                new Reference('ux.twig_component.component_stack'),
+                new Reference('ux.live_component.deterministic_id_calculator'),
+                new Reference('ux.live_component.fingerprint_calculator'),
+                new Reference('router'),
+                new Reference('security.csrf.token_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+            ])
+        ;
+
         $container->register('ux.live_component.add_attributes_subscriber', AddLiveAttributesSubscriber::class)
             ->addTag('kernel.event_subscriber')
-            ->addTag('container.service_subscriber', ['key' => LiveComponentHydrator::class, 'id' => 'ux.live_component.component_hydrator'])
-            ->addTag('container.service_subscriber', ['key' => ComponentStack::class, 'id' => 'ux.twig_component.component_stack'])
-            ->addTag('container.service_subscriber', ['key' => TwigAttributeHelper::class, 'id' => 'ux.live_component.attribute_helper'])
-            ->addTag('container.service_subscriber', ['key' => DeterministicTwigIdCalculator::class, 'id' => 'ux.live_component.deterministic_id_calculator'])
-            ->addTag('container.service_subscriber', ['key' => FingerprintCalculator::class, 'id' => 'ux.live_component.fingerprint_calculator'])
-            ->addTag('container.service_subscriber') // csrf & router
+            ->addTag('container.service_subscriber', ['key' => LiveControllerAttributesCreator::class, 'id' => 'ux.live_component.live_controller_attributes_creator'])
         ;
 
         $container->register('ux.live_component.deterministic_id_calculator', DeterministicTwigIdCalculator::class);

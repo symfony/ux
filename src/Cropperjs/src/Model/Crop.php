@@ -38,6 +38,7 @@ class Crop
 
     /**
      * @Assert\NotBlank()
+     *
      * @Assert\Type("array")
      */
     private $options = [

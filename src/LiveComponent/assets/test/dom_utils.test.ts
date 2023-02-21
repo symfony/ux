@@ -13,7 +13,7 @@ import Backend from '../src/Backend';
 import {StandardElementDriver} from '../src/Component/ElementDriver';
 
 const createStore = function(props: any = {}): ValueStore {
-    return new ValueStore(props, {});
+    return new ValueStore(props);
 }
 
 describe('getValueFromElement', () => {
@@ -217,7 +217,6 @@ describe('elementBelongsToThisComponent', () => {
     const createComponent = (html: string, childComponents: Component[] = []) => {
         const component = new Component(
             htmlToElement(html),
-            {},
             {},
             null,
             'some-id-' + Math.floor((Math.random() * 100)),

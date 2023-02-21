@@ -36,7 +36,6 @@ export interface LiveController {
 export default class extends Controller<HTMLElement> implements LiveController {
     static values = {
         url: String,
-        data: Object,
         props: Object,
         csrf: String,
         debounce: { type: Number, default: 150 },
@@ -45,7 +44,6 @@ export default class extends Controller<HTMLElement> implements LiveController {
     };
 
     declare readonly urlValue: string;
-    declare readonly dataValue: any;
     declare readonly propsValue: any;
     declare readonly csrfValue: string;
     declare readonly hasDebounceValue: boolean;
@@ -72,7 +70,6 @@ export default class extends Controller<HTMLElement> implements LiveController {
         this.component = new Component(
             this.element,
             this.propsValue,
-            this.dataValue,
             this.fingerprintValue,
             id,
             new Backend(this.urlValue, this.csrfValue),
@@ -196,7 +193,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
     }
 
     $render() {
-        this.component.render();
+        return this.component.render();
     }
 
     /**
@@ -216,7 +213,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
      * @param {number|boolean} debounce
      */
     $updateModel(model: string, value: any, shouldRender = true, debounce: number | boolean = true) {
-        this.component.set(model, value, shouldRender, debounce);
+        return this.component.set(model, value, shouldRender, debounce);
     }
 
     private handleInputEvent(event: Event) {
@@ -254,7 +251,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
      *                  skip updating if the on() modifier is passed (e.g. on(change)).
      *                  If not passed, the model will always be updated.
      */
-    private updateModelFromElementEvent(element: Element, eventName: string | null) {
+    private updateModelFromElementEvent(element: Element, eventName: string | null): void {
         if (!elementBelongsToThisComponent(element, this.component)) {
             return;
         }
@@ -310,7 +307,7 @@ export default class extends Controller<HTMLElement> implements LiveController {
         this.component.set(modelBinding.modelName, finalValue, modelBinding.shouldRender, modelBinding.debounce);
     }
 
-    handleConnectedControllerEvent(event: LiveEvent) {
+    handleConnectedControllerEvent(event: LiveEvent): void {
         if (event.target === this.element) {
             return;
         }

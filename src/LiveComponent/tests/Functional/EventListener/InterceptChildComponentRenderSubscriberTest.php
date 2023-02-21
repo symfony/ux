@@ -99,7 +99,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
                     AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX
                 ), $content);
                 $this->assertStringContainsString(sprintf(
-                    '<div data-live-id="%s1" data-live-fingerprint-value="gn9PcPUqL0tkeLSw0ZuhOj96dwIpiBmJPoO5NPync2o&#x3D;" data-live-props-value="&#x7B;&quot;_checksum&quot;&#x3A;&quot;YrPg4mHsB82fR&#x5C;&#x2F;VmTL3gJIX32kS8HvWy&#x5C;&#x2F;9uKSs&#x5C;&#x2F;aPfk&#x3D;&quot;&#x7D;"></div>',
+                    '<div data-live-id="%s1" data-live-fingerprint-value="gn9PcPUqL0tkeLSw0ZuhOj96dwIpiBmJPoO5NPync2o&#x3D;" data-live-props-value="&#x7B;&quot;readonlyValue&quot;&#x3A;&quot;readonly&quot;,&quot;&#x40;checksum&quot;&#x3A;&quot;OMLGPMvM8nHe8iWiHeSQ2oyKlFqPNsd49TYmFYzMky8&#x3D;&quot;&#x7D;"></div>',
                     AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX
                 ), $content);
                 $this->assertStringContainsString(sprintf(
@@ -120,10 +120,10 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
             'includeDataLiveId' => $includeLiveId,
         ]);
 
-        $dehydrated = $this->dehydrateComponent($component);
+        $dehydratedProps = $this->dehydrateComponent($component);
 
         $queryData = [
-            'data' => json_encode($dehydrated->all()),
+            'data' => json_encode($dehydratedProps),
         ];
 
         if ($childrenFingerprints) {

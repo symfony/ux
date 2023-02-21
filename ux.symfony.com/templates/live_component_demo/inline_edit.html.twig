@@ -1,0 +1,23 @@
+{% extends 'liveDemoBase.html.twig' %}
+
+{% block code_block_left %}
+    {% component code_block with { filename: 'src/Twig/InlineEditFoodComponent.php', height: '400px' } %}
+        {% block content %}
+            {{- source('@src/Twig/InlineEditFoodComponent.php')|cleanup_php_file -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_right %}
+    {% component code_block with { filename: 'templates/components/inline_edit_food.html.twig', height: '400px' } %}
+        {% block content %}
+            {{- source('components/inline_edit_food.html.twig') -}}
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block demo_content %}
+    {{ component('inline_edit_food', {
+        food: food
+    }) }}
+{% endblock %}
