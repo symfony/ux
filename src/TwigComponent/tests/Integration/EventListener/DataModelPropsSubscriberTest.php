@@ -27,7 +27,7 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
             'content2' => 'Value for second child',
         ]);
 
-        $this->assertStringContainsString('<textarea>Hello data-model!</textarea>', $html);
-        $this->assertStringContainsString('<textarea>Value for second child</textarea>', $html);
+        $this->assertStringContainsString('<textarea data-model="content:value">Hello data-model!</textarea>', $html);
+        $this->assertStringContainsString('<textarea data-model="content2:value">Value for second child</textarea>', $html);
     }
 }

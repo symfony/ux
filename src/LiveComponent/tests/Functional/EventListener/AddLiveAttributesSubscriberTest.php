@@ -46,7 +46,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertArrayHasKey('@checksum', $props);
     }
 
-    public function testCanUseCustomAttributes(): void
+    public function testCanUseCustomAttributesVariableName(): void
     {
         $div = $this->browser()
             ->visit('/render-template/render_custom_attributes')
@@ -90,6 +90,11 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         // deterministic id: should not change, and counter should increase
         $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'0', $lis->first()->attr('data-live-id'));
         $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'2', $lis->last()->attr('data-live-id'));
+
+        // the data-live-id attribute also needs to be part of the "props" so that it persists on renders
+        $props = json_decode($lis->first()->attr('data-live-props-value'), true);
+        $attributesProps = $props['@attributes'];
+        $this->assertArrayHasKey('data-live-id', $attributesProps);
 
         // fingerprints
         // first and last both have the same input - thus fingerprint

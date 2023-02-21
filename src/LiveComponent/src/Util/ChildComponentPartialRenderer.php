@@ -28,7 +28,7 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
 {
     public function __construct(
         private FingerprintCalculator $fingerprintCalculator,
-        private TwigAttributeHelper $attributeHelper,
+        private TwigAttributeHelperFactory $attributeHelperFactory,
         private ContainerInterface $container,
     ) {
     }
@@ -41,10 +41,10 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
             // the props passed to create this child have *not* changed
             // return an empty element so the frontend knows to keep the current child
 
-            $attributes = [];
-            $this->attributeHelper->addLiveId($deterministicId, $attributes);
+            $attributesCollection = $this->attributeHelperFactory->create();
+            $attributesCollection->addLiveId($deterministicId);
 
-            return $this->createHtml($attributes);
+            return $this->createHtml($attributesCollection->toEscapedArray());
         }
 
         /*
@@ -55,23 +55,27 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
          *      * data-live-props-value (new READONLY dehydrated props)
          */
         $mounted = $this->getComponentFactory()->create($componentName, $inputProps);
-        $liveMetadata = $this->getLiveComponentMetadataFactory()->getMetadata($mounted->getName());
-        $dehydratedProps = $this->getLiveComponentHydrator()->dehydrate(
-            $mounted->getComponent(),
-            $mounted->getAttributes(),
-            $liveMetadata
+        $attributesCollection = $this->getAttributesCreator()->attributesForRendering(
+            $mounted,
+            $this->getComponentFactory()->metadataFor($componentName),
+            true,
+            $deterministicId
         );
+
+        $liveMetadata = $this->getLiveComponentMetadataFactory()->getMetadata($componentName);
+        $props = $attributesCollection->getProps();
 
         // only send back the props that are marked as "read-only"
         $readonlyDehydratedProps = array_intersect_key(
-            $dehydratedProps,
+            $props,
             array_flip(array_merge($liveMetadata->getReadonlyPropPaths(), LiveComponentHydrator::getInternalPropNames()))
         );
-
-        $attributes = [];
-        $this->attributeHelper->addLiveId($deterministicId, $attributes);
-        $this->attributeHelper->addFingerprint($newPropsFingerprint, $attributes);
-        $this->attributeHelper->addProps($readonlyDehydratedProps, $attributes);
+        $attributesCollection->addProps($readonlyDehydratedProps);
+        $attributes = $attributesCollection->toEscapedArray();
+        // optional, but these just aren't needed by the frontend at this point
+        unset($attributes['data-controller']);
+        unset($attributes['data-live-url-value']);
+        unset($attributes['data-live-csrf-value']);
 
         return $this->createHtml($attributes);
     }
@@ -95,6 +99,7 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
             ComponentFactory::class,
             LiveComponentMetadataFactory::class,
             LiveComponentHydrator::class,
+            LiveControllerAttributesCreator::class,
         ];
     }
 
@@ -111,5 +116,10 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
     private function getLiveComponentHydrator(): LiveComponentHydrator
     {
         return $this->container->get(LiveComponentHydrator::class);
+    }
+
+    private function getAttributesCreator(): LiveControllerAttributesCreator
+    {
+        return $this->container->get(LiveControllerAttributesCreator::class);
     }
 }

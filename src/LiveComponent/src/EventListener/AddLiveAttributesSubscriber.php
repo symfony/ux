@@ -17,10 +17,15 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
+use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Symfony\UX\TwigComponent\MountedComponent;
 
 /**
+ * Adds the extra attributes needed to activate a live controller.
+ *
+ * Used during initial render and a re-render of a component.
+ *
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
@@ -29,8 +34,10 @@ use Symfony\UX\TwigComponent\MountedComponent;
  */
 final class AddLiveAttributesSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {
-    public function __construct(private ContainerInterface $container)
-    {
+    public function __construct(
+        private ComponentStack $componentStack,
+        private ContainerInterface $container
+    ) {
     }
 
     public function onPreRender(PreRenderEvent $event): void
@@ -79,11 +86,12 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
         $attributesCreator = $this->container->get(LiveControllerAttributesCreator::class);
         \assert($attributesCreator instanceof LiveControllerAttributesCreator);
 
-        $attributes = $attributesCreator->attributesForRendering(
+        $attributesCollection = $attributesCreator->attributesForRendering(
             $mounted,
-            $metadata
+            $metadata,
+            $this->componentStack->hasParentComponent()
         );
 
-        return new ComponentAttributes($attributes);
+        return new ComponentAttributes($attributesCollection->toEscapedArray());
     }
 }

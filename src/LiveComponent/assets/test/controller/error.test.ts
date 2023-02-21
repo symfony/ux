@@ -23,14 +23,14 @@ describe('LiveController Error Handling', () => {
     })
 
     it('displays an error modal on 500 errors', async () => {
-        const test = await createTest({ }, (data: any) => `
+        const test = await createTest({ counter: 4 }, (data: any) => `
             <div ${initComponent(data)}>
-                Original component text
+                Current count: ${data.counter}
                 <button data-action="live#action" data-action-name="save">Save</button>
+                <button data-action="live#$render">Render</button>
             </div>
         `);
 
-        // ONLY a post is sent, not a re-render GET
         test.expectsAjaxCall('post')
             .expectSentData(test.initialData)
             .serverWillReturnCustomResponse(500, `
@@ -43,12 +43,23 @@ describe('LiveController Error Handling', () => {
 
         await waitFor(() => expect(document.getElementById('live-component-error')).not.toBeNull());
         // the component did not change or re-render
-        expect(test.element).toHaveTextContent('Original component text');
+        expect(test.element).toHaveTextContent('Current count: 4');
         const errorContainer = getErrorElement();
         if (!errorContainer) {
             throw new Error('containing missing');
         }
         expect(errorContainer.querySelector('iframe')).not.toBeNull();
+
+        // make sure future requests can still be sent
+        test.expectsAjaxCall('get')
+            .expectSentData(test.initialData)
+            .serverWillChangeData((data: any) => {
+                data.counter = 10;
+            })
+            .init();
+
+        getByText(test.element, 'Render').click();
+        await waitFor(() => expect(test.element).toHaveTextContent('Current count: 10'));
     });
 
     it('displays a modal on any non-component response', async () => {
@@ -59,7 +70,6 @@ describe('LiveController Error Handling', () => {
             </div>
         `);
 
-        // ONLY a post is sent, not a re-render GET
         test.expectsAjaxCall('post')
             .expectSentData(test.initialData)
             .serverWillReturnCustomResponse(200, `

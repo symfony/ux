@@ -16,6 +16,7 @@ use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\MountedComponent;
@@ -32,7 +33,7 @@ class LiveControllerAttributesCreator
     public function __construct(
         private LiveComponentMetadataFactory $metadataFactory,
         private LiveComponentHydrator $hydrator,
-        private TwigAttributeHelper $attributeHelper,
+        private TwigAttributeHelperFactory $attributeHelper,
         private ComponentStack $componentStack,
         private DeterministicTwigIdCalculator $idCalculator,
         private FingerprintCalculator $fingerprintCalculator,
@@ -41,35 +42,47 @@ class LiveControllerAttributesCreator
     ) {
     }
 
-    public function attributesForRendering(MountedComponent $mounted, ComponentMetadata $metadata): array
+    /**
+     * Calculates the array of extra attributes that should be added to the root
+     * component element to activate the live controller functionality.
+     */
+    public function attributesForRendering(MountedComponent $mounted, ComponentMetadata $metadata, bool $isChildComponent, string $deterministicId = null): LiveAttributesCollection
     {
-        $attributes = [];
-        $this->attributeHelper->addLiveController($attributes);
+        $attributesCollection = $this->attributeHelper->create();
+        $attributesCollection->addLiveController();
 
         $url = $this->urlGenerator->generate($metadata->get('route'), ['_live_component' => $mounted->getName()]);
-        $this->attributeHelper->addLiveUrl($url, $attributes);
+        $attributesCollection->addLiveUrl($url);
 
-        $dehydratedProps = $this->dehydrateComponent($mounted);
-        $this->attributeHelper->addProps($dehydratedProps, $attributes);
+        $mountedAttributes = $mounted->getAttributes();
 
-        if ($this->csrfTokenManager && $metadata->get('csrf')) {
-            $this->attributeHelper->addLiveCsrf(
-                $this->csrfTokenManager->getToken(self::getCsrfTokeName($mounted->getName()))->getValue(),
-                $attributes
-            );
-        }
-
-        if ($this->componentStack->hasParentComponent()) {
-            if (!isset($mounted->getAttributes()->all()['data-live-id'])) {
-                $id = $this->idCalculator->calculateDeterministicId();
-                $this->attributeHelper->addLiveId($id, $attributes);
+        if ($isChildComponent) {
+            if (!isset($mountedAttributes->all()['data-live-id'])) {
+                $id = $deterministicId ?: $this->idCalculator->calculateDeterministicId();
+                $attributesCollection->addLiveId($id);
+                // we need to add this to the mounted attributes so that it is
+                // will be included in the "attributes" part of the props data.
+                $mountedAttributes = $mountedAttributes->defaults(['data-live-id' => $id]);
             }
 
             $fingerprint = $this->fingerprintCalculator->calculateFingerprint($mounted->getInputProps());
-            $this->attributeHelper->addFingerprint($fingerprint, $attributes);
+            $attributesCollection->addFingerprint($fingerprint);
         }
 
-        return $attributes;
+        $dehydratedProps = $this->dehydrateComponent(
+            $mounted->getName(),
+            $mounted->getComponent(),
+            $mountedAttributes
+        );
+        $attributesCollection->addProps($dehydratedProps);
+
+        if ($this->csrfTokenManager && $metadata->get('csrf')) {
+            $attributesCollection->addLiveCsrf(
+                $this->csrfTokenManager->getToken(self::getCsrfTokeName($mounted->getName()))->getValue(),
+            );
+        }
+
+        return $attributesCollection;
     }
 
     public static function getCsrfTokeName(string $componentName): string
@@ -77,13 +90,13 @@ class LiveControllerAttributesCreator
         return 'live_component_'.$componentName;
     }
 
-    private function dehydrateComponent(MountedComponent $mounted): array
+    private function dehydrateComponent(string $name, object $component, ComponentAttributes $attributes): array
     {
-        $liveMetadata = $this->metadataFactory->getMetadata($mounted->getName());
+        $liveMetadata = $this->metadataFactory->getMetadata($name);
 
         return $this->hydrator->dehydrate(
-            $mounted->getComponent(),
-            $mounted->getAttributes(),
+            $component,
+            $attributes,
             $liveMetadata
         );
     }

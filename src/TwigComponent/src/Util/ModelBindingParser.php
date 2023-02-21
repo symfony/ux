@@ -15,7 +15,6 @@ namespace Symfony\UX\TwigComponent\Util;
  * Parses the "data-model" format.
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
-
  *
  * @internal
  */
@@ -40,7 +39,7 @@ class ModelBindingParser
     }
 
     /**
-     * @return <array{child: string, parent: string}>
+     * @return <array{parent: string, child: string}>
      */
     private function parseBinding(string $bindingString): array
     {
@@ -48,7 +47,7 @@ class ModelBindingParser
 
         return match (\count($parts)) {
             1 => ['child' => 'value', 'parent' => $parts[0]],
-            2 => ['child' => $parts[0], 'parent' => $parts[1]],
+            2 => ['child' => $parts[1], 'parent' => $parts[0]],
             default => throw new \InvalidArgumentException(sprintf('Invalid value "%s" given for "data-model". Format should be "childValue:parentValue" or just "parentValue" to use "value" for the child.', $bindingString)),
         };
     }

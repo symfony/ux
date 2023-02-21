@@ -47,7 +47,7 @@ export default class Component {
 
     defaultDebounce = 150;
 
-    private backendRequest: BackendRequest|null;
+    private backendRequest: BackendRequest|null = null;
     /** Actions that are waiting to be executed */
     private pendingActions: BackendAction[] = [];
     /** Is a request waiting to be made? */
@@ -298,6 +298,7 @@ export default class Component {
         this.isRequestPending = false;
 
         this.backendRequest.promise.then(async (response) => {
+            this.backendRequest = null;
             const backendResponse = new BackendResponse(response);
             const html = await backendResponse.getBody();
 
@@ -317,7 +318,6 @@ export default class Component {
             }
 
             this.processRerender(html, backendResponse);
-            this.backendRequest = null;
 
             // finally resolve this promise
             thisPromiseResolve(backendResponse);

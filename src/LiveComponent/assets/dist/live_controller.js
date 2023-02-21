@@ -376,7 +376,7 @@ function setDeepData(data, propertyPath, value) {
 
 class ValueStore {
     constructor(props) {
-        this.$identifierKey = '@id';
+        this.identifierKey = '@id';
         this.updatedModels = [];
         this.props = {};
         this.props = props;
@@ -387,8 +387,8 @@ class ValueStore {
         if (null === value) {
             return value;
         }
-        if (this.isPropNameTopLevel(normalizedName) && typeof value === 'object' && value[this.$identifierKey] !== undefined) {
-            return value[this.$identifierKey];
+        if (this.isPropNameTopLevel(normalizedName) && typeof value === 'object' && value[this.identifierKey] !== undefined) {
+            return value[this.identifierKey];
         }
         return value;
     }
@@ -400,8 +400,8 @@ class ValueStore {
         if (this.isPropNameTopLevel(normalizedName)
             && this.props[normalizedName] !== null
             && typeof this.props[normalizedName] === 'object'
-            && this.props[normalizedName][this.$identifierKey] !== undefined) {
-            normalizedName = normalizedName + '.' + this.$identifierKey;
+            && this.props[normalizedName][this.identifierKey] !== undefined) {
+            normalizedName = normalizedName + '.' + this.identifierKey;
         }
         const currentValue = this.get(normalizedName);
         if (currentValue !== value && !this.updatedModels.includes(normalizedName)) {
@@ -433,10 +433,10 @@ class ValueStore {
         return key.indexOf('.') === -1;
     }
     findIdentifier(value) {
-        if (typeof value !== 'object' || value[this.$identifierKey] === undefined) {
+        if (typeof value !== 'object' || value[this.identifierKey] === undefined) {
             return value;
         }
-        return value[this.$identifierKey];
+        return value[this.identifierKey];
     }
 }
 
@@ -1397,6 +1397,7 @@ class ChildComponentWrapper {
 class Component {
     constructor(element, props, fingerprint, id, backend, elementDriver) {
         this.defaultDebounce = 150;
+        this.backendRequest = null;
         this.pendingActions = [];
         this.isRequestPending = false;
         this.requestDebounceTimeout = null;
@@ -1540,6 +1541,7 @@ class Component {
         this.valueStore.updatedModels = [];
         this.isRequestPending = false;
         this.backendRequest.promise.then(async (response) => {
+            this.backendRequest = null;
             const backendResponse = new BackendResponse(response);
             const html = await backendResponse.getBody();
             const headers = backendResponse.response.headers;
@@ -1553,7 +1555,6 @@ class Component {
                 return response;
             }
             this.processRerender(html, backendResponse);
-            this.backendRequest = null;
             thisPromiseResolve(backendResponse);
             if (this.isRequestPending) {
                 this.isRequestPending = false;
