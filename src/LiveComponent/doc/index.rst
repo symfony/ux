@@ -1992,7 +1992,7 @@ attribute to the child:
     {# templates/components/post_form.html.twig #}
 
     {{ component('textarea_field', {
-        dataModel: 'value:content',
+        dataModel: 'content',
         error: this.getError('content'),
     }) }}
 
@@ -2015,14 +2015,14 @@ changed.
     (e.g. during re-rendering or via an action), that change will
     *not* be reflected on any parent components that share that model.
 
-If the child component model is called ``value``, you can also shorten
-the syntax:
+You can also specify the name of the child prop with the ``parentProp:childProp``
+syntax. The following is the same as above:
 
 .. code-block:: twig
 
-    <!-- same as "value:content" -->
+    <!-- same as dataModel: 'content' -->
     {{ component('textarea_field', {
-        dataModel: 'content',
+        dataModel: 'content:value',
     }) }}
 
 If your child component has multiple models, separate each with a space:

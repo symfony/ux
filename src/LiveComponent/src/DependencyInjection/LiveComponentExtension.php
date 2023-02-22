@@ -35,7 +35,7 @@ use Symfony\UX\LiveComponent\Twig\LiveComponentRuntime;
 use Symfony\UX\LiveComponent\Util\ChildComponentPartialRenderer;
 use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
 use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
-use Symfony\UX\LiveComponent\Util\TwigAttributeHelper;
+use Symfony\UX\LiveComponent\Util\TwigAttributeHelperFactory;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 
@@ -108,11 +108,12 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         $container->register('ux.live_component.child_component_partial_renderer', ChildComponentPartialRenderer::class)
             ->setArguments([
                 new Reference('ux.live_component.fingerprint_calculator'),
-                new Reference('ux.live_component.attribute_helper'),
+                new Reference('ux.live_component.attribute_helper_factory'),
             ])
             ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
             ->addTag('container.service_subscriber', ['key' => LiveComponentMetadataFactory::class, 'id' => 'ux.live_component.metadata_factory'])
             ->addTag('container.service_subscriber', ['key' => LiveComponentHydrator::class, 'id' => 'ux.live_component.component_hydrator'])
+            ->addTag('container.service_subscriber', ['key' => LiveControllerAttributesCreator::class, 'id' => 'ux.live_component.live_controller_attributes_creator'])
         ;
 
         $container->register('ux.live_component.reset_deterministic_id_subscriber', ResetDeterministicIdSubscriber::class)
@@ -146,14 +147,14 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->addTag('container.service_subscriber', ['key' => 'validator', 'id' => 'validator'])
         ;
 
-        $container->register('ux.live_component.attribute_helper', TwigAttributeHelper::class)
+        $container->register('ux.live_component.attribute_helper_factory', TwigAttributeHelperFactory::class)
             ->setArguments([new Reference('twig')]);
 
         $container->register('ux.live_component.live_controller_attributes_creator', LiveControllerAttributesCreator::class)
             ->setArguments([
                 new Reference('ux.live_component.metadata_factory'),
                 new Reference('ux.live_component.component_hydrator'),
-                new Reference('ux.live_component.attribute_helper'),
+                new Reference('ux.live_component.attribute_helper_factory'),
                 new Reference('ux.twig_component.component_stack'),
                 new Reference('ux.live_component.deterministic_id_calculator'),
                 new Reference('ux.live_component.fingerprint_calculator'),
@@ -163,6 +164,9 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         ;
 
         $container->register('ux.live_component.add_attributes_subscriber', AddLiveAttributesSubscriber::class)
+            ->setArguments([
+                new Reference('ux.twig_component.component_stack'),
+            ])
             ->addTag('kernel.event_subscriber')
             ->addTag('container.service_subscriber', ['key' => LiveControllerAttributesCreator::class, 'id' => 'ux.live_component.live_controller_attributes_creator'])
         ;

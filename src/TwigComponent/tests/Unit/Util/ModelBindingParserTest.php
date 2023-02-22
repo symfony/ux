@@ -30,20 +30,20 @@ final class ModelBindingParserTest extends TestCase
         yield 'empty_string' => ['', []];
 
         yield 'valid_but_empty_second_mode' => ['foo:bar ', [
-            ['child' => 'foo', 'parent' => 'bar'],
+            ['parent' => 'foo', 'child' => 'bar'],
         ]];
 
         yield 'valid_without_colon_uses_value_default' => ['foo ', [
-            ['child' => 'value', 'parent' => 'foo'],
+            ['parent' => 'foo', 'child' => 'value'],
         ]];
 
         yield 'multiple_spaces_between_models' => ['foo    bar:baz', [
-            ['child' => 'value', 'parent' => 'foo'],
-            ['child' => 'bar', 'parent' => 'baz'],
+            ['parent' => 'foo', 'child' => 'value'],
+            ['parent' => 'bar', 'child' => 'baz'],
         ]];
     }
 
-    public function testParseThrowsExceptionWithMutipleColons(): void
+    public function testParseThrowsExceptionWithMultipleColons(): void
     {
         $this->expectException(\InvalidArgumentException::class);
         $this->expectExceptionMessage('Invalid value "foo:bar:baz" given for "data-model"');

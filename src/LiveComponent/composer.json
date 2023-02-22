@@ -29,7 +29,7 @@
         "php": ">=8.0",
         "symfony/property-access": "^5.4|^6.0",
         "symfony/serializer": "^5.4|^6.0",
-        "symfony/ux-twig-component": "^2.5"
+        "symfony/ux-twig-component": "^2.8"
     },
     "require-dev": {
         "doctrine/annotations": "^1.0",

@@ -2,7 +2,7 @@ import { getDeepData, setDeepData } from '../data_manipulation_utils';
 import { normalizeModelName } from '../string_utils';
 
 export default class {
-    private readonly $identifierKey = '@id';
+    private readonly identifierKey = '@id';
 
     updatedModels: string[] = [];
     private props: any = {};
@@ -29,8 +29,8 @@ export default class {
 
         // if normalizedName is "top level" and value is an object,
         // and the value has an "@id" key, then return the "@id" key.
-        if (this.isPropNameTopLevel(normalizedName) && typeof value === 'object' && value[this.$identifierKey] !== undefined) {
-            return value[this.$identifierKey];
+        if (this.isPropNameTopLevel(normalizedName) && typeof value === 'object' && value[this.identifierKey] !== undefined) {
+            return value[this.identifierKey];
         }
 
         return value;
@@ -55,9 +55,9 @@ export default class {
         if (this.isPropNameTopLevel(normalizedName)
             && this.props[normalizedName] !== null
             && typeof this.props[normalizedName] === 'object'
-            && this.props[normalizedName][this.$identifierKey] !== undefined
+            && this.props[normalizedName][this.identifierKey] !== undefined
         ) {
-            normalizedName = normalizedName + '.' + this.$identifierKey;
+            normalizedName = normalizedName + '.' + this.identifierKey;
         }
 
         const currentValue = this.get(normalizedName);
@@ -126,10 +126,10 @@ export default class {
     }
 
     private findIdentifier(value: any): any {
-        if (typeof value !== 'object' || value[this.$identifierKey] === undefined) {
+        if (typeof value !== 'object' || value[this.identifierKey] === undefined) {
             return value;
         }
 
-        return value[this.$identifierKey];
+        return value[this.identifierKey];
     }
 }

@@ -99,7 +99,7 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
                     AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX
                 ), $content);
                 $this->assertStringContainsString(sprintf(
-                    '<div data-live-id="%s1" data-live-fingerprint-value="gn9PcPUqL0tkeLSw0ZuhOj96dwIpiBmJPoO5NPync2o&#x3D;" data-live-props-value="&#x7B;&quot;readonlyValue&quot;&#x3A;&quot;readonly&quot;,&quot;&#x40;checksum&quot;&#x3A;&quot;OMLGPMvM8nHe8iWiHeSQ2oyKlFqPNsd49TYmFYzMky8&#x3D;&quot;&#x7D;"></div>',
+                    '<div data-live-id="%s1" data-live-fingerprint-value="gn9PcPUqL0tkeLSw0ZuhOj96dwIpiBmJPoO5NPync2o&#x3D;" data-live-props-value="&#x7B;&quot;readonlyValue&quot;&#x3A;&quot;readonly&quot;,&quot;&#x40;attributes&quot;&#x3A;&#x7B;&quot;data-live-id&quot;&#x3A;&quot;live-289310975-1&quot;&#x7D;,&quot;&#x40;checksum&quot;&#x3A;&quot;C4PEpn28xE48w&#x2B;RozphzgGLhj9buyo4id6OSzEeq4OM&#x3D;&quot;&#x7D;"></div>',
                     AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX
                 ), $content);
                 $this->assertStringContainsString(sprintf(

@@ -1,5 +1,5 @@
 export default class {
-    private readonly $identifierKey;
+    private readonly identifierKey;
     updatedModels: string[];
     private props;
     constructor(props: any);

@@ -51,6 +51,10 @@ final class DataModelPropsSubscriber implements EventSubscriberInterface
             return;
         }
 
+        // normalize dataModel to a data-model HTML attribute
+        unset($data['dataModel']);
+        $data['data-model'] = $dataModel;
+
         // the parent is still listed as the "current" component at this point
         $parentMountedComponent = $this->componentStack->getCurrentComponent();
         if (null === $parentMountedComponent) {
