@@ -401,7 +401,7 @@ Now, create a "fresh" form and pass it into your stream:
         {
             $form = $this->createForm(TaskType::class, new Task());
 
-+            $emptyForm = clone $form ;
+   +        $emptyForm = clone $form ;
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -412,7 +412,7 @@ Now, create a "fresh" form and pass it into your stream:
 
                     return $this->render('task/success.stream.html.twig', [
                         'task' => $task,
-+                        'form' => $emptyForm,
+   +                    'form' => $emptyForm,
                     ]);
                 }
 
