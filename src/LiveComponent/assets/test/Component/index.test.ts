@@ -1,12 +1,12 @@
 import Component, {proxifyComponent} from '../../src/Component';
-import {BackendAction, BackendInterface} from '../../src/Backend';
+import {BackendAction, BackendInterface} from '../../src/Backend/Backend';
 import {
     StandardElementDriver
 } from '../../src/Component/ElementDriver';
-import BackendRequest from '../../src/BackendRequest';
+import BackendRequest from '../../src/Backend/BackendRequest';
 import { Response } from 'node-fetch';
 import {waitFor} from '@testing-library/dom';
-import BackendResponse from '../../src/BackendResponse';
+import BackendResponse from '../../src/Backend/BackendResponse';
 
 interface MockBackend extends BackendInterface {
     actions: BackendAction[],

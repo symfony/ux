@@ -36,8 +36,8 @@ describe('Component parent -> child data-model binding tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData({ foodName: 'ice cream' })
+        test.expectsAjaxCall()
+            .expectUpdatedData({ foodName: 'ice cream' })
             // mimic that the data on the child props have not changed, so we
             // render a simple placeholder
             .willReturn((data: any) => `
@@ -45,8 +45,7 @@ describe('Component parent -> child data-model binding tests', () => {
                     Food Name ${data.foodName}
                     <div data-live-id="the-child-id">
                 </div>
-            `)
-            .init();
+            `);
 
         // type into the child component
         await userEvent.type(test.queryByDataModel('value'), 'ice cream');
@@ -70,8 +69,8 @@ describe('Component parent -> child data-model binding tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData({ foodName: 'ice cream' })
+        test.expectsAjaxCall()
+            .expectUpdatedData({ foodName: 'ice cream' })
             // mimic that the data on the child props have not changed, so we
             // render a simple placeholder
             .willReturn((data: any) => `
@@ -79,8 +78,7 @@ describe('Component parent -> child data-model binding tests', () => {
                     Food Name ${data.foodName}
                     <div data-live-id="the-child-id">
                 </div>
-            `)
-            .init();
+            `);
 
         // type into the child component
         await userEvent.type(test.queryByDataModel('value'), 'ice cream');
@@ -130,8 +128,8 @@ describe('Component parent -> child data-model binding tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData({ foodName: 'ice cream' })
+        test.expectsAjaxCall()
+            .expectUpdatedData({ foodName: 'ice cream' })
             // mimic that the data on the child props have not changed, so we
             // render a simple placeholder
             .willReturn((data: any) => `
@@ -139,8 +137,7 @@ describe('Component parent -> child data-model binding tests', () => {
                     Food Name ${data.foodName}
                     <div data-live-id="the-child-id">
                 </div>
-            `)
-            .init();
+            `);
 
         // type into the child component
         const inputElement = test.queryByDataModel('value');

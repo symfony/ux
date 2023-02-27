@@ -11,7 +11,7 @@
 
 import { createTest, initComponent, shutdownTests } from '../tools';
 import { getByText, waitFor } from '@testing-library/dom';
-import BackendResponse from '../../src/BackendResponse';
+import BackendResponse from '../../src/Backend/BackendResponse';
 
 const getErrorElement = (): Element|null => {
     return document.getElementById('live-component-error');
@@ -31,13 +31,11 @@ describe('LiveController Error Handling', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('post')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             .serverWillReturnCustomResponse(500, `
                 <html><head><title>Error!</title></head><body><h1>An error occurred</h1></body></html>
             `)
-            .expectActionCalled('save')
-            .init();
+            .expectActionCalled('save');
 
         getByText(test.element, 'Save').click();
 
@@ -51,12 +49,10 @@ describe('LiveController Error Handling', () => {
         expect(errorContainer.querySelector('iframe')).not.toBeNull();
 
         // make sure future requests can still be sent
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 data.counter = 10;
-            })
-            .init();
+            });
 
         getByText(test.element, 'Render').click();
         await waitFor(() => expect(test.element).toHaveTextContent('Current count: 10'));
@@ -70,13 +66,11 @@ describe('LiveController Error Handling', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('post')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             .serverWillReturnCustomResponse(200, `
                 <html><head><title>Hi!</title></head><body><h1>I'm a whole page, not a component!</h1></body></html>
             `)
-            .expectActionCalled('save')
-            .init();
+            .expectActionCalled('save');
 
         getByText(test.element, 'Save').click();
 
@@ -92,13 +86,11 @@ describe('LiveController Error Handling', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('post')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             .serverWillReturnCustomResponse(200, `
                 <html><head><title>Hi!</title></head><body><h1>I'm a whole page, not a component!</h1></body></html>
             `)
-            .expectActionCalled('save')
-            .init();
+            .expectActionCalled('save');
 
         let isHookCalled = false;
         test.component.on('response:error', (backendResponse: BackendResponse, controls) => {

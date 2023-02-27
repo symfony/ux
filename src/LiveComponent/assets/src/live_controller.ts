@@ -8,7 +8,7 @@ import {
     getAllModelDirectiveFromElements,
 } from './dom_utils';
 import Component, { proxifyComponent } from './Component';
-import Backend from './Backend';
+import Backend from './Backend/Backend';
 import { StandardElementDriver } from './Component/ElementDriver';
 import LoadingPlugin from './Component/plugins/LoadingPlugin';
 import ValidatedFieldsPlugin from './Component/plugins/ValidatedFieldsPlugin';
@@ -33,7 +33,7 @@ export interface LiveController {
     element: HTMLElement;
     component: Component;
 }
-export default class extends Controller<HTMLElement> implements LiveController {
+export default class LiveControllerDefault extends Controller<HTMLElement> implements LiveController {
     static values = {
         url: String,
         props: Object,

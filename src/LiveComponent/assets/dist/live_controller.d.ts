@@ -12,7 +12,7 @@ export interface LiveController {
     element: HTMLElement;
     component: Component;
 }
-export default class extends Controller<HTMLElement> implements LiveController {
+export default class LiveControllerDefault extends Controller<HTMLElement> implements LiveController {
     static values: {
         url: StringConstructor;
         props: ObjectConstructor;
@@ -39,8 +39,8 @@ export default class extends Controller<HTMLElement> implements LiveController {
     disconnect(): void;
     update(event: any): void;
     action(event: any): void;
-    $render(): Promise<import("./BackendResponse").default>;
-    $updateModel(model: string, value: any, shouldRender?: boolean, debounce?: number | boolean): Promise<import("./BackendResponse").default>;
+    $render(): Promise<import("./Backend/BackendResponse").default>;
+    $updateModel(model: string, value: any, shouldRender?: boolean, debounce?: number | boolean): Promise<import("./Backend/BackendResponse").default>;
     private handleInputEvent;
     private handleChangeEvent;
     private updateModelFromElementEvent;

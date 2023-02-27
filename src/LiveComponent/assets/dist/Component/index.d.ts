@@ -1,12 +1,12 @@
-import { BackendInterface } from '../Backend';
+import { BackendInterface } from '../Backend/Backend';
 import ValueStore from './ValueStore';
 import { ElementDriver } from './ElementDriver';
 import { PluginInterface } from './plugins/PluginInterface';
-import BackendResponse from '../BackendResponse';
+import BackendResponse from '../Backend/BackendResponse';
 import { ModelBinding } from '../Directive/get_model_binding';
 export default class Component {
     readonly element: HTMLElement;
-    private readonly backend;
+    private backend;
     private readonly elementDriver;
     id: string | null;
     fingerprint: string | null;
@@ -23,6 +23,7 @@ export default class Component {
     private children;
     private parent;
     constructor(element: HTMLElement, props: any, fingerprint: string | null, id: string | null, backend: BackendInterface, elementDriver: ElementDriver);
+    _swapBackend(backend: BackendInterface): void;
     addPlugin(plugin: PluginInterface): void;
     connect(): void;
     disconnect(): void;

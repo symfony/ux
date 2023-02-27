@@ -209,9 +209,10 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private static function parseDataFor(Request $request): array
     {
         if (!$request->attributes->has('_live_request_data')) {
-            if ($request->query->has('data')) {
+            if ($request->query->has('props')) {
                 $liveRequestData = [
-                    'data' => self::parseJsonFromQuery($request, 'data'),
+                    'props' => self::parseJsonFromQuery($request, 'props'),
+                    'updated' => self::parseJsonFromQuery($request, 'updated'),
                     'args' => [],
                     'actions' => [],
                     'childrenFingerprints' => self::parseJsonFromQuery($request, 'childrenFingerprints'),
@@ -220,7 +221,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                 $requestData = $request->toArray();
 
                 $liveRequestData = [
-                    'data' => $requestData['data'] ?? [],
+                    'props' => $requestData['props'] ?? [],
+                    'updated' => $requestData['updated'] ?? [],
                     'args' => $requestData['args'] ?? [],
                     'actions' => $requestData['actions'] ?? [],
                     'childrenFingerprints' => $requestData['childrenFingerprints'] ?? [],
@@ -332,7 +334,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         $componentAttributes = $hydrator->hydrate(
             $component,
-            $this->parseDataFor($request)['data'],
+            $this->parseDataFor($request)['props'],
+            $this->parseDataFor($request)['updated'],
             $metadataFactory->getMetadata($componentName)
         );
 

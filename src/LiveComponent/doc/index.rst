@@ -406,22 +406,18 @@ like entities or other objects. For example::
         public Post $post;
     }
 
-To send the ``$post`` property to the frontend, it is "dehydrated" to a scalar value.
-For persisted entities, the data is dehydrated to its ``id`` and only that is passed
-to the frontend. For unsaved entities - or any other objects - the value is passed
-through Symfony's serializer.
+To send it to the frontend, the ``Post`` object is "dehydrated" to a scalar value.
+For persisted entities, the data is dehydrated to its ``id``. For unsaved entities -
+or any other objects - the value is passed through Symfony's serializer.
 
-When Ajax requests are sent to the frontend, the data is then *hydrated* back
-into the original values.
+When Ajax requests are sent to the frontend, the dehydrated data is then *hydrated*
+back into the original values.
 
 .. caution::
 
     Dehydrated data is passed to the frontend so it's readable by the user.
     If your object is dehydrated via the serializer, be sure no sensitive
     data is exposed.
-
-To control (de)hydration, set the ``hydrateWith`` and ``dehydrateWith`` options
-on ``LiveProp``.
 
 Writable Object Properties or Array Keys
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -472,6 +468,11 @@ changed, added or removed::
     #[LiveProp(writable: true)]
     public array $todoItems = ['Train tiger', 'Feed tiger', 'Pet tiger'];
 
+.. note::
+
+    Writable path values are dehydrated/hydrated using the same process as the top-level
+    properties (i.e. Symfony's serializer).
+
 Allowing an Entity to be Changed to Another
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -506,6 +507,48 @@ properties, use the special ``LiveProp::IDENTITY`` constant::
 Note that being able to change the "identity" of an object is something
 that works only for objects that are dehydrated to a scalar value (like
 persisted entities, which dehydrate to an ``id``).
+
+More Control Over Dehydration & Hydration
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``LiveProp`` attribute uses the normalizer to dehydrate values before
+sending them to the frontend. Then it uses the denormalizer to hydrate values
+when they are sent back to the backend.
+
+If needed, you can control the normalization or denormalization context using
+the ``Context`` attribute from Symfony's serializer::
+
+    #[LiveProp]
+    #[Context(groups: ['my_group'])]
+    public Post $post;
+
+.. note::
+
+    If your property has writable paths, those will be normalized/denormalized
+    using the same `Context` set on the property itself.
+
+Or, you can take full control over the (de)hydration process by setting the ``hydrateWith``
+and ``dehydrateWith`` options on ``LiveProp``. For example::
+
+    class ComponentWithAddressDto
+    {
+        #[LiveProp(dehydrateWith: 'dehydrateAddress', hydrateWith: 'hydrateAddress')]
+        public AddressDto $addressDto;
+
+        public function dehydrateAddress(AddressDto $address)
+        {
+            return [
+                'street' => $address->street,
+                'city' => $address->city,
+                'state' => $address->state,
+            ];
+        }
+
+        public function hydrateMyDto($data): MyDto
+        {
+            return new MyDto($data['street'], $data['city'], $data['state']);
+        }
+    }
 
 Updating a Model Manually
 -------------------------

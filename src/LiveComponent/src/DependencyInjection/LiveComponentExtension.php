@@ -77,6 +77,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('serializer'),
                 new Reference('property_accessor'),
                 new Reference('property_info'),
+                new Reference('serializer.mapping.class_metadata_factory'),
                 '%kernel.secret%',
             ])
         ;

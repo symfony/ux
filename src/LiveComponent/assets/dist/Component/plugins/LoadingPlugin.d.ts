@@ -1,5 +1,5 @@
 import { Directive } from '../../Directive/directives_parser';
-import BackendRequest from '../../BackendRequest';
+import BackendRequest from '../../Backend/BackendRequest';
 import Component from '../../Component';
 import { PluginInterface } from './PluginInterface';
 interface ElementLoadingDirectives {

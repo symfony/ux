@@ -27,17 +27,12 @@ describe('LiveController Action Tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('post')
-            .expectSentData({
-                comment: 'great turtles!',
-                isSaved: false
-            })
+        test.expectsAjaxCall()
             .expectActionCalled('save')
-            .serverWillChangeData((data: any) => {
+            .serverWillChangeProps((data: any) => {
                 // server marks component as "saved"
                 data.isSaved = true;
-            })
-            .init();
+            });
 
         getByText(test.element, 'Save').click();
 
@@ -56,17 +51,15 @@ describe('LiveController Action Tests', () => {
         `);
 
         // JUST the POST request: no other GET requests
-        test.expectsAjaxCall('post')
-            .expectSentData({
+        test.expectsAjaxCall()
+            .expectUpdatedData({
                 comment: 'great tortugas!',
-                isSaved: false
             })
             .expectActionCalled('save')
-            .serverWillChangeData((data: any) => {
+            .serverWillChangeProps((data: any) => {
                 // server marks component as "saved"
                 data.isSaved = true;
-            })
-            .init();
+            });
 
         await userEvent.type(test.queryByDataModel('comment'), 'great tortugas!');
         // type immediately, still during the model debounce
@@ -88,14 +81,12 @@ describe('LiveController Action Tests', () => {
        `);
 
         // ONLY a post is sent, not a re-render GET
-        test.expectsAjaxCall('post')
-            .expectSentData({ isSaved: false })
+        test.expectsAjaxCall()
             .expectActionCalled('sendNamedArgs', {a: '1', b: '2', c: '3'})
-            .serverWillChangeData((data: any) => {
+            .serverWillChangeProps((data: any) => {
                 // server marks component as "saved"
                 data.isSaved = true;
-            })
-            .init();
+            });
 
        getByText(test.element, 'Send named args').click();
 
@@ -122,10 +113,9 @@ describe('LiveController Action Tests', () => {
         // ONLY a post is sent
         // the re-render GET from "input" of the select should be avoided
         // because an action immediately happens
-        test.expectsAjaxCall('post')
-           .expectSentData({ food: 'pizza' })
-           .expectActionCalled('changeFood')
-           .init();
+        test.expectsAjaxCall()
+           .expectUpdatedData({ food: 'pizza' })
+           .expectActionCalled('changeFood');
 
         await userEvent.selectOptions(test.queryByDataModel('food'), 'pizza');
 
@@ -146,23 +136,20 @@ describe('LiveController Action Tests', () => {
         `);
 
         // ONLY a post is sent, not a re-render GET
-        test.expectsAjaxCall('post')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             .expectActionCalled('save')
             .delayResponse(100) // longer than debounce, so updating comment could potentially send a request
-            .serverWillChangeData((data: any) => {
+            .serverWillChangeProps((data: any) => {
                 // server marks component as "saved"
                 data.isSaved = true;
-            })
-            .init();
+            });
 
         // the model re-render shouldn't happen until after the action ajax finishes,
         // which will take 100ms. So, don't start expecting it until nearly then
         // but after the model debounce
         setTimeout(() => {
-            test.expectsAjaxCall('get')
-                .expectSentData({comment: 'donut holes', isSaved: true})
-                .init();
+            test.expectsAjaxCall()
+                .expectUpdatedData({comment: 'donut holes'});
         }, 75)
 
         // save first, then type into the box
@@ -189,16 +176,14 @@ describe('LiveController Action Tests', () => {
         `);
 
         // 1 request with all 3 actions
-        test.expectsAjaxCall('post')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             // 3 actions called
             .expectActionCalled('save')
             .expectActionCalled('sync', { syncAll: '1' })
             .expectActionCalled('save')
-            .serverWillChangeData((data: any) => {
+            .serverWillChangeProps((data: any) => {
                 data.isSaved = true;
-            })
-            .init();
+            });
 
         getByText(test.element, 'Save').click();
         getByText(test.element, 'Sync').click();

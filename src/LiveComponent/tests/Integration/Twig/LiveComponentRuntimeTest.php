@@ -33,7 +33,7 @@ final class LiveComponentRuntimeTest extends KernelTestCase
             'prop3' => 'howdy',
         ]);
 
-        $this->assertStringStartsWith('/_components/component1?data=%7B%22prop1%22:null,%22prop2%22:%222022-10-06T00:00:00%2B00:00%22,%22prop3%22:%22howdy%22,%22', $url);
+        $this->assertStringStartsWith('/_components/component1?props=%7B%22prop1%22:null,%22prop2%22:%222022-10-06T00:00:00%2B00:00%22,%22prop3%22:%22howdy%22,%22', $url);
         $this->browser()
             ->throwExceptions()
             ->get($url)

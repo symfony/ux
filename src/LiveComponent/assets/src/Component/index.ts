@@ -1,7 +1,7 @@
-import {BackendAction, BackendInterface} from '../Backend';
+import {BackendAction, BackendInterface} from '../Backend/Backend';
 import ValueStore from './ValueStore';
 import { normalizeModelName } from '../string_utils';
-import BackendRequest from '../BackendRequest';
+import BackendRequest from '../Backend/BackendRequest';
 import {
     getValueFromElement, htmlToElement,
 } from '../dom_utils';
@@ -10,7 +10,7 @@ import UnsyncedInputsTracker from './UnsyncedInputsTracker';
 import { ElementDriver } from './ElementDriver';
 import HookManager from '../HookManager';
 import { PluginInterface } from './plugins/PluginInterface';
-import BackendResponse from '../BackendResponse';
+import BackendResponse from '../Backend/BackendResponse';
 import { ModelBinding } from '../Directive/get_model_binding';
 
 declare const Turbo: any;
@@ -27,7 +27,7 @@ class ChildComponentWrapper {
 
 export default class Component {
     readonly element: HTMLElement;
-    private readonly backend: BackendInterface;
+    private backend: BackendInterface;
     private readonly elementDriver: ElementDriver;
     id: string|null;
 
@@ -81,6 +81,13 @@ export default class Component {
         this.resetPromise();
 
         this.onChildComponentModelUpdate = this.onChildComponentModelUpdate.bind(this);
+    }
+
+    /**
+     * @internal
+     */
+    _swapBackend(backend: BackendInterface) {
+        this.backend = backend;
     }
 
     addPlugin(plugin: PluginInterface) {
@@ -286,15 +293,15 @@ export default class Component {
         this.unsyncedInputsTracker.resetUnsyncedFields();
 
         this.backendRequest = this.backend.makeRequest(
-            this.valueStore.all(),
+            this.valueStore.getOriginalProps(),
             this.pendingActions,
-            this.valueStore.updatedModels,
+            this.valueStore.getDirtyProps(),
             this.getChildrenFingerprints()
         );
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
 
         this.pendingActions = [];
-        this.valueStore.updatedModels = [];
+        this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = false;
 
         this.backendRequest.promise.then(async (response) => {
@@ -306,6 +313,7 @@ export default class Component {
             const headers = backendResponse.response.headers;
             if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
                 const controls = { displayError: true };
+                this.valueStore.pushPendingPropsBackToDirty();
                 this.hooks.triggerHook('response:error', backendResponse, controls);
 
                 if (controls.displayError) {
@@ -362,7 +370,7 @@ export default class Component {
          * the server has been processed.
          */
         const modifiedModelValues: any = {};
-        this.valueStore.updatedModels.forEach((modelName) => {
+        Object.keys(this.valueStore.getDirtyProps()).forEach((modelName) => {
             modifiedModelValues[modelName] = this.valueStore.get(modelName);
         });
 
@@ -382,6 +390,7 @@ export default class Component {
         this.hooks.triggerHook('loading.state:finished', newElement);
 
         this.valueStore.reinitializeAllProps(this.elementDriver.getComponentProps(newElement));
+
         executeMorphdom(
             this.element,
             newElement,

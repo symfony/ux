@@ -1,7 +1,7 @@
 import Component from '../src/Component';
 import ComponentRegistry from '../src/ComponentRegistry';
-import BackendRequest from '../src/BackendRequest';
-import { BackendInterface } from '../src/Backend';
+import BackendRequest from '../src/Backend/BackendRequest';
+import { BackendInterface } from '../src/Backend/Backend';
 import { Response } from 'node-fetch';
 import { StandardElementDriver } from '../src/Component/ElementDriver';
 
