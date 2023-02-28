@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.8.0
+
+-   `true` attribute values now render just the attribute name, `false` excludes it entirely.
+
 ## 2.7.0
 
 -   `PreMount` and `PostMount` hooks can now return nothing.
