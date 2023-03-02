@@ -3,7 +3,7 @@
 </a></p>
 
 <h3 align="center">
-    Symfony UX: a new JavaScript ecosystem for Symfony
+    Symfony UX: a JavaScript ecosystem for Symfony
 </h3>
 
 Symfony UX is an initiative and set of libraries to seamlessly
