@@ -1,8 +1,6 @@
-{# initialize the swup controller, then render normal links! #}
-<div
-    {{ stimulus_controller('symfony/ux-swup/swup') }}
-    id="swup"
->
+{# you only need to add the call to the Stimilus controller;
+   swup doesn't require any other changes in your template #}
+<div {{ stimulus_controller('symfony/ux-swup/swup') }}>
 
     {% for package in pager %}
         <a href="{{ path(package.route) }}" class="col-12">
