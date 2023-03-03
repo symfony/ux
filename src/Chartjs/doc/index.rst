@@ -84,6 +84,73 @@ Once created in PHP, a chart can be displayed using Twig if installed
     {# You can pass HTML attributes as a second argument to add them on the <canvas> tag #}
     {{ render_chart(chart, {'class': 'my-chart'}) }}
 
+Using Plugins
+~~~~~~~~~~~~~
+
+Chart.js comes with `a lot of plugins`_ to extend its default behavior. Let's see
+what it looks like to use the `zoom plugin`_ by following the
+`zoom plugin documentation`_.
+
+First, install the plugin:
+
+.. code-block:: terminal
+
+    $ npm install chartjs-plugin-zoom -D
+
+    # or use yarn
+    $ yarn add chartjs-plugin-zoom -dev
+
+Then register the plugin globally. This can be done in your ``app.js`` file:
+
+.. code-block:: javascript
+
+    // assets/app.js
+
+    import { Chart } from 'chart.js';
+    import zoomPlugin from 'chartjs-plugin-zoom';
+
+    Chart.register(zoomPlugin);
+
+    // ...
+
+Finally, configure the plugin with the chart options. For example,
+the zoom plugin docs show the following example config:
+
+.. code-block:: javascript
+
+    // ...
+    options: {
+        plugins: {
+            zoom: {
+                zoom: {
+                  wheel: { enabled: true },
+                  pinch: { enabled: true },
+                  mode: 'xy',
+                }
+            }
+        }
+    }
+    // ...
+
+To use this same config in Symfony UX Chart.js, you can use the
+``setOptions()`` method::
+
+    $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
+
+    // ...
+
+    $chart->setOptions([
+        'plugins' => [
+            'zoom' => [
+                'zoom' => [
+                    'wheel' => ['enabled' => true],
+                    'pinch' => ['enabled' => true],
+                    'mode' => 'xy',
+                ],
+            ],
+        ],
+    ]);
+
 Extend the default behavior
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -158,3 +225,6 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Chart.js documentation`: https://www.chartjs.org/docs/latest/
 .. _`Symfony Webpack Encore`: https://symfony.com/doc/current/frontend/encore/installation.html
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _`a lot of plugins`: https://github.com/chartjs/awesome#plugins
+.. _`zoom plugin`: https://www.chartjs.org/chartjs-plugin-zoom/latest/
+.. _`zoom plugin documentation`: https://www.chartjs.org/chartjs-plugin-zoom/latest/guide/integration.html
