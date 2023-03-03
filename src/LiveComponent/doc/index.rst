@@ -391,6 +391,20 @@ commonly used. You can also use the normal modifiers, like
 ``data-model="on(change)|*"`` to, for example, only send
 model updates for the ``change`` event of each field inside.
 
+Model Updates don't work when External JavaScript Changes a Field
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Suppose you use a JavaScript library that sets the value of a field
+*for* you: for example a "date picker" library that hides
+the native ``<input data-model="publishAt">`` field and sets it
+behind-the-scenes when the user selects a date.
+
+In this case, the model (e.g. ``publishAt``) will probably *not*
+update correctly because JavaScript doesn't trigger the normal
+``change`` event. To fix this, you'll need to "hook" into the
+JavaScript library and set the model directly (or trigger a
+``change`` event on the ``data-model`` field). See :ref:`working-in-javascript`.
+
 LiveProp for Entities & More Complex Data
 -----------------------------------------
 
@@ -526,6 +540,8 @@ In this example, clicking the button will change a ``mode``
 live property on your component to the value ``edit``. The
 ``data-action="live#update"`` is Stimulus code that triggers
 the update.
+
+.. _working-in-javascript:
 
 Working with the Component in JavaScript
 ----------------------------------------
