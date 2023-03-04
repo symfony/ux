@@ -27,30 +27,39 @@ trait LiveCollectionTrait
     #[LiveAction]
     public function addCollectionItem(PropertyAccessorInterface $propertyAccessor, #[LiveArg] string $name): void
     {
-        if (str_starts_with($name, $this->formName)) {
-            $name = substr_replace($name, '', 0, mb_strlen($this->formName));
-        }
-
-        $data = $propertyAccessor->getValue($this->formValues, $name);
+        $propertyPath = $this->fieldNameToPropertyPath($name, $this->formName);
+        $data = $propertyAccessor->getValue($this->formValues, $propertyPath);
 
         if (!\is_array($data)) {
-            $propertyAccessor->setValue($this->formValues, $name, []);
+            $propertyAccessor->setValue($this->formValues, $propertyPath, []);
             $data = [];
         }
 
         $index = [] !== $data ? max(array_keys($data)) + 1 : 0;
-        $propertyAccessor->setValue($this->formValues, $name."[$index]", []);
+        $propertyAccessor->setValue($this->formValues, $propertyPath."[$index]", []);
     }
 
     #[LiveAction]
     public function removeCollectionItem(PropertyAccessorInterface $propertyAccessor, #[LiveArg] string $name, #[LiveArg] int $index): void
     {
-        if (str_starts_with($name, $this->formName)) {
-            $name = substr_replace($name, '', 0, mb_strlen($this->formName));
+        $propertyPath = $this->fieldNameToPropertyPath($name, $this->formName);
+        $data = $propertyAccessor->getValue($this->formValues, $propertyPath);
+        unset($data[$index]);
+        $propertyAccessor->setValue($this->formValues, $propertyPath, $data);
+    }
+
+    private function fieldNameToPropertyPath(string $collectionFieldName, string $rootFormName): string
+    {
+        $propertyPath = $collectionFieldName;
+
+        if (str_starts_with($collectionFieldName, $rootFormName)) {
+            $propertyPath = substr_replace($collectionFieldName, '', 0, mb_strlen($rootFormName));
         }
 
-        $data = $propertyAccessor->getValue($this->formValues, $name);
-        unset($data[$index]);
-        $propertyAccessor->setValue($this->formValues, $name, $data);
+        if (!str_starts_with($propertyPath, '[')) {
+            $propertyPath = "[$propertyPath]";
+        }
+
+        return $propertyPath;
     }
 }
