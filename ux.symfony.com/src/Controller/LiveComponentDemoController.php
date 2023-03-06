@@ -75,4 +75,12 @@ class LiveComponentDemoController extends AbstractController
             'food' => $foodRepository->findOneBy([]),
         ]);
     }
+
+    #[Route('/chartjs', name: 'app_live_components_demo_chartjs')]
+    public function chartJs(LiveDemoRepository $liveDemoRepository): Response
+    {
+        return $this->render('live_component_demo/chartjs.html.twig', parameters: [
+            'demo' => $liveDemoRepository->find('chartjs_updating'),
+        ]);
+    }
 }

@@ -1,0 +1,1856 @@
+[
+    {
+        "name": "aardonyx",
+        "type": "sauropod",
+        "from": "199",
+        "to": "189"
+    },
+    {
+        "name": "abelisaurus",
+        "type": "large theropod",
+        "from": "74",
+        "to": "70"
+    },
+    {
+        "name": "achelousaurus",
+        "type": "ceratopsian",
+        "from": "83",
+        "to": "70"
+    },
+    {
+        "name": "achillobator",
+        "type": "large theropod",
+        "from": "99",
+        "to": "84"
+    },
+    {
+        "name": "acrocanthosaurus",
+        "type": "large theropod",
+        "from": "115",
+        "to": "105"
+    },
+    {
+        "name": "aegyptosaurus",
+        "type": "sauropod",
+        "from": "98",
+        "to": "93"
+    },
+    {
+        "name": "afrovenator",
+        "type": "large theropod",
+        "from": "132",
+        "to": "121"
+    },
+    {
+        "name": "agilisaurus",
+        "type": "euornithopod",
+        "from": "169",
+        "to": "159"
+    },
+    {
+        "name": "alamosaurus",
+        "type": "sauropod",
+        "from": "70",
+        "to": "65"
+    },
+    {
+        "name": "albertaceratops",
+        "type": "ceratopsian",
+        "from": "80",
+        "to": "75"
+    },
+    {
+        "name": "albertosaurus",
+        "type": "large theropod",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "alectrosaurus",
+        "type": "large theropod",
+        "from": "90",
+        "to": "70"
+    },
+    {
+        "name": "alioramus",
+        "type": "large theropod",
+        "from": "71",
+        "to": "65"
+    },
+    {
+        "name": "allosaurus",
+        "type": "large theropod",
+        "from": "156",
+        "to": "144"
+    },
+    {
+        "name": "alvarezsaurus",
+        "type": "small theropod",
+        "from": "89",
+        "to": "85"
+    },
+    {
+        "name": "amargasaurus",
+        "type": "sauropod",
+        "from": "132",
+        "to": "127"
+    },
+    {
+        "name": "ammosaurus",
+        "type": "sauropod",
+        "from": "195",
+        "to": "180"
+    },
+    {
+        "name": "ampelosaurus",
+        "type": "sauropod",
+        "from": "71",
+        "to": "65"
+    },
+    {
+        "name": "amygdalodon",
+        "type": "sauropod",
+        "from": "177",
+        "to": "169"
+    },
+    {
+        "name": "anchiceratops",
+        "type": "ceratopsian",
+        "from": "74",
+        "to": "70"
+    },
+    {
+        "name": "anchisaurus",
+        "type": "sauropod",
+        "from": "190",
+        "to": 185
+    },
+    {
+        "name": "ankylosaurus",
+        "type": "armoured dinosaur",
+        "from": "74",
+        "to": "67"
+    },
+    {
+        "name": "anserimimus",
+        "type": "large theropod",
+        "from": "84",
+        "to": "65"
+    },
+    {
+        "name": "antarctosaurus",
+        "type": "sauropod",
+        "from": "84",
+        "to": "65"
+    },
+    {
+        "name": "apatosaurus",
+        "type": "sauropod",
+        "from": "154",
+        "to": "145"
+    },
+    {
+        "name": "aragosaurus",
+        "type": "sauropod",
+        "from": "132",
+        "to": "121"
+    },
+    {
+        "name": "aralosaurus",
+        "type": "euornithopod",
+        "from": "94",
+        "to": "84"
+    },
+    {
+        "name": "archaeoceratops",
+        "type": "ceratopsian",
+        "from": "121",
+        "to": "99"
+    },
+    {
+        "name": "archaeopteryx",
+        "type": "small theropod",
+        "from": "147",
+        "to": 142
+    },
+    {
+        "name": "archaeornithomimus",
+        "type": "small theropod",
+        "from": "95",
+        "to": "70"
+    },
+    {
+        "name": "argentinosaurus",
+        "type": "sauropod",
+        "from": "90",
+        "to": 85
+    },
+    {
+        "name": "arrhinoceratops",
+        "type": "ceratopsian",
+        "from": "72",
+        "to": "67"
+    },
+    {
+        "name": "atlascopcosaurus",
+        "type": "euornithopod",
+        "from": "121",
+        "to": "97"
+    },
+    {
+        "name": "aucasaurus",
+        "type": "large theropod",
+        "from": "84",
+        "to": "71"
+    },
+    {
+        "name": "austrosaurus",
+        "type": "sauropod",
+        "from": "112",
+        "to": "99"
+    },
+    {
+        "name": "avaceratops",
+        "type": "ceratopsian",
+        "from": "80",
+        "to": "75"
+    },
+    {
+        "name": "avimimus",
+        "type": "small theropod",
+        "from": "80",
+        "to": "75"
+    },
+    {
+        "name": "bactrosaurus",
+        "type": "euornithopod",
+        "from": "84",
+        "to": "71"
+    },
+    {
+        "name": "bagaceratops",
+        "type": "ceratopsian",
+        "from": "85",
+        "to": "80"
+    },
+    {
+        "name": "bambiraptor",
+        "type": "small theropod",
+        "from": "84",
+        "to": "71"
+    },
+    {
+        "name": "barapasaurus",
+        "type": "sauropod",
+        "from": "185",
+        "to": "170"
+    },
+    {
+        "name": "barosaurus",
+        "type": "sauropod",
+        "from": "155",
+        "to": "145"
+    },
+    {
+        "name": "baryonyx",
+        "type": "large theropod",
+        "from": "125",
+        "to": 120
+    },
+    {
+        "name": "becklespinax",
+        "type": "large theropod",
+        "from": "142",
+        "to": "132"
+    },
+    {
+        "name": "beipiaosaurus",
+        "type": "small theropod",
+        "from": "127",
+        "to": "121"
+    },
+    {
+        "name": "bellusaurus",
+        "type": "sauropod",
+        "from": "180",
+        "to": "159"
+    },
+    {
+        "name": "borogovia",
+        "type": "small theropod",
+        "from": "84",
+        "to": "65"
+    },
+    {
+        "name": "brachiosaurus",
+        "type": "sauropod",
+        "from": "155",
+        "to": "140"
+    },
+    {
+        "name": "brachylophosaurus",
+        "type": "euornithopod",
+        "from": "89",
+        "to": "88"
+    },
+    {
+        "name": "brachytrachelopan",
+        "type": "sauropod",
+        "from": "150",
+        "to": 145
+    },
+    {
+        "name": "buitreraptor",
+        "type": "small theropod",
+        "from": "99",
+        "to": "90"
+    },
+    {
+        "name": "camarasaurus",
+        "type": "sauropod",
+        "from": "150",
+        "to": "140"
+    },
+    {
+        "name": "camptosaurus",
+        "type": "euornithopod",
+        "from": "155",
+        "to": "145"
+    },
+    {
+        "name": "carcharodontosaurus",
+        "type": "large theropod",
+        "from": "98",
+        "to": "94"
+    },
+    {
+        "name": "carnotaurus",
+        "type": "large theropod",
+        "from": "70",
+        "to": 65
+    },
+    {
+        "name": "caudipteryx",
+        "type": "small theropod",
+        "from": "125",
+        "to": "122"
+    },
+    {
+        "name": "cedarpelta",
+        "type": "armoured dinosaur",
+        "from": "142",
+        "to": "127"
+    },
+    {
+        "name": "centrosaurus",
+        "type": "ceratopsian",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "ceratosaurus",
+        "type": "large theropod",
+        "from": "153",
+        "to": "148"
+    },
+    {
+        "name": "cetiosauriscus",
+        "type": "sauropod",
+        "from": "175",
+        "to": "160"
+    },
+    {
+        "name": "cetiosaurus",
+        "type": "sauropod",
+        "from": "170",
+        "to": "160"
+    },
+    {
+        "name": "chaoyangsaurus",
+        "type": "ceratopsian",
+        "from": "152",
+        "to": "145"
+    },
+    {
+        "name": "chasmosaurus",
+        "type": "ceratopsian",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "chindesaurus",
+        "type": "small theropod",
+        "from": "227",
+        "to": "210"
+    },
+    {
+        "name": "chinshakiangosaurus",
+        "type": "sauropod",
+        "from": "159",
+        "to": "142"
+    },
+    {
+        "name": "chirostenotes",
+        "type": "small theropod",
+        "from": "79",
+        "to": "67"
+    },
+    {
+        "name": "chubutisaurus",
+        "type": "sauropod",
+        "from": "112",
+        "to": "99"
+    },
+    {
+        "name": "chungkingosaurus",
+        "type": "armoured dinosaur",
+        "from": "159",
+        "to": "142"
+    },
+    {
+        "name": "citipati",
+        "type": "small theropod",
+        "from": "81",
+        "to": "75"
+    },
+    {
+        "name": "coelophysis",
+        "type": "small theropod",
+        "from": "225",
+        "to": "190"
+    },
+    {
+        "name": "coelurus",
+        "type": "small theropod",
+        "from": "155",
+        "to": "145"
+    },
+    {
+        "name": "coloradisaurus",
+        "type": "sauropod",
+        "from": "221",
+        "to": "210"
+    },
+    {
+        "name": "compsognathus",
+        "type": "small theropod",
+        "from": "145",
+        "to": "140"
+    },
+    {
+        "name": "conchoraptor",
+        "type": "small theropod",
+        "from": "81",
+        "to": "76"
+    },
+    {
+        "name": "confuciusornis",
+        "type": "small theropod",
+        "from": "127",
+        "to": "121"
+    },
+    {
+        "name": "corythosaurus",
+        "type": "euornithopod",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "cryolophosaurus",
+        "type": "large theropod",
+        "from": "170",
+        "to": 165
+    },
+    {
+        "name": "dacentrurus",
+        "type": "armoured dinosaur",
+        "from": "154",
+        "to": "150"
+    },
+    {
+        "name": "daspletosaurus",
+        "type": "large theropod",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "datousaurus",
+        "type": "sauropod",
+        "from": "170",
+        "to": 165
+    },
+    {
+        "name": "deinocheirus",
+        "type": "large theropod",
+        "from": "70",
+        "to": "66"
+    },
+    {
+        "name": "deinonychus",
+        "type": "small theropod",
+        "from": "120",
+        "to": "110"
+    },
+    {
+        "name": "deltadromeus",
+        "type": "large theropod",
+        "from": "99",
+        "to": "94"
+    },
+    {
+        "name": "dicraeosaurus",
+        "type": "sauropod",
+        "from": "150",
+        "to": "135"
+    },
+    {
+        "name": "dilophosaurus",
+        "type": "large theropod",
+        "from": "190",
+        "to": 185
+    },
+    {
+        "name": "diplodocus",
+        "type": "sauropod",
+        "from": "155",
+        "to": "145"
+    },
+    {
+        "name": "dromaeosaurus",
+        "type": "small theropod",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "dromiceiomimus",
+        "type": "large theropod",
+        "from": "74",
+        "to": "70"
+    },
+    {
+        "name": "dryosaurus",
+        "type": "euornithopod",
+        "from": "155",
+        "to": "140"
+    },
+    {
+        "name": "dryptosaurus",
+        "type": "large theropod",
+        "from": "84",
+        "to": "65"
+    },
+    {
+        "name": "dubreuillosaurus",
+        "type": "large theropod",
+        "from": "169",
+        "to": "164"
+    },
+    {
+        "name": "edmontonia",
+        "type": "armoured dinosaur",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "edmontosaurus",
+        "type": "euornithopod",
+        "from": "76",
+        "to": "65"
+    },
+    {
+        "name": "einiosaurus",
+        "type": "ceratopsian",
+        "from": "74",
+        "to": 69
+    },
+    {
+        "name": "elaphrosaurus",
+        "type": "large theropod",
+        "from": "154",
+        "to": "151"
+    },
+    {
+        "name": "emausaurus",
+        "type": "armoured dinosaur",
+        "from": "190",
+        "to": "180"
+    },
+    {
+        "name": "eolambia",
+        "type": "euornithopod",
+        "from": "99",
+        "to": "94"
+    },
+    {
+        "name": "eoraptor",
+        "type": "small theropod",
+        "from": "228",
+        "to": 223
+    },
+    {
+        "name": "eotyrannus",
+        "type": "large theropod",
+        "from": "127",
+        "to": "121"
+    },
+    {
+        "name": "equijubus",
+        "type": "euornithopod",
+        "from": "127",
+        "to": "99"
+    },
+    {
+        "name": "erketu",
+        "type": "sauropod",
+        "from": 145,
+        "to": 135
+    },
+    {
+        "name": "erlikosaurus",
+        "type": "small theropod",
+        "from": "99",
+        "to": "89"
+    },
+    {
+        "name": "euhelopus",
+        "type": "sauropod",
+        "from": "154",
+        "to": "142"
+    },
+    {
+        "name": "euoplocephalus",
+        "type": "armoured dinosaur",
+        "from": "76",
+        "to": "70"
+    },
+    {
+        "name": "europasaurus",
+        "type": "sauropod",
+        "from": "154",
+        "to": "151"
+    },
+    {
+        "name": "eustreptospondylus",
+        "type": "large theropod",
+        "from": "165",
+        "to": 160
+    },
+    {
+        "name": "fukuiraptor",
+        "type": "large theropod",
+        "from": "121",
+        "to": "99"
+    },
+    {
+        "name": "fukuisaurus",
+        "type": "euornithopod",
+        "from": "121",
+        "to": "99"
+    },
+    {
+        "name": "gallimimus",
+        "type": "large theropod",
+        "from": "74",
+        "to": "70"
+    },
+    {
+        "name": "gargoyleosaurus",
+        "type": "armoured dinosaur",
+        "from": "154",
+        "to": "142"
+    },
+    {
+        "name": "garudimimus",
+        "type": "large theropod",
+        "from": "99",
+        "to": "89"
+    },
+    {
+        "name": "gasosaurus",
+        "type": "small theropod",
+        "from": "170",
+        "to": "160"
+    },
+    {
+        "name": "gasparinisaura",
+        "type": "euornithopod",
+        "from": "86",
+        "to": "71"
+    },
+    {
+        "name": "gastonia",
+        "type": "armoured dinosaur",
+        "from": "142",
+        "to": "127"
+    },
+    {
+        "name": "giganotosaurus",
+        "type": "large theropod",
+        "from": "112",
+        "to": "90"
+    },
+    {
+        "name": "gilmoreosaurus",
+        "type": "euornithopod",
+        "from": "76",
+        "to": "70"
+    },
+    {
+        "name": "giraffatitan",
+        "type": "sauropod",
+        "from": "154",
+        "to": "142"
+    },
+    {
+        "name": "gobisaurus",
+        "type": "armoured dinosaur",
+        "from": "121",
+        "to": "99"
+    },
+    {
+        "name": "gorgosaurus",
+        "type": "large theropod",
+        "from": "80",
+        "to": "73"
+    },
+    {
+        "name": "goyocephale",
+        "type": "large theropod",
+        "from": "81",
+        "to": "75"
+    },
+    {
+        "name": "graciliceratops",
+        "type": "ceratopsian",
+        "from": "99",
+        "to": "84"
+    },
+    {
+        "name": "gryposaurus",
+        "type": "euornithopod",
+        "from": "86",
+        "to": "71"
+    },
+    {
+        "name": "guaibasaurus",
+        "type": "small theropod",
+        "from": "221",
+        "to": "210"
+    },
+    {
+        "name": "guanlong",
+        "type": "small theropod",
+        "from": "159",
+        "to": "154"
+    },
+    {
+        "name": "hadrosaurus",
+        "type": "euornithopod",
+        "from": "78",
+        "to": "74"
+    },
+    {
+        "name": "hagryphus",
+        "type": "small theropod",
+        "from": "76",
+        "to": 71
+    },
+    {
+        "name": "haplocanthosaurus",
+        "type": "sauropod",
+        "from": "154",
+        "to": "142"
+    },
+    {
+        "name": "harpymimus",
+        "type": "small theropod",
+        "from": "121",
+        "to": "99"
+    },
+    {
+        "name": "herrerasaurus",
+        "type": "small theropod",
+        "from": "228",
+        "to": 223
+    },
+    {
+        "name": "hesperosaurus",
+        "type": "armoured dinosaur",
+        "from": "154",
+        "to": "142"
+    },
+    {
+        "name": "heterodontosaurus",
+        "type": "euornithopod",
+        "from": "205",
+        "to": 200
+    },
+    {
+        "name": "heyuannia",
+        "type": "small theropod",
+        "from": "72",
+        "to": "68"
+    },
+    {
+        "name": "homalocephale",
+        "type": "euornithopod",
+        "from": "72",
+        "to": "68"
+    },
+    {
+        "name": "huayangosaurus",
+        "type": "armoured dinosaur",
+        "from": "170",
+        "to": "160"
+    },
+    {
+        "name": "hylaeosaurus",
+        "type": "armoured dinosaur",
+        "from": "150",
+        "to": "135"
+    },
+    {
+        "name": "hypacrosaurus",
+        "type": "euornithopod",
+        "from": "70",
+        "to": 65
+    },
+    {
+        "name": "hypsilophodon",
+        "type": "euornithopod",
+        "from": "125",
+        "to": 120
+    },
+    {
+        "name": "iguanodon",
+        "type": "euornithopod",
+        "from": "140",
+        "to": "110"
+    },
+    {
+        "name": "indosuchus",
+        "type": "large theropod",
+        "from": "71",
+        "to": "65"
+    },
+    {
+        "name": "irritator",
+        "type": "large theropod",
+        "from": "112",
+        "to": "99"
+    },
+    {
+        "name": "isisaurus",
+        "type": "sauropod",
+        "from": "71",
+        "to": "65"
+    },
+    {
+        "name": "janenschia",
+        "type": "sauropod",
+        "from": "154",
+        "to": "151"
+    },
+    {
+        "name": "jaxartosaurus",
+        "type": "euornithopod",
+        "from": "94",
+        "to": "84"
+    },
+    {
+        "name": "jingshanosaurus",
+        "type": "sauropod",
+        "from": "205",
+        "to": "190"
+    },
+    {
+        "name": "jinzhousaurus",
+        "type": "euornithopod",
+        "from": "127",
+        "to": "121"
+    },
+    {
+        "name": "jobaria",
+        "type": "sauropod",
+        "from": "132",
+        "to": "94"
+    },
+    {
+        "name": "juravenator",
+        "type": "small theropod",
+        "from": "154",
+        "to": "151"
+    },
+    {
+        "name": "kentrosaurus",
+        "type": "armoured dinosaur",
+        "from": "155",
+        "to": "150"
+    },
+    {
+        "name": "khaan",
+        "type": "small theropod",
+        "from": "81",
+        "to": "75"
+    },
+    {
+        "name": "kotasaurus",
+        "type": "sauropod",
+        "from": "205",
+        "to": "180"
+    },
+    {
+        "name": "kritosaurus",
+        "type": "euornithopod",
+        "from": "78",
+        "to": "74"
+    },
+    {
+        "name": "lambeosaurus",
+        "type": "euornithopod",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "lapparentosaurus",
+        "type": "sauropod",
+        "from": "169",
+        "to": "164"
+    },
+    {
+        "name": "leaellynasaura",
+        "type": "euornithopod",
+        "from": "115",
+        "to": "110"
+    },
+    {
+        "name": "leptoceratops",
+        "type": "ceratopsian",
+        "from": "67",
+        "to": "65"
+    },
+    {
+        "name": "lesothosaurus",
+        "type": "euornithopod",
+        "from": "213",
+        "to": "200"
+    },
+    {
+        "name": "liaoceratops",
+        "type": "ceratopsian",
+        "from": "127",
+        "to": "121"
+    },
+    {
+        "name": "ligabuesaurus",
+        "type": "sauropod",
+        "from": "121",
+        "to": "99"
+    },
+    {
+        "name": "liliensternus",
+        "type": "small theropod",
+        "from": "205",
+        "to": "202"
+    },
+    {
+        "name": "lophorhothon",
+        "type": "euornithopod",
+        "from": "84",
+        "to": "71"
+    },
+    {
+        "name": "lophostropheus",
+        "type": "large theropod",
+        "from": "203",
+        "to": "196"
+    },
+    {
+        "name": "lufengosaurus",
+        "type": "sauropod",
+        "from": "200",
+        "to": "195"
+    },
+    {
+        "name": "lurdusaurus",
+        "type": "euornithopod",
+        "from": "121",
+        "to": "112"
+    },
+    {
+        "name": "lycorhinus",
+        "type": "euornithopod",
+        "from": "205",
+        "to": "195"
+    },
+    {
+        "name": "magyarosaurus",
+        "type": "sauropod",
+        "from": "71",
+        "to": "65"
+    },
+    {
+        "name": "maiasaura",
+        "type": "euornithopod",
+        "from": "80",
+        "to": "75"
+    },
+    {
+        "name": "majungasaurus",
+        "type": "large theropod",
+        "from": "84",
+        "to": "71"
+    },
+    {
+        "name": "malawisaurus",
+        "type": "sauropod",
+        "from": "121",
+        "to": "112"
+    },
+    {
+        "name": "mamenchisaurus",
+        "type": "sauropod",
+        "from": "155",
+        "to": "145"
+    },
+    {
+        "name": "mapusaurus",
+        "type": "large theropod",
+        "from": "99",
+        "to": "94"
+    },
+    {
+        "name": "marshosaurus",
+        "type": "large theropod",
+        "from": "154",
+        "to": "142"
+    },
+    {
+        "name": "masiakasaurus",
+        "type": "small theropod",
+        "from": "84",
+        "to": "71"
+    },
+    {
+        "name": "massospondylus",
+        "type": "sauropod",
+        "from": "208",
+        "to": "204"
+    },
+    {
+        "name": "maxakalisaurus",
+        "type": "sauropod",
+        "from": "80",
+        "to": 75
+    },
+    {
+        "name": "megalosaurus",
+        "type": "large theropod",
+        "from": "170",
+        "to": "155"
+    },
+    {
+        "name": "melanorosaurus",
+        "type": "sauropod",
+        "from": "227",
+        "to": "221"
+    },
+    {
+        "name": "metriacanthosaurus",
+        "type": "large theropod",
+        "from": "159",
+        "to": "154"
+    },
+    {
+        "name": "microceratus",
+        "type": "ceratopsian",
+        "from": "86",
+        "to": "66"
+    },
+    {
+        "name": "micropachycephalosaurus",
+        "type": "ceratopsian",
+        "from": "84",
+        "to": "71"
+    },
+    {
+        "name": "microraptor",
+        "type": "small theropod",
+        "from": "125",
+        "to": "122"
+    },
+    {
+        "name": "minmi",
+        "type": "armoured dinosaur",
+        "from": "121",
+        "to": "112"
+    },
+    {
+        "name": "monolophosaurus",
+        "type": "large theropod",
+        "from": "180",
+        "to": "159"
+    },
+    {
+        "name": "mononykus",
+        "type": "small theropod",
+        "from": "81",
+        "to": "68"
+    },
+    {
+        "name": "mussaurus",
+        "type": "sauropod",
+        "from": "221",
+        "to": "210"
+    },
+    {
+        "name": "muttaburrasaurus",
+        "type": "euornithopod",
+        "from": "110",
+        "to": "100"
+    },
+    {
+        "name": "nanshiungosaurus",
+        "type": "large theropod",
+        "from": "84",
+        "to": "71"
+    },
+    {
+        "name": "nedoceratops",
+        "type": "ceratopsian",
+        "from": "67",
+        "to": "65"
+    },
+    {
+        "name": "nemegtosaurus",
+        "type": "sauropod",
+        "from": "72",
+        "to": "68"
+    },
+    {
+        "name": "neovenator",
+        "type": "large theropod",
+        "from": "127",
+        "to": "121"
+    },
+    {
+        "name": "neuquenosaurus",
+        "type": "sauropod",
+        "from": "71",
+        "to": "65"
+    },
+    {
+        "name": "nigersaurus",
+        "type": "sauropod",
+        "from": "121",
+        "to": "99"
+    },
+    {
+        "name": "nipponosaurus",
+        "type": "euornithopod",
+        "from": "89",
+        "to": "84"
+    },
+    {
+        "name": "noasaurus",
+        "type": "small theropod",
+        "from": "84",
+        "to": "65"
+    },
+    {
+        "name": "nodosaurus",
+        "type": "armoured dinosaur",
+        "from": "110",
+        "to": "100"
+    },
+    {
+        "name": "nomingia",
+        "type": "small theropod",
+        "from": "72",
+        "to": "68"
+    },
+    {
+        "name": "nothronychus",
+        "type": "large theropod",
+        "from": "94",
+        "to": "89"
+    },
+    {
+        "name": "nqwebasaurus",
+        "type": "small theropod",
+        "from": "159",
+        "to": "132"
+    },
+    {
+        "name": "omeisaurus",
+        "type": "sauropod",
+        "from": "169",
+        "to": "159"
+    },
+    {
+        "name": "opisthocoelicaudia",
+        "type": "sauropod",
+        "from": "72",
+        "to": "68"
+    },
+    {
+        "name": "ornitholestes",
+        "type": "small theropod",
+        "from": "150",
+        "to": "144"
+    },
+    {
+        "name": "ornithomimus",
+        "type": "large theropod",
+        "from": "74",
+        "to": "65"
+    },
+    {
+        "name": "orodromeus",
+        "type": "euornithopod",
+        "from": "74",
+        "to": 69
+    },
+    {
+        "name": "oryctodromeus",
+        "type": "euornithopod",
+        "from": "99",
+        "to": "94"
+    },
+    {
+        "name": "othnielia",
+        "type": "euornithopod",
+        "from": "154",
+        "to": "142"
+    },
+    {
+        "name": "ouranosaurus",
+        "type": "euornithopod",
+        "from": "115",
+        "to": "100"
+    },
+    {
+        "name": "oviraptor",
+        "type": "small theropod",
+        "from": "85",
+        "to": "75"
+    },
+    {
+        "name": "pachycephalosaurus",
+        "type": "euornithopod",
+        "from": "76",
+        "to": "65"
+    },
+    {
+        "name": "pachyrhinosaurus",
+        "type": "ceratopsian",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "panoplosaurus",
+        "type": "armoured dinosaur",
+        "from": "79",
+        "to": "75"
+    },
+    {
+        "name": "pantydraco",
+        "type": "euornithopod",
+        "from": 199,
+        "to": 189
+    },
+    {
+        "name": "paralititan",
+        "type": "sauropod",
+        "from": "99",
+        "to": "94"
+    },
+    {
+        "name": "parasaurolophus",
+        "type": "euornithopod",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "parksosaurus",
+        "type": "euornithopod",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "patagosaurus",
+        "type": "sauropod",
+        "from": "164",
+        "to": "159"
+    },
+    {
+        "name": "pelicanimimus",
+        "type": "small theropod",
+        "from": "127",
+        "to": "121"
+    },
+    {
+        "name": "pelorosaurus",
+        "type": "sauropod",
+        "from": "125",
+        "to": 120
+    },
+    {
+        "name": "pentaceratops",
+        "type": "ceratopsian",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "piatnitzkysaurus",
+        "type": "large theropod",
+        "from": "164",
+        "to": "159"
+    },
+    {
+        "name": "pinacosaurus",
+        "type": "armoured dinosaur",
+        "from": "81",
+        "to": "75"
+    },
+    {
+        "name": "plateosaurus",
+        "type": "sauropod",
+        "from": "210",
+        "to": 205
+    },
+    {
+        "name": "podokesaurus",
+        "type": "small theropod",
+        "from": "195",
+        "to": "180"
+    },
+    {
+        "name": "poekilopleuron",
+        "type": "large theropod",
+        "from": "169",
+        "to": "164"
+    },
+    {
+        "name": "polacanthus",
+        "type": "armoured dinosaur",
+        "from": "125",
+        "to": 120
+    },
+    {
+        "name": "prenocephale",
+        "type": "euornithopod",
+        "from": "80",
+        "to": "65"
+    },
+    {
+        "name": "probactrosaurus",
+        "type": "euornithopod",
+        "from": "121",
+        "to": "99"
+    },
+    {
+        "name": "proceratosaurus",
+        "type": "small theropod",
+        "from": "169",
+        "to": "164"
+    },
+    {
+        "name": "procompsognathus",
+        "type": "small theropod",
+        "from": "221",
+        "to": "210"
+    },
+    {
+        "name": "prosaurolophus",
+        "type": "euornithopod",
+        "from": "77",
+        "to": "75"
+    },
+    {
+        "name": "protarchaeopteryx",
+        "type": "small theropod",
+        "from": "122",
+        "to": "120"
+    },
+    {
+        "name": "protoceratops",
+        "type": "ceratopsian",
+        "from": "74",
+        "to": "70"
+    },
+    {
+        "name": "protohadros",
+        "type": "euornithopod",
+        "from": "99",
+        "to": "94"
+    },
+    {
+        "name": "psittacosaurus",
+        "type": "ceratopsian",
+        "from": "120",
+        "to": "100"
+    },
+    {
+        "name": "quaesitosaurus",
+        "type": "sauropod",
+        "from": "86",
+        "to": "84"
+    },
+    {
+        "name": "rebbachisaurus",
+        "type": "sauropod",
+        "from": "112",
+        "to": "99"
+    },
+    {
+        "name": "rhabdodon",
+        "type": "euornithopod",
+        "from": "76",
+        "to": "70"
+    },
+    {
+        "name": "rhoetosaurus",
+        "type": "sauropod",
+        "from": "177",
+        "to": "169"
+    },
+    {
+        "name": "rinchenia",
+        "type": "small theropod",
+        "from": "72",
+        "to": "68"
+    },
+    {
+        "name": "riojasaurus",
+        "type": "sauropod",
+        "from": "221",
+        "to": "210"
+    },
+    {
+        "name": "rugops",
+        "type": "large theropod",
+        "from": "95",
+        "to": 90
+    },
+    {
+        "name": "saichania",
+        "type": "armoured dinosaur",
+        "from": "80",
+        "to": 75
+    },
+    {
+        "name": "saltasaurus",
+        "type": "sauropod",
+        "from": "70",
+        "to": "65"
+    },
+    {
+        "name": "saltopus",
+        "type": "small theropod",
+        "from": "221",
+        "to": "210"
+    },
+    {
+        "name": "sarcosaurus",
+        "type": "small theropod",
+        "from": "202",
+        "to": "195"
+    },
+    {
+        "name": "saurolophus",
+        "type": "euornithopod",
+        "from": "74",
+        "to": "70"
+    },
+    {
+        "name": "sauropelta",
+        "type": "armoured dinosaur",
+        "from": "121",
+        "to": "94"
+    },
+    {
+        "name": "saurophaganax",
+        "type": "large theropod",
+        "from": "154",
+        "to": "142"
+    },
+    {
+        "name": "saurornithoides",
+        "type": "small theropod",
+        "from": "85",
+        "to": "80"
+    },
+    {
+        "name": "scelidosaurus",
+        "type": "armoured dinosaur",
+        "from": "208",
+        "to": "194"
+    },
+    {
+        "name": "scutellosaurus",
+        "type": "armoured dinosaur",
+        "from": "205",
+        "to": "202"
+    },
+    {
+        "name": "secernosaurus",
+        "type": "euornithopod",
+        "from": "71",
+        "to": "65"
+    },
+    {
+        "name": "segisaurus",
+        "type": "small theropod",
+        "from": "195",
+        "to": "180"
+    },
+    {
+        "name": "segnosaurus",
+        "type": "large theropod",
+        "from": "97",
+        "to": "88"
+    },
+    {
+        "name": "shamosaurus",
+        "type": "armoured dinosaur",
+        "from": "121",
+        "to": "99"
+    },
+    {
+        "name": "shanag",
+        "type": "small theropod",
+        "from": "126",
+        "to": "142"
+    },
+    {
+        "name": "shantungosaurus",
+        "type": "euornithopod",
+        "from": "78",
+        "to": "74"
+    },
+    {
+        "name": "shunosaurus",
+        "type": "sauropod",
+        "from": "170",
+        "to": "160"
+    },
+    {
+        "name": "shuvuuia",
+        "type": "small theropod",
+        "from": "75",
+        "to": "81"
+    },
+    {
+        "name": "silvisaurus",
+        "type": "armoured dinosaur",
+        "from": "121",
+        "to": "112"
+    },
+    {
+        "name": "sinocalliopteryx",
+        "type": "small theropod",
+        "from": "125",
+        "to": 120
+    },
+    {
+        "name": "sinornithosaurus",
+        "type": "small theropod",
+        "from": "122",
+        "to": "120"
+    },
+    {
+        "name": "sinosauropteryx",
+        "type": "small theropod",
+        "from": "122",
+        "to": "120"
+    },
+    {
+        "name": "sinovenator",
+        "type": "small theropod",
+        "from": "127",
+        "to": "121"
+    },
+    {
+        "name": "sinraptor",
+        "type": "large theropod",
+        "from": "169",
+        "to": "142"
+    },
+    {
+        "name": "sonidosaurus",
+        "type": "sauropod",
+        "from": "89",
+        "to": "65"
+    },
+    {
+        "name": "spinosaurus",
+        "type": "large theropod",
+        "from": "95",
+        "to": "70"
+    },
+    {
+        "name": "staurikosaurus",
+        "type": "large theropod",
+        "from": "227",
+        "to": "221"
+    },
+    {
+        "name": "stegoceras",
+        "type": "euornithopod",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "stegosaurus",
+        "type": "armoured dinosaur",
+        "from": "155",
+        "to": "145"
+    },
+    {
+        "name": "stenopelix",
+        "type": "ceratopsian",
+        "from": "127",
+        "to": "121"
+    },
+    {
+        "name": "struthiomimus",
+        "type": "small theropod",
+        "from": "76",
+        "to": "74"
+    },
+    {
+        "name": "struthiosaurus",
+        "type": "armoured dinosaur",
+        "from": "83",
+        "to": "75"
+    },
+    {
+        "name": "styracosaurus",
+        "type": "ceratopsian",
+        "from": "76",
+        "to": "70"
+    },
+    {
+        "name": "suchomimus",
+        "type": "large theropod",
+        "from": "121",
+        "to": "112"
+    },
+    {
+        "name": "supersaurus",
+        "type": "sauropod",
+        "from": "154",
+        "to": "142"
+    },
+    {
+        "name": "talarurus",
+        "type": "armoured dinosaur",
+        "from": "99",
+        "to": "89"
+    },
+    {
+        "name": "tanius",
+        "type": "euornithopod",
+        "from": "89",
+        "to": "65"
+    },
+    {
+        "name": "tarbosaurus",
+        "type": "large theropod",
+        "from": "74",
+        "to": "70"
+    },
+    {
+        "name": "tarchia",
+        "type": "armoured dinosaur",
+        "from": "75",
+        "to": "68"
+    },
+    {
+        "name": "telmatosaurus",
+        "type": "euornithopod",
+        "from": "84",
+        "to": "65"
+    },
+    {
+        "name": "tenontosaurus",
+        "type": "euornithopod",
+        "from": "120",
+        "to": "110"
+    },
+    {
+        "name": "thecodontosaurus",
+        "type": "sauropod",
+        "from": "227",
+        "to": "205"
+    },
+    {
+        "name": "therizinosaurus",
+        "type": "large theropod",
+        "from": "85",
+        "to": "70"
+    },
+    {
+        "name": "thescelosaurus",
+        "type": "euornithopod",
+        "from": "76",
+        "to": "67"
+    },
+    {
+        "name": "torosaurus",
+        "type": "ceratopsian",
+        "from": "70",
+        "to": "65"
+    },
+    {
+        "name": "torvosaurus",
+        "type": "large theropod",
+        "from": "155",
+        "to": "144"
+    },
+    {
+        "name": "triceratops",
+        "type": "ceratopsian",
+        "from": "68",
+        "to": "66"
+    },
+    {
+        "name": "troodon",
+        "type": "small theropod",
+        "from": "74",
+        "to": "65"
+    },
+    {
+        "name": "tsagantegia",
+        "type": "armoured dinosaur",
+        "from": "99",
+        "to": "84"
+    },
+    {
+        "name": "tsintaosaurus",
+        "type": "euornithopod",
+        "from": "84",
+        "to": "71"
+    },
+    {
+        "name": "tuojiangosaurus",
+        "type": "armoured dinosaur",
+        "from": "157",
+        "to": "154"
+    },
+    {
+        "name": "tylocephale",
+        "type": "euornithopod",
+        "from": "75",
+        "to": "72"
+    },
+    {
+        "name": "tyrannosaurus",
+        "type": "large theropod",
+        "from": "68",
+        "to": "66"
+    },
+    {
+        "name": "udanoceratops",
+        "type": "ceratopsian",
+        "from": "81",
+        "to": "75"
+    },
+    {
+        "name": "unenlagia",
+        "type": "small theropod",
+        "from": "94",
+        "to": "86"
+    },
+    {
+        "name": "urbacodon",
+        "type": "small theropod",
+        "from": "95",
+        "to": 90
+    },
+    {
+        "name": "utahraptor",
+        "type": "large theropod",
+        "from": "112",
+        "to": "100"
+    },
+    {
+        "name": "valdosaurus",
+        "type": "euornithopod",
+        "from": "142",
+        "to": "121"
+    },
+    {
+        "name": "velociraptor",
+        "type": "small theropod",
+        "from": "74",
+        "to": "70"
+    },
+    {
+        "name": "vulcanodon",
+        "type": "sauropod",
+        "from": "205",
+        "to": "202"
+    },
+    {
+        "name": "yandusaurus",
+        "type": "euornithopod",
+        "from": "169",
+        "to": "159"
+    },
+    {
+        "name": "yangchuanosaurus",
+        "type": "large theropod",
+        "from": "160",
+        "to": "144"
+    },
+    {
+        "name": "yimenosaurus",
+        "type": "sauropod",
+        "from": "195",
+        "to": "190"
+    },
+    {
+        "name": "yingshanosaurus",
+        "type": "armoured dinosaur",
+        "from": "159",
+        "to": "142"
+    },
+    {
+        "name": "yinlong",
+        "type": "ceratopsian",
+        "from": "159",
+        "to": "154"
+    },
+    {
+        "name": "yuanmousaurus",
+        "type": "sauropod",
+        "from": "180",
+        "to": "159"
+    },
+    {
+        "name": "yunnanosaurus",
+        "type": "sauropod",
+        "from": "205",
+        "to": "190"
+    },
+    {
+        "name": "zalmoxes",
+        "type": "euornithopod",
+        "from": "69",
+        "to": 64
+    },
+    {
+        "name": "zephyrosaurus",
+        "type": "euornithopod",
+        "from": "120",
+        "to": "110"
+    },
+    {
+        "name": "zuniceratops",
+        "type": "ceratopsian",
+        "from": "94",
+        "to": "89"
+    }
+]

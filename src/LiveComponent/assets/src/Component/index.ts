@@ -1,17 +1,16 @@
-import {BackendAction, BackendInterface} from '../Backend/Backend';
+import { BackendAction, BackendInterface } from '../Backend/Backend';
 import ValueStore from './ValueStore';
 import { normalizeModelName } from '../string_utils';
 import BackendRequest from '../Backend/BackendRequest';
-import {
-    getValueFromElement, htmlToElement,
-} from '../dom_utils';
-import {executeMorphdom} from '../morphdom';
+import { elementBelongsToThisComponent, getValueFromElement, htmlToElement } from '../dom_utils';
+import { executeMorphdom } from '../morphdom';
 import UnsyncedInputsTracker from './UnsyncedInputsTracker';
 import { ElementDriver } from './ElementDriver';
 import HookManager from '../HookManager';
 import { PluginInterface } from './plugins/PluginInterface';
 import BackendResponse from '../Backend/BackendResponse';
 import { ModelBinding } from '../Directive/get_model_binding';
+import ExternalMutationTracker from '../Rendering/ExternalMutationTracker';
 
 declare const Turbo: any;
 
@@ -60,6 +59,8 @@ export default class Component {
     private children: Map<string, ChildComponentWrapper> = new Map();
     private parent: Component|null = null;
 
+    private externalMutationTracker: ExternalMutationTracker;
+
     /**
      * @param element The root element
      * @param props   Readonly component props
@@ -81,6 +82,14 @@ export default class Component {
         this.hooks = new HookManager();
         this.resetPromise();
 
+        this.externalMutationTracker = new ExternalMutationTracker(
+            this.element,
+            (element: Element) => elementBelongsToThisComponent(element, this)
+        );
+        // start early to catch any mutations that happen before the component is connected
+        // for example, the LoadingPlugin, which sets initial non-loading state
+        this.externalMutationTracker.start();
+
         this.onChildComponentModelUpdate = this.onChildComponentModelUpdate.bind(this);
     }
 
@@ -98,12 +107,14 @@ export default class Component {
     connect(): void {
         this.hooks.triggerHook('connect', this);
         this.unsyncedInputsTracker.activate();
+        this.externalMutationTracker.start();
     }
 
     disconnect(): void {
         this.hooks.triggerHook('disconnect', this);
         this.clearRequestDebounceTimeout();
         this.unsyncedInputsTracker.deactivate();
+        this.externalMutationTracker.stop();
     }
 
     /**
@@ -375,7 +386,7 @@ export default class Component {
             modifiedModelValues[modelName] = this.valueStore.get(modelName);
         });
 
-        let newElement;
+        let newElement: HTMLElement;
         try {
             newElement = htmlToElement(html);
 
@@ -387,12 +398,13 @@ export default class Component {
 
             throw error;
         }
-        // normalize new element into non-loading state before diff
-        this.hooks.triggerHook('loading.state:finished', newElement);
 
         const { props: newProps, nestedProps: newNestedProps } = this.elementDriver.getComponentProps(newElement);
         this.valueStore.reinitializeAllProps(newProps, newNestedProps);
 
+        // make sure we've processed all external changes before morphing
+        this.externalMutationTracker.handlePendingChanges();
+        this.externalMutationTracker.stop();
         executeMorphdom(
             this.element,
             newElement,
@@ -400,8 +412,10 @@ export default class Component {
             (element: HTMLElement) => getValueFromElement(element, this.valueStore),
             Array.from(this.getChildren().values()),
             this.elementDriver.findChildComponentElement,
-            this.elementDriver.getKeyFromElement
+            this.elementDriver.getKeyFromElement,
+            this.externalMutationTracker
         );
+        this.externalMutationTracker.start();
 
         // reset the modified values back to their client-side version
         Object.keys(modifiedModelValues).forEach((modelName) => {
@@ -510,6 +524,7 @@ export default class Component {
             this.nextRequestPromiseResolve = resolve;
         });
     }
+
 }
 
 /**

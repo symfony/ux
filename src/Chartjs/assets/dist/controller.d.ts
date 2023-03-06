@@ -4,6 +4,8 @@ export default class extends Controller {
     static values: {
         view: ObjectConstructor;
     };
+    private chart;
     connect(): void;
+    viewValueChanged(): void;
     private dispatchEvent;
 }

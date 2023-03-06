@@ -42,6 +42,12 @@ class LiveDemoRepository
                 description: 'Activate an inline editing form with validation.',
                 route: 'app_live_components_demo_inline_edit',
             ),
+            new LiveDemo(
+                'chartjs_updating',
+                name: 'Auto-Updating Chart',
+                description: 'Render & Update a Chart.js chart in real-time.',
+                route: 'app_live_components_demo_chartjs',
+            ),
         ];
     }
 

@@ -19,6 +19,8 @@ export default class extends Controller {
         view: Object,
     };
 
+    private chart: Chart | null = null;
+
     connect() {
         if (!(this.element instanceof HTMLCanvasElement)) {
             throw new Error('Invalid element');
@@ -35,9 +37,32 @@ export default class extends Controller {
         if (!canvasContext) {
             throw new Error('Could not getContext() from Element');
         }
-        const chart = new Chart(canvasContext, payload);
+        this.chart = new Chart(canvasContext, payload);
 
-        this.dispatchEvent('connect', { chart });
+        this.dispatchEvent('connect', { chart: this.chart });
+    }
+
+    /**
+     * If the underlying data or options change, let's update the chart!
+     */
+    viewValueChanged(): void {
+        if (this.chart) {
+            this.chart.data = this.viewValue.data;
+            this.chart.options = this.viewValue.options;
+            this.chart.update();
+
+            // Updating the chart seems to sometimes result in a chart that is
+            // much smaller than the canvas size. Resizing the parent element
+            // triggers a mechanism in Chart.js that fixes the size.
+            const parentElement = this.element.parentElement;
+            if (parentElement && this.chart.options.responsive) {
+                const originalWidth = parentElement.style.width;
+                parentElement.style.width = parentElement.offsetWidth + 1 + 'px';
+                setTimeout(() => {
+                    parentElement.style.width = originalWidth;
+                }, 0);
+            }
+        }
     }
 
     private dispatchEvent(name: string, payload: any) {
