@@ -1,0 +1,79 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2023-03-03T11:37:27Z
+
+As this affects hydration, I have a small proposition: add `dehydrationContext` to `AsLiveComponent` attribute which would be passed down to `serializer->denormalize` context.
+
+Use case:
+I have a root DTO for a form type and I declare on the DTO properties with docblock type hints and validation constraints, but without strict typing to avoid errors.
+
+So now the result is that my initial DTO does not hold any data because it must be filled, and if I change a single field then the dehydration fails because the initial values are `null` and serializer gets from the property info that the value must be a string for example. (I know that I could initialize them as empty strings, so the type would match, but I can't initialize the prop if it expects an entity from an EntityType because it's not loaded at that time)
+
+So my expectations that the form validation would handle that the value is not a string or an empty string, etc. and at the end I'd have a valid DTO which I could use.
+
+Currently my workaround is to create a custom denormalizer and pass down `AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true` but that's not a friendly solution :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-03-03T19:50:24Z
+
+I'm not sure specifically about your use-case... Regardless, you're 100% correct about needing a way to pass in the context for the serializer.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-03-04T16:28:23Z
+
+(de)normalization context added - usage for your situation
+
+```php
+#[LiveProp(
+    denormalizationContext: [ObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true]
+)]
+public YourDto $yourDto;
+```
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-03-04T17:17:50Z
+
+What do you think about reusing the context attribute from serializer?
+
+```php
+#[LiveProp]
+#[Context([ObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true])]
+public YourDto $yourDto;
+```
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-03-04T17:54:51Z
+
+> What do you think about reusing the context attribute from serializer?
+>
+> ```php
+> #[LiveProp]
+> #[Context([ObjectNormalizer::DISABLE_TYPE_ENFORCEMENT => true])]
+> public YourDto $yourDto;
+> ```
+
+Same thing to complete same task, I'd agree nevertheless ☺️
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-03-04T17:58:07Z
+
+After I wrote that I was thinking that a property on LiveProp would be more "discoverable"
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-03-06T14:01:47Z
+
+I don't think discoverability is very important as this is more of an edge-case feature. So I agree with using `#[Context]`. Btw, that feature (other than the "New in Symfony 5.3") looks undocumented - someone should fix that ;)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-03-06T21:20:56Z
+
+Updated to use `#[Context]`.
+
+Note: while we use the serialization system, we only read the "context": we're not reading and using other options like "maxDepth", etc. Also, if you have `#[Context]` on a live prop, then that context is used to (de)normalize any writable paths. For example, if the `LiveProp` is a `Post` object and it has a writable path that is a `Category` object, we don't also look on *that* property to see if IT also has a `Context`. I want to avoid getting in the weeds with complex serialization edge-cases. And, so far, other thank @norkunas' use-case, nobody has even asked for control over the serialization context yet. So giving some basic control, I think, is enough.
