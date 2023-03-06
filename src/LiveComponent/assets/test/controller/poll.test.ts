@@ -26,19 +26,15 @@ describe('LiveController polling Tests', () => {
         `);
 
         // poll 1
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 data.renderCount = 1;
-            })
-            .init();
+            });
         // poll 2
-        test.expectsAjaxCall('get')
-            .expectSentData({renderCount: 1})
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 data.renderCount = 2;
-            })
-            .init();
+            });
 
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'), {
             timeout: 2100
@@ -56,19 +52,15 @@ describe('LiveController polling Tests', () => {
         `);
 
         // poll 1
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 data.renderCount = 1;
-            })
-            .init();
+            });
         // poll 2
-        test.expectsAjaxCall('get')
-            .expectSentData({renderCount: 1})
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 data.renderCount = 2;
-            })
-            .init();
+            });
 
         // only wait for about 500ms this time
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'), {
@@ -87,21 +79,17 @@ describe('LiveController polling Tests', () => {
         `);
 
         // poll 1
-        test.expectsAjaxCall('post')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             .expectActionCalled('saveAction')
-            .serverWillChangeData((data: any) => {
+            .serverWillChangeProps((data: any) => {
                 data.renderCount = 1;
-            })
-            .init();
+            });
         // poll 2
-        test.expectsAjaxCall('post')
-            .expectSentData({renderCount: 1})
+        test.expectsAjaxCall()
             .expectActionCalled('saveAction')
-            .serverWillChangeData((data: any) => {
+            .serverWillChangeProps((data: any) => {
                 data.renderCount = 2;
-            })
-            .init();
+            });
 
         // only wait for about 500ms this time
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'), {
@@ -120,20 +108,16 @@ describe('LiveController polling Tests', () => {
         `);
 
         // poll 1
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 data.renderCount = 1;
-            })
-            .init();
+            });
         // poll 2
-        test.expectsAjaxCall('get')
-            .expectSentData({keepPolling: true, renderCount: 1})
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 data.renderCount = 2;
                 data.keepPolling = false;
-            })
-            .init();
+            });
 
         // only wait for about 500ms this time
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'), {
@@ -161,12 +145,10 @@ describe('LiveController polling Tests', () => {
        `);
 
        // poll 1
-       test.expectsAjaxCall('get')
-           .expectSentData(test.initialData)
-           .serverWillChangeData((data: any) => {
+       test.expectsAjaxCall()
+           .serverWillChangeProps((data: any) => {
                data.renderCount = 1;
-           })
-           .init();
+           });
 
        // only wait for about 500ms this time
        await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'), {
@@ -199,24 +181,21 @@ describe('LiveController polling Tests', () => {
         `);
 
         // First request, from typing (debouncing is set to 1ms)
-        test.expectsAjaxCall('get')
-            .expectSentData({ renderCount: 0, name: 'Ryan Weaver'})
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .expectUpdatedData({ name: 'Ryan Weaver'})
+            .serverWillChangeProps((data: any) => {
                 data.renderCount = 1;
             })
-            .delayResponse(100)
-            .init();
+            .delayResponse(100);
 
         await userEvent.type(test.queryByDataModel('name'), ' Weaver');
 
         setTimeout(() => {
             // first poll, should happen after 50 ms, but needs to wait the full 100
-            test.expectsAjaxCall('get')
-                .expectSentData({renderCount: 1, name: 'Ryan Weaver'})
-                .serverWillChangeData((data: any) => {
+            test.expectsAjaxCall()
+                .serverWillChangeProps((data: any) => {
                     data.renderCount = 2;
-                })
-                .init();
+                });
         }, 75)
 
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'));

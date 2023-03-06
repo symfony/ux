@@ -41,7 +41,7 @@ final class LiveComponentRuntime
             $mounted->getAttributes(),
             $this->metadataFactory->getMetadata($mounted->getName())
         );
-        $params = ['_live_component' => $name] + ['data' => json_encode($props)];
+        $params = ['_live_component' => $name] + ['props' => json_encode($props)];
 
         $metadata = $this->factory->metadataFor($mounted->getName());
 

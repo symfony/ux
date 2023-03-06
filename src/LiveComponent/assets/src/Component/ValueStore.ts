@@ -1,11 +1,26 @@
-import { getDeepData, setDeepData } from '../data_manipulation_utils';
+import { getDeepData } from '../data_manipulation_utils';
 import { normalizeModelName } from '../string_utils';
 
 export default class {
     private readonly identifierKey = '@id';
 
-    updatedModels: string[] = [];
+    /**
+     * The original props passed to the component.
+     *
+     * @private
+     */
     private props: any = {};
+
+    /**
+     * A list of props that have been "dirty" (changed) since the last request to the server.
+     */
+    private dirtyProps: {[key: string]: any} = {};
+
+    /**
+     * A list of dirty props that were sent to the server, but the response has
+     * not yet been received.
+     */
+    private pendingProps: {[key: string]: any} = {};
 
     constructor(props: any) {
         this.props = props;
@@ -20,6 +35,14 @@ export default class {
      */
     get(name: string): any {
         const normalizedName = normalizeModelName(name);
+
+        if (this.dirtyProps[normalizedName] !== undefined) {
+            return this.dirtyProps[normalizedName];
+        }
+
+        if (this.pendingProps[normalizedName] !== undefined) {
+            return this.pendingProps[normalizedName];
+        }
 
         const value = getDeepData(this.props, normalizedName);
 
@@ -48,41 +71,52 @@ export default class {
      * Returns true if the new value is different from the existing value.
      */
     set(name: string, value: any): boolean {
-        let normalizedName = normalizeModelName(name);
-
-        // if normalizedName is a "top level" key and currentValue is an object
-        // then change normalizedName to set the "@id" key.
-        if (this.isPropNameTopLevel(normalizedName)
-            && this.props[normalizedName] !== null
-            && typeof this.props[normalizedName] === 'object'
-            && this.props[normalizedName][this.identifierKey] !== undefined
-        ) {
-            normalizedName = normalizedName + '.' + this.identifierKey;
-        }
+        const normalizedName = normalizeModelName(name);
 
         const currentValue = this.get(normalizedName);
 
-        if (currentValue !== value && !this.updatedModels.includes(normalizedName)) {
-            this.updatedModels.push(normalizedName);
+        if (currentValue === value) {
+            return false;
         }
 
-        this.props = setDeepData(this.props, normalizedName, value);
+        this.dirtyProps[normalizedName] = value;
 
-        return currentValue !== value;
+        return true;
     }
 
-    all(): any {
+    getOriginalProps(): any {
         return { ...this.props };
     }
 
+    getDirtyProps(): any {
+        return { ...this.dirtyProps };
+    }
+
     /**
-     * Set the props to a fresh set from the server.
+     * Called when an update request begins.
+     */
+    flushDirtyPropsToPending(): void {
+        this.pendingProps = { ...this.dirtyProps };
+        this.dirtyProps = {};
+    }
+
+    /**
+     * Called when an update request finishes successfully.
      *
      * @param props
      */
     reinitializeAllProps(props: any): void {
-        this.updatedModels = [];
         this.props = props;
+        this.pendingProps = {};
+    }
+
+    /**
+     * Called after an update request failed.
+     */
+    pushPendingPropsBackToDirty(): void {
+        // merge back onto dirty, but don't overwrite existing dirty props
+        this.dirtyProps = { ...this.pendingProps, ...this.dirtyProps };
+        this.pendingProps = {};
     }
 
     /**
@@ -121,6 +155,7 @@ export default class {
 
         return changed;
     }
+
     private isPropNameTopLevel(key: string): boolean {
         return key.indexOf('.') === -1;
     }

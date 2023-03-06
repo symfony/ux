@@ -352,37 +352,23 @@ const parseDeepData = function (data, propertyPath) {
         parts,
     };
 };
-function setDeepData(data, propertyPath, value) {
-    const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath);
-    if (typeof currentLevelData !== 'object') {
-        const lastPart = parts.pop();
-        if (typeof currentLevelData === 'undefined') {
-            throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not exist. Did you forget to expose "${parts[0]}" as a LiveProp?`);
-        }
-        throw new Error(`Cannot set data-model="${propertyPath}". The parent "${parts.join('.')}" data does not appear to be an object (it's "${currentLevelData}"). Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
-    }
-    if (currentLevelData[finalKey] === undefined) {
-        const lastPart = parts.pop();
-        if (parts.length > 0) {
-            throw new Error(`The model name ${propertyPath} was never initialized. Did you forget to add exposed={"${lastPart}"} to its LiveProp?`);
-        }
-        else {
-            throw new Error(`The model name "${propertyPath}" was never initialized. Did you forget to expose "${lastPart}" as a LiveProp? Available models values are: ${Object.keys(data).length > 0 ? Object.keys(data).join(', ') : '(none)'}`);
-        }
-    }
-    currentLevelData[finalKey] = value;
-    return finalData;
-}
 
 class ValueStore {
     constructor(props) {
         this.identifierKey = '@id';
-        this.updatedModels = [];
         this.props = {};
+        this.dirtyProps = {};
+        this.pendingProps = {};
         this.props = props;
     }
     get(name) {
         const normalizedName = normalizeModelName(name);
+        if (this.dirtyProps[normalizedName] !== undefined) {
+            return this.dirtyProps[normalizedName];
+        }
+        if (this.pendingProps[normalizedName] !== undefined) {
+            return this.pendingProps[normalizedName];
+        }
         const value = getDeepData(this.props, normalizedName);
         if (null === value) {
             return value;
@@ -396,26 +382,31 @@ class ValueStore {
         return this.get(name) !== undefined;
     }
     set(name, value) {
-        let normalizedName = normalizeModelName(name);
-        if (this.isPropNameTopLevel(normalizedName)
-            && this.props[normalizedName] !== null
-            && typeof this.props[normalizedName] === 'object'
-            && this.props[normalizedName][this.identifierKey] !== undefined) {
-            normalizedName = normalizedName + '.' + this.identifierKey;
-        }
+        const normalizedName = normalizeModelName(name);
         const currentValue = this.get(normalizedName);
-        if (currentValue !== value && !this.updatedModels.includes(normalizedName)) {
-            this.updatedModels.push(normalizedName);
+        if (currentValue === value) {
+            return false;
         }
-        this.props = setDeepData(this.props, normalizedName, value);
-        return currentValue !== value;
+        this.dirtyProps[normalizedName] = value;
+        return true;
     }
-    all() {
+    getOriginalProps() {
         return Object.assign({}, this.props);
     }
+    getDirtyProps() {
+        return Object.assign({}, this.dirtyProps);
+    }
+    flushDirtyPropsToPending() {
+        this.pendingProps = Object.assign({}, this.dirtyProps);
+        this.dirtyProps = {};
+    }
     reinitializeAllProps(props) {
-        this.updatedModels = [];
         this.props = props;
+        this.pendingProps = {};
+    }
+    pushPendingPropsBackToDirty() {
+        this.dirtyProps = Object.assign(Object.assign({}, this.pendingProps), this.dirtyProps);
+        this.pendingProps = {};
     }
     reinitializeProvidedProps(props) {
         let changed = false;
@@ -1414,6 +1405,9 @@ class Component {
         this.resetPromise();
         this.onChildComponentModelUpdate = this.onChildComponentModelUpdate.bind(this);
     }
+    _swapBackend(backend) {
+        this.backend = backend;
+    }
     addPlugin(plugin) {
         plugin.attachToComponent(this);
     }
@@ -1535,10 +1529,10 @@ class Component {
         const thisPromiseResolve = this.nextRequestPromiseResolve;
         this.resetPromise();
         this.unsyncedInputsTracker.resetUnsyncedFields();
-        this.backendRequest = this.backend.makeRequest(this.valueStore.all(), this.pendingActions, this.valueStore.updatedModels, this.getChildrenFingerprints());
+        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints());
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
         this.pendingActions = [];
-        this.valueStore.updatedModels = [];
+        this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = false;
         this.backendRequest.promise.then(async (response) => {
             this.backendRequest = null;
@@ -1547,6 +1541,7 @@ class Component {
             const headers = backendResponse.response.headers;
             if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
                 const controls = { displayError: true };
+                this.valueStore.pushPendingPropsBackToDirty();
                 this.hooks.triggerHook('response:error', backendResponse, controls);
                 if (controls.displayError) {
                     this.renderError(html);
@@ -1580,7 +1575,7 @@ class Component {
         }
         this.hooks.triggerHook('loading.state:finished', this.element);
         const modifiedModelValues = {};
-        this.valueStore.updatedModels.forEach((modelName) => {
+        Object.keys(this.valueStore.getDirtyProps()).forEach((modelName) => {
             modifiedModelValues[modelName] = this.valueStore.get(modelName);
         });
         let newElement;
@@ -1734,12 +1729,12 @@ class BackendRequest {
     }
 }
 
-class Backend {
+class RequestBuilder {
     constructor(url, csrfToken = null) {
         this.url = url;
         this.csrfToken = csrfToken;
     }
-    makeRequest(data, actions, updatedModels, childrenFingerprints) {
+    buildRequest(props, actions, updated, childrenFingerprints) {
         const splitUrl = this.url.split('?');
         let [url] = splitUrl;
         const [, queryString] = splitUrl;
@@ -1749,25 +1744,19 @@ class Backend {
             Accept: 'application/vnd.live-component+html',
         };
         const hasFingerprints = Object.keys(childrenFingerprints).length > 0;
-        const hasUpdatedModels = Object.keys(updatedModels).length > 0;
         if (actions.length === 0 &&
-            this.willDataFitInUrl(JSON.stringify(data), params, JSON.stringify(childrenFingerprints))) {
-            params.set('data', JSON.stringify(data));
+            this.willDataFitInUrl(JSON.stringify(props), JSON.stringify(updated), params, JSON.stringify(childrenFingerprints))) {
+            params.set('props', JSON.stringify(props));
+            params.set('updated', JSON.stringify(updated));
             if (hasFingerprints) {
                 params.set('childrenFingerprints', JSON.stringify(childrenFingerprints));
             }
-            updatedModels.forEach((model) => {
-                params.append('updatedModels[]', model);
-            });
             fetchOptions.method = 'GET';
         }
         else {
             fetchOptions.method = 'POST';
             fetchOptions.headers['Content-Type'] = 'application/json';
-            const requestData = { data };
-            if (hasUpdatedModels) {
-                requestData.updatedModels = updatedModels;
-            }
+            const requestData = { props, updated };
             if (hasFingerprints) {
                 requestData.childrenFingerprints = childrenFingerprints;
             }
@@ -1787,11 +1776,24 @@ class Backend {
             fetchOptions.body = JSON.stringify(requestData);
         }
         const paramsString = params.toString();
-        return new BackendRequest(fetch(`${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`, fetchOptions), actions.map((backendAction) => backendAction.name), updatedModels);
+        return {
+            url: `${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`,
+            fetchOptions,
+        };
     }
-    willDataFitInUrl(dataJson, params, childrenFingerprintsJson) {
-        const urlEncodedJsonData = new URLSearchParams(dataJson + childrenFingerprintsJson).toString();
+    willDataFitInUrl(propsJson, updatedJson, params, childrenFingerprintsJson) {
+        const urlEncodedJsonData = new URLSearchParams(propsJson + updatedJson + childrenFingerprintsJson).toString();
         return (urlEncodedJsonData + params.toString()).length < 1500;
+    }
+}
+
+class Backend {
+    constructor(url, csrfToken = null) {
+        this.requestBuilder = new RequestBuilder(url, csrfToken);
+    }
+    makeRequest(props, actions, updated, childrenFingerprints) {
+        const { url, fetchOptions } = this.requestBuilder.buildRequest(props, actions, updated, childrenFingerprints);
+        return new BackendRequest(fetch(url, fetchOptions), actions.map((backendAction) => backendAction.name), Object.keys(updated));
     }
 }
 
@@ -2219,7 +2221,7 @@ const ComponentRegistry = class {
 var ComponentRegistry$1 = new ComponentRegistry();
 
 const getComponent = (element) => ComponentRegistry$1.getComponent(element);
-class default_1 extends Controller {
+class LiveControllerDefault extends Controller {
     constructor() {
         super(...arguments);
         this.pendingActionTriggerModelElement = null;
@@ -2388,7 +2390,7 @@ class default_1 extends Controller {
         this.dispatch(name, { detail, prefix: 'live', cancelable, bubbles: canBubble });
     }
 }
-default_1.values = {
+LiveControllerDefault.values = {
     url: String,
     props: Object,
     csrf: String,
@@ -2397,4 +2399,4 @@ default_1.values = {
     fingerprint: String,
 };
 
-export { Component, default_1 as default, getComponent };
+export { Component, LiveControllerDefault as default, getComponent };

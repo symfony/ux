@@ -54,11 +54,11 @@ trait LiveComponentTestHelper
         );
     }
 
-    private function hydrateComponent(object $component, array $data, string $name): ComponentAttributes
+    private function hydrateComponent(object $component, string $name, array $props, array $updatedProps = []): ComponentAttributes
     {
         $liveMetadataFactory = self::getContainer()->get('ux.live_component.metadata_factory');
         \assert($liveMetadataFactory instanceof LiveComponentMetadataFactory);
 
-        return $this->hydrator()->hydrate($component, $data, $liveMetadataFactory->getMetadata($name));
+        return $this->hydrator()->hydrate($component, $props, $updatedProps, $liveMetadataFactory->getMetadata($name));
     }
 }

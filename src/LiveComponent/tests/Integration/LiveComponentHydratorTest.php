@@ -12,12 +12,15 @@
 namespace Symfony\UX\LiveComponent\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
+use Symfony\UX\LiveComponent\Exception\HydrationException;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component3;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\BlogPostWithSerializationContext;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Embeddable2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsDateAndEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsStringEnum;
@@ -48,8 +51,19 @@ final class LiveComponentHydratorTest extends KernelTestCase
     use LiveComponentTestHelper;
     use ResetDatabase;
 
-    private function executeHydrationTestCase(HydrationTestCase $testCase): void
+    private function executeHydrationTestCase(callable $testFactory, int $minPhpVersion = null): void
     {
+        if (null !== $minPhpVersion && $minPhpVersion > \PHP_VERSION_ID) {
+            $this->markTestSkipped(sprintf('Test requires PHP version %s or higher.', $minPhpVersion));
+        }
+
+        // lazily create the test case so each case can prep its data with an isolated container
+        $testBuilder = $testFactory();
+        if (!$testBuilder instanceof HydrationTest) {
+            throw new \InvalidArgumentException('Test case callable must return a HydrationTest instance.');
+        }
+        $testCase = $testBuilder->getTest();
+
         // keep a copy of the original, empty component object for hydration later
         $originalComponentWithData = clone $testCase->component;
         $componentAfterHydration = clone $testCase->component;
@@ -78,21 +92,25 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $this->assertEquals($expectedDehydratedProps, $dehydratedProps, 'Dehydrated props do not match expected.');
         }
 
-        // grab the data the user is sending, or use $dehydratedProps if not set
-        $dataForHydration = $testCase->sentDataForHydration ?? $dehydratedProps;
-        // make sure checksum is set
-        $dataForHydration['@checksum'] = $dehydratedProps['@checksum'];
-
-        if ($testCase->expectHydrationFailsChecksum) {
-            $this->expectException(UnprocessableEntityHttpException::class);
-            $this->expectExceptionMessageMatches('/checksum/i');
+        if ($testCase->expectHydrationException) {
+            $this->expectException($testCase->expectHydrationException);
+            if ($testCase->expectHydrationExceptionMessage) {
+                $this->expectExceptionMessageMatches($testCase->expectHydrationExceptionMessage);
+            }
         }
 
         if ($testCase->beforeHydrationCallable) {
             ($testCase->beforeHydrationCallable)();
         }
 
-        $this->hydrator()->hydrate($componentAfterHydration, $dataForHydration, $liveMetadata);
+        $originalPropsToSend = $testCase->changedOriginalProps ?? $dehydratedProps;
+
+        $this->hydrator()->hydrate(
+            $componentAfterHydration,
+            $originalPropsToSend,
+            $testCase->updatedProps,
+            $liveMetadata
+        );
 
         if (null !== $testCase->assertObjectAfterHydrationCallable) {
             ($testCase->assertObjectAfterHydrationCallable)($componentAfterHydration);
@@ -102,19 +120,9 @@ final class LiveComponentHydratorTest extends KernelTestCase
     /**
      * @dataProvider provideDehydrationHydrationTests
      */
-    public function testCanDehydrateAndHydrateComponentWithTestCases(callable $testFactory, ?int $minPHPVersion = null): void
+    public function testCanDehydrateAndHydrateComponentWithTestCases(callable $testFactory, ?int $minPhpVersion = null): void
     {
-        if (null !== $minPHPVersion && $minPHPVersion > \PHP_VERSION_ID) {
-            $this->markTestSkipped(sprintf('Test requires PHP version %s or higher.', $minPHPVersion));
-        }
-
-        // lazily create the test case so each case can prep its data with an isolated container
-        $testBuilder = $testFactory();
-        if (!$testBuilder instanceof HydrationTest) {
-            throw new \InvalidArgumentException('Test case callable must return a HydrationTest instance.');
-        }
-
-        $this->executeHydrationTestCase($testBuilder->getTest(), $minPHPVersion);
+        $this->executeHydrationTestCase($testFactory, $minPhpVersion);
     }
 
     public function provideDehydrationHydrationTests(): iterable
@@ -138,8 +146,8 @@ final class LiveComponentHydratorTest extends KernelTestCase
             })
                 ->mountWith(['firstName' => 'Ryan'])
                 ->assertDehydratesTo(['firstName' => 'Ryan'])
-                ->userChangesDataTo(['firstName' => 'Kevin'])
-                ->expectHydrationFailsChecksum();
+                ->userChangesOriginalPropsTo(['firstName' => 'Kevin'])
+                ->expectsExceptionDuringHydration(BadRequestHttpException::class, '/checksum/i');
         }];
 
         yield 'string: changing writable field works' => [function () {
@@ -149,7 +157,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             })
                 ->mountWith(['firstName' => 'Ryan'])
                 ->assertDehydratesTo(['firstName' => 'Ryan'])
-                ->userChangesDataTo(['firstName' => 'Kevin'])
+                ->userUpdatesProps(['firstName' => 'Kevin'])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertSame('Kevin', $object->firstName);
                 })
@@ -193,22 +201,6 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
-        yield 'Persisted entity: non-writable cannot be changed' => [function () {
-            $entityFoo = create(Entity1::class)->object();
-            $entityBar = create(Entity1::class)->object();
-            \assert($entityFoo instanceof Entity1);
-            \assert($entityBar instanceof Entity1);
-
-            return HydrationTest::create(new class() {
-                #[LiveProp()]
-                public Entity1 $entity1;
-            })
-                ->mountWith(['entity1' => $entityFoo])
-                ->userChangesDataTo(['entity1' => $entityBar->id])
-                ->expectHydrationFailsChecksum()
-            ;
-        }];
-
         yield 'Persisted entity: writable CAN be changed via id' => [function () {
             $entityOriginal = create(Entity1::class)->object();
             $entityNext = create(Entity1::class)->object();
@@ -220,7 +212,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 public Entity1 $entity1;
             })
                 ->mountWith(['entity1' => $entityOriginal])
-                ->userChangesDataTo(['entity1' => $entityNext->id])
+                ->userUpdatesProps(['entity1' => $entityNext->id])
                 ->assertObjectAfterHydration(function (object $object) use ($entityNext) {
                     $this->assertSame(
                         $entityNext->id,
@@ -241,7 +233,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 public Entity1 $entity1;
             })
                 ->mountWith(['entity1' => $entityOriginal])
-                ->userChangesDataTo(['entity1' => $entityNext->id])
+                ->userUpdatesProps(['entity1' => $entityNext->id])
                 ->assertObjectAfterHydration(function (object $object) use ($entityNext) {
                     $this->assertSame(
                         $entityNext->id,
@@ -267,11 +259,8 @@ final class LiveComponentHydratorTest extends KernelTestCase
                         'name' => $product->name,
                     ],
                 ])
-                ->userChangesDataTo([
-                    'product' => [
-                        '@id' => $product->id,
-                        'name' => 'real chicken',
-                    ],
+                ->userUpdatesProps([
+                    'product.name' => 'real chicken',
                 ])
                 ->assertObjectAfterHydration(function (object $object) use ($product) {
                     $this->assertSame(
@@ -345,15 +334,9 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     ],
                     'price' => 333,
                 ]])
-                ->userChangesDataTo(['product' => [
-                    '@id' => [
-                        'id' => null,
-                        'name' => 'original name',
-                        'price' => 333,
-                    ],
-                    'name' => 'will be ignored',
-                    'price' => 1000,
-                ]])
+                ->userUpdatesProps([
+                    'product.price' => 1000,
+                ])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertNull($object->product->id);
                     // from the denormalizing process
@@ -386,11 +369,8 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 public array $foods = [];
             })
                 ->mountWith(['foods' => ['banana', 'popcorn']])
-                ->userChangesDataTo([
-                    'foods' => [
-                        0 => 'apple',
-                        1 => 'chips',
-                    ],
+                ->userUpdatesProps([
+                    'foods' => ['apple', 'chips'],
                 ])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertSame(
@@ -441,7 +421,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     'show' => 'Arrested development',
                     'character' => 'Michael Bluth',
                 ]])
-                ->userChangesDataTo(['options' => [
+                ->userUpdatesProps(['options' => [
                     'show' => 'Simpsons',
                     'quote' => 'I didn\'t do it',
                 ]])
@@ -450,6 +430,30 @@ final class LiveComponentHydratorTest extends KernelTestCase
                         [
                             'show' => 'Simpsons',
                             'quote' => 'I didn\'t do it',
+                        ],
+                        $object->options
+                    );
+                });
+        }];
+
+        yield 'Associative array: fully writable allows partial changes' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true)]
+                public array $options = [];
+            })
+                ->mountWith(['options' => [
+                    'show' => 'Arrested development',
+                    'character' => 'Michael Bluth',
+                ]])
+                ->userUpdatesProps([
+                    // instead of replacing the entire array, you can change
+                    // just one key on the array, since it's fully writable
+                    'options.character' => 'Buster Bluth'])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame(
+                        [
+                            'show' => 'Arrested development',
+                            'character' => 'Buster Bluth',
                         ],
                         $object->options
                     );
@@ -472,13 +476,9 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     ],
                     'character' => 'Michael Bluth',
                 ]])
-                ->userChangesDataTo(['options' => [
-                    '@id' => [
-                        'show' => 'Arrested development',
-                        'character' => 'Michael Bluth',
-                    ],
-                    'character' => 'George Michael Bluth',
-                ]])
+                ->userUpdatesProps([
+                    'options.character' => 'George Michael Bluth',
+                ])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertSame(
                         [
@@ -506,14 +506,14 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     ],
                     'character' => 'Michael Bluth',
                 ]])
-                ->userChangesDataTo(['options' => [
+                ->userChangesOriginalPropsTo(['options' => [
                     '@id' => [
                         'show' => 'Simpsons',
                         'character' => 'Michael Bluth',
                     ],
                     'character' => 'George Michael Bluth',
                 ]])
-                ->expectHydrationFailsChecksum();
+                ->expectsExceptionDuringHydration(BadRequestHttpException::class, '/checksum/i');
         }];
 
         yield 'Associative array: support for multiple levels of writable path' => [function () {
@@ -532,13 +532,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     ]],
                     'details' => ['key1' => 'bar'],
                 ]])
-                ->userChangesDataTo(['stuff' => [
-                    '@id' => ['details' => [
-                        'key1' => 'bar',
-                        'key2' => 'baz',
-                    ]],
-                    'details' => ['key1' => 'changed key1'],
-                ]])
+                ->userUpdatesProps(['stuff.details.key1' => 'changed key1'])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertSame(['details' => [
                         'key1' => 'changed key1',
@@ -564,13 +558,9 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     ]],
                     'details' => ['key1' => 'bar', 'key2' => 'baz'],
                 ]])
-                ->userChangesDataTo(['stuff' => [
-                    '@id' => ['details' => [
-                        'key1' => 'bar',
-                        'key2' => 'baz',
-                    ]],
-                    'details' => ['key1' => 'changed key1', 'new_key' => 'new value'],
-                ]])
+                ->userUpdatesProps([
+                    'stuff.details' => ['key1' => 'changed key1', 'new_key' => 'new value'],
+                ])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertSame(['details' => [
                         'key1' => 'changed key1',
@@ -638,7 +628,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 public ?IntEnum $int = null;
             })
                 ->mountWith(['int' => IntEnum::HIGH])
-                ->userChangesDataTo(['int' => 1])
+                ->userUpdatesProps(['int' => 1])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertSame(1, $object->int->value);
                 })
@@ -662,7 +652,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     'zeroInt2' => null,
                     'emptyString' => null,
                 ])
-                ->userChangesDataTo([
+                ->userUpdatesProps([
                     'zeroInt' => 0,
                     'zeroInt2' => '0',
                     'emptyString' => '',
@@ -682,7 +672,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             })
                 ->mountWith(['int' => IntEnum::HIGH])
                 ->assertDehydratesTo(['int' => 10])
-                ->userChangesDataTo(['int' => 99999])
+                ->userUpdatesProps(['int' => 99999])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertNull($object->int);
                 })
@@ -771,16 +761,10 @@ final class LiveComponentHydratorTest extends KernelTestCase
                         'product' => $product->id,
                     ],
                 ])
-                ->userChangesDataTo([
-                    'holdsDate' => [
-                        '@id' => [
-                            'createdAt' => '2023-03-05T09:23:00-05:00',
-                            'product' => $product->id,
-                        ],
-                        // change these: their values should dehydrate and be used
-                        'createdAt' => '2022-01-01T09:23:00-05:00',
-                        'product' => $product2->id,
-                    ],
+                ->userUpdatesProps([
+                    // change these: their values should dehydrate and be used
+                    'holdsDate.createdAt' => '2022-01-01T09:23:00-05:00',
+                    'holdsDate.product' => $product2->id,
                 ])
                 ->assertObjectAfterHydration(function (object $object) use ($product2) {
                     $this->assertSame(
@@ -811,13 +795,8 @@ final class LiveComponentHydratorTest extends KernelTestCase
                         'stringEnum' => 'active',
                     ],
                 ])
-                ->userChangesDataTo([
-                    'holdsStringEnum' => [
-                        '@id' => [
-                            'stringEnum' => 'active',
-                        ],
-                        'stringEnum' => 'not_real',
-                    ],
+                ->userUpdatesProps([
+                    'holdsStringEnum.stringEnum' => 'not_real',
                 ])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertNull(
@@ -826,6 +805,87 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 })
             ;
         }, 80100];
+
+        yield 'Updating non-writable path is rejected' => [function () {
+            $product = new ProductFixtureEntity();
+            $product->name = 'original name';
+            $product->price = 333;
+
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: ['price'])]
+                public ProductFixtureEntity $product;
+            })
+                ->mountWith(['product' => $product])
+                ->userUpdatesProps([
+                    'product.name' => 'will cause an explosion',
+                ])
+                ->expectsExceptionDuringHydration(HydrationException::class, '/The model "product\.name" was sent for sent for update, but it is not writable\. Try adding "writable\: \[\'name\'\]" to the \$product property in/')
+            ;
+        }];
+
+        yield 'Updating non-writable property is rejected' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp()]
+                public string $name;
+            })
+                ->mountWith(['name' => 'Ryan'])
+                ->userUpdatesProps([
+                    'name' => 'will cause an explosion',
+                ])
+                ->expectsExceptionDuringHydration(HydrationException::class, '/The model "name" was sent for sent for update, but it is not writable\. Try adding "writable\: true" to the \$name property in/')
+            ;
+        }];
+
+        yield 'Context: Pass (de)normalization context' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp]
+                #[Context(
+                    normalizationContext: ['groups' => ['foo']],
+                    denormalizationContext: ['groups' => ['bar']],
+                )]
+                public string $name;
+
+                #[LiveProp]
+                #[Context(
+                    normalizationContext: ['groups' => ['foo']],
+                    denormalizationContext: ['groups' => ['bar']],
+                )]
+                public \DateTimeInterface $createdAt;
+
+                #[LiveProp]
+                #[Context(
+                    normalizationContext: ['groups' => ['the_normalization_group']],
+                    denormalizationContext: ['groups' => ['the_denormalization_group']],
+                )]
+                public BlogPostWithSerializationContext $blogPost;
+            })
+                ->mountWith([
+                    'name' => 'Ryan',
+                    'createdAt' => new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York')),
+                    'blogPost' => new BlogPostWithSerializationContext('the_title', 'the_body', 5, 2500),
+                ])
+                ->assertDehydratesTo([
+                    'name' => 'Ryan',
+                    'createdAt' => '2023-03-05T09:23:00-05:00',
+                    'blogPost' => [
+                        // price is not in the normalization groups
+                        'title' => 'the_title',
+                        'body' => 'the_body',
+                        'rating' => 5,
+                    ],
+                ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame('Ryan', $object->name);
+                    $this->assertSame('2023-03-05 09:23:00', $object->createdAt->format('Y-m-d H:i:s'));
+                    $this->assertSame('the_title', $object->blogPost->title);
+                    $this->assertSame('the_body', $object->blogPost->body);
+                    // rating is not in the denormalization groups
+                    $this->assertSame(0, $object->blogPost->rating);
+                    // price wasn't even sent, so it's null
+                    $this->assertSame(0, $object->blogPost->price);
+                })
+            ;
+        }];
     }
 
     public function testWritableObjectsDehydratedToArrayIsNotAllowed(): void
@@ -845,7 +905,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             }
         };
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(BadRequestHttpException::class);
         $this->expectExceptionMessageMatches('/The LiveProp path "createdAt" is an object that was dehydrated to an array/');
         $this->expectExceptionMessageMatches('/You probably want to set writable to only the properties on your class that should be writable/');
         $this->hydrator()->dehydrate(
@@ -871,7 +931,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             }
         };
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(BadRequestHttpException::class);
         $this->expectExceptionMessageMatches('/The LiveProp path "holdsDateAndEntity.product" is an object that was dehydrated to an array/');
         $this->hydrator()->dehydrate(
             $component,
@@ -898,14 +958,15 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $this->createLiveMetadata($component)
         );
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(BadRequestHttpException::class);
         $this->expectExceptionMessageMatches('/The model path "createdAt" was sent as an array, but this could not be hydrated to an object as that is not allowed/');
 
-        $dehydratedProps['createdAt'] = ['year' => 2023, 'month' => 02];
+        $updatedProps = ['createdAt' => ['year' => 2023, 'month' => 2]];
 
         $this->hydrator()->hydrate(
             $component,
             $dehydratedProps,
+            $updatedProps,
             $this->createLiveMetadata($component),
         );
     }
@@ -931,14 +992,15 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $this->createLiveMetadata($component)
         );
 
-        $this->expectException(UnprocessableEntityHttpException::class);
+        $this->expectException(BadRequestHttpException::class);
         $this->expectExceptionMessageMatches('/The model path "holdsDateAndEntity.product" was sent as an array, but this could not be hydrated to an object as that is not allowed/');
 
-        $dehydratedProps['holdsDateAndEntity']['product'] = ['name' => 'new name'];
+        $updatedProps = ['holdsDateAndEntity.product.name' => 'new name'];
 
         $this->hydrator()->hydrate(
             $component,
             $dehydratedProps,
+            $updatedProps,
             $this->createLiveMetadata($component),
         );
     }
@@ -946,75 +1008,109 @@ final class LiveComponentHydratorTest extends KernelTestCase
     /**
      * @dataProvider provideInvalidHydrationTests
      */
-    public function testInvalidTypeHydration()
+    public function testInvalidTypeHydration(callable $testFactory, int $minPhpVersion = null): void
     {
-        $this->markTestIncomplete('TODO');
+        $this->executeHydrationTestCase($testFactory, $minPhpVersion);
     }
 
     public function provideInvalidHydrationTests(): iterable
     {
-        // TODO
-        yield 'enum_with_an_invalid_value_TODO' => [function () {
+        yield 'invalid_types_string_to_number_becomes_zero' => [function () {
             return HydrationTest::create(new class() {
                 #[LiveProp(writable: true)]
-                public ?IntEnum $int = null;
+                public int $count;
             })
-                ->mountWith([])
-                ->userChangesDataTo([
-                    'int' => 'not-real-value',
-                ])
-            ;
-        }, 80100];
+                ->mountWith(['count' => 1])
+                ->userUpdatesProps(['count' => 'pretzels'])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame(0, $object->count);
+                });
+        }];
 
-        // TODO: invalid values for type (e.g. int to string type-hint)
-        // TODO invalid value for enum
-        //      A) including some non-string, non-integer value
-        //      B) Passing string to an int backed
-        //      C) Passing correct type, but not in the enum
-        // TODO (and maybe in a different test) that you can't dehydrate an object to
-        //      an array AND be writable
-
-        // TODO: check that this is not allowed - and error comes from hydration system
-        // and will result in a 400 level code
-        yield 'writable_persisted_entity_can_be_replaced_with_new_object' => [function () {
-            $product = create(ProductFixtureEntity::class)->object();
-            \assert($product instanceof ProductFixtureEntity);
-
+        yield 'invalid_types_array_to_string_is_rejected' => [function () {
             return HydrationTest::create(new class() {
                 #[LiveProp(writable: true)]
+                public string $name;
+            })
+                ->mountWith(['name' => 'Ryan'])
+                ->userUpdatesProps(['name' => ['pretzels', 'nonsense']])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame('Ryan', $object->name);
+                });
+        }];
+
+        yield 'invalid_types_writable_path_values_not_accepted' => [function () {
+            $product = create(ProductFixtureEntity::class, [
+                'name' => 'oranges',
+                'price' => 199,
+            ])->object();
+
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: ['name', 'price'])]
                 public ProductFixtureEntity $product;
             })
                 ->mountWith(['product' => $product])
-                ->userChangesDataTo(['product' => [
-                    'name' => 'Totally new name',
-                    'price' => 1000,
-                ]])
+                ->userUpdatesProps([
+                    'product.name' => ['pretzels', 'nonsense'],
+                    'product.price' => 'bananas',
+                ])
                 ->assertObjectAfterHydration(function (object $object) {
-                    $this->assertNull($object->product->id);
-                    // special system only creates a new object
-                    $this->assertSame('', $object->product->name);
+                    // change rejected
+                    $this->assertSame('oranges', $object->product->name);
+                    // string becomes 0
                     $this->assertSame(0, $object->product->price);
-                })
-            ;
+                });
         }];
+
+        yield 'invalid_types_enum_with_an_invalid_value' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true)]
+                public ?IntEnum $nullableInt = null;
+
+                #[LiveProp(writable: true)]
+                public IntEnum $nonNullableInt;
+
+                #[LiveProp(writable: ['stringEnum'])]
+                public HoldsStringEnum $holdsStringEnum;
+            })
+                ->mountWith([
+                    'nullableInt' => IntEnum::LOW,
+                    'nonNullableInt' => IntEnum::LOW,
+                    'holdsStringEnum' => new HoldsStringEnum(StringEnum::ACTIVE),
+                ])
+                ->userUpdatesProps([
+                    // not a real option
+                    'nullableInt' => 500,
+                    'nonNullableInt' => 500,
+                    'holdsStringEnum.stringEnum' => 'not a real option',
+                ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    // nullable int becomes null
+                    $this->assertNull($object->nullableInt);
+                    // non-nullable change is rejected (1=LOW)
+                    $this->assertSame(1, $object->nonNullableInt->value);
+                    // writable path change is rejected
+                    $this->assertNull($object->holdsStringEnum->stringEnum);
+                });
+        }, 80100];
     }
 
     public function testHydrationFailsIfChecksumMissing(): void
     {
         $component = $this->getComponent('component1');
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(BadRequestHttpException::class);
 
-        $this->hydrateComponent($component, [], 'component1');
+        $this->hydrateComponent($component, 'component1', []);
     }
 
     public function testHydrationFailsOnChecksumMismatch(): void
     {
         $component = $this->getComponent('component1');
 
-        $this->expectException(\RuntimeException::class);
+        $this->expectException(BadRequestHttpException::class);
 
-        $this->hydrateComponent($component, ['@checksum' => 'invalid'], 'component1');
+        $this->hydrateComponent($component, 'component1', ['@checksum' => 'invalid']);
     }
 
     public function testPreDehydrateAndPostHydrateHooksCalled(): void
@@ -1038,7 +1134,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertFalse($component->preDehydrateCalled);
         $this->assertFalse($component->postHydrateCalled);
 
-        $this->hydrateComponent($component, $data, $mounted->getName());
+        $this->hydrateComponent($component, $mounted->getName(), $data);
 
         $this->assertFalse($component->preDehydrateCalled);
         $this->assertTrue($component->postHydrateCalled);
@@ -1059,7 +1155,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         /** @var Component3 $component */
         $component = $this->getComponent('component3');
 
-        $this->hydrateComponent($component, $dehydrated, $mounted->getName());
+        $this->hydrateComponent($component, $mounted->getName(), $dehydrated);
 
         $this->assertSame('value1', $component->prop1);
         $this->assertSame('value2', $component->prop2);
@@ -1076,7 +1172,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertArrayHasKey('@attributes', $dehydrated);
         $this->assertSame($attributes, $dehydrated['@attributes']);
 
-        $actualAttributes = $this->hydrateComponent($this->getComponent('with_attributes'), $dehydrated, $mounted->getName());
+        $actualAttributes = $this->hydrateComponent($this->getComponent('with_attributes'), $mounted->getName(), $dehydrated);
 
         $this->assertSame($attributes, $actualAttributes->all());
     }
@@ -1091,7 +1187,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->assertArrayNotHasKey('_attributes', $dehydrated);
 
-        $actualAttributes = $this->hydrateComponent($this->getComponent('with_attributes'), $dehydrated, $mounted->getName());
+        $actualAttributes = $this->hydrateComponent($this->getComponent('with_attributes'), $mounted->getName(), $dehydrated);
 
         $this->assertSame([], $actualAttributes->all());
     }
@@ -1103,12 +1199,11 @@ final class LiveComponentHydratorTest extends KernelTestCase
     {
         $dehydratedProps = $this->dehydrateComponent($this->mountComponent('scalar_types'));
 
-        $dehydratedProps[$prop] = $value;
+        $updatedProps = [$prop => $value];
+        $hydratedComponent = $this->getComponent('scalar_types');
+        $this->hydrateComponent($hydratedComponent, 'scalar_types', $dehydratedProps, $updatedProps);
 
-        $hydrated = $this->getComponent('scalar_types');
-        $this->hydrateComponent($hydrated, $dehydratedProps, 'scalar_types');
-
-        $this->assertSame($expected, $hydrated->$prop);
+        $this->assertSame($expected, $hydratedComponent->$prop);
     }
 
     public static function falseyValueProvider(): iterable
@@ -1129,7 +1224,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         yield ['nullableFloat', '   ', null];
         yield ['nullableFloat', 'apple', 0.0];
         yield ['nullableBool', '', null];
-        yield ['nullableBool', '   ', null];
+        yield 'fooey-o-booey-todo' => ['nullableBool', '   ', null];
     }
 
     private function createLiveMetadata(object $component): LiveComponentMetadata
@@ -1148,10 +1243,12 @@ class HydrationTest
 {
     private array $inputProps;
     private ?array $expectedDehydratedProps = null;
-    private ?array $sentDataForHydration = null;
+    private array $updatedProps = [];
     private ?\Closure $assertObjectAfterHydrationCallable = null;
     private ?\Closure $beforeHydrationCallable = null;
-    private bool $expectHydrationFailsChecksum = false;
+    private ?array $changedOriginalProps = null;
+    private ?string $expectedHydrationException = null;
+    private ?string $expectHydrationExceptionMessage = null;
 
     private function __construct(
         private object $component,
@@ -1180,9 +1277,16 @@ class HydrationTest
         return $this;
     }
 
-    public function userChangesDataTo(array $sentDataForHydration): self
+    public function userUpdatesProps(array $updatedProps): self
     {
-        $this->sentDataForHydration = $sentDataForHydration;
+        $this->updatedProps = $updatedProps;
+
+        return $this;
+    }
+
+    public function userChangesOriginalPropsTo(array $newProps): self
+    {
+        $this->changedOriginalProps = $newProps;
 
         return $this;
     }
@@ -1201,13 +1305,6 @@ class HydrationTest
         return $this;
     }
 
-    public function expectHydrationFailsChecksum(): self
-    {
-        $this->expectHydrationFailsChecksum = true;
-
-        return $this;
-    }
-
     public function getTest(): HydrationTestCase
     {
         return new HydrationTestCase(
@@ -1218,11 +1315,21 @@ class HydrationTest
             ),
             $this->inputProps,
             $this->expectedDehydratedProps,
-            $this->sentDataForHydration,
+            $this->updatedProps,
+            $this->changedOriginalProps,
             $this->assertObjectAfterHydrationCallable,
             $this->beforeHydrationCallable,
-            $this->expectHydrationFailsChecksum,
+            $this->expectedHydrationException,
+            $this->expectHydrationExceptionMessage
         );
+    }
+
+    public function expectsExceptionDuringHydration(string $exceptionClass, string $exceptionMessage = null): self
+    {
+        $this->expectedHydrationException = $exceptionClass;
+        $this->expectHydrationExceptionMessage = $exceptionMessage;
+
+        return $this;
     }
 }
 
@@ -1233,10 +1340,12 @@ class HydrationTestCase
         public LiveComponentMetadata $liveMetadata,
         public array $inputProps,
         public ?array $expectedDehydratedProps,
-        public ?array $sentDataForHydration,
+        public array $updatedProps,
+        public ?array $changedOriginalProps,
         public ?\Closure $assertObjectAfterHydrationCallable,
         public ?\Closure $beforeHydrationCallable,
-        public bool $expectHydrationFailsChecksum,
+        public ?string $expectHydrationException,
+        public ?string $expectHydrationExceptionMessage,
     ) {
     }
 }

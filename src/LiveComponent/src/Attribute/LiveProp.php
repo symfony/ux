@@ -45,7 +45,7 @@ final class LiveProp
         bool|array $writable = false,
         ?string $hydrateWith = null,
         ?string $dehydrateWith = null,
-        ?string $fieldName = null
+        ?string $fieldName = null,
     ) {
         $this->writable = $writable;
         $this->hydrateWith = $hydrateWith;

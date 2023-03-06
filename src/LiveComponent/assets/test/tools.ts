@@ -1,25 +1,14 @@
 import { Application } from '@hotwired/stimulus';
 import LiveController from '../src/live_controller';
 import { waitFor } from '@testing-library/dom';
-import fetchMock from 'fetch-mock-jest';
 import { htmlToElement } from '../src/dom_utils';
 import Component from '../src/Component';
+import { BackendAction, BackendInterface } from '../src/Backend/Backend';
+import BackendRequest from '../src/Backend/BackendRequest';
+import { Response } from 'node-fetch';
+import { setDeepData } from '../src/data_manipulation_utils';
 
 let activeTests: FunctionalTest[] = [];
-let unmatchedFetchErrors: Array<{url: string, method: string, body: any, headers: any}> = [];
-
-// manually error on unmatched request for readability
-fetchMock.config.warnOnFallback = false;
-fetchMock.catch((url: string, response: any) => {
-    unmatchedFetchErrors.push({
-        url,
-        method: response.method,
-        body: response.body,
-        headers: response.headers,
-    });
-
-    return response;
-});
 
 let application: Application;
 
@@ -34,70 +23,33 @@ export function shutdownTests() {
     tests.forEach((test) => {
         shutdownTest(test);
     });
-
-    // only possible if someone uses fetchMock directly, but here just in case
-    if (!fetchMock.done()) {
-        fetchMock.reset();
-
-        throw new Error('Some mocked requests were never called.');
-    }
-
-    fetchMock.reset();
 }
 
 const shutdownTest = function(test: FunctionalTest) {
-    unmatchedFetchErrors.forEach((unmatchedFetchError) => {
-        const urlParams = new URLSearchParams(unmatchedFetchError.url.substring(unmatchedFetchError.url.indexOf('?')));
-        const requestInfo = [];
-        requestInfo.push(` URL: ${unmatchedFetchError.url}`)
-        requestInfo.push(`  METHOD: ${unmatchedFetchError.method}`);
-        requestInfo.push(`  HEADERS: ${JSON.stringify(unmatchedFetchError.headers)}`);
-        requestInfo.push(`  DATA: ${unmatchedFetchError.method === 'GET' ? urlParams.get('data') : unmatchedFetchError.body}`);
-
-        console.log('UNMATCHED request was made with the following info:', '\n', requestInfo.join('\n'));
-    });
-    unmatchedFetchErrors = [];
-
-    let allMocksRequestsCalled = true;
-    test.mockedAjaxCalls.forEach((mock => {
-        if (!mock.fetchMock) {
-            throw new Error('You must call .init() after calling expectsAjaxCall() to fully initialize the mock Ajax call.')
-        }
-
-        if (!fetchMock.called(mock.routeName)) {
-            console.log('EXPECTED request was never made matching the following info:', '\n', mock.getVisualSummary());
-            allMocksRequestsCalled = false;
-        }
+    test.pendingAjaxCallsThatAreStillExpected().forEach((mock => {
+        const requestInfo = mock.getVisualSummary();
+        throw new Error(`EXPECTED request was never made matching the following info: \n${requestInfo.join('\n')}`);
     }));
-
-    // this + the above warnings - has a nicer output than using "fetchMock.done()".
-    if (!allMocksRequestsCalled || unmatchedFetchErrors.length > 0) {
-        fetchMock.reset();
-
-        throw new Error('Some mocked requests were never called or unexpected calls were made.');
-    }
 }
 
 class FunctionalTest {
     component: Component;
     element: HTMLElement;
-    initialData: any;
-    props: any = {};
     template: (data: any) => string;
-    mockedAjaxCalls: Array<MockedAjaxCall> = [];
-    id: number;
+    mockedBackend: MockedBackend;
 
-    constructor(component: Component, element: HTMLElement, initialData: any, template: (data: any) => string) {
+    constructor(component: Component, element: HTMLElement, template: (data: any) => string) {
         this.component = component;
         this.element = element;
-        this.initialData = initialData;
         this.template = template;
-        this.id = Math.floor(1000*Math.random());
+
+        this.mockedBackend = new MockedBackend();
+        this.component._swapBackend(this.mockedBackend);
     }
 
-    expectsAjaxCall = (method: string): MockedAjaxCall => {
-        const mock = new MockedAjaxCall(method, this);
-        this.mockedAjaxCalls.push(mock);
+    expectsAjaxCall = (): MockedAjaxCall => {
+        const mock = new MockedAjaxCall(this);
+        this.mockedBackend.addMockedAjaxCall(mock);
 
         return mock;
     }
@@ -129,65 +81,190 @@ class FunctionalTest {
 
         return element as HTMLElement;
     }
-}
-class MockedAjaxCall {
-    method: string;
-    test: FunctionalTest;
-    private expectedSentData?: any;
-    private expectedActions: Array<{ name: string, args: any }> = [];
-    private expectedHeaders: any = {};
-    private expectedChildFingerprints: any = null;
-    private changeDataCallback?: (data: any) => void;
-    private template?: (data: any) => string
-    options: any = {};
-    fetchMock?: typeof fetchMock;
-    routeName?: string;
-    customResponseStatusCode?: number;
-    customResponseHTML?: string;
 
-    constructor(method: string, test: FunctionalTest) {
-        this.method = method.toUpperCase();
+    pendingAjaxCallsThatAreStillExpected(): Array<MockedAjaxCall> {
+        return this.mockedBackend.getExpectedMockedAjaxCalls();
+    }
+}
+class MockedBackend implements BackendInterface {
+    private expectedMockedAjaxCalls: Array<MockedAjaxCall> = [];
+
+    addMockedAjaxCall(mock: MockedAjaxCall) {
+        this.expectedMockedAjaxCalls.push(mock);
+    }
+
+    makeRequest(props: any, actions: BackendAction[], updated: { [key: string]: any }, childrenFingerprints: any): BackendRequest {
+        const matchedMock = this.findMatchingMock(props, actions, updated, childrenFingerprints);
+
+        if (!matchedMock) {
+            const requestInfo = [];
+            requestInfo.push('ACTUAL REQUEST INFO: ');
+            requestInfo.push(`  PROPS: ${JSON.stringify(props)}`);
+            requestInfo.push(`  ACTIONS: ${JSON.stringify(actions)}`);
+            requestInfo.push(`  UPDATED: ${JSON.stringify(updated)}`);
+            requestInfo.push(`  CHILDREN: ${JSON.stringify(childrenFingerprints)}`);
+
+            requestInfo.push('');
+            if (this.expectedMockedAjaxCalls.length === 0) {
+                requestInfo.push('No mocked Ajax calls were expected.');
+            } else {
+                this.expectedMockedAjaxCalls.forEach((mock) => {
+                    requestInfo.push(`EXPECTED REQUEST #${this.expectedMockedAjaxCalls.indexOf(mock) + 1}:`)
+                    requestInfo.push(...mock.getVisualSummary());
+                });
+            }
+
+            throw new Error(`An AJAX call was made that was not expected: \n${requestInfo.join('\n')}`);
+        }
+
+        // remove the matched mock from the list of expected calls
+        this.expectedMockedAjaxCalls.splice(this.expectedMockedAjaxCalls.indexOf(matchedMock), 1);
+
+        return matchedMock.createBackendRequest();
+    }
+
+    getExpectedMockedAjaxCalls(): Array<MockedAjaxCall> {
+        return this.expectedMockedAjaxCalls;
+    }
+
+    private findMatchingMock(props: any, actions: BackendAction[], updated: { [key: string]: any }, childrenFingerprints: any): MockedAjaxCall|null {
+        for(let i = 0; i < this.expectedMockedAjaxCalls.length; i++) {
+            const mock = this.expectedMockedAjaxCalls[i];
+            if (mock.matches(props, actions, updated, childrenFingerprints)) {
+                return mock;
+            }
+        }
+
+        return null;
+    }
+}
+
+class MockedAjaxCall {
+    private test: FunctionalTest;
+
+    /* Matcher properties */
+    private expectedActions: Array<{ name: string, args: any }> = [];
+    private expectedSentUpdatedData: { [key: string]: any } = {};
+    private expectedChildFingerprints: any = null;
+
+    /* Response properties */
+    private changePropsCallback?: (data: any) => void;
+    private template?: (data: any) => string
+    private delayResponseTime?: number = 0;
+    private customResponseStatusCode?: number;
+    private customResponseHTML?: string;
+
+    constructor(test: FunctionalTest) {
         this.test = test;
     }
 
-    /**
-     * Pass the "data" that is expected to be sent on the Ajax request
-     */
-    expectSentData = (data: any): MockedAjaxCall => {
-        this.checkInitialization('expectSentData');
+    getVisualSummary(): string[] {
+        const requestInfo = [];
+        requestInfo.push(`  PROPS: ${JSON.stringify(this.test.component.valueStore.getOriginalProps())}`);
+        requestInfo.push(`  ACTIONS: ${JSON.stringify(this.expectedActions)}`);
+        requestInfo.push(`  UPDATED: ${JSON.stringify(this.expectedSentUpdatedData)}`);
+        requestInfo.push(`  CHILDREN: ${JSON.stringify(this.expectedChildFingerprints)}`);
 
-        this.expectedSentData = data;
+        return requestInfo;
+    }
+
+    matches(props: any, actions: BackendAction[], updated: { [key: string]: any }, childrenFingerprints: any): boolean {
+        if (!this.isEqual(this.test.component.valueStore.getOriginalProps(), props)) {
+            return false;
+        }
+
+        const normalizedBackendActions = actions.map((action) => {
+            return {
+                name: action.name,
+                args: action.args,
+            }
+        });
+
+        if (!this.isEqual(normalizedBackendActions, this.expectedActions)) {
+            return false;
+        }
+
+        if (!this.isEqual(updated, this.expectedSentUpdatedData)) {
+            return false;
+        }
+
+        if (null !== this.expectedChildFingerprints && !this.isEqual(childrenFingerprints, this.expectedChildFingerprints)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    createBackendRequest(): BackendRequest {
+        const promise: Promise<Response> = new Promise((resolve) => {
+            setTimeout(() => {
+                let newProps = JSON.parse(JSON.stringify(this.test.component.valueStore.getOriginalProps()));
+                // imitate the server by updating the props with the updated data
+                Object.keys(this.expectedSentUpdatedData).forEach((key) => {
+                    newProps = setDeepData(newProps, key, this.expectedSentUpdatedData[key]);
+                });
+
+                if (this.changePropsCallback) {
+                    this.changePropsCallback(newProps);
+                }
+
+                const template = this.template ? this.template : this.test.template;
+                const html = this.customResponseHTML ? this.customResponseHTML : template(newProps);
+
+                // assume a normal, live-component response unless it's totally custom
+                const headers = { 'Content-Type': 'application/vnd.live-component+html' };
+                if (this.customResponseHTML) {
+                    headers['Content-Type'] = 'text/html';
+                }
+
+                const response = new Response(html, {
+                    status: this.customResponseStatusCode || 200,
+                    headers
+                });
+
+                resolve(response);
+            }, this.delayResponseTime);
+        });
+
+        return new BackendRequest(
+            // @ts-ignore Response doesn't quite match the underlying interface
+            promise,
+            this.expectedActions.map((action) => action.name),
+            Object.keys(this.expectedSentUpdatedData),
+        );
+    }
+
+    /**
+     * Pass any updated data that is expected to be sent on the Ajax request
+     */
+    expectUpdatedData = (updated: { [key: string]: any }): MockedAjaxCall => {
+        this.expectedSentUpdatedData = updated;
 
         return this;
     }
 
     expectChildFingerprints = (fingerprints: any): MockedAjaxCall => {
-        this.checkInitialization('expectSentData');
-
         this.expectedChildFingerprints = fingerprints;
 
         return this;
     }
 
     /**
-     * Call if the "server" will change the data before it re-renders
+     * Call if the "server" will change the props before it re-renders.
      */
-    serverWillChangeData = (callback: (data: any) => void): MockedAjaxCall => {
-        this.checkInitialization('serverWillChangeData');
-        this.changeDataCallback = callback;
+    serverWillChangeProps = (callback: (data: any) => void): MockedAjaxCall => {
+        this.changePropsCallback = callback;
 
         return this;
     }
 
     delayResponse = (milliseconds: number): MockedAjaxCall => {
-        this.checkInitialization('delayResponse');
-        this.options.delay = milliseconds;
+        this.delayResponseTime = milliseconds;
 
         return this;
     }
 
     expectActionCalled(actionName: string, args: any = {}): MockedAjaxCall {
-        this.checkInitialization('expectActionName');
         this.expectedActions.push({
             name: actionName,
             args: args
@@ -196,186 +273,38 @@ class MockedAjaxCall {
         return this;
     }
 
-    init = (): void => {
-        if (this.fetchMock) {
-            throw new Error('Cannot call call init() multiple times.');
-        }
-
-        if (!this.expectedSentData) {
-            throw new Error('expectSentData() must be called before init().')
-        }
-
-        const finalServerData = JSON.parse(JSON.stringify(this.expectedSentData));
-
-        if (this.changeDataCallback) {
-            this.changeDataCallback(finalServerData);
-        }
-
-        // use custom template, or the main one
-        const template = this.template ? this.template : this.test.template;
-
-        let response;
-        if (this.customResponseStatusCode) {
-            response = {
-                body: this.customResponseHTML,
-                status: this.customResponseStatusCode
-            }
-        } else {
-            response = {
-                body: template(finalServerData),
-                headers: {
-                    'Content-Type': 'application/vnd.live-component+html'
-                }
-            }
-        }
-
-        this.fetchMock = fetchMock.mock(
-            this.getMockMatcher(),
-            response,
-            this.options
-        );
-    }
-
     willReturn(template: (data: any) => string): MockedAjaxCall {
-        this.checkInitialization('willReturn');
         this.template = template;
 
         return this;
     }
 
-    expectHeader(headerName: string, value: string): MockedAjaxCall {
-        this.checkInitialization('expectHeader');
-        this.expectedHeaders[headerName] = value;
-
-        return this;
-    }
-
     serverWillReturnCustomResponse(statusCode: number, responseHTML: string): MockedAjaxCall {
-        this.checkInitialization('serverWillReturnAnError');
         this.customResponseStatusCode = statusCode;
         this.customResponseHTML = responseHTML;
 
         return this;
     }
 
-    getVisualSummary(): string {
-        const requestInfo = [];
-        if (this.method === 'GET') {
-            requestInfo.push(` URL MATCH: end:${this.getMockMatcher(true).url}`);
-        }
-        requestInfo.push(`  METHOD: ${this.method}`);
-        if (Object.keys(this.expectedHeaders).length > 0) {
-            requestInfo.push(`  HEADERS: ${JSON.stringify(this.expectedHeaders)}`);
-        }
-        if (this.method === 'GET') {
-            requestInfo.push(`  DATA: ${JSON.stringify(this.expectedSentData)}`);
-        } else {
-            requestInfo.push(`  DATA: ${JSON.stringify(this.getRequestBody())}`);
-        }
+    private isEqual(a: any, b: any): boolean {
+        const sortedA = Object.keys(a).sort().reduce((obj: any, key) => {
+            obj[key] = a[key];
+            return obj;
+        }, {});
 
-        if (this.expectedChildFingerprints) {
-            requestInfo.push(`  CHILD FINGERPRINTS: ${JSON.stringify(this.expectedChildFingerprints)}`)
-        }
+        const sortedB = Object.keys(b).sort().reduce((obj: any, key) => {
+            obj[key] = b[key];
+            return obj;
+        }, {});
 
-        if (this.expectedActions.length === 1) {
-            requestInfo.push(`  Expected URL to contain action /${this.expectedActions[0].name}`)
-        }
-
-        return requestInfo.join('\n');
-    }
-
-    // https://www.wheresrhys.co.uk/fetch-mock/#api-mockingmock_matcher
-    private getMockMatcher(createMatchForShowingError = false): any {
-        if (!this.expectedSentData) {
-            throw new Error('expectedSentData not set yet');
-        }
-
-        const matcherObject: any = { method: this.method };
-
-        if (Object.keys(this.expectedHeaders).length > 0) {
-            matcherObject.headers = this.expectedHeaders;
-        }
-
-        if (this.method === 'GET') {
-            const paramsData: any = {
-                data: JSON.stringify(this.expectedSentData)
-            };
-            if (this.expectedChildFingerprints) {
-                paramsData.childrenFingerprints = JSON.stringify(this.expectedChildFingerprints);
-            }
-            const params = new URLSearchParams(paramsData);
-            if (createMatchForShowingError) {
-                // simplified version for error reporting
-                matcherObject.url = `(approximation) ?${params.toString()}`;
-            } else {
-                matcherObject.functionMatcher = (url: string) => {
-                    const actualUrl = new URL(url);
-                    const actualParams = new URLSearchParams(actualUrl.search);
-                    actualParams.delete('updatedModels[]');
-                    // if we're not expecting specific child fingerprints, ignore them
-                    if (!paramsData.childrenFingerprints) {
-                        actualParams.delete('childrenFingerprints');
-                    }
-
-                    return actualParams.toString() === params.toString();
-                };
-            }
-        } else {
-            // match the body, by without "updatedModels" which is not important
-            // and also difficult/tedious to always assert
-            matcherObject.functionMatcher = (url: string, request: any) => {
-                const body = JSON.parse(request.body);
-                delete body.updatedModels;
-
-                return JSON.stringify(body) === JSON.stringify(this.getRequestBody());
-            };
-
-            if (this.expectedActions.length === 1) {
-                matcherObject.url = `end:/${this.expectedActions[0].name}`;
-            } else if (this.expectedActions.length > 1) {
-                matcherObject.url = 'end:/_batch';
-            }
-        }
-
-        this.routeName = `route-${this.test.id}-${this.test.mockedAjaxCalls.length}`;
-        matcherObject.name = this.routeName;
-
-        return matcherObject;
-    }
-
-    private getRequestBody(): any {
-        if (this.method === 'GET') {
-            return null;
-        }
-
-        const body: any = {
-            data: this.expectedSentData
-        };
-
-        if (this.expectedChildFingerprints) {
-            body.childrenFingerprints = this.expectedChildFingerprints;
-        }
-
-        if (this.expectedActions.length === 1) {
-            body.args = this.expectedActions[0].args;
-        } else if (this.expectedActions.length > 1) {
-            body.actions = this.expectedActions;
-        }
-
-        return body;
-    }
-
-    private checkInitialization = (method: string): void => {
-        if (this.fetchMock) {
-            throw new Error(`Cannot call ${method}() after MockedAjaxCall is initialized`);
-        }
+        return JSON.stringify(sortedA) === JSON.stringify(sortedB);
     }
 }
 
 export async function createTest(data: any, template: (data: any) => string): Promise<FunctionalTest> {
     const testData = await startStimulus(template(data));
 
-    const test = new FunctionalTest(testData.controller.component, testData.element, data, template);
+    const test = new FunctionalTest(testData.controller.component, testData.element, template);
     activeTests.push(test);
 
     return test;
@@ -385,7 +314,7 @@ export async function createTest(data: any, template: (data: any) => string): Pr
  * An internal way to create a FunctionalTest: useful for child components
  */
 export function createTestForExistingComponent(component: Component): FunctionalTest {
-    const test = new FunctionalTest(component, component.element, {}, () => '');
+    const test = new FunctionalTest(component, component.element, () => '');
     activeTests.push(test);
 
     return test;

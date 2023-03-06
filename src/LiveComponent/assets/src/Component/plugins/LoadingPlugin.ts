@@ -4,7 +4,7 @@ import {
     parseDirectives
 } from '../../Directive/directives_parser';
 import { combineSpacedArray}  from '../../string_utils';
-import BackendRequest from '../../BackendRequest';
+import BackendRequest from '../../Backend/BackendRequest';
 import Component from '../../Component';
 import { PluginInterface } from './PluginInterface';
 

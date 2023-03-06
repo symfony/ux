@@ -27,15 +27,13 @@ describe('LiveController data-loading Tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 // to help detect when rendering is done
                 data.food = 'popcorn';
             })
             // delay so we can check loading
-            .delayResponse(50)
-            .init();
+            .delayResponse(50);
 
         // wait for element to hide itself on start up
         await waitFor(() => expect(getByTestId(test.element, 'loading-element')).not.toBeVisible());
@@ -61,35 +59,29 @@ describe('LiveController data-loading Tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             // delay so we can check loading
-            .delayResponse(50)
-            .init();
+            .delayResponse(50);
 
         getByText(test.element, 'Re-Render').click();
         // it should not be loading yet
         expect(getByTestId(test.element, 'loading-element')).not.toBeVisible();
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
 
-        test.expectsAjaxCall('post')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             .expectActionCalled('otherAction')
             // delay so we can check loading
-            .delayResponse(50)
-            .init();
+            .delayResponse(50);
         getByText(test.element, 'Other Action').click();
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
         // it should not be loading yet
         expect(getByTestId(test.element, 'loading-element')).not.toBeVisible();
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
 
-        test.expectsAjaxCall('post')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             .expectActionCalled('save')
             // delay so we can check loading
-            .delayResponse(50)
-            .init();
+            .delayResponse(50);
         getByText(test.element, 'Save').click();
         // wait for the ajax call to start (will be 0ms, but with a timeout, so not *quite* instant)
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
@@ -111,11 +103,10 @@ describe('LiveController data-loading Tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData({ comments: 'Changing the comments!', user: { email: '' } })
+        test.expectsAjaxCall()
+            .expectUpdatedData({ comments: 'Changing the comments!' })
             // delay so we can check loading
-            .delayResponse(50)
-            .init();
+            .delayResponse(50);
 
         userEvent.type(test.queryByDataModel('comments'), 'Changing the comments!')
         // it should not be loading yet due to debouncing
@@ -132,11 +123,10 @@ describe('LiveController data-loading Tests', () => {
         expect(getByTestId(test.element, 'comments-loading')).not.toBeVisible();
 
         // now try the user.email "child property" field
-        test.expectsAjaxCall('get')
-            .expectSentData({ comments: 'Changing the comments!', user: { email: 'ryan@symfonycasts.com' } })
+        test.expectsAjaxCall()
+            .expectUpdatedData({ 'user.email': 'ryan@symfonycasts.com' })
             // delay so we can check loading
-            .delayResponse(50)
-            .init();
+            .delayResponse(50);
 
         userEvent.type(test.queryByDataModel('user.email'), 'ryan@symfonycasts.com');
         // it should not be loading yet due to debouncing
@@ -164,13 +154,11 @@ describe('LiveController data-loading Tests', () => {
         `);
 
         // 1 ajax request with both actions
-        test.expectsAjaxCall('post')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             .expectActionCalled('save')
             .expectActionCalled('otherAction')
             // delay so we can check loading
-            .delayResponse(50)
-            .init();
+            .delayResponse(50);
 
         getByText(test.element, 'Save').click();
         getByText(test.element, 'Other Action').click();
@@ -191,12 +179,10 @@ describe('LiveController data-loading Tests', () => {
            </div>
        `);
 
-        test.expectsAjaxCall('post')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             .expectActionCalled('save')
             // delay, but not as long as the loading delay
-            .delayResponse(30)
-            .init();
+            .delayResponse(30);
 
         getByText(test.element, 'Save').click();
         // it should NOT be loading: loading is delayed

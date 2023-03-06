@@ -74,13 +74,11 @@ describe('Component parent -> child initialization and rendering tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             .expectChildFingerprints({
                 'the-child-id1': 'child-fingerprint1',
                 'the-child-id2': 'child-fingerprint2'
-            })
-            .init();
+            });
 
         test.component.render();
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
@@ -96,12 +94,10 @@ describe('Component parent -> child initialization and rendering tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 data.renderChild = false;
-            })
-            .init();
+            });
 
         expect(test.element).toHaveTextContent('Child Component')
         expect(test.component.getChildren().size).toEqual(1);
@@ -123,12 +119,10 @@ describe('Component parent -> child initialization and rendering tests', () => {
            </div>
        `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 data.renderChild = true;
-            })
-            .init();
+            });
 
         expect(test.element).not.toHaveTextContent('Child Component')
         expect(test.component.getChildren().size).toEqual(0);
@@ -158,12 +152,10 @@ describe('Component parent -> child initialization and rendering tests', () => {
            </div>
        `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 data.useOriginalChild = false;
-            })
-            .init();
+            });
 
         expect(test.element).toHaveTextContent('Original Child Component')
         test.component.render();
@@ -229,12 +221,10 @@ describe('Component parent -> child initialization and rendering tests', () => {
         userEvent.type(childTest.queryByDataModel('fullName'), ' Weaver');
 
         // C) Re-render the parent
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 data.useOriginalChild = false;
-            })
-            .init();
+            });
         test.component.render();
         // wait for parent Ajax call to start
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
@@ -242,12 +232,11 @@ describe('Component parent -> child initialization and rendering tests', () => {
         // E) Expect the child to re-render
         // after the parent Ajax call has finished, but shortly before it's
         // done processing, the child component should start its own Aja call
-        childTest.expectsAjaxCall('get')
+        childTest.expectsAjaxCall()
             // expect the modified firstName data
             // expect the new prop
-            .expectSentData({ toUppercase: true, fullName: 'Ryan Weaver' })
-            .willReturn(childTemplate)
-            .init();
+            .expectUpdatedData({ fullName: 'Ryan Weaver' })
+            .willReturn(childTemplate);
 
         // wait for parent Ajax call to finish
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
@@ -290,25 +279,23 @@ describe('Component parent -> child initialization and rendering tests', () => {
         const childTest = createTestForExistingComponent(childComponent);
 
         // Re-render the parent
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 // change the child prop
                 data.prop1 = 'updated_prop';
                 // re-render the "fake" component with a different tag
                 data.useRealChild = false;
-            })
-            .init();
+            });
         test.component.render();
         // wait for parent Ajax call to start
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
 
         // Expect the child to re-render
-        childTest.expectsAjaxCall('get')
-            // expect the new prop
-            .expectSentData({ prop1: 'updated_prop' })
-            .willReturn(realChildTemplate)
-            .init();
+        childTest.expectsAjaxCall()
+            // prop1 will have changed, but that's not "updated" data
+            // we verify below that the new prop1 is used by looking at the HTML
+            .expectUpdatedData({ })
+            .willReturn(realChildTemplate);
 
         // wait for parent Ajax call to finish
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
@@ -344,13 +331,11 @@ describe('Component parent -> child initialization and rendering tests', () => {
        `);
 
         // Re-render the parent
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 // trigger the re-rendered child to be used
                 data.useOriginalChild = false;
-            })
-            .init();
+            });
         test.component.render();
         // wait for parent Ajax call to start/finish
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
@@ -383,8 +368,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
        `);
 
         // Re-render the parent
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
+        test.expectsAjaxCall()
             // return the template in a different order
             // and render children with an updated value prop
             .willReturn((data: any) => `
@@ -399,8 +383,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
                         </li>
                     </ul>
                 </div>
-            `)
-            .init();
+            `);
         test.component.render();
         // wait for parent Ajax call to start
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
@@ -411,16 +394,14 @@ describe('Component parent -> child initialization and rendering tests', () => {
         const childTest2 = createTestForExistingComponent(childComponent2);
 
         // Expect both children to re-render
-        childTest1.expectsAjaxCall('get')
-            // expect the new prop
-            .expectSentData({ number: 1, value: 'New value for child 1' })
-            .willReturn(childTemplate)
-            .init();
-        childTest2.expectsAjaxCall('get')
-            // expect the new prop
-            .expectSentData({ number: 2, value: 'New value for child 2' })
-            .willReturn(childTemplate)
-            .init();
+        childTest1.expectsAjaxCall()
+            // new props are sent, but that doesn't count as updated data
+            // we verify the new props are used below by checking the HTML
+            .expectUpdatedData({ })
+            .willReturn(childTemplate);
+        childTest2.expectsAjaxCall()
+            .expectUpdatedData({ })
+            .willReturn(childTemplate);
 
         // wait for parent Ajax call to finish
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));

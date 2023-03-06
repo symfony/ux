@@ -12,7 +12,6 @@
 import { shutdownTests, createTest, initComponent } from '../tools';
 import { getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
-import fetchMock from 'fetch-mock-jest';
 import { htmlToElement } from '../../src/dom_utils';
 
 describe('LiveController rendering Tests', () => {
@@ -28,19 +27,17 @@ describe('LiveController rendering Tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 // change the data on the server so the template renders differently
                 data.firstName = 'Kevin';
-            })
-            .init();
+            });
 
         getByText(test.element, 'Reload').click();
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name: Kevin'));
         // data returned from the server is used for the new "data"
-        expect(test.component.valueStore.all()).toEqual({firstName: 'Kevin'});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({firstName: 'Kevin'});
     });
 
     it('conserves the value of model field that was modified after a render request', async () => {
@@ -60,11 +57,10 @@ describe('LiveController rendering Tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
+        test.expectsAjaxCall()
             // only the update title will be sent
-            .expectSentData({ title: 'greetings!!', comment: '' })
-            .delayResponse(100)
-            .init();
+            .expectUpdatedData({ title: 'greetings!!' })
+            .delayResponse(100);
 
         userEvent.type(test.queryByDataModel('title'), '!!');
 
@@ -86,23 +82,24 @@ describe('LiveController rendering Tests', () => {
         // the server returned comment as ''. However, this model WAS set
         // during the last render, and that has not been taken into account yet.
         // and so, like with the comment textarea, the client-side value is kept
-        expect(test.component.valueStore.all()).toEqual({
+        expect(test.component.valueStore.getOriginalProps()).toEqual({
             title: 'greetings!!',
-            comment: 'I had a great time'
+            // original props show it as blank
+            comment: ''
         });
+        // but the valueStore has the latest value
+        expect(test.component.valueStore.get('comment')).toEqual('I had a great time');
 
         // trigger render: the new comment data *will* now be sent
-        test.expectsAjaxCall('get')
-            // just repeat what we verified from above
-            .expectSentData(test.component.valueStore.all())
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .expectUpdatedData({ comment: 'I had a great time' })
+            .serverWillChangeProps((data: any) => {
                 // to be EXTRA complicated, the server will change the comment
                 // on the client, we should now recognize that the latest comment
                 // model data *was* sent (the <textarea> is no longer out-of-sync)
                 // and so it should accept the HTML from the server
                 data.comment = data.comment.toUpperCase();
-            })
-            .init();
+            });
 
         getByText(test.element, 'Reload').click();
         await waitFor(() => expect(test.element).toHaveTextContent('Comment: "I HAD A GREAT TIME"'));
@@ -122,10 +119,9 @@ describe('LiveController rendering Tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData({ title: 'greetings!!' })
-            .delayResponse(100)
-            .init();
+        test.expectsAjaxCall()
+            .expectUpdatedData({ title: 'greetings!!' })
+            .delayResponse(100);
 
         userEvent.type(test.queryByDataModel('title'), '!!');
 
@@ -141,10 +137,9 @@ describe('LiveController rendering Tests', () => {
         expect((test.element.querySelector('textarea') as HTMLTextAreaElement).value).toEqual('typing after the request starts');
 
         // make a 2nd request
-        test.expectsAjaxCall('get')
-            .expectSentData({ title: 'greetings!! Yay!' })
-            .delayResponse(100)
-            .init();
+        test.expectsAjaxCall()
+            .expectUpdatedData({ title: 'greetings!! Yay!' })
+            .delayResponse(100);
 
         userEvent.type(test.queryByDataModel('title'), ' Yay!');
 
@@ -169,13 +164,11 @@ describe('LiveController rendering Tests', () => {
         test.element.querySelector('span')?.setAttribute('data-foo', 'bar');
         test.element.appendChild(htmlToElement('<div data-live-ignore>I should not be removed</div>'));
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 // change the data on the server so the template renders differently
                 data.firstName = 'Kevin';
-            })
-            .init();
+            });
 
         getByText(test.element, 'Reload').click();
 
@@ -199,14 +192,12 @@ describe('LiveController rendering Tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 // change the data on the server so the template renders differently
                 data.firstName = 'Kevin';
                 data.containerId = 'updated';
-            })
-            .init();
+            });
 
         getByText(test.element, 'Reload').click();
 
@@ -222,20 +213,18 @@ describe('LiveController rendering Tests', () => {
             <div ${initComponent(data)}>${data.greeting}</div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data) => {
                 data.greeting = 'Hello';
             })
-            .delayResponse(100)
-            .init();
+            .delayResponse(100);
 
-        test.component.render();
+        const promise = test.component.render();
         // trigger disconnect
         test.element.removeAttribute('data-controller')
 
         // wait for the fetch to finish
-        await fetchMock.flush();
+        await promise;
 
         // the re-render should not have happened
         expect(test.element).not.toHaveTextContent('Hello');
@@ -246,31 +235,32 @@ describe('LiveController rendering Tests', () => {
             <div ${initComponent(data)}>${data.greeting}</div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data) => {
                 data.greeting = 'Hello';
             })
-            .delayResponse(100)
-            .init();
+            .delayResponse(100);
 
-        test.component.render();
+        const promise = test.component.render();
 
         // trigger controller disconnect
         test.element.removeAttribute('data-controller')
         // wait for the fetch to finish
-        await fetchMock.flush();
+        await promise;
 
         expect(test.element).toHaveTextContent('aloha!')
 
         // trigger connect
         test.element.setAttribute('data-controller', 'live')
-        test.component.render();
-        // wait for the fetch to finish
-        await fetchMock.flush();
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data) => {
+                data.greeting = 'Hello2';
+            })
+            .delayResponse(100);
+        await test.component.render();
 
         // the re-render should have happened
-        expect(test.element).toHaveTextContent('Hello');
+        expect(test.element).toHaveTextContent('Hello2');
     });
 
     it('waits for the previous request to finish & batches changes', async () => {
@@ -286,10 +276,8 @@ describe('LiveController rendering Tests', () => {
         `);
 
         // expect the initial Reload request, but delay it
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .delayResponse(100)
-            .init();
+        test.expectsAjaxCall()
+            .delayResponse(100);
 
         getByText(test.element, 'Reload').click();
 
@@ -300,13 +288,12 @@ describe('LiveController rendering Tests', () => {
             userEvent.type(test.queryByDataModel('contents'), 'Welcome to our test!');
 
             // NOW we're expecting th 2nd request
-            test.expectsAjaxCall('get')
+            test.expectsAjaxCall()
                 // only 1 request, both new pieces of data sent at once
-                .expectSentData({
+                .expectUpdatedData({
                     title: 'greetings!!!',
                     contents: 'Welcome to our test!'
-                })
-                .init();
+                });
         }, 10);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Title: "greetings!!!"'));
@@ -334,9 +321,8 @@ describe('LiveController rendering Tests', () => {
             // delay 40 ms before we start to expect it
             setTimeout(() => {
                 // just one request should be made
-                test.expectsAjaxCall('get')
-                    .expectSentData({ title: 'greetings to you', contents: 'Welcome to our test!'})
-                    .init();
+                test.expectsAjaxCall()
+                    .expectUpdatedData({ title: 'greetings to you', contents: 'Welcome to our test!'});
                 }, 40)
         }, 40);
 
@@ -353,13 +339,11 @@ describe('LiveController rendering Tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 // change the data on the server so the template renders differently
                 data.text = '123';
-            })
-            .init();
+            });
 
         getByText(test.element, 'Reload').click();
 
@@ -376,13 +360,11 @@ describe('LiveController rendering Tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data: any) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
                 // change the data on the server so the template renders differently
                 data.text = '123';
-            })
-            .init();
+            });
 
         getByText(test.element, 'Reload').click();
 
@@ -397,12 +379,10 @@ describe('LiveController rendering Tests', () => {
             </div>
         `);
 
-        test.expectsAjaxCall('get')
-            .expectSentData(test.initialData)
-            .serverWillChangeData((data) => {
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data) => {
                 data.season = 'autumn';
-            })
-            .init();
+            });
 
         await test.component.render();
         // verify the component *did* render ok

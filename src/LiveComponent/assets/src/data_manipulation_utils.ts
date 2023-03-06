@@ -31,7 +31,9 @@ const parseDeepData = function (data: any, propertyPath: string) {
     };
 };
 
-// post.user.username
+/**
+ * @internal
+ */
 export function setDeepData(data: any, propertyPath: string, value: any): any {
     const { currentLevelData, finalData, finalKey, parts } = parseDeepData(data, propertyPath);
 

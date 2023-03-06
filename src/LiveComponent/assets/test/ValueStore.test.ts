@@ -49,11 +49,30 @@ describe('ValueStore', () => {
             name: 'firstName',
             expected: null,
         },
+        {
+            props: { firstName: 'Ryan' },
+            updated: [ { prop: 'firstName', value: 'Kevin' }],
+            name: 'firstName',
+            expected: 'Kevin',
+        },
+        {
+            props: {
+                user: {
+                    firstName: 'Ryan',
+                },
+            },
+            updated: [ { prop: 'user.firstName', value: 'Kevin' }],
+            name: 'user.firstName',
+            expected: 'Kevin',
+        },
     ];
 
-    getDataset.forEach(({ props, name, expected }) => {
+    getDataset.forEach(({ props, name, expected, updated = [] }) => {
         it(`get("${name}") with data ${JSON.stringify(props)} returns ${JSON.stringify(expected)}`, () => {
             const store = new ValueStore(props);
+            updated.forEach(({ prop, value }) => {
+                store.set(prop, value);
+            });
             expect(store.get(name)).toEqual(expected);
         });
     });
@@ -135,7 +154,7 @@ describe('ValueStore', () => {
             },
             set: 'user.firstName',
             to: 'Kevin',
-            expected: { user: { firstName: 'Kevin' } },
+            expected: { 'user.firstName': 'Kevin' },
         },
         {
             props: {
@@ -146,7 +165,7 @@ describe('ValueStore', () => {
             },
             set: 'user',
             to: 456,
-            expected: { user: { '@id': 456, firstName: 'Ryan' } },
+            expected: { user: 456 },
         },
         {
             props: {
@@ -174,51 +193,45 @@ describe('ValueStore', () => {
         it(`set("${set}", ${JSON.stringify(to)}) with data ${JSON.stringify(props)} results in ${JSON.stringify(expected)}`, () => {
             const store = new ValueStore(props);
             store.set(set, to);
-            expect(store.all()).toEqual(expected);
+            expect(store.getDirtyProps()).toEqual(expected);
         });
     });
 
-    const setErrorsDataset = [
-        {
-            props: { },
-            set: 'firstName',
-            to: 'Ryan',
-            throws: 'was never initialized',
-        },
-        {
-            props: { },
-            set: 'user.firstName',
-            to: 'Ryan',
-            throws: 'The parent "user" data does not exist',
-        },
-        {
-            props: { user: {} },
-            set: 'user.firstName',
-            to: 'Ryan',
-            throws: 'was never initialized',
-        },
-        {
-            props: { user: 'Kevin' },
-            set: 'user.firstName',
-            to: 'Ryan',
-            throws: 'The parent "user" data does not appear to be an object',
-        },
-    ];
-    setErrorsDataset.forEach(({ props, set, to, throws }) => {
-        it(`set("${set}") with data ${JSON.stringify(props)} throws "${throws}"`, () => {
-            const store = new ValueStore(props);
-            expect(() => {
-                store.set(set, to);
-            }).toThrow(throws);
-        });
+    it('correctly tracks pending changes', () => {
+        const store = new ValueStore({ firstName: 'Ryan' });
+
+        store.set('firstName', 'Kevin');
+        store.flushDirtyPropsToPending();
+        expect(store.get('firstName')).toEqual('Kevin');
+
+        // imitate an Ajax failure: new value still exists
+        store.pushPendingPropsBackToDirty();
+        expect(store.get('firstName')).toEqual('Kevin');
+
+        // imitate an Ajax success (but the server changes the data)
+        store.flushDirtyPropsToPending();
+        store.reinitializeAllProps({ firstName: 'KEVIN' });
+        expect(store.get('firstName')).toEqual('KEVIN');
+
+        // imitate an Ajax success where the value is changed during the request
+        store.reinitializeAllProps({ firstName: 'Ryan' });
+        store.set('firstName', 'Kevin');
+        store.flushDirtyPropsToPending();
+        store.set('firstName', 'Wouter');
+        expect(store.get('firstName')).toEqual('Wouter');
+        // ajax call finishes, the props has updated correctly
+        store.reinitializeAllProps({ firstName: 'Kevin' });
+        // the updating state still exists
+        expect(store.get('firstName')).toEqual('Wouter');
     });
 
-    it('all() returns props', () => {
+
+    it('getOriginalProps() returns props', () => {
         const container = new ValueStore(
             { city: 'Grand Rapids', user: 'Kevin' },
         );
 
-        expect(container.all()).toEqual({ city: 'Grand Rapids', user: 'Kevin'});
+        expect(container.getOriginalProps()).toEqual({ city: 'Grand Rapids', user: 'Kevin'});
     });
 
     const reinitializeProvidedPropsDataset = [
@@ -350,7 +363,7 @@ describe('ValueStore', () => {
         it(`reinitializeProvidedProps(${JSON.stringify(newProps)}) with data ${JSON.stringify(props)} results in ${JSON.stringify(expectedProps)}`, () => {
             const store = new ValueStore(props);
             const actualChanged = store.reinitializeProvidedProps(newProps);
-            expect(store.all()).toEqual(expectedProps);
+            expect(store.getOriginalProps()).toEqual(expectedProps);
             expect(actualChanged).toEqual(changed);
         });
     });

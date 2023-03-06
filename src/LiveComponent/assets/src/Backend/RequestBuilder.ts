@@ -1,20 +1,6 @@
-import BackendRequest from './BackendRequest';
+import { BackendAction } from './Backend';
 
-export interface BackendInterface {
-    makeRequest(
-        data: any,
-        actions: BackendAction[],
-        updatedModels: string[],
-        childrenFingerprints: any
-    ): BackendRequest;
-}
-
-export interface BackendAction {
-    name: string;
-    args: Record<string, string>;
-}
-
-export default class implements BackendInterface {
+export default class {
     private url: string;
     private readonly csrfToken: string | null;
 
@@ -23,12 +9,12 @@ export default class implements BackendInterface {
         this.csrfToken = csrfToken;
     }
 
-    makeRequest(
-        data: any,
+    buildRequest(
+        props: any,
         actions: BackendAction[],
-        updatedModels: string[],
+        updated: {[key: string]: any},
         childrenFingerprints: any
-    ): BackendRequest {
+    ): { url: string; fetchOptions: RequestInit } {
         const splitUrl = this.url.split('?');
         let [url] = splitUrl;
         const [, queryString] = splitUrl;
@@ -40,26 +26,20 @@ export default class implements BackendInterface {
         };
 
         const hasFingerprints = Object.keys(childrenFingerprints).length > 0;
-        const hasUpdatedModels = Object.keys(updatedModels).length > 0;
         if (
             actions.length === 0 &&
-            this.willDataFitInUrl(JSON.stringify(data), params, JSON.stringify(childrenFingerprints))
+            this.willDataFitInUrl(JSON.stringify(props), JSON.stringify(updated), params, JSON.stringify(childrenFingerprints))
         ) {
-            params.set('data', JSON.stringify(data));
+            params.set('props', JSON.stringify(props));
+            params.set('updated', JSON.stringify(updated));
             if (hasFingerprints) {
                 params.set('childrenFingerprints', JSON.stringify(childrenFingerprints));
             }
-            updatedModels.forEach((model) => {
-                params.append('updatedModels[]', model);
-            });
             fetchOptions.method = 'GET';
         } else {
             fetchOptions.method = 'POST';
             fetchOptions.headers['Content-Type'] = 'application/json';
-            const requestData: any = { data };
-            if (hasUpdatedModels) {
-                requestData.updatedModels = updatedModels;
-            }
+            const requestData: any = { props, updated };
             if (hasFingerprints) {
                 requestData.childrenFingerprints = childrenFingerprints;
             }
@@ -86,15 +66,14 @@ export default class implements BackendInterface {
 
         const paramsString = params.toString();
 
-        return new BackendRequest(
-            fetch(`${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`, fetchOptions),
-            actions.map((backendAction) => backendAction.name),
-            updatedModels
-        );
+        return {
+            url: `${url}${paramsString.length > 0 ? `?${paramsString}` : ''}`,
+            fetchOptions,
+        }
     }
 
-    private willDataFitInUrl(dataJson: string, params: URLSearchParams, childrenFingerprintsJson: string) {
-        const urlEncodedJsonData = new URLSearchParams(dataJson + childrenFingerprintsJson).toString();
+    private willDataFitInUrl(propsJson: string, updatedJson: string, params: URLSearchParams, childrenFingerprintsJson: string) {
+        const urlEncodedJsonData = new URLSearchParams(propsJson + updatedJson + childrenFingerprintsJson).toString();
 
         // if the URL gets remotely close to 2000 chars, it may not fit
         return (urlEncodedJsonData + params.toString()).length < 1500;
