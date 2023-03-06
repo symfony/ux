@@ -54,7 +54,7 @@ final class LiveComponentHydrator
     ) {
     }
 
-    public function dehydrate(object $component, ComponentAttributes $attributes, LiveComponentMetadata $componentMetadata): array
+    public function dehydrate(object $component, ComponentAttributes $attributes, LiveComponentMetadata $componentMetadata): DehydratedProps
     {
         foreach (AsLiveComponent::preDehydrateMethods($component) as $method) {
             $component->{$method->name}();
@@ -105,7 +105,7 @@ final class LiveComponentHydrator
                 $this->preventArrayDehydratedValueForObjectThatIsWritable($dehydratedValue, $propMetadata->getType(), $propMetadata->isBuiltIn(), $propMetadata->getName(), false);
             }
 
-            $dehydratedProps->addIdentifierValue($frontendName, $dehydratedValue);
+            $dehydratedProps->addPropValue($frontendName, $dehydratedValue);
 
             foreach ($propMetadata->writablePaths() as $path) {
                 try {
@@ -128,57 +128,45 @@ final class LiveComponentHydrator
                     $this->preventArrayDehydratedValueForObjectThatIsWritable($pathValue, $originalPathValueClass, false, sprintf('%s.%s', $propMetadata->getName(), $path), false);
                 }
 
-                $dehydratedProps->addWritablePathValue($frontendName, $path, $pathValue);
+                $dehydratedProps->addNestedProp($frontendName, $path, $pathValue);
             }
         }
 
         if (0 !== \count($attributes->all())) {
-            $dehydratedProps->addIdentifierValue(self::ATTRIBUTES_KEY, $attributes->all());
+            $dehydratedProps->addPropValue(self::ATTRIBUTES_KEY, $attributes->all());
         }
 
-        $dehydratedProps = $dehydratedProps->toArray();
-        $dehydratedProps[self::CHECKSUM_KEY] = $this->calculateChecksum($dehydratedProps);
+        $checksum = $this->calculateChecksum($dehydratedProps->getProps());
+        $dehydratedProps->addPropValue(self::CHECKSUM_KEY, $checksum);
 
         return $dehydratedProps;
     }
 
     /**
-     * Takes the given read-only props and updatedProps and hydrates the component.
+     * Takes the read-only props and updatedProps and hydrates the component.
      *
      * $props:  The original props - i.e. the return value from dehydrate():
      *
-     *          [
-     *             'name' => 'ryan',
-     *             'food' => [
-     *                 '@id' => 1,
-     *                 'name' => 'Pizza',
-     *             ]
-     *         ]
-     *
+     *     ['name' => 'ryan', 'food' => 5]
      *
      * $updatedProps A one-dimensional array of any props that should change:
      *
-     *         [
-     *            'name' => 'kevin',
-     *            'food.name' => 'Pasta',
-     *        ]
+     *     ['name' => 'kevin', 'food.name' => 'Pasta']
      */
     public function hydrate(object $component, array $props, array $updatedProps, LiveComponentMetadata $componentMetadata): ComponentAttributes
     {
-        $dehydratedOriginalProps = DehydratedProps::createFromArray($props);
+        $dehydratedOriginalProps = DehydratedProps::createFromPropsArray($props);
         $dehydratedUpdatedProps = DehydratedProps::createFromUpdatedArray($updatedProps);
 
-        if (!$this->isChecksumValid($dehydratedOriginalProps->toArray())) {
-            throw new HydrationException('Invalid or missing checksum. This usually means that you tried to change a property that is not writable: true.');
-        }
-        $dehydratedOriginalProps->removeIdentifierValue(self::CHECKSUM_KEY);
+        $this->verifyChecksum($dehydratedOriginalProps->getProps());
+        $dehydratedOriginalProps->removePropValue(self::CHECKSUM_KEY);
 
-        $attributes = new ComponentAttributes($dehydratedOriginalProps->getIdentifierValue(self::ATTRIBUTES_KEY, []));
-        $dehydratedOriginalProps->removeIdentifierValue(self::ATTRIBUTES_KEY);
+        $attributes = new ComponentAttributes($dehydratedOriginalProps->getPropValue(self::ATTRIBUTES_KEY, []));
+        $dehydratedOriginalProps->removePropValue(self::ATTRIBUTES_KEY);
 
         foreach ($componentMetadata->getAllLivePropsMetadata() as $propMetadata) {
             $frontendName = $propMetadata->calculateFieldName($component, $propMetadata->getName());
-            if (!$dehydratedOriginalProps->hasIdentifierValue($frontendName)) {
+            if (!$dehydratedOriginalProps->hasPropValue($frontendName)) {
                 // this property was not sent, so skip
                 // even if this has writable paths, if no identity is sent,
                 // then there's nothing to write those onto
@@ -186,31 +174,47 @@ final class LiveComponentHydrator
             }
 
             /*
-            | 1) Hydrate and set the "original" data for this property.
+            | 1) Hydrate and set the "original" data for this LiveProp.
             */
-            $propertyValue = $this->hydratePropertyData(
+            $propertyValue = $this->hydrateLiveProp(
                 $component,
                 $propMetadata,
-                $frontendName,
-                $dehydratedOriginalProps,
-                null,
-                allowIdentifierToBeWritten: true,
-                propsAreFromUserForUpdating: false
+                $dehydratedOriginalProps->getPropValue($frontendName),
             );
             $this->propertyAccessor->setValue($component, $propMetadata->getName(), $propertyValue);
 
             /*
-             | 2) Hydrate and set the "updated" data for this property.
+             | 2) Hydrate and set the "updated" data for this LiveProp if one was sent.
              */
-            $propertyValue = $this->hydratePropertyData(
-                $component,
-                $propMetadata,
-                $frontendName,
-                $dehydratedUpdatedProps,
-                $propertyValue,
-                allowIdentifierToBeWritten: $propMetadata->isIdentityWritable(),
-                propsAreFromUserForUpdating: true
-            );
+            if ($dehydratedUpdatedProps->hasPropValue($frontendName)) {
+                if (!$propMetadata->isIdentityWritable()) {
+                    throw new HydrationException(sprintf('The model "%s" was sent for update, but it is not writable. Try adding "writable: true" to the $%s property in %s.', $frontendName, $propMetadata->getName(), \get_class($component)));
+                }
+                try {
+                    $propertyValue = $this->hydrateLiveProp(
+                        $component,
+                        $propMetadata,
+                        $dehydratedUpdatedProps->getPropValue($frontendName),
+                    );
+                } catch (HydrationException $e) {
+                    // swallow this: it's bad data from the user
+                }
+            }
+
+            /*
+             | 3) Hydrate and set any "writable paths" data for this LiveProp.
+             */
+            if (\is_array($propertyValue) || \is_object($propertyValue)) {
+                $propertyValue = $this->hydrateAndSetWritablePaths(
+                    $propMetadata,
+                    $frontendName,
+                    $propertyValue,
+                    $dehydratedUpdatedProps,
+                    $this->getDenormalizationContext($component, $propMetadata->getName()),
+                    \get_class($component),
+                );
+            }
+
             try {
                 $this->propertyAccessor->setValue($component, $propMetadata->getName(), $propertyValue);
             } catch (PropertyAccessExceptionInterface $exception) {
@@ -253,20 +257,24 @@ final class LiveComponentHydrator
         // sort so it is always consistent (frontend could have re-ordered data)
         ksort($dehydratedPropsData);
 
-        return base64_encode(hash_hmac('sha256', var_export($dehydratedPropsData, true), $this->secret, true));
+        return base64_encode(hash_hmac('sha256', json_encode($dehydratedPropsData), $this->secret, true));
     }
 
-    private function isChecksumValid(array $flattenedProps): bool
+    private function verifyChecksum(array $identifierPops): void
     {
-        if (!\array_key_exists(self::CHECKSUM_KEY, $flattenedProps)) {
-            return false;
+        if (!\array_key_exists(self::CHECKSUM_KEY, $identifierPops)) {
+            throw new HydrationException(sprintf('Missing %s. key', self::CHECKSUM_KEY));
         }
-        $sentChecksum = $flattenedProps[self::CHECKSUM_KEY];
-        unset($flattenedProps[self::CHECKSUM_KEY]);
+        $sentChecksum = $identifierPops[self::CHECKSUM_KEY];
+        unset($identifierPops[self::CHECKSUM_KEY]);
 
-        $expectedChecksum = $this->calculateChecksum($flattenedProps);
+        $expectedChecksum = $this->calculateChecksum($identifierPops);
 
-        return hash_equals($expectedChecksum, $sentChecksum);
+        if (hash_equals($expectedChecksum, $sentChecksum)) {
+            return;
+        }
+
+        throw new HydrationException('Invalid checksum sent when updating the live component.');
     }
 
     /**
@@ -369,58 +377,29 @@ final class LiveComponentHydrator
         }
     }
 
-    private function hydratePropertyData(object $component, Metadata\LivePropMetadata $propMetadata, string $frontendName, DehydratedProps $dehydratedProps, mixed $startingHydratedValue, bool $allowIdentifierToBeWritten, bool $propsAreFromUserForUpdating): mixed
+    private function hydrateLiveProp(object $component, Metadata\LivePropMetadata $propMetadata, mixed $dehydratedProp): mixed
     {
-        $hydratedPropertyValue = $startingHydratedValue;
-
-        if ($propsAreFromUserForUpdating && !$allowIdentifierToBeWritten && $dehydratedProps->hasIdentifierValue($frontendName)) {
-            throw new HydrationException(sprintf('The model "%s" was sent for sent for update, but it is not writable. Try adding "writable: true" to the $%s property in %s.', $frontendName, $propMetadata->getName(), \get_class($component)));
-        }
-
-        if ($allowIdentifierToBeWritten && $dehydratedProps->hasIdentifierValue($frontendName)) {
-            $dehydratedProp = $dehydratedProps->getIdentifierValue($frontendName);
-
-            if ($propMetadata->hydrateMethod()) {
-                if (!method_exists($component, $propMetadata->hydrateMethod())) {
-                    throw new \LogicException(sprintf('The "%s" component has a hydrateMethod of "%s" but the method does not exist.', \get_class($component), $propMetadata->hydrateMethod()));
-                }
-                $hydratedPropertyValue = $component->{$propMetadata->hydrateMethod()}($dehydratedProp);
-            } else {
-                try {
-                    $hydratedPropertyValue = $this->hydrateValue(
-                        $dehydratedProp,
-                        $propMetadata->getType(),
-                        $propMetadata->allowsNull(),
-                        $propMetadata->isBuiltIn(),
-                        $this->getDenormalizationContext($component, $propMetadata->getName()),
-                        $propMetadata->getName(),
-                        $propMetadata->isIdentityWritable(),
-                        \get_class($component),
-                    );
-                } catch (HydrationException $exception) {
-                    if (!$propsAreFromUserForUpdating) {
-                        throw $exception;
-                    }
-                }
+        if ($propMetadata->hydrateMethod()) {
+            if (!method_exists($component, $propMetadata->hydrateMethod())) {
+                throw new \LogicException(sprintf('The "%s" component has a hydrateMethod of "%s" but the method does not exist.', \get_class($component), $propMetadata->hydrateMethod()));
             }
+
+            return $component->{$propMetadata->hydrateMethod()}($dehydratedProp);
         }
 
-        if (\is_array($hydratedPropertyValue) || \is_object($hydratedPropertyValue)) {
-            $hydratedPropertyValue = $this->hydrateAndSetWritablePaths(
-                $propMetadata,
-                $frontendName,
-                $hydratedPropertyValue,
-                $dehydratedProps,
-                $this->getDenormalizationContext($component, $propMetadata->getName()),
-                \get_class($component),
-                $propsAreFromUserForUpdating
-            );
-        }
-
-        return $hydratedPropertyValue;
+        return $this->hydrateValue(
+            $dehydratedProp,
+            $propMetadata->getType(),
+            $propMetadata->allowsNull(),
+            $propMetadata->isBuiltIn(),
+            $this->getDenormalizationContext($component, $propMetadata->getName()),
+            $propMetadata->getName(),
+            $propMetadata->isIdentityWritable(),
+            \get_class($component),
+        );
     }
 
-    private function hydrateAndSetWritablePaths(LivePropMetadata $propMetadata, string $frontendPropName, array|object $propertyValue, DehydratedProps $props, array $denormalizationContext, string $componentClass, bool $propsAreFromUserForUpdating): array|object
+    private function hydrateAndSetWritablePaths(LivePropMetadata $propMetadata, string $frontendPropName, array|object $propertyValue, DehydratedProps $props, array $denormalizationContext, string $componentClass): array|object
     {
         /*
          | Allows for specific keys to be written to a "fully-writable" array.
@@ -431,25 +410,23 @@ final class LiveComponentHydrator
          | isn't explicitly a writable path.
          */
         $writablePaths = $propMetadata->writablePaths();
-        if (\is_array($propertyValue) && $propsAreFromUserForUpdating && $propMetadata->isIdentityWritable()) {
-            $writablePaths = array_merge($writablePaths, $props->getWritablePathsForProperty($frontendPropName));
+        if (\is_array($propertyValue) && $propMetadata->isIdentityWritable()) {
+            $writablePaths = array_merge($writablePaths, $props->getNestedPathsForProperty($frontendPropName));
         }
 
-        if ($propsAreFromUserForUpdating) {
-            $extraSentWritablePaths = $props->calculateUnexpectedWritablePathsForProperty($frontendPropName, $writablePaths);
+        $extraSentWritablePaths = $props->calculateUnexpectedNestedPathsForProperty($frontendPropName, $writablePaths);
 
-            if (\count($extraSentWritablePaths) > 0) {
-                // we could show multiple fields here in the message
-                throw new HydrationException(sprintf('The model "%s.%s" was sent for sent for update, but it is not writable. Try adding "writable: [\'%s\']" to the $%s property in %s.', $frontendPropName, $extraSentWritablePaths[0], $extraSentWritablePaths[0], $propMetadata->getName(), $componentClass));
-            }
+        if (\count($extraSentWritablePaths) > 0) {
+            // we could show multiple fields here in the message
+            throw new HydrationException(sprintf('The model "%s.%s" was sent for update, but it is not writable. Try adding "writable: [\'%s\']" to the $%s property in %s.', $frontendPropName, $extraSentWritablePaths[0], $extraSentWritablePaths[0], $propMetadata->getName(), $componentClass));
         }
 
         foreach ($writablePaths as $writablePath) {
-            if (!$props->hasWritablePathValue($frontendPropName, $writablePath)) {
+            if (!$props->hasNestedPathValue($frontendPropName, $writablePath)) {
                 continue;
             }
 
-            $writablePathData = $props->getWritablePathValue($frontendPropName, $writablePath);
+            $writablePathData = $props->getNestedPathValue($frontendPropName, $writablePath);
 
             // smarter hydration currently only supported for top-level writable
             // e.g. writablePaths: ['post.createdAt'] is not supported.
@@ -474,10 +451,7 @@ final class LiveComponentHydrator
                         $componentClass,
                     );
                 } catch (HydrationException $exception) {
-                    if (!$propsAreFromUserForUpdating) {
-                        throw $exception;
-                    }
-
+                    // swallow problems hydrating user-sent data
                     continue;
                 }
             }
@@ -489,9 +463,7 @@ final class LiveComponentHydrator
                     $writablePathData
                 );
             } catch (PropertyAccessExceptionInterface $e) {
-                if (!$propsAreFromUserForUpdating) {
-                    throw $e;
-                }
+                // swallow problems setting user-sent data
             }
         }
 

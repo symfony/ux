@@ -2,14 +2,19 @@ import { getDeepData } from '../data_manipulation_utils';
 import { normalizeModelName } from '../string_utils';
 
 export default class {
-    private readonly identifierKey = '@id';
-
     /**
-     * The original props passed to the component.
+     * Original, read-only props that represent the original component state.
      *
      * @private
      */
     private props: any = {};
+
+    /**
+     * A list of extra, nested props added to make them available as models.
+     *
+     * @private
+     */
+    private nestedProps: any = {};
 
     /**
      * A list of props that have been "dirty" (changed) since the last request to the server.
@@ -22,8 +27,9 @@ export default class {
      */
     private pendingProps: {[key: string]: any} = {};
 
-    constructor(props: any) {
+    constructor(props: any, nestedProps: any) {
         this.props = props;
+        this.nestedProps = nestedProps;
     }
 
     /**
@@ -44,19 +50,11 @@ export default class {
             return this.pendingProps[normalizedName];
         }
 
-        const value = getDeepData(this.props, normalizedName);
-
-        if (null === value) {
-            return value;
+        if (this.nestedProps[normalizedName] !== undefined) {
+            return this.nestedProps[normalizedName];
         }
 
-        // if normalizedName is "top level" and value is an object,
-        // and the value has an "@id" key, then return the "@id" key.
-        if (this.isPropNameTopLevel(normalizedName) && typeof value === 'object' && value[this.identifierKey] !== undefined) {
-            return value[this.identifierKey];
-        }
-
-        return value;
+        return getDeepData(this.props, normalizedName);
     }
 
     has(name: string): boolean {
@@ -88,6 +86,10 @@ export default class {
         return { ...this.props };
     }
 
+    getOriginalNestedProps(): any {
+        return { ...this.nestedProps };
+    }
+
     getDirtyProps(): any {
         return { ...this.dirtyProps };
     }
@@ -102,11 +104,10 @@ export default class {
 
     /**
      * Called when an update request finishes successfully.
-     *
-     * @param props
      */
-    reinitializeAllProps(props: any): void {
+    reinitializeAllProps(props: any, nestedProps: any): void {
         this.props = props;
+        this.nestedProps = nestedProps;
         this.pendingProps = {};
     }
 
@@ -129,42 +130,22 @@ export default class {
      * The server manages returning only the readonly props, so we don't need to
      * worry about that.
      *
-     * If a prop is readonly, it will also include all of its "writable" paths
-     * data. So, that embedded, writable data *is* overwritten. For example,
-     * if the "user" data is currently { '@id': 123, firstName: 'Ryan' } and
-     * the "user" prop changes to "456", the new "user" prop passed here will
-     * be { '@id': 456, firstName: 'Kevin' }. This will overwrite the "firstName",
-     * writable embedded data.
-     *
      * Returns true if any of the props changed.
      */
     reinitializeProvidedProps(props: any): boolean {
         let changed = false;
 
         for (const [key, value] of Object.entries(props)) {
-            const currentIdentifier = this.get(key);
-            const newIdentifier = this.findIdentifier(value);
+            const currentValue = this.get(key);
 
-            // if the readonly identifier is different, then overwrite
-            // the prop entirely, including embedded writable data.
-            if (currentIdentifier !== newIdentifier) {
+            // if the readonly identifier is different, then overwrite the
+            // prop entirely
+            if (currentValue !== value) {
                 changed = true;
                 this.props[key] = value;
             }
         }
 
         return changed;
-    }
-
-    private isPropNameTopLevel(key: string): boolean {
-        return key.indexOf('.') === -1;
-    }
-
-    private findIdentifier(value: any): any {
-        if (typeof value !== 'object' || value[this.identifierKey] === undefined) {
-            return value;
-        }
-
-        return value[this.identifierKey];
     }
 }

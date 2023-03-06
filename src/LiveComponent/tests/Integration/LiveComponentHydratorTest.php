@@ -83,13 +83,14 @@ final class LiveComponentHydratorTest extends KernelTestCase
         );
 
         // this is empty, so won't be here
-        $this->assertArrayNotHasKey('@attributes', $dehydratedProps);
+        $this->assertArrayNotHasKey('@attributes', $dehydratedProps->getProps());
 
         if (null !== $testCase->expectedDehydratedProps) {
             $expectedDehydratedProps = $testCase->expectedDehydratedProps;
             // add checksum to make comparison happy
-            $expectedDehydratedProps['@checksum'] = $dehydratedProps['@checksum'];
-            $this->assertEquals($expectedDehydratedProps, $dehydratedProps, 'Dehydrated props do not match expected.');
+            $expectedDehydratedProps['@checksum'] = $dehydratedProps->getProps()['@checksum'];
+            $this->assertEquals($expectedDehydratedProps, $dehydratedProps->getProps(), 'Dehydrated props do not match expected.');
+            $this->assertEquals($testCase->expectedDehydratedNestedProps, $dehydratedProps->getNestedProps(), 'Dehydrated nested props do not match expected.');
         }
 
         if ($testCase->expectHydrationException) {
@@ -103,7 +104,9 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ($testCase->beforeHydrationCallable)();
         }
 
-        $originalPropsToSend = $testCase->changedOriginalProps ?? $dehydratedProps;
+        $originalPropsToSend = $testCase->changedOriginalProps ?? $dehydratedProps->getProps();
+        // mimic sending over the wire, which can subtle change php types
+        $originalPropsToSend = json_decode(json_encode($originalPropsToSend), true);
 
         $this->hydrator()->hydrate(
             $componentAfterHydration,
@@ -160,6 +163,25 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->userUpdatesProps(['firstName' => 'Kevin'])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertSame('Kevin', $object->firstName);
+                })
+            ;
+        }];
+
+        yield 'float: precision change to the frontend works ok' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true)]
+                public float $price;
+            })
+                // when the 123.00 float/double is json encoded, it becomes the
+                // integer 123. If not handled correctly, this can cause a checksum
+                // failure: the checksum is originally calculated with the float
+                // 123.00, but then when the props are sent back to the server,
+                // the float is converted to an integer 123, which causes the checksum
+                // to fail.
+                ->mountWith(['price' => 123.00])
+                ->assertDehydratesTo(['price' => 123.00])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame(123.00, $object->price);
                 })
             ;
         }];
@@ -253,12 +275,10 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 public ProductFixtureEntity $product;
             })
                 ->mountWith(['product' => $product])
-                ->assertDehydratesTo([
-                    'product' => [
-                        '@id' => $product->id,
-                        'name' => $product->name,
-                    ],
-                ])
+                ->assertDehydratesTo(
+                    ['product' => $product->id],
+                    ['product.name' => $product->name],
+                )
                 ->userUpdatesProps([
                     'product.name' => 'real chicken',
                 ])
@@ -326,14 +346,16 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 public ProductFixtureEntity $product;
             })
                 ->mountWith(['product' => $product])
-                ->assertDehydratesTo(['product' => [
-                    '@id' => [
-                        'id' => null,
-                        'name' => 'original name',
-                        'price' => 333,
+                ->assertDehydratesTo(
+                    [
+                        'product' => [
+                            'id' => null,
+                            'name' => 'original name',
+                            'price' => 333,
+                        ],
                     ],
-                    'price' => 333,
-                ]])
+                    ['product.price' => 333],
+                )
                 ->userUpdatesProps([
                     'product.price' => 1000,
                 ])
@@ -448,7 +470,8 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->userUpdatesProps([
                     // instead of replacing the entire array, you can change
                     // just one key on the array, since it's fully writable
-                    'options.character' => 'Buster Bluth'])
+                    'options.character' => 'Buster Bluth',
+                ])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertSame(
                         [
@@ -456,6 +479,48 @@ final class LiveComponentHydratorTest extends KernelTestCase
                             'character' => 'Buster Bluth',
                         ],
                         $object->options
+                    );
+                });
+        }];
+
+        yield 'Associative array: fully writable allows deep partial changes' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true, fieldName: 'invoice')]
+                public array $formData = [];
+            })
+                ->mountWith(['formData' => [
+                    'number' => '123',
+                    'lineItems' => [
+                        ['name' => 'item1', 'quantity' => 4, 'price' => 100],
+                        ['name' => 'item2', 'quantity' => 2, 'price' => 200],
+                        ['name' => 'item3', 'quantity' => 1, 'price' => 1000],
+                    ],
+                ]])
+                ->assertDehydratesTo(['invoice' => [
+                    'number' => '123',
+                    'lineItems' => [
+                        ['name' => 'item1', 'quantity' => 4, 'price' => 100],
+                        ['name' => 'item2', 'quantity' => 2, 'price' => 200],
+                        ['name' => 'item3', 'quantity' => 1, 'price' => 1000],
+                    ],
+                ]])
+                ->userUpdatesProps([
+                    // invoice is used as the field name
+                    'invoice.lineItems.0.quantity' => 5,
+                    'invoice.lineItems.1.price' => 300,
+                    'invoice.number' => '456',
+                    // tricky: overriding the entire array
+                    'invoice.lineItems.2' => ['name' => 'item3_updated', 'quantity' => 2, 'price' => 2000],
+                ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame([
+                        'number' => '456',
+                        'lineItems' => [
+                            ['name' => 'item1', 'quantity' => 5, 'price' => 100],
+                            ['name' => 'item2', 'quantity' => 2, 'price' => 300],
+                            ['name' => 'item3_updated', 'quantity' => 2, 'price' => 2000],
+                        ]],
+                        $object->formData
                     );
                 });
         }];
@@ -469,13 +534,15 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     'show' => 'Arrested development',
                     'character' => 'Michael Bluth',
                 ]])
-                ->assertDehydratesTo(['options' => [
-                    '@id' => [
-                        'show' => 'Arrested development',
-                        'character' => 'Michael Bluth',
+                ->assertDehydratesTo(
+                    [
+                        'options' => [
+                            'show' => 'Arrested development',
+                            'character' => 'Michael Bluth',
+                        ],
                     ],
-                    'character' => 'Michael Bluth',
-                ]])
+                    ['options.character' => 'Michael Bluth'],
+                )
                 ->userUpdatesProps([
                     'options.character' => 'George Michael Bluth',
                 ])
@@ -499,19 +566,18 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     'show' => 'Arrested development',
                     'character' => 'Michael Bluth',
                 ]])
-                ->assertDehydratesTo(['options' => [
-                    '@id' => [
-                        'show' => 'Arrested development',
-                        'character' => 'Michael Bluth',
+                ->assertDehydratesTo(
+                    [
+                        'options' => [
+                            'show' => 'Arrested development',
+                            'character' => 'Michael Bluth',
+                        ],
                     ],
-                    'character' => 'Michael Bluth',
-                ]])
+                    ['options.character' => 'Michael Bluth']
+                )
                 ->userChangesOriginalPropsTo(['options' => [
-                    '@id' => [
-                        'show' => 'Simpsons',
-                        'character' => 'Michael Bluth',
-                    ],
-                    'character' => 'George Michael Bluth',
+                    'show' => 'Simpsons',
+                    'character' => 'Michael Bluth',
                 ]])
                 ->expectsExceptionDuringHydration(BadRequestHttpException::class, '/checksum/i');
         }];
@@ -525,13 +591,15 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     'key1' => 'bar',
                     'key2' => 'baz',
                 ]]])
-                ->assertDehydratesTo(['stuff' => [
-                    '@id' => ['details' => [
-                        'key1' => 'bar',
-                        'key2' => 'baz',
-                    ]],
-                    'details' => ['key1' => 'bar'],
-                ]])
+                ->assertDehydratesTo(
+                    [
+                        'stuff' => ['details' => [
+                            'key1' => 'bar',
+                            'key2' => 'baz',
+                        ]],
+                    ],
+                    ['stuff.details.key1' => 'bar'],
+                )
                 ->userUpdatesProps(['stuff.details.key1' => 'changed key1'])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertSame(['details' => [
@@ -551,13 +619,13 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     'key1' => 'bar',
                     'key2' => 'baz',
                 ]]])
-                ->assertDehydratesTo(['stuff' => [
-                    '@id' => ['details' => [
+                ->assertDehydratesTo(
+                    ['stuff' => ['details' => [
                         'key1' => 'bar',
                         'key2' => 'baz',
-                    ]],
-                    'details' => ['key1' => 'bar', 'key2' => 'baz'],
-                ]])
+                    ]]],
+                    ['stuff.details' => ['key1' => 'bar', 'key2' => 'baz']],
+                )
                 ->userUpdatesProps([
                     'stuff.details' => ['key1' => 'changed key1', 'new_key' => 'new value'],
                 ])
@@ -751,16 +819,16 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 public HoldsDateAndEntity $holdsDate;
             })
                 ->mountWith(['holdsDate' => $holdsDate])
-                ->assertDehydratesTo([
-                    'holdsDate' => [
-                        '@id' => [
-                            'createdAt' => '2023-03-05T09:23:00-05:00',
-                            'product' => $product->id,
-                        ],
+                ->assertDehydratesTo(
+                    ['holdsDate' => [
                         'createdAt' => '2023-03-05T09:23:00-05:00',
                         'product' => $product->id,
+                    ]],
+                    [
+                        'holdsDate.createdAt' => '2023-03-05T09:23:00-05:00',
+                        'holdsDate.product' => $product->id,
                     ],
-                ])
+                )
                 ->userUpdatesProps([
                     // change these: their values should dehydrate and be used
                     'holdsDate.createdAt' => '2022-01-01T09:23:00-05:00',
@@ -787,14 +855,12 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 public HoldsStringEnum $holdsStringEnum;
             })
                 ->mountWith(['holdsStringEnum' => $holdsStringEnum])
-                ->assertDehydratesTo([
-                    'holdsStringEnum' => [
-                        '@id' => [
-                            'stringEnum' => 'active',
-                        ],
-                        'stringEnum' => 'active',
+                ->assertDehydratesTo(
+                    [
+                        'holdsStringEnum' => ['stringEnum' => 'active'],
                     ],
-                ])
+                    ['holdsStringEnum.stringEnum' => 'active'],
+                )
                 ->userUpdatesProps([
                     'holdsStringEnum.stringEnum' => 'not_real',
                 ])
@@ -819,7 +885,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->userUpdatesProps([
                     'product.name' => 'will cause an explosion',
                 ])
-                ->expectsExceptionDuringHydration(HydrationException::class, '/The model "product\.name" was sent for sent for update, but it is not writable\. Try adding "writable\: \[\'name\'\]" to the \$product property in/')
+                ->expectsExceptionDuringHydration(HydrationException::class, '/The model "product\.name" was sent for update, but it is not writable\. Try adding "writable\: \[\'name\'\]" to the \$product property in/')
             ;
         }];
 
@@ -832,7 +898,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->userUpdatesProps([
                     'name' => 'will cause an explosion',
                 ])
-                ->expectsExceptionDuringHydration(HydrationException::class, '/The model "name" was sent for sent for update, but it is not writable\. Try adding "writable\: true" to the \$name property in/')
+                ->expectsExceptionDuringHydration(HydrationException::class, '/The model "name" was sent for update, but it is not writable\. Try adding "writable\: true" to the \$name property in/')
             ;
         }];
 
@@ -965,7 +1031,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->hydrator()->hydrate(
             $component,
-            $dehydratedProps,
+            $dehydratedProps->getProps(),
             $updatedProps,
             $this->createLiveMetadata($component),
         );
@@ -995,11 +1061,11 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->expectException(BadRequestHttpException::class);
         $this->expectExceptionMessageMatches('/The model path "holdsDateAndEntity.product" was sent as an array, but this could not be hydrated to an object as that is not allowed/');
 
-        $updatedProps = ['holdsDateAndEntity.product.name' => 'new name'];
+        $updatedProps = ['holdsDateAndEntity.product' => ['name' => 'new name']];
 
         $this->hydrator()->hydrate(
             $component,
-            $dehydratedProps,
+            $dehydratedProps->getProps(),
             $updatedProps,
             $this->createLiveMetadata($component),
         );
@@ -1123,7 +1189,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertFalse($component->preDehydrateCalled);
         $this->assertFalse($component->postHydrateCalled);
 
-        $data = $this->dehydrateComponent($mounted);
+        $dehydrated = $this->dehydrateComponent($mounted);
 
         $this->assertTrue($component->preDehydrateCalled);
         $this->assertFalse($component->postHydrateCalled);
@@ -1134,7 +1200,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertFalse($component->preDehydrateCalled);
         $this->assertFalse($component->postHydrateCalled);
 
-        $this->hydrateComponent($component, $mounted->getName(), $data);
+        $this->hydrateComponent($component, $mounted->getName(), $dehydrated->getProps());
 
         $this->assertFalse($component->preDehydrateCalled);
         $this->assertTrue($component->postHydrateCalled);
@@ -1143,19 +1209,19 @@ final class LiveComponentHydratorTest extends KernelTestCase
     public function testCorrectlyUsesCustomFrontendNameInDehydrateAndHydrate(): void
     {
         $mounted = $this->mountComponent('component3', ['prop1' => 'value1', 'prop2' => 'value2']);
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydratedProps = $this->dehydrateComponent($mounted)->getProps();
 
-        $this->assertArrayNotHasKey('prop1', $dehydrated);
-        $this->assertArrayNotHasKey('prop2', $dehydrated);
-        $this->assertArrayHasKey('myProp1', $dehydrated);
-        $this->assertArrayHasKey('myProp2', $dehydrated);
-        $this->assertSame('value1', $dehydrated['myProp1']);
-        $this->assertSame('value2', $dehydrated['myProp2']);
+        $this->assertArrayNotHasKey('prop1', $dehydratedProps);
+        $this->assertArrayNotHasKey('prop2', $dehydratedProps);
+        $this->assertArrayHasKey('myProp1', $dehydratedProps);
+        $this->assertArrayHasKey('myProp2', $dehydratedProps);
+        $this->assertSame('value1', $dehydratedProps['myProp1']);
+        $this->assertSame('value2', $dehydratedProps['myProp2']);
 
         /** @var Component3 $component */
         $component = $this->getComponent('component3');
 
-        $this->hydrateComponent($component, $mounted->getName(), $dehydrated);
+        $this->hydrateComponent($component, $mounted->getName(), $dehydratedProps);
 
         $this->assertSame('value1', $component->prop1);
         $this->assertSame('value2', $component->prop2);
@@ -1167,12 +1233,12 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->assertSame($attributes, $mounted->getAttributes()->all());
 
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydratedProps = $this->dehydrateComponent($mounted)->getProps();
 
-        $this->assertArrayHasKey('@attributes', $dehydrated);
-        $this->assertSame($attributes, $dehydrated['@attributes']);
+        $this->assertArrayHasKey('@attributes', $dehydratedProps);
+        $this->assertSame($attributes, $dehydratedProps['@attributes']);
 
-        $actualAttributes = $this->hydrateComponent($this->getComponent('with_attributes'), $mounted->getName(), $dehydrated);
+        $actualAttributes = $this->hydrateComponent($this->getComponent('with_attributes'), $mounted->getName(), $dehydratedProps);
 
         $this->assertSame($attributes, $actualAttributes->all());
     }
@@ -1183,11 +1249,11 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         $this->assertSame([], $mounted->getAttributes()->all());
 
-        $dehydrated = $this->dehydrateComponent($mounted);
+        $dehydratedProps = $this->dehydrateComponent($mounted)->getProps();
 
-        $this->assertArrayNotHasKey('_attributes', $dehydrated);
+        $this->assertArrayNotHasKey('_attributes', $dehydratedProps);
 
-        $actualAttributes = $this->hydrateComponent($this->getComponent('with_attributes'), $mounted->getName(), $dehydrated);
+        $actualAttributes = $this->hydrateComponent($this->getComponent('with_attributes'), $mounted->getName(), $dehydratedProps);
 
         $this->assertSame([], $actualAttributes->all());
     }
@@ -1197,7 +1263,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
      */
     public function testCoerceFalseyValuesForScalarTypes($prop, $value, $expected): void
     {
-        $dehydratedProps = $this->dehydrateComponent($this->mountComponent('scalar_types'));
+        $dehydratedProps = $this->dehydrateComponent($this->mountComponent('scalar_types'))->getProps();
 
         $updatedProps = [$prop => $value];
         $hydratedComponent = $this->getComponent('scalar_types');
@@ -1243,6 +1309,7 @@ class HydrationTest
 {
     private array $inputProps;
     private ?array $expectedDehydratedProps = null;
+    private ?array $expectedDehydratedNestedProps = null;
     private array $updatedProps = [];
     private ?\Closure $assertObjectAfterHydrationCallable = null;
     private ?\Closure $beforeHydrationCallable = null;
@@ -1270,9 +1337,10 @@ class HydrationTest
         return $this;
     }
 
-    public function assertDehydratesTo(array $expectDehydrated): self
+    public function assertDehydratesTo(array $expectDehydratedProps, array $expectedDehydratedNestedProps = []): self
     {
-        $this->expectedDehydratedProps = $expectDehydrated;
+        $this->expectedDehydratedProps = $expectDehydratedProps;
+        $this->expectedDehydratedNestedProps = $expectedDehydratedNestedProps;
 
         return $this;
     }
@@ -1315,6 +1383,7 @@ class HydrationTest
             ),
             $this->inputProps,
             $this->expectedDehydratedProps,
+            $this->expectedDehydratedNestedProps,
             $this->updatedProps,
             $this->changedOriginalProps,
             $this->assertObjectAfterHydrationCallable,
@@ -1340,6 +1409,7 @@ class HydrationTestCase
         public LiveComponentMetadata $liveMetadata,
         public array $inputProps,
         public ?array $expectedDehydratedProps,
+        public ?array $expectedDehydratedNestedProps,
         public array $updatedProps,
         public ?array $changedOriginalProps,
         public ?\Closure $assertObjectAfterHydrationCallable,

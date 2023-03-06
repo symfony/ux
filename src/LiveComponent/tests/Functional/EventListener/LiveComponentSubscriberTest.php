@@ -45,7 +45,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component1?props='.urlencode(json_encode($dehydrated)))
+            ->get('/_components/component1?props='.urlencode(json_encode($dehydrated->getProps())))
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Prop1: '.$entity->id)
@@ -61,7 +61,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/alt/alternate_route?props='.urlencode(json_encode($dehydrated)))
+            ->get('/alt/alternate_route?props='.urlencode(json_encode($dehydrated->getProps())))
             ->assertSuccessful()
             ->assertOn('/alt/alternate_route', parts: ['path'])
             ->assertContains('From alternate route. (count: 0)')
@@ -75,7 +75,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component2?props='.urlencode(json_encode($dehydrated)))
+            ->get('/_components/component2?props='.urlencode(json_encode($dehydrated->getProps())))
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 1')
@@ -85,7 +85,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             })
             ->post('/_components/component2/increase', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode(['props' => $dehydrated]),
+                'body' => json_encode(['props' => $dehydrated->getProps()]),
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
@@ -100,7 +100,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/alt/alternate_route?props='.urlencode(json_encode($dehydrated)))
+            ->get('/alt/alternate_route?props='.urlencode(json_encode($dehydrated->getProps())))
             ->assertSuccessful()
             ->assertContains('count: 0')
             ->use(function (Crawler $crawler) use (&$token) {
@@ -109,7 +109,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             })
             ->post('/alt/alternate_route/increase', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode(['props' => $dehydrated]),
+                'body' => json_encode(['props' => $dehydrated->getProps()]),
             ])
             ->assertSuccessful()
             ->assertOn('/alt/alternate_route/increase')
@@ -177,12 +177,12 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/disabled_csrf?props='.urlencode(json_encode($dehydrated)))
+            ->get('/_components/disabled_csrf?props='.urlencode(json_encode($dehydrated->getProps())))
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 1')
             ->post('/_components/disabled_csrf/increase', [
-                'body' => json_encode(['props' => $dehydrated]),
+                'body' => json_encode(['props' => $dehydrated->getProps()]),
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
@@ -198,7 +198,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->visit('/render-template/render_component2')
             ->assertSuccessful()
             ->assertSee('PreReRenderCalled: No')
-            ->get('/_components/component2?props='.urlencode(json_encode($dehydrated)))
+            ->get('/_components/component2?props='.urlencode(json_encode($dehydrated->getProps())))
             ->assertSuccessful()
             ->assertSee('PreReRenderCalled: Yes')
         ;
@@ -211,7 +211,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component2?props='.urlencode(json_encode($dehydrated)))
+            ->get('/_components/component2?props='.urlencode(json_encode($dehydrated->getProps())))
             ->assertSuccessful()
             ->use(function (Crawler $crawler) use (&$token) {
                 // get a valid token to use for actions
@@ -221,7 +221,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             // with no custom header, it redirects like a normal browser
             ->post('/_components/component2/redirect', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode(['props' => $dehydrated]),
+                'body' => json_encode(['props' => $dehydrated->getProps()]),
             ])
             ->assertRedirectedTo('/')
 
@@ -231,7 +231,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                     'Accept' => 'application/vnd.live-component+html',
                     'X-CSRF-TOKEN' => $token,
                 ],
-                'body' => json_encode(['props' => $dehydrated]),
+                'body' => json_encode(['props' => $dehydrated->getProps()]),
             ])
             ->assertStatus(204)
             ->assertHeaderEquals('Location', '/')
@@ -248,7 +248,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         $arguments = ['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3'];
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component6?props='.urlencode(json_encode($dehydrated)))
+            ->get('/_components/component6?props='.urlencode(json_encode($dehydrated->getProps())))
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Arg1: not provided')
@@ -261,7 +261,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->post('/_components/component6/inject', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
                 'body' => json_encode([
-                    'props' => $dehydrated,
+                    'props' => $dehydrated->getProps(),
                     'args' => $arguments,
                 ]),
             ])
@@ -279,7 +279,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/with_nullable_entity?props='.urlencode(json_encode($dehydrated)))
+            ->get('/_components/with_nullable_entity?props='.urlencode(json_encode($dehydrated->getProps())))
             ->assertSuccessful()
             ->assertContains('Prop1: default')
         ;

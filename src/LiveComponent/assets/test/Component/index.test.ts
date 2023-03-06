@@ -1,11 +1,9 @@
-import Component, {proxifyComponent} from '../../src/Component';
+import Component, { proxifyComponent } from '../../src/Component';
 import {BackendAction, BackendInterface} from '../../src/Backend/Backend';
-import {
-    StandardElementDriver
-} from '../../src/Component/ElementDriver';
+import { StandardElementDriver } from '../../src/Component/ElementDriver';
 import BackendRequest from '../../src/Backend/BackendRequest';
 import { Response } from 'node-fetch';
-import {waitFor} from '@testing-library/dom';
+import { waitFor } from '@testing-library/dom';
 import BackendResponse from '../../src/Backend/BackendResponse';
 
 interface MockBackend extends BackendInterface {
@@ -29,7 +27,8 @@ const makeTestComponent = (): { component: Component, backend: MockBackend } => 
 
     const component = new Component(
         document.createElement('div'),
-        {firstName: ''},
+        { firstName: '' },
+        {},
         null,
         null,
         backend,

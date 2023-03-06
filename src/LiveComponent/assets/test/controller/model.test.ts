@@ -9,7 +9,12 @@
 
 'use strict';
 
-import { createTest, initComponent, shutdownTests } from '../tools';
+import {
+    createTest,
+    createTestWithNested,
+    initComponent,
+    shutdownTests,
+} from '../tools';
 import { getByLabelText, getByTestId, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
@@ -154,7 +159,6 @@ describe('LiveController data-model Tests', () => {
                     <input
                         name="name"
                         data-model="firstName"
-                        value="${data.firstName}"
                     >
                 </form>
                 
@@ -177,7 +181,6 @@ describe('LiveController data-model Tests', () => {
             <div ${initComponent(data)}>
                 <input
                     data-model="sport"
-                    value="${data.sport}"
                     data-value="cross country"
                 >
                 
@@ -199,7 +202,6 @@ describe('LiveController data-model Tests', () => {
             <div ${initComponent(data)}>
                 <input
                     data-model="user[name]"
-                    value="${data.user.name}"
                 >
                 
                 Name: ${data.user.name}
@@ -213,6 +215,30 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name: Ryan Weaver'));
         expect(test.component.valueStore.getOriginalProps()).toEqual({ user: { name: 'Ryan Weaver' } });
+    });
+
+    it('can use models from nestedProps', async () => {
+        const test = await createTestWithNested(
+            { user: 5 },
+            {'user.name': 'Ryan'},
+            (props: any, nestedProps) => `
+                <div ${initComponent(props, { nestedProps })}>
+                    <input
+                        data-model="user.name"
+                    >
+
+                    Name: ${nestedProps['user.name']}
+                </div>
+        `);
+
+        test.expectsAjaxCall()
+            .expectUpdatedData({ 'user.name': 'Ryan Weaver' });
+
+        await userEvent.type(test.queryByDataModel('user.name'), ' Weaver');
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Name: Ryan Weaver'));
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ user: 5 });
+        expect(test.component.valueStore.getOriginalNestedProps()).toEqual({ 'user.name': 'Ryan Weaver' });
     });
 
     it('sends correct data for checkbox fields', async () => {
@@ -419,7 +445,6 @@ describe('LiveController data-model Tests', () => {
             <div ${initComponent(data)}>
                 <input
                     data-model="treat"
-                    value="${data.treat}"
                 >
 
                 Treat: ${data.treat}
@@ -442,7 +467,6 @@ describe('LiveController data-model Tests', () => {
             <div ${initComponent(data)}>
                 <input
                     data-model="pizzaTopping"
-                    value="${data.pizzaTopping}"
                 >
 
                 Mmmm ${data.pizzaTopping} pizza
@@ -466,8 +490,8 @@ describe('LiveController data-model Tests', () => {
     it('sends a render request without debounce for change events', async () => {
         const test = await createTest({ firstName: '', lastName: '' }, (data: any) => `
             <div ${initComponent(data)}>
-                <input data-model="on(change)|firstName" value="${data.firstName}">
-                <input data-model="on(change)|lastName" value="${data.lastName}">
+                <input data-model="on(change)|firstName">
+                <input data-model="on(change)|lastName">
 
                 <button>Do nothing</button>
 

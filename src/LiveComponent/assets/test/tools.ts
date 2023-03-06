@@ -35,10 +35,10 @@ const shutdownTest = function(test: FunctionalTest) {
 class FunctionalTest {
     component: Component;
     element: HTMLElement;
-    template: (data: any) => string;
+    template: (props: any, nestedProps: any) => string;
     mockedBackend: MockedBackend;
 
-    constructor(component: Component, element: HTMLElement, template: (data: any) => string) {
+    constructor(component: Component, element: HTMLElement, template: (props: any, nestedProps: any) => string) {
         this.component = component;
         this.element = element;
         this.template = template;
@@ -148,8 +148,8 @@ class MockedAjaxCall {
     private expectedChildFingerprints: any = null;
 
     /* Response properties */
-    private changePropsCallback?: (data: any) => void;
-    private template?: (data: any) => string
+    private changePropsCallback?: (props: any, nestedProps: any) => void;
+    private template?: (props: any, nestedProps: any) => string
     private delayResponseTime?: number = 0;
     private customResponseStatusCode?: number;
     private customResponseHTML?: string;
@@ -199,17 +199,24 @@ class MockedAjaxCall {
         const promise: Promise<Response> = new Promise((resolve) => {
             setTimeout(() => {
                 let newProps = JSON.parse(JSON.stringify(this.test.component.valueStore.getOriginalProps()));
+                const newNestedProps = JSON.parse(JSON.stringify(this.test.component.valueStore.getOriginalNestedProps()));
                 // imitate the server by updating the props with the updated data
                 Object.keys(this.expectedSentUpdatedData).forEach((key) => {
-                    newProps = setDeepData(newProps, key, this.expectedSentUpdatedData[key]);
+                    // if a key matches a "nested prop", imitate the server by updating
+                    // the nested prop directly
+                    if (newNestedProps[key] !== undefined) {
+                        newNestedProps[key] = this.expectedSentUpdatedData[key];
+                    } else {
+                        newProps = setDeepData(newProps, key, this.expectedSentUpdatedData[key]);
+                    }
                 });
 
                 if (this.changePropsCallback) {
-                    this.changePropsCallback(newProps);
+                    this.changePropsCallback(newProps, newNestedProps);
                 }
 
                 const template = this.template ? this.template : this.test.template;
-                const html = this.customResponseHTML ? this.customResponseHTML : template(newProps);
+                const html = this.customResponseHTML ? this.customResponseHTML : template(newProps, newNestedProps);
 
                 // assume a normal, live-component response unless it's totally custom
                 const headers = { 'Content-Type': 'application/vnd.live-component+html' };
@@ -301,8 +308,12 @@ class MockedAjaxCall {
     }
 }
 
-export async function createTest(data: any, template: (data: any) => string): Promise<FunctionalTest> {
-    const testData = await startStimulus(template(data));
+export async function createTest(props: any, template: (props: any, nestedProps: any) => string): Promise<FunctionalTest> {
+    return createTestWithNested(props, {}, template);
+}
+
+export async function createTestWithNested(props: any, nestedProps: any, template: (props: any, nestedProps: any) => string): Promise<FunctionalTest> {
+    const testData = await startStimulus(template(props, nestedProps));
 
     const test = new FunctionalTest(testData.controller.component, testData.element, template);
     activeTests.push(test);
@@ -377,6 +388,7 @@ export function initComponent(props: any = {}, controllerValues: any = {}) {
         data-controller="live"
         data-live-url-value="http://localhost/components/_test_component_${Math.round(Math.random() * 1000)}"
         data-live-props-value="${dataToJsonAttribute(props)}"
+        ${controllerValues.nestedProps ? `data-live-nested-props-value="${dataToJsonAttribute(controllerValues.nestedProps)}"` : ''}
         ${controllerValues.debounce ? `data-live-debounce-value="${controllerValues.debounce}"` : ''}
         ${controllerValues.csrf ? `data-live-csrf-value="${controllerValues.csrf}"` : ''}
         ${controllerValues.id ? `data-live-id="${controllerValues.id}"` : ''}

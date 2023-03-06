@@ -37,6 +37,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     static values = {
         url: String,
         props: Object,
+        nestedProps: { type: Object, default: {} },
         csrf: String,
         debounce: { type: Number, default: 150 },
         id: String,
@@ -45,6 +46,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
 
     declare readonly urlValue: string;
     declare readonly propsValue: any;
+    declare readonly nestedPropsValue: any;
     declare readonly csrfValue: string;
     declare readonly hasDebounceValue: boolean;
     declare readonly debounceValue: number;
@@ -70,6 +72,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         this.component = new Component(
             this.element,
             this.propsValue,
+            this.nestedPropsValue,
             this.fingerprintValue,
             id,
             new Backend(this.urlValue, this.csrfValue),

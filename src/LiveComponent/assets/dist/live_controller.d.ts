@@ -16,6 +16,10 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     static values: {
         url: StringConstructor;
         props: ObjectConstructor;
+        nestedProps: {
+            type: ObjectConstructor;
+            default: {};
+        };
         csrf: StringConstructor;
         debounce: {
             type: NumberConstructor;
@@ -26,6 +30,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     };
     readonly urlValue: string;
     readonly propsValue: any;
+    readonly nestedPropsValue: any;
     readonly csrfValue: string;
     readonly hasDebounceValue: boolean;
     readonly debounceValue: number;

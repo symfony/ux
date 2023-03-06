@@ -35,7 +35,7 @@ class ComponentWithFormTest extends KernelTestCase
 
     public function testFormValuesRebuildAfterFormChanges(): void
     {
-        $dehydratedProps = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'));
+        $dehydratedProps = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'))->getProps();
 
         $browser = $this->browser();
         $crawler = $browser
@@ -127,7 +127,7 @@ class ComponentWithFormTest extends KernelTestCase
         // component should recognize that it is already submitted
         $this->assertTrue($component->isValidated);
 
-        $dehydratedProps = $this->dehydrateComponent($mounted);
+        $dehydratedProps = $this->dehydrateComponent($mounted)->getProps();
         $updatedProps = [
             'blog_post_form.content' => 'changed description',
             'validatedFields' => array_merge(
@@ -158,7 +158,7 @@ class ComponentWithFormTest extends KernelTestCase
             ]
         );
 
-        $dehydratedProps = $this->dehydrateComponent($mounted);
+        $dehydratedProps = $this->dehydrateComponent($mounted)->getProps();
         $this->assertSame([
             'text' => '',
             'textarea' => '',
@@ -239,7 +239,7 @@ class ComponentWithFormTest extends KernelTestCase
 
     public function testLiveCollectionTypeAddButtonsByDefault(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'))->getProps();
 
         $this->browser()
             ->get('/_components/form_with_live_collection_type?props='.urlencode(json_encode($dehydrated)))
@@ -250,7 +250,7 @@ class ComponentWithFormTest extends KernelTestCase
 
     public function testLiveCollectionTypeFieldsAddedAndRemoved(): void
     {
-        $dehydratedProps = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'));
+        $dehydratedProps = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'))->getProps();
         $updatedProps = [];
         $token = null;
 
@@ -325,7 +325,7 @@ class ComponentWithFormTest extends KernelTestCase
 
     public function testDataModelAttributeAutomaticallyAdded(): void
     {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'));
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'))->getProps();
 
         $this->browser()
             ->get('/_components/form_with_collection_type?props='.urlencode(json_encode($dehydrated)))
