@@ -9,7 +9,6 @@ use Twig\Node\Expression\AbstractExpression;
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Kevin Bond <kevinbond@gmail.com>
-
  *
  * @internal
  */

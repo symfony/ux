@@ -14,7 +14,6 @@ use Twig\TokenParser\AbstractTokenParser;
 /**
  * @author Fabien Potencier <fabien@symfony.com>
  * @author Kevin Bond <kevinbond@gmail.com>
-
  *
  * @internal
  */

@@ -17,7 +17,6 @@ use Symfony\Component\DependencyInjection\Exception\LogicException;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
-
  *
  * @internal
  */
