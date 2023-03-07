@@ -22,7 +22,6 @@ use Twig\Extension\EscaperExtension;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
-
  *
  * @internal
  */

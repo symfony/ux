@@ -13,7 +13,6 @@ namespace Symfony\UX\TwigComponent;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
-
  *
  * @internal
  */
