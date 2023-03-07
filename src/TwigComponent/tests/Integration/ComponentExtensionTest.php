@@ -86,7 +86,7 @@ final class ComponentExtensionTest extends KernelTestCase
             'class' => 'bar',
             'style' => 'color:red;',
             'value' => '',
-            'autofocus' => null,
+            'autofocus' => true,
         ]);
 
         $this->assertStringContainsString('Component Content (prop value 1)', $output);

@@ -577,7 +577,7 @@ When rendering the component, you can pass an array of html attributes to add:
       My Component!
     </div>
 
-Set an attribute's value to ``null`` to exclude the value when rendering:
+Set an attribute's value to ``true`` to render just the attribute name:
 
 .. code-block:: twig
 
@@ -585,10 +585,23 @@ Set an attribute's value to ``null`` to exclude the value when rendering:
     <input{{ attributes}}/>
 
     {# render component #}
-    {{ component('my_component', { type: 'text', value: '', autofocus: null }) }}
+    {{ component('my_component', { type: 'text', value: '', autofocus: true }) }}
 
     {# renders as: #}
     <input type="text" value="" autofocus/>
+
+Set an attribute's value to ``false`` to exclude the attribute:
+
+.. code-block:: twig
+
+    {# templates/components/my_component.html.twig #}
+    <input{{ attributes}}/>
+
+    {# render component #}
+    {{ component('my_component', { type: 'text', value: '', autofocus: false }) }}
+
+    {# renders as: #}
+    <input type="text" value=""/>
 
 .. versionadded: 2.7
 

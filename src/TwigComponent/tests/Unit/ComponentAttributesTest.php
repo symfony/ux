@@ -26,7 +26,7 @@ final class ComponentAttributesTest extends TestCase
             'class' => 'foo',
             'style' => 'color:black;',
             'value' => '',
-            'autofocus' => null,
+            'autofocus' => true,
         ]);
 
         $this->assertSame(' class="foo" style="color:black;" value="" autofocus', (string) $attributes);
@@ -86,5 +86,29 @@ final class ComponentAttributesTest extends TestCase
             'data-live-data-value' => '{}',
             'data-foo-name-value' => 'ryan',
         ], $attributes->all());
+    }
+
+    public function testBooleanBehaviour(): void
+    {
+        $attributes = new ComponentAttributes(['disabled' => true]);
+
+        $this->assertSame(['disabled' => true], $attributes->all());
+        $this->assertSame(' disabled', (string) $attributes);
+
+        $attributes = new ComponentAttributes(['disabled' => false]);
+
+        $this->assertSame(['disabled' => false], $attributes->all());
+        $this->assertSame('', (string) $attributes);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testNullBehaviour(): void
+    {
+        $attributes = new ComponentAttributes(['disabled' => null]);
+
+        $this->assertSame(['disabled' => null], $attributes->all());
+        $this->assertSame(' disabled', (string) $attributes);
     }
 }

@@ -34,11 +34,18 @@ final class ComponentAttributes
         return array_reduce(
             array_keys($this->attributes),
             function (string $carry, string $key) {
-                if (null === $this->attributes[$key]) {
-                    return "{$carry} {$key}";
+                $value = $this->attributes[$key];
+
+                if (null === $value) {
+                    trigger_deprecation('symfony/ux-twig-component', '2.8.0', 'Passing "null" as an attribute value is deprecated and will throw an exception in 3.0.');
+                    $value = true;
                 }
 
-                return sprintf('%s %s="%s"', $carry, $key, $this->attributes[$key]);
+                return match ($value) {
+                    true => "{$carry} {$key}",
+                    false => $carry,
+                    default => sprintf('%s %s="%s"', $carry, $key, $value),
+                };
             },
             ''
         );
