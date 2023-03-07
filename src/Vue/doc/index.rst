@@ -112,10 +112,11 @@ For example:
 Events
 ~~~~~~
 
-The event ``vue:before-mount`` is called before a component is mounted on the page. This is the event to listen if you need to modifiy the Vue application (e.g.: add plugins, add global directives, ...):
+The event ``vue:before-mount`` is called before a component is mounted on the page. This is the event to listen if you need to modifiy the Vue application (e.g.: add plugins, add global directives, states ...):
 
 .. code-block:: js
 
+    // assets/app.js
     document.addEventListener('vue:before-mount', (event) => {
         const {
             componentName, // The Vue component's name
