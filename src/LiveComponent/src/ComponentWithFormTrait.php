@@ -127,7 +127,7 @@ trait ComponentWithFormTrait
 
     public function getFormName(): string
     {
-        if (!$this->formName) {
+        if (null === $this->formName) {
             $this->formName = $this->getForm()->vars['name'];
         }
 
