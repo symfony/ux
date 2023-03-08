@@ -12,7 +12,6 @@
 namespace Symfony\UX\TwigComponent\Tests\Fixtures\Component;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Tests\Fixtures\Service\ServiceA;
 
 #[AsTwigComponent('textarea_component')]
 final class TextareaComponent
