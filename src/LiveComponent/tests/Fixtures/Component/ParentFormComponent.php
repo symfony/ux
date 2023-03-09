@@ -9,13 +9,16 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent\Tests\Fixtures\Component;
+namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
-use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsTwigComponent('parent_form_component')]
+#[AsLiveComponent('parent_form_component')]
 final class ParentFormComponent
 {
+    use DefaultActionTrait;
+
     public ?string $content = null;
 
     public ?string $content2 = null;

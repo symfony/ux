@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent\EventListener;
+namespace Symfony\UX\LiveComponent\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\UX\LiveComponent\Util\ModelBindingParser;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\Event\PreMountEvent;
-use Symfony\UX\TwigComponent\Util\ModelBindingParser;
 
 /**
  * Parses the "data-model" key, which triggers extra props to be passed in.

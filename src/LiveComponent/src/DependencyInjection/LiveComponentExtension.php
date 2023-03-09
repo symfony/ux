@@ -23,6 +23,7 @@ use Symfony\UX\LiveComponent\ComponentValidator;
 use Symfony\UX\LiveComponent\ComponentValidatorInterface;
 use Symfony\UX\LiveComponent\Controller\BatchActionController;
 use Symfony\UX\LiveComponent\EventListener\AddLiveAttributesSubscriber;
+use Symfony\UX\LiveComponent\EventListener\DataModelPropsSubscriber;
 use Symfony\UX\LiveComponent\EventListener\InterceptChildComponentRenderSubscriber;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
 use Symfony\UX\LiveComponent\EventListener\ResetDeterministicIdSubscriber;
@@ -86,6 +87,14 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->setPublic(true)
             ->setArguments([
                 new Reference('http_kernel'),
+            ])
+        ;
+
+        $container->register('ux.live_component.event_listener.data_model_props_subscriber', DataModelPropsSubscriber::class)
+            ->addTag('kernel.event_subscriber')
+            ->setArguments([
+                new Reference('ux.twig_component.component_stack'),
+                new Reference('property_accessor'),
             ])
         ;
 
