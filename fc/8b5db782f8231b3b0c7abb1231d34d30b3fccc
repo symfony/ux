@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-03-08T14:28:39Z
+
+This works now on the reproducer from #720. I'm playing a bit of whack-a-mole with hydration edge-cases, but I don't think it's a problem: each adds a new test case, and I think remaining problems are finite.
