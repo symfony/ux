@@ -62,6 +62,11 @@ final class LiveAttributesCollection
         $this->attributes['data-live-props-value'] = $dehydratedProps;
     }
 
+    public function addNestedProps(array $nestedProps): void
+    {
+        $this->attributes['data-live-nested-props-value'] = $nestedProps;
+    }
+
     public function getProps(): array
     {
         if (!\array_key_exists('data-live-props-value', $this->attributes)) {

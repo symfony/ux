@@ -74,7 +74,10 @@ class LiveControllerAttributesCreator
             $mounted->getComponent(),
             $mountedAttributes
         );
-        $attributesCollection->addProps($dehydratedProps);
+        $attributesCollection->addProps($dehydratedProps->getProps());
+        if ($dehydratedProps->getNestedProps()) {
+            $attributesCollection->addNestedProps($dehydratedProps->getNestedProps());
+        }
 
         if ($this->csrfTokenManager && $metadata->get('csrf')) {
             $attributesCollection->addLiveCsrf(
@@ -90,7 +93,7 @@ class LiveControllerAttributesCreator
         return 'live_component_'.$componentName;
     }
 
-    private function dehydrateComponent(string $name, object $component, ComponentAttributes $attributes): array
+    private function dehydrateComponent(string $name, object $component, ComponentAttributes $attributes): DehydratedProps
     {
         $liveMetadata = $this->metadataFactory->getMetadata($name);
 

@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Tests;
 
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
+use Symfony\UX\LiveComponent\Util\DehydratedProps;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\MountedComponent;
@@ -42,7 +43,7 @@ trait LiveComponentTestHelper
         return $this->factory()->create($name, $data);
     }
 
-    private function dehydrateComponent(MountedComponent $mounted): array
+    private function dehydrateComponent(MountedComponent $mounted): DehydratedProps
     {
         $liveMetadataFactory = self::getContainer()->get('ux.live_component.metadata_factory');
         \assert($liveMetadataFactory instanceof LiveComponentMetadataFactory);

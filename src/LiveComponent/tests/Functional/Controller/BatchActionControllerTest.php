@@ -31,7 +31,7 @@ final class BatchActionControllerTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/with_actions', ['json' => ['props' => $dehydrated]])
+            ->get('/_components/with_actions', ['json' => ['props' => $dehydrated->getProps()]])
             ->assertSuccessful()
             ->assertSee('initial')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
@@ -78,7 +78,7 @@ final class BatchActionControllerTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/alt/alternate_route', ['json' => ['props' => $dehydrated]])
+            ->get('/alt/alternate_route', ['json' => ['props' => $dehydrated->getProps()]])
             ->assertSuccessful()
             ->assertSee('count: 0')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
@@ -109,7 +109,7 @@ final class BatchActionControllerTest extends KernelTestCase
 
         $this->browser()
             ->post('/_components/with_actions/_batch', ['json' => [
-                'props' => $dehydrated,
+                'props' => $dehydrated->getProps(),
                 'actions' => [],
             ]])
             ->assertStatus(400)
@@ -122,7 +122,7 @@ final class BatchActionControllerTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/with_actions', ['json' => ['props' => $dehydrated]])
+            ->get('/_components/with_actions', ['json' => ['props' => $dehydrated->getProps()]])
             ->assertSuccessful()
             ->interceptRedirects()
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
@@ -150,7 +150,7 @@ final class BatchActionControllerTest extends KernelTestCase
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
         $this->browser()
-            ->get('/_components/with_actions', ['json' => ['props' => $dehydrated]])
+            ->get('/_components/with_actions', ['json' => ['props' => $dehydrated->getProps()]])
             ->assertSuccessful()
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
@@ -178,7 +178,7 @@ final class BatchActionControllerTest extends KernelTestCase
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
         $this->browser()
-            ->get('/_components/with_actions', ['json' => ['props' => $dehydrated]])
+            ->get('/_components/with_actions', ['json' => ['props' => $dehydrated->getProps()]])
             ->assertSuccessful()
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();

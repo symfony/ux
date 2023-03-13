@@ -177,7 +177,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
             </div>
         `;
 
-        // a simpler version of the child is returned from the prent component's re-render
+        // a simpler version of the child is returned from the parent component's re-render
         const childReturnedFromParentCall = `
             <div ${initComponent(
                 { toUppercase: true }, // new prop value (firstName is not sent as it is writable)

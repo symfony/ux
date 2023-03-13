@@ -354,12 +354,13 @@ const parseDeepData = function (data, propertyPath) {
 };
 
 class ValueStore {
-    constructor(props) {
-        this.identifierKey = '@id';
+    constructor(props, nestedProps) {
         this.props = {};
+        this.nestedProps = {};
         this.dirtyProps = {};
         this.pendingProps = {};
         this.props = props;
+        this.nestedProps = nestedProps;
     }
     get(name) {
         const normalizedName = normalizeModelName(name);
@@ -369,14 +370,10 @@ class ValueStore {
         if (this.pendingProps[normalizedName] !== undefined) {
             return this.pendingProps[normalizedName];
         }
-        const value = getDeepData(this.props, normalizedName);
-        if (null === value) {
-            return value;
+        if (this.nestedProps[normalizedName] !== undefined) {
+            return this.nestedProps[normalizedName];
         }
-        if (this.isPropNameTopLevel(normalizedName) && typeof value === 'object' && value[this.identifierKey] !== undefined) {
-            return value[this.identifierKey];
-        }
-        return value;
+        return getDeepData(this.props, normalizedName);
     }
     has(name) {
         return this.get(name) !== undefined;
@@ -393,6 +390,9 @@ class ValueStore {
     getOriginalProps() {
         return Object.assign({}, this.props);
     }
+    getOriginalNestedProps() {
+        return Object.assign({}, this.nestedProps);
+    }
     getDirtyProps() {
         return Object.assign({}, this.dirtyProps);
     }
@@ -400,8 +400,9 @@ class ValueStore {
         this.pendingProps = Object.assign({}, this.dirtyProps);
         this.dirtyProps = {};
     }
-    reinitializeAllProps(props) {
+    reinitializeAllProps(props, nestedProps) {
         this.props = props;
+        this.nestedProps = nestedProps;
         this.pendingProps = {};
     }
     pushPendingPropsBackToDirty() {
@@ -411,23 +412,13 @@ class ValueStore {
     reinitializeProvidedProps(props) {
         let changed = false;
         for (const [key, value] of Object.entries(props)) {
-            const currentIdentifier = this.get(key);
-            const newIdentifier = this.findIdentifier(value);
-            if (currentIdentifier !== newIdentifier) {
+            const currentValue = this.get(key);
+            if (currentValue !== value) {
                 changed = true;
                 this.props[key] = value;
             }
         }
         return changed;
-    }
-    isPropNameTopLevel(key) {
-        return key.indexOf('.') === -1;
-    }
-    findIdentifier(value) {
-        if (typeof value !== 'object' || value[this.identifierKey] === undefined) {
-            return value;
-        }
-        return value[this.identifierKey];
     }
 }
 
@@ -1386,7 +1377,7 @@ class ChildComponentWrapper {
     }
 }
 class Component {
-    constructor(element, props, fingerprint, id, backend, elementDriver) {
+    constructor(element, props, nestedProps, fingerprint, id, backend, elementDriver) {
         this.defaultDebounce = 150;
         this.backendRequest = null;
         this.pendingActions = [];
@@ -1399,7 +1390,7 @@ class Component {
         this.elementDriver = elementDriver;
         this.id = id;
         this.fingerprint = fingerprint;
-        this.valueStore = new ValueStore(props);
+        this.valueStore = new ValueStore(props, nestedProps);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
         this.hooks = new HookManager();
         this.resetPromise();
@@ -1488,7 +1479,7 @@ class Component {
         return children;
     }
     updateFromNewElement(toEl) {
-        const props = this.elementDriver.getComponentProps(toEl);
+        const { props } = this.elementDriver.getComponentProps(toEl);
         if (props === null) {
             return false;
         }
@@ -1590,7 +1581,8 @@ class Component {
             throw error;
         }
         this.hooks.triggerHook('loading.state:finished', newElement);
-        this.valueStore.reinitializeAllProps(this.elementDriver.getComponentProps(newElement));
+        const { props: newProps, nestedProps: newNestedProps } = this.elementDriver.getComponentProps(newElement);
+        this.valueStore.reinitializeAllProps(newProps, newNestedProps);
         executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), Array.from(this.getChildren().values()), this.elementDriver.findChildComponentElement, this.elementDriver.getKeyFromElement);
         Object.keys(modifiedModelValues).forEach((modelName) => {
             this.valueStore.set(modelName, modifiedModelValues[modelName]);
@@ -1806,10 +1798,13 @@ class StandardElementDriver {
         return modelDirective.action;
     }
     getComponentProps(rootElement) {
-        if (!rootElement.dataset.livePropsValue) {
-            return null;
-        }
-        return JSON.parse(rootElement.dataset.livePropsValue);
+        var _a, _b;
+        const propsJson = (_a = rootElement.dataset.livePropsValue) !== null && _a !== void 0 ? _a : '{}';
+        const nestedPropsJson = (_b = rootElement.dataset.liveNestedPropsValue) !== null && _b !== void 0 ? _b : '{}';
+        return {
+            props: JSON.parse(propsJson),
+            nestedProps: JSON.parse(nestedPropsJson),
+        };
     }
     findChildComponentElement(id, element) {
         return element.querySelector(`[data-live-id=${id}]`);
@@ -2234,7 +2229,7 @@ class LiveControllerDefault extends Controller {
     initialize() {
         this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
         const id = this.element.dataset.liveId || null;
-        this.component = new Component(this.element, this.propsValue, this.fingerprintValue, id, new Backend(this.urlValue, this.csrfValue), new StandardElementDriver());
+        this.component = new Component(this.element, this.propsValue, this.nestedPropsValue, this.fingerprintValue, id, new Backend(this.urlValue, this.csrfValue), new StandardElementDriver());
         this.proxiedComponent = proxifyComponent(this.component);
         this.element.__component = this.proxiedComponent;
         if (this.hasDebounceValue) {
@@ -2393,6 +2388,7 @@ class LiveControllerDefault extends Controller {
 LiveControllerDefault.values = {
     url: String,
     props: Object,
+    nestedProps: { type: Object, default: {} },
     csrf: String,
     debounce: { type: Number, default: 150 },
     id: String,

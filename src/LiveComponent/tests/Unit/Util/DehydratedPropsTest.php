@@ -7,146 +7,76 @@ use Symfony\UX\LiveComponent\Util\DehydratedProps;
 
 class DehydratedPropsTest extends TestCase
 {
-    /**
-     * @dataProvider getDataIsBuiltCorrectlyTestCases
-     */
-    public function testDataIsBuiltCorrectly(string $fieldName, mixed $identifier, array $writablePathValues, mixed $expectedArray): void
+    public function testDataIsBuiltCorrectly(): void
     {
-        $props = new DehydratedProps();
-        // simple scalar
-        $props->addIdentifierValue($fieldName, $identifier);
+        $dehydratedProps = new DehydratedProps();
+        $dehydratedProps->addPropValue('firstName', 'Ryan');
+        $dehydratedProps->addPropValue('address', ['street' => '123 Main St', 'city' => 'New York']);
+        $dehydratedProps->addPropValue('product', 5);
 
-        foreach ($writablePathValues as $path => $value) {
-            $props->addWritablePathValue($fieldName, $path, $value);
-        }
+        $dehydratedProps->addNestedProp('address', 'city', 'New York');
+        $dehydratedProps->addNestedProp('product', 'name', 'marshmallows');
+        $dehydratedProps->addNestedProp('product', 'price', '25.99');
+        $dehydratedProps->addNestedProp('product', 'category.title', 'campfire food');
 
-        $actualAsArray = $props->toArray();
-        $this->assertSame($expectedArray, $actualAsArray[$fieldName]);
+        $this->assertSame([
+            'firstName' => 'Ryan',
+            'address' => ['street' => '123 Main St', 'city' => 'New York'],
+            'product' => 5,
+        ], $dehydratedProps->getProps());
+        $this->assertSame([
+            'address.city' => 'New York',
+            'product.name' => 'marshmallows',
+            'product.price' => '25.99',
+            'product.category.title' => 'campfire food',
+        ], $dehydratedProps->getNestedProps());
 
         // now reverse the process
-        $propsFromArray = DehydratedProps::createFromArray($actualAsArray);
-        $this->assertEquals($props, $propsFromArray);
+        $propsFromArray = DehydratedProps::createFromPropsArray($dehydratedProps->getProps());
+        $this->assertEquals($dehydratedProps->getProps(), $propsFromArray->getProps());
+
+        $updatedProps = DehydratedProps::createFromUpdatedArray($dehydratedProps->getNestedProps());
+        $this->assertEquals($dehydratedProps->getNestedProps(), $updatedProps->getNestedProps());
     }
 
-    public function getDataIsBuiltCorrectlyTestCases(): iterable
-    {
-        yield 'identity_string_no_writable_paths' => [
-            'firstName',
-            'Ryan',
-            [],
-            'Ryan',
-        ];
-
-        yield 'identity_string_with_writable_paths' => [
-            'product',
-            '5',
-            ['name' => 'marshmallows'],
-            ['@id' => '5', 'name' => 'marshmallows'],
-        ];
-
-        yield 'identity_array_no_writable_paths' => [
-            'product',
-            ['name' => 'marshmallows'],
-            [],
-            ['name' => 'marshmallows'],
-        ];
-
-        yield 'identity_array_with_writable_paths' => [
-            'product',
-            ['name' => 'marshmallows', 'description' => 'delicious'],
-            ['price' => '25.99', 'description' => 'delicious'],
-            [
-                '@id' => [
-                    'name' => 'marshmallows',
-                    'description' => 'delicious',
-                ],
-                'price' => '25.99',
-                'description' => 'delicious',
-            ],
-        ];
-
-        yield 'identity_with_deep_paths' => [
-            'product',
-            '5',
-            [
-                'name' => 'marshmallows',
-                'category.title' => 'campfire food',
-            ],
-            [
-                '@id' => '5',
-                'name' => 'marshmallows',
-                'category' => [
-                    'title' => 'campfire food',
-                ],
-            ],
-        ];
-
-        yield 'identity_indexed_array_of_strings' => [
-            'tags',
-            ['foo', 'bar'],
-            [],
-            [
-                0 => 'foo',
-                1 => 'bar',
-            ],
-        ];
-
-        yield 'identity_indexed_array_of_objects' => [
-            'tags',
-            [['name' => 'foo'], ['name' => 'bar']],
-            [],
-            [['name' => 'foo'], ['name' => 'bar']],
-        ];
-
-        yield 'identity_indexed_array_of_objects_with_writable' => [
-            'tags',
-            [['name' => 'foo'], ['name' => 'bar']],
-            ['0.name' => 'foo'],
-            [
-                '@id' => [['name' => 'foo'], ['name' => 'bar']],
-                ['name' => 'foo'],
-            ],
-        ];
-    }
-
-    public function testRemoveIdentifierValue(): void
+    public function testRemovePropValue(): void
     {
         $props = new DehydratedProps();
-        $props->addIdentifierValue('firstName', 'Ryan');
-        $props->addIdentifierValue('lastName', 'Weaver');
-        $props->removeIdentifierValue('firstName');
-        $this->assertSame(['lastName' => 'Weaver'], $props->toArray());
+        $props->addPropValue('firstName', 'Ryan');
+        $props->addPropValue('lastName', 'Weaver');
+        $props->removePropValue('firstName');
+        $this->assertSame(['lastName' => 'Weaver'], $props->getProps());
     }
 
-    public function testGetAndHasIdentifierValue(): void
+    public function testGetAndHasPropValue(): void
     {
         $props = new DehydratedProps();
-        $props->addIdentifierValue('firstName', 'Ryan');
-        $props->addIdentifierValue('lastName', 'Weaver');
-        $this->assertTrue($props->hasIdentifierValue('firstName'));
-        $this->assertFalse($props->hasIdentifierValue('middleName'));
-        $this->assertSame('Ryan', $props->getIdentifierValue('firstName'));
-        $this->assertNull($props->getIdentifierValue('middleName'));
+        $props->addPropValue('firstName', 'Ryan');
+        $props->addPropValue('lastName', 'Weaver');
+        $this->assertTrue($props->hasPropValue('firstName'));
+        $this->assertFalse($props->hasPropValue('middleName'));
+        $this->assertSame('Ryan', $props->getPropValue('firstName'));
+        $this->assertNull($props->getPropValue('middleName'));
     }
 
-    public function testGetAndHasWritablePathValue()
+    public function testGetAndHasNestedPathValue()
     {
         $props = new DehydratedProps();
-        $props->addIdentifierValue('student', '11');
-        $props->addWritablePathValue('student', 'firstName', 'Ryan');
-        $props->addWritablePathValue('student', 'lastName', 'Weaver');
+        $props->addPropValue('student', '11');
+        $props->addNestedProp('student', 'firstName', 'Ryan');
+        $props->addNestedProp('student', 'lastName', 'Weaver');
 
-        $this->assertTrue($props->hasWritablePathValue('student', 'firstName'));
-        $this->assertFalse($props->hasWritablePathValue('student', 'middleName'));
-        $this->assertSame('Ryan', $props->getWritablePathValue('student', 'firstName'));
+        $this->assertTrue($props->hasNestedPathValue('student', 'firstName'));
+        $this->assertFalse($props->hasNestedPathValue('student', 'middleName'));
+        $this->assertSame('Ryan', $props->getNestedPathValue('student', 'firstName'));
 
-        $props->addIdentifierValue('product', '9');
-        $props->addWritablePathValue('product', 'category.name', 'Campfire Food');
-        $this->assertTrue($props->hasWritablePathValue('product', 'category.name'));
-        $this->assertSame('Campfire Food', $props->getWritablePathValue('product', 'category.name'));
+        $props->addPropValue('product', '9');
+        $props->addNestedProp('product', 'category.name', 'Campfire Food');
+        $this->assertTrue($props->hasNestedPathValue('product', 'category.name'));
+        $this->assertSame('Campfire Food', $props->getNestedPathValue('product', 'category.name'));
     }
 
-    public function testCreateFromFlatArray(): void
+    public function testCreateFromUpdatedArray(): void
     {
         $actual = DehydratedProps::createFromUpdatedArray([
             'isPublic' => true,
@@ -157,27 +87,31 @@ class DehydratedPropsTest extends TestCase
             'product.category.name' => 'Campfire Food',
         ]);
 
-        $expected = new DehydratedProps(allowMissingIdentifierValues: true);
-        $expected->addIdentifierValue('isPublic', true);
-        $expected->addIdentifierValue('student', 10);
-        $expected->addWritablePathValue('student', 'firstName', 'Ryan');
-        $expected->addWritablePathValue('student', 'lastName', 'Weaver');
-        $expected->addWritablePathValue('product', 'name', 'Smores');
-        $expected->addWritablePathValue('product', 'category.name', 'Campfire Food');
+        $expected = new DehydratedProps();
+        $expected->addPropValue('isPublic', true);
+        $expected->addPropValue('student', 10);
+        $expected->addNestedProp('student', 'firstName', 'Ryan');
+        $expected->addNestedProp('student', 'lastName', 'Weaver');
+        $expected->addNestedProp('product', 'name', 'Smores');
+        $expected->addNestedProp('product', 'category.name', 'Campfire Food');
 
         $this->assertEquals($expected, $actual);
     }
 
-    public function testGetWritablePathsForProperty(): void
+    public function testGetNestedPathsForProperty(): void
     {
-        // test DehydratedProps::getWritablePathsForProperty()
         $props = DehydratedProps::createFromUpdatedArray([
-            'options.show' => 'Arrested development',
-            'options.characters.main' => 'Michael Bluth',
+            'invoice.number' => '123',
+            'invoice.lineItems.0.quantity' => 1,
+            'invoice.lineItems.1.price' => 300,
+            'invoice.linesItems.2' => ['quantity' => 5, 'price' => 100],
         ]);
 
-        $actual = $props->getWritablePathsForProperty('options');
-        $this->assertSame(['show', 'characters.main'], $actual);
+        $actual = $props->getNestedPathsForProperty('invoice');
+        $this->assertSame(
+            ['number', 'lineItems.0.quantity', 'lineItems.1.price', 'linesItems.2'],
+            $actual
+        );
     }
 
     public function testCalculateUnexpectedWritablePaths(): void
@@ -187,21 +121,21 @@ class DehydratedPropsTest extends TestCase
             'product.name' => 'bananas',
         ]);
 
-        $this->assertEmpty($props->calculateUnexpectedWritablePathsForProperty(
+        $this->assertEmpty($props->calculateUnexpectedNestedPathsForProperty(
             'product',
             ['tags', 'name']
         ));
-        $this->assertEmpty($props->calculateUnexpectedWritablePathsForProperty(
+        $this->assertEmpty($props->calculateUnexpectedNestedPathsForProperty(
             'product',
             ['tags', 'name', 'other']
         ));
-        $this->assertSame(['name'], $props->calculateUnexpectedWritablePathsForProperty(
+        $this->assertSame(['name'], $props->calculateUnexpectedNestedPathsForProperty(
             'product',
             ['tags']
         ));
-        $this->assertSame(['tags.1'], $props->calculateUnexpectedWritablePathsForProperty(
+        $this->assertSame(['tags'], $props->calculateUnexpectedNestedPathsForProperty(
             'product',
-            ['name', 'tags.0']
+            ['tags.0', 'name']
         ));
     }
 }
