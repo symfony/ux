@@ -261,7 +261,7 @@ component use a ``PreMount`` hook::
             $resolver->setRequired('message');
             $resolver->setAllowedTypes('message', 'string');
 
-            return $resolver->resolve($data)
+            return $resolver->resolve($data);
         }
 
         // ...
