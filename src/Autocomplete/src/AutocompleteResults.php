@@ -14,7 +14,7 @@ namespace Symfony\UX\Autocomplete;
 final class AutocompleteResults
 {
     /**
-     * @param list<array{label: string, value: mixed}> $results
+     * @param list<array{text: string, value: mixed}> $results
      */
     public function __construct(
         public array $results,
