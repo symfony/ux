@@ -25,7 +25,6 @@ use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
-use Symfony\UX\TwigComponent\EventListener\DataModelPropsSubscriber;
 use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 
 /**
@@ -75,14 +74,6 @@ final class TwigComponentExtension extends Extension
             ->addTag('twig.extension')
             ->addTag('container.service_subscriber', ['key' => ComponentRenderer::class, 'id' => 'ux.twig_component.component_renderer'])
             ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
-        ;
-
-        $container->register('ux.twig_component.event_listener.data_model_props_subscriber', DataModelPropsSubscriber::class)
-            ->addTag('kernel.event_subscriber')
-            ->setArguments([
-                new Reference('ux.twig_component.component_stack'),
-                new Reference('property_accessor'),
-            ])
         ;
     }
 }

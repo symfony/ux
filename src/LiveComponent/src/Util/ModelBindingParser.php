@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent\Util;
+namespace Symfony\UX\LiveComponent\Util;
 
 /**
  * Parses the "data-model" format.

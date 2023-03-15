@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent\Tests\Unit\Util;
+namespace Symfony\UX\LiveComponent\Tests\Unit\Util;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\UX\TwigComponent\Util\ModelBindingParser;
+use Symfony\UX\LiveComponent\Util\ModelBindingParser;
 
 final class ModelBindingParserTest extends TestCase
 {
