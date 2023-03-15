@@ -1,0 +1,61 @@
+---------------------------------------------------------------------------
+
+by kevinmade at 2023-03-08T14:17:21Z
+
+I'm having the same issue.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-03-08T15:13:03Z
+
+Great catch on this!
+
+These fingerprints need to be a deterministic string that represents "the input passed into a component" - https://github.com/symfony/ux/blob/e45a8edfcd6d6ab62248d1ffe42ef13e9dcc11b3/src/LiveComponent/src/Util/LiveControllerAttributesCreator.php#L68 - and they need to always return the same string for the same input.
+
+If you pass an object (e.g. a `Post` entity) into a component, the `spl_object_id()` of that might be different the next time the component is re-rendered via an Ajax call, right?
+
+I'm open to ideas on how to fix this. In practice, if we added some special code for entity objects that, if persisted, used their id instead of serializing them, that might solve things. For example, if one of the items in `$data` is a `Post` entity, then instead of serializing that or `spl_object_id()`, we use `App\Entity\Post:{THE_ID}`.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-03-08T15:14:41Z
+
+> These fingerprints need to be a deterministic string that represents
+
+Oops, didn't realize this. Could `spl_object_hash()` be used? I don't know if this would still have a perf problem.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-03-08T15:15:30Z
+
+I think `spl_object_hash()` has the same problem - not 100% certain on that, but pretty sure.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-03-08T15:15:50Z
+
+You're right. From php.net:
+
+> When an object is destroyed, its hash may be reused for other objects.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-03-08T15:17:08Z
+
+> These fingerprints need to be a deterministic string that represents "the input passed into a component" -
+
+We should have a test to prove this behaviour.
+
+---------------------------------------------------------------------------
+
+by kevinmade at 2023-03-08T15:25:37Z
+
+Perhaps it's an idea to add `if (\is_object($value) && method_exists($value, 'getId')) {
+                return $value->getId();
+            }` instead of `\is_object($value)`.
+
+---------------------------------------------------------------------------
+
+by LunkLoafGrumble at 2023-03-09T19:52:34Z
+
+Using objectNormalizer greatly improves the performance over just serializing the object.
