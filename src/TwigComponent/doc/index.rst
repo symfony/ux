@@ -640,7 +640,7 @@ the exception of *class*. For ``class``, the defaults are prepended:
     {{ component('my_component', { style: 'color:red' }) }}
 
     {# renders as: #}
-    <button class="bar" style="color:red">Save</button>
+    <button class="bar" type="button" style="color:red">Save</button>
 
     {# render component #}
     {{ component('my_component', { class: 'foo', type: 'submit' }) }}
