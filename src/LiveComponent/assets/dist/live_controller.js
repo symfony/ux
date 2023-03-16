@@ -1191,7 +1191,7 @@ function normalizeAttributesForComparison(element) {
     });
 }
 
-function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, getElementValue, childComponents, findChildComponent, getKeyFromElement) {
+function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, getElementValue, childComponents, findChildComponent, getKeyFromElement, externalMutationTracker) {
     const childComponentMap = new Map();
     childComponents.forEach((childComponent) => {
         childComponentMap.set(childComponent.element, childComponent);
@@ -1209,30 +1209,35 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
             if (!(node instanceof HTMLElement)) {
                 return;
             }
+            if (externalMutationTracker.wasElementAdded(node)) {
+                return 'added_element_' + Math.random();
+            }
             return getKeyFromElement(node);
         },
         onBeforeElUpdated: (fromEl, toEl) => {
             if (fromEl === rootFromElement) {
                 return true;
             }
-            if (!(fromEl instanceof HTMLElement || fromEl instanceof SVGElement) ||
-                !(toEl instanceof HTMLElement || toEl instanceof SVGElement)) {
-                return false;
-            }
-            const childComponent = childComponentMap.get(fromEl) || false;
-            if (childComponent) {
-                return childComponent.updateFromNewElement(toEl);
-            }
-            if (modifiedFieldElements.includes(fromEl)) {
-                setValueOnElement(toEl, getElementValue(fromEl));
-            }
-            if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement && fromEl.isEqualNode(toEl)) {
-                const normalizedFromEl = cloneHTMLElement(fromEl);
-                normalizeAttributesForComparison(normalizedFromEl);
-                const normalizedToEl = cloneHTMLElement(toEl);
-                normalizeAttributesForComparison(normalizedToEl);
-                if (normalizedFromEl.isEqualNode(normalizedToEl)) {
-                    return false;
+            if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement) {
+                if (childComponentMap.has(fromEl)) {
+                    const childComponent = childComponentMap.get(fromEl);
+                    return childComponent.updateFromNewElement(toEl);
+                }
+                if (modifiedFieldElements.includes(fromEl)) {
+                    setValueOnElement(toEl, getElementValue(fromEl));
+                }
+                const elementChanges = externalMutationTracker.getChangedElement(fromEl);
+                if (elementChanges) {
+                    elementChanges.applyToElement(toEl);
+                }
+                if (fromEl.isEqualNode(toEl)) {
+                    const normalizedFromEl = cloneHTMLElement(fromEl);
+                    normalizeAttributesForComparison(normalizedFromEl);
+                    const normalizedToEl = cloneHTMLElement(toEl);
+                    normalizeAttributesForComparison(normalizedToEl);
+                    if (normalizedFromEl.isEqualNode(normalizedToEl)) {
+                        return false;
+                    }
                 }
             }
             return !fromEl.hasAttribute('data-live-ignore');
@@ -1240,6 +1245,9 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
         onBeforeNodeDiscarded(node) {
             if (!(node instanceof HTMLElement)) {
                 return true;
+            }
+            if (externalMutationTracker.wasElementAdded(node)) {
+                return false;
             }
             return !node.hasAttribute('data-live-ignore');
         },
@@ -1370,6 +1378,343 @@ class BackendResponse {
     }
 }
 
+class ChangingItemsTracker {
+    constructor() {
+        this.changedItems = new Map();
+        this.removedItems = new Map();
+    }
+    setItem(itemName, newValue, previousValue) {
+        if (this.removedItems.has(itemName)) {
+            const removedRecord = this.removedItems.get(itemName);
+            this.removedItems.delete(itemName);
+            if (removedRecord.original === newValue) {
+                return;
+            }
+        }
+        if (this.changedItems.has(itemName)) {
+            const originalRecord = this.changedItems.get(itemName);
+            if (originalRecord.original === newValue) {
+                this.changedItems.delete(itemName);
+                return;
+            }
+            this.changedItems.set(itemName, { original: originalRecord.original, new: newValue });
+            return;
+        }
+        this.changedItems.set(itemName, { original: previousValue, new: newValue });
+    }
+    removeItem(itemName, currentValue) {
+        let trueOriginalValue = currentValue;
+        if (this.changedItems.has(itemName)) {
+            const originalRecord = this.changedItems.get(itemName);
+            trueOriginalValue = originalRecord.original;
+            this.changedItems.delete(itemName);
+            if (trueOriginalValue === null) {
+                return;
+            }
+        }
+        if (!this.removedItems.has(itemName)) {
+            this.removedItems.set(itemName, { original: trueOriginalValue });
+        }
+    }
+    getChangedItems() {
+        const changedItems = [];
+        this.changedItems.forEach((value, key) => {
+            changedItems.push({ name: key, value: value.new });
+        });
+        return changedItems;
+    }
+    getRemovedItems() {
+        const removedItems = [];
+        this.removedItems.forEach((value, key) => {
+            removedItems.push(key);
+        });
+        return removedItems;
+    }
+    isEmpty() {
+        return this.changedItems.size === 0 && this.removedItems.size === 0;
+    }
+}
+
+class ElementChanges {
+    constructor() {
+        this.addedClasses = [];
+        this.removedClasses = [];
+        this.styleChanges = new ChangingItemsTracker();
+        this.attributeChanges = new ChangingItemsTracker();
+    }
+    addClass(className) {
+        if (this.removedClasses.includes(className)) {
+            this.removedClasses = this.removedClasses.filter((name) => name !== className);
+            return;
+        }
+        if (!this.addedClasses.includes(className)) {
+            this.addedClasses.push(className);
+        }
+    }
+    removeClass(className) {
+        if (this.addedClasses.includes(className)) {
+            this.addedClasses = this.addedClasses.filter((name) => name !== className);
+            return;
+        }
+        if (!this.removedClasses.includes(className)) {
+            this.removedClasses.push(className);
+        }
+    }
+    addStyle(styleName, newValue, originalValue) {
+        this.styleChanges.setItem(styleName, newValue, originalValue);
+    }
+    removeStyle(styleName, originalValue) {
+        this.styleChanges.removeItem(styleName, originalValue);
+    }
+    addAttribute(attributeName, newValue, originalValue) {
+        this.attributeChanges.setItem(attributeName, newValue, originalValue);
+    }
+    removeAttribute(attributeName, originalValue) {
+        this.attributeChanges.removeItem(attributeName, originalValue);
+    }
+    getAddedClasses() {
+        return this.addedClasses;
+    }
+    getRemovedClasses() {
+        return this.removedClasses;
+    }
+    getChangedStyles() {
+        return this.styleChanges.getChangedItems();
+    }
+    getRemovedStyles() {
+        return this.styleChanges.getRemovedItems();
+    }
+    getChangedAttributes() {
+        return this.attributeChanges.getChangedItems();
+    }
+    getRemovedAttributes() {
+        return this.attributeChanges.getRemovedItems();
+    }
+    applyToElement(element) {
+        this.addedClasses.forEach((className) => {
+            element.classList.add(className);
+        });
+        this.removedClasses.forEach((className) => {
+            element.classList.remove(className);
+        });
+        this.styleChanges.getChangedItems().forEach((change) => {
+            element.style.setProperty(change.name, change.value);
+            return;
+        });
+        this.styleChanges.getRemovedItems().forEach((styleName) => {
+            element.style.removeProperty(styleName);
+        });
+        this.attributeChanges.getChangedItems().forEach((change) => {
+            element.setAttribute(change.name, change.value);
+        });
+        this.attributeChanges.getRemovedItems().forEach((attributeName) => {
+            element.removeAttribute(attributeName);
+        });
+    }
+    isEmpty() {
+        return (this.addedClasses.length === 0 &&
+            this.removedClasses.length === 0 &&
+            this.styleChanges.isEmpty() &&
+            this.attributeChanges.isEmpty());
+    }
+}
+
+class ExternalMutationTracker {
+    constructor(element, shouldTrackChangeCallback) {
+        this.changedElements = new WeakMap();
+        this.changedElementsCount = 0;
+        this.addedElements = [];
+        this.removedElements = [];
+        this.isStarted = false;
+        this.element = element;
+        this.shouldTrackChangeCallback = shouldTrackChangeCallback;
+        this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
+    }
+    start() {
+        if (this.isStarted) {
+            return;
+        }
+        this.mutationObserver.observe(this.element, {
+            childList: true,
+            subtree: true,
+            attributes: true,
+            attributeOldValue: true,
+        });
+        this.isStarted = true;
+    }
+    stop() {
+        if (this.isStarted) {
+            this.mutationObserver.disconnect();
+            this.isStarted = false;
+        }
+    }
+    getChangedElement(element) {
+        return this.changedElements.has(element) ? this.changedElements.get(element) : null;
+    }
+    getAddedElements() {
+        return this.addedElements;
+    }
+    wasElementAdded(element) {
+        return this.addedElements.includes(element);
+    }
+    handlePendingChanges() {
+        this.onMutations(this.mutationObserver.takeRecords());
+    }
+    onMutations(mutations) {
+        const handledAttributeMutations = new WeakMap();
+        for (const mutation of mutations) {
+            const element = mutation.target;
+            if (!this.shouldTrackChangeCallback(element)) {
+                continue;
+            }
+            let isChangeInAddedElement = false;
+            for (const addedElement of this.addedElements) {
+                if (addedElement.contains(element)) {
+                    isChangeInAddedElement = true;
+                    break;
+                }
+            }
+            if (isChangeInAddedElement) {
+                continue;
+            }
+            switch (mutation.type) {
+                case 'childList':
+                    this.handleChildListMutation(mutation);
+                    break;
+                case 'attributes':
+                    if (!handledAttributeMutations.has(element)) {
+                        handledAttributeMutations.set(element, []);
+                    }
+                    if (!handledAttributeMutations.get(element).includes(mutation.attributeName)) {
+                        this.handleAttributeMutation(mutation);
+                        handledAttributeMutations.set(element, [
+                            ...handledAttributeMutations.get(element),
+                            mutation.attributeName
+                        ]);
+                    }
+                    break;
+            }
+        }
+    }
+    handleChildListMutation(mutation) {
+        mutation.addedNodes.forEach((node) => {
+            if (!(node instanceof Element)) {
+                return;
+            }
+            if (this.removedElements.includes(node)) {
+                this.removedElements.splice(this.removedElements.indexOf(node), 1);
+                return;
+            }
+            this.addedElements.push(node);
+        });
+        mutation.removedNodes.forEach((node) => {
+            if (!(node instanceof Element)) {
+                return;
+            }
+            if (this.addedElements.includes(node)) {
+                this.addedElements.splice(this.addedElements.indexOf(node), 1);
+                return;
+            }
+            this.removedElements.push(node);
+        });
+    }
+    handleAttributeMutation(mutation) {
+        const element = mutation.target;
+        if (!this.changedElements.has(element)) {
+            this.changedElements.set(element, new ElementChanges());
+            this.changedElementsCount++;
+        }
+        const changedElement = this.changedElements.get(element);
+        switch (mutation.attributeName) {
+            case 'class':
+                this.handleClassAttributeMutation(mutation, changedElement);
+                break;
+            case 'style':
+                this.handleStyleAttributeMutation(mutation, changedElement);
+                break;
+            default:
+                this.handleGenericAttributeMutation(mutation, changedElement);
+        }
+        if (changedElement.isEmpty()) {
+            this.changedElements.delete(element);
+            this.changedElementsCount--;
+        }
+    }
+    handleClassAttributeMutation(mutation, elementChanges) {
+        const element = mutation.target;
+        const previousValue = mutation.oldValue;
+        const previousValues = previousValue ? previousValue.split(' ') : [];
+        previousValues.forEach((value, index) => {
+            const trimmedValue = value.trim();
+            if (trimmedValue !== '') {
+                previousValues[index] = trimmedValue;
+            }
+            else {
+                previousValues.splice(index, 1);
+            }
+        });
+        const newValues = [].slice.call(element.classList);
+        const addedValues = newValues.filter((value) => !previousValues.includes(value));
+        const removedValues = previousValues.filter((value) => !newValues.includes(value));
+        addedValues.forEach((value) => {
+            elementChanges.addClass(value);
+        });
+        removedValues.forEach((value) => {
+            elementChanges.removeClass(value);
+        });
+    }
+    handleStyleAttributeMutation(mutation, elementChanges) {
+        const element = mutation.target;
+        const previousValue = mutation.oldValue || '';
+        const previousStyles = this.extractStyles(previousValue);
+        const newValue = element.getAttribute('style') || '';
+        const newStyles = this.extractStyles(newValue);
+        const addedOrChangedStyles = Object.keys(newStyles).filter((key) => previousStyles[key] === undefined || previousStyles[key] !== newStyles[key]);
+        const removedStyles = Object.keys(previousStyles).filter((key) => !newStyles[key]);
+        addedOrChangedStyles.forEach((style) => {
+            elementChanges.addStyle(style, newStyles[style], previousStyles[style] === undefined ? null : previousStyles[style]);
+        });
+        removedStyles.forEach((style) => {
+            elementChanges.removeStyle(style, previousStyles[style]);
+        });
+    }
+    handleGenericAttributeMutation(mutation, elementChanges) {
+        const attributeName = mutation.attributeName;
+        const element = mutation.target;
+        let oldValue = mutation.oldValue;
+        let newValue = element.getAttribute(attributeName);
+        if (oldValue === attributeName) {
+            oldValue = '';
+        }
+        if (newValue === attributeName) {
+            newValue = '';
+        }
+        if (!element.hasAttribute(attributeName)) {
+            if (oldValue === null) {
+                return;
+            }
+            elementChanges.removeAttribute(attributeName, mutation.oldValue);
+            return;
+        }
+        if (newValue === oldValue) {
+            return;
+        }
+        elementChanges.addAttribute(attributeName, element.getAttribute(attributeName), mutation.oldValue);
+    }
+    extractStyles(styles) {
+        const styleObject = {};
+        styles.split(';').forEach((style) => {
+            const parts = style.split(':');
+            if (parts.length === 1) {
+                return;
+            }
+            const property = parts[0].trim();
+            styleObject[property] = parts.slice(1).join(':').trim();
+        });
+        return styleObject;
+    }
+}
+
 class ChildComponentWrapper {
     constructor(component, modelBindings) {
         this.component = component;
@@ -1394,6 +1739,8 @@ class Component {
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
         this.hooks = new HookManager();
         this.resetPromise();
+        this.externalMutationTracker = new ExternalMutationTracker(this.element, (element) => elementBelongsToThisComponent(element, this));
+        this.externalMutationTracker.start();
         this.onChildComponentModelUpdate = this.onChildComponentModelUpdate.bind(this);
     }
     _swapBackend(backend) {
@@ -1405,11 +1752,13 @@ class Component {
     connect() {
         this.hooks.triggerHook('connect', this);
         this.unsyncedInputsTracker.activate();
+        this.externalMutationTracker.start();
     }
     disconnect() {
         this.hooks.triggerHook('disconnect', this);
         this.clearRequestDebounceTimeout();
         this.unsyncedInputsTracker.deactivate();
+        this.externalMutationTracker.stop();
     }
     on(hookName, callback) {
         this.hooks.register(hookName, callback);
@@ -1580,10 +1929,12 @@ class Component {
             console.error('There was a problem with the component HTML returned:');
             throw error;
         }
-        this.hooks.triggerHook('loading.state:finished', newElement);
         const { props: newProps, nestedProps: newNestedProps } = this.elementDriver.getComponentProps(newElement);
         this.valueStore.reinitializeAllProps(newProps, newNestedProps);
-        executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), Array.from(this.getChildren().values()), this.elementDriver.findChildComponentElement, this.elementDriver.getKeyFromElement);
+        this.externalMutationTracker.handlePendingChanges();
+        this.externalMutationTracker.stop();
+        executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), Array.from(this.getChildren().values()), this.elementDriver.findChildComponentElement, this.elementDriver.getKeyFromElement, this.externalMutationTracker);
+        this.externalMutationTracker.start();
         Object.keys(modifiedModelValues).forEach((modelName) => {
             this.valueStore.set(modelName, modifiedModelValues[modelName]);
         });

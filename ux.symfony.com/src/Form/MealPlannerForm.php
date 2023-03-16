@@ -31,6 +31,7 @@ class MealPlannerForm extends AbstractType
         $builder->add('meal', ChoiceType::class, [
             'choices' => $choices,
             'placeholder' => 'Which meal is it?',
+            'autocomplete' => true,
         ]);
 
         $builder->addEventListener(
@@ -67,8 +68,8 @@ class MealPlannerForm extends AbstractType
     private function getAvailableFoodChoices(string $meal): array
     {
         $foods = match ($meal) {
-            self::MEAL_BREAKFAST => ['Eggs 🍳', 'Bacon 🥓', 'Strawberries 🍓', 'Croissant 🥐'],
-            self::MEAL_SECOND_BREAKFAST => ['Bagel 🥯', 'Kiwi 🥝', 'Avocado 🥑', ' Wafles 🧇'],
+            self::MEAL_BREAKFAST => ['Eggs 🍳', 'Bacon 🥓', 'Strawberries 🍓', 'Croissant 🥐', 'Other', 'AnOther'],
+            self::MEAL_SECOND_BREAKFAST => ['Bagel 🥯', 'Kiwi 🥝', 'Avocado 🥑', 'Waffles 🧇'],
             self::MEAL_ELEVENSES => ['Pancakes 🥞', 'Salad 🥙', 'Tea ☕️'],
             self::MEAL_LUNCH => ['Sandwich 🥪', 'Cheese 🧀', 'Sushi 🍱'],
             self::MEAL_DINNER => ['Pizza 🍕', 'A Pint 🍺', 'Pasta 🍝'],
@@ -89,6 +90,7 @@ class MealPlannerForm extends AbstractType
             'disabled' => null === $meal,
             // silence real-time "invalid" message when switching "meals"
             'invalid_message' => false,
+            'autocomplete' => true,
         ]);
     }
 }

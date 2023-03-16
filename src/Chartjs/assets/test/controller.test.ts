@@ -9,66 +9,64 @@
 
 'use strict';
 
-import { Application, Controller } from '@hotwired/stimulus';
-import { getByTestId, waitFor } from '@testing-library/dom';
-import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
+import { Application } from '@hotwired/stimulus';
+import { waitFor } from '@testing-library/dom';
 import ChartjsController from '../src/controller';
 
-// Controller used to check the actual controller was properly booted
-class CheckController extends Controller {
-    connect() {
-        this.element.addEventListener('chartjs:pre-connect', () => {
-            this.element.classList.add('pre-connected');
-        });
+const startChartTest = async (canvasHtml: string): Promise<{ canvas: HTMLCanvasElement, chart: Chart }> => {
+    let chart: Chart | null = null;
 
-        this.element.addEventListener('chartjs:connect', (event) => {
-            this.element.classList.add('connected');
-            this.element.chart = event.detail.chart;
-        });
+    document.body.addEventListener('chartjs:pre-connect', () => {
+        document.body.classList.add('pre-connected');
+    });
+
+    document.body.addEventListener('chartjs:connect', (event: any) => {
+        chart = (event.detail).chart;
+        document.body.classList.add('connected');
+    });
+
+    document.body.innerHTML = canvasHtml;
+    const canvasElement = document.querySelector('canvas');
+    if (!canvasElement) {
+        throw 'Missing canvas element';
     }
+
+    await waitFor(() => {
+        expect(document.body).toHaveClass('pre-connected');
+        expect(document.body).toHaveClass('connected');
+    });
+
+    if (!chart) {
+        throw 'Missing TomSelect instance';
+    }
+
+    return { canvas: canvasElement, chart };
 }
 
-const startStimulus = () => {
-    const application = Application.start();
-    application.register('check', CheckController);
-    application.register('chartjs', ChartjsController);
-
-    return application;
-};
-
 describe('ChartjsController', () => {
-    let application;
+    beforeAll(() => {
+        const application = Application.start();
+        application.register('chartjs', ChartjsController);
+    });
 
     afterEach(() => {
-        clearDOM();
-        application.stop();
+        document.body.innerHTML = '';
     });
 
     it('connect without options', async () => {
-        const container = mountDOM(`
+        const { chart } = await startChartTest(`
             <canvas
                 data-testid="canvas"
-                data-controller="check chartjs"
+                data-controller="chartjs"
                 data-chartjs-view-value="&#x7B;&quot;type&quot;&#x3A;&quot;line&quot;,&quot;data&quot;&#x3A;&#x7B;&quot;labels&quot;&#x3A;&#x5B;&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;&#x5D;,&quot;datasets&quot;&#x3A;&#x5B;&#x7B;&quot;label&quot;&#x3A;&quot;My&#x20;First&#x20;dataset&quot;,&quot;backgroundColor&quot;&#x3A;&quot;rgb&#x28;255,&#x20;99,&#x20;132&#x29;&quot;,&quot;borderColor&quot;&#x3A;&quot;rgb&#x28;255,&#x20;99,&#x20;132&#x29;&quot;,&quot;data&quot;&#x3A;&#x5B;0,10,5,2,20,30,45&#x5D;&#x7D;&#x5D;&#x7D;,&quot;options&quot;&#x3A;&#x5B;&#x5D;&#x7D;"
             ></canvas>
         `);
 
-        expect(getByTestId(container, 'canvas')).not.toHaveClass('pre-connected');
-        expect(getByTestId(container, 'canvas')).not.toHaveClass('connected');
-
-        application = startStimulus();
-
-        await waitFor(() => {
-            expect(getByTestId(container, 'canvas')).toHaveClass('pre-connected');
-            expect(getByTestId(container, 'canvas')).toHaveClass('connected');
-        });
-
-        const chart = getByTestId(container, 'canvas').chart;
         expect(chart.options.showLines).toBeUndefined();
     });
 
     it('connect with options', async () => {
-        const container = mountDOM(`
+        const { chart } = await startChartTest(`
             <canvas
                 data-testid="canvas"
                 data-controller="check chartjs"
@@ -76,16 +74,25 @@ describe('ChartjsController', () => {
             ></canvas>
         `);
 
-        expect(getByTestId(container, 'canvas')).not.toHaveClass('pre-connected');
-        expect(getByTestId(container, 'canvas')).not.toHaveClass('connected');
-
-        application = startStimulus();
-        await waitFor(() => {
-            expect(getByTestId(container, 'canvas')).toHaveClass('pre-connected');
-            expect(getByTestId(container, 'canvas')).toHaveClass('connected');
-        });
-
-        const chart = getByTestId(container, 'canvas').chart;
         expect(chart.options.showLines).toBe(false);
+    });
+
+    it('will update when the view data changes', async () => {
+        const { chart, canvas } = await startChartTest(`
+           <canvas
+               data-testid='canvas'
+               data-controller='check chartjs'
+               data-chartjs-view-value="&#x7B;&quot;type&quot;&#x3A;&quot;line&quot;,&quot;data&quot;&#x3A;&#x7B;&quot;labels&quot;&#x3A;&#x5B;&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;&#x5D;,&quot;datasets&quot;&#x3A;&#x5B;&#x7B;&quot;label&quot;&#x3A;&quot;My&#x20;First&#x20;dataset&quot;,&quot;backgroundColor&quot;&#x3A;&quot;rgb&#x28;255,&#x20;99,&#x20;132&#x29;&quot;,&quot;borderColor&quot;&#x3A;&quot;rgb&#x28;255,&#x20;99,&#x20;132&#x29;&quot;,&quot;data&quot;&#x3A;&#x5B;0,10,5,2,20,30,45&#x5D;&#x7D;&#x5D;&#x7D;,&quot;options&quot;&#x3A;&#x7B;&quot;showLines&quot;&#x3A;false&#x7D;&#x7D;"
+           ></canvas>
+       `);
+
+        expect(chart.options.showLines).toBe(false);
+        const currentViewValue = JSON.parse((canvas.dataset.chartjsViewValue as string));
+        currentViewValue.options.showLines = true;
+        canvas.dataset.chartjsViewValue = JSON.stringify(currentViewValue);
+
+        await waitFor(() => {
+            expect(chart.options.showLines).toBe(true);
+        });
     });
 });

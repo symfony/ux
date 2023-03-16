@@ -1,0 +1,53 @@
+<div {{ attributes }}>
+    <div class="row">
+        <div class="col-2">
+            <label for="fromYear" class="form-label">
+                From: <code><small>({{ fromYear|abs }} mya)</small></code>
+            </label>
+            <input
+                type="range"
+                class="form-range"
+                id="fromYear"
+                data-model="fromYear"
+                min="-200"
+                max="{{ toYear }}"
+            >
+        </div>
+
+        <div class="col-2">
+            <label for="toYear" class="form-label">
+                To: <code><small>({{ toYear|abs }} mya)</small></code>
+            </label>
+            <input
+                type="range"
+                class="form-range"
+                id="toYear"
+                data-model="toYear"
+                min="{{ fromYear }}"
+                max="-65"
+            >
+        </div>
+
+        <div class="col-8">
+            <label for="dinoTypes" class="form-label">Choose Dino Types</label>
+            <select
+                data-model="currentTypes"
+                multiple
+                id="dinoTypes"
+                {{ stimulus_controller('symfony/ux-autocomplete/autocomplete') }}
+            >
+                {% for type in allTypes %}
+                    <option value="{{ type }}">{{ type }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <hr>
+
+    <div style="min-height: 400px;">
+        {{ render_chart(chart) }}
+    </div>
+
+    <small>Source: <a href="https://www.nhm.ac.uk/">National History Museum</a> courtesy of https://github.com/kjanjua26/jurassic-park</small>
+</div>

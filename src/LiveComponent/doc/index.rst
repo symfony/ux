@@ -2204,19 +2204,47 @@ To fix this, add a unique ``data-live-id`` attribute to the root component of ea
 child element. This will helps LiveComponent identify each item in the
 list and correctly determine if a re-render is necessary, or not.
 
+Advanced Functionality
+----------------------
+
+.. _`smart-rerender-algorithm`:
+
+The Smart Re-Render Algorithm
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When a component re-renders, the new HTML if "morphed" onto the existing
+elements on the page. For example, if the re-render includes a new ``class``
+on an existing element, that class will be added to that element.
+
+The rendering system is also smart enough to know when an element was changed
+by something *outside* of the LiveComponents system: e.g. some JavaScript
+that added a class to an element. In this case, the class will be preserved
+when the component re-renders.
+
+The system doesn't handle every edge case, so here are some things to keep in mind:
+
+* If JavaScript changes an attribute on an element, that change is **preserved**.
+* If JavaScript adds a new element, that element is **preserved**.
+* If JavaScript removes an element that was originally rendered by the component,
+    that change will be **lost**: the element will be re-added during the next re-render.
+* If JavaScript changes the text of an element, that change is **lost**: it will
+    be restored to the text from the server during the next re-render.
+* If an element is moved from one location in the component to another,
+    that change is **lost**: the element will be re-added in its original location
+    during the next re-render.
+
 Skipping Updating Certain Elements
-----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Sometimes you may have an element inside a component that you do *not* want to
-change whenever your component re-renders. For example, some elements managed by
-third-party JavaScript or a form element that is not bound to a model... where you
-don't want a re-render to reset the data the user has entered.
-
-To handle this, add the ``data-live-ignore`` attribute to the element:
+If you have an element inside a component that you do *not* want to change
+when your component re-renders, you can add a ``data-live-ignore`` attribute:
 
 .. code-block:: html
 
     <input name="favorite_color" data-live-ignore>
+
+But you should need this rarely if ever. Even if you write JavaScript that modifies
+an element, that changes is preserved (see :ref:`smart-rerender-algorithm`).
 
 .. note::
 
@@ -2225,7 +2253,7 @@ To handle this, add the ``data-live-ignore`` attribute to the element:
     of the children of the element will be re-rendered, even those with ``data-live-ignore``.
 
 Define another route for your Component
----------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 2.7
 
