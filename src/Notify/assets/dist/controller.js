@@ -4,6 +4,7 @@ class default_1 extends Controller {
     constructor() {
         super(...arguments);
         this.eventSources = [];
+        this.listeners = new WeakMap();
     }
     initialize() {
         const errorMessages = [];
@@ -25,13 +26,18 @@ class default_1 extends Controller {
             return;
         }
         this.eventSources.forEach((eventSource) => {
-            eventSource.addEventListener('message', (event) => this._notify(JSON.parse(event.data).summary));
+            const listener = (event) => this._notify(JSON.parse(event.data).summary);
+            eventSource.addEventListener('message', listener);
+            this.listeners.set(eventSource, listener);
         });
         this.dispatchEvent('connect', { eventSources: this.eventSources });
     }
     disconnect() {
         this.eventSources.forEach((eventSource) => {
-            eventSource.removeEventListener('message', this._notify);
+            const listener = this.listeners.get(eventSource);
+            if (listener) {
+                eventSource.removeEventListener('message', listener);
+            }
             eventSource.close();
         });
         this.eventSources = [];

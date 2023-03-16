@@ -4,7 +4,12 @@ export default class extends Controller {
         hub: StringConstructor;
         topics: ArrayConstructor;
     };
+    hubValue: string;
+    topicsValue: Array<string>;
+    readonly hasHubValue: boolean;
+    readonly hasTopicsValue: boolean;
     eventSources: Array<EventSource>;
+    listeners: WeakMap<EventSource, (event: MessageEvent) => void>;
     initialize(): void;
     connect(): void;
     disconnect(): void;

@@ -193,7 +193,7 @@ class default_1 extends Controller {
             this.resetTomSelect();
         }
         if (changeDisabledState) {
-            this.changeTomSelectDisabledState((this.formElement.disabled));
+            this.changeTomSelectDisabledState(this.formElement.disabled);
         }
         if (changePlaceholder) {
             this.updateTomSelectPlaceholder();

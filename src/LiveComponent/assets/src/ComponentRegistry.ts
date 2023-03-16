@@ -1,7 +1,7 @@
 import Component from './Component';
 import { getElementAsTagText } from './dom_utils';
 
-const ComponentRegistry = class {
+class ComponentRegistry {
     private components = new WeakMap<HTMLElement, Component>();
 
     public registerComponent(element: HTMLElement, definition: Component) {
@@ -30,6 +30,6 @@ const ComponentRegistry = class {
             }, 5);
         });
     }
-};
+}
 
 export default new ComponentRegistry();
