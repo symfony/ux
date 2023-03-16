@@ -19,6 +19,10 @@ export default class extends Controller {
         hub: String,
         topics: Array,
     };
+    declare hubValue: string;
+    declare topicsValue: Array<string>;
+    declare readonly hasHubValue: boolean;
+    declare readonly hasTopicsValue: boolean;
 
     eventSources: Array<EventSource> = [];
 

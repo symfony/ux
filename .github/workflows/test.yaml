@@ -15,6 +15,7 @@ jobs:
               run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
 
     coding-style-js:
+        name: JavaScript Coding Style
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
@@ -33,6 +34,7 @@ jobs:
             - run: yarn check-format
 
     js-dist-current:
+        name: Check for UnBuilt JS Dist Files
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
@@ -49,12 +51,18 @@ jobs:
             - run: yarn && yarn build
             - name: Check if js dist files are current
               id: changes
-              uses: UnicornGlobal/has-changes-action@v1.0.11
+              run: |
+                echo "STATUS=$(git status --porcelain)" >> $GITHUB_OUTPUT
 
-            - name: Ensure no changes
-              if: steps.changes.outputs.changed == 1
+            - name: No changes found
+              if: steps.changes.outputs.STATUS == ''
+              run: |
+                echo "git status is clean"
+            - name: Changes were found
+              if: steps.changes.outputs.STATUS != ''
               run: |
                 echo "JS dist files need to be rebuilt"
+                echo "${{ steps.changes.outputs.STATUS }}"
                 exit 1
 
     tests-php-low-deps:
