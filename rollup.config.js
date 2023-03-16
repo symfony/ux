@@ -89,11 +89,7 @@ module.exports = files.map((file) => {
                     emitDeclarationOnly: true,
                 }
             }),
-            commonjs({
-                namedExports: {
-                    'react-dom/client': ['createRoot'],
-                },
-            }),
+            commonjs(),
             wildcardExternalsPlugin(peerDependencies),
             moveTypescriptDeclarationsPlugin(packageRoot),
         ],
