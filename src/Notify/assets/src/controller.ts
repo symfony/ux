@@ -25,6 +25,7 @@ export default class extends Controller {
     declare readonly hasTopicsValue: boolean;
 
     eventSources: Array<EventSource> = [];
+    listeners: WeakMap<EventSource, (event: MessageEvent) => void> = new WeakMap();
 
     initialize() {
         const errorMessages: Array<string> = [];
@@ -50,7 +51,9 @@ export default class extends Controller {
         }
 
         this.eventSources.forEach((eventSource) => {
-            eventSource.addEventListener('message', (event) => this._notify(JSON.parse(event.data).summary));
+            const listener = (event: MessageEvent) => this._notify(JSON.parse(event.data).summary);
+            eventSource.addEventListener('message', listener);
+            this.listeners.set(eventSource, listener);
         });
 
         this.dispatchEvent('connect', { eventSources: this.eventSources });
@@ -58,7 +61,11 @@ export default class extends Controller {
 
     disconnect() {
         this.eventSources.forEach((eventSource) => {
-            eventSource.removeEventListener('message', this._notify);
+            const listener = this.listeners.get(eventSource);
+            if (listener) {
+                eventSource.removeEventListener('message', listener);
+            }
+
             eventSource.close();
         });
 
