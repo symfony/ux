@@ -40,9 +40,7 @@ create a Crop object, and use this object inside a standard form::
 
     class HomeController extends AbstractController
     {
-        /**
-         * #[Route('/', name: 'app_homepage')]
-         */
+        #[Route('/', name: 'app_homepage')]
         public function index(CropperInterface $cropper, Request $request): Response
         {
             $crop = $cropper->createCrop('/server/path/to/the/image.jpg');

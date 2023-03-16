@@ -1058,9 +1058,7 @@ write your form controller logic::
 
     class PostController extends AbstractController
     {
-        /**
-         * #[Route('/admin/post/{id}/edit', name: 'app_post_edit')]
-         */
+        #[Route('/admin/post/{id}/edit', name: 'app_post_edit')]
         public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
         {
             $form = $this->createForm(PostType::class, $post);
