@@ -9,6 +9,7 @@ class LiveDemo
         private string $name,
         private string $description,
         private string $route,
+        private string $longDescription,
     ) {
     }
 
@@ -25,6 +26,11 @@ class LiveDemo
     public function getDescription(): string
     {
         return $this->description;
+    }
+
+    public function getLongDescription(): string
+    {
+        return $this->longDescription;
     }
 
     public function getRoute(): string

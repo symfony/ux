@@ -290,6 +290,9 @@ export default class extends Controller {
 
         if (placeholder) {
             this.stopMutationObserver();
+            // override settings so it's used again later
+            this.tomSelect.settings.placeholder = placeholder;
+            // and set it right now
             this.tomSelect.control_input.setAttribute('placeholder', placeholder);
             this.startMutationObserver();
         }

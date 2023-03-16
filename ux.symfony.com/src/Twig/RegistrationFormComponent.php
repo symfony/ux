@@ -27,6 +27,11 @@ class RegistrationFormComponent extends AbstractController
         return $this->createForm(RegistrationForm::class);
     }
 
+    public function hasValidationErrors(): bool
+    {
+        return $this->getFormInstance()->isSubmitted() && !$this->getFormInstance()->isValid();
+    }
+
     #[LiveAction]
     public function saveRegistration()
     {

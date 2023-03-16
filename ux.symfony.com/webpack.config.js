@@ -84,9 +84,6 @@ Encore
         // only copy files matching this pattern
         //pattern: /\.(png|jpg|jpeg)$/
     })
-    .enableBuildCache({
-        config: [__filename],
-    })
 ;
 
 module.exports = Encore.getWebpackConfig();

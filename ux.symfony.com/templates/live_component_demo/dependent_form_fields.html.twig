@@ -1,44 +1,27 @@
-{% extends 'liveDemoBase.html.twig' %}
+{% extends 'liveDemoTabsBase.html.twig' %}
 
-{% block code_block_full %}
-<div class="row mb-5">
-    <div class="terminal-code">
-        <ul class="nav nav-tabs">
-          <li class="nav-item" role="presentation">
-            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#demo_component" type="button" role="tab" aria-controls="demo_component" aria-selected="true">src/Twig/MealPlannerComponent.php</a>
-          </li>
-          <li class="nav-item" role="presentation">
-              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#demo_template" type="button" role="tab" aria-controls="demo_template">templates/components/meal_planner.html.twig</a>
-          </li>
-          <li class="nav-item" role="presentation">
-              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#demo_form" type="button" role="tab" aria-controls="demo_form">src/Form/MealPlannerForm.php</a>
-          </li>
-        </ul>
-        <div class="tab-content" id="code-tabs">
-            <div class="tab-pane show active" id="demo_component">
-                {% component code_block with { filename: 'src/Twig/MealPlannerComponent.php', showFilename: false, height: '300px' } %}
-                    {% block content %}
-                        {{- source('@src/Twig/MealPlannerComponent.php')|cleanup_php_file -}}
-                    {% endblock %}
-                {% endcomponent %}
-            </div>
-            <div class="tab-pane" id="demo_template">
-                {% component code_block with { filename: 'templates/components/meal_planner.html.twig', showFilename: false, height: '300px' } %}
-                    {% block content %}
-                        {{- source('components/meal_planner.html.twig') -}}
-                    {% endblock %}
-                {% endcomponent %}
-            </div>
-            <div class="tab-pane" id="demo_form">
-                {% component code_block with { filename: 'src/Form/MealPlannerForm.php', showFilename: false, height: '300px' } %}
-                    {% block content %}
-                        {{- source('@src/Form/MealPlannerForm.php')|cleanup_php_file -}}
-                    {% endblock %}
-                {% endcomponent %}
-            </div>
-        </div>
+{% block demo_code_tabs %}
+    <div class="tab-pane show active" id="demo_component">
+        {% component code_block with { filename: 'src/Twig/MealPlannerComponent.php', showFilename: false, height: '300px' } %}
+            {% block content %}
+                {{- source('@src/Twig/MealPlannerComponent.php')|cleanup_php_file -}}
+            {% endblock %}
+        {% endcomponent %}
     </div>
-</div>
+    <div class="tab-pane" id="demo_template">
+        {% component code_block with { filename: 'templates/components/meal_planner.html.twig', showFilename: false, height: '300px' } %}
+            {% block content %}
+                {{- source('components/meal_planner.html.twig') -}}
+            {% endblock %}
+        {% endcomponent %}
+    </div>
+    <div class="tab-pane" id="demo_form">
+        {% component code_block with { filename: 'src/Form/MealPlannerForm.php', showFilename: false, height: '300px' } %}
+            {% block content %}
+                {{- source('@src/Form/MealPlannerForm.php')|cleanup_php_file -}}
+            {% endblock %}
+        {% endcomponent %}
+    </div>
 {% endblock %}
 
 {% block demo_content %}

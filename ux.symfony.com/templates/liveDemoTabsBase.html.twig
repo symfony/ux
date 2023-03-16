@@ -1,0 +1,22 @@
+{% extends 'liveDemoBase.html.twig' %}
+
+{% block code_block_full %}
+<div class="row" style="margin-top: 60px;">
+    <div class="terminal-code">
+        <ul class="nav nav-tabs">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#demo_component" type="button" role="tab" aria-controls="demo_component" aria-selected="true">src/Twig/MealPlannerComponent.php</button>
+          </li>
+          <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#demo_template" type="button" role="tab" aria-controls="demo_template">templates/components/meal_planner.html.twig</button>
+          </li>
+          <li class="nav-item" role="presentation">
+              <button class="nav-link" data-bs-toggle="tab" data-bs-target="#demo_form" type="button" role="tab" aria-controls="demo_form">src/Form/MealPlannerForm.php</button>
+          </li>
+        </ul>
+        <div class="tab-content" id="code-tabs">
+            {% block demo_code_tabs %}{% endblock %}
+        </div>
+    </div>
+</div>
+{% endblock %}

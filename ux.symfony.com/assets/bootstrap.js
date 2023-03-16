@@ -11,6 +11,5 @@ export const app = startStimulusApp(require.context(
 app.debug = process.env.NODE_ENV === 'development';
 
 app.register('clipboard', Clipboard);
-app.register('live', Live);
 // register any custom, 3rd party controllers here
 
