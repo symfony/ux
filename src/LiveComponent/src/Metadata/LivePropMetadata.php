@@ -26,7 +26,6 @@ final class LivePropMetadata
         private string $name,
         private LiveProp $liveProp,
         private ?string $typeName,
-        private bool $allowsNull,
         private bool $isBuiltIn,
     ) {
     }
@@ -39,11 +38,6 @@ final class LivePropMetadata
     public function getType(): ?string
     {
         return $this->typeName;
-    }
-
-    public function allowsNull(): bool
-    {
-        return $this->allowsNull;
     }
 
     public function isBuiltIn(): bool

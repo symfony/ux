@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -30,9 +29,6 @@ use Symfony\UX\LiveComponent\LiveComponentHydrator;
  */
 final class DoctrineObjectNormalizer implements NormalizerInterface, DenormalizerInterface, ServiceSubscriberInterface
 {
-    /** Flag to avoid recursion in the normalizer */
-    private const DOCTRINE_OBJECT_ALREADY_NORMALIZED = 'doctrine_object_normalizer.normalized';
-
     /**
      * @param ManagerRegistry[] $managerRegistries
      */
@@ -89,45 +85,24 @@ final class DoctrineObjectNormalizer implements NormalizerInterface, Denormalize
 
     public function denormalize(mixed $data, string $type, string $format = null, array $context = []): ?object
     {
-        if (null === $data) {
-            return null;
-        }
-
         // $data is the single identifier or array of identifiers
         if (\is_scalar($data) || (\is_array($data) && isset($data[0]))) {
             return $this->objectManagerFor($type)->find($type, $data);
         }
 
-        // $data is an associative array to denormalize the entity
-        // allow the object to be denormalized using the default denormalizer
-        // except that the denormalizer has problems with "nullable: false" columns
-        // https://github.com/symfony/symfony/issues/49149
-        // so, we send the object through the denormalizer, but turn type-checks off
-        // NOTE: The hydration system will already have prevented a writable property
-        //       from reaching this.
-        $context[AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT] = true;
-        $context[self::DOCTRINE_OBJECT_ALREADY_NORMALIZED] = true;
-
-        return $this->getDenormalizer()->denormalize($data, $type, $format, $context);
+        throw new \LogicException('Invalid denormalization case');
     }
 
     public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = [])
     {
-        if (true !== ($context[LiveComponentHydrator::LIVE_CONTEXT] ?? null) || !class_exists($type)) {
-            return false;
+        if (
+            (\is_scalar($data) || (\is_array($data) && isset($data[0])))
+            && null !== $this->objectManagerFor($type)
+        ) {
+            return true;
         }
 
-        // not an entity?
-        if (null === $this->objectManagerFor($type)) {
-            return false;
-        }
-
-        // avoid recursion
-        if ($context[self::DOCTRINE_OBJECT_ALREADY_NORMALIZED] ?? false) {
-            return false;
-        }
-
-        return true;
+        return false;
     }
 
     public static function getSubscribedServices(): array
@@ -139,6 +114,10 @@ final class DoctrineObjectNormalizer implements NormalizerInterface, Denormalize
 
     private function objectManagerFor(string $class): ?ObjectManager
     {
+        if (!class_exists($class)) {
+            return null;
+        }
+
         // todo cache/warmup an array of classes that are "doctrine objects"
         foreach ($this->managerRegistries as $registry) {
             if ($om = $registry->getManagerForClass($class)) {

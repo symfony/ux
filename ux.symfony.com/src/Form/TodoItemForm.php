@@ -12,7 +12,11 @@ class TodoItemForm extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('description')
+            ->add('description', null, [
+                // added because setDescription() doesn't allow null
+                // it would be simpler to make the arg to that method nullable
+                'empty_data' => '',
+            ])
             ->add('priority')
         ;
     }

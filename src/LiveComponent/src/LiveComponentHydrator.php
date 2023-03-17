@@ -18,9 +18,16 @@ use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
+use Symfony\Component\Serializer\Exception\ExtraAttributesException;
+use Symfony\Component\Serializer\Exception\MissingConstructorArgumentsException;
+use Symfony\Component\Serializer\Exception\NotNormalizableValueException;
+use Symfony\Component\Serializer\Exception\PartialDenormalizationException;
 use Symfony\Component\Serializer\Mapping\AttributeMetadataInterface;
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -93,11 +100,11 @@ final class LiveComponentHydrator
                     throw new \LogicException(sprintf('The "%s" component has a dehydrateMethod of "%s" but the method does not exist.', \get_class($component), $method));
                 }
                 $dehydratedValue = $component->$method($dehydratedValue);
-            } elseif (\is_object($rawPropertyValue)) {
+            } elseif (\is_object($rawPropertyValue) || \is_array($rawPropertyValue)) {
                 $dehydratedValue = $this->normalizer->normalize(
                     $dehydratedValue,
                     'json',
-                    array_merge([self::LIVE_CONTEXT => true], $normalizationContext)
+                    $normalizationContext
                 );
             }
 
@@ -128,7 +135,7 @@ final class LiveComponentHydrator
                     $pathValue = $this->normalizer->normalize(
                         $pathValue,
                         'json',
-                        array_merge([self::LIVE_CONTEXT => true], $normalizationContext)
+                        $normalizationContext,
                     );
 
                     $this->preventArrayDehydratedValueForObjectThatIsWritable($pathValue, $originalPathValueClass, false, sprintf('%s.%s', $propMetadata->getName(), $path), false);
@@ -179,12 +186,15 @@ final class LiveComponentHydrator
                 continue;
             }
 
+            $types = $this->propertyTypeExtractor->getTypes(\get_class($component), $propMetadata->getName());
+
             /*
             | 1) Hydrate and set ORIGINAL data for this LiveProp.
             */
             $propertyValue = $this->hydrateLiveProp(
                 $component,
                 $propMetadata,
+                $types,
                 $dehydratedOriginalProps->getPropValue($frontendName),
             );
 
@@ -216,6 +226,7 @@ final class LiveComponentHydrator
                     $propertyValue = $this->hydrateLiveProp(
                         $component,
                         $propMetadata,
+                        $types,
                         $dehydratedUpdatedProps->getPropValue($frontendName),
                     );
                 } catch (HydrationException $e) {
@@ -357,50 +368,236 @@ final class LiveComponentHydrator
         return $finalPropertyPath;
     }
 
-    private function hydrateValue(mixed $value, ?string $type, bool $allowsNull, bool $isBuiltIn, array $denormalizationContext, string $fullPathForErrors, bool $isWritable, string $componentClass): mixed
+    private function hydrateValue(mixed $data, array $types, array $context, string $fullPathForErrors, bool $isWritable, string $componentClass): mixed
     {
-        if (\is_string($value) && \in_array($type, ['int', 'float', 'bool'], true)) {
-            return self::coerceScalarValue($value, $type, $allowsNull);
-        }
-
-        if ($type && $allowsNull && is_a($type, \BackedEnum::class, true) && !\in_array($value, array_map(fn (\BackedEnum $e) => $e->value, $type::cases()))) {
-            return null;
-        }
-
-        if (null === $value || null === $type || $isBuiltIn) {
-            return $value;
-        }
-
-        if ($isWritable) {
-            $this->preventArrayDehydratedValueForObjectThatIsWritable($value, $type, $isBuiltIn, $fullPathForErrors, true);
-        }
-
         try {
-            return $this->normalizer->denormalize(
-                $value,
-                $type,
-                'json',
-                array_merge([self::LIVE_CONTEXT => true], $denormalizationContext)
-            );
+            return $this->doHydrateValue($data, $types, $context, $fullPathForErrors, $isWritable, $componentClass);
+        } catch (PartialDenormalizationException $exception) {
+            // Swallow these: at least one sub path on the object could not be hydrated.
+            // This is a tricky situation: it could be caused by user error, it even
+            // because a property was an object, a null property was deserialized
+            // to null, but its setter only allow non-null values. It's balancing
+            // act of being friendly to use and not hiding errors.
+            // in the future, we could collect the errors and display them somewhere
+            return $exception->getData();
         } catch (ExceptionInterface $exception) {
-            $json = json_encode($value);
-            $message = sprintf(
-                'The normalizer was used to hydrate/denormalize the "%s" property on your "%s" live component, but it failed: %s',
-                $fullPathForErrors,
+            $json = json_encode($data);
+            $message = sprintf(<<<EOF
+'The normalizer was used to denormalize the "%s.%s" property, but it failed:
+
+> %s
+
+Fix the error, or use the hydrateWith/dehydrateWith options to control the (de)hydration process.'
+EOF,
                 $componentClass,
+                $fullPathForErrors,
                 $exception->getMessage()
             );
 
             // unless the data is gigantic, include it in the error to help
             if (\strlen($json) < 1000) {
-                $message .= sprintf(' The data sent from the frontend was: %s', $json);
+                $message .= sprintf(<<<EOF
+The data that was used for denormalizing was:
+
+%s
+EOF
+                    , $json);
             }
 
             throw new HydrationException($message, $exception);
         }
     }
 
-    private function hydrateLiveProp(object $component, Metadata\LivePropMetadata $propMetadata, mixed $dehydratedProp): mixed
+    /**
+     * Modeled after AbstractObjectNormalizer::validateAndDenormalize().
+     *
+     * @param Type[] $types
+     */
+    private function doHydrateValue(mixed $data, array $types, array $context, string $fullPathForErrors, bool $isWritable, string $currentClass): mixed
+    {
+        $format = 'json';
+        $context = array_merge([
+            self::LIVE_CONTEXT => true,
+            // prevents NotNormalizableValueException from being thrown
+            // e.g. if we're denormalizing into an object, and one value
+            // fails to be set (e.g. because of a type mismatch), don't
+            // stop the entire process: continue
+            // In the future, we could collect these and do something with them
+            DenormalizerInterface::COLLECT_DENORMALIZATION_ERRORS => true,
+        ], $context);
+
+        $expectedTypes = [];
+        $isUnionType = \count($types) > 1;
+        $extraAttributesException = null;
+        $missingConstructorArgumentException = null;
+        foreach ($types as $type) {
+            if (null === $data && $type->isNullable()) {
+                return null;
+            }
+
+            /* START CUSTOM */
+            // coerce scalar values to the correct type instead of just ignoring them
+            if (\is_string($data) && \in_array($type->getBuiltinType(), ['int', 'float', 'bool'], true)) {
+                return self::coerceScalarValue($data, $type->getBuiltinType(), $type->isNullable());
+            }
+
+            $typeClass = $type->getClassName();
+            if ($typeClass && $type->isNullable() && is_a($typeClass, \BackedEnum::class, true) && !\in_array($data, array_map(fn (\BackedEnum $e) => $e->value, $typeClass::cases()))) {
+                return null;
+            }
+            /* END CUSTOM */
+
+            $collectionValueType = $type->isCollection() ? $type->getCollectionValueTypes()[0] ?? null : null;
+
+            /* START DUPLICATION */
+            try {
+                if (null !== $collectionValueType && Type::BUILTIN_TYPE_OBJECT === $collectionValueType->getBuiltinType()) {
+                    $builtinType = Type::BUILTIN_TYPE_OBJECT;
+                    $class = $collectionValueType->getClassName().'[]';
+
+                    if (\count($collectionKeyType = $type->getCollectionKeyTypes()) > 0) {
+                        [$context['key_type']] = $collectionKeyType;
+                    }
+
+                    $context['value_type'] = $collectionValueType;
+                } elseif ($type->isCollection() && \count($collectionValueType = $type->getCollectionValueTypes()) > 0 && Type::BUILTIN_TYPE_ARRAY === $collectionValueType[0]->getBuiltinType()) {
+                    // get inner type for any nested array
+                    [$innerType] = $collectionValueType;
+
+                    // note that it will break for any other builtinType
+                    $dimensions = '[]';
+                    while (\count($innerType->getCollectionValueTypes()) > 0 && Type::BUILTIN_TYPE_ARRAY === $innerType->getBuiltinType()) {
+                        $dimensions .= '[]';
+                        [$innerType] = $innerType->getCollectionValueTypes();
+                    }
+
+                    if (null !== $innerType->getClassName()) {
+                        // the builtinType is the inner one and the class is the class followed by []...[]
+                        $builtinType = $innerType->getBuiltinType();
+                        $class = $innerType->getClassName().$dimensions;
+                    } else {
+                        // default fallback (keep it as array)
+                        $builtinType = $type->getBuiltinType();
+                        $class = $type->getClassName();
+                    }
+                } else {
+                    $builtinType = $type->getBuiltinType();
+                    $class = $type->getClassName();
+                }
+
+                $expectedTypes[Type::BUILTIN_TYPE_OBJECT === $builtinType && $class ? $class : $builtinType] = true;
+
+                if (Type::BUILTIN_TYPE_OBJECT === $builtinType) {
+                    /* START CUSTOM */
+                    $childContext = $context;
+                    // $childContext = $this->createChildContext($context, $attribute, $format);
+                    if ($isWritable) {
+                        $this->preventArrayDehydratedValueForObjectThatIsWritable($data, $class, false, $fullPathForErrors, true);
+                    }
+                    /* END CUSTOM */
+
+                    if ($this->normalizer->supportsDenormalization($data, $class, $format, $childContext)) {
+                        return $this->normalizer->denormalize($data, $class, $format, $childContext);
+                    }
+                }
+
+                // JSON only has a Number type corresponding to both int and float PHP types.
+                // PHP's json_encode, JavaScript's JSON.stringify, Go's json.Marshal as well as most other JSON encoders convert
+                // floating-point numbers like 12.0 to 12 (the decimal part is dropped when possible).
+                // PHP's json_decode automatically converts Numbers without a decimal part to integers.
+                // To circumvent this behavior, integers are converted to floats when denormalizing JSON based formats and when
+                // a float is expected.
+                if (Type::BUILTIN_TYPE_FLOAT === $builtinType && \is_int($data) && null !== $format && str_contains($format, JsonEncoder::FORMAT)) {
+                    return (float) $data;
+                }
+
+                if ((Type::BUILTIN_TYPE_FALSE === $builtinType && false === $data) || (Type::BUILTIN_TYPE_TRUE === $builtinType && true === $data)) {
+                    return $data;
+                }
+
+                if (('is_'.$builtinType)($data)) {
+                    return $data;
+                }
+            } catch (NotNormalizableValueException $e) {
+                if (!$isUnionType) {
+                    throw $e;
+                }
+            } catch (ExtraAttributesException $e) {
+                if (!$isUnionType) {
+                    throw $e;
+                }
+
+                $extraAttributesException ??= $e;
+            } catch (MissingConstructorArgumentsException $e) {
+                if (!$isUnionType) {
+                    throw $e;
+                }
+
+                $missingConstructorArgumentException ??= $e;
+            }
+            /* END DUPLICATION */
+        }
+
+        /* START DUPLICATION */
+        if ($extraAttributesException) {
+            throw $extraAttributesException;
+        }
+
+        if ($missingConstructorArgumentException) {
+            throw $missingConstructorArgumentException;
+        }
+
+        if ($context[AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT] ?? $this->defaultContext[AbstractObjectNormalizer::DISABLE_TYPE_ENFORCEMENT] ?? false) {
+            return $data;
+        }
+
+        throw NotNormalizableValueException::createForUnexpectedDataType(sprintf('The type of the "%s" attribute for class "%s" must be one of "%s" ("%s" given).', $fullPathForErrors, $currentClass, implode('", "', array_keys($expectedTypes)), get_debug_type($data)), $data, array_keys($expectedTypes), $context['deserialization_path'] ?? $fullPathForErrors);
+        /* END DUPLICATION */
+
+        if (\is_string($value) && \in_array($typeString, ['int', 'float', 'bool'], true)) {
+            return self::coerceScalarValue($value, $typeString, $allowsNull);
+        }
+
+        if (null === $value || null === $typeString || $isBuiltIn) {
+            return $value;
+        }
+
+        try {
+            return $this->normalizer->denormalize(
+                $value,
+                $typeString,
+                'json',
+                array_merge([self::LIVE_CONTEXT => true], $denormalizationContext)
+            );
+        } catch (ExceptionInterface $exception) {
+            $json = json_encode($value);
+            $message = sprintf(<<<EOF
+'The normalizer was used to denormalize the "%s.%s" property, but it failed:
+
+> %s
+
+Fix the error, or use the hydrateWith/dehydrateWith options to control the (de)hydration process.'
+EOF,
+                $componentClass,
+                $fullPathForErrors,
+                $exception->getMessage()
+            );
+
+            // unless the data is gigantic, include it in the error to help
+            if (\strlen($json) < 1000) {
+                $message .= sprintf(<<<EOF
+The data that was used for denormalizing was:
+
+%s
+EOF
+                    , $json);
+            }
+
+            throw new HydrationException($message, $exception);
+        }
+    }
+
+    private function hydrateLiveProp(object $component, $propMetadata, ?array $types, mixed $dehydratedProp): mixed
     {
         if ($propMetadata->hydrateMethod()) {
             if (!method_exists($component, $propMetadata->hydrateMethod())) {
@@ -410,11 +607,13 @@ final class LiveComponentHydrator
             return $component->{$propMetadata->hydrateMethod()}($dehydratedProp);
         }
 
+        if (null === $types) {
+            return $dehydratedProp;
+        }
+
         return $this->hydrateValue(
             $dehydratedProp,
-            $propMetadata->getType(),
-            $propMetadata->allowsNull(),
-            $propMetadata->isBuiltIn(),
+            $types,
             $this->getDenormalizationContext($component, $propMetadata->getName()),
             $propMetadata->getName(),
             $propMetadata->isIdentityWritable(),
@@ -455,30 +654,24 @@ final class LiveComponentHydrator
             // e.g. writablePaths: ['post.createdAt'] is not supported.
             if (0 === substr_count($writablePath, '.') && \is_object($propertyValue)) {
                 $types = $this->propertyTypeExtractor->getTypes(\get_class($propertyValue), $writablePath);
-                $type = null === $types ? null : $types[0] ?? null;
-                $isBuiltIn = $type ? Type::BUILTIN_TYPE_OBJECT !== $type->getBuiltinType() : false;
-                $typeString = null;
-                if ($type) {
-                    $typeString = $isBuiltIn ? $type->getBuiltinType() : $type->getClassName();
-                }
 
-                try {
-                    $writablePathData = $this->hydrateValue(
-                        $writablePathData,
-                        $typeString,
-                        $type ? $type->isNullable() : true,
-                        $isBuiltIn,
-                        $denormalizationContext,
-                        sprintf('%s.%s', $frontendPropName, $writablePath),
-                        true,
-                        $componentClass,
-                    );
-                } catch (HydrationException $exception) {
-                    if ($throwErrors) {
-                        throw $exception;
+                if (null !== $types) {
+                    try {
+                        $writablePathData = $this->hydrateValue(
+                            $writablePathData,
+                            $types,
+                            $denormalizationContext,
+                            sprintf('%s.%s', $frontendPropName, $writablePath),
+                            true,
+                            $componentClass,
+                        );
+                    } catch (HydrationException $exception) {
+                        if ($throwErrors) {
+                            throw $exception;
+                        }
+                        // swallow problems hydrating user-sent data
+                        continue;
                     }
-                    // swallow problems hydrating user-sent data
-                    continue;
                 }
             }
 
@@ -520,7 +713,18 @@ final class LiveComponentHydrator
     {
         $attributeMetadata = $this->getSerializationAttributeMetadata($component, $propertyName);
         // passing [] for groups - not sure if we need to be smarter
-        return $attributeMetadata ? $attributeMetadata->getNormalizationContextForGroups([]) : [];
+
+        $context = $attributeMetadata ? $attributeMetadata->getNormalizationContextForGroups([]) : [];
+
+        return array_merge([
+            self::LIVE_CONTEXT => true,
+            // avoid circular references by setting the reference to null
+            // this covers the most common case of Doctrine relations
+            // and isn't perfect, but is a decent default
+            AbstractNormalizer::CIRCULAR_REFERENCE_HANDLER => static function ($object, $format, $context) {
+                return null;
+            },
+        ], $context);
     }
 
     private function getDenormalizationContext(object $component, string $propertyName): array

@@ -541,8 +541,11 @@ the ``Context`` attribute from Symfony's serializer::
     If your property has writable paths, those will be normalized/denormalized
     using the same `Context` set on the property itself.
 
-Or, you can take full control over the (de)hydration process by setting the ``hydrateWith``
-and ``dehydrateWith`` options on ``LiveProp``. For example::
+Using the serializer isn't meant to work out-of-the-box in every possible situation
+and it's always simpler to use scalar `LiveProp` values instead of complex objects.
+If you're having (de)hydrating a complex object, you can take full control by
+setting the ``hydrateWith`` and ``dehydrateWith`` options on ``LiveProp``. For
+example::
 
     class ComponentWithAddressDto
     {
