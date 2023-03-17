@@ -24,16 +24,11 @@ class DehydratedProps
     /**
      * Array keyed by the frontend LiveProp name (e.g. product) and set to the dehydrated value.
      *
-     * @var array<string, mixed>
-     */
-    private array $propValues = [];
-
-    /**
-     * Array keyed by the full nested path (e.g. "product.name") and set to the dehydrated value.
+     * Nested paths can be used like "product.name".
      *
      * @var array<string, mixed>
      */
-    private array $nestedPathValues = [];
+    private array $propValues = [];
 
     /**
      * Create this object from the extra "props" identifiers passed to/from the frontend.
@@ -53,13 +48,6 @@ class DehydratedProps
     {
         $props = new static();
         foreach ($updatedPaths as $frontendName => $dehydratedValue) {
-            if (str_contains($frontendName, '.')) {
-                [$frontendName, $nestedPath] = explode('.', $frontendName, 2);
-                $props->addNestedProp($frontendName, $nestedPath, $dehydratedValue);
-
-                continue;
-            }
-
             $props->addPropValue($frontendName, $dehydratedValue);
         }
 
@@ -74,7 +62,7 @@ class DehydratedProps
     public function addNestedProp(string $frontendName, string $nestedPath, mixed $pathValue): void
     {
         $fullPath = $frontendName.'.'.$nestedPath;
-        $this->nestedPathValues[$fullPath] = $pathValue;
+        $this->propValues[$fullPath] = $pathValue;
     }
 
     public function removePropValue(string $key): void
@@ -100,7 +88,7 @@ class DehydratedProps
     {
         $fullPath = $propName.'.'.$nestedPath;
 
-        return \array_key_exists($fullPath, $this->nestedPathValues);
+        return \array_key_exists($fullPath, $this->propValues);
     }
 
     public function getNestedPathValue(string $propName, string $nestedPath): mixed
@@ -111,13 +99,13 @@ class DehydratedProps
 
         $fullPath = $propName.'.'.$nestedPath;
 
-        return $this->nestedPathValues[$fullPath];
+        return $this->propValues[$fullPath];
     }
 
     public function getNestedPathsForProperty(string $prop): array
     {
         $nestedPaths = [];
-        foreach ($this->nestedPathValues as $fullPath => $value) {
+        foreach ($this->propValues as $fullPath => $value) {
             if (str_starts_with($fullPath, $prop.'.')) {
                 $nestedPaths[] = substr($fullPath, \strlen($prop) + 1);
             }
@@ -130,7 +118,7 @@ class DehydratedProps
     {
         $clone = clone $this;
         foreach ($expectedNestedPaths as $nestedPath) {
-            unset($clone->nestedPathValues[$prop.'.'.$nestedPath]);
+            unset($clone->propValues[$prop.'.'.$nestedPath]);
         }
 
         return $clone->getNestedPathsForProperty($prop);
@@ -139,10 +127,5 @@ class DehydratedProps
     public function getProps(): array
     {
         return $this->propValues;
-    }
-
-    public function getNestedProps(): array
-    {
-        return $this->nestedPathValues;
     }
 }

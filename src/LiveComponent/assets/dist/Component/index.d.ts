@@ -23,7 +23,7 @@ export default class Component {
     private children;
     private parent;
     private externalMutationTracker;
-    constructor(element: HTMLElement, props: any, nestedProps: any, fingerprint: string | null, id: string | null, backend: BackendInterface, elementDriver: ElementDriver);
+    constructor(element: HTMLElement, props: any, fingerprint: string | null, id: string | null, backend: BackendInterface, elementDriver: ElementDriver);
     _swapBackend(backend: BackendInterface): void;
     addPlugin(plugin: PluginInterface): void;
     connect(): void;

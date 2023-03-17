@@ -23,20 +23,15 @@ class DehydratedPropsTest extends TestCase
             'firstName' => 'Ryan',
             'address' => ['street' => '123 Main St', 'city' => 'New York'],
             'product' => 5,
-        ], $dehydratedProps->getProps());
-        $this->assertSame([
             'address.city' => 'New York',
             'product.name' => 'marshmallows',
             'product.price' => '25.99',
             'product.category.title' => 'campfire food',
-        ], $dehydratedProps->getNestedProps());
+        ], $dehydratedProps->getProps());
 
         // now reverse the process
         $propsFromArray = DehydratedProps::createFromPropsArray($dehydratedProps->getProps());
         $this->assertEquals($dehydratedProps->getProps(), $propsFromArray->getProps());
-
-        $updatedProps = DehydratedProps::createFromUpdatedArray($dehydratedProps->getNestedProps());
-        $this->assertEquals($dehydratedProps->getNestedProps(), $updatedProps->getNestedProps());
     }
 
     public function testRemovePropValue(): void

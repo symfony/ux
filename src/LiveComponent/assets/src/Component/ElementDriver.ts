@@ -3,7 +3,7 @@ import {getModelDirectiveFromElement} from '../dom_utils';
 export interface ElementDriver {
     getModelName(element: HTMLElement): string|null;
 
-    getComponentProps(rootElement: HTMLElement): { props: any, nestedProps: any };
+    getComponentProps(rootElement: HTMLElement): any;
 
     /**
      * Given an HtmlElement and a child id, find the root element for that child.
@@ -29,12 +29,8 @@ export class StandardElementDriver implements ElementDriver {
 
     getComponentProps(rootElement: HTMLElement): any {
         const propsJson = rootElement.dataset.livePropsValue ?? '{}';
-        const nestedPropsJson = rootElement.dataset.liveNestedPropsValue ?? '{}';
 
-        return {
-            props: JSON.parse(propsJson),
-            nestedProps: JSON.parse(nestedPropsJson),
-        }
+        return JSON.parse(propsJson);
     }
 
     findChildComponentElement(id: string, element: HTMLElement): HTMLElement|null {

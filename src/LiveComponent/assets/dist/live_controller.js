@@ -354,13 +354,11 @@ const parseDeepData = function (data, propertyPath) {
 };
 
 class ValueStore {
-    constructor(props, nestedProps) {
+    constructor(props) {
         this.props = {};
-        this.nestedProps = {};
         this.dirtyProps = {};
         this.pendingProps = {};
         this.props = props;
-        this.nestedProps = nestedProps;
     }
     get(name) {
         const normalizedName = normalizeModelName(name);
@@ -370,8 +368,8 @@ class ValueStore {
         if (this.pendingProps[normalizedName] !== undefined) {
             return this.pendingProps[normalizedName];
         }
-        if (this.nestedProps[normalizedName] !== undefined) {
-            return this.nestedProps[normalizedName];
+        if (this.props[normalizedName] !== undefined) {
+            return this.props[normalizedName];
         }
         return getDeepData(this.props, normalizedName);
     }
@@ -390,9 +388,6 @@ class ValueStore {
     getOriginalProps() {
         return Object.assign({}, this.props);
     }
-    getOriginalNestedProps() {
-        return Object.assign({}, this.nestedProps);
-    }
     getDirtyProps() {
         return Object.assign({}, this.dirtyProps);
     }
@@ -400,9 +395,8 @@ class ValueStore {
         this.pendingProps = Object.assign({}, this.dirtyProps);
         this.dirtyProps = {};
     }
-    reinitializeAllProps(props, nestedProps) {
+    reinitializeAllProps(props) {
         this.props = props;
-        this.nestedProps = nestedProps;
         this.pendingProps = {};
     }
     pushPendingPropsBackToDirty() {
@@ -1727,7 +1721,7 @@ class ChildComponentWrapper {
     }
 }
 class Component {
-    constructor(element, props, nestedProps, fingerprint, id, backend, elementDriver) {
+    constructor(element, props, fingerprint, id, backend, elementDriver) {
         this.defaultDebounce = 150;
         this.backendRequest = null;
         this.pendingActions = [];
@@ -1740,7 +1734,7 @@ class Component {
         this.elementDriver = elementDriver;
         this.id = id;
         this.fingerprint = fingerprint;
-        this.valueStore = new ValueStore(props, nestedProps);
+        this.valueStore = new ValueStore(props);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
         this.hooks = new HookManager();
         this.resetPromise();
@@ -1833,7 +1827,7 @@ class Component {
         return children;
     }
     updateFromNewElement(toEl) {
-        const { props } = this.elementDriver.getComponentProps(toEl);
+        const props = this.elementDriver.getComponentProps(toEl);
         if (props === null) {
             return false;
         }
@@ -1934,8 +1928,8 @@ class Component {
             console.error('There was a problem with the component HTML returned:');
             throw error;
         }
-        const { props: newProps, nestedProps: newNestedProps } = this.elementDriver.getComponentProps(newElement);
-        this.valueStore.reinitializeAllProps(newProps, newNestedProps);
+        const newProps = this.elementDriver.getComponentProps(newElement);
+        this.valueStore.reinitializeAllProps(newProps);
         this.externalMutationTracker.handlePendingChanges();
         this.externalMutationTracker.stop();
         executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), Array.from(this.getChildren().values()), this.elementDriver.findChildComponentElement, this.elementDriver.getKeyFromElement, this.externalMutationTracker);
@@ -2154,13 +2148,9 @@ class StandardElementDriver {
         return modelDirective.action;
     }
     getComponentProps(rootElement) {
-        var _a, _b;
+        var _a;
         const propsJson = (_a = rootElement.dataset.livePropsValue) !== null && _a !== void 0 ? _a : '{}';
-        const nestedPropsJson = (_b = rootElement.dataset.liveNestedPropsValue) !== null && _b !== void 0 ? _b : '{}';
-        return {
-            props: JSON.parse(propsJson),
-            nestedProps: JSON.parse(nestedPropsJson),
-        };
+        return JSON.parse(propsJson);
     }
     findChildComponentElement(id, element) {
         return element.querySelector(`[data-live-id=${id}]`);
@@ -2585,7 +2575,7 @@ class LiveControllerDefault extends Controller {
     initialize() {
         this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
         const id = this.element.dataset.liveId || null;
-        this.component = new Component(this.element, this.propsValue, this.nestedPropsValue, this.fingerprintValue, id, new Backend(this.urlValue, this.csrfValue), new StandardElementDriver());
+        this.component = new Component(this.element, this.propsValue, this.fingerprintValue, id, new Backend(this.urlValue, this.csrfValue), new StandardElementDriver());
         this.proxiedComponent = proxifyComponent(this.component);
         this.element.__component = this.proxiedComponent;
         if (this.hasDebounceValue) {
@@ -2744,7 +2734,6 @@ class LiveControllerDefault extends Controller {
 LiveControllerDefault.values = {
     url: String,
     props: Object,
-    nestedProps: { type: Object, default: {} },
     csrf: String,
     debounce: { type: Number, default: 150 },
     id: String,

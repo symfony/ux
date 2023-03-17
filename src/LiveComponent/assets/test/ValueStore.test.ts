@@ -4,13 +4,11 @@ describe('ValueStore', () => {
     const getDataset = [
         {
             props: { firstName: 'Ryan' },
-            nestedProps: {},
             name: 'firstName',
             expected: 'Ryan',
         },
         {
             props: {},
-            nestedProps: {},
             name: 'firstName',
             expected: undefined,
         },
@@ -20,15 +18,12 @@ describe('ValueStore', () => {
                     firstName: 'Ryan',
                 },
             },
-            nestedProps: {},
             name: 'user.firstName',
             expected: 'Ryan',
         },
         {
             props: {
                 user: 5,
-            },
-            nestedProps: {
                 'user.firstName': 'Ryan',
             },
             name: 'user.firstName',
@@ -37,8 +32,8 @@ describe('ValueStore', () => {
         {
             props: {
                 user: 111,
+                'user.FirstName': 'Ryan'
             },
-            nestedProps: { 'user.FirstName': 'Ryan' },
             name: 'user',
             expected: 111,
         },
@@ -48,7 +43,6 @@ describe('ValueStore', () => {
                     firstName: 'Ryan',
                 },
             },
-            nestedProps: {},
             name: 'user',
             expected: {
                 firstName: 'Ryan',
@@ -56,13 +50,11 @@ describe('ValueStore', () => {
         },
         {
             props: { firstName: null },
-            nestedProps: {},
             name: 'firstName',
             expected: null,
         },
         {
             props: { firstName: 'Ryan' },
-            nestedProps: {},
             updated: [ { prop: 'firstName', value: 'Kevin' }],
             name: 'firstName',
             expected: 'Kevin',
@@ -73,16 +65,15 @@ describe('ValueStore', () => {
                     firstName: 'Ryan',
                 },
             },
-            nestedProps: {},
             updated: [ { prop: 'user.firstName', value: 'Kevin' }],
             name: 'user.firstName',
             expected: 'Kevin',
         },
     ];
 
-    getDataset.forEach(({ props, nestedProps, name, expected, updated = [] }) => {
+    getDataset.forEach(({ props, name, expected, updated = [] }) => {
         it(`get("${name}") with data ${JSON.stringify(props)} returns ${JSON.stringify(expected)}`, () => {
-            const store = new ValueStore(props, nestedProps);
+            const store = new ValueStore(props);
             updated.forEach(({ prop, value }) => {
                 store.set(prop, value);
             });
@@ -93,13 +84,11 @@ describe('ValueStore', () => {
     const hasDataset = [
         {
             props: { firstName: 'Ryan' },
-            nestedProps: {},
             name: 'firstName',
             expected: true,
         },
         {
             props: { firstName: 'Ryan' },
-            nestedProps: {},
             name: 'lastName',
             expected: false,
         },
@@ -109,15 +98,14 @@ describe('ValueStore', () => {
                     firstName: 'Ryan',
                 },
             },
-            nestedProps: {},
             name: 'user.firstName',
             expected: true,
         },
         {
             props: {
                 user: 5,
+                'user.firstName': 'Ryan'
             },
-            nestedProps: { 'user.firstName': 'Ryan' },
             name: 'user.firstName',
             expected: true,
         },
@@ -127,15 +115,14 @@ describe('ValueStore', () => {
                     firstName: 'Ryan',
                 },
             },
-            nestedProps: {},
             name: 'user.lastName',
             expected: false,
         },
         {
             props: {
                 user: 111,
+                'user.firstName': 'Ryan'
             },
-            nestedProps: { 'user.firstName': 'Ryan'},
             name: 'user',
             expected: true,
         },
@@ -145,21 +132,19 @@ describe('ValueStore', () => {
                     firstName: 'Ryan',
                 },
             },
-            nestedProps: {},
             name: 'user',
             expected: true,
         },
         {
             props: { firstName: null },
-            nestedProps: {},
             name: 'firstName',
             expected: true,
         },
     ];
 
-    hasDataset.forEach(({ props, nestedProps, name, expected }) => {
+    hasDataset.forEach(({ props, name, expected }) => {
         it(`has("${name}") with data ${JSON.stringify(props)} returns ${JSON.stringify(expected)}`, () => {
-            const store = new ValueStore(props, nestedProps);
+            const store = new ValueStore(props);
             expect(store.has(name)).toEqual(expected);
         });
     });
@@ -213,14 +198,14 @@ describe('ValueStore', () => {
 
     setDataset.forEach(({ props, set, to, expected }) => {
         it(`set("${set}", ${JSON.stringify(to)}) with data ${JSON.stringify(props)} results in ${JSON.stringify(expected)}`, () => {
-            const store = new ValueStore(props, {});
+            const store = new ValueStore(props);
             store.set(set, to);
             expect(store.getDirtyProps()).toEqual(expected);
         });
     });
 
     it('correctly tracks pending changes', () => {
-        const store = new ValueStore({ firstName: 'Ryan' }, {});
+        const store = new ValueStore({ firstName: 'Ryan' });
 
         store.set('firstName', 'Kevin');
         store.flushDirtyPropsToPending();
@@ -232,17 +217,17 @@ describe('ValueStore', () => {
 
         // imitate an Ajax success (but the server changes the data)
         store.flushDirtyPropsToPending();
-        store.reinitializeAllProps({ firstName: 'KEVIN' }, {});
+        store.reinitializeAllProps({ firstName: 'KEVIN' });
         expect(store.get('firstName')).toEqual('KEVIN');
 
         // imitate an Ajax success where the value is changed during the request
-        store.reinitializeAllProps({ firstName: 'Ryan' }, {});
+        store.reinitializeAllProps({ firstName: 'Ryan' });
         store.set('firstName', 'Kevin');
         store.flushDirtyPropsToPending();
         store.set('firstName', 'Wouter');
         expect(store.get('firstName')).toEqual('Wouter');
         // ajax call finishes, the props has updated correctly
-        store.reinitializeAllProps({ firstName: 'Kevin' }, {});
+        store.reinitializeAllProps({ firstName: 'Kevin' });
         // the updating state still exists
         expect(store.get('firstName')).toEqual('Wouter');
     });
@@ -251,7 +236,6 @@ describe('ValueStore', () => {
     it('getOriginalProps() returns props', () => {
         const container = new ValueStore(
             { city: 'Grand Rapids', user: 'Kevin', product: 5 },
-            { 'product.name': 'Banana'}
         );
 
         expect(container.getOriginalProps()).toEqual({ city: 'Grand Rapids', user: 'Kevin', product: 5 });
@@ -347,7 +331,7 @@ describe('ValueStore', () => {
     ];
     reinitializeProvidedPropsDataset.forEach(({ props, newProps, expectedProps, changed }) => {
         it(`reinitializeProvidedProps(${JSON.stringify(newProps)}) with data ${JSON.stringify(props)} results in ${JSON.stringify(expectedProps)}`, () => {
-            const store = new ValueStore(props, {});
+            const store = new ValueStore(props);
             const actualChanged = store.reinitializeProvidedProps(newProps);
             expect(store.getOriginalProps()).toEqual(expectedProps);
             expect(actualChanged).toEqual(changed);

@@ -75,9 +75,6 @@ class LiveControllerAttributesCreator
             $mountedAttributes
         );
         $attributesCollection->addProps($dehydratedProps->getProps());
-        if ($dehydratedProps->getNestedProps()) {
-            $attributesCollection->addNestedProps($dehydratedProps->getNestedProps());
-        }
 
         if ($this->csrfTokenManager && $metadata->get('csrf')) {
             $attributesCollection->addLiveCsrf(
