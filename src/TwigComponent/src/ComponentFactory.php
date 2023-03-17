@@ -86,6 +86,7 @@ final class ComponentFactory
         // ensure remaining data is scalar
         foreach ($data as $key => $value) {
             if ($value instanceof \Stringable) {
+                $data[$key] = (string) $value;
                 continue;
             }
 
