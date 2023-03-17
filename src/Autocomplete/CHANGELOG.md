@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.8.0
+
+-   The autocomplete will now update if any of the `option` elements inside of
+    it change, including the empty / placeholder element. Additionally, if the
+    `select` or `input` element's `disabled` attribute changes, the autocomplete
+    instance will update accordingly. This makes Autocomplete work perfectly inside
+    of a LiveComponent.
+
 ## 2.7.0
 
 -   Add `assets/src` to `.gitattributes` to exclude them from the installation

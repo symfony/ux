@@ -15,9 +15,25 @@ public User $user;
 
 -   Better support for using arrays with `LiveProp`.
 
+-   Smart rendering system! If you have JavaScript that makes changes to
+    the DOM inside a live component, those changes will now be _kept_ when
+    the component is re-rendered. This has limitations - see the documentation.
+
 -   Added support for setting `writable` to a property that is an object
     (previously, only scalar values were supported). The object is passed
     through the serializer.
+
+-   Invalid data sent by the user is now handled in a robust way. Previously,
+    if the user sent invalid data (e.g. a string for a `LiveProp` that has
+    an `int` type), the component update would break. Now, if the new data
+    cannot be hydrated onto the object during a re-render, the last valid
+    value is used.
+
+-   Several bug fixes to parent - child components - see #700.
+
+-   Fixed handling of boolean attributes to a component - see #710.
+
+-   Fixed performance calculating component fingerprint for large components.
 
 ## 2.7.0
 
