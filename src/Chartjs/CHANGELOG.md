@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.8.0
+
+-   The chart will now automatically re-render if the `view` Stimulus value
+    (i.e. the `data-symfony--ux-chartjs--chart-view-value` attribute) changes.
+    This makes Chart.js work perfectly inside of a LiveComponent.
+
 ## 2.7.0
 
 -   The `chartjs:connect` JavaScript event now bubbles up.
