@@ -9,12 +9,7 @@
 
 'use strict';
 
-import {
-    createTest,
-    createTestWithNested,
-    initComponent,
-    shutdownTests,
-} from '../tools';
+import { createTest, initComponent, shutdownTests } from '../tools';
 import { getByLabelText, getByTestId, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
@@ -217,17 +212,16 @@ describe('LiveController data-model Tests', () => {
         expect(test.component.valueStore.getOriginalProps()).toEqual({ user: { name: 'Ryan Weaver' } });
     });
 
-    it('can use models from nestedProps', async () => {
-        const test = await createTestWithNested(
-            { user: 5 },
-            {'user.name': 'Ryan'},
-            (props: any, nestedProps) => `
-                <div ${initComponent(props, { nestedProps })}>
+    it('can use models from nested props', async () => {
+        const test = await createTest(
+            { user: 5, 'user.name': 'Ryan' },
+            (props: any) => `
+                <div ${initComponent(props)}>
                     <input
                         data-model="user.name"
                     >
 
-                    Name: ${nestedProps['user.name']}
+                    Name: ${props['user.name']}
                 </div>
         `);
 
@@ -237,8 +231,7 @@ describe('LiveController data-model Tests', () => {
         await userEvent.type(test.queryByDataModel('user.name'), ' Weaver');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name: Ryan Weaver'));
-        expect(test.component.valueStore.getOriginalProps()).toEqual({ user: 5 });
-        expect(test.component.valueStore.getOriginalNestedProps()).toEqual({ 'user.name': 'Ryan Weaver' });
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ user: 5, 'user.name': 'Ryan Weaver' });
     });
 
     it('sends correct data for checkbox fields', async () => {

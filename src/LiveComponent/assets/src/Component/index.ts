@@ -64,20 +64,19 @@ export default class Component {
     /**
      * @param element The root element
      * @param props   Readonly component props
-     * @param nestedProps   Extra nested prop values that can be used as models
      * @param fingerprint
      * @param id      Some unique id to identify this component. Needed to be a child component
      * @param backend Backend instance for updating
      * @param elementDriver Class to get "model" name from any element.
      */
-    constructor(element: HTMLElement, props: any, nestedProps: any, fingerprint: string|null, id: string|null, backend: BackendInterface, elementDriver: ElementDriver) {
+    constructor(element: HTMLElement, props: any, fingerprint: string|null, id: string|null, backend: BackendInterface, elementDriver: ElementDriver) {
         this.element = element;
         this.backend = backend;
         this.elementDriver = elementDriver;
         this.id = id;
         this.fingerprint = fingerprint;
 
-        this.valueStore = new ValueStore(props, nestedProps);
+        this.valueStore = new ValueStore(props);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
         this.hooks = new HookManager();
         this.resetPromise();
@@ -230,7 +229,7 @@ export default class Component {
      * @param toEl
      */
     updateFromNewElement(toEl: HTMLElement): boolean {
-        const { props } = this.elementDriver.getComponentProps(toEl);
+        const props = this.elementDriver.getComponentProps(toEl);
 
         // if no props are on the element, use the existing element completely
         // this means the parent is signaling that the child does not need to be re-rendered
@@ -399,8 +398,8 @@ export default class Component {
             throw error;
         }
 
-        const { props: newProps, nestedProps: newNestedProps } = this.elementDriver.getComponentProps(newElement);
-        this.valueStore.reinitializeAllProps(newProps, newNestedProps);
+        const newProps = this.elementDriver.getComponentProps(newElement);
+        this.valueStore.reinitializeAllProps(newProps);
 
         // make sure we've processed all external changes before morphing
         this.externalMutationTracker.handlePendingChanges();

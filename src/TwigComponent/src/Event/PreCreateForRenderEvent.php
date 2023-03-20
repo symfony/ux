@@ -24,7 +24,7 @@ final class PreCreateForRenderEvent extends Event
 
     public function __construct(
         private string $name,
-        private array $props = []
+        private array $inputProps = []
     ) {
     }
 
@@ -34,11 +34,19 @@ final class PreCreateForRenderEvent extends Event
     }
 
     /**
-     * @return array the array of data passed to originally create this component
+     * @deprecated since 2.8, use getInputProps() instead.
      */
     public function getProps(): array
     {
-        return $this->props;
+        return $this->inputProps;
+    }
+
+    /**
+     * @return array the array of "input" data passed to originally create this component
+     */
+    public function getInputProps(): array
+    {
+        return $this->inputProps;
     }
 
     public function setRenderedString(string $renderedString): void

@@ -10,13 +10,6 @@ export default class {
     private props: any = {};
 
     /**
-     * A list of extra, nested props added to make them available as models.
-     *
-     * @private
-     */
-    private nestedProps: any = {};
-
-    /**
      * A list of props that have been "dirty" (changed) since the last request to the server.
      */
     private dirtyProps: {[key: string]: any} = {};
@@ -27,9 +20,8 @@ export default class {
      */
     private pendingProps: {[key: string]: any} = {};
 
-    constructor(props: any, nestedProps: any) {
+    constructor(props: any) {
         this.props = props;
-        this.nestedProps = nestedProps;
     }
 
     /**
@@ -50,8 +42,8 @@ export default class {
             return this.pendingProps[normalizedName];
         }
 
-        if (this.nestedProps[normalizedName] !== undefined) {
-            return this.nestedProps[normalizedName];
+        if (this.props[normalizedName] !== undefined) {
+            return this.props[normalizedName];
         }
 
         return getDeepData(this.props, normalizedName);
@@ -86,10 +78,6 @@ export default class {
         return { ...this.props };
     }
 
-    getOriginalNestedProps(): any {
-        return { ...this.nestedProps };
-    }
-
     getDirtyProps(): any {
         return { ...this.dirtyProps };
     }
@@ -105,9 +93,8 @@ export default class {
     /**
      * Called when an update request finishes successfully.
      */
-    reinitializeAllProps(props: any, nestedProps: any): void {
+    reinitializeAllProps(props: any): void {
         this.props = props;
-        this.nestedProps = nestedProps;
         this.pendingProps = {};
     }
 

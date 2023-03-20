@@ -35,10 +35,10 @@ const shutdownTest = function(test: FunctionalTest) {
 class FunctionalTest {
     component: Component;
     element: HTMLElement;
-    template: (props: any, nestedProps: any) => string;
+    template: (props: any) => string;
     mockedBackend: MockedBackend;
 
-    constructor(component: Component, element: HTMLElement, template: (props: any, nestedProps: any) => string) {
+    constructor(component: Component, element: HTMLElement, template: (props: any) => string) {
         this.component = component;
         this.element = element;
         this.template = template;
@@ -148,8 +148,8 @@ class MockedAjaxCall {
     private expectedChildFingerprints: any = null;
 
     /* Response properties */
-    private changePropsCallback?: (props: any, nestedProps: any) => void;
-    private template?: (props: any, nestedProps: any) => string
+    private changePropsCallback?: (props: any) => void;
+    private template?: (props: any) => string
     private delayResponseTime?: number = 0;
     private customResponseStatusCode?: number;
     private customResponseHTML?: string;
@@ -199,24 +199,28 @@ class MockedAjaxCall {
         const promise: Promise<Response> = new Promise((resolve) => {
             setTimeout(() => {
                 let newProps = JSON.parse(JSON.stringify(this.test.component.valueStore.getOriginalProps()));
-                const newNestedProps = JSON.parse(JSON.stringify(this.test.component.valueStore.getOriginalNestedProps()));
                 // imitate the server by updating the props with the updated data
                 Object.keys(this.expectedSentUpdatedData).forEach((key) => {
-                    // if a key matches a "nested prop", imitate the server by updating
-                    // the nested prop directly
-                    if (newNestedProps[key] !== undefined) {
-                        newNestedProps[key] = this.expectedSentUpdatedData[key];
-                    } else {
+                    // hopefully this is close enough to the server
+                    // if this is a nested key, but that expect nested prop
+                    // doesn't exist, then we're actually setting a specific
+                    // field on a to-level property. For example, the property
+                    // is an array called `options` and we're setting the
+                    // `options.label` field... which means we want to set the
+                    // "label" field onto the existing "options" array.
+                    if (key.includes('.') && newProps[key] === undefined) {
                         newProps = setDeepData(newProps, key, this.expectedSentUpdatedData[key]);
+                    } else {
+                        newProps[key] = this.expectedSentUpdatedData[key];
                     }
                 });
 
                 if (this.changePropsCallback) {
-                    this.changePropsCallback(newProps, newNestedProps);
+                    this.changePropsCallback(newProps);
                 }
 
                 const template = this.template ? this.template : this.test.template;
-                const html = this.customResponseHTML ? this.customResponseHTML : template(newProps, newNestedProps);
+                const html = this.customResponseHTML ? this.customResponseHTML : template(newProps);
 
                 // assume a normal, live-component response unless it's totally custom
                 const headers = { 'Content-Type': 'application/vnd.live-component+html' };
@@ -308,19 +312,14 @@ class MockedAjaxCall {
     }
 }
 
-export async function createTest(props: any, template: (props: any, nestedProps: any) => string): Promise<FunctionalTest> {
-    return createTestWithNested(props, {}, template);
-}
-
-export async function createTestWithNested(props: any, nestedProps: any, template: (props: any, nestedProps: any) => string): Promise<FunctionalTest> {
-    const testData = await startStimulus(template(props, nestedProps));
+export async function createTest(props: any, template: (props: any) => string): Promise<FunctionalTest> {
+    const testData = await startStimulus(template(props));
 
     const test = new FunctionalTest(testData.controller.component, testData.element, template);
     activeTests.push(test);
 
     return test;
 }
-
 /**
  * An internal way to create a FunctionalTest: useful for child components
  */
@@ -388,7 +387,6 @@ export function initComponent(props: any = {}, controllerValues: any = {}) {
         data-controller="live"
         data-live-url-value="http://localhost/components/_test_component_${Math.round(Math.random() * 1000)}"
         data-live-props-value="${dataToJsonAttribute(props)}"
-        ${controllerValues.nestedProps ? `data-live-nested-props-value="${dataToJsonAttribute(controllerValues.nestedProps)}"` : ''}
         ${controllerValues.debounce ? `data-live-debounce-value="${controllerValues.debounce}"` : ''}
         ${controllerValues.csrf ? `data-live-csrf-value="${controllerValues.csrf}"` : ''}
         ${controllerValues.id ? `data-live-id="${controllerValues.id}"` : ''}

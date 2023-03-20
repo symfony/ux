@@ -108,13 +108,19 @@ final class LiveComponentHydrator
             $dehydratedProps->addPropValue($frontendName, $dehydratedValue);
 
             foreach ($propMetadata->writablePaths() as $path) {
-                try {
-                    $pathValue = $this->propertyAccessor->getValue(
-                        $rawPropertyValue,
-                        $this->adjustPropertyPathForData($rawPropertyValue, $path)
-                    );
-                } catch (NoSuchPropertyException $e) {
-                    throw new \LogicException(sprintf('The writable path "%s" does not exist on the "%s" property of the "%s" component.', $path, $propertyName, \get_class($component)), 0, $e);
+                if (\is_array($rawPropertyValue) || \is_object($rawPropertyValue)) {
+                    try {
+                        $pathValue = $this->propertyAccessor->getValue(
+                            $rawPropertyValue,
+                            $this->adjustPropertyPathForData($rawPropertyValue, $path)
+                        );
+                    } catch (NoSuchPropertyException $e) {
+                        throw new \LogicException(sprintf('The writable path "%s" does not exist on the "%s" property of the "%s" component.', $path, $propertyName, \get_class($component)), 0, $e);
+                    }
+                } elseif (null === $rawPropertyValue) {
+                    $pathValue = null;
+                } else {
+                    throw new LogicException(sprintf('The "%s" property of the "%s" component is not an array or object and so cannot have writable paths.', $propertyName, \get_class($component)));
                 }
 
                 if (\is_object($pathValue)) {
@@ -174,17 +180,33 @@ final class LiveComponentHydrator
             }
 
             /*
-            | 1) Hydrate and set the "original" data for this LiveProp.
+            | 1) Hydrate and set ORIGINAL data for this LiveProp.
             */
             $propertyValue = $this->hydrateLiveProp(
                 $component,
                 $propMetadata,
                 $dehydratedOriginalProps->getPropValue($frontendName),
             );
+
             $this->propertyAccessor->setValue($component, $propMetadata->getName(), $propertyValue);
 
             /*
-             | 2) Hydrate and set the "updated" data for this LiveProp if one was sent.
+             | 2) Hydrate and set UPDATED "writable paths" data for this LiveProp.
+             */
+            if (\is_array($propertyValue) || \is_object($propertyValue)) {
+                $propertyValue = $this->hydrateAndSetWritablePaths(
+                    $propMetadata,
+                    $frontendName,
+                    $propertyValue,
+                    $dehydratedOriginalProps,
+                    $this->getDenormalizationContext($component, $propMetadata->getName()),
+                    \get_class($component),
+                    throwErrors: true
+                );
+            }
+
+            /*
+             | 3) Hydrate and set UPDATED data for this LiveProp if one was sent.
              */
             if ($dehydratedUpdatedProps->hasPropValue($frontendName)) {
                 if (!$propMetadata->isIdentityWritable()) {
@@ -202,7 +224,7 @@ final class LiveComponentHydrator
             }
 
             /*
-             | 3) Hydrate and set any "writable paths" data for this LiveProp.
+             | 4) Hydrate and set UPDATED "writable paths" data for this LiveProp.
              */
             if (\is_array($propertyValue) || \is_object($propertyValue)) {
                 $propertyValue = $this->hydrateAndSetWritablePaths(
@@ -212,6 +234,7 @@ final class LiveComponentHydrator
                     $dehydratedUpdatedProps,
                     $this->getDenormalizationContext($component, $propMetadata->getName()),
                     \get_class($component),
+                    throwErrors: false
                 );
             }
 
@@ -399,7 +422,7 @@ final class LiveComponentHydrator
         );
     }
 
-    private function hydrateAndSetWritablePaths(LivePropMetadata $propMetadata, string $frontendPropName, array|object $propertyValue, DehydratedProps $props, array $denormalizationContext, string $componentClass): array|object
+    private function hydrateAndSetWritablePaths(LivePropMetadata $propMetadata, string $frontendPropName, array|object $propertyValue, DehydratedProps $props, array $denormalizationContext, string $componentClass, bool $throwErrors): array|object
     {
         /*
          | Allows for specific keys to be written to a "fully-writable" array.
@@ -451,6 +474,9 @@ final class LiveComponentHydrator
                         $componentClass,
                     );
                 } catch (HydrationException $exception) {
+                    if ($throwErrors) {
+                        throw $exception;
+                    }
                     // swallow problems hydrating user-sent data
                     continue;
                 }
@@ -463,6 +489,9 @@ final class LiveComponentHydrator
                     $writablePathData
                 );
             } catch (PropertyAccessExceptionInterface $e) {
+                if ($throwErrors) {
+                    throw $exception;
+                }
                 // swallow problems setting user-sent data
             }
         }
