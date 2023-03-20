@@ -5,7 +5,7 @@
         <p class="py-2 ps-4 mb-0">{{ filename }}</p>
     {% endif %}
     <div class="terminal-body ps-4" style="height: {{ height }}; overflow: auto;">
-        <pre class="pt-2">
+        <pre class="pt-2" style="overflow:initial;">
         {{- this.highlight(block('content'))|raw -}}
         </pre>
 
