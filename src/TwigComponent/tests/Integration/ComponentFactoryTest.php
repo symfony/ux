@@ -100,14 +100,14 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testStringableObjectCanBePassedToComponent(): void
     {
-        $attributes = (string) $this->factory()->create('component_a', ['propB' => 'B', 'data-item-id-param' => new class() {
+        $attributes = $this->factory()->create('component_a', ['propB' => 'B', 'data-item-id-param' => new class() {
             public function __toString(): string
             {
                 return 'test';
             }
-        }])->getAttributes();
+        }])->getAttributes()->all();
 
-        self::assertSame(' data-item-id-param="test"', $attributes);
+        self::assertSame(['data-item-id-param' => 'test'], $attributes);
     }
 
     public function testTwigComponentServiceTagMustHaveKey(): void
