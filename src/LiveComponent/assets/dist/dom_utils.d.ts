@@ -1,7 +1,7 @@
 import ValueStore from './Component/ValueStore';
 import { Directive } from './Directive/directives_parser';
 import Component from './Component';
-export declare function getValueFromElement(element: HTMLElement, valueStore: ValueStore): string | string[] | null;
+export declare function getValueFromElement(element: HTMLElement, valueStore: ValueStore): string | string[] | null | boolean;
 export declare function setValueOnElement(element: HTMLElement, value: any): void;
 export declare function getAllModelDirectiveFromElements(element: HTMLElement): Directive[];
 export declare function getModelDirectiveFromElement(element: HTMLElement, throwOnMissing?: boolean): null | Directive;

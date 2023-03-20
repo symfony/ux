@@ -156,15 +156,17 @@ function normalizeModelName(model) {
 function getValueFromElement(element, valueStore) {
     if (element instanceof HTMLInputElement) {
         if (element.type === 'checkbox') {
-            const modelNameData = getModelDirectiveFromElement(element);
-            if (modelNameData === null) {
-                return null;
+            const modelNameData = getModelDirectiveFromElement(element, false);
+            if (modelNameData !== null) {
+                const modelValue = valueStore.get(modelNameData.action);
+                if (Array.isArray(modelValue)) {
+                    return getMultipleCheckboxValue(element, modelValue);
+                }
             }
-            const modelValue = valueStore.get(modelNameData.action);
-            if (Array.isArray(modelValue)) {
-                return getMultipleCheckboxValue(element, modelValue);
+            if (element.hasAttribute('value')) {
+                return element.checked ? element.getAttribute('value') : null;
             }
-            return element.checked ? inputValue(element) : null;
+            return element.checked;
         }
         return inputValue(element);
     }
@@ -205,7 +207,12 @@ function setValueOnElement(element, value) {
                 element.checked = valueFound;
             }
             else {
-                element.checked = element.value == value;
+                if (element.hasAttribute('value')) {
+                    element.checked = element.value == value;
+                }
+                else {
+                    element.checked = value;
+                }
             }
             return;
         }

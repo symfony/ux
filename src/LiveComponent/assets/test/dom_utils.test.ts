@@ -17,7 +17,7 @@ const createStore = function(props: any = {}): ValueStore {
 }
 
 describe('getValueFromElement', () => {
-    it('Correctly adds data from checked checkbox', () => {
+    it('Correctly adds data from valued checked checkbox', () => {
         const input = document.createElement('input');
         input.type = 'checkbox';
         input.checked = true;
@@ -34,7 +34,7 @@ describe('getValueFromElement', () => {
             .toEqual(['bar', 'the_checkbox_value']);
     });
 
-    it('Correctly removes data from unchecked checkbox', () => {
+    it('Correctly removes data from valued unchecked checkbox', () => {
         const input = document.createElement('input');
         input.type = 'checkbox';
         input.checked = false;
@@ -50,7 +50,36 @@ describe('getValueFromElement', () => {
             .toEqual(['bar']);
         expect(getValueFromElement(input, createStore({ foo: ['bar', 'the_checkbox_value'] })))
             .toEqual(['bar']);
-    })
+    });
+
+    it('Correctly handles boolean checkbox', () => {
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = true;
+        input.dataset.model = 'foo';
+
+        expect(getValueFromElement(input, createStore()))
+            .toEqual(true);
+
+        input.checked = false;
+
+        expect(getValueFromElement(input, createStore()))
+            .toEqual(false);
+    });
+
+    it('Correctly returns for non-model checkboxes', () => {
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = true;
+        input.value = 'the_checkbox_value';
+
+        expect(getValueFromElement(input, createStore()))
+            .toEqual('the_checkbox_value');
+
+        input.checked = false;
+        expect(getValueFromElement(input, createStore()))
+            .toEqual(null);
+    });
 
     it('Correctly sets data from select multiple', () => {
         const select = document.createElement('select');
@@ -129,6 +158,24 @@ describe('setValueOnElement', () => {
         input.value = 'the_checkbox_value';
 
         setValueOnElement(input, ['other_value', 'foo']);
+        expect(input.checked).toBeFalsy();
+    });
+
+    it('Checks checkbox with boolean value', () => {
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = false;
+
+        setValueOnElement(input, true);
+        expect(input.checked).toBeTruthy();
+    });
+
+    it('Unchecks checkbox with boolean value', () => {
+        const input = document.createElement('input');
+        input.type = 'checkbox';
+        input.checked = true;
+
+        setValueOnElement(input, false);
         expect(input.checked).toBeFalsy();
     });
 
