@@ -11,20 +11,25 @@ import Component from './Component';
  * elements. In those cases, it will return the "full", final value
  * for the model, which includes previously-selected values.
  */
-export function getValueFromElement(element: HTMLElement, valueStore: ValueStore): string | string[] | null {
+export function getValueFromElement(element: HTMLElement, valueStore: ValueStore): string | string[] | null | boolean {
     if (element instanceof HTMLInputElement) {
         if (element.type === 'checkbox') {
-            const modelNameData = getModelDirectiveFromElement(element);
-            if (modelNameData === null) {
-                return null;
+            const modelNameData = getModelDirectiveFromElement(element, false);
+            if (modelNameData !== null) {
+                // if there's a model - try to determine if it's an array
+                const modelValue = valueStore.get(modelNameData.action);
+                if (Array.isArray(modelValue)) {
+                    return getMultipleCheckboxValue(element, modelValue);
+                }
             }
 
-            const modelValue = valueStore.get(modelNameData.action);
-            if (Array.isArray(modelValue)) {
-                return getMultipleCheckboxValue(element, modelValue);
+            // read the attribute directly to avoid the default "on" value
+            if (element.hasAttribute('value')) {
+                // if the checkbox has a value="", then the unchecked value is null
+                return element.checked ? element.getAttribute('value') : null;
             }
 
-            return element.checked ? inputValue(element) : null;
+            return element.checked;
         }
 
         return inputValue(element);
@@ -86,7 +91,13 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
 
                 element.checked = valueFound;
             } else {
-                element.checked = element.value == value;
+                if (element.hasAttribute('value')) {
+                    // if the checkbox has a value="", then check if it matches
+                    element.checked = element.value == value;
+                } else {
+                    // no value, treat it like a boolean
+                    element.checked = value;
+                }
             }
 
             return;

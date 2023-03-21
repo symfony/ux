@@ -487,6 +487,53 @@ changed, added or removed::
     Writable path values are dehydrated/hydrated using the same process as the top-level
     properties (i.e. Symfony's serializer).
 
+Checkboxes, Select Elements Radios & Arrays
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.8
+
+    The ability to use checkboxes to set boolean values was added in LiveComponent 2.8.
+
+Checkboxes can be used to set a boolean or an array of strings::
+
+    #[LiveProp(writable: true)]
+    public bool $agreeToTerms = false;
+
+    #[LiveProp(writable: true)]
+    public array $foods = ['pizza', 'tacos'];
+
+In the template, setting a ``value`` attribute on the checkbox will set that
+value on checked. If no ``value`` is set, the checkbox will set a boolean value:
+
+.. code-block:: twig
+
+    <input type="checkbox" data-model="agreeToTerms">
+
+    <input type="checkbox" data-model="foods" value="pizza">
+    <input type="checkbox" data-model="foods" value="tacos">
+    <input type="checkbox" data-model="foods" value="sushi">
+
+``select`` and ``radio`` elements are a bit easier: use these to either set a
+single value or an array of values::
+
+    #[LiveProp(writable: true)]
+    public string $meal = 'lunch';
+
+    #[LiveProp(writable: true)]
+    public array $foods = ['pizza', 'tacos'];
+
+.. code-block:: twig
+
+    <input type="radio" data-model="meal" value="breakfast">
+    <input type="radio" data-model="meal" value="lunch">
+    <input type="radio" data-model="meal" value="dinner">
+
+    <select data-model="foods" multiple>
+        <option value="pizza">Pizza</option>
+        <option value="tacos">Tacos</option>
+        <option value="sushi">Sushi</option>
+    </select>
+
 Allowing an Entity to be Changed to Another
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

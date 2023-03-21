@@ -19,6 +19,10 @@ public User $user;
     the DOM inside a live component, those changes will now be _kept_ when
     the component is re-rendered. This has limitations - see the documentation.
 
+-   Boolean checkboxes are now supported. Of a checkbox does **not** have a
+    `value` attribute, then the associated `LiveProp` will be set to a boolean
+    when the input is checked/unchecked.
+
 -   Added support for setting `writable` to a property that is an object
     (previously, only scalar values were supported). The object is passed
     through the serializer.
