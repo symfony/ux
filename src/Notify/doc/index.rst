@@ -84,7 +84,7 @@ call the ``stream_notifications()`` Twig function anywhere on the page:
 
 Enjoy your server-sent native notifications!
 
-.. figure:: https://github.com/symfony/ux-notify/blob/2.x/doc/native-notification-example.png?raw=true
+.. figure:: ./native-notification-example.png
    :alt: Example of a native notification
 
 Extend the Stimulus Controller
