@@ -2214,6 +2214,10 @@ When a component re-renders, the new HTML if "morphed" onto the existing
 elements on the page. For example, if the re-render includes a new ``class``
 on an existing element, that class will be added to that element.
 
+.. versionadded:: 2.8
+
+    The smart re-render algorithm was introduced in LiveComponent 2.8.
+
 The rendering system is also smart enough to know when an element was changed
 by something *outside* of the LiveComponents system: e.g. some JavaScript
 that added a class to an element. In this case, the class will be preserved
