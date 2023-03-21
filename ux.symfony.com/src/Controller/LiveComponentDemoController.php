@@ -43,9 +43,9 @@ class LiveComponentDemoController extends AbstractController
             ]);
         }
 
-        return $this->renderForm('live_component_demo/form_collection_type.html.twig', [
+        return $this->render('live_component_demo/form_collection_type.html.twig', [
             'form' => $form,
-            'todo' => $todoList,
+            'todoList' => $todoList,
             'demo' => $liveDemoRepository->find('form-collection-type'),
         ]);
     }

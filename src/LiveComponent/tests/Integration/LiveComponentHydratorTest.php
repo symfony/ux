@@ -30,6 +30,8 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Embeddable1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ProductFixtureEntity;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\TodoItemFixtureEntity;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\TodoListFixtureEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\EmptyStringEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\IntEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\StringEnum;
@@ -380,6 +382,37 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
+        yield 'Non-Persisted entity with embedded entities (de)hydrates correctly' => [function () {
+            $list = new TodoListFixtureEntity('Cool stuff for today');
+            $item = new TodoItemFixtureEntity('Buy milk');
+            $list->addTodoItem($item);
+
+            return HydrationTest::create(new class() {
+                #[LiveProp]
+                public TodoListFixtureEntity $todoList;
+            })
+                ->mountWith(['todoList' => $list])
+                ->assertDehydratesTo([
+                    'todoList' => [
+                        'id' => null,
+                        'listTitle' => 'Cool stuff for today',
+                        'todoItems' => [
+                            [
+                                'id' => null,
+                                'name' => 'Buy milk',
+                                'todoList' => null,
+                            ],
+                        ],
+                    ],
+                ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame('Cool stuff for today', $object->todoList->listTitle);
+                    $this->assertCount(1, $object->todoList->getTodoItems());
+                    $this->assertSame('Buy milk', $object->todoList->getTodoItems()[0]->getName());
+                })
+            ;
+        }];
+
         yield 'Index array: (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class() {
                 #[LiveProp()]
@@ -654,6 +687,37 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     $this->assertSame(
                         [],
                         $object->foods
+                    );
+                })
+            ;
+        }];
+
+        yield 'Array with objects: (de)hydrates correctly' => [function () {
+            $prod1 = new ProductFixtureEntity();
+            $prod1->name = 'item1';
+            $prod2 = new ProductFixtureEntity();
+            $prod2->name = 'item2';
+
+            return HydrationTest::create(new class() {
+                #[LiveProp()]
+                /** @var \Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ProductFixtureEntity[] */
+                public $products = [];
+            })
+                ->mountWith(['products' => [$prod1, $prod2]])
+                ->assertDehydratesTo([
+                    'products' => [
+                        ['id' => null, 'name' => 'item1', 'price' => 0],
+                        ['id' => null, 'name' => 'item2', 'price' => 0],
+                    ],
+                ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame(
+                        'item1',
+                        $object->products[0]->name
+                    );
+                    $this->assertSame(
+                        'item2',
+                        $object->products[1]->name
                     );
                 })
             ;
@@ -1007,6 +1071,41 @@ final class LiveComponentHydratorTest extends KernelTestCase
         );
     }
 
+    public function testCircularReferencesAreAvoided(): void
+    {
+        $component = new class() {
+            #[LiveProp()]
+            public TodoListFixtureEntity $todoList;
+        };
+
+        $list = new TodoListFixtureEntity('My Todo List');
+        $item = new TodoItemFixtureEntity('Roll the trash can around for awhile');
+        $list->addTodoItem($item);
+        $component->todoList = $list;
+
+        $dehydratedProps = $this->hydrator()->dehydrate(
+            $component,
+            new ComponentAttributes([]),
+            $this->createLiveMetadata($component)
+        );
+
+        $actualProps = $dehydratedProps->getProps();
+        unset($actualProps['@checksum']);
+        $this->assertSame([
+            'todoList' => [
+                'todoItems' => [
+                    [
+                        'todoList' => null,
+                        'name' => 'Roll the trash can around for awhile',
+                        'id' => null,
+                    ],
+                ],
+                'id' => null,
+                'listTitle' => 'My Todo List',
+            ],
+        ], $actualProps);
+    }
+
     public function testPassingArrayToWritablePropForHydrationIsNotAllowed(): void
     {
         $component = new class() {
@@ -1082,7 +1181,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
     public function provideInvalidHydrationTests(): iterable
     {
-        yield 'invalid_types_string_to_number_becomes_zero' => [function () {
+        yield 'invalid_types_string_to_number_uses_coerced' => [function () {
             return HydrationTest::create(new class() {
                 #[LiveProp(writable: true)]
                 public int $count;
@@ -1090,6 +1189,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->mountWith(['count' => 1])
                 ->userUpdatesProps(['count' => 'pretzels'])
                 ->assertObjectAfterHydration(function (object $object) {
+                    // pretzels is coerced to 0
                     $this->assertSame(0, $object->count);
                 });
         }];
@@ -1124,8 +1224,36 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->assertObjectAfterHydration(function (object $object) {
                     // change rejected
                     $this->assertSame('oranges', $object->product->name);
-                    // string becomes 0
+                    // bananas is coerced to 0
                     $this->assertSame(0, $object->product->price);
+                });
+        }];
+
+        yield 'nullable_properties_that_cannot_set_null_are_rejected_but_no_error' => [function () {
+            $todoList = create(TodoListFixtureEntity::class, [
+                'listTitle' => 'My Todo List',
+            ])->object();
+            \assert($todoList instanceof TodoListFixtureEntity);
+            // make an item with a null "name"
+            // but, the setName() method does not allow null
+            $todoItem = new TodoItemFixtureEntity();
+            $todoList->addTodoItem($todoItem);
+
+            return HydrationTest::create(new class() {
+                #[LiveProp()]
+                public TodoItemFixtureEntity $todoItem;
+            })
+                ->mountWith(['todoItem' => $todoItem])
+                ->assertDehydratesTo([
+                    'todoItem' => [
+                        'todoList' => $todoList->id,
+                        'name' => null,
+                        'id' => null,
+                    ],
+                ])
+                ->assertObjectAfterHydration(function (object $component) use ($todoList) {
+                    $this->assertSame($todoList, $component->todoItem->getTodoList());
+                    $this->assertNull($component->todoItem->getName());
                 });
         }];
 

@@ -19,7 +19,7 @@
 {% block demo_content %}
     {{ component('todo_list_form', {
         form: form,
-        todoList: todo.id ? todo : null
+        todoList: todoList
     }) }}
 {% endblock %}
 

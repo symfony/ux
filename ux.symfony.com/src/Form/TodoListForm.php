@@ -15,6 +15,9 @@ class TodoListForm extends AbstractType
         $builder
             ->add('name', null, [
                 'label' => 'List name',
+                // added because setName() doesn't allow null
+                // it would be simpler to make the arg to that method nullable
+                'empty_data' => '',
             ])
             ->add('todoItems', LiveCollectionType::class, [
                 'entry_type' => TodoItemForm::class,
