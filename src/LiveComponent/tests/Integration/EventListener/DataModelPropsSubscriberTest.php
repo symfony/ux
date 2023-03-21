@@ -12,12 +12,20 @@
 namespace Symfony\UX\LiveComponent\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 
 final class DataModelPropsSubscriberTest extends KernelTestCase
 {
     public function testDataModelPropsAreSharedToChild(): void
     {
+        // work around so that a session is available so CSRF doesn't fail
+        $session = self::getContainer()->get('session.factory')->createSession();
+        $request = Request::create('/');
+        $request->setSession($session);
+        $requestStack = self::getContainer()->get('request_stack');
+        $requestStack->push($request);
+
         /** @var ComponentRenderer $renderer */
         $renderer = self::getContainer()->get('ux.twig_component.component_renderer');
 
