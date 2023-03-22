@@ -14,7 +14,10 @@
             {{ form_row(form.password) }}
             {{ form_row(form.terms) }}
 
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button
+                type="submit"
+                class="btn btn-primary {{ this.hasValidationErrors ? 'disabled' : '' }}"
+            >Register</button>
 
             {{ form_rest(form) }}
         </form>

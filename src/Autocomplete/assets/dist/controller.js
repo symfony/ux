@@ -112,6 +112,7 @@ class default_1 extends Controller {
         }
         if (placeholder) {
             this.stopMutationObserver();
+            this.tomSelect.settings.placeholder = placeholder;
             this.tomSelect.control_input.setAttribute('placeholder', placeholder);
             this.startMutationObserver();
         }

@@ -21,7 +21,6 @@ class RegistrationForm extends AbstractType
                     new NotBlank(message: 'Please enter an email!'),
                     new Email(),
                 ],
-                'help' => 'Type an invalid email and watch as it auto-validates when you leave the field!',
             ])
             ->add('password', PasswordType::class, [
                 'constraints' => [
