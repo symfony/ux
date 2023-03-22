@@ -2278,12 +2278,12 @@ The system doesn't handle every edge case, so here are some things to keep in mi
 * If JavaScript changes an attribute on an element, that change is **preserved**.
 * If JavaScript adds a new element, that element is **preserved**.
 * If JavaScript removes an element that was originally rendered by the component,
-    that change will be **lost**: the element will be re-added during the next re-render.
+  that change will be **lost**: the element will be re-added during the next re-render.
 * If JavaScript changes the text of an element, that change is **lost**: it will
-    be restored to the text from the server during the next re-render.
+  be restored to the text from the server during the next re-render.
 * If an element is moved from one location in the component to another,
-    that change is **lost**: the element will be re-added in its original location
-    during the next re-render.
+  that change is **lost**: the element will be re-added in its original location
+  during the next re-render.
 
 Skipping Updating Certain Elements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
