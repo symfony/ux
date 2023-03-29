@@ -385,12 +385,14 @@ const dataToJsonAttribute = (data: any): string => {
 export function initComponent(props: any = {}, controllerValues: any = {}) {
     return `
         data-controller="live"
+        data-live-name-value="${controllerValues.name || 'testing-component'}"
         data-live-url-value="http://localhost/components/_test_component_${Math.round(Math.random() * 1000)}"
         data-live-props-value="${dataToJsonAttribute(props)}"
         ${controllerValues.debounce ? `data-live-debounce-value="${controllerValues.debounce}"` : ''}
         ${controllerValues.csrf ? `data-live-csrf-value="${controllerValues.csrf}"` : ''}
         ${controllerValues.id ? `data-live-id="${controllerValues.id}"` : ''}
         ${controllerValues.fingerprint ? `data-live-fingerprint-value="${controllerValues.fingerprint}"` : ''}
+        ${controllerValues.listeners ? `data-live-listeners-value="${dataToJsonAttribute(controllerValues.listeners)}"` : ''}
     `;
 }
 

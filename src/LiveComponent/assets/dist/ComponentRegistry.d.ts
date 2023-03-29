@@ -1,9 +1,9 @@
 import Component from './Component';
-declare class ComponentRegistry {
-    private components;
-    registerComponent(element: HTMLElement, definition: Component): void;
-    unregisterComponent(element: HTMLElement): void;
+export default class {
+    private componentMapByElement;
+    private componentMapByComponent;
+    registerComponent(element: HTMLElement, component: Component): void;
+    unregisterComponent(component: Component): void;
     getComponent(element: HTMLElement): Promise<Component>;
+    findComponents(currentComponent: Component, onlyParents: boolean, onlyMatchName: string | null): Component[];
 }
-declare const _default: ComponentRegistry;
-export default _default;

@@ -20,7 +20,8 @@ import getModelBinding from './Directive/get_model_binding';
 import ComponentRegistry from './ComponentRegistry';
 
 export { Component };
-export const getComponent = (element: HTMLElement): Promise<Component> => ComponentRegistry.getComponent(element);
+export const getComponent = (element: HTMLElement): Promise<Component> =>
+    LiveControllerDefault.componentRegistry.getComponent(element);
 
 export interface LiveEvent extends CustomEvent {
     detail: {
@@ -35,17 +36,21 @@ export interface LiveController {
 }
 export default class LiveControllerDefault extends Controller<HTMLElement> implements LiveController {
     static values = {
+        name: String,
         url: String,
         props: Object,
         csrf: String,
+        listeners: { type: Array, default: [] },
         debounce: { type: Number, default: 150 },
         id: String,
         fingerprint: String,
     };
 
+    declare readonly nameValue: string;
     declare readonly urlValue: string;
     declare readonly propsValue: any;
     declare readonly csrfValue: string;
+    declare readonly listenersValue: Array<{ event: string; action: string }>;
     declare readonly hasDebounceValue: boolean;
     declare readonly debounceValue: number;
     declare readonly fingerprintValue: string;
@@ -62,6 +67,8 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
     ];
 
+    static componentRegistry = new ComponentRegistry();
+
     initialize() {
         this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
 
@@ -69,7 +76,11 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
 
         this.component = new Component(
             this.element,
+            this.nameValue,
             this.propsValue,
+            this.listenersValue,
+            (currentComponent: Component, onlyParents: boolean, onlyMatchName: string | null) =>
+                LiveControllerDefault.componentRegistry.findComponents(currentComponent, onlyParents, onlyMatchName),
             this.fingerprintValue,
             id,
             new Backend(this.urlValue, this.csrfValue),
@@ -97,24 +108,24 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     }
 
     connect() {
+        LiveControllerDefault.componentRegistry.registerComponent(this.element, this.component);
         this.component.connect();
 
         this.elementEventListeners.forEach(({ event, callback }) => {
             this.component.element.addEventListener(event, callback);
         });
 
-        ComponentRegistry.registerComponent(this.element, this.component);
         this.dispatchEvent('connect');
     }
 
     disconnect() {
+        LiveControllerDefault.componentRegistry.unregisterComponent(this.component);
         this.component.disconnect();
 
         this.elementEventListeners.forEach(({ event, callback }) => {
             this.component.element.removeEventListener(event, callback);
         });
 
-        ComponentRegistry.unregisterComponent(this.element);
         this.dispatchEvent('disconnect');
     }
 
@@ -194,6 +205,57 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
 
     $render() {
         return this.component.render();
+    }
+
+    emit(event: Event) {
+        this.getEmitDirectives(event).forEach(({ name, data, nameMatch }) => {
+            this.component.emit(name, data, nameMatch);
+        });
+    }
+
+    emitUp(event: Event) {
+        this.getEmitDirectives(event).forEach(({ name, data, nameMatch }) => {
+            this.component.emitUp(name, data, nameMatch);
+        });
+    }
+
+    emitSelf(event: Event) {
+        this.getEmitDirectives(event).forEach(({ name, data }) => {
+            this.component.emitSelf(name, data);
+        });
+    }
+
+    private getEmitDirectives(event: Event): Array<{ name: string; data: any; nameMatch: string | null }> {
+        const element = event.currentTarget as HTMLElement;
+        if (!element.dataset.event) {
+            throw new Error(`No data-event attribute found on element: ${getElementAsTagText(element)}`);
+        }
+
+        const eventInfo = element.dataset.event;
+
+        // data-event="name(product_list)|some_event"
+        const directives = parseDirectives(eventInfo);
+        const emits: Array<{ name: string; data: any; nameMatch: string | null }> = [];
+        directives.forEach((directive) => {
+            let nameMatch = null;
+            directive.modifiers.forEach((modifier) => {
+                switch (modifier.name) {
+                    case 'name':
+                        nameMatch = modifier.value;
+                        break;
+                    default:
+                        throw new Error(`Unknown modifier ${modifier.name} in event "${eventInfo}".`);
+                }
+            });
+
+            emits.push({
+                name: directive.action,
+                data: directive.named,
+                nameMatch,
+            });
+        });
+
+        return emits;
     }
 
     /**

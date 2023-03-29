@@ -27,7 +27,10 @@ const makeTestComponent = (): { component: Component, backend: MockBackend } => 
 
     const component = new Component(
         document.createElement('div'),
+        'test-component',
         { firstName: '' },
+        [],
+        () => [],
         null,
         null,
         backend,

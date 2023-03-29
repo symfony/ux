@@ -264,7 +264,10 @@ describe('elementBelongsToThisComponent', () => {
     const createComponent = (html: string, childComponents: Component[] = []) => {
         const component = new Component(
             htmlToElement(html),
+            'some-component',
             {},
+            [],
+            () => [],
             null,
             'some-id-' + Math.floor((Math.random() * 100)),
             new Backend(''),

@@ -14,6 +14,8 @@ import ExternalMutationTracker from '../Rendering/ExternalMutationTracker';
 
 declare const Turbo: any;
 
+export type ComponentFinder = (currentComponent: Component, onlyParents: boolean, onlyMatchName: string|null) => Component[];
+
 class ChildComponentWrapper {
     component: Component;
     modelBindings: ModelBinding[];
@@ -26,6 +28,10 @@ class ChildComponentWrapper {
 
 export default class Component {
     readonly element: HTMLElement;
+    readonly name: string;
+    // key is the string event name and value is an array of action names
+    readonly listeners: Map<string, string[]>;
+    private readonly componentFinder: ComponentFinder;
     private backend: BackendInterface;
     private readonly elementDriver: ElementDriver;
     id: string|null;
@@ -63,18 +69,31 @@ export default class Component {
 
     /**
      * @param element The root element
+     * @param name    The name of the component
      * @param props   Readonly component props
+     * @param listeners Array of event -> action listeners
+     * @param componentFinder
      * @param fingerprint
      * @param id      Some unique id to identify this component. Needed to be a child component
      * @param backend Backend instance for updating
      * @param elementDriver Class to get "model" name from any element.
      */
-    constructor(element: HTMLElement, props: any, fingerprint: string|null, id: string|null, backend: BackendInterface, elementDriver: ElementDriver) {
+    constructor(element: HTMLElement, name: string, props: any, listeners: Array<{ event: string; action: string }>, componentFinder: ComponentFinder, fingerprint: string|null, id: string|null, backend: BackendInterface, elementDriver: ElementDriver) {
         this.element = element;
+        this.name = name;
+        this.componentFinder = componentFinder;
         this.backend = backend;
         this.elementDriver = elementDriver;
         this.id = id;
         this.fingerprint = fingerprint;
+
+        this.listeners = new Map();
+        listeners.forEach((listener) => {
+            if (!this.listeners.has(listener.event)) {
+                this.listeners.set(listener.event, []);
+            }
+            this.listeners.get(listener.event)?.push(listener.action);
+        });
 
         this.valueStore = new ValueStore(props);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
@@ -221,6 +240,38 @@ export default class Component {
         });
 
         return children;
+    }
+
+    emit(name: string, data: any, onlyMatchingComponentsNamed: string|null = null): void {
+        return this.performEmit(name, data, false, onlyMatchingComponentsNamed);
+    }
+
+    emitUp(name: string, data: any, onlyMatchingComponentsNamed: string|null = null): void {
+        return this.performEmit(name, data, true, onlyMatchingComponentsNamed);
+    }
+
+    emitSelf(name: string, data: any): void {
+        return this.doEmit(name, data);
+    }
+
+    private performEmit(name: string, data: any, emitUp: boolean, matchingName: string|null): void {
+        const components = this.componentFinder(this, emitUp, matchingName);
+        components.forEach((component) => {
+            component.doEmit(name, data);
+        });
+    }
+
+    private doEmit(name: string, data: any): void {
+        if (!this.listeners.has(name)) {
+            return ;
+        }
+
+        // set actions but tell TypeScript it is an array of strings
+        const actions = this.listeners.get(name) || [];
+        actions.forEach((action) => {
+            // debounce slightly to allow for multiple actions to queue
+            this.action(action, data, 1);
+        });
     }
 
     /**
@@ -401,6 +452,8 @@ export default class Component {
         const newProps = this.elementDriver.getComponentProps(newElement);
         this.valueStore.reinitializeAllProps(newProps);
 
+        const eventsToEmit = this.elementDriver.getEventsToEmit(newElement);
+
         // make sure we've processed all external changes before morphing
         this.externalMutationTracker.handlePendingChanges();
         this.externalMutationTracker.stop();
@@ -419,6 +472,22 @@ export default class Component {
         // reset the modified values back to their client-side version
         Object.keys(modifiedModelValues).forEach((modelName) => {
             this.valueStore.set(modelName, modifiedModelValues[modelName]);
+        });
+
+        eventsToEmit.forEach(({ event, data, target, componentName }) => {
+            if (target === 'up') {
+                this.emitUp(event, data, componentName);
+
+                return;
+            }
+
+            if (target === 'self') {
+                this.emitSelf(event, data);
+
+                return
+            }
+
+            this.emit(event, data, componentName);
         });
 
         this.hooks.triggerHook('render:finished', this);

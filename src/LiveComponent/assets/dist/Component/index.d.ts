@@ -4,8 +4,12 @@ import { ElementDriver } from './ElementDriver';
 import { PluginInterface } from './plugins/PluginInterface';
 import BackendResponse from '../Backend/BackendResponse';
 import { ModelBinding } from '../Directive/get_model_binding';
+export type ComponentFinder = (currentComponent: Component, onlyParents: boolean, onlyMatchName: string | null) => Component[];
 export default class Component {
     readonly element: HTMLElement;
+    readonly name: string;
+    readonly listeners: Map<string, string[]>;
+    private readonly componentFinder;
     private backend;
     private readonly elementDriver;
     id: string | null;
@@ -23,7 +27,10 @@ export default class Component {
     private children;
     private parent;
     private externalMutationTracker;
-    constructor(element: HTMLElement, props: any, fingerprint: string | null, id: string | null, backend: BackendInterface, elementDriver: ElementDriver);
+    constructor(element: HTMLElement, name: string, props: any, listeners: Array<{
+        event: string;
+        action: string;
+    }>, componentFinder: ComponentFinder, fingerprint: string | null, id: string | null, backend: BackendInterface, elementDriver: ElementDriver);
     _swapBackend(backend: BackendInterface): void;
     addPlugin(plugin: PluginInterface): void;
     connect(): void;
@@ -39,6 +46,11 @@ export default class Component {
     removeChild(child: Component): void;
     getParent(): Component | null;
     getChildren(): Map<string, Component>;
+    emit(name: string, data: any, onlyMatchingComponentsNamed?: string | null): void;
+    emitUp(name: string, data: any, onlyMatchingComponentsNamed?: string | null): void;
+    emitSelf(name: string, data: any): void;
+    private performEmit;
+    private doEmit;
     updateFromNewElement(toEl: HTMLElement): boolean;
     onChildComponentModelUpdate(modelName: string, value: any, childComponent: Component): void;
     private tryStartingRequest;

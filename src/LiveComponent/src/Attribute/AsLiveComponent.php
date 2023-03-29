@@ -89,4 +89,16 @@ final class AsLiveComponent extends AsTwigComponent
     {
         yield from self::attributeMethodsFor(PreDehydrate::class, $component);
     }
+
+    public static function liveListeners(object $component): array
+    {
+        $listeners = [];
+        foreach (self::attributeMethodsFor(LiveListener::class, $component) as $method) {
+            foreach ($method->getAttributes(LiveListener::class) as $attribute) {
+                $listeners[] = ['action' => $method->getName(), 'event' => $attribute->newInstance()->getEventName()];
+            }
+        }
+
+        return $listeners;
+    }
 }
