@@ -51,7 +51,7 @@ export default class Component {
     emitSelf(name: string, data: any): void;
     private performEmit;
     private doEmit;
-    updateFromNewElement(toEl: HTMLElement): boolean;
+    updateFromNewElementFromParentRender(toEl: HTMLElement): void;
     onChildComponentModelUpdate(modelName: string, value: any, childComponent: Component): void;
     private tryStartingRequest;
     private performRequest;

@@ -10,6 +10,11 @@
 public User $user;
 ```
 
+-   [BC BREAK]: Child components are no longer automatically re-rendered when
+    a parent component re-renders and the value of one of the props passed to
+    the child has changed. Pass `acceptUpdatesFromParent: true` to any `LiveProp`
+    on the child component to re-enable this behavior.
+
 -   Non-persisted entity objects can now be used with `LiveProp`: it will be
     serialized using the serializer.
 

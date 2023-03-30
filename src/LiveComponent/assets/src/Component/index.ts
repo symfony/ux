@@ -1,4 +1,4 @@
-import { BackendAction, BackendInterface } from '../Backend/Backend';
+import { BackendAction, BackendInterface, ChildrenFingerprints } from '../Backend/Backend';
 import ValueStore from './ValueStore';
 import { normalizeModelName } from '../string_utils';
 import BackendRequest from '../Backend/BackendRequest';
@@ -279,17 +279,17 @@ export default class Component {
      *
      * @param toEl
      */
-    updateFromNewElement(toEl: HTMLElement): boolean {
+    updateFromNewElementFromParentRender(toEl: HTMLElement): void {
         const props = this.elementDriver.getComponentProps(toEl);
 
         // if no props are on the element, use the existing element completely
         // this means the parent is signaling that the child does not need to be re-rendered
         if (props === null) {
-            return false;
+            return;
         }
 
         // push props directly down onto the value store
-        const isChanged = this.valueStore.reinitializeProvidedProps(props);
+        const isChanged = this.valueStore.storeNewPropsFromParent(props);
 
         const fingerprint = toEl.dataset.liveFingerprintValue;
         if (fingerprint !== undefined) {
@@ -299,8 +299,6 @@ export default class Component {
         if (isChanged) {
             this.render();
         }
-
-        return false;
     }
 
     /**
@@ -358,7 +356,8 @@ export default class Component {
             this.valueStore.getOriginalProps(),
             this.pendingActions,
             this.valueStore.getDirtyProps(),
-            this.getChildrenFingerprints()
+            this.getChildrenFingerprints(),
+            this.valueStore.getUpdatedPropsFromParent(),
         );
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
 
@@ -572,8 +571,8 @@ export default class Component {
         modal.focus();
     }
 
-    private getChildrenFingerprints(): any {
-        const fingerprints: any = {};
+    private getChildrenFingerprints(): ChildrenFingerprints {
+        const fingerprints: ChildrenFingerprints = {};
 
         this.children.forEach((childComponent) => {
             const child = childComponent.component;
@@ -581,7 +580,10 @@ export default class Component {
                 throw new Error('missing id');
             }
 
-            fingerprints[child.id] = child.fingerprint;
+            fingerprints[child.id] = {
+                fingerprint: child.fingerprint as string,
+                tag: child.element.tagName.toLowerCase(),
+            };
         });
 
         return fingerprints;

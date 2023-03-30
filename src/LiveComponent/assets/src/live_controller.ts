@@ -43,7 +43,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         listeners: { type: Array, default: [] },
         debounce: { type: Number, default: 150 },
         id: String,
-        fingerprint: String,
+        fingerprint: { type: String, default: '' },
     };
 
     declare readonly nameValue: string;

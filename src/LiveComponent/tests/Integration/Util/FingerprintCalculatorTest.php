@@ -12,7 +12,9 @@
 namespace Symfony\UX\LiveComponent\Tests\Integration\Util;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
+use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
@@ -25,8 +27,7 @@ final class FingerprintCalculatorTest extends KernelTestCase
 
     public function testFingerprintEqual()
     {
-        $fingerprintCalculator = self::getContainer()->get('ux.live_component.fingerprint_calculator');
-
+        $fingerprintCalculator = $this->getFingerprintCalculator();
         $entityOne = create(Entity1::class)->object();
 
         $entityTwo = clone $entityOne;
@@ -36,23 +37,75 @@ final class FingerprintCalculatorTest extends KernelTestCase
             spl_object_id($entityTwo)
         );
 
+        $metadata1 = $this->createMock(LiveComponentMetadata::class);
+        $metadata1
+            ->expects($this->once())
+            ->method('getOnlyPropsThatAcceptUpdatesFromParent')
+            ->with([$entityOne])
+            ->willReturn([$entityOne]);
+
+        $metadata2 = $this->createMock(LiveComponentMetadata::class);
+        $metadata2
+            ->expects($this->once())
+            ->method('getOnlyPropsThatAcceptUpdatesFromParent')
+            ->with([$entityTwo])
+            ->willReturn([$entityTwo]);
+
         self::assertSame(
-            $fingerprintCalculator->calculateFingerprint([$entityOne]),
-            $fingerprintCalculator->calculateFingerprint([$entityTwo])
+            $fingerprintCalculator->calculateFingerprint([$entityOne], $metadata1),
+            $fingerprintCalculator->calculateFingerprint([$entityTwo], $metadata2)
         );
     }
 
     public function testFingerprintNotEqual()
     {
-        $fingerprintCalculator = self::getContainer()->get('ux.live_component.fingerprint_calculator');
+        $fingerprintCalculator = $this->getFingerprintCalculator();
 
         $entityOne = create(Entity1::class)->object();
 
         $entityTwo = create(Entity1::class)->object();
 
+        $metadata1 = $this->createMock(LiveComponentMetadata::class);
+        $metadata1
+            ->expects($this->once())
+            ->method('getOnlyPropsThatAcceptUpdatesFromParent')
+            ->with([$entityOne])
+            ->willReturn([$entityOne]);
+
+        $metadata2 = $this->createMock(LiveComponentMetadata::class);
+        $metadata2
+            ->expects($this->once())
+            ->method('getOnlyPropsThatAcceptUpdatesFromParent')
+            ->with([$entityTwo])
+            ->willReturn([$entityTwo]);
+
         self::assertNotSame(
-            $fingerprintCalculator->calculateFingerprint([$entityOne]),
-            $fingerprintCalculator->calculateFingerprint([$entityTwo])
+            $fingerprintCalculator->calculateFingerprint([$entityOne], $metadata1),
+            $fingerprintCalculator->calculateFingerprint([$entityTwo], $metadata2)
         );
+    }
+
+    public function testFingerprintOnlyUsesPropsThatAcceptUpdates(): void
+    {
+        $fingerprintCalculator = $this->getFingerprintCalculator();
+
+        $inputProps = ['foo' => 'fooValue', 'bar' => 'barValue'];
+
+        $metadata = $this->createMock(LiveComponentMetadata::class);
+        $metadata
+            ->expects($this->once())
+            ->method('getOnlyPropsThatAcceptUpdatesFromParent')
+            ->with($inputProps)
+            ->willReturn(['foo' => 'fooValue']);
+
+        self::assertSame(
+            'SRfLHaj7eA9qpiz5/qR32jTsdsmbDit4ejkMigdisGY=',
+            $fingerprintCalculator->calculateFingerprint($inputProps, $metadata),
+        );
+    }
+
+    private function getFingerprintCalculator(): FingerprintCalculator
+    {
+        return self::getContainer()->get('ux.live_component.fingerprint_calculator');
     }
 }

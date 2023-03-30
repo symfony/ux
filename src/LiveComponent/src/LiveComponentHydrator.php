@@ -166,13 +166,10 @@ final class LiveComponentHydrator
      *
      *     ['name' => 'kevin', 'food.name' => 'Pasta']
      */
-    public function hydrate(object $component, array $props, array $updatedProps, LiveComponentMetadata $componentMetadata): ComponentAttributes
+    public function hydrate(object $component, array $props, array $updatedProps, LiveComponentMetadata $componentMetadata, array $updatedPropsFromParent = []): ComponentAttributes
     {
-        $dehydratedOriginalProps = DehydratedProps::createFromPropsArray($props);
+        $dehydratedOriginalProps = $this->combineAndValidateProps($props, $updatedPropsFromParent);
         $dehydratedUpdatedProps = DehydratedProps::createFromUpdatedArray($updatedProps);
-
-        $this->verifyChecksum($dehydratedOriginalProps->getProps());
-        $dehydratedOriginalProps->removePropValue(self::CHECKSUM_KEY);
 
         $attributes = new ComponentAttributes($dehydratedOriginalProps->getPropValue(self::ATTRIBUTES_KEY, []));
         $dehydratedOriginalProps->removePropValue(self::ATTRIBUTES_KEY);
@@ -265,12 +262,14 @@ final class LiveComponentHydrator
         return $attributes;
     }
 
-    public static function getInternalPropNames(): array
+    public function addChecksumToData(array $data): array
     {
-        return [self::ATTRIBUTES_KEY, self::CHECKSUM_KEY];
+        $data[self::CHECKSUM_KEY] = $this->calculateChecksum($data);
+
+        return $data;
     }
 
-    private static function coerceScalarValue(string $value, string $type, bool $allowsNull): int|float|bool|null
+    private static function coerceStringValue(string $value, string $type, bool $allowsNull): int|float|bool|null
     {
         $value = trim($value);
 
@@ -294,7 +293,7 @@ final class LiveComponentHydrator
         return base64_encode(hash_hmac('sha256', json_encode($dehydratedPropsData), $this->secret, true));
     }
 
-    private function verifyChecksum(array $identifierPops): void
+    private function verifyChecksum(array $identifierPops, string $error = 'Invalid checksum sent when updating the live component.'): void
     {
         if (!\array_key_exists(self::CHECKSUM_KEY, $identifierPops)) {
             throw new HydrationException(sprintf('Missing %s. key', self::CHECKSUM_KEY));
@@ -308,7 +307,7 @@ final class LiveComponentHydrator
             return;
         }
 
-        throw new HydrationException('Invalid checksum sent when updating the live component.');
+        throw new HydrationException($error);
     }
 
     /**
@@ -438,7 +437,7 @@ EOF
             /* START CUSTOM */
             // coerce scalar values to the correct type instead of just ignoring them
             if (\is_string($data) && \in_array($type->getBuiltinType(), ['int', 'float', 'bool'], true)) {
-                return self::coerceScalarValue($data, $type->getBuiltinType(), $type->isNullable());
+                return self::coerceStringValue($data, $type->getBuiltinType(), $type->isNullable());
             }
 
             $typeClass = $type->getClassName();
@@ -555,7 +554,7 @@ EOF
         /* END DUPLICATION */
 
         if (\is_string($value) && \in_array($typeString, ['int', 'float', 'bool'], true)) {
-            return self::coerceScalarValue($value, $typeString, $allowsNull);
+            return self::coerceStringValue($value, $typeString, $allowsNull);
         }
 
         if (null === $value || null === $typeString || $isBuiltIn) {
@@ -732,5 +731,24 @@ EOF
         $attributeMetadata = $this->getSerializationAttributeMetadata($component, $propertyName);
         // passing [] for groups - not sure if we need to be smarter
         return $attributeMetadata ? $attributeMetadata->getDenormalizationContextForGroups([]) : [];
+    }
+
+    private function combineAndValidateProps(array $props, array $updatedPropsFromParent): DehydratedProps
+    {
+        $dehydratedOriginalProps = DehydratedProps::createFromPropsArray($props);
+        $this->verifyChecksum($dehydratedOriginalProps->getProps());
+        $dehydratedOriginalProps->removePropValue(self::CHECKSUM_KEY);
+
+        // if a parent component is requesting some updates to the props, verify
+        // their checksum and apply them as "original props"
+        if (\count($updatedPropsFromParent) > 0) {
+            $this->verifyChecksum($updatedPropsFromParent, 'Invalid checksum for the data sent from the parent component.');
+            unset($updatedPropsFromParent[self::CHECKSUM_KEY]);
+            foreach ($updatedPropsFromParent as $key => $value) {
+                $dehydratedOriginalProps->addPropValue($key, $value);
+            }
+        }
+
+        return $dehydratedOriginalProps;
     }
 }

@@ -250,19 +250,6 @@ export function htmlToElement(html: string): HTMLElement {
     return child;
 }
 
-// Inspired by https://stackoverflow.com/questions/13389751/change-tag-using-javascript
-export function cloneElementWithNewTagName(element: Element, newTag: string): HTMLElement {
-    const originalTag = element.tagName;
-    const startRX = new RegExp('^<' + originalTag, 'i');
-    const endRX = new RegExp(originalTag + '>$', 'i');
-    const startSubst = '<' + newTag;
-    const endSubst = newTag + '>';
-
-    const newHTML = element.outerHTML.replace(startRX, startSubst).replace(endRX, endSubst);
-
-    return htmlToElement(newHTML);
-}
-
 /**
  * Returns just the outer element's HTML as a string - useful for error messages.
  *

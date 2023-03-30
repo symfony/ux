@@ -41,16 +41,30 @@ final class LiveProp
      */
     private ?string $fieldName;
 
+    private bool $acceptUpdatesFromParent;
+
+    /**
+     * @param bool|array $writable         If true, this property can be changed by the frontend.
+     *                                     Or set to an array of paths within this object/array
+     *                                     that are writable.
+     * @param bool       $updateFromParent if true, while a parent component is re-rendering,
+     *                                     if the parent passes in this prop and it changed
+     *                                     from the value used when originally rendering
+     *                                     this child, the value in the child will be updated
+     *                                     to match the new value and the child will be re-rendered
+     */
     public function __construct(
         bool|array $writable = false,
         ?string $hydrateWith = null,
         ?string $dehydrateWith = null,
         ?string $fieldName = null,
+        bool $updateFromParent = false
     ) {
         $this->writable = $writable;
         $this->hydrateWith = $hydrateWith;
         $this->dehydrateWith = $dehydrateWith;
         $this->fieldName = $fieldName;
+        $this->acceptUpdatesFromParent = $updateFromParent;
     }
 
     /**
@@ -109,5 +123,10 @@ final class LiveProp
         }
 
         return $this->fieldName;
+    }
+
+    public function acceptUpdatesFromParent(): bool
+    {
+        return $this->acceptUpdatesFromParent;
     }
 }

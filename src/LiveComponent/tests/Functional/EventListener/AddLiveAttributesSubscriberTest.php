@@ -97,11 +97,12 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertArrayHasKey('data-live-id', $attributesProps);
 
         // fingerprints
-        // first and last both have the same input - thus fingerprint
-        $this->assertSame('sH/Rwn0x37n3KyMWQLa6OBPgglriBZqlwPLnm/EQTlE=', $lis->first()->attr('data-live-fingerprint-value'));
-        $this->assertSame('sH/Rwn0x37n3KyMWQLa6OBPgglriBZqlwPLnm/EQTlE=', $lis->last()->attr('data-live-fingerprint-value'));
+        // first and last both have the same length "text" input, and since "textLength"
+        // is the only updateFromParent prop, they should have the same fingerprint
+        $this->assertSame('7uQSVj4d4n3/RCVRkyLDCW9vLBxIAQVCEb1Rr3CJpfc=', $lis->first()->attr('data-live-fingerprint-value'));
+        $this->assertSame('7uQSVj4d4n3/RCVRkyLDCW9vLBxIAQVCEb1Rr3CJpfc=', $lis->last()->attr('data-live-fingerprint-value'));
         // middle has a different fingerprint
-        $this->assertSame('cuOKkrHC9lOmBa6dyVZ3S0REdw4CKCwJgLDdrVoTb2g=', $lis->eq(1)->attr('data-live-fingerprint-value'));
+        $this->assertSame('XSdvsiDR8VG0GFDQbOnj74XfSmfL6WrzMbSQcdIRhSs=', $lis->eq(1)->attr('data-live-fingerprint-value'));
     }
 
     public function testItDoesNotOverrideDataLiveIdIfSpecified(): void

@@ -3,7 +3,7 @@ import LiveController from '../src/live_controller';
 import { waitFor } from '@testing-library/dom';
 import { htmlToElement } from '../src/dom_utils';
 import Component from '../src/Component';
-import { BackendAction, BackendInterface } from '../src/Backend/Backend';
+import { BackendAction, BackendInterface, ChildrenFingerprints } from '../src/Backend/Backend';
 import BackendRequest from '../src/Backend/BackendRequest';
 import { Response } from 'node-fetch';
 import { setDeepData } from '../src/data_manipulation_utils';
@@ -93,8 +93,8 @@ class MockedBackend implements BackendInterface {
         this.expectedMockedAjaxCalls.push(mock);
     }
 
-    makeRequest(props: any, actions: BackendAction[], updated: { [key: string]: any }, childrenFingerprints: any): BackendRequest {
-        const matchedMock = this.findMatchingMock(props, actions, updated, childrenFingerprints);
+    makeRequest(props: any, actions: BackendAction[], updated: { [key: string]: any }, children: ChildrenFingerprints, updatedPropsFromParent: {[key: string]: any}): BackendRequest {
+        const matchedMock = this.findMatchingMock(props, actions, updated, children, updatedPropsFromParent);
 
         if (!matchedMock) {
             const requestInfo = [];
@@ -102,7 +102,8 @@ class MockedBackend implements BackendInterface {
             requestInfo.push(`  PROPS: ${JSON.stringify(props)}`);
             requestInfo.push(`  ACTIONS: ${JSON.stringify(actions)}`);
             requestInfo.push(`  UPDATED: ${JSON.stringify(updated)}`);
-            requestInfo.push(`  CHILDREN: ${JSON.stringify(childrenFingerprints)}`);
+            requestInfo.push(`  CHILDREN: ${JSON.stringify(children)}`);
+            requestInfo.push(`  UPDATED PROPS FROM PARENT: ${JSON.stringify(updatedPropsFromParent)}`);
 
             requestInfo.push('');
             if (this.expectedMockedAjaxCalls.length === 0) {
@@ -127,10 +128,10 @@ class MockedBackend implements BackendInterface {
         return this.expectedMockedAjaxCalls;
     }
 
-    private findMatchingMock(props: any, actions: BackendAction[], updated: { [key: string]: any }, childrenFingerprints: any): MockedAjaxCall|null {
+    private findMatchingMock(props: any, actions: BackendAction[], updated: { [key: string]: any }, children: ChildrenFingerprints, updatedPropsFromParent: {[key: string]: any}): MockedAjaxCall|null {
         for(let i = 0; i < this.expectedMockedAjaxCalls.length; i++) {
             const mock = this.expectedMockedAjaxCalls[i];
-            if (mock.matches(props, actions, updated, childrenFingerprints)) {
+            if (mock.matches(props, actions, updated, children, updatedPropsFromParent)) {
                 return mock;
             }
         }
@@ -145,7 +146,8 @@ class MockedAjaxCall {
     /* Matcher properties */
     private expectedActions: Array<{ name: string, args: any }> = [];
     private expectedSentUpdatedData: { [key: string]: any } = {};
-    private expectedChildFingerprints: any = null;
+    private expectedChildFingerprints: ChildrenFingerprints|null = null;
+    private expectedUpdatedPropsFromParent: {[key: string]: any}|null = null;
 
     /* Response properties */
     private changePropsCallback?: (props: any) => void;
@@ -164,11 +166,12 @@ class MockedAjaxCall {
         requestInfo.push(`  ACTIONS: ${JSON.stringify(this.expectedActions)}`);
         requestInfo.push(`  UPDATED: ${JSON.stringify(this.expectedSentUpdatedData)}`);
         requestInfo.push(`  CHILDREN: ${JSON.stringify(this.expectedChildFingerprints)}`);
+        requestInfo.push(`  UPDATED PROPS FROM PARENT: ${JSON.stringify(this.expectedUpdatedPropsFromParent)}`);
 
         return requestInfo;
     }
 
-    matches(props: any, actions: BackendAction[], updated: { [key: string]: any }, childrenFingerprints: any): boolean {
+    matches(props: any, actions: BackendAction[], updated: { [key: string]: any }, children: ChildrenFingerprints, updatedPropsFromParent: {[key: string]: any}): boolean {
         if (!this.isEqual(this.test.component.valueStore.getOriginalProps(), props)) {
             return false;
         }
@@ -188,7 +191,15 @@ class MockedAjaxCall {
             return false;
         }
 
-        if (null !== this.expectedChildFingerprints && !this.isEqual(childrenFingerprints, this.expectedChildFingerprints)) {
+        if (
+            null !== this.expectedChildFingerprints && !this.isEqual(children, this.expectedChildFingerprints)
+        ) {
+            return false;
+        }
+
+        if (
+            (null !== this.expectedUpdatedPropsFromParent || Object.keys(updatedPropsFromParent).length > 0)
+            && !this.isEqual(updatedPropsFromParent, this.expectedUpdatedPropsFromParent)) {
             return false;
         }
 
@@ -199,12 +210,21 @@ class MockedAjaxCall {
         const promise: Promise<Response> = new Promise((resolve) => {
             setTimeout(() => {
                 let newProps = JSON.parse(JSON.stringify(this.test.component.valueStore.getOriginalProps()));
+
+                // this should be a simple, top-level property update
+                if (null !== this.expectedUpdatedPropsFromParent) {
+                    Object.keys(this.expectedUpdatedPropsFromParent).forEach((key) => {
+                        // @ts-ignore
+                        newProps[key] = this.expectedUpdatedPropsFromParent[key];
+                    });
+                }
+
                 // imitate the server by updating the props with the updated data
                 Object.keys(this.expectedSentUpdatedData).forEach((key) => {
                     // hopefully this is close enough to the server
                     // if this is a nested key, but that expect nested prop
                     // doesn't exist, then we're actually setting a specific
-                    // field on a to-level property. For example, the property
+                    // field on a top-level property. For example, the property
                     // is an array called `options` and we're setting the
                     // `options.label` field... which means we want to set the
                     // "label" field onto the existing "options" array.
@@ -260,6 +280,12 @@ class MockedAjaxCall {
         return this;
     }
 
+    expectUpdatedPropsFromParent = (updatedProps: any): MockedAjaxCall => {
+        this.expectedUpdatedPropsFromParent = updatedProps;
+
+        return this;
+    }
+
     /**
      * Call if the "server" will change the props before it re-renders.
      */
@@ -298,6 +324,14 @@ class MockedAjaxCall {
     }
 
     private isEqual(a: any, b: any): boolean {
+        if (a === null || b === null) {
+            return a === b;
+        }
+
+        if (typeof a !== 'object' || typeof b !== 'object') {
+            return a === b;
+        }
+
         const sortedA = Object.keys(a).sort().reduce((obj: any, key) => {
             obj[key] = a[key];
             return obj;

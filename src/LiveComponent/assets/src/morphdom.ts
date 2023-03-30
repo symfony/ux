@@ -1,4 +1,4 @@
-import { cloneElementWithNewTagName, cloneHTMLElement, setValueOnElement } from './dom_utils';
+import { cloneHTMLElement, setValueOnElement } from './dom_utils';
 import morphdom from 'morphdom';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
 import Component from './Component';
@@ -17,16 +17,6 @@ export function executeMorphdom(
     const childComponentMap: Map<HTMLElement, Component> = new Map();
     childComponents.forEach((childComponent) => {
         childComponentMap.set(childComponent.element, childComponent);
-        if (!childComponent.id) {
-            throw new Error('Child is missing id.');
-        }
-        const childComponentToElement = findChildComponent(childComponent.id, rootToElement);
-        if (childComponentToElement && childComponentToElement.tagName !== childComponent.element.tagName) {
-            // we need to "correct" the tag name for the child to match the "from"
-            // so that we always get a "diff", not a remove/add
-            const newTag = cloneElementWithNewTagName(childComponentToElement, childComponent.element.tagName);
-            childComponentToElement.replaceWith(newTag);
-        }
     });
 
     morphdom(rootFromElement, rootToElement, {
@@ -55,7 +45,9 @@ export function executeMorphdom(
                 if (childComponentMap.has(fromEl)) {
                     const childComponent = childComponentMap.get(fromEl) as Component;
 
-                    return childComponent.updateFromNewElement(toEl);
+                    childComponent.updateFromNewElementFromParentRender(toEl);
+
+                    return false;
                 }
 
                 // if this field's value has been modified since this HTML was

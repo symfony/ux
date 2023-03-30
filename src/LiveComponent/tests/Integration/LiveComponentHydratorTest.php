@@ -1308,6 +1308,70 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->hydrateComponent($component, 'component1', ['@checksum' => 'invalid']);
     }
 
+    public function testHydrationTakeUpdatedParentPropsIntoAccount(): void
+    {
+        $component = new class() {
+            #[LiveProp(writable: true)]
+            public string $name = 'Ryan';
+
+            #[LiveProp(updateFromParent: true)]
+            public bool $shouldUppercase = false;
+        };
+
+        $freshComponent = clone $component;
+
+        $liveMetadata = $this->createLiveMetadata($component);
+        $dehydrated = $this->hydrator()->dehydrate(
+            $component,
+            new ComponentAttributes([]),
+            $liveMetadata
+        );
+        $updatedFromParentData = ['shouldUppercase' => true];
+        $updatedFromParentData = $this->hydrator()->addChecksumToData($updatedFromParentData);
+
+        $this->hydrator()->hydrate(
+            $freshComponent,
+            $dehydrated->getProps(),
+            [], // updated data
+            $liveMetadata,
+            $updatedFromParentData
+        );
+        // keeps original, dehydrated value
+        $this->assertSame('Ryan', $freshComponent->name);
+        // updated from parent
+        $this->assertTrue($freshComponent->shouldUppercase);
+    }
+
+    public function testHydrationWithUpdatesParentPropsAndBadChecksumFails(): void
+    {
+        $component = new class() {
+            #[LiveProp(updateFromParent: true)]
+            public string $name = 'Ryan';
+        };
+
+        $freshComponent = clone $component;
+
+        $liveMetadata = $this->createLiveMetadata($component);
+        $dehydrated = $this->hydrator()->dehydrate(
+            $component,
+            new ComponentAttributes([]),
+            $liveMetadata
+        );
+        $updatedFromParentData = ['name' => 'Kevin'];
+        $updatedFromParentData = $this->hydrator()->addChecksumToData($updatedFromParentData);
+        // change the data again: now the checksum is wrong!
+        $updatedFromParentData['name'] = 'Fabien';
+
+        $this->expectException(BadRequestHttpException::class);
+        $this->hydrator()->hydrate(
+            $freshComponent,
+            $dehydrated->getProps(),
+            [], // updated data
+            $liveMetadata,
+            $updatedFromParentData
+        );
+    }
+
     public function testPreDehydrateAndPostHydrateHooksCalled(): void
     {
         $mounted = $this->mountComponent('component2');

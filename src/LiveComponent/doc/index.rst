@@ -1987,6 +1987,10 @@ You can also trigger a specific "action" instead of a normal re-render:
 Communication Between Components: Emitting Events
 -------------------------------------------------
 
+.. versionadded:: 2.8
+
+    The ability to emit events was added in Live Components 2.8.
+
 Events allow you to communicate between any two components that live
 on your page.
 
@@ -2144,7 +2148,7 @@ Nested Components
 Need to nest one live component inside another one? No problem! As a
 rule of thumb, **each component exists in its own, isolated universe**.
 This means that if a parent component re-renders, it won't automatically
-cause the child to re-render (but it *may* - keep reading). Or, if
+cause the child to re-render (but it *can* - keep reading). Or, if
 a model in a child updates, it won't also update that model in its parent
 (but it *can* - keep reading).
 
@@ -2154,10 +2158,10 @@ it behave exactly like you need.
 Each component re-renders independent of one another
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If a parent component re-renders, this may or may not cause the child
-component to send its own Ajax request to re-render. What determines
-that? Let's look at an example of a todo list component with a child
-that renders the total number of todo items:
+If a parent component re-renders, this won't, by default, cause any child
+components to re-render, but you *can* make it do that. Let's look at an
+example of a todo list component with a child that renders the total number of
+todo items:
 
 .. code-block:: twig
 
@@ -2175,25 +2179,46 @@ that renders the total number of todo items:
     </div>
 
 Suppose the user updates the ``listName`` model and the parent component
-re-renders. In this case, the child component will *not* re-render. Why?
-Because the live components system will detect that none of the values passed
-*into* ``todo_footer`` (just ``count`` in this case). Have change. If no inputs
-to the child changed, there's no need to re-render it.
+re-renders. In this case, the child component will *not* re-render by design:
+each component lives in its own universe.
 
-But if the user added a *new* todo item and the number of todos changed from
-5 to 6, this *would* change the ``count`` value that's passed into the ``todo_footer``.
-In this case, immediately after the parent component re-renders, the child
-request will make a second Ajax request to render itself. Smart!
+.. versionadded:: 2.8
+
+    The ``updateFromParent`` option was added in Live Components 2.8. Previously,
+    a child would re-render when *any* props passed into it changed.
+
+However, if the user adds a *new* todo item then we *do* want the ``todo_footer``
+child component to re-render: using the new ``count`` value. To trigger this,
+in the ``todo_footer`` component, add the ``updateFromParent`` option::
+
+    #[LiveComponent('todo_footer')]
+    class TodoFooterComponent
+    {
+        #[LiveProp(updateFromParent: true)]
+        public int $count = 0;
+    }
+
+Now, when the parent component re-renders, if the value of the ``count`` prop
+changes, the child will make a second Ajax request to re-render itself.
+
+.. note::
+
+    To work, the name of the prop that's passed when rendering the ``todo_footer``
+    component must match the property name that has the ``updateFromParent`` - e.g.
+    ``{{ component('todo_footer', { count: todos|length }) }}``. If you pass in a
+    different name and set the ``count`` property via a ref:``mount()`` method, the
+    child component will not re-render correctly.
 
 Child components keep their modifiable LiveProp values
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-But suppose that the ``todo_footer`` in the previous example also has
+What if the ``todo_footer`` component in the previous example also has
 an ``isVisible`` ``LiveProp(writable: true)`` property which starts as
 ``true`` but can be changed (via a link click) to ``false``. Will
-re-rendering the child cause this to be reset back to its original
-value? Nope! When the child component re-renders, it will keep the
-current value for any of its writable props.
+re-rendering the child when ``count`` changes cause this to be reset back to its
+original value? Nope! When the child component re-renders, it will keep the
+current value for all props, except for those that are marked as
+``updateFromParent``.
 
 What if you *do* want your entire child component to re-render (including
 resetting writable live props) when some value in the parent changes? This

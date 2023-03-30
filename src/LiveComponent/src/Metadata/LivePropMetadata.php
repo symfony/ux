@@ -78,4 +78,9 @@ final class LivePropMetadata
     {
         return $this->liveProp->isIdentityWritable();
     }
+
+    public function acceptUpdatesFromParent(): bool
+    {
+        return $this->liveProp->acceptUpdatesFromParent();
+    }
 }

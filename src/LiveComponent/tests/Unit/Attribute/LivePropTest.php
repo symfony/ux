@@ -71,4 +71,14 @@ final class LivePropTest extends TestCase
         $this->assertFalse($liveProp3->isIdentityWritable());
         $this->assertSame(['bar'], $liveProp3->writablePaths());
     }
+
+    // test updateFromParent property being set and accessed with acceptUpdatesFromParent()
+    public function testUpdateFromParent(): void
+    {
+        $liveProp = new LiveProp();
+        $this->assertFalse($liveProp->acceptUpdatesFromParent());
+
+        $liveProp2 = new LiveProp(updateFromParent: true);
+        $this->assertTrue($liveProp2->acceptUpdatesFromParent());
+    }
 }

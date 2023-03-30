@@ -42,14 +42,23 @@ class LiveComponentMetadata
         return $this->livePropsMetadata;
     }
 
-    public function getReadonlyPropPaths(): array
+    /**
+     * Looks at an array of "input prop" values and sees which of these correspond
+     * with LiveProps that accept updates from the parent.
+     *
+     * Returns the final array of "input props" that should be used to update
+     * LiveProps on the component.
+     */
+    public function getOnlyPropsThatAcceptUpdatesFromParent(array $inputProps): array
     {
-        $writableProps = array_filter($this->livePropsMetadata, function ($livePropMetadata) {
-            return !$livePropMetadata->isIdentityWritable();
+        $writableProps = array_filter($this->livePropsMetadata, function (LivePropMetadata $livePropMetadata) {
+            return $livePropMetadata->acceptUpdatesFromParent();
         });
 
-        return array_map(function ($livePropMetadata) {
+        $propNames = array_map(function ($livePropMetadata) {
             return $livePropMetadata->getName();
         }, $writableProps);
+
+        return array_intersect_key($inputProps, array_flip($propNames));
     }
 }

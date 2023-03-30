@@ -70,7 +70,8 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
 
         $rendered = $childPartialRenderer->renderChildComponent(
             $deterministicId,
-            $childFingerprints[$deterministicId],
+            $childFingerprints[$deterministicId]['fingerprint'],
+            $childFingerprints[$deterministicId]['tag'],
             $event->getName(),
             $event->getInputProps(),
         );

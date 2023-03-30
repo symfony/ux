@@ -28,7 +28,10 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
             default: number;
         };
         id: StringConstructor;
-        fingerprint: StringConstructor;
+        fingerprint: {
+            type: StringConstructor;
+            default: string;
+        };
     };
     readonly nameValue: string;
     readonly urlValue: string;

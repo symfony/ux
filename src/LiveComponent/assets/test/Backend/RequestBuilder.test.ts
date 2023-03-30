@@ -7,10 +7,11 @@ describe('buildRequest', () => {
             { firstName: 'Ryan' },
             [],
             { firstName: 'Kevin' },
-            { 'child-component': '123' }
+            { 'child-component': {fingerprint: '123', tag: 'div' } },
+            {}
         );
 
-        expect(url).toEqual('/_components?existing_param=1&props=%7B%22firstName%22%3A%22Ryan%22%7D&updated=%7B%22firstName%22%3A%22Kevin%22%7D&childrenFingerprints=%7B%22child-component%22%3A%22123%22%7D');
+        expect(url).toEqual('/_components?existing_param=1&props=%7B%22firstName%22%3A%22Ryan%22%7D&updated=%7B%22firstName%22%3A%22Kevin%22%7D&children=%7B%22child-component%22%3A%7B%22fingerprint%22%3A%22123%22%2C%22tag%22%3A%22div%22%7D%7D');
         expect(fetchOptions.method).toEqual('GET');
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
@@ -26,7 +27,8 @@ describe('buildRequest', () => {
                 args: { sendNotification: '1' },
             }],
             { firstName: 'Kevin' },
-            { 'child-component': '123' }
+            { 'child-component': {fingerprint: '123', tag: 'div' } },
+            {}
         );
 
         expect(url).toEqual('/_components/saveData');
@@ -39,7 +41,7 @@ describe('buildRequest', () => {
         expect(fetchOptions.body).toEqual(JSON.stringify({
             props: { firstName: 'Ryan' },
             updated: { firstName: 'Kevin' },
-            childrenFingerprints: { 'child-component': '123' },
+            children: { 'child-component': { fingerprint: '123', tag: 'div' } },
             args: { sendNotification: '1' },
         }));
     });
@@ -56,6 +58,7 @@ describe('buildRequest', () => {
                 args: { sendNotification: '0' },
             }],
             { firstName: 'Kevin' },
+            {},
             {}
         );
 
@@ -81,6 +84,7 @@ describe('buildRequest', () => {
             { firstName: 'Ryan'.repeat(1000) },
             [],
             { firstName: 'Kevin'.repeat(1000) },
+            {},
             {}
         );
 
@@ -94,6 +98,38 @@ describe('buildRequest', () => {
         expect(fetchOptions.body).toEqual(JSON.stringify({
             props: { firstName: 'Ryan'.repeat(1000) },
             updated: { firstName: 'Kevin'.repeat(1000) },
+        }));
+    });
+
+    it('sends propsFromParent when specified', () => {
+        const builder = new RequestBuilder('/_components?existing_param=1', '_the_csrf_token');
+        const { url } = builder.buildRequest(
+            { firstName: 'Ryan' },
+            [],
+            { firstName: 'Kevin' },
+            { },
+            { count: 5 }
+        );
+
+        expect(url).toEqual('/_components?existing_param=1&props=%7B%22firstName%22%3A%22Ryan%22%7D&updated=%7B%22firstName%22%3A%22Kevin%22%7D&propsFromParent=%7B%22count%22%3A5%7D');
+
+        // do a POST
+        const { fetchOptions } = builder.buildRequest(
+            { firstName: 'Ryan' },
+            [{
+                name: 'saveData',
+                args: { sendNotification: '1' },
+            }],
+            { firstName: 'Kevin' },
+            {},
+            { count: 5 },
+        );
+
+        expect(fetchOptions.body).toEqual(JSON.stringify({
+            props: { firstName: 'Ryan' },
+            updated: { firstName: 'Kevin' },
+            propsFromParent: { count: 5 },
+            args: { sendNotification: '1' },
         }));
     });
 });
