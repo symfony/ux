@@ -44,11 +44,23 @@ final class AsLiveComponentTest extends TestCase
         $this->assertSame('method3', $methods[0]->getName());
     }
 
+    public function testCanGetLiveListeners(): void
+    {
+        $liveListeners = AsLiveComponent::liveListeners(new Component5());
+
+        $this->assertCount(1, $liveListeners);
+        $this->assertSame([
+            'action' => 'aListenerActionMethod',
+            'event' => 'the_event_name',
+        ], $liveListeners[0]);
+    }
+
     public function testCanCheckIfMethodIsAllowed(): void
     {
         $component = new Component5();
 
         $this->assertTrue(AsLiveComponent::isActionAllowed($component, 'method1'));
         $this->assertFalse(AsLiveComponent::isActionAllowed($component, 'method2'));
+        $this->assertTrue(AsLiveComponent::isActionAllowed($component, 'aListenerActionMethod'));
     }
 }

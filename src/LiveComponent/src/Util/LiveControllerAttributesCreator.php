@@ -13,12 +13,13 @@ namespace Symfony\UX\LiveComponent\Util;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
+use Symfony\UX\LiveComponent\LiveResponder;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
-use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\MountedComponent;
 
 /**
@@ -34,10 +35,10 @@ class LiveControllerAttributesCreator
         private LiveComponentMetadataFactory $metadataFactory,
         private LiveComponentHydrator $hydrator,
         private TwigAttributeHelperFactory $attributeHelper,
-        private ComponentStack $componentStack,
         private DeterministicTwigIdCalculator $idCalculator,
         private FingerprintCalculator $fingerprintCalculator,
         private UrlGeneratorInterface $urlGenerator,
+        private LiveResponder $liveResponder,
         private ?CsrfTokenManagerInterface $csrfTokenManager,
     ) {
     }
@@ -49,24 +50,35 @@ class LiveControllerAttributesCreator
     public function attributesForRendering(MountedComponent $mounted, ComponentMetadata $metadata, bool $isChildComponent, string $deterministicId = null): LiveAttributesCollection
     {
         $attributesCollection = $this->attributeHelper->create();
-        $attributesCollection->addLiveController();
+        $attributesCollection->setLiveController($mounted->getName());
 
         $url = $this->urlGenerator->generate($metadata->get('route'), ['_live_component' => $mounted->getName()]);
-        $attributesCollection->addLiveUrl($url);
+        $attributesCollection->setUrl($url);
+
+        $liveListeners = AsLiveComponent::liveListeners($mounted->getComponent());
+        if ($liveListeners) {
+            $attributesCollection->setListeners($liveListeners);
+        }
+
+        $eventsToEmit = $this->liveResponder->getEventsToEmit();
+        $this->liveResponder->reset();
+        if ($eventsToEmit) {
+            $attributesCollection->setEventsToEmit($eventsToEmit);
+        }
 
         $mountedAttributes = $mounted->getAttributes();
 
         if ($isChildComponent) {
             if (!isset($mountedAttributes->all()['data-live-id'])) {
                 $id = $deterministicId ?: $this->idCalculator->calculateDeterministicId();
-                $attributesCollection->addLiveId($id);
+                $attributesCollection->setLiveId($id);
                 // we need to add this to the mounted attributes so that it is
                 // will be included in the "attributes" part of the props data.
                 $mountedAttributes = $mountedAttributes->defaults(['data-live-id' => $id]);
             }
 
             $fingerprint = $this->fingerprintCalculator->calculateFingerprint($mounted->getInputProps());
-            $attributesCollection->addFingerprint($fingerprint);
+            $attributesCollection->setFingerprint($fingerprint);
         }
 
         $dehydratedProps = $this->dehydrateComponent(
@@ -74,10 +86,10 @@ class LiveControllerAttributesCreator
             $mounted->getComponent(),
             $mountedAttributes
         );
-        $attributesCollection->addProps($dehydratedProps->getProps());
+        $attributesCollection->setProps($dehydratedProps->getProps());
 
         if ($this->csrfTokenManager && $metadata->get('csrf')) {
-            $attributesCollection->addLiveCsrf(
+            $attributesCollection->setCsrf(
                 $this->csrfTokenManager->getToken(self::getCsrfTokeName($mounted->getName()))->getValue(),
             );
         }

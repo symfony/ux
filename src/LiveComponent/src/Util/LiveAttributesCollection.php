@@ -42,48 +42,54 @@ final class LiveAttributesCollection
         return $escaped;
     }
 
-    public function addLiveController(): void
+    public function setLiveController(string $componentName): void
     {
         $this->attributes['data-controller'] = 'live';
+        $this->attributes['data-live-name-value'] = $componentName;
     }
 
-    public function addLiveId(string $id): void
+    public function setLiveId(string $id): void
     {
         $this->attributes['data-live-id'] = $id;
     }
 
-    public function addFingerprint(string $fingerprint): void
+    public function setFingerprint(string $fingerprint): void
     {
         $this->attributes['data-live-fingerprint-value'] = $fingerprint;
     }
 
-    public function addProps(array $dehydratedProps): void
+    public function setProps(array $dehydratedProps): void
     {
         $this->attributes['data-live-props-value'] = $dehydratedProps;
-    }
-
-    public function addNestedProps(array $nestedProps): void
-    {
-        $this->attributes['data-live-nested-props-value'] = $nestedProps;
     }
 
     public function getProps(): array
     {
         if (!\array_key_exists('data-live-props-value', $this->attributes)) {
-            throw new \LogicException('You must call addProps() before calling getProps().');
+            throw new \LogicException('You must call setProps() before calling getProps().');
         }
 
         return $this->attributes['data-live-props-value'];
     }
 
-    public function addLiveUrl(string $url): void
+    public function setUrl(string $url): void
     {
         $this->attributes['data-live-url-value'] = $url;
     }
 
-    public function addLiveCsrf(string $csrf): void
+    public function setCsrf(string $csrf): void
     {
         $this->attributes['data-live-csrf-value'] = $csrf;
+    }
+
+    public function setListeners(array $listeners): void
+    {
+        $this->attributes['data-live-listeners-value'] = $listeners;
+    }
+
+    public function setEventsToEmit(array $events): void
+    {
+        $this->attributes['data-live-emit'] = $events;
     }
 
     private function escapeAttribute(string $value): string

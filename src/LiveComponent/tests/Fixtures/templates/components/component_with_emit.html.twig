@@ -1,0 +1,8 @@
+<div{{ attributes }}>
+    My action emits an event!
+
+    {% for event in events %}
+        Event: {{ event.event }}<br>
+        Data: {{ event.data|json_encode|raw }}<br>
+    {% endfor %}
+</div>

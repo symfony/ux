@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent;
 
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Attribute\PostHydrate;
 
@@ -134,9 +135,8 @@ trait ValidatableComponentTrait
 
     /**
      * @internal
-     *
-     * @required
      */
+    #[Required]
     public function setComponentValidator(ComponentValidatorInterface $componentValidator): void
     {
         $this->componentValidator = $componentValidator;

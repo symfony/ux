@@ -14,6 +14,11 @@ export interface ElementDriver {
      * Given an element, find the "key" that should be used to identify it;
      */
     getKeyFromElement(element: HTMLElement): string|null;
+
+    /**
+     * Given an element from a response, find all the events that should be emitted.
+     */
+    getEventsToEmit(element: HTMLElement): Array<{event: string, data: any, target: string|null, componentName: string|null }>;
 }
 
 export class StandardElementDriver implements ElementDriver {
@@ -39,5 +44,11 @@ export class StandardElementDriver implements ElementDriver {
 
     getKeyFromElement(element: HTMLElement): string|null {
         return element.dataset.liveId || null;
+    }
+
+    getEventsToEmit(element: HTMLElement): Array<{event: string, data: any, target: string|null, componentName: string|null }> {
+        const eventsJson = element.dataset.liveEmit ?? '[]';
+
+        return JSON.parse(eventsJson);
     }
 }

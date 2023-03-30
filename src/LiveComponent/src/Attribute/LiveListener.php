@@ -15,6 +15,14 @@ namespace Symfony\UX\LiveComponent\Attribute;
  * @experimental
  */
 #[\Attribute(\Attribute::TARGET_METHOD)]
-class LiveAction
+class LiveListener extends LiveAction
 {
+    public function __construct(private string $eventName)
+    {
+    }
+
+    public function getEventName(): string
+    {
+        return $this->eventName;
+    }
 }

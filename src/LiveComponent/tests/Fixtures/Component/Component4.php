@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
+use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -52,5 +53,11 @@ class Component4
     #[PostHydrate]
     public function method5()
     {
+    }
+
+    #[LiveListener('the_event_name')]
+    public function aListenerActionMethod()
+    {
+
     }
 }

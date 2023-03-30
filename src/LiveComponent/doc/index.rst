@@ -1982,6 +1982,162 @@ You can also trigger a specific "action" instead of a normal re-render:
         #}
     >
 
+.. _emit:
+
+Communication Between Components: Emitting Events
+-------------------------------------------------
+
+Events allow you to communicate between any two components that live
+on your page.
+
+Emitting an Event
+~~~~~~~~~~~~~~~~~
+
+There are three ways to emit an event:
+
+1. From Twig:
+
+.. code-block:: twig
+
+    <button
+        data-action="live#emit"
+        data-event="productAdded"
+    >
+
+2. From your PHP component via ``ComponentEmitsTrait``::
+
+    use Symfony\UX\LiveComponent\ComponentEmitsTrait;
+
+    class MyComponent
+    {
+        use ComponentEmitsTrait
+
+        #[LiveAction]
+        public function saveProduct()
+        {
+            // ...
+
+            $this->emit('productAdded');
+        }
+    }
+
+3. :ref:`From JavaScript <working-in-javascript>`, using your component:
+
+.. code-block:: javascript
+
+    this.component.emit('productAdded');
+
+Listen to Events
+~~~~~~~~~~~~~~~~
+
+To listen to an event, add a method with a `#[LiveListener]` above it::
+
+    #[LiveProp]
+    public int $productCount = 0;
+
+    #[LiveListener('productAdded')]
+    public function incrementProductCount()
+    {
+        $this->productCount++;
+    }
+
+Thanks to this, when any other component emits the ``productAdded`` event, an Ajax
+call will be made to call this method and re-render the component.
+
+Behind the scenes, event listeners are also `LiveActions <actions>`, so you can
+autowire any services you need.
+
+Passing Data to Listeners
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can also pass extra (scalar) data to the listeners::
+
+    #[LiveAction]
+    public function saveProduct()
+    {
+        // ...
+
+        $this->emit('productAdded', [
+            'product' => $product->getId(),
+        ]);
+    }
+
+In your listeners, you can access this by adding a matching argument
+name with `#[LiveArg]` in front::
+
+    #[LiveListener('productAdded')]
+    public function incrementProductCount(#[LiveArg] int $product)
+    {
+        $this->productCount++;
+        $this->lastProduct = $data['product'];
+    }
+
+And because event listeners are also actions, you can type-hint an argument
+with an entity name, just like you would in a controller::
+
+    #[LiveListener('productAdded')]
+    public function incrementProductCount(#[LiveArg] Product $product)
+    {
+        $this->productCount++;
+        $this->lastProduct = $product;
+    }
+
+Scoping Events
+~~~~~~~~~~~~~~
+
+By default, when an event is emitted, it is sent to *all* components that are
+currently on the page. You can scope these in various ways:
+
+Emitting only to Parent Components
+...................................
+
+If you want to emit an event to only the parent components, use the
+``emitUp()`` method:
+
+.. code-block:: twig
+
+    <button
+        data-action="live#emitUp"
+        data-event="productAdded"
+    >
+
+Or, in PHP::
+
+    $this->emitUp('productAdded');
+
+Emitting only to Components with a Specific Name
+.................................................
+
+If you want to emit an event to only components with a specific name,
+use the ``name()`` modifier:
+
+.. code-block:: twig
+
+    <button
+        data-action="live#emit"
+        data-event="name(product_list)|productAdded"
+    >
+
+Or, in PHP::
+
+    $this->emit('productAdded', name: 'product_list');
+
+Emitting only to Yourself
+.........................
+
+To emit an event to only yourself, use the ``emitSelf()`` method:
+
+.. code-block:: twig
+
+    <button
+        data-action="live#emitSelf"
+        data-event="productAdded"
+    >
+
+Or, in PHP::
+
+    $this->emitSelf('productAdded');
+
 Nested Components
 -----------------
 
@@ -2075,6 +2231,24 @@ When the user clicks that button, it will attempt to call the ``save``
 action in the *child* component only, even if the ``save`` action
 actually only exists in the parent. The same is true for ``data-model``,
 though there is some special handling for this case (see next point).
+
+Communicating with a Parent Component
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+There are two main ways to communicate from a child component to a parent
+component:
+
+1. :ref:`Emitting events <emit>`
+
+    The most flexible way to communicate: any information can be sent
+    from the child to the parent.
+
+2. :ref:`Updating a parent model from a child <update-parent-model>`
+
+    Useful as a simple way to "synchronize" a child model with a parent
+    model: when the child model changes, the parent model will also change.
+
+.. _data-model:
 
 Updating a Parent Model from a Child
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

@@ -42,7 +42,7 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
             // return an empty element so the frontend knows to keep the current child
 
             $attributesCollection = $this->attributeHelperFactory->create();
-            $attributesCollection->addLiveId($deterministicId);
+            $attributesCollection->setLiveId($deterministicId);
 
             return $this->createHtml($attributesCollection->toEscapedArray());
         }
@@ -70,7 +70,7 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
             $props,
             array_flip(array_merge($liveMetadata->getReadonlyPropPaths(), LiveComponentHydrator::getInternalPropNames()))
         );
-        $attributesCollection->addProps($readonlyDehydratedProps);
+        $attributesCollection->setProps($readonlyDehydratedProps);
         $attributes = $attributesCollection->toEscapedArray();
         // optional, but these just aren't needed by the frontend at this point
         unset($attributes['data-controller']);
