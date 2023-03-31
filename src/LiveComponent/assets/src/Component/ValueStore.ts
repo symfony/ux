@@ -20,6 +20,13 @@ export default class {
      */
     private pendingProps: {[key: string]: any} = {};
 
+    /**
+     * A list of props that the parent wants us to update.
+     *
+     * These will be sent on the next request to the server.
+     */
+    private updatedPropsFromParent: {[key: string]: any} = {};
+
     constructor(props: any) {
         this.props = props;
     }
@@ -82,6 +89,10 @@ export default class {
         return { ...this.dirtyProps };
     }
 
+    getUpdatedPropsFromParent(): any {
+        return { ...this.updatedPropsFromParent };
+    }
+
     /**
      * Called when an update request begins.
      */
@@ -95,6 +106,7 @@ export default class {
      */
     reinitializeAllProps(props: any): void {
         this.props = props;
+        this.updatedPropsFromParent = {};
         this.pendingProps = {};
     }
 
@@ -108,18 +120,19 @@ export default class {
     }
 
     /**
-     * Reinitialize *only* the provided props, but leave other untouched.
-     *
      * This is used when a parent component is rendering, and it includes
-     * a fresh set of the "readonly" props for a child. This allows any writable
-     * props to remain (as these may have already been changed by the user).
+     * a fresh set of props that should be updated on the child component.
      *
-     * The server manages returning only the readonly props, so we don't need to
-     * worry about that.
+     * The server manages returning only the props that should be updated onto
+     * the child, so we don't need to worry about that.
      *
-     * Returns true if any of the props changed.
+     * The props are stored in a different place, because the existing props
+     * have their own checksum and these new props have *their* own checksum.
+     * So, on the next render, both need to be sent independently.
+     *
+     * Returns true if any of the props are different.
      */
-    reinitializeProvidedProps(props: any): boolean {
+    storeNewPropsFromParent(props: any): boolean {
         let changed = false;
 
         for (const [key, value] of Object.entries(props)) {
@@ -129,8 +142,11 @@ export default class {
             // prop entirely
             if (currentValue !== value) {
                 changed = true;
-                this.props[key] = value;
             }
+        }
+
+        if (changed) {
+            this.updatedPropsFromParent = props;
         }
 
         return changed;

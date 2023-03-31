@@ -76,8 +76,8 @@ describe('Component parent -> child initialization and rendering tests', () => {
 
         test.expectsAjaxCall()
             .expectChildFingerprints({
-                'the-child-id1': 'child-fingerprint1',
-                'the-child-id2': 'child-fingerprint2'
+                'the-child-id1': { fingerprint: 'child-fingerprint1', tag: 'div' },
+                'the-child-id2': { fingerprint: 'child-fingerprint2', tag: 'div' },
             });
 
         test.component.render();
@@ -231,11 +231,12 @@ describe('Component parent -> child initialization and rendering tests', () => {
 
         // E) Expect the child to re-render
         // after the parent Ajax call has finished, but shortly before it's
-        // done processing, the child component should start its own Aja call
+        // done processing, the child component should start its own Ajax call
         childTest.expectsAjaxCall()
             // expect the modified firstName data
             // expect the new prop
             .expectUpdatedData({ fullName: 'Ryan Weaver' })
+            .expectUpdatedPropsFromParent({ toUppercase: true })
             .willReturn(childTemplate);
 
         // wait for parent Ajax call to finish
@@ -251,64 +252,9 @@ describe('Component parent -> child initialization and rendering tests', () => {
         await waitFor(() => expect(childComponent.element).not.toHaveAttribute('busy'));
 
         // child component re-rendered and there are a few important things here
-        // 1) the toUppercase prop was changed after by the parent and that change remains
+        // 1) the toUppercase prop was changed by the parent and that change remains
         // 2) The " Weaver" change to the "firstName" data was kept, not "run over"
         expect(childComponent.element).toHaveTextContent('Full Name: RYAN WEAVER')
-    });
-
-    it('existing child gets new props even though the element type differs', async () => {
-        const realChildTemplate = (data: any) => `
-            <span ${initComponent({ prop1: data.prop1 }, { id: 'child-id' })} data-testid="child-component">
-                Child prop1: ${data.prop1}
-            </span>
-        `;
-        // the empty-ish child element used on re-render
-        const parentReRenderedChildTemplate = (data: any) => `
-            <div ${initComponent({ prop1: data.prop1 }, { id: 'child-id' })} data-testid="child-component"></div>
-        `;
-
-        const test = await createTest({prop1: 'original_prop', useRealChild: true}, (data: any) => `
-           <div ${initComponent(data)}>
-               Parent Component
-               ${data.useRealChild ? realChildTemplate({data}) : parentReRenderedChildTemplate(data)}
-           </div>
-       `);
-
-        const childComponent = getComponent(getByTestId(test.element, 'child-component'));
-        // just used to mock the Ajax call
-        const childTest = createTestForExistingComponent(childComponent);
-
-        // Re-render the parent
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                // change the child prop
-                data.prop1 = 'updated_prop';
-                // re-render the "fake" component with a different tag
-                data.useRealChild = false;
-            });
-        test.component.render();
-        // wait for parent Ajax call to start
-        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
-
-        // Expect the child to re-render
-        childTest.expectsAjaxCall()
-            // prop1 will have changed, but that's not "updated" data
-            // we verify below that the new prop1 is used by looking at the HTML
-            .expectUpdatedData({ })
-            .willReturn(realChildTemplate);
-
-        // wait for parent Ajax call to finish
-        await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
-        // wait for child to start and stop loading
-        await waitFor(() => expect(childComponent.element).toHaveAttribute('busy'));
-        await waitFor(() => expect(childComponent.element).not.toHaveAttribute('busy'));
-
-        // child component re-rendered successfully
-        // re-grabbing child-component fresh to prove it's not stale
-        const childElement2 = getByTestId(test.element, 'child-component');
-        expect(childElement2).toHaveTextContent('Child prop1: updated_prop')
-        // it should still be a span, even though the initial re-render was a div
-        expect(childElement2.tagName).toEqual('SPAN');
     });
 
     it('replaces old child with new child if the "id" changes', async () => {
@@ -398,9 +344,11 @@ describe('Component parent -> child initialization and rendering tests', () => {
             // new props are sent, but that doesn't count as updated data
             // we verify the new props are used below by checking the HTML
             .expectUpdatedData({ })
+            .expectUpdatedPropsFromParent({ number: 1, value: 'New value for child 1' })
             .willReturn(childTemplate);
         childTest2.expectsAjaxCall()
             .expectUpdatedData({ })
+            .expectUpdatedPropsFromParent({ number: 2, value: 'New value for child 2' })
             .willReturn(childTemplate);
 
         // wait for parent Ajax call to finish

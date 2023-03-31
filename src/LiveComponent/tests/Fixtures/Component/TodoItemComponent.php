@@ -23,6 +23,9 @@ final class TodoItemComponent
     #[LiveProp(writable: true)]
     public string $text = '';
 
+    #[LiveProp(updateFromParent: true)]
+    public int $textLength = 0;
+
     // here just to force a checksum to be needed, helps make tests more robust
     #[LiveProp(writable: false)]
     public string $readonlyValue = 'readonly';

@@ -241,7 +241,7 @@ describe('ValueStore', () => {
         expect(container.getOriginalProps()).toEqual({ city: 'Grand Rapids', user: 'Kevin', product: 5 });
     });
 
-    const reinitializeProvidedPropsDataset = [
+    const storeNewPropsFromParentDataset = [
         {
             props: {},
             newProps: {},
@@ -329,12 +329,12 @@ describe('ValueStore', () => {
             changed: true,
         },
     ];
-    reinitializeProvidedPropsDataset.forEach(({ props, newProps, expectedProps, changed }) => {
-        it(`reinitializeProvidedProps(${JSON.stringify(newProps)}) with data ${JSON.stringify(props)} results in ${JSON.stringify(expectedProps)}`, () => {
+    storeNewPropsFromParentDataset.forEach(({ props, newProps, expectedProps, changed }) => {
+        it(`storeNewPropsFromParent(${JSON.stringify(newProps)}) with data ${JSON.stringify(props)} results in ${JSON.stringify(expectedProps)}`, () => {
             const store = new ValueStore(props);
-            const actualChanged = store.reinitializeProvidedProps(newProps);
-            expect(store.getOriginalProps()).toEqual(expectedProps);
+            const actualChanged = store.storeNewPropsFromParent(newProps);
             expect(actualChanged).toEqual(changed);
+            expect(store.getUpdatedPropsFromParent()).toEqual(changed ? newProps : {});
         });
     });
 });

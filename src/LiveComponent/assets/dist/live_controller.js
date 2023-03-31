@@ -305,15 +305,6 @@ function htmlToElement(html) {
     }
     return child;
 }
-function cloneElementWithNewTagName(element, newTag) {
-    const originalTag = element.tagName;
-    const startRX = new RegExp('^<' + originalTag, 'i');
-    const endRX = new RegExp(originalTag + '>$', 'i');
-    const startSubst = '<' + newTag;
-    const endSubst = newTag + '>';
-    const newHTML = element.outerHTML.replace(startRX, startSubst).replace(endRX, endSubst);
-    return htmlToElement(newHTML);
-}
 function getElementAsTagText(element) {
     return element.innerHTML
         ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML))
@@ -365,6 +356,7 @@ class ValueStore {
         this.props = {};
         this.dirtyProps = {};
         this.pendingProps = {};
+        this.updatedPropsFromParent = {};
         this.props = props;
     }
     get(name) {
@@ -398,26 +390,32 @@ class ValueStore {
     getDirtyProps() {
         return Object.assign({}, this.dirtyProps);
     }
+    getUpdatedPropsFromParent() {
+        return Object.assign({}, this.updatedPropsFromParent);
+    }
     flushDirtyPropsToPending() {
         this.pendingProps = Object.assign({}, this.dirtyProps);
         this.dirtyProps = {};
     }
     reinitializeAllProps(props) {
         this.props = props;
+        this.updatedPropsFromParent = {};
         this.pendingProps = {};
     }
     pushPendingPropsBackToDirty() {
         this.dirtyProps = Object.assign(Object.assign({}, this.pendingProps), this.dirtyProps);
         this.pendingProps = {};
     }
-    reinitializeProvidedProps(props) {
+    storeNewPropsFromParent(props) {
         let changed = false;
         for (const [key, value] of Object.entries(props)) {
             const currentValue = this.get(key);
             if (currentValue !== value) {
                 changed = true;
-                this.props[key] = value;
             }
+        }
+        if (changed) {
+            this.updatedPropsFromParent = props;
         }
         return changed;
     }
@@ -1201,14 +1199,6 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
     const childComponentMap = new Map();
     childComponents.forEach((childComponent) => {
         childComponentMap.set(childComponent.element, childComponent);
-        if (!childComponent.id) {
-            throw new Error('Child is missing id.');
-        }
-        const childComponentToElement = findChildComponent(childComponent.id, rootToElement);
-        if (childComponentToElement && childComponentToElement.tagName !== childComponent.element.tagName) {
-            const newTag = cloneElementWithNewTagName(childComponentToElement, childComponent.element.tagName);
-            childComponentToElement.replaceWith(newTag);
-        }
     });
     morphdom(rootFromElement, rootToElement, {
         getNodeKey: (node) => {
@@ -1227,7 +1217,8 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
             if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement) {
                 if (childComponentMap.has(fromEl)) {
                     const childComponent = childComponentMap.get(fromEl);
-                    return childComponent.updateFromNewElement(toEl);
+                    childComponent.updateFromNewElementFromParentRender(toEl);
+                    return false;
                 }
                 if (modifiedFieldElements.includes(fromEl)) {
                     setValueOnElement(toEl, getElementValue(fromEl));
@@ -1867,12 +1858,12 @@ class Component {
             this.action(action, data, 1);
         });
     }
-    updateFromNewElement(toEl) {
+    updateFromNewElementFromParentRender(toEl) {
         const props = this.elementDriver.getComponentProps(toEl);
         if (props === null) {
-            return false;
+            return;
         }
-        const isChanged = this.valueStore.reinitializeProvidedProps(props);
+        const isChanged = this.valueStore.storeNewPropsFromParent(props);
         const fingerprint = toEl.dataset.liveFingerprintValue;
         if (fingerprint !== undefined) {
             this.fingerprint = fingerprint;
@@ -1880,7 +1871,6 @@ class Component {
         if (isChanged) {
             this.render();
         }
-        return false;
     }
     onChildComponentModelUpdate(modelName, value, childComponent) {
         if (!childComponent.id) {
@@ -1909,7 +1899,7 @@ class Component {
         const thisPromiseResolve = this.nextRequestPromiseResolve;
         this.resetPromise();
         this.unsyncedInputsTracker.resetUnsyncedFields();
-        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints());
+        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints(), this.valueStore.getUpdatedPropsFromParent());
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
         this.pendingActions = [];
         this.valueStore.flushDirtyPropsToPending();
@@ -2065,7 +2055,10 @@ class Component {
             if (!child.id) {
                 throw new Error('missing id');
             }
-            fingerprints[child.id] = child.fingerprint;
+            fingerprints[child.id] = {
+                fingerprint: child.fingerprint,
+                tag: child.element.tagName.toLowerCase(),
+            };
         });
         return fingerprints;
     }
@@ -2129,7 +2122,7 @@ class RequestBuilder {
         this.url = url;
         this.csrfToken = csrfToken;
     }
-    buildRequest(props, actions, updated, childrenFingerprints) {
+    buildRequest(props, actions, updated, children, updatedPropsFromParent) {
         const splitUrl = this.url.split('?');
         let [url] = splitUrl;
         const [, queryString] = splitUrl;
@@ -2138,13 +2131,16 @@ class RequestBuilder {
         fetchOptions.headers = {
             Accept: 'application/vnd.live-component+html',
         };
-        const hasFingerprints = Object.keys(childrenFingerprints).length > 0;
+        const hasFingerprints = Object.keys(children).length > 0;
         if (actions.length === 0 &&
-            this.willDataFitInUrl(JSON.stringify(props), JSON.stringify(updated), params, JSON.stringify(childrenFingerprints))) {
+            this.willDataFitInUrl(JSON.stringify(props), JSON.stringify(updated), params, JSON.stringify(children), JSON.stringify(updatedPropsFromParent))) {
             params.set('props', JSON.stringify(props));
             params.set('updated', JSON.stringify(updated));
+            if (Object.keys(updatedPropsFromParent).length > 0) {
+                params.set('propsFromParent', JSON.stringify(updatedPropsFromParent));
+            }
             if (hasFingerprints) {
-                params.set('childrenFingerprints', JSON.stringify(childrenFingerprints));
+                params.set('children', JSON.stringify(children));
             }
             fetchOptions.method = 'GET';
         }
@@ -2152,8 +2148,11 @@ class RequestBuilder {
             fetchOptions.method = 'POST';
             fetchOptions.headers['Content-Type'] = 'application/json';
             const requestData = { props, updated };
+            if (Object.keys(updatedPropsFromParent).length > 0) {
+                requestData.propsFromParent = updatedPropsFromParent;
+            }
             if (hasFingerprints) {
-                requestData.childrenFingerprints = childrenFingerprints;
+                requestData.children = children;
             }
             if (actions.length > 0) {
                 if (this.csrfToken) {
@@ -2176,8 +2175,8 @@ class RequestBuilder {
             fetchOptions,
         };
     }
-    willDataFitInUrl(propsJson, updatedJson, params, childrenFingerprintsJson) {
-        const urlEncodedJsonData = new URLSearchParams(propsJson + updatedJson + childrenFingerprintsJson).toString();
+    willDataFitInUrl(propsJson, updatedJson, params, childrenJson, propsFromParentJson) {
+        const urlEncodedJsonData = new URLSearchParams(propsJson + updatedJson + childrenJson + propsFromParentJson).toString();
         return (urlEncodedJsonData + params.toString()).length < 1500;
     }
 }
@@ -2186,8 +2185,8 @@ class Backend {
     constructor(url, csrfToken = null) {
         this.requestBuilder = new RequestBuilder(url, csrfToken);
     }
-    makeRequest(props, actions, updated, childrenFingerprints) {
-        const { url, fetchOptions } = this.requestBuilder.buildRequest(props, actions, updated, childrenFingerprints);
+    makeRequest(props, actions, updated, children, updatedPropsFromParent) {
+        const { url, fetchOptions } = this.requestBuilder.buildRequest(props, actions, updated, children, updatedPropsFromParent);
         return new BackendRequest(fetch(url, fetchOptions), actions.map((backendAction) => backendAction.name), Object.keys(updated));
     }
 }
@@ -2855,7 +2854,7 @@ LiveControllerDefault.values = {
     listeners: { type: Array, default: [] },
     debounce: { type: Number, default: 150 },
     id: String,
-    fingerprint: String,
+    fingerprint: { type: String, default: '' },
 };
 LiveControllerDefault.componentRegistry = new ComponentRegistry();
 

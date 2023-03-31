@@ -3,7 +3,7 @@
 
     <ul>
     {% for item in items %}
-        {% set componentProps = { text: item.text } %}
+        {% set componentProps = { text: item.text, textLength: item.text|length } %}
         {% if includeDataLiveId %}
             {% set componentProps = componentProps|merge({'data-live-id': ('todo-item-' ~ loop.index) }) %}
         {% endif %}

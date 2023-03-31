@@ -203,7 +203,9 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
      *     data: array,
      *     args: array,
      *     actions: array
-     *     childrenFingerprints: array
+     *     // has "fingerprint" and "tag" string key, keyed by component id
+     *     children: array
+     *     propsFromParent: array
      * }
      */
     private static function parseDataFor(Request $request): array
@@ -215,7 +217,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                     'updated' => self::parseJsonFromQuery($request, 'updated'),
                     'args' => [],
                     'actions' => [],
-                    'childrenFingerprints' => self::parseJsonFromQuery($request, 'childrenFingerprints'),
+                    'children' => self::parseJsonFromQuery($request, 'children'),
+                    'propsFromParent' => self::parseJsonFromQuery($request, 'propsFromParent'),
                 ];
             } else {
                 $requestData = $request->toArray();
@@ -225,7 +228,8 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                     'updated' => $requestData['updated'] ?? [],
                     'args' => $requestData['args'] ?? [],
                     'actions' => $requestData['actions'] ?? [],
-                    'childrenFingerprints' => $requestData['childrenFingerprints'] ?? [],
+                    'children' => $requestData['children'] ?? [],
+                    'propsFromParent' => $requestData['propsFromParent'] ?? [],
                 ];
             }
 
@@ -336,14 +340,15 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             $component,
             $this->parseDataFor($request)['props'],
             $this->parseDataFor($request)['updated'],
-            $metadataFactory->getMetadata($componentName)
+            $metadataFactory->getMetadata($componentName),
+            $this->parseDataFor($request)['propsFromParent']
         );
 
         $mountedComponent = new MountedComponent($componentName, $component, $componentAttributes);
 
         $mountedComponent->addExtraMetadata(
             InterceptChildComponentRenderSubscriber::CHILDREN_FINGERPRINTS_METADATA_KEY,
-            $this->parseDataFor($request)['childrenFingerprints']
+            $this->parseDataFor($request)['children']
         );
 
         return $mountedComponent;

@@ -1,12 +1,18 @@
 import BackendRequest from './BackendRequest';
 import RequestBuilder from './RequestBuilder';
 
+export interface ChildrenFingerprints {
+    // key is the id of the child component
+    [key: string]: {fingerprint: string, tag: string}
+}
+
 export interface BackendInterface {
     makeRequest(
         props: any,
         actions: BackendAction[],
         updated: {[key: string]: any},
-        childrenFingerprints: any
+        children: ChildrenFingerprints,
+        updatedPropsFromParent: {[key: string]: any},
     ): BackendRequest;
 }
 
@@ -26,13 +32,15 @@ export default class implements BackendInterface {
         props: any,
         actions: BackendAction[],
         updated: {[key: string]: any},
-        childrenFingerprints: any
+        children: ChildrenFingerprints,
+        updatedPropsFromParent: {[key: string]: any},
     ): BackendRequest {
         const { url, fetchOptions } = this.requestBuilder.buildRequest(
             props,
             actions,
             updated,
-            childrenFingerprints
+            children,
+            updatedPropsFromParent
         );
 
         return new BackendRequest(

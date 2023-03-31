@@ -33,9 +33,10 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
     ) {
     }
 
-    public function renderChildComponent(string $deterministicId, string $currentPropsFingerprint, string $componentName, array $inputProps): string
+    public function renderChildComponent(string $deterministicId, string $currentPropsFingerprint, string $childTag, string $componentName, array $inputProps): string
     {
-        $newPropsFingerprint = $this->fingerprintCalculator->calculateFingerprint($inputProps);
+        $liveMetadata = $this->getLiveComponentMetadataFactory()->getMetadata($componentName);
+        $newPropsFingerprint = $this->fingerprintCalculator->calculateFingerprint($inputProps, $liveMetadata);
 
         if ($currentPropsFingerprint === $newPropsFingerprint) {
             // the props passed to create this child have *not* changed
@@ -44,7 +45,7 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
             $attributesCollection = $this->attributeHelperFactory->create();
             $attributesCollection->setLiveId($deterministicId);
 
-            return $this->createHtml($attributesCollection->toEscapedArray());
+            return $this->createHtml($attributesCollection->toEscapedArray(), $childTag);
         }
 
         /*
@@ -52,7 +53,7 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
          * Send back a fake element with:
          *      * data-live-id
          *      * data-live-fingerprint-value (new fingerprint)
-         *      * data-live-props-value (new READONLY dehydrated props)
+         *      * data-live-props-value (dehydrated props that "accept updates from parent")
          */
         $mounted = $this->getComponentFactory()->create($componentName, $inputProps);
         $attributesCollection = $this->getAttributesCreator()->attributesForRendering(
@@ -62,14 +63,12 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
             $deterministicId
         );
 
-        $liveMetadata = $this->getLiveComponentMetadataFactory()->getMetadata($componentName);
         $props = $attributesCollection->getProps();
 
-        // only send back the props that are marked as "read-only"
-        $readonlyDehydratedProps = array_intersect_key(
-            $props,
-            array_flip(array_merge($liveMetadata->getReadonlyPropPaths(), LiveComponentHydrator::getInternalPropNames()))
-        );
+        // only send back the props that are allowed to be updated from the parent
+        $readonlyDehydratedProps = $liveMetadata->getOnlyPropsThatAcceptUpdatesFromParent($props);
+        $readonlyDehydratedProps = $this->getLiveComponentHydrator()->addChecksumToData($readonlyDehydratedProps);
+
         $attributesCollection->setProps($readonlyDehydratedProps);
         $attributes = $attributesCollection->toEscapedArray();
         // optional, but these just aren't needed by the frontend at this point
@@ -77,20 +76,20 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
         unset($attributes['data-live-url-value']);
         unset($attributes['data-live-csrf-value']);
 
-        return $this->createHtml($attributes);
+        return $this->createHtml($attributes, $childTag);
     }
 
     /**
      * @param array<string, string> $attributes
      */
-    private function createHtml(array $attributes): string
+    private function createHtml(array $attributes, string $childTag): string
     {
         // transform attributes into an array of key="value" strings
         $attributes = array_map(function ($key, $value) {
             return sprintf('%s="%s"', $key, $value);
         }, array_keys($attributes), $attributes);
 
-        return sprintf('<div %s></div>', implode(' ', $attributes));
+        return sprintf('<%s %s></%s>', $childTag, implode(' ', $attributes), $childTag);
     }
 
     public static function getSubscribedServices(): array
