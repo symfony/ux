@@ -66,7 +66,7 @@ Finally, to load your Vue components, add the following lines to ``assets/app.js
     // they are not necessary.
     registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
 
-    // If you prefer to lazy-load your Vue.js controller components, in order to reduce to keep the JavaScript bundle the smallest as possible,
+    // If you prefer to lazy-load your Vue.js controller components, in order to keep the JavaScript bundle the smallest as possible,
     // and improve performance, you can use the following line instead:
     //registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/, 'lazy'));
 
