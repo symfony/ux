@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Metadata;
 
+use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\TwigComponent\ComponentFactory;
 
@@ -23,8 +24,10 @@ use Symfony\UX\TwigComponent\ComponentFactory;
  */
 class LiveComponentMetadataFactory
 {
-    public function __construct(private ComponentFactory $componentFactory)
-    {
+    public function __construct(
+        private ComponentFactory $componentFactory,
+        private PropertyTypeExtractorInterface $propertyTypeExtractor,
+    ) {
     }
 
     public function getMetadata(string $name): LiveComponentMetadata
@@ -42,7 +45,7 @@ class LiveComponentMetadataFactory
      *
      * @internal
      */
-    public static function createPropMetadatas(\ReflectionClass $class): array
+    public function createPropMetadatas(\ReflectionClass $class): array
     {
         $metadatas = [];
 
@@ -56,12 +59,25 @@ class LiveComponentMetadataFactory
                 continue;
             }
 
+            $collectionValueType = null;
+            $infoTypes = $this->propertyTypeExtractor->getTypes($class->getName(), $property->getName()) ?? [];
+            foreach ($infoTypes as $infoType) {
+                if ($infoType->isCollection()) {
+                    foreach ($infoType->getCollectionValueTypes() as $valueType) {
+                        $collectionValueType = $valueType;
+                        break;
+                    }
+                }
+            }
+
             $type = $property->getType();
             $metadatas[$property->getName()] = new LivePropMetadata(
                 $property->getName(),
                 $attribute->newInstance(),
                 $type ? $type->getName() : null,
                 $type ? $type->isBuiltin() : false,
+                $type ? $type->allowsNull() : true,
+                $collectionValueType,
             );
         }
 

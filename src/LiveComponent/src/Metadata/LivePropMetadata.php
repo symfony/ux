@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Metadata;
 
+use Symfony\Component\PropertyInfo\Type;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
 /**
@@ -27,6 +28,8 @@ final class LivePropMetadata
         private LiveProp $liveProp,
         private ?string $typeName,
         private bool $isBuiltIn,
+        private bool $allowsNull,
+        private ?Type $collectionValueType,
     ) {
     }
 
@@ -45,6 +48,11 @@ final class LivePropMetadata
         return $this->isBuiltIn;
     }
 
+    public function allowsNull(): bool
+    {
+        return $this->allowsNull;
+    }
+
     public function calculateFieldName(object $component, string $fallback): string
     {
         return $this->liveProp->calculateFieldName($component, $fallback);
@@ -58,17 +66,11 @@ final class LivePropMetadata
         return $this->liveProp->writablePaths();
     }
 
-    /**
-     * @internal
-     */
     public function hydrateMethod(): ?string
     {
         return $this->liveProp->hydrateMethod();
     }
 
-    /**
-     * @internal
-     */
     public function dehydrateMethod(): ?string
     {
         return $this->liveProp->dehydrateMethod();
@@ -82,5 +84,25 @@ final class LivePropMetadata
     public function acceptUpdatesFromParent(): bool
     {
         return $this->liveProp->acceptUpdatesFromParent();
+    }
+
+    public function useSerializerForHydration(): bool
+    {
+        return $this->liveProp->useSerializerForHydration();
+    }
+
+    public function serializationContext(): array
+    {
+        return $this->liveProp->serializationContext();
+    }
+
+    public function collectionValueType(): ?Type
+    {
+        return $this->collectionValueType;
+    }
+
+    public function getFormat(): ?string
+    {
+        return $this->liveProp->format();
     }
 }

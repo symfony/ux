@@ -30,6 +30,10 @@ final class LiveProp
 
     private ?string $dehydrateWith;
 
+    private bool $useSerializerForHydration;
+
+    private array $serializationContext;
+
     /**
      * The "frontend" field name that should be used for this property.
      *
@@ -44,27 +48,43 @@ final class LiveProp
     private bool $acceptUpdatesFromParent;
 
     /**
-     * @param bool|array $writable         If true, this property can be changed by the frontend.
-     *                                     Or set to an array of paths within this object/array
-     *                                     that are writable.
-     * @param bool       $updateFromParent if true, while a parent component is re-rendering,
-     *                                     if the parent passes in this prop and it changed
-     *                                     from the value used when originally rendering
-     *                                     this child, the value in the child will be updated
-     *                                     to match the new value and the child will be re-rendered
+     * @param bool|array  $writable                  If true, this property can be changed by the frontend.
+     *                                               Or set to an array of paths within this object/array
+     *                                               that are writable.
+     * @param bool        $useSerializerForHydration If true, the serializer will be used to
+     *                                               dehydrate then hydrate this property.
+     *                                               Incompatible with hydrateWith and dehydrateWith.
+     * @param string|null $format                    The format to be used if the value is a DateTime of some sort.
+     *                                               For example: 'Y-m-d H:i:s'. If this property is writable, set this
+     *                                               to the format that your frontend field will use/set.
+     * @param bool        $updateFromParent          if true, while a parent component is re-rendering,
+     *                                               if the parent passes in this prop and it changed
+     *                                               from the value used when originally rendering
+     *                                               this child, the value in the child will be updated
+     *                                               to match the new value and the child will be re-rendered
      */
     public function __construct(
         bool|array $writable = false,
         ?string $hydrateWith = null,
         ?string $dehydrateWith = null,
+        bool $useSerializerForHydration = false,
+        array $serializationContext = [],
         ?string $fieldName = null,
+        ?string $format = null,
         bool $updateFromParent = false
     ) {
         $this->writable = $writable;
         $this->hydrateWith = $hydrateWith;
         $this->dehydrateWith = $dehydrateWith;
+        $this->useSerializerForHydration = $useSerializerForHydration;
+        $this->serializationContext = $serializationContext;
         $this->fieldName = $fieldName;
+        $this->format = $format;
         $this->acceptUpdatesFromParent = $updateFromParent;
+
+        if ($this->useSerializerForHydration && ($this->hydrateWith || $this->dehydrateWith)) {
+            throw new \InvalidArgumentException('Cannot use useSerializerForHydration with hydrateWith or dehydrateWith.');
+        }
     }
 
     /**
@@ -112,6 +132,22 @@ final class LiveProp
     /**
      * @internal
      */
+    public function useSerializerForHydration(): bool
+    {
+        return $this->useSerializerForHydration;
+    }
+
+    /**
+     * @internal
+     */
+    public function serializationContext(): array
+    {
+        return $this->serializationContext;
+    }
+
+    /**
+     * @internal
+     */
     public function calculateFieldName(object $component, string $fallback): string
     {
         if (!$this->fieldName) {
@@ -123,6 +159,11 @@ final class LiveProp
         }
 
         return $this->fieldName;
+    }
+
+    public function format(): ?string
+    {
+        return $this->format;
     }
 
     public function acceptUpdatesFromParent(): bool

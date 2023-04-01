@@ -16,12 +16,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
 final class BlogPostWithSerializationContext
 {
     public function __construct(
-        #[Groups(['the_normalization_group', 'the_denormalization_group'])]
+        #[Groups(['the_serialization_group'])]
         public string $title = '',
-        #[Groups(['the_normalization_group', 'the_denormalization_group'])]
+        #[Groups(['the_serialization_group'])]
         public string $body = '',
-        #[Groups(['the_normalization_group'])]
-        public int $rating = 0,
         public int $price = 0,
     ) {
     }

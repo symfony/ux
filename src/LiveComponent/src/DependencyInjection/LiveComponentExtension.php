@@ -28,6 +28,8 @@ use Symfony\UX\LiveComponent\EventListener\InterceptChildComponentRenderSubscrib
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
 use Symfony\UX\LiveComponent\EventListener\ResetDeterministicIdSubscriber;
 use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
+use Symfony\UX\LiveComponent\Hydration\HydrationExtensionInterface;
+use Symfony\UX\LiveComponent\LiveComponentBundle;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\LiveResponder;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
@@ -40,6 +42,8 @@ use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
 use Symfony\UX\LiveComponent\Util\TwigAttributeHelperFactory;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
+
+use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -74,12 +78,14 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             }
         );
 
+        $container->registerForAutoconfiguration(HydrationExtensionInterface::class)
+            ->addTag(LiveComponentBundle::HYDRATION_EXTENSION_TAG);
+
         $container->register('ux.live_component.component_hydrator', LiveComponentHydrator::class)
             ->setArguments([
-                new Reference('serializer'),
+                tagged_iterator(LiveComponentBundle::HYDRATION_EXTENSION_TAG),
                 new Reference('property_accessor'),
-                new Reference('property_info'),
-                new Reference('serializer.mapping.class_metadata_factory'),
+                new Reference('serializer'),
                 '%kernel.secret%',
             ])
         ;
@@ -154,6 +160,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         $container->register('ux.live_component.metadata_factory', LiveComponentMetadataFactory::class)
             ->setArguments([
                 new Reference('ux.twig_component.component_factory'),
+                new Reference('property_info'),
             ])
         ;
 

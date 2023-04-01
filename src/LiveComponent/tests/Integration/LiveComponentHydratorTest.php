@@ -13,7 +13,6 @@ namespace Symfony\UX\LiveComponent\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Exception\HydrationException;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
@@ -22,16 +21,12 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component3;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\BlogPostWithSerializationContext;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Embeddable2;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsDateAndEntity;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsStringEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Money;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Temperature;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Embeddable1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ProductFixtureEntity;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\TodoItemFixtureEntity;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\TodoListFixtureEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\EmptyStringEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\IntEnum;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Enum\StringEnum;
@@ -64,7 +59,10 @@ final class LiveComponentHydratorTest extends KernelTestCase
         if (!$testBuilder instanceof HydrationTest) {
             throw new \InvalidArgumentException('Test case callable must return a HydrationTest instance.');
         }
-        $testCase = $testBuilder->getTest();
+
+        $metadataFactory = self::getContainer()->get('ux.live_component.metadata_factory');
+        \assert($metadataFactory instanceof LiveComponentMetadataFactory);
+        $testCase = $testBuilder->getTest($metadataFactory);
 
         // keep a copy of the original, empty component object for hydration later
         $originalComponentWithData = clone $testCase->component;
@@ -334,7 +332,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $entity2 = create(Entity2::class, ['embedded1' => new Embeddable1('bar'), 'embedded2' => new Embeddable2('baz')])->object();
 
             return HydrationTest::create(new class() {
-                #[LiveProp]
+                #[LiveProp(useSerializerForHydration: true)]
                 public Entity2 $entity2;
             })
                 ->mountWith(['entity2' => $entity2])
@@ -352,6 +350,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Non-Persisted entity: non-writable (de)hydrates correctly' => [function () {
             $product = new ProductFixtureEntity();
+            // set props: but these will be lost
             $product->name = 'original name';
             $product->price = 333;
 
@@ -362,11 +361,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             })
                 ->mountWith(['product' => $product])
                 ->assertDehydratesTo([
-                    'product' => [
-                        'id' => null,
-                        'name' => 'original name',
-                        'price' => 333,
-                    ],
+                    'product' => [],
                     'product.price' => 333,
                 ])
                 ->userUpdatesProps([
@@ -374,41 +369,10 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertNull($object->product->id);
-                    // from the denormalizing process
-                    $this->assertSame('original name', $object->product->name);
+                    // set value is lost: we simply reinstantiate the entity
+                    $this->assertSame('', $object->product->name);
                     // from the writable path sent by the user
                     $this->assertSame(1000, $object->product->price);
-                })
-            ;
-        }];
-
-        yield 'Non-Persisted entity with embedded entities (de)hydrates correctly' => [function () {
-            $list = new TodoListFixtureEntity('Cool stuff for today');
-            $item = new TodoItemFixtureEntity('Buy milk');
-            $list->addTodoItem($item);
-
-            return HydrationTest::create(new class() {
-                #[LiveProp]
-                public TodoListFixtureEntity $todoList;
-            })
-                ->mountWith(['todoList' => $list])
-                ->assertDehydratesTo([
-                    'todoList' => [
-                        'id' => null,
-                        'listTitle' => 'Cool stuff for today',
-                        'todoItems' => [
-                            [
-                                'id' => null,
-                                'name' => 'Buy milk',
-                                'todoList' => null,
-                            ],
-                        ],
-                    ],
-                ])
-                ->assertObjectAfterHydration(function (object $object) {
-                    $this->assertSame('Cool stuff for today', $object->todoList->listTitle);
-                    $this->assertCount(1, $object->todoList->getTodoItems());
-                    $this->assertSame('Buy milk', $object->todoList->getTodoItems()[0]->getName());
                 })
             ;
         }];
@@ -693,31 +657,33 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Array with objects: (de)hydrates correctly' => [function () {
-            $prod1 = new ProductFixtureEntity();
-            $prod1->name = 'item1';
+            $prod1 = create(ProductFixtureEntity::class, ['name' => 'item1'])->object();
             $prod2 = new ProductFixtureEntity();
-            $prod2->name = 'item2';
+            $prod3 = create(ProductFixtureEntity::class, ['name' => 'item3'])->object();
 
             return HydrationTest::create(new class() {
                 #[LiveProp()]
                 /** @var \Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ProductFixtureEntity[] */
                 public $products = [];
             })
-                ->mountWith(['products' => [$prod1, $prod2]])
+                ->mountWith(['products' => [$prod1, $prod2, $prod3]])
                 ->assertDehydratesTo([
-                    'products' => [
-                        ['id' => null, 'name' => 'item1', 'price' => 0],
-                        ['id' => null, 'name' => 'item2', 'price' => 0],
-                    ],
+                    'products' => [$prod1->id, [], $prod3->id],
                 ])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertSame(
                         'item1',
                         $object->products[0]->name
                     );
+                    // the non-persisted one is simply reinstantiated
+                    $this->assertInstanceOf(
+                        ProductFixtureEntity::class,
+                        $object->products[1],
+                    );
+                    $this->assertNull($object->products[1]->id);
                     $this->assertSame(
-                        'item2',
-                        $object->products[1]->name
+                        'item3',
+                        $object->products[2]->name
                     );
                 })
             ;
@@ -818,7 +784,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Object: using custom normalizer (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class() {
-                #[LiveProp]
+                #[LiveProp(useSerializerForHydration: true)]
                 public Money $money;
             })
                 ->mountWith(['money' => new Money(500, 'CAD')])
@@ -834,7 +800,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Object: dehydrates to array works correctly' => [function () {
             return HydrationTest::create(new class() {
-                #[LiveProp]
+                #[LiveProp(useSerializerForHydration: true)]
                 public Temperature $temperature;
             })
                 ->mountWith(['temperature' => new Temperature(30, 'C')])
@@ -850,92 +816,6 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 })
             ;
         }];
-
-        yield 'Object: Embeddable object (de)hydrates correctly' => [function () {
-            return HydrationTest::create(new class() {
-                #[LiveProp]
-                public Embeddable1 $embeddable1;
-            })
-                ->mountWith(['embeddable1' => new Embeddable1('foo')])
-                ->assertDehydratesTo([
-                    'embeddable1' => [
-                        'name' => 'foo',
-                    ],
-                ])
-                ->assertObjectAfterHydration(function (object $object) {
-                    $this->assertSame('foo', $object->embeddable1->name);
-                })
-            ;
-        }];
-
-        yield 'Object: writable property that requires (de)normalization works correctly' => [function () {
-            $product = create(ProductFixtureEntity::class, [
-                'name' => 'foo',
-                'price' => 100,
-            ])->object();
-            $product2 = create(ProductFixtureEntity::class, [
-                'name' => 'bar',
-                'price' => 500,
-            ])->object();
-            \assert($product instanceof ProductFixtureEntity);
-            $holdsDate = new HoldsDateAndEntity(
-                new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York')),
-                $product
-            );
-
-            return HydrationTest::create(new class() {
-                #[LiveProp(writable: ['createdAt', 'product'])]
-                public HoldsDateAndEntity $holdsDate;
-            })
-                ->mountWith(['holdsDate' => $holdsDate])
-                ->assertDehydratesTo([
-                    'holdsDate' => [
-                        'createdAt' => '2023-03-05T09:23:00-05:00',
-                        'product' => $product->id,
-                    ],
-                    'holdsDate.createdAt' => '2023-03-05T09:23:00-05:00',
-                    'holdsDate.product' => $product->id,
-                ])
-                ->userUpdatesProps([
-                    // change these: their values should dehydrate and be used
-                    'holdsDate.createdAt' => '2022-01-01T09:23:00-05:00',
-                    'holdsDate.product' => $product2->id,
-                ])
-                ->assertObjectAfterHydration(function (object $object) use ($product2) {
-                    $this->assertSame(
-                        '2022-01-01 09:23:00',
-                        $object->holdsDate->createdAt->format('Y-m-d H:i:s')
-                    );
-                    $this->assertSame(
-                        $product2->id,
-                        $object->holdsDate->product->id,
-                    );
-                })
-            ;
-        }];
-
-        yield 'Object: writable property that with invalid enum property coerced to null' => [function () {
-            $holdsStringEnum = new HoldsStringEnum(StringEnum::ACTIVE);
-
-            return HydrationTest::create(new class() {
-                #[LiveProp(writable: ['stringEnum'])]
-                public HoldsStringEnum $holdsStringEnum;
-            })
-                ->mountWith(['holdsStringEnum' => $holdsStringEnum])
-                ->assertDehydratesTo([
-                    'holdsStringEnum' => ['stringEnum' => 'active'],
-                    'holdsStringEnum.stringEnum' => 'active',
-                ])
-                ->userUpdatesProps([
-                    'holdsStringEnum.stringEnum' => 'not_real',
-                ])
-                ->assertObjectAfterHydration(function (object $object) {
-                    $this->assertNull(
-                        $object->holdsStringEnum->stringEnum,
-                    );
-                })
-            ;
-        }, 80100];
 
         yield 'Updating non-writable path is rejected' => [function () {
             $product = new ProductFixtureEntity();
@@ -969,31 +849,19 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Context: Pass (de)normalization context' => [function () {
             return HydrationTest::create(new class() {
-                #[LiveProp]
-                #[Context(
-                    normalizationContext: ['groups' => ['foo']],
-                    denormalizationContext: ['groups' => ['bar']],
-                )]
+                #[LiveProp(serializationContext: ['groups' => 'foo'])]
                 public string $name;
 
-                #[LiveProp]
-                #[Context(
-                    normalizationContext: ['groups' => ['foo']],
-                    denormalizationContext: ['groups' => ['bar']],
-                )]
+                #[LiveProp(useSerializerForHydration: true, serializationContext: ['groups' => 'foo'])]
                 public \DateTimeInterface $createdAt;
 
-                #[LiveProp]
-                #[Context(
-                    normalizationContext: ['groups' => ['the_normalization_group']],
-                    denormalizationContext: ['groups' => ['the_denormalization_group']],
-                )]
+                #[LiveProp(useSerializerForHydration: true, serializationContext: ['groups' => 'the_serialization_group'])]
                 public BlogPostWithSerializationContext $blogPost;
             })
                 ->mountWith([
                     'name' => 'Ryan',
                     'createdAt' => new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York')),
-                    'blogPost' => new BlogPostWithSerializationContext('the_title', 'the_body', 5, 2500),
+                    'blogPost' => new BlogPostWithSerializationContext('the_title', 'the_body', 2500),
                 ])
                 ->assertDehydratesTo([
                     'name' => 'Ryan',
@@ -1002,7 +870,6 @@ final class LiveComponentHydratorTest extends KernelTestCase
                         // price is not in the normalization groups
                         'title' => 'the_title',
                         'body' => 'the_body',
-                        'rating' => 5,
                     ],
                 ])
                 ->assertObjectAfterHydration(function (object $object) {
@@ -1010,100 +877,77 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     $this->assertSame('2023-03-05 09:23:00', $object->createdAt->format('Y-m-d H:i:s'));
                     $this->assertSame('the_title', $object->blogPost->title);
                     $this->assertSame('the_body', $object->blogPost->body);
-                    // rating is not in the denormalization groups
-                    $this->assertSame(0, $object->blogPost->rating);
                     // price wasn't even sent, so it's null
                     $this->assertSame(0, $object->blogPost->price);
                 })
             ;
         }];
-    }
 
-    public function testWritableObjectsDehydratedToArrayIsNotAllowed(): void
-    {
-        $component = new class() {
-            #[LiveProp(writable: true, dehydrateWith: 'dehydrateDate')]
-            public \DateTime $createdAt;
+        yield 'It is valid to dehydrate to a fully-writable array' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true, dehydrateWith: 'dehydrateDate', hydrateWith: 'hydrateDate')]
+                public \DateTime $createdAt;
 
-            public function __construct()
-            {
-                $this->createdAt = new \DateTime();
-            }
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime();
+                }
 
-            public function dehydrateDate()
-            {
-                return ['year' => 2023, 'month' => 02];
-            }
-        };
+                public function dehydrateDate()
+                {
+                    return [
+                        'year' => $this->createdAt->format('Y'),
+                        'month' => $this->createdAt->format('m'),
+                    ];
+                }
 
-        $this->expectException(BadRequestHttpException::class);
-        $this->expectExceptionMessageMatches('/The LiveProp path "createdAt" is an object that was dehydrated to an array/');
-        $this->expectExceptionMessageMatches('/You probably want to set writable to only the properties on your class that should be writable/');
-        $this->hydrator()->dehydrate(
-            $component,
-            new ComponentAttributes([]),
-            $this->createLiveMetadata($component)
-        );
-    }
+                public function hydrateDate($data)
+                {
+                    return \DateTime::createFromFormat(
+                        'Y-m',
+                        sprintf('%s-%s', $data['year'], $data['month'])
+                    );
+                }
+            })
+                ->mountWith([
+                   'createdAt' => new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York')),
+               ])
+                ->assertDehydratesTo([
+                   'createdAt' => ['year' => 2023, 'month' => 3],
+               ])
+                ->userUpdatesProps([
+                   'createdAt' => ['year' => 2024, 'month' => 4],
+               ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame('2024-04', $object->createdAt->format('Y-m'));
+                })
+            ;
+        }];
 
-    public function testWritablePathObjectsDehydratedToArrayIsNotAllowed(): void
-    {
-        $component = new class() {
-            #[LiveProp(writable: ['product'])]
-            public HoldsDateAndEntity $holdsDateAndEntity;
+        yield 'Use the format option to control the date format' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true, format: 'Y-m-d')]
+                public \DateTime $createdAt;
 
-            public function __construct()
-            {
-                $this->holdsDateAndEntity = new HoldsDateAndEntity(
-                    new \DateTime(),
-                    // non-persisted entity will dehydrate to an array
-                    new ProductFixtureEntity(),
-                );
-            }
-        };
-
-        $this->expectException(BadRequestHttpException::class);
-        $this->expectExceptionMessageMatches('/The LiveProp path "holdsDateAndEntity.product" is an object that was dehydrated to an array/');
-        $this->hydrator()->dehydrate(
-            $component,
-            new ComponentAttributes([]),
-            $this->createLiveMetadata($component)
-        );
-    }
-
-    public function testCircularReferencesAreAvoided(): void
-    {
-        $component = new class() {
-            #[LiveProp()]
-            public TodoListFixtureEntity $todoList;
-        };
-
-        $list = new TodoListFixtureEntity('My Todo List');
-        $item = new TodoItemFixtureEntity('Roll the trash can around for awhile');
-        $list->addTodoItem($item);
-        $component->todoList = $list;
-
-        $dehydratedProps = $this->hydrator()->dehydrate(
-            $component,
-            new ComponentAttributes([]),
-            $this->createLiveMetadata($component)
-        );
-
-        $actualProps = $dehydratedProps->getProps();
-        unset($actualProps['@checksum']);
-        $this->assertSame([
-            'todoList' => [
-                'todoItems' => [
-                    [
-                        'todoList' => null,
-                        'name' => 'Roll the trash can around for awhile',
-                        'id' => null,
-                    ],
-                ],
-                'id' => null,
-                'listTitle' => 'My Todo List',
-            ],
-        ], $actualProps);
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime();
+                }
+            })
+                ->mountWith([
+                   'createdAt' => new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York')),
+               ])
+                ->assertDehydratesTo([
+                   'createdAt' => '2023-03-05',
+               ])
+                ->userUpdatesProps([
+                   'createdAt' => '2024-04-06',
+               ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame('2024-04-06', $object->createdAt->format('Y-m-d'));
+                })
+            ;
+        }];
     }
 
     public function testPassingArrayToWritablePropForHydrationIsNotAllowed(): void
@@ -1125,43 +969,9 @@ final class LiveComponentHydratorTest extends KernelTestCase
         );
 
         $this->expectException(BadRequestHttpException::class);
-        $this->expectExceptionMessageMatches('/The model path "createdAt" was sent as an array, but this could not be hydrated to an object as that is not allowed/');
+        $this->expectExceptionMessageMatches('/The model path "createdAt" was sent an invalid data type "array"/');
 
         $updatedProps = ['createdAt' => ['year' => 2023, 'month' => 2]];
-
-        $this->hydrator()->hydrate(
-            $component,
-            $dehydratedProps->getProps(),
-            $updatedProps,
-            $this->createLiveMetadata($component),
-        );
-    }
-
-    public function testPassingArrayToWritablePathForHydrationIsNotAllowed(): void
-    {
-        $component = new class() {
-            #[LiveProp(writable: ['product'])]
-            public HoldsDateAndEntity $holdsDateAndEntity;
-
-            public function __construct()
-            {
-                $this->holdsDateAndEntity = new HoldsDateAndEntity(
-                    new \DateTime(),
-                    create(ProductFixtureEntity::class)->object()
-                );
-            }
-        };
-
-        $dehydratedProps = $this->hydrator()->dehydrate(
-            $component,
-            new ComponentAttributes([]),
-            $this->createLiveMetadata($component)
-        );
-
-        $this->expectException(BadRequestHttpException::class);
-        $this->expectExceptionMessageMatches('/The model path "holdsDateAndEntity.product" was sent as an array, but this could not be hydrated to an object as that is not allowed/');
-
-        $updatedProps = ['holdsDateAndEntity.product' => ['name' => 'new name']];
 
         $this->hydrator()->hydrate(
             $component,
@@ -1222,38 +1032,9 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     'product.price' => 'bananas',
                 ])
                 ->assertObjectAfterHydration(function (object $object) {
-                    // change rejected
+                    // changes rejected
                     $this->assertSame('oranges', $object->product->name);
-                    // bananas is coerced to 0
-                    $this->assertSame(0, $object->product->price);
-                });
-        }];
-
-        yield 'nullable_properties_that_cannot_set_null_are_rejected_but_no_error' => [function () {
-            $todoList = create(TodoListFixtureEntity::class, [
-                'listTitle' => 'My Todo List',
-            ])->object();
-            \assert($todoList instanceof TodoListFixtureEntity);
-            // make an item with a null "name"
-            // but, the setName() method does not allow null
-            $todoItem = new TodoItemFixtureEntity();
-            $todoList->addTodoItem($todoItem);
-
-            return HydrationTest::create(new class() {
-                #[LiveProp()]
-                public TodoItemFixtureEntity $todoItem;
-            })
-                ->mountWith(['todoItem' => $todoItem])
-                ->assertDehydratesTo([
-                    'todoItem' => [
-                        'todoList' => $todoList->id,
-                        'name' => null,
-                        'id' => null,
-                    ],
-                ])
-                ->assertObjectAfterHydration(function (object $component) use ($todoList) {
-                    $this->assertSame($todoList, $component->todoItem->getTodoList());
-                    $this->assertNull($component->todoItem->getName());
+                    $this->assertSame(199, $object->product->price);
                 });
         }];
 
@@ -1264,28 +1045,25 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
                 #[LiveProp(writable: true)]
                 public IntEnum $nonNullableInt;
-
-                #[LiveProp(writable: ['stringEnum'])]
-                public HoldsStringEnum $holdsStringEnum;
             })
                 ->mountWith([
                     'nullableInt' => IntEnum::LOW,
                     'nonNullableInt' => IntEnum::LOW,
-                    'holdsStringEnum' => new HoldsStringEnum(StringEnum::ACTIVE),
+                ])
+                ->assertDehydratesTo([
+                    'nullableInt' => 1,
+                    'nonNullableInt' => 1,
                 ])
                 ->userUpdatesProps([
                     // not a real option
                     'nullableInt' => 500,
                     'nonNullableInt' => 500,
-                    'holdsStringEnum.stringEnum' => 'not a real option',
                 ])
                 ->assertObjectAfterHydration(function (object $object) {
                     // nullable int becomes null
                     $this->assertNull($object->nullableInt);
                     // non-nullable change is rejected (1=LOW)
                     $this->assertSame(1, $object->nonNullableInt->value);
-                    // writable path change is rejected
-                    $this->assertNull($object->holdsStringEnum->stringEnum);
                 });
         }, 80100];
     }
@@ -1489,7 +1267,9 @@ final class LiveComponentHydratorTest extends KernelTestCase
     private function createLiveMetadata(object $component): LiveComponentMetadata
     {
         $reflectionClass = new \ReflectionClass($component);
-        $livePropsMetadata = LiveComponentMetadataFactory::createPropMetadatas($reflectionClass);
+        $metadataFactory = self::getContainer()->get('ux.live_component.metadata_factory');
+        \assert($metadataFactory instanceof LiveComponentMetadataFactory);
+        $livePropsMetadata = $metadataFactory->createPropMetadatas($reflectionClass);
 
         return new LiveComponentMetadata(
             new ComponentMetadata(['key' => '__testing']),
@@ -1511,15 +1291,12 @@ class HydrationTest
 
     private function __construct(
         private object $component,
-        private array $propMetadatas,
     ) {
     }
 
     public static function create(object $component): self
     {
-        $reflectionClass = new \ReflectionClass($component);
-
-        return new self($component, LiveComponentMetadataFactory::createPropMetadatas($reflectionClass));
+        return new self($component);
     }
 
     public function mountWith(array $props): self
@@ -1564,13 +1341,15 @@ class HydrationTest
         return $this;
     }
 
-    public function getTest(): HydrationTestCase
+    public function getTest(LiveComponentMetadataFactory $metadataFactory): HydrationTestCase
     {
+        $reflectionClass = new \ReflectionClass($this->component);
+
         return new HydrationTestCase(
             $this->component,
             new LiveComponentMetadata(
                 new ComponentMetadata(['key' => '__testing']),
-                $this->propMetadatas,
+                $metadataFactory->createPropMetadatas($reflectionClass),
             ),
             $this->inputProps,
             $this->expectedDehydratedProps,

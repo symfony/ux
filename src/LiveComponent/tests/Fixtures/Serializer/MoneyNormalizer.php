@@ -36,4 +36,9 @@ final class MoneyNormalizer implements NormalizerInterface, DenormalizerInterfac
     {
         return $data instanceof Money;
     }
+
+    public function getSupportedTypes(?string $format): array
+    {
+        return [Money::class => true];
+    }
 }
