@@ -24,6 +24,8 @@ use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 use Symfony\UX\TwigComponent\Twig\ComponentExtension;
+use Symfony\UX\TwigComponent\Twig\ComponentLexer;
+use Symfony\UX\TwigComponent\Twig\TwigEnvironmentConfigurator;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -73,5 +75,11 @@ final class TwigComponentExtension extends Extension
             ->addTag('container.service_subscriber', ['key' => ComponentRenderer::class, 'id' => 'ux.twig_component.component_renderer'])
             ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
         ;
+
+        $container->register('ux.twig_component.twig.lexer', ComponentLexer::class);
+
+        $container->register('ux.twig_component.twig.environment_configurator', TwigEnvironmentConfigurator::class)
+            ->setDecoratedService(new Reference('twig.configurator.environment'))
+            ->setArguments([new Reference('ux.twig_component.twig.environment_configurator.inner')]);
     }
 }

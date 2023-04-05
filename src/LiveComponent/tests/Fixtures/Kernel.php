@@ -26,6 +26,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\MoneyNormalizer;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Environment;
 use Zenstruck\Foundry\ZenstruckFoundryBundle;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -112,6 +113,8 @@ final class Kernel extends BaseKernel
             ->set(MoneyNormalizer::class)->autoconfigure()->autowire()
             ->set(Entity2Normalizer::class)->autoconfigure()->autowire()
             ->load(__NAMESPACE__.'\\Component\\', __DIR__.'/Component')
+            ->set(TestingDeterministicIdTwigExtension::class)
+                ->args([service('ux.live_component.deterministic_id_calculator')])
         ;
     }
 

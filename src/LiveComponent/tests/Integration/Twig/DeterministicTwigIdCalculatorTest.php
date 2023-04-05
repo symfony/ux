@@ -14,35 +14,15 @@ namespace Symfony\UX\LiveComponent\Tests\Integration;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
 use Twig\Environment;
-use Twig\Extension\AbstractExtension;
-use Twig\TwigFunction;
 
 final class DeterministicTwigIdCalculatorTest extends KernelTestCase
 {
     public function testReturnsDeterministicId(): void
     {
-        $deterministicIdCalculator = new DeterministicTwigIdCalculator();
-        $twigExtension = new class($deterministicIdCalculator) extends AbstractExtension {
-            public function __construct(private DeterministicTwigIdCalculator $deterministicIdCalculator)
-            {
-            }
-
-            public function getFunctions(): array
-            {
-                return [
-                    new TwigFunction('get_id_for_test', [$this, 'getIdForTest']),
-                ];
-            }
-
-            public function getIdForTest(): string
-            {
-                return $this->deterministicIdCalculator->calculateDeterministicId();
-            }
-        };
-
         /** @var Environment $twig */
         $twig = self::getContainer()->get('twig');
-        $twig->addExtension($twigExtension);
+        /** @var DeterministicTwigIdCalculator $deterministicIdCalculator */
+        $deterministicIdCalculator = self::getContainer()->get('ux.live_component.deterministic_id_calculator');
 
         $rendered = $twig->render('deterministic_id.html.twig');
         $this->assertStringContainsString('Deterministic Id Line1-1: "live-3860148629-0"', $rendered);
