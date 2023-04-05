@@ -1714,7 +1714,7 @@ Override the specific block for comment items:
     {%- block _blog_post_form_comments_entry_row -%}
         <li class="...">
             {{ form_row(form.content, { label: false }) }}
-            {{ form_row(button_delete_prototype, { label: 'X', attr: { class: 'btn btn-outline-danger' } }) }}
+            {{ form_row(button_delete, { label: 'X', attr: { class: 'btn btn-outline-danger' } }) }}
         </li>
     {% endblock %}
 
