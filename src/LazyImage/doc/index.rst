@@ -38,7 +38,7 @@ The default usage of Symfony UX LazyImage is to use its Stimulus
 controller to first load a small placeholder image that will then be
 replaced by the high-definition version once the page has been rendered:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <img
         src="{{ asset('image/small.png') }}"
@@ -58,7 +58,7 @@ larger image, the ``src`` attribute will change to ``image/large.png``.
 There is also support for the ``srcset`` attribute by passing an
 ``srcset`` value to the controller:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <img
         src="{{ asset('image/small.png') }}"
@@ -81,7 +81,7 @@ Instead of using a generated thumbnail that would exist on your
 filesystem, you can use the BlurHash algorithm to create a light,
 blurred, data-uri thumbnail of the image:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <img
         src="{{ data_uri_thumbnail('public/image/large.png', 100, 75) }}"
@@ -140,7 +140,7 @@ custom Stimulus controller:
 
 Then in your template, add your controller to the HTML attribute:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <img
         src="{{ data_uri_thumbnail('public/image/large.png', 100, 75) }}"
@@ -158,9 +158,9 @@ Then in your template, add your controller to the HTML attribute:
 
 ..
 
-   **Note**: be careful to add your controller **before** the LazyImage
-   controller so that it is executed before and can listen on the
-   ``lazy-image:connect`` event properly.
+    **Note**: be careful to add your controller **before** the LazyImage
+    controller so that it is executed before and can listen on the
+    ``lazy-image:connect`` event properly.
 
 Backward Compatibility promise
 ------------------------------

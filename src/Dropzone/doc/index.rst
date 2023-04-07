@@ -80,6 +80,7 @@ switching the ``@symfony/ux-dropzone/src/style.css`` autoimport to
     }
 
 .. note::
+
    *Note*: you should put the value to ``false`` and not remove the line
    so that Symfony Flex won’t try to add the line again in the future.
 

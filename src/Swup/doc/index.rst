@@ -43,7 +43,7 @@ this swap, it is therefore able to animate a transition between pages.
 The main usage of Symfony UX Swup is to use its Stimulus controller to
 initialize Swup:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <html lang="en">
         <head>
@@ -74,7 +74,7 @@ it will only swap the content of this container from one page to
 another. If you wish, you can configure additional containers, for
 instance to have a navigation menu that updates when changing pages:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <html lang="en">
         <head>
@@ -105,7 +105,7 @@ You can configure several other options using values on the controller.
 Most of these correspond to `Swup Options`_, but there are a few extra
 added:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <html lang="en">
         <head>
@@ -170,7 +170,7 @@ Stimulus controller:
 
 Then in your template, add your controller to the HTML attribute:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <html lang="en">
         <head>

@@ -77,7 +77,7 @@ All options and data are provided as-is to Chart.js. You can read
 Once created in PHP, a chart can be displayed using Twig if installed
 (requires `Symfony Webpack Encore`_):
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {{ render_chart(chart) }}
 

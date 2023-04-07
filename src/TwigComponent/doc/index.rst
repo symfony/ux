@@ -21,7 +21,7 @@ Every component consists of (1) a class::
 
 And (2) a corresponding template:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/alert.html.twig #}
     <div class="alert alert-{{ type }}">
@@ -81,7 +81,7 @@ live in ``templates/components/{component_name}.html.twig``, where
 ``{component_name}`` is whatever you passed as the first argument to the
 ``AsTwigComponent`` class attribute:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/alert.html.twig #}
     <div class="alert alert-success">
@@ -131,7 +131,7 @@ Use them to render the two new properties:
     The ability to reference local variables in the template (e.g. ``message``) was added in TwigComponents 2.1.
     Previously, all data needed to be referenced through ``this`` (e.g. ``this.message``).
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div class="alert alert-{{ type }}">
         {{ message }}
@@ -241,7 +241,6 @@ If you need to modify/validate data before it's *mounted* on the
 component use a ``PreMount`` hook::
 
     // src/Components/AlertComponent.php
-
     use Symfony\UX\TwigComponent\Attribute\PreMount;
     // ...
 
@@ -287,7 +286,6 @@ method accepts the extra data as an argument and must return an array. If
 the returned array is empty, the exception will be avoided::
 
     // src/Components/AlertComponent.php
-
     use Symfony\UX\TwigComponent\Attribute\PostMount;
     // ...
 
@@ -318,7 +316,6 @@ creating the ``alert`` component::
 You can handle this prop via a ``#[PostMount]`` hook::
 
     // src/Components/AlertComponent.php
-
     #[AsTwigComponent('alert')]
     class AlertComponent
     {
@@ -367,7 +364,7 @@ template (``someProp`` vs ``this.someProp``, ``someMethod`` vs ``this.someMethod
 Properties must be *accessible* (have a getter). Methods *cannot have*
 required parameters.
 
-.. code-block:: php
+.. code-block::
 
     // ...
     use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
@@ -467,10 +464,9 @@ normal. This example assumes you have a ``Product`` Doctrine entity and
 In the template, the ``getProducts()`` method can be accessed via
 ``this.products``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/featured_products.html.twig #}
-
     <div>
         <h3>Featured Products</h3>
 
@@ -520,10 +516,9 @@ call ``computed.products`` in your template. ``computed`` is a proxy
 that wraps your component and caches the return of methods. If they
 are called additional times, the cached value is used.
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/featured_products.html.twig #}
-
     <div>
         <h3>Featured Products</h3>
 
@@ -558,17 +553,16 @@ component's template.
 To use, in your component's template, render the ``attributes`` variable in
 the root element:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/my_component.html.twig #}
-
     <div{{ attributes }}>
       My Component!
     </div>
 
 When rendering the component, you can pass an array of html attributes to add:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {{ component('my_component', { class: 'foo', style: 'color:red' }) }}
 
@@ -579,7 +573,7 @@ When rendering the component, you can pass an array of html attributes to add:
 
 Set an attribute's value to ``true`` to render just the attribute name:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/my_component.html.twig #}
     <input{{ attributes}}/>
@@ -592,7 +586,7 @@ Set an attribute's value to ``true`` to render just the attribute name:
 
 Set an attribute's value to ``false`` to exclude the attribute:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/my_component.html.twig #}
     <input{{ attributes}}/>
@@ -609,7 +603,7 @@ Set an attribute's value to ``false`` to exclude the attribute:
 
 To add a custom Stimulus controller to your root component element:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div {{ attributes.add(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
 
@@ -630,10 +624,9 @@ In your component template, you can set defaults that are merged with
 passed attributes. The passed attributes override the default with
 the exception of *class*. For ``class``, the defaults are prepended:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/my_component.html.twig #}
-
     <button{{ attributes.defaults({ class: 'bar', type: 'button' }) }}>Save</button>
 
     {# render component #}
@@ -653,10 +646,9 @@ Only
 
 Extract specific attributes and discard the rest:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/my_component.html.twig #}
-
     <div{{ attributes.only('class') }}>
       My Component!
     </div>
@@ -674,10 +666,9 @@ Without
 
 Exclude specific attributes:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/my_component.html.twig #}
-
     <div{{ attributes.without('class') }}>
       My Component!
     </div>
@@ -784,10 +775,9 @@ similar to Twig's native `embed tag`_.
 Consider a data table component. You pass it headers and rows but can expose
 blocks for the cells and an optional footer:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/data_table.html.twig #}
-
     <div{{ attributes.defaults({class: 'data-table'}) }}>
         <table>
             <thead>
@@ -817,10 +807,9 @@ blocks for the cells and an optional footer:
 When rendering, you can override the ``th_class``, ``td_class``, and ``footer`` blocks.
 The ``with`` data is what's mounted on the component object.
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/some_page.html.twig #}
-
     {% component table with {headers: ['key', 'value'], data: [[1, 2], [3, 4]]} %}
         {% block th_class %}{{ parent() }} text-bold{% endblock %}
 

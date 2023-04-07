@@ -303,7 +303,6 @@ To use another route, first declare it:
 Then specify this new route on the attribute::
 
     // src/Form/FoodAutocompleteField.php
-
     #[AsEntityAutocompleteField(route: 'ux_entity_autocomplete_admin')]
     class FoodAutocompleteField
     // ...
@@ -470,7 +469,7 @@ This library comes with a Stimulus controller that can activate
 Tom Select on any ``select`` or ``input`` element. This can be used
 outside of the Form component. For example:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <select
         name="food"
@@ -481,7 +480,7 @@ That's it! If you want the options to be autocompleted via
 Ajax, pass a ``url`` value, which works well if you create
 a :ref:`custom autocompleter <custom-autocompleter>`:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <select
         name="food"
