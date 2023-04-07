@@ -46,7 +46,7 @@ final class EntityAutocompleteController
         if ($data->hasNextPage) {
             $parameters = array_merge($request->attributes->all('_route_params'), $request->query->all(), ['page' => $page + 1]);
 
-            $nextPage = $this->urlGenerator->generate($request->attributes->get('_route'), $parameters, UrlGeneratorInterface::ABSOLUTE_URL);
+            $nextPage = $this->urlGenerator->generate($request->attributes->get('_route'), $parameters);
         }
 
         return new JsonResponse([
