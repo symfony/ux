@@ -449,7 +449,7 @@ By default, the user can't change the *properties* of an object ``LiveProp``
         public Post $post;
 
         #[LiveProp(writable: ['allow_markdown'])]
-        public array $options = ['allow_markdown' => true, 'allow_html' => false]
+        public array $options = ['allow_markdown' => true, 'allow_html' => false];
     }
 
 Now ``post.title``, ``post.content`` or ``options.allow_markdown`` can be used like
@@ -476,11 +476,17 @@ Any other properties on the object (or keys on the array) will be read-only.
 For arrays, you can set ``writable: true`` to allow *any* key in the array to be
 changed, added or removed::
 
-    #[LiveProp(writable: true)]
-    public array $options = ['allow_markdown' => true, 'allow_html' => false];
+    #[AsLiveComponent('edit_post')]
+    class EditPostComponent
+    {
+        // ...
 
-    #[LiveProp(writable: true)]
-    public array $todoItems = ['Train tiger', 'Feed tiger', 'Pet tiger'];
+        #[LiveProp(writable: true)]
+        public array $options = ['allow_markdown' => true, 'allow_html' => false];
+
+        #[LiveProp(writable: true)]
+        public array $todoItems = ['Train tiger', 'Feed tiger', 'Pet tiger'];
+    }
 
 .. note::
 
@@ -496,11 +502,15 @@ Checkboxes, Select Elements Radios & Arrays
 
 Checkboxes can be used to set a boolean or an array of strings::
 
-    #[LiveProp(writable: true)]
-    public bool $agreeToTerms = false;
+    #[AsLiveComponent('edit_post')]
+    class EditPostComponent
+    {
+        #[LiveProp(writable: true)]
+        public bool $agreeToTerms = false;
 
-    #[LiveProp(writable: true)]
-    public array $foods = ['pizza', 'tacos'];
+        #[LiveProp(writable: true)]
+        public array $foods = ['pizza', 'tacos'];
+    }
 
 In the template, setting a ``value`` attribute on the checkbox will set that
 value on checked. If no ``value`` is set, the checkbox will set a boolean value:
@@ -516,11 +526,17 @@ value on checked. If no ``value`` is set, the checkbox will set a boolean value:
 ``select`` and ``radio`` elements are a bit easier: use these to either set a
 single value or an array of values::
 
-    #[LiveProp(writable: true)]
-    public string $meal = 'lunch';
+    #[AsLiveComponent('edit_post')]
+    class EditPostComponent
+    {
+        // ...
 
-    #[LiveProp(writable: true)]
-    public array $foods = ['pizza', 'tacos'];
+        #[LiveProp(writable: true)]
+        public string $meal = 'lunch';
+
+        #[LiveProp(writable: true)]
+        public array $foods = ['pizza', 'tacos'];
+    }
 
 .. code-block:: twig
 
@@ -550,8 +566,14 @@ the user to switch the *entity* to another? For example:
 
 To make the ``post`` property itself writable, use ``writable: true``::
 
-    #[LiveProp(writable: true)]
-    public Post $post;
+    use App\Entity\Post;
+
+    #[AsLiveComponent('edit_post')]
+    class EditPostComponent
+    {
+        #[LiveProp(writable: true)]
+        public Post $post;
+    }
 
 .. caution::
 
@@ -562,8 +584,14 @@ To make the ``post`` property itself writable, use ``writable: true``::
 If you want the user to be able to change the ``Post`` *and* certain
 properties, use the special ``LiveProp::IDENTITY`` constant::
 
-    #[LiveProp(writable: [LiveProp::IDENTITY, 'title', 'content'])]
-    public Post $post;
+    use App\Entity\Post;
+
+    #[AsLiveComponent('edit_post')]
+    class EditPostComponent
+    {
+        #[LiveProp(writable: [LiveProp::IDENTITY, 'title', 'content'])]
+        public Post $post;
+    }
 
 Note that being able to change the "identity" of an object is something
 that works only for objects that are dehydrated to a scalar value (like
@@ -579,9 +607,15 @@ when they are sent back to the backend.
 If needed, you can control the normalization or denormalization context using
 the ``Context`` attribute from Symfony's serializer::
 
-    #[LiveProp]
-    #[Context(groups: ['my_group'])]
-    public Post $post;
+    use App\Entity\Post;
+
+    #[AsLiveComponent('edit_post')]
+    class EditPostComponent
+    {
+        #[LiveProp]
+        #[Context(groups: ['my_group'])]
+        public Post $post;
+    }
 
 .. note::
 
@@ -1644,17 +1678,19 @@ Here are some examples of these techniques.
 If you only want to customize some attributes, the simplest to use the options in the form type::
 
     // ...
-    ->add('comments', LiveCollectionType::class, [
-        'entry_type' => CommentFormType::class,
-        'label' => false,
-        'button_delete_options' => [
-            'label' => 'X',
-            'attr' => [
-                'class' => 'btn btn-outline-danger',
-            ],
-        ]
-    ])
-    // ...
+    $builder
+        // ...
+        ->add('comments', LiveCollectionType::class, [
+            'entry_type' => CommentFormType::class,
+            'label' => false,
+            'button_delete_options' => [
+                'label' => 'X',
+                'attr' => [
+                    'class' => 'btn btn-outline-danger',
+                ],
+            ]
+        ])
+    ;
 
 Inline rendering:
 
@@ -2014,7 +2050,7 @@ There are three ways to emit an event:
 
     class MyComponent
     {
-        use ComponentEmitsTrait
+        use ComponentEmitsTrait;
 
         #[LiveAction]
         public function saveProduct()

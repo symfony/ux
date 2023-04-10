@@ -229,22 +229,27 @@ to the options above, you can also pass:
 
         use Symfony\Component\Security\Core\Security;
 
-        'security' => function(Security $security): bool {
-            return $security->isGranted('ROLE_FOO');
-        }
+        [
+            'security' => function(Security $security): bool {
+                return $security->isGranted('ROLE_FOO');
+            },
+        ];
 
 ``filter_query`` (default: ``null``)
     If you want to completely control the query made for the "search results",
     use this option. This is incompatible with ``searchable_fields``::
 
-        'filter_query' => function(QueryBuilder $qb, string $query, EntityRepository $repository) {
-            if (!$query) {
-                return;
-            }
+        [
+            'filter_query' => function(QueryBuilder $qb, string $query, EntityRepository $repository) {
+                if (!$query) {
+                    return;
+                }
 
-            $qb->andWhere('entity.name LIKE :filter OR entity.description LIKE :filter')
-                ->setParameter('filter', '%'.$query.'%');
-        }
+                $qb->andWhere('entity.name LIKE :filter OR entity.description LIKE :filter')
+                    ->setParameter('filter', '%'.$query.'%');
+            },
+        ];
+
 ``max_results`` (default: 10)
     Allow you to control the max number of results returned by the automatic autocomplete endpoint.
 
@@ -306,7 +311,9 @@ Then specify this new route on the attribute::
 
     #[AsEntityAutocompleteField(route: 'ux_entity_autocomplete_admin')]
     class FoodAutocompleteField
-    // ...
+    {
+        // ...
+    }
 
 Extending Tom Select
 --------------------
