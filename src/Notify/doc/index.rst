@@ -34,8 +34,7 @@ properly configured notifier transport:
 
 .. code-block:: yaml
 
-    // config/packages/notifier.yaml
-
+    # config/packages/notifier.yaml
     framework:
         notifier:
             chatter_transports:

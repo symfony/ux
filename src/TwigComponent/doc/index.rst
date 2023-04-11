@@ -308,6 +308,8 @@ i.e. because they don't correspond to any property. You can handle and remove th
 here. For example, imagine an extra ``autoChooseType`` prop were passed when
 creating the ``alert`` component::
 
+.. code-block:: twig
+
     {{ component('alert', {
         message: 'Danger Will Robinson!',
         autoChooseType: true,

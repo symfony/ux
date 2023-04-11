@@ -589,7 +589,7 @@ updates and deletions of entities::
     #[Broadcast] // 🔥 The magic happens here
     class Book
     {
-        #[ORM\Column, ORM\Id, ORM\GeneratedValue(strategy="AUTO")]
+        #[ORM\Column, ORM\Id, ORM\GeneratedValue(strategy: "AUTO")]
         public ?int $id = null;
 
         #[ORM\Column]
