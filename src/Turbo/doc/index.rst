@@ -58,7 +58,7 @@ need to adjust your JavaScript to work properly. The best solution is to
 write your JavaScript using
 `Stimulus`_ or something similar.
 
-We also recommend that you place your ``script`` tags live inside your
+We also recommend that you place your ``script`` tags inside your
 ``head`` tag so that they aren't reloaded on every navigation (Turbo
 re-executes any ``script`` tags inside ``body`` on every navigation).
 Add a ``defer`` attribute to each ``script`` tag to prevent it from
