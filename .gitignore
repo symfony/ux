@@ -1,7 +1,6 @@
 .doctor-rst.cache
 .php-cs-fixer.cache
 node_modules
-yarn.lock
 yarn-error.log
 /composer.lock
 /vendor

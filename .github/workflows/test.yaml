@@ -31,7 +31,7 @@ jobs:
                   key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}
                   restore-keys: |
                       ${{ runner.os }}-yarn-
-            - run: yarn
+            - run: yarn --frozen-lockfile
             - run: yarn check-lint
             - run: yarn check-format
 
@@ -50,7 +50,7 @@ jobs:
                   key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}
                   restore-keys: |
                       ${{ runner.os }}-yarn-
-            - run: yarn && yarn build
+            - run: yarn --frozen-lockfile && yarn build
             - name: Check if js dist files are current
               id: changes
               run: |
@@ -259,5 +259,5 @@ jobs:
                   key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}
                   restore-keys: |
                       ${{ runner.os }}-yarn-
-            - run: yarn
+            - run: yarn --frozen-lockfile
             - run: yarn test
