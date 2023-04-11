@@ -35,8 +35,8 @@ create a Crop object, and use this object inside a standard form::
 
     // ...
     use Symfony\Component\HttpFoundation\Request;
-    use Symfony\UX\Cropperjs\Form\CropperType;
     use Symfony\UX\Cropperjs\Factory\CropperInterface;
+    use Symfony\UX\Cropperjs\Form\CropperType;
 
     class HomeController extends AbstractController
     {

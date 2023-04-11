@@ -67,7 +67,7 @@ Finally, to load your Vue components, add the following lines to ``assets/app.js
     registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
 
     // If you prefer to lazy-load your Vue.js controller components, in order to reduce to keep the JavaScript bundle the smallest as possible,
-    // and improve performances, you can use the following line instead:
+    // and improve performance, you can use the following line instead:
     //registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/, 'lazy'));
 
 That's it! Create an `assets/vue/controllers/` directory and start creating your
@@ -103,10 +103,9 @@ For example:
         });
     </script>
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/home.html.twig #}
-
     <div {{ vue_component('MyComponent', { 'name': app.user.fullName }) }}></div>
 
 Events
@@ -114,7 +113,7 @@ Events
 
 The event ``vue:before-mount`` is called before a component is mounted on the page. This is the event to listen if you need to modifiy the Vue application (e.g.: add plugins, add global directives, states ...):
 
-.. code-block:: js
+.. code-block:: javascript
 
     // assets/app.js
     document.addEventListener('vue:before-mount', (event) => {
@@ -137,13 +136,14 @@ The event ``vue:before-mount`` is called before a component is mounted on the pa
     });
 
 .. note::
+
    When using Vue Router, you can use "hash" or "memory" history mode
    to prevent your Vue routes from being served through Symfony controllers.
    If you want to use web history mode, see :ref:`Web History mode with Vue Router`
 
 The event ``vue:mount`` is called when a component has been mounted on the page:
 
-.. code-block:: js
+.. code-block:: javascript
 
     document.addEventListener('vue:mount', (event) => {
         const {
@@ -155,7 +155,7 @@ The event ``vue:mount`` is called when a component has been mounted on the page:
 
 The event ``vue:unmount`` is called when a component has been unmounted on the page:
 
-.. code-block:: js
+.. code-block:: javascript
 
     document.addEventListener('vue:unmount', (event) => {
         const {
@@ -170,7 +170,7 @@ Web History mode with Vue Router
 To use "web" history mode with Vue Router, a catch-all route will be needed
 which should render the same template and Vue component:
 
-.. code-block:: php
+.. code-block::
 
     #Route('/survey/{path<.+>}')
     public function survey($path = ''): Response
@@ -181,7 +181,7 @@ which should render the same template and Vue component:
 This controller will catch any URL that starts with `/survey`. This prefix can then be
 used for all the Vue routes:
 
-.. code-block:: js
+.. code-block:: javascript
 
     const router = VueRouter.createRouter({
         history: VueRouter.createWebHistory(),

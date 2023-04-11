@@ -1,6 +1,8 @@
 name: Symfony UX
 
-on: [push, pull_request]
+on:
+    push:
+    pull_request:
 
 jobs:
     coding-style-php:

@@ -15,8 +15,8 @@ A real-time product search component might look like this::
     namespace App\Components;
 
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-    use Symfony\UX\LiveComponent\DefaultActionTrait;
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
 
     #[AsLiveComponent('product_search')]
     class ProductSearchComponent
@@ -37,7 +37,7 @@ A real-time product search component might look like this::
         }
     }
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/product_search.html.twig #}
     {# for the Live Component to work, there must be a single root element
@@ -137,7 +137,7 @@ Suppose you've already built a basic Twig component::
         }
     }
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/random_number.html.twig #}
     <div>
@@ -152,7 +152,6 @@ re-rendered live on the frontend), replace the component's
 .. code-block:: diff
 
       // src/Components/RandomNumberComponent.php
-
     - use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
     + use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     + use Symfony\UX\LiveComponent\DefaultActionTrait;
@@ -180,7 +179,7 @@ anything that would cause the component to update. Let's start simple,
 by adding a button that - when clicked - will re-render the component
 and give the user a new random number:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div {{ attributes }}>
         <strong>{{ this.randomNumber }}</strong>
@@ -260,7 +259,7 @@ property and then re-render the component when they do? Definitely! And
 
 Add an input to the template:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/random_number.html.twig #}
     <div {{ attributes }}>
@@ -323,7 +322,7 @@ typing before sending an Ajax request to re-render. This is
 built in, so you don't need to think about it. But, you can
 delay via the ``debounce`` modifier:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
         <input data-model="debounce(100)|max">
 
@@ -335,7 +334,7 @@ changed an input *and* moved to another field. Browsers dispatch a
 ``change`` event in this situation. To re-render when this event
 happens, use the ``on(change)`` modifier:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <input data-model="on(change)|max">
 
@@ -348,7 +347,7 @@ Other times, you might want to update the internal value of a property,
 but wait until later to re-render the component (e.g. until a button is
 clicked). To do that, use ``norender`` modifier:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <input data-model="norender|max">
 
@@ -373,7 +372,7 @@ rely on the ``name`` attribute.
 To activate this, you must add a ``data-model`` attribute to
 the ``<form>`` element:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div {{ attributes }}>
         <form data-model="*">
@@ -455,7 +454,7 @@ By default, the user can't change the *properties* of an object ``LiveProp``
 Now ``post.title``, ``post.content`` or ``options.allow_markdown`` can be used like
 normal model names:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div {{ attributes }}>
         <input data-model="post.title">
@@ -505,7 +504,7 @@ Checkboxes can be used to set a boolean or an array of strings::
 In the template, setting a ``value`` attribute on the checkbox will set that
 value on checked. If no ``value`` is set, the checkbox will set a boolean value:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <input type="checkbox" data-model="agreeToTerms">
 
@@ -522,7 +521,7 @@ single value or an array of values::
     #[LiveProp(writable: true)]
     public array $foods = ['pizza', 'tacos'];
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <input type="radio" data-model="meal" value="breakfast">
     <input type="radio" data-model="meal" value="lunch">
@@ -540,7 +539,7 @@ Allowing an Entity to be Changed to Another
 What if, instead of changing a *property* on an entity, you want to allow
 the user to switch the *entity* to another? For example:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <select data-model="post">
         {% for post in posts %}
@@ -620,7 +619,7 @@ Updating a Model Manually
 You can also change the value of a model more directly, without
 using a form field:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <button
         type="button"
@@ -735,7 +734,7 @@ Adding a Stimulus Controller to your Component Root Element
 
 To add a custom Stimulus controller to your root component element:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div {{ attributes.add(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
 
@@ -745,7 +744,7 @@ Loading States
 Often, you'll want to show (or hide) an element while a component is
 re-rendering or an :ref:`action <actions>` is processing. For example:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <!-- show only when the component is loading -->
     <span data-loading>Loading</span>
@@ -755,7 +754,7 @@ re-rendering or an :ref:`action <actions>` is processing. For example:
 
 Or, to *hide* an element while the component is loading:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <!-- hide when the component is loading -->
     <span
@@ -768,7 +767,7 @@ Adding and Removing Classes or Attributes
 Instead of hiding or showing an entire element, you could add or remove
 a class:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <!-- add this class when loading -->
     <div data-loading="addClass(opacity-50)">...</div>
@@ -782,7 +781,7 @@ a class:
 Sometimes you may want to add or remove an attribute when loading. That
 can be accomplished with ``addAttribute`` or ``removeAttribute``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <!-- add the "disabled" attribute when loading -->
     <div data-loading="addAttribute(disabled)">...</div>
@@ -790,14 +789,14 @@ can be accomplished with ``addAttribute`` or ``removeAttribute``:
 You can also combine any number of directives by separating them with a
 space:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div data-loading="addClass(opacity-50) addAttribute(disabled)">...</div>
 
 Finally, you can add the ``delay`` modifier to not trigger the loading
 changes until loading has taken longer than a certain amount of time:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <!-- Add class after 200ms of loading -->
     <div data-loading="delay|addClass(opacity-50)">...</div>
@@ -818,7 +817,7 @@ Targeting Loading for a Specific Action
 To only toggle the loading behavior when a specific action is triggered,
 use the ``action()`` modifier with the name of the action - e.g. ``saveForm()``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <!-- show only when the "saveForm" action is triggering -->
     <span data-loading="action(saveForm)|show">Loading</span>
@@ -835,7 +834,7 @@ Targeting Loading When a Specific Model Changes
 You can also toggle the loading behavior only if a specific model value
 was just changed using the ``model()`` modifier:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <input data-model="email" type="email">
 
@@ -887,7 +886,7 @@ the work::
 To call this, add ``data-action="live#action"`` and ``data-action-name``
 to an element (e.g. a button or form):
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <button
         data-action="live#action"
@@ -901,7 +900,7 @@ property value!
 
 You can also add several "modifiers" to the action:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <form>
         <button
@@ -953,7 +952,7 @@ Actions & Arguments
 
 You can also provide custom arguments to your action:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <form>
         <button
@@ -969,8 +968,8 @@ the ``#[LiveArg()]`` attribute::
     namespace App\Components;
 
     // ...
-    use Symfony\UX\LiveComponent\Attribute\LiveArg;
     use Psr\Log\LoggerInterface;
+    use Symfony\UX\LiveComponent\Attribute\LiveArg;
 
     class ItemComponent
     {
@@ -1130,10 +1129,9 @@ write your form controller logic::
 Great! In the template, instead of rendering the form, let's render a
 ``post_form`` component that we will create next:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/post/edit.html.twig #}
-
     {% extends 'base.html.twig' %}
 
     {% block body %}
@@ -1203,7 +1201,7 @@ as ``form`` thanks to the trait:
     The ability to access ``form`` directly in your component's template
     was added in LiveComponents 2.1. Previously ``this.form`` was required.
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/post_form.html.twig #}
     <div {{ attributes }}>
@@ -1340,10 +1338,9 @@ need any form logic in your controller::
 
 And you wouldn't pass any ``form`` into the component:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/post/edit.html.twig #}
-
     <h1>Edit Post</h1>
 
     {{ component('post_form', {
@@ -1414,11 +1411,11 @@ via the ``CollectionType``::
 
     namespace App\Form;
 
+    use App\Entity\BlogPost;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\Extension\Core\Type\CollectionType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
-    use App\Entity\BlogPost;
 
     class BlogPostFormType extends AbstractType
     {
@@ -1446,15 +1443,15 @@ Now, create a Twig component to render the form::
 
     namespace App\Twig;
 
+    use App\Entity\BlogPost;
+    use App\Entity\Comment;
+    use App\Form\BlogPostFormType;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\Form\FormInterface;
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\Attribute\LiveAction;
     use Symfony\UX\LiveComponent\ComponentWithFormTrait;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
-    use App\Entity\BlogPost;
-    use App\Entity\Comment;
-    use App\Form\BlogPostFormType;
 
     #[AsLiveComponent('blog_post_collection_type')]
     class BlogPostCollectionTypeComponent extends AbstractController
@@ -1491,7 +1488,7 @@ The template for this component has two jobs: (1) render the form
 like normal and (2) include links that trigger the ``addComment()``
 and ``removeComment()`` actions:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div{{ attributes }}>
         {{ form_start(form) }}
@@ -1564,11 +1561,11 @@ via the ``LiveCollectionType``::
 
     namespace App\Form;
 
+    use App\Entity\BlogPost;
     use Symfony\Component\Form\AbstractType;
     use Symfony\Component\Form\FormBuilderInterface;
     use Symfony\Component\OptionsResolver\OptionsResolver;
     use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
-    use App\Entity\BlogPost;
 
     class BlogPostFormType extends AbstractType
     {
@@ -1593,14 +1590,14 @@ Now, create a Twig component to render the form::
 
     namespace App\Twig;
 
+    use App\Entity\BlogPost;
+    use App\Form\BlogPostFormType;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\Form\FormInterface;
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\Attribute\LiveProp;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
     use Symfony\UX\LiveComponent\LiveCollectionTrait;
-    use Symfony\UX\LiveComponent\Attribute\LiveProp;
-    use App\Entity\BlogPost;
-    use App\Form\BlogPostFormType;
 
     #[AsLiveComponent('blog_post_collection_type')]
     class BlogPostCollectionTypeComponent extends AbstractController
@@ -1619,7 +1616,7 @@ Now, create a Twig component to render the form::
 
 There is no need for a custom template just render the form as usual:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div {{ attributes }}>
         {{ form(form) }}
@@ -1658,7 +1655,7 @@ If you only want to customize some attributes, the simplest to use the options i
 
 Inline rendering:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div {{ attributes }}>
         {{ form_start(form) }}
@@ -1685,7 +1682,7 @@ Inline rendering:
 
 Override the specific block for comment items:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% form_theme form 'components/_form_theme_comment_list.html.twig' %}
 
@@ -1708,7 +1705,7 @@ Override the specific block for comment items:
     </div>
 
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# components/_form_theme_comment_list.html.twig #}
     {%- block _blog_post_form_comments_entry_row -%}
@@ -1730,7 +1727,7 @@ The ``add`` and ``delete`` buttons are rendered as separate ``ButtonType`` form
 types and can be customized like a normal form type via the ``live_collection_button_add``
 and ``live_collection_button_delete`` block prefix respectively:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% block live_collection_button_add_widget %}
         {% set attr = attr|merge({'class': attr.class|default('btn btn-ghost')}) %}
@@ -1738,7 +1735,7 @@ and ``live_collection_button_delete`` block prefix respectively:
         {% set label_html = true %}
         {%- set label -%}
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
             </svg>
             {{ 'form.collection.button.add.label'|trans({}, 'forms') }}
         {%- endset -%}
@@ -1762,7 +1759,7 @@ For example, by default the add button is placed after the items (the comments i
 
 Now add a div around each row:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {%- block live_collection_entry_row -%}
         <div>
@@ -1776,7 +1773,7 @@ Now add a div around each row:
 As another example, let's create a general bootstrap 5 theme for the live
 collection type, rendering every item in a table row:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {%- block live_collection_widget -%}
         <table class="table table-borderless form-no-mb">
@@ -1811,7 +1808,7 @@ collection type, rendering every item in a table row:
 To render the add button later in the template, you can skip rendering it initially with ``skip_add_button``,
 then render it manually after:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <table class="table table-borderless form-no-mb">
         <thead>
@@ -1843,10 +1840,10 @@ First use the ``ValidatableComponentTrait`` and add any constraints you
 need::
 
     use App\Entity\User;
+    use Symfony\Component\Validator\Constraints as Assert;
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
     use Symfony\UX\LiveComponent\ValidatableComponentTrait;
-    use Symfony\Component\Validator\Constraints as Assert;
 
     #[AsLiveComponent('edit_user')]
     class EditUserComponent
@@ -1895,7 +1892,7 @@ If validation fails, an exception is thrown, but the component will be
 re-rendered. In your template, render errors using the ``getError()``
 method:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {% if this.getError('post.content') %}
         <div class="error">
@@ -1935,7 +1932,7 @@ address before validating it).
 
 To validate only on "change", use the ``on(change)`` modifier:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <input
         type="email"
@@ -1961,7 +1958,7 @@ can change this by adding a ``delay()`` modifier. When you do this, you
 need to be specific that you want to call the ``$render`` method. To
 delay for 500ms:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div
         {{ attributes }}
@@ -1970,7 +1967,7 @@ delay for 500ms:
 
 You can also trigger a specific "action" instead of a normal re-render:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div
         {{ attributes }}
@@ -2001,7 +1998,7 @@ There are three ways to emit an event:
 
 1. From Twig:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <button
         data-action="live#emit"
@@ -2093,12 +2090,12 @@ By default, when an event is emitted, it is sent to *all* components that are
 currently on the page. You can scope these in various ways:
 
 Emitting only to Parent Components
-...................................
+..................................
 
 If you want to emit an event to only the parent components, use the
 ``emitUp()`` method:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <button
         data-action="live#emitUp"
@@ -2110,12 +2107,12 @@ Or, in PHP::
     $this->emitUp('productAdded');
 
 Emitting only to Components with a Specific Name
-.................................................
+................................................
 
 If you want to emit an event to only components with a specific name,
 use the ``name()`` modifier:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <button
         data-action="live#emit"
@@ -2131,7 +2128,7 @@ Emitting only to Yourself
 
 To emit an event to only yourself, use the ``emitSelf()`` method:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <button
         data-action="live#emitSelf"
@@ -2163,7 +2160,7 @@ components to re-render, but you *can* make it do that. Let's look at an
 example of a todo list component with a child that renders the total number of
 todo items:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/todo_list.html.twig #}
     <div {{ attributes }}>
@@ -2225,7 +2222,7 @@ resetting writable live props) when some value in the parent changes? This
 can be done by manually giving your component a ``data-live-id`` attribute
 that will change if the component should be totally re-rendered:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/todo_list.html.twig #}
     <div {{ attributes }}>
@@ -2296,7 +2293,6 @@ attribute to the child:
 .. code-block:: twig
 
     {# templates/components/post_form.html.twig #}
-
     {{ component('textarea_field', {
         dataModel: 'content',
         error: this.getError('content'),
@@ -2324,7 +2320,7 @@ changed.
 You can also specify the name of the child prop with the ``parentProp:childProp``
 syntax. The following is the same as above:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <!-- same as dataModel: 'content' -->
     {{ component('textarea_field', {
@@ -2396,7 +2392,7 @@ And a ``MarkdownTextareaComponent``::
 In the ``EditPostComponent`` template, you render the
 ``MarkdownTextareaComponent``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/edit_post.html.twig #}
     <div {{ attributes }}>
@@ -2420,7 +2416,7 @@ In the ``EditPostComponent`` template, you render the
         </form>
     </div>
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div {{ attributes }} class="mb-3">
         <textarea
@@ -2529,7 +2525,6 @@ Then specify this new route on your component:
 .. code-block:: diff
 
     // src/Components/RandomNumberComponent.php
-
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
 

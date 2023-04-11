@@ -41,7 +41,7 @@ and smart backspace are some incredible parameters you can use.
 
 The main usage of Symfony UX Typed is to use its Stimulus controller to initialize Typed:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div>
         I created this UX component because
@@ -55,7 +55,7 @@ That's it! Typed now shows the messages defined in the `strings` argument.
 You can customize the way those messages are typed.
 Parameters are exactly the same as for the `typed library`_
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div>
         I created this UX component because
@@ -74,7 +74,7 @@ Parameters are exactly the same as for the `typed library`_
 .. note::
 
 Extend the JavaScript Controller
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Symfony UX Typed allows you to extend its default behavior using a custom
 Stimulus controller:
@@ -124,7 +124,7 @@ Stimulus controller:
 
 Then in your template, add your controller to the HTML attribute:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <html lang="en">
         <head>

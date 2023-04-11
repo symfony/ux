@@ -89,10 +89,9 @@ For example:
     }
 
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/home.html.twig #}
-
     <div {{ react_component('MyComponent', { 'fullName': app.user.fullName }) }}></div>
 
 Backward Compatibility promise

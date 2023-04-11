@@ -1,0 +1,31 @@
+name: RST Linter
+
+on:
+    push:
+    pull_request:
+
+jobs:
+    doctor-rst:
+        name: DOCtor-RST
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v3
+
+            - name: Create cache dir
+              run: mkdir .cache
+
+            - name: Extract base branch name
+              run: echo "##[set-output name=branch;]$(echo ${GITHUB_BASE_REF:=${GITHUB_REF##*/}})"
+              id: extract_base_branch
+
+            - name: Cache DOCtor-RST
+              uses: actions/cache@v3
+              with:
+                  path: .cache
+                  key: doctor-rst-${{ steps.extract_base_branch.outputs.branch }}
+
+            - name: DOCtor-RST
+              uses: docker://oskarstark/doctor-rst
+              with:
+                  args: --short --error-format=github --cache-file=/github/workspace/.cache/doctor-rst.cache

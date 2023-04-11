@@ -5,7 +5,8 @@ Symfony UX Turbo is a Symfony bundle integrating the `Hotwire Turbo`_
 library in Symfony applications. It is part of `the Symfony UX initiative`_.
 
 Symfony UX Turbo allows having the same user experience as with
-`Single Page Apps`_ but without having to write a single line of JavaScript!
+`Single Page Applications`_ but without having to write a single line of
+JavaScript!
 
 Symfony UX Turbo also integrates with `Symfony Mercure`_ or any other
 transports to broadcast DOM changes to all currently connected users!
@@ -85,7 +86,7 @@ so that your filenames change when the file contents change:
 Then add a ``data-turbo-track="reload"`` attribute to all of your
 ``script`` and ``link`` tags:
 
-.. code-block:: yml
+.. code-block:: yaml
 
    # config/packages/webpack_encore.yaml
    webpack_encore:
@@ -159,6 +160,7 @@ not required for Turbo Drive, but 303 is "more correct" for this
 situation.
 
 .. note::
+
     **NOTE:** When your form contains more than one submit button and,
     you want to check which of the buttons was clicked to adapt the
     program flow in your controller. You need to add a value to each
@@ -190,7 +192,7 @@ Decomposing Complex Pages with Turbo Frames
 
 Once Symfony UX Turbo is installed, you can also leverage `Turbo Frames`_:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# home.html.twig #}
     {% extends 'base.html.twig' %}
@@ -201,7 +203,7 @@ Once Symfony UX Turbo is installed, you can also leverage `Turbo Frames`_:
         </turbo-frame>
     {% endblock %}
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# another-page.html.twig #}
     {% extends 'base.html.twig' %}
@@ -217,7 +219,7 @@ Once Symfony UX Turbo is installed, you can also leverage `Turbo Frames`_:
 
 The content of a frame can be lazy loaded:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# home.html.twig #}
     {% extends 'base.html.twig' %}
@@ -315,11 +317,11 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
     namespace App\Controller;
 
     // ...
+    use App\Entity\Task;
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\Component\HttpFoundation\Response;
     use Symfony\UX\Turbo\TurboBundle;
-    use App\Entity\Task;
 
     class TaskController extends AbstractController
     {
@@ -341,7 +343,7 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
                 }
 
                 // If the client doesn't support JavaScript, or isn't using Turbo, the form still works as usual.
-                // Symfony UX Turbo is all about progressively enhancing your apps!
+                // Symfony UX Turbo is all about progressively enhancing your applications!
                 return $this->redirectToRoute('task_success', [], Response::HTTP_SEE_OTHER);
             }
 
@@ -352,10 +354,9 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
         }
     }
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# success.stream.html.twig #}
-
     <turbo-stream action="replace" target="my_div_id">
         <template>
             The element having the id "my_div_id" will be replace by this block, without a full page reload!
@@ -378,10 +379,9 @@ To do that, first isolate your form rendering into a template partial so you can
 reuse it. Also surround the form by an element with an ``id`` so you can target
 it from the stream:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/task/_form.html.twig #}
-
     <div id="task-form">
         {# render your form however you want #}
         {{ form(form) }}
@@ -428,10 +428,9 @@ Now, create a "fresh" form and pass it into your stream:
 
 Now, in your stream template, "replace" the entire form:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# success.stream.html.twig #}
-
     <turbo-stream action="replace" target="task-form">
         <template>
             {{ include('task/_form.html.twig') }}
@@ -531,7 +530,7 @@ Let's create our chat::
         }
     }
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# chat/index.html.twig #}
     {% extends 'base.html.twig' %}
@@ -557,10 +556,9 @@ Let's create our chat::
         </turbo-frame>
     {% endblock %}
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# chat/message.stream.html.twig #}
-
     {# New messages received through the Mercure connection are appended to the div with the "messages" ID. #}
     <turbo-stream action="append" target="messages">
         <template>
@@ -601,24 +599,23 @@ updates and deletions of entities::
 To subscribe to updates of an entity, pass it as parameter of the
 ``turbo_stream_listen()`` Twig helper:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div id="book_{{ book.id }}" {{ turbo_stream_listen(book) }}></div>
 
 Alternatively, you can subscribe to updates made to all entities of a
 given class by using its Fully Qualified Class Name:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div id="books" {{ turbo_stream_listen('App\\Entity\\Book') }}></div>
 
 Finally, create the template that will be rendered when an entity is
 created, modified or deleted:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/broadcast/Book.stream.html.twig #}
-
     {% block create %}
         <turbo-stream action="append" target="books">
             <template>
@@ -703,7 +700,7 @@ The ``Broadcast`` attribute comes with a set of handy options:
 -  ``template`` (``string``): Twig template to render (see above)
 
 The ``Broadcast`` attribute can be repeated (e.g. you can have multiple
-`#[Broadcast]`. This is convenient to to render several templates associated with
+`#[Broadcast]`. This is convenient to render several templates associated with
 their own topics for the same change (e.g. the same data is rendered in different
 way in the list and in the detail pages).
 
@@ -800,7 +797,7 @@ Finally, generate the HTML attributes registering the Stimulus
 controller corresponding to your transport by passing an extra argument
 to ``turbo_stream_listen()``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <div id="messages" {{ turbo_stream_listen('App\Entity\Book', 'hub2') }}></div>
 
@@ -879,7 +876,7 @@ Symfony UX Turbo has been created by `Kévin Dunglas`_. It has been inspired by
 
 .. _`Hotwire Turbo`: https://turbo.hotwired.dev
 .. _`the Symfony UX initiative`: https://symfony.com/ux
-.. _`Single Page Apps`: https://en.wikipedia.org/wiki/Single-page_application
+.. _`Single Page Applications`: https://en.wikipedia.org/wiki/Single-page_application
 .. _`Symfony Mercure`: https://symfony.com/doc/current/mercure.html
 .. _`Turbo Screencast on SymfonyCasts`: https://symfonycasts.com/screencast/turbo
 .. _`Stimulus`: https://stimulus.hotwired.dev
