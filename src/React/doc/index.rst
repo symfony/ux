@@ -62,7 +62,7 @@ Finally, to load your React components, add the following lines to ``assets/app.
     // they are not necessary.
     registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
 
-That's it! Create an `assets/react/controllers/` directory and start creating your
+That's it! Create an ``assets/react/controllers/`` directory and start creating your
 React components.
 
 Usage
@@ -77,6 +77,7 @@ React components located in the directory ``assets/react/controllers`` are regis
 React controller components.
 
 You can then render any React controller component in Twig using the ``react_component``.
+
 For example:
 
 .. code-block:: javascript
@@ -88,11 +89,19 @@ For example:
         return <div>Hello {props.fullName}</div>;
     }
 
-
 .. code-block:: html+twig
 
     {# templates/home.html.twig #}
-    <div {{ react_component('MyComponent', { 'fullName': app.user.fullName }) }}></div>
+    {% extends 'base.html.twig' %}
+
+    {% block body %}
+        <div {{ react_component('MyComponent', { 'fullName': number }) }}>
+            Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
+        </div>
+        
+        {# Component living in a subdirectory: "assets/react/controllers/Admin/OtherComponent" #}
+        <div {{ react_component('Admin/OtherComponent') }}></div>
+    {% endblock %}
 
 Backward Compatibility promise
 ------------------------------
