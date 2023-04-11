@@ -578,7 +578,7 @@ option::
 
 Now you can bind this to a field on the frontend that uses that same format:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <input type="date" data-model="publishOn">
 
@@ -2547,16 +2547,35 @@ form.
 Rendering Quirks with List of Embedded Components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Imagine your component renders a list of embedded components and
-that list is updated as the user types into a search box. Most of the
-time, this works *fine*. But in some cases, as the list of items
-changes, a child component will re-render even though it was there
-before *and* after the list changed. This can cause that child component
-to lose some state (i.e. it re-renders with its original live props data).
+Rendering Quirks with List of Embedded Components
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-To fix this, add a unique ``data-live-id`` attribute to the root component of each
-child element. This will helps LiveComponent identify each item in the
-list and correctly determine if a re-render is necessary, or not.
+Imagine your component renders a list of child components and
+the list changes as the user types into a search box... or by clicking
+"delete" on an item. In this case, the wrong children may be removed
+or existing child components may not disappear when they should.
+
+.. versionadded:: 2.8
+
+    The ``key`` prop was added in Symfony UX Live Component 2.8.
+
+To fix this, add a ``key`` prop to each child component that's unique
+to that component:
+
+.. code-block:: twig
+
+    {# templates/components/invoice.html.twig #}
+    {% for lineItem in lineItems %}
+        {{ component('invoice_line_item', {
+            productId: lineItem.productId,
+            key: lineItem.id,
+        }) }}
+    {% endfor %}
+
+The ``key`` will be used to generate a ``data-live-id`` attribute,
+which will be used to identify each child component. You can
+also pass in a ``data-live-id`` attribute directly, but ``key`` is
+a bit more convenient.
 
 Advanced Functionality
 ----------------------

@@ -64,6 +64,10 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
             $attributes = $attributes->defaults($variables[$attributesKey]->all());
         }
 
+        // "key" is a special attribute: don't actually render it
+        // this is used inside LiveControllerAttributesCreator
+        $attributes = $attributes->without(LiveControllerAttributesCreator::KEY_PROP_NAME);
+
         $variables[$attributesKey] = $attributes;
 
         $event->setVariables($variables);

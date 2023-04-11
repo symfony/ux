@@ -31,6 +31,13 @@ use Symfony\UX\TwigComponent\MountedComponent;
  */
 class LiveControllerAttributesCreator
 {
+    /**
+     * Prop name that can be passed into a component to keep it unique in a loop.
+     *
+     * This is used to generate the unique data-live-id for the child component.
+     */
+    public const KEY_PROP_NAME = 'key';
+
     public function __construct(
         private LiveComponentMetadataFactory $metadataFactory,
         private LiveComponentHydrator $hydrator,
@@ -70,7 +77,8 @@ class LiveControllerAttributesCreator
 
         if ($isChildComponent) {
             if (!isset($mountedAttributes->all()['data-live-id'])) {
-                $id = $deterministicId ?: $this->idCalculator->calculateDeterministicId();
+                $id = $deterministicId ?: $this->idCalculator
+                    ->calculateDeterministicId(key: $mounted->getInputProps()[self::KEY_PROP_NAME] ?? null);
                 $attributesCollection->setLiveId($id);
                 // we need to add this to the mounted attributes so that it is
                 // will be included in the "attributes" part of the props data.
