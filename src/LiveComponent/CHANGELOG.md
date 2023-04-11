@@ -10,6 +10,11 @@
 public User $user;
 ```
 
+-   [BC BREAK]: `LiveProp` values are no longer automatically (de)hydrated
+    through Symfony's serializer. Use `LiveProp(useSerializerForHydration: true)`
+    to activate this. Also, a `serializationContext` option was added to
+    `LiveProp`.
+
 -   [BC BREAK]: Child components are no longer automatically re-rendered when
     a parent component re-renders and the value of one of the props passed to
     the child has changed. Pass `acceptUpdatesFromParent: true` to any `LiveProp`
@@ -29,6 +34,9 @@ public User $user;
 -   Boolean checkboxes are now supported. Of a checkbox does **not** have a
     `value` attribute, then the associated `LiveProp` will be set to a boolean
     when the input is checked/unchecked.
+
+-   A `format` option was added to `LiveProp` to control how `DateTime`
+    properties are (de)hydrated.
 
 -   Added support for setting `writable` to a property that is an object
     (previously, only scalar values were supported). The object is passed

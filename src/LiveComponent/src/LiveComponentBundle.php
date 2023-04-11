@@ -24,6 +24,8 @@ use Symfony\UX\LiveComponent\DependencyInjection\Compiler\OptionalDependencyPass
  */
 final class LiveComponentBundle extends Bundle
 {
+    public const HYDRATION_EXTENSION_TAG = 'live_component.hydration_extension';
+
     public function build(ContainerBuilder $container): void
     {
         // must run before Symfony\Component\Serializer\DependencyInjection\SerializerPass
