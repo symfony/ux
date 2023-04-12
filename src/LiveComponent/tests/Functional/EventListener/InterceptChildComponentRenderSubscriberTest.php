@@ -103,16 +103,50 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
             });
     }
 
+    public function testItUsesKeysToRenderChildrenLiveIds(): void
+    {
+        $fingerprintValues = array_values(self::$actualTodoItemFingerprints);
+        $fingerprints = [];
+        foreach ($fingerprintValues as $key => $fingerprintValue) {
+            // creating fingerprints keys to match todo_list_with_keys.html.twig
+            $fingerprints['live-4172682817-the-key'.$key] = $fingerprintValue;
+        }
+        $fingerprints['live-4172682817-the-key1'] = 'wrong fingerprint';
+
+        $urlSimple = $this->doBuildUrlForComponent('todo_list_with_keys', []);
+        $urlWithChangedFingerprints = $this->doBuildUrlForComponent('todo_list_with_keys', $fingerprints);
+
+        $this->browser()
+            ->visit($urlSimple)
+            ->assertSuccessful()
+            ->assertHtml()
+            ->assertElementCount('ul li', 3)
+            // check for the live-id we expect based on the key
+            ->assertContains('data-live-id="live-4172682817-the-key0"')
+            ->assertNotContains('key="the-key0"')
+            ->visit($urlWithChangedFingerprints)
+            ->assertContains('<li data-live-id="live-4172682817-the-key0"></li>')
+            // this one is changed, so it renders a full element
+            ->assertContains('<li data-live-name-value="todo_item" data-live-id="live-4172682817-the-key1"')
+        ;
+    }
+
     private function buildUrlForTodoListComponent(array $childrenFingerprints, bool $includeLiveId = false): string
     {
-        $component = $this->mountComponent('todo_list', [
+        return $this->doBuildUrlForComponent('todo_list', $childrenFingerprints, [
+            'includeDataLiveId' => $includeLiveId,
+        ]);
+    }
+
+    private function doBuildUrlForComponent(string $componentName, array $childrenFingerprints, array $extraProps = []): string
+    {
+        $component = $this->mountComponent($componentName, array_merge([
             'items' => [
                 ['text' => 'wake up'],
                 ['text' => 'high five a friend'],
                 ['text' => 'take a nap'],
             ],
-            'includeDataLiveId' => $includeLiveId,
-        ]);
+        ], $extraProps));
 
         $dehydratedProps = $this->dehydrateComponent($component);
 
@@ -131,6 +165,6 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
             $queryData['children'] = json_encode($children);
         }
 
-        return '/_components/todo_list?'.http_build_query($queryData);
+        return sprintf('/_components/%s?%s', $componentName, http_build_query($queryData));
     }
 }

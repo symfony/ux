@@ -37,8 +37,11 @@ class DeterministicTwigIdCalculator
      * called this method 3 times on the same line during one request, you will
      * get the same value back if you call it 3 times on a future request for
      * that same file & line.
+     *
+     * @param bool        $increment Whether to increment the counter for this file+line
+     * @param string|null $key       An optional key to use instead of the incremented counter
      */
-    public function calculateDeterministicId(bool $increment = true): string
+    public function calculateDeterministicId(bool $increment = true, string $key = null): string
     {
         $lineData = $this->guessTemplateInfo();
 
@@ -48,9 +51,9 @@ class DeterministicTwigIdCalculator
         }
 
         $id = sprintf(
-            'live-%s-%d',
+            'live-%s-%s',
             crc32($fileAndLine),
-            $this->lineAndFileCounts[$fileAndLine]
+            null !== $key ? $key : $this->lineAndFileCounts[$fileAndLine]
         );
 
         if ($increment) {

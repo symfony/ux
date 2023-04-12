@@ -53,7 +53,13 @@ class InterceptChildComponentRenderSubscriber implements EventSubscriberInterfac
         $childFingerprints = $parentComponent->getExtraMetadata(self::CHILDREN_FINGERPRINTS_METADATA_KEY);
 
         // get the deterministic id for this child, but without incrementing the counter yet
-        $deterministicId = $event->getInputProps()['data-live-id'] ?? $this->getDeterministicIdCalculator()->calculateDeterministicId(increment: false);
+        if (isset($event->getInputProps()['data-live-id'])) {
+            $deterministicId = $event->getInputProps()['data-live-id'];
+        } else {
+            $key = $event->getInputProps()[LiveControllerAttributesCreator::KEY_PROP_NAME] ?? null;
+            $deterministicId = $this->getDeterministicIdCalculator()->calculateDeterministicId(increment: false, key: $key);
+        }
+
         if (!isset($childFingerprints[$deterministicId])) {
             // child fingerprint wasn't set, it is likely a new child, allow it to render fully
             return;

@@ -12,23 +12,17 @@
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 
-#[AsLiveComponent('todo_item')]
-final class TodoItemComponent
+#[AsLiveComponent('todo_list_with_keys')]
+final class TodoListWithKeysComponent
 {
     use DefaultActionTrait;
 
     #[LiveProp(writable: true)]
-    public string $text = '';
+    public string $name = '';
 
-    #[LiveProp(updateFromParent: true)]
-    public int $textLength = 0;
-
-    // here just to force a checksum to be needed, helps make tests more robust
-    #[LiveProp(writable: false)]
-    public string $readonlyValue = 'readonly';
+    #[LiveProp]
+    public array $items = [];
 }
