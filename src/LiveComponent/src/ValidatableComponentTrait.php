@@ -16,6 +16,8 @@ use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Attribute\PostHydrate;
+use Symfony\UX\LiveComponent\Component\ComponentValidationErrors;
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
@@ -25,7 +27,7 @@ use Symfony\UX\LiveComponent\Attribute\PostHydrate;
 trait ValidatableComponentTrait
 {
     private ?ComponentValidatorInterface $componentValidator = null;
-    private array $validationErrors = [];
+    private ?ComponentValidationErrors $validationErrors = null;
 
     /**
      * Tracks whether this entire component has been validated.
@@ -55,9 +57,9 @@ trait ValidatableComponentTrait
         // set fields back to empty, as now the *entire* object is validated.
         $this->validatedFields = [];
         $this->isValidated = true;
-        $this->validationErrors = $this->getValidator()->validate($this);
+        $this->getValidationErrors()->setAll($this->getValidator()->validate($this));
 
-        if ($throw && \count($this->validationErrors) > 0) {
+        if ($throw && \count($this->getValidationErrors()) > 0) {
             throw new UnprocessableEntityHttpException('Component validation failed');
         }
     }
@@ -76,7 +78,7 @@ trait ValidatableComponentTrait
         }
 
         $errors = $this->getValidator()->validateField($this, $propertyName);
-        $this->validationErrors[$propertyName] = $errors;
+        $this->getValidationErrors()->set($propertyName, $errors);
 
         if ($throw && \count($errors) > 0) {
             throw new UnprocessableEntityHttpException(sprintf('The "%s" field of the component failed validation.', $propertyName));
@@ -88,7 +90,15 @@ trait ValidatableComponentTrait
      */
     public function getError(string $propertyPath): ?ConstraintViolation
     {
-        return $this->validationErrors[$propertyPath][0] ?? null;
+        $violations = $this->getValidationErrors()->getViolations($propertyPath);
+
+        return $violations[0] ?? null;
+    }
+
+    #[ExposeInTemplate('_errors')]
+    public function getErrorsObject(): ComponentValidationErrors
+    {
+        return $this->getValidationErrors();
     }
 
     /**
@@ -96,12 +106,12 @@ trait ValidatableComponentTrait
      */
     public function getErrors(string $propertyPath): array
     {
-        return $this->validationErrors[$propertyPath] ?? [];
+        return $this->getValidationErrors()->getAll($propertyPath);
     }
 
     public function isValid(): bool
     {
-        return 0 === \count($this->validationErrors);
+        return 0 === \count($this->getValidationErrors());
     }
 
     /**
@@ -111,7 +121,7 @@ trait ValidatableComponentTrait
     {
         $this->isValidated = false;
         $this->validatedFields = [];
-        $this->validationErrors = [];
+        $this->getValidationErrors()->clear();
     }
 
     /**
@@ -149,5 +159,14 @@ trait ValidatableComponentTrait
         }
 
         return $this->componentValidator;
+    }
+
+    private function getValidationErrors(): ComponentValidationErrors
+    {
+        if (null === $this->validationErrors) {
+            $this->validationErrors = new ComponentValidationErrors();
+        }
+
+        return $this->validationErrors;
     }
 }

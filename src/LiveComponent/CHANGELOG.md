@@ -48,6 +48,9 @@ public User $user;
     cannot be hydrated onto the object during a re-render, the last valid
     value is used.
 
+-   When using `ValidatableComponentTrait`, a new `_errors` variable is sent
+    to the template, which is easier to use!
+
 -   Several bug fixes to parent - child components - see #700.
 
 -   Fixed handling of boolean attributes to a component - see #710.
