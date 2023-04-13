@@ -1,0 +1,5 @@
+<div{{ attributes }}>
+    <div>Name: {{ name }}</div>
+    <div>Has Error: {{ _errors.has('name') ? 'yes' : 'no' }}</div>
+    <div>Error: "{{ _errors.get('name') }}"</div>
+</div>

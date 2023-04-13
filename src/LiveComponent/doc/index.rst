@@ -1351,13 +1351,14 @@ This is possible thanks to the team work of two pieces:
    yet by the user, its validation errors are cleared so that they
    aren't displayed.
 
-Easier "New Form" Component
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Making the Post Object Optional for a "New Form" Component
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The previous component could be used to edit an existing post or create
-a new post. But, the way it's currently written, a ``post`` object *must*
-be passed to the ``component()`` function so the `$post` property is set.
-But you can make that optional by adding a ``mount()`` method::
+a new post. But either way, the component *requires* you to pass it
+a ``post`` property.
+
+Tou can make that optional by adding a ``mount()`` method::
 
     #[AsLiveComponent('post_form')]
     class PostFormComponent extends AbstractController
@@ -2000,27 +2001,26 @@ action::
     }
 
 If validation fails, an exception is thrown, but the component will be
-re-rendered. In your template, render errors using the ``getError()``
-method:
+re-rendered. In your template, render errors using an ``_errors`` variable:
 
 .. code-block:: html+twig
 
-    {% if this.getError('post.content') %}
+    {% if _errors.has('post.content') %}
         <div class="error">
-            {{ this.getError('post.content').message }}
+            {{ _errors.get('post.content') }}
         </div>
     {% endif %}
     <textarea
         data-model="post.content"
-        class="{{ this.getError('post.content') ? 'has-error' : '' }}"
+        class="{{ _errors.has('post.content') ? 'is-invalid' : '' }}"
     ></textarea>
 
-    {% if this.getError('agreeToTerms') %}
+    {% if _errors.has('agreeToTerms') %}
         <div class="error">
-            {{ this.getError('agreeToTerms').message }}
+            {{ _errors.get('agreeToTerms') }}
         </div>
     {% endif %}
-    <input type="checkbox" data-model="agreeToTerms" class="{{ this.getError('agreeToTerms') ? 'has-error' : '' }}"/>
+    <input type="checkbox" data-model="agreeToTerms" class="{{ _errors.has('agreeToTerms') ? 'is-invalid' : '' }}"/>
 
     <button
         type="submit"
@@ -2048,7 +2048,7 @@ To validate only on "change", use the ``on(change)`` modifier:
     <input
         type="email"
         data-model="on(change)|user.email"
-        class="{{ this.getError('post.content') ? 'has-error' : '' }}"
+        class="{{ _errors.has('post.content') ? 'is-invalid' : '' }}"
     >
 
 Polling
@@ -2406,7 +2406,7 @@ attribute to the child:
     {# templates/components/post_form.html.twig #}
     {{ component('textarea_field', {
         dataModel: 'content',
-        error: this.getError('content'),
+        error: _errors.get('content'),
     }) }}
 
 This does two things:
@@ -2543,9 +2543,6 @@ In the ``EditPostComponent`` template, you render the
 Notice that ``MarkdownTextareaComponent`` allows a dynamic ``name``
 attribute to be passed in. This makes that component re-usable in any
 form.
-
-Rendering Quirks with List of Embedded Components
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Rendering Quirks with List of Embedded Components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

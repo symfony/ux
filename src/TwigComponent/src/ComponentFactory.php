@@ -91,7 +91,7 @@ final class ComponentFactory
             }
 
             if (!\is_scalar($value) && null !== $value) {
-                throw new \LogicException(sprintf('Unable to use "%s" (%s) as an attribute. Attributes must be scalar or null. If you meant to mount this value on "%s", make sure "$%1$s" is a writable property or create a mount() method with a "$%1$s" argument.', $key, get_debug_type($value), $component::class));
+                throw new \LogicException(sprintf('A "%s" prop was passed when creating the "%s" component. No matching %s property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a %s). Did you mean to pass this to your component or is there a typo on its name?', $key, $componentMetadata->getName(), $key, get_debug_type($value)));
             }
         }
 
