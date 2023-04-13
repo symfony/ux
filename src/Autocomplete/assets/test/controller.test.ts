@@ -227,6 +227,29 @@ describe('AutocompleteController', () => {
         expect(tomSelect.settings.shouldLoad('')).toBeTruthy()
     })
 
+    it('adds work-around for live-component & multiple select', async () => {
+        const { container } = await startAutocompleteTest(`
+            <div>
+                <label for="the-select" data-testid="main-element-label">Select something</label>
+                <select
+                    id="the-select"
+                    data-testid="main-element"
+                    data-controller="check autocomplete"
+                    multiple
+                ></select>
+            </div>
+        `);
+
+        expect(getByTestId(container, 'main-element')).toHaveAttribute('data-live-ignore');
+        expect(getByTestId(container, 'main-element-label')).toHaveAttribute('data-live-ignore');
+        const tsDropdown = container.querySelector('.ts-wrapper');
+
+        await waitFor(() => {
+            expect(tsDropdown).not.toBeNull();
+        });
+        expect(tsDropdown).toHaveAttribute('data-live-ignore');
+    });
+
     it('loads new pages on scroll', async () => {
         document.addEventListener('autocomplete:pre-connect', (event: any) => {
             const options = (event.detail as AutocompletePreConnectOptions).options;

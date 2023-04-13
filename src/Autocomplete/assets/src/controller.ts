@@ -36,10 +36,27 @@ export default class extends Controller {
     private isObserving = false;
 
     initialize() {
-        if (!this.mutationObserver) {
-            this.mutationObserver = new MutationObserver((mutations: MutationRecord[]) => {
-                this.onMutations(mutations);
-            });
+        if (this.requiresLiveIgnore()) {
+            // unfortunately, TomSelect does enough weird things that, for a
+            // multi select, if the HTML in the `<select>` element changes,
+            // we can't reliably update TomSelect to see those changes. So,
+            // as a workaround, we tell LiveComponents to entirely ignore trying
+            // to update this item
+            this.element.setAttribute('data-live-ignore', '');
+            if (this.element.id) {
+                const label = document.querySelector(`label[for="${this.element.id}"]`);
+                if (label) {
+                    label.setAttribute('data-live-ignore', '');
+                }
+            }
+        } else {
+            // for non-multiple selects, we use a MutationObserver to update
+            // the TomSelect instance if the options themselves change
+            if (!this.mutationObserver) {
+                this.mutationObserver = new MutationObserver((mutations: MutationRecord[]) => {
+                    this.onMutations(mutations);
+                });
+            }
         }
     }
 
@@ -88,12 +105,21 @@ export default class extends Controller {
             },
         };
 
+        const requiresLiveIgnore = this.requiresLiveIgnore();
+
         const config: RecursivePartial<TomSettings> = {
             render,
             plugins,
             // clear the text input after selecting a value
             onItemAdd: () => {
                 this.tomSelect.setTextboxValue('');
+            },
+            // see initialize() method for explanation
+            onInitialize: function () {
+                if (requiresLiveIgnore) {
+                    const tomSelect = this as any;
+                    tomSelect.wrapper.setAttribute('data-live-ignore', '');
+                }
             },
             closeAfterSelect: true,
         };
@@ -300,7 +326,7 @@ export default class extends Controller {
     }
 
     private startMutationObserver(): void {
-        if (!this.isObserving) {
+        if (!this.isObserving && this.mutationObserver) {
             this.mutationObserver.observe(this.element, {
                 childList: true,
                 subtree: true,
@@ -312,7 +338,7 @@ export default class extends Controller {
     }
 
     private stopMutationObserver(): void {
-        if (this.isObserving) {
+        if (this.isObserving && this.mutationObserver) {
             this.mutationObserver.disconnect();
             this.isObserving = false;
         }
@@ -403,5 +429,9 @@ export default class extends Controller {
         if (changePlaceholder) {
             this.updateTomSelectPlaceholder();
         }
+    }
+
+    private requiresLiveIgnore(): boolean {
+        return this.element instanceof HTMLSelectElement && this.element.multiple;
     }
 }

@@ -46,4 +46,5 @@ export default class extends Controller {
     private startMutationObserver;
     private stopMutationObserver;
     private onMutations;
+    private requiresLiveIgnore;
 }

@@ -30,10 +30,21 @@ class default_1 extends Controller {
         this.isObserving = false;
     }
     initialize() {
-        if (!this.mutationObserver) {
-            this.mutationObserver = new MutationObserver((mutations) => {
-                this.onMutations(mutations);
-            });
+        if (this.requiresLiveIgnore()) {
+            this.element.setAttribute('data-live-ignore', '');
+            if (this.element.id) {
+                const label = document.querySelector(`label[for="${this.element.id}"]`);
+                if (label) {
+                    label.setAttribute('data-live-ignore', '');
+                }
+            }
+        }
+        else {
+            if (!this.mutationObserver) {
+                this.mutationObserver = new MutationObserver((mutations) => {
+                    this.onMutations(mutations);
+                });
+            }
         }
     }
     connect() {
@@ -118,7 +129,7 @@ class default_1 extends Controller {
         }
     }
     startMutationObserver() {
-        if (!this.isObserving) {
+        if (!this.isObserving && this.mutationObserver) {
             this.mutationObserver.observe(this.element, {
                 childList: true,
                 subtree: true,
@@ -129,7 +140,7 @@ class default_1 extends Controller {
         }
     }
     stopMutationObserver() {
-        if (this.isObserving) {
+        if (this.isObserving && this.mutationObserver) {
             this.mutationObserver.disconnect();
             this.isObserving = false;
         }
@@ -200,6 +211,9 @@ class default_1 extends Controller {
             this.updateTomSelectPlaceholder();
         }
     }
+    requiresLiveIgnore() {
+        return this.element instanceof HTMLSelectElement && this.element.multiple;
+    }
 }
 _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _default_1_getCommonConfig() {
     const plugins = {};
@@ -218,11 +232,18 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
         },
     };
+    const requiresLiveIgnore = this.requiresLiveIgnore();
     const config = {
         render,
         plugins,
         onItemAdd: () => {
             this.tomSelect.setTextboxValue('');
+        },
+        onInitialize: function () {
+            if (requiresLiveIgnore) {
+                const tomSelect = this;
+                tomSelect.wrapper.setAttribute('data-live-ignore', '');
+            }
         },
         closeAfterSelect: true,
     };
