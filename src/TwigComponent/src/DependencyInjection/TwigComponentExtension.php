@@ -12,8 +12,6 @@
 namespace Symfony\UX\TwigComponent\DependencyInjection;
 
 use Symfony\Component\DependencyInjection\Argument\AbstractArgument;
-use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
-use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
@@ -49,7 +47,7 @@ final class TwigComponentExtension extends Extension
 
         $container->register('ux.twig_component.component_factory', ComponentFactory::class)
             ->setArguments([
-                new ServiceLocatorArgument(new TaggedIteratorArgument('twig.component', 'key', null, true)),
+                class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : null,
                 new Reference('property_accessor'),
                 new Reference('event_dispatcher'),
                 class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : [],

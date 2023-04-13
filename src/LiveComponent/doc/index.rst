@@ -11,15 +11,15 @@ the frontend as the user interacts with them. Inspired by
 
 A real-time product search component might look like this::
 
-    // src/Components/ProductSearchComponent.php
+    // src/Components/ProductSearch.php
     namespace App\Components;
 
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-    #[AsLiveComponent('product_search')]
-    class ProductSearchComponent
+    #[AsLiveComponent]
+    class ProductSearch
     {
         use DefaultActionTrait;
 
@@ -39,7 +39,7 @@ A real-time product search component might look like this::
 
 .. code-block:: html+twig
 
-    {# templates/components/product_search.html.twig #}
+    {# templates/components/ProductSearch.html.twig #}
     {# for the Live Component to work, there must be a single root element
        (e.g. a <div>) where the attributes are applied to #}
     <div {{ attributes }}>
@@ -69,9 +69,7 @@ Done! Now render it wherever you want:
 
 .. code-block:: twig
 
-    {# the argument is the name of the live component,
-       which is defined in the #[AsLiveComponent] attribute #}
-    {{ component('product_search') }}
+    {{ component('ProductSearch') }}
 
 As a user types into the box, the component will automatically re-render
 and show the new results!
@@ -123,13 +121,13 @@ documentation to get the basics of Twig components.
 
 Suppose you've already built a basic Twig component::
 
-    // src/Components/RandomNumberComponent.php
+    // src/Components/RandomNumber.php
     namespace App\Components;
 
     use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-    #[AsTwigComponent('random_number')]
-    class RandomNumberComponent
+    #[AsTwigComponent()]
+    class RandomNumber
     {
         public function getRandomNumber(): int
         {
@@ -139,7 +137,7 @@ Suppose you've already built a basic Twig component::
 
 .. code-block:: html+twig
 
-    {# templates/components/random_number.html.twig #}
+    {# templates/components/RandomNumber.html.twig #}
     <div>
         <strong>{{ this.randomNumber }}</strong>
     </div>
@@ -151,14 +149,14 @@ re-rendered live on the frontend), replace the component's
 
 .. code-block:: diff
 
-      // src/Components/RandomNumberComponent.php
+      // src/Components/RandomNumber.php
     - use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
     + use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     + use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-    - #[AsTwigComponent('random_number')]
-    + #[AsLiveComponent('random_number')]
-      class RandomNumberComponent
+    - #[AsTwigComponent()]
+    + #[AsLiveComponent]
+      class RandomNumber
       {
     +     use DefaultActionTrait;
       }
@@ -204,14 +202,14 @@ LiveProps: Stateful Component Properties
 
 Let's make our component more flexible by adding a ``$max`` property::
 
-    // src/Components/RandomNumberComponent.php
+    // src/Components/RandomNumber.php
     namespace App\Components;
 
     // ...
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
-    #[AsLiveComponent('random_number')]
-    class RandomNumberComponent
+    #[AsLiveComponent]
+    class RandomNumber
     {
         #[LiveProp]
         public int $max = 1000;
@@ -229,7 +227,7 @@ the component:
 
 .. code-block:: twig
 
-    {{ component('random_number', { max: 500 }) }}
+    {{ component('RandomNumber', { max: 500 }) }}
 
 But what's up with the ``LiveProp`` attribute? A property with the
 ``LiveProp`` attribute becomes a "stateful" property for this component.
@@ -270,7 +268,7 @@ Add an input to the template:
 
 .. code-block:: html+twig
 
-    {# templates/components/random_number.html.twig #}
+    {# templates/components/RandomNumber.html.twig #}
     <div {{ attributes }}>
         <input type="number" data-model="max">
 
@@ -304,10 +302,10 @@ Well, actually, we're missing one step. By default, a ``LiveProp`` is
 
 .. code-block:: diff
 
-      // src/Components/RandomNumberComponent.php
+      // src/Components/RandomNumber.php
       // ...
 
-      class RandomNumberComponent
+      class RandomNumber
       {
           // ...
 
@@ -426,8 +424,8 @@ Doctrine entity objects are a special case for ``LiveProp``::
 
     use App\Entity\Post;
 
-    #[AsLiveComponent('edit_post')]
-    class EditPostComponent
+    #[AsLiveComponent]
+    class EditPost
     {
         #[LiveProp]
         public Post $post;
@@ -454,8 +452,8 @@ This also works as a way to make only *some* keys of an array writable::
 
     use App\Entity\Post;
 
-    #[AsLiveComponent('edit_post')]
-    class EditPostComponent
+    #[AsLiveComponent]
+    class EditPost
     {
         #[LiveProp(writable: ['title', 'content'])]
         public Post $post;
@@ -488,8 +486,8 @@ Any other properties on the object (or keys on the array) will be read-only.
 For arrays, you can set ``writable: true`` to allow *any* key in the array to be
 changed, added or removed::
 
-    #[AsLiveComponent('edit_post')]
-    class EditPostComponent
+    #[AsLiveComponent]
+    class EditPost
     {
         // ...
 
@@ -514,8 +512,8 @@ Checkboxes, Select Elements Radios & Arrays
 
 Checkboxes can be used to set a boolean or an array of strings::
 
-    #[AsLiveComponent('edit_post')]
-    class EditPostComponent
+    #[AsLiveComponent]
+    class EditPost
     {
         #[LiveProp(writable: true)]
         public bool $agreeToTerms = false;
@@ -538,8 +536,8 @@ value on checked. If no ``value`` is set, the checkbox will set a boolean value:
 ``select`` and ``radio`` elements are a bit easier: use these to either set a
 single value or an array of values::
 
-    #[AsLiveComponent('edit_post')]
-    class EditPostComponent
+    #[AsLiveComponent]
+    class EditPost
     {
         // ...
 
@@ -600,8 +598,8 @@ To make the ``post`` property itself writable, use ``writable: true``::
 
     use App\Entity\Post;
 
-    #[AsLiveComponent('edit_post')]
-    class EditPostComponent
+    #[AsLiveComponent]
+    class EditPost
     {
         #[LiveProp(writable: true)]
         public Post $post;
@@ -618,8 +616,8 @@ properties, use the special ``LiveProp::IDENTITY`` constant::
 
     use App\Entity\Post;
 
-    #[AsLiveComponent('edit_post')]
-    class EditPostComponent
+    #[AsLiveComponent]
+    class EditPost
     {
         #[LiveProp(writable: [LiveProp::IDENTITY, 'title', 'content'])]
         public Post $post;
@@ -839,7 +837,7 @@ The following hooks are available (along with the arguments that are passed):
 Adding a Stimulus Controller to your Component Root Element
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded: 2.7
+.. versionadded:: 2.7
 
     The ``add()`` method was introduced in TwigComponents 2.7.
 
@@ -973,13 +971,13 @@ that, when clicked, sets the min/max numbers back to a default value.
 First, add a method with a ``LiveAction`` attribute above it that does
 the work::
 
-    // src/Components/RandomNumberComponent.php
+    // src/Components/RandomNumber.php
     namespace App\Components;
 
     // ...
     use Symfony\UX\LiveComponent\Attribute\LiveAction;
 
-    class RandomNumberComponent
+    class RandomNumber
     {
         // ...
 
@@ -1032,13 +1030,13 @@ normal controller method that you would create with a route.
 
 This means that, for example, you can use action autowiring::
 
-    // src/Components/RandomNumberComponent.php
+    // src/Components/RandomNumber.php
     namespace App\Components;
 
     // ...
     use Psr\Log\LoggerInterface;
 
-    class RandomNumberComponent
+    class RandomNumber
     {
         // ...
 
@@ -1073,14 +1071,14 @@ You can also provide custom arguments to your action:
 In your component, to allow each argument to be passed, we need to add
 the ``#[LiveArg()]`` attribute::
 
-    // src/Components/ItemComponent.php
+    // src/Components/ItemList.php
     namespace App\Components;
 
     // ...
     use Psr\Log\LoggerInterface;
     use Symfony\UX\LiveComponent\Attribute\LiveArg;
 
-    class ItemComponent
+    class ItemList
     {
         // ...
         #[LiveAction]
@@ -1116,7 +1114,7 @@ If you want to disable CSRF for a single component you can set
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
-    #[AsLiveComponent('my_live_component', csrf: false)]
+    #[AsLiveComponent(csrf: false)]
     class MyLiveComponent
     {
         // ...
@@ -1130,13 +1128,13 @@ Sometimes, you may want to redirect after an action is executed
 page). You can do that by returning a ``RedirectResponse`` from your
 action::
 
-    // src/Components/RandomNumberComponent.php
+    // src/Components/RandomNumber.php
     namespace App\Components;
 
     // ...
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
-    class RandomNumberComponent extends AbstractController
+    class RandomNumber extends AbstractController
     {
         // ...
 
@@ -1236,7 +1234,7 @@ write your form controller logic::
     }
 
 Great! In the template, instead of rendering the form, let's render a
-``post_form`` component that we will create next:
+``PostForm`` component that we will create next:
 
 .. code-block:: html+twig
 
@@ -1246,13 +1244,13 @@ Great! In the template, instead of rendering the form, let's render a
     {% block body %}
         <h1>Edit Post</h1>
 
-        {{ component('post_form', {
+        {{ component('PostForm', {
             post: post,
             form: form
         }) }}
     {% endblock %}
 
-Ok: time to build that ``post_form`` component! The Live Components
+Ok: time to build that ``PostForm`` component! The Live Components
 package comes with a special trait - ``ComponentWithFormTrait`` - to
 make it easy to deal with forms::
 
@@ -1267,8 +1265,8 @@ make it easy to deal with forms::
     use Symfony\UX\LiveComponent\ComponentWithFormTrait;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-    #[AsLiveComponent('post_form')]
-    class PostFormComponent extends AbstractController
+    #[AsLiveComponent]
+    class PostForm extends AbstractController
     {
         use DefaultActionTrait;
         use ComponentWithFormTrait;
@@ -1312,7 +1310,7 @@ as ``form`` thanks to the trait:
 
 .. code-block:: html+twig
 
-    {# templates/components/post_form.html.twig #}
+    {# templates/components/PostForm.html.twig #}
     <div {{ attributes }}>
         {{ form_start(form) }}
             {{ form_row(form.title) }}
@@ -1360,8 +1358,8 @@ a ``post`` property.
 
 Tou can make that optional by adding a ``mount()`` method::
 
-    #[AsLiveComponent('post_form')]
-    class PostFormComponent extends AbstractController
+    #[AsLiveComponent]
+    class PostForm extends AbstractController
     {
         // ...
         #[LiveProp(fieldName: 'data')]
@@ -1453,7 +1451,7 @@ And you wouldn't pass any ``form`` into the component:
     {# templates/post/edit.html.twig #}
     <h1>Edit Post</h1>
 
-    {{ component('post_form', {
+    {{ component('PostForm', {
         post: post
     }) }}
 
@@ -1465,7 +1463,7 @@ automatically. Let's add the ``save()`` action to the component::
     use Doctrine\ORM\EntityManagerInterface;
     use Symfony\UX\LiveComponent\Attribute\LiveAction;
 
-    class PostFormComponent extends AbstractController
+    class PostForm extends AbstractController
     {
         // ...
 
@@ -1494,7 +1492,7 @@ Finally, tell the ``form`` element to use this action:
 
 .. code-block:: twig
 
-    {# templates/components/post_form.html.twig #}
+    {# templates/components/PostForm.html.twig #}
     {# ... #}
 
     {{ form_start(form, {
@@ -1563,8 +1561,8 @@ Now, create a Twig component to render the form::
     use Symfony\UX\LiveComponent\ComponentWithFormTrait;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-    #[AsLiveComponent('blog_post_collection_type')]
-    class BlogPostCollectionTypeComponent extends AbstractController
+    #[AsLiveComponent]
+    class BlogPostCollectionType extends AbstractController
     {
         use ComponentWithFormTrait;
         use DefaultActionTrait;
@@ -1709,8 +1707,8 @@ Now, create a Twig component to render the form::
     use Symfony\UX\LiveComponent\DefaultActionTrait;
     use Symfony\UX\LiveComponent\LiveCollectionTrait;
 
-    #[AsLiveComponent('blog_post_collection_type')]
-    class BlogPostCollectionTypeComponent extends AbstractController
+    #[AsLiveComponent]
+    class BlogPostCollectionType extends AbstractController
     {
         use LiveCollectionTrait;
         use DefaultActionTrait;
@@ -1819,7 +1817,7 @@ Override the specific block for comment items:
 
 .. code-block:: html+twig
 
-    {# components/_form_theme_comment_list.html.twig #}
+    {# templates/components/_form_theme_comment_list.html.twig #}
     {%- block _blog_post_form_comments_entry_row -%}
         <li class="...">
             {{ form_row(form.content, { label: false }) }}
@@ -1957,8 +1955,8 @@ need::
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
     use Symfony\UX\LiveComponent\ValidatableComponentTrait;
 
-    #[AsLiveComponent('edit_user')]
-    class EditUserComponent
+    #[AsLiveComponent]
+    class EditUser
     {
         use ValidatableComponentTrait;
 
@@ -1985,8 +1983,8 @@ action::
 
     use Symfony\UX\LiveComponent\Attribute\LiveAction;
 
-    #[AsLiveComponent('edit_user')]
-    class EditUserComponent
+    #[AsLiveComponent]
+    class EditUser
     {
         // ...
 
@@ -2227,12 +2225,12 @@ use the ``name()`` modifier:
 
     <button
         data-action="live#emit"
-        data-event="name(product_list)|productAdded"
+        data-event="name(ProductList)|productAdded"
     >
 
 Or, in PHP::
 
-    $this->emit('productAdded', name: 'product_list');
+    $this->emit('productAdded', name: 'ProductList');
 
 Emitting only to Yourself
 .........................
@@ -2273,7 +2271,7 @@ todo items:
 
 .. code-block:: html+twig
 
-    {# templates/components/todo_list.html.twig #}
+    {# templates/components/TodoList.html.twig #}
     <div {{ attributes }}>
         <input data-model="listName">
 
@@ -2281,7 +2279,7 @@ todo items:
             ...
         {% endfor %}
 
-        {{ component('todo_footer', {
+        {{ component('TodoFooter', {
             count: todos|length
         }) }}
     </div>
@@ -2295,12 +2293,12 @@ each component lives in its own universe.
     The ``updateFromParent`` option was added in Live Components 2.8. Previously,
     a child would re-render when *any* props passed into it changed.
 
-However, if the user adds a *new* todo item then we *do* want the ``todo_footer``
+However, if the user adds a *new* todo item then we *do* want the ``TodoFooter``
 child component to re-render: using the new ``count`` value. To trigger this,
-in the ``todo_footer`` component, add the ``updateFromParent`` option::
+in the ``TodoFooter`` component, add the ``updateFromParent`` option::
 
-    #[LiveComponent('todo_footer')]
-    class TodoFooterComponent
+    #[LiveComponent()]
+    class TodoFooter
     {
         #[LiveProp(updateFromParent: true)]
         public int $count = 0;
@@ -2311,16 +2309,16 @@ changes, the child will make a second Ajax request to re-render itself.
 
 .. note::
 
-    To work, the name of the prop that's passed when rendering the ``todo_footer``
+    To work, the name of the prop that's passed when rendering the ``TodoFooter``
     component must match the property name that has the ``updateFromParent`` - e.g.
-    ``{{ component('todo_footer', { count: todos|length }) }}``. If you pass in a
+    ``{{ component('TodoFooter', { count: todos|length }) }}``. If you pass in a
     different name and set the ``count`` property via a ref:``mount()`` method, the
     child component will not re-render correctly.
 
 Child components keep their modifiable LiveProp values
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-What if the ``todo_footer`` component in the previous example also has
+What if the ``TodoFooter`` component in the previous example also has
 an ``isVisible`` ``LiveProp(writable: true)`` property which starts as
 ``true`` but can be changed (via a link click) to ``false``. Will
 re-rendering the child when ``count`` changes cause this to be reset back to its
@@ -2335,11 +2333,11 @@ that will change if the component should be totally re-rendered:
 
 .. code-block:: html+twig
 
-    {# templates/components/todo_list.html.twig #}
+    {# templates/components/TodoList.html.twig #}
     <div {{ attributes }}>
         <!-- ... -->
 
-        {{ component('todo_footer', {
+        {{ component('TodoFooter', {
             count: todos|length,
             'data-live-id': 'todo-footer-'~todos|length
         }) }}
@@ -2403,19 +2401,19 @@ attribute to the child:
 
 .. code-block:: twig
 
-    {# templates/components/post_form.html.twig #}
-    {{ component('textarea_field', {
+    {# templates/components/PostForm.html.twig #}
+    {{ component('TextareaField', {
         dataModel: 'content',
         error: _errors.get('content'),
     }) }}
 
 This does two things:
 
-#. A prop called ``value`` will be passed into ``textarea_field``
+#. A prop called ``value`` will be passed into ``TextareaField``
    set to ``content`` from the parent component (i.e. the same
    as manually passing ``value: content`` into the component).
 
-#. When the ``value`` prop changes inside of ``textarea_field``,
+#. When the ``value`` prop changes inside of ``TextareaField``,
    the ``content`` prop will change on the parent component.
 
 This result is that, when ``value`` changes, the parent component
@@ -2434,7 +2432,7 @@ syntax. The following is the same as above:
 .. code-block:: html+twig
 
     <!-- same as dataModel: 'content' -->
-    {{ component('textarea_field', {
+    {{ component('TextareaField', {
         dataModel: 'content:value',
     }) }}
 
@@ -2442,7 +2440,7 @@ If your child component has multiple models, separate each with a space:
 
 .. code-block:: twig
 
-    {{ component('textarea_field', {
+    {{ component('TextareaField', {
         dataModel: 'user.firstName:first user.lastName:last',
     }) }}
 
@@ -2454,7 +2452,7 @@ Full Embedded Component Example
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Let's look at a full, complex example of an embedded component. Suppose
-you have an ``EditPostComponent``::
+you have an ``EditPost``::
 
     namespace App\Twig\Components;
 
@@ -2465,8 +2463,8 @@ you have an ``EditPostComponent``::
     use Symfony\UX\LiveComponent\Attribute\LiveAction;
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
-    #[AsLiveComponent('edit_post')]
-    final class EditPostComponent extends AbstractController
+    #[AsLiveComponent]
+    final class EditPost extends AbstractController
     {
         #[LiveProp(writable: ['title', 'content'])]
         public Post $post;
@@ -2480,15 +2478,15 @@ you have an ``EditPostComponent``::
         }
     }
 
-And a ``MarkdownTextareaComponent``::
+And a ``MarkdownTextarea``::
 
     namespace App\Twig\Components;
 
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
-    #[AsLiveComponent('markdown_textarea')]
-    final class MarkdownTextareaComponent
+    #[AsLiveComponent]
+    final class MarkdownTextarea
     {
         #[LiveProp]
         public string $label;
@@ -2500,12 +2498,12 @@ And a ``MarkdownTextareaComponent``::
         public string $value = '';
     }
 
-In the ``EditPostComponent`` template, you render the
-``MarkdownTextareaComponent``:
+In the ``EditPost`` template, you render the
+``MarkdownTextarea``:
 
 .. code-block:: html+twig
 
-    {# templates/components/edit_post.html.twig #}
+    {# templates/components/EditPost.html.twig #}
     <div {{ attributes }}>
         <form data-model="on(change)|*">
             <input
@@ -2514,7 +2512,7 @@ In the ``EditPostComponent`` template, you render the
                 value="{{ post.title }}"
             >
 
-            {{ component('markdown_textarea', {
+            {{ component('MarkdownTextarea', {
                 name: 'post[content]',
                 dataModel: 'value:post.content',
                 label: 'Content',
@@ -2540,7 +2538,7 @@ In the ``EditPostComponent`` template, you render the
         </div>
     </div>
 
-Notice that ``MarkdownTextareaComponent`` allows a dynamic ``name``
+Notice that ``MarkdownTextarea`` allows a dynamic ``name``
 attribute to be passed in. This makes that component re-usable in any
 form.
 
@@ -2561,7 +2559,7 @@ to that component:
 
 .. code-block:: twig
 
-    {# templates/components/invoice.html.twig #}
+    {# templates/components/Invoice.html.twig #}
     {% for lineItem in lineItems %}
         {{ component('invoice_line_item', {
             productId: lineItem.productId,
@@ -2651,13 +2649,13 @@ Then specify this new route on your component:
 
 .. code-block:: diff
 
-    // src/Components/RandomNumberComponent.php
+    // src/Components/RandomNumber.php
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-    - #[AsLiveComponent('random_number')]
-    + #[AsLiveComponent('random_number', route: 'live_component_admin')]
-      class RandomNumberComponent
+    - #[AsLiveComponent]
+    + #[AsLiveComponent(route: 'live_component_admin')]
+      class RandomNumber
       {
           use DefaultActionTrait;
       }

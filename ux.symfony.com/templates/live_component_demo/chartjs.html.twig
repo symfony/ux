@@ -1,21 +1,21 @@
 {% extends 'liveDemoBase.html.twig' %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'src/Twig/DinoChartComponent.php', height: '400px' } %}
+    {% component CodeBlock with { filename: 'src/Twig/DinoChart.php', height: '400px' } %}
         {% block content %}
-            {{- source('@src/Twig/DinoChartComponent.php')|cleanup_php_file -}}
+            {{- source('@src/Twig/DinoChart.php')|cleanup_php_file -}}
         {% endblock %}
     {% endcomponent %}
 {% endblock %}
 
 {% block code_block_right %}
-    {% component code_block with { filename: 'templates/components/dino_chart.html.twig', height: '400px' } %}
+    {% component CodeBlock with { filename: 'templates/components/DinoChart.html.twig', height: '400px' } %}
         {% block content %}
-            {{- source('components/dino_chart.html.twig') -}}
+            {{- source('components/DinoChart.html.twig') -}}
         {% endblock %}
     {% endcomponent %}
 {% endblock %}
 
 {% block demo_content %}
-    {{ component('dino_chart') }}
+    {{ component('DinoChart') }}
 {% endblock %}

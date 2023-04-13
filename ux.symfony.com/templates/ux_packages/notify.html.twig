@@ -1,7 +1,7 @@
 {% extends 'packageBase.html.twig' %}
 
 {% block component_header %}
-    {% component package_header with {
+    {% component PackageHeader with {
         package: package,
         eyebrowText: 'Native Browser Notifications'
     } %}
@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'src/Controller/NotifierController.php', height: '300px' } %}
+    {% component CodeBlock with { filename: 'src/Controller/NotifierController.php', height: '300px' } %}
         {% block content %}
             {{- source('@code_snippets/_NotifierController.php')|cleanup_php_file(removeClass=true) -}}
         {% endblock %}
@@ -25,7 +25,7 @@
 {% endblock %}
 
 {% block code_block_right %}
-    {% component code_block with { filename: 'templates/notifier/notify.html.twig', height: '300px' } %}
+    {% component CodeBlock with { filename: 'templates/notifier/notify.html.twig', height: '300px' } %}
         {% block content %}
             {{- source('@code_snippets/_notify.html.twig') -}}
         {% endblock %}

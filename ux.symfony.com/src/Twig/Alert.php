@@ -5,8 +5,8 @@ namespace App\Twig;
 use App\Service\PackageRepository;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('alert')]
-class AlertComponent
+#[AsTwigComponent()]
+class Alert
 {
     public string $type = 'success';
     public string $message;

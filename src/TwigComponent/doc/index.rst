@@ -7,13 +7,13 @@ making it easier to render and re-use small template "units" - like an
 
 Every component consists of (1) a class::
 
-    // src/Components/AlertComponent.php
+    // src/Components/Alert.php
     namespace App\Components;
 
     use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-    #[AsTwigComponent('alert')]
-    class AlertComponent
+    #[AsTwigComponent]
+    class Alert
     {
         public string $type = 'success';
         public string $message;
@@ -23,7 +23,7 @@ And (2) a corresponding template:
 
 .. code-block:: html+twig
 
-    {# templates/components/alert.html.twig #}
+    {# templates/components/Alert.html.twig #}
     <div class="alert alert-{{ type }}">
         {{ message }}
     </div>
@@ -32,14 +32,14 @@ Done! Now render it wherever you want:
 
 .. code-block:: twig
 
-    {{ component('alert', { message: 'Hello Twig Components!' }) }}
+    {{ component('Alert', { message: 'Hello Twig Components!' }) }}
 
 Enjoy your new component!
 
 .. image:: images/alert-example.png
-   :alt: Example of the AlertComponent
+   :alt: Example of the Alert Component
 
-   Example of the AlertComponent
+   Example of the Alert Component
 
 This brings the familiar "component" system from client-side frameworks
 into Symfony. Combine this with `Live Components`_, to create
@@ -66,24 +66,23 @@ or error messages across our site. Step 1 is always to create a
 component that has an ``AsTwigComponent`` class attribute. Let's start
 as simple as possible::
 
-    // src/Components/AlertComponent.php
+    // src/Components/Alert.php
     namespace App\Components;
 
     use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-    #[AsTwigComponent('alert')]
-    class AlertComponent
+    #[AsTwigComponent]
+    class Alert
     {
     }
 
 Step 2 is to create a template for this component. By default, templates
 live in ``templates/components/{component_name}.html.twig``, where
-``{component_name}`` is whatever you passed as the first argument to the
-``AsTwigComponent`` class attribute:
+``{component_name}`` matches the class name of the component:
 
 .. code-block:: html+twig
 
-    {# templates/components/alert.html.twig #}
+    {# templates/components/Alert.html.twig #}
     <div class="alert alert-success">
         Success! You've created a Twig component!
     </div>
@@ -94,26 +93,42 @@ any other Twig template:
 
 .. code-block:: twig
 
-    {{ component('alert') }}
+    {{ component('Alert') }}
 
 Done! You've just rendered your first Twig Component! Take a moment to
 fist pump - then come back!
 
+Naming Your Component
+---------------------
+
+.. versionadded:: 2.8
+
+    Before 2.8, passing a name to ``AsTwigComponent`` was required. Now, the
+    name is optional and defaults to the class name.
+
+The name of your component is the class name by default. But you can
+customize it by passing an argument to ``AsTwigComponent``::
+
+    #[AsTwigComponent('alert')]
+    class Alert
+    {
+    }
+
 Passing Data into your Component
 --------------------------------
 
-Good start: but this isn't very interesting yet! To make our ``alert``
+Good start: but this isn't very interesting yet! To make our ``Alert``
 component reusable, we need to make the message and type
 (e.g. ``success``, ``danger``, etc) configurable. To do that, create a
 public property for each:
 
 .. code-block:: diff
 
-      // src/Components/AlertComponent.php
+      // src/Components/Alert.php
       // ...
 
-      #[AsTwigComponent('alert')]
-      class AlertComponent
+      #[AsTwigComponent]
+      class Alert
       {
     +     public string $message;
 
@@ -122,7 +137,7 @@ public property for each:
           // ...
       }
 
-In the template, the ``AlertComponent`` instance is available via
+In the template, the ``Alert`` instance is available via
 the ``this`` variable and public properties are available directly.
 Use them to render the two new properties:
 
@@ -145,14 +160,14 @@ them as a 2nd argument to the ``component()`` function when rendering:
 
 .. code-block:: twig
 
-    {{ component('alert', { message: 'Successfully created!' }) }}
+    {{ component('Alert', { message: 'Successfully created!' }) }}
 
-    {{ component('alert', {
+    {{ component('Alert', {
         type: 'danger',
         message: 'Danger Will Robinson!'
     }) }}
 
-Behind the scenes, a new ``AlertComponent`` will be instantiated and the
+Behind the scenes, a new ``Alert`` will be instantiated and the
 ``message`` key (and ``type`` if passed) will be set onto the
 ``$message`` property of the object. Then, the component is rendered! If
 a property has a setter method (e.g. ``setMessage()``), that will be
@@ -163,8 +178,8 @@ called instead of setting the property directly.
     You can disable exposing public properties for a component. When disabled,
     ``this.property`` must be used::
 
-        #[AsTwigComponent('alert', exposePublicProps: false)]
-        class AlertComponent
+        #[AsTwigComponent(exposePublicProps: false)]
+        class Alert
         {
             // ...
         }
@@ -177,12 +192,12 @@ as the second argument to the ``AsTwigComponent`` attribute:
 
 .. code-block:: diff
 
-      // src/Components/AlertComponent.php
+      // src/Components/Alert.php
       // ...
 
-    - #[AsTwigComponent('alert')]
-    + #[AsTwigComponent('alert', template: 'my/custom/template.html.twig')]
-      class AlertComponent
+    - #[AsTwigComponent]
+    + #[AsTwigComponent(template: 'my/custom/template.html.twig')]
+      class Alert
       {
           // ...
       }
@@ -201,11 +216,11 @@ If, for some reason, you don't want an option to the ``component()``
 function to be set directly onto a property, you can, instead, create a
 ``mount()`` method in your component::
 
-    // src/Components/AlertComponent.php
+    // src/Components/Alert.php
     // ...
 
-    #[AsTwigComponent('alert')]
-    class AlertComponent
+    #[AsTwigComponent]
+    class Alert
     {
         public string $message;
         public string $type = 'success';
@@ -240,12 +255,12 @@ PreMount Hook
 If you need to modify/validate data before it's *mounted* on the
 component use a ``PreMount`` hook::
 
-    // src/Components/AlertComponent.php
+    // src/Components/Alert.php
     use Symfony\UX\TwigComponent\Attribute\PreMount;
     // ...
 
-    #[AsTwigComponent('alert')]
-    class AlertComponent
+    #[AsTwigComponent]
+    class Alert
     {
         public string $message;
         public string $type = 'success';
@@ -285,12 +300,12 @@ behavior and "catch" this extra data with a ``PostMount`` hook method. This
 method accepts the extra data as an argument and must return an array. If
 the returned array is empty, the exception will be avoided::
 
-    // src/Components/AlertComponent.php
+    // src/Components/Alert.php
     use Symfony\UX\TwigComponent\Attribute\PostMount;
     // ...
 
-    #[AsTwigComponent('alert')]
-    class AlertComponent
+    #[AsTwigComponent]
+    class Alert
     {
         #[PostMount]
         public function postMount(): array
@@ -306,20 +321,20 @@ A ``PostMount`` method can also receive an array ``$data`` argument, which
 will contain any props passed to the component that have *not* yet been processed,
 i.e. because they don't correspond to any property. You can handle and remove those
 here. For example, imagine an extra ``autoChooseType`` prop were passed when
-creating the ``alert`` component::
+creating the ``Alert`` component:
 
 .. code-block:: twig
 
-    {{ component('alert', {
+    {{ component('Alert', {
         message: 'Danger Will Robinson!',
         autoChooseType: true,
     }) }}
 
 You can handle this prop via a ``#[PostMount]`` hook::
 
-    // src/Components/AlertComponent.php
-    #[AsTwigComponent('alert')]
-    class AlertComponent
+    // src/Components/Alert.php
+    #[AsTwigComponent]
+    class Alert
     {
         public string $message;
         public string $type = 'success';
@@ -364,15 +379,13 @@ template. You can use the ``ExposeInTemplate`` attribute to expose
 private/protected properties and public methods directly in a component
 template (``someProp`` vs ``this.someProp``, ``someMethod`` vs ``this.someMethod``).
 Properties must be *accessible* (have a getter). Methods *cannot have*
-required parameters.
-
-.. code-block::
+required parameters::
 
     // ...
     use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-    #[AsTwigComponent('alert')]
-    class AlertComponent
+    #[AsTwigComponent]
+    class Alert
     {
         #[ExposeInTemplate]
         private string $message; // available as `{{ message }}` in the template
@@ -440,14 +453,14 @@ How? Components are *services*, which means autowiring works like
 normal. This example assumes you have a ``Product`` Doctrine entity and
 ``ProductRepository``::
 
-    // src/Components/FeaturedProductsComponent.php
+    // src/Components/FeaturedProducts.php
     namespace App\Components;
 
     use App\Repository\ProductRepository;
     use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-    #[AsTwigComponent('featured_products')]
-    class FeaturedProductsComponent
+    #[AsTwigComponent]
+    class FeaturedProducts
     {
         private ProductRepository $productRepository;
 
@@ -468,7 +481,7 @@ In the template, the ``getProducts()`` method can be accessed via
 
 .. code-block:: html+twig
 
-    {# templates/components/featured_products.html.twig #}
+    {# templates/components/FeaturedProducts.html.twig #}
     <div>
         <h3>Featured Products</h3>
 
@@ -482,7 +495,7 @@ need to populate, you can render it with:
 
 .. code-block:: twig
 
-    {{ component('featured_products') }}
+    {{ component('FeaturedProducts') }}
 
 .. note::
 
@@ -520,7 +533,7 @@ are called additional times, the cached value is used.
 
 .. code-block:: html+twig
 
-    {# templates/components/featured_products.html.twig #}
+    {# templates/components/FeaturedProducts.html.twig #}
     <div>
         <h3>Featured Products</h3>
 
@@ -557,7 +570,7 @@ the root element:
 
 .. code-block:: html+twig
 
-    {# templates/components/my_component.html.twig #}
+    {# templates/components/MyComponent.html.twig #}
     <div{{ attributes }}>
       My Component!
     </div>
@@ -566,7 +579,7 @@ When rendering the component, you can pass an array of html attributes to add:
 
 .. code-block:: html+twig
 
-    {{ component('my_component', { class: 'foo', style: 'color:red' }) }}
+    {{ component('MyComponent', { class: 'foo', style: 'color:red' }) }}
 
     {# renders as: #}
     <div class="foo" style="color:red">
@@ -577,11 +590,11 @@ Set an attribute's value to ``true`` to render just the attribute name:
 
 .. code-block:: html+twig
 
-    {# templates/components/my_component.html.twig #}
+    {# templates/components/MyComponent.html.twig #}
     <input{{ attributes}}/>
 
     {# render component #}
-    {{ component('my_component', { type: 'text', value: '', autofocus: true }) }}
+    {{ component('MyComponent', { type: 'text', value: '', autofocus: true }) }}
 
     {# renders as: #}
     <input type="text" value="" autofocus/>
@@ -590,16 +603,16 @@ Set an attribute's value to ``false`` to exclude the attribute:
 
 .. code-block:: html+twig
 
-    {# templates/components/my_component.html.twig #}
+    {# templates/components/MyComponent.html.twig #}
     <input{{ attributes}}/>
 
     {# render component #}
-    {{ component('my_component', { type: 'text', value: '', autofocus: false }) }}
+    {{ component('MyComponent', { type: 'text', value: '', autofocus: false }) }}
 
     {# renders as: #}
     <input type="text" value=""/>
 
-.. versionadded: 2.7
+.. versionadded:: 2.7
 
     The ``add()`` method was introduced in TwigComponents 2.7.
 
@@ -613,8 +626,8 @@ To add a custom Stimulus controller to your root component element:
 
     You can adjust the attributes variable exposed in your template::
 
-        #[AsTwigComponent('alert', attributesVar: '_attributes')]
-        class AlertComponent
+        #[AsTwigComponent(attributesVar: '_attributes')]
+        class Alert
         {
             // ...
         }
@@ -628,17 +641,17 @@ the exception of *class*. For ``class``, the defaults are prepended:
 
 .. code-block:: html+twig
 
-    {# templates/components/my_component.html.twig #}
+    {# templates/components/MyComponent.html.twig #}
     <button{{ attributes.defaults({ class: 'bar', type: 'button' }) }}>Save</button>
 
     {# render component #}
-    {{ component('my_component', { style: 'color:red' }) }}
+    {{ component('MyComponent', { style: 'color:red' }) }}
 
     {# renders as: #}
     <button class="bar" type="button" style="color:red">Save</button>
 
     {# render component #}
-    {{ component('my_component', { class: 'foo', type: 'submit' }) }}
+    {{ component('MyComponent', { class: 'foo', type: 'submit' }) }}
 
     {# renders as: #}
     <button class="bar foo" type="submit">Save</button>
@@ -650,13 +663,13 @@ Extract specific attributes and discard the rest:
 
 .. code-block:: html+twig
 
-    {# templates/components/my_component.html.twig #}
+    {# templates/components/MyComponent.html.twig #}
     <div{{ attributes.only('class') }}>
       My Component!
     </div>
 
     {# render component #}
-    {{ component('my_component', { class: 'foo', style: 'color:red' }) }}
+    {{ component('MyComponent', { class: 'foo', style: 'color:red' }) }}
 
     {# renders as: #}
     <div class="foo">
@@ -670,13 +683,13 @@ Exclude specific attributes:
 
 .. code-block:: html+twig
 
-    {# templates/components/my_component.html.twig #}
+    {# templates/components/MyComponent.html.twig #}
     <div{{ attributes.without('class') }}>
       My Component!
     </div>
 
     {# render component #}
-    {{ component('my_component', { class: 'foo', style: 'color:red' }) }}
+    {{ component('MyComponent', { class: 'foo', style: 'color:red' }) }}
 
     {# renders as: #}
     <div style="color:red">
@@ -779,7 +792,7 @@ blocks for the cells and an optional footer:
 
 .. code-block:: html+twig
 
-    {# templates/components/data_table.html.twig #}
+    {# templates/components/DataTable.html.twig #}
     <div{{ attributes.defaults({class: 'data-table'}) }}>
         <table>
             <thead>
@@ -812,7 +825,7 @@ The ``with`` data is what's mounted on the component object.
 .. code-block:: html+twig
 
     {# templates/some_page.html.twig #}
-    {% component table with {headers: ['key', 'value'], data: [[1, 2], [3, 4]]} %}
+    {% component DataTable with {headers: ['key', 'value'], data: [[1, 2], [3, 4]]} %}
         {% block th_class %}{{ parent() }} text-bold{% endblock %}
 
         {% block td_class %}{{ parent() }} text-italic{% endblock %}

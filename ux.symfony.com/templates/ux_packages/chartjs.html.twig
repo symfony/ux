@@ -1,7 +1,7 @@
 {% extends 'packageBase.html.twig' %}
 
 {% block component_header %}
-    {% component package_header with {
+    {% component PackageHeader with {
         package: package,
         eyebrowText: 'Charts from PHP'
     } %}
@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'src/Controller/ChartController.php', height: '250px' } %}
+    {% component CodeBlock with { filename: 'src/Controller/ChartController.php', height: '250px' } %}
         {% block content %}
             {{- source('@code_snippets/_ChartController.php')|cleanup_php_file(removeClass=true) -}}
         {% endblock %}
@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block code_block_right %}
-    {% component code_block with { filename: 'templates/chart/chartjs.html.twig', height: '250px' } %}
+    {% component CodeBlock with { filename: 'templates/chart/chartjs.html.twig', height: '250px' } %}
         {% block content %}
             {{- source('@code_snippets/_chartjs.html.twig') -}}
         {% endblock %}

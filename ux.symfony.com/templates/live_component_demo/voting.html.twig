@@ -1,17 +1,17 @@
 {% extends 'liveDemoBase.html.twig' %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'src/Twig/FoodVoteComponent.php', height: '400px' } %}
+    {% component CodeBlock with { filename: 'src/Twig/FoodVote.php', height: '400px' } %}
         {% block content %}
-            {{- source('@src/Twig/FoodVoteComponent.php')|cleanup_php_file -}}
+            {{- source('@src/Twig/FoodVote.php')|cleanup_php_file -}}
         {% endblock %}
     {% endcomponent %}
 {% endblock %}
 
 {% block code_block_right %}
-    {% component code_block with { filename: 'templates/components/food_vote.html.twig', height: '400px' } %}
+    {% component CodeBlock with { filename: 'templates/components/FoodVote.html.twig', height: '400px' } %}
         {% block content %}
-            {{- source('components/food_vote.html.twig') -}}
+            {{- source('components/FoodVote.html.twig') -}}
         {% endblock %}
     {% endcomponent %}
 {% endblock %}
@@ -19,7 +19,7 @@
 {% block demo_content %}
     <table class="table">
         {% for food in foods %}
-            {{ component('food_vote', {
+            {{ component('FoodVote', {
                 food: food
             }) }}
         {% endfor %}

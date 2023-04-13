@@ -4,6 +4,8 @@
 
 -   `true` attribute values now render just the attribute name, `false` excludes it entirely.
 
+-   The first argument to `AsTwigComponent` is now optional and defaults to the class name.
+
 ## 2.7.0
 
 -   `PreMount` and `PostMount` hooks can now return nothing.

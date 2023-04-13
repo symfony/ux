@@ -5,8 +5,8 @@ namespace App\Twig;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsTwigComponent('docs_link')]
-class DocsLinkComponent
+#[AsTwigComponent()]
+class DocsLink
 {
     public string $url;
     public string $title;

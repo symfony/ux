@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\TodoItem;
 use App\Entity\TodoList;
-use App\Form\TodoListForm;
+use App\Form\TodoListFormType;
 use App\Repository\FoodRepository;
 use App\Repository\TodoListRepository;
 use App\Service\LiveDemoRepository;
@@ -31,7 +31,7 @@ class LiveComponentDemoController extends AbstractController
             $todoList = new TodoList();
             $todoList->addTodoItem(new TodoItem());
         }
-        $form = $this->createForm(TodoListForm::class, $todoList);
+        $form = $this->createForm(TodoListFormType::class, $todoList);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

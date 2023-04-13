@@ -2,7 +2,7 @@
 
 namespace App\Twig;
 
-use App\Form\RegistrationForm;
+use App\Form\RegistrationFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -11,8 +11,8 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent('registration_form')]
-class RegistrationFormComponent extends AbstractController
+#[AsLiveComponent()]
+class RegistrationForm extends AbstractController
 {
     use ComponentWithFormTrait;
     use DefaultActionTrait;
@@ -24,7 +24,7 @@ class RegistrationFormComponent extends AbstractController
 
     protected function instantiateForm(): FormInterface
     {
-        return $this->createForm(RegistrationForm::class);
+        return $this->createForm(RegistrationFormType::class);
     }
 
     public function hasValidationErrors(): bool

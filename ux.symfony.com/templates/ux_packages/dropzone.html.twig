@@ -1,7 +1,7 @@
 {% extends 'packageBase.html.twig' %}
 
 {% block component_header %}
-    {% component package_header with {
+    {% component PackageHeader with {
         package: package,
         eyebrowText: 'Styled Upload Zone'
     } %}
@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'src/Form/DropzoneForm.php' } %}
+    {% component CodeBlock with { filename: 'src/Form/DropzoneForm.php' } %}
         {% block content %}
             {{- source('@src/Form/DropzoneForm.php')|cleanup_php_file(removeClass=true) -}}
         {% endblock %}
@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block code_block_right %}
-    {% component code_block with { filename: 'templates/anything.html.twig' } %}
+    {% component CodeBlock with { filename: 'templates/anything.html.twig' } %}
         {% block content %}
             {{- source('@code_snippets/_dropzone.html.twig') -}}
         {% endblock %}

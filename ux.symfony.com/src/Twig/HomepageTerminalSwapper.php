@@ -7,8 +7,8 @@ use App\Util\SourceCleaner;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsTwigComponent('homepage_terminal_swapper')]
-class HomepageTerminalSwapperComponent
+#[AsTwigComponent()]
+class HomepageTerminalSwapper
 {
     public function __construct(private PackageRepository $packageRepository)
     {

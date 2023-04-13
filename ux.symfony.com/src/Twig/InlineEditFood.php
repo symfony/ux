@@ -12,8 +12,8 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\ValidatableComponentTrait;
 
-#[AsLiveComponent('inline_edit_food')]
-class InlineEditFoodComponent extends AbstractController
+#[AsLiveComponent()]
+class InlineEditFood extends AbstractController
 {
     use DefaultActionTrait;
     use ValidatableComponentTrait;

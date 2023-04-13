@@ -63,5 +63,17 @@ final class Kernel extends BaseKernel
                 ->tag('twig.component')
             ;
         }
+
+        if ('missing_key_with_collision' === $this->environment) {
+            $services->set('component_b_1', ComponentB::class)
+                ->tag('twig.component', [
+                    'key' => 'ComponentB',
+                ])
+            ;
+            // this will try to reuse the same ComponentB name
+            $services->set('component_b_2', ComponentB::class)
+                ->tag('twig.component')
+            ;
+        }
     }
 }

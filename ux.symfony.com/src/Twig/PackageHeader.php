@@ -6,8 +6,8 @@ use App\Model\Package;
 use App\Repository\ChatRepository;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('package_header')]
-class PackageHeaderComponent
+#[AsTwigComponent()]
+class PackageHeader
 {
     public Package $package;
 

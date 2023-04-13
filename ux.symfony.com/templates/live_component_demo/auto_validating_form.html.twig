@@ -1,21 +1,21 @@
 {% extends 'liveDemoBase.html.twig' %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'src/Twig/RegistrationFormComponent.php', height: '400px' } %}
+    {% component CodeBlock with { filename: 'src/Twig/RegistrationForm.php', height: '400px' } %}
         {% block content %}
-            {{- source('@src/Twig/RegistrationFormComponent.php')|cleanup_php_file -}}
+            {{- source('@src/Twig/RegistrationForm.php')|cleanup_php_file -}}
         {% endblock %}
     {% endcomponent %}
 {% endblock %}
 
 {% block code_block_right %}
-    {% component code_block with { filename: 'templates/components/registration_form.html.twig', height: '400px' } %}
+    {% component CodeBlock with { filename: 'templates/components/RegistrationForm.html.twig', height: '400px' } %}
         {% block content %}
-            {{- source('components/registration_form.html.twig') -}}
+            {{- source('components/RegistrationForm.html.twig') -}}
         {% endblock %}
     {% endcomponent %}
 {% endblock %}
 
 {% block demo_content %}
-    {{ component('registration_form') }}
+    {{ component('RegistrationForm') }}
 {% endblock %}
