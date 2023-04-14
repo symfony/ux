@@ -2,7 +2,7 @@
 
 {% block component_header %}
     {% component PackageHeader with {
-        package: package,
+        package: 'vue',
         eyebrowText: 'Vue.js Component Rendering'
     } %}
         {% block title_header %}
@@ -17,19 +17,15 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component CodeBlock with { filename: 'templates/vue.html.twig', height: '350px' } %}
-        {% block content %}
-            {{- source('@code_snippets/_vue.html.twig') -}}
-        {% endblock %}
-    {% endcomponent %}
+    <twig:CodeBlock filename="templates/ux_packages/vue.html.twig" height="350px"/>
 {% endblock %}
 
 {% block code_block_right %}
-    {% component CodeBlock with { filename: 'assets/vue/controllers/PackageSearch.vue', height: '350px', language: 'html' } %}
-        {% block content %}
-            {{- source('@code_snippets/_PackageSearch.vue') -}}
-        {% endblock %}
-    {% endcomponent %}
+    <twig:CodeBlock
+        filename="assets/vue/controllers/PackageSearch.vue"
+        height="350px"
+        language="html"
+    />
 {% endblock %}
 
 {% block demo_title %}UX Vue.js{% endblock %}

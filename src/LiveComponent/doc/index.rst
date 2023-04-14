@@ -2302,7 +2302,7 @@ Stimulus controller - like this for Bootstrap's modal:
 
     // assets/controllers/bootstrap-modal-controller.js
     import { Controller } from '@hotwired/stimulus';
-    import { Modal } from 'bootstrap';
+    import Modal from 'bootstrap/js/dist/modal';
 
     export default class extends Controller {
         modal = null;
@@ -2317,7 +2317,7 @@ Just make sure this controller is attached to the modal element:
 
 .. code-block:: html+twig
 
-    <div class="modal fade" {{ stimulus_controller('bootstrap-modal') }}">
+    <div class="modal fade" {{ stimulus_controller('bootstrap-modal') }}>
         <div class="modal-dialog">
             ... content ...
         </div>

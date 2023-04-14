@@ -224,3 +224,8 @@ h4.ubuntu {
     color: $n-300;
     font-weight: lighter;
 }
+
+blockquote {
+    border-left: 5px solid $n-200;
+    padding-left: 1rem;
+}

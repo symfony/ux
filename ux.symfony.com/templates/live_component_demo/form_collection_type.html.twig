@@ -1,19 +1,11 @@
 {% extends 'liveDemoBase.html.twig' %}
 
 {% block code_block_left %}
-    {% component CodeBlock with { filename: 'src/Twig/TodoListForm.php', height: '400px' } %}
-        {% block content %}
-            {{- source('@src/Twig/TodoListForm.php')|cleanup_php_file -}}
-        {% endblock %}
-    {% endcomponent %}
+    <twig:CodeBlock filename="src/Twig/TodoListForm.php" height="400px" />
 {% endblock %}
 
 {% block code_block_right %}
-    {% component CodeBlock with { filename: 'templates/components/TodoListForm.html.twig', height: '400px' } %}
-        {% block content %}
-            {{- source('components/TodoListForm.html.twig') -}}
-        {% endblock %}
-    {% endcomponent %}
+    <twig:CodeBlock filename="templates/components/TodoListForm.html.twig" height="400px" />
 {% endblock %}
 
 {% block demo_content %}

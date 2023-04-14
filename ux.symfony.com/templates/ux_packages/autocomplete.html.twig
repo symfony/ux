@@ -2,7 +2,7 @@
 
 {% block component_header %}
     {% component PackageHeader with {
-        package: package,
+        package: 'autocomplete',
         eyebrowText: 'Smart Form Controls'
     } %}
         {% block title_header %}
@@ -20,19 +20,11 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component CodeBlock with { filename: 'src/Form/TimeForAMealForm.php', height: '400px' } %}
-        {% block content %}
-            {{- source('@src/Form/TimeForAMealForm.php')|cleanup_php_file -}}
-        {% endblock %}
-    {% endcomponent %}
+    <twig:CodeBlock filename="src/Form/TimeForAMealForm.php" height="300px" />
 {% endblock %}
 
 {% block code_block_right %}
-    {% component CodeBlock with { filename: 'src/Form/FoodAutocompleteField.php', height: '400px' } %}
-        {% block content %}
-            {{- source('@src/Form/FoodAutocompleteField.php')|cleanup_php_file -}}
-        {% endblock %}
-    {% endcomponent %}
+    <twig:CodeBlock filename="src/Form/FoodAutocompleteField.php" height="300px" />
 {% endblock %}
 
 {% block demo_title %}UX Autocomplete{% endblock %}

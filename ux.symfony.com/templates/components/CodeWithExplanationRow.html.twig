@@ -1,0 +1,12 @@
+<div {{ attributes.defaults({
+    class: 'row mb-5 align-items-center position-relative'
+}) }}>
+    <div class="col-12 col-md-6 code-description {{ not reversed ? 'order-md-2' }}">
+        {% apply markdown_to_html %}
+            {% block content %}{% endblock %}
+        {% endapply %}
+    </div>
+    <div class="col-12 col-md-6" {{ not reversed ? 'order-md-1' }}>
+        <twig:CodeBlock :filename="filename" />
+    </div>
+</div>

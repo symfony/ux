@@ -2,7 +2,7 @@
 
 {% block component_header %}
     {% component PackageHeader with {
-        package: package,
+        package: 'react',
         eyebrowText: 'React Component Rendering'
     } %}
         {% block title_header %}
@@ -17,19 +17,15 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component CodeBlock with { filename: 'templates/react.html.twig', height: '350px' } %}
-        {% block content %}
-            {{- source('@code_snippets/_react.html.twig') -}}
-        {% endblock %}
-    {% endcomponent %}
+    <twig:CodeBlock filename="assets/react/controllers/PackageSearch.jsx" height="300px" />
 {% endblock %}
 
 {% block code_block_right %}
-    {% component CodeBlock with { filename: 'assets/react/controllers/PackageSearch.jsx', height: '350px' } %}
-        {% block content %}
-            {{- source('@code_snippets/_PackageSearch.jsx') -}}
-        {% endblock %}
-    {% endcomponent %}
+    <twig:CodeBlock
+        filename="templates/ux_packages/react.html.twig"
+        height="300px"
+        targetTwigBlock="demo_content"
+    />
 {% endblock %}
 
 {% block demo_title %}UX React{% endblock %}

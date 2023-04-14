@@ -16,8 +16,10 @@ class LiveComponentDemosTest extends KernelTestCase
      */
     public function testDemoPagesAllLoad(LiveDemo $liveDemo): void
     {
+        $router = self::bootKernel()->getContainer()->get('router');
+        $url = $router->generate($liveDemo->getRoute());
         $this->browser()
-            ->visit('/live-component/demos/'.$liveDemo->getIdentifier())
+            ->visit($url)
             ->assertSuccessful()
             ->assertSeeIn('h1', $liveDemo->getName())
         ;

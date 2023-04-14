@@ -6,8 +6,10 @@ use App\Model\Package;
 
 class TwigPackageHelper
 {
-    public function __construct(private PackageRepository $packageRepository)
-    {
+    public function __construct(
+        private PackageRepository $packageRepository,
+        private PackageContext $packageContext
+    ) {
     }
 
     /**
@@ -21,5 +23,10 @@ class TwigPackageHelper
             $this->packageRepository->find('react'),
             $this->packageRepository->find('vue'),
         ];
+    }
+
+    public function getCurrentPackage(): Package
+    {
+        return $this->packageContext->getCurrentPackage();
     }
 }

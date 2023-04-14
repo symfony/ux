@@ -62,7 +62,7 @@ EOF
             new LiveDemo(
                 'inline_edit',
                 name: 'Inline Editing',
-                description: 'Activate an inline editing form with validation.',
+                description: 'Activate an inline editing form with real-time validation.',
                 route: 'app_live_components_demo_inline_edit',
                 longDescription: <<<EOF
 Inline editing? Simple. Use LiveComponents to track if you're in "edit" mode, let
@@ -78,6 +78,26 @@ EOF
 What do you get with Live Components + UX Chart.js + UX Autocomplete?
 <br>
 An auto-updating chart that you will ❤️.
+EOF
+            ),
+            new LiveDemo(
+                'invoice',
+                name: 'Invoice Creator',
+                description: 'Create an invoice + line items that updates as you type.',
+                route: 'app_live_components_invoice',
+                longDescription: <<<EOF
+A parent component with children components for each line item.
+<br>
+Children emit events to communicate to the parent.
+EOF
+            ),
+            new LiveDemo(
+                'product_form',
+                name: 'Product Form + Category Modal',
+                description: 'Create a Category on the fly - from inside a product form - via a modal.',
+                route: 'app_live_components_product_form',
+                longDescription: <<<EOF
+Open a child modal component to create a new Category.
 EOF
             ),
         ];

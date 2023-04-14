@@ -2,7 +2,7 @@
 
 {% block component_header %}
     {% component PackageHeader with {
-        package: package,
+        package: 'dropzone',
         eyebrowText: 'Styled Upload Zone'
     } %}
         {% block title_header %}
@@ -18,19 +18,14 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component CodeBlock with { filename: 'src/Form/DropzoneForm.php' } %}
-        {% block content %}
-            {{- source('@src/Form/DropzoneForm.php')|cleanup_php_file(removeClass=true) -}}
-        {% endblock %}
-    {% endcomponent %}
+    <twig:CodeBlock filename="src/Form/DropzoneForm.php" />
 {% endblock %}
 
 {% block code_block_right %}
-    {% component CodeBlock with { filename: 'templates/anything.html.twig' } %}
-        {% block content %}
-            {{- source('@code_snippets/_dropzone.html.twig') -}}
-        {% endblock %}
-    {% endcomponent %}
+    <twig:CodeBlock
+        filename="templates/ux_packages/dropzone.html.twig"
+        targetTwigBlock="demo_content"
+    />
 {% endblock %}
 
 {% block demo_title %}UX Dropzone{% endblock %}

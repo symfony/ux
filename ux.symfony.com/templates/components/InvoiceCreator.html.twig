@@ -1,0 +1,119 @@
+<div {{ attributes }}>
+    <form data-action="live#action" data-action-name="prevent|saveInvoice">
+        <div class="mb-3">
+            <label for="customer-name">Customer name:</label>
+            <input
+                type="text"
+                data-model="invoice.customerName"
+                class="form-control {{ _errors.has('invoice.customerName') ? 'is-invalid' }}"
+                id="customer-name"
+            >
+            {% if _errors.has('invoice.customerName') %}
+                <div class="invalid-feedback">
+                    {{ _errors.get('invoice.customerName') }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="mb-3">
+            <label for="customer-email">Billing Email:</label>
+            <input
+                type="email"
+                data-model="invoice.customerEmail"
+                class="form-control {{ _errors.has('invoice.customerEmail') ? 'is-invalid' }}"
+                id="customer-email"
+            >
+            {% if _errors.has('invoice.customerEmail') %}
+                <div class="invalid-feedback">
+                    {{ _errors.get('invoice.customerEmail') }}
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="card">
+            <div class="card-header">Invoice Items</div>
+            <div class="card-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th style="width: 100px;">Price</th>
+                            <th style="width: 100px;">Quantity</th>
+                            <th style="width: 100px;">&nbsp;</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for key, line in lineItems %}
+                            {{ component('InvoiceCreatorLineItem', {
+                                key: key,
+                                productId: line.productId,
+                                quantity: line.quantity,
+                                isEditing: line.isEditing,
+                            }) }}
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+                <button
+                    data-action="live#action"
+                    data-action-name="addLineItem"
+                    class="btn btn-sm btn-secondary"
+                    type="button"
+                ><span class="fa fa-plus-circle"></span> Add Item</button>
+            </div>
+        </div>
+
+        <div class="col-4 offset-8 mt-4">
+            <table class="table text-end">
+                <tbody>
+                    <tr>
+                        <th>Subtotal:</th>
+                        <td>{{ this.subtotal|format_currency('USD') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Tax rate:</th>
+                        <td class="d-flex justify-content-end">
+                            <div style="width: 110px;" class="input-group {{ _errors.has('invoice.taxRate') ? 'is-invalid' }}">
+                                <input
+                                    type="number"
+                                    data-model="invoice.taxRate"
+                                    class="form-control"
+                                >
+                                <span class="input-group-text">%</span>
+                            </div>
+                            {% if _errors.has('invoice.taxRate') %}
+                                <div class="invalid-feedback">
+                                    {{ _errors.get('invoice.taxRate') }}
+                                </div>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Total:</th>
+                        <td>{{ this.total|format_currency('USD') }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button
+            class="btn btn-primary"
+            {{ areAnyLineItemsEditing ? 'disabled' : '' }}
+        >
+            <span data-loading="action(saveInvoice)|show" class="fa fa-spin fa-spinner"></span>
+            {% if savedSuccessfully %}
+                <span class="fa fa-check-circle text-success"></span>
+            {% endif %}
+            {% if saveFailed %}
+                <span class="fa fa-exclamation-circle"></span>
+            {% endif %}
+            Save Invoice
+        </button>
+        {% if saveFailed %}
+            <small class="text-secondary">Check above for errors</small>
+        {%  endif %}
+        {% if areAnyLineItemsEditing %}
+            <small class="text-secondary">Save all line items before continuing.</small>
+        {% endif %}
+    </form>
+</div>
