@@ -1,0 +1,52 @@
+---------------------------------------------------------------------------
+
+by jvancoillie at 2022-11-05T21:39:22Z
+
+Hi @weaverryan 👋
+
+Thank you for this feedback, I will make the changes following your comments.
+
+---------------------------------------------------------------------------
+
+by jvancoillie at 2022-11-06T03:06:11Z
+
+sorry for the small setback, I had some difficulties on the rebase of the branch 2.x :(
+
+I had to do a force push because of my merge error.
+
+---------------------------------------------------------------------------
+
+by jvancoillie at 2022-11-06T03:41:28Z
+
+Here are the changes after rebase and the pagination supports.
+There have been some changes, a review would be welcome. thanks
+
+---------------------------------------------------------------------------
+
+by jvancoillie at 2023-02-07T08:56:32Z
+
+Hi @weaverryan,
+
+what should we do with this pr ? I have however tried to be reactive because we are waiting for this feature.
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-02-07T10:44:28Z
+
+Maybe if `group_by` is not configured, it should return the results in the old format? Because for me it would now be a BC break
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-02-07T16:17:58Z
+
+> Maybe if group_by is not configured, it should return the results in the old format? Because for me it would now be a BC break
+
+I think that's an excellent idea. It would make the PR a lot safer to merge 👍
+
+---------------------------------------------------------------------------
+
+by jvancoillie at 2023-02-09T14:09:43Z
+
+Hello, I made some changes to keep the old format if the group_by option is not set.
+
+Would you have some time to give some feedback ?
