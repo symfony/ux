@@ -10,7 +10,6 @@
 
 -   Added support for using [OptionGroups](https://tom-select.js.org/examples/optgroups/).
 
-
 ## 2.7.0
 
 -   Add `assets/src` to `.gitattributes` to exclude them from the installation
