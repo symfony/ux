@@ -19,6 +19,7 @@ final class AutocompleteResults
     public function __construct(
         public array $results,
         public bool $hasNextPage,
+        public array $optgroups = [],
     ) {
     }
 }

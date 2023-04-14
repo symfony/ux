@@ -266,13 +266,14 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
                 .then((response) => response.json())
                 .then((json) => {
                 this.setNextUrl(query, json.next_page);
-                callback(json.results);
+                callback(json.results.options || json.results, json.results.optgroups || []);
             })
-                .catch(() => callback());
+                .catch(() => callback([], []));
         },
         shouldLoad: function (query) {
             return query.length >= minCharacterLength;
         },
+        optgroupField: 'group_by',
         score: function (search) {
             return function (item) {
                 return 1;

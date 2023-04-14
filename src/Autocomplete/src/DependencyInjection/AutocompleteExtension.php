@@ -81,6 +81,7 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
             ->register('ux.autocomplete.results_executor', AutocompleteResultsExecutor::class)
             ->setArguments([
                 new Reference('ux.autocomplete.doctrine_registry_wrapper'),
+                new Reference('property_accessor'),
                 new Reference('security.helper', ContainerInterface::NULL_ON_INVALID_REFERENCE),
             ])
         ;

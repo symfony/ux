@@ -96,7 +96,7 @@ describe('AutocompleteController', () => {
                         value: 3,
                         text: 'salad'
                     },
-                ],
+                ]
             }),
         );
 
@@ -111,8 +111,8 @@ describe('AutocompleteController', () => {
                     {
                         value: 2,
                         text: 'popcorn'
-                    },
-                ],
+                    }
+                ]
             }),
         );
 
@@ -498,5 +498,103 @@ describe('AutocompleteController', () => {
         selectElement.children[0].childNodes[0].nodeValue = 'Select a kangaroo';
         await shortDelay(10);
         expect(tomSelect.control_input.placeholder).toBe('Select a kangaroo');
+    });
+
+    it('group related options', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="check autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+            ></select>
+        `);
+
+        // initial Ajax request on focus with group_by options
+        fetchMock.mock(
+            '/path/to/autocomplete?query=',
+            JSON.stringify({
+                results: {
+                    options: [
+                        {
+                            group_by: ['Meat'],
+                            value: 1,
+                            text: 'Beef'
+                        },
+                        {
+                            group_by: ['Meat'],
+                            value: 2,
+                            text: 'Mutton'
+                        },
+                        {
+                            group_by: ['starchy'],
+                            value: 3,
+                            text: 'Potatoes'
+                        },
+                        {
+                            group_by: ['starchy', 'Meat'],
+                            value: 4,
+                            text: 'chili con carne'
+                        },
+                    ],
+                    optgroups: [
+                        {
+                            value: 'Meat',
+                            label: 'Meat'
+                        },
+                        {
+                            value: 'starchy',
+                            label: 'starchy'
+                        },
+                    ]
+                },
+            }),
+        );
+
+        fetchMock.mock(
+            '/path/to/autocomplete?query=foo',
+            JSON.stringify({
+                results: {
+                    options: [
+                        {
+                            group_by: ['Meat'],
+                            value: 1,
+                            text: 'Beef'
+                        },
+                        {
+                            group_by: ['Meat'],
+                            value: 2,
+                            text: 'Mutton'
+                        },
+                    ],
+                    optgroups: [
+                        {
+                            value: 'Meat',
+                            label: 'Meat'
+                        },
+                    ]
+                }
+            }),
+        );
+
+        const controlInput = tomSelect.control_input;
+
+        // wait for the initial Ajax request to finish
+        userEvent.click(controlInput);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(5);
+            expect(container.querySelectorAll('.optgroup-header')).toHaveLength(2);
+        });
+
+        // typing was not properly triggering, for some reason
+        //userEvent.type(controlInput, 'foo');
+        controlInput.value = 'foo';
+        controlInput.dispatchEvent(new Event('input'));
+
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(2);
+            expect(container.querySelectorAll('.optgroup-header')).toHaveLength(1);
+        });
     });
 });

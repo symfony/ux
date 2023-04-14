@@ -12,6 +12,7 @@
 namespace Symfony\UX\Autocomplete\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\UX\Autocomplete\AutocompleteResultsExecutor;
@@ -31,6 +32,7 @@ class AutocompleteResultsExecutorTest extends TestCase
 
         $executor = new AutocompleteResultsExecutor(
             $doctrineRegistry,
+            $this->createMock(PropertyAccessorInterface::class),
             $this->createMock(Security::class)
         );
 

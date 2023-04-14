@@ -58,4 +58,9 @@ class CustomProductAutocompleter implements EntityAutocompleterInterface
 
         return true;
     }
+
+    public function getGroupBy(): mixed
+    {
+        return null;
+    }
 }
