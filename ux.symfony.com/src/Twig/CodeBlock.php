@@ -5,8 +5,8 @@ namespace App\Twig;
 use Highlight\Highlighter;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('code_block')]
-class CodeBlockComponent
+#[AsTwigComponent()]
+class CodeBlock
 {
     public string $filename;
     public string $height = 'auto';

@@ -1,7 +1,7 @@
 {% extends 'packageBase.html.twig' %}
 
 {% block component_header %}
-    {% component package_header with {
+    {% component PackageHeader with {
         package: package,
         eyebrowText: 'Craft the perfect image'
     } %}
@@ -18,7 +18,7 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'src/Controller/CroppingController.php', height: '270px' } %}
+    {% component CodeBlock with { filename: 'src/Controller/CroppingController.php', height: '270px' } %}
         {% block content %}
             {{- source('@code_snippets/_CroppingController.php')|cleanup_php_file(removeClass=true) -}}
         {% endblock %}
@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block code_block_right %}
-    {% component code_block with { filename: 'templates/cropping/cropper.html.twig', height: '270px' } %}
+    {% component CodeBlock with { filename: 'templates/cropping/cropper.html.twig', height: '270px' } %}
         {% block content %}
             {{- source('@code_snippets/_cropper.html.twig') -}}
         {% endblock %}

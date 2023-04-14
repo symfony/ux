@@ -1,7 +1,7 @@
 {% extends 'packageBase.html.twig' %}
 
 {% block component_header %}
-    {% component package_header with {
+    {% component PackageHeader with {
         package: package,
         eyebrowText: 'Smart Form Controls'
     } %}
@@ -12,7 +12,7 @@
 
         {% block sub_content %}
             Breathe life into <code class="font-white">EntityType</code> and
-            <code class="font-white">ChoiceType</code> fields 
+            <code class="font-white">ChoiceType</code> fields
             with <a class="font-white text-underline" href="https://tom-select.js.org/" rel="noopener nofollow noreferrer">Tom Select</a>
             and a sprinkle of Ajax.
         {% endblock %}
@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'src/Form/TimeForAMealForm.php', height: '400px' } %}
+    {% component CodeBlock with { filename: 'src/Form/TimeForAMealForm.php', height: '400px' } %}
         {% block content %}
             {{- source('@src/Form/TimeForAMealForm.php')|cleanup_php_file -}}
         {% endblock %}
@@ -28,7 +28,7 @@
 {% endblock %}
 
 {% block code_block_right %}
-    {% component code_block with { filename: 'src/Form/FoodAutocompleteField.php', height: '400px' } %}
+    {% component CodeBlock with { filename: 'src/Form/FoodAutocompleteField.php', height: '400px' } %}
         {% block content %}
             {{- source('@src/Form/FoodAutocompleteField.php')|cleanup_php_file -}}
         {% endblock %}

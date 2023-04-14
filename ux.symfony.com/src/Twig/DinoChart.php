@@ -10,8 +10,8 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsLiveComponent('dino_chart')]
-class DinoChartComponent
+#[AsLiveComponent()]
+class DinoChart
 {
     use DefaultActionTrait;
 

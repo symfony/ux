@@ -1,7 +1,7 @@
 {% extends 'packageBase.html.twig' %}
 
 {% block component_header %}
-    {% component package_header with {
+    {% component PackageHeader with {
         package: package,
         eyebrowText: 'A Library that Types'
     } %}
@@ -17,7 +17,7 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'templates/typed.html.twig', height: '210px' } %}
+    {% component CodeBlock with { filename: 'templates/typed.html.twig', height: '210px' } %}
         {% block content %}
             {{- source('@code_snippets/_typed.html.twig') -}}
         {% endblock %}

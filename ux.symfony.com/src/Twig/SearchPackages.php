@@ -7,8 +7,8 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent('search_packages')]
-class SearchPackagesComponent
+#[AsLiveComponent()]
+class SearchPackages
 {
     use DefaultActionTrait;
 

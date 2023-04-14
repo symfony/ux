@@ -18,7 +18,7 @@ namespace Symfony\UX\TwigComponent\Attribute;
 class AsTwigComponent
 {
     public function __construct(
-        private string $name,
+        private ?string $name = null,
         private ?string $template = null,
         private bool $exposePublicProps = true,
         private string $attributesVar = 'attributes'

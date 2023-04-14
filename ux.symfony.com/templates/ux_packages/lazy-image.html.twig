@@ -1,7 +1,7 @@
 {% extends 'packageBase.html.twig' %}
 
 {% block component_header %}
-    {% component package_header with {
+    {% component PackageHeader with {
         package: package,
         eyebrowText: 'Images that Zoom',
         withChatIcon: true
@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'templates/images.html.twig', height: '310px' } %}
+    {% component CodeBlock with { filename: 'templates/images.html.twig', height: '310px' } %}
         {% block content %}
             {{- source('@code_snippets/_lazy_image.html.twig') -}}
         {% endblock %}

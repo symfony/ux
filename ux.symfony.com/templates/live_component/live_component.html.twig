@@ -1,7 +1,7 @@
 {% extends 'packageBase.html.twig' %}
 
 {% block component_header %}
-    {% component package_header with {
+    {% component PackageHeader with {
         package: package,
         eyebrowText: 'Reactive Twig Templates'
     } %}
@@ -18,17 +18,17 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'src/Twig/SearchPackagesComponent.php' } %}
+    {% component CodeBlock with { filename: 'src/Twig/SearchPackages.php' } %}
         {% block content %}
-            {{- source('@src/Twig/SearchPackagesComponent.php')|cleanup_php_file -}}
+            {{- source('@src/Twig/SearchPackages.php')|cleanup_php_file -}}
         {% endblock %}
     {% endcomponent %}
 {% endblock %}
 
 {% block code_block_right %}
-    {% component code_block with { filename: 'templates/components/search_packages.html.twig' } %}
+    {% component CodeBlock with { filename: 'templates/components/SearchPackages.html.twig' } %}
         {% block content %}
-            {{- source('@code_snippets/_search_packages.html.twig') -}}
+            {{- source('@code_snippets/_SearchPackages.html.twig') -}}
         {% endblock %}
     {% endcomponent %}
 {% endblock %}
@@ -37,7 +37,7 @@
     Live Components
 {% endblock %}
 {% block demo_content %}
-    {{ component('search_packages') }}
+    {{ component('SearchPackages') }}
 
     <div class="d-flex eyebrows pt-5">
         <div>Automatic debouncing</div>

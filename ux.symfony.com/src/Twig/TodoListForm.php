@@ -3,7 +3,7 @@
 namespace App\Twig;
 
 use App\Entity\TodoList;
-use App\Form\TodoListForm;
+use App\Form\TodoListFormType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -11,8 +11,8 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\LiveCollectionTrait;
 
-#[AsLiveComponent('todo_list_form')]
-class TodoListFormComponent extends AbstractController
+#[AsLiveComponent()]
+class TodoListForm extends AbstractController
 {
     use DefaultActionTrait;
     use LiveCollectionTrait;
@@ -23,7 +23,7 @@ class TodoListFormComponent extends AbstractController
     protected function instantiateForm(): FormInterface
     {
         return $this->createForm(
-            TodoListForm::class,
+            TodoListFormType::class,
             $this->todoList
         );
     }

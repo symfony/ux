@@ -10,7 +10,7 @@
         <p>A set of PHP & JavaScript packages to solve every day frontend problems featuring Stimulus and Turbo.</p>
       </div>
       <div class="col-12 col-sm-8 col-lg-6">
-          {{ component('homepage_terminal_swapper') }}
+          {{ component('HomepageTerminalSwapper') }}
       </div>
     </div>
 </div>
@@ -22,7 +22,7 @@
 
     <div class="row">
         <div class="col-12 col-md-6">
-            {% component terminal %}
+            {% component Terminal %}
                 {% block content %}
                     composer require symfony/webpack-encore-bundle
                     npm install
@@ -54,14 +54,14 @@
 
     <div class="row">
         <div class="col-12 col-md-6">
-            {% component code_block with { filename: 'templates/anything.html.twig' } %}
+            {% component CodeBlock with { filename: 'templates/anything.html.twig' } %}
                 {% block content %}
                     {{- source('@code_snippets/_markdown.html.twig') -}}
                 {% endblock %}
             {% endcomponent %}
         </div>
         <div class="col-12 col-md-6  mt-3 mt-md-0">
-            {% component code_block with { filename: 'assets/controllers/markdown_controller.js' } %}
+            {% component CodeBlock with { filename: 'assets/controllers/markdown_controller.js' } %}
                 {% block content %}
                     {{- source('@assets/controllers/markdown-controller.js') -}}
                 {% endblock %}

@@ -110,12 +110,22 @@ final class ComponentFactoryTest extends KernelTestCase
         self::assertSame(['data-item-id-param' => 'test'], $attributes);
     }
 
-    public function testTwigComponentServiceTagMustHaveKey(): void
+    public function testTwigComponentServiceTagWithoutKeyUsesShortClassName(): void
+    {
+        // boots ComponentB, but with no key on the tag
+        self::bootKernel(['environment' => 'missing_key']);
+        $component = $this->createComponent('ComponentB');
+        self::assertInstanceOf(ComponentB::class, $component);
+    }
+
+    public function testTwigComponentServiceTagWithoutKeyButCollissionCausesAnException(): void
     {
         $this->expectException(LogicException::class);
-        $this->expectExceptionMessage('"twig.component" tag for service "missing_key" requires a "key" attribute.');
+        $this->expectExceptionMessage('Failed creating the "Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB" component with the automatic name "ComponentB": another component already has this name. To fix this, give the component an explicit name (hint: using "ComponentB" will override the existing component).');
 
-        self::bootKernel(['environment' => 'missing_key']);
+        self::bootKernel(['environment' => 'missing_key_with_collision']);
+        $component = $this->createComponent('ComponentB');
+        self::assertInstanceOf(ComponentB::class, $component);
     }
 
     public function testCanGetMetadataForComponentByName(): void

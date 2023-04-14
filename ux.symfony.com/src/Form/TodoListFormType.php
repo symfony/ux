@@ -8,7 +8,7 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 
-class TodoListForm extends AbstractType
+class TodoListFormType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {

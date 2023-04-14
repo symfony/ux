@@ -1,7 +1,7 @@
 {% extends 'packageBase.html.twig' %}
 
 {% block component_header %}
-    {% component package_header with {
+    {% component PackageHeader with {
         package: package,
         eyebrowText: 'Object-Oriented Templates'
     } %}
@@ -17,17 +17,17 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component code_block with { filename: 'src/Twig/AlertComponent.php', height: '330px' } %}
+    {% component CodeBlock with { filename: 'src/Twig/Alert.php', height: '330px' } %}
         {% block content %}
-            {{- source('@src/Twig/AlertComponent.php')|cleanup_php_file -}}
+            {{- source('@src/Twig/Alert.php')|cleanup_php_file -}}
         {% endblock %}
     {% endcomponent %}
 {% endblock %}
 
 {% block code_block_right %}
-    {% component code_block with { filename: 'templates/components/alert.html.twig', height: '330px' } %}
+    {% component CodeBlock with { filename: 'templates/components/Alert.html.twig', height: '330px' } %}
         {% block content %}
-            {{- source('components/alert.html.twig') -}}
+            {{- source('components/Alert.html.twig') -}}
         {% endblock %}
     {% endcomponent %}
 {% endblock %}
@@ -37,12 +37,12 @@
 {% block demo_content %}
     <div class="row">
         <div class="col-8">
-            {{ component('alert', {
+            {{ component('Alert', {
                 message: 'I am a success alert!',
             }) }}
         </div>
         <div class="col-4">
-            {% component code_block with { filename: 'template.html.twig', showFilename: false } %}
+            {% component CodeBlock with { filename: 'template.html.twig', showFilename: false } %}
                 {% block content %}
                     {{- source('@code_snippets/_alert_success.html.twig') -}}
                 {% endblock %}
@@ -52,13 +52,13 @@
 
     <div class="row my-2">
         <div class="col-8">
-            {{ component('alert', {
+            {{ component('Alert', {
                 type: 'danger',
                 message: 'Oh no! The dinos escaped!',
             }) }}
         </div>
         <div class="col-4">
-            {% component code_block with { filename: 'template.html.twig', showFilename: false } %}
+            {% component CodeBlock with { filename: 'template.html.twig', showFilename: false } %}
                 {% block content %}
                     {{- source('@code_snippets/_alert_danger.html.twig') -}}
                 {% endblock %}
