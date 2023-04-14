@@ -23,6 +23,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\BlogPostWithSerializationContext
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Embeddable2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Money;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Temperature;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\CategoryFixtureEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Embeddable1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity2;
@@ -1066,6 +1067,19 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     $this->assertSame(1, $object->nonNullableInt->value);
                 });
         }, 80100];
+
+        yield 'writable_path_with_type_problem_ignored' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: ['name'])]
+                public CategoryFixtureEntity $category;
+            })
+                ->mountWith(['category' => new CategoryFixtureEntity()])
+                ->assertObjectAfterHydration(function (object $object) {
+                    // dehydrating category.name=null does not cause issues
+                    // even though setName() does not allow null
+                    $this->assertNull($object->category->getName());
+                });
+        }];
     }
 
     public function testHydrationFailsIfChecksumMissing(): void

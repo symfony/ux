@@ -159,7 +159,8 @@ final class LiveComponentHydrator
             );
 
             /*
-             | 2) Set UPDATED "writable paths" data for this LiveProp.
+             | 2) Set ORIGINAL "writable paths" data for this LiveProp.
+             | (which may represent data that was updated on a previous request)
              */
             $originalWritablePaths = $this->calculateWritablePaths($propMetadata, $propertyValue, $dehydratedOriginalProps, $frontendName, \get_class($component));
             $propertyValue = $this->setWritablePaths(
@@ -194,16 +195,12 @@ final class LiveComponentHydrator
              | 4) Set UPDATED "writable paths" data for this LiveProp.
              */
             $updatedWritablePaths = $this->calculateWritablePaths($propMetadata, $propertyValue, $dehydratedUpdatedProps, $frontendName, \get_class($component));
-            try {
-                $propertyValue = $this->setWritablePaths(
-                    $updatedWritablePaths,
-                    $frontendName,
-                    $propertyValue,
-                    $dehydratedUpdatedProps,
-                );
-            } catch (HydrationException $e) {
-                // swallow this: it's bad data from the user
-            }
+            $propertyValue = $this->setWritablePaths(
+                $updatedWritablePaths,
+                $frontendName,
+                $propertyValue,
+                $dehydratedUpdatedProps,
+            );
 
             try {
                 $this->propertyAccessor->setValue($component, $propMetadata->getName(), $propertyValue);
@@ -316,7 +313,10 @@ final class LiveComponentHydrator
                     $writablePathData
                 );
             } catch (PropertyAccessExceptionInterface $exception) {
-                throw new HydrationException(sprintf('The model "%s.%s" was sent for update, but it could not be set: %s', $frontendPropName, $writablePath, $exception->getMessage()), $exception);
+                // The user likely sent bad data (e.g. string for a number field).
+                // Simply fail to set the field and use the previous value
+                // (this can also happen with original, writable data - e.g. if
+                // a property is "null", but the setter method doesn't allow null).
             }
         }
 
