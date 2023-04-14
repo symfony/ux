@@ -2,12 +2,11 @@
 
 ## 2.8.0
 
-
--   The autocomplete will now update if any of the `option` elements inside of
+-   The autocomplete now watches for update to any `option` elements inside of
     it change, including the empty / placeholder element. Additionally, if the
     `select` or `input` element's `disabled` attribute changes, the autocomplete
-    instance will update accordingly. This makes Autocomplete work perfectly inside
-    of a LiveComponent.
+    instance will update accordingly. This makes Autocomplete work correctly inside
+    of a LiveComponent. This functionality does _not_ work for `multiple` selects.
 
 -   Added support for using [OptionGroups](https://tom-select.js.org/examples/optgroups/).
 

@@ -68,7 +68,7 @@ class MealPlannerForm extends AbstractType
     private function getAvailableFoodChoices(string $meal): array
     {
         $foods = match ($meal) {
-            self::MEAL_BREAKFAST => ['Eggs 🍳', 'Bacon 🥓', 'Strawberries 🍓', 'Croissant 🥐', 'Other', 'AnOther'],
+            self::MEAL_BREAKFAST => ['Eggs 🍳', 'Bacon 🥓', 'Strawberries 🍓', 'Croissant 🥐'],
             self::MEAL_SECOND_BREAKFAST => ['Bagel 🥯', 'Kiwi 🥝', 'Avocado 🥑', 'Waffles 🧇'],
             self::MEAL_ELEVENSES => ['Pancakes 🥞', 'Salad 🥙', 'Tea ☕️'],
             self::MEAL_LUNCH => ['Sandwich 🥪', 'Cheese 🧀', 'Sushi 🍱'],
