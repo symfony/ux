@@ -17,6 +17,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Event\PostMountEvent;
 use Symfony\UX\TwigComponent\Event\PreMountEvent;
+use Twig\Environment;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -35,6 +36,7 @@ final class ComponentFactory
         private EventDispatcherInterface $eventDispatcher,
         private array $config,
         private array $classMap,
+        private Environment $environment,
     ) {
     }
 
@@ -43,7 +45,14 @@ final class ComponentFactory
         $name = $this->classMap[$name] ?? $name;
 
         if (!$config = $this->config[$name] ?? null) {
-            $this->throwUnknownComponentException($name);
+            if ($this->isStaticComponent($name)) {
+                return new ComponentMetadata([
+                    'key' => $name,
+                    'template' => $this->getTemplateFromName($name),
+                ]);
+            }
+
+            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->config))));
         }
 
         return new ComponentMetadata($config);
@@ -149,7 +158,11 @@ final class ComponentFactory
         $name = $this->classMap[$name] ?? $name;
 
         if (!$this->components->has($name)) {
-            $this->throwUnknownComponentException($name);
+            if ($this->isStaticComponent($name)) {
+                return new StaticComponent();
+            }
+
+            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->components->getProvidedServices()))));
         }
 
         return $this->components->get($name);
@@ -187,6 +200,16 @@ final class ComponentFactory
         }
 
         return $data;
+    }
+
+    private function isStaticComponent(string $name): bool
+    {
+        return $this->environment->getLoader()->exists($this->getTemplateFromName($name));
+    }
+
+    private function getTemplateFromName(string $name): string
+    {
+        return str_replace('.', '/', $name).'.html.twig';
     }
 
     /**
