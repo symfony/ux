@@ -1962,6 +1962,7 @@ class Component {
         const newProps = this.elementDriver.getComponentProps(newElement);
         this.valueStore.reinitializeAllProps(newProps);
         const eventsToEmit = this.elementDriver.getEventsToEmit(newElement);
+        const browserEventsToDispatch = this.elementDriver.getBrowserEventsToDispatch(newElement);
         this.externalMutationTracker.handlePendingChanges();
         this.externalMutationTracker.stop();
         executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), Array.from(this.getChildren().values()), this.elementDriver.findChildComponentElement, this.elementDriver.getKeyFromElement, this.externalMutationTracker);
@@ -1979,6 +1980,12 @@ class Component {
                 return;
             }
             this.emit(event, data, componentName);
+        });
+        browserEventsToDispatch.forEach(({ event, payload }) => {
+            this.element.dispatchEvent(new CustomEvent(event, {
+                detail: payload,
+                bubbles: true,
+            }));
         });
         this.hooks.triggerHook('render:finished', this);
     }
@@ -2213,6 +2220,11 @@ class StandardElementDriver {
     getEventsToEmit(element) {
         var _a;
         const eventsJson = (_a = element.dataset.liveEmit) !== null && _a !== void 0 ? _a : '[]';
+        return JSON.parse(eventsJson);
+    }
+    getBrowserEventsToDispatch(element) {
+        var _a;
+        const eventsJson = (_a = element.dataset.liveBrowserDispatch) !== null && _a !== void 0 ? _a : '[]';
         return JSON.parse(eventsJson);
     }
 }

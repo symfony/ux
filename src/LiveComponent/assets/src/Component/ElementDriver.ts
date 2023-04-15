@@ -19,6 +19,11 @@ export interface ElementDriver {
      * Given an element from a response, find all the events that should be emitted.
      */
     getEventsToEmit(element: HTMLElement): Array<{event: string, data: any, target: string|null, componentName: string|null }>;
+
+    /**
+     * Given an element from a response, find all the events that should be dispatched.
+     */
+    getBrowserEventsToDispatch(element: HTMLElement): Array<{event: string, payload: any }>;
 }
 
 export class StandardElementDriver implements ElementDriver {
@@ -48,6 +53,12 @@ export class StandardElementDriver implements ElementDriver {
 
     getEventsToEmit(element: HTMLElement): Array<{event: string, data: any, target: string|null, componentName: string|null }> {
         const eventsJson = element.dataset.liveEmit ?? '[]';
+
+        return JSON.parse(eventsJson);
+    }
+
+    getBrowserEventsToDispatch(element: HTMLElement): Array<{event: string, payload: any }> {
+        const eventsJson = element.dataset.liveBrowserDispatch ?? '[]';
 
         return JSON.parse(eventsJson);
     }

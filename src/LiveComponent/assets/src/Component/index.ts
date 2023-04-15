@@ -452,6 +452,7 @@ export default class Component {
         this.valueStore.reinitializeAllProps(newProps);
 
         const eventsToEmit = this.elementDriver.getEventsToEmit(newElement);
+        const browserEventsToDispatch = this.elementDriver.getBrowserEventsToDispatch(newElement);
 
         // make sure we've processed all external changes before morphing
         this.externalMutationTracker.handlePendingChanges();
@@ -487,6 +488,13 @@ export default class Component {
             }
 
             this.emit(event, data, componentName);
+        });
+
+        browserEventsToDispatch.forEach(({ event, payload }) => {
+            this.element.dispatchEvent(new CustomEvent(event, {
+                detail: payload,
+                bubbles: true,
+            }));
         });
 
         this.hooks.triggerHook('render:finished', this);

@@ -68,9 +68,14 @@ class LiveControllerAttributesCreator
         }
 
         $eventsToEmit = $this->liveResponder->getEventsToEmit();
+        $browserEventsToDispatch = $this->liveResponder->getBrowserEventsToDispatch();
+
         $this->liveResponder->reset();
         if ($eventsToEmit) {
             $attributesCollection->setEventsToEmit($eventsToEmit);
+        }
+        if ($browserEventsToDispatch) {
+            $attributesCollection->setBrowserEventsToDispatch($browserEventsToDispatch);
         }
 
         $mountedAttributes = $mounted->getAttributes();

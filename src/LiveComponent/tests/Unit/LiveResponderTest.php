@@ -72,4 +72,23 @@ class LiveResponderTest extends TestCase
             ],
         ], $responder->getEventsToEmit());
     }
+
+    public function testDispatchBrowserEvent(): void
+    {
+        $responder = new LiveResponder();
+        $responder->dispatchBrowserEvent('event_name1', ['data_key' => 'data_value']);
+        $responder->dispatchBrowserEvent('event_name2', ['data_key' => 'data_value']);
+        $this->assertSame([
+            [
+                'event' => 'event_name1',
+                'payload' => ['data_key' => 'data_value'],
+            ],
+            [
+                'event' => 'event_name2',
+                'payload' => ['data_key' => 'data_value'],
+            ],
+        ], $responder->getBrowserEventsToDispatch());
+        $responder->reset();
+        $this->assertSame([], $responder->getBrowserEventsToDispatch());
+    }
 }

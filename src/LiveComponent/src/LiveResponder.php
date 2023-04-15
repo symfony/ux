@@ -19,11 +19,14 @@ namespace Symfony\UX\LiveComponent;
 final class LiveResponder
 {
     /**
-     * Key is the event name, value is an array with keys: event, data, target.
-     *
-     * @var array<string, array<string, mixed>>
+     * Each item is an array with keys: event, data, target, componentName.
      */
     private array $eventsToEmit = [];
+
+    /**
+     * Each item is an array with keys: event, payload.
+     */
+    private array $browserEventsToDispatch = [];
 
     public function emit(string $eventName, array $data = [], string $componentName = null): void
     {
@@ -55,13 +58,27 @@ final class LiveResponder
         ];
     }
 
+    public function dispatchBrowserEvent(string $event, array $payload = []): void
+    {
+        $this->browserEventsToDispatch[] = [
+            'event' => $event,
+            'payload' => $payload,
+        ];
+    }
+
     public function getEventsToEmit(): array
     {
         return $this->eventsToEmit;
     }
 
+    public function getBrowserEventsToDispatch(): array
+    {
+        return $this->browserEventsToDispatch;
+    }
+
     public function reset(): void
     {
         $this->eventsToEmit = [];
+        $this->browserEventsToDispatch = [];
     }
 }

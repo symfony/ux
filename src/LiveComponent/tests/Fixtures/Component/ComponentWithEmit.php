@@ -14,7 +14,7 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
-use Symfony\UX\LiveComponent\ComponentEmitsTrait;
+use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 
@@ -22,7 +22,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 final class ComponentWithEmit
 {
     use DefaultActionTrait;
-    use ComponentEmitsTrait;
+    use ComponentToolsTrait;
 
     public $events = [];
 
@@ -31,5 +31,14 @@ final class ComponentWithEmit
     {
         $this->emit('event1', ['foo' => 'bar']);
         $this->events = $this->liveResponder->getEventsToEmit();
+    }
+
+    #[LiveAction]
+    public function actionThatDispatchesABrowserEvent(): void
+    {
+        $this->liveResponder->dispatchBrowserEvent(
+            'browser-event',
+            ['fooKey' => 'barVal'],
+        );
     }
 }
