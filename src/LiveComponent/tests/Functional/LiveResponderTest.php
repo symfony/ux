@@ -37,4 +37,27 @@ final class LiveResponderTest extends KernelTestCase
             ->assertSee('Event: event1')
             ->assertSee('Data: {"foo":"bar"}');
     }
+
+    public function testComponentCanDispatchBrowserEvents(): void
+    {
+        $component = $this->mountComponent('component_with_emit');
+        $dehydrated = $this->dehydrateComponent($component);
+
+        $crawler = $this->browser()
+            ->throwExceptions()
+            ->post('/_components/component_with_emit/actionThatDispatchesABrowserEvent', [
+                'body' => json_encode(['props' => $dehydrated->getProps()]),
+            ])
+            ->assertSuccessful()
+            ->crawler()
+        ;
+
+        $div = $crawler->filter('div');
+        $browserDispatch = $div->attr('data-live-browser-dispatch');
+        $this->assertNotNull($browserDispatch);
+        $browserDispatchData = json_decode($browserDispatch, true);
+        $this->assertSame([
+            ['event' => 'browser-event', 'payload' => ['fooKey' => 'barVal']],
+        ], $browserDispatchData);
+    }
 }

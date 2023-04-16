@@ -2114,13 +2114,13 @@ There are three ways to emit an event:
         data-event="productAdded"
     >
 
-2. From your PHP component via ``ComponentEmitsTrait``::
+2. From your PHP component via ``ComponentToolsTrait``::
 
-    use Symfony\UX\LiveComponent\ComponentEmitsTrait;
+    use Symfony\UX\LiveComponent\ComponentToolsTrait;
 
     class MyComponent
     {
-        use ComponentEmitsTrait;
+        use ComponentToolsTrait;
 
         #[LiveAction]
         public function saveProduct()
@@ -2247,6 +2247,71 @@ To emit an event to only yourself, use the ``emitSelf()`` method:
 Or, in PHP::
 
     $this->emitSelf('productAdded');
+
+Dispatching Browser/JavaScript Events
+-------------------------------------
+
+Sometimes you may want to dispatch a JavaScript event from your component. You
+could use this to signal, for example, that a modal should close::
+
+    use Symfony\UX\LiveComponent\ComponentToolsTrait;
+    // ...
+
+    class MyComponent
+    {
+        use ComponentToolsTrait;
+
+        #[LiveAction]
+        public function saveProduct()
+        {
+            // ...
+
+            $this->dispatchBrowserEvent('modal:close');
+        }
+    }
+
+This will dispatch a ``modal:close`` event on the top-level element of
+your component. It's often handy to listen to this event in a custom
+Stimulus controller - like this for Bootstrap's modal:
+
+.. code-block:: javascript
+
+    // assets/controllers/bootstrap-modal-controller.js
+    import { Controller } from '@hotwired/stimulus';
+    import { Modal } from 'bootstrap';
+
+    export default class extends Controller {
+        modal = null;
+
+        initialize() {
+            this.modal = Modal.getOrCreateInstance(this.element);
+            window.addEventListener('modal:close', () => this.modal.hide());
+        }
+    }
+
+Just make sure this controller is attached to the modal element:
+
+.. code-block:: html+twig
+
+    <div class="modal fade" {{ stimulus_controller('bootstrap-modal') }}">
+        <div class="modal-dialog">
+            ... content ...
+        </div>
+    </div>
+
+You can also pass data to the event::
+
+    $this->dispatchBrowserEvent('product:created', [
+        'product' => $product->getId(),
+    ]);
+
+This becomes the ``detail`` property of the event:
+
+.. code-block:: javascript
+
+    window.addEventListener('product:created', (event) => {
+        console.log(event.detail.product);
+    });
 
 Nested Components
 -----------------

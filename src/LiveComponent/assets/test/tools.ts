@@ -427,6 +427,7 @@ export function initComponent(props: any = {}, controllerValues: any = {}) {
         ${controllerValues.id ? `data-live-id="${controllerValues.id}"` : ''}
         ${controllerValues.fingerprint ? `data-live-fingerprint-value="${controllerValues.fingerprint}"` : ''}
         ${controllerValues.listeners ? `data-live-listeners-value="${dataToJsonAttribute(controllerValues.listeners)}"` : ''}
+        ${controllerValues.browserDispatch ? `data-live-browser-dispatch="${dataToJsonAttribute(controllerValues.browserDispatch)}"` : ''}
     `;
 }
 

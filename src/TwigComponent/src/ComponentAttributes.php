@@ -108,10 +108,10 @@ final class ComponentAttributes
         $controllersAttributes = $stimulusDto->toArray();
         $attributes = $this->attributes;
 
-        $attributes['data-controller'] = implode(' ', array_merge(
-            explode(' ', $attributes['data-controller']),
+        $attributes['data-controller'] = trim(implode(' ', array_merge(
+            explode(' ', $attributes['data-controller'] ?? ''),
             explode(' ', $controllersAttributes['data-controller'] ?? [])
-        ));
+        )));
         unset($controllersAttributes['data-controller']);
 
         $clone = new self($attributes);

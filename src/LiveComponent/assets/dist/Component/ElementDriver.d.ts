@@ -9,6 +9,10 @@ export interface ElementDriver {
         target: string | null;
         componentName: string | null;
     }>;
+    getBrowserEventsToDispatch(element: HTMLElement): Array<{
+        event: string;
+        payload: any;
+    }>;
 }
 export declare class StandardElementDriver implements ElementDriver {
     getModelName(element: HTMLElement): string | null;
@@ -20,5 +24,9 @@ export declare class StandardElementDriver implements ElementDriver {
         data: any;
         target: string | null;
         componentName: string | null;
+    }>;
+    getBrowserEventsToDispatch(element: HTMLElement): Array<{
+        event: string;
+        payload: any;
     }>;
 }

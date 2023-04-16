@@ -14,11 +14,13 @@ namespace Symfony\UX\LiveComponent;
 use Symfony\Contracts\Service\Attribute\Required;
 
 /**
+ * Trait with shortcut methods useful for live components.
+ *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
  * @experimental
  */
-trait ComponentEmitsTrait
+trait ComponentToolsTrait
 {
     private LiveResponder $liveResponder;
 
@@ -44,5 +46,10 @@ trait ComponentEmitsTrait
     public function emitSelf(string $eventName, array $data = []): void
     {
         $this->liveResponder->emitSelf($eventName, $data);
+    }
+
+    public function dispatchBrowserEvent(string $eventName, array $payload = []): void
+    {
+        $this->liveResponder->dispatchBrowserEvent($eventName, $payload);
     }
 }

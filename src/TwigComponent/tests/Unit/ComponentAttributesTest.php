@@ -88,6 +88,29 @@ final class ComponentAttributesTest extends TestCase
         ], $attributes->all());
     }
 
+    public function testCanAddStimulusControllerIfNoneAlreadyPresent(): void
+    {
+        $attributes = new ComponentAttributes([
+            'class' => 'foo',
+        ]);
+
+        $controllerDto = $this->createMock(AbstractStimulusDto::class);
+        $controllerDto->expects(self::once())
+            ->method('toArray')
+            ->willReturn([
+                'data-controller' => 'foo bar',
+                'data-foo-name-value' => 'ryan',
+            ]);
+
+        $attributes = $attributes->add($controllerDto);
+
+        $this->assertEquals([
+            'class' => 'foo',
+            'data-controller' => 'foo bar',
+            'data-foo-name-value' => 'ryan',
+        ], $attributes->all());
+    }
+
     public function testBooleanBehaviour(): void
     {
         $attributes = new ComponentAttributes(['disabled' => true]);

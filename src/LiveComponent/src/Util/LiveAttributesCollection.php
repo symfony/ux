@@ -92,6 +92,11 @@ final class LiveAttributesCollection
         $this->attributes['data-live-emit'] = $events;
     }
 
+    public function setBrowserEventsToDispatch(array $browserEventsToDispatch): void
+    {
+        $this->attributes['data-live-browser-dispatch'] = $browserEventsToDispatch;
+    }
+
     private function escapeAttribute(string $value): string
     {
         return twig_escape_filter($this->twig, $value, 'html_attr');

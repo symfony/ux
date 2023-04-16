@@ -31,6 +31,8 @@ public User $user;
 
 -   You can now `emit()` events to communicate between components.
 
+-   You can now dispatch DOM/browser events from components.
+
 -   Boolean checkboxes are now supported. Of a checkbox does **not** have a
     `value` attribute, then the associated `LiveProp` will be set to a boolean
     when the input is checked/unchecked.
