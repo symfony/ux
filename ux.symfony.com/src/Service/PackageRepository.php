@@ -71,6 +71,16 @@ class PackageRepository
                 ->setDocsLink('https://vuejs.org/', 'Go deeper with the Vue.js docs.'),
 
             (new Package(
+                'svelte',
+                'Svelte',
+                'app_svelte',
+                'linear-gradient(95.22deg, #f73c00 -4.7%, #f08e6e 105.43%)',
+                'Quickly render `<Svelte />` components &amp; pass them props.',
+                'I need to render Svelte components from Twig'
+            ))
+                ->setDocsLink('https://svelte.dev/', 'Go deeper with the Svelte docs.'),
+
+            (new Package(
                 'cropperjs',
                 'Image Cropper',
                 'app_cropper',

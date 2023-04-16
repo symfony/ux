@@ -35,6 +35,7 @@
         "symfony/ux-live-component": "2.x-dev",
         "symfony/ux-notify": "2.x-dev",
         "symfony/ux-react": "2.x-dev",
+        "symfony/ux-svelte": "2.x-dev",
         "symfony/ux-swup": "2.x-dev",
         "symfony/ux-turbo": "2.x-dev",
         "symfony/ux-twig-component": "2.x-dev",

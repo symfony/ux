@@ -56,6 +56,16 @@ class UxPackagesController extends AbstractController
         ]);
     }
 
+    #[Route('/svelte', name: 'app_svelte')]
+    public function svelte(PackageRepository $packageRepository): Response
+    {
+        $packagesData = $this->getNormalizedPackages($packageRepository);
+
+        return $this->render('ux_packages/svelte.html.twig', [
+            'packagesData' => $packagesData,
+        ]);
+    }
+
     #[Route('/typed', name: 'app_typed')]
     public function typed(): Response
     {
