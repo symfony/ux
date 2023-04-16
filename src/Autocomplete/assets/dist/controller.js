@@ -30,6 +30,9 @@ class default_1 extends Controller {
         this.isObserving = false;
     }
     initialize() {
+        if (this.element.hasAttribute('data-live-id')) {
+            return;
+        }
         if (this.requiresLiveIgnore()) {
             this.element.setAttribute('data-live-ignore', '');
             if (this.element.id) {

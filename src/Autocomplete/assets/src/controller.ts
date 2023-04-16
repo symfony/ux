@@ -36,6 +36,10 @@ export default class extends Controller {
     private isObserving = false;
 
     initialize() {
+        if (this.element.hasAttribute('data-live-id')) {
+            return;
+        }
+
         if (this.requiresLiveIgnore()) {
             // unfortunately, TomSelect does enough weird things that, for a
             // multi select, if the HTML in the `<select>` element changes,
