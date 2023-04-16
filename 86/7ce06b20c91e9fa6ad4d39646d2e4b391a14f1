@@ -1,0 +1,650 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2023-04-05T12:05:51Z
+
+Nice. Waiting for this since first time of using twig components :D
+
+Will it be possible to pass arrays/objects as attributes if the component defines it?
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-05T12:46:21Z
+
+Very nice! I've also wanted this from the beginning!
+
+Some comments/ideas:
+1. I think we'll have to prefix the component tag name (to avoid conflicts with existing html-elements). ie `<x-UserDashboard...` or maybe `<t-UserDashboard...`?
+2. Could the following syntax be possible? `<UserDashboard :user="user.id"...`
+3. `<x-block name="actions">` would be awesome! So would default slots...
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-05T17:02:41Z
+
+Hey, thanks for your returns!
+
+> Will it be possible to pass arrays/objects as attributes if the component defines it?
+
+Yes of course 😁
+
+> I think we'll have to prefix the component tag name (to avoid conflicts with existing html-elements). ie <x-UserDashboard... or maybe <t-UserDashboard...
+
+This is why I uppercase the first letter because I don't think there are any tags starting by uppercase in HTML
+
+> Could the following syntax be possible? <UserDashboard :user="user.id"...
+
+I don't know how to do it, but It can be a really really cool feature! I will look at it!
+
+> <x-block name="actions"> would be awesome! So would default slots...
+
+Yes! super great idea! And this time I know exactly how to do it! 😁
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-05T17:07:46Z
+
+> This is why I uppercase the first letter because I don't think there are any tags starting by uppercase in HTML
+
+I think this could still be a problem if a user also has, say, vue components on the page.
+
+> Yes! super great idea! And this time I know exactly how to do it!
+
+Awesome, a default slot concept in twig has always vexed me! Just so we're on the same page, this is what I mean by default slot:
+
+```html
+<UserDashboard user="{{ user.id }}" isAdmin graph="linear" primary>
+    <div>...</div> <!-- this is the default slot content -->
+</UserDashboard>
+```
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-04-05T17:12:34Z
+
+What if we could do?:
+
+```
+{% import_component UserDashboard 'FQCN\to\component' %}
+```
+This probably could avoid conflicts?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-07T22:25:59Z
+
+Hey all! I made some updated base on the previous comment:
+
+1 - New syntax you now prefix your tag block with <x-componentName>
+```php
+    <x-userDashboard>
+       ...
+    <x-userDashboard/>
+
+   </x-userDashboard>
+```
+
+2 - You can now prefix your argument with an ':' in order to pass an object or array or anything that Twig should process
+```php
+    <x-userDashboard :user='user.id' isAdmin graph='linear' primary>
+       ...
+    <x-userDashboard/>
+```
+
+3 - You can use a special syntax  for block in embedded component
+```php
+    <x-userDashboard :user='user.id' isAdmin graph='linear' primary>
+       <x-block name='actions'>
+            <x-userActions isAdmin/>
+        <x-block/>
+       <x-block name='footer'>
+            <x-userDashBoardFooter/>
+       <x-block/>
+    <x-userDashboard/>
+```
+
+> Awesome, a default slot concept in twig has always vexed me! Just so we're on the same page, this is what I mean by default slot
+
+For the default slot I propose to work on this in a next-up PR since we have to make changes out of range of this PR in order to do it 😁
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-07T22:27:39Z
+
+This PR should be ready for review. I need to figure out why all these tests are passing locally but not on the CI
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-04-08T04:50:26Z
+
+That `x-` is ugly 😔 😅
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-04-08T04:52:41Z
+
+> > Will it be possible to pass arrays/objects as attributes if the component defines it?
+>
+> Yes of course grin
+
+Could you add a test for passing an object? :smiley:
+
+---------------------------------------------------------------------------
+
+by yguedidi at 2023-04-08T16:09:18Z
+
+Awesome work!!! bring JSX-like way of writing components to PHP/Twig! I like!
+But I must admit I find the `x-` prefix ugly too 😅
+
+Here some random ideas I have to solve this:
+
+1. prefix but make it configurable
+3. no prefix and exclude components matching a provided list of forbidden ones (HTML tags, custom HTML tags)
+2. no prefix and assume Twig files will contain only HTML, and WebComponent are using kebab-case for components, so we could support only CamelCase for Twig component
+4. no prefix and forbid only self referencing, e.g. a `button` Twig component is likely to wrap a `<button>` HTML tag, so never parse `<button>` as a Twig component from within the scope of `button` Twig component
+5. no prefix and documentation to warn that Twig components written this way takes precedence over any HTML custom tag
+
+What do you think?
+Me I prefer them from bottom (5) to top (1)
+
+---------------------------------------------------------------------------
+
+by asispts at 2023-04-08T18:13:20Z
+
+Does this new syntax also support both react and vue components?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-08T21:33:22Z
+
+So here is what this PR does:
+
+- Let's say you have the following template:
+```php
+{% extends 'base.html.twig' %}
+ <x-userDashboard :user='user.id' isAdmin graph='linear' primary>
+       ...
+    <x-userDashboard/>
+```
+- then your render your template as usual
+- but now because of this PR the twig Lexer is decorated.  So before Twig parses your template the decorator looks for your <x-userDashboard> tag and replaces that by the traditional syntax {{ component('userDashboard') }}
+- and then the decorator calls Twig and the template is parsed as your never use this syntax
+
+> Does this new syntax also support both react and vue components?
+
+So, of course, this new syntax support React and Vue since React and Vue are Js Framework, and here everything happens on the server in the PHP.
+
+> That x- is ugly
+
+Please don't use the word ugly to express your opinion on a template syntax.
+
+Actually, there is no real conflict between React and this PR. Tell me if I am wrong but React uses what they call a virtual DOM. So in React, you add your component on this virtual DOM, and then React compiles everything to pure HTML and adds that to the root you are defined. And all of that happens in the js, and your HTML is not aware of this compilation.
+
+Then if you mean the Symfony Ux React and Vue components. There is no conflict your custom tag  <x-userDashboard/> gonna be parsed in {{ component('userDashboard') }} and you can still use the react_component() function for your react component where you want them to be.
+
+> That x- is ugly
+
+Actually, I am not a big fan,and at first, see in the first comment I proposed this syntax <ComponentName/>
+So there is no real conflict by using this syntax <ComponentName/>. Everything gonna still works, but the question is more do we want people to have potentially the same name for a react and twig component? Or should we provide a syntax for TwigComponent?
+
+The other reason is now we introduce the slot syntax
+
+```php
+<x-userDashboard :user='user.id' isAdmin graph='linear' primary>
+       <x-block name='actions'>
+            <x-userActions isAdmin/>
+        <x-block/>
+       <x-block name='footer'>
+            <x-userDashBoardFooter/>
+       <x-block/>
+    <x-userDashboard/>
+```
+
+So if we get back on the first syntax: <ComponentName/> we also have to find a syntax for slot.
+
+I think we gonna use this syntax only in Twig templates. And so even with this syntax <ComponentName/> it's gonna be clear that it's a TwigComponent.
+So I am voting to get back on the first syntax. 😁
+What do you think @kbond?
+
+---------------------------------------------------------------------------
+
+by yguedidi at 2023-04-08T22:38:20Z
+
+> Please don't use the word ugly to express your opinion on a template syntax.
+
+Sorry for the offense. 😕
+I meant it looks superfluous to me, breaking a bit the readability.
+
+> Then if you mean the Symfony Ux React and Vue components. There is no conflict your custom tag gonna be parsed in {{ component('userDashboard') }} and you can still use the react_component() function for your react component where you want them to be.
+
+I completely agree!
+My understanding of this feature is that it's a syntax sugar for `{{ component('userDashboard') }}`, not for `{{ react_component('userDashboard') }}`.
+
+> we also have to find a syntax for slot.
+
+~What do you think about kinda mimic Twig syntax?
+With something like `{% slot 'actions' %}...{% endslot %}` and `{% slot default %}...{% endslot %}`.
+It may be possible as the new lexer run before Twig parse the real Twig code~
+Just realizing the TwigComponent [already supports slots](https://symfony.com/bundles/ux-twig-component/current/index.html#embedded-components) 😅
+So if I get it correctly we need a solution only for a default slot if we write:
+```html
+<UserDashboard>
+    Content for the default slot
+</UserDashboard>
+```
+
+> So I am voting to get back on the first syntax.
+
+For what it counts, same vote from me
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-09T01:22:20Z
+
+@WebMamba THANK YOU FOR THIS 😍!!! I have also been wanting this badly, and it's been crawling higher and higher on my list.
+
+I've been on vacation (and I still am for a few days), but I can say a few things quickly:
+
+A) About naming: since we are not the first people to come up with this idea, it likely makes sense to look at how other systems (e.g Laravel) do their naming - https://laravel.com/docs/10.x/blade#components - for Blade components, if you have a component named `UserDashboard`, they would render it with `<x-user-dashboard>`. Additionally, like other frontend frameworks, if you have a "prop" named `isAdmin`, they would render it as `is-admin`:
+
+```
+<x-user-dashboard is-admin :user='user.id'>
+```
+
+B) About slots, I like the "named" slot (well, you call them "blocks", which likely makes sense) syntax 👍. We definitely need a "default" block syntax, and ideally we would get it all done in one PR. But if needed, it can be added after.
+
+Thank you for this wonderful post-vacation gift!
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-04-09T05:08:24Z
+
+I still have same opinion that we could do like in php/js - import the component under default or aliased name so then we could have many components with the same name.
+
+For example we have material v2 spec components, but v3 is already released, so if we'd add component with the same name I don't know which it would render.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-10T08:48:56Z
+
+> My understanding of this feature is that it's a syntax sugar for {{ component('userDashboard') }}, not for {{ react_component('userDashboard') }}.
+
+yes exactly
+
+Hey Ryan thanks for your review! Have a nice Easter holiday time 🐰
+Actually the Blade <x- syntax is not bad for me. But what I don't like with the Blade syntax is having to change your component name and properties name to camelcase. I don't think we have to do that, and I fill this a bit disturbing for the user to not have the same names on his templates and on his php files.
+So I think we can just keep the syntax as so:
+```php
+<x-userDashboard :user='user.id' isAdmin graph='linear' primary>
+```
+Or maybe you know the reasons why they made this?
+
+> I still have same opinion that we could do like in php/js - import the component under default or aliased name so then we could have many components with the same name.
+
+yes, but let's keep this PR short, I think this is already hard enough to review. But this I agree an important feature. Laravel already solve this, and I like the way they took: https://laravel.com/docs/10.x/blade#manually-registering-package-components
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-11T18:48:14Z
+
+> But what I don't like with the Blade syntax is having to change your component name and properties name to camelcase.
+
+Hmm, perhaps you're right. I think the motivation from places like Blade is that this is meant to look like an HTML tag... and HTML tags are case-insensitive (and almost always shown in all lowercase). But then React always uses upper camel case. So I think you're right.
+
+Though, if we DO keep it like `<x-userDashboard`, WDYT about using a `:` instead: `<x:userDashboard`? For some reason, having a lowercase `x` then a `-` then a string that is NOT lowercase bothers me (it looks like an HTML tag where I can't decide if I want to use upper or lowercase). The `<something:else>`  actually matches the HTML spec for creating a custom element in a "namespace". That won't apply to our situation as the element won't actually be rendered, but there may be pros/cons to using this syntax. Livewire actually uses `<livewire:user-dashboard>` for reference.
+
+**Upper Camel Case Naming Convention?**
+
+Related to this topic (but not this PR, sorry - but it's a good time to talk about it) is naming conventions for Twig components. So far, we've done something like this:
+
+```
+#[AsTwigComponent('success_alert')]
+class SuccessAlert
+```
+
+So:
+
+PHP class: `SuccessAlert`
+component: `success_alert`
+template: `success_alert.html.twig`
+rendered as: `<x-success_alert message="seeya later alligator!">`
+
+What does everyone thing about (as a convention) using the class name everywhere:
+
+```
+// maybe the argument is even optional?
+#[AsTwigComponent('SuccessAlert')]
+class SuccessAlert
+```
+
+So:
+
+PHP class: `SuccessAlert`
+component: `SuccessAlert`
+template: `SuccessAlert.html.twig`
+rendered as: `<x-SuccessAlert message="seeya later alligator!">`
+
+Thoughts?I don't want to bike shed, just want to see if there is any big consensus one way or another.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-11T19:01:18Z
+
+1. I really like the namespace idea! If we're using a namespace, why not be explicit: `<twig:component_name>` or `<t:component_name>` (or allow both or make it configurable). I think this is nice when scanning a twig file - you know exactly what it is.
+2. For the _tag name_, I think we should keep it simple:
+    - Component name: `MyComponent`: `<twig:MyComponent>`
+    - Component name: `my_component`: `<twig:my_component>`
+    - Component name: `my-component`: `<twig:myicomponent>`
+3. For the attributes, again, I think we should keep it simple (at least to start):
+    - `<twig:my_component isAdmin>` maps to prop `$isAdmin`
+    - `<twig:my_component is_admin>` fails if prop is `$isAdmin`
+
+---------------------------------------------------------------------------
+
+by asispts at 2023-04-11T19:11:40Z
+
+> I really like the namespace idea! If we're using a namespace, why not be explicit: <twig:component_name> or <t:component_name> (or allow both or make it configurable). I think this is nice when scanning a twig file - you know exactly what it is.
+
+I agree with the `t:` namespace
+
+It's easier to use this convention because we can simply copy and paste from the PHP class name.
+> PHP class: SuccessAlert
+> component: SuccessAlert
+> template: SuccessAlert.html.twig
+> rendered as: `<x-SuccessAlert message="seeya later alligator!">`
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-11T20:19:16Z
+
+> WDYT about using a : instead: <x:userDashboard
+
+Agree with you, on this point. Is way much nicer to have: if we don't camel case everything
+
+I made the change to fit this syntax. It looks really as @kbond described it in his last comment 😁
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-12T18:54:34Z
+
+Ping @WebMamba - I've taken your excellent work and extended it a bit. Please see https://github.com/WebMamba/ux/pull/1 for a new (hopefully more powerful, but still pretty simple) implementation.
+
+As a BONUS, that implementation adds support for default blocks:
+
+```html
+<t:alert type="danger">
+    <p>Watch our for the dangerously cool new Twig component syntax</p>
+</t:alert>
+```
+
+In this case, the `<p>` tag becomes a block called `default` inside the component template :).
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-04-12T18:56:59Z
+
+> In this case, the `<p>` tag becomes a block called `default` inside the component template :).
+
+What if it would be called `children` like in js land?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-12T20:05:35Z
+
+> What if it would be called children like in js land?
+
+Yea, React does this. I think Vue uses slots and doesn't have a default name at all (Blade's default "slot" is also nameless - just `$slot`)? I want to be as consistent as possible with other things, but I think `children` might feel more like "children components" whereas in Twig, this is really just "content" (we could call it `content`). You CAN put child components inside of this default block, but it's really just "content".
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-04-13T03:02:40Z
+
+> > What if it would be called children like in js land?
+>
+> Yea, React does this. I think Vue uses slots and doesn't have a default name at all (Blade's default "slot" is also nameless - just `$slot`)? I want to be as consistent as possible with other things, but I think `children` might feel more like "children components" whereas in Twig, this is really just "content" (we could call it `content`). You CAN put child components inside of this default block, but it's really just "content".
+
+In DOM it's also children or childNodes:)
+
+---------------------------------------------------------------------------
+
+by mahono at 2023-04-13T06:48:50Z
+
+What about using "<ux:" as prefix? (To match the Symfony UX project.)
+
+Somehow I find "t" a bit confusing. Is it "template", is it "twig"..? What has "t" to do with "component"?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-13T09:20:42Z
+
+> You CAN put child components inside of this default block, but it's really just "content"
+
+I like the naming 'content' as well! I think it's a mistake to be to close the React naming since we took a really different path.
+
+> Somehow I find "t" a bit confusing. Is it "template", is it "twig"..? What has "t" to do with "component"
+
+Yes this is t for Twig
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-13T14:18:55Z
+
+I vote for `content` as the default block name. Fair point about `children` and `childNodes`... but as PHP developers, we don't think as closely about HTML consisting of "Node" objects.
+
+>  What about using "<ux:" as prefix? (To match the Symfony UX project.)
+> Somehow I find "t" a bit confusing. Is it "template", is it "twig"..? What has "t" to do with "component"?
+
+Not sure about `ux` (though it does look cool)... just because even though we have this "UX" concept, you can use "Twig Components" without every knowing or caring that there is this "UX" concept.
+
+We could do `twig:`. Blade component use the VERY short `x:`, but livewire uses `livewire:`... and that's 2x the length of `twig` :p. So adding 3 characters for clarity seems reasonable.
+
+@WebMamba Could you take an attempt at adding some docs for this? My opinion is that we should add a section to the Twig components docs for this "HTML Component Syntax" (and mention it is experimental), but leave all of the other examples using `{{ component() }}` for now.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-13T14:56:52Z
+
+> I vote for content as the default block name.
+
+If my understanding on how the default block system works is correct, isn't it possible (even likely) someone could have a named `content` block that would cause a conflict? I personally prefer `default` as it's less likely a user would have this block name.
+
+> We could do twig:.
+
++1 for `twig:`
+
+> Could you take an attempt at adding some docs for this?
+
+Keep in mind we have to make it known that this syntax is not supported by live components (...yet 😄)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-13T15:39:00Z
+
+> If my understanding on how the default block system works is correct, isn't it possible (even likely) someone could have a named content block that would cause a conflict? I personally prefer default as it's less likely a user would have this block name.
+
+I just checked and the block conflict is NOT a problem. We can safely use `content`.
+
+If I'm using, for example, a block called `body` in `base.html.twig` (like a normal Symfony app) and then I create a `{% component %}` tag (which is what the `<twig:foo>` syntax is changed to) with a block called `body`, it doesn't cause any problems.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-13T15:49:51Z
+
+Is `twig:block` the only _hardcoded_ tag? There is a, perhaps small, concern where someone has a component named _block_. Not sure how/if we account for this.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-13T15:59:43Z
+
+> Is twig:block the only hardcoded tag? There is a, perhaps small, concern where someone has a component named block. Not sure how/if we account for this.
+
+Yes it is the only. And I think we say that `block` is a reserved word with this syntax.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-13T16:03:21Z
+
+> I just checked and the block conflict is NOT a problem. We can safely use content.
+
+I was referring to the name inside the twig component template. Are we on the same page?
+
+```html
+<twig:my_component>
+    <p>something I expect in the "default" block</p>
+    <twig:block name="content">
+        <p>something I expect in the named "content" block</p>
+    </twig:block>
+</twig:my_component>
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-13T16:14:21Z
+
+> I was referring to the name inside the twig component template. Are we on the same page?
+
+Ohhh. Yes, if we renamed to `content`, then you could have the following bad situation:
+
+```twig
+<twig:my_component>
+    <p>something I expect in the "content" block</p>
+    <twig:block name="content">
+        <p>something I expect in the named "content" block</p>
+    </twig:block>
+</twig:my_component>
+```
+
+So, 2x blocks called `content` and an error. I think that's ok: it feels weird for the user to use a "default block"... but then still have ANOTHER named block called `content`. I still like `content` as the default name :)
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-13T16:56:23Z
+
+That's fair. A block named `content` that represents the default slot feels a bit like an arbitrary convention. What about a hard-coded `<twig:content>` element that translates to `<twig:block name="content">`? We could even make the name `__content__` (as it's all internal) to avoid any potential conflicts?
+
+I feel like when scanning your component template, `<twig:content>...</twig:content>` better conveys what it represents.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-13T18:53:40Z
+
+Oh I see - you’re looking now at what the component template itself looks like. I’m not sure: so far the special <twig: syntax is used when *rendering* a component, not inside the component template itself. That doesn’t mean we can’t change that, just mentioning it. And since we *are* ultimately using blocks everywhere, I kinda like using “block content” in the component template. But I welcome anyone else to disagree!
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-13T18:58:55Z
+
+> I’m not sure: so far the special <twig: syntax is used when rendering a component, not inside the component template itself.
+
+You can choose to use `<twig:block name="x">` inside the component template, right?
+
+Anyway, I don't feel very strongly about it. I'm fine leaving as just a special named block (this also allows the twig template to use a standard `{% block x %}` tag)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-13T19:44:27Z
+
+> You can choose to use <twig:block name="x"> inside the component template, right?
+
+No you can't. It wouldn't be hard to add that (IF we wanted it). But currently, we only even start looking for `<twig:block name="x">` if we're inside of a `<twig:foo>` "tag" already - i.e. when we're currently rendering a component using the new syntax. I think we leave it for now - and call it `content`. If we find soon that we absolutely hate this or want a fancier syntax, we can change. I think we should introduce this feature as experimental originally.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-13T19:58:06Z
+
+@weaverryan just added your code about the default block! 😁
+
+> Could you take an attempt at adding some docs for this? My opinion is that we should add a section to the Twig components docs for this "HTML Component Syntax
+
+Yeap sure I will open a PR for it!
+
+> Keep in mind we have to make it known that this syntax is not supported by live components (...yet 😄)
+
+Good catch 😁
+
+I agree with Ryan on this one, 'content' feels more apparent. Maybe we can add an error if someone tries to do <:t block="content"> we can raise an error like block content is reserved world, please choose another block name. 😁
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-13T20:04:50Z
+
+> No you can't.
+
+Ahh, ok, got it.
+
+> I agree with Ryan on this one, 'content' feels more apparent.
+
+Ok, let's go with `content`
+
+> Maybe we can add an error if someone tries to do <:t block="content"> we can raise an error like block content is reserved world, please choose another block name.
+
+Let's save that for a followup PR
+
+@WebMamba, could you adjust this PR's description to show the updated syntax and what's possible with default blocks?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-13T21:15:45Z
+
+> @WebMamba, could you adjust this PR's description to show the updated syntax and what's possible with default blocks?
+
+@kbond Done! 😁
+
+And I made the change to content from default! 😁
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-13T21:26:23Z
+
+`t:` => `twig:`?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-13T21:42:15Z
+
+> t: => twig:?
+
+voting for t
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-13T22:06:24Z
+
+Support both?
+
+---------------------------------------------------------------------------
+
+by mahono at 2023-04-14T08:00:09Z
+
+> Support both?
+
+To be honest I was thinking about providing a way to allow custom namespaces. Could be interesting when someone builds a CMS or something on top of that and wants to "rebrand" the prefix for their components.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-14T14:07:41Z
+
+I'd vote for `twig:` - a lot of extra clarity of "wtf is that tag! Is that some Vue component, some custom HTML element?" for just 3 extra chars.
+
+> To be honest I was thinking about providing a way to allow custom namespaces. Could be interesting when someone builds a CMS or something on top of that and wants to "rebrand" the prefix for their components.
+
+Definitely this is something we need to think about, but probably in another PR.
+
+If some CMS wants to add new components under some sort of a namespace, that should also affect the way the component is used with the simple syntax `{{ component() }}`. For example, perhaps we add the ability to make something like `{{ component('MyCMS:Alert') }}` (actually, other than the fact that this component would need to specify a custom template name so that it doesn't have a `:`, this should already be possible). Naturally, with the new syntax, that would be come `<twig:MyCMS:Alert>`. Do we allow that to become `<MyCMS:Alert>`. *Maybe*? But definitely for later.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-15T09:31:58Z
+
+@kbond @weaverryan just updated to have the syntax with the twig prefix 😁 Maybe in a following PR I will make a proposal to support both syntaxes 😇
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-16T16:48:11Z
+
+Btw, if it helps, here's the test fix - https://github.com/WebMamba/ux/pull/2 :)
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-16T19:57:12Z
+
+Great thanks @weaverryan! Everything is green now! 😁
