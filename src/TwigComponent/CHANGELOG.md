@@ -2,6 +2,7 @@
 
 ## 2.8.0
 
+-   Add new HTML syntax for rendering components: `<twig:ComponentName>`
 -   `true` attribute values now render just the attribute name, `false` excludes it entirely.
 
 -   The first argument to `AsTwigComponent` is now optional and defaults to the class name.
