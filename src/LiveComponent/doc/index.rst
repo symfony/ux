@@ -2030,6 +2030,30 @@ Once a component has been validated, the component will "remember" that
 it has been validated. This means that, if you edit a field and the
 component re-renders, it will be validated again.
 
+Resetting Validation Errors
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you want to clear validation errors (e.g. so you can reuse the form again),
+you can call the ``resetValidation()`` method::
+
+    // ...
+    class EditUser
+    {
+        // ...
+
+        #[LiveAction]
+        public function save()
+        {
+            // validate, save, etc
+
+            // reset your live props to the original state
+            $this->user = new User();
+            $this->agreeToTerms = false;
+            // clear the validation state
+            $this->resetValidation();
+        }
+    }
+
 Real-Time Validation on Change
 ------------------------------
 
