@@ -244,7 +244,7 @@ final class LiveComponentHydrator
     private function calculateChecksum(array $dehydratedPropsData): ?string
     {
         // sort so it is always consistent (frontend could have re-ordered data)
-        ksort($dehydratedPropsData);
+        $this->recursiveKeySort($dehydratedPropsData);
 
         return base64_encode(hash_hmac('sha256', json_encode($dehydratedPropsData), $this->secret, true));
     }
@@ -549,5 +549,15 @@ final class LiveComponentHydrator
         }
 
         return $dehydratedOriginalProps;
+    }
+
+    private function recursiveKeySort(array &$data): void
+    {
+        foreach ($data as &$value) {
+            if (\is_array($value)) {
+                $this->recursiveKeySort($value);
+            }
+        }
+        ksort($data);
     }
 }
