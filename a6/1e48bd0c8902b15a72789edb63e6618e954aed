@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by hedocode at 2023-04-12T11:30:23Z
+
+Another thing, I noticed that they are no explanation for components in subfolders, I expected it to work by writing the component file name but we actually need to write the path to it from the root folder, can I document it in this pull request or may I create a new one for this ?
+
+---------------------------------------------------------------------------
+
+by hedocode at 2023-04-12T15:22:12Z
+
+> Yea, this is something that should be mentioned - totally ok to include it here +1
+
+Done ! :heavy_check_mark:
