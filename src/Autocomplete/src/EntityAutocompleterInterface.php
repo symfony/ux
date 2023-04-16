@@ -17,6 +17,8 @@ use Symfony\Component\Security\Core\Security;
 
 /**
  * Interface for classes that will have an "autocomplete" endpoint exposed.
+ *
+ * @method mixed getGroupBy() Return group_by option.
  */
 interface EntityAutocompleterInterface
 {
@@ -50,5 +52,5 @@ interface EntityAutocompleterInterface
     /**
      * Return group_by option.
      */
-    public function getGroupBy(): mixed;
+    /* public function getGroupBy(): mixed; */
 }

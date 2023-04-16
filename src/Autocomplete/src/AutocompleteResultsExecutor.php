@@ -71,7 +71,9 @@ final class AutocompleteResultsExecutor
 
         $results = [];
 
-        if (null === $groupBy = $autocompleter->getGroupBy()) {
+        if (!method_exists($autocompleter, 'getGroupBy')) {
+            trigger_deprecation('symfony/ux-autocomplete', '2.8', 'Not implementing the "EntityAutocompleterInterface::getGroupBy()" in "%s" is deprecated.', get_debug_type($autocompleter));
+        } elseif (null === $groupBy = $autocompleter->getGroupBy()) {
             foreach ($paginator as $entity) {
                 $results[] = [
                     'value' => $autocompleter->getValue($entity),
