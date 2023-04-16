@@ -840,6 +840,86 @@ The ``with`` data is what's mounted on the component object.
 .. note::
 
     Embedded components *cannot* currently be used with LiveComponents.
+    
+Component HTML Syntax
+---------------------
+    
+.. versionadded:: 2.8
+
+    This syntax was been introduced in 2.8 and is still experimental: it may change in the future.
+    
+Twig Components come with an HTML-like syntax to ease the readability of your template:
+
+.. code-block:: html+twig
+
+    <twig:Alert></:Alert>
+    // or use a self-closing tag
+    <twig:Alert/>
+    
+You can pass props to your component by using HTML attributes. Suppose you have the following component:
+
+.. code-block:: html+twig
+
+    // "withActions" property will be set to true
+    <twig:Alert withActions message="hello"></:Alert>
+        
+You can add the ':' prefix to your attribute to indicate that the value 
+should be compiled by Twig
+
+.. code-block:: html+twig
+    
+    <twig:Alert message="hello" :user="user.id"/>
+    
+    // equal to
+    <twig:Alert message="hello" user="{{ user.id }}"/>
+    
+    // and pass object, or table, or anything you imagine
+    <twig:Alert :foo="['col' => ['foo', 'oof']]"/>
+    
+You can pass content directly inside your component.
+
+.. code-block:: html+twig
+
+    <twig:Alert>
+       // any content you want
+       <div>
+           ...
+       </div>
+    </twig:Alert>
+    
+Then in your component template, This becomes a block called content:
+
+.. code-block:: html+twig
+
+    <div class="content">
+         {% block content %}
+            // and the content will appear in here
+         {% endblock %}
+         {% block footer %}
+            ...
+         {% block footer %}
+     </div>    
+    
+In addition to the default block, you can also add named blocks:
+
+.. code-block:: html+twig
+    
+    <twig:Alert message="hello" :user="user.id">
+        <twig:block name="footer">
+            ...
+        </twig:block>
+    </twig:Alert>
+    
+And in your component template you can access your embedded block
+
+.. code-block:: html+twig
+    
+    <div class="content">
+         {% block footer %}
+            ...
+         {% block footer %}
+     </div>
+    
 
 Contributing
 ------------
