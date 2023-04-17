@@ -59,5 +59,15 @@ class ValidatableComponentTraitTest extends KernelTestCase
             ->assertSuccessful()
             ->assertContains('Has Error: yes')
         ;
+
+        $browser
+            ->post('/_components/validating_component/resetValidationAction', [
+                'json' => [
+                    'props' => $dehydratedProps,
+                ],
+            ])
+            ->assertSuccessful()
+            ->assertContains('Has Error: no')
+        ;
     }
 }

@@ -152,6 +152,13 @@ trait ValidatableComponentTrait
         $this->componentValidator = $componentValidator;
     }
 
+    private function resetValidation(): void
+    {
+        $this->isValidated = false;
+        $this->validatedFields = [];
+        $this->validationErrors = null;
+    }
+
     private function getValidator(): ComponentValidatorInterface
     {
         if (!$this->componentValidator) {
