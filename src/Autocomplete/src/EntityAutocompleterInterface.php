@@ -49,7 +49,7 @@ interface EntityAutocompleterInterface
      */
     public function isGranted(Security $security): bool;
 
-    /**
+    /*
      * Return group_by option.
      */
     /* public function getGroupBy(): mixed; */
