@@ -37,6 +37,7 @@ final class ComponentFactory
         private array $config,
         private array $classMap,
         private Environment $environment,
+        private string $twigExtension
     ) {
     }
 
@@ -52,7 +53,7 @@ final class ComponentFactory
                 ]);
             }
 
-            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->config))));
+            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s. And no template %s. founded', $name, implode(', ', array_keys($this->config)), $this->getTemplateFromName($name)));
         }
 
         return new ComponentMetadata($config);
@@ -162,7 +163,7 @@ final class ComponentFactory
                 return new StaticComponent();
             }
 
-            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->components->getProvidedServices()))));
+            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s. And no template %s. founded', $name, implode(', ', array_keys($this->components->getProvidedServices())), $this->getTemplateFromName($name)));
         }
 
         return $this->components->get($name);
@@ -209,7 +210,7 @@ final class ComponentFactory
 
     private function getTemplateFromName(string $name): string
     {
-        return str_replace('.', '/', $name).'.html.twig';
+        return str_replace('.', '/', $name).$this->twigExtension;
     }
 
     /**
