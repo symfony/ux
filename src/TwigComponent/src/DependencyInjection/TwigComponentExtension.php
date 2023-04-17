@@ -57,7 +57,7 @@ final class TwigComponentExtension extends Extension
                 new Reference('event_dispatcher'),
                 class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : [],
                 new Reference('twig'),
-                $config['twig_extension'],
+                $config['template_extension'],
             ])
         ;
 

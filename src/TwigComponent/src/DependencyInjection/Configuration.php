@@ -13,7 +13,7 @@ class Configuration implements ConfigurationInterface
         $rootNode = $treeBuilder->getRootNode();
         $rootNode
             ->children()
-                ->scalarNode('twig_extension')->defaultValue('.html.twig')->end()
+                ->scalarNode('template_extension')->defaultValue('.html.twig')->end()
             ->end()
         ;
 
