@@ -778,9 +778,10 @@ child components works. Read `Live Nested Components`_.
 Embedded Components
 -------------------
 
-.. versionadded:: 2.2
+.. tip::
 
-    Embedded components were added in TwigComponents 2.2.
+    Embedded components (i.e. components with blocks) can be written in a more
+    readable way by using the `Component HTML Syntax`_.
 
 You can write your component's Twig template with blocks that can be overridden
 when rendering using the ``{% component %}`` syntax. These blocks can be thought of as
@@ -840,86 +841,96 @@ The ``with`` data is what's mounted on the component object.
 .. note::
 
     Embedded components *cannot* currently be used with LiveComponents.
-    
+
 Component HTML Syntax
 ---------------------
-    
+
 .. versionadded:: 2.8
 
     This syntax was been introduced in 2.8 and is still experimental: it may change in the future.
-    
+
 Twig Components come with an HTML-like syntax to ease the readability of your template:
 
 .. code-block:: html+twig
 
-    <twig:Alert></:Alert>
+    <twig:Alert></twig:Alert>
     // or use a self-closing tag
-    <twig:Alert/>
-    
-You can pass props to your component by using HTML attributes. Suppose you have the following component:
+    <twig:Alert />
+
+Passing Props as HTML Attributes
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Passing props is done with HTML attributes. For example if you have this component::
+
+    #[AsTwigComponent]
+    class Alert
+    {
+        public string $message = '';
+        public bool $withActions = false;
+        public string $type = 'success';
+    }
+
+You can pass the ``message``, ``withActions`` or ``type`` props as attributes:
 
 .. code-block:: html+twig
 
-    // "withActions" property will be set to true
-    <twig:Alert withActions message="hello"></:Alert>
-        
-You can add the ':' prefix to your attribute to indicate that the value 
-should be compiled by Twig
+    // withActions will be set to true
+    <twig:Alert type="info" message="hello!" withActions />
+
+To pass in a dynamic value, prefix the attribute with ``:`` or use the
+normal ``{{ }}`` syntax:
 
 .. code-block:: html+twig
-    
-    <twig:Alert message="hello" :user="user.id"/>
-    
+
+    <twig:Alert message="hello!" :user="user.id" />
+
     // equal to
-    <twig:Alert message="hello" user="{{ user.id }}"/>
-    
+    <twig:Alert message="hello!" user="{{ user.id }}" />
+
     // and pass object, or table, or anything you imagine
-    <twig:Alert :foo="['col' => ['foo', 'oof']]"/>
-    
-You can pass content directly inside your component.
+    <twig:Alert :foo="['col' => ['foo', 'oof']]" />
+
+Passing Blocks to your Component
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can also pass content directly to your component:
 
 .. code-block:: html+twig
 
-    <twig:Alert>
-       // any content you want
-       <div>
-           ...
-       </div>
+    <twig:Alert type="success">
+        <div>Congratulations! You've won a free puppy!</div>
     </twig:Alert>
-    
-Then in your component template, This becomes a block called content:
+
+In your component template, this becomes a block named ``content``:
 
 .. code-block:: html+twig
 
-    <div class="content">
-         {% block content %}
-            // and the content will appear in here
-         {% endblock %}
-         {% block footer %}
-            ...
-         {% block footer %}
-     </div>    
-    
+    <div class="alert alert-{{ type }}">
+        {% block content %}
+            // the content will appear in here
+        {% endblock %}
+     </div>
+
 In addition to the default block, you can also add named blocks:
 
 .. code-block:: html+twig
-    
-    <twig:Alert message="hello" :user="user.id">
+
+    <twig:Alert type="success">
+        <div>Congrats on winning a free puppy!</div>
+
         <twig:block name="footer">
-            ...
+            <button class="btn btn-primary">Claim your prize</button>
         </twig:block>
     </twig:Alert>
-    
+
 And in your component template you can access your embedded block
 
 .. code-block:: html+twig
-    
-    <div class="content">
-         {% block footer %}
-            ...
-         {% block footer %}
+
+    <div class="alert alert-{{ type }}">
+        {% block content %}{% endblock %}
+        {% block footer %}{% endblock %}
      </div>
-    
 
 Contributing
 ------------
