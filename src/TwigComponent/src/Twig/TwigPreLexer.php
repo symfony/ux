@@ -58,7 +58,7 @@ class TwigPreLexer
                     $this->currentComponents[] = ['name' => $componentName, 'hasDefaultBlock' => false];
                 }
 
-                $output .= "{% component {$componentName}".($attributes ? " with { {$attributes} }" : '').' %}';
+                $output .= "{% component '{$componentName}'".($attributes ? " with { {$attributes} }" : '').' %}';
                 if ($isSelfClosing) {
                     $output .= '{% endcomponent %}';
                 }
@@ -117,7 +117,7 @@ class TwigPreLexer
     private function consumeComponentName(): string
     {
         $start = $this->position;
-        while ($this->position < $this->length && preg_match('/[A-Za-z0-9_]/', $this->input[$this->position])) {
+        while ($this->position < $this->length && preg_match('/[A-Za-z0-9_:@\-\/.]/', $this->input[$this->position])) {
             ++$this->position;
         }
         $componentName = substr($this->input, $start, $this->position - $start);
