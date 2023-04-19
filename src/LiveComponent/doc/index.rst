@@ -2350,6 +2350,8 @@ a model in a child updates, it won't also update that model in its parent
 The parent-child system is *smart*. And with a few tricks, you can make
 it behave exactly like you need.
 
+.. _child-component-independent-rerender:
+
 Each component re-renders independent of one another
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -2631,6 +2633,27 @@ Notice that ``MarkdownTextarea`` allows a dynamic ``name``
 attribute to be passed in. This makes that component re-usable in any
 form.
 
+.. _rendering-loop-of-elements:
+
+Rendering Quirks with List of Elements
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you're rendering a list of elements in your component, to help LiveComponents
+understand which element is which between re-renders (i.e. if something re-orders
+or removes some of those elements), you can add a ``data-live-id`` attribute to
+each element
+
+.. code-block:: html+twig
+
+    {# templates/components/Invoice.html.twig #}
+    {% for lineItem in lineItems %}
+        <div data-live-id="{{ lineItem.id }}">
+            {{ lineItem.name }}
+        </div>
+    {% endfor %}
+
+.. _key-prop:
+
 Rendering Quirks with List of Embedded Components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -2648,10 +2671,10 @@ to that component:
 
 .. code-block:: twig
 
-    {# templates/components/Invoice.html.twig #}
-    {% for lineItem in lineItems %}
-        {{ component('invoice_line_item', {
-            productId: lineItem.productId,
+    {# templates/components/InvoiceCreator.html.twig #}
+    {% for lineItem in invoice.lineItems %}
+        {{ component('InvoiceLineItemForm', {
+            lineItem: lineItem,
             key: lineItem.id,
         }) }}
     {% endfor %}
@@ -2660,6 +2683,128 @@ The ``key`` will be used to generate a ``data-live-id`` attribute,
 which will be used to identify each child component. You can
 also pass in a ``data-live-id`` attribute directly, but ``key`` is
 a bit more convenient.
+
+.. _rendering-loop-new-element:
+
+Tricks with a Loop + a "New" Item
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Let's get fancier. After looping over the current line items, you
+decide to render one more component to create a *new* line item.
+In that case, you can pass in a ``key`` set to something like ``new_line_item``:
+
+.. code-block:: twig
+
+    {# templates/components/InvoiceCreator.html.twig #}
+    // ... loop and render the existing line item components
+
+    {{ component('InvoiceLineItemForm', {
+        key: 'new_line_item',
+    }) }}
+
+Imagine you also have a ``LiveAction`` inside of ``InvoiceLineItemForm``
+that saves the new line item to the database. To be extra fancy,
+it emits a ``lineItem:created`` event to the parent::
+
+    // src/Twig/InvoiceLineItemForm.php
+    // ...
+
+    #[AsLiveComponent]
+    final class InvoiceLineItemForm
+    {
+        // ...
+
+        #[LiveProp]
+        #[Valid]
+        public ?InvoiceLineItem $lineItem = null;
+
+        #[PostMount]
+        public function postMount(): void
+        {
+            if(!$this->lineItem) {
+                $this->lineItem = new InvoiceLineItem();
+            }
+        }
+
+        #[LiveAction]
+        public function save(EntityManagerInterface $entityManager)
+        {
+            if (!$this->lineItem->getId()) {
+                $this->emit('lineItem:created', $this->lineItem);
+            }
+
+            $entityManager->persist($this->lineItem);
+            $entityManager->flush();
+        }
+    }
+
+Finally, the parent ``InvoiceCreator`` component listens to this
+so that it can re-render the line items (which will now contain the
+newly-saved item)::
+
+    // src/Twig/InvoiceCreator.php
+    // ...
+
+    #[AsLiveComponent]
+    final class InvoiceCreator
+    {
+        // ...
+
+        #[LiveListener('lineItem:created')]
+        public function addLineItem()
+        {
+            // no need to do anything here: the component will re-render
+        }
+    }
+
+This will work beautifully: when a new line item is saved, the ``InvoiceCreator``
+component will re-render and the newly saved line item will be displayed along
+with the extra ``new_line_item`` component at the bottom.
+
+But something surprising might happen: the ``new_line_item`` component won't
+update! It will *keep* the data and props that were there a moment ago (i.e. the
+form fields will still have data in them) instead of rendering a fresh, empty component.
+
+Why? When live components re-renders, it thinks the existing ``key: new_line_item``
+component on the page is the *same* new component that it's about to render. And
+because the props passed into that component haven't changed, it doesn't see any
+reason to re-render it.
+
+To fix this, you have two options:
+
+1. Make the ``key`` dynamic so it will be different after adding a new item::
+
+.. code-block:: twig
+
+    {{ component('InvoiceLineItemForm', {
+        key: 'new_line_item_'~lineItems|length,
+    }) }}
+
+2. Reset the state of the ``InvoiceLineItemForm`` component after it's saved::
+
+    // src/Twig/InvoiceLineItemForm.php
+    // ...
+    class InvoiceLineItemForm
+    {
+        // ...
+
+        #[LiveAction]
+        public function save(EntityManagerInterface $entityManager)
+        {
+            $isNew = null === $this->lineItem->getId();
+
+            $entityManager->persist($this->lineItem);
+            $entityManager->flush();
+
+            if ($isNew) {
+                // reset the state of this component
+                $this->emit('lineItem:created', $this->lineItem);
+                $this->lineItem = new InvoiceLineItem();
+                // if you're using ValidatableComponentTrait
+                $this->clearValidation();
+            }
+        }
+    }
 
 Advanced Functionality
 ----------------------
@@ -2693,6 +2838,40 @@ The system doesn't handle every edge case, so here are some things to keep in mi
 * If an element is moved from one location in the component to another,
   that change is **lost**: the element will be re-added in its original location
   during the next re-render.
+
+The Mystical data-live-id Attribute
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``data-live-id`` attribute is mentioned several times throughout the documentation
+to solve various problems. It's usually not needed, but can be the key to solving
+certain complex problems. But what is it?
+
+.. note::
+
+    The :ref:`key prop <key-prop>` is used to create a ``data-live-id`` attribute
+    on child components. So everything in this section applies equally to the
+    ``key`` prop.
+
+The ``data-live-id`` attribute is a unique identifier for an element or a component.
+It's used when a component re-renders and helps Live Components "connect" elements
+or components in the existing HTML with the new HTML. The logic works like this:
+
+Suppose an element or component in the new HTML has a ``data-live-id="some-id`` attribute.
+Then:
+
+A) If there **is** an element or component with ``data-live-id="some-id"`` in the
+   existing HTML, then the old and new elements/components are considered to be the
+   "same". For elements, the new element will be used to update the old element even
+   if the two elements appear in different places - e.g. like if :ref:`elements are moved <rendering-loop-of-elements>`
+   or re-ordered. For components, because child components render independently
+   from their parent, the existing component will be "left alone" and not re-rendered
+   (unless some ``updateFromParent`` props have changed - see :ref:`child-component-independent-rerender`).
+
+B) If there is **not** an element or component with ``data-live-id="some-id"`` in
+   the existing HTML, then the new element or component is considered to be "new".
+   In both cases, the new element or component will be added to the page. If there
+   is a component/element with a ``data-live-id`` attribute that is *not* in the
+   new HTML, that component/element will be removed from the page.
 
 Skipping Updating Certain Elements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

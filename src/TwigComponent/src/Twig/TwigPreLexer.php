@@ -58,9 +58,13 @@ class TwigPreLexer
                     $this->currentComponents[] = ['name' => $componentName, 'hasDefaultBlock' => false];
                 }
 
-                $output .= "{% component '{$componentName}'".($attributes ? " with { {$attributes} }" : '').' %}';
                 if ($isSelfClosing) {
-                    $output .= '{% endcomponent %}';
+                    // use the simpler component() format, so that the system doesn't think
+                    // this is an "embedded" component with blocks
+                    // see https://github.com/symfony/ux/issues/810
+                    $output .= "{{ component('{$componentName}'".($attributes ? ", { {$attributes} }" : '').') }}';
+                } else {
+                    $output .= "{% component '{$componentName}'".($attributes ? " with { {$attributes} }" : '').' %}';
                 }
 
                 continue;
