@@ -29,17 +29,17 @@ final class TwigPreLexerTest extends TestCase
     {
         yield 'simple_component' => [
             '<twig:foo />',
-            '{% component \'foo\' %}{% endcomponent %}',
+            '{{ component(\'foo\') }}',
         ];
 
         yield 'component_with_attributes' => [
             '<twig:foo bar="baz" with_quotes="It\'s with quotes" />',
-            "{% component 'foo' with { bar: 'baz', with_quotes: 'It\'s with quotes' } %}{% endcomponent %}",
+            "{{ component('foo', { bar: 'baz', with_quotes: 'It\'s with quotes' }) }}",
         ];
 
         yield 'component_with_dynamic_attributes' => [
             '<twig:foo dynamic="{{ dynamicVar }}" :otherDynamic="anotherVar" />',
-            '{% component \'foo\' with { dynamic: dynamicVar, otherDynamic: anotherVar } %}{% endcomponent %}',
+            '{{ component(\'foo\', { dynamic: dynamicVar, otherDynamic: anotherVar }) }}',
         ];
 
         yield 'component_with_closing_tag' => [
@@ -54,12 +54,12 @@ final class TwigPreLexerTest extends TestCase
 
         yield 'component_with_embedded_component_inside_block' => [
             '<twig:foo><twig:block name="foo_block"><twig:bar /></twig:block></twig:foo>',
-            '{% component \'foo\' %}{% block foo_block %}{% component \'bar\' %}{% endcomponent %}{% endblock %}{% endcomponent %}',
+            '{% component \'foo\' %}{% block foo_block %}{{ component(\'bar\') }}{% endblock %}{% endcomponent %}',
         ];
 
         yield 'attribute_with_no_value' => [
             '<twig:foo bar />',
-            '{% component \'foo\' with { bar: true } %}{% endcomponent %}',
+            '{{ component(\'foo\', { bar: true }) }}',
         ];
 
         yield 'component_with_default_block_content' => [
@@ -69,7 +69,7 @@ final class TwigPreLexerTest extends TestCase
 
         yield 'component_with_default_block_that_holds_a_component_and_multi_blocks' => [
             '<twig:foo>Foo <twig:bar /><twig:block name="other_block">Other block</twig:block></twig:foo>',
-            '{% component \'foo\' %}{% block content %}Foo {% component \'bar\' %}{% endcomponent %}{% endblock %}{% block other_block %}Other block{% endblock %}{% endcomponent %}',
+            '{% component \'foo\' %}{% block content %}Foo {{ component(\'bar\') }}{% endblock %}{% block other_block %}Other block{% endblock %}{% endcomponent %}',
         ];
         yield 'component_with_character_:_on_his_name' => [
             '<twig:foo:bar></twig:foo:bar>',
