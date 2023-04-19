@@ -1,0 +1,6 @@
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-19T14:25:22Z
+
+This is a fix on the HTML twig component syntax but do you think we should extend the fix to allow this
+`` {% component foo:bar `` for the moment only ``{% component 'foo:bar' %}`` is allow?
