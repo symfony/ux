@@ -2669,7 +2669,7 @@ Advanced Functionality
 The Smart Re-Render Algorithm
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-When a component re-renders, the new HTML if "morphed" onto the existing
+When a component re-renders, the new HTML is "morphed" onto the existing
 elements on the page. For example, if the re-render includes a new ``class``
 on an existing element, that class will be added to that element.
 
