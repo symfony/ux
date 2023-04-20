@@ -2693,6 +2693,7 @@ The system doesn't handle every edge case, so here are some things to keep in mi
 * If an element is moved from one location in the component to another,
   that change is **lost**: the element will be re-added in its original location
   during the next re-render.
+* If a stimulus controller element is moved, depending on your DOM structure, the controller might not follow the element and get applied to another element and break your logic. To help the rendering system to be smarter you should use the `data-live-id` attribute on those elements.
 
 Skipping Updating Certain Elements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
