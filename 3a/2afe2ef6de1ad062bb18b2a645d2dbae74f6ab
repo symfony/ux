@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-19T21:14:24Z
+
+So to clarify, using a self closing twig tag allows it to be a live component?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-20T15:53:32Z
+
+> So to clarify, using a self closing twig tag allows it to be a live component?
+
+Exactly right :)
