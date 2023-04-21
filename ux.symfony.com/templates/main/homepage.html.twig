@@ -54,21 +54,21 @@
 
     <div class="row">
         <div class="col-12 col-md-6">
-            {% component CodeBlock with { filename: 'templates/anything.html.twig' } %}
-                {% block content %}
-                    {{- source('@code_snippets/_markdown.html.twig') -}}
-                {% endblock %}
-            {% endcomponent %}
+            <twig:CodeBlock
+                filename="templates/main/homepage.html.twig"
+                targetTwigBlock="markdown_example"
+                :showTwigExtends="false"
+                :stripExcessHtml="true"
+            />
         </div>
         <div class="col-12 col-md-6  mt-3 mt-md-0">
-            {% component CodeBlock with { filename: 'assets/controllers/markdown_controller.js' } %}
-                {% block content %}
-                    {{- source('@assets/controllers/markdown-controller.js') -}}
-                {% endblock %}
-            {% endcomponent %}
+            <twig:CodeBlock
+                filename="assets/controllers/markdown-controller.js"
+            />
         </div>
     </div>
 
+    {% block markdown_example %}
     <div class="p-4 markdown-container rainbow-gradient mt-5 row" {{ stimulus_controller('markdown') }}>
         <div class="col-12 col-md-5">
             <textarea rows="3" class="form-control" aria-label="Type markdown into this box"
@@ -86,6 +86,7 @@
             </div>
         </div>
     </div>
+    {% endblock %}
 
     <p class="eyebrows" style="margin-top: 111px;">Components</p>
     <div class="d-md-flex justify-content-md-between text-center text-md-start">

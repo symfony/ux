@@ -2,13 +2,39 @@
     class: this.classString,
 }) }}>
     {% if showFilename %}
-        <p class="py-2 ps-4 mb-0">{{ filename }}</p>
+        <div class="py-2 ps-4 pe-2 mb-0 d-flex justify-content-between">
+            <a id="{{ this.elementId }}" href="#{{ this.elementId }}" class="filename-header">{{ filename }}</a>
+            <div>
+                {{ include('partials/code-block-buttons.html.twig', {
+                    source: this.rawSource,
+                    link: this.githubLink,
+                }) }}
+            </div>
+        </div>
     {% endif %}
-    <div class="terminal-body ps-4" style="height: {{ height }}; overflow: auto;">
-        <pre class="pt-2" style="overflow:initial;">
-        {{- this.highlight(block('content'))|raw -}}
+    <div class="terminal-body" {{ stimulus_controller('code-expander')}} style="position: relative">
+        {% if not showFilename %}
+            {{ include('partials/code-block-buttons.html.twig', {
+                source: this.rawSource,
+                link: this.githubLink,
+            }) }}
+        {% endif %}
+        <pre
+            class="py-2 ps-4"
+            style="height: {{ height }}; overflow: auto;"
+            {{ stimulus_target('code-expander', 'codeContent') }}
+        >
+            {{- this.highlightSource()|raw -}}
         </pre>
 
-        {% block code_content_bottom %}{% endblock %}
+        {% block code_content_bottom %}
+            <button
+                type="button"
+                class="btn btn-expand-code pt-2 text-center"
+                {{ stimulus_target('code-expander', 'expandCodeButton') }}
+                {{ stimulus_action('code-expander', 'expandCode') }}
+                style="display: none;"
+            >Expand code</button>
+        {% endblock %}
     </div>
 </div>

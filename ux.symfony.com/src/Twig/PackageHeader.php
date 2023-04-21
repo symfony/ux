@@ -4,6 +4,7 @@ namespace App\Twig;
 
 use App\Model\Package;
 use App\Repository\ChatRepository;
+use App\Service\PackageRepository;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent()]
@@ -18,8 +19,13 @@ class PackageHeader
      */
     public bool $withChatIcon = false;
 
-    public function __construct(private ChatRepository $chatRepository)
+    public function __construct(private PackageRepository $packageRepository, private ChatRepository $chatRepository)
     {
+    }
+
+    public function mount(string $package): void
+    {
+        $this->package = $this->packageRepository->find($package);
     }
 
     /**

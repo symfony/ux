@@ -8,8 +8,6 @@ export const app = startStimulusApp(require.context(
     /\.[jt]sx?$/
 ));
 
-app.debug = process.env.NODE_ENV === 'development';
-
 app.register('clipboard', Clipboard);
 // register any custom, 3rd party controllers here
 

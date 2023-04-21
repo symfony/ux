@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\TwigComponent\Twig;
 
+use Twig\Error\SyntaxError;
+
 /**
  * Rewrites <twig:component> syntaxes to {% component %} syntaxes.
  */
@@ -46,12 +48,12 @@ class TwigPreLexer
                         $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = false;
                     }
 
-                    $output .= $this->consumeBlock();
+                    $output .= $this->consumeBlock($componentName);
 
                     continue;
                 }
 
-                $attributes = $this->consumeAttributes();
+                $attributes = $this->consumeAttributes($componentName);
                 $isSelfClosing = $this->consume('/>');
                 if (!$isSelfClosing) {
                     $this->consume('>');
@@ -79,7 +81,7 @@ class TwigPreLexer
                 $lastComponentName = $lastComponent['name'];
 
                 if ($closingComponentName !== $lastComponentName) {
-                    throw new \RuntimeException("Expected closing tag '</twig:{$lastComponentName}>' but found '</twig:{$closingComponentName}>' at line {$this->line}");
+                    throw new SyntaxError("Expected closing tag '</twig:{$lastComponentName}>' but found '</twig:{$closingComponentName}>'", $this->line);
                 }
 
                 // we've reached the end of this component. If we're inside the
@@ -112,28 +114,40 @@ class TwigPreLexer
 
         if (!empty($this->currentComponents)) {
             $lastComponent = array_pop($this->currentComponents)['name'];
-            throw new \RuntimeException(sprintf('Expected closing tag "</twig:%s>" not found at line %d.', $lastComponent, $this->line));
+            throw new SyntaxError(sprintf('Expected closing tag "</twig:%s>" not found.', $lastComponent), $this->line);
         }
 
         return $output;
     }
 
-    private function consumeComponentName(): string
+    private function consumeComponentName(string $customExceptionMessage = null): string
     {
         $start = $this->position;
         while ($this->position < $this->length && preg_match('/[A-Za-z0-9_:@\-\/.]/', $this->input[$this->position])) {
             ++$this->position;
         }
+
         $componentName = substr($this->input, $start, $this->position - $start);
 
         if (empty($componentName)) {
-            throw new \RuntimeException("Expected component name at line {$this->line}");
+            $exceptionMessage = $customExceptionMessage;
+            if (null == $exceptionMessage) {
+                $exceptionMessage = 'Expected component name when resolving the "<twig:" syntax.';
+            }
+            throw new SyntaxError($exceptionMessage, $this->line);
         }
 
         return $componentName;
     }
 
-    private function consumeAttributes(): string
+    private function consumeAttributeName(string $componentName): string
+    {
+        $message = sprintf('Expected attribute name when parsing the "<twig:%s" syntax.', $componentName);
+
+        return $this->consumeComponentName($message);
+    }
+
+    private function consumeAttributes(string $componentName): string
     {
         $attributes = [];
 
@@ -151,7 +165,7 @@ class TwigPreLexer
                 $isAttributeDynamic = true;
             }
 
-            $key = $this->consumeComponentName();
+            $key = $this->consumeAttributeName($componentName);
 
             // <twig:component someProp> -> someProp: true
             if (!$this->check('=')) {
@@ -202,13 +216,13 @@ class TwigPreLexer
     private function consumeChar($validChars = null): string
     {
         if ($this->position >= $this->length) {
-            throw new \RuntimeException('Unexpected end of input');
+            throw new SyntaxError('Unexpected end of input', $this->line);
         }
 
         $char = $this->input[$this->position];
 
         if (null !== $validChars && !\in_array($char, (array) $validChars, true)) {
-            throw new \RuntimeException('Expected one of ['.implode('', (array) $validChars)."] but found '{$char}' at line {$this->line}");
+            throw new SyntaxError('Expected one of ['.implode('', (array) $validChars)."] but found '{$char}'.", $this->line);
         }
 
         ++$this->position;
@@ -255,7 +269,7 @@ class TwigPreLexer
         }
 
         if ($this->position >= $this->length || $this->input[$this->position] !== $char) {
-            throw new \RuntimeException("Expected '{$char}' but found '{$this->input[$this->position]}' at line {$this->line}");
+            throw new SyntaxError("Expected '{$char}' but found '{$this->input[$this->position]}'.", $this->line);
         }
         ++$this->position;
     }
@@ -276,9 +290,9 @@ class TwigPreLexer
         return true;
     }
 
-    private function consumeBlock(): string
+    private function consumeBlock(string $componentName): string
     {
-        $attributes = $this->consumeAttributes();
+        $attributes = $this->consumeAttributes($componentName);
         $this->consume('>');
 
         $blockName = '';
@@ -291,14 +305,14 @@ class TwigPreLexer
         }
 
         if (empty($blockName)) {
-            throw new \RuntimeException("Expected block name at line {$this->line}");
+            throw new SyntaxError('Expected block name.', $this->line);
         }
 
         $output = "{% block {$blockName} %}";
 
         $closingTag = '</twig:block>';
         if (!$this->doesStringEventuallyExist($closingTag)) {
-            throw new \RuntimeException("Expected closing tag '{$closingTag}' for block '{$blockName}' at line {$this->line}");
+            throw new SyntaxError("Expected closing tag '{$closingTag}' for block '{$blockName}'.", $this->line);
         }
         $blockContents = $this->consumeUntil($closingTag);
 

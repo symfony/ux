@@ -1,5 +1,6 @@
 {% extends 'base.html.twig' %}
 
+{% set package = twigPackageHelper.currentPackage() %}
 {% block title %}{{ package.humanName }} | Symfony UX Components{% endblock %}
 
 {% block body %}
@@ -29,12 +30,16 @@
             </div>
         {% endif %}
 
-        {{ include('main/_installTerminal.html.twig') }}
+        {{ include('main/_installTerminal.html.twig', {
+            package: package,
+        }) }}
 
         {% block component_bottom %}{% endblock %}
     </div>
 
     {% block documentation_links %}
-        {{ include('main/_documentationLinks.html.twig') }}
+        {{ include('main/_documentationLinks.html.twig', {
+            package: package
+        }) }}
     {% endblock %}
 {% endblock %}

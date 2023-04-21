@@ -1,27 +1,11 @@
-{% extends 'liveDemoTabsBase.html.twig' %}
+{% extends 'liveDemoBase.html.twig' %}
 
-{% block demo_code_tabs %}
-    <div class="tab-pane show active" id="demo_component">
-        {% component CodeBlock with { filename: 'src/Twig/MealPlanner.php', showFilename: false, height: '300px' } %}
-            {% block content %}
-                {{- source('@src/Twig/MealPlanner.php')|cleanup_php_file -}}
-            {% endblock %}
-        {% endcomponent %}
-    </div>
-    <div class="tab-pane" id="demo_template">
-        {% component CodeBlock with { filename: 'templates/components/MealPlanner.html.twig', showFilename: false, height: '300px' } %}
-            {% block content %}
-                {{- source('components/MealPlanner.html.twig') -}}
-            {% endblock %}
-        {% endcomponent %}
-    </div>
-    <div class="tab-pane" id="demo_form">
-        {% component CodeBlock with { filename: 'src/Form/MealPlannerForm.php', showFilename: false, height: '300px' } %}
-            {% block content %}
-                {{- source('@src/Form/MealPlannerForm.php')|cleanup_php_file -}}
-            {% endblock %}
-        {% endcomponent %}
-    </div>
+{% block code_block_full %}
+    <twig:TabbedCodeBlocks :files="[
+        'src/Twig/MealPlanner.php',
+        'templates/components/MealPlanner.html.twig',
+        'src/Form/MealPlannerForm.php',
+    ]" />
 {% endblock %}
 
 {% block demo_content %}

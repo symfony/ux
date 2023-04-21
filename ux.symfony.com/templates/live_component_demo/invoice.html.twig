@@ -1,0 +1,69 @@
+{% extends 'liveDemoBase.html.twig' %}
+
+{% block code_block_full %}
+    <twig:CodeWithExplanationRow filename="src/Twig/InvoiceCreator.php">
+This main component keeps track of the `Invoice` (which may be new) and
+a list of the "invoice items" - stored on a `LiveProp` called `$lineItems`.
+
+Because `LiveProp` values need to be (mostly) simple, the `$lineItems` are
+stored as a raw array of data, which we add to or remove from when line
+items are added/removed.
+
+This components listens to several events that the child
+`InvoiceCreatorLineItem` components emits. For example, the child emits
+`removeLineItem` when the user clicks the "x" button on a line item.
+This triggers the `removeLineItem()` method on this component, which
+removes the line item from the `$lineItems` array.
+    </twig:CodeWithExplanationRow>
+
+    <twig:CodeWithExplanationRow filename="templates/components/InvoiceCreator.html.twig" reversed>
+The template is fairly simple: rendering form fields with `data-model` to
+bind to writable `LiveProp`'s along with their validation errors.
+
+Most importantly, this loops over `$lineItems` and renders the
+`InvoiceCreatorLineItem` child component for each one passing the
+data: `productId`, `quantity`, and `isEditing`. It also passes a `key`,
+which is needed so LiveComponents can track which row is which.
+    </twig:CodeWithExplanationRow>
+
+    <twig:CodeWithExplanationRow filename="src/Twig/InvoiceCreatorLineItem.php">
+The child component for each "line item". This handles validating, saving,
+and changing the "edit" state of the line item.
+
+But all of the line item data ultimately needs to be stored on the parent
+component so that we can wait to save everything to the database. This
+component communicates the new data (or "edit" state change) to the parent
+by emitting events - e.g. `line_item:save`.
+
+> Note: it would be simpler to manage the `isEditing` state directly on this
+> component, instead of passing it to the parent. It was done this way so that
+> the parent component can know how many of its children are currently in
+> "edit" mode.
+    </twig:CodeWithExplanationRow>
+
+    <twig:CodeWithExplanationRow filename="templates/components/InvoiceCreatorLineItem.html.twig" reversed>
+Nothing too fancy here: some `data-model` elements and `data-action="live#action"`
+buttons.
+
+The most interesting part is the "X" button to remove a line item: this uses
+`data-action="live#emitUp"` to emit the `removeLineItem` event to the parent component.
+In this case, instead of triggering a `LiveAction` that *then* emits the event,
+we emit the event directly.
+    </twig:CodeWithExplanationRow>
+{% endblock %}
+
+{% block demo_content %}
+    <div class="row">
+        <div class="col-8">
+            {{ component('InvoiceCreator', {
+                invoice: invoice
+            }) }}
+        </div>
+    </div>
+    <div class="mt-3">
+        <small>
+            Inspired by:
+            <a href="https://www.youtube.com/watch?v=udvFu31sFpk" rel="external noopener noreferrer">Livewire Invoice Editor Component: Parent-Child Example by Laravel Daily</a>
+        </small>
+    </div>
+{% endblock %}

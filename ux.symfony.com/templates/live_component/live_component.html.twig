@@ -2,7 +2,7 @@
 
 {% block component_header %}
     {% component PackageHeader with {
-        package: package,
+        package: 'live-component',
         eyebrowText: 'Reactive Twig Templates'
     } %}
         {% block title_header %}
@@ -17,20 +17,14 @@
     {% endcomponent %}
 {% endblock %}
 
+
+
 {% block code_block_left %}
-    {% component CodeBlock with { filename: 'src/Twig/SearchPackages.php' } %}
-        {% block content %}
-            {{- source('@src/Twig/SearchPackages.php')|cleanup_php_file -}}
-        {% endblock %}
-    {% endcomponent %}
+    <twig:CodeBlock filename="src/Twig/SearchPackages.php" />
 {% endblock %}
 
 {% block code_block_right %}
-    {% component CodeBlock with { filename: 'templates/components/SearchPackages.html.twig' } %}
-        {% block content %}
-            {{- source('@code_snippets/_SearchPackages.html.twig') -}}
-        {% endblock %}
-    {% endcomponent %}
+    <twig:CodeBlock filename="templates/components/SearchPackages.html.twig" />
 {% endblock %}
 
 {% block demo_title %}
@@ -61,7 +55,7 @@
         {% for demo in demos %}
             <div class="col-12 col-sm-6 col-md-4 mt-3">
                 <a href="{{ path(demo.route) }}">
-                    <div class="demo-container" style="height: 180px; overflow: hidden">
+                    <div class="demo-container text-center" style="height: 180px; overflow: hidden">
                         <img src="{{ demo.screenshotFilename }}" style="border-top-left-radius: 12px; border-top-right-radius: 12px; height: 100%;" alt="Screenshot of the {{ demo.name }} demo">
                     </div>
                     <div class="demo-container-inner p-3">

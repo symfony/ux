@@ -2,9 +2,8 @@
 
 {% block component_header %}
     {% component PackageHeader with {
-        package: package,
+        package: 'lazy-image',
         eyebrowText: 'Images that Zoom',
-        withChatIcon: true
     } %}
         {% block title_header %}
             Load fast with
@@ -19,13 +18,14 @@
 {% endblock %}
 
 {% block code_block_left %}
-    {% component CodeBlock with { filename: 'templates/images.html.twig', height: '310px' } %}
-        {% block content %}
-            {{- source('@code_snippets/_lazy_image.html.twig') -}}
-        {% endblock %}
-
-        {% block code_content_bottom %}
-            <div class="eyebrows pt-4">
+    <twig:CodeBlock
+        filename="templates/ux_packages/lazy-image.html.twig"
+        height="230px"
+        targetTwigBlock="code_block_right"
+        :showTwigExtends="false"
+    >
+        <twig:block name="code_content_bottom">
+            <div class="eyebrows pb-2 px-2">
                 <div>
                     <i class="fa-solid fa-circle px-2 align-self-center" style="font-size: 3px;"></i>
                     Load a small (or blurred) image first
@@ -36,32 +36,19 @@
                     The real (large) image is downloaded after page load
                 </div>
             </div>
-        {% endblock %}
-    {% endcomponent %}
+        </twig:block>
+    </twig:CodeBlock>
 {% endblock %}
 
 {% block code_block_right %}
-    {% embed 'main/_demoBox.html.twig' %}
-        {% block demo_title %}UX Lazy Image{% endblock %}
-        {% block demo_content_padding %}{% endblock %}
-        {% block demo_content %}
-            <img
-                src="{{ data_uri_thumbnail(publicDir~asset('build/images/legos.jpg'), 40, 30) }}"
-                {{ stimulus_controller('symfony/ux-lazy-image/lazy-image', {
-                    src: asset('build/images/legos.jpg')
-                }) }}
-
-                alt="A blurhash image that is replaced by the real image on load"
-                width="578"
-                height="275"
-                style="border-bottom-left-radius: 5px; border-bottom-right-radius: 5px;"
-            >
-        {% endblock %}
-    {% endembed %}
-{% endblock %}
-
-
-
-{% block demo_content %}
-
+    <img
+        src="{{ data_uri_thumbnail(publicDir~asset('build/images/legos.jpg'), 40, 30) }}"
+        {{ stimulus_controller('symfony/ux-lazy-image/lazy-image', {
+            src: asset('build/images/legos.jpg')
+        }) }}
+        alt="A blurhash image that is replaced by the real image on load"
+        width="578"
+        height="275"
+        style="border-radius: 5px;"
+    >
 {% endblock %}

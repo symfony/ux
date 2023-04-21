@@ -15,6 +15,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
+use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -53,11 +54,27 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
 
     public function render(string $name, array $props = []): string
     {
-        return $this->container->get(ComponentRenderer::class)->createAndRender($name, $props);
+        try {
+            return $this->container->get(ComponentRenderer::class)->createAndRender($name, $props);
+        } catch (\Throwable $e) {
+            $this->throwRuntimeError($name, $e);
+        }
     }
 
     public function embeddedContext(string $name, array $props, array $context): array
     {
-        return $this->container->get(ComponentRenderer::class)->embeddedContext($name, $props, $context);
+        try {
+            return $this->container->get(ComponentRenderer::class)->embeddedContext($name, $props, $context);
+        } catch (\Throwable $e) {
+            $this->throwRuntimeError($name, $e);
+        }
+    }
+
+    private function throwRuntimeError(string $name, \Throwable $e): void
+    {
+        if (!($e instanceof \Exception)) {
+            $e = new \Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
+        }
+        throw new RuntimeError(sprintf('Error rendering "%s" component: %s', $name, $e->getMessage()), previous: $e);
     }
 }

@@ -160,4 +160,16 @@ class PackageRepository
     {
         return \count($this->findAll());
     }
+
+    public function findByRoute(string $route): Package
+    {
+        $packages = $this->findAll();
+        foreach ($packages as $package) {
+            if ($package->getRoute() === $route) {
+                return $package;
+            }
+        }
+
+        throw new \InvalidArgumentException(sprintf('Could not find a package for the current route "%s"', $route));
+    }
 }
