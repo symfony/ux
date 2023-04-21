@@ -16,7 +16,7 @@ class default_1 extends Controller {
     }
     connect() {
         if (this.url) {
-            this.es = new EventSource(this.url);
+            this.es = new EventSource(this.url, {withCredentials: true});
             connectStreamSource(this.es);
         }
     }
