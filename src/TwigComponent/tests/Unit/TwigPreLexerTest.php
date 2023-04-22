@@ -92,5 +92,9 @@ final class TwigPreLexerTest extends TestCase
             '<twig:foo.bar></twig:foo.bar>',
             '{% component \'foo.bar\' %}{% endcomponent %}',
         ];
+        yield 'nested_component_2_levels' => [
+            '<twig:foo><twig:block name="child"><twig:bar><twig:block name="message">Hello World!</twig:block></twig:bar></twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block child %}{% component \'bar\' %}{% block message %}Hello World!{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}',
+        ];
     }
 }
