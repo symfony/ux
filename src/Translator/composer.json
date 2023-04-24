@@ -1,0 +1,49 @@
+{
+    "name": "symfony/ux-translator",
+    "type": "symfony-bundle",
+    "description": "Symfony Translator for JavaScript",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hugo Alliaume",
+            "email": "hugo@alliau.me"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Translator\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Translator\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.0",
+        "symfony/console": "^5.4|^6.0",
+        "symfony/filesystem": "^5.4|^6.0",
+        "symfony/string": "^5.4|^6.0",
+        "symfony/translation": "^5.4|^6.0"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "^5.4|^6.0",
+        "symfony/phpunit-bridge": "^5.2|^6.0",
+        "symfony/var-dumper": "^5.4|^6.0"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}

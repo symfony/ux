@@ -1,0 +1,20 @@
+{
+    "name": "@symfony/ux-translator",
+    "description": "Symfony Translator for JavaScript",
+    "license": "MIT",
+    "version": "1.0.0",
+    "main": "dist/translator_controller.js",
+    "types": "dist/translator_controller.d.ts",
+    "peerDependencies": {
+        "intl-messageformat": "^10.2.5"
+    },
+    "peerDependenciesMeta": {
+        "intl-messageformat": {
+            "optional": false
+        }
+    },
+    "devDependencies": {
+        "intl-messageformat": "^10.2.5",
+        "ts-jest": "^27.1.5"
+    }
+}
