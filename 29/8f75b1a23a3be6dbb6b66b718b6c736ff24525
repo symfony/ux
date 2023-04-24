@@ -1,0 +1,42 @@
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-20T14:29:39Z
+
+Hmm, the `/` would be required for #802. Is is possible to allow it for any character but the last?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-20T15:50:51Z
+
+> Hmm, the / would be required for https://github.com/symfony/ux/pull/802. Is is possible to allow it for any character but the last?
+
+Unless we force a `.` syntax instead - that's another thing Blade components do. This would be my preference, at least for now. It'll make life simpler - and we could consider adding `/` back later.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-20T15:52:33Z
+
+> By allowing the / character in https://github.com/symfony/ux/pull/806, we introduce a bug. You can't now use the self-closing syntax because it enters in conflict with the component name
+
+The tests on #806 were passing, so we must be missing a test-case for this. Can you add one in this PR to "prove" the bug that you're fixing?
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-20T16:12:56Z
+
+> Unless we force a . syntax instead
+
+This would disallow adding .html.twig but I'm fine with that. "Anonymous twig template files must end in .html.twig". If someone has a use-case where this doesn't work for them we can re-evaluate.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-21T09:35:04Z
+
+> The tests on https://github.com/symfony/ux/pull/806 were passing, so we must be missing a test-case for this. Can you add one in this PR to "prove" the bug that you're fixing?
+
+I just push a test for it 👍
+
+This is also my thought :
+> This would disallow adding .html.twig but I'm fine with that. "Anonymous twig template files must end in .html.twig"
+
+I just want to avoid the code being more complex for edge cases. Forcing the `.` syntax as Blade does is the way to go for me.
