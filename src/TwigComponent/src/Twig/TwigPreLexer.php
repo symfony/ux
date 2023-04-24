@@ -314,7 +314,7 @@ class TwigPreLexer
         if (!$this->doesStringEventuallyExist($closingTag)) {
             throw new SyntaxError("Expected closing tag '{$closingTag}' for block '{$blockName}'.", $this->line);
         }
-        $blockContents = $this->consumeUntil($closingTag);
+        $blockContents = $this->consumeUntilEndBlock();
 
         $subLexer = new self($this->line);
         $output .= $subLexer->preLexComponents($blockContents);
@@ -323,6 +323,33 @@ class TwigPreLexer
         $output .= '{% endblock %}';
 
         return $output;
+    }
+
+    private function consumeUntilEndBlock(): string
+    {
+        $start = $this->position;
+
+        $depth = 1;
+        while ($this->position < $this->length) {
+            if ('</twig:block' === substr($this->input, $this->position, 12)) {
+                if (1 === $depth) {
+                    break;
+                } else {
+                    --$depth;
+                }
+            }
+
+            if ('<twig:block' === substr($this->input, $this->position, 11)) {
+                ++$depth;
+            }
+
+            if ("\n" === $this->input[$this->position]) {
+                ++$this->line;
+            }
+            ++$this->position;
+        }
+
+        return substr($this->input, $start, $this->position - $start);
     }
 
     private function doesStringEventuallyExist(string $needle): bool
