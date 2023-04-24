@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1147ea6841cb30b649de7d9d8b1c5734",
+    "content-hash": "3e742c195db23e735ec6e345329ebb24",
     "packages": [
         {
             "name": "babdev/pagerfanta-bundle",
@@ -7451,6 +7451,84 @@
             "time": "2023-04-16T16:35:15+00:00"
         },
         {
+            "name": "symfony/ux-svelte",
+            "version": "2.x-dev",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/ux-svelte.git",
+                "reference": "111274910c49c4001143c968ce6b64a1e655703d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/ux-svelte/zipball/111274910c49c4001143c968ce6b64a1e655703d",
+                "reference": "111274910c49c4001143c968ce6b64a1e655703d",
+                "shasum": ""
+            },
+            "require": {
+                "symfony/webpack-encore-bundle": "^1.15"
+            },
+            "require-dev": {
+                "symfony/framework-bundle": "^5.4|^6.2",
+                "symfony/phpunit-bridge": "^5.4|^6.2",
+                "symfony/twig-bundle": "^5.4|^6.2",
+                "symfony/var-dumper": "^5.4|^6.2"
+            },
+            "default-branch": true,
+            "type": "symfony-bundle",
+            "extra": {
+                "thanks": {
+                    "name": "symfony/ux",
+                    "url": "https://github.com/symfony/ux"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Symfony\\UX\\Svelte\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Titouan Galopin",
+                    "email": "galopintitouan@gmail.com"
+                },
+                {
+                    "name": "Thomas Choquet",
+                    "email": "thomas.choquet.pro@gmail.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Integration of Svelte in Symfony",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "symfony-ux"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/ux-svelte/tree/2.x"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "time": "2023-04-14T13:38:54+00:00"
+        },
+        {
             "name": "symfony/ux-swup",
             "version": "2.x-dev",
             "source": {
@@ -11244,6 +11322,7 @@
         "symfony/ux-live-component": 20,
         "symfony/ux-notify": 20,
         "symfony/ux-react": 20,
+        "symfony/ux-svelte": 20,
         "symfony/ux-swup": 20,
         "symfony/ux-turbo": 20,
         "symfony/ux-twig-component": 20,

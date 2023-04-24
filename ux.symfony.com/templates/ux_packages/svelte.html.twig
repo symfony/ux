@@ -1,0 +1,39 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block component_header %}
+    {% component PackageHeader with {
+        package: 'svelte',
+        eyebrowText: 'Svelte Component Rendering'
+    } %}
+        {% block title_header %}
+            Render Svelte from
+            <span class="playfair ps-2">inside Twig</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Built a Svelte component? Render it quickly &amp; easily in Twig <em>and</em> pass in dynamic props.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    <twig:CodeBlock filename="assets/svelte/controllers/PackageSearch.svelte" height="300px" language="html" />
+{% endblock %}
+
+{% block code_block_right %}
+    <twig:CodeBlock
+        filename="templates/ux_packages/svelte.html.twig"
+        height="300px"
+        targetTwigBlock="demo_content"
+    />
+{% endblock %}
+
+{% block demo_title %}UX Svelte{% endblock %}
+
+{% block demo_content %}
+    <div {{ svelte_component('PackageSearch', {
+        packages: packagesData
+    }) }}>
+        Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
+    </div>
+{% endblock %}

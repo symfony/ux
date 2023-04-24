@@ -544,6 +544,9 @@
     "symfony/ux-react": {
         "version": "2.x-dev"
     },
+    "symfony/ux-svelte": {
+        "version": "2.x-dev"
+    },
     "symfony/ux-swup": {
         "version": "v2.1.1"
     },

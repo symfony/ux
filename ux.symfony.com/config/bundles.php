@@ -24,4 +24,5 @@ return [
     Symfony\UX\Notify\NotifyBundle::class => ['all' => true],
     Symfony\UX\React\ReactBundle::class => ['all' => true],
     Symfony\UX\Vue\VueBundle::class => ['all' => true],
+    Symfony\UX\Svelte\SvelteBundle::class => ['all' => true],
 ];

@@ -1,5 +1,6 @@
 import { registerReactControllerComponents } from '@symfony/ux-react';
 import {registerVueControllerComponents} from "@symfony/ux-vue";
+import { registerSvelteControllerComponents } from "@symfony/ux-svelte";
 
 // any CSS you import will output into a single css file (app.css in this case)
 import './styles/app.scss';
@@ -15,3 +16,4 @@ import Tab from 'bootstrap/js/dist/tab';
 // initialize symfony/ux-react
 registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
 registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue?$/, 'lazy'));
+registerSvelteControllerComponents(require.context('./svelte/controllers', true, /\.svelte$/));
