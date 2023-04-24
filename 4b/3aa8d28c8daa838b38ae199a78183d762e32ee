@@ -1,0 +1,742 @@
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-19T14:55:43Z
+
+While I can see the need for this, my app doesn't have so many translations that I'd be concerned with the perf impact of dumping the entire catalog. Should we include this functionality here or are you thinking, in this case, use [BazingaJsTranslationBundle](https://github.com/willdurand/BazingaJsTranslationBundle)?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-19T15:19:34Z
+
+Some applications can have more than 1000 keys (we got ~2500 in our main app 😅):
+<img width="190" alt="image" src="https://user-images.githubusercontent.com/2103975/208456181-29e06d93-d541-42ea-8a77-8b4bd8d200fe.png">
+
+In those 2500 keys, maybe 200 are used both in PHP and injected in JavaScript (we translate the messages with `|trans` and expose them in JavaScript, but it does not supports parameters). So we can't dump whole translations files nor creating a dedicated domain for JavaScript because we don't want to duplicate translations.
+
+I would like to see this functionality here because this package behave as a bridge between Symfony and JavaScript:
+> Symfony UX: A set of PHP & JavaScript packages to solve every day frontend problems
+
+I know that the BazingaJsTranslationBundle suffers from a lack of maintainability, the last release is 4 months old and some PRs are still opened. IINW @ willdurand does not maintain (or even use?) its bundle anymore.
+
+Finally, I think it can makes Symfony UX more "valuable", as it provides a more simple and light installation + usage than Bazinga.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-19T15:32:34Z
+
+> In those 2500 keys, maybe 200 are used both in PHP and injected in JavaScript
+
+Is there an alternate way we can flag these translations for js? Adding each and every key in your twig template feels a bit cumbersome, no?
+
+Message catalog metadata? Just thinking out loud.
+
+> I know that the BazingaJsTranslationBundle suffers from a lack of maintainability
+
+So should we consider moving it's primary functionality here (in addition to this new feature)?
+
+> Finally, I think it can makes Symfony UX more "valuable", as it provides a more simple and light installation + usage than Bazinga.
+
+I agree but clearly many people use Bazinga in it's current form w/o the perf issues you describe. I think we should provide both options.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-19T16:49:28Z
+
+> > In those 2500 keys, maybe 200 are used both in PHP and injected in JavaScript
+>
+> Is there an alternate way we can flag these translations for js? Adding each and every key in your twig template feels a bit cumbersome, no?
+>
+> Message catalog metadata? Just thinking out loud.
+
+I can looks cumbersome yeah, but I don't find it shocking since we are not building an SPA.
+
+Where the end-user can access to Catalogue Metadata? To me those metadata are internals to Symfony right?
+
+> > I know that the BazingaJsTranslationBundle suffers from a lack of maintainability
+>
+> So should we consider moving it's primary functionality here (in addition to this new feature)?
+
+To me, yes. Each PHP + JS existing bundles should be put under the Symfony UX brand/repository.
+
+> > Finally, I think it can makes Symfony UX more "valuable", as it provides a more simple and light installation + usage than Bazinga.
+>
+> I agree but clearly many people use Bazinga in it's current form w/o the perf issues you describe.
+
+I think that many people use Bazinga because it's the only one bundle to make re-using Symfony translations messages in JavaScript possible.
+
+For performance issues, I'm willing to bet my arm they either don't know or they don't care about these. Unfortunatelly, not every developer use profiling tools like Blackfire for PHP, and the tabs Analyzer/Performance Insights for JavaScript.
+
+>  I think we should provide both options.
+
+We can, this is something I planned for a 2nd PR if people had the issues. We can do it by making the 1st parameter of `load_translations_for_js()` optional, which will load all translations for a domain+locale. WDYT?
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-19T16:58:43Z
+
+> Where the end-user can access to Catalogue Metadata? To me those metadata are internals to Symfony right?
+
+I think it can be used outside - the standard `MessageCatalog` implements [`MetadataAwareInterface`](https://github.com/symfony/symfony/blob/926b450c297a87c5673c45e2326a484f619d9f51/src/Symfony/Component/Translation/MetadataAwareInterface.php). Don't know if all the loaders support metadata - xliff for sure. Would be really neat if you could _tag_ translations for _js_. Outside of the scope of this current PR - just something to think about later.
+
+> We can, this is something I planned for a 2nd PR if people had the issues. We can do it by making the 1st parameter of load_translations_for_js() optional, which will load all translations for a domain+locale. WDYT?
+
+This, or I was thinking dumping a js file to be included in a user's encore asset build? I use `friendsofsymfony/jsrouting-bundle` and this pattern works well. You flag routes to be included in js and these are dumped (this is where I had the idea of flagging translation messages). You don't need any twig helpers - just include the `router.js` script provided by the bundle and the dumped `routes.js`.
+
+For translations, we'd need the figure out what the current locale is. Can we use the `<html lang="x">` attribute to get this?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-19T17:05:13Z
+
+> > We can, this is something I planned for a 2nd PR if people had the issues. We can do it by making the 1st parameter of load_translations_for_js() optional, which will load all translations for a domain+locale. WDYT?
+>
+> This, or I was thinking dumping a js file to be included in a user's encore asset build? I use `friendsofsymfony/jsrouting-bundle` and this pattern works well. You flag routes to be included in js and these are dumped (this is where I had the idea of flagging translation messages).
+
+I've also used this pattern (with Bazinga and `friendsofsymfony/jsrouting-bundle`), it worked pretty fine but this was a bit tricky to setup:
+- "should we commit those files?"
+- you can't run Encore (or equivalent) before installing PHP deps and making your PHP app usable, so you must modify your installation steps to make things working, and that's not a easy thing to do with PaaS. Note: this argument is not so much valid anymore with Symfony UX, which seems have "popularized" this behavior.
+
+The `load_translations_for_js()` is a solution that does not suffer about those _issues_.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-19T17:08:10Z
+
+Certainly `load_translations_for_js()` could be an option but if we add the ability to dump all messages, we shouldn't suggest adding to every page's content.
+
+Maybe we shouldn't even provide this. If you want to pick and choose which messages to include, use `load_translations_for_js()`. If you want to dump you're entire catalog, use the js-dump command and include in your assets.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-19T17:11:22Z
+
+> For translations, we'd need the figure out what the current locale is. Can we use the `<html lang="x">` attribute to get this?
+
+Mmmh, maybe it can works if you use `<html lang="{{ app.request.locale }}">`, but this is not always true (e.g.: IIRC for SEO practices).
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-19T17:15:50Z
+
+Yeah, my thinking was to default the locale to the `html.lang` attribute and if `initialize_js_translator()` is used, override.
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2022-12-22T08:32:39Z
+
+Just my adding my two cents: I did something similar in the past (declaring translations in JS globally) but in the end, I reverted back to translations local to controllers. It's cumbersome to declare all translations to expose so my thinking was that I might as well declare them locally in a "labels" key in the controller to pass the translations directly from Twig:
+
+```twig
+{{ stimulus_controller('my_controller', {
+    'labels': {
+        'location': 'crm.list.location'|trans,
+        'createdAt': 'crm.list.createdAt'|trans,
+        ...
+    }
+) }}
+```
+
+This provides the following benefits:
+* It naturally exposes only the translations actually used by the project ;
+* It allows to have different translations for a same controller/component used in different places (think something like a confirm button)
+* It allows to profit from Twig autocompletion and other similar tools to detect translation usages
+
+So I'd say that if we don't have a big DX improvement using this component over this "local key" approach, we shouldn't release it.
+
+There is a different way I can think of that could provide such great DX improvement: leveraging Webpack tree shaking to not have to care about marking translations to expose and easily importing them.
+
+In such case, a translations module would be declared dynamically as a virtual module and would create one exported JS constant per translation key. We could then import these keys in our JS files (we could even have autocompletion if we create a stub file) and they would be linked to either EN or FR at runtime. Because of tree shaking, Webpack would remove the unused keys from the built JS automatically.
+
+WDYT? I know it's very different from the current proposal but I really think we should be careful about the DX of this component, it's tricky to do right :) .
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-22T10:25:13Z
+
+Hi @tgalopin, and thanks for your comment.
+
+Your approach is interesting, however I can see three major issues in your code example:
+1. You are "forced" to use Stimulus controller. It's not that I don't like them, quite the opposite, but it complicates the migrations from [BazingaJsTranslationBundle](https://github.com/willdurand/BazingaJsTranslationBundle) where developpers could use `Translator.trans('my_message')`
+2. You need to inject those translations everywhere you need them (i.e.: in a Vue.js component or a `utils.js`), where we can easily rely on a global state (like [BazingaJsTranslationBundle](https://github.com/willdurand/BazingaJsTranslationBundle) and this new package do)
+3. You can't use translation parameters with values coming from JS since the message is already translated before, which can makes the UI less interactive
+
+> There is a different way I can think of that could provide such great DX improvement: leveraging Webpack tree shaking to not have to care about marking translations to expose and easily importing them.
+
+> In such case, a translations module would be declared dynamically as a virtual module and would create one exported JS constant per translation key. We could then import these keys in our JS files (we could even have autocompletion if we create a stub file) and they would be linked to either EN or FR at runtime. Because of tree shaking, Webpack would remove the unused keys from the built JS automatically.
+
+I like this suggestion, however I have many questions:
+1. Where those JS constants would be defined? In a file previously dumped by a Symfony command?
+2. What if we have two same keys from different domains?
+3. What if the locale is updated (through `setLocale()`), how the constants import + three-shaking will works? Should we import all translations from a given `id` ?
+4. Are we ok to keep `trans(key, parameters, domain, locale)` function?
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2022-12-22T12:34:47Z
+
+> Where those JS constants would be defined? In a file previously dumped by a Symfony command?
+
+I was thinking about a virtual module or a Webpack loader so that it's dynamic and it doesn't need to be dumped in between.
+
+It could generate multiple files (one per domain) like:
+
+```typescript
+export const CRM_LIST_LOCATION = {
+    'en': '...',
+    'fr': '...',
+};
+```
+
+This would solve your 3 first questions (2: one file per domain, 3: we need to have locales in the key so that tree-shaking works as expected).
+
+For 4, the usage could then be:
+
+```typescript
+CRM_LIST_LOCATION['en']
+// or perhaps
+trans(CRM_LIST_LOCATION, 'en')
+```
+
+There may be a better DX to be found though, expecially given how big the DX improvements can be.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-22T19:55:02Z
+
+About the virtual module, would it add too much complexity?
+
+I'm not familiar with them, but I wonder how we will deal with auto-completion in IDE? With TypeScript support? How do we get translations, from a Symfony command? If yes how do we run it (which `php` executable should be use?)
+
+If we go to this direction, I prefer having a dedicated Symfony command that will dump translations (for all domains + enabled locales) somewhere in multiple `.ts` files (one file per domain).
+
+After running the command manually (ie. during a `composer install`), you will be able to import translations like this:
+```ts
+import { trans } from '@symfony/ux-translator';
+import { CRM_LIST_LOCATION, FOO_BAR } from '@symfony/ux-translator/translations/messages';
+
+trans(CRM_LIST_LOCATION, { param1: 'value1' }, 'en');
+```
+
+We can also imagine, maybe for later, thanks to TypeScript types, to have auto-completion on translations parameters given the translation id, WDYT?
+
+/cc @weaverryan @kbond
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-22T20:12:19Z
+
+That'd be really cool! Could the imported messages be js objects? (I have minimal experience with js so not sure if this is even possible)
+
+```js
+import { CRM_LIST_LOCATION, FOO_BAR } from '@symfony/ux-translator/translations/messages';
+
+CRM_LIST_LOCATION; // no parameters just is the value
+
+FOO_BAR.with({ param1: 'value1' });
+FOO_BAR.with({ param1: 'value1' }).locale('fr');
+
+// maybe this would be required? (i'm thinking about __toString() in PHP above)
+CRM_LIST_LOCATION.render();
+FOO_BAR.with({ param1: 'value1' }).render();
+FOO_BAR.with({ param1: 'value1' }).locale('fr').render();
+```
+
+Also, how are you thinking the locale-detection would work? I'm thinking the following _cascade_:
+1. defaults to `en`
+2. `html.lang` attr
+3. some kind of twig function ( ie `{{ js_trans_locale('fr') }}`)
+4. `trans()` js function
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-22T20:24:55Z
+
+The following syntax would be possible, however I'm not a big of creating multiple objects like this because it can lead to performances issues.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-22T20:55:17Z
+
+> creating multiple objects like this because it can lead to performances issues.
+
+Ok, fair enough.
+
+---
+
+~I'm guessing each domain would/could be dumped by the command?~
+
+```js
+import { trans } from '@symfony/ux-translator';
+import { FOO } from '@symfony/ux-translator/translations/messages';
+import { BAR } from '@symfony/ux-translator/translations/domain1';
+```
+~Or how would that work?~
+
+Nevermind, I see you specified this above :).
+
+---
+
+For small apps that don't have a perf problem loading all their translations, what about something like:
+
+```js
+import { trans } from '@symfony/ux-translator/translations/_all';
+
+trans('key1');
+trans('key2', { param1: 'value1' }, domain: 'security');
+trans('key3', domain: 'security', locale: 'fr');
+```
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-22T22:38:03Z
+
+> For small apps that don't have a perf problem loading all their translations, what about something like:
+>
+> ```js
+> import { trans } from '@symfony/ux-translator/translations/_all';
+>
+> trans('key1');
+> trans('key2', { param1: 'value1' }, domain: 'security');
+> trans('key3', domain: 'security', locale: 'fr');
+> ```
+
+The `trans()` function from `@symfony/ux-translator/translations/_all` would be a different function than `trans()` from `@symfony/ux-translator`?
+
+If no, we can't make tree-shaking + translation id auto-completion + translation parameters working all together
+If yes, I'm a bit afraid to confuse users with two different functions having the same name but different parameters type.
+
+Constants imported from `@symfony/ux-translator/translations/messages` won't be a string but an object contains the following data:
+- the translated message per local
+- the parameters (maybe in a future iteration)
+
+Thanks to TypeScript types, we could get parameters autocompletion given the constant name. This is also something that can work with your proposition, but you won't benefit from tree-shaking.
+
+If you really need to import all translations, per domain, you can still use `import * as messages from '@symfony/ux-translator/translations/messages';`, but I honestly don't think there is an interest in doing that.
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-22T23:10:53Z
+
+> The trans() function from @symfony/ux-translator/translations/_all would be a different function than trans() from @symfony/ux-translator?
+
+I was thinking yes.
+
+> If you really need to import all translations, per domain, you can still use import * as messages from '@symfony/ux-translator/translations/messages';, but I honestly don't think there is an interest in doing that.
+
+Your probably right but I'm trying to find an easy migration path for bazinga users.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-22T23:29:01Z
+
+> > The trans() function from @symfony/ux-translator/translations/_all would be a different function than trans() from @symfony/ux-translator?
+>
+> I was thinking yes.
+
+Alright, I will see what I can do.
+
+> > If you really need to import all translations, per domain, you can still use import * as messages from '@symfony/ux-translator/translations/messages';, but I honestly don't think there is an interest in doing that.
+>
+> Your probably right but I'm trying to find an easy migration path for bazinga users.
+
+Oh, yeah that's true! I don't have a better suggestion for the moment, let's go for `_all` + special `trans()` function so.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-23T08:03:54Z
+
+This is what I've imagined for parameters/locales autocompletion, by using constants:
+
+```ts
+interface Message<Translations = { [locale: string]: string }, Parameters = Record<string, unknown>> {
+    domain: string;
+    translations: Translations,
+    parameters?: Parameters,
+}
+
+export type TranslationsOf<T> = T extends Message<infer TranslationsType, infer ParametersType> ? TranslationsType : never;
+export type ParametersOf<T> = T extends Message<infer TranslationsType, infer ParametersType> ? ParametersType : never;
+
+function trans<
+    M extends Message,
+    Parameters extends ParametersOf<M>,
+    Translations extends TranslationsOf<M>,
+>(message: M, parameters?: Parameters, locale?: keyof Translations): string {
+    // ...
+}
+```
+
+With the following constants file, which will be auto-generated by a Symfony command:
+```ts
+const CRM_LIST_LOCATION: Message<Record<'en'|'fr', string>, { foo: string }> = {
+    domain: 'messages',
+    translations: {
+        en: 'CRM List {foo}',
+        fr: 'Liste CRM {foo}'
+    },
+}
+
+const FOO_BAR: Message<Record<'en'|'fr'|'it', string>, { foo: string }> = {
+    domain: 'messages',
+    translations: {
+        en: 'Foo bar (en)',
+        fr: 'Foo bar (fr)',
+        it: 'qsd',
+    }
+}
+```
+
+This way we can provide a very good DX:
+<img width="587" alt="Capture d’écran 2022-12-23 à 08 54 13" src="https://user-images.githubusercontent.com/2103975/209295930-61141400-db80-4269-b389-8f55ec138c9e.png">
+<img width="736" alt="image" src="https://user-images.githubusercontent.com/2103975/209295973-0f9264b6-0ddb-4087-b2cd-da82b81d659e.png">
+<img width="1102" alt="image" src="https://user-images.githubusercontent.com/2103975/209296553-e70af33b-a32a-4a8b-8896-5ee7794408b8.png">
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2022-12-23T12:52:18Z
+
+I'm fine with having a dumped file, but then it shouldn't be committed, otherwise it risks being unsynced from the actual translations.
+
+With such an uncommited file, it becomes indeed easier to have great autocompletion without virtual module. I proposed a virtual module so that we are certain it will never be unsynced, but we may have checks to ensure that in dev instead.
+
+Such generated file should IMO be in the assets directory of the project then, becoming very easy to instanciate. I'm thinking about something like `assets/translations.js` and have an option in the command-line to dump as Typescript (with advanced types). We could even provide the `trans` function through this file as well, to give it more typehinting capabilities (as you mentionned @Kocal).
+
+Then in the code, this should be possible:
+
+```typescript
+import {trans, CRM_LIST_LOCATION} from './translations';
+
+trans(CRM_LIST_LOCATION, { param1: 'value1' }, domain: 'security', locale: 'en');
+```
+
+Note that in order to avoid conflicts between domains, the internal data structure of a message will need to be something like:
+
+```
+const CRM_LIST_LOCATION = {
+    messages: {
+        en: 'CRM List {foo}',
+        fr: 'Liste CRM {foo}'
+    },
+    user: {
+        en: 'CRM List {foo}',
+        fr: 'Liste CRM {foo}'
+    },
+}
+```
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2022-12-23T12:54:29Z
+
+Also, @kbond for smaller projects, the `domain: "messages"` would be the default meaning you would be able to do:
+
+```typescript
+import {trans, CRM_LIST_LOCATION} from './translations';
+
+trans(CRM_LIST_LOCATION, { param1: 'value1' });
+```
+
+Because of Webpack tree shaking, it doesn't matter that we import all translations in the generated file as it will be cleaned from unused translations anyway.
+
+---------------------------------------------------------------------------
+
+by kbond at 2022-12-23T15:09:20Z
+
+@Kocal, that example looks pretty sweet!
+
+> I'm fine with having a dumped file, but then it shouldn't be committed
+
+Agree 100%, should we investigate hooking into Symfony's cache-warmup to create?
+
+> or smaller projects, the domain: "messages" would be the default meaning you would be able to do:
+
+I was thinking using strings as keys so you wouldn't need to import every translation constant. Again, I'm only thinking of a possible migration from bazinga to this - maybe that isn't or shouldn't be a concern.
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2022-12-23T16:19:37Z
+
+@kbond Having a dumped file always gives us the possibility to have an option for the dump to do that, something like `--as-strings` (name to be defined).
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-23T17:03:00Z
+
+For the dumping command, I'm thinking we can get rid of `--typescript` options and generate both `.js` and `.d.ts` files at the same time.
+
+This way, even people that does not use TypeScript would benefit from autocompletion through the IDE.
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-24T09:46:08Z
+
+After a bit of work, I came up with something rather sexy, more specifically for the mandatory or non-mandatory translation parameters.
+
+The two following files will be generated through a Symfony command:
+```ts
+// assets/translations.d.ts
+
+type DomainType = string;
+type LocaleType = string;
+type NoParametersType = Record<string, never>;
+type ParametersType = Record<string, string | number> | NoParametersType;
+
+export interface Message<Domain extends DomainType, Locale extends LocaleType, Parameters extends ParametersType> {
+    translations: Record<Domain, Record<Locale, string>>;
+}
+
+type DomainsOf<M> = M extends Message<infer Domain, LocaleType, ParametersType> ? Domain : never;
+type LocaleOf<M> = M extends Message<DomainType, infer Locale, ParametersType> ? Locale : never;
+type ParametersOf<M> = M extends Message<DomainType, LocaleType, infer Parameters> ? Parameters : never;
+
+export function trans<M extends Message<DomainType, LocaleType, ParametersType>, P extends ParametersOf<M>>(
+    ...args: P extends NoParametersType
+        ? [message: M, parameters?: P, domain?: DomainsOf<M>, locale?: LocaleOf<M>]
+        : [message: M, parameters: P, domain?: DomainsOf<M>, locale?: LocaleOf<M>]
+);
+
+// Those constants will be automatically generated
+export const CRM_USER_FOO: Message<'messages', 'fr' | 'en', NoParametersType>;
+export const FOO_BAR: Message<'messages', 'fr' | 'en', { foo: string; bar: string; count: number }>;
+```
+
+```js
+// assets/translations.js
+export function trans(message, parameters = {}, domain = 'messages', locale = null) {
+    // ...
+}
+
+// Those constants will be automatically generated
+export const CRM_USER_FOO = {
+    translations: {
+        messages: {
+            fr: 'Crm user foo (fr)',
+            en: 'Crm user foo (fr)',
+        },
+    },
+};
+
+export const FOO_BAR = {
+    translations: {
+        messages: {
+            fr: '{foo} {bar}',
+            en: '{foo} {bar}',
+        },
+    },
+};
+```
+
+And for usage:
+```js
+import { trans, CRM_USER_FOO, FOO_BAR } from './translations';
+
+trans(CRM_USER_FOO);
+trans(CRM_USER_FOO, {});
+trans(CRM_USER_FOO, {}, 'foo');
+trans(CRM_USER_FOO, {}, 'messages');
+trans(CRM_USER_FOO, {}, 'messages', 'de');
+trans(CRM_USER_FOO, {}, 'messages', 'fr');
+
+trans(FOO_BAR);
+trans(FOO_BAR, { count: 1 });
+trans(FOO_BAR, { count: 1, foo: 'foo' });
+trans(FOO_BAR, { count: 1, foo: 'foo', bar: 'bar' });
+trans(FOO_BAR, { count: 1, foo: 'foo', bar: 'bar' }, 'qsd');
+trans(FOO_BAR, { count: 1, foo: 'foo', bar: 'bar' }, 'messages');
+trans(FOO_BAR, { count: 1, foo: 'foo', bar: 'bar' }, 'messages', 'de');
+trans(FOO_BAR, { count: 1, foo: 'foo', bar: 'bar' }, 'messages', 'fr');
+```
+
+When using JavaScript, you won't have type-hinting issues (except with PHPStorm/WebStorm ?), but with TypeScript:
+<img width="1569" alt="image" src="https://user-images.githubusercontent.com/2103975/209430280-2d221966-210a-40bc-9cd8-e801fb7baa8a.png">
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2022-12-25T10:32:29Z
+
+Very cool indeed! I very much like where this is going :)
+
+> Agree 100%, should we investigate hooking into Symfony's cache-warmup to create?
+
+Following this statement from @kbond I realized it's actually an amazing idea: we could create an always up-to-date file, without even having to implement any command, by hooking into the translations cache update process. Symfony already watches for changes on translations to dump them in PHP, we should definitely use that to generate the JS IMO. It would ease usage, integrates nicely in existing deployments and ensure always synced files.
+
+Also, I was thinking about how we could put the generated files in var/cache and then have a file in assets that contains only an import from var/cache (and error handling): this would allow us to provide a better DX as this assets file would be committed and would warn the developer in the console that the translations are not generated when they are missing. This file would be committed to always be available in the other files.
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-25T11:25:09Z
+
+> Following this statement from @kbond I realized it's actually an amazing idea: we could create an always up-to-date file, without even having to implement any command, by hooking into the translations cache update process. Symfony already watches for changes on translations to dump them in PHP, we should definitely use that to generate the JS IMO. It would ease usage, integrates nicely in existing deployments and ensure always synced files.
+
+Yeah that could be nice, however we must really document that people needs to rebuild their assets (or use `encore dev-server` / `dev --watch`).
+
+> Also, I was thinking about how we could put the generated files in var/cache and then have a file in assets that contains only an import from var/cache (and error handling): this would allow us to provide a better DX as this assets file would be committed and would warn the developer in the console that the translations are not generated when they are missing. This file would be committed to always be available in the other files.
+
+This is a nice idea, by doing this way we keep the maximum of code in the Translator package and not in "userland".
+However I have two questions:
+  1. How the file in `assets` would be created? By the end-user, or from a Symfony recipe?
+  2. Are you strictly speaking about `var/cache` or about `var/cache/<env>`?
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2022-12-25T15:24:36Z
+
+I was thinking about var/cache/env yes, it was a shortcut :)
+
+I was thinking about using a recipe for the asset file indeed
+
+> Yeah that could be nice, however we must really document that people needs to rebuild their assets
+
+I agree with you, but I guess that won't be an issue because people will need to rebuild their assets to use the translations anyway.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2022-12-30T18:41:03Z
+
+Hi!
+
+> I was thinking about var/cache/env yes, it was a shortcut :)
+>
+> I was thinking about using a recipe for the asset file indeed
+
+How would we know which environment to use?
+What does this file looks like? Since we can't try/catch `export * from '../var/cache/<env>'` and try to load dumped translations from prod/dev env for examples.
+
+IMO translations files should be dump in a non env-dependant directory, either `./assets/translations/` or `./var/translations/` for example.
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2023-01-01T22:00:49Z
+
+You're right, the env doesn't make sense, var/translations seems great to me
+
+---------------------------------------------------------------------------
+
+by Kocal at 2023-03-19T09:15:31Z
+
+Hi everyone, this PR is ready for review again!
+
+The translations dumping system as JS constants, TypeScript types definitions, and locales fallback (which were missing from the previous iteration) have been implemented. 🎉
+
+/cc @weaverryan @tgalopin @kbond
+
+---
+
+PS: I'm having issue with this CI check:
+
+<img width="1156" alt="image" src="https://user-images.githubusercontent.com/2103975/226165180-a75b2753-2bf7-4bf7-9478-8acaf3d0ef71.png">
+
+When running `yarn build` on my Mac (`rm -fr node_modules && yarn && yarn build`), I got a different `git status` output:
+```
+➜  symfony-ux git:(feat/translator) ✗ git status
+On branch feat/translator
+Your branch is up to date with 'origin/feat/translator'.
+
+Changes not staged for commit:
+  (use "git add <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   src/Autocomplete/assets/dist/controller.js
+	modified:   src/LiveComponent/assets/dist/live_controller.js
+	modified:   src/React/assets/dist/register_controller.d.ts
+```
+
+What can we do? Thanks :)
+
+**EDIT:** my `yarn.lock` was outdated, removing it and reinstalling deps worked, thanks Ryan :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-03-20T20:44:41Z
+
+> When running yarn build on my Mac (rm -fr node_modules && yarn && yarn build), I got a different git status output:
+
+Hmm. Are the local changes just whitespace? Or something more significant? I'm on a mac also - my builds are clean locally on 2. last I checked.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2023-03-21T23:46:54Z
+
+Hi everyone, and thanks for the reviews!
+
+Your comments have been addressed, here are the updates:
+- The locale fallbacks is now computed at cache warmup, it's located in `var/translations/configuration.js` file
+- The Twig Extension (and the Twig dependency aswell) have been removed
+
+---
+
+> And... so we also need to at least have some "plan" for import maps, which is coming very soon to Symfony. The big tricky part is the lack of tree shaking. You can import specific modules (e.g. `import { TRANSLATION_SIMPLE } from './translator'`), but the entire target `./translator` would be downloaded to make that happen. If you're using importmaps, you ARE opting out of tree shaking... but generally-speaking, it works well and there should be some reasonable path for UX translator to work with then. Any ideas about this?
+
+Are you speaking about https://github.com/symfony/symfony/pull/48371?
+
+Unfortunately, this Translator package now **highly** relies on bundler's (Webpack or anything else) tree-shaking.
+It was not the case with the 1st implementation (loading translations you nedd through a Twig function), but Titouan proposed a solution with a better DX in https://github.com/symfony/ux/pull/616#issuecomment-1362554359 but it needs tree-shaking.
+
+I don't know how works ImportMaps works, but if it does not support tree-shaking, then the Translator won't be usable. :/
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2023-03-22T09:47:45Z
+
+IMO we shouldn't care too much about importmaps for this PR.
+
+My reasonning is that I think there are mostly two use cases for import maps (ie. two types of people using them):
+
+1/ in dev environment it allows not to have to wait for webpack to build, meaning a faster iteration loop => we don't care that the whole translator is imported here, as long as it will work the same way when using Webpack.
+
+2/ In prod environment, almost everyone with a slightly big app uses Webpack or another bundler. Webpack isn't only about building, it's also about productivity: many modules allow to inspect the code, to compile it, to provide DX tools, ... I generally compare it to the Symfony container being built: of course we could do without, but CompilerPass are hugely useful.
+
+The only two cases where I can see someone using import maps in prod would be for small projects (=> fine to import the whole translator) or for projects having a large app but a tiny bit of front-end (in which case they most likely should just pass the translations from PHP as Stimulus values or similar).
+
+I don't see a case where import maps are an issue, especially given how the DX is *so good* using the tree-shaking approach (you simply don't need to think about translations).
+
+BTW I think a good tool to create in the future will be a Router ;)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-03-22T12:58:30Z
+
+> The only two cases where I can see someone using import maps in prod would be for small projects (=> fine to import the whole translator) or for projects having a large app but a tiny bit of front-end (in which case they most likely should just pass the translations from PHP as Stimulus values or similar).
+
+Yes, I think this is the key. I would be careful not to make it look like importmaps are not ok for production, because they are - even in large apps. So the point is that, if you're using importmaps, you are likely using Turbo + Stimulus to get your rich frontend, and so can pass translations as values to Stimulus.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-03-22T17:14:53Z
+
+> BTW I think a good tool to create in the future will be a Router ;)
+
+Ooo, like a replacement for https://github.com/FriendsOfSymfony/FOSJsRoutingBundle?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2023-03-22T17:43:05Z
+
+> > BTW I think a good tool to create in the future will be a Router ;)
+>
+> Ooo, like a replacement for [FriendsOfSymfony/FOSJsRoutingBundle](https://github.com/FriendsOfSymfony/FOSJsRoutingBundle)?
+
+Well, I had the same idea as Titouan, but I didn't want to spoil until this PR was merged 😛
+
+Now that the logic "warm => dump => import + tree-shaking" is mastered, that would be _easy_ to create a UX Router package.
+
+---------------------------------------------------------------------------
+
+by tgalopin at 2023-03-23T09:25:50Z
+
+> Now that the logic "warm => dump => import + tree-shaking" is mastered, that would be easy to create a UX Router package.
+
+Exactly my thinking as well :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2023-04-15T07:00:49Z
+
+(the PR has been rebased)
