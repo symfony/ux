@@ -62,6 +62,11 @@ final class TwigPreLexerTest extends TestCase
             '{{ component(\'foo\', { bar: true }) }}',
         ];
 
+        yield 'attribute_with_no_value_and_no_attributes' => [
+            '<twig:foo/>',
+            '{{ component(\'foo\') }}',
+        ];
+
         yield 'component_with_default_block_content' => [
             '<twig:foo>Foo</twig:foo>',
             '{% component \'foo\' %}{% block content %}Foo{% endblock %}{% endcomponent %}',
@@ -82,10 +87,6 @@ final class TwigPreLexerTest extends TestCase
         yield 'component_with_character_-_on_his_name' => [
             '<twig:foo-bar></twig:foo-bar>',
             '{% component \'foo-bar\' %}{% endcomponent %}',
-        ];
-        yield 'component_with_character_/_on_his_name' => [
-            '<twig:foo/bar></twig:foo/bar>',
-            '{% component \'foo/bar\' %}{% endcomponent %}',
         ];
         yield 'component_with_character_._on_his_name' => [
             '<twig:foo.bar></twig:foo.bar>',
