@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-18T20:08:41Z
+
+This looks great ❤️. I DID just introduce some site changes i've been working on in #804 - once that's merged, we'll need a (hopefully) quick update to this PR to match the new style.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-21T00:05:25Z
+
+Ok #804 is merged - so this can be rebased/updated for that. Thanks!
+
+---------------------------------------------------------------------------
+
+by ChqThomas at 2023-04-22T11:04:58Z
+
+PR rebased and updated @weaverryan 👍
+I love the new twig component syntax !!
