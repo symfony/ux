@@ -114,6 +114,12 @@ class UxPackagesController extends AbstractController
         ]);
     }
 
+    #[Route('/translator', name: 'app_translator')]
+    public function translator(): Response
+    {
+        return $this->render('ux_packages/translator.html.twig');
+    }
+
     private function getDeliciousWord(): string
     {
         $words = ['delicious', 'scrumptious', 'mouth-watering', 'life-changing', 'world-beating', 'freshly-squeezed'];

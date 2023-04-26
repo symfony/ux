@@ -16,6 +16,7 @@ class Package
         private string $gradient,
         private string $description,
         private string $createString,
+        private ?string $imageFileName = null,
     ) {
     }
 
@@ -41,7 +42,7 @@ class Package
 
     public function getImageFilename(): string
     {
-        return ltrim($this->name, 'ux-').'.png';
+        return $this->imageFileName ?? ltrim($this->name, 'ux-').'.png';
     }
 
     public function getDescription(): string
