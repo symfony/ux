@@ -23,7 +23,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * @experimental
  */
-class TranslatorExtension extends Extension
+class UxTranslatorExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container)
     {

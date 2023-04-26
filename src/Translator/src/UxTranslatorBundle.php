@@ -20,7 +20,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  *
  * @experimental
  */
-class TranslatorBundle extends Bundle
+class UxTranslatorBundle extends Bundle
 {
     public function getPath(): string
     {
