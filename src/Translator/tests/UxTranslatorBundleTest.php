@@ -7,7 +7,7 @@ use Symfony\Component\HttpKernel\Kernel;
 use Symfony\UX\Translator\Tests\Kernel\EmptyAppKernel;
 use Symfony\UX\Translator\Tests\Kernel\FrameworkAppKernel;
 
-class TranslatorBundleTest extends TestCase
+class UxTranslatorBundleTest extends TestCase
 {
     public function provideKernels()
     {
@@ -21,6 +21,6 @@ class TranslatorBundleTest extends TestCase
     public function testBootKernel(Kernel $kernel)
     {
         $kernel->boot();
-        $this->assertArrayHasKey('TranslatorBundle', $kernel->getBundles());
+        $this->assertArrayHasKey('UxTranslatorBundle', $kernel->getBundles());
     }
 }

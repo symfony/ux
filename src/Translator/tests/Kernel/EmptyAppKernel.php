@@ -13,7 +13,7 @@ namespace Symfony\UX\Translator\Tests\Kernel;
 
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\UX\Translator\TranslatorBundle;
+use Symfony\UX\Translator\UxTranslatorBundle;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -26,7 +26,7 @@ class EmptyAppKernel extends Kernel
 
     public function registerBundles(): iterable
     {
-        return [new TranslatorBundle()];
+        return [new UxTranslatorBundle()];
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)

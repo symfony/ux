@@ -15,7 +15,7 @@ use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
-use Symfony\UX\Translator\TranslatorBundle;
+use Symfony\UX\Translator\UxTranslatorBundle;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -28,7 +28,7 @@ class FrameworkAppKernel extends Kernel
 
     public function registerBundles(): iterable
     {
-        return [new FrameworkBundle(), new TranslatorBundle()];
+        return [new FrameworkBundle(), new UxTranslatorBundle()];
     }
 
     public function registerContainerConfiguration(LoaderInterface $loader)
