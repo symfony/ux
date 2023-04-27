@@ -96,5 +96,9 @@ final class TwigPreLexerTest extends TestCase
             '<twig:foo><twig:block name="child"><twig:bar><twig:block name="message">Hello World!</twig:block></twig:bar></twig:block></twig:foo>',
             '{% component \'foo\' %}{% block child %}{% component \'bar\' %}{% block message %}Hello World!{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}',
         ];
+        yield 'component_with_html_syntaxt_in_argument' => [
+            '<twig:foo text="Hello {{ name }}!"/>',
+            "{{ component('foo', { text: 'Hello '~(name)~'!' }) }}",
+        ];
     }
 }

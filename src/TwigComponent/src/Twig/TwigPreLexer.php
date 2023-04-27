@@ -184,18 +184,18 @@ class TwigPreLexer
                 $this->expectAndConsumeChar('}');
                 $this->expectAndConsumeChar('}');
                 $this->consumeUntil($quote);
-                $isAttributeDynamic = true;
-            } else {
-                $attributeValue = $this->consumeUntil($quote);
-            }
-            $this->expectAndConsumeChar($quote);
 
-            if ($isAttributeDynamic) {
                 $attributes[] = sprintf('%s: %s', $key, $attributeValue);
             } else {
-                $attributes[] = sprintf("%s: '%s'", $key, str_replace("'", "\'", $attributeValue));
-            }
+                $attributeValue = $this->consumeAttributeValue($quote);
 
+                if ($isAttributeDynamic) {
+                    $attributes[] = sprintf('%s: %s', $key, $attributeValue);
+                } else {
+                    $attributes[] = sprintf("%s: '%s'", $key, $attributeValue);
+                }
+            }
+            $this->expectAndConsumeChar($quote);
             $this->consumeWhitespace();
         }
 
@@ -350,6 +350,43 @@ class TwigPreLexer
         }
 
         return substr($this->input, $start, $this->position - $start);
+    }
+
+    private function consumeAttributeValue(string $quote): string
+    {
+        $attributeValue = '';
+        while ($this->position < $this->length) {
+            if (substr($this->input, $this->position, 1) === $quote) {
+                break;
+            }
+
+            if ("\n" === $this->input[$this->position]) {
+                ++$this->line;
+            }
+
+            if ('\'' === $this->input[$this->position]) {
+                $attributeValue .= "\'";
+                ++$this->position;
+
+                continue;
+            }
+
+            if ('{{' === substr($this->input, $this->position, 2)) {
+                $this->consume('{{');
+                $attributeValue .= "'~(";
+                $this->consumeWhitespace();
+                $value = rtrim($this->consumeUntil('}}'));
+                $this->expectAndConsumeChar('}');
+                $this->expectAndConsumeChar('}');
+                $attributeValue .= $value;
+                $attributeValue .= ")~'";
+            }
+
+            $attributeValue .= $this->input[$this->position];
+            ++$this->position;
+        }
+
+        return $attributeValue;
     }
 
     private function doesStringEventuallyExist(string $needle): bool
