@@ -932,6 +932,61 @@ And in your component template you can access your embedded block
         {% block footer %}{% endblock %}
      </div>
 
+Test Helpers
+------------
+
+You can test how your component is mounted and rendered using the
+``InteractsWithTwigComponents`` trait::
+
+    use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+    use Symfony\UX\TwigComponent\Test\InteractsWithTwigComponents;
+
+    class MyComponentTest extends KernelTestCase
+    {
+        use InteractsWithTwigComponents;
+
+        public function testComponentMount(): void
+        {
+            $component = $this->mountTwigComponent(
+                name: 'MyComponent', // can also use FQCN (MyComponent::class)
+                data: ['foo' => 'bar'],
+            );
+
+            $this->assertInstanceOf(MyComponent::class, $component);
+            $this->assertSame('bar', $component->foo);
+        }
+
+        public function testComponentRenders(): void
+        {
+            $rendered = $this->renderTwigComponent(
+                name: 'MyComponent', // can also use FQCN (MyComponent::class)
+                data: ['foo' => 'bar'],
+            );
+
+            $this->assertStringContainsString('bar', $rendered);
+        }
+
+        public function testEmbeddedComponentRenders(): void
+        {
+            $rendered = $this->renderTwigComponent(
+                name: 'MyComponent', // can also use FQCN (MyComponent::class)
+                data: ['foo' => 'bar'],
+                content: '<div>My content</div>', // "content" (default) block
+                blocks: [
+                    'header' => '<div>My header</div>',
+                    'menu' => $this->renderTwigComponent('Menu'), // can embed other components
+                ],
+            );
+
+            $this->assertStringContainsString('bar', $rendered);
+        }
+    }
+
+.. note::
+
+    The ``InteractsWithTwigComponents`` trait can only be used in tests that extend
+    ``Symfony\Bundle\FrameworkBundle\Test\KernelTestCase``.
+
 Contributing
 ------------
 

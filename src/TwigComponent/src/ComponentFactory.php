@@ -26,20 +26,24 @@ use Symfony\UX\TwigComponent\Event\PreMountEvent;
 final class ComponentFactory
 {
     /**
-     * @param array<string, array> $config
+     * @param array<string, array>        $config
+     * @param array<class-string, string> $classMap
      */
     public function __construct(
         private ServiceLocator $components,
         private PropertyAccessorInterface $propertyAccessor,
         private EventDispatcherInterface $eventDispatcher,
-        private array $config
+        private array $config,
+        private array $classMap,
     ) {
     }
 
     public function metadataFor(string $name): ComponentMetadata
     {
+        $name = $this->classMap[$name] ?? $name;
+
         if (!$config = $this->config[$name] ?? null) {
-            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->config))));
+            $this->throwUnknownComponentException($name);
         }
 
         return new ComponentMetadata($config);
@@ -142,8 +146,10 @@ final class ComponentFactory
 
     private function getComponent(string $name): object
     {
+        $name = $this->classMap[$name] ?? $name;
+
         if (!$this->components->has($name)) {
-            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->components->getProvidedServices()))));
+            $this->throwUnknownComponentException($name);
         }
 
         return $this->components->get($name);
@@ -181,5 +187,13 @@ final class ComponentFactory
         }
 
         return $data;
+    }
+
+    /**
+     * @return never
+     */
+    private function throwUnknownComponentException(string $name): void
+    {
+        throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->config))));
     }
 }
