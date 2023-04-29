@@ -3033,6 +3033,74 @@ Then specify this new route on your component:
           use DefaultActionTrait;
       }
 
+Test Helper
+-----------
+
+.. versionadded:: 2.11
+
+    The test helper was added in LiveComponents 2.11.
+
+For testing, you can use the ``InteractsWithLiveComponents`` trait which
+uses Symfony's test client to render and make requests to your components::
+
+    use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+    use Symfony\UX\LiveComponent\Test\InteractsWithLiveComponents;
+
+    class MyComponentTest extends KernelTestCase
+    {
+        use InteractsWithLiveComponents;
+
+        public function testCanRenderAndInteract(): void
+        {
+            $testComponent = $this->createLiveComponent(
+                name: 'MyComponent', // can also use FQCN (MyComponent::class)
+                data: ['foo' => 'bar'],
+            );
+
+            // render the component html
+            $this->assertStringContainsString('Count: 0', $testComponent->render());
+
+            // call live actions
+            $testComponent
+                ->call('increase')
+                ->call('increase', ['amount' => 2]) // call a live action with arguments
+            ;
+
+            $this->assertStringContainsString('Count: 3', $testComponent->render());
+
+            // emit live events
+            $testComponent
+                ->emit('increaseEvent')
+                ->emit('increaseEvent', ['amount' => 2]) // emit a live event with arguments
+            ;
+
+            // set live props
+            $testComponent
+                ->set('count', 99)
+            ;
+
+            $this->assertStringContainsString('Count: 99', $testComponent->render());
+
+            // refresh the component
+            $testComponent->refresh();
+
+            // access the component object (in it's current state)
+            $component = $testComponent->component(); // MyComponent
+
+            $this->assertSame(99, $component->count);
+
+            // test a live action that redirects
+            $response = $testComponent->call('redirect')->response(); // Symfony\Component\HttpFoundation\Response
+
+            $this->assertSame(302, $response->getStatusCode());
+        }
+    }
+
+.. note::
+
+    The ``InteractsWithLiveComponents`` trait can only be used in tests that extend
+    ``Symfony\Bundle\FrameworkBundle\Test\KernelTestCase``.
+
 Backward Compatibility promise
 ------------------------------
 

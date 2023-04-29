@@ -3,6 +3,7 @@
 ## 2.11.0
 
 -   Support ...spread operator with html syntax (requires Twig 3.7.0 or higher)
+-   Add `RenderedComponent::crawler()` and `toString()` methods.
 
 ## 2.9.0
 
