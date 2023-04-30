@@ -2772,7 +2772,7 @@ reason to re-render it.
 
 To fix this, you have two options:
 
-1. Make the ``key`` dynamic so it will be different after adding a new item::
+\1) Make the ``key`` dynamic so it will be different after adding a new item:
 
 .. code-block:: twig
 
@@ -2780,10 +2780,12 @@ To fix this, you have two options:
         key: 'new_line_item_'~lineItems|length,
     }) }}
 
-2. Reset the state of the ``InvoiceLineItemForm`` component after it's saved::
+\2) Reset the state of the ``InvoiceLineItemForm`` component after it's saved::
 
     // src/Twig/InvoiceLineItemForm.php
     // ...
+
+    #[AsLiveComponent]
     class InvoiceLineItemForm
     {
         // ...
