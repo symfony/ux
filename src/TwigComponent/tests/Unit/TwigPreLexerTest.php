@@ -96,9 +96,37 @@ final class TwigPreLexerTest extends TestCase
             '<twig:foo><twig:block name="child"><twig:bar><twig:block name="message">Hello World!</twig:block></twig:bar></twig:block></twig:foo>',
             '{% component \'foo\' %}{% block child %}{% component \'bar\' %}{% block message %}Hello World!{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}',
         ];
-        yield 'component_with_html_syntaxt_in_argument' => [
+        yield 'component_with_mixture_of_string_and_twig_in_argument' => [
             '<twig:foo text="Hello {{ name }}!"/>',
             "{{ component('foo', { text: 'Hello '~(name)~'!' }) }}",
+        ];
+        yield 'component_with_mixture_of_string_and_twig_with_quote_in_argument' => [
+            '<twig:foo text="Hello {{ name }}, I\'m Theo!"/>',
+            "{{ component('foo', { text: 'Hello '~(name)~', I\'m Theo!' }) }}",
+        ];
+        yield 'component_where_entire_default_block_is_embedded_component' => [
+            <<<EOF
+            <twig:foo>
+                <twig:bar>bar content</twig:bar>
+            </twig:foo>
+            EOF,
+            <<<EOF
+            {% component 'foo' %}
+                {% block content %}{% component 'bar' %}{% block content %}bar content{% endblock %}{% endcomponent %}
+            {% endblock %}{% endcomponent %}
+            EOF
+        ];
+        yield 'component_where_entire_default_block_is_embedded_component_self_closing' => [
+            <<<EOF
+            <twig:foo>
+                <twig:bar />
+            </twig:foo>
+            EOF,
+            <<<EOF
+            {% component 'foo' %}
+                {% block content %}{{ component('bar') }}
+            {% endblock %}{% endcomponent %}
+            EOF
         ];
     }
 }

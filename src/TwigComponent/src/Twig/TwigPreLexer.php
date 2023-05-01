@@ -30,7 +30,10 @@ class TwigPreLexer
         $this->line = $startingLine;
     }
 
-    public function preLexComponents(string $input): string
+    /**
+     * @param bool $insideOfBlock Are we sub-parsing the content inside a block?
+     */
+    public function preLexComponents(string $input, bool $insideOfBlock = false): string
     {
         $this->input = $input;
         $this->length = \strlen($input);
@@ -51,6 +54,15 @@ class TwigPreLexer
                     $output .= $this->consumeBlock($componentName);
 
                     continue;
+                }
+
+                // if we're already inside a component, and we're not inside a block,
+                // *and* we've just found a new component, then we should try to
+                // open the default block
+                if (!$insideOfBlock
+                    && !empty($this->currentComponents)
+                    && !$this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock']) {
+                    $output .= $this->addDefaultBlock();
                 }
 
                 $attributes = $this->consumeAttributes($componentName);
@@ -100,13 +112,12 @@ class TwigPreLexer
                 ++$this->line;
             }
 
-            // handle adding a default block if needed
+            // handle adding a default block if we find non-whitespace outside of a block
             if (!empty($this->currentComponents)
                 && !$this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock']
                 && preg_match('/\S/', $char)
             ) {
-                $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = true;
-                $output .= '{% block content %}';
+                $output .= $this->addDefaultBlock();
             }
 
             $output .= $char;
@@ -202,10 +213,15 @@ class TwigPreLexer
         return implode(', ', $attributes);
     }
 
+    /**
+     * If the next character(s) exactly matches the given string, then
+     * consume it (move forward) and return true.
+     */
     private function consume(string $string): bool
     {
-        if (substr($this->input, $this->position, \strlen($string)) === $string) {
-            $this->position += \strlen($string);
+        $stringLength = \strlen($string);
+        if (substr($this->input, $this->position, $stringLength) === $string) {
+            $this->position += $stringLength;
 
             return true;
         }
@@ -317,7 +333,7 @@ class TwigPreLexer
         $blockContents = $this->consumeUntilEndBlock();
 
         $subLexer = new self($this->line);
-        $output .= $subLexer->preLexComponents($blockContents);
+        $output .= $subLexer->preLexComponents($blockContents, true);
 
         $this->consume($closingTag);
         $output .= '{% endblock %}';
@@ -394,5 +410,12 @@ class TwigPreLexer
         $remainingString = substr($this->input, $this->position);
 
         return str_contains($remainingString, $needle);
+    }
+
+    private function addDefaultBlock(): string
+    {
+        $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = true;
+
+        return '{% block content %}';
     }
 }
