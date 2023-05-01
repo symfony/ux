@@ -3,11 +3,7 @@
 
     <ul>
     {% for key, item in items %}
-        {{ component('todo_item', {
-            text: item.text,
-            textLength: item.text|length,
-            key: 'the-key'~key,
-        }) }}
+        {{ component('todo_item', { text: item.text, textLength: item.text|length, key: 'the-key'~key }) }}
     {% endfor %}
     </ul>
 </div>

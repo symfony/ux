@@ -270,7 +270,7 @@ jobs:
             - name: Notify Tests
               working-directory: src/Notify
               run: php vendor/bin/simple-phpunit
-              
+
             - name: Translator Dependencies
               uses: ramsey/composer-install@v2
               with:
