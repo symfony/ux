@@ -39,7 +39,7 @@ final class TwigPreLexerTest extends TestCase
 
         yield 'component_with_dynamic_attributes' => [
             '<twig:foo dynamic="{{ dynamicVar }}" :otherDynamic="anotherVar" />',
-            '{{ component(\'foo\', { dynamic: dynamicVar, otherDynamic: anotherVar }) }}',
+            '{{ component(\'foo\', { dynamic: (dynamicVar), otherDynamic: anotherVar }) }}',
         ];
 
         yield 'component_with_closing_tag' => [
@@ -100,6 +100,14 @@ final class TwigPreLexerTest extends TestCase
             '<twig:foo text="Hello {{ name }}!"/>',
             "{{ component('foo', { text: 'Hello '~(name)~'!' }) }}",
         ];
+        yield 'component_with_mixture_of_dynamic_twig_from_start' => [
+            '<twig:foo text="{{ name   }} is my name{{ ending~\'!!\' }}"/>',
+            "{{ component('foo', { text: (name)~' is my name'~(ending~'!!') }) }}",
+        ];
+        yield 'dynamic_attribute_with_quotation_included' => [
+            '<twig:foo text="{{ "hello!" }}"/>',
+            "{{ component('foo', { text: (\"hello!\") }) }}",
+        ];
         yield 'component_with_mixture_of_string_and_twig_with_quote_in_argument' => [
             '<twig:foo text="Hello {{ name }}, I\'m Theo!"/>',
             "{{ component('foo', { text: 'Hello '~(name)~', I\'m Theo!' }) }}",
@@ -126,6 +134,21 @@ final class TwigPreLexerTest extends TestCase
             {% component 'foo' %}
                 {% block content %}{{ component('bar') }}
             {% endblock %}{% endcomponent %}
+            EOF
+        ];
+
+        yield 'string_inside_of_twig_code_not_escaped' => [
+            <<<EOF
+            <twig:TabbedCodeBlocks :files="[
+                'src/Twig/MealPlanner.php',
+                'templates/components/MealPlanner.html.twig',
+            ]" />
+            EOF,
+            <<<EOF
+            {{ component('TabbedCodeBlocks', { files: [
+                'src/Twig/MealPlanner.php',
+                'templates/components/MealPlanner.html.twig',
+            ] }) }}
             EOF
         ];
     }

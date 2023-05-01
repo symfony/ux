@@ -180,6 +180,11 @@ class TwigPreLexer
 
             // <twig:component someProp> -> someProp: true
             if (!$this->check('=')) {
+                // don't allow "<twig:component :someProp>"
+                if ($isAttributeDynamic) {
+                    throw new SyntaxError(sprintf('Expected "=" after ":%s" when parsing the "<twig:%s" syntax.', $key, $componentName), $this->line);
+                }
+
                 $attributes[] = sprintf('%s: true', $key);
                 $this->consumeWhitespace();
                 continue;
@@ -188,24 +193,15 @@ class TwigPreLexer
             $this->expectAndConsumeChar('=');
             $quote = $this->consumeChar(["'", '"']);
 
-            // someProp="{{ dynamicVar }}"
-            if ($this->consume('{{')) {
-                $this->consumeWhitespace();
-                $attributeValue = rtrim($this->consumeUntil('}'));
-                $this->expectAndConsumeChar('}');
-                $this->expectAndConsumeChar('}');
-                $this->consumeUntil($quote);
-
-                $attributes[] = sprintf('%s: %s', $key, $attributeValue);
+            if ($isAttributeDynamic) {
+                // :someProp="dynamicVar"
+                $attributeValue = $this->consumeUntil($quote);
             } else {
                 $attributeValue = $this->consumeAttributeValue($quote);
-
-                if ($isAttributeDynamic) {
-                    $attributes[] = sprintf('%s: %s', $key, $attributeValue);
-                } else {
-                    $attributes[] = sprintf("%s: '%s'", $key, $attributeValue);
-                }
             }
+
+            $attributes[] = sprintf('%s: %s', $key, $attributeValue);
+
             $this->expectAndConsumeChar($quote);
             $this->consumeWhitespace();
         }
@@ -246,6 +242,12 @@ class TwigPreLexer
         return $char;
     }
 
+    /**
+     * Moves the position forward until it finds $endString.
+     *
+     * Any string consumed *before* finding that string is returned.
+     * The position is moved forward to just *before* $endString.
+     */
     private function consumeUntil(string $endString): string
     {
         $start = $this->position;
@@ -284,9 +286,14 @@ class TwigPreLexer
             throw new \InvalidArgumentException('Expected a single character');
         }
 
-        if ($this->position >= $this->length || $this->input[$this->position] !== $char) {
+        if ($this->position >= $this->length) {
+            throw new SyntaxError("Expected '{$char}' but reached the end of the file.", $this->line);
+        }
+
+        if ($this->input[$this->position] !== $char) {
             throw new SyntaxError("Expected '{$char}' but found '{$this->input[$this->position]}'.", $this->line);
         }
+
         ++$this->position;
     }
 
@@ -370,9 +377,10 @@ class TwigPreLexer
 
     private function consumeAttributeValue(string $quote): string
     {
-        $attributeValue = '';
+        $parts = [];
+        $currentPart = '';
         while ($this->position < $this->length) {
-            if (substr($this->input, $this->position, 1) === $quote) {
+            if ($this->check($quote)) {
                 break;
             }
 
@@ -380,29 +388,32 @@ class TwigPreLexer
                 ++$this->line;
             }
 
-            if ('\'' === $this->input[$this->position]) {
-                $attributeValue .= "\'";
-                ++$this->position;
+            if ($this->check('{{')) {
+                // mark any previous static text as complete: push into parts
+                if ('' !== $currentPart) {
+                    $parts[] = sprintf("'%s'", str_replace("'", "\'", $currentPart));
+                    $currentPart = '';
+                }
+
+                // consume the entire {{ }} block
+                $this->consume('{{');
+                $this->consumeWhitespace();
+                $parts[] = sprintf('(%s)', rtrim($this->consumeUntil('}}')));
+                $this->expectAndConsumeChar('}');
+                $this->expectAndConsumeChar('}');
 
                 continue;
             }
 
-            if ('{{' === substr($this->input, $this->position, 2)) {
-                $this->consume('{{');
-                $attributeValue .= "'~(";
-                $this->consumeWhitespace();
-                $value = rtrim($this->consumeUntil('}}'));
-                $this->expectAndConsumeChar('}');
-                $this->expectAndConsumeChar('}');
-                $attributeValue .= $value;
-                $attributeValue .= ")~'";
-            }
-
-            $attributeValue .= $this->input[$this->position];
+            $currentPart .= $this->input[$this->position];
             ++$this->position;
         }
 
-        return $attributeValue;
+        if ('' !== $currentPart) {
+            $parts[] = sprintf("'%s'", str_replace("'", "\'", $currentPart));
+        }
+
+        return implode('~', $parts);
     }
 
     private function doesStringEventuallyExist(string $needle): bool
