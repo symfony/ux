@@ -22,6 +22,7 @@ class TwigPackageHelper
             $this->packageRepository->find('autocomplete'),
             $this->packageRepository->find('react'),
             $this->packageRepository->find('vue'),
+            $this->packageRepository->find('translator'),
         ];
     }
 

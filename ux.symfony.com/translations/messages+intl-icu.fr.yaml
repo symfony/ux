@@ -1,0 +1,33 @@
+hello: 'Bonjour !'
+say_hello: 'Bonjour {name} !'
+
+# Select
+invitation_title: >-
+  {organizer_gender, select,
+      female   {{organizer_name} t'a invité à sa fête !}
+      male     {{organizer_name} t'a invité à sa fête !}
+      multiple {{organizer_name} t'a invité à sa fête !}
+      other    {{organizer_name} t'a invité à sa fête !}
+  }
+
+# Pluralization
+num_of_apples: >-
+  {apples, plural,
+      =0    {Il n'y a pas de pommes}
+      =1    {Il y a une pomme...}
+      other {Il y a # pommes !}
+  }
+
+# Ordinal
+finish_place: >-
+  Tu as terminé {place, selectordinal,
+      one   {#er}
+      other {#e}
+  } !
+
+# Date and Time
+published_at: 'Publié le {publication_date, date} - {publication_date, time, short}'
+
+# Numbers
+progress: '{progress, number, percent} du travail est fait'
+value_of_object: "Cette artéfact vaut {value, number, ::currency/EUR}"

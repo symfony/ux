@@ -1,0 +1,35 @@
+hello: 'Hello!'
+say_hello: 'Hello {name}!'
+
+# Select
+invitation_title: >-
+  {organizer_gender, select,
+      female   {{organizer_name} has invited you to her party!}
+      male     {{organizer_name} has invited you to his party!}
+      multiple {{organizer_name} have invited you to their party!}
+      other    {{organizer_name} has invited you to their party!}
+  }
+
+# Pluralization
+num_of_apples: >-
+  {apples, plural,
+      =0    {There are no apples}
+      =1    {There is one apple...}
+      other {There are # apples!}
+  }
+
+# Ordinal
+finish_place: >-
+  You finished {place, selectordinal,
+      one   {#st}
+      two   {#nd}
+      few   {#rd}
+      other {#th}
+  }!
+
+# Date and Time
+published_at: 'Published at {publication_date, date} - {publication_date, time, short}'
+
+# Numbers
+progress: '{progress, number, percent} of the work is done'
+value_of_object: 'This artifact is worth {value, number, ::currency/EUR}'

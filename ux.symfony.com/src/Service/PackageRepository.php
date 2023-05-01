@@ -74,9 +74,10 @@ class PackageRepository
                 'svelte',
                 'Svelte',
                 'app_svelte',
-                'linear-gradient(95.22deg, #f73c00 -4.7%, #f08e6e 105.43%)',
+                'linear-gradient(137.59deg, #FF3E00 -7.89%, #FF8A00 110.57%)',
                 'Quickly render `<Svelte />` components &amp; pass them props.',
-                'I need to render Svelte components from Twig'
+                'I need to render Svelte components from Twig',
+                'svelte.svg',
             ))
                 ->setDocsLink('https://svelte.dev/', 'Go deeper with the Svelte docs.'),
 
@@ -142,6 +143,17 @@ class PackageRepository
                 'I need to type onto the screen... like this'
             ))
                 ->setDocsLink('https://github.com/mattboldt/typed.js/', 'Typed.js documentation'),
+
+            new Package(
+                'translator',
+                'Translator',
+                'app_translator',
+                'linear-gradient(139.1deg, #2248D0 -20.18%, #00FFB2 113.25%)',
+                "Use Symfony's translations in JavaScript",
+                'I need to translate strings in JavaScript',
+                'translator.svg'
+            ),
+
             // new Package('form-collection', 'Form Collection', 'app_form_collection', 'linear-gradient(95.22deg, #5920A0 -4.7%, #844EC9 105.43%), #5920A0', 'Handle CollectionType embedded forms with zero custom JavaScript'),
         ];
 
