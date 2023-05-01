@@ -45,6 +45,8 @@ final class LiveProp
      */
     private ?string $fieldName;
 
+    private ?string $format;
+
     private bool $acceptUpdatesFromParent;
 
     /**
