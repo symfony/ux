@@ -102,7 +102,7 @@ class DeterministicTwigIdCalculator
 
         // update template name
         // START CHANGE
-        // don't check name poroperty
+        // don't check name property
         // if (null !== $template && null === $this->name) {
         if (null !== $template) {
             // END CHANGE

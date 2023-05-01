@@ -194,7 +194,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
 
         $container->register('ux.live_component.deterministic_id_calculator', DeterministicTwigIdCalculator::class);
         $container->register('ux.live_component.fingerprint_calculator', FingerprintCalculator::class)
-            ->setArguments([new Reference('serializer'), '%kernel.secret%']);
+            ->setArguments(['%kernel.secret%']);
 
         $container->setAlias(ComponentValidatorInterface::class, ComponentValidator::class);
 

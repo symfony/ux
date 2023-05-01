@@ -109,9 +109,9 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
         $fingerprints = [];
         foreach ($fingerprintValues as $key => $fingerprintValue) {
             // creating fingerprints keys to match todo_list_with_keys.html.twig
-            $fingerprints['live-4172682817-the-key'.$key] = $fingerprintValue;
+            $fingerprints['live-1745423312-the-key'.$key] = $fingerprintValue;
         }
-        $fingerprints['live-4172682817-the-key1'] = 'wrong fingerprint';
+        $fingerprints['live-1745423312-the-key1'] = 'wrong fingerprint';
 
         $urlSimple = $this->doBuildUrlForComponent('todo_list_with_keys', []);
         $urlWithChangedFingerprints = $this->doBuildUrlForComponent('todo_list_with_keys', $fingerprints);
@@ -120,14 +120,15 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
             ->visit($urlSimple)
             ->assertSuccessful()
             ->assertHtml()
+            ->dump()
             ->assertElementCount('ul li', 3)
             // check for the live-id we expect based on the key
-            ->assertContains('data-live-id="live-4172682817-the-key0"')
+            ->assertContains('data-live-id="live-1745423312-the-key0"')
             ->assertNotContains('key="the-key0"')
             ->visit($urlWithChangedFingerprints)
-            ->assertContains('<li data-live-id="live-4172682817-the-key0"></li>')
+            ->assertContains('<li data-live-id="live-1745423312-the-key0"></li>')
             // this one is changed, so it renders a full element
-            ->assertContains('<li data-live-name-value="todo_item" data-live-id="live-4172682817-the-key1"')
+            ->assertContains('<li data-live-name-value="todo_item" data-live-id="live-1745423312-the-key1"')
         ;
     }
 

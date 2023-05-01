@@ -36,7 +36,6 @@ use Symfony\UX\TwigComponent\ComponentAttributes;
  */
 final class LiveComponentHydrator
 {
-    public const LIVE_CONTEXT = 'live-component';
     private const ATTRIBUTES_KEY = '@attributes';
     private const CHECKSUM_KEY = '@checksum';
 

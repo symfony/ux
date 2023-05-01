@@ -13,8 +13,6 @@ declare(strict_types=1);
 
 namespace Symfony\UX\LiveComponent\Util;
 
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
-use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
 
 /**
@@ -33,7 +31,6 @@ use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
 class FingerprintCalculator
 {
     public function __construct(
-        private NormalizerInterface $objectNormalizer,
         private string $secret,
     ) {
     }
@@ -46,8 +43,6 @@ class FingerprintCalculator
             return '';
         }
 
-        $normalizedData = $this->objectNormalizer->normalize($fingerprintProps, context: [LiveComponentHydrator::LIVE_CONTEXT => true]);
-
-        return base64_encode(hash_hmac('sha256', serialize($normalizedData), $this->secret, true));
+        return base64_encode(hash_hmac('sha256', serialize($fingerprintProps), $this->secret, true));
     }
 }
