@@ -61,16 +61,17 @@ Configuring the default locale
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 By default, the default locale is ``en`` (English) that you can configure through many ways (in order of priority):
-1. With ``setLocale('your-locale')`` from ``@symfony/ux-translator`` package
-2. Or with ``<html data-symfony-ux-translator-locale="your-locale">`` attribute
-3. Or with ``<html lang="your-locale">`` attribute
+
+#. With ``setLocale('your-locale')`` from ``@symfony/ux-translator`` package
+#. Or with ``<html data-symfony-ux-translator-locale="your-locale">`` attribute
+#. Or with ``<html lang="your-locale">`` attribute
 
 Importing and using translations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you use the Symfony Flex recipe, you can import the ``trans()`` function and your translations in your assets from the file `assets/translator.js`.
+If you use the Symfony Flex recipe, you can import the ``trans()`` function and your translations in your assets from the file ``assets/translator.js``.
 
-Translations are available as named exports, by using the translation's id transformed in uppercase snake-case (e.g.: `my.translation` becomes `MY_TRANSLATION`),
+Translations are available as named exports, by using the translation's id transformed in uppercase snake-case (e.g.: ``my.translation`` becomes ``MY_TRANSLATION``),
 so you can import them like this:
 
 .. code-block:: javascript

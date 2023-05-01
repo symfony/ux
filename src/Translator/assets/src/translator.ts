@@ -14,7 +14,7 @@ export type LocaleType = string;
 
 export type TranslationsType = Record<DomainType, { parameters: ParametersType }>;
 export type NoParametersType = Record<string, never>;
-export type ParametersType = Record<string, string | number> | NoParametersType;
+export type ParametersType = Record<string, string | number | Date> | NoParametersType;
 
 export type RemoveIntlIcuSuffix<T> = T extends `${infer U}+intl-icu` ? U : T;
 export type DomainsOf<M> = M extends Message<infer Translations, LocaleType> ? keyof Translations : never;
