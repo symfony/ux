@@ -358,6 +358,7 @@ export default class Component {
             this.valueStore.getDirtyProps(),
             this.getChildrenFingerprints(),
             this.valueStore.getUpdatedPropsFromParent(),
+            {}, // Uploaded files will go here
         );
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
 
