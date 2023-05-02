@@ -39,9 +39,8 @@ describe('buildRequest', () => {
             Accept: 'application/vnd.live-component+html',
             'X-CSRF-TOKEN': '_the_csrf_token',
         });
-        const body = fetchOptions.body;
+        const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
-        // @ts-ignore body is already asserted to be FormData
         expect(body.get('data')).toEqual(JSON.stringify({
             props: { firstName: 'Ryan' },
             updated: { firstName: 'Kevin' },
@@ -69,9 +68,8 @@ describe('buildRequest', () => {
 
         expect(url).toEqual('/_components/_batch');
         expect(fetchOptions.method).toEqual('POST');
-        const body = fetchOptions.body;
+        const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
-        // @ts-ignore body is already asserted to be FormData
         expect(body.get('data')).toEqual(JSON.stringify({
             props: { firstName: 'Ryan' },
             updated: { firstName: 'Kevin' },
@@ -103,9 +101,8 @@ describe('buildRequest', () => {
             // no token
             Accept: 'application/vnd.live-component+html',
         });
-        const body = fetchOptions.body;
+        const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
-        // @ts-ignore body is already asserted to be FormData
         expect(body.get('data')).toEqual(JSON.stringify({
             props: { firstName: 'Ryan'.repeat(1000) },
             updated: { firstName: 'Kevin'.repeat(1000) },
@@ -138,14 +135,81 @@ describe('buildRequest', () => {
             {}
         );
 
-        const body = fetchOptions.body;
+        const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
-        // @ts-ignore body is already asserted to be FormData
         expect(body.get('data')).toEqual(JSON.stringify({
             props: { firstName: 'Ryan' },
             updated: { firstName: 'Kevin' },
             propsFromParent: { count: 5 },
             args: { sendNotification: '1' },
         }));
+    });
+
+    // Helper method for FileList mocking
+    const getFileList = (length = 1) => {
+        const blob = new Blob([''], { type: 'text/html' });
+        // @ts-ignore This is a mock and those are needed to mock a File object
+        blob['lastModifiedDate'] = '';
+        // @ts-ignore This is a mock and those are needed to mock a File object
+        blob['name'] = 'filename';
+        const file = <File>blob;
+        const fileList: FileList = {
+            length: length,
+            item: () => file
+        };
+        for (let i= 0; i < length; ++i) {
+            fileList[i] = file;
+        }
+        return fileList;
+    };
+
+    it('Sends file with request', () => {
+        const builder = new RequestBuilder('/_components', '_the_csrf_token');
+
+        const { url, fetchOptions } = builder.buildRequest(
+            { firstName: 'Ryan' },
+            [],
+            {},
+            {},
+            {},
+            { 'file': getFileList()}
+        );
+
+        expect(url).toEqual('/_components');
+        expect(fetchOptions.method).toEqual('POST');
+        expect(fetchOptions.headers).toEqual({
+            Accept: 'application/vnd.live-component+html',
+            'X-CSRF-TOKEN': '_the_csrf_token',
+        });
+        const body = <FormData>fetchOptions.body;
+        expect(body).toBeInstanceOf(FormData);
+        expect(body.get('file')).toBeInstanceOf(File);
+        expect(body.getAll('file').length).toEqual(1);
+    });
+
+    it('Sends multiple files with request', () => {
+        const builder = new RequestBuilder('/_components', '_the_csrf_token');
+
+        const { url, fetchOptions } = builder.buildRequest(
+            { firstName: 'Ryan' },
+            [],
+            {},
+            {},
+            {},
+            { 'file[]': getFileList(3), 'otherFile': getFileList()}
+        );
+
+        expect(url).toEqual('/_components');
+        expect(fetchOptions.method).toEqual('POST');
+        expect(fetchOptions.headers).toEqual({
+            Accept: 'application/vnd.live-component+html',
+            'X-CSRF-TOKEN': '_the_csrf_token',
+        });
+        const body = <FormData>fetchOptions.body;
+        expect(body).toBeInstanceOf(FormData);
+        expect(body.get('file[]')).toBeInstanceOf(File);
+        expect(body.getAll('file[]').length).toEqual(3);
+        expect(body.get('otherFile')).toBeInstanceOf(File);
+        expect(body.getAll('otherFile').length).toEqual(1);
     });
 });

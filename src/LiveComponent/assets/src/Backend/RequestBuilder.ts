@@ -27,9 +27,15 @@ export default class {
             Accept: 'application/vnd.live-component+html',
         };
 
+        const totalFiles = Object.entries(files).reduce(
+            (total, current) => total + current.length,
+            0
+        );
+
         const hasFingerprints = Object.keys(children).length > 0;
         if (
             actions.length === 0 &&
+            totalFiles === 0 &&
             this.willDataFitInUrl(JSON.stringify(props), JSON.stringify(updated), params, JSON.stringify(children), JSON.stringify(updatedPropsFromParent))
         ) {
             params.set('props', JSON.stringify(props));
@@ -51,11 +57,15 @@ export default class {
                 requestData.children = children;
             }
 
+            if (
+                this.csrfToken &&
+                (actions.length || totalFiles)
+            ) {
+                fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
+            }
+
             if (actions.length > 0) {
                 // one or more ACTIONs
-                if (this.csrfToken) {
-                    fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
-                }
 
                 if (actions.length === 1) {
                     // simple, single action
