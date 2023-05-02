@@ -1900,7 +1900,7 @@ class Component {
         const thisPromiseResolve = this.nextRequestPromiseResolve;
         this.resetPromise();
         this.unsyncedInputsTracker.resetUnsyncedFields();
-        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints(), this.valueStore.getUpdatedPropsFromParent());
+        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints(), this.valueStore.getUpdatedPropsFromParent(), {});
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
         this.pendingActions = [];
         this.valueStore.flushDirtyPropsToPending();
@@ -2130,7 +2130,7 @@ class RequestBuilder {
         this.url = url;
         this.csrfToken = csrfToken;
     }
-    buildRequest(props, actions, updated, children, updatedPropsFromParent) {
+    buildRequest(props, actions, updated, children, updatedPropsFromParent, files) {
         const splitUrl = this.url.split('?');
         let [url] = splitUrl;
         const [, queryString] = splitUrl;
@@ -2139,8 +2139,10 @@ class RequestBuilder {
         fetchOptions.headers = {
             Accept: 'application/vnd.live-component+html',
         };
+        const totalFiles = Object.entries(files).reduce((total, current) => total + current.length, 0);
         const hasFingerprints = Object.keys(children).length > 0;
         if (actions.length === 0 &&
+            totalFiles === 0 &&
             this.willDataFitInUrl(JSON.stringify(props), JSON.stringify(updated), params, JSON.stringify(children), JSON.stringify(updatedPropsFromParent))) {
             params.set('props', JSON.stringify(props));
             params.set('updated', JSON.stringify(updated));
@@ -2154,7 +2156,6 @@ class RequestBuilder {
         }
         else {
             fetchOptions.method = 'POST';
-            fetchOptions.headers['Content-Type'] = 'application/json';
             const requestData = { props, updated };
             if (Object.keys(updatedPropsFromParent).length > 0) {
                 requestData.propsFromParent = updatedPropsFromParent;
@@ -2162,10 +2163,11 @@ class RequestBuilder {
             if (hasFingerprints) {
                 requestData.children = children;
             }
+            if (this.csrfToken &&
+                (actions.length || totalFiles)) {
+                fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
+            }
             if (actions.length > 0) {
-                if (this.csrfToken) {
-                    fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
-                }
                 if (actions.length === 1) {
                     requestData.args = actions[0].args;
                     url += `/${encodeURIComponent(actions[0].name)}`;
@@ -2175,7 +2177,15 @@ class RequestBuilder {
                     requestData.actions = actions;
                 }
             }
-            fetchOptions.body = JSON.stringify(requestData);
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(requestData));
+            for (const [key, value] of Object.entries(files)) {
+                const length = value.length;
+                for (let i = 0; i < length; ++i) {
+                    formData.append(key, value[i]);
+                }
+            }
+            fetchOptions.body = formData;
         }
         const paramsString = params.toString();
         return {
@@ -2193,8 +2203,8 @@ class Backend {
     constructor(url, csrfToken = null) {
         this.requestBuilder = new RequestBuilder(url, csrfToken);
     }
-    makeRequest(props, actions, updated, children, updatedPropsFromParent) {
-        const { url, fetchOptions } = this.requestBuilder.buildRequest(props, actions, updated, children, updatedPropsFromParent);
+    makeRequest(props, actions, updated, children, updatedPropsFromParent, files) {
+        const { url, fetchOptions } = this.requestBuilder.buildRequest(props, actions, updated, children, updatedPropsFromParent, files);
         return new BackendRequest(fetch(url, fetchOptions), actions.map((backendAction) => backendAction.name), Object.keys(updated));
     }
 }
