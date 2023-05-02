@@ -221,7 +221,11 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                     'propsFromParent' => self::parseJsonFromQuery($request, 'propsFromParent'),
                 ];
             } else {
-                $requestData = $request->toArray();
+                try {
+                    $requestData = json_decode($request->request->get('data'), true, 512, \JSON_BIGINT_AS_STRING | \JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new JsonException('Could not decode request body.', $e->getCode(), $e);
+                }
 
                 $liveRequestData = [
                     'props' => $requestData['props'] ?? [],

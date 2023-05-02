@@ -53,7 +53,7 @@ class ComponentWithFormTest extends KernelTestCase
         $crawler = $browser
             // post to action, which will add a new embedded comment
             ->post('/_components/form_with_collection_type/addComment', [
-                'body' => json_encode(['props' => $dehydratedProps, 'updated' => $updatedProps]),
+                'body' => ['data' => json_encode(['props' => $dehydratedProps, 'updated' => $updatedProps])],
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
@@ -89,7 +89,7 @@ class ComponentWithFormTest extends KernelTestCase
         $crawler = $browser
             // post to action, which will remove the original embedded comment
             ->post('/_components/form_with_collection_type/removeComment', [
-                'body' => json_encode(['props' => $dehydratedProps, 'updated' => $updatedProps, 'args' => ['index' => '0']]),
+                'body' => ['data' => json_encode(['props' => $dehydratedProps, 'updated' => $updatedProps, 'args' => ['index' => '0']])],
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
@@ -336,7 +336,7 @@ class ComponentWithFormTest extends KernelTestCase
             })
             // post to action, which will add a new embedded comment
             ->post('/_components/form_with_live_collection_type/addCollectionItem', [
-                'body' => json_encode(['props' => $dehydratedProps, 'updated' => $updatedProps, 'args' => ['name' => 'blog_post_form[comments]']]),
+                'body' => ['data' => json_encode(['props' => $dehydratedProps, 'updated' => $updatedProps, 'args' => ['name' => 'blog_post_form[comments]']])],
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
@@ -373,7 +373,7 @@ class ComponentWithFormTest extends KernelTestCase
 
             // post to action, which will remove the original embedded comment
             ->post('/_components/form_with_live_collection_type/removeCollectionItem', [
-                'body' => json_encode(['props' => $dehydratedProps, 'updated' => $updatedProps, 'args' => ['name' => 'blog_post_form[comments]', 'index' => '0']]),
+                'body' => ['data' => json_encode(['props' => $dehydratedProps, 'updated' => $updatedProps, 'args' => ['name' => 'blog_post_form[comments]', 'index' => '0']])],
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)

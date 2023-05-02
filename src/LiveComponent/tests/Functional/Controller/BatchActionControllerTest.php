@@ -31,7 +31,7 @@ final class BatchActionControllerTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/with_actions', ['json' => ['props' => $dehydrated->getProps()]])
+            ->get('/_components/with_actions', ['query' => ['props' => json_encode($dehydrated->getProps())]])
             ->assertSuccessful()
             ->assertSee('initial')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
@@ -39,9 +39,11 @@ final class BatchActionControllerTest extends KernelTestCase
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
                 $browser->post('/_components/with_actions/add', [
-                    'json' => [
-                        'props' => $liveProps,
-                        'args' => ['what' => 'first'],
+                    'body' => [
+                        'data' => json_encode([
+                            'props' => $liveProps,
+                            'args' => ['what' => 'first'],
+                        ]),
                     ],
                     'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
@@ -53,13 +55,15 @@ final class BatchActionControllerTest extends KernelTestCase
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
                 $browser->post('/_components/with_actions/_batch', [
-                    'json' => [
-                        'props' => $liveProps,
-                        'actions' => [
-                            ['name' => 'add', 'args' => ['what' => 'second']],
-                            ['name' => 'add', 'args' => ['what' => 'third']],
-                            ['name' => 'add', 'args' => ['what' => 'fourth']],
-                        ],
+                    'body' => [
+                        'data' => json_encode([
+                            'props' => $liveProps,
+                            'actions' => [
+                                ['name' => 'add', 'args' => ['what' => 'second']],
+                                ['name' => 'add', 'args' => ['what' => 'third']],
+                                ['name' => 'add', 'args' => ['what' => 'fourth']],
+                            ],
+                        ]),
                     ],
                     'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
@@ -78,7 +82,7 @@ final class BatchActionControllerTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/alt/alternate_route', ['json' => ['props' => $dehydrated->getProps()]])
+            ->get('/alt/alternate_route', ['query' => ['props' => json_encode($dehydrated->getProps())]])
             ->assertSuccessful()
             ->assertSee('count: 0')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
@@ -86,13 +90,15 @@ final class BatchActionControllerTest extends KernelTestCase
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
                 $browser->post('/alt/alternate_route/_batch', [
-                    'json' => [
-                        'props' => $liveProps,
-                        'actions' => [
-                            ['name' => 'increase'],
-                            ['name' => 'increase'],
-                            ['name' => 'increase'],
-                        ],
+                    'body' => [
+                        'data' => json_encode([
+                            'props' => $liveProps,
+                            'actions' => [
+                                ['name' => 'increase'],
+                                ['name' => 'increase'],
+                                ['name' => 'increase'],
+                            ],
+                        ]),
                     ],
                     'headers' => ['X-CSRF-TOKEN' => $rootElement->attr('data-live-csrf-value')],
                 ]);
@@ -122,7 +128,7 @@ final class BatchActionControllerTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/with_actions', ['json' => ['props' => $dehydrated->getProps()]])
+            ->get('/_components/with_actions', ['query' => ['props' => json_encode($dehydrated->getProps())]])
             ->assertSuccessful()
             ->interceptRedirects()
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
@@ -130,13 +136,15 @@ final class BatchActionControllerTest extends KernelTestCase
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
                 $browser->post('/_components/with_actions/_batch', [
-                    'json' => [
-                        'props' => $liveProps,
-                        'actions' => [
-                            ['name' => 'add', 'args' => ['what' => 'second']],
-                            ['name' => 'redirect'],
-                            ['name' => 'add', 'args' => ['what' => 'fourth']],
-                        ],
+                    'body' => [
+                        'data' => json_encode([
+                            'props' => $liveProps,
+                            'actions' => [
+                                ['name' => 'add', 'args' => ['what' => 'second']],
+                                ['name' => 'redirect'],
+                                ['name' => 'add', 'args' => ['what' => 'fourth']],
+                            ],
+                        ]),
                     ],
                     'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
@@ -150,20 +158,22 @@ final class BatchActionControllerTest extends KernelTestCase
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
         $this->browser()
-            ->get('/_components/with_actions', ['json' => ['props' => $dehydrated->getProps()]])
+            ->get('/_components/with_actions', ['query' => ['props' => json_encode($dehydrated->getProps())]])
             ->assertSuccessful()
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
                 $browser->post('/_components/with_actions/_batch', [
-                    'json' => [
-                        'props' => $liveProps,
-                        'actions' => [
-                            ['name' => 'add', 'args' => ['what' => 'second']],
-                            ['name' => 'exception'],
-                            ['name' => 'add', 'args' => ['what' => 'fourth']],
-                        ],
+                    'body' => [
+                        'data' => json_encode([
+                            'props' => $liveProps,
+                            'actions' => [
+                                ['name' => 'add', 'args' => ['what' => 'second']],
+                                ['name' => 'exception'],
+                                ['name' => 'add', 'args' => ['what' => 'fourth']],
+                            ],
+                        ]),
                     ],
                     'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
@@ -178,20 +188,22 @@ final class BatchActionControllerTest extends KernelTestCase
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
         $this->browser()
-            ->get('/_components/with_actions', ['json' => ['props' => $dehydrated->getProps()]])
+            ->get('/_components/with_actions', ['query' => ['props' => json_encode($dehydrated->getProps())]])
             ->assertSuccessful()
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
 
                 $browser->post('/_components/with_actions/_batch', [
-                    'json' => [
-                        'props' => $liveProps,
-                        'actions' => [
-                            ['name' => 'add', 'args' => ['what' => 'second']],
-                            ['name' => 'nonLive'],
-                            ['name' => 'add', 'args' => ['what' => 'fourth']],
-                        ],
+                    'body' => [
+                        'data' => json_encode([
+                            'props' => $liveProps,
+                            'actions' => [
+                                ['name' => 'add', 'args' => ['what' => 'second']],
+                                ['name' => 'nonLive'],
+                                ['name' => 'add', 'args' => ['what' => 'fourth']],
+                            ],
+                        ]),
                     ],
                     'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);

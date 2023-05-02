@@ -62,8 +62,10 @@ class ValidatableComponentTraitTest extends KernelTestCase
 
         $browser
             ->post('/_components/validating_component/resetValidationAction', [
-                'json' => [
-                    'props' => $dehydratedProps,
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydratedProps,
+                    ]),
                 ],
             ])
             ->assertSuccessful()
