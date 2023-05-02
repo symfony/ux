@@ -15,6 +15,7 @@ export default class {
         updated: {[key: string]: any},
         children: ChildrenFingerprints,
         updatedPropsFromParent: {[key: string]: any},
+        files: {[key: string]: FileList},
     ): { url: string; fetchOptions: RequestInit } {
         const splitUrl = this.url.split('?');
         let [url] = splitUrl;
@@ -42,7 +43,6 @@ export default class {
             fetchOptions.method = 'GET';
         } else {
             fetchOptions.method = 'POST';
-            fetchOptions.headers['Content-Type'] = 'application/json';
             const requestData: any = { props, updated };
             if (Object.keys(updatedPropsFromParent).length > 0) {
                 requestData.propsFromParent = updatedPropsFromParent;
@@ -68,7 +68,17 @@ export default class {
                 }
             }
 
-            fetchOptions.body = JSON.stringify(requestData);
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(requestData));
+
+            for(const [key, value] of Object.entries(files)) {
+                const length = value.length;
+                for (let i = 0; i < length ; ++i) {
+                    formData.append(key, value[i]);
+                }
+            }
+
+            fetchOptions.body = formData;
         }
 
         const paramsString = params.toString();

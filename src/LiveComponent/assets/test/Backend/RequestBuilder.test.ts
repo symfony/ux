@@ -8,6 +8,7 @@ describe('buildRequest', () => {
             [],
             { firstName: 'Kevin' },
             { 'child-component': {fingerprint: '123', tag: 'div' } },
+            {},
             {}
         );
 
@@ -28,6 +29,7 @@ describe('buildRequest', () => {
             }],
             { firstName: 'Kevin' },
             { 'child-component': {fingerprint: '123', tag: 'div' } },
+            {},
             {}
         );
 
@@ -35,10 +37,12 @@ describe('buildRequest', () => {
         expect(fetchOptions.method).toEqual('POST');
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
-            'Content-Type': 'application/json',
             'X-CSRF-TOKEN': '_the_csrf_token',
         });
-        expect(fetchOptions.body).toEqual(JSON.stringify({
+        const body = fetchOptions.body;
+        expect(body).toBeInstanceOf(FormData);
+        // @ts-ignore body is already asserted to be FormData
+        expect(body.get('data')).toEqual(JSON.stringify({
             props: { firstName: 'Ryan' },
             updated: { firstName: 'Kevin' },
             children: { 'child-component': { fingerprint: '123', tag: 'div' } },
@@ -59,12 +63,16 @@ describe('buildRequest', () => {
             }],
             { firstName: 'Kevin' },
             {},
+            {},
             {}
         );
 
         expect(url).toEqual('/_components/_batch');
         expect(fetchOptions.method).toEqual('POST');
-        expect(fetchOptions.body).toEqual(JSON.stringify({
+        const body = fetchOptions.body;
+        expect(body).toBeInstanceOf(FormData);
+        // @ts-ignore body is already asserted to be FormData
+        expect(body.get('data')).toEqual(JSON.stringify({
             props: { firstName: 'Ryan' },
             updated: { firstName: 'Kevin' },
             actions: [{
@@ -85,6 +93,7 @@ describe('buildRequest', () => {
             [],
             { firstName: 'Kevin'.repeat(1000) },
             {},
+            {},
             {}
         );
 
@@ -93,9 +102,11 @@ describe('buildRequest', () => {
         expect(fetchOptions.headers).toEqual({
             // no token
             Accept: 'application/vnd.live-component+html',
-            'Content-Type': 'application/json',
         });
-        expect(fetchOptions.body).toEqual(JSON.stringify({
+        const body = fetchOptions.body;
+        expect(body).toBeInstanceOf(FormData);
+        // @ts-ignore body is already asserted to be FormData
+        expect(body.get('data')).toEqual(JSON.stringify({
             props: { firstName: 'Ryan'.repeat(1000) },
             updated: { firstName: 'Kevin'.repeat(1000) },
         }));
@@ -108,7 +119,8 @@ describe('buildRequest', () => {
             [],
             { firstName: 'Kevin' },
             { },
-            { count: 5 }
+            { count: 5 },
+            {}
         );
 
         expect(url).toEqual('/_components?existing_param=1&props=%7B%22firstName%22%3A%22Ryan%22%7D&updated=%7B%22firstName%22%3A%22Kevin%22%7D&propsFromParent=%7B%22count%22%3A5%7D');
@@ -123,9 +135,13 @@ describe('buildRequest', () => {
             { firstName: 'Kevin' },
             {},
             { count: 5 },
+            {}
         );
 
-        expect(fetchOptions.body).toEqual(JSON.stringify({
+        const body = fetchOptions.body;
+        expect(body).toBeInstanceOf(FormData);
+        // @ts-ignore body is already asserted to be FormData
+        expect(body.get('data')).toEqual(JSON.stringify({
             props: { firstName: 'Ryan' },
             updated: { firstName: 'Kevin' },
             propsFromParent: { count: 5 },
