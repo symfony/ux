@@ -1,7 +1,7 @@
 {
     "name": "symfony/ux-translator",
     "type": "symfony-bundle",
-    "description": "Symfony Translator for JavaScript",
+    "description": "Exposes Symfony Translations directly to JavaScript.",
     "keywords": [
         "symfony-ux"
     ],
