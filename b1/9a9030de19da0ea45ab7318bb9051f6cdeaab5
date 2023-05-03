@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2023-05-03T16:27:05Z
+
+> also, just question, why is `uppercase snake-case` necessary?
+
+It's a convention, see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/const#basic_const_usage
