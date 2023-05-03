@@ -66,7 +66,7 @@ export default class extends Controller {
     }
 
     render() {
-        this.helloCodeTarget.innerHTML =     highlight({ code: `import { trans, SAY_HELLO } from '../translator';
+        this.helloCodeTarget.innerHTML =     highlight({ code: `import { trans, HELLO } from '../translator';
         
 trans(HELLO)` });
         this.helloOutputTarget.textContent = trans(HELLO);
