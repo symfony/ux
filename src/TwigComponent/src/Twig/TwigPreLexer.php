@@ -200,7 +200,7 @@ class TwigPreLexer
                 $attributeValue = $this->consumeAttributeValue($quote);
             }
 
-            $attributes[] = sprintf('%s: %s', $key, $attributeValue);
+            $attributes[] = sprintf('%s: %s', preg_match('/[-:]/', $key) ? "'$key'" : $key, $attributeValue);
 
             $this->expectAndConsumeChar($quote);
             $this->consumeWhitespace();

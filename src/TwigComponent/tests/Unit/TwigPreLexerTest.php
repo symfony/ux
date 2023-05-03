@@ -151,5 +151,20 @@ final class TwigPreLexerTest extends TestCase
             ] }) }}
             EOF
         ];
+
+        yield 'component_with_dashed_attribute' => [
+            '<twig:foobar data-action="foo#bar"></twig:foobar>',
+            '{% component \'foobar\' with { \'data-action\': \'foo#bar\' } %}{% endcomponent %}',
+        ];
+
+        yield 'component_with_dashed_attribute_self_closing' => [
+            '<twig:foobar data-action="foo#bar" />',
+            '{{ component(\'foobar\', { \'data-action\': \'foo#bar\' }) }}',
+        ];
+
+        yield 'component_with_colon_attribute' => [
+            '<twig:foobar my:attribute="yo"></twig:foobar>',
+            '{% component \'foobar\' with { \'my:attribute\': \'yo\' } %}{% endcomponent %}',
+        ];
     }
 }
