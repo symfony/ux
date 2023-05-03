@@ -166,5 +166,10 @@ final class TwigPreLexerTest extends TestCase
             '<twig:foobar my:attribute="yo"></twig:foobar>',
             '{% component \'foobar\' with { \'my:attribute\': \'yo\' } %}{% endcomponent %}',
         ];
+
+        yield 'ignore_twig_comment' => [
+            '{# <twig:Alert/> #} <twig:Alert/>',
+            '{# <twig:Alert/> #} {{ component(\'Alert\') }}',
+        ];
     }
 }

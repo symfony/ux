@@ -40,6 +40,14 @@ class TwigPreLexer
         $output = '';
 
         while ($this->position < $this->length) {
+            // ignore content inside twig comments, see #838
+            if ($this->consume('{#')) {
+                $output .= '{#';
+                $output .= $this->consumeUntil('#}');
+                $this->consume('#}');
+                $output .= '#}';
+            }
+
             if ($this->consume('<twig:')) {
                 $componentName = $this->consumeComponentName();
 
