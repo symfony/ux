@@ -193,7 +193,7 @@ class TwigPreLexer
                     throw new SyntaxError(sprintf('Expected "=" after ":%s" when parsing the "<twig:%s" syntax.', $key, $componentName), $this->line);
                 }
 
-                $attributes[] = sprintf('%s: true', $key);
+                $attributes[] = sprintf('%s: true', preg_match('/[-:]/', $key) ? "'$key'" : $key);
                 $this->consumeWhitespace();
                 continue;
             }
