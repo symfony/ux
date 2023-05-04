@@ -46,6 +46,10 @@ class TwigPreLexer
                 $output .= $this->consumeUntil('#}');
                 $this->consume('#}');
                 $output .= '#}';
+
+                if ($this->position === $this->length) {
+                    break;
+                }
             }
 
             if ($this->consume('<twig:')) {
