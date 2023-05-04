@@ -171,5 +171,15 @@ final class TwigPreLexerTest extends TestCase
             '{# <twig:Alert/> #} <twig:Alert/>',
             '{# <twig:Alert/> #} {{ component(\'Alert\') }}',
         ];
+
+        yield 'file_ended_with_comments' => [
+            '{# <twig:Alert/> #}',
+            '{# <twig:Alert/> #}',
+        ];
+
+        yield 'mixing_component_and_file_ended_with_comments' => [
+            '<twig:Alert/> {# <twig:Alert/> #}',
+            '{{ component(\'Alert\') }} {# <twig:Alert/> #}',
+        ];
     }
 }
