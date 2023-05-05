@@ -181,5 +181,15 @@ final class TwigPreLexerTest extends TestCase
             '<twig:Alert/> {# <twig:Alert/> #}',
             '{{ component(\'Alert\') }} {# <twig:Alert/> #}',
         ];
+
+        yield 'components_content_starting_with_twig_block' => [
+            '<twig:foo><p>My content</p>{% block bar %}<p>Inside bar</p>{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block content %}<p>My content</p>{% endblock %}{% block bar %}<p>Inside bar</p>{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'components_content_ending_with_twig_block' => [
+            '<twig:foo>{% block bar %}<p>Inside bar</p>{% endblock %}<p>My content</p></twig:foo>',
+            '{% component \'foo\' %}{% block bar %}<p>Inside bar</p>{% endblock %}{% block content %}<p>My content</p>{% endblock %}{% endcomponent %}',
+        ];
     }
 }

@@ -52,6 +52,19 @@ class TwigPreLexer
                 }
             }
 
+            if ($this->consume('{% block')) {
+                // if we're already inside the "default" block, let's close it
+                if (!empty($this->currentComponents) && $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock']) {
+                    $output .= '{% endblock %}';
+
+                    $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = false;
+                }
+
+                $output .= $this->consumeTwigBlock();
+
+                continue;
+            }
+
             if ($this->consume('<twig:')) {
                 $componentName = $this->consumeComponentName();
 
@@ -360,6 +373,36 @@ class TwigPreLexer
         return $output;
     }
 
+    private function consumeTwigBlock(): string
+    {
+        $output = '';
+        $this->consumeWhitespace();
+
+        $start = $this->position;
+        while ($this->position < $this->length && preg_match('/[A-Za-z0-9_:@\-.]/', $this->input[$this->position])) {
+            ++$this->position;
+        }
+
+        $blockName = substr($this->input, $start, $this->position - $start);
+
+        $this->consumeWhitespace();
+        $this->consume('%}');
+        $output .= "{% block {$blockName} %}";
+        $closingTag = '{% endblock %}';
+        if (!$this->doesStringEventuallyExist($closingTag)) {
+            throw new SyntaxError("Expected closing tag '{$closingTag}' for block '{$blockName}'.", $this->line);
+        }
+
+        $blockContents = $this->consumeUntilEndTwigBlock();
+        $subLexer = new self($this->line);
+        $output .= $subLexer->preLexComponents($blockContents, true);
+
+        $this->consume($closingTag);
+        $output .= '{% endblock %}';
+
+        return $output;
+    }
+
     private function consumeUntilEndBlock(): string
     {
         $start = $this->position;
@@ -375,6 +418,33 @@ class TwigPreLexer
             }
 
             if ('<twig:block' === substr($this->input, $this->position, 11)) {
+                ++$depth;
+            }
+
+            if ("\n" === $this->input[$this->position]) {
+                ++$this->line;
+            }
+            ++$this->position;
+        }
+
+        return substr($this->input, $start, $this->position - $start);
+    }
+
+    private function consumeUntilEndTwigBlock(): string
+    {
+        $start = $this->position;
+
+        $depth = 1;
+        while ($this->position < $this->length) {
+            if ('{% endblock %}' === substr($this->input, $this->position, 14)) {
+                if (1 === $depth) {
+                    break;
+                } else {
+                    --$depth;
+                }
+            }
+
+            if ('{% block' === substr($this->input, $this->position, 8)) {
                 ++$depth;
             }
 
