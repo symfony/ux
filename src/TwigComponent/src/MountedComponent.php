@@ -21,7 +21,7 @@ final class MountedComponent
     /**
      * Any extra metadata that might be useful to set.
      *
-     * @var array<string, string>
+     * @var array<string, mixed>
      */
     private array $extraMetadata = [];
 
