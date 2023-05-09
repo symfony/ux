@@ -2834,8 +2834,7 @@ class LiveControllerDefault extends Controller {
         if (!(element instanceof HTMLElement)) {
             throw new Error('Could not update model for non HTMLElement');
         }
-        if (element instanceof HTMLInputElement
-            && element.type === 'file') {
+        if (element instanceof HTMLInputElement && element.type === 'file') {
             const key = (_a = element.dataset.model) !== null && _a !== void 0 ? _a : element.name;
             if ((_b = element.files) === null || _b === void 0 ? void 0 : _b.length) {
                 this.pendingFiles[key] = element.files;
