@@ -101,12 +101,22 @@ class ComponentWithFormTest extends KernelTestCase
         ;
 
         $div = $crawler->filter('[data-controller="live"]');
-        $liveProps = json_decode($div->attr('data-live-props-value'), true);
+        $dehydratedProps = json_decode($div->attr('data-live-props-value'), true);
         // the embedded validated field should be gone, since its data is gone
         $this->assertEquals(
             ['blog_post_form.content'],
-            $liveProps['validatedFields']
+            $dehydratedProps['validatedFields']
         );
+
+        $browser
+            // empty the collection
+            ->post('/_components/form_with_collection_type/removeComment', [
+                'body' => json_encode(['props' => $dehydratedProps, 'args' => ['index' => '1']]),
+                'headers' => ['X-CSRF-TOKEN' => $token],
+            ])
+            ->assertStatus(422)
+            ->assertNotContains('<textarea id="blog_post_form_comments_')
+        ;
     }
 
     public function testFormRemembersValidationFromInitialForm(): void
