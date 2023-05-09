@@ -66,7 +66,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         { event: 'change', callback: (event) => this.handleChangeEvent(event) },
         { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
     ];
-    private pendingFiles: {[key: string]: FileList} = {};
+    private pendingFiles: { [key: string]: FileList } = {};
 
     static componentRegistry = new ComponentRegistry();
 
@@ -160,7 +160,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         let debounce: number | boolean = false;
 
         directives.forEach((directive) => {
-            let pendingFiles: {[key: string]: FileList} = {};
+            let pendingFiles: { [key: string]: FileList } = {};
             const validModifiers: Map<string, (modifier: DirectiveModifier) => void> = new Map();
             validModifiers.set('prevent', () => {
                 event.preventDefault();
@@ -337,10 +337,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
 
         // file uploads aren't mapped to model,
         // but needs to be scheduled for sending
-        if (
-            element instanceof HTMLInputElement
-            && element.type === 'file'
-        ) {
+        if (element instanceof HTMLInputElement && element.type === 'file') {
             const key = element.dataset.model ?? element.name;
             if (element.files?.length) {
                 this.pendingFiles[key] = element.files;
