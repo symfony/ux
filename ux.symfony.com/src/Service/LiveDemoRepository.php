@@ -100,6 +100,15 @@ EOF
 Open a child modal component to create a new Category.
 EOF
             ),
+            new LiveDemo(
+                'upload',
+                name: 'Uploading files',
+                description: 'Upload files to live component.',
+                route: 'app_live_components_upload',
+                longDescription: <<<EOF
+Send files to be handled by live component.
+EOF
+            ),
         ];
     }
 

@@ -1,0 +1,26 @@
+<div
+        {{ attributes }}
+>
+    <p><strong>Note:</strong> files aren't persisted and will be lost on each rerender if not stored.</p>
+    <p>
+        Single file: <input type="file" name="single" autocomplete="off" /> <br>
+        Current file:
+        {% if single %}
+            {{ single.clientOriginalName }} ({{ single.clientMimeType }})
+        {% else %}
+            none
+        {% endif %}
+    </p>
+    <div>
+        Multiple files: <input type="file" name="multiple[]" autocomplete="off" multiple /> <br>
+        Current files:
+        <ul>
+            {% for file in multiple %}
+                <li>{{ file.clientOriginalName }} ({{ file.clientMimeType }})</li>
+            {% else %}
+                <li>none</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <button data-action="live#action" data-action-name="files|sendFiles">Send files!</button>
+</div>

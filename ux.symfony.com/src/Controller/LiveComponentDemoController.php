@@ -108,4 +108,12 @@ class LiveComponentDemoController extends AbstractController
             'demo' => $liveDemoRepository->find('product_form'),
         ]);
     }
+
+    #[Route('/upload', name: 'app_live_components_upload')]
+    public function uploadFiles(LiveDemoRepository $liveDemoRepository): Response
+    {
+        return $this->render('live_component_demo/upload.html.twig', parameters: [
+            'demo' => $liveDemoRepository->find('upload'),
+        ]);
+    }
 }
