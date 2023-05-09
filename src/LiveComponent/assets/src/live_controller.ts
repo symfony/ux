@@ -66,6 +66,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         { event: 'change', callback: (event) => this.handleChangeEvent(event) },
         { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
     ];
+    private pendingFiles: {[key: string]: FileList} = {};
 
     static componentRegistry = new ComponentRegistry();
 
@@ -159,6 +160,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         let debounce: number | boolean = false;
 
         directives.forEach((directive) => {
+            let pendingFiles: {[key: string]: FileList} = {};
             const validModifiers: Map<string, (modifier: DirectiveModifier) => void> = new Map();
             validModifiers.set('prevent', () => {
                 event.preventDefault();
@@ -173,6 +175,13 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
             });
             validModifiers.set('debounce', (modifier: DirectiveModifier) => {
                 debounce = modifier.value ? parseInt(modifier.value) : true;
+            });
+            validModifiers.set('files', (modifier: DirectiveModifier) => {
+                if (!modifier.value) {
+                    pendingFiles = this.pendingFiles;
+                } else if (this.pendingFiles[modifier.value]) {
+                    pendingFiles[modifier.value] = this.pendingFiles[modifier.value];
+                }
             });
 
             directive.modifiers.forEach((modifier) => {
@@ -191,6 +200,10 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
                 );
             });
 
+            for (const [key, files] of Object.entries(pendingFiles)) {
+                this.component.files(key, files);
+                delete this.pendingFiles[key];
+            }
             this.component.action(directive.action, directive.named, debounce);
 
             // possible case where this element is also a "model" element
@@ -320,6 +333,20 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
 
         if (!(element instanceof HTMLElement)) {
             throw new Error('Could not update model for non HTMLElement');
+        }
+
+        // file uploads aren't mapped to model,
+        // but needs to be scheduled for sending
+        if (
+            element instanceof HTMLInputElement
+            && element.type === 'file'
+        ) {
+            const key = element.dataset.model ?? element.name;
+            if (element.files?.length) {
+                this.pendingFiles[key] = element.files;
+            } else if (this.pendingFiles[key]) {
+                delete this.pendingFiles[key];
+            }
         }
 
         const modelDirective = getModelDirectiveFromElement(element, false);

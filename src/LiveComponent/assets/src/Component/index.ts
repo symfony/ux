@@ -55,6 +55,8 @@ export default class Component {
     private backendRequest: BackendRequest|null = null;
     /** Actions that are waiting to be executed */
     private pendingActions: BackendAction[] = [];
+    /** Files that are waiting to be sent */
+    private pendingFiles: {[key: string]: FileList} = {};
     /** Is a request waiting to be made? */
     private isRequestPending = false;
     /** Current "timeout" before the pending request should be sent. */
@@ -192,6 +194,10 @@ export default class Component {
         this.debouncedStartRequest(debounce);
 
         return promise;
+    }
+
+    files(key: string, fileList: FileList): void {
+        this.pendingFiles[key] = fileList;
     }
 
     render(): Promise<BackendResponse> {
@@ -358,7 +364,7 @@ export default class Component {
             this.valueStore.getDirtyProps(),
             this.getChildrenFingerprints(),
             this.valueStore.getUpdatedPropsFromParent(),
-            {}, // Uploaded files will go here
+            this.pendingFiles,
         );
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
 
