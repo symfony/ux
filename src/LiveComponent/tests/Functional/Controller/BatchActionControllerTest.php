@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\KernelBrowser;
 use Zenstruck\Browser\Test\HasBrowser;
@@ -160,6 +161,7 @@ final class BatchActionControllerTest extends KernelTestCase
         $this->browser()
             ->get('/_components/with_actions', ['query' => ['props' => json_encode($dehydrated->getProps())]])
             ->assertSuccessful()
+            ->expectException(\RuntimeException::class, 'Exception message')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
@@ -178,8 +180,6 @@ final class BatchActionControllerTest extends KernelTestCase
                     'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
             })
-            ->assertStatus(500)
-            ->assertContains('Exception message')
         ;
     }
 
@@ -190,6 +190,7 @@ final class BatchActionControllerTest extends KernelTestCase
         $this->browser()
             ->get('/_components/with_actions', ['query' => ['props' => json_encode($dehydrated->getProps())]])
             ->assertSuccessful()
+            ->expectException(NotFoundHttpException::class, 'The action "nonLive" either doesn\'t exist or is not allowed')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
                 $rootElement = $crawler->filter('ul')->first();
                 $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
@@ -208,8 +209,6 @@ final class BatchActionControllerTest extends KernelTestCase
                     'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
             })
-            ->assertStatus(404)
-            ->assertContains('The action \"nonLive\" either doesn\'t exist or is not allowed')
         ;
     }
 }
