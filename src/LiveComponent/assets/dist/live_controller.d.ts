@@ -48,6 +48,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     component: Component;
     pendingActionTriggerModelElement: HTMLElement | null;
     private elementEventListeners;
+    private pendingFiles;
     static componentRegistry: ComponentRegistry;
     initialize(): void;
     connect(): void;

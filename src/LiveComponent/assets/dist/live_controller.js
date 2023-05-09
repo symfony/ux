@@ -1724,6 +1724,7 @@ class Component {
         this.defaultDebounce = 150;
         this.backendRequest = null;
         this.pendingActions = [];
+        this.pendingFiles = {};
         this.isRequestPending = false;
         this.requestDebounceTimeout = null;
         this.children = new Map();
@@ -1800,6 +1801,9 @@ class Component {
         });
         this.debouncedStartRequest(debounce);
         return promise;
+    }
+    files(key, fileList) {
+        this.pendingFiles[key] = fileList;
     }
     render() {
         const promise = this.nextRequestPromise;
@@ -1900,7 +1904,7 @@ class Component {
         const thisPromiseResolve = this.nextRequestPromiseResolve;
         this.resetPromise();
         this.unsyncedInputsTracker.resetUnsyncedFields();
-        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints(), this.valueStore.getUpdatedPropsFromParent(), {});
+        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints(), this.valueStore.getUpdatedPropsFromParent(), this.pendingFiles);
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
         this.pendingActions = [];
         this.valueStore.flushDirtyPropsToPending();
@@ -2668,6 +2672,7 @@ class LiveControllerDefault extends Controller {
             { event: 'change', callback: (event) => this.handleChangeEvent(event) },
             { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
         ];
+        this.pendingFiles = {};
     }
     initialize() {
         this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
@@ -2716,6 +2721,7 @@ class LiveControllerDefault extends Controller {
         const directives = parseDirectives(rawAction);
         let debounce = false;
         directives.forEach((directive) => {
+            let pendingFiles = {};
             const validModifiers = new Map();
             validModifiers.set('prevent', () => {
                 event.preventDefault();
@@ -2731,6 +2737,14 @@ class LiveControllerDefault extends Controller {
             validModifiers.set('debounce', (modifier) => {
                 debounce = modifier.value ? parseInt(modifier.value) : true;
             });
+            validModifiers.set('files', (modifier) => {
+                if (!modifier.value) {
+                    pendingFiles = this.pendingFiles;
+                }
+                else if (this.pendingFiles[modifier.value]) {
+                    pendingFiles[modifier.value] = this.pendingFiles[modifier.value];
+                }
+            });
             directive.modifiers.forEach((modifier) => {
                 var _a;
                 if (validModifiers.has(modifier.name)) {
@@ -2740,6 +2754,10 @@ class LiveControllerDefault extends Controller {
                 }
                 console.warn(`Unknown modifier ${modifier.name} in action "${rawAction}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
             });
+            for (const [key, files] of Object.entries(pendingFiles)) {
+                this.component.files(key, files);
+                delete this.pendingFiles[key];
+            }
             this.component.action(directive.action, directive.named, debounce);
             if (getModelDirectiveFromElement(event.currentTarget, false)) {
                 this.pendingActionTriggerModelElement = event.currentTarget;
@@ -2809,11 +2827,22 @@ class LiveControllerDefault extends Controller {
         this.updateModelFromElementEvent(target, 'change');
     }
     updateModelFromElementEvent(element, eventName) {
+        var _a, _b;
         if (!elementBelongsToThisComponent(element, this.component)) {
             return;
         }
         if (!(element instanceof HTMLElement)) {
             throw new Error('Could not update model for non HTMLElement');
+        }
+        if (element instanceof HTMLInputElement
+            && element.type === 'file') {
+            const key = (_a = element.dataset.model) !== null && _a !== void 0 ? _a : element.name;
+            if ((_b = element.files) === null || _b === void 0 ? void 0 : _b.length) {
+                this.pendingFiles[key] = element.files;
+            }
+            else if (this.pendingFiles[key]) {
+                delete this.pendingFiles[key];
+            }
         }
         const modelDirective = getModelDirectiveFromElement(element, false);
         if (!modelDirective) {
