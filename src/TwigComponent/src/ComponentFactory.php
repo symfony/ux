@@ -115,7 +115,7 @@ final class ComponentFactory
     {
         try {
             $method = (new \ReflectionClass($component))->getMethod('mount');
-        } catch (\ReflectionException $e) {
+        } catch (\ReflectionException) {
             // no hydrate method
             return;
         }
