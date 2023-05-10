@@ -120,7 +120,6 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
             ->visit($urlSimple)
             ->assertSuccessful()
             ->assertHtml()
-            ->dump()
             ->assertElementCount('ul li', 3)
             // check for the live-id we expect based on the key
             ->assertContains('data-live-id="live-1745423312-the-key0"')

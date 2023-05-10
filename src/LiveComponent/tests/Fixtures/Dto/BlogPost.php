@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Dto;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
@@ -22,5 +23,11 @@ class BlogPost
     #[Length(min: 100, minMessage: 'The content field is too short')]
     public $content;
 
-    public $comments = [];
+    public $comments;
+
+    public function __construct()
+    {
+        // makes the class more complex & realistic - e.g. like an entity
+        $this->comments = new ArrayCollection();
+    }
 }

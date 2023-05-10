@@ -235,7 +235,7 @@ trait ComponentWithFormTrait
             // is already correct. For example, an expanded ChoiceType with
             // options "text" and "phone" would already have a value in the format
             // ["text"] (assuming "text" is checked and "phone" is not).
-            if (!($child->vars['expanded'] ?? false) && \count($child->children) > 0) {
+            if (!($child->vars['expanded'] ?? false) && ($child->vars['compound'] ?? false)) {
                 $values[$name] = $this->extractFormValues($child);
 
                 continue;
