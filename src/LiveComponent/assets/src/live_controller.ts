@@ -338,7 +338,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         // file uploads aren't mapped to model,
         // but needs to be scheduled for sending
         if (element instanceof HTMLInputElement && element.type === 'file') {
-            const key = element.dataset.model ?? element.name;
+            const key = element.name;
             if (element.files?.length) {
                 this.pendingFiles[key] = element.files;
             } else if (this.pendingFiles[key]) {

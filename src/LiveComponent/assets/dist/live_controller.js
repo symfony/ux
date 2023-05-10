@@ -2827,7 +2827,7 @@ class LiveControllerDefault extends Controller {
         this.updateModelFromElementEvent(target, 'change');
     }
     updateModelFromElementEvent(element, eventName) {
-        var _a, _b;
+        var _a;
         if (!elementBelongsToThisComponent(element, this.component)) {
             return;
         }
@@ -2835,8 +2835,8 @@ class LiveControllerDefault extends Controller {
             throw new Error('Could not update model for non HTMLElement');
         }
         if (element instanceof HTMLInputElement && element.type === 'file') {
-            const key = (_a = element.dataset.model) !== null && _a !== void 0 ? _a : element.name;
-            if ((_b = element.files) === null || _b === void 0 ? void 0 : _b.length) {
+            const key = element.name;
+            if ((_a = element.files) === null || _a === void 0 ? void 0 : _a.length) {
                 this.pendingFiles[key] = element.files;
             }
             else if (this.pendingFiles[key]) {
