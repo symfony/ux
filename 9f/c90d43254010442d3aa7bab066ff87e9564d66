@@ -1,0 +1,14 @@
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-05-09T09:13:17Z
+
+I considered that, but  I wrongly assumed that intersection types are only used for method argument types, to enforce an argument to implement two interfaces, and thus not for property types, which does not make much sense. However, I checked now, and it is allowed (although the use case might be less common imo).
+
+I updated the code, since it _is_ possible for properties as well.
+
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-05-09T14:36:20Z
+
+@weaverryan that's indeed a double negative 🙈
+Fixed it!
