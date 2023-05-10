@@ -52,6 +52,16 @@ final class TwigPreLexerTest extends TestCase
             '{% component \'foo\' %}{% block foo_block %}Foo{% endblock %}{% endcomponent %}',
         ];
 
+        yield 'component_with_traditional_block' => [
+            '<twig:foo>{% block foo_block %}Foo{% endblock %}</twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}Foo{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'traditional_blocks_around_component_do_not_confuse' => [
+            'Hello {% block foo_block %}Foo{% endblock %}<twig:foo />{% block bar_block %}Bar{% endblock %}',
+            'Hello {% block foo_block %}Foo{% endblock %}{{ component(\'foo\') }}{% block bar_block %}Bar{% endblock %}',
+        ];
+
         yield 'component_with_embedded_component_inside_block' => [
             '<twig:foo><twig:block name="foo_block"><twig:bar /></twig:block></twig:foo>',
             '{% component \'foo\' %}{% block foo_block %}{{ component(\'bar\') }}{% endblock %}{% endcomponent %}',
