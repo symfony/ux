@@ -71,6 +71,9 @@ class LiveComponentMetadataFactory
             }
 
             $type = $property->getType();
+            if ($type instanceof \ReflectionUnionType || $type instanceof \ReflectionIntersectionType) {
+                throw new \LogicException(sprintf('Union or intersection types are not supported for LiveProps. You may want to change the type of property %s in %s.', $property->getName(), $property->getDeclaringClass()->getName()));
+            }
             $metadatas[$property->getName()] = new LivePropMetadata(
                 $property->getName(),
                 $attribute->newInstance(),
