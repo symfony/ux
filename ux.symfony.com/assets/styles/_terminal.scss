@@ -19,6 +19,9 @@
 .terminal-code a.filename-header {
     color: white;
     display: inline-block;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .terminal-wrapper .terminal-controls {
@@ -61,6 +64,9 @@
 }
 .terminal-code .btn-copy:hover {
     background-color: $n-600;
+}
+.terminal-code .code-buttons {
+    white-space: nowrap;
 }
 /* copy button inside the code block itself */
 .terminal-code .terminal-body .code-buttons {
