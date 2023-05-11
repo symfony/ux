@@ -151,6 +151,40 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('custom td (1)', $output);
     }
 
+    public function testCanRenderNestedEmbeddedComponentReferencingHost(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('nested_components.html.twig');
+
+        $this->assertStringContainsString(<<<string
+            This at root: you called wrapper
+            <h1>A Foo component</h1>
+            <div class='embedded content in Foo'>
+            host from embedded content in Foo element: you called wrapper
+            this from embedded content in Foo element: you called Foo
+
+            <h1>A Bar component</h1>
+
+            propGivenHost in Bar1: you called wrapper
+            propGivenThis in Bar1: you called Foo
+            this in Bar1: you called Bar1
+
+            <div class='embedded content in Bar1'>
+            <h1>A Bar component</h1>
+
+            propGivenHost in Bar2: you called Foo
+            propGivenThis in Bar2: you called Bar1
+            this in Bar2: you called Bar2
+
+            <div class='embedded content in Bar2'>
+            </div>
+
+            </div>
+            </div>
+            string,
+            $output
+        );
+    }
+
     public function testComponentWithNamespace(): void
     {
         $output = $this->renderComponent('foo:bar:baz');

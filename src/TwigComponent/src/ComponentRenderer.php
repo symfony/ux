@@ -91,6 +91,9 @@ final class ComponentRenderer implements ComponentRendererInterface
             // add the component as "this"
             ['this' => $component],
 
+            // add the "host" component when rendering an embedded component
+            isset($context[PreRenderEvent::EMBEDDED], $context['this']) && true === $context[PreRenderEvent::EMBEDDED] ? ['host' => $context['this']] : [],
+
             // add computed properties proxy
             ['computed' => new ComputedPropertiesProxy($component)],
 
