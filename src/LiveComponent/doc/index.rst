@@ -700,7 +700,7 @@ a custom ``Food`` object, a hydration extension might look like this::
             return is_subclass_of($className, Food::class);
         }
 
-        public function hydrate($value)
+        public function hydrate(mixed $value, string $className): ?object
         {
             return new Food($value['name'], $value['isCooked']);
         }
