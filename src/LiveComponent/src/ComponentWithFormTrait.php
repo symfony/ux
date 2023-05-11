@@ -247,15 +247,15 @@ trait ComponentWithFormTrait
 
                 continue;
             }
-            if (is_scalar($child->vars['value'])) {
+            if (\is_scalar($child->vars['value'])) {
                 $values[$name] = $child->vars['value'];
 
                 continue;
             }
 
-            if (is_iterable($child->vars['value'])) {
+            if ($child->vars['value'] instanceof \Traversable) {
                 // special handling for collections
-                $values[$name] = iterator_to_array($child->vars['value']);
+                $values[$name] = \iterator_to_array($child->vars['value']);
 
                 continue;
             }
