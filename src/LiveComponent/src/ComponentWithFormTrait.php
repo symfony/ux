@@ -244,8 +244,20 @@ trait ComponentWithFormTrait
             if (\array_key_exists('checked', $child->vars)) {
                 // special handling for check boxes
                 $values[$name] = $child->vars['checked'] ? $child->vars['value'] : null;
-            } else {
+
+                continue;
+            }
+            if (is_scalar($child->vars['value'])) {
                 $values[$name] = $child->vars['value'];
+
+                continue;
+            }
+
+            if (is_iterable($child->vars['value'])) {
+                // special handling for collections
+                $values[$name] = iterator_to_array($child->vars['value']);
+
+                continue;
             }
         }
 
