@@ -52,8 +52,10 @@ class TwigPreLexer
                 }
             }
 
-            if ($this->consume('<twig:')) {
-                $componentName = $this->consumeComponentName();
+            $isTwigHtmlOpening = $this->consume('<twig:');
+            $isTraditionalBlockOpening = false;
+            if ($isTwigHtmlOpening || (0 !== \count($this->currentComponents) && $isTraditionalBlockOpening = $this->consume('{% block'))) {
+                $componentName = $isTraditionalBlockOpening ? 'block' : $this->consumeComponentName();
 
                 if ('block' === $componentName) {
                     // if we're already inside the "default" block, let's close it
@@ -61,6 +63,15 @@ class TwigPreLexer
                         $output .= '{% endblock %}';
 
                         $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = false;
+                    }
+
+                    if ($isTraditionalBlockOpening) {
+                        // add what we've consumed so far
+                        $output .= '{% block';
+                        $output .= $this->consumeUntil('%}');
+                        $output .= $this->consumeUntilEndBlock();
+
+                        continue;
                     }
 
                     $output .= $this->consumeBlock($componentName);
@@ -119,7 +130,7 @@ class TwigPreLexer
                 continue;
             }
 
-            $char = $this->consumeChar();
+            $char = $this->input[$this->position];
             if ("\n" === $char) {
                 ++$this->line;
             }
@@ -128,11 +139,13 @@ class TwigPreLexer
             if (!empty($this->currentComponents)
                 && !$this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock']
                 && preg_match('/\S/', $char)
+                && !$this->check('{% block')
             ) {
                 $output .= $this->addDefaultBlock();
             }
 
             $output .= $char;
+            $this->consumeChar();
         }
 
         if (!empty($this->currentComponents)) {
@@ -374,7 +387,21 @@ class TwigPreLexer
                 }
             }
 
+            if ('{% endblock %}' === substr($this->input, $this->position, 14)) {
+                if (1 === $depth) {
+                    // in this case, we want to advanced ALL the way beyond the endblock
+                    $this->position += 14;
+                    break;
+                } else {
+                    --$depth;
+                }
+            }
+
             if ('<twig:block' === substr($this->input, $this->position, 11)) {
+                ++$depth;
+            }
+
+            if ('{% block' === substr($this->input, $this->position, 8)) {
                 ++$depth;
             }
 
