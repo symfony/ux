@@ -12,6 +12,8 @@
 import { Controller } from '@hotwired/stimulus';
 import Chart from 'chart.js/auto';
 
+let isChartInitialized = false;
+
 export default class extends Controller {
     declare readonly viewValue: any;
 
@@ -22,6 +24,13 @@ export default class extends Controller {
     private chart: Chart | null = null;
 
     connect() {
+        if (!isChartInitialized) {
+            isChartInitialized = true;
+            this.dispatchEvent('init', {
+                Chart,
+            });
+        }
+
         if (!(this.element instanceof HTMLCanvasElement)) {
             throw new Error('Invalid element');
         }
@@ -31,7 +40,10 @@ export default class extends Controller {
             payload.options = {};
         }
 
-        this.dispatchEvent('pre-connect', { options: payload.options });
+        this.dispatchEvent('pre-connect', {
+            options: payload.options,
+            config: payload,
+        });
 
         const canvasContext = this.element.getContext('2d');
         if (!canvasContext) {

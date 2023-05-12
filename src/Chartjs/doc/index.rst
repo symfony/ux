@@ -98,18 +98,20 @@ First, install the plugin:
     $ npm install chartjs-plugin-zoom -D
 
     # or use yarn
-    $ yarn add chartjs-plugin-zoom -dev
+    $ yarn add chartjs-plugin-zoom --dev
 
 Then register the plugin globally. This can be done in your ``app.js`` file:
 
 .. code-block:: javascript
 
     // assets/app.js
-
-    import { Chart } from 'chart.js';
     import zoomPlugin from 'chartjs-plugin-zoom';
 
-    Chart.register(zoomPlugin);
+    // register globally for all charts
+    document.addEventListener('chartjs:init', function (event) {
+        const Chart = event.detail.Chart;
+        Chart.register(zoomPlugin);
+    });
 
     // ...
 
@@ -177,10 +179,11 @@ custom Stimulus controller:
 
         _onPreConnect(event) {
             // The chart is not yet created
-            console.log(event.detail.options); // You can access the chart options using the event details
+            // You can access the config that will be passed to "new Chart()"
+            console.log(event.detail.config);
 
             // For instance you can format Y axis
-            event.detail.options.scales = {
+            event.detail.config.options.scales = {
                 yAxes: [
                     {
                         ticks: {
@@ -213,6 +216,24 @@ Then in your render call, add your controller as an HTML attribute:
 
     {{ render_chart(chart, {'data-controller': 'mychart'}) }}
 
+There is also a ``chartjs:init`` event that is called just *one* time before your
+first chart is rendered. That's an ideal place to `register plugins globally <Using Plugins>`_
+or make other changes to any "static"/global part of Chart.js. For example,
+to add a global `Tooltip positioner`_:
+
+.. code-block:: javascript
+
+    // assets/app.js
+
+    // register globally for all charts
+    document.addEventListener('chartjs:init', function (event) {
+        const Chart = event.detail.Chart;
+        const Tooltip = Chart.registry.plugins.get('tooltip');
+        Tooltip.positioners.bottom = function(items) {
+            /* ... */
+        };
+    });
+
 Backward Compatibility promise
 ------------------------------
 
@@ -228,3 +249,4 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`a lot of plugins`: https://github.com/chartjs/awesome#plugins
 .. _`zoom plugin`: https://www.chartjs.org/chartjs-plugin-zoom/latest/
 .. _`zoom plugin documentation`: https://www.chartjs.org/chartjs-plugin-zoom/latest/guide/integration.html
+.. _`Tooltip positioner`: https://www.chartjs.org/docs/latest/samples/tooltip/position.html

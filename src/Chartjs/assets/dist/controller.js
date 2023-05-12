@@ -1,12 +1,19 @@
 import { Controller } from '@hotwired/stimulus';
 import Chart from 'chart.js/auto';
 
+let isChartInitialized = false;
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
         this.chart = null;
     }
     connect() {
+        if (!isChartInitialized) {
+            isChartInitialized = true;
+            this.dispatchEvent('init', {
+                Chart,
+            });
+        }
         if (!(this.element instanceof HTMLCanvasElement)) {
             throw new Error('Invalid element');
         }
@@ -14,7 +21,10 @@ class default_1 extends Controller {
         if (Array.isArray(payload.options) && 0 === payload.options.length) {
             payload.options = {};
         }
-        this.dispatchEvent('pre-connect', { options: payload.options });
+        this.dispatchEvent('pre-connect', {
+            options: payload.options,
+            config: payload,
+        });
         const canvasContext = this.element.getContext('2d');
         if (!canvasContext) {
             throw new Error('Could not getContext() from Element');
