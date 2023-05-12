@@ -45,6 +45,9 @@ class ComponentWithFormTest extends KernelTestCase
                 'checkbox_checked' => '1',
                 'file' => '',
                 'hidden' => '',
+                'complexType' => [
+                    'sub_field' => '',
+                ],
             ],
             $component->formValues
         );
