@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.8.1
+
+-   Increased the priority of `LiveComponentSubscriber` `ControllerEvent` from
+    0 to 10 to fix incompatibility with SensioFrameworkExtraBundle.
+
 ## 2.8.0
 
 -   [BC BREAK]: The `exposed` option was changed to `writable` in `LiveProp`:
