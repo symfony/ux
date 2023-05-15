@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\DependencyInjection;
 
+use Psr\Container\ContainerInterface;
 use Symfony\Component\DependencyInjection\Argument\AbstractArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -74,6 +75,10 @@ final class TwigComponentExtension extends Extension
             ->addTag('twig.extension')
             ->addTag('container.service_subscriber', ['key' => ComponentRenderer::class, 'id' => 'ux.twig_component.component_renderer'])
             ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
+            ->setArguments([
+                new Reference(ContainerInterface::class),
+                new Reference('twig')
+            ])
         ;
 
         $container->register('ux.twig_component.twig.lexer', ComponentLexer::class);

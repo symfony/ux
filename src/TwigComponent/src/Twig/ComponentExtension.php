@@ -15,6 +15,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
+use Twig\Environment;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -26,7 +27,7 @@ use Twig\TwigFunction;
  */
 final class ComponentExtension extends AbstractExtension implements ServiceSubscriberInterface
 {
-    public function __construct(private ContainerInterface $container)
+    public function __construct(private ContainerInterface $container, private Environment $environment)
     {
     }
 
@@ -49,6 +50,8 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
     {
         return [
             new ComponentTokenParser(fn () => $this->container->get(ComponentFactory::class)),
+            new TwigComponentTokenParser(fn () => $this->container->get(ComponentFactory::class), $this->environment),
+            new SlotTokenParser()
         ];
     }
 

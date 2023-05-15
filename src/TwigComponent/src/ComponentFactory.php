@@ -36,10 +36,20 @@ final class ComponentFactory
     ) {
     }
 
+    // should be deprecated, and use metadataForTwigComponent instead
     public function metadataFor(string $name): ComponentMetadata
     {
         if (!$config = $this->config[$name] ?? null) {
             throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->config))));
+        }
+
+        return new ComponentMetadata($config);
+    }
+
+    public function metadataForTwigComponent(string $name): ?ComponentMetadata
+    {
+        if (!$config = $this->config[$name] ?? null) {
+            return null;
         }
 
         return new ComponentMetadata($config);
