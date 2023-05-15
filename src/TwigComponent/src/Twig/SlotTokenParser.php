@@ -14,6 +14,7 @@ namespace Symfony\UX\TwigComponent\Twig;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
+use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
 
@@ -24,7 +25,7 @@ use Twig\TokenParser\AbstractTokenParser;
  */
 class SlotTokenParser extends AbstractTokenParser
 {
-    public function parse(Token $token)
+    public function parse(Token $token): Node
     {
         $parent = $this->parser->getExpressionParser()->parseExpression();
 
