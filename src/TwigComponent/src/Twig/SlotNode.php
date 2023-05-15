@@ -39,9 +39,8 @@ final class SlotNode extends Node implements NodeOutputInterface
         $compiler
             ->write('ob_start();')
             ->subcompile($this->getNode('body'))
-            ->write('$body = ob_get_clean();' . PHP_EOL)
-            ->write("\$slots['$name'] = new " . ComponentSlot::class . "(\$body, ");
-        ;
+            ->write('$body = ob_get_clean();'.\PHP_EOL)
+            ->write("\$slots['$name'] = new ".ComponentSlot::class.'($body, ');
 
         if ($this->hasNode('variables')) {
             $compiler->subcompile($this->getNode('variables'));
@@ -49,6 +48,6 @@ final class SlotNode extends Node implements NodeOutputInterface
             $compiler->raw('[]');
         }
 
-        $compiler->write(");");
+        $compiler->write(');');
     }
 }

@@ -77,7 +77,7 @@ final class TwigComponentExtension extends Extension
             ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
             ->setArguments([
                 new Reference(ContainerInterface::class),
-                new Reference('twig')
+                new Reference('twig'),
             ])
         ;
 

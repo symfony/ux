@@ -43,11 +43,11 @@ class SlotTokenParser extends AbstractTokenParser
         $stream = $this->parser->getStream();
 
         $variables = null;
-        if ($stream->nextIf(/* Token::NAME_TYPE */5, 'with')) {
+        if ($stream->nextIf(/* Token::NAME_TYPE */ 5, 'with')) {
             $variables = $this->parser->getExpressionParser()->parseExpression();
         }
 
-        $stream->expect(/* Token::BLOCK_END_TYPE */3);
+        $stream->expect(/* Token::BLOCK_END_TYPE */ 3);
 
         return $variables;
     }
@@ -56,7 +56,7 @@ class SlotTokenParser extends AbstractTokenParser
     {
         $stream = $this->parser->getStream();
 
-        if ($this->parser->getCurrentToken()->getType() != /** Token::NAME_TYPE */ 5) {
+        if (5 != /* Token::NAME_TYPE */ $this->parser->getCurrentToken()->getType()) {
             throw new \Exception('First token must be a name type');
         }
 

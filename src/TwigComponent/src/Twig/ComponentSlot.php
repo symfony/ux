@@ -43,7 +43,7 @@ class ComponentSlot
 
     public function isEmpty(): bool
     {
-        return $this->contents === '';
+        return '' === $this->contents;
     }
 
     public function __toString()

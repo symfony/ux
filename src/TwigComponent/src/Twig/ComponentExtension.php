@@ -51,7 +51,7 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
         return [
             new ComponentTokenParser(fn () => $this->container->get(ComponentFactory::class)),
             new TwigComponentTokenParser(fn () => $this->container->get(ComponentFactory::class), $this->environment),
-            new SlotTokenParser()
+            new SlotTokenParser(),
         ];
     }
 

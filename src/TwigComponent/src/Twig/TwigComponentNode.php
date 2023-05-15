@@ -40,21 +40,22 @@ class TwigComponentNode extends IncludeNode
         $this->setNode('slot', $slot);
         $this->environment = $environment;
     }
+
     public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
 
         $template = $compiler->getVarName();
 
-        $compiler->write(sprintf("$%s = ", $template));
+        $compiler->write(sprintf('$%s = ', $template));
 
         $this->addGetTemplate($compiler);
 
         $compiler
             ->write(sprintf("if ($%s) {\n", $template))
-            ->write('$slotsStack = $slotsStack ?? [];' . PHP_EOL)
-            ->write('$slotsStack[] = $slots ?? [];' . PHP_EOL)
-            ->write('$slots = [];' . PHP_EOL)
+            ->write('$slotsStack = $slotsStack ?? [];'.\PHP_EOL)
+            ->write('$slotsStack[] = $slots ?? [];'.\PHP_EOL)
+            ->write('$slots = [];'.\PHP_EOL)
         ;
 
         if ($this->getAttribute('componentMetadata') instanceof ComponentMetadata) {
@@ -62,16 +63,16 @@ class TwigComponentNode extends IncludeNode
         }
 
         $compiler
-            ->write("ob_start();"  . PHP_EOL)
+            ->write('ob_start();'.\PHP_EOL)
             ->subcompile($this->getNode('slot'))
-            ->write('$slot = ob_get_clean();' . PHP_EOL)
+            ->write('$slot = ob_get_clean();'.\PHP_EOL)
             ->write(sprintf('$%s->display(', $template));
 
         $this->addTemplateArguments($compiler);
 
         $compiler
             ->raw(");\n")
-            ->write('$slots = array_pop($slotsStack);' . PHP_EOL)
+            ->write('$slots = array_pop($slotsStack);'.\PHP_EOL)
             ->write("}\n")
         ;
     }
@@ -79,18 +80,18 @@ class TwigComponentNode extends IncludeNode
     protected function addGetTemplate(Compiler $compiler)
     {
         $compiler
-            ->raw('$this->loadTemplate(' . PHP_EOL)
+            ->raw('$this->loadTemplate('.\PHP_EOL)
             ->indent(1)
             ->write('')
             ->repr($this->getTemplatePath())
-            ->raw(', ' . PHP_EOL)
+            ->raw(', '.\PHP_EOL)
             ->write('')
             ->repr($this->getTemplatePath())
-            ->raw(', ' . PHP_EOL)
+            ->raw(', '.\PHP_EOL)
             ->write('')
             ->repr($this->getTemplateLine())
             ->indent(-1)
-            ->raw(PHP_EOL . ');' . PHP_EOL . PHP_EOL);
+            ->raw(\PHP_EOL.');'.\PHP_EOL.\PHP_EOL);
     }
 
     protected function addTemplateArguments(Compiler $compiler)
@@ -99,17 +100,17 @@ class TwigComponentNode extends IncludeNode
             ->indent(1)
             ->write("\n")
             ->write("array_merge(\n")
-            ->write('$slots,' . PHP_EOL)
+            ->write('$slots,'.\PHP_EOL)
         ;
 
         if ($this->getAttribute('componentMetadata') instanceof ComponentMetadata) {
-            $compiler->write('$props,' . PHP_EOL);
+            $compiler->write('$props,'.\PHP_EOL);
         }
 
         $compiler
             ->write('$context,[')
-            ->write("'slot' => new  " . ComponentSlot::class . " (\$slot),\n")
-            ->write("'attributes' => new " . AttributeBag::class . "(");
+            ->write("'slot' => new  ".ComponentSlot::class." (\$slot),\n")
+            ->write("'attributes' => new ".AttributeBag::class.'(');
 
         if ($this->hasNode('variables')) {
             $compiler->subcompile($this->getNode('variables'));
@@ -119,7 +120,7 @@ class TwigComponentNode extends IncludeNode
 
         $compiler->write(")\n")
             ->indent(-1)
-            ->write("],");
+            ->write('],');
 
         if ($this->hasNode('variables')) {
             $compiler->subcompile($this->getNode('variables'));
@@ -146,16 +147,16 @@ class TwigComponentNode extends IncludeNode
             return $componentPath;
         }
 
-        if ($loader->exists($componentPath . '.html.twig')) {
-            return $componentPath . '.html.twig';
+        if ($loader->exists($componentPath.'.html.twig')) {
+            return $componentPath.'.html.twig';
         }
 
-        if ($loader->exists('components/' . $componentPath)) {
-            return 'components/' . $componentPath;
+        if ($loader->exists('components/'.$componentPath)) {
+            return 'components/'.$componentPath;
         }
 
-        if ($loader->exists('/components/' . $componentPath . '.html.twig')) {
-            return '/components/' . $componentPath . '.html.twig';
+        if ($loader->exists('/components/'.$componentPath.'.html.twig')) {
+            return '/components/'.$componentPath.'.html.twig';
         }
 
         throw new \LogicException("No template found for: {$name}");

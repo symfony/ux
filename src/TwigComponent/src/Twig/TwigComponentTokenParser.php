@@ -31,6 +31,7 @@ final class TwigComponentTokenParser extends AbstractTokenParser
     private $factory;
 
     private Environment $environment;
+
     public function __construct(
         $factory,
         Environment $environment

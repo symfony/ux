@@ -10,7 +10,7 @@ class AttributeBag implements \ArrayAccess, \IteratorAggregate
     {
         $this->attributes = $attributes;
 
-        if (array_key_exists('attributes', $this->attributes) && $this->attributes['attributes'] instanceof ComponentAttributeBag) {
+        if (\array_key_exists('attributes', $this->attributes) && $this->attributes['attributes'] instanceof ComponentAttributeBag) {
             $parentAttributes = $this->attributes['attributes'];
             unset($this->attributes['attributes']);
             $this->attributes = $this->merge($parentAttributes->getAttributes())->getAttributes();
@@ -29,22 +29,22 @@ class AttributeBag implements \ArrayAccess, \IteratorAggregate
 
     public function has($key): bool
     {
-        return array_key_exists($key, $this->attributes);
+        return \array_key_exists($key, $this->attributes);
     }
 
     public function only($keys): self
     {
-        if (is_null($keys)) {
+        if (null === $keys) {
             $values = $this->attributes;
         } else {
-            $keys = is_array($keys) ? $keys : [$keys];
+            $keys = \is_array($keys) ? $keys : [$keys];
 
             $values = array_filter(
                 $this->attributes,
                 function ($key) use ($keys) {
-                    return in_array($key, $keys);
+                    return \in_array($key, $keys);
                 },
-                ARRAY_FILTER_USE_KEY
+                \ARRAY_FILTER_USE_KEY
             );
         }
 
@@ -53,17 +53,17 @@ class AttributeBag implements \ArrayAccess, \IteratorAggregate
 
     public function except($keys): self
     {
-        if (is_null($keys)) {
+        if (null === $keys) {
             $values = $this->attributes;
         } else {
-            $keys = is_array($keys) ? $keys : [$keys];
+            $keys = \is_array($keys) ? $keys : [$keys];
 
             $values = array_filter(
                 $this->attributes,
                 function ($key) use ($keys) {
-                    return ! in_array($key, $keys);
+                    return !\in_array($key, $keys);
                 },
-                ARRAY_FILTER_USE_KEY
+                \ARRAY_FILTER_USE_KEY
             );
         }
 
@@ -75,13 +75,13 @@ class AttributeBag implements \ArrayAccess, \IteratorAggregate
         $attributes = $this->getAttributes();
 
         foreach ($attributeDefaults as $key => $value) {
-            if (! array_key_exists($key, $attributes)) {
+            if (!\array_key_exists($key, $attributes)) {
                 $attributes[$key] = '';
             }
         }
 
         foreach ($attributes as $key => $value) {
-            $attributes[$key] = trim($value . ' ' . ($attributeDefaults[$key] ?? ''));
+            $attributes[$key] = trim($value.' '.($attributeDefaults[$key] ?? ''));
         }
 
         return new static($attributes);
@@ -141,15 +141,15 @@ class AttributeBag implements \ArrayAccess, \IteratorAggregate
         $string = '';
 
         foreach ($this->attributes as $key => $value) {
-            if ($value === false || is_null($value)) {
+            if (false === $value || null === $value) {
                 continue;
             }
 
-            if ($value === true) {
+            if (true === $value) {
                 $value = $key;
             }
 
-            $string .= ' ' . $key . '="' . str_replace('"', '\\"', trim($value)) . '"';
+            $string .= ' '.$key.'="'.str_replace('"', '\\"', trim($value)).'"';
         }
 
         return trim($string);
