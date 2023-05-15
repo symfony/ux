@@ -1,4 +1,4 @@
-{% component table with { caption: 'data table', headers: ['key', 'value'], data: [[1, 2], [3, 4]] } %}
+{% component table with { caption: 'data table', headers: ['key', 'value'], data: [[1, 2], [3, 4]], dataSort: 'asc' } %}
     {% block th %}custom th ({{ parent() }}){% endblock %}
     {% block td %}custom td ({{ parent() }}){% endblock %}
 

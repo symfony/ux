@@ -87,10 +87,12 @@ final class ComponentExtensionTest extends KernelTestCase
             'style' => 'color:red;',
             'value' => '',
             'autofocus' => true,
+            'data-size' => 'md',
+            'dataVariant' => 'success',
         ]);
 
         $this->assertStringContainsString('Component Content (prop value 1)', $output);
-        $this->assertStringContainsString('<button class="foo bar" type="button" style="color:red;" value="" autofocus>', $output);
+        $this->assertStringContainsString('<button class="foo bar" type="button" style="color:red;" value="" autofocus data-size="md" data-variant="success">', $output);
 
         $output = $this->renderComponent('with_attributes', [
             'prop' => 'prop value 2',
@@ -146,6 +148,7 @@ final class ComponentExtensionTest extends KernelTestCase
     {
         $output = self::getContainer()->get(Environment::class)->render('embedded_component.html.twig');
 
+        $this->assertStringContainsString('data-sort="asc"', $output);
         $this->assertStringContainsString('<caption>data table</caption>', $output);
         $this->assertStringContainsString('custom th (key)', $output);
         $this->assertStringContainsString('custom td (1)', $output);

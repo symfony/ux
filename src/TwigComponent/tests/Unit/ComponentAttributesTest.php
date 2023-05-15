@@ -27,9 +27,11 @@ final class ComponentAttributesTest extends TestCase
             'style' => 'color:black;',
             'value' => '',
             'autofocus' => true,
+            'data-size' => 'md',
+            'dataVariant' => 'success',
         ]);
 
-        $this->assertSame(' class="foo" style="color:black;" value="" autofocus', (string) $attributes);
+        $this->assertSame(' class="foo" style="color:black;" value="" autofocus data-size="md" data-variant="success"', (string) $attributes);
     }
 
     public function testCanSetDefaults(): void

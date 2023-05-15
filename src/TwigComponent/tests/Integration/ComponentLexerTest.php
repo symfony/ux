@@ -41,6 +41,7 @@ class ComponentLexerTest extends KernelTestCase
     {
         $output = self::getContainer()->get(Environment::class)->render('tags/embedded_component.html.twig');
 
+        $this->assertStringContainsString('data-sort="asc"', $output);
         $this->assertStringContainsString('<caption>data table</caption>', $output);
         $this->assertStringContainsString('custom th (key)', $output);
         $this->assertStringContainsString('custom td (1)', $output);

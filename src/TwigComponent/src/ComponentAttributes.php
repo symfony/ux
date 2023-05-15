@@ -44,7 +44,7 @@ final class ComponentAttributes
                 return match ($value) {
                     true => "{$carry} {$key}",
                     false => $carry,
-                    default => sprintf('%s %s="%s"', $carry, $key, $value),
+                    default => sprintf('%s %s="%s"', $carry, strtolower(preg_replace('/(?<!^)[A-Z]/', '-$0', $key)), $value),
                 };
             },
             ''
