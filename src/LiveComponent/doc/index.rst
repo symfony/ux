@@ -2605,7 +2605,7 @@ In the ``EditPost`` template, you render the
 
             {{ component('MarkdownTextarea', {
                 name: 'post[content]',
-                dataModel: 'value:post.content',
+                dataModel: 'post.content:value',
                 label: 'Content',
             }) }}
 
