@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2023-05-12T14:15:34Z
+
+Nice,thank you. Will try it out on monday 🙂
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-05-15T03:59:26Z
+
+Tried this, but now I get: `Error rendering "InvoiceCreateForm" component: Child "_token" does not exist.`
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-15T11:06:11Z
+
+Ok, give it another try. We have CSRF disabled in the tests - I still need to fix that - but I bet it'll work now
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-05-15T11:38:19Z
+
+> Ok, give it another try. We have CSRF disabled in the tests - I still need to fix that - but I bet it'll work now
+
+works :+1:
