@@ -40,46 +40,46 @@ properly configured notifier transport:
             chatter_transports:
                myMercureChatter: '%env(MERCURE_DSN)%'
 
-.. note::
-
-   It is possible to specify the topics to send the notification in the ``MERCURE_DSN``
-   environment variable by specifying the ``topics`` query parameter.
-   Otherwise, notifications will be sent to ``https://symfony.com/notifier`` topic.
-
 Then, you can inject the ``NotifierInterface`` service and send messages on the ``chat/myMercureChatter`` channel::
 
     // ...
-    use Symfony\Component\Notifier\Notification\Notification;
-    use Symfony\Component\Notifier\NotifierInterface;
+    use Symfony\Component\Notifier\ChatterInterface;
+    use Symfony\Component\Notifier\Message\ChatMessage;
 
     #[AsCommand(name: 'app:flash-sales:announce')]
     class AnnounceFlashSalesCommand extends Command
     {
-        public function __construct(private NotifierInterface $notifier)
+        public function __construct(private ChatterInterface $chatter)
         {
             parent::__construct();
         }
 
         protected function execute(InputInterface $input, OutputInterface $output): int
         {
-            $this->notifier->send(new Notification('Flash sales has been started!', ['chat/myMercureChatter']));
+            $message = (new ChatMessage(
+                'Flash sales has been started!',
+                new MercureOptions(['/chat/flash-sales'])
+            ))->transport('myMercureChatter');
+
+            $this->chatter->send($message);
 
             return 0;
         }
     }
 
-Finally, to "listen" and trigger the notifications in the user's browser,
-call the ``stream_notifications()`` Twig function anywhere on the page:
+The ``chat/flash-sales`` is the Mercure topic the message will be sent to.
+The final step is to "listen" to that topic and trigger the notifications
+in the user's browser. To do that, call the ``stream_notifications()`` Twig
+function anywhere on the page:
 
 .. code-block:: twig
 
-    {{ stream_notifications() }}
-    {{ stream_notifications(['/my/topic/1', '/my/topic/2']) }}
+    {{ stream_notifications(['/chat/flash-sales']) }}
 
 .. note::
 
-   Calling ``stream_notifications()`` without parameter will fallback to the
-   following unique topic: ``https://symfony.com/notifier``.
+   Calling ``stream_notifications()`` without a parameter will default
+   to the ``https://symfony.com/notifier`` topic.
 
 Enjoy your server-sent native notifications!
 

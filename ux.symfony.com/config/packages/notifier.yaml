@@ -1,6 +1,7 @@
 framework:
     notifier:
         chatter_transports:
+            # MERCURE_DSN is defined in .env or should be set by you
             custom_mercure_chatter_transport: '%env(MERCURE_DSN)%'
         #    slack: '%env(SLACK_DSN)%'
         #    telegram: '%env(TELEGRAM_DSN)%'
