@@ -67,6 +67,7 @@ class FormWithManyDifferentFieldsType extends AbstractType
             ->add('checkbox_checked', CheckboxType::class)
             ->add('file', FileType::class)
             ->add('hidden', HiddenType::class)
+            ->add('complexType', ComplexFieldType::class)
         ;
     }
 

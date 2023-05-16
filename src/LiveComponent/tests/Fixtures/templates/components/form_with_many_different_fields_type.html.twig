@@ -1,3 +1,12 @@
 <div {{ attributes }}>
-    {{ form(this.form) }}
+    {{ form_start(this.form) }}
+        {#
+            This is a compound field, but to be tricky, we change its compound
+            view value to false. This causes the rendering system (correctly) to
+            choke on it. So, we render it manually. This imitates the behavior
+            of the UX autocomplete form type.
+        #}
+        {{ form_row(this.form.complexType.sub_field) }}
+        {{ form_widget(this.form) }}
+    {{ form_end(this.form) }}
 </div>

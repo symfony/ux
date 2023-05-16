@@ -35,13 +35,13 @@ class ComponentWithFormTest extends KernelTestCase
 
     public function testFormValuesRebuildAfterFormChanges(): void
     {
-        $dehydratedProps = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'))->getProps();
-
         $browser = $this->browser();
         $crawler = $browser
-            ->get('/_components/form_with_collection_type?props='.urlencode(json_encode($dehydratedProps)))
+            ->get('/render-template/render_form_with_collection_type')
             ->crawler()
         ;
+        $div = $crawler->filter('[data-controller="live"]');
+        $dehydratedProps = json_decode($div->attr('data-live-props-value'), true);
 
         // mimic user typing
         $updatedProps = [
@@ -181,6 +181,9 @@ class ComponentWithFormTest extends KernelTestCase
             'checkbox_checked' => '1',
             'file' => '',
             'hidden' => '',
+            'complexType' => [
+                'sub_field' => '',
+            ],
         ], $dehydratedProps['form']);
 
         $getUrl = function (array $props, array $updatedProps = null) {

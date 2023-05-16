@@ -90,7 +90,7 @@ trait ComponentWithFormTrait
         }
 
         // set the formValues from the initial form view's data
-        $this->formValues = $this->extractFormValues($this->getForm());
+        $this->formValues = $this->extractFormValues($this->getForm(), $this->getFormInstance());
 
         return $data;
     }
@@ -157,7 +157,7 @@ trait ComponentWithFormTrait
 
         // re-extract the "view" values in case the submitted data
         // changed the underlying data or structure of the form
-        $this->formValues = $this->extractFormValues($this->getForm());
+        $this->formValues = $this->extractFormValues($this->getForm(), $form);
 
         // remove any validatedFields that do not exist in data anymore
         $this->validatedFields = LiveFormUtility::removePathsNotInData(
@@ -223,7 +223,7 @@ trait ComponentWithFormTrait
      * frontend, and it's meant to equal the raw POST data that would
      * be sent if the form were submitted without modification.
      */
-    private function extractFormValues(FormView $formView): array
+    private function extractFormValues(FormView $formView, FormInterface $form): array
     {
         $values = [];
 
@@ -235,8 +235,10 @@ trait ComponentWithFormTrait
             // is already correct. For example, an expanded ChoiceType with
             // options "text" and "phone" would already have a value in the format
             // ["text"] (assuming "text" is checked and "phone" is not).
-            if (!($child->vars['expanded'] ?? false) && ($child->vars['compound'] ?? false)) {
-                $values[$name] = $this->extractFormValues($child);
+            //
+            $isCompound = $form->has($name) && $form->get($name)->getConfig()->getOption('compound', false);
+            if ($isCompound && !($child->vars['expanded'] ?? false)) {
+                $values[$name] = $this->extractFormValues($child, $form->get($name));
 
                 continue;
             }
