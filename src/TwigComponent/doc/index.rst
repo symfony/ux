@@ -601,6 +601,8 @@ Set an attribute's value to ``false`` to exclude the attribute:
 
 .. versionadded:: 2.7
 
+    #this part needs more calrification and an example of how to use it and why 
+
     The ``add()`` method was introduced in TwigComponents 2.7.
 
 To add a custom Stimulus controller to your root component element:
