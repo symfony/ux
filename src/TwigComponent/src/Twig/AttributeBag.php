@@ -13,7 +13,7 @@ namespace Symfony\UX\TwigComponent\Twig;
 
 /**
  * thanks to @giorgiopogliani!
- * This file is inspired by: https://github.com/giorgiopogliani/twig-components
+ * This file is inspired by: https://github.com/giorgiopogliani/twig-components.
  *
  * @author Mathéo Daninos <matheo.daninos@gmail.com>
  */
