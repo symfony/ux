@@ -1,0 +1,9 @@
+This at root: {{ this.something }}
+<twig:embedded_content_foo>
+host from embedded content in Foo element: {{ host.something }}
+this from embedded content in Foo element: {{ this.something }}
+
+<twig:embedded_content_bar :propGivenThis="this.something" :propGivenHost="host.something" id='1' >
+    <twig:embedded_content_bar :propGivenThis="this.something" :propGivenHost="host.something" id='2' />
+</twig:embedded_content_bar>
+</twig:embedded_content_foo>

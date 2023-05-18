@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.9.0
+
+-   Add `host` context, available in embedded components
+
 ## 2.8.0
 
 -   Add new HTML syntax for rendering components: `<twig:ComponentName>`
