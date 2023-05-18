@@ -17,6 +17,9 @@ use Twig\Node\Node;
 use Twig\Node\NodeOutputInterface;
 
 /**
+ * thanks to @giorgiopogliani!
+ * This file is inspired by: https://github.com/giorgiopogliani/twig-components
+ *
  * @author Mathéo Daninos <matheo.daninos@gmail.com>
  *
  * @internal

@@ -1,7 +1,22 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfony\UX\TwigComponent\Twig;
 
+/**
+ * thanks to @giorgiopogliani!
+ * This file is inspired by: https://github.com/giorgiopogliani/twig-components
+ *
+ * @author Mathéo Daninos <matheo.daninos@gmail.com>
+ */
 class AttributeBag implements \ArrayAccess, \IteratorAggregate
 {
     protected $attributes = [];
