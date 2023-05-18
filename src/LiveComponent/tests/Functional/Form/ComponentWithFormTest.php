@@ -261,6 +261,63 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
+    public function testResetForm(): void
+    {
+        $mounted = $this->mountComponent('form_with_many_different_fields_type');
+
+        $dehydratedProps = $this->dehydrateComponent($mounted)->getProps();
+
+        $getUrl = function (array $props, array $updatedProps = null) {
+            $url = '/_components/form_with_many_different_fields_type?props='.urlencode(json_encode($props));
+            if (null !== $updatedProps) {
+                $url .= '&updated='.urlencode(json_encode($updatedProps));
+            }
+
+            return $url;
+        };
+
+        $browser = $this->browser();
+        $crawler = $browser
+            ->get($getUrl($dehydratedProps, [
+                'form' => [
+                    'text' => 'foo',
+                    'textarea' => 'longer than 5',
+                ],
+                'validatedFields' => ['form.text', 'form.textarea'],
+            ]))
+            ->assertStatus(422)
+            ->assertContains('textarea is too long')
+            ->crawler()
+        ;
+
+        $div = $crawler->filter('[data-controller="live"]');
+        $dehydratedProps = json_decode($div->attr('data-live-props-value'), true);
+        $token = $div->attr('data-live-csrf-value');
+
+        $browser
+            ->post('/_components/form_with_many_different_fields_type/submitAndResetForm', [
+                'body' => json_encode([
+                    'props' => $dehydratedProps,
+                    'updated' => ['form.textarea' => 'short'],
+                ]),
+                'headers' => ['X-CSRF-TOKEN' => $token],
+            ])
+            ->assertStatus(200)
+            ->assertContains('<textarea id="form_textarea" name="form[textarea]" required="required"></textarea>')
+        ;
+
+        // try resetting without submitting
+        $browser
+            ->post('/_components/form_with_many_different_fields_type/resetFormWithoutSubmitting', [
+                'body' => json_encode(['props' => $dehydratedProps]),
+                'headers' => ['X-CSRF-TOKEN' => $token],
+            ])
+            ->assertStatus(200)
+            ->assertNotContains('textarea is too long')
+            ->assertContains('<textarea id="form_textarea" name="form[textarea]" required="required"></textarea>')
+        ;
+    }
+
     public function testLiveCollectionTypeFieldsAddedAndRemoved(): void
     {
         $dehydratedProps = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'))->getProps();

@@ -294,11 +294,8 @@ PostMount Hook
 
     The ``PostMount`` hook was added in TwigComponents 2.1.
 
-When a component is mounted with the passed data, if an item cannot be
-mounted on the component, an exception is thrown. You can intercept this
-behavior and "catch" this extra data with a ``PostMount`` hook method. This
-method accepts the extra data as an argument and must return an array. If
-the returned array is empty, the exception will be avoided::
+After a component is instantiated and its data mounted, you can run extra
+code via the ``PostMount`` hook::
 
     // src/Components/Alert.php
     use Symfony\UX\TwigComponent\Attribute\PostMount;
@@ -319,18 +316,8 @@ the returned array is empty, the exception will be avoided::
 
 A ``PostMount`` method can also receive an array ``$data`` argument, which
 will contain any props passed to the component that have *not* yet been processed,
-i.e. because they don't correspond to any property. You can handle and remove those
-here. For example, imagine an extra ``autoChooseType`` prop were passed when
-creating the ``Alert`` component:
-
-.. code-block:: twig
-
-    {{ component('Alert', {
-        message: 'Danger Will Robinson!',
-        autoChooseType: true,
-    }) }}
-
-You can handle this prop via a ``#[PostMount]`` hook::
+i.e. because they don't correspond to any property. You can handle these props,
+remove them from the ``$data`` and return the array::
 
     // src/Components/Alert.php
     #[AsTwigComponent]
@@ -342,7 +329,7 @@ You can handle this prop via a ``#[PostMount]`` hook::
         #[PostMount]
         public function processAutoChooseType(array $data): array
         {
-            if (array_key_exists('autoChooseType', $data) && $data['autoChooseType']) {
+            if ($data['autoChooseType'] ?? false) {
                 if (str_contains($this->message, 'danger')) {
                     $this->type = 'danger';
                 }
