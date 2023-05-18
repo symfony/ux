@@ -1,0 +1,6 @@
+<div class='container' style='background: {{ color|default('blue') }}'>
+    <div class='content'>
+        {{ slot }}
+    </div>
+    {{ footer|default('')|raw }}
+</div>

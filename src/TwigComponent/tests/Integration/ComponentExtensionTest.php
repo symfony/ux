@@ -158,9 +158,28 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('Content...', $output);
     }
 
+    public function testTwigComponent(): void
+    {
+        $output = $this->renderComponent('component_a', [
+            'propA' => 'prop a value',
+            'propB' => 'prop b value',
+        ]);
+
+        $this->assertStringContainsString('propA: prop a value', $output);
+        $this->assertStringContainsString('propB: prop b value', $output);
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [
+            'name' => $name,
+            'data' => $data,
+        ]);
+    }
+
+    private function renderTwigComponent(string $name, array $data = []): string
+    {
+        return self::getContainer()->get(Environment::class)->render('render_twig_component.html.twig', [
             'name' => $name,
             'data' => $data,
         ]);

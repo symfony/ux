@@ -36,7 +36,7 @@ class TwigComponentNode extends IncludeNode
     {
         parent::__construct(new ConstantExpression('not_used', $lineno), $variables, false, false, $lineno, null);
         $this->setAttribute('componentName', $componentName);
-        $this->setAttribute('componentMetadata', $factory()->metadataFor($componentName));
+        $this->setAttribute('componentMetadata', $factory()->metadataForTwigComponent($componentName));
         $this->setNode('slot', $slot);
         $this->environment = $environment;
     }
@@ -170,9 +170,19 @@ class TwigComponentNode extends IncludeNode
             ->raw(']->embeddedContext(')
             ->string($this->getAttribute('componentName'))
             ->raw(', ')
-            ->raw('twig_to_array(')
-            ->subcompile($this->getNode('variables'))
-            ->raw('), ')
+        ;
+
+        if ($this->hasNode('variables')) {
+            $compiler
+                ->raw('twig_to_array(')
+                ->subcompile($this->getNode('variables'))
+                ->raw('), ')
+            ;
+        } else {
+            $compiler->raw('[], ');
+        }
+
+        $compiler
             ->raw('$context')
             ->raw(");\n")
         ;
