@@ -12,8 +12,6 @@
 namespace Symfony\UX\Vue\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\UX\Vue\Tests\Kernel\FrameworkAppKernel;
 use Symfony\UX\Vue\Tests\Kernel\TwigAppKernel;
 
 /**
@@ -24,17 +22,9 @@ use Symfony\UX\Vue\Tests\Kernel\TwigAppKernel;
  */
 class VueBundleTest extends TestCase
 {
-    public function provideKernels()
+    public function testBootKernel()
     {
-        yield 'framework' => [new FrameworkAppKernel('test', true)];
-        yield 'twig' => [new TwigAppKernel('test', true)];
-    }
-
-    /**
-     * @dataProvider provideKernels
-     */
-    public function testBootKernel(Kernel $kernel)
-    {
+        $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
         $this->assertArrayHasKey('VueBundle', $kernel->getBundles());
     }

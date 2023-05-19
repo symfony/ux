@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.9.0
+
+-   A SwupBundle was added - which allows for integration with symfony/asset-mapper.
+
+-   Add support for symfony/asset-mapper
+
 ## 2.7.0
 
 -   The JavaScript events now bubble up.

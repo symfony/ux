@@ -32,7 +32,6 @@ class SvelteComponentExtensionTest extends TestCase
         $extension = $kernel->getContainer()->get('test.twig.extension.svelte');
 
         $rendered = $extension->renderSvelteComponent(
-            $kernel->getContainer()->get('test.twig'),
             'SubDir/MyComponent',
             ['fullName' => 'Titouan Galopin']
         );
@@ -51,7 +50,7 @@ class SvelteComponentExtensionTest extends TestCase
         /** @var SvelteComponentExtension $extension */
         $extension = $kernel->getContainer()->get('test.twig.extension.svelte');
 
-        $rendered = $extension->renderSvelteComponent($kernel->getContainer()->get('test.twig'), 'SubDir/MyComponent');
+        $rendered = $extension->renderSvelteComponent('SubDir/MyComponent');
 
         $this->assertSame(
             'data-controller="symfony--ux-svelte--svelte" data-symfony--ux-svelte--svelte-component-value="SubDir&#x2F;MyComponent"',
@@ -68,7 +67,6 @@ class SvelteComponentExtensionTest extends TestCase
         $extension = $kernel->getContainer()->get('test.twig.extension.svelte');
 
         $rendered = $extension->renderSvelteComponent(
-            $kernel->getContainer()->get('test.twig'),
             'SubDir/MyComponent',
             ['fullName' => 'Titouan Galopin'],
             true

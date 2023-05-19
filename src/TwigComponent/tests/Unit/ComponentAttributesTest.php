@@ -12,8 +12,11 @@
 namespace Symfony\UX\TwigComponent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\WebpackEncoreBundle\Dto\AbstractStimulusDto;
+use Twig\Environment;
+use Twig\Loader\ArrayLoader;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -62,6 +65,9 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(['class' => 'foo'], $attributes->without('style')->all());
     }
 
+    /**
+     * @group legacy
+     */
     public function testCanAddStimulusController(): void
     {
         $attributes = new ComponentAttributes([
@@ -88,6 +94,9 @@ final class ComponentAttributesTest extends TestCase
         ], $attributes->all());
     }
 
+    /**
+     * @group legacy
+     */
     public function testCanAddStimulusControllerIfNoneAlreadyPresent(): void
     {
         $attributes = new ComponentAttributes([
@@ -107,6 +116,31 @@ final class ComponentAttributesTest extends TestCase
         $this->assertEquals([
             'class' => 'foo',
             'data-controller' => 'foo bar',
+            'data-foo-name-value' => 'ryan',
+        ], $attributes->all());
+    }
+
+    public function testCanAddStimulusControllerViaStimulusAttributes(): void
+    {
+        // if PHP less than 8.1, skip
+        if (version_compare(\PHP_VERSION, '8.1.0', '<')) {
+            $this->markTestSkipped('PHP 8.1+ required');
+        }
+
+        $attributes = new ComponentAttributes([
+            'class' => 'foo',
+            'data-controller' => 'live',
+            'data-live-data-value' => '{}',
+        ]);
+
+        $stimulusAttributes = new StimulusAttributes(new Environment(new ArrayLoader()));
+        $stimulusAttributes->addController('foo', ['name' => 'ryan']);
+        $attributes = $attributes->defaults($stimulusAttributes);
+
+        $this->assertEquals([
+            'class' => 'foo',
+            'data-controller' => 'foo live',
+            'data-live-data-value' => '{}',
             'data-foo-name-value' => 'ryan',
         ], $attributes->all());
     }

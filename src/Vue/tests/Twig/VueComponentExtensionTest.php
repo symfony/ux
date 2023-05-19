@@ -32,7 +32,6 @@ class VueComponentExtensionTest extends TestCase
         $extension = $kernel->getContainer()->get('test.twig.extension.vue');
 
         $rendered = $extension->renderVueComponent(
-            $kernel->getContainer()->get('test.twig'),
             'SubDir/MyComponent',
             ['fullName' => 'Titouan Galopin']
         );
@@ -51,7 +50,7 @@ class VueComponentExtensionTest extends TestCase
         /** @var VueComponentExtension $extension */
         $extension = $kernel->getContainer()->get('test.twig.extension.vue');
 
-        $rendered = $extension->renderVueComponent($kernel->getContainer()->get('test.twig'), 'SubDir/MyComponent');
+        $rendered = $extension->renderVueComponent('SubDir/MyComponent');
 
         $this->assertSame(
             'data-controller="symfony--ux-vue--vue" data-symfony--ux-vue--vue-component-value="SubDir&#x2F;MyComponent"',

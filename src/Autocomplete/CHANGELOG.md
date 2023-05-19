@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.9.0
+
+-   Add support for symfony/asset-mapper
+
 ## 2.8.0
 
 -   The autocomplete now watches for update to any `option` elements inside of

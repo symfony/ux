@@ -12,9 +12,6 @@
 namespace Symfony\UX\Chartjs\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\UX\Chartjs\Tests\Kernel\EmptyAppKernel;
-use Symfony\UX\Chartjs\Tests\Kernel\FrameworkAppKernel;
 use Symfony\UX\Chartjs\Tests\Kernel\TwigAppKernel;
 
 /**
@@ -24,18 +21,9 @@ use Symfony\UX\Chartjs\Tests\Kernel\TwigAppKernel;
  */
 class ChartjsBundleTest extends TestCase
 {
-    public function provideKernels()
+    public function testBootKernel()
     {
-        yield 'empty' => [new EmptyAppKernel('test', true)];
-        yield 'framework' => [new FrameworkAppKernel('test', true)];
-        yield 'twig' => [new TwigAppKernel('test', true)];
-    }
-
-    /**
-     * @dataProvider provideKernels
-     */
-    public function testBootKernel(Kernel $kernel)
-    {
+        $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
         $this->assertArrayHasKey('ChartjsBundle', $kernel->getBundles());
     }

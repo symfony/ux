@@ -12,8 +12,6 @@
 namespace Symfony\UX\Symfony\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\UX\Svelte\Tests\Kernel\FrameworkAppKernel;
 use Symfony\UX\Svelte\Tests\Kernel\TwigAppKernel;
 
 /**
@@ -24,17 +22,9 @@ use Symfony\UX\Svelte\Tests\Kernel\TwigAppKernel;
  */
 class SvelteBundleTest extends TestCase
 {
-    public function provideKernels()
+    public function testBootKernel()
     {
-        yield 'framework' => [new FrameworkAppKernel('test', true)];
-        yield 'twig' => [new TwigAppKernel('test', true)];
-    }
-
-    /**
-     * @dataProvider provideKernels
-     */
-    public function testBootKernel(Kernel $kernel)
-    {
+        $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
         $this->assertArrayHasKey('SvelteBundle', $kernel->getBundles());
     }

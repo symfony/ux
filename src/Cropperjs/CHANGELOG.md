@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.9.0
+
+-   Add support for symfony/asset-mapper
+
+-   Minimum required Symfony version is now 5.4
+
 ## 2.7.0
 
 -   The JavaScript events now bubble up.

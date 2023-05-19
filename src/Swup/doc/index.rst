@@ -64,7 +64,7 @@ initialize Swup:
 
 .. note::
 
-    The ``stimulus_controller()`` function comes from `WebpackEncoreBundle v1.10`_.
+    The ``stimulus_controller()`` function comes from `StimulusBundle`_.
 
 That's it! Swup now reacts to a link click and run the default fade-in
 transition.
@@ -200,6 +200,6 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Swup`: https://swup.js.org/
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _`@symfony/stimulus-bridge`: https://github.com/symfony/stimulus-bridge
-.. _`WebpackEncoreBundle v1.10`: https://github.com/symfony/webpack-encore-bundle
+.. _`StimulusBundle`: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`Swup Options`: https://swup.js.org/options
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html

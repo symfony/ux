@@ -24,6 +24,6 @@ final class NotifyExtension extends AbstractExtension
      */
     public function getFunctions(): iterable
     {
-        yield new TwigFunction('stream_notifications', [NotifyRuntime::class, 'renderStreamNotifications'], ['needs_environment' => true, 'is_safe' => ['html']]);
+        yield new TwigFunction('stream_notifications', [NotifyRuntime::class, 'renderStreamNotifications'], ['is_safe' => ['html']]);
     }
 }

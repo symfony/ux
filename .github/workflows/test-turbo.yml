@@ -14,7 +14,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.0'
+                  php-version: '8.1'
                   extensions: zip
 
             - uses: ramsey/composer-install@v2
@@ -33,7 +33,7 @@ jobs:
         runs-on: ubuntu-latest
         strategy:
             matrix:
-                php-versions: ['7.3', '7.4', '8.0']
+                php-versions: ['8.1']
             fail-fast: false
         name: PHP ${{ matrix.php-versions }} Test on ubuntu-latest
 
@@ -96,7 +96,7 @@ jobs:
 
     tests-php-low-deps:
         runs-on: ubuntu-latest
-        name: PHP 8.0 (lowest) Test on ubuntu-latest
+        name: PHP 8.1 (lowest) Test on ubuntu-latest
 
         services:
             mercure:
@@ -118,7 +118,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.0'
+                  php-version: '8.1'
                   extensions: zip, pdo_sqlite
 
             - uses: ramsey/composer-install@v2

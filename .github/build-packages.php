@@ -1,21 +1,53 @@
 <?php
 
-$dir = __DIR__.'/../src/LiveComponent';
-$flags = JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
+/**
+ * Updates the composer.json files to use the local version of the Symfony UX packages.
+ */
 
-$json = ltrim(file_get_contents($dir.'/composer.json'));
-if (null === $package = json_decode($json)) {
-    passthru("composer validate $dir/composer.json");
-    exit(1);
+require __DIR__.'/../vendor/autoload.php';
+
+use Symfony\Component\Finder\Finder;
+
+$finder = (new Finder())
+    ->in(__DIR__.'/../src/*/')
+    ->depth(0)
+    ->name('composer.json')
+;
+
+foreach ($finder as $composerFile) {
+    $json = file_get_contents($composerFile->getPathname());
+    if (null === $packageData = json_decode($json, true)) {
+        passthru(sprintf('composer validate %s', $composerFile->getPathname()));
+        exit(1);
+    }
+
+    $repositories = [];
+
+    if (isset($packageData['require']['symfony/ux-twig-component'])
+        || isset($packageData['require-dev']['symfony/ux-twig-component'])
+    ) {
+        $repositories[] = [
+            'type' => 'path',
+            'url' => '../TwigComponent',
+        ];
+        $key = isset($packageData['require']['symfony/ux-twig-component']) ? 'require' : 'require-dev';
+        $packageData[$key]['symfony/ux-twig-component'] = '@dev';
+    }
+
+    if (isset($packageData['require']['symfony/stimulus-bundle'])
+        || isset($packageData['require-dev']['symfony/stimulus-bundle'])
+    ) {
+        $repositories[] = [
+            'type' => 'path',
+            'url' => '../StimulusBundle',
+        ];
+        $key = isset($packageData['require']['symfony/stimulus-bundle']) ? 'require' : 'require-dev';
+        $packageData[$key]['symfony/stimulus-bundle'] = '@dev';
+    }
+    if ($repositories) {
+        $packageData['repositories'] = $repositories;
+    }
+
+    $json = json_encode($packageData, \JSON_PRETTY_PRINT | \JSON_UNESCAPED_SLASHES | \JSON_UNESCAPED_UNICODE);
+    file_put_contents($composerFile->getPathname(), $json."\n");
 }
-
-$package->repositories[] = [
-    'type' => 'path',
-    'url' => '../TwigComponent',
-];
-
-$json = preg_replace('/\n    "repositories": \[\n.*?\n    \],/s', '', $json);
-$json = rtrim(json_encode(['repositories' => $package->repositories], $flags), "\n}").','.substr($json, 1);
-$json = preg_replace('/"symfony\/ux-twig-component": "(\^[\d]+\.[\d]+)"/s', '"symfony/ux-twig-component": "@dev"', $json);
-file_put_contents($dir.'/composer.json', $json);
-

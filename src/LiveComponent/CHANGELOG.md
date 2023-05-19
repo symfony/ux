@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.9.0
+
+-   Add support for symfony/asset-mapper
+
 ## 2.8.1
 
 -   Increased the priority of `LiveComponentSubscriber` `ControllerEvent` from

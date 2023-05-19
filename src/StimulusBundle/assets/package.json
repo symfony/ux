@@ -1,0 +1,17 @@
+{
+    "name": "@symfony/stimulus-bundle",
+    "description": "Integration of @hotwired/stimulus into Symfony",
+    "version": "1.0.0",
+    "license": "MIT",
+    "symfony": {
+        "needsPackageAsADependency": false,
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "@symfony/stimulus-bundle": "path:dist/loader.js"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "@symfony/stimulus-bridge": "^3.2.0"
+    }
+}

@@ -12,6 +12,10 @@
                 "fetch": "eager",
                 "enabled": true
             }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "svelte": "^3.0"
         }
     },
     "peerDependencies": {

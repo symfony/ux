@@ -1,0 +1,41 @@
+{
+    "name": "symfony/stimulus-bundle",
+    "description": "Integration with your Symfony app & Stimulus!",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "license": "MIT",
+    "type": "symfony-bundle",
+    "authors": [
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=8.1",
+        "symfony/config": "^5.4|^6.0",
+        "symfony/dependency-injection": "^5.4|^6.0",
+        "symfony/finder": "^5.4|^6.0",
+        "symfony/http-kernel": "^5.4|^6.0",
+        "twig/twig": "^2.15.3|^3.4.3"
+    },
+    "require-dev": {
+        "symfony/asset-mapper": "^6.3",
+        "symfony/framework-bundle": "^5.4|^6.0",
+        "symfony/phpunit-bridge": "^5.4|^6.0",
+        "symfony/twig-bundle": "^5.4|^6.0",
+        "zenstruck/browser": "^1.4"
+    },
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\StimulusBundle\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\StimulusBundle\\Tests\\": "tests/"
+        }
+    }
+}

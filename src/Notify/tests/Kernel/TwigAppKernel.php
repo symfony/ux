@@ -18,7 +18,7 @@ use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Kernel;
 use Symfony\UX\Notify\NotifyBundle;
-use Symfony\WebpackEncoreBundle\WebpackEncoreBundle;
+use Symfony\UX\StimulusBundle\StimulusBundle;
 
 /**
  * @author Mathias Arlaud <mathias.arlaud@gmail.com>
@@ -27,14 +27,12 @@ use Symfony\WebpackEncoreBundle\WebpackEncoreBundle;
  */
 class TwigAppKernel extends Kernel
 {
-    use AppKernelTrait;
-
     public function registerBundles(): iterable
     {
         yield new FrameworkBundle();
         yield new TwigBundle();
+        yield new StimulusBundle();
         yield new MercureBundle();
-        yield new WebpackEncoreBundle();
         yield new NotifyBundle();
     }
 
@@ -43,7 +41,6 @@ class TwigAppKernel extends Kernel
         $loader->load(function (ContainerBuilder $container) {
             $container->loadFromExtension('framework', ['secret' => '$ecret', 'test' => true, 'http_method_override' => false]);
             $container->loadFromExtension('twig', ['default_path' => __DIR__.'/templates', 'strict_variables' => true, 'exception_controller' => null]);
-            $container->loadFromExtension('webpack_encore', ['output_path' => '%kernel.project_dir%/public/build']);
             $container->loadFromExtension('mercure', [
                 'hubs' => [
                     'default' => [
@@ -59,5 +56,26 @@ class TwigAppKernel extends Kernel
 
             $container->setAlias('test.notify.twig_runtime', 'notify.twig_runtime')->setPublic(true);
         });
+    }
+
+    public function getCacheDir(): string
+    {
+        return $this->createTmpDir('cache');
+    }
+
+    public function getLogDir(): string
+    {
+        return $this->createTmpDir('logs');
+    }
+
+    private function createTmpDir(string $type): string
+    {
+        $dir = sys_get_temp_dir().'/notify_bundle/'.uniqid($type.'_', true);
+
+        if (!file_exists($dir)) {
+            mkdir($dir, 0777, true);
+        }
+
+        return $dir;
     }
 }

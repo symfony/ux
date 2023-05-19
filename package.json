@@ -4,7 +4,7 @@
         "src/*/assets"
     ],
     "scripts": {
-        "build": "yarn rollup -c",
+        "build": "node build.js",
         "test": "yarn workspaces run jest",
         "lint": "yarn workspaces run eslint src test",
         "format": "prettier src/*/assets/src/*.ts src/*/assets/test/*.js {,src/*/}*.{json,md} --write",

@@ -36,6 +36,7 @@ use Symfony\Component\Mercure\Hub;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\UX\StimulusBundle\StimulusBundle;
 use Symfony\UX\Turbo\TurboBundle;
 use Symfony\WebpackEncoreBundle\WebpackEncoreBundle;
 use Twig\Environment;
@@ -55,6 +56,7 @@ class Kernel extends BaseKernel
         yield new MercureBundle();
         yield new TurboBundle();
         yield new WebpackEncoreBundle();
+        yield new StimulusBundle();
         yield new WebProfilerBundle();
         yield new DebugBundle();
     }

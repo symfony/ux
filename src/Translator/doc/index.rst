@@ -1,6 +1,9 @@
 Symfony UX Translator
 =====================
 
+**EXPERIMENTAL** This component is currently experimental and is likely
+to change, or even change drastically.
+
 Symfony UX Translator is a Symfony bundle providing the same mechanism as `Symfony Translator`_
 in JavaScript with a TypeScript integration, in Symfony applications. It is part of `the Symfony UX initiative`_.
 

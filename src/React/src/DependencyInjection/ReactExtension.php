@@ -11,8 +11,10 @@
 
 namespace Symfony\UX\React\DependencyInjection;
 
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\UX\React\Twig\ReactComponentExtension;
@@ -22,15 +24,30 @@ use Symfony\UX\React\Twig\ReactComponentExtension;
  *
  * @internal
  */
-class ReactExtension extends Extension
+class ReactExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container)
     {
         $container
             ->setDefinition('twig.extension.react', new Definition(ReactComponentExtension::class))
-            ->setArgument(0, new Reference('webpack_encore.twig_stimulus_extension'))
+            ->setArgument(0, new Reference('stimulus.helper'))
             ->addTag('twig.extension')
             ->setPublic(false)
         ;
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        if (!interface_exists(AssetMapperInterface::class)) {
+            return;
+        }
+
+        $container->prependExtensionConfig('framework', [
+            'asset_mapper' => [
+                'paths' => [
+                    __DIR__.'/../../assets/dist' => '@symfony/ux-react',
+                ],
+            ],
+        ]);
     }
 }

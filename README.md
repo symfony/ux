@@ -15,8 +15,9 @@ to build the chart in PHP. The JavaScript is handled for you automatically.
 **That's Symfony UX.**
 
 Symfony UX leverages [Stimulus](https://stimulus.hotwired.dev/) for JavaScript
-and the [Stimulus Bridge](https://github.com/symfony/stimulus-bridge) for
-integrating it into [Webpack Encore](https://github.com/symfony/webpack-encore).
+and can integrate with [Webpack Encore](https://github.com/symfony/webpack-encore)
+(with the help of [Stimulus Bridge](https://github.com/symfony/stimulus-bridge))
+or with [AssetMapper](https://symfony.com/doc/current/frontend/asset-mapper.html)
 
 ## Resources
 

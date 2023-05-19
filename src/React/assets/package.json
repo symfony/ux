@@ -13,6 +13,11 @@
                 "fetch": "eager",
                 "enabled": true
             }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "react": "^18.0",
+            "react-dom": "^18.0"
         }
     },
     "peerDependencies": {

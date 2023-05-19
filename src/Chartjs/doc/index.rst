@@ -74,8 +74,7 @@ and create charts in PHP::
 All options and data are provided as-is to Chart.js. You can read
 `Chart.js documentation`_ to discover them all.
 
-Once created in PHP, a chart can be displayed using Twig if installed
-(requires `Symfony Webpack Encore`_):
+Once created in PHP, a chart can be displayed using Twig:
 
 .. code-block:: html+twig
 
@@ -244,7 +243,6 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _`@symfony/stimulus-bridge`: https://github.com/symfony/stimulus-bridge
 .. _`Chart.js documentation`: https://www.chartjs.org/docs/latest/
-.. _`Symfony Webpack Encore`: https://symfony.com/doc/current/frontend/encore/installation.html
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
 .. _`a lot of plugins`: https://github.com/chartjs/awesome#plugins
 .. _`zoom plugin`: https://www.chartjs.org/chartjs-plugin-zoom/latest/

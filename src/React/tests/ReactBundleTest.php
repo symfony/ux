@@ -12,8 +12,6 @@
 namespace Symfony\UX\React\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\UX\React\Tests\Kernel\FrameworkAppKernel;
 use Symfony\UX\React\Tests\Kernel\TwigAppKernel;
 
 /**
@@ -23,17 +21,9 @@ use Symfony\UX\React\Tests\Kernel\TwigAppKernel;
  */
 class ReactBundleTest extends TestCase
 {
-    public function provideKernels()
+    public function testBootKernel()
     {
-        yield 'framework' => [new FrameworkAppKernel('test', true)];
-        yield 'twig' => [new TwigAppKernel('test', true)];
-    }
-
-    /**
-     * @dataProvider provideKernels
-     */
-    public function testBootKernel(Kernel $kernel)
-    {
+        $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
         $this->assertArrayHasKey('ReactBundle', $kernel->getBundles());
     }

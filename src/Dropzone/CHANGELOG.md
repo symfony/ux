@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.9.0
+
+-   Add support for symfony/asset-mapper
+
 ## 2.7.0
 
 -   The JavaScript events now bubble up.

@@ -1,5 +1,15 @@
 # CHANGELOG
 
+## 2.9.0
+
+-   Add support for symfony/asset-mapper
+
+-   Add dependency on symfony/stimulus-bundle
+
+-   Minimum required PHP version is now 8.1.
+
+-   Minimum required Symfony version is now 5.4.
+
 ## 2.8.0
 
 -   The chart will now automatically re-render if the `view` Stimulus value

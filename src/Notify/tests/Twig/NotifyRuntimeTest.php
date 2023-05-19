@@ -13,7 +13,7 @@ namespace Symfony\UX\Notify\Tests;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Notify\Tests\Kernel\TwigAppKernel;
-use Twig\Environment;
+use Symfony\UX\Notify\Twig\NotifyRuntime;
 
 /**
  * @author Mathias Arlaud <mathias.arlaud@gmail.com>
@@ -31,7 +31,9 @@ class NotifyRuntimeTest extends TestCase
         $kernel->boot();
         $container = $kernel->getContainer()->get('test.service_container');
 
-        $rendered = $container->get('test.notify.twig_runtime')->renderStreamNotifications($container->get(Environment::class), ...$params);
+        $runtime = $container->get('test.notify.twig_runtime');
+        \assert($runtime instanceof NotifyRuntime);
+        $rendered = $runtime->renderStreamNotifications(...$params);
         $this->assertSame($expected, $rendered);
     }
 

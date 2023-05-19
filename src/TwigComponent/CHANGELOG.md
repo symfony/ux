@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.9.0
+
+-   The `ComponentAttributes::defaults()` method now accepts any iterable argument.
+    The `ComponentAttributes::add()` method has been deprecated. To add a Stimulus
+    controller to the attributes, use `{{ attributes.defaults(stimulus_controller('...')) }}`.
+
 ## 2.8.0
 
 -   Add new HTML syntax for rendering components: `<twig:ComponentName>`

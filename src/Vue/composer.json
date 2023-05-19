@@ -32,13 +32,14 @@
         }
     },
     "require": {
-        "symfony/webpack-encore-bundle": "^1.11"
+        "php": ">=8.1",
+        "symfony/stimulus-bundle": "^2.9"
     },
     "require-dev": {
-        "symfony/framework-bundle": "^4.4|^5.0|^6.0",
-        "symfony/phpunit-bridge": "^5.2|^6.0",
-        "symfony/twig-bundle": "^4.4|^5.0|^6.0",
-        "symfony/var-dumper": "^4.4|^5.0|^6.0"
+        "symfony/framework-bundle": "^5.4|^6.0",
+        "symfony/phpunit-bridge": "^5.4|^6.0",
+        "symfony/twig-bundle": "^5.4|^6.0",
+        "symfony/var-dumper": "^5.4|^6.0"
     },
     "extra": {
         "thanks": {

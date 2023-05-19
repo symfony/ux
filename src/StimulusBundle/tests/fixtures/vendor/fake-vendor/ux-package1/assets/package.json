@@ -1,0 +1,16 @@
+{
+    "symfony": {
+        "controllers": {
+            "controller_first": {
+                "main": "dist/package-controller-first.js",
+                "fetch": "eager",
+                "enabled": true
+            },
+            "controller_second": {
+                "main": "dist/package-controller-second.js",
+                "fetch": "lazy",
+                "enabled": true
+            }
+        }
+    }
+}
