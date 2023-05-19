@@ -74,4 +74,19 @@ class TwigComponentExtensionTest extends KernelTestCase
 
         $this->assertStringContainsString('Hello from a sub folder', $output);
     }
+
+    public function testRenderNestedComponents(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('slot/render_nested_component.html.twig');
+
+        $this->assertStringContainsString('You have a new message from @fabot', $output);
+        $this->assertStringContainsString('Go to the message', $output);
+    }
+
+    public function testPassDefaultSlotToChildComponents(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('slot/pass_default_slot_to_child.html.twig');
+
+        $this->assertStringContainsString('<button class="btn">Delete User</button>', $output);
+    }
 }
