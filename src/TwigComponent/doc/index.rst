@@ -599,15 +599,18 @@ Set an attribute's value to ``false`` to exclude the attribute:
     {# renders as: #}
     <input type="text" value=""/>
 
-.. versionadded:: 2.7
+To add a custom `Stimulus controller`_ to your root component element:
 
-    The ``add()`` method was introduced in TwigComponents 2.7.
+.. versionadded:: 2.9
 
-To add a custom Stimulus controller to your root component element:
+    The ability to use ``stimulus_controller()`` with ``attributes.defaults()``
+    was added in TwigComponents 2.9 and requires ``symfony/stimulus-bundle``.
+    Previously, ``stimulus_controller()`` was passed to an ``attributes.add()``
+    method.
 
 .. code-block:: html+twig
 
-    <div {{ attributes.add(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
+    <div {{ attributes.defaults(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
 
 .. note::
 
@@ -937,3 +940,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Vue`: https://v3.vuejs.org/guide/computed.html
 .. _`Live Nested Components`: https://symfony.com/bundles/ux-live-component/current/index.html#nested-components
 .. _`embed tag`: https://twig.symfony.com/doc/3.x/tags/embed.html
+.. _`Stimulus controller`: https://symfony.com/bundles/StimulusBundle/current/index.html

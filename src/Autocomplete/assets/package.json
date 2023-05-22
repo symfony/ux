@@ -17,6 +17,10 @@
                     "tom-select/dist/css/tom-select.bootstrap5.css": false
                 }
             }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "tom-select": "^2.2.2"
         }
     },
     "peerDependencies": {

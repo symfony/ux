@@ -16,6 +16,9 @@
                     "@symfony/ux-dropzone/src/style.css": true
                 }
             }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0"
         }
     },
     "peerDependencies": {

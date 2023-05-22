@@ -11,8 +11,10 @@
 
 namespace Symfony\UX\Translator\DependencyInjection;
 
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
@@ -23,7 +25,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
  *
  * @experimental
  */
-class UxTranslatorExtension extends Extension
+class UxTranslatorExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -34,5 +36,20 @@ class UxTranslatorExtension extends Extension
         $loader->load('services.php');
 
         $container->getDefinition('ux.translator.translations_dumper')->setArgument(0, $config['dump_directory']);
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        if (!interface_exists(AssetMapperInterface::class)) {
+            return;
+        }
+
+        $container->prependExtensionConfig('framework', [
+            'asset_mapper' => [
+                'paths' => [
+                    __DIR__.'/../../assets/dist' => '@symfony/ux-translator',
+                ],
+            ],
+        ]);
     }
 }

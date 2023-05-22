@@ -17,6 +17,10 @@
                     "@symfony/ux-cropperjs/src/style.css": true
                 }
             }
+        },
+        "importmap": {
+            "cropperjs": "^1.5.9",
+            "@hotwired/stimulus": "^3.0.0"
         }
     },
     "peerDependencies": {

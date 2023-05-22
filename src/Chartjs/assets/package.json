@@ -13,6 +13,10 @@
                 "fetch": "eager",
                 "enabled": true
             }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "chart.js/auto": "^3.4.1"
         }
     },
     "peerDependencies": {

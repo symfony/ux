@@ -31,7 +31,6 @@ class ReactComponentExtensionTest extends TestCase
         $extension = $kernel->getContainer()->get('test.twig.extension.react');
 
         $rendered = $extension->renderReactComponent(
-            $kernel->getContainer()->get('test.twig'),
             'SubDir/MyComponent',
             ['fullName' => 'Titouan Galopin']
         );
@@ -50,7 +49,7 @@ class ReactComponentExtensionTest extends TestCase
         /** @var ReactComponentExtension $extension */
         $extension = $kernel->getContainer()->get('test.twig.extension.react');
 
-        $rendered = $extension->renderReactComponent($kernel->getContainer()->get('test.twig'), 'SubDir/MyComponent');
+        $rendered = $extension->renderReactComponent('SubDir/MyComponent');
 
         $this->assertSame(
             'data-controller="symfony--ux-react--react" data-symfony--ux-react--react-component-value="SubDir&#x2F;MyComponent"',

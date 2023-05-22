@@ -17,6 +17,11 @@
             "homepage": "https://symfony.com/contributors"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Swup\\": "src/"
+        }
+    },
     "conflict": {
         "symfony/flex": "<1.13"
     },

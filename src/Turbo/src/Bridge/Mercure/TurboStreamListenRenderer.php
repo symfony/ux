@@ -12,6 +12,7 @@
 namespace Symfony\UX\Turbo\Bridge\Mercure;
 
 use Symfony\Component\Mercure\HubInterface;
+use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
 use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
@@ -25,14 +26,23 @@ use Twig\Environment;
 final class TurboStreamListenRenderer implements TurboStreamListenRendererInterface
 {
     private $hub;
-    private $stimulusTwigExtension;
+    private $stimulusHelper;
     private $idAccessor;
 
-    public function __construct(HubInterface $hub, StimulusTwigExtension $stimulusTwigExtension, IdAccessor $idAccessor)
+    /**
+     * @param $stimulus StimulusHelper
+     */
+    public function __construct(HubInterface $hub, StimulusHelper|StimulusTwigExtension $stimulus, IdAccessor $idAccessor)
     {
         $this->hub = $hub;
-        $this->stimulusTwigExtension = $stimulusTwigExtension;
         $this->idAccessor = $idAccessor;
+
+        if ($stimulus instanceof StimulusTwigExtension) {
+            trigger_deprecation('symfony/ux-turbo', '2.9', 'Passing an instance of "%s" as second argument of "%s" is deprecated, pass an instance of "%s" instead.', StimulusTwigExtension::class, __CLASS__, StimulusHelper::class);
+
+            $stimulus = new StimulusHelper(null);
+        }
+        $this->stimulusHelper = $stimulus;
     }
 
     public function renderTurboStreamListen(Environment $env, $topic): string
@@ -50,10 +60,12 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
             $topic = sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($topic), '{id}');
         }
 
-        return $this->stimulusTwigExtension->renderStimulusController(
-            $env,
+        $stimulusAttributes = $this->stimulusHelper->createStimulusAttributes();
+        $stimulusAttributes->addController(
             'symfony/ux-turbo/mercure-turbo-stream',
             ['topic' => $topic, 'hub' => $this->hub->getPublicUrl()]
         );
+
+        return (string) $stimulusAttributes;
     }
 }

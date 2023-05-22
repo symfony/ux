@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 2.9.0
+
+-   Replace `symfony/webpack-encore-bundle` by `symfony/stimulus-bundle` in dependencies
+
+-   Add support for symfony/asset-mapper
+
+-   Minimum PHP version is now 8.1
+
 ## 2.7.0
 
 -   Add `assets/src` to `.gitattributes` to exclude source TypeScript files from

@@ -61,37 +61,40 @@ const moveTypescriptDeclarationsPlugin = (packagePath) => ({
     }
 });
 
-const files = glob.sync('src/*/assets/src/*controller.ts');
-module.exports = files.map((file) => {
-    const packageRoot = path.join(file, '..', '..');
-    const packagePath = path.join(packageRoot, 'package.json');
-    const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
-    const peerDependencies = [
-        '@hotwired/stimulus',
-        ...(packageData.peerDependencies ? Object.keys(packageData.peerDependencies) : [])
-    ];
+const file = process.env.INPUT_FILE;
+const packageRoot = path.join(file, '..', '..');
+const packagePath = path.join(packageRoot, 'package.json');
+const packageData = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+const peerDependencies = [
+    '@hotwired/stimulus',
+    ...(packageData.peerDependencies ? Object.keys(packageData.peerDependencies) : [])
+];
 
-    return {
-        input: file,
-        output: {
-            file: path.join(packageRoot, 'dist', path.basename(file, '.ts') + '.js'),
-            format: 'esm',
-        },
-        external: peerDependencies,
-        plugins: [
-            resolve(),
-            typescript({
-                filterRoot: packageRoot,
-                include: ['src/**/*.ts'],
-                compilerOptions: {
-                    outDir: 'dist',
-                    declaration: true,
-                    emitDeclarationOnly: true,
-                }
-            }),
-            commonjs(),
-            wildcardExternalsPlugin(peerDependencies),
-            moveTypescriptDeclarationsPlugin(packageRoot),
-        ],
-    };
-});
+// custom handling for StimulusBundle
+if (file.includes('StimulusBundle/assets/src/loader.ts')) {
+    peerDependencies.push('./controllers.js');
+}
+
+module.exports = {
+    input: file,
+    output: {
+        file: path.join(packageRoot, 'dist', path.basename(file, '.ts') + '.js'),
+        format: 'esm',
+    },
+    external: peerDependencies,
+    plugins: [
+        resolve(),
+        typescript({
+            filterRoot: packageRoot,
+            include: ['src/**/*.ts'],
+            compilerOptions: {
+                outDir: 'dist',
+                declaration: true,
+                emitDeclarationOnly: true,
+            }
+        }),
+        commonjs(),
+        wildcardExternalsPlugin(peerDependencies),
+        moveTypescriptDeclarationsPlugin(packageRoot),
+    ],
+};

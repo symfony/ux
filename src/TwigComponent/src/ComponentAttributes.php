@@ -61,13 +61,25 @@ final class ComponentAttributes
 
     /**
      * Set default attributes. These are used if they are not already
-     * defined. "class" is special, these defaults are prepended to
-     * the existing "class" attribute (if available).
+     * defined.
+     *
+     * "class" and "data-controller" are special, these defaults are prepended to
+     * the existing attribute (if available).
      */
-    public function defaults(array $attributes): self
+    public function defaults(iterable $attributes): self
     {
+        if ($attributes instanceof \Traversable) {
+            $attributes = iterator_to_array($attributes);
+        }
+
         foreach ($this->attributes as $key => $value) {
-            $attributes[$key] = isset($attributes[$key]) && 'class' === $key ? "{$attributes[$key]} {$value}" : $value;
+            if (\in_array($key, ['class', 'data-controller'], true) && isset($attributes[$key])) {
+                $attributes[$key] = "{$attributes[$key]} {$value}";
+
+                continue;
+            }
+
+            $attributes[$key] = $value;
         }
 
         return new self($attributes);
@@ -105,6 +117,8 @@ final class ComponentAttributes
 
     public function add(AbstractStimulusDto $stimulusDto): self
     {
+        trigger_deprecation('symfony/ux-twig-component', '2.9.0', 'Passing a StimulusDto to ComponentAttributes::add() is deprecated. Run "composer require symfony/stimulus-bundle" then use "attributes.defaults(stimulus_controller(\'...\'))".');
+
         $controllersAttributes = $stimulusDto->toArray();
         $attributes = $this->attributes;
 

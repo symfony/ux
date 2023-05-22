@@ -1,0 +1,20 @@
+{
+    "controllers": {
+        "@fake-vendor/ux-package1": {
+            "controller_first": {
+                "enabled": false,
+                "fetch": "eager"
+            },
+            "controller_second": {
+                "enabled": true,
+                "fetch": "lazy"
+            }
+        },
+        "@fake-vendor/ux-package2": {
+            "hello_controller": {
+                "enabled": true,
+                "fetch": "eager"
+            }
+        }
+    }
+}

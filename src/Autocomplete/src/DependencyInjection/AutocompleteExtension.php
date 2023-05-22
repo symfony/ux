@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Autocomplete\DependencyInjection;
 
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
@@ -41,13 +42,21 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
     {
         $bundles = $container->getParameter('kernel.bundles');
 
-        if (!isset($bundles['TwigBundle'])) {
-            return;
+        if (isset($bundles['TwigBundle'])) {
+            $container->prependExtensionConfig('twig', [
+                'form_themes' => ['@Autocomplete/autocomplete_form_theme.html.twig'],
+            ]);
         }
 
-        $container->prependExtensionConfig('twig', [
-            'form_themes' => ['@Autocomplete/autocomplete_form_theme.html.twig'],
-        ]);
+        if (interface_exists(AssetMapperInterface::class)) {
+            $container->prependExtensionConfig('framework', [
+                'asset_mapper' => [
+                    'paths' => [
+                        __DIR__.'/../../assets/dist' => '@symfony/ux-autocomplete',
+                    ],
+                ],
+            ]);
+        }
     }
 
     public function load(array $configs, ContainerBuilder $container)

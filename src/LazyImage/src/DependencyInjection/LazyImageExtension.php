@@ -12,9 +12,11 @@
 namespace Symfony\UX\LazyImage\DependencyInjection;
 
 use Intervention\Image\ImageManager;
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\UX\LazyImage\BlurHash\BlurHash;
@@ -26,7 +28,7 @@ use Symfony\UX\LazyImage\Twig\BlurHashExtension;
  *
  * @internal
  */
-class LazyImageExtension extends Extension
+class LazyImageExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -51,5 +53,20 @@ class LazyImageExtension extends Extension
             ->addTag('twig.extension')
             ->setPublic(false)
         ;
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        if (!interface_exists(AssetMapperInterface::class)) {
+            return;
+        }
+
+        $container->prependExtensionConfig('framework', [
+            'asset_mapper' => [
+                'paths' => [
+                    __DIR__.'/../../assets/dist' => '@symfony/ux-lazy-image',
+                ],
+            ],
+        ]);
     }
 }

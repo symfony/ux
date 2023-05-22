@@ -75,7 +75,7 @@ There is also support for the ``srcset`` attribute by passing an
 
 .. note::
 
-    The ``stimulus_controller()`` function comes from `WebpackEncoreBundle v1.10`_.
+    The ``stimulus_controller()`` function comes from `StimulusBundle`_.
 
 Instead of using a generated thumbnail that would exist on your
 filesystem, you can use the BlurHash algorithm to create a light,
@@ -172,5 +172,5 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _`@symfony/stimulus-bridge`: https://github.com/symfony/stimulus-bridge
 .. _`BlurHash implementation`: https://blurha.sh
-.. _`WebpackEncoreBundle v1.10`: https://github.com/symfony/webpack-encore-bundle
+.. _`StimulusBundle`: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html

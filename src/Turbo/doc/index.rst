@@ -823,33 +823,31 @@ transports::
         }
     }
 
-.. code-block:: php
+Then a stream listener::
 
     // src/Turbo/TurboStreamListenRenderer.php
     namespace App\Turbo;
 
     use Symfony\Component\DependencyInjection\Attribute\AsTaggedItem;
+    use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
     use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
-    use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
     use Twig\Environment;
 
     #[AsTaggedItem(index: 'my-transport')]
     class TurboStreamListenRenderer implements TurboStreamListenRendererInterface
     {
         public function __construct(
-            private StimulusTwigExtension $stimulusTwigExtension,
+            private StimulusHelper $stimulusHelper,
         ) {}
 
-        /**
-         * @param string|object $topic
-         */
         public function renderTurboStreamListen(Environment $env, $topic): string
         {
-            return $this->stimulusTwigExtension->renderStimulusController(
-                $env,
-                'your_stimulus_controller',
-                [/* controller values such as topic */]
-            );
+            $stimulusAttributes = $this->stimulusHelper->createStimulusAttributes();
+            $stimulusAttributes->addController('your_stimulus_controller', [
+                /* controller values such as topic */
+            ]);
+
+            return (string) $stimulusAttributes;
         }
     }
 

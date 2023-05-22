@@ -11,7 +11,9 @@
 
 namespace Symfony\UX\Notify\DependencyInjection;
 
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\UX\Notify\Twig\NotifyExtension as TwigNotifyExtension;
@@ -22,7 +24,7 @@ use Symfony\UX\Notify\Twig\NotifyRuntime;
  *
  * @internal
  */
-final class NotifyExtension extends ConfigurableExtension
+final class NotifyExtension extends ConfigurableExtension implements PrependExtensionInterface
 {
     /**
      * {@inheritdoc}
@@ -36,9 +38,24 @@ final class NotifyExtension extends ConfigurableExtension
         $container->register('notify.twig_runtime', NotifyRuntime::class)
             ->setArguments([
                 new Reference($config['mercure_hub']),
-                new Reference('webpack_encore.twig_stimulus_extension'),
+                new Reference('stimulus.helper'),
             ])
             ->addTag('twig.runtime')
         ;
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        if (!interface_exists(AssetMapperInterface::class)) {
+            return;
+        }
+
+        $container->prependExtensionConfig('framework', [
+            'asset_mapper' => [
+                'paths' => [
+                    __DIR__.'/../../assets/dist' => '@symfony/ux-notify',
+                ],
+            ],
+        ]);
     }
 }

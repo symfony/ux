@@ -17,6 +17,9 @@
                     "@symfony/ux-live-component/styles/live.css": true
                 }
             }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0"
         }
     },
     "dependencies": {

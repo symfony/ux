@@ -75,15 +75,6 @@ jobs:
               with:
                   php-version: '7.2'
 
-            - name: Chartjs Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Chartjs
-                  dependency-versions: lowest
-            - name: Chartjs Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/Chartjs
-
             - name: Cropperjs Dependencies
               uses: ramsey/composer-install@v2
               with:
@@ -111,24 +102,6 @@ jobs:
               run: php vendor/bin/simple-phpunit
               working-directory: src/LazyImage
 
-            - name: React Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/React
-                  dependency-versions: lowest
-            - name: React Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/React
-
-            - name: Svelte Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Svelte
-                  dependency-versions: lowest
-            - name: Svelte Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/Svelte
-
     tests-php8-low-deps:
         runs-on: ubuntu-latest
         steps:
@@ -142,6 +115,8 @@ jobs:
               with:
                   working-directory: src/TwigComponent
                   dependency-versions: lowest
+                  # needed for php 8.0 to skip symfony/stimulus-bundle
+                  composer-options: "--ignore-platform-reqs"
             - name: TwigComponent Tests
               run: php vendor/bin/simple-phpunit
               working-directory: src/TwigComponent
@@ -173,22 +148,28 @@ jobs:
               run: php vendor/bin/simple-phpunit
               working-directory: src/Translator
 
+            - name: StimulusBundle Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                working-directory: src/StimulusBundle
+                dependency-versions: lowest
+            - name: StimulusBundle Tests
+              working-directory: src/StimulusBundle
+              run: php vendor/bin/simple-phpunit
+
     tests-php-high-deps:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
+
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.0'
-            - run: php .github/build-packages.php
 
-            - name: Chartjs Dependencies
+            - name: Install root Dependencies
               uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Chartjs
-            - name: Chartjs Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/Chartjs
+
+            - run: php .github/build-packages.php
 
             - name: Cropperjs Dependencies
               uses: ramsey/composer-install@v2
@@ -214,28 +195,12 @@ jobs:
               run: php vendor/bin/simple-phpunit
               working-directory: src/LazyImage
 
-            - name: TwigComponent Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/TwigComponent
-            - name: TwigComponent Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/TwigComponent
-
             - name: LiveComponent Dependencies
               uses: ramsey/composer-install@v2
               with:
                   working-directory: src/LiveComponent
             - name: LiveComponent Tests
               working-directory: src/LiveComponent
-              run: php vendor/bin/simple-phpunit
-
-            - name: React Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/React
-            - name: React Tests
-              working-directory: src/React
               run: php vendor/bin/simple-phpunit
 
             - name: Autocomplete Dependencies
@@ -246,22 +211,27 @@ jobs:
               working-directory: src/Autocomplete
               run: php vendor/bin/simple-phpunit
 
-            - name: Svelte Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                working-directory: src/Svelte
-            - name: Svelte Tests
-              working-directory: src/Svelte
-              run: php vendor/bin/simple-phpunit
-
     tests-php81-high-deps:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@master
+
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.1'
+
+            - name: Install root Dependencies
+              uses: ramsey/composer-install@v2
+
             - run: php .github/build-packages.php
+
+            - name: Chartjs Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/Chartjs
+            - name: Chartjs Tests
+              working-directory: src/Chartjs
+              run: php vendor/bin/simple-phpunit
 
             - name: Notify Dependencies
               uses: ramsey/composer-install@v2
@@ -271,6 +241,32 @@ jobs:
               working-directory: src/Notify
               run: php vendor/bin/simple-phpunit
 
+            - name: React Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/React
+                  dependency-versions: lowest
+            - name: React Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/React
+
+            - name: StimulusBundle Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                working-directory: src/StimulusBundle
+            - name: StimulusBundle Tests
+              working-directory: src/StimulusBundle
+              run: php vendor/bin/simple-phpunit
+
+            - name: Svelte Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/Svelte
+                  dependency-versions: lowest
+            - name: Svelte Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/Svelte
+
             - name: Translator Dependencies
               uses: ramsey/composer-install@v2
               with:
@@ -278,6 +274,23 @@ jobs:
             - name: Translator Tests
               working-directory: src/Translator
               run: php vendor/bin/simple-phpunit
+
+            - name: TwigComponent Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/TwigComponent
+            - name: TwigComponent Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/TwigComponent
+
+            - name: Vue Dependencies
+              uses: ramsey/composer-install@v2
+              with:
+                  working-directory: src/Vue
+                  dependency-versions: lowest
+            - name: Vue Tests
+              run: php vendor/bin/simple-phpunit
+              working-directory: src/Vue
 
     tests-js:
         runs-on: ubuntu-latest

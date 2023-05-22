@@ -12,8 +12,10 @@
 namespace Symfony\UX\Cropperjs\DependencyInjection;
 
 use Intervention\Image\ImageManager;
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\UX\Cropperjs\Factory\Cropper;
@@ -25,7 +27,7 @@ use Symfony\UX\Cropperjs\Form\CropperType;
  *
  * @internal
  */
-class CropperjsExtension extends Extension
+class CropperjsExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -47,5 +49,20 @@ class CropperjsExtension extends Extension
         ;
 
         $container->setAlias(CropperInterface::class, 'cropper')->setPublic(false);
+    }
+
+    public function prepend(ContainerBuilder $container)
+    {
+        if (!interface_exists(AssetMapperInterface::class)) {
+            return;
+        }
+
+        $container->prependExtensionConfig('framework', [
+            'asset_mapper' => [
+                'paths' => [
+                    __DIR__.'/../../assets/dist' => '@symfony/ux-cropperjs',
+                ],
+            ],
+        ]);
     }
 }

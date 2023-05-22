@@ -1,0 +1,11 @@
+{
+    "symfony": {
+        "controllers": {
+            "hello_controller": {
+                "main": "dist/package-hello-controller.js",
+                "fetch": "eager",
+                "enabled": true
+            }
+        }
+    }
+}

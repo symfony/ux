@@ -12,9 +12,6 @@
 namespace Symfony\UX\Notify\Tests;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpKernel\Kernel;
-use Symfony\UX\Notify\Tests\Kernel\EmptyAppKernel;
-use Symfony\UX\Notify\Tests\Kernel\FrameworkAppKernel;
 use Symfony\UX\Notify\Tests\Kernel\TwigAppKernel;
 
 /**
@@ -24,22 +21,10 @@ use Symfony\UX\Notify\Tests\Kernel\TwigAppKernel;
  */
 class NotifyBundleTest extends TestCase
 {
-    /**
-     * @dataProvider provideKernels
-     */
-    public function testBootKernel(Kernel $kernel)
+    public function testBootKernel()
     {
+        $kernel = new TwigAppKernel('test', true);
         $kernel->boot();
         $this->assertArrayHasKey('NotifyBundle', $kernel->getBundles());
-    }
-
-    /**
-     * @return iterable<Kernel>
-     */
-    public function provideKernels(): iterable
-    {
-        yield 'empty' => [new EmptyAppKernel('test', true)];
-        yield 'framework' => [new FrameworkAppKernel('test', true)];
-        yield 'twig' => [new TwigAppKernel('test', true)];
     }
 }

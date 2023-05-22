@@ -34,7 +34,8 @@
     "require-dev": {
         "doctrine/doctrine-bundle": "^2.4",
         "doctrine/orm": "^2.9",
-        "mtdowling/jmespath.php": "2.6.x-dev",
+        "fakerphp/faker": "^1.22",
+        "mtdowling/jmespath.php": "^2.6",
         "symfony/form": "^5.4|^6.0",
         "symfony/framework-bundle": "^5.4|^6.0",
         "symfony/maker-bundle": "^1.40",
@@ -45,7 +46,7 @@
         "symfony/twig-bundle": "^5.4|^6.0",
         "symfony/uid": "^5.4|^6.0",
         "zenstruck/browser": "^1.1",
-        "zenstruck/foundry": "^1.19"
+        "zenstruck/foundry": "^1.32"
     },
     "conflict": {
         "doctrine/orm": "2.9.0 || 2.9.1"

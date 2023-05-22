@@ -34,8 +34,8 @@
         "symfony/http-kernel": "^5.4|^6.0",
         "symfony/mercure-bundle": "^0.3.4",
         "symfony/mercure-notifier": "^5.4|^6.0",
-        "symfony/twig-bundle": "^5.4|^6.0",
-        "symfony/webpack-encore-bundle": "^1.11"
+        "symfony/stimulus-bundle": "^2.9",
+        "symfony/twig-bundle": "^5.4|^6.0"
     },
     "require-dev": {
         "symfony/framework-bundle": "^5.4|^6.0",

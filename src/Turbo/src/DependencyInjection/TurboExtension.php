@@ -14,10 +14,12 @@ namespace Symfony\UX\Turbo\DependencyInjection;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
@@ -26,7 +28,7 @@ use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
  */
-final class TurboExtension extends Extension
+final class TurboExtension extends Extension implements PrependExtensionInterface
 {
     /**
      * @param array<string, array> $configs
@@ -87,5 +89,23 @@ final class TurboExtension extends Extension
         if (!class_exists(DoctrineBundle::class) || !interface_exists(EntityManagerInterface::class)) {
             throw new InvalidConfigurationException('You cannot use the Doctrine ORM integration as the Doctrine bundle is not installed. Try running "composer require symfony/orm-pack".');
         }
+    }
+
+    public function prepend(ContainerBuilder $container): void
+    {
+        if (!interface_exists(AssetMapperInterface::class)) {
+            return;
+        }
+
+        $container->prependExtensionConfig('framework', [
+            'asset_mapper' => [
+                'paths' => [
+                    __DIR__.'/../../assets/dist' => '@symfony/ux-turbo',
+                ],
+                'importmap_script_attributes' => [
+                    'data-turbo-track' => 'reload',
+                ],
+            ],
+        ]);
     }
 }

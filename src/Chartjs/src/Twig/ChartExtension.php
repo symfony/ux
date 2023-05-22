@@ -12,9 +12,8 @@
 namespace Symfony\UX\Chartjs\Twig;
 
 use Symfony\UX\Chartjs\Model\Chart;
-use Symfony\WebpackEncoreBundle\Dto\StimulusControllersDto;
+use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
-use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -27,19 +26,27 @@ class ChartExtension extends AbstractExtension
 {
     private $stimulus;
 
-    public function __construct(StimulusTwigExtension $stimulus)
+    /**
+     * @param $stimulus StimulusHelper
+     */
+    public function __construct(StimulusHelper|StimulusTwigExtension $stimulus)
     {
+        if ($stimulus instanceof StimulusTwigExtension) {
+            trigger_deprecation('symfony/ux-chartjs', '2.9', 'Passing an instance of "%s" to "%s" is deprecated, pass an instance of "%s" instead.', StimulusTwigExtension::class, __CLASS__, StimulusHelper::class);
+            $stimulus = new StimulusHelper(null);
+        }
+
         $this->stimulus = $stimulus;
     }
 
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('render_chart', [$this, 'renderChart'], ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('render_chart', [$this, 'renderChart'], ['is_safe' => ['html']]),
         ];
     }
 
-    public function renderChart(Environment $env, Chart $chart, array $attributes = []): string
+    public function renderChart(Chart $chart, array $attributes = []): string
     {
         $chart->setAttributes(array_merge($chart->getAttributes(), $attributes));
 
@@ -49,15 +56,9 @@ class ChartExtension extends AbstractExtension
         }
         $controllers['@symfony/ux-chartjs/chart'] = ['view' => $chart->createView()];
 
-        if (class_exists(StimulusControllersDto::class)) {
-            $dto = new StimulusControllersDto($env);
-            foreach ($controllers as $name => $controllerValues) {
-                $dto->addController($name, $controllerValues);
-            }
-
-            $html = '<canvas '.$dto.' ';
-        } else {
-            $html = '<canvas '.$this->stimulus->renderStimulusController($env, $controllers).' ';
+        $stimulusAttributes = $this->stimulus->createStimulusAttributes();
+        foreach ($controllers as $name => $controllerValues) {
+            $stimulusAttributes->addController($name, $controllerValues);
         }
 
         foreach ($chart->getAttributes() as $name => $value) {
@@ -66,12 +67,12 @@ class ChartExtension extends AbstractExtension
             }
 
             if (true === $value) {
-                $html .= $name.'="'.$name.'" ';
+                $stimulusAttributes->addAttribute($name, $name);
             } elseif (false !== $value) {
-                $html .= $name.'="'.$value.'" ';
+                $stimulusAttributes->addAttribute($name, $value);
             }
         }
 
-        return trim($html).'></canvas>';
+        return sprintf('<canvas %s></canvas>', $stimulusAttributes);
     }
 }
