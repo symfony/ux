@@ -4,6 +4,9 @@
     "main": "dist/live_controller.js",
     "types": "dist/live_controller.d.ts",
     "version": "1.0.0",
+    "config": {
+        "css_source": "styles/live.css"
+    },
     "license": "MIT",
     "symfony": {
         "controllers": {
@@ -14,7 +17,7 @@
                 "fetch": "eager",
                 "enabled": true,
                 "autoimport": {
-                    "@symfony/ux-live-component/styles/live.css": true
+                    "@symfony/ux-live-component/dist/live.min.css": true
                 }
             }
         },

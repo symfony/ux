@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PackageList from '../components/PackageList';
+import PackageList from '../components/PackageList.js';
 
 export default class extends Component {
     constructor() {

@@ -15,6 +15,11 @@ Then, install this bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-notify
 
+If you're using WebpackEncore, install your assets and restart Encore. This is
+not needed if you're using AssetMapper:
+
+.. code-block:: terminal
+
     # Don't forget to install the JavaScript dependencies as well and compile
     $ npm install --force
     $ npm run watch
@@ -22,9 +27,6 @@ Then, install this bundle using Composer and Symfony Flex:
     # or use yarn
     $ yarn install --force
     $ yarn watch
-
-Also make sure you have at least version 3.0 of
-`@symfony/stimulus-bridge`_ in your ``package.json`` file.
 
 Usage
 -----
@@ -151,7 +153,6 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`the Symfony UX initiative`: https://symfony.com/ux
-.. _`@symfony/stimulus-bridge`: https://github.com/symfony/stimulus-bridge
 .. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
 .. _`Mercure`: https://mercure.rocks
 .. _`running Mercure server`: https://symfony.com/doc/current/mercure.html#running-a-mercure-hub

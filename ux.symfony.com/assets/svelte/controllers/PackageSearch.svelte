@@ -1,5 +1,5 @@
 <script>
-    import PackageList from '../components/PackageList';
+    import PackageList from '../components/PackageList.js';
 
     export let packages = [];
     let search = '';

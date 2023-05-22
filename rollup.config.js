@@ -74,6 +74,10 @@ const peerDependencies = [
 if (file.includes('StimulusBundle/assets/src/loader.ts')) {
     peerDependencies.push('./controllers.js');
 }
+// React, Vue
+if (file.includes('assets/src/loader.ts')) {
+    peerDependencies.push('./components.js');
+}
 
 module.exports = {
     input: file,

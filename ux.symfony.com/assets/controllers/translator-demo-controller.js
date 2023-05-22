@@ -10,7 +10,7 @@ import {
     PUBLISHED_AT,
     PROGRESS,
     VALUE_OF_OBJECT
-} from '../translator';
+} from '../translator.js';
 
 import hljs from 'highlight.js/lib/core';
 import javascript from 'highlight.js/lib/languages/javascript';
@@ -67,14 +67,14 @@ export default class extends Controller {
 
     render() {
         this.helloCodeTarget.innerHTML =     highlight({ code: `import { trans, HELLO } from '../translator';
-        
+
 trans(HELLO)` });
         this.helloOutputTarget.textContent = trans(HELLO);
 
         this.sayHelloCodeTarget.innerHTML = highlight({
             code: `import { trans, SAY_HELLO } from '../translator';
-        
-trans(SAY_HELLO, { 
+
+trans(SAY_HELLO, {
     name: ${this.#quoteValue(this.sayHelloNameInputTarget.value)}
 })`
         });
@@ -84,10 +84,10 @@ trans(SAY_HELLO, {
 
         this.invitationTitleCodeTarget.innerHTML = highlight({
             code: `import { trans, INVITATION_TITLE } from '../translator';
-        
-trans(INVITATION_TITLE, { 
+
+trans(INVITATION_TITLE, {
     organizer_gender: ${this.#quoteValue(this.invitationTitleOrganizationGenderInputTarget.value)},
-    organizer_name: ${this.#quoteValue(this.invitationTitleOrganizationNameInputTarget.value)}, 
+    organizer_name: ${this.#quoteValue(this.invitationTitleOrganizationNameInputTarget.value)},
 })`
         }) ;
         this.invitationTitleOutputTarget.textContent = trans(INVITATION_TITLE, {
@@ -97,8 +97,8 @@ trans(INVITATION_TITLE, {
 
         this.numOfApplesCodeTarget.innerHTML = highlight({
             code: `import { trans, NUM_OF_APPLES } from '../translator';
-        
-trans(NUM_OF_APPLES, { 
+
+trans(NUM_OF_APPLES, {
     apples: ${this.numOfApplesCountInputTarget.value}
 })`
         });
@@ -108,8 +108,8 @@ trans(NUM_OF_APPLES, {
 
         this.finishPlaceCodeTarget.innerHTML = highlight({
             code: `import { trans, FINISH_PLACE } from '../translator';
-        
-trans(FINISH_PLACE, { 
+
+trans(FINISH_PLACE, {
     place: ${this.finishPlacePlaceInputTarget.value}
 })`
         });
@@ -119,8 +119,8 @@ trans(FINISH_PLACE, {
 
         this.publishedAtCodeTarget.innerHTML = highlight({
             code: `import { trans, PUBLISHED_AT } from '../translator';
-        
-trans(PUBLISHED_AT, { 
+
+trans(PUBLISHED_AT, {
     publication_date: new Date('${this.publishedAtDateInputTarget.value}')
 })`
         });
@@ -130,8 +130,8 @@ trans(PUBLISHED_AT, {
 
         this.progressAtCodeTarget.innerHTML = highlight({
             code: `import { trans, PROGRESS } from '../translator';
-        
-trans(PROGRESS, { 
+
+trans(PROGRESS, {
     progress: ${this.progressAtProgressInputTarget.value / 100},
 })`
         });
@@ -141,8 +141,8 @@ trans(PROGRESS, {
 
         this.valueOfObjectCodeTarget.innerHTML = highlight({
             code: `import { trans, VALUE_OF_OBJECT } from '../translator';
-        
-trans(VALUE_OF_OBJECT, { 
+
+trans(VALUE_OF_OBJECT, {
     value: ${this.valueOfObjectValueInputTarget.value}
 })`
         });

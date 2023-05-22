@@ -21,7 +21,7 @@ class CropperController extends AbstractController
 
         $form = $this->createFormBuilder(['crop' => $crop])
             ->add('crop', CropperType::class, [
-                'public_url' => $package->getUrl('/build/images/large.jpg'),
+                'public_url' => $package->getUrl('images/large.jpg'),
                 'cropper_options' => [
                     'aspectRatio' => 4 / 3,
                     'preview' => '#cropper-preview',

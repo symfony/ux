@@ -48,6 +48,7 @@ class UxTranslatorExtension extends Extension implements PrependExtensionInterfa
             'asset_mapper' => [
                 'paths' => [
                     __DIR__.'/../../assets/dist' => '@symfony/ux-translator',
+                    '%kernel.project_dir%/var/translations' => 'var/translations',
                 ],
             ],
         ]);

@@ -235,8 +235,20 @@
     "stella-maris/clock": {
         "version": "0.1.4"
     },
-    "symfony/asset": {
-        "version": "v6.0.7"
+    "symfony/asset-mapper": {
+        "version": "6.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "6.3",
+            "ref": "445f56412ec437dc0f9f2c31716c867d207bcd62"
+        },
+        "files": [
+            "assets/app.js",
+            "assets/styles/app.css",
+            "config/packages/asset_mapper.yaml",
+            "importmap.php"
+        ]
     },
     "symfony/browser-kit": {
         "version": "v6.0.3"
@@ -477,6 +489,20 @@
     "symfony/service-contracts": {
         "version": "v3.0.1"
     },
+    "symfony/stimulus-bundle": {
+        "version": "2.9999999",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.9",
+            "ref": "b6d49e237d6c2c106da0fc283dae268b31534bb4"
+        },
+        "files": [
+            "assets/bootstrap.js",
+            "assets/controllers.json",
+            "assets/controllers/hello_controller.js"
+        ]
+    },
     "symfony/stopwatch": {
         "version": "v6.0.5"
     },
@@ -582,6 +608,9 @@
     "symfony/ux-twig-component": {
         "version": "v2.1.0"
     },
+    "symfony/ux-typed": {
+        "version": "2.x-dev"
+    },
     "symfony/ux-vue": {
         "version": "2.x-dev"
     },
@@ -617,25 +646,6 @@
         "files": [
             "config/packages/web_profiler.yaml",
             "config/routes/web_profiler.yaml"
-        ]
-    },
-    "symfony/webpack-encore-bundle": {
-        "version": "1.16",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "main",
-            "version": "1.10",
-            "ref": "5878c7c28468ca0fdce2497a04cfc66bab0dc3ef"
-        },
-        "files": [
-            "assets/app.js",
-            "assets/bootstrap.js",
-            "assets/controllers.json",
-            "assets/controllers/hello_controller.js",
-            "assets/styles/app.css",
-            "config/packages/webpack_encore.yaml",
-            "package.json",
-            "webpack.config.js"
         ]
     },
     "symfony/yaml": {

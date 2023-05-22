@@ -1,0 +1,1 @@
+Other file - not a React file.

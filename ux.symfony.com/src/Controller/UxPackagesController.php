@@ -31,8 +31,10 @@ class UxPackagesController extends AbstractController
     #[Route('/lazy-image', name: 'app_lazy_image')]
     public function lazyImage(): Response
     {
+        $legosFilePath = $this->getParameter('kernel.project_dir').'/assets/images/legos.jpg';
+
         return $this->render('ux_packages/lazy-image.html.twig', [
-            'publicDir' => $this->getParameter('kernel.project_dir').'/public',
+            'legosFilePath' => $legosFilePath,
         ]);
     }
 
@@ -157,7 +159,7 @@ class UxPackagesController extends AbstractController
         return array_map(function (array $data) use ($assetPackages) {
             $data['url'] = $this->generateUrl($data['route']);
             unset($data['route']);
-            $data['imageUrl'] = $assetPackages->getUrl('build/images/'.$data['imageFilename']);
+            $data['imageUrl'] = $assetPackages->getUrl('images/'.$data['imageFilename']);
 
             return $data;
         }, $packagesData);
