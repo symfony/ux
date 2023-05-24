@@ -55,16 +55,13 @@ final class Broadcaster implements BroadcasterInterface
         }
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function broadcast(object $entity, string $action, array $options): void
     {
         if (isset($options['transports']) && !\in_array($this->name, (array) $options['transports'], true)) {
             return;
         }
 
-        $entityClass = \get_class($entity);
+        $entityClass = $entity::class;
 
         if (!isset($options['rendered_action'])) {
             throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s" as option "rendered_action" is missing.', $entityClass));
@@ -82,7 +79,7 @@ final class Broadcaster implements BroadcasterInterface
                 continue;
             }
 
-            if (0 !== strpos($topic, '@=')) {
+            if (!str_starts_with($topic, '@=')) {
                 $topics[] = $topic;
                 continue;
             }

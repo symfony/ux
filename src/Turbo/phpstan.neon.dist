@@ -2,7 +2,7 @@ parameters:
 	level: 8
 	paths:
 		- .
-	excludes_analyse:
+	excludePaths:
 		- vendor/*
 		- tests/app/var/*
 		# The Symfony Configuration API isn't good enough to be analysed

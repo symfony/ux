@@ -36,9 +36,6 @@ final class TwigBroadcaster implements BroadcasterInterface
         $this->idAccessor = $idAccessor ?? new IdAccessor();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function broadcast(object $entity, string $action, array $options): void
     {
         if (!isset($options['id']) && null !== $id = $this->idAccessor->getEntityId($entity)) {
@@ -46,9 +43,9 @@ final class TwigBroadcaster implements BroadcasterInterface
         }
 
         if (null === $template = $options['template'] ?? null) {
-            $template = \get_class($entity);
+            $template = $entity::class;
             foreach ($this->templatePrefixes as $namespace => $prefix) {
-                if (0 === strpos($template, $namespace)) {
+                if (str_starts_with($template, $namespace)) {
                     $template = substr_replace($template, $prefix, 0, \strlen($namespace));
                     break;
                 }

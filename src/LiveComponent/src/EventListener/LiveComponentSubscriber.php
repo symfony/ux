@@ -110,9 +110,9 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         }
 
         if (
-            $this->container->has(CsrfTokenManagerInterface::class) &&
-            $metadata->get('csrf') &&
-            !$this->container->get(CsrfTokenManagerInterface::class)->isTokenValid(new CsrfToken(LiveControllerAttributesCreator::getCsrfTokeName($componentName), $request->headers->get('X-CSRF-TOKEN')))) {
+            $this->container->has(CsrfTokenManagerInterface::class)
+            && $metadata->get('csrf')
+            && !$this->container->get(CsrfTokenManagerInterface::class)->isTokenValid(new CsrfToken(LiveControllerAttributesCreator::getCsrfTokeName($componentName), $request->headers->get('X-CSRF-TOKEN')))) {
             throw new BadRequestHttpException('Invalid CSRF token.');
         }
 
@@ -161,7 +161,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         }
 
         if (!$request->attributes->get('_component_default_action', false) && !AsLiveComponent::isActionAllowed($component, $action)) {
-            throw new NotFoundHttpException(sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveAction attribute above it.', $action, \get_class($component)));
+            throw new NotFoundHttpException(sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveAction attribute above it.', $action, $component::class));
         }
 
         /*

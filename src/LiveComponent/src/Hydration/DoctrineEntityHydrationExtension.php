@@ -54,7 +54,7 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
     public function dehydrate(object $object): mixed
     {
         $id = $this
-            ->objectManagerFor($class = \get_class($object))
+            ->objectManagerFor($class = $object::class)
             ->getClassMetadata($class)
             ->getIdentifierValues($object)
         ;

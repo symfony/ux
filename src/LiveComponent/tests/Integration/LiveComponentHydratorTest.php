@@ -137,7 +137,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     /**
      * @dataProvider provideDehydrationHydrationTests
      */
-    public function testCanDehydrateAndHydrateComponentWithTestCases(callable $testFactory, ?int $minPhpVersion = null): void
+    public function testCanDehydrateAndHydrateComponentWithTestCases(callable $testFactory, int $minPhpVersion = null): void
     {
         $this->executeHydrationTestCase($testFactory, $minPhpVersion);
     }

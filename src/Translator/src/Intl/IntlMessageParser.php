@@ -51,8 +51,8 @@ class IntlMessageParser
             } elseif (125 === $char /* `}` */ && $nestingLevel > 0) {
                 break;
             } elseif (
-                35 === $char /* `#` */ &&
-                ('plural' === $parentArgType || 'selectordinal' === $parentArgType)
+                35 === $char /* `#` */
+                && ('plural' === $parentArgType || 'selectordinal' === $parentArgType)
             ) {
                 $position = clone $this->position;
                 $this->bump();
@@ -61,9 +61,9 @@ class IntlMessageParser
                     'location' => new Location($position, clone $this->position),
                 ];
             } elseif (
-                60 === $char /* `<` */ &&
-                !$this->ignoreTag &&
-                47 === $this->peek() // char code for '/'
+                60 === $char /* `<` */
+                && !$this->ignoreTag
+                && 47 === $this->peek() // char code for '/'
             ) {
                 if ($expectingCloseTag) {
                     break;
@@ -74,9 +74,9 @@ class IntlMessageParser
                     );
                 }
             } elseif (
-                60 === $char /* `<` */ &&
-                !$this->ignoreTag &&
-                Utils::isAlpha($this->peek() || 0)
+                60 === $char /* `<` */
+                && !$this->ignoreTag
+                && Utils::isAlpha($this->peek() || 0)
             ) {
                 $result = $this->parseTag($nestingLevel, $parentArgType);
                 if ($result['err']) {
@@ -158,11 +158,11 @@ class IntlMessageParser
     private function tryParseLeftAngleBracket(): string|null
     {
         if (
-            !$this->isEOF() &&
-            60 === $this->char() /* `<` */ &&
-            ($this->ignoreTag ||
+            !$this->isEOF()
+            && 60 === $this->char() /* `<` */
+            && ($this->ignoreTag
                 // If at the opening tag or closing tag position, bail.
-                !Utils::isAlphaOrSlash($this->peek() || 0))
+                || !Utils::isAlphaOrSlash($this->peek() || 0))
         ) {
             $this->bump(); // `<`
 
@@ -245,11 +245,11 @@ class IntlMessageParser
         $ch = $this->char();
 
         if (
-            60 === $ch /* `<` */ ||
-            123 === $ch /* `{` */ ||
-            (35 === $ch /* `#` */ &&
-                ('plural' === $parentArgType || 'selectordinal' === $parentArgType)) ||
-            (125 === $ch /* `}` */ && $nestingLevel > 0)
+            60 === $ch /* `<` */
+            || 123 === $ch /* `{` */
+            || (35 === $ch /* `#` */
+                && ('plural' === $parentArgType || 'selectordinal' === $parentArgType))
+            || (125 === $ch /* `}` */ && $nestingLevel > 0)
         ) {
             return null;
         } else {

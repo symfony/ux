@@ -28,9 +28,6 @@ final class ImuxBroadcaster implements BroadcasterInterface
         $this->broadcasters = $broadcasters;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function broadcast(object $entity, string $action, array $options): void
     {
         foreach ($this->broadcasters as $broadcaster) {

@@ -60,7 +60,7 @@ class ControllersMapGenerator
             $name = str_replace('/', '--', $name);
 
             $asset = $this->assetMapper->getAssetFromSourcePath($file->getRealPath());
-            $isLazy = preg_match('/\/\*\s*stimulusFetch:\s*\'lazy\'\s*\*\//i', $asset->getContent());
+            $isLazy = preg_match('/\/\*\s*stimulusFetch:\s*\'lazy\'\s*\*\//i', $asset->content);
 
             $controllersMap[$name] = new MappedControllerAsset($asset, $isLazy);
         }
