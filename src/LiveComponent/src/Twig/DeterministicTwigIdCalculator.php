@@ -84,7 +84,7 @@ class DeterministicTwigIdCalculator
         foreach ($backtrace as $trace) {
             if (isset($trace['object']) && $trace['object'] instanceof Template) {
                 $currentClass = \get_class($trace['object']);
-                $isEmbedContainer = null === $templateClass ? false : 0 === strpos($templateClass, $currentClass);
+                $isEmbedContainer = null === $templateClass ? false : str_starts_with($templateClass, $currentClass);
                 // START CHANGE
                 // if statement not needed
                 // if (null === $this->name || ($this->name == $trace['object']->getTemplateName() && !$isEmbedContainer)) {

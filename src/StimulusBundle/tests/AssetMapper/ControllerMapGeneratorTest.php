@@ -36,11 +36,7 @@ class ControllerMapGeneratorTest extends TestCase
                     $logicalPath = substr($path, $assetsPosition + 1);
                 }
 
-                $mappedAsset = new MappedAsset($logicalPath);
-                $mappedAsset->setSourcePath($path);
-                $mappedAsset->setContent(file_get_contents($path));
-
-                return $mappedAsset;
+                return new MappedAsset($logicalPath, $path, content: file_get_contents($path));
             });
 
         $packageReader = new UxPackageReader(__DIR__.'/../fixtures');
@@ -72,16 +68,16 @@ class ControllerMapGeneratorTest extends TestCase
         ], $packageNames);
 
         $controllerSecond = $map['fake-vendor--ux-package1--controller-second'];
-        $this->assertSame('fake-vendor/ux-package1/package-controller-second.js', $controllerSecond->asset->getLogicalPath());
+        $this->assertSame('fake-vendor/ux-package1/package-controller-second.js', $controllerSecond->asset->logicalPath);
         // lazy from user's controller.json
         $this->assertTrue($controllerSecond->isLazy);
 
         $helloControllerFromPackage = $map['fake-vendor--ux-package2--hello-controller'];
-        $this->assertSame('fake-vendor/ux-package2/package-hello-controller.js', $helloControllerFromPackage->asset->getLogicalPath());
+        $this->assertSame('fake-vendor/ux-package2/package-hello-controller.js', $helloControllerFromPackage->asset->logicalPath);
         $this->assertFalse($helloControllerFromPackage->isLazy);
 
         $helloController = $map['hello'];
-        $this->assertStringContainsString('hello-controller.js override', file_get_contents($helloController->asset->getSourcePath()));
+        $this->assertStringContainsString('hello-controller.js override', file_get_contents($helloController->asset->sourcePath));
         $this->assertFalse($helloController->isLazy);
 
         // lazy from stimulusFetch comment

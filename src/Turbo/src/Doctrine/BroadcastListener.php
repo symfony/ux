@@ -31,20 +31,20 @@ final class BroadcastListener implements ResetInterface
     private $annotationReader;
 
     /**
-     * @var array<class-string, array[]>
+     * @var array<class-string, array<mixed>>
      */
     private $broadcastedClasses;
 
     /**
-     * @var \SplObjectStorage<object, array>
+     * @var \SplObjectStorage<object, array<mixed>>
      */
     private $createdEntities;
     /**
-     * @var \SplObjectStorage<object, array>
+     * @var \SplObjectStorage<object, array<mixed>>
      */
     private $updatedEntities;
     /**
-     * @var \SplObjectStorage<object, array>
+     * @var \SplObjectStorage<object, array<mixed>>
      */
     private $removedEntities;
 
@@ -94,7 +94,7 @@ final class BroadcastListener implements ResetInterface
         try {
             foreach ($this->createdEntities as $entity) {
                 $options = $this->createdEntities[$entity];
-                $id = $em->getClassMetadata(\get_class($entity))->getIdentifierValues($entity);
+                $id = $em->getClassMetadata($entity::class)->getIdentifierValues($entity);
                 foreach ($options as $option) {
                     $option['id'] = $id;
                     $this->broadcaster->broadcast($entity, Broadcast::ACTION_CREATE, $option);
@@ -126,7 +126,7 @@ final class BroadcastListener implements ResetInterface
 
     private function storeEntitiesToPublish(EntityManagerInterface $em, object $entity, string $property): void
     {
-        $class = \get_class($entity);
+        $class = $entity::class;
 
         if (!isset($this->broadcastedClasses[$class])) {
             $this->broadcastedClasses[$class] = [];

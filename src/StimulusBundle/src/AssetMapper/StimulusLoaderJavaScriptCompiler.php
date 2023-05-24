@@ -34,7 +34,7 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
 
     public function supports(MappedAsset $asset): bool
     {
-        return $asset->getSourcePath() === realpath(__DIR__.'/../../assets/dist/controllers.js');
+        return $asset->sourcePath === realpath(__DIR__.'/../../assets/dist/controllers.js');
     }
 
     public function compile(string $content, MappedAsset $asset, AssetMapperInterface $assetMapper): string
@@ -42,9 +42,9 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
         $importLines = [];
         $eagerControllerParts = [];
         $lazyControllers = [];
-        $loaderPublicPath = $asset->getPublicPathWithoutDigest();
+        $loaderPublicPath = $asset->publicPathWithoutDigest;
         foreach ($this->controllersMapGenerator->getControllersMap() as $name => $mappedControllerAsset) {
-            $controllerPublicPath = $mappedControllerAsset->asset->getPublicPathWithoutDigest();
+            $controllerPublicPath = $mappedControllerAsset->asset->publicPathWithoutDigest;
             $relativeImportPath = $this->createRelativePath($loaderPublicPath, $controllerPublicPath);
 
             /*

@@ -105,8 +105,7 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
 
     private function createAsset(string $publicPath): MappedAsset
     {
-        $asset = new MappedAsset(basename($publicPath));
-        $asset->setPublicPathWithoutDigest($publicPath);
+        $asset = new MappedAsset(basename($publicPath), publicPathWithoutDigest: $publicPath);
 
         return $asset;
     }

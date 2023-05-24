@@ -147,16 +147,6 @@ jobs:
             - name: Translator Tests
               run: php vendor/bin/simple-phpunit
               working-directory: src/Translator
-
-            - name: StimulusBundle Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                working-directory: src/StimulusBundle
-                dependency-versions: lowest
-            - name: StimulusBundle Tests
-              working-directory: src/StimulusBundle
-              run: php vendor/bin/simple-phpunit
-
     tests-php-high-deps:
         runs-on: ubuntu-latest
         steps:

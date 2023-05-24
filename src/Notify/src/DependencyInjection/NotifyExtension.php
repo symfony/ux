@@ -26,9 +26,6 @@ use Symfony\UX\Notify\Twig\NotifyRuntime;
  */
 final class NotifyExtension extends ConfigurableExtension implements PrependExtensionInterface
 {
-    /**
-     * {@inheritdoc}
-     */
     public function loadInternal(array $config, ContainerBuilder $container)
     {
         $container->register('notify.twig_extension', TwigNotifyExtension::class)

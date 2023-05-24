@@ -12,6 +12,7 @@ declare(strict_types=1);
 namespace Symfony\UX\StimulusBundle\DependencyInjection;
 
 use Symfony\Component\AssetMapper\AssetMapperInterface;
+use Symfony\Component\AssetMapper\Compiler\AssetCompilerPathResolverTrait;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -39,6 +40,11 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
         $container->findDefinition('stimulus.asset_mapper.controllers_map_generator')
             ->replaceArgument(2, $config['controller_paths'])
             ->replaceArgument(3, $config['controllers_json']);
+
+        // on older versions, the presence of this service if the trait doesn't exist causes an error
+        if (!trait_exists(AssetCompilerPathResolverTrait::class)) {
+            $container->removeDefinition('stimulus.asset_mapper.loader_javascript_compiler');
+        }
     }
 
     public function prepend(ContainerBuilder $container)

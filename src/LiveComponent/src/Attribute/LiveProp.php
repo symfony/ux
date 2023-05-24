@@ -67,12 +67,12 @@ final class LiveProp
      */
     public function __construct(
         bool|array $writable = false,
-        ?string $hydrateWith = null,
-        ?string $dehydrateWith = null,
+        string $hydrateWith = null,
+        string $dehydrateWith = null,
         bool $useSerializerForHydration = false,
         array $serializationContext = [],
-        ?string $fieldName = null,
-        ?string $format = null,
+        string $fieldName = null,
+        string $format = null,
         bool $updateFromParent = false
     ) {
         $this->writable = $writable;

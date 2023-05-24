@@ -31,7 +31,7 @@ class IdAccessor
      */
     public function getEntityId(object $entity): ?array
     {
-        $entityClass = \get_class($entity);
+        $entityClass = $entity::class;
 
         if ($this->doctrine && $em = $this->doctrine->getManagerForClass($entityClass)) {
             return $em->getClassMetadata($entityClass)->getIdentifierValues($entity);

@@ -34,15 +34,15 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $formType = $builder->getType()->getInnerType();
-        $attribute = AsEntityAutocompleteField::getInstance(\get_class($formType));
+        $attribute = AsEntityAutocompleteField::getInstance($formType::class);
 
         if (!$attribute && empty($options['autocomplete_url'])) {
-            throw new \LogicException(sprintf('You must either provide your own autocomplete_url, or add #[AsEntityAutocompleteField] attribute to %s.', \get_class($formType)));
+            throw new \LogicException(sprintf('You must either provide your own autocomplete_url, or add #[AsEntityAutocompleteField] attribute to %s.', $formType::class));
         }
 
         // Use the provided URL, or auto-generate from the provided alias
         $autocompleteUrl = $options['autocomplete_url'] ?? $this->urlGenerator->generate($attribute->getRoute(), [
-            'alias' => $attribute->getAlias() ?: AsEntityAutocompleteField::shortName(\get_class($formType)),
+            'alias' => $attribute->getAlias() ?: AsEntityAutocompleteField::shortName($formType::class),
         ]);
 
         $builder

@@ -25,9 +25,9 @@ use Twig\Environment;
  */
 final class TurboStreamListenRenderer implements TurboStreamListenRendererInterface
 {
-    private $hub;
-    private $stimulusHelper;
-    private $idAccessor;
+    private HubInterface $hub;
+    private StimulusHelper $stimulusHelper;
+    private IdAccessor $idAccessor;
 
     /**
      * @param $stimulus StimulusHelper
@@ -42,13 +42,14 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
 
             $stimulus = new StimulusHelper(null);
         }
+        /* @var StimulusHelper $stimulus */
         $this->stimulusHelper = $stimulus;
     }
 
     public function renderTurboStreamListen(Environment $env, $topic): string
     {
         if (\is_object($topic)) {
-            $class = \get_class($topic);
+            $class = $topic::class;
 
             if (!$id = $this->idAccessor->getEntityId($topic)) {
                 throw new \LogicException(sprintf('Cannot listen to entity of class "%s" as the PropertyAccess component is not installed. Try running "composer require symfony/property-access".', $class));

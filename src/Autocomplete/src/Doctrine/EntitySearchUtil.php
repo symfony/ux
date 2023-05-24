@@ -99,9 +99,9 @@ class EntitySearchUtil
 
             // this complex condition is needed to avoid issues on PostgreSQL databases
             if (
-                ($isSmallIntegerProperty && $isSmallIntegerQuery) ||
-                ($isIntegerProperty && $isIntegerQuery) ||
-                ($isNumericProperty && $isNumericQuery)
+                ($isSmallIntegerProperty && $isSmallIntegerQuery)
+                || ($isIntegerProperty && $isIntegerQuery)
+                || ($isNumericProperty && $isNumericQuery)
             ) {
                 $expressions[] = $queryBuilder->expr()->eq(sprintf('%s.%s', $entityName, $propertyName), ':query_for_numbers');
                 $queryBuilder->setParameter('query_for_numbers', $dqlParameters['numeric_query']);

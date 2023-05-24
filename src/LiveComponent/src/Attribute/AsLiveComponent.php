@@ -22,8 +22,8 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 final class AsLiveComponent extends AsTwigComponent
 {
     public function __construct(
-        ?string $name = null,
-        ?string $template = null,
+        string $name = null,
+        string $template = null,
         private ?string $defaultAction = null,
         bool $exposePublicProps = true,
         string $attributesVar = 'attributes',

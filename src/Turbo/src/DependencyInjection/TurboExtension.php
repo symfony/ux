@@ -30,9 +30,6 @@ use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
  */
 final class TurboExtension extends Extension implements PrependExtensionInterface
 {
-    /**
-     * @param array<string, array> $configs
-     */
     public function load(array $configs, ContainerBuilder $container): void
     {
         $configuration = new Configuration();
