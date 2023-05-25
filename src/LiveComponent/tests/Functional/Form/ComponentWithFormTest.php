@@ -111,7 +111,7 @@ class ComponentWithFormTest extends KernelTestCase
         $browser
             // empty the collection
             ->post('/_components/form_with_collection_type/removeComment', [
-                'body' => json_encode(['props' => $dehydratedProps, 'args' => ['index' => '1']]),
+                'body' => ['data' => json_encode(['props' => $dehydratedProps, 'args' => ['index' => '1']])],
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
