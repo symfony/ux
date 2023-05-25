@@ -359,7 +359,7 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
     {# success.stream.html.twig #}
     <turbo-stream action="replace" target="my_div_id">
         <template>
-            The element having the id "my_div_id" will be replace by this block, without a full page reload!
+            The element having the id "my_div_id" will be replaced by this block, without a full page reload!
 
             <div>The task "{{ task }}" has been created!</div>
         </template>
