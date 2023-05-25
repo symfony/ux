@@ -272,7 +272,7 @@ Add an input to the template:
     <div {{ attributes }}>
         <input type="number" data-model="max">
 
-        Generating a number between 9 and {{ max }}
+        Generating a number between 0 and {{ max }}
         <strong>{{ this.randomNumber }}</strong>
     </div>
 
