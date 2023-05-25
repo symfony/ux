@@ -56,7 +56,7 @@ export default class Component {
     /** Actions that are waiting to be executed */
     private pendingActions: BackendAction[] = [];
     /** Files that are waiting to be sent */
-    private pendingFiles: {[key: string]: FileList} = {};
+    private pendingFiles: {[key: string]: HTMLInputElement} = {};
     /** Is a request waiting to be made? */
     private isRequestPending = false;
     /** Current "timeout" before the pending request should be sent. */
@@ -196,8 +196,8 @@ export default class Component {
         return promise;
     }
 
-    files(key: string, fileList: FileList): void {
-        this.pendingFiles[key] = fileList;
+    files(key: string, input: HTMLInputElement): void {
+        this.pendingFiles[key] = input;
     }
 
     render(): Promise<BackendResponse> {
@@ -358,18 +358,24 @@ export default class Component {
         // they are now "in sync" (with some exceptions noted inside)
         this.unsyncedInputsTracker.resetUnsyncedFields();
 
+        const filesToSend: {[key: string]: FileList} = {};
+        for(const [key, value] of Object.entries(this.pendingFiles)) {
+            if (value.files) {
+                filesToSend[key] = value.files;
+            }
+        }
+
         this.backendRequest = this.backend.makeRequest(
             this.valueStore.getOriginalProps(),
             this.pendingActions,
             this.valueStore.getDirtyProps(),
             this.getChildrenFingerprints(),
             this.valueStore.getUpdatedPropsFromParent(),
-            this.pendingFiles,
+            filesToSend,
         );
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
 
         this.pendingActions = [];
-        this.pendingFiles = {};
         this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = false;
 
@@ -377,6 +383,11 @@ export default class Component {
             this.backendRequest = null;
             const backendResponse = new BackendResponse(response);
             const html = await backendResponse.getBody();
+
+            // clear sent files inputs
+            for(const input of Object.values(this.pendingFiles)) {
+                input.value = '';
+            }
 
             // if the response does not contain a component, render as an error
             const headers = backendResponse.response.headers;

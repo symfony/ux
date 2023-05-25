@@ -41,7 +41,7 @@ export default class Component {
     set(model: string, value: any, reRender?: boolean, debounce?: number | boolean): Promise<BackendResponse>;
     getData(model: string): any;
     action(name: string, args?: any, debounce?: number | boolean): Promise<BackendResponse>;
-    files(key: string, fileList: FileList): void;
+    files(key: string, input: HTMLInputElement): void;
     render(): Promise<BackendResponse>;
     getUnsyncedModels(): string[];
     addChild(child: Component, modelBindings?: ModelBinding[]): void;

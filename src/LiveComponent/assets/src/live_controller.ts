@@ -66,7 +66,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         { event: 'change', callback: (event) => this.handleChangeEvent(event) },
         { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
     ];
-    private pendingFiles: { [key: string]: FileList } = {};
+    private pendingFiles: { [key: string]: HTMLInputElement } = {};
 
     static componentRegistry = new ComponentRegistry();
 
@@ -160,7 +160,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         let debounce: number | boolean = false;
 
         directives.forEach((directive) => {
-            let pendingFiles: { [key: string]: FileList } = {};
+            let pendingFiles: { [key: string]: HTMLInputElement } = {};
             const validModifiers: Map<string, (modifier: DirectiveModifier) => void> = new Map();
             validModifiers.set('prevent', () => {
                 event.preventDefault();
@@ -200,8 +200,10 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
                 );
             });
 
-            for (const [key, files] of Object.entries(pendingFiles)) {
-                this.component.files(key, files);
+            for (const [key, input] of Object.entries(pendingFiles)) {
+                if (input.files) {
+                    this.component.files(key, input);
+                }
                 delete this.pendingFiles[key];
             }
             this.component.action(directive.action, directive.named, debounce);
@@ -340,7 +342,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         if (element instanceof HTMLInputElement && element.type === 'file') {
             const key = element.name;
             if (element.files?.length) {
-                this.pendingFiles[key] = element.files;
+                this.pendingFiles[key] = element;
             } else if (this.pendingFiles[key]) {
                 delete this.pendingFiles[key];
             }

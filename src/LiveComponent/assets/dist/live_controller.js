@@ -1802,8 +1802,8 @@ class Component {
         this.debouncedStartRequest(debounce);
         return promise;
     }
-    files(key, fileList) {
-        this.pendingFiles[key] = fileList;
+    files(key, input) {
+        this.pendingFiles[key] = input;
     }
     render() {
         const promise = this.nextRequestPromise;
@@ -1904,16 +1904,24 @@ class Component {
         const thisPromiseResolve = this.nextRequestPromiseResolve;
         this.resetPromise();
         this.unsyncedInputsTracker.resetUnsyncedFields();
-        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints(), this.valueStore.getUpdatedPropsFromParent(), this.pendingFiles);
+        const filesToSend = {};
+        for (const [key, value] of Object.entries(this.pendingFiles)) {
+            if (value.files) {
+                filesToSend[key] = value.files;
+            }
+        }
+        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints(), this.valueStore.getUpdatedPropsFromParent(), filesToSend);
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
         this.pendingActions = [];
-        this.pendingFiles = {};
         this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = false;
         this.backendRequest.promise.then(async (response) => {
             this.backendRequest = null;
             const backendResponse = new BackendResponse(response);
             const html = await backendResponse.getBody();
+            for (const input of Object.values(this.pendingFiles)) {
+                input.value = '';
+            }
             const headers = backendResponse.response.headers;
             if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
                 const controls = { displayError: true };
@@ -2755,8 +2763,10 @@ class LiveControllerDefault extends Controller {
                 }
                 console.warn(`Unknown modifier ${modifier.name} in action "${rawAction}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
             });
-            for (const [key, files] of Object.entries(pendingFiles)) {
-                this.component.files(key, files);
+            for (const [key, input] of Object.entries(pendingFiles)) {
+                if (input.files) {
+                    this.component.files(key, input);
+                }
                 delete this.pendingFiles[key];
             }
             this.component.action(directive.action, directive.named, debounce);
@@ -2838,7 +2848,7 @@ class LiveControllerDefault extends Controller {
         if (element instanceof HTMLInputElement && element.type === 'file') {
             const key = element.name;
             if ((_a = element.files) === null || _a === void 0 ? void 0 : _a.length) {
-                this.pendingFiles[key] = element.files;
+                this.pendingFiles[key] = element;
             }
             else if (this.pendingFiles[key]) {
                 delete this.pendingFiles[key];
