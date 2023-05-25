@@ -369,6 +369,7 @@ export default class Component {
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
 
         this.pendingActions = [];
+        this.pendingFiles = {};
         this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = false;
 

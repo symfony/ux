@@ -1907,6 +1907,7 @@ class Component {
         this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints(), this.valueStore.getUpdatedPropsFromParent(), this.pendingFiles);
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
         this.pendingActions = [];
+        this.pendingFiles = {};
         this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = false;
         this.backendRequest.promise.then(async (response) => {
