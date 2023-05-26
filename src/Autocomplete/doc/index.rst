@@ -34,16 +34,29 @@ If you don't have Symfony Flex in your project:
 
     $ composer require symfony/ux-autocomplete
 
-    # Don't forget to install the JavaScript dependencies as well and compile
-    $ npm install @symfony/ux-autocomplete
     $ npm install tom-select
+    # or use yarn
+    $ yarn add tom-select
+
+Add ``@symfony/ux-autocomplete`` assets path in your ``package.json``
+
+.. code-block:: test
+
+     "devDependencies": {
+       "@symfony/ux-autocomplete": "file:vendor/symfony/ux-autocomplete/assets",
+     },
+     
+Don't forget to install the JavaScript dependencies as well and compile
+
+.. code-block:: terminal
+
+    $ npm install --force
     $ npm run watch
 
     # or use yarn
-    $ yarn add @symfony/ux-autocomplete
-    $ yarn add tom-select
+    $ yarn install --force
     $ yarn watch
-
+    
 Don't forget to add ``symfony/ux-autocomplete`` to your bundles list in ``config/bundles.php``
 
 Add the route config in ``config/routes/ux_autocomplete.yaml``
