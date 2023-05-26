@@ -16,7 +16,10 @@
         },
         "importmap": {
             "@hotwired/stimulus": "^3.0.0",
-            "vue/dist/vue.esm-bundler.js": "^3.0",
+            "vue": {
+                "package": "vue/dist/vue.esm-bundler.js",
+                "version": "^3.0"
+            },
             "@symfony/ux-vue": "path:dist/loader.js"
         }
     },
