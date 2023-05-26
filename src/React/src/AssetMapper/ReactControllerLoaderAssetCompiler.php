@@ -72,6 +72,10 @@ class ReactControllerLoaderAssetCompiler implements AssetCompilerInterface
             throw new \LogicException('The "symfony/finder" package is required to use ux-react with AssetMapper. Try running "composer require symfony/finder".');
         }
 
+        if (!file_exists($this->controllerPath)) {
+            return [];
+        }
+
         $finder = new Finder();
         $finder->in($this->controllerPath)
             ->files()

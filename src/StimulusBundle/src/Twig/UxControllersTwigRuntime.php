@@ -26,6 +26,9 @@ final class UxControllersTwigRuntime implements RuntimeExtensionInterface
     ) {
     }
 
+    /**
+     * Returns the CSS <link> tags for all "autoimport" entries in controllers.json.
+     */
     public function renderLinkTags(): string
     {
         $controllersFile = $this->controllersMapGenerator->getControllersJsonPath();
