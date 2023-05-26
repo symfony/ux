@@ -10,11 +10,14 @@
         <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
+            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:200,400,600|Playfair+Display:400,700i|Space+Mono|Ubuntu:400,700&display=swap">
+            {{ ux_controller_link_tags() }}
+            <link rel="stylesheet" href="{{ asset('styles/app.css') }}">
         {% endblock %}
 
         {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
+            <script src="https://kit.fontawesome.com/2ac393ea81.js" crossorigin="anonymous"></script>
+            {{ importmap('app') }}
         {% endblock %}
     </head>
     <body>

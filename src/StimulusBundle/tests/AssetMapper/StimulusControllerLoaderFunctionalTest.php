@@ -44,10 +44,12 @@ class StimulusControllerLoaderFunctionalTest extends WebTestCase
             // 2x from more-controllers
             '/assets/more-controllers/hello-controller.js',
             '/assets/more-controllers/other-controller.js',
-            // 3x from importmap.php
+            // 5x from importmap.php
             '@hotwired/stimulus',
+            '@scoped/needed-vendor',
             '@symfony/stimulus-bundle',
             'app',
+            'needed-vendor',
         ], $importMapKeys);
 
         // "app" & loader.js are pre-loaded. So, all non-lazy controllers should be preloaded:

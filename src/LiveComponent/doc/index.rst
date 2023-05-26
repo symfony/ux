@@ -87,6 +87,11 @@ Now install the library with:
 
     $ composer require symfony/ux-live-component
 
+If you're using WebpackEncore, install your assets and restart Encore. This is
+not needed if you're using AssetMapper:
+
+.. code-block:: terminal
+
     # Don't forget to install the JavaScript dependencies as well and compile
     $ npm install --force
     $ npm run watch
@@ -94,9 +99,6 @@ Now install the library with:
     # or use yarn
     $ yarn install --force
     $ yarn watch
-
-Also make sure you have at least version 3.2 of
-``@symfony/stimulus-bridge`` in your ``package.json`` file.
 
 In case your project `localizes its URLs`_ by adding the special
 ``{_locale}`` parameter to the paths of its route definitions,

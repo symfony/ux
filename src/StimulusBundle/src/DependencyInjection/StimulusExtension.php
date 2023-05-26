@@ -58,6 +58,10 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
                 'paths' => [
                     __DIR__.'/../../assets/dist' => '@symfony/stimulus-bundle',
                 ],
+                'excluded_patterns' => [
+                    '*.d.ts',
+                    '**/controllers.json',
+                ],
             ],
         ]);
     }

@@ -22,7 +22,7 @@
                 "fetch": "lazy",
                 "autoimport": {
                     "cropperjs/dist/cropper.min.css": true,
-                    "@symfony/ux-cropperjs/src/style.css": true
+                    "@symfony/ux-cropperjs/dist/style.min.css": true
                 }
             }
         },
@@ -31,7 +31,7 @@
                 "enabled": true,
                 "fetch": "lazy",
                 "autoimport": {
-                    "@symfony/ux-dropzone/src/style.css": true
+                    "@symfony/ux-dropzone/dist/style.min.css": true
                 }
             }
         },
@@ -46,7 +46,7 @@
                 "enabled": true,
                 "fetch": "eager",
                 "autoimport": {
-                    "@symfony/ux-live-component/styles/live.css": true
+                    "@symfony/ux-live-component/dist/live.min.css": true
                 }
             }
         },
@@ -59,13 +59,13 @@
         "@symfony/ux-react": {
             "react": {
                 "enabled": true,
-                "fetch": "eager"
+                "fetch": "lazy"
             }
         },
         "@symfony/ux-svelte": {
             "svelte": {
                 "enabled": true,
-                "fetch": "eager"
+                "fetch": "lazy"
             }
         },
         "@symfony/ux-swup": {
@@ -93,7 +93,7 @@
         "@symfony/ux-vue": {
             "vue": {
                 "enabled": true,
-                "fetch": "eager"
+                "fetch": "lazy"
             }
         }
     },

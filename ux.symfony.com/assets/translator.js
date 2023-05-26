@@ -8,9 +8,9 @@
  */
 
 import { trans, getLocale, setLocale, setLocaleFallbacks } from '@symfony/ux-translator';
-import { localeFallbacks } from '../var/translations/configuration';
+import { localeFallbacks } from '@app/translations/configuration';
 
 setLocaleFallbacks(localeFallbacks);
 
 export { trans, setLocale };
-export * from '../var/translations';
+export * from '@app/translations';

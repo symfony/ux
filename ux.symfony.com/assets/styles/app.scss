@@ -1,5 +1,5 @@
 @import './variables';
-@import '~bootstrap';
+@import '../../vendor/twbs/bootstrap/scss/bootstrap';
 
 @import './container';
 @import './navigation';
@@ -8,20 +8,6 @@
 @import './terminal';
 @import './highlight';
 @import './live_demos';
-
-/*
- * External Fonts
- */
-
-@import '~@fortawesome/fontawesome-free/css/all.css';
-@import '@fontsource/inter/400.css';
-@import '@fontsource/inter/600.css';
-@import '@fontsource/inter/200.css';
-@import '@fontsource/playfair-display/400.css';
-@import '@fontsource/playfair-display/700-italic.css';
-@import '@fontsource/space-mono';
-@import '@fontsource/ubuntu/400.css';
-@import '@fontsource/ubuntu/700.css';
 
 body {
     font-family: Inter;

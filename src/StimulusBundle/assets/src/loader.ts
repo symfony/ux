@@ -1,3 +1,12 @@
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 /**
  * Starts the Stimulus application and reads a map dump in the DOM to load controllers.
  *
@@ -61,7 +70,7 @@ class StimulusLazyControllerHandler {
     private async loadLazyController(name: string) {
         if (canRegisterController(name, this.application)) {
             if (this.lazyControllers[name] === undefined) {
-                console.error(`Failed to autoload controller: ${name}`);
+                return;
             }
 
             const controllerModule = await this.lazyControllers[name]();

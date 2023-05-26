@@ -19,4 +19,10 @@ return [
         'path' => '@symfony/stimulus-bundle/loader.js',
         'preload' => true,
     ],
+    'needed-vendor' => [
+        'url' => 'https://cdn.jsdelivr.net/npm/needed-vendor@3.2.0/dist/needed-vendor+esm',
+    ],
+    '@scoped/needed-vendor' => [
+        'url' => 'https://cdn.jsdelivr.net/npm/@scoped/needed-vendor@1.2.3',
+    ],
 ];

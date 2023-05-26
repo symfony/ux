@@ -4,7 +4,7 @@
         "src/*/assets"
     ],
     "scripts": {
-        "build": "node build.js",
+        "build": "node bin/build_javascript.js && node bin/build_styles.js",
         "test": "yarn workspaces run jest",
         "lint": "yarn workspaces run eslint src test",
         "format": "prettier src/*/assets/src/*.ts src/*/assets/test/*.js {,src/*/}*.{json,md} --write",
@@ -23,6 +23,7 @@
         "@typescript-eslint/eslint-plugin": "^5.2.0",
         "@typescript-eslint/parser": "^5.2.0",
         "babel-jest": "^27.3.1",
+        "clean-css-cli": "^5.6.2",
         "eslint": "^8.1.0",
         "eslint-config-prettier": "^8.0.0",
         "eslint-plugin-jest": "^25.2.2",

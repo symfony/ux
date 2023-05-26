@@ -5,6 +5,9 @@
     "version": "1.1.0",
     "main": "dist/controller.js",
     "types": "dist/controller.d.ts",
+    "config": {
+        "css_source": "src/style.css"
+    },
     "symfony": {
         "controllers": {
             "dropzone": {
@@ -13,7 +16,7 @@
                 "fetch": "eager",
                 "enabled": true,
                 "autoimport": {
-                    "@symfony/ux-dropzone/src/style.css": true
+                    "@symfony/ux-dropzone/dist/style.min.css": true
                 }
             }
         },

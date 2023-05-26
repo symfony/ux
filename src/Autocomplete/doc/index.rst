@@ -20,6 +20,11 @@ Then install the bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-autocomplete
 
+If you're using WebpackEncore, install your assets and restart Encore. This is
+not needed if you're using AssetMapper:
+
+.. code-block:: terminal
+
     # Don't forget to install the JavaScript dependencies as well and compile
     $ npm install --force
     $ npm run watch

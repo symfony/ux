@@ -56,7 +56,7 @@
             <div class="col-12 col-sm-6 col-md-4 mt-3">
                 <a href="{{ path(demo.route) }}">
                     <div class="demo-container text-center" style="height: 180px; overflow: hidden">
-                        <img src="{{ demo.screenshotFilename }}" style="border-top-left-radius: 12px; border-top-right-radius: 12px; height: 100%;" alt="Screenshot of the {{ demo.name }} demo">
+                        <img src="{{ asset(demo.screenshotFilename) }}" style="border-top-left-radius: 12px; border-top-right-radius: 12px; height: 100%;" alt="Screenshot of the {{ demo.name }} demo">
                     </div>
                     <div class="demo-container-inner p-3">
                         <h4 class="ubuntu">{{ demo.name }}</h4>

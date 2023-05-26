@@ -30,7 +30,7 @@ class StimulusLazyControllerHandler {
     async loadLazyController(name) {
         if (canRegisterController(name, this.application)) {
             if (this.lazyControllers[name] === undefined) {
-                console.error(`Failed to autoload controller: ${name}`);
+                return;
             }
             const controllerModule = await this.lazyControllers[name]();
             registerController(name, controllerModule.default, this.application);

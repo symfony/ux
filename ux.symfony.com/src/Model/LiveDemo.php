@@ -40,6 +40,6 @@ class LiveDemo
 
     public function getScreenshotFilename(): string
     {
-        return '/build/images/live_demo/'.$this->identifier.'.png';
+        return 'images/live_demo/'.$this->identifier.'.png';
     }
 }

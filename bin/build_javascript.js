@@ -9,6 +9,15 @@ const { spawnSync } = require('child_process');
 const glob = require('glob');
 
 const files = [
+    // custom handling for React
+    'src/React/assets/src/loader.ts',
+    'src/React/assets/src/components.ts',
+    // custom handling for Svelte
+    'src/Svelte/assets/src/loader.ts',
+    'src/Svelte/assets/src/components.ts',
+    // custom handling for Vue
+    'src/Vue/assets/src/loader.ts',
+    'src/Vue/assets/src/components.ts',
     // custom handling for StimulusBundle
     'src/StimulusBundle/assets/src/loader.ts',
     'src/StimulusBundle/assets/src/controllers.ts',

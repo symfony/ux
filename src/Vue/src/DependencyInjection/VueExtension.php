@@ -12,11 +12,15 @@
 namespace Symfony\UX\Vue\DependencyInjection;
 
 use Symfony\Component\AssetMapper\AssetMapperInterface;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\UX\Vue\AssetMapper\VueControllerLoaderAssetCompiler;
 use Symfony\UX\Vue\Twig\VueComponentExtension;
 
 /**
@@ -25,15 +29,27 @@ use Symfony\UX\Vue\Twig\VueComponentExtension;
  *
  * @internal
  */
-class VueExtension extends Extension implements PrependExtensionInterface
+class VueExtension extends Extension implements PrependExtensionInterface, ConfigurationInterface
 {
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = $this->getConfiguration($configs, $container);
+        $config = $this->processConfiguration($configuration, $configs);
+
         $container
             ->setDefinition('twig.extension.vue', new Definition(VueComponentExtension::class))
             ->setArgument(0, new Reference('stimulus.helper'))
             ->addTag('twig.extension')
             ->setPublic(false)
+        ;
+
+        $container->setDefinition('vue.asset_mapper.vue_controller_loader_compiler', new Definition(VueControllerLoaderAssetCompiler::class))
+            ->setArguments([
+                $config['controllers_path'],
+                $config['name_glob'],
+            ])
+            // run before the core JavaScript compiler
+            ->addTag('asset_mapper.compiler', ['priority' => 100])
         ;
     }
 
@@ -50,5 +66,33 @@ class VueExtension extends Extension implements PrependExtensionInterface
                 ],
             ],
         ]);
+    }
+
+    public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface
+    {
+        return $this;
+    }
+
+    public function getConfigTreeBuilder(): TreeBuilder
+    {
+        $treeBuilder = new TreeBuilder('vue');
+        $rootNode = $treeBuilder->getRootNode();
+        \assert($rootNode instanceof ArrayNodeDefinition);
+
+        $rootNode
+            ->children()
+                ->scalarNode('controllers_path')
+                    ->info('The path to the directory where Vue controller components are stored - relevant only when using symfony/asset-mapper.')
+                    ->defaultValue('%kernel.project_dir%/assets/vue/controllers')
+                ->end()
+                ->arrayNode('name_glob')
+                    ->info('The glob patterns to use to find Vue controller components inside of controllers_path')
+                    // find .js (.vue SFC are not supported) - they must be written or compiled to .js
+                    ->defaultValue(['*.js'])
+                    ->scalarPrototype()->end()
+                ->end()
+            ->end();
+
+        return $treeBuilder;
     }
 }

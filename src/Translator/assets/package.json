@@ -7,7 +7,9 @@
     "types": "dist/translator_controller.d.ts",
     "symfony": {
         "importmap": {
-            "intl-messageformat": "^10.2.5"
+            "intl-messageformat": "^10.2.5",
+            "@symfony/ux-translator": "path:dist/translator_controller.js",
+            "@app/translations": "var/translations/index.js"
         }
     },
     "peerDependencies": {
