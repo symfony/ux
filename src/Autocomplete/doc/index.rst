@@ -27,6 +27,32 @@ Then install the bundle using Composer and Symfony Flex:
     # or use yarn
     $ yarn install --force
     $ yarn watch
+    
+If you don't have Symfony Flex in your project:
+
+.. code-block:: terminal
+
+    $ composer require symfony/ux-autocomplete
+
+    # Don't forget to install the JavaScript dependencies as well and compile
+    $ npm install @symfony/ux-autocomplete
+    $ npm install tom-select
+    $ npm run watch
+
+    # or use yarn
+    $ yarn add @symfony/ux-autocomplete
+    $ yarn add tom-select
+    $ yarn watch
+
+Don't forget to add ``symfony/ux-autocomplete`` to your bundles list in ``config/bundles.php``
+
+Add the route config in ``config/routes/ux_autocomplete.yaml``
+
+.. code-block:: text
+
+   ux_autocomplete:
+    resource: '@AutocompleteBundle/config/routes.php'
+    prefix: '/autocomplete'
 
 Usage in a Form (without Ajax)
 ------------------------------
