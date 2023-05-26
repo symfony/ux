@@ -16,7 +16,7 @@
         "importmap": {
             "@hotwired/stimulus": "^3.0.0",
             "svelte/internal": "^3.0",
-            "@symfony/ux-svelte": "path:dist/loader.js"
+            "@symfony/ux-svelte": "path:%PACKAGE%/dist/loader.js"
         }
     },
     "peerDependencies": {

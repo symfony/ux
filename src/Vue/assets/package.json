@@ -20,7 +20,7 @@
                 "package": "vue/dist/vue.esm-bundler.js",
                 "version": "^3.0"
             },
-            "@symfony/ux-vue": "path:dist/loader.js"
+            "@symfony/ux-vue": "path:%PACKAGE%/dist/loader.js"
         }
     },
     "peerDependencies": {
