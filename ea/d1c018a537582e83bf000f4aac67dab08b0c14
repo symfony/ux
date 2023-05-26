@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-25T21:03:29Z
+
+Ok, all of ux.symfony.com on this branch now works with AssetMapper without Node/Webpack!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-26T01:32:33Z
+
+This is ready to go - it's a bit too big to review effectively, but it relates to StimulusBundle + AssetMapper, both of which will be experimental to begin with. I'll merge tomorrow.
