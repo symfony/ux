@@ -7,7 +7,7 @@
         "needsPackageAsADependency": false,
         "importmap": {
             "@hotwired/stimulus": "^3.0.0",
-            "@symfony/stimulus-bundle": "path:dist/loader.js"
+            "@symfony/stimulus-bundle": "path:%PACKAGE%/dist/loader.js"
         }
     },
     "peerDependencies": {

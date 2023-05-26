@@ -18,7 +18,7 @@
             "@hotwired/stimulus": "^3.0.0",
             "react": "^18.0",
             "react-dom": "^18.0",
-            "@symfony/ux-react": "path:dist/loader.js"
+            "@symfony/ux-react": "path:%PACKAGE%/dist/loader.js"
         }
     },
     "peerDependencies": {
