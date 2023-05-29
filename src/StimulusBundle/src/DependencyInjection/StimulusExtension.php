@@ -23,8 +23,6 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 /**
- * @experimental
- *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 final class StimulusExtension extends Extension implements PrependExtensionInterface, ConfigurationInterface

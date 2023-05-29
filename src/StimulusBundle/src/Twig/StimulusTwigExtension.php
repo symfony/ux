@@ -18,8 +18,6 @@ use Twig\TwigFilter;
 use Twig\TwigFunction;
 
 /**
- * @experimental
- *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 final class StimulusTwigExtension extends AbstractExtension

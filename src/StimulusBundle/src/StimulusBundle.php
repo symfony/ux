@@ -14,8 +14,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 use Symfony\UX\StimulusBundle\DependencyInjection\Compiler\RemoveAssetMapperServicesCompiler;
 
 /**
- * @experimental
- *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 final class StimulusBundle extends Bundle

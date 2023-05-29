@@ -16,8 +16,6 @@ use Twig\Environment;
 /**
  * Helper to build Stimulus-related HTML attributes.
  *
- * @experimental
- *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 class StimulusAttributes implements \Stringable, \IteratorAggregate
