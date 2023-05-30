@@ -34,7 +34,7 @@ class DropzoneExtension extends Extension implements PrependExtensionInterface
             $container->prependExtensionConfig('twig', ['form_themes' => ['@Dropzone/form_theme.html.twig']]);
         }
 
-        if (interface_exists(AssetMapperInterface::class)) {
+        if ($this->isAssetMapperAvailable($container)) {
             $container->prependExtensionConfig('framework', [
                 'asset_mapper' => [
                     'paths' => [
@@ -52,5 +52,20 @@ class DropzoneExtension extends Extension implements PrependExtensionInterface
             ->addTag('form.type')
             ->setPublic(false)
         ;
+    }
+
+    private function isAssetMapperAvailable(ContainerBuilder $container): bool
+    {
+        if (!interface_exists(AssetMapperInterface::class)) {
+            return false;
+        }
+
+        // check that FrameworkBundle 6.3 or higher is installed
+        $bundlesMetadata = $container->getParameter('kernel.bundles_metadata');
+        if (!isset($bundlesMetadata['FrameworkBundle'])) {
+            return false;
+        }
+
+        return is_file($bundlesMetadata['FrameworkBundle']['path'].'/Resources/config/asset_mapper.php');
     }
 }

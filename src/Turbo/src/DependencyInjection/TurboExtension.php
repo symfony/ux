@@ -90,7 +90,7 @@ final class TurboExtension extends Extension implements PrependExtensionInterfac
 
     public function prepend(ContainerBuilder $container): void
     {
-        if (!interface_exists(AssetMapperInterface::class)) {
+        if (!$this->isAssetMapperAvailable($container)) {
             return;
         }
 
@@ -104,5 +104,20 @@ final class TurboExtension extends Extension implements PrependExtensionInterfac
                 ],
             ],
         ]);
+    }
+
+    private function isAssetMapperAvailable(ContainerBuilder $container): bool
+    {
+        if (!interface_exists(AssetMapperInterface::class)) {
+            return false;
+        }
+
+        // check that FrameworkBundle 6.3 or higher is installed
+        $bundlesMetadata = $container->getParameter('kernel.bundles_metadata');
+        if (!isset($bundlesMetadata['FrameworkBundle'])) {
+            return false;
+        }
+
+        return is_file($bundlesMetadata['FrameworkBundle']['path'].'/Resources/config/asset_mapper.php');
     }
 }
