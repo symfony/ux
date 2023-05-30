@@ -266,24 +266,25 @@ export function getElementAsTagText(element: HTMLElement): string {
 }
 
 const getMultipleCheckboxValue = function (element: HTMLInputElement, currentValues: Array<string>): Array<string> {
+    const finalValues = [...currentValues];
     const value = inputValue(element);
     const index = currentValues.indexOf(value);
 
     if (element.checked) {
         // Add value to an array if it's not in it already
         if (index === -1) {
-            currentValues.push(value);
+            finalValues.push(value);
         }
 
-        return currentValues;
+        return finalValues;
     }
 
     // Remove value from an array
     if (index > -1) {
-        currentValues.splice(index, 1);
+        finalValues.splice(index, 1);
     }
 
-    return currentValues;
+    return finalValues;
 };
 
 const inputValue = function (element: HTMLInputElement): string {

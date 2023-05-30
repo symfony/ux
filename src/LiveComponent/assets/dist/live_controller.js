@@ -311,18 +311,19 @@ function getElementAsTagText(element) {
         : element.outerHTML;
 }
 const getMultipleCheckboxValue = function (element, currentValues) {
+    const finalValues = [...currentValues];
     const value = inputValue(element);
     const index = currentValues.indexOf(value);
     if (element.checked) {
         if (index === -1) {
-            currentValues.push(value);
+            finalValues.push(value);
         }
-        return currentValues;
+        return finalValues;
     }
     if (index > -1) {
-        currentValues.splice(index, 1);
+        finalValues.splice(index, 1);
     }
-    return currentValues;
+    return finalValues;
 };
 const inputValue = function (element) {
     return element.dataset.value ? element.dataset.value : element.value;

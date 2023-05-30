@@ -335,6 +335,38 @@ describe('LiveController data-model Tests', () => {
         expect(test.component.valueStore.getOriginalProps()).toEqual({form: {check: ['foo', 'bar']}});
     });
 
+    it('sends correct data for array valued checkbox fields with non-form object', async () => {
+        const test = await createTest({ check: [] }, (data: any) => `
+            <div ${initComponent(data)}>
+                <form data-model="*">
+                    <label>
+                        Checkbox 1: <input type="checkbox" name="check[]" value="foo" ${data.check.indexOf('foo') > -1 ? 'checked' : ''} />
+                    </label>
+
+                    <label>
+                        Checkbox 2: <input type="checkbox" name="check[]" value="bar" ${data.check.indexOf('bar') > -1 ? 'checked' : ''} />
+                    </label>
+                </form>
+                
+                Checkbox 2 is ${data.check.indexOf('bar') > -1 ? 'checked' : 'unchecked' }
+            </div>
+        `);
+
+        const check1Element = getByLabelText(test.element, 'Checkbox 1:');
+        const check2Element = getByLabelText(test.element, 'Checkbox 2:');
+
+        // only 1 Ajax call will be made thanks to debouncing
+        test.expectsAjaxCall()
+            .expectUpdatedData({ 'check': ['foo', 'bar'] });
+
+        await userEvent.click(check1Element);
+        await userEvent.click(check2Element);
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 2 is checked'));
+
+        expect(test.component.valueStore.getOriginalProps()).toEqual({check: ['foo', 'bar']});
+    });
+
     it('sends correct data for array valued checkbox fields with initial data', async () => {
         const test = await createTest({ form: { check: ['foo']} }, (data: any) => `
             <div ${initComponent(data)}>
@@ -365,6 +397,36 @@ describe('LiveController data-model Tests', () => {
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 1 is unchecked'));
 
         expect(test.component.valueStore.getOriginalProps()).toEqual({form: {check: ['bar']}});
+    });
+
+    it('sends correct data for array valued checkbox fields with non-form object and with initial data', async () => {
+        const test = await createTest({ check: ['foo'] }, (data: any) => `
+            <div ${initComponent(data)}>
+                <label>
+                    Checkbox 1: <input type="checkbox" data-model="check[]" value="foo" ${data.check.indexOf('foo') > -1 ? 'checked' : ''} />
+                </label>
+
+                <label>
+                    Checkbox 2: <input type="checkbox" data-model="check[]" value="bar" ${data.check.indexOf('bar') > -1 ? 'checked' : ''} />
+                </label>
+                
+                Checkbox 1 is ${data.check.indexOf('foo') > -1 ? 'checked' : 'unchecked' }
+            </div>
+        `);
+
+        const check1Element = getByLabelText(test.element, 'Checkbox 1:');
+        const check2Element = getByLabelText(test.element, 'Checkbox 2:');
+
+        // only 1 Ajax call will be made thanks to debouncing
+        test.expectsAjaxCall()
+            .expectUpdatedData({ 'check': ['bar'] });
+
+        await userEvent.click(check1Element);
+        await userEvent.click(check2Element);
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 1 is unchecked'));
+
+        expect(test.component.valueStore.getOriginalProps()).toEqual({check: ['bar']});
     });
 
     it('sends correct data for select multiple field', async () => {

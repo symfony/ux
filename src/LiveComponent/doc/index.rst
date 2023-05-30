@@ -531,9 +531,9 @@ value on checked. If no ``value`` is set, the checkbox will set a boolean value:
 
     <input type="checkbox" data-model="agreeToTerms">
 
-    <input type="checkbox" data-model="foods" value="pizza">
-    <input type="checkbox" data-model="foods" value="tacos">
-    <input type="checkbox" data-model="foods" value="sushi">
+    <input type="checkbox" data-model="foods[]" value="pizza">
+    <input type="checkbox" data-model="foods[]" value="tacos">
+    <input type="checkbox" data-model="foods[]" value="sushi">
 
 ``select`` and ``radio`` elements are a bit easier: use these to either set a
 single value or an array of values::
