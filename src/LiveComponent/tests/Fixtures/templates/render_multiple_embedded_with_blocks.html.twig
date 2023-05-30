@@ -1,0 +1,2 @@
+<div id="component1">{% component component2 %}{% block content %}Overridden content from component 1{% endblock %}{% endcomponent %}</div><div id="component2">{% component component2 %}{% block content %}Overridden content from component 2 on same line - count: {{ this.count }}{% endblock %}{% endcomponent %}</div>
+<div id="component3">Not overriding{% component component2 %}{% endcomponent %}</div>

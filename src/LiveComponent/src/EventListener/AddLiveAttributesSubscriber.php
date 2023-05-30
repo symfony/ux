@@ -14,6 +14,7 @@ namespace Symfony\UX\LiveComponent\EventListener;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Symfony\UX\LiveComponent\Twig\TemplateMap;
 use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
@@ -36,7 +37,8 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
 {
     public function __construct(
         private ComponentStack $componentStack,
-        private ContainerInterface $container
+        private TemplateMap $templateMap,
+        private ContainerInterface $container,
     ) {
     }
 
@@ -45,10 +47,6 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
         if (!$event->getMetadata()->get('live', false)) {
             // not a live component, skip
             return;
-        }
-
-        if ($event->isEmbedded()) {
-            throw new \LogicException('Embedded components cannot be live.');
         }
 
         $metadata = $event->getMetadata();
@@ -60,8 +58,21 @@ final class AddLiveAttributesSubscriber implements EventSubscriberInterface, Ser
         // onto the variables. So, we manually merge our new attributes in and
         // override that variable.
         if (isset($variables[$attributesKey]) && $variables[$attributesKey] instanceof ComponentAttributes) {
+            $originalAttributes = $variables[$attributesKey]->all();
+
             // merge with existing attributes if available
-            $attributes = $attributes->defaults($variables[$attributesKey]->all());
+            $attributes = $attributes->defaults($originalAttributes);
+
+            if (isset($originalAttributes['data-host-template'], $originalAttributes['data-embedded-template-index'])) {
+                // This component is an embedded component, that's being re-rendered.
+                // We'll change the template that will be used to render it to
+                // the embedded template so that the blocks from that template
+                // will be used, if any, instead of the originals.
+                $event->setTemplate(
+                    $this->templateMap->resolve($originalAttributes['data-host-template']),
+                    $originalAttributes['data-embedded-template-index'],
+                );
+            }
         }
 
         // "key" is a special attribute: don't actually render it

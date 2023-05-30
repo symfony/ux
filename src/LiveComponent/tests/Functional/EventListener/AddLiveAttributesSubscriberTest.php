@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
 
 /**
@@ -20,11 +21,14 @@ use Zenstruck\Browser\Test\HasBrowser;
 final class AddLiveAttributesSubscriberTest extends KernelTestCase
 {
     use HasBrowser;
+    use LiveComponentTestHelper;
+
     /**
      * The deterministic id of the "todo_item" components in todo_list.html.twig.
      * If that template changes, this will need to be updated.
      */
-    public const TODO_ITEM_DETERMINISTIC_PREFIX = 'live-289310975-';
+    public const TODO_ITEM_DETERMINISTIC_PREFIX = 'live-1715058793-';
+    public const TODO_ITEM_DETERMINISTIC_PREFIX_EMBEDDED = 'live-2285361477-';
 
     public function testInitLiveComponent(): void
     {
@@ -40,10 +44,12 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertSame('live', $div->attr('data-controller'));
         $this->assertSame('/_components/component_with_writable_props', $div->attr('data-live-url-value'));
         $this->assertNotNull($div->attr('data-live-csrf-value'));
-        $this->assertCount(3, $props);
+        $this->assertCount(4, $props);
         $this->assertSame(5, $props['max']);
         $this->assertSame(1, $props['count']);
         $this->assertArrayHasKey('@checksum', $props);
+        $this->assertArrayHasKey('@attributes', $props);
+        $this->assertArrayHasKey('data-live-id', $props['@attributes']);
     }
 
     public function testCanUseCustomAttributesVariableName(): void
@@ -79,6 +85,10 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
     public function testItAddsIdAndFingerprintToChildComponent(): void
     {
+        $templateName = 'components/todo_list.html.twig';
+        $obscuredName = 'd9bcb8935cbb4282ac5d227fc82ae782';
+        $this->addTemplateMap($obscuredName, $templateName);
+
         $ul = $this->browser()
             ->visit('/render-template/render_todo_list')
             ->assertSuccessful()
@@ -89,7 +99,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $lis = $ul->children('li');
         // deterministic id: should not change, and counter should increase
         $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'0', $lis->first()->attr('data-live-id'));
-        $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'2', $lis->last()->attr('data-live-id'));
+        $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'1', $lis->last()->attr('data-live-id'));
 
         // the data-live-id attribute also needs to be part of the "props" so that it persists on renders
         $props = json_decode($lis->first()->attr('data-live-props-value'), true);
@@ -107,6 +117,10 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
     public function testItDoesNotOverrideDataLiveIdIfSpecified(): void
     {
+        $templateName = 'components/todo_list.html.twig';
+        $obscuredName = 'a643d58357b14c9bb077f0c00a742059';
+        $this->addTemplateMap($obscuredName, $templateName);
+
         $ul = $this->browser()
             ->visit('/render-template/render_todo_list_with_live_id')
             ->assertSuccessful()

@@ -1215,7 +1215,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
     public function testCanDehydrateAndHydrateComponentsWithAttributes(): void
     {
-        $mounted = $this->mountComponent('with_attributes', $attributes = ['class' => 'foo', 'value' => null]);
+        $mounted = $this->mountComponent('with_attributes', $attributes = ['class' => 'foo', 'value' => null], false);
 
         $this->assertSame($attributes, $mounted->getAttributes()->all());
 
@@ -1231,7 +1231,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
     public function testCanDehydrateAndHydrateComponentsWithEmptyAttributes(): void
     {
-        $mounted = $this->mountComponent('with_attributes');
+        $mounted = $this->mountComponent('with_attributes', [], false);
 
         $this->assertSame([], $mounted->getAttributes()->all());
 

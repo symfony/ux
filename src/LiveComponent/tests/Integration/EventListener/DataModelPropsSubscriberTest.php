@@ -33,6 +33,10 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
             // content is mapped down to "value" in a child component
             'content' => 'Hello data-model!',
             'content2' => 'Value for second child',
+            // Normally createAndRender is always called from within a Template via the ComponentExtension.
+            // To avoid that the DeterministicTwigIdCalculator complains that there's no Template
+            // to base the live id on, we'll add this dummy one, so it gets skipped.
+            'attributes' => ['data-live-id' => 'dummy-live-id'],
         ]);
 
         $this->assertStringContainsString('<textarea data-model="content:value">Hello data-model!</textarea>', $html);

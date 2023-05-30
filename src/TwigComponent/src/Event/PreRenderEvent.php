@@ -25,6 +25,8 @@ final class PreRenderEvent extends Event
 
     private string $template;
 
+    private ?int $templateIndex = null;
+
     /**
      * @internal
      */
@@ -52,15 +54,20 @@ final class PreRenderEvent extends Event
     /**
      * Change the twig template used.
      */
-    public function setTemplate(string $template): self
+    public function setTemplate(string $template, int $index = null): self
     {
-        if ($this->isEmbedded()) {
-            throw new \LogicException('Cannot modify template for embedded components.');
-        }
-
         $this->template = $template;
+        $this->templateIndex = $index;
 
         return $this;
+    }
+
+    /**
+     * @return string The twig template index used for the component, in case it's an embedded template
+     */
+    public function getTemplateIndex(): ?int
+    {
+        return $this->templateIndex;
     }
 
     public function getComponent(): object

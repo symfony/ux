@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent;
 
+use Composer\InstalledVersions;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
@@ -38,14 +39,21 @@ final class ComponentRenderer implements ComponentRendererInterface
     ) {
     }
 
-    public function createAndRender(string $name, array $props = []): string
+    /**
+     * Allow the render process to be short-circuited.
+     */
+    public function preCreateForRender(string $name, array $props = []): ?string
     {
         $event = new PreCreateForRenderEvent($name, $props);
         $this->dispatcher->dispatch($event);
 
-        // allow the process to be short-circuited
-        if (null !== $rendered = $event->getRenderedString()) {
-            return $rendered;
+        return $event->getRenderedString();
+    }
+
+    public function createAndRender(string $name, array $props = []): string
+    {
+        if ($preRendered = $this->preCreateForRender($name, $props)) {
+            return $preRendered;
         }
 
         return $this->render($this->factory->create($name, $props));
@@ -58,7 +66,15 @@ final class ComponentRenderer implements ComponentRendererInterface
         $event = $this->preRender($mounted);
 
         try {
-            return $this->twig->render($event->getTemplate(), $event->getVariables());
+            if (InstalledVersions::getVersion('twig/twig') < 3) {
+                return $this->twig->loadTemplate($event->getTemplate(), $event->getTemplateIndex())->render($event->getVariables());
+            }
+
+            return $this->twig->loadTemplate(
+                $this->twig->getTemplateClass($event->getTemplate()),
+                $event->getTemplate(),
+                $event->getTemplateIndex(),
+            )->render($event->getVariables());
         } finally {
             $this->componentStack->pop();
 
@@ -67,17 +83,27 @@ final class ComponentRenderer implements ComponentRendererInterface
         }
     }
 
-    public function embeddedContext(string $name, array $props, array $context): array
+    public function embeddedContext(string $name, array $props, array $context, string $hostTemplateName, int $index): array
     {
         $context[PreRenderEvent::EMBEDDED] = true;
 
-        $embeddedContext = $this->preRender($this->factory->create($name, $props), $context)->getVariables();
+        $mounted = $this->factory->create($name, $props);
+        $mounted->addExtraMetadata('hostTemplate', $hostTemplateName);
+        $mounted->addExtraMetadata('embeddedTemplateIndex', $index);
 
-        if (!isset($embeddedContext['outerBlocks'])) {
-            $embeddedContext['outerBlocks'] = new BlockStack();
+        $this->componentStack->push($mounted);
+
+        try {
+            $embeddedContext = $this->preRender($mounted, $context)->getVariables();
+
+            if (!isset($embeddedContext['outerBlocks'])) {
+                $embeddedContext['outerBlocks'] = new BlockStack();
+            }
+
+            return $embeddedContext;
+        } finally {
+            $this->componentStack->pop();
         }
-
-        return $embeddedContext;
     }
 
     private function preRender(MountedComponent $mounted, array $context = []): PreRenderEvent

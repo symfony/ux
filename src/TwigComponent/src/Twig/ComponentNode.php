@@ -35,15 +35,42 @@ final class ComponentNode extends EmbedNode
         $compiler->addDebugInfo($this);
 
         $compiler
-            ->write('$embeddedContext = $this->extensions[')
+            ->write('$preRendered = $this->extensions[')
             ->string(ComponentExtension::class)
-            ->raw(']->embeddedContext(')
+            ->raw(']->preRender(')
             ->string($this->getAttribute('component'))
             ->raw(', ')
             ->raw('twig_to_array(')
             ->subcompile($this->getNode('variables'))
+            ->raw(')')
+            ->raw(");\n")
+        ;
+
+        $compiler
+            ->write('if (null !== $preRendered) {')
+            ->raw("\n")
+            ->indent()
+            ->write('echo $preRendered;')
+            ->raw("\n")
+            ->outdent()
+            ->write('} else {')
+            ->raw("\n")
+            ->indent()
+        ;
+
+        $compiler
+            ->write('$embeddedContext = $this->extensions[')
+            ->string(ComponentExtension::class)
+            ->raw(']->embeddedContext(')
+            ->string($this->getAttribute('component'))
+            ->raw(', twig_to_array(')
+            ->subcompile($this->getNode('variables'))
             ->raw('), ')
             ->raw($this->getAttribute('only') ? '[]' : '$context')
+            ->raw(', ')
+            ->string($this->getAttribute('name'))
+            ->raw(', ')
+            ->raw($this->getAttribute('index'))
             ->raw(");\n")
         ;
 
@@ -57,5 +84,11 @@ final class ComponentNode extends EmbedNode
         $this->addGetTemplate($compiler);
         $compiler->raw('->display($embeddedContext, $embeddedBlocks);');
         $compiler->raw("\n");
+
+        $compiler
+            ->outdent()
+            ->write('}')
+            ->raw("\n")
+        ;
     }
 }

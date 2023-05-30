@@ -37,6 +37,8 @@ use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
 use Symfony\UX\LiveComponent\Twig\LiveComponentExtension as LiveComponentTwigExtension;
 use Symfony\UX\LiveComponent\Twig\LiveComponentRuntime;
+use Symfony\UX\LiveComponent\Twig\TemplateCacheWarmer;
+use Symfony\UX\LiveComponent\Twig\TemplateMap;
 use Symfony\UX\LiveComponent\Util\ChildComponentPartialRenderer;
 use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
 use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
@@ -55,6 +57,8 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_it
  */
 final class LiveComponentExtension extends Extension implements PrependExtensionInterface
 {
+    public const TEMPLATES_MAP_FILENAME = 'live_components_twig_templates.map';
+
     public function prepend(ContainerBuilder $container)
     {
         // Register the form theme if TwigBundle is available
@@ -190,12 +194,14 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('router'),
                 new Reference('ux.live_component.live_responder'),
                 new Reference('security.csrf.token_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                new Reference('ux.live_component.twig.template_mapper'),
             ])
         ;
 
         $container->register('ux.live_component.add_attributes_subscriber', AddLiveAttributesSubscriber::class)
             ->setArguments([
                 new Reference('ux.twig_component.component_stack'),
+                new Reference('ux.live_component.twig.template_mapper'),
             ])
             ->addTag('kernel.event_subscriber')
             ->addTag('container.service_subscriber', ['key' => LiveControllerAttributesCreator::class, 'id' => 'ux.live_component.live_controller_attributes_creator'])
@@ -212,6 +218,13 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->addTag('form.type')
             ->setPublic(false)
         ;
+
+        $container->register('ux.live_component.twig.template_mapper', TemplateMap::class)
+            ->setArguments(['%kernel.cache_dir%/'.self::TEMPLATES_MAP_FILENAME]);
+
+        $container->register('ux.live_component.twig.cache_warmer', TemplateCacheWarmer::class)
+            ->setArguments([new Reference('twig.template_iterator'), self::TEMPLATES_MAP_FILENAME])
+            ->addTag('kernel.cache_warmer');
     }
 
     private function isAssetMapperAvailable(ContainerBuilder $container): bool
