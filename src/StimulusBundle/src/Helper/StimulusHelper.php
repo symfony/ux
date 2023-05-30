@@ -16,8 +16,6 @@ use Twig\Environment;
 use Twig\Loader\ArrayLoader;
 
 /**
- * @experimental
- *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 final class StimulusHelper

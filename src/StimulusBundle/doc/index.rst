@@ -1,13 +1,10 @@
 StimulusBundle: Symfony integration with Stimulus
 =================================================
 
-**EXPERIMENTAL** This bundle is currently experimental. It is possible that
-backwards-compatibility breaks could happen between minor versions.
-
 This bundle adds integration between Symfony, `Stimulus`_ and Symfony UX:
 
 A) Twig `stimulus_*` functions & filters to add Stimulus controllers, actions & targets in your templates;
-B) Integration with Symfony UX & AssetMapper;
+B) Integration with Symfony UX & AssetMapper (this integration is `experimental`_)
 C) A helper service to build the Stimulus data attributes and use them in your services.
 
 Installation
@@ -314,3 +311,4 @@ is running in debug mode.
 .. _`parameters`: https://stimulus.hotwired.dev/reference/actions#action-parameters
 .. _`Stimulus Targets`: https://stimulus.hotwired.dev/reference/targets
 .. _`StimulusBundle Flex recipe`: https://github.com/symfony/recipes/tree/main/symfony/stimulus-bundle
+.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
