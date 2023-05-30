@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent;
 
+use Symfony\UX\StimulusBundle\Dto\StimulusAttributes;
 use Symfony\WebpackEncoreBundle\Dto\AbstractStimulusDto;
 
 /**
@@ -115,9 +116,17 @@ final class ComponentAttributes
         return $clone;
     }
 
-    public function add(AbstractStimulusDto $stimulusDto): self
+    public function add($stimulusDto): self
     {
-        trigger_deprecation('symfony/ux-twig-component', '2.9.0', 'Passing a StimulusDto to ComponentAttributes::add() is deprecated. Run "composer require symfony/stimulus-bundle" then use "attributes.defaults(stimulus_controller(\'...\'))".');
+        if ($stimulusDto instanceof AbstractStimulusDto) {
+            trigger_deprecation('symfony/ux-twig-component', '2.9.0', 'Passing a StimulusDto to ComponentAttributes::add() is deprecated. Run "composer require symfony/stimulus-bundle" then use "attributes.defaults(stimulus_controller(\'...\'))".');
+        } elseif ($stimulusDto instanceof StimulusAttributes) {
+            trigger_deprecation('symfony/ux-twig-component', '2.9.0', 'Calling ComponentAttributes::add() is deprecated. Instead use "attributes.defaults(stimulus_controller(\'...\'))".');
+
+            return $this->defaults($stimulusDto);
+        } else {
+            throw new \InvalidArgumentException(sprintf('Argument 1 passed to "%s()" must be an instance of "%s" or "%s", "%s" given.', __METHOD__, AbstractStimulusDto::class, StimulusAttributes::class, get_debug_type($stimulusDto)));
+        }
 
         $controllersAttributes = $stimulusDto->toArray();
         $attributes = $this->attributes;
