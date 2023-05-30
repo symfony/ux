@@ -48,7 +48,7 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
             ]);
         }
 
-        if (interface_exists(AssetMapperInterface::class)) {
+        if ($this->isAssetMapperAvailable($container)) {
             $container->prependExtensionConfig('framework', [
                 'asset_mapper' => [
                     'paths' => [
@@ -154,5 +154,20 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
                 new Reference('property_accessor'),
                 new Reference('ux.autocomplete.entity_search_util'),
             ]);
+    }
+
+    private function isAssetMapperAvailable(ContainerBuilder $container): bool
+    {
+        if (!interface_exists(AssetMapperInterface::class)) {
+            return false;
+        }
+
+        // check that FrameworkBundle 6.3 or higher is installed
+        $bundlesMetadata = $container->getParameter('kernel.bundles_metadata');
+        if (!isset($bundlesMetadata['FrameworkBundle'])) {
+            return false;
+        }
+
+        return is_file($bundlesMetadata['FrameworkBundle']['path'].'/Resources/config/asset_mapper.php');
     }
 }
