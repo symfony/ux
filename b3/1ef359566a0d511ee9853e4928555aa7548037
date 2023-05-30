@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-30T13:50:25Z
+
+Low deps on 8.1 are failing but should be good (I'll verify after the merge). The CI matrix doesn't patch (yet) cross-dependencies as well as symfony/symfony, so those bundles are not using StimulusBundle from this PR and are thus failing due to its prepend configuration acting when it shouldn't.
