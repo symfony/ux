@@ -9,6 +9,7 @@
 
 namespace Symfony\UX\StimulusBundle\Tests\AssetMapper;
 
+use Composer\InstalledVersions;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\UX\StimulusBundle\Tests\fixtures\StimulusTestKernel;
@@ -20,6 +21,10 @@ class StimulusControllerLoaderFunctionalTest extends WebTestCase
 
     public function testFullApplicationLoad()
     {
+        if (InstalledVersions::getVersion('symfony/framework-bundle') < '6.3') {
+            $this->markTestSkipped('This test requires symfony/framework-bundle 6.3+');
+        }
+
         $filesystem = new Filesystem();
         $filesystem->remove(__DIR__.'/../fixtures/var/cache');
 
