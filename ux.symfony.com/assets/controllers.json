@@ -3,7 +3,7 @@
         "@symfony/ux-autocomplete": {
             "autocomplete": {
                 "enabled": true,
-                "fetch": "eager",
+                "fetch": "lazy",
                 "autoimport": {
                     "tom-select/dist/css/tom-select.default.css": false,
                     "tom-select/dist/css/tom-select.bootstrap5.css": true
@@ -44,7 +44,7 @@
         "@symfony/ux-live-component": {
             "live": {
                 "enabled": true,
-                "fetch": "eager",
+                "fetch": "lazy",
                 "autoimport": {
                     "@symfony/ux-live-component/dist/live.min.css": true
                 }
@@ -53,7 +53,7 @@
         "@symfony/ux-notify": {
             "notify": {
                 "enabled": true,
-                "fetch": "eager"
+                "fetch": "lazy"
             }
         },
         "@symfony/ux-react": {
@@ -71,7 +71,7 @@
         "@symfony/ux-swup": {
             "swup": {
                 "enabled": true,
-                "fetch": "eager"
+                "fetch": "lazy"
             }
         },
         "@symfony/ux-turbo": {
