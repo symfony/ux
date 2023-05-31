@@ -3,7 +3,7 @@ StimulusBundle: Symfony integration with Stimulus
 
 This bundle adds integration between Symfony, `Stimulus`_ and Symfony UX:
 
-A) Twig `stimulus_*` functions & filters to add Stimulus controllers, actions & targets in your templates;
+A) Twig ``stimulus_*`` functions & filters to add Stimulus controllers, actions & targets in your templates;
 B) Integration with Symfony UX & AssetMapper (this integration is `experimental`_)
 C) A helper service to build the Stimulus data attributes and use them in your services.
 
@@ -107,7 +107,8 @@ Any non-scalar values (like ``data: [1, 2, 3, 4]``) are JSON-encoded. And all
 values are properly escaped (the string ``&#x5B;`` is an escaped
 ``[`` character, so the attribute is really ``[1,2,3,4]``).
 
-If you have multiple controllers on the same element, you can chain them as there's also a ``stimulus_controller`` filter:
+If you have multiple controllers on the same element, you can chain them as
+there's also a ``stimulus_controller`` filter:
 
 .. code-block:: html+twig
 
@@ -137,8 +138,8 @@ For example:
     <div data-action="controller#method">Hello</div>
     <div data-action="click->controller#method">Hello</div>
 
-If you have multiple actions and/or methods on the same element, you can chain them as there's also a
-``stimulus_action`` filter:
+If you have multiple actions and/or methods on the same element, you can chain
+them as there's also a ``stimulus_action`` filter:
 
 .. code-block:: html+twig
 
@@ -182,7 +183,8 @@ For example:
     <div data-controller-target="a-target">Hello</div>
     <div data-controller-target="a-target second-target">Hello</div>
 
-If you have multiple targets on the same element, you can chain them as there's also a `stimulus_target` filter:
+If you have multiple targets on the same element, you can chain them as there's
+also a ``stimulus_target`` filter:
 
 .. code-block:: html+twig
 
