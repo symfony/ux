@@ -899,14 +899,15 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     return [
                         'year' => $this->createdAt->format('Y'),
                         'month' => $this->createdAt->format('m'),
+                        'day' => $this->createdAt->format('d'),
                     ];
                 }
 
                 public function hydrateDate($data)
                 {
                     return \DateTime::createFromFormat(
-                        'Y-m',
-                        sprintf('%s-%s', $data['year'], $data['month'])
+                        'Y-m-d',
+                        sprintf('%s-%s-%s', $data['year'], $data['month'], $data['day'])
                     );
                 }
             })
@@ -914,13 +915,13 @@ final class LiveComponentHydratorTest extends KernelTestCase
                    'createdAt' => new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York')),
                ])
                 ->assertDehydratesTo([
-                   'createdAt' => ['year' => 2023, 'month' => 3],
+                   'createdAt' => ['year' => 2023, 'month' => 3, 'day' => 5],
                ])
                 ->userUpdatesProps([
-                   'createdAt' => ['year' => 2024, 'month' => 4],
+                   'createdAt' => ['year' => 2024, 'month' => 4, 'day' => 5],
                ])
                 ->assertObjectAfterHydration(function (object $object) {
-                    $this->assertSame('2024-04', $object->createdAt->format('Y-m'));
+                    $this->assertSame('2024-04-05', $object->createdAt->format('Y-m-d'));
                 })
             ;
         }];

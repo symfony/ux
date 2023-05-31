@@ -839,15 +839,17 @@ The following hooks are available (along with the arguments that are passed):
 Adding a Stimulus Controller to your Component Root Element
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.7
+.. versionadded:: 2.9
 
-    The ``add()`` method was introduced in TwigComponents 2.7.
+    The ability to use the ``defaults()`` method with ``stimulus_controller()``
+    was added in TwigComponents 2.9 and requires ``symfony/stimulus-bundle``.
+    Previously, ``stimulus_controller()`` was passed to ``attributes.add()``.
 
 To add a custom Stimulus controller to your root component element:
 
 .. code-block:: html+twig
 
-    <div {{ attributes.add(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
+    <div {{ attributes.defaults(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
 
 Loading States
 --------------
