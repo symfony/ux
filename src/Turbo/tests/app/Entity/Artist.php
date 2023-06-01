@@ -11,41 +11,28 @@
 
 namespace App\Entity;
 
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 /**
- * @ORM\Entity
- *
- * @Broadcast
- *
  * @author Rick Kuipers <rick@levelup-it.com>
  */
 #[Broadcast]
+#[ORM\Entity]
 class Artist
 {
-    /**
-     * @ORM\Column(type="integer")
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int|null
-     */
-    public $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
+    public ?int $id = null;
+
+    #[ORM\Column]
+    public string $name = '';
 
     /**
-     * @ORM\Column
-     *
-     * @var string
+     * @var Collection<int, Song>
      */
-    public $name = '';
-
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Song", mappedBy="artist")
-     *
-     * @var Song[]
-     */
-    public $songs;
+    #[ORM\OneToMany(targetEntity: Song::class, mappedBy: 'artist')]
+    public Collection $songs;
 }

@@ -15,30 +15,17 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 /**
- * @ORM\Entity
- *
- * @Broadcast
- *
  * @author Kévin Dunglas <kevin@dunglas.fr>
  */
 #[Broadcast]
+#[ORM\Entity]
 class Book
 {
-    /**
-     * @ORM\Column(type="integer")
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int|null
-     */
-    public $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
+    public ?int $id = null;
 
-    /**
-     * @ORM\Column
-     *
-     * @var string
-     */
-    public $title = '';
+    #[ORM\Column]
+    public string $title = '';
 }

@@ -227,6 +227,96 @@ describe('AutocompleteController', () => {
         expect(tomSelect.settings.shouldLoad('')).toBeTruthy()
     })
 
+    it('default min-characters will always load after first load', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+            ></select>
+        `);
+
+        const controlInput = tomSelect.control_input;
+
+        // ajax call from initial focus
+        fetchMock.mock(
+            '/path/to/autocomplete?query=',
+            JSON.stringify({
+                results: [
+                    {
+                        value: 1,
+                        text: 'pizza'
+                    },
+                ],
+            }),
+        );
+        // wait for the initial Ajax request to finish
+        userEvent.click(controlInput);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(1);
+        });
+
+        // min length will default to 3, so this is too short
+        controlInput.value = 'fo';
+        controlInput.dispatchEvent(new Event('input'));
+        // should still have just 1 option
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(1);
+        });
+
+        // now trigger a load
+        fetchMock.mock(
+            '/path/to/autocomplete?query=foo',
+            JSON.stringify({
+                results: [
+                    {
+                        value: 1,
+                        text: 'pizza'
+                    },
+                    {
+                        value: 2,
+                        text: 'popcorn'
+                    },
+                ],
+            }),
+        );
+        controlInput.value = 'foo';
+        controlInput.dispatchEvent(new Event('input'));
+
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(2);
+        });
+
+        // now go below the min characters, but it should still load
+        fetchMock.mock(
+            '/path/to/autocomplete?query=fo',
+            JSON.stringify({
+                results: [
+                    {
+                        value: 1,
+                        text: 'pizza'
+                    },
+                    {
+                        value: 2,
+                        text: 'popcorn'
+                    },
+                    {
+                        value: 3,
+                        text: 'apples'
+                    },
+                ],
+            }),
+        );
+        controlInput.value = 'fo';
+        controlInput.dispatchEvent(new Event('input'));
+
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(3);
+        });
+    });
+
     it('adds work-around for live-component & multiple select', async () => {
         const { container } = await startAutocompleteTest(`
             <div>

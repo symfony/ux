@@ -14,10 +14,7 @@ export default class extends Controller {
         optionsAsHtml: BooleanConstructor;
         noResultsFoundText: StringConstructor;
         noMoreResultsText: StringConstructor;
-        minCharacters: {
-            type: NumberConstructor;
-            default: number;
-        };
+        minCharacters: NumberConstructor;
         tomSelectOptions: ObjectConstructor;
         preload: StringConstructor;
     };
@@ -26,12 +23,14 @@ export default class extends Controller {
     readonly noMoreResultsTextValue: string;
     readonly noResultsFoundTextValue: string;
     readonly minCharactersValue: number;
+    readonly hasMinCharactersValue: boolean;
     readonly tomSelectOptionsValue: object;
     readonly hasPreloadValue: boolean;
     readonly preloadValue: string;
     tomSelect: TomSelect;
     private mutationObserver;
     private isObserving;
+    private hasLoadedChoicesPreviously;
     initialize(): void;
     connect(): void;
     disconnect(): void;

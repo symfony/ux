@@ -15,37 +15,20 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 
 /**
- * @ORM\Entity
- *
- * @Broadcast(topics={"@='songs_by_artist_' ~ (entity.artist ? entity.artist.id : null)", "songs"})
- *
  * @author Rick Kuipers <rick@levelup-it.com>
  */
 #[Broadcast(topics: ['@="songs_by_artist_" ~ (entity.artist ? entity.artist.id : null)', 'songs'])]
+#[ORM\Entity]
 class Song
 {
-    /**
-     * @ORM\Column(type="integer")
-     *
-     * @ORM\Id
-     *
-     * @ORM\GeneratedValue(strategy="AUTO")
-     *
-     * @var int|null
-     */
-    public $id;
+    #[ORM\Id]
+    #[ORM\GeneratedValue(strategy: 'AUTO')]
+    #[ORM\Column(type: 'integer')]
+    public ?string $id = null;
 
-    /**
-     * @ORM\Column
-     *
-     * @var string
-     */
-    public $title = '';
+    #[ORM\Column]
+    public string $title = '';
 
-    /**
-     * @ORM\ManyToOne(targetEntity=Artist::class, inversedBy="songs")
-     *
-     * @var Artist|null
-     */
-    public $artist;
+    #[ORM\ManyToOne(targetEntity: Artist::class, inversedBy: 'songs')]
+    public ?Artist $artist = null;
 }

@@ -17,7 +17,7 @@ export default class extends Controller {
         optionsAsHtml: Boolean,
         noResultsFoundText: String,
         noMoreResultsText: String,
-        minCharacters: { type: Number, default: 3 },
+        minCharacters: Number,
         tomSelectOptions: Object,
         preload: String,
     };
@@ -27,6 +27,7 @@ export default class extends Controller {
     declare readonly noMoreResultsTextValue: string;
     declare readonly noResultsFoundTextValue: string;
     declare readonly minCharactersValue: number;
+    declare readonly hasMinCharactersValue: boolean;
     declare readonly tomSelectOptionsValue: object;
     declare readonly hasPreloadValue: boolean;
     declare readonly preloadValue: string;
@@ -34,6 +35,7 @@ export default class extends Controller {
 
     private mutationObserver: MutationObserver;
     private isObserving = false;
+    private hasLoadedChoicesPreviously = false;
 
     initialize() {
         if (this.requiresLiveIgnore()) {
@@ -62,7 +64,10 @@ export default class extends Controller {
 
     connect() {
         if (this.urlValue) {
-            this.tomSelect = this.#createAutocompleteWithRemoteData(this.urlValue, this.minCharactersValue);
+            this.tomSelect = this.#createAutocompleteWithRemoteData(
+                this.urlValue,
+                this.hasMinCharactersValue ? this.minCharactersValue : null
+            );
 
             return;
         }
@@ -163,7 +168,7 @@ export default class extends Controller {
         return this.#createTomSelect(config);
     }
 
-    #createAutocompleteWithRemoteData(autocompleteEndpointUrl: string, minCharacterLength: number): TomSelect {
+    #createAutocompleteWithRemoteData(autocompleteEndpointUrl: string, minCharacterLength: number | null): TomSelect {
         const config: RecursivePartial<TomSettings> = this.#mergeObjects(this.#getCommonConfig(), {
             firstUrl: (query: string) => {
                 const separator = autocompleteEndpointUrl.includes('?') ? '&' : '?';
@@ -184,8 +189,26 @@ export default class extends Controller {
                     })
                     .catch(() => callback([], []));
             },
-            shouldLoad: function (query: string) {
-                return query.length >= minCharacterLength;
+            shouldLoad: (query: string) => {
+                // if min length is specified, always use it
+                if (null !== minCharacterLength) {
+                    return query.length >= minCharacterLength;
+                }
+
+                // otherwise, default to 3, but always load after the first request
+                // this gives nice behavior when the user deletes characters and
+                // goes below the minimum length, it will still load fresh choices
+
+                if (this.hasLoadedChoicesPreviously) {
+                    return true;
+                }
+
+                // mark that the choices have loaded (but avoid initial load)
+                if (query.length > 0) {
+                    this.hasLoadedChoicesPreviously = true;
+                }
+
+                return query.length >= 3;
             },
             optgroupField: 'group_by',
             // avoid extra filtering after results are returned
