@@ -65,7 +65,7 @@ final class BroadcastListener implements ResetInterface
             return;
         }
 
-        $em = $eventArgs->getEntityManager();
+        $em = $eventArgs->getObjectManager();
         $uow = $em->getUnitOfWork();
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
             $this->storeEntitiesToPublish($em, $entity, 'createdEntities');
@@ -89,7 +89,7 @@ final class BroadcastListener implements ResetInterface
             return;
         }
 
-        $em = $eventArgs->getEntityManager();
+        $em = $eventArgs->getObjectManager();
 
         try {
             foreach ($this->createdEntities as $entity) {
