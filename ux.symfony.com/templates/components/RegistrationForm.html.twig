@@ -4,12 +4,13 @@
     {% if isSuccessful %}
         <div>Welcome {{ newUserEmail}}!</div>
     {% else %}
-        <form
-            novalidate
-            data-action="live#action"
-            data-action-name="prevent|saveRegistration"
-            data-model="on(change)|*"
-        >
+        {{ form_start(form, {
+            attr: {
+                'novalidate': true,
+                'data-action': 'live#action',
+                'data-action-name': 'prevent|saveRegistration',
+            }
+        }) }}
             {{ form_row(form.email) }}
             {{ form_row(form.password) }}
             {{ form_row(form.terms) }}

@@ -1287,7 +1287,7 @@ make it easy to deal with forms::
          * with that data. The value - data - could be anything.
          */
         #[LiveProp(fieldName: 'data')]
-        public Post $post;
+        public Post $post = null;
 
         /**
          * Used to re-create the PostType form for re-rendering.
@@ -1353,31 +1353,21 @@ This is possible thanks to the team work of two pieces:
    yet by the user, its validation errors are cleared so that they
    aren't displayed.
 
-Making the Post Object Optional for a "New Form" Component
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Build the "New Post" Form Component
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The previous component could be used to edit an existing post or create
-a new post. But either way, the component *requires* you to pass it
-a ``post`` property.
+The previous component can already be used to edit an existing post or create
+a new post. For a new post, either pass in a new ``Post`` object to ``pass``,
+or omit it entirely to let the ``post`` property default to ``null``:
 
-Tou can make that optional by adding a ``mount()`` method::
+.. code-block:: twig
 
-    #[AsLiveComponent]
-    class PostForm extends AbstractController
-    {
-        // ...
-        #[LiveProp(fieldName: 'data')]
-        public Post $post;
+    {# templates/post/new.html.twig #}
+    {# ... #}
 
-        public function mount(Post $post = null)
-        {
-            $this->post = $post ?? new Post();
-        }
-    }
-
-If a ``post`` variable is passed to ``component()``, then it will
-be passed to the ``mount()`` method where you either use it, or
-create a new ``Post``.
+    {{ component('PostForm', {
+        form: form
+    }) }}
 
 Form Rendering Problems
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -1487,7 +1477,7 @@ automatically. Let's add the ``save()`` action to the component::
             $this->addFlash('success', 'Post saved!');
 
             return $this->redirectToRoute('app_post_show', [
-                'id' => $this->post->getId(),
+                'id' => $post->getId(),
             ]);
         }
     }
