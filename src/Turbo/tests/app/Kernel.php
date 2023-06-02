@@ -14,6 +14,7 @@ namespace App;
 use App\Entity\Artist;
 use App\Entity\Book;
 use App\Entity\Song;
+use Composer\InstalledVersions;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\DebugBundle\DebugBundle;
@@ -84,7 +85,7 @@ class Kernel extends BaseKernel
                 'mappings' => [
                     'App' => [
                         'is_bundle' => false,
-                        'type' => 'annotation',
+                        'type' => 'attribute',
                         'dir' => '%kernel.project_dir%/Entity',
                         'prefix' => 'App\Entity',
                         'alias' => 'App',
@@ -92,6 +93,12 @@ class Kernel extends BaseKernel
                 ],
             ],
         ];
+
+        // https://github.com/doctrine/DoctrineBundle/pull/1661
+        $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle');
+        if (null !== $doctrineBundleVersion && version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
+            $doctrineConfig['orm']['report_fields_where_declared'] = true;
+        }
 
         $container
             ->extension('doctrine', $doctrineConfig);

@@ -99,7 +99,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             'allow_options_create' => false,
             'no_results_found_text' => 'No results found',
             'no_more_results_text' => 'No more results',
-            'min_characters' => 3,
+            'min_characters' => null,
             'max_results' => 10,
             'preload' => 'focus',
         ]);

@@ -28,6 +28,7 @@ class default_1 extends Controller {
         super(...arguments);
         _default_1_instances.add(this);
         this.isObserving = false;
+        this.hasLoadedChoicesPreviously = false;
     }
     initialize() {
         if (this.requiresLiveIgnore()) {
@@ -49,7 +50,7 @@ class default_1 extends Controller {
     }
     connect() {
         if (this.urlValue) {
-            this.tomSelect = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createAutocompleteWithRemoteData).call(this, this.urlValue, this.minCharactersValue);
+            this.tomSelect = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createAutocompleteWithRemoteData).call(this, this.urlValue, this.hasMinCharactersValue ? this.minCharactersValue : null);
             return;
         }
         if (this.optionsAsHtmlValue) {
@@ -291,8 +292,17 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             })
                 .catch(() => callback([], []));
         },
-        shouldLoad: function (query) {
-            return query.length >= minCharacterLength;
+        shouldLoad: (query) => {
+            if (null !== minCharacterLength) {
+                return query.length >= minCharacterLength;
+            }
+            if (this.hasLoadedChoicesPreviously) {
+                return true;
+            }
+            if (query.length > 0) {
+                this.hasLoadedChoicesPreviously = true;
+            }
+            return query.length >= 3;
         },
         optgroupField: 'group_by',
         score: function (search) {
@@ -334,7 +344,7 @@ default_1.values = {
     optionsAsHtml: Boolean,
     noResultsFoundText: String,
     noMoreResultsText: String,
-    minCharacters: { type: Number, default: 3 },
+    minCharacters: Number,
     tomSelectOptions: Object,
     preload: String,
 };
