@@ -62,6 +62,8 @@ trait ComponentWithFormTrait
     #[LiveProp(writable: true)]
     public array $validatedFields = [];
 
+    private bool $shouldAutoSubmitForm = true;
+
     /**
      * Return the full, top-level, Form object that this component uses.
      */
@@ -107,7 +109,7 @@ trait ComponentWithFormTrait
     #[PreReRender]
     public function submitFormOnRender(): void
     {
-        if (!$this->getFormInstance()->isSubmitted()) {
+        if ($this->shouldAutoSubmitForm) {
             $this->submitForm($this->isValidated);
         }
     }
@@ -134,6 +136,18 @@ trait ComponentWithFormTrait
         return $this->formName;
     }
 
+    /**
+     * Reset the form to its initial state, so it can be used again.
+     */
+    private function resetForm(): void
+    {
+        // prevent the system from trying to submit this reset form
+        $this->shouldAutoSubmitForm = false;
+        $this->formInstance = null;
+        $this->formView = null;
+        $this->formValues = $this->extractFormValues($this->getForm(), $this->getFormInstance());
+    }
+
     private function submitForm(bool $validateAll = true): void
     {
         if (null !== $this->formView) {
@@ -142,6 +156,7 @@ trait ComponentWithFormTrait
 
         $form = $this->getFormInstance();
         $form->submit($this->formValues);
+        $this->shouldAutoSubmitForm = false;
 
         if ($validateAll) {
             // mark the entire component as validated

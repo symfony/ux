@@ -1500,6 +1500,21 @@ Now, when the form is submitted, it will execute the ``save()`` method
 via Ajax. If the form fails validation, it will re-render with the
 errors. And if it's successful, it will redirect.
 
+Resetting the Form
+~~~~~~~~~~~~~~~~~~
+
+After submitting a form via an action, you might want to "reset" the form
+back to its initial state so you can use it again. Do that by calling
+``resetForm()`` in your action instead of redirecting::
+
+    #[LiveAction]
+    public function save(EntityManagerInterface $entityManager)
+    {
+        // ...
+
+        $this->resetForm();
+    }
+
 Using Actions to Change your Form: CollectionType
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
