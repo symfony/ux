@@ -151,7 +151,7 @@ final class ComponentFactoryTest extends KernelTestCase
     public function testCannotGetConfigByNameForNonRegisteredComponent(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unknown component "invalid". The registered components are: component_a');
+        $this->expectExceptionMessageMatches('/^Unknown component "invalid"\. The registered components are:.* component_a/');
 
         $this->factory()->metadataFor('invalid');
     }
@@ -159,7 +159,7 @@ final class ComponentFactoryTest extends KernelTestCase
     public function testCannotGetInvalidComponent(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Unknown component "invalid". The registered components are: component_a');
+        $this->expectExceptionMessageMatches('/^Unknown component "invalid"\. The registered components are:.* component_a/');
 
         $this->factory()->get('invalid');
     }

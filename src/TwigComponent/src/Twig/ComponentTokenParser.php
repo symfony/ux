@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Twig;
 
+use Symfony\UX\TwigComponent\BlockStack;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
@@ -60,6 +61,17 @@ final class ComponentTokenParser extends AbstractTokenParser
             new Token(Token::BLOCK_START_TYPE, '', $token->getLine()),
             new Token(Token::NAME_TYPE, 'extends', $token->getLine()),
             $parentToken,
+            new Token(Token::BLOCK_END_TYPE, '', $token->getLine()),
+
+            // Add an empty block which can act as a fallback for when an outer
+            // block is referenced that is not passed in from the embedded component.
+            // See BlockStack::__call()
+            new Token(Token::BLOCK_START_TYPE, '', $token->getLine()),
+            new Token(Token::NAME_TYPE, 'block', $token->getLine()),
+            new Token(Token::NAME_TYPE, BlockStack::OUTER_BLOCK_FALLBACK_NAME, $token->getLine()),
+            new Token(Token::BLOCK_END_TYPE, '', $token->getLine()),
+            new Token(Token::BLOCK_START_TYPE, '', $token->getLine()),
+            new Token(Token::NAME_TYPE, 'endblock', $token->getLine()),
             new Token(Token::BLOCK_END_TYPE, '', $token->getLine()),
         ]);
 

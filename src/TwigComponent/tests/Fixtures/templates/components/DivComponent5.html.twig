@@ -1,0 +1,7 @@
+<twig:GenericElement element="div" class="divComponent">
+    I can access my own properties: {{ divComponentName }}.
+    I can access the id of the Generic Element: {{ id }}.
+    This refers to the Generic Element: {{ this.someFunction }}.
+    I have access to outer context variables like {{ name }}.
+    {{ block(outerBlocks.content) }}
+</twig:GenericElement>

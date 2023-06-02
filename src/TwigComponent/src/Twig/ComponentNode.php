@@ -35,7 +35,7 @@ final class ComponentNode extends EmbedNode
         $compiler->addDebugInfo($this);
 
         $compiler
-            ->raw('$props = $this->extensions[')
+            ->write('$embeddedContext = $this->extensions[')
             ->string(ComponentExtension::class)
             ->raw(']->embeddedContext(')
             ->string($this->getAttribute('component'))
@@ -47,9 +47,15 @@ final class ComponentNode extends EmbedNode
             ->raw(");\n")
         ;
 
-        $this->addGetTemplate($compiler);
+        $compiler->write('$embeddedBlocks = $embeddedContext[')
+            ->string('outerBlocks')
+            ->raw(']->convert($blocks, ')
+            ->raw($this->getAttribute('index'))
+            ->raw(");\n")
+        ;
 
-        $compiler->raw('->display($props);');
+        $this->addGetTemplate($compiler);
+        $compiler->raw('->display($embeddedContext, $embeddedBlocks);');
         $compiler->raw("\n");
     }
 }
