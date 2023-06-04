@@ -25,6 +25,7 @@ export default class {
             const interval = setInterval(() => {
                 const component = this.componentMapByElement.get(element);
                 if (component) {
+                    clearInterval(interval);
                     resolve(component);
                 }
                 count++;

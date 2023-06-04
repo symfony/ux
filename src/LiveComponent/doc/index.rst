@@ -771,13 +771,11 @@ controller and put it around (or attached to) your root component element:
         toggleMode() {
             // e.g. set some live property called "mode" on your component
             this.component.set('mode', 'editing');
-            // you can also say
-            this.component.mode = 'editing';
+            // then, trigger a re-render to get the fresh HTML
+            this.component.render();
 
             // or call an action
             this.component.action('save', { arg1: 'value1' });
-            // you can also say:
-            this.component.save({ arg1: 'value1'});
         }
     }
 
