@@ -164,17 +164,6 @@ class AttributeBag implements \ArrayAccess, \IteratorAggregate
                 $value = $key;
             }
 
-            if (\is_array($value)) {
-                $convertedArray = '[';
-                foreach ($value as $key => $item) {
-                    $convertedArray .= $key.'=>'.$item.',';
-                }
-
-                $convertedArray = rtrim($convertedArray, ',');
-                $convertedArray .= ']';
-                $value = $convertedArray;
-            }
-
             $string .= ' '.$key.'="'.str_replace('"', '\\"', trim($value)).'"';
         }
 

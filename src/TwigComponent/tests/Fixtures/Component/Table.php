@@ -8,6 +8,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 final class Table
 {
     public ?string $caption = null;
-    public array $headers = ['key', 'value'];
-    public array $data = [[1, 2], [3, 4]];
+    public array $headers;
+    public array $data;
 }
