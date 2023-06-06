@@ -2356,8 +2356,9 @@ cause the child to re-render (but it *can* - keep reading). Or, if
 a model in a child updates, it won't also update that model in its parent
 (but it *can* - keep reading).
 
-The parent-child system is *smart*. And with a few tricks, you can make
-it behave exactly like you need.
+The parent-child system is *smart*. And with a few tricks
+(:ref:`such as the key prop for lists of embedded components <rendering-quirks-with-list-of-embedded-components>`),
+you can make it behave exactly like you need.
 
 .. _child-component-independent-rerender:
 
