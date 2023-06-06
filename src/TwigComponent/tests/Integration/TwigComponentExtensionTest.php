@@ -89,4 +89,13 @@ class TwigComponentExtensionTest extends KernelTestCase
 
         $this->assertStringContainsString('<button class="btn">Delete User</button>', $output);
     }
+
+    public function testCanRenderEmbeddedComponent(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('slot/render_block.html.twig');
+
+        $this->assertStringContainsString('<caption>data table</caption>', $output);
+        $this->assertStringContainsString('custom th (key)', $output);
+        $this->assertStringContainsString('custom td (1)', $output);
+    }
 }

@@ -176,12 +176,4 @@ final class ComponentExtensionTest extends KernelTestCase
             'data' => $data,
         ]);
     }
-
-    private function renderTwigComponent(string $name, array $data = []): string
-    {
-        return self::getContainer()->get(Environment::class)->render('render_twig_component.html.twig', [
-            'name' => $name,
-            'data' => $data,
-        ]);
-    }
 }

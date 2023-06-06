@@ -39,6 +39,17 @@ class ComponentSlot
         return $this;
     }
 
+    public function withContext(array $contexts): void
+    {
+        $content = $this->contents;
+
+        foreach ($contexts as $key => $value) {
+            $content = str_replace("<slot_value name=\"$key\"/>", $value, $content);
+        }
+
+        $this->contents = $content;
+    }
+
     public function toHtml(): string
     {
         return $this->contents;
