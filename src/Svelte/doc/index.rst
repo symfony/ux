@@ -13,7 +13,12 @@ Symfony UX Svelte supports Svelte 3 only.
 Installation
 ------------
 
-Before you start, make sure you have `Symfony UX configured in your app`_.
+.. note::
+
+    This package works best with WebpackEncore. To use it with AssetMapper, see
+    :ref:`Using with AssetMapper <using-with-asset-mapper>`.
+
+Before you start, make sure you have `StimulusBundle configured in your app`_.
 
 Then install the bundle using Composer and Symfony Flex:
 
@@ -21,7 +26,6 @@ Then install the bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-svelte
 
-    # Don't forget to install the JavaScript dependencies as well and compile
     $ npm install --force
     $ npm run watch
 
@@ -115,6 +119,35 @@ Svelte client-side component API:
     {# templates/home.html.twig #}
     <div {{ svelte_component('MyAnimatedComponent', { 'name': app.user.fullName }, true) }}></div>
 
+.. _using-with-asset-mapper:
+
+Using with AssetMapper
+----------------------
+
+Because the ``.svelte`` file format isn't pure JavaScript, using this library with
+AssetMapper requires some extra steps.
+
+#. Compile your ``.svelte`` files to pure JavaScript files. This can be done by
+   using the ``svelte/compiler`` library, but is a bit of a non-standard process.
+   For an example, see https://github.com/symfony/ux/blob/2.x/ux.symfony.com/bin/compile_svelte.js.
+
+#. Point this library at the "built" controllers directory that contains the final
+   JavaScript files:
+
+.. code-block:: yaml
+
+    # config/packages/svelte.yaml
+    svelte:
+        controllers_path: '%kernel.project_dir%/assets/build/svelte/controllers'
+
+Also, inside of your ``.svelte`` files, when importing another component, use the
+``.js`` extension:
+
+.. code-block:: javascript
+
+    // use PackageList.js even though the file is named PackageList.svelte
+    import PackageList from '../components/PackageList.js';
+
 Backward Compatibility promise
 ------------------------------
 
@@ -125,4 +158,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Svelte`: https://svelte.dev/
 .. _`svelte-loader`: https://github.com/sveltejs/svelte-loader/blob/master/README.md
 .. _`the Symfony UX initiative`: https://symfony.com/ux
-.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html

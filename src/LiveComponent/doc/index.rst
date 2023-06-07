@@ -4,10 +4,13 @@ Live Components
 **EXPERIMENTAL** This component is currently experimental and is likely
 to change, or even change drastically.
 
-Live components work with the `TwigComponent`_ library
+Live components builds on top of the `TwigComponent`_ library
 to give you the power to automatically update your Twig components on
 the frontend as the user interacts with them. Inspired by
 `Livewire`_ and `Phoenix LiveView`_.
+
+If you're not familiar with Twig components yet, it's worth taking a few minutes
+to familiarize yourself in the `TwigComponent documentation`_.
 
 A real-time product search component might look like this::
 
@@ -55,16 +58,6 @@ A real-time product search component might look like this::
         </ul>
     </div>
 
-.. versionadded:: 2.1
-
-    The ability to reference local variables in the template (e.g. ``query``) was added in TwigComponents 2.1.
-    Previously, all data needed to be referenced through ``this`` (e.g. ``this.query``).
-
-.. versionadded:: 2.1
-
-    The ability to initialize live component with the ``attributes`` twig variable was added in LiveComponents
-    2.1. Previously, the ``init_live_component()`` function was required (this function was removed in 2.1).
-
 Done! Now render it wherever you want:
 
 .. code-block:: twig
@@ -79,7 +72,7 @@ Want some demos? Check out https://ux.symfony.com/live-component#demo
 Installation
 ------------
 
-Before you start, make sure you have `Symfony UX configured in your app`_.
+Before you start, make sure you have `StimulusBundle configured in your app`_.
 
 Now install the library with:
 
@@ -87,12 +80,11 @@ Now install the library with:
 
     $ composer require symfony/ux-live-component
 
-If you're using WebpackEncore, install your assets and restart Encore. This is
-not needed if you're using AssetMapper:
+If you're using WebpackEncore, install your assets and restart Encore (not
+needed if you're using AssetMapper):
 
 .. code-block:: terminal
 
-    # Don't forget to install the JavaScript dependencies as well and compile
     $ npm install --force
     $ npm run watch
 
@@ -411,7 +403,8 @@ In this case, the model (e.g. ``publishAt``) will probably *not*
 update correctly because JavaScript doesn't trigger the normal
 ``change`` event. To fix this, you'll need to "hook" into the
 JavaScript library and set the model directly (or trigger a
-``change`` event on the ``data-model`` field). See :ref:`working-in-javascript`.
+``change`` event on the ``data-model`` field). See
+:ref:`manually trigger an element change <javascript-manual-element-change>`.
 
 .. _hydration:
 
@@ -788,6 +781,8 @@ initialized:
 
     const component = document.getElementById('id-of-your-element').__component;
     component.mode = 'editing';
+
+.. _javascript-manual-element-change:
 
 Finally, you can also set the value of a model field directly. However,
 be sure to *also* trigger a ``change`` event so that live components is notified
@@ -2949,6 +2944,7 @@ However it is currently considered `experimental`_, meaning it is not
 bound to Symfony's BC policy for the moment.
 
 .. _`TwigComponent`: https://symfony.com/bundles/ux-twig-component/current/index.html
+.. _TwigComponent documentation: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _`Livewire`: https://laravel-livewire.com
 .. _`Phoenix LiveView`: https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html
 .. _`Twig Component`: https://symfony.com/bundles/ux-twig-component/current/index.html
@@ -2956,7 +2952,7 @@ bound to Symfony's BC policy for the moment.
 .. _`Symfony form`: https://symfony.com/doc/current/forms.html
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`dependent form fields`: https://ux.symfony.com/live-component/demos/dependent-form-fields
-.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`localizes its URLs`: https://symfony.com/doc/current/translation/locale.html#translation-locale-url
 .. _`attributes variable`: https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes
 .. _`CollectionType`: https://symfony.com/doc/current/form/form_collections.html

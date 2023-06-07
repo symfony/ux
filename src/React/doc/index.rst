@@ -13,7 +13,12 @@ Symfony UX React supports React 18+.
 Installation
 ------------
 
-Before you start, make sure you have `Symfony UX configured in your app`_.
+.. note::
+
+    This package works best with WebpackEncore. To use it with AssetMapper, see
+    :ref:`Using with AssetMapper <using-with-asset-mapper>`.
+
+Before you start, make sure you have `StimulusBundle configured in your app`_.
 Then install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
@@ -40,7 +45,6 @@ Install a package to help React:
     $ npm run watch
 
     # or use yarn
-    
     $ yarn add @babel/preset-react --dev --force
     $ yarn watch
 
@@ -98,10 +102,39 @@ For example:
         <div {{ react_component('MyComponent', { 'fullName': number }) }}>
             Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
         </div>
-        
+
         {# Component living in a subdirectory: "assets/react/controllers/Admin/OtherComponent" #}
         <div {{ react_component('Admin/OtherComponent') }}></div>
     {% endblock %}
+
+.. _using-with-asset-mapper:
+
+Using with AssetMapper
+----------------------
+
+Because the JSX format isn't pure JavaScript, using this library with AssetMapper
+requires some extra steps.
+
+#. Compile your ``.jsx`` files to pure JavaScript files. This can be done by
+   installing Babel and the ``@babel/preset-react`` preset. Example:
+   https://github.com/symfony/ux/blob/2.x/ux.symfony.com/package.json
+
+#. Point this library at the "built" controllers directory that contains the final
+   JavaScript files:
+
+.. code-block:: yaml
+
+    # config/packages/react.yaml
+    react:
+        controllers_path: '%kernel.project_dir%/assets/build/react/controllers'
+
+Also, inside of your ``.jsx`` files, when importing another component, use the
+``.js`` extension:
+
+.. code-block:: javascript
+
+    // use PackageList.js even though the file is named PackageList.jsx
+    import PackageList from '../components/PackageList.js';
 
 Backward Compatibility promise
 ------------------------------
@@ -112,4 +145,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`React`: https://reactjs.org/
 .. _`the Symfony UX initiative`: https://symfony.com/ux
-.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html

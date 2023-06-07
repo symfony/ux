@@ -12,7 +12,12 @@ The `ICU Message Format`_ is also supported.
 Installation
 ------------
 
-Before you start, make sure you have `Symfony UX configured in your app`_.
+.. note::
+
+    This package works best with WebpackEncore. To use it with AssetMapper, see
+    :ref:`Using with AssetMapper <using-with-asset-mapper>`.
+
+Before you start, make sure you have `StimulusBundle configured in your app`_.
 
 Install this bundle using Composer and Symfony Flex:
 
@@ -20,12 +25,11 @@ Install this bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-translator
 
-If you're using WebpackEncore, install your assets and restart Encore. This is
-not needed if you're using AssetMapper:
+If you're using WebpackEncore, install your assets and restart Encore (not
+needed if you're using AssetMapper):
 
 .. code-block:: terminal
 
-    # Don't forget to install the JavaScript dependencies as well and compile
     $ npm install --force
     $ npm run watch
 
@@ -114,6 +118,31 @@ so you can import them like this:
     // Same as above, but uses the "it" locale
     trans(TRANSLATION_MULTI_LOCALES, {}, 'messages', 'it');
 
+.. _using-with-asset-mapper:
+
+Using with AssetMapper
+----------------------
+
+Using this library with AssetMapper is possible, but is currently experimental
+and may not be ready yet for production.
+
+When installing with AssetMapper, Flex will add a few new items to your ``importmap.php``
+file. 2 of the new items are::
+
+    '@app/translations' => [
+        'path' => 'var/translations/index.js',
+    ],
+    '@app/translations/configuration' => [
+        'path' => 'var/translations/configuration.js',
+    ],
+
+These are then imported in your ``assets/translator.js`` file. This setup is
+very similar to working with WebpackEncore. However, the ``var/translations/index.js``
+file contains *every* translation in your app, which is not ideal for production
+and may even leak translations only meant for admin areas. Encore solves this via
+tree-shaking, but the AssetMapper component does not. There is not, yet, a way to
+solve this properly with the AssetMapper component.
+
 Backward Compatibility promise
 ------------------------------
 
@@ -123,5 +152,5 @@ https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`Symfony Translator`: https://symfony.com/doc/current/translation.html
 .. _`the Symfony UX initiative`: https://symfony.com/ux
-.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`ICU Message Format`: https://symfony.com/doc/current/translation/message_format.html

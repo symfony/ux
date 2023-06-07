@@ -7,7 +7,7 @@ in Symfony applications using `Mercure`_. It is part of `the Symfony UX initiati
 Installation
 ------------
 
-Before you start, make sure you have `Symfony UX configured in your app`_.
+Before you start, make sure you have `StimulusBundle configured in your app`_.
 
 Then, install this bundle using Composer and Symfony Flex:
 
@@ -15,12 +15,11 @@ Then, install this bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-notify
 
-If you're using WebpackEncore, install your assets and restart Encore. This is
-not needed if you're using AssetMapper:
+If you're using WebpackEncore, install your assets and restart Encore (not
+needed if you're using AssetMapper):
 
 .. code-block:: terminal
 
-    # Don't forget to install the JavaScript dependencies as well and compile
     $ npm install --force
     $ npm run watch
 
@@ -153,7 +152,7 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`the Symfony UX initiative`: https://symfony.com/ux
-.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`Mercure`: https://mercure.rocks
 .. _`running Mercure server`: https://symfony.com/doc/current/mercure.html#running-a-mercure-hub
 .. _`native notifications`: https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API

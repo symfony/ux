@@ -13,7 +13,12 @@ Symfony UX Vue.js supports Vue.js v3 only.
 Installation
 ------------
 
-Before you start, make sure you have `Symfony UX configured in your app`_.
+.. note::
+
+    This package works best with WebpackEncore. To use it with AssetMapper, see
+    :ref:`Using with AssetMapper <using-with-asset-mapper>`.
+
+Before you start, make sure you have `StimulusBundle configured in your app`_.
 Then install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
@@ -34,17 +39,12 @@ Next, in ``webpack.config.js``, enable Vue.js support:
 
 Install a package to help Vue:
 
-With NPM:
-
 .. code-block:: terminal
 
     $ npm install -D vue-loader --force
     $ npm run watch
-    
-With Yarn:
 
-.. code-block:: terminal
-
+    # or with yarn
     $ yarn add vue-loader --dev --force
     $ yarn watch
 
@@ -70,7 +70,7 @@ Finally, to load your Vue components, add the following lines to ``assets/app.js
     // and improve performance, you can use the following line instead:
     //registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/, 'lazy'));
 
-That's it! Create an `assets/vue/controllers/` directory and start creating your
+That's it! Create an ``assets/vue/controllers/`` directory and start creating your
 Vue components.
 
 Usage
@@ -83,9 +83,6 @@ from Twig.
 When using the ``registerVueControllerComponents`` configuration shown previously, all
 Vue.js components located in the directory ``assets/vue/controllers`` are registered as
 Vue.js controller components.
-
-To make sure those components can be loaded by Webpack Encore, you need to configure
-it by following the instructions in `the related section of the documentation`_.
 
 You can then render any Vue.js controller component in Twig using the ``vue_component``.
 For example:
@@ -194,6 +191,19 @@ used for all the Vue routes:
 
     app.use(router);
 
+.. _using-with-asset-mapper:
+
+Using with AssetMapper
+----------------------
+
+The Vue single-file component (i.e. ``.vue``) file format is not pure JavaScript
+and cannot currently be converted to pure JavaScript outside of a bundler like
+Webpack Encore or Vite. This means that the ``.vue`` file format cannot be used
+with AssetMapper.
+
+If you *do* still want to use Vue with AssetMapper, you can do so by avoiding
+the ``.vue`` file format. For example, https://github.com/symfony/ux/blob/2.x/ux.symfony.com/assets/vue/controllers/PackageSearch.js.
+
 Backward Compatibility promise
 ------------------------------
 
@@ -204,4 +214,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Vue.js`: https://vuejs.org/
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _ `the related section of the documentation`: https://symfony.com/doc/current/frontend/encore/vuejs.html
-.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html

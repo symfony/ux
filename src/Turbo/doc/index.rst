@@ -19,7 +19,7 @@ Or watch the `Turbo Screencast on SymfonyCasts`_.
 Installation
 ------------
 
-Before you start, make sure you have `Symfony UX configured in your app`_.
+Before you start, make sure you have `StimulusBundle configured in your app`_.
 
 Install this bundle using Composer and Symfony Flex:
 
@@ -27,12 +27,11 @@ Install this bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-turbo
 
-If you're using WebpackEncore, install your assets and restart Encore. This is
-not needed if you're using AssetMapper:
+If you're using WebpackEncore, install your assets and restart Encore (not
+needed if you're using AssetMapper):
 
 .. code-block:: terminal
 
-    # Don't forget to install the JavaScript dependencies as well and compile
     $ npm install --force
     $ npm run watch
 
@@ -902,6 +901,6 @@ Symfony UX Turbo has been created by `Kévin Dunglas`_. It has been inspired by
 .. _`Kévin Dunglas`: https://dunglas.fr
 .. _`hotwired/turbo-rails`: https://github.com/hotwired/turbo-rails
 .. _`sroze/live-twig`: https://github.com/sroze/live-twig
-.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`Moving <script> inside <head> and the "defer" Attribute`: https://symfony.com/blog/moving-script-inside-head-and-the-defer-attribute
 .. _`Expression Language`: https://symfony.com/doc/current/components/expression_language.html

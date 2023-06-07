@@ -12,7 +12,7 @@ into an Ajax-powered autocomplete smart UI control (leveraging `Tom Select`_):
 Installation
 ------------
 
-Before you start, make sure you have `Symfony UX configured in your app`_.
+Before you start, make sure you have `StimulusBundle configured in your app`_.
 
 Then install the bundle using Composer and Symfony Flex:
 
@@ -20,12 +20,11 @@ Then install the bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-autocomplete
 
-If you're using WebpackEncore, install your assets and restart Encore. This is
-not needed if you're using AssetMapper:
+If you're using WebpackEncore, install your assets and restart Encore (not
+needed if you're using AssetMapper):
 
 .. code-block:: terminal
 
-    # Don't forget to install the JavaScript dependencies as well and compile
     $ npm install --force
     $ npm run watch
 
@@ -585,7 +584,7 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`Tom Select`: https://tom-select.js.org/
-.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`Tom Select Options`: https://tom-select.js.org/docs/#general-configuration
 .. _`controller.ts`: https://github.com/symfony/ux/blob/2.x/src/Autocomplete/assets/src/controller.ts
 .. _`Tom Select Render Templates`: https://tom-select.js.org/docs/#render-templates
