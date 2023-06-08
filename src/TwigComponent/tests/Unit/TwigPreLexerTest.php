@@ -62,9 +62,19 @@ final class TwigPreLexerTest extends TestCase
             'Hello {% block foo_block %}Foo{% endblock %}{{ component(\'foo\') }}{% block bar_block %}Bar{% endblock %}',
         ];
 
-        yield 'component_with_embedded_component_inside_block' => [
+        yield 'component_with_component_inside_block' => [
             '<twig:foo><twig:block name="foo_block"><twig:bar /></twig:block></twig:foo>',
             '{% component \'foo\' %}{% block foo_block %}{{ component(\'bar\') }}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'component_with_embedded_component_inside_block' => [
+            '<twig:foo><twig:block name="foo_block"><twig:bar><twig:baz /></twig:bar></twig:block></twig:foo>',
+            '{% component \'foo\' %}{% block foo_block %}{% component \'bar\' %}{% block content %}{{ component(\'baz\') }}{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'component_with_embedded_component' => [
+            '<twig:foo>foo_content<twig:bar><twig:baz /></twig:bar></twig:foo>',
+            '{% component \'foo\' %}{% block content %}foo_content{% component \'bar\' %}{% block content %}{{ component(\'baz\') }}{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}',
         ];
 
         yield 'attribute_with_no_value' => [

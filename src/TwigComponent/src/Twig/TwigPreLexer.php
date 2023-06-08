@@ -30,10 +30,7 @@ class TwigPreLexer
         $this->line = $startingLine;
     }
 
-    /**
-     * @param bool $insideOfBlock Are we sub-parsing the content inside a block?
-     */
-    public function preLexComponents(string $input, bool $insideOfBlock = false): string
+    public function preLexComponents(string $input): string
     {
         $this->input = $input;
         $this->length = \strlen($input);
@@ -79,11 +76,10 @@ class TwigPreLexer
                     continue;
                 }
 
-                // if we're already inside a component, and we're not inside a block,
+                // if we're already inside a component,
                 // *and* we've just found a new component, then we should try to
                 // open the default block
-                if (!$insideOfBlock
-                    && !empty($this->currentComponents)
+                if (!empty($this->currentComponents)
                     && !$this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock']) {
                     $output .= $this->addDefaultBlock();
                 }
@@ -365,7 +361,7 @@ class TwigPreLexer
         $blockContents = $this->consumeUntilEndBlock();
 
         $subLexer = new self($this->line);
-        $output .= $subLexer->preLexComponents($blockContents, true);
+        $output .= $subLexer->preLexComponents($blockContents);
 
         $this->consume($closingTag);
         $output .= '{% endblock %}';
