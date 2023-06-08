@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-05-23T14:30:57Z
+
+@weaverryan Going to tag you here since git blame indicates you added the check at https://github.com/symfony/ux/blob/2.x/src/TwigComponent/src/Twig/TwigPreLexer.php#L82-L89. So perhaps, you can tell if I'm wrong in saying that the `$insideOfBlock` check shouldn't happen.
