@@ -194,6 +194,194 @@ used for all the Vue routes:
 
     app.use(router);
 
+Typescript
+----------
+
+To enable Typescript support for Vue enable the Typescript loader:
+
+.. code-block:: javascript
+
+    // webpack.config.js
+    // uncomment if you use TypeScript
+    .enableTypeScriptLoader()
+
+It's ofen useful to add aliases for your components:
+
+.. code-block:: javascript
+
+    // webpack.config.js
+    .addAliases({
+      '@': path.resolve('assets/vue/')
+    })
+
+Typescript needs to know about the `.vue` extension which is done through a
+`shims-vue.d.ts` file. For Vue 3 use the following:
+
+.. code-block:: typescript
+
+    // assets/shims-vue.d.ts
+    declare module '*.vue';
+
+
+For Vue 2 use:
+
+.. code-block:: typescript
+
+    // assets/shims-vue.d.ts
+    declare module "*.vue" {
+        import Vue from "vue";
+        export default Vue;
+    }
+
+Config
+~~~~~~
+
+Install `@vue/tsconfig`:
+
+.. code-block:: terminal
+
+    $ npm install -D @vue/tsconfig
+
+Normally we would extend this config in `tsconfig.json`:
+
+.. code-block:: json
+
+    // tsconfig.json
+    {
+        "extends": "@vue/tsconfig/tsconfig.dom.json"
+    }
+
+However, Encore is currently using Typescript 4, which will result in the following error when
+running `npm run watch`, as `bundler` cannot be used for `moduleResolution`:
+
+.. code-block:: text
+
+    [tsl] ERROR in node_modules/@vue/tsconfig/tsconfig.json(12,25)
+        TS6046: Argument for '--moduleResolution' option must be: 'node', 'classic', 'node16', 'nodenext'.
+
+Instead, copy the contents of `@vue/tsconfig/tsconfig.json` into `tsconfig.json` and change `moduleResolution`
+to `nodenext`, and adding in some additional configuration for `baseUrl`, `paths`, `include`, and `exclude`:
+
+.. code-block:: json
+
+    // tsconfig.json
+    {
+        // "extends": "@vue/tsconfig/tsconfig.dom.json",
+        "compilerOptions": {
+            // As long as you are using a build tool, we recommend you to author and ship in ES modules.
+            // Even if you are targeting Node.js, because
+            //  - `CommonJS` is too outdated
+            //  - the ecosystem hasn't fully caught up with `Node16`/`NodeNext`
+            // This recommendation includes environments like Vitest, Vite Config File, Vite SSR, etc.
+            "module": "ESNext",
+
+            // We expect users to use bundlers.
+            // So here we enable some resolution features that are only available in bundlers.
+            "moduleResolution": "nodenext",
+            "resolveJsonModule": true,
+            // `allowImportingTsExtensions` can only be used when `noEmit` or `emitDeclarationOnly` is set.
+            // But `noEmit` may cause problems with solution-style tsconfigs:
+            // <https://github.com/microsoft/TypeScript/issues/49844>
+            // And `emitDeclarationOnly` is not always wanted.
+            // Considering it's not likely to be commonly used in Vue codebases, we don't enable it here.
+
+            // Required in Vue projects
+            "jsx": "preserve",
+            "jsxImportSource": "vue",
+
+            // `"noImplicitThis": true` is part of `strict`
+            // Added again here in case some users decide to disable `strict`.
+            // This enables stricter inference for data properties on `this`.
+            "noImplicitThis": true,
+            "strict": true,
+
+            // <https://devblogs.microsoft.com/typescript/announcing-typescript-5-0/#verbatimmodulesyntax>
+            // Any imports or exports without a type modifier are left around. This is important for `<script setup>`.
+            // Anything that uses the type modifier is dropped entirely.
+            // "verbatimModuleSyntax": true,
+
+            // A few notes:
+            // - Vue 3 supports ES2016+
+            // - For Vite, the actual compilation target is determined by the
+            //   `build.target` option in the Vite config.
+            //   So don't change the `target` field here. It has to be
+            //   at least `ES2020` for dynamic `import()`s and `import.meta` to work correctly.
+            // - If you are not using Vite, feel free to overwrite the `target` field.
+            "target": "ESNext",
+            // For spec compilance.
+            // `true` by default if the `target` is `ES2020` or higher.
+            // Explicitly set it to `true` here in case some users want to overwrite the `target`.
+            "useDefineForClassFields": true,
+
+            // Recommended
+            "esModuleInterop": true,
+            "forceConsistentCasingInFileNames": true,
+            // See <https://github.com/vuejs/vue-cli/pull/5688>
+            "skipLibCheck": true,
+
+            // Project overrides
+            "baseUrl": "./",
+            // These are just here for IDE path mapping - for compilation we use addAliases() in webpack.config.js
+            "paths": {
+                "@/*": [
+                    "./assets/vue/*"
+                ],
+            }
+        },
+        "include": [
+            "./assets/vue/**/*.ts",
+            "./assets/vue/**/*.vue",
+        ],
+        "exclude": [
+            "./node_modules",
+            "./vendor"
+        ]
+    }
+
+Typescript is now configured to work with Vue.
+
+Vue components using Typescript
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Create Vue components which use Typescript:
+
+.. code-block:: javascript
+
+    // assets/vue/controllers/MyTypescriptComponent.vue
+    <template>
+        <div>
+            <demo :name="name"></demo>
+        </div>
+    </template>
+
+    <script lang="ts" setup>
+        import Demo from "@/components/DemoComponent.vue";
+
+        defineProps({
+            name: String
+        });
+    </script>
+
+    // assets/vue/components/DemoComponent.vue
+    <template>
+        <div>Hello {{ name }}!</div>
+    </template>
+
+    <script lang="ts" setup>
+        defineProps({
+            name: String
+        });
+    </script>
+
+
+These components can then be rendered in Twig as follows:
+
+.. code-block:: html+twig
+
+    {# templates/home.html.twig #}
+    <div {{ vue_component('MyTypescriptComponent', { 'name': app.user.fullName }) }}></div>
+
+
 Backward Compatibility promise
 ------------------------------
 
