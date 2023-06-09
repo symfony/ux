@@ -98,4 +98,13 @@ class TwigComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('custom th (key)', $output);
         $this->assertStringContainsString('custom td (1)', $output);
     }
+
+    public function testCanRenderMixOfBlockAndSlot(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('slot/render_mix_of_slot_and_blocks.html.twig');
+
+        $this->assertStringContainsString('<p>You have an alert!</p>', $output);
+        $this->assertStringContainsString('Hey!', $output);
+        $this->assertStringContainsString('from @bob', $output);
+    }
 }

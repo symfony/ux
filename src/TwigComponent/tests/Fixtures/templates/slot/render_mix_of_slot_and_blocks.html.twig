@@ -1,0 +1,10 @@
+<twig:Alarm>
+   {% block header %}
+       {{ parent() }}
+       <p>A new message</p>
+   {% endblock %}
+    <p>Hey!</p>
+    <twig:slot name="footer">
+        from @bob
+    </twig:slot>
+</twig:Alarm>

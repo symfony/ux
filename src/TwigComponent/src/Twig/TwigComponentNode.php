@@ -41,16 +41,8 @@ class TwigComponentNode extends EmbedNode
     {
         $compiler->addDebugInfo($this);
 
-        $template = $compiler->getVarName();
-        $compiler->write(sprintf('$%s = ', $template));
-        $this->addGetTemplate($compiler);
-
         $compiler
-            ->raw(';')
-            ->write(sprintf("if ($%s) {\n", $template))
             ->write('$slotsStack = $slotsStack ?? [];'.\PHP_EOL)
-            ->write('$slotsStack[] = $slots ?? [];'.\PHP_EOL)
-            ->write('$slots = [];'.\PHP_EOL)
         ;
 
         if ($this->getAttribute('componentMetadata') instanceof ComponentMetadata) {
@@ -63,11 +55,15 @@ class TwigComponentNode extends EmbedNode
             ->write('$slot = ob_get_clean();'.\PHP_EOL)
         ;
 
-        $compiler->raw(sprintf('$%s->display(', $template));
+        $compiler
+            ->write("\$slotsStack['content'] = new  ".ComponentSlot::class." (\$slot);\n")
+        ;
+
+        $this->addGetTemplate($compiler);
+        $compiler->raw('->display(');
 
         $this->addTemplateArguments($compiler);
         $compiler->raw(");\n");
-        $compiler->write("}\n");
     }
 
     protected function addTemplateArguments(Compiler $compiler)
@@ -76,7 +72,6 @@ class TwigComponentNode extends EmbedNode
             ->indent(1)
             ->write("\n")
             ->write("array_merge(\n")
-            ->write('$slots,'.\PHP_EOL)
         ;
 
         if ($this->getAttribute('componentMetadata') instanceof ComponentMetadata) {
@@ -85,8 +80,9 @@ class TwigComponentNode extends EmbedNode
 
         $compiler
             ->write('$context,[')
-            ->write("'slot' => new  ".ComponentSlot::class." (\$slot),\n")
-            ->write("'attributes' => new ".AttributeBag::class.'(');
+            ->write("'slots' => \$slotsStack,")
+            ->write("'attributes' => new ".AttributeBag::class.'(')
+        ;
 
         if ($this->hasNode('variables')) {
             $compiler->subcompile($this->getNode('variables'));

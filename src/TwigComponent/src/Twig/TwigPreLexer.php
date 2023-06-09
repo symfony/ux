@@ -76,6 +76,12 @@ class TwigPreLexer
                     continue;
                 }
 
+                if ('slot' === $componentName) {
+                    $output .= $this->consumeSlot($componentName);
+
+                    continue;
+                }
+
                 // if we're already inside a component,
                 // *and* we've just found a new component, then we should try to
                 // open the default block
@@ -95,9 +101,9 @@ class TwigPreLexer
                     // use the simpler component() format, so that the system doesn't think
                     // this is an "embedded" component with blocks
                     // see https://github.com/symfony/ux/issues/810
-                    $output .= "{{ component('{$componentName}'".($attributes ? ", { {$attributes} }" : '').') }}';
+                    $output .= "{% twig_component '{$componentName}'".($attributes ? " with { {$attributes} }" : '').' %}{% end_twig_component %}';
                 } else {
-                    $output .= "{% component '{$componentName}'".($attributes ? " with { {$attributes} }" : '').' %}';
+                    $output .= "{% twig_component '{$componentName}'".($attributes ? " with { {$attributes} }" : '').' %}';
                 }
 
                 continue;
@@ -121,7 +127,7 @@ class TwigPreLexer
                     $output .= '{% endblock %}';
                 }
 
-                $output .= '{% endcomponent %}';
+                $output .= '{% end_twig_component %}';
 
                 continue;
             }
@@ -398,6 +404,82 @@ class TwigPreLexer
             }
 
             if ('{% block' === substr($this->input, $this->position, 8)) {
+                ++$depth;
+            }
+
+            if ("\n" === $this->input[$this->position]) {
+                ++$this->line;
+            }
+            ++$this->position;
+        }
+
+        return substr($this->input, $start, $this->position - $start);
+    }
+
+    private function consumeSlot(string $componentName): string
+    {
+        $attributes = $this->consumeAttributes($componentName);
+        $this->consume('>');
+
+        $slotName = '';
+        foreach (explode(', ', $attributes) as $attr) {
+            [$key, $value] = explode(': ', $attr);
+            if ('name' === $key) {
+                $slotName = trim($value, "'");
+                break;
+            }
+        }
+
+        if (empty($slotName)) {
+            throw new SyntaxError('Expected block name.', $this->line);
+        }
+
+        $output = "{% slot {$slotName} %}";
+
+        $closingTag = '</twig:slot>';
+        if (!$this->doesStringEventuallyExist($closingTag)) {
+            throw new SyntaxError("Expected closing tag '{$closingTag}' for block '{$slotName}'.", $this->line);
+        }
+        $slotContents = $this->consumeUntilEndSlot();
+
+        $subLexer = new self($this->line);
+        $output .= $subLexer->preLexComponents($slotContents);
+
+        $this->consume($closingTag);
+        $output .= '{% endslot %}';
+
+        return $output;
+    }
+
+    private function consumeUntilEndSlot(): string
+    {
+        $start = $this->position;
+
+        $depth = 1;
+        while ($this->position < $this->length) {
+            if ('</twig:slot' === substr($this->input, $this->position, 11)) {
+                if (1 === $depth) {
+                    break;
+                } else {
+                    --$depth;
+                }
+            }
+
+            if ('{% endslot %}' === substr($this->input, $this->position, 13)) {
+                if (1 === $depth) {
+                    // in this case, we want to advanced ALL the way beyond the endblock
+                    $this->position += 14;
+                    break;
+                } else {
+                    --$depth;
+                }
+            }
+
+            if ('<twig:slot' === substr($this->input, $this->position, 10)) {
+                ++$depth;
+            }
+
+            if ('{% slot' === substr($this->input, $this->position, 7)) {
                 ++$depth;
             }
 
