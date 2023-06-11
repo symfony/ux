@@ -17,6 +17,12 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
  * @author Bart Vanderstukken <bart.vanderstukken@gmail.com>
  */
 #[AsTwigComponent]
-final class DivComponentWrapper
+final class DivComponentWrapper3
 {
+    public string $divComponentWrapperName = 'bar';
+
+    public function someFunction(): string
+    {
+        return 'calling DivComponentWrapper';
+    }
 }

@@ -140,13 +140,20 @@ final class EmbeddedComponentTest extends KernelTestCase
 
     /**
      * Rule 12: Blocks defined within an embedded component can access the context of the block they are replacing.
+     * Rule 13: Blocks defined within an embedded component can access the context of components up the hierarchy (up to their own level) via "outerScope".
      */
     public function testBlockDefinitionCanAccessTheContextOfTheDestinationBlocks(): void
     {
         $this->assertStringContainsStringIgnoringIndentation(
-            '<div class="divComponent">I can access my own properties: foo.I can access the id of the Generic Element: symfonyIsAwesome.This refers to the Generic Element: calling GenericElement.I have access to outer context variables like Fabien.I can access the id from Generic Element as well: symfonyIsAwesome.I can access the properties from DivComponent as well: foo.The less obvious thing is that at this level "this" refers to the component where the content block is used, i.e. the Generic Element.Therefore, functions through this will be calling GenericElement.<span class="foo">The Generic Element default foo block</span></div>',
+            '<div class="divComponent">I can access my own properties: foo.I can access the id of the Generic Element: symfonyIsAwesome.This refers to the Generic Element: calling GenericElement.To access my own functions I can use outerScope.this: calling DivComponent.I have access to outer context variables like Fabien.I can access the id from Generic Element as well: symfonyIsAwesome.I can access the properties from DivComponent as well: foo.And of course the properties from DivComponentWrapper: bar.The less obvious thing is that at this level "this" refers to the component where the content block is used, i.e. the Generic Element.Therefore, functions through this will be calling GenericElement.Calls to outerScope.this will be calling DivComponent.Even I can access the id from Generic Element as well: symfonyIsAwesome.Even I can access the properties from DivComponent as well: foo.Even I can access the properties from DivComponentWrapper as well: bar.Even I can access the functions of DivComponent via outerScope.this: calling DivComponent.Since we are nesting two levels deep, calls to outerScope.outerScope.this will be calling DivComponentWrapper.<span class="foo">The Generic Element default foo block</span></div>',
             self::getContainer()->get(Environment::class)->render('embedded_component_blocks_context.html.twig')
         );
+    }
+
+    public function testAccessingTheHierarchyTooHighThrowsAnException(): void
+    {
+        $this->expectExceptionMessage('Key "this" for array with keys "app, __embedded" does not exist.');
+        self::getContainer()->get(Environment::class)->render('embedded_component_hierarchy_exception.html.twig');
     }
 
     public function testANonEmbeddedComponentRendersOuterBlocksEmpty(): void

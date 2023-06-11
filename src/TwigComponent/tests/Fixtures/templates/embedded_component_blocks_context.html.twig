@@ -1,7 +1,8 @@
 {% set name = 'Fabien' %}
-<twig:DivComponent5>
-    I can access the id from Generic Element as well: {{ id }}.
-    I can access the properties from DivComponent as well: {{ divComponentName }}.
-    The less obvious thing is that at this level "this" refers to the component where the content block is used, i.e. the Generic Element.
-    Therefore, functions through this will be {{ this.someFunction }}.
-</twig:DivComponent5>
+<twig:DivComponentWrapper3>
+    Even I can access the id from Generic Element as well: {{ id }}.
+    Even I can access the properties from DivComponent as well: {{ divComponentName }}.
+    Even I can access the properties from DivComponentWrapper as well: {{ divComponentWrapperName }}.
+    Even I can access the functions of DivComponent via outerScope.this: {{ outerScope.this.someFunction }}.
+    Since we are nesting two levels deep, calls to outerScope.outerScope.this will be {{ outerScope.outerScope.this.someFunction }}.
+</twig:DivComponentWrapper3>
