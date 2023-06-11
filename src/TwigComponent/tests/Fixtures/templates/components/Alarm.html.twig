@@ -3,7 +3,7 @@
         <p>You have an alert!</p>
     {% endblock %}
     <div class='content'>
-        {{ slots.content }}
+        {{ slot }}
     </div>
     {{ slots.footer|default('')|raw }}
 </div>

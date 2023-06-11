@@ -52,7 +52,6 @@ final class ComponentNode extends EmbedNode
             ->write('ob_start();'.\PHP_EOL)
             ->subcompile($this->getNode('slot'))
             ->write('$slot = ob_get_clean();'.\PHP_EOL)
-            ->write("\$slotsStack['content'] = new  ".ComponentSlot::class." (\$slot);\n")
         ;
 
         $this->addGetTemplate($compiler);
@@ -77,6 +76,7 @@ final class ComponentNode extends EmbedNode
 
         $compiler
             ->write('$context,[')
+            ->write("'slot' => new  ".ComponentSlot::class." (\$slot),\n")
             ->write("'slots' => \$slotsStack,")
         ;
 
