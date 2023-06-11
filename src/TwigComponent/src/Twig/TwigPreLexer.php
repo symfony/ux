@@ -101,9 +101,9 @@ class TwigPreLexer
                     // use the simpler component() format, so that the system doesn't think
                     // this is an "embedded" component with blocks
                     // see https://github.com/symfony/ux/issues/810
-                    $output .= "{% twig_component '{$componentName}'".($attributes ? " with { {$attributes} }" : '').' %}{% end_twig_component %}';
+                    $output .= "{% component '{$componentName}'".($attributes ? " with { {$attributes} }" : '').' %}{% endcomponent %}';
                 } else {
-                    $output .= "{% twig_component '{$componentName}'".($attributes ? " with { {$attributes} }" : '').' %}';
+                    $output .= "{% component '{$componentName}'".($attributes ? " with { {$attributes} }" : '').' %}';
                 }
 
                 continue;
@@ -127,7 +127,7 @@ class TwigPreLexer
                     $output .= '{% endblock %}';
                 }
 
-                $output .= '{% end_twig_component %}';
+                $output .= '{% endcomponent %}';
 
                 continue;
             }

@@ -12,10 +12,12 @@
 namespace Symfony\UX\TwigComponent\Twig;
 
 use Symfony\UX\TwigComponent\ComponentFactory;
+use Twig\Environment;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\NameExpression;
+use Twig\Node\ModuleNode;
 use Twig\Node\Node;
 use Twig\Token;
 use Twig\TokenParser\AbstractTokenParser;
@@ -31,12 +33,15 @@ final class ComponentTokenParser extends AbstractTokenParser
     /** @var ComponentFactory|callable():ComponentFactory */
     private $factory;
 
+    private Environment $environment;
+
     /**
      * @param callable():ComponentFactory $factory
      */
-    public function __construct(callable $factory)
+    public function __construct(callable $factory, Environment $environment)
     {
         $this->factory = $factory;
+        $this->environment = $environment;
     }
 
     public function parse(Token $token): Node
@@ -44,7 +49,7 @@ final class ComponentTokenParser extends AbstractTokenParser
         $stream = $this->parser->getStream();
         $parent = $this->parser->getExpressionParser()->parseExpression();
         $componentName = $this->componentName($parent);
-        $componentMetadata = $this->factory()->metadataFor($componentName);
+        $componentMetadata = $this->factory()->metadataForTwigComponent($componentName);
 
         [$variables, $only] = $this->parseArguments();
 
@@ -52,7 +57,7 @@ final class ComponentTokenParser extends AbstractTokenParser
             $variables = new ArrayExpression([], $parent->getTemplateLine());
         }
 
-        $parentToken = new Token(Token::STRING_TYPE, $componentMetadata->getTemplate(), $token->getLine());
+        $parentToken = new Token(Token::STRING_TYPE, $this->getTemplatePath($componentName), $token->getLine());
         $fakeParentToken = new Token(Token::STRING_TYPE, '__parent__', $token->getLine());
 
         // inject a fake parent to make the parent() function work
@@ -65,6 +70,8 @@ final class ComponentTokenParser extends AbstractTokenParser
 
         $module = $this->parser->parse($stream, fn (Token $token) => $token->test("end{$this->getTag()}"), true);
 
+        $slot = $this->getSlotFromBlockContent($module);
+
         // override the parent with the correct one
         if ($fakeParentToken === $parentToken) {
             $module->setNode('parent', $parent);
@@ -74,7 +81,7 @@ final class ComponentTokenParser extends AbstractTokenParser
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new ComponentNode($componentName, $module->getTemplateName(), $module->getAttribute('index'), $variables, $only, $token->getLine(), $this->getTag());
+        return new ComponentNode($componentName, $module->getTemplateName(), $module->getAttribute('index'), $variables, $only, $token->getLine(), $this->getTag(), $slot, $componentMetadata);
     }
 
     public function getTag(): string
@@ -93,6 +100,34 @@ final class ComponentTokenParser extends AbstractTokenParser
         }
 
         throw new \LogicException('Could not parse component name.');
+    }
+
+    private function getTemplatePath(string $name): string
+    {
+        $loader = $this->environment->getLoader();
+        $componentPath = rtrim(str_replace('.', '/', $name));
+
+        if (($componentMetadata = $this->factory->metadataForTwigComponent($name)) !== null) {
+            return $componentMetadata->getTemplate();
+        }
+
+        if ($loader->exists($componentPath)) {
+            return $componentPath;
+        }
+
+        if ($loader->exists($componentPath.'.html.twig')) {
+            return $componentPath.'.html.twig';
+        }
+
+        if ($loader->exists('components/'.$componentPath)) {
+            return 'components/'.$componentPath;
+        }
+
+        if ($loader->exists('/components/'.$componentPath.'.html.twig')) {
+            return '/components/'.$componentPath.'.html.twig';
+        }
+
+        throw new \LogicException("No template found for: {$name}");
     }
 
     private function factory(): ComponentFactory
@@ -123,5 +158,14 @@ final class ComponentTokenParser extends AbstractTokenParser
         $stream->expect(Token::BLOCK_END_TYPE);
 
         return [$variables, $only];
+    }
+
+    private function getSlotFromBlockContent(ModuleNode $module): Node
+    {
+        if ($module->getNode('blocks')->hasNode('content')) {
+            return $module->getNode('blocks')->getNode('content')->getNode(0)->getNode('body');
+        }
+
+        return new Node();
     }
 }

@@ -11,9 +11,12 @@
 
 namespace Symfony\UX\TwigComponent\Twig;
 
+use Symfony\UX\TwigComponent\ComponentAttributes;
+use Symfony\UX\TwigComponent\ComponentMetadata;
 use Twig\Compiler;
 use Twig\Node\EmbedNode;
 use Twig\Node\Expression\AbstractExpression;
+use Twig\Node\Node;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -23,17 +26,87 @@ use Twig\Node\Expression\AbstractExpression;
  */
 final class ComponentNode extends EmbedNode
 {
-    public function __construct(string $component, string $template, int $index, AbstractExpression $variables, bool $only, int $lineno, string $tag)
+    public function __construct(string $component, string $template, int $index, AbstractExpression $variables, bool $only, int $lineno, string $tag, Node $slot, ?ComponentMetadata $componentMetadata)
     {
         parent::__construct($template, $index, $variables, $only, false, $lineno, $tag);
 
         $this->setAttribute('component', $component);
+        $this->setAttribute('componentMetadata', $componentMetadata);
+
+        $this->setNode('slot', $slot);
     }
 
     public function compile(Compiler $compiler): void
     {
         $compiler->addDebugInfo($this);
 
+        $compiler
+            ->write('$slotsStack = $slotsStack ?? [];'.\PHP_EOL)
+        ;
+
+        if ($this->getAttribute('componentMetadata') instanceof ComponentMetadata) {
+            $this->addComponentProps($compiler);
+        }
+
+        $compiler
+            ->write('ob_start();'.\PHP_EOL)
+            ->subcompile($this->getNode('slot'))
+            ->write('$slot = ob_get_clean();'.\PHP_EOL)
+            ->write("\$slotsStack['content'] = new  ".ComponentSlot::class." (\$slot);\n")
+        ;
+
+        $this->addGetTemplate($compiler);
+
+        $compiler->raw('->display(');
+
+        $this->addTemplateArguments($compiler);
+        $compiler->raw(");\n");
+    }
+
+    protected function addTemplateArguments(Compiler $compiler)
+    {
+        $compiler
+            ->indent(1)
+            ->write("\n")
+            ->write("array_merge(\n")
+        ;
+
+        if ($this->getAttribute('componentMetadata') instanceof ComponentMetadata) {
+            $compiler->write('$props,'.\PHP_EOL);
+        }
+
+        $compiler
+            ->write('$context,[')
+            ->write("'slots' => \$slotsStack,")
+        ;
+
+        if (!$this->getAttribute('componentMetadata') instanceof ComponentMetadata) {
+            $compiler->write("'attributes' => new ".ComponentAttributes::class.'(');
+
+            if ($this->hasNode('variables')) {
+                $compiler->subcompile($this->getNode('variables'));
+            } else {
+                $compiler->raw('[]');
+            }
+
+            $compiler->write(")\n");
+        }
+
+        $compiler
+            ->indent(-1)
+            ->write('],');
+
+        if ($this->hasNode('variables')) {
+            $compiler->subcompile($this->getNode('variables'));
+        } else {
+            $compiler->raw('[]');
+        }
+
+        $compiler->write(")\n");
+    }
+
+    private function addComponentProps(Compiler $compiler)
+    {
         $compiler
             ->raw('$props = $this->extensions[')
             ->string(ComponentExtension::class)
@@ -46,10 +119,5 @@ final class ComponentNode extends EmbedNode
             ->raw($this->getAttribute('only') ? '[]' : '$context')
             ->raw(");\n")
         ;
-
-        $this->addGetTemplate($compiler);
-
-        $compiler->raw('->display($props);');
-        $compiler->raw("\n");
     }
 }
