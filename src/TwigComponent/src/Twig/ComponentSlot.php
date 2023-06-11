@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\TwigComponent\Twig;
 
+use Symfony\UX\TwigComponent\ComponentAttributes;
+
 /**
  * thanks to @giorgiopogliani!
  * This file is inspired by: https://github.com/giorgiopogliani/twig-components.
@@ -21,7 +23,7 @@ namespace Symfony\UX\TwigComponent\Twig;
  */
 class ComponentSlot
 {
-    public AttributeBag $attributes;
+    public ComponentAttributes $attributes;
 
     protected string $contents;
 
@@ -34,7 +36,7 @@ class ComponentSlot
 
     public function withAttributes(array $attributes): self
     {
-        $this->attributes = new AttributeBag($attributes);
+        $this->attributes = new ComponentAttributes($attributes);
 
         return $this;
     }

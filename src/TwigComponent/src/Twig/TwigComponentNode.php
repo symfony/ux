@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Twig;
 
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Twig\Compiler;
 use Twig\Node\EmbedNode;
@@ -81,16 +82,21 @@ class TwigComponentNode extends EmbedNode
         $compiler
             ->write('$context,[')
             ->write("'slots' => \$slotsStack,")
-            ->write("'attributes' => new ".AttributeBag::class.'(')
         ;
 
-        if ($this->hasNode('variables')) {
-            $compiler->subcompile($this->getNode('variables'));
-        } else {
-            $compiler->raw('[]');
+        if (!$this->getAttribute('componentMetadata') instanceof ComponentMetadata) {
+            $compiler->write("'attributes' => new ".ComponentAttributes::class.'(');
+
+            if ($this->hasNode('variables')) {
+                $compiler->subcompile($this->getNode('variables'));
+            } else {
+                $compiler->raw('[]');
+            }
+
+            $compiler->write(")\n");
         }
 
-        $compiler->write(")\n")
+        $compiler
             ->indent(-1)
             ->write('],');
 
@@ -111,20 +117,10 @@ class TwigComponentNode extends EmbedNode
             ->raw(']->embeddedContext(')
             ->string($this->getAttribute('component'))
             ->raw(', ')
-        ;
-
-        if ($this->hasNode('variables')) {
-            $compiler
-                ->raw('twig_to_array(')
-                ->subcompile($this->getNode('variables'))
-                ->raw('), ')
-            ;
-        } else {
-            $compiler->raw('[], ');
-        }
-
-        $compiler
-            ->raw('$context')
+            ->raw('twig_to_array(')
+            ->subcompile($this->getNode('variables'))
+            ->raw('), ')
+            ->raw($this->getAttribute('only') ? '[]' : '$context')
             ->raw(");\n")
         ;
     }

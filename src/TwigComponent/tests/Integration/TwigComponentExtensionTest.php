@@ -65,7 +65,7 @@ class TwigComponentExtensionTest extends KernelTestCase
         $output = self::getContainer()->get(Environment::class)->render('slot/use_attribute_variables.html.twig');
 
         $this->assertStringContainsString('Submit!', $output);
-        $this->assertStringContainsString('class="btn-primary btn"', $output);
+        $this->assertStringContainsString('class="btn btn-primary"', $output);
     }
 
     public function testRenderStaticComponentInSubFolder(): void
@@ -87,7 +87,7 @@ class TwigComponentExtensionTest extends KernelTestCase
     {
         $output = self::getContainer()->get(Environment::class)->render('slot/pass_default_slot_to_child.html.twig');
 
-        $this->assertStringContainsString('<button class="btn">Delete User</button>', $output);
+        $this->assertStringContainsString('<button  class="btn">Delete User</button>', $output);
     }
 
     public function testCanRenderEmbeddedComponent(): void
