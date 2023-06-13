@@ -1,11 +1,17 @@
 StimulusBundle: Symfony integration with Stimulus
 =================================================
 
-This bundle adds integration between Symfony, `Stimulus`_ and Symfony UX:
+.. tip::
 
-A) Twig ``stimulus_*`` functions & filters to add Stimulus controllers, actions & targets in your templates;
-B) Integration with Symfony UX & AssetMapper (this integration is `experimental`_)
-C) A helper service to build the Stimulus data attributes and use them in your services.
+    Check out live demos of Symfony UX at https://ux.symfony.com!
+
+This bundle adds integration between Symfony, `Stimulus`_ and the Symfony UX packages:
+
+A) Twig ``stimulus_`` functions & filters to add Stimulus controllers,
+   actions & targets in your templates;
+
+B) Integration to load :ref:`UX Packages <ux-packages>` (extra Stimulus controllers)
+   (if you're using AssetMapper, this integration is `experimental`_)
 
 Installation
 ------------
@@ -15,18 +21,13 @@ both work great with StimulusBundle:
 
 * A) `Webpack Encore`_ Node-based packaging system:
 
-  .. code-block:: terminal
-
-      $ composer require symfony/webpack-encore-bundle
 or
 
 * B) `AssetMapper`_: PHP-based system for handling assets:
 
-  .. code-block:: terminal
+See `Encore vs AssetMapper`_ to learn which is best for your project.
 
-      $ composer require symfony/asset-mapper
-
-Then, install the bundle:
+Next, install the bundle:
 
 .. code-block:: terminal
 
@@ -35,11 +36,26 @@ Then, install the bundle:
 If you're using `Symfony Flex`_, you're done! The recipe will update the
 necessary files. If not, or you're curious, see :ref:`Manual Setup <manual-installation>`.
 
+.. tip::
+
+    If you're using Encore, be sure to install your assets (e.g. ``npm install``)
+    and restart Encore.
+
 Usage
 -----
 
 You can now create custom Stimulus controllers inside of the ``assets/controllers.``
-directory. In fact, you should have an example controller there already: ``hello_controller.js``.
+directory. In fact, you should have an example controller there already: ``hello_controller.js``:
+
+.. code-block:: javascript
+
+    import { Controller } from '@hotwired/stimulus';
+
+    export default class extends Controller {
+        connect() {
+            this.element.textContent = 'Hello Stimulus! Edit me in assets/controllers/hello_controller.js';
+        }
+    }
 
 Use the Twig functions from this bundle to activate your controllers:
 
@@ -49,13 +65,97 @@ Use the Twig functions from this bundle to activate your controllers:
         ...
     </div>
 
-Your app will also activate any 3rd party controllers (installed by UX bundles)
-mentioned in your ``assets/controllers.json`` file.
+That's it! Whenever this element appears on the page, the ``hello`` controller
+will activate.
 
-For a *ton* more details, see the `Symfony UX documentation`_.
+There's a *lot* more to learn about Stimulus. See the `Stimulus Documentation`_
+for all the goodies.
+
+.. _ux-packages:
+
+The UX Packages
+~~~~~~~~~~~~~~~
+
+Symfony provides a set of UX packages that add extra Stimulus controllers to solve
+common problems. StimulusBundle activates any 3rd party Stimulus controllers
+that are mentioned in your ``assets/controllers.json`` file. This file is updated
+whenever you install a UX package.
+
+The official UX packages are:
+
+* `ux-autocomplete`_: Transform ``EntityType``, ``ChoiceType`` or *any*
+  ``<select>`` element into an Ajax-powered autocomplete field
+  (`see demo <https://ux.symfony.com/autocomplete>`_)
+* `ux-chartjs`_: Easy charts with `Chart.js`_ (`see demo <https://ux.symfony.com/chartjs>`_)
+* `ux-cropperjs`_: Form Type and tools for cropping images (`see demo <https://ux.symfony.com/cropperjs>`_)
+* `ux-dropzone`_: Form Type for stylized "drop zone" for file uploads
+  (`see demo <https://ux.symfony.com/dropzone>`_)
+* `ux-lazy-image`_: Optimize Image Loading with BlurHash
+  (`see demo <https://ux.symfony.com/lazy-image>`_)
+* `ux-live-component`_: Build Dynamic Interfaces with Zero JavaScript
+  (`see demo <https://ux.symfony.com/live-component>`_)
+* `ux-notify`_: Send server-sent native notification with Mercure
+  (`see demo <https://ux.symfony.com/notify>`_)
+* `ux-react`_: Render `React`_ component from Twig (`see demo <https://ux.symfony.com/react>`_)
+* `ux-svelte`_: Render `Svelte`_ component from Twig (`see demo <https://ux.symfony.com/svelte>`_)
+* `ux-swup`_: Integration with `Swup`_ (`see demo <https://ux.symfony.com/swup>`_)
+* `ux-translator`_: Use your Symfony translations in JavaScript `Swup`_ (`see demo <https://ux.symfony.com/translator>`_)
+* `ux-turbo`_: Integration with `Turbo Drive`_ for a single-page-app experience
+  (`see demo <https://ux.symfony.com/turbo>`_)
+* `ux-twig-component`_: Build Twig Components Backed by a PHP Class
+  (`see demo <https://ux.symfony.com/twig-component>`_)
+* `ux-typed`_: Integration with `Typed`_ (`see demo <https://ux.symfony.com/typed>`_)
+* `ux-vue`_: Render `Vue`_ component from Twig (`see demo <https://ux.symfony.com/vue>`_)
+
+Lazy Stimulus Controllers
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, all of your controllers (i.e. files in ``assets/controllers/`` +
+controllers in ``assets/controllers.json``) will be downloaded and loaded on
+every page.
+
+Sometimes you may have a controller that's only used on some pages. In that case,
+you can make the controller "lazy". In this case, will *not be downloaded on
+initial page load. Instead, as soon as an element appears on the page matching
+the controller (e.g. ``<div data-controller="hello">``), the controller - and anything
+else it imports - will be lazily-loaded via Ajax.
+
+To make one of your custom controllers lazy, add a special comment on top:
+
+.. code-block:: javascript
+
+    import { Controller } from '@hotwired/stimulus';
+
+    /* stimulusFetch: 'lazy' */
+    export default class extends Controller {
+        // ...
+    }
+
+To make a third-party controller lazy, in ``assets/controllers.json``, set
+``fetch`` to ``lazy``.
+
+.. note::
+
+    If you write your controllers using TypeScript, make sure
+    ``removeComments`` is not set to ``true`` in your TypeScript config.
+
+Stimulus Tools around the World
+-------------------------------
+
+Because Stimulus is used by developers outside of Symfony, many tools
+exist beyond the UX packages:
+
+* `stimulus-use`_: Add composable behaviors to your Stimulus controllers, like
+  debouncing, detecting outside clicks and many other things.
+
+* `stimulus-components`_ A large number of pre-made Stimulus controllers, like for
+  Copying to clipboard, Sortable, Popover (similar to tooltips) and much more.
 
 Stimulus Twig Helpers
 ---------------------
+
+This bundle adds 3 Twig functions/filters to help add Stimulus controllers,
+actions & targets in your templates.
 
 stimulus_controller
 ~~~~~~~~~~~~~~~~~~~
@@ -203,6 +303,8 @@ You can also retrieve the generated attributes as an array, which can be helpful
 
     {{ form_row(form.password, { attr: stimulus_target('hello-controller', 'a-target').toArray() }) }}
 
+.. _configuration:
+
 Configuration
 -------------
 
@@ -303,10 +405,77 @@ will import all your custom controllers as well as those from ``controllers.json
 It will also dynamically enable "debug" mode in Stimulus when your application
 is running in debug mode.
 
+How are the Stimulus Controllers Loaded?
+----------------------------------------
+
+When you install a UX PHP package, Symfony Flex will automatically update your
+``package.json`` file (not done or needed if using AssetMapper) to point to a
+"virtual package" that lives inside that PHP package. For example:
+
+.. code-block:: json
+
+    {
+        "devDependencies": {
+            "...": "",
+            "@symfony/ux-chartjs": "file:vendor/symfony/ux-chartjs/assets"
+        }
+    }
+
+This gives you a *real* Node package (e.g. ``@symfony/ux-chartjs``) that, instead
+of being downloaded, points directly to files that already live in your ``vendor/``
+directory.
+
+The Flex recipe will usually also update your ``assets/controllers.json`` file
+to add a new Stimulus controller to your app. For example:
+
+.. code-block:: json
+
+    {
+        "controllers": {
+            "@symfony/ux-chartjs": {
+                "chart": {
+                    "enabled": true,
+                    "fetch": "eager"
+                }
+            }
+        },
+        "entrypoints": []
+    }
+
+Finally, your ``assets/bootstrap.js`` file will automatically register:
+
+* All files in ``assets/controllers/`` as Stimulus controllers;
+* And all controllers described in ``assets/controllers.json`` as Stimulus controllers.
+
+.. note::
+
+    If you're using WebpackEncore, the ``bootstrap.js`` file works in partnership
+    with `@symfony/stimulus-bridge`_. With AssetMapper, the ``bootstrap.js`` file
+    works directly with this bundle: a ``@symfony/stimulus-bundle`` entry is added
+    to your ``importmap.php`` file via Flex, which points to a file that is dynamically
+    built to find and load your controllers (see :ref:`Configuration <configuration>`).
+
+The end result: you install a package, and you instantly have a Stimulus
+controller available! In this example, it's called
+``@symfony/ux-chartjs/chart``. Well, technically, it will be called
+``symfony--ux-chartjs--chart``. However, you can pass the original name
+into the ``{{ stimulus_controller() }}`` function from WebpackEncoreBundle, and
+it will normalize it:
+
+.. code-block:: html+twig
+
+    <div {{ stimulus_controller('@symfony/ux-chartjs/chart') }}>
+
+    <!-- will render as: -->
+    <div data-controller="symfony--ux-chartjs--chart">
+
+.. _Encore vs AssetMapper: https://symfony.com/doc/current/frontend.html
+.. _Symfony Flex: https://symfony.com/doc/current/setup/flex.html
+.. _Stimulus Documentation: https://stimulus.hotwired.dev/
+.. _`@symfony/stimulus-bridge`: https://github.com/symfony/stimulus-bridge
 .. _`Stimulus`: https://stimulus.hotwired.dev/
 .. _`Webpack Encore`: https://symfony.com/doc/current/frontend.html
 .. _`AssetMapper`: https://symfony.com/doc/current/frontend/asset-mapper.html
-.. _`Symfony UX documentation`: https://symfony.com/doc/current/frontend/ux.html
 .. _`Stimulus Controllers & Values`: https://stimulus.hotwired.dev/reference/values
 .. _`CSS Classes`: https://stimulus.hotwired.dev/reference/css-classes
 .. _`Stimulus Actions`: https://stimulus.hotwired.dev/reference/actions
@@ -314,3 +483,27 @@ is running in debug mode.
 .. _`Stimulus Targets`: https://stimulus.hotwired.dev/reference/targets
 .. _`StimulusBundle Flex recipe`: https://github.com/symfony/recipes/tree/main/symfony/stimulus-bundle
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
+.. _`ux-autocomplete`: https://symfony.com/bundles/ux-autocomplete/current/index.html
+.. _`ux-chartjs`: https://symfony.com/bundles/ux-chartjs/current/index.html
+.. _`ux-cropperjs`: https://symfony.com/bundles/ux-cropperjs/current/index.html
+.. _`ux-dropzone`: https://symfony.com/bundles/ux-dropzone/current/index.html
+.. _`ux-lazy-image`: https://symfony.com/bundles/ux-lazy-image/current/index.html
+.. _`ux-live-component`: https://symfony.com/bundles/ux-live-component/current/index.html
+.. _`ux-notify`: https://symfony.com/bundles/ux-notify/current/index.html
+.. _`ux-react`: https://symfony.com/bundles/ux-react/current/index.html
+.. _ux-translator: https://symfony.com/bundles/ux-translator/current/index.html
+.. _`ux-swup`: https://symfony.com/bundles/ux-swup/current/index.html
+.. _`ux-turbo`: https://symfony.com/bundles/ux-turbo/current/index.html
+.. _`ux-twig-component`: https://symfony.com/bundles/ux-twig-component/current/index.html
+.. _`ux-typed`: https://symfony.com/bundles/ux-typed/current/index.html
+.. _`ux-vue`: https://symfony.com/bundles/ux-vue/current/index.html
+.. _`ux-svelte`: https://symfony.com/bundles/ux-svelte/current/index.html
+.. _`Chart.js`: https://www.chartjs.org/
+.. _`Swup`: https://swup.js.org/
+.. _`React`: https://reactjs.org/
+.. _`Svelte`: https://svelte.dev/
+.. _`Turbo Drive`: https://turbo.hotwired.dev/
+.. _`Typed`: https://github.com/mattboldt/typed.js/
+.. _`Vue`: https://vuejs.org/
+.. _`stimulus-use`: https://stimulus-use.github.io/stimulus-use
+.. _`stimulus-components`: https://stimulus-components.netlify.app/

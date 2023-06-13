@@ -86,9 +86,9 @@ EOF
                 description: 'Create an invoice + line items that updates as you type.',
                 route: 'app_live_components_invoice',
                 longDescription: <<<EOF
-A parent component with children components for each line item.
+Create or edit an `Invoice` entity along with child components for each related `InvoiceItem` entity.
 <br>
-Children emit events to communicate to the parent.
+Children components emit events to communicate to the parent and everything is saved in a `saveInvoice` LiveAction method.
 EOF
             ),
             new LiveDemo(

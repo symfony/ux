@@ -8,20 +8,19 @@ It is part of `the Symfony UX initiative`_.
 Installation
 ------------
 
-Before you start, make sure you have `Symfony UX configured in your app`_.
+Before you start, make sure you have `StimulusBundle configured in your app`_.
 
-Then, install this bundle using Composer and Symfony Flex:
+Then install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
     $ composer require symfony/ux-chartjs
 
-If you're using WebpackEncore, install your assets and restart Encore. This is
-not needed if you're using AssetMapper:
+If you're using WebpackEncore, install your assets and restart Encore (not
+needed if you're using AssetMapper):
 
 .. code-block:: terminal
 
-    # Don't forget to install the JavaScript dependencies as well and compile
     $ npm install --force
     $ npm run watch
 
@@ -244,7 +243,7 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Chart.js`: https://www.chartjs.org
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _`Chart.js documentation`: https://www.chartjs.org/docs/latest/
-.. _`Symfony UX configured in your app`: https://symfony.com/doc/current/frontend/ux.html
+.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`a lot of plugins`: https://github.com/chartjs/awesome#plugins
 .. _`zoom plugin`: https://www.chartjs.org/chartjs-plugin-zoom/latest/
 .. _`zoom plugin documentation`: https://www.chartjs.org/chartjs-plugin-zoom/latest/guide/integration.html
