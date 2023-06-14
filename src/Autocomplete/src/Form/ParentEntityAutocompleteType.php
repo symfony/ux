@@ -56,7 +56,11 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
         array_splice($view['autocomplete']->vars['block_prefixes'], -1, 0, 'ux_entity_autocomplete_inner');
         // this IS A compound (i.e. has children) field
         // however, we only render the child "autocomplete" field. So for rendering, fake NOT compound
+        // This is a hack and we should check into removing it in the future
         $view->vars['compound'] = false;
+        // the above, unfortunately, can also trick other things that might use
+        // "compound" for other reasons. This, at least, leaves a hint.
+        $view->vars['compound_data'] = true;
     }
 
     public function configureOptions(OptionsResolver $resolver)

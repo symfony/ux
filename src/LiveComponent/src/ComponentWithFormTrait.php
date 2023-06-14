@@ -92,7 +92,7 @@ trait ComponentWithFormTrait
         }
 
         // set the formValues from the initial form view's data
-        $this->formValues = $this->extractFormValues($this->getForm(), $this->getFormInstance());
+        $this->formValues = $this->extractFormValues($this->getForm());
 
         return $data;
     }
@@ -145,7 +145,7 @@ trait ComponentWithFormTrait
         $this->shouldAutoSubmitForm = false;
         $this->formInstance = null;
         $this->formView = null;
-        $this->formValues = $this->extractFormValues($this->getForm(), $this->getFormInstance());
+        $this->formValues = $this->extractFormValues($this->getForm());
     }
 
     private function submitForm(bool $validateAll = true): void
@@ -172,7 +172,7 @@ trait ComponentWithFormTrait
 
         // re-extract the "view" values in case the submitted data
         // changed the underlying data or structure of the form
-        $this->formValues = $this->extractFormValues($this->getForm(), $form);
+        $this->formValues = $this->extractFormValues($this->getForm());
 
         // remove any validatedFields that do not exist in data anymore
         $this->validatedFields = LiveFormUtility::removePathsNotInData(
@@ -238,7 +238,7 @@ trait ComponentWithFormTrait
      * frontend, and it's meant to equal the raw POST data that would
      * be sent if the form were submitted without modification.
      */
-    private function extractFormValues(FormView $formView, FormInterface $form): array
+    private function extractFormValues(FormView $formView): array
     {
         $values = [];
 
@@ -250,10 +250,12 @@ trait ComponentWithFormTrait
             // is already correct. For example, an expanded ChoiceType with
             // options "text" and "phone" would already have a value in the format
             // ["text"] (assuming "text" is checked and "phone" is not).
-            //
-            $isCompound = $form->has($name) && $form->get($name)->getConfig()->getOption('compound', false);
+            // "compound" is how we know if a field holds children. The extra
+            // "compound_data" is a special flag to workaround the fact that
+            // the "autocomplete" library fakes their compound fake incorrectly.
+            $isCompound = $child->vars['compound_data'] ?? $child->vars['compound'] ?? false;
             if ($isCompound && !($child->vars['expanded'] ?? false)) {
-                $values[$name] = $this->extractFormValues($child, $form->get($name));
+                $values[$name] = $this->extractFormValues($child);
 
                 continue;
             }

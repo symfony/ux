@@ -19,6 +19,8 @@ class ComplexFieldType extends AbstractType
     public function finishView(FormView $view, FormInterface $form, array $options)
     {
         // try to confuse ComponentWithFormTrait
+        // mimics what autocomplete does
         $view->vars['compound'] = false;
+        $view->vars['compound_data'] = true;
     }
 }
