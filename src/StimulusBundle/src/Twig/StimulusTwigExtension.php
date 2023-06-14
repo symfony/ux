@@ -48,18 +48,19 @@ final class StimulusTwigExtension extends AbstractExtension
      * @param string $controllerName    the Stimulus controller name
      * @param array  $controllerValues  array of controller values
      * @param array  $controllerClasses array of controller CSS classes
+     * @param array  $controllerOutlets array of controller outlets
      */
-    public function renderStimulusController(string $controllerName, array $controllerValues = [], array $controllerClasses = []): StimulusAttributes
+    public function renderStimulusController(string $controllerName, array $controllerValues = [], array $controllerClasses = [], array $controllerOutlets = []): StimulusAttributes
     {
         $stimulusAttributes = $this->stimulusHelper->createStimulusAttributes();
-        $stimulusAttributes->addController($controllerName, $controllerValues, $controllerClasses);
+        $stimulusAttributes->addController($controllerName, $controllerValues, $controllerClasses, $controllerOutlets);
 
         return $stimulusAttributes;
     }
 
-    public function appendStimulusController(StimulusAttributes $stimulusAttributes, string $controllerName, array $controllerValues = [], array $controllerClasses = []): StimulusAttributes
+    public function appendStimulusController(StimulusAttributes $stimulusAttributes, string $controllerName, array $controllerValues = [], array $controllerClasses = [], array $controllerOutlets = []): StimulusAttributes
     {
-        $stimulusAttributes->addController($controllerName, $controllerValues, $controllerClasses);
+        $stimulusAttributes->addController($controllerName, $controllerValues, $controllerClasses, $controllerOutlets);
 
         return $stimulusAttributes;
     }
