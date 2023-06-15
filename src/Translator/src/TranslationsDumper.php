@@ -53,7 +53,7 @@ class TranslationsDumper
         $translationsTs = "import { Message, NoParametersType } from '@symfony/ux-translator';\n\n";
 
         foreach ($this->getTranslations(...$catalogues) as $translationId => $translationsByDomainAndLocale) {
-            $constantName = s($translationId)->ascii()->snake()->upper()->toString();
+            $constantName = $this->generateConstantName($translationId);
 
             $translationsJs .= sprintf(
                 "export const %s = %s;\n",
@@ -158,5 +158,20 @@ TS
         }
 
         return $localesFallbacks;
+    }
+
+    private function generateConstantName(string $translationId): string
+    {
+        static $alreadyGenerated = [];
+
+        $prefix = 0;
+        do {
+            $constantName = s($translationId)->ascii()->snake()->upper()->toString().($prefix > 0 ? '_'.$prefix : '');
+            ++$prefix;
+        } while (\in_array($constantName, $alreadyGenerated, true));
+
+        $alreadyGenerated[] = $constantName;
+
+        return $constantName;
     }
 }
