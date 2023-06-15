@@ -109,7 +109,17 @@ describe('LiveController data-model Tests', () => {
     it('renders correctly with data-value and live#update on a non-input', async () => {
         const test = await createTest({ name: 'Ryan' }, (data: any) => `
             <div ${initComponent(data)}>
-                <a data-action="live#update" data-model="name" data-value="Jan">Change name to Jan</a>
+                <a
+                    data-action="live#update"
+                    data-model="name"
+                    data-value="Jan"
+                >Change name to Jan</a>
+
+                <a
+                    data-action="live#update"
+                    data-model="name"
+                    data-value="Dan"
+                ><span>Change name to Dan</span></a>
                 
                 Name is: ${data.name}
             </div>
@@ -122,6 +132,14 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name is: Jan'));
         expect(test.component.valueStore.getOriginalProps()).toEqual({name: 'Jan'});
+
+        test.expectsAjaxCall()
+            .expectUpdatedData({ name: 'Dan' });
+
+        userEvent.click(getByText(test.element, 'Change name to Dan'));
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Name is: Dan'));
+        expect(test.component.valueStore.getOriginalProps()).toEqual({name: 'Dan'});
     });
 
     it('falls back to using the name attribute when no data-model is present and <form data-model> is ancestor', async () => {

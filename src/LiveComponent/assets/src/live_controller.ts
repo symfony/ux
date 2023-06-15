@@ -138,12 +138,12 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         if (event.type === 'input' || event.type === 'change') {
             throw new Error(
                 `Since LiveComponents 2.3, you no longer need data-action="live#update" on form elements. Found on element: ${getElementAsTagText(
-                    event.target
+                    event.currentTarget
                 )}`
             );
         }
 
-        this.updateModelFromElementEvent(event.target, null);
+        this.updateModelFromElementEvent(event.currentTarget, null);
     }
 
     action(event: any) {
