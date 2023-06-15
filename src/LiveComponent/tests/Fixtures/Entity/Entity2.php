@@ -14,25 +14,17 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Embeddable2;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class Entity2
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     public $id;
 
-    /**
-     * @ORM\Embedded(Embeddable1::class)
-     */
+    #[ORM\Embedded(Embeddable1::class)]
     public Embeddable1 $embedded1;
 
-    /**
-     * @ORM\Embedded(Embeddable2::class)
-     */
+    #[ORM\Embedded(Embeddable2::class)]
     public Embeddable2 $embedded2;
 }

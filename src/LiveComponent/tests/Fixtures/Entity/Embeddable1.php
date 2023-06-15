@@ -13,14 +13,10 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Embeddable
- */
+#[ORM\Embeddable]
 final class Embeddable1
 {
-    /**
-     * @ORM\Column
-     */
+    #[ORM\Column]
     public string $name;
 
     public function __construct(string $name)

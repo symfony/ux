@@ -16,6 +16,9 @@ use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
@@ -26,6 +29,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\MoneyNormalizer;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Environment;
 use Zenstruck\Foundry\ZenstruckFoundryBundle;
+
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 /**
@@ -57,6 +61,17 @@ final class Kernel extends BaseKernel
         yield new ZenstruckFoundryBundle();
     }
 
+    protected function build(ContainerBuilder $container): void
+    {
+        // workaround https://github.com/symfony/symfony/issues/50322
+        $container->addCompilerPass(new class() implements CompilerPassInterface {
+            public function process(ContainerBuilder $container): void
+            {
+                $container->removeDefinition('doctrine.orm.listeners.pdo_session_handler_schema_listener');
+            }
+        }, PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
+    }
+
     protected function configureContainer(ContainerConfigurator $c): void
     {
         $c->extension('framework', [
@@ -84,7 +99,7 @@ final class Kernel extends BaseKernel
                 'mappings' => [
                     'Default' => [
                         'is_bundle' => false,
-                        'type' => 'annotation',
+                        'type' => 'attribute',
                         'dir' => '%kernel.project_dir%/tests/Fixtures/Entity',
                         'prefix' => 'Symfony\UX\LiveComponent\Tests\Fixtures\Entity',
                         'alias' => 'Default',
@@ -106,16 +121,15 @@ final class Kernel extends BaseKernel
 
         $c->services()
             ->defaults()
-                ->autowire()
-                ->autoconfigure()
+            ->autowire()
+            ->autoconfigure()
             // disable logging errors to the console
             ->set('logger', NullLogger::class)
             ->set(MoneyNormalizer::class)->autoconfigure()->autowire()
             ->set(Entity2Normalizer::class)->autoconfigure()->autowire()
             ->load(__NAMESPACE__.'\\Component\\', __DIR__.'/Component')
             ->set(TestingDeterministicIdTwigExtension::class)
-                ->args([service('ux.live_component.deterministic_id_calculator')])
-        ;
+            ->args([service('ux.live_component.deterministic_id_calculator')]);
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
