@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Update Artist Via Song</h1>
+
+    <div id="artists" {{ turbo_stream_listen('App\\Entity\\Artist') }}></div>
+
+    <turbo-frame id="api">
+        <form method="post" enctype="application/x-www-form-urlencoded">
+            <input name="id" value="{{ song ? song.id }}">
+            <button>Submit</button>
+        </form>
+    </turbo-frame>
+{% endblock %}

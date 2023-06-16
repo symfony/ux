@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Turbo\Broadcaster;
 
+use Doctrine\Common\Util\ClassUtils;
+use Symfony\Component\VarExporter\LazyObjectInterface;
 use Twig\Environment;
 
 /**
@@ -42,8 +44,18 @@ final class TwigBroadcaster implements BroadcasterInterface
             $options['id'] = $id;
         }
 
+        // handle proxies (both styles)
+        if ($entity instanceof LazyObjectInterface) {
+            $class = get_parent_class($entity);
+            if (false === $class) {
+                throw new \LogicException('Parent class missing');
+            }
+        } else {
+            $class = ClassUtils::getClass($entity);
+        }
+
         if (null === $template = $options['template'] ?? null) {
-            $template = $entity::class;
+            $template = $class;
             foreach ($this->templatePrefixes as $namespace => $prefix) {
                 if (str_starts_with($template, $namespace)) {
                     $template = substr_replace($template, $prefix, 0, \strlen($namespace));

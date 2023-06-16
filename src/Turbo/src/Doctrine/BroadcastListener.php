@@ -13,9 +13,11 @@ namespace Symfony\UX\Turbo\Doctrine;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventArgs;
+use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
+use Symfony\Component\VarExporter\LazyObjectInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
@@ -126,7 +128,15 @@ final class BroadcastListener implements ResetInterface
 
     private function storeEntitiesToPublish(EntityManagerInterface $em, object $entity, string $property): void
     {
-        $class = $entity::class;
+        // handle proxies (both styles)
+        if ($entity instanceof LazyObjectInterface) {
+            $class = get_parent_class($entity);
+            if (false === $class) {
+                throw new \LogicException('Parent class missing');
+            }
+        } else {
+            $class = ClassUtils::getClass($entity);
+        }
 
         if (!isset($this->broadcastedClasses[$class])) {
             $this->broadcastedClasses[$class] = [];

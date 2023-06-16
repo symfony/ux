@@ -33,7 +33,7 @@ class BroadcastTest extends PantherTestCase
         parent::setUp();
     }
 
-    public function testBroadcast(): void
+    public function testBroadcastBasic(): void
     {
         ($client = self::createPantherClient())->request('GET', '/books');
 
@@ -87,5 +87,21 @@ class BroadcastTest extends PantherTestCase
             $songsElement->getText(),
             'Artist 2 shows a song that does not belong to them'
         );
+    }
+
+    public function testBroadcastWithProxy(): void
+    {
+        // testing that Artist is updated, even though it's saved as Proxy
+        ($client = self::createPantherClient())->request('GET', '/artistFromSong');
+
+        // submit first time to create the artist
+        $client->submitForm('Submit');
+        $this->assertSelectorWillContain('#artists', 'testing artist');
+
+        // submit again to update the artist
+        $client->submitForm('Submit');
+        $this->assertSelectorWillContain('#artists', 'testing artist after change');
+        // this part is from the stream template
+        $this->assertSelectorWillContain('#artists', ', updated)');
     }
 }
