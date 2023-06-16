@@ -2697,9 +2697,9 @@ class LiveControllerDefault extends Controller {
     }
     update(event) {
         if (event.type === 'input' || event.type === 'change') {
-            throw new Error(`Since LiveComponents 2.3, you no longer need data-action="live#update" on form elements. Found on element: ${getElementAsTagText(event.target)}`);
+            throw new Error(`Since LiveComponents 2.3, you no longer need data-action="live#update" on form elements. Found on element: ${getElementAsTagText(event.currentTarget)}`);
         }
-        this.updateModelFromElementEvent(event.target, null);
+        this.updateModelFromElementEvent(event.currentTarget, null);
     }
     action(event) {
         const rawAction = event.currentTarget.dataset.actionName;
