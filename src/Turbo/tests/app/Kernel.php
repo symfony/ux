@@ -33,7 +33,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\Component\Mercure\Hub;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
@@ -117,8 +116,6 @@ class Kernel extends BaseKernel
                 ],
             ],
         ]);
-
-        $container->services()->alias(Hub::class, 'mercure.hub.default'); // FIXME: temporary fix for a bug in https://github.com/symfony/mercure-bundle/pull/42
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
@@ -135,6 +132,7 @@ class Kernel extends BaseKernel
         $routes->add('songs', '/songs')->controller('kernel::songs');
         $routes->add('artists', '/artists')->controller('kernel::artists');
         $routes->add('artist', '/artists/{id}')->controller('kernel::artist');
+        $routes->add('artist_from_song', '/artistFromSong')->controller('kernel::artistFromSong');
     }
 
     public function getProjectDir(): string
@@ -264,5 +262,43 @@ class Kernel extends BaseKernel
         }
 
         return new Response($twig->render('artist.html.twig', ['artist' => $artist]));
+    }
+
+    public function artistFromSong(Request $request, EntityManagerInterface $doctrine, Environment $twig): Response
+    {
+        $song = null;
+        if ($request->isMethod('POST')) {
+            // on first post, create the objects
+            // on second, update the artist
+            $id = $request->get('id');
+            if (!$id) {
+                $artist = new Artist();
+                $artist->name = 'testing artist';
+
+                $song = new Song();
+                $song->artist = $artist;
+                $song->title = 'testing song title';
+
+                $doctrine->persist($artist);
+                $doctrine->persist($song);
+                $doctrine->flush();
+            } else {
+                $song = $doctrine->find(Song::class, $id);
+                if (!$song) {
+                    throw new NotFoundHttpException();
+                }
+                $artist = $song->artist;
+                if (!$artist) {
+                    throw new NotFoundHttpException();
+                }
+                $artist->name = $artist->name.' after change';
+
+                $doctrine->flush();
+            }
+        }
+
+        return new Response($twig->render('artist_from_song.html.twig', [
+            'song' => $song,
+        ]));
     }
 }
