@@ -206,5 +206,10 @@ final class TwigPreLexerTest extends TestCase
             '<twig:Alert/> {# <twig:Alert/> #}',
             '{{ component(\'Alert\') }} {# <twig:Alert/> #}',
         ];
+
+        yield 'ignore_content_of_verbatim_block' => [
+            '{% verbatim %}<twig:Alert/>{% endverbatim %}',
+            '{% verbatim %}<twig:Alert/>{% endverbatim %}',
+        ];
     }
 }

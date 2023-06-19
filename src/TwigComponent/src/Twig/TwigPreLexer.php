@@ -37,6 +37,18 @@ class TwigPreLexer
         $output = '';
 
         while ($this->position < $this->length) {
+            // ignore content inside verbatim block #947
+            if ($this->consume('{% verbatim %}')) {
+                $output .= '{% verbatim %}';
+                $output .= $this->consumeUntil('{% endverbatim %}');
+                $this->consume('{% endverbatim %}');
+                $output .= '{% endverbatim %}';
+
+                if ($this->position === $this->length) {
+                    break;
+                }
+            }
+
             // ignore content inside twig comments, see #838
             if ($this->consume('{#')) {
                 $output .= '{#';
