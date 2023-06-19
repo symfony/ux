@@ -18,6 +18,9 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\MakerBundle\MakerBundle;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\Compiler\PassConfig;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\Form\FormFactoryInterface;
@@ -64,6 +67,17 @@ final class Kernel extends BaseKernel
         yield new SecurityBundle();
         yield new MakerBundle();
         yield new ZenstruckFoundryBundle();
+    }
+
+    protected function build(ContainerBuilder $container): void
+    {
+        // workaround https://github.com/symfony/symfony/issues/50322
+        $container->addCompilerPass(new class() implements CompilerPassInterface {
+            public function process(ContainerBuilder $container): void
+            {
+                $container->removeDefinition('doctrine.orm.listeners.pdo_session_handler_schema_listener');
+            }
+        }, PassConfig::TYPE_BEFORE_OPTIMIZATION, 1);
     }
 
     protected function configureContainer(ContainerConfigurator $c): void

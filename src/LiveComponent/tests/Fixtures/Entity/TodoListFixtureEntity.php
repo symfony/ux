@@ -15,26 +15,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class TodoListFixtureEntity
 {
-    /**
-     * @ORM\Id
-     * @ORM\GeneratedValue
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     public $id;
 
-    /**
-     * @ORM\Column(type="string")
-     */
+    #[ORM\Column(type: 'string')]
     public string $listTitle = '';
 
-    /**
-     * @ORM\OneToMany(targetEntity=TodoItemFixtureEntity::class, mappedBy="todoList")
-     */
+    #[ORM\OneToMany(targetEntity: TodoItemFixtureEntity::class, mappedBy: 'todoList')]
     private Collection $todoItems;
 
     public function __construct(string $listTitle = '')

@@ -28,7 +28,7 @@
         }
     },
     "require": {
-        "php": ">=7.2.5",
+        "php": ">=8.1",
         "symfony/config": "^5.4|^6.0",
         "symfony/http-kernel": "^5.4|^6.0",
         "symfony/dependency-injection": "^5.4|^6.0"

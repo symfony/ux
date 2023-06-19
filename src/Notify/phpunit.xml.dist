@@ -14,6 +14,7 @@
         <ini name="intl.error_level" value="0" />
         <ini name="memory_limit" value="-1" />
         <env name="SHELL_VERBOSITY" value="-1" />
+        <server name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0&amp;max[direct]=0"/>
     </php>
 
     <testsuites>

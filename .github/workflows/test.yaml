@@ -11,7 +11,7 @@ jobs:
             - uses: actions/checkout@master
             - uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.0'
+                  php-version: '8.1'
             - uses: ramsey/composer-install@v2
             - name: php-cs-fixer
               run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
@@ -67,280 +67,59 @@ jobs:
                 echo "${{ steps.changes.outputs.STATUS }}"
                 exit 1
 
-    tests-php72-low-deps:
+    tests-php-components:
         runs-on: ubuntu-latest
+        outputs:
+            components: ${{ steps.components.outputs.components }}
         steps:
-            - uses: actions/checkout@master
-            - uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '7.2'
+            - uses: actions/checkout@v3
 
-            - name: Cropperjs Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Cropperjs
-                  dependency-versions: lowest
-            - name: Cropperjs Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/Cropperjs
+            - id: components
+              run: |
+                components=$(tree src -J -d -L 1 | jq -c '.[0].contents | map(.name)')
+                echo "$components"
+                echo "components=$components" >> $GITHUB_OUTPUT
 
-            - name: Dropzone Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Dropzone
-                  dependency-versions: lowest
-            - name: Dropzone Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/Dropzone
-
-            - name: LazyImage Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/LazyImage
-                  dependency-versions: lowest
-            - name: LazyImage Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/LazyImage
-
-    tests-php80-low-deps:
+    tests-php:
         runs-on: ubuntu-latest
+        needs: tests-php-components
+        strategy:
+            fail-fast: false
+            matrix:
+                php-version: ['8.1']
+                dependency-version: ['lowest', 'highest']
+                component: ${{ fromJson(needs.tests-php-components.outputs.components )}}
+                exclude:
+                  - component: Swup  # has no tests
+                  - component: Turbo # has its own workflow (test-turbo.yml)
+                  - component: Typed  # has no tests
+
         steps:
-            - uses: actions/checkout@master
-            - uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '8.0'
-
-            - name: TwigComponent Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/TwigComponent
-                  dependency-versions: lowest
-                  # needed for php 8.0 to skip symfony/stimulus-bundle
-                  composer-options: "--ignore-platform-reqs"
-            - name: TwigComponent Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/TwigComponent
-
-            - name: LiveComponent Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/LiveComponent
-                  dependency-versions: lowest
-            - name: LiveComponent Tests
-              working-directory: src/LiveComponent
-              run: php vendor/bin/simple-phpunit
-
-            - name: Autocomplete Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                working-directory: src/Autocomplete
-                dependency-versions: lowest
-            - name: Autocomplete Tests
-              working-directory: src/Autocomplete
-              run: php vendor/bin/simple-phpunit
-
-            - name: Translator Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                working-directory: src/Translator
-                dependency-versions: lowest
-            - name: Translator Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/Translator
-    tests-php80-high-deps:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@master
+            - uses: actions/checkout@v3
 
             - uses: shivammathur/setup-php@v2
               with:
-                  php-version: '8.0'
+                php-version: ${{ matrix.php-version }}
 
-            - name: Install root Dependencies
-              uses: ramsey/composer-install@v2
-
-            - run: php .github/build-packages.php
-
-            - name: Cropperjs Dependencies
+            - name: Install root packages
               uses: ramsey/composer-install@v2
               with:
-                  working-directory: src/Cropperjs
-            - name: Cropperjs Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/Cropperjs
+                working-directory: ${{ github.workspace }}
+                dependency-versions: ${{ matrix.dependency-version }}
 
-            - name: Dropzone Dependencies
+            - name: Build root packages
+              run: php .github/build-packages.php
+              working-directory: ${{ github.workspace }}
+
+            - name: Install ${{ matrix.component }} packages
               uses: ramsey/composer-install@v2
               with:
-                  working-directory: src/Dropzone
-            - name: Dropzone Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/Dropzone
+                working-directory: "src/${{ matrix.component }}"
+                dependency-versions: ${{ matrix.dependency-version }}
 
-            - name: LazyImage Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/LazyImage
-            - name: LazyImage Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/LazyImage
-
-            - name: LiveComponent Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/LiveComponent
-            - name: LiveComponent Tests
-              working-directory: src/LiveComponent
-              run: php vendor/bin/simple-phpunit
-
-            - name: Autocomplete Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                working-directory: src/Autocomplete
-            - name: Autocomplete Tests
-              working-directory: src/Autocomplete
-              run: php vendor/bin/simple-phpunit
-
-    tests-php81-high-deps:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@master
-
-            - uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '8.1'
-
-            - name: Install root Dependencies
-              uses: ramsey/composer-install@v2
-
-            - run: php .github/build-packages.php
-
-            - name: Chartjs Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Chartjs
-            - name: Chartjs Tests
-              working-directory: src/Chartjs
-              run: php vendor/bin/simple-phpunit
-
-            - name: Notify Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Notify
-            - name: Notify Tests
-              working-directory: src/Notify
-              run: php vendor/bin/simple-phpunit
-
-            - name: React Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/React
-            - name: React Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/React
-
-            - name: StimulusBundle Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                working-directory: src/StimulusBundle
-            - name: StimulusBundle Tests
-              working-directory: src/StimulusBundle
-              run: php vendor/bin/simple-phpunit
-
-            - name: Svelte Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Svelte
-            - name: Svelte Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/Svelte
-
-            - name: Translator Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Translator
-            - name: Translator Tests
-              working-directory: src/Translator
-              run: php vendor/bin/simple-phpunit
-
-            - name: TwigComponent Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/TwigComponent
-            - name: TwigComponent Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/TwigComponent
-
-            - name: Vue Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Vue
-            - name: Vue Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/Vue
-
-    tests-php81-low-deps:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@master
-
-            - uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '8.1'
-
-            - name: Chartjs Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Chartjs
-                  dependency-versions: lowest
-            - name: Chartjs Tests
-              working-directory: src/Chartjs
-              run: php vendor/bin/simple-phpunit
-
-            - name: Notify Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Notify
-                  dependency-versions: lowest
-            - name: Notify Tests
-              working-directory: src/Notify
-              run: php vendor/bin/simple-phpunit
-
-            - name: React Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/React
-                  dependency-versions: lowest
-            - name: React Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/React
-
-            - name: StimulusBundle Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                working-directory: src/StimulusBundle
-                dependency-versions: lowest
-            - name: StimulusBundle Tests
-              working-directory: src/StimulusBundle
-              run: php vendor/bin/simple-phpunit
-
-            - name: Svelte Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Svelte
-                  dependency-versions: lowest
-            - name: Svelte Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/Svelte
-
-            - name: Vue Dependencies
-              uses: ramsey/composer-install@v2
-              with:
-                  working-directory: src/Vue
-                  dependency-versions: lowest
-            - name: Vue Tests
-              run: php vendor/bin/simple-phpunit
-              working-directory: src/Vue
+            - name: ${{ matrix.component }} Tests
+              working-directory: "src/${{ matrix.component }}"
+              run: vendor/bin/simple-phpunit
 
     tests-js:
         runs-on: ubuntu-latest
