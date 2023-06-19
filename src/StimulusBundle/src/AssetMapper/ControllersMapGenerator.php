@@ -62,7 +62,7 @@ class ControllersMapGenerator
         foreach ($finder as $file) {
             $name = $file->getRelativePathname();
             $name = str_replace(['_controller.js', '-controller.js'], '', $name);
-            $name = str_replace('/', '--', $name);
+            $name = str_replace(['_', '/'], ['-', '--'], $name);
 
             $asset = $this->assetMapper->getAssetFromSourcePath($file->getRealPath());
             $isLazy = preg_match('/\/\*\s*stimulusFetch:\s*\'lazy\'\s*\*\//i', $asset->content);
