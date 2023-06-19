@@ -2,94 +2,118 @@
 
 namespace App\Form;
 
+use App\Enum\Food;
+use App\Enum\Meal;
+use App\Enum\PizzaSize;
 use App\Model\MealPlan;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class MealPlannerForm extends AbstractType
 {
-    public const MEAL_BREAKFAST = 'breakfast';
-    public const MEAL_SECOND_BREAKFAST = 'second breakfast';
-    public const MEAL_ELEVENSES = 'elevenses';
-    public const MEAL_LUNCH = 'lunch';
-    public const MEAL_DINNER = 'dinner';
+    private FormFactoryInterface $factory;
+
+    /**
+     * @var array<string, mixed>
+     */
+    private $dependencies = [];
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $choices = [
-            'Breakfast' => self::MEAL_BREAKFAST,
-            'Second Breakfast' => self::MEAL_SECOND_BREAKFAST,
-            'Elevenses' => self::MEAL_ELEVENSES,
-            'Lunch' => self::MEAL_LUNCH,
-            'Dinner' => self::MEAL_DINNER,
-        ];
-        $builder->add('meal', ChoiceType::class, [
-            'choices' => $choices,
+        $this->factory = $builder->getFormFactory();
+
+        $builder->add('meal', EnumType::class, [
+            'class' => Meal::class,
+            'choice_label' => fn (Meal $meal): string => $meal->getReadable(),
             'placeholder' => 'Which meal is it?',
             'autocomplete' => true,
         ]);
 
-        $builder->addEventListener(
-            FormEvents::PRE_SET_DATA,
-            function (FormEvent $event) {
-                // the object tied to your form
-                /** @var ?MealPlan $data */
-                $data = $event->getData();
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData']);
+        $builder->addEventListener(FormEvents::POST_SUBMIT, [$this, 'onPostSubmit']);
 
-                $meal = $data?->getMeal();
-                $this->addFoodField($event->getForm(), $meal);
-            }
-        );
-
-        $builder->get('meal')->addEventListener(
-            FormEvents::POST_SUBMIT,
-            function (FormEvent $event) {
-                // It's important here to fetch $event->getForm()->getData(), as
-                // $event->getData() will get you the client data (that is, the ID)
-                $meal = $event->getForm()->getData();
-
-                // since we've added the listener to the child, we'll have to pass on
-                // the parent to the callback functions!
-                $this->addFoodField($event->getForm()->getParent(), $meal);
-            }
-        );
+        $builder->get('meal')->addEventListener(FormEvents::POST_SUBMIT, [$this, 'storeDependencies']);
+        $builder->get('meal')->addEventListener(FormEvents::POST_SUBMIT, [$this, 'onPostSubmitMeal']);
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults(['data_class' => MealPlan::class]);
     }
 
-    private function getAvailableFoodChoices(string $meal): array
+    public function onPreSetData(FormEvent $event): void
     {
-        $foods = match ($meal) {
-            self::MEAL_BREAKFAST => ['Eggs 🍳', 'Bacon 🥓', 'Strawberries 🍓', 'Croissant 🥐'],
-            self::MEAL_SECOND_BREAKFAST => ['Bagel 🥯', 'Kiwi 🥝', 'Avocado 🥑', 'Waffles 🧇'],
-            self::MEAL_ELEVENSES => ['Pancakes 🥞', 'Salad 🥙', 'Tea ☕️'],
-            self::MEAL_LUNCH => ['Sandwich 🥪', 'Cheese 🧀', 'Sushi 🍱'],
-            self::MEAL_DINNER => ['Pizza 🍕', 'A Pint 🍺', 'Pasta 🍝'],
-        };
+        // the object tied to your form
+        /** @var ?MealPlan $data */
+        $data = $event->getData();
 
-        $foods = array_combine($foods, $foods);
-
-        return $foods;
+        $this->addFoodField($event->getForm(), $data?->getMeal());
+        $this->addPizzaSizeField($event->getForm(), $data?->getPizzaSize());
     }
 
-    public function addFoodField(FormInterface $form, ?string $meal)
+    public function onPostSubmit(FormEvent $event): void
     {
-        $foodChoices = null === $meal ? [] : $this->getAvailableFoodChoices($meal);
+        $this->dependencies = [];
+    }
 
-        $form->add('mainFood', ChoiceType::class, [
-            'placeholder' => null === $meal ? 'Select a meal first' : sprintf('What\'s for %s?', $meal),
-            'choices' => $foodChoices,
-            'disabled' => null === $meal,
-            // silence real-time "invalid" message when switching "meals"
-            'invalid_message' => false,
+    public function storeDependencies(FormEvent $event): void
+    {
+        $this->dependencies[$event->getForm()->getName()] = $event->getForm()->getData();
+    }
+
+    public function onPostSubmitMeal(FormEvent $event): void
+    {
+        $this->addFoodField(
+            $event->getForm()->getParent(),
+            $this->dependencies['meal'],
+        );
+    }
+
+    public function onPostSubmitFood(FormEvent $event): void
+    {
+        $this->addPizzaSizeField(
+            $event->getForm()->getParent(),
+            $this->dependencies['mainFood'],
+        );
+    }
+
+    public function addFoodField(FormInterface $form, ?Meal $meal): void
+    {
+        $mainFood = $this->factory
+            ->createNamedBuilder('mainFood', EnumType::class, $meal, [
+                'class' => Food::class,
+                'placeholder' => null === $meal ? 'Select a meal first' : sprintf('What\'s for %s?', $meal->getReadable()),
+                'choices' => $meal?->getFoodChoices(),
+                'choice_label' => fn (Food $food): string => $food->getReadable(),
+                'disabled' => null === $meal,
+                // silence real-time "invalid" message when switching "meals"
+                'invalid_message' => false,
+                'autocomplete' => true,
+                'auto_initialize' => false,
+            ])
+            ->addEventListener(FormEvents::POST_SUBMIT, [$this, 'storeDependencies'])
+            ->addEventListener(FormEvents::POST_SUBMIT, [$this, 'onPostSubmitFood']);
+
+        $form->add($mainFood->getForm());
+    }
+
+    public function addPizzaSizeField(FormInterface $form, ?Food $food): void
+    {
+        if (Food::Pizza !== $food) {
+            return;
+        }
+
+        $form->add('pizzaSize', EnumType::class, [
+            'class' => PizzaSize::class,
+            'placeholder' => 'What size pizza?',
+            'choice_label' => fn (PizzaSize $pizzaSize): string => $pizzaSize->getReadable(),
+            'required' => true,
             'autocomplete' => true,
         ]);
     }

@@ -2,33 +2,54 @@
 
 namespace App\Model;
 
-use Symfony\Component\Validator\Constraints\NotBlank;
+use App\Enum\Food;
+use App\Enum\Meal;
+use App\Enum\PizzaSize;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class MealPlan
 {
-    #[NotBlank]
-    private ?string $meal = null;
+    #[Assert\NotNull]
+    private ?Meal $meal = null;
 
-    #[NotBlank]
-    private ?string $mainFood = null;
+    #[Assert\NotNull]
+    private ?Food $mainFood = null;
 
-    public function getMeal(): ?string
+    #[Assert\When(
+        expression: 'this.getMainFood() === enum("App\\\Enum\\\Food::Pizza")',
+        constraints: [
+            new Assert\NotNull(message: 'Please select a Pizza Size.'),
+        ],
+    )]
+    private ?PizzaSize $pizzaSize = null;
+
+    public function getMeal(): ?Meal
     {
         return $this->meal;
     }
 
-    public function setMeal(?string $meal): void
+    public function setMeal(?Meal $meal): void
     {
         $this->meal = $meal;
     }
 
-    public function getMainFood(): ?string
+    public function getMainFood(): ?Food
     {
         return $this->mainFood;
     }
 
-    public function setMainFood(?string $mainFood): void
+    public function setMainFood(?Food $mainFood): void
     {
         $this->mainFood = $mainFood;
+    }
+
+    public function getPizzaSize(): ?PizzaSize
+    {
+        return $this->pizzaSize;
+    }
+
+    public function setPizzaSize(?PizzaSize $pizzaSize): void
+    {
+        $this->pizzaSize = $pizzaSize;
     }
 }
