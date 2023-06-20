@@ -8,8 +8,10 @@ use App\Entity\TodoList;
 use App\Form\TodoListFormType;
 use App\Repository\FoodRepository;
 use App\Repository\TodoListRepository;
+use App\Service\DinoPager;
 use App\Service\LiveDemoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -106,6 +108,33 @@ class LiveComponentDemoController extends AbstractController
     {
         return $this->render('live_component_demo/product_form.html.twig', parameters: [
             'demo' => $liveDemoRepository->find('product_form'),
+        ]);
+    }
+
+    #[Route('/paginated-list', name: 'app_live_components_paginated_list')]
+    public function paginatedList(LiveDemoRepository $liveDemoRepository, Request $request, DinoPager $pager): Response
+    {
+        $form = $this->createFormBuilder(null, ['method' => 'GET'])
+            ->add('name', TextType::class, [
+                'required' => false,
+            ])
+            ->add('type', TextType::class, [
+                'required' => false,
+            ])->getForm();
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $pager->filter(name: $data['name'], type: $data['type']);
+        }
+
+        $pager->setCurrentPage($request->query->get('page', '1'));
+
+        return $this->render('live_component_demo/paginated_list.html.twig', parameters: [
+            'demo' => $liveDemoRepository->find('paginated_list'),
+            'form' => $form,
+            'pager' => $pager
         ]);
     }
 }
