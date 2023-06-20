@@ -1,0 +1,48 @@
+{% extends 'liveDemoBase.html.twig' %}
+
+{% block code_block_full %}
+    <twig:TabbedCodeBlocks :files="[
+        'src/Twig/PaginatedList.php',
+        'templates/components/PaginatedList.html.twig',
+        'templates/live_component_demo/paginated_list.html.twig',
+        'src/Service/DinoPager.php',
+    ]" />
+{% endblock %}
+
+{% block demo_content %}
+    {% component 'PaginatedList' with {
+        form: form,
+        pager: pager,
+    } %}
+
+        {% block formFilterRows %}
+            <div class="col-lg-3">
+                {{ form_widget(form.name, {attr: {placeholder: 'name'}}) }}
+            </div>
+            <div class="col-lg-3">
+                {{ form_widget(form.type, {attr: {placeholder: 'type'}}) }}
+            </div>
+        {% endblock %}
+
+        {% block tableTh %}
+            <th>Name</th>
+            <th>Type</th>
+            <th>From</th>
+            <th>To</th>
+        {% endblock %}
+
+        {% block tableTd %}
+            <td>{{ object.name }}</td>
+            <td>{{ object.type }}</td>
+            <td>{{ object.from }}</td>
+            <td>{{ object.to }}</td>
+        {% endblock %}
+
+        {% block tableEdit %}
+            <td>
+                <i class="fa-solid fa-pencil"></i>
+                <i class="fa-solid fa-trash"></i>
+            </td>
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}

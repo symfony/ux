@@ -1,0 +1,66 @@
+{% if form is not none %}
+    <div class="mb-3">
+        {{ form_start(form, {attr: {class: 'form-inline'}}) }}
+        <div class="row">
+            {% block formFilterRows '' %}
+
+            <div class="col">
+                <div class="btn-group">
+                    <button class="btn btn-secondary" type="submit">Search</button>
+                </div>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endif %}
+
+<div>
+    {{ pager.totalElements }} results
+    <table class="table table-centered table-striped">
+        <thead>
+        <tr>
+            {% block tableTh '' %}
+            {% block tableAction %}
+                <th>actions</th>
+            {% endblock %}
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for object in pager.currentPageResults %}
+            <tr>
+                {% block tableTd '' %}
+
+                {% block tableEdit %}
+                    <td></td>
+                {% endblock %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {% block pagination %}
+        <nav>
+            <ul class="pagination">
+                {% if pager.currentPage > 1 %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="{{ path('app_live_components_paginated_list', {page: pager.currentPage - 1}) }}"
+                           aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% if pager.currentPage < pager.numberPages %}
+                    <li class="page-item">
+                        <a class="page-link"
+                           href="{{ path('app_live_components_paginated_list', {page: pager.currentPage + 1}) }}"
+                           aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% endblock %}
+</div>
