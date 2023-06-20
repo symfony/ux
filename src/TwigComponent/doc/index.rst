@@ -365,6 +365,10 @@ All public component properties are available directly in your component
 template. You can use the ``ExposeInTemplate`` attribute to expose
 private/protected properties and public methods directly in a component
 template (``someProp`` vs ``this.someProp``, ``someMethod`` vs ``this.someMethod``).
+/* update this part to Properties must be *accessible* (have a getter and setter). Methods *cannot have* 
+*  because if i have a getter without a setter and the prop is private as an example so how can i get a prop that is not setted 
+*  from the start
+*/
 Properties must be *accessible* (have a getter). Methods *cannot have*
 required parameters::
 
