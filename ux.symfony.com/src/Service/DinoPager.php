@@ -41,8 +41,7 @@ class DinoPager
         $this->numberPages = ceil($this->totalElements / $this->elementsPerPage);
         $offset = ($this->currentPage - 1) * $this->elementsPerPage;
 
-        return array_slice($data, $offset, $this->elementsPerPage);
-
+        return \array_slice($data, $offset, $this->elementsPerPage);
     }
 
     public function getNumberPages(): int
@@ -53,6 +52,7 @@ class DinoPager
     public function getTotalElements(): int
     {
         $this->applyFilters();
+
         return $this->totalElements;
     }
 
@@ -77,9 +77,6 @@ class DinoPager
         }
     }
 
-    /**
-     * @return array|null
-     */
     private function applyFilters(): ?array
     {
         $data = array_filter($this->rawData, function (array $dino) {
