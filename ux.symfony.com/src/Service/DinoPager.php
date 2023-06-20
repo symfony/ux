@@ -21,7 +21,7 @@ class DinoPager
         $data = $this->getRawData();
 
         $this->elementsPerPage = 10;
-        $this->totalElements = count($data);
+        $this->totalElements = \count($data);
         $this->numberPages = ceil($this->totalElements / $this->elementsPerPage);
         $this->currentPage = 1;
     }
@@ -98,7 +98,7 @@ class DinoPager
             return true;
         });
 
-        $this->totalElements = count($data);
+        $this->totalElements = \count($data);
 
         return $data;
     }
