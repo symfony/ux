@@ -101,7 +101,7 @@ Open a child modal component to create a new Category.
 EOF
             ),
             new LiveDemo(
-            'paginated_list',
+                'paginated_list',
                 name: 'List + pagination',
                 description: 'Create a paginated list',
                 route: 'app_live_components_paginated_list',

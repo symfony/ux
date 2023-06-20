@@ -134,7 +134,7 @@ class LiveComponentDemoController extends AbstractController
         return $this->render('live_component_demo/paginated_list.html.twig', parameters: [
             'demo' => $liveDemoRepository->find('paginated_list'),
             'form' => $form,
-            'pager' => $pager
+            'pager' => $pager,
         ]);
     }
 }
