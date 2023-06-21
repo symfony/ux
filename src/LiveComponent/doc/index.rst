@@ -414,7 +414,7 @@ LiveProp for Entities & More Complex Data
 ``LiveProp`` data must be simple scalar values, with a few exception,
 like ``DateTime`` objects, enums & Doctrine entity objects. When ``LiveProp``s
 are sent to the frontend, they are "dehydrated". When Ajax requests are sent
-to the frontend, the dehydrated data is then "hydrated" back into the original.
+from the frontend, the dehydrated data is then "hydrated" back into the original.
 Doctrine entity objects are a special case for ``LiveProp``::
 
     use App\Entity\Post;
@@ -1843,7 +1843,7 @@ and ``live_collection_button_delete`` block prefix respectively:
 
     {% block live_collection_button_add_widget %}
         {% set attr = attr|merge({'class': attr.class|default('btn btn-ghost')}) %}
-        {% set translation_domin = false %}
+        {% set translation_domain = false %}
         {% set label_html = true %}
         {%- set label -%}
             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
