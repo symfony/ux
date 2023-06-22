@@ -1496,6 +1496,10 @@ errors. And if it's successful, it will redirect.
 Resetting the Form
 ~~~~~~~~~~~~~~~~~~
 
+.. versionadded:: 2.10
+
+    The ``resetForm()`` method was added in LiveComponent 2.10.
+
 After submitting a form via an action, you might want to "reset" the form
 back to its initial state so you can use it again. Do that by calling
 ``resetForm()`` in your action instead of redirecting::
