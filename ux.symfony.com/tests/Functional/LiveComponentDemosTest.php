@@ -2,14 +2,26 @@
 
 namespace App\Tests\Functional;
 
+use App\Entity\Food;
 use App\Model\LiveDemo;
 use App\Service\LiveDemoRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Zenstruck\Browser\Test\HasBrowser;
+use Zenstruck\Foundry\Test\Factories;
+use Zenstruck\Foundry\Test\ResetDatabase;
+use function Zenstruck\Foundry\create;
 
 class LiveComponentDemosTest extends KernelTestCase
 {
-    use HasBrowser;
+    use Factories, HasBrowser, ResetDatabase;
+
+    /**
+     * @before
+     */
+    public function setupEntities(): void
+    {
+        create(Food::class, ['name' => 'Pizza', 'votes' => 10]);
+    }
 
     /**
      * @dataProvider getSmokeTests
