@@ -671,5 +671,17 @@
     },
     "zenstruck/callback": {
         "version": "v1.4.2"
+    },
+    "zenstruck/foundry": {
+        "version": "1.33",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.10",
+            "ref": "37c2f894cc098ab4c08874b80cccc8e2f8de7976"
+        },
+        "files": [
+            "config/packages/zenstruck_foundry.yaml"
+        ]
     }
 }
