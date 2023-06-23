@@ -1,0 +1,62 @@
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-06-02T08:00:49Z
+
+Note that I had some tests locally to address the ability to access the host/parent component from within an (nested) embedded component, but since that depends on #863 I didn't add them in this PR.
+I'll add those tests either in that PR or in this one, depending on which one might get merged first.
+
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-06-02T08:08:31Z
+
+~~To fix the failing tests #918 should be merged.~~ Done, and rebased
+
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-06-08T22:14:10Z
+
+For the record: as discussed on Slack, this PR currently can cause a recursive loop when a block (for example content) for a component has a(nother) component which also has a content block. The last component will be used in the actual content block for the first component. Then when the latter component is rendered it also will be using that same content definition from the first component. So it will render that first content block which renders the last's content blocks which refers again to the first and so on...
+
+I have a fix for this ready, and will update the PR soon after I've updated/extended the tests.
+
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-06-10T20:55:51Z
+
+I pushed an improved mechanism to pass blocks down to nested components.
+
+As said in my previous comment, just passing along blocks to the embedded templates will quickly end up in recursive loops, not using the correct blocks etc.
+
+Now, blocks are still passed along but their name is being randomized.
+A `BlockStack` object is introduced which keeps track of the location of a block definition, the relation to each embedded component, and that randomized name, so that when the component instance is rendered, the correct block definition can be accessed via the special `outerBlocks` variable (which refers to the `BlockStack`).
+
+The example from the description now becomes (I've adjusted it there as well):
+
+```twig
+{# anywhere #}
+{% set name = 'Fabien' %}
+<twig:DivComponent>
+    Hello {{ name }}!
+</twig:DivComponent>
+```
+
+```twig
+{# DivComponent.html.twig #}
+<twig:GenericElement element="div" class="divComponent">
+    {{ block(outerBlocks.content) }}
+</twig:GenericElement>
+```
+
+```twig
+{# GenericElement.html.twig #}
+<{{ element }}{{ attributes }}>
+  {%- block content -%}{%- endblock -%}
+</{{ element }}>
+```
+
+I added a LOT more test cases, which deal with all kind of problems that would not be workable with just passing blocks down like:
+* nesting the same component instances in each other, or simply components which are using the same block names
+* skipping blocks for some component instances
+* adding extra content to an outer block at some level of the component stack
+
+See [this test](https://github.com/symfony/ux/pull/920/files#diff-9eda096e580efd11e919de803af482984ad15254ffc28755a2e06cfcd43a439a) which lists all "rules" that blocks abide to within the context of embedded components.
