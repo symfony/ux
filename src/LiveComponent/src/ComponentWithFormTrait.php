@@ -28,9 +28,9 @@ use Symfony\UX\TwigComponent\Attribute\PostMount;
  */
 trait ComponentWithFormTrait
 {
-    #[ExposeInTemplate(name: 'form', getter: 'getForm')]
+    #[ExposeInTemplate(name: 'form', getter: 'getFormView')]
     private ?FormView $formView = null;
-    private ?FormInterface $formInstance = null;
+    private ?FormInterface $form = null;
 
     /**
      * Holds the name prefix the form uses.
@@ -42,7 +42,7 @@ trait ComponentWithFormTrait
      * Holds the raw form values.
      */
     #[LiveProp(writable: true, fieldName: 'getFormName()')]
-    public ?array $formValues = null;
+    public array $formValues = [];
 
     /**
      * Tracks whether this entire component has been validated.
@@ -92,7 +92,7 @@ trait ComponentWithFormTrait
         }
 
         // set the formValues from the initial form view's data
-        $this->formValues = $this->extractFormValues($this->getForm());
+        $this->formValues = $this->extractFormValues($this->getFormView());
 
         return $data;
     }
@@ -114,13 +114,10 @@ trait ComponentWithFormTrait
         }
     }
 
-    /**
-     * Returns the FormView object: useful for rendering your form/fields!
-     */
-    public function getForm(): FormView
+    public function getFormView(): FormView
     {
         if (null === $this->formView) {
-            $this->formView = $this->getFormInstance()->createView();
+            $this->formView = $this->getForm()->createView();
             $this->useNameAttributesAsModelName();
         }
 
@@ -130,7 +127,7 @@ trait ComponentWithFormTrait
     public function getFormName(): string
     {
         if (null === $this->formName) {
-            $this->formName = $this->getForm()->vars['name'];
+            $this->formName = $this->getFormView()->vars['name'];
         }
 
         return $this->formName;
@@ -143,9 +140,9 @@ trait ComponentWithFormTrait
     {
         // prevent the system from trying to submit this reset form
         $this->shouldAutoSubmitForm = false;
-        $this->formInstance = null;
+        $this->form = null;
         $this->formView = null;
-        $this->formValues = $this->extractFormValues($this->getForm());
+        $this->formValues = $this->extractFormValues($this->getFormView());
     }
 
     private function submitForm(bool $validateAll = true): void
@@ -154,7 +151,7 @@ trait ComponentWithFormTrait
             throw new \LogicException('The submitForm() method is being called, but the FormView has already been built. Are you calling $this->getForm() - which creates the FormView - before submitting the form?');
         }
 
-        $form = $this->getFormInstance();
+        $form = $this->getForm();
         $form->submit($this->formValues);
         $this->shouldAutoSubmitForm = false;
 
@@ -172,7 +169,7 @@ trait ComponentWithFormTrait
 
         // re-extract the "view" values in case the submitted data
         // changed the underlying data or structure of the form
-        $this->formValues = $this->extractFormValues($this->getForm());
+        $this->formValues = $this->extractFormValues($this->getFormView());
 
         // remove any validatedFields that do not exist in data anymore
         $this->validatedFields = LiveFormUtility::removePathsNotInData(
@@ -185,13 +182,13 @@ trait ComponentWithFormTrait
         }
     }
 
-    private function getFormInstance(): FormInterface
+    private function getForm(): FormInterface
     {
-        if (null === $this->formInstance) {
-            $this->formInstance = $this->instantiateForm();
+        if (null === $this->form) {
+            $this->form = $this->instantiateForm();
         }
 
-        return $this->formInstance;
+        return $this->form;
     }
 
     /**
@@ -210,14 +207,14 @@ trait ComponentWithFormTrait
     private function useNameAttributesAsModelName(): void
     {
         $modelValue = $this->getDataModelValue();
-        $attributes = $this->getForm()->vars['attr'] ?: [];
+        $attributes = $this->getFormView()->vars['attr'] ?: [];
         if (null === $modelValue) {
             unset($attributes['data-model']);
         } else {
             $attributes['data-model'] = $modelValue;
         }
 
-        $this->getForm()->vars['attr'] = $attributes;
+        $this->getFormView()->vars['attr'] = $attributes;
     }
 
     /**

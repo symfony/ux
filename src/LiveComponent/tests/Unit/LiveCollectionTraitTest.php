@@ -215,13 +215,13 @@ final class LiveCollectionTraitTest extends TestCase
             use LiveCollectionTrait;
 
             public function __construct(
-                private FormInterface $form,
+                private FormInterface $theForm,
             ) {
             }
 
             protected function instantiateForm(): FormInterface
             {
-                return $this->form;
+                return $this->theForm;
             }
         };
         $component->formName = array_key_first($postedFormData);

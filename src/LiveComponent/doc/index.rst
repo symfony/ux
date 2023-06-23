@@ -1195,42 +1195,7 @@ instant validation as the user types::
         }
     }
 
-Before you start thinking about the component, make sure that you have
-your controller set up so you can handle the form submit. There's
-nothing special about this controller: it's written however you normally
-write your form controller logic::
-
-    namespace App\Controller;
-
-    use App\Entity\Post;
-    use App\Form\PostType;
-    use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-    use Symfony\Component\HttpFoundation\Request;
-    use Symfony\Component\HttpFoundation\Response;
-    use Symfony\Component\Routing\Annotation\Route;
-
-    class PostController extends AbstractController
-    {
-        #[Route('/admin/post/{id}/edit', name: 'app_post_edit')]
-        public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
-        {
-            $form = $this->createForm(PostType::class, $post);
-            $form->handleRequest($request);
-
-            if ($form->isSubmitted() && $form->isValid()) {
-                $entityManager->flush();
-
-                return $this->redirectToRoute('app_post_index');
-            }
-
-            return $this->render('post/edit.html.twig', [
-                'post' => $post,
-                'form' => $form,
-            ]);
-        }
-    }
-
-Great! In the template, instead of rendering the form, let's render a
+Great! In the template for some page (e.g. an "Edit post" page), render a
 ``PostForm`` component that we will create next:
 
 .. code-block:: html+twig
@@ -1242,8 +1207,7 @@ Great! In the template, instead of rendering the form, let's render a
         <h1>Edit Post</h1>
 
         {{ component('PostForm', {
-            post: post,
-            form: form
+            initialFormData: post,
         }) }}
     {% endblock %}
 
@@ -1270,40 +1234,24 @@ make it easy to deal with forms::
 
         /**
          * The initial data used to create the form.
-         *
-         * Needed so the same form can be re-created
-         * when the component is re-rendered via Ajax.
-         *
-         * The `fieldName` option is needed in this situation because
-         * the form renders fields with names like `name="post[title]"`.
-         * We set `fieldName: ''` so that this live prop doesn't collide
-         * with that data. The value - data - could be anything.
          */
-        #[LiveProp(fieldName: 'data')]
-        public Post $post = null;
+        #[LiveProp]
+        public Post $initialFormData = null;
 
-        /**
-         * Used to re-create the PostType form for re-rendering.
-         */
         protected function instantiateForm(): FormInterface
         {
             // we can extend AbstractController to get the normal shortcuts
-            return $this->createForm(PostType::class, $this->post);
+            return $this->createForm(PostType::class, $this->initialFormData);
         }
     }
 
 The trait forces you to create an ``instantiateForm()`` method, which is
-used when the component is rendered via AJAX. Notice that, in order to
-recreate the *same* form, we pass in the ``Post`` object and set it as a
-``LiveProp``.
+used each time the component is rendered via AJAX. To recreate the *same*
+form as the original, we pass in the ``initialFormData`` property and set it
+as a ``LiveProp``.
 
 The template for this component will render the form, which is available
 as ``form`` thanks to the trait:
-
-.. versionadded:: 2.1
-
-    The ability to access ``form`` directly in your component's template
-    was added in LiveComponents 2.1. Previously ``this.form`` was required.
 
 .. code-block:: html+twig
 
@@ -1318,40 +1266,25 @@ as ``form`` thanks to the trait:
         {{ form_end(form) }}
     </div>
 
-That's a pretty boring template! It includes the normal
-``attributes`` and then you render the form however you want.
-
-But the result is incredible! As you finish changing each field, the
+That's it! The result is incredible! As you finish changing each field, the
 component automatically re-renders - including showing any validation
 errors for that field! Amazing!
 
-.. versionadded:: 2.3
+How this works:
 
-    Before version 2.3, a ``data-action="live#update"`` was required
-    on a parent element of the form to trigger updates. That should
-    now be removed.
-
-This is possible thanks to the team work of two pieces:
-
--  ``ComponentWithFormTrait`` adds a ``data-model="on(change)|*"``
-   attribute to your ``<form>`` tag. This causes each field to become
-   a "model" that will update on "change"
-   (override the ``getDataModelValue()`` method to control this).
-   See ":ref:`name-attribute-model`".
-
--  ``ComponentWithFormTrait`` has a modifiable ``LiveProp`` that
-   holds the form data and is updated each time a field changes.
-   On each re-render, these values are used to "submit" the form,
-   triggering validation! However, if a field has not been modified
-   yet by the user, its validation errors are cleared so that they
-   aren't displayed.
+#. The ``ComponentWithFormTrait`` has a ``$formValues`` writable ``LiveProp``
+   containing the value for every field in your form.
+#. When the user changes a field, that key in ``$formValues`` is updated and
+   an Ajax request is sent to re-render.
+#. During that Ajax call, the form is submitted using ``$formValues``, the
+   form re-renders, and the page is updated.
 
 Build the "New Post" Form Component
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 The previous component can already be used to edit an existing post or create
-a new post. For a new post, either pass in a new ``Post`` object to ``pass``,
-or omit it entirely to let the ``post`` property default to ``null``:
+a new post. For a new post, either pass in a new ``Post`` object to ``initialFormData``,
+or omit it entirely to let the ``initialFormData`` property default to ``null``:
 
 .. code-block:: twig
 
@@ -1361,6 +1294,182 @@ or omit it entirely to let the ``post`` property default to ``null``:
     {{ component('PostForm', {
         form: form
     }) }}
+
+Submitting the Form via a LiveAction
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The simplest way to handle your form submit is directly in your component via
+a :ref:`LiveAction <actions>`::
+
+    // ...
+    use Doctrine\ORM\EntityManagerInterface;
+    use Symfony\UX\LiveComponent\Attribute\LiveAction;
+
+    class PostForm extends AbstractController
+    {
+        // ...
+
+        #[LiveAction]
+        public function save(EntityManagerInterface $entityManager)
+        {
+            // Submit the form! If validation fails, an exception is thrown
+            // and the component is automatically re-rendered with the errors
+            $this->submitForm();
+
+            /** @var Post $post */
+            $post = $this->getFormInstance()->getData();
+            $entityManager->persist($post);
+            $entityManager->flush();
+
+            $this->addFlash('success', 'Post saved!');
+
+            return $this->redirectToRoute('app_post_show', [
+                'id' => $post->getId(),
+            ]);
+        }
+    }
+
+Next, tell the ``form`` element to use this action:
+
+.. code-block:: twig
+
+    {# templates/components/PostForm.html.twig #}
+    {# ... #}
+
+    {{ form_start(form, {
+        attr: {
+            'data-action': 'live#action',
+            'data-action-name': 'prevent|save'
+        }
+    }) }}
+
+Now, when the form is submitted, it will execute the ``save()`` method
+via Ajax. If the form fails validation, it will re-render with the
+errors. And if it's successful, it will redirect.
+
+Submitting with a Normal Symfony Controller
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you prefer, you can submit the form via a Symfony controller. To do
+this, create your controller like normal, including the submit logic::
+
+    // src/Controller/PostController.php
+    class PostController extends AbstractController
+    {
+        #[Route('/admin/post/{id}/edit', name: 'app_post_edit')]
+        public function edit(Request $request, Post $post, EntityManagerInterface $entityManager): Response
+        {
+            $form = $this->createForm(PostType::class, $post);
+            $form->handleRequest($request);
+
+            if ($form->isSubmitted() && $form->isValid()) {
+                // save, redirect, etc
+            }
+
+            return $this->render('post/edit.html.twig', [
+                'post' => $post,
+                'form' => $form,
+            ]);
+        }
+    }
+
+If validation fails, you'll want the live component to render with the form
+errors instead of creating a fresh form. To do that, pass the ``form`` variable
+into the component:
+
+.. code-block:: twig
+
+    {# templates/post/edit.html.twig #}
+    {{ component('PostForm', {
+        initialFormData: post,
+        form: form
+    }) }}
+
+Using Form Data in a LiveAction
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Each time an Ajax call is made to re-render the live component the form is
+automatically submitted using the latest data.
+
+However, there are two important things to know:
+
+#. When a ``LiveAction`` is executed, the form has **not** yet been submitted.
+#. The ``initialFormData`` property is **not** updated until after the form is
+   submitted.
+
+If you need to access the latest data in a ``LiveAction``, you can manually submit
+the form::
+
+    // ...
+
+    #[LiveAction]
+    public function save()
+    {
+        // $this->initialFormData will *not* contain the latest data yet!
+
+        // submit the form
+        $this->submitForm();
+
+        // now you can access the latest data
+        $post = $this->getFormInstance()->getData();
+        // (same as above)
+        $post = $this->initialFormData;
+    }
+
+.. tip::
+
+    If you don't call ``$this->submitForm()``, it's called automatically
+    before the component is re-rendered.
+
+Dynamically Updating the Form In a LiveAction
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When an Ajax call is made to re-render the live component (whether that's
+due to a model change or a LiveAction), the form is submitted using a
+``$formValues`` property from ``ComponentWithFormTrait`` that contains the
+latest data from the form.
+
+Sometimes, you need to update something on the form dynamically from a ``LiveAction``.
+For example, suppose you have a "Generate Title" button that, when clicked, will
+generate a title based on the content of the post.
+
+To do this, you **must** update the ``$this->formValues`` property directly
+before the form is submitted::
+
+    // ...
+
+    #[LiveAction]
+    public function generateTitle()
+    {
+        // this works!
+        // (the form will be submitted automatically after this method, now with the new title)
+        $this->formValues['title'] = '... some auto-generated-title';
+
+        // this would *not* work
+        // $this->submitForm();
+        // $post = $this->getFormInstance()->getData();
+        // $post->setTitle('... some auto-generated-title');
+    }
+
+This is tricky. The ``$this->formValues`` property is an array of the raw form
+data on the frontend and contains only scalar values (e.g. strings, integers, booleans
+and arrays). By updating this property, the form will submit as *if* the user had
+typed the new ``title`` into the form. The form will then be re-rendered with the
+new data.
+
+.. note::
+
+    If the field you're updating is an object in your code - like an entity object
+    corresponding to an ``EntityType`` field - you need to use the value that's
+    used on the frontend of your form. For an entity, that's the ``id``::
+
+        $this->formValues['author'] = $author->getId();
+
+Why not just update the ``$post`` object directly? Once you submit the form, the
+"form view" (data, errors, etc for the frontend) has already been created. Changing
+the ``$post`` object has no effect. Even modifying ``$this->initialFormData``
+before submitting the form has no effect: the actual, submitted ``title`` would
+override that.
 
 Form Rendering Problems
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -1410,88 +1519,6 @@ To fix this, set the ``always_empty`` option to ``false`` in your form::
             ])
         ;
     }
-
-Submitting the Form via an action()
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Notice that, while we *could* add a ``save()`` :ref:`component action <actions>`
-that handles the form submit through the component,
-we've chosen not to do that so far. The reason is simple: by creating a
-normal route & controller that handles the submit, our form continues to
-work without JavaScript.
-
-However, you *can* do this if you'd like. In that case, you wouldn't
-need any form logic in your controller::
-
-    #[Route('/admin/post/{id}/edit', name: 'app_post_edit')]
-    public function edit(Post $post): Response
-    {
-        return $this->render('post/edit.html.twig', [
-            'post' => $post,
-        ]);
-    }
-
-And you wouldn't pass any ``form`` into the component:
-
-.. code-block:: html+twig
-
-    {# templates/post/edit.html.twig #}
-    <h1>Edit Post</h1>
-
-    {{ component('PostForm', {
-        post: post
-    }) }}
-
-When you do *not* pass a ``form`` into a component that uses
-``ComponentWithFormTrait``, the form will be created for you
-automatically. Let's add the ``save()`` action to the component::
-
-    // ...
-    use Doctrine\ORM\EntityManagerInterface;
-    use Symfony\UX\LiveComponent\Attribute\LiveAction;
-
-    class PostForm extends AbstractController
-    {
-        // ...
-
-        #[LiveAction]
-        public function save(EntityManagerInterface $entityManager)
-        {
-            // shortcut to submit the form with form values
-            // if any validation fails, an exception is thrown automatically
-            // and the component will be re-rendered with the form errors
-            $this->submitForm();
-
-            /** @var Post $post */
-            $post = $this->getFormInstance()->getData();
-            $entityManager->persist($post);
-            $entityManager->flush();
-
-            $this->addFlash('success', 'Post saved!');
-
-            return $this->redirectToRoute('app_post_show', [
-                'id' => $post->getId(),
-            ]);
-        }
-    }
-
-Finally, tell the ``form`` element to use this action:
-
-.. code-block:: twig
-
-    {# templates/components/PostForm.html.twig #}
-    {# ... #}
-
-    {{ form_start(form, {
-        attr: {
-            'data-action': 'live#action',
-            'data-action-name': 'prevent|save'
-        }
-    }) }}
-
-Now, when the form is submitted, it will execute the ``save()`` method
-via Ajax. If the form fails validation, it will re-render with the
-errors. And if it's successful, it will redirect.
 
 Resetting the Form
 ~~~~~~~~~~~~~~~~~~
@@ -1574,11 +1601,11 @@ Now, create a Twig component to render the form::
         use DefaultActionTrait;
 
         #[LiveProp]
-        public BlogPost $post;
+        public initialFormData $post;
 
         protected function instantiateForm(): FormInterface
         {
-            return $this->createForm(BlogPostFormType::class, $this->post);
+            return $this->createForm(BlogPostFormType::class, $this->initialFormData);
         }
 
         #[LiveAction]
@@ -1720,11 +1747,11 @@ Now, create a Twig component to render the form::
         use DefaultActionTrait;
 
         #[LiveProp]
-        public BlogPost $post;
+        public BlogPost $initialFormData;
 
         protected function instantiateForm(): FormInterface
         {
-            return $this->createForm(BlogPostFormType::class, $this->post);
+            return $this->createForm(BlogPostFormType::class, $this->initialFormData);
         }
     }
 
