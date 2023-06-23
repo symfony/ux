@@ -1,0 +1,4 @@
+<div id="rendered-in-place">{% block not_passed_down %}This block is rendered in place, since there's no extend happening{% endblock %}</div>
+
+{% set name = 'Fabien' %}
+<twig:DivComponent>Hello {{ name }}!{% block not_passed_down %}{% endblock %}</twig:DivComponent>

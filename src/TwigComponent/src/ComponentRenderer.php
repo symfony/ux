@@ -71,7 +71,13 @@ final class ComponentRenderer implements ComponentRendererInterface
     {
         $context[PreRenderEvent::EMBEDDED] = true;
 
-        return $this->preRender($this->factory->create($name, $props), $context)->getVariables();
+        $embeddedContext = $this->preRender($this->factory->create($name, $props), $context)->getVariables();
+
+        if (!isset($embeddedContext['outerBlocks'])) {
+            $embeddedContext['outerBlocks'] = new BlockStack();
+        }
+
+        return $embeddedContext;
     }
 
     private function preRender(MountedComponent $mounted, array $context = []): PreRenderEvent

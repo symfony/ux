@@ -1,0 +1,12 @@
+<twig:DivComponent>
+    Content 1
+    <twig:DivComponent>
+        Content 2
+        <twig:DivComponent>
+            Content 3
+            <twig:block name="foo">Override foo3</twig:block>
+        </twig:DivComponent>
+        <twig:block name="foo">Override foo2</twig:block>
+    </twig:DivComponent>
+    <twig:block name="foo">Override foo1</twig:block>
+</twig:DivComponent>

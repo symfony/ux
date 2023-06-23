@@ -1,0 +1,6 @@
+<twig:GenericElement element="div" class="divComponent">
+    {{ block(outerBlocks.content) }}
+    {% block foo %}
+        {{ parent() }} + {{ block(outerBlocks.foo) }}
+    {% endblock %}
+</twig:GenericElement>

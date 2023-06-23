@@ -1,0 +1,10 @@
+<{{ element }}{{ attributes }}>
+    {%- block content -%}
+        The Generic Element could have some default content, although it does not make sense in this example.
+    {%- endblock -%}
+    <span class="foo">
+    {% block foo %}
+        The Generic Element default foo block
+    {%- endblock -%}
+    </span>
+</{{ element }}>
