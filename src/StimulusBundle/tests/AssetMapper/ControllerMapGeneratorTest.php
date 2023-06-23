@@ -54,8 +54,8 @@ class ControllerMapGeneratorTest extends TestCase
         $map = $generator->getControllersMap();
         // + 3 controller.json UX controllers
         // - 1 controllers.json UX controller is disabled
-        // + 4 custom controllers (1 file is not a controller & 1 is overridden)
-        $this->assertCount(6, $map);
+        // + 8 custom controllers (1 file is not a controller & 1 is overridden)
+        $this->assertCount(10, $map);
         $packageNames = array_keys($map);
         sort($packageNames);
         $this->assertSame([
@@ -63,8 +63,12 @@ class ControllerMapGeneratorTest extends TestCase
             'fake-vendor--ux-package1--controller-second',
             'fake-vendor--ux-package2--hello-controller',
             'hello',
+            'hello-with-dashes',
+            'hello-with-underscores',
             'other',
             'subdir--deeper',
+            'subdir--deeper-with-dashes',
+            'subdir--deeper-with-underscores',
         ], $packageNames);
 
         $controllerSecond = $map['fake-vendor--ux-package1--controller-second'];
