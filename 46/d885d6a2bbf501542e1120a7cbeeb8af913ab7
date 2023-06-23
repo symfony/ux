@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by kbond at 2023-06-22T16:22:39Z
+
+When using the turbo stream chat demo, I get the following error when posting a message in chat:
+
+![Failed-to-send-an-update-500-Internal-Server-Error-](https://github.com/symfony/ux/assets/127811/8dc4a9d4-94f9-4d81-b311-04420c041f9b)
+
+Must be to do with the `MERCURE_URL` variables in .env but not sure how to fix (or what to set it to locally).
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-06-22T20:13:59Z
+
+About the Mercure stuff, hmm. Iirc, using Docker + the `symfony` binary should set those automatically... though I'm not seeing that locally right now. I talk very specifically in a tutorial about this, but I can't seem to see the `MERCURE_` env vars locally...
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-06-22T20:53:32Z
+
+I should note that when I reload the page, the chat box contains my message - so appears some kind of side-effect is failing.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-06-23T00:00:07Z
+
+@kbond I think I fixed it over on #965 - looks like wrong flag, or an outdated flag (I'm sure this worked at some point - I've used this locally).
