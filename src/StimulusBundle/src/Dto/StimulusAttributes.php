@@ -179,6 +179,16 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
         return array_merge($attributes, $this->attributes);
     }
 
+    public function toEscapedArray(): array
+    {
+        $escaped = [];
+        foreach ($this->toArray() as $key => $value) {
+            $escaped[$key] = $this->escapeAsHtmlAttr($value);
+        }
+
+        return $escaped;
+    }
+
     private function getFormattedValue(mixed $value): string
     {
         if ($value instanceof \Stringable || (\is_object($value) && \is_callable([$value, '__toString']))) {
