@@ -134,7 +134,7 @@ final class ComponentAttributesTest extends TestCase
         ]);
 
         $stimulusAttributes = new StimulusAttributes(new Environment(new ArrayLoader()));
-        $stimulusAttributes->addController('foo', ['name' => 'ryan']);
+        $stimulusAttributes->addController('foo', ['name' => 'ryan', 'some_array' => ['a', 'b']]);
         $attributes = $attributes->defaults($stimulusAttributes);
 
         $this->assertEquals([
@@ -142,6 +142,7 @@ final class ComponentAttributesTest extends TestCase
             'data-controller' => 'foo live',
             'data-live-data-value' => '{}',
             'data-foo-name-value' => 'ryan',
+            'data-foo-some-array-value' => '&#x5B;&quot;a&quot;,&quot;b&quot;&#x5D;',
         ], $attributes->all());
     }
 

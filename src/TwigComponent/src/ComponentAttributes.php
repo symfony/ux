@@ -69,6 +69,10 @@ final class ComponentAttributes
      */
     public function defaults(iterable $attributes): self
     {
+        if ($attributes instanceof StimulusAttributes) {
+            $attributes = $attributes->toEscapedArray();
+        }
+
         if ($attributes instanceof \Traversable) {
             $attributes = iterator_to_array($attributes);
         }
