@@ -29,6 +29,7 @@ final class TwigComponentPass implements CompilerPassInterface
         $componentConfig = [];
 
         $componentReferences = [];
+        $componentClassMap = [];
         $componentNames = [];
         foreach ($container->findTaggedServiceIds('twig.component') as $id => $tags) {
             $definition = $container->findDefinition($id);
@@ -52,11 +53,13 @@ final class TwigComponentPass implements CompilerPassInterface
                 $componentConfig[$tag['key']] = $tag;
                 $componentReferences[$tag['key']] = new Reference($id);
                 $componentNames[] = $tag['key'];
+                $componentClassMap[$tag['class']] = $tag['key'];
             }
         }
 
         $factoryDefinition = $container->findDefinition('ux.twig_component.component_factory');
         $factoryDefinition->setArgument(0, ServiceLocatorTagPass::register($container, $componentReferences));
         $factoryDefinition->setArgument(3, $componentConfig);
+        $factoryDefinition->setArgument(4, $componentClassMap);
     }
 }

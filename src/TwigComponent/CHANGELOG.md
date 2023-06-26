@@ -10,8 +10,9 @@
 
 -   Add new HTML syntax for rendering components: `<twig:ComponentName>`
 -   `true` attribute values now render just the attribute name, `false` excludes it entirely.
-
+-   Add helpers for testing components.
 -   The first argument to `AsTwigComponent` is now optional and defaults to the class name.
+-   Allow passing a FQCN to `ComponentFactory` methods.
 
 ## 2.7.0
 

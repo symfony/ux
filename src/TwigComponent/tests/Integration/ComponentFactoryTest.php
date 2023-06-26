@@ -17,6 +17,7 @@ use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\WithSlots;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -168,6 +169,18 @@ final class ComponentFactoryTest extends KernelTestCase
     {
         $mountedComponent = $this->factory()->create('component_a', ['propA' => 'A', 'propB' => 'B']);
         $this->assertSame(['propA' => 'A', 'propB' => 'B'], $mountedComponent->getInputProps());
+    }
+
+    /**
+     * @doesNotPerformAssertions
+     */
+    public function testGetComponentWithClassName(): void
+    {
+        $factory = $this->factory();
+
+        $factory->create(WithSlots::class);
+        $factory->get(WithSlots::class);
+        $factory->metadataFor(WithSlots::class);
     }
 
     private function factory(): ComponentFactory
