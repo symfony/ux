@@ -11,7 +11,6 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-use Symfony\UX\LiveComponent\ValidatableComponentTrait;
 
 #[AsLiveComponent()]
 class UploadFiles
@@ -54,7 +53,7 @@ class UploadFiles
     private function processFileUpload(UploadedFile $file): array
     {
         // in a real app, move this file somewhere
-        //$file->move(...);
+        // $file->move(...);
 
         return [$file->getClientOriginalName(), $file->getSize()];
     }
@@ -67,7 +66,7 @@ class UploadFiles
             ]),
         ]);
 
-        if (count($errors) === 0) {
+        if (0 === \count($errors)) {
             return;
         }
 
