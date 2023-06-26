@@ -43,7 +43,13 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
         $eagerControllerParts = [];
         $lazyControllers = [];
         $loaderPublicPath = $asset->publicPathWithoutDigest;
+
+        // add file dependencies so the cache rebuilds
         $asset->addFileDependency($this->controllersMapGenerator->getControllersJsonPath());
+        foreach ($this->controllersMapGenerator->getControllerPaths() as $controllerDir) {
+            $asset->addFileDependency($controllerDir);
+        }
+
         foreach ($this->controllersMapGenerator->getControllersMap() as $name => $mappedControllerAsset) {
             $controllerPublicPath = $mappedControllerAsset->asset->publicPathWithoutDigest;
             $relativeImportPath = $this->createRelativePath($loaderPublicPath, $controllerPublicPath);

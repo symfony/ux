@@ -48,6 +48,11 @@ class ControllersMapGenerator
         return $this->controllersJsonPath;
     }
 
+    public function getControllerPaths(): array
+    {
+        return $this->controllerPaths;
+    }
+
     /**
      * @return array<string, MappedControllerAsset>
      */
