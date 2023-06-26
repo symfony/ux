@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-28T19:53:40Z
+
+My plan is to eventually add an `InteractsWithLiveComponents` trait (that'll probably use/extend this one) that adds _live-specific_ testing helpers.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-28T20:55:58Z
+
+I've added the ability to use the component class name with these helpers (ie `$this->renderTwigComponent(MyComponent::class)`). Not sure if we should though as we aren't testing that the name (which will be used in twig) renders the expected component. For instance, if you use your IDE to rename a component, the tests will still pass but the template might not (if not manually configuring a component name).
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-06-25T19:49:03Z
+
+@kbond friendly ping here! What is needed in order to merge it? I feel like it's super close. I already start to use this trait on my project and it's super handy! 😁
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-06-25T22:41:09Z
+
+I feel this is basically ready. I'll rebase this week to ensure all's still good. I'll add a test for an embedded component using html syntax too.
+
+I guess I was looking for opinions on the following:
+
+- https://github.com/symfony/ux/pull/821#issuecomment-1528082967
+- https://github.com/symfony/ux/pull/821#discussion_r1180758774 (would be cool to add a full HTML selector API in the future I think)
+
+/cc @weaverryan
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-06-26T20:05:26Z
+
+> I've added the ability to use the component class name with these helpers (ie $this->renderTwigComponent(MyComponent::class))
+
+I like this. I see what you're saying... but we can't do any better. To me, it feels like you've added a way to unit test a class... but sure, ultimately, someone could call it with invalid arguments or forget to call it at all on page. A higher-level test would be needed for that.
