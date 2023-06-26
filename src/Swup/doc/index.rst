@@ -178,9 +178,8 @@ Then in your template, add your controller to the HTML attribute:
             <title>Swup</title>
             {# ... #}
         </head>
-        <body {{ stimulus_controller({
-            myswup: {},
-            'symfony/ux-swup/swup': {}
+        <body {{ stimulus_controller('myswup')|stimulus_controller('symfony/ux-swup/swup', {
+            // ... options
         }) }}>
             {# ... #}
         </body>

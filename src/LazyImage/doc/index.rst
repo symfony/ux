@@ -145,11 +145,8 @@ Then in your template, add your controller to the HTML attribute:
 
     <img
         src="{{ data_uri_thumbnail('public/image/large.png', 100, 75) }}"
-        {{ stimulus_controller({
-            mylazyimage: {},
-            'symfony/ux-lazy-image/lazy-image': {
-                src: asset('image/large.png')
-            }
+        {{ stimulus_controller('mylazyimage')|stimulus_controller('symfony/ux-lazy-image/lazy-image', {
+            src: asset('image/large.png')
         }) }}
 
         {# Using BlurHash, the size is required #}

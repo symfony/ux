@@ -132,9 +132,8 @@ Then in your template, add your controller to the HTML attribute:
             <title>Typed</title>
             {# ... #}
         </head>
-        <body {{ stimulus_controller({
-            mytyped: {},
-            'symfony/ux-typed': {}
+        <body {{ stimulus_controller('mytyped')|stimulus_controller('symfony/ux-typed', {
+            strings: ['...'],
         }) }}>
             {# ... #}
         </body>
