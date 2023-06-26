@@ -25,19 +25,11 @@ Then install the bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-react
 
-Next, in ``webpack.config.js``, enable React support:
+The Flex recipe will automatically set things up for you, like adding
+``.enableReactPreset()`` to your ``webpack.config.js`` file and adding code
+to load your React components inside ``assets/app.js``.
 
-.. code-block:: javascript
-
-    // webpack.config.js
-    // ...
-
-    Encore
-        // ...
-        .enableReactPreset()
-    ;
-
-Install a package to help React:
+Next, install a package to help React:
 
 .. code-block:: terminal
 
@@ -48,45 +40,33 @@ Install a package to help React:
     $ yarn add @babel/preset-react --dev --force
     $ yarn watch
 
-Finally, to load your React components, add the following lines to ``assets/app.js``:
+That's it! Any files inside ``assets/react/controllers/`` can now be rendered as
+React components.
+
+Usage
+-----
+
+The Flex recipe will have already added the ``registerReactControllerComponents()``
+code to your ``assets/app.js`` file:
 
 .. code-block:: javascript
 
     // assets/app.js
     import { registerReactControllerComponents } from '@symfony/ux-react';
 
-    // Registers React controller components to allow loading them from Twig
-    //
-    // React controller components are components that are meant to be rendered
-    // from Twig. These component then rely on other components that won't be called
-    // directly from Twig.
-    //
-    // By putting only controller components in `react/controllers`, you ensure that
-    // internal components won't be automatically included in your JS built file if
-    // they are not necessary.
-    registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
+    registerReactControllerComponents(require.context('./react/controllers', true, /\\.(j|t)sx?$/));
 
-That's it! Create an ``assets/react/controllers/`` directory and start creating your
-React components.
+This will load all React components located in the ``assets/react/controllers``
+directory. These are known as **React controller components**: top-level
+components that are meant to be rendered from Twig.
 
-Usage
------
-
-UX React works by using a system of **React controller components**: React components that
-are registered using ``registerReactControllerComponents`` and that are meant to be rendered
-from Twig.
-
-When using the ``registerReactControllerComponents`` configuration shown previously, all
-React components located in the directory ``assets/react/controllers`` are registered as
-React controller components.
-
-You can then render any React controller component in Twig using the ``react_component``.
+You can render any React controller component in Twig using the ``react_component()``.
 
 For example:
 
 .. code-block:: javascript
 
-    // assets/react/controllers/MyComponent.jsx
+    // assets/react/controllers/Hello.jsx
     import React from 'react';
 
     export default function (props) {
@@ -99,7 +79,7 @@ For example:
     {% extends 'base.html.twig' %}
 
     {% block body %}
-        <div {{ react_component('MyComponent', { 'fullName': number }) }}>
+        <div {{ react_component('Hello', { 'fullName': number }) }}>
             Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
         </div>
 
