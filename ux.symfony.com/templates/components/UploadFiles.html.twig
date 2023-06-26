@@ -1,26 +1,43 @@
-<div
-        {{ attributes }}
->
-    <p><strong>Note:</strong> files aren't persisted and will be lost on each rerender if not stored.</p>
-    <p>
-        Single file: <input type="file" name="single" autocomplete="off" /> <br>
-        Current file:
-        {% if single %}
-            {{ single.clientOriginalName }} ({{ single.clientMimeType }})
+<div class="container" {{ attributes }}>
+    <p class="text-muted"><strong>Note:</strong> files aren't persisted and will be lost on each rerender if not stored.</p>
+    <div class="form-group mb-3">
+        <label for="single-file" class="form-label">Single file:</label>
+        <input
+            type="file"
+            name="single"
+            autocomplete="off"
+            id="single-file"
+            class="form-control-file {{ singleFileUploadError ? 'is-invalid' : '' }}"
+        >
+        <div class="form-text text-muted">Current file:
+        {% if singleUploadFilename %}
+            {{ singleUploadFilename }}
         {% else %}
             none
         {% endif %}
-    </p>
-    <div>
-        Multiple files: <input type="file" name="multiple[]" autocomplete="off" multiple /> <br>
-        Current files:
+        </div>
+        {% if singleFileUploadError %}
+            <div class="invalid-feedback">{{ singleFileUploadError }}</div>
+        {% endif %}
+    </div>
+    <div class="form-group mb-3">
+        <label for="multiple-files" class="form-label">Multiple files:</label>
+        <input type="file" name="multiple[]" autocomplete="off" multiple="" id="multiple-files" class="form-control-file">
+        <div class="form-text text-muted">Current files:
+        {% if multipleUploadFilenames %}
         <ul>
-            {% for file in multiple %}
-                <li>{{ file.clientOriginalName }} ({{ file.clientMimeType }})</li>
-            {% else %}
-                <li>none</li>
+            {% for file in multipleUploadFilenames %}
+                <li>{{ file.filename }} ({{ file.size }} bytes)</li>
             {% endfor %}
         </ul>
+        {% else %}
+            (none)
+        {% endif %}
+        </div>
     </div>
-    <button data-action="live#action" data-action-name="files|sendFiles">Send files!</button>
+    <button
+        data-action="live#action"
+        data-action-name="files|uploadFiles"
+        class="btn btn-primary"
+    >Upload files!</button>
 </div>

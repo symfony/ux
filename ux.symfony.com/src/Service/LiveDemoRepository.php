@@ -103,10 +103,10 @@ EOF
             new LiveDemo(
                 'upload',
                 name: 'Uploading files',
-                description: 'Upload files to live component.',
+                description: 'Upload file from your live component through a LiveAction.',
                 route: 'app_live_components_upload',
                 longDescription: <<<EOF
-Send files to be handled by live component.
+File uploads are tricky. Submit them to a `#[LiveAction]` with the `files` modifier on `data-live-action` then process them.
 EOF
             ),
         ];
