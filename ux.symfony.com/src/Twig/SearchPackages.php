@@ -2,7 +2,7 @@
 
 namespace App\Twig;
 
-use App\Service\PackageRepository;
+use App\Repository\PackageRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
