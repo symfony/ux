@@ -25,19 +25,11 @@ Then install the bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-vue
 
-Next, in ``webpack.config.js``, enable Vue.js support:
+The Flex recipe will automatically set things up for you, like adding
+``.enableVueLoader()`` to your ``webpack.config.js`` file and adding code
+to load your Vue components inside ``assets/app.js``.
 
-.. code-block:: javascript
-
-    // webpack.config.js
-    // ...
-
-    Encore
-        // ...
-        .enableVueLoader()
-    ;
-
-Install a package to help Vue:
+Next, install a package to help Vue:
 
 .. code-block:: terminal
 
@@ -48,48 +40,31 @@ Install a package to help Vue:
     $ yarn add vue-loader --dev --force
     $ yarn watch
 
-Finally, to load your Vue components, add the following lines to ``assets/app.js``:
+That's it! Any files inside ``assets/vue/controllers/`` can now be rendered as
+Vue components.
+
+Usage
+-----
+
+The Flex recipe will have already added the ``registerVueControllerComponents()``
+code to your ``assets/app.js`` file:
 
 .. code-block:: javascript
 
     // assets/app.js
     import { registerVueControllerComponents } from '@symfony/ux-vue';
 
-    // Registers Vue.js controller components to allow loading them from Twig
-    //
-    // Vue.js controller components are components that are meant to be rendered
-    // from Twig. These component can then rely on other components that won't be
-    // called directly from Twig.
-    //
-    // By putting only controller components in `vue/controllers`, you ensure that
-    // internal components won't be automatically included in your JS built file if
-    // they are not necessary.
-    registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
+    registerVueControllerComponents(require.context('./vue/controllers', true, /\\.(j|t)sx?$/));
 
-    // If you prefer to lazy-load your Vue.js controller components, in order to keep the JavaScript bundle the smallest as possible,
-    // and improve performance, you can use the following line instead:
-    //registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/, 'lazy'));
+This will load all Vue components located in the ``assets/vue/controllers``
+directory. These are known as **Vue controller components**: top-level
+components that are meant to be rendered from Twig.
 
-That's it! Create an ``assets/vue/controllers/`` directory and start creating your
-Vue components.
-
-Usage
------
-
-UX Vue.js works by using a system of **Vue.js controller components**: Vue.js components that
-are registered using ``registerVueControllerComponents`` and that are meant to be rendered
-from Twig.
-
-When using the ``registerVueControllerComponents`` configuration shown previously, all
-Vue.js components located in the directory ``assets/vue/controllers`` are registered as
-Vue.js controller components.
-
-You can then render any Vue.js controller component in Twig using the ``vue_component``.
-For example:
+You can render any Vue controller component in Twig using the ``vue_component()``.
 
 .. code-block:: javascript
 
-    // assets/vue/controllers/MyComponent.vue
+    // assets/vue/controllers/Hello.vue
     <template>
         <div>Hello {{ name }}!</div>
     </template>
@@ -103,7 +78,7 @@ For example:
 .. code-block:: html+twig
 
     {# templates/home.html.twig #}
-    <div {{ vue_component('MyComponent', { 'name': app.user.fullName }) }}></div>
+    <div {{ vue_component('Hello', { 'name': app.user.fullName }) }}></div>
 
 Events
 ~~~~~~

@@ -33,26 +33,11 @@ Then install the bundle using Composer and Symfony Flex:
     $ yarn install --force
     $ yarn watch
 
-You also need to add the following lines at the end to your ``assets/app.js`` file:
+The Flex recipe will automatically set things up for you, like adding
+``.enableSvelte()`` to your ``webpack.config.js`` file and adding code
+to load your Vue components inside ``assets/app.js``.
 
-.. code-block:: javascript
-
-    // assets/app.js
-    import { registerSvelteControllerComponents } from '@symfony/ux-svelte';
-
-    // Registers Svelte controller components to allow loading them from Twig
-    //
-    // Svelte controller components are components that are meant to be rendered
-    // from Twig. These component can then rely on other components that won't be
-    // called directly from Twig.
-    //
-    // By putting only controller components in `svelte/controllers`, you ensure that
-    // internal components won't be automatically included in your JS built file if
-    // they are not necessary.
-    registerSvelteControllerComponents(require.context('./svelte/controllers', true, /\.svelte$/));
-
-To make sure Svelte components can be loaded by Webpack Encore, you need to add and configure
-the `svelte-loader`_ library in your project :
+Next, install a package to help Svelte:
 
 .. code-block:: terminal
 
@@ -61,32 +46,33 @@ the `svelte-loader`_ library in your project :
     # or use yarn
     $ yarn add svelte svelte-loader --dev
 
-Enable it in your ``webpack.config.js`` file :
-
-.. code-block:: javascript
-
-    // webpack.config.js
-    Encore
-        // ...
-        .enableSvelte()
-    ;
+That's it! Any files inside ``assets/svelte/controllers/`` can now be rendered as
+Svelte components.
 
 Usage
 -----
 
-UX Svelte works by using a system of **Svelte controller components**: Svelte components that
-are registered using ``registerSvelteControllerComponents()`` and that are meant to be rendered
-from Twig.
-
-When using the ``registerSvelteControllerComponents()`` configuration shown previously, all
-Svelte components located in the directory ``assets/svelte/controllers`` are registered as
-Svelte controller components.
-
-You can then render any Svelte controller component in Twig using the ``svelte_component()`` function:
+The Flex recipe will have already added the ``registerSvelteControllerComponents()``
+code to your ``assets/app.js`` file:
 
 .. code-block:: javascript
 
-    // assets/svelte/controllers/MyComponent.svelte
+    // assets/app.js
+    import { registerSvelteControllerComponents } from '@symfony/ux-svelte';
+
+    registerSvelteControllerComponents(require.context('./svelte/controllers', true, /\\.(j|t)sx?$/));
+
+This will load all Svelte components located in the ``assets/svelte/controllers``
+directory. These are known as **Svelte controller components**: top-level
+components that are meant to be rendered from Twig.
+
+You can render any Svelte controller component in Twig using the ``svelte_component()``.
+
+For example:
+
+.. code-block:: javascript
+
+    // assets/svelte/controllers/Hello.svelte
     <script>
         export let name = "Svelte";
     </script>
@@ -97,7 +83,7 @@ You can then render any Svelte controller component in Twig using the ``svelte_c
 .. code-block:: html+twig
 
     {# templates/home.html.twig #}
-    <div {{ svelte_component('MyComponent', { 'name': app.user.fullName }) }}></div>
+    <div {{ svelte_component('Hello', { 'name': app.user.fullName }) }}></div>
 
 If your Svelte component has a transition that you want to play on initial render, you can use
 the third argument ``intro`` of the ``svelte_component()`` function like you would do with the
@@ -156,6 +142,5 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`Svelte`: https://svelte.dev/
-.. _`svelte-loader`: https://github.com/sveltejs/svelte-loader/blob/master/README.md
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
