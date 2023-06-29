@@ -9,11 +9,14 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
+
 use function Zenstruck\Foundry\create;
 
 class LiveComponentDemosTest extends KernelTestCase
 {
-    use Factories, HasBrowser, ResetDatabase;
+    use Factories;
+    use HasBrowser;
+    use ResetDatabase;
 
     /**
      * @before

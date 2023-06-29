@@ -28,7 +28,7 @@ class UxPackagesTest extends KernelTestCase
     {
         $repository = new PackageRepository();
         foreach ($repository->findAll() as $package) {
-            if ($package->getName() === 'live-component') {
+            if ('live-component' === $package->getName()) {
                 // Live Component has a different bottom section
                 yield $package->getName() => [$package, 'Read full Documentation'];
                 continue;
