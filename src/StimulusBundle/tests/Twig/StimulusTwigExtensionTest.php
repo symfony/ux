@@ -32,10 +32,10 @@ final class StimulusTwigExtensionTest extends TestCase
     /**
      * @dataProvider provideRenderStimulusController
      */
-    public function testRenderStimulusController(string $controllerName, array $controllerValues, array $controllerClasses, string $expectedString, array $expectedArray): void
+    public function testRenderStimulusController(string $controllerName, array $controllerValues, array $controllerClasses, array $controllerOutlets, string $expectedString, array $expectedArray): void
     {
         $extension = new StimulusTwigExtension(new StimulusHelper($this->twig));
-        $dto = $extension->renderStimulusController($controllerName, $controllerValues, $controllerClasses);
+        $dto = $extension->renderStimulusController($controllerName, $controllerValues, $controllerClasses, $controllerOutlets);
         $this->assertSame($expectedString, (string) $dto);
         $this->assertSame($expectedArray, $dto->toArray());
     }
@@ -50,14 +50,18 @@ final class StimulusTwigExtensionTest extends TestCase
             'controllerClasses' => [
                 'second"Key"' => 'loading',
             ],
-            'expectedString' => 'data-controller="symfony--ux-dropzone--dropzone" data-symfony--ux-dropzone--dropzone-my-key-value="true" data-symfony--ux-dropzone--dropzone-second-key-class="loading"',
-            'expectedArray' => ['data-controller' => 'symfony--ux-dropzone--dropzone', 'data-symfony--ux-dropzone--dropzone-my-key-value' => 'true', 'data-symfony--ux-dropzone--dropzone-second-key-class' => 'loading'],
+            'controllerOutlets' => [
+                'other' => '.test',
+            ],
+            'expectedString' => 'data-controller="symfony--ux-dropzone--dropzone" data-symfony--ux-dropzone--dropzone-my-key-value="true" data-symfony--ux-dropzone--dropzone-second-key-class="loading" data-symfony--ux-dropzone--dropzone-other-outlet=".test"',
+            'expectedArray' => ['data-controller' => 'symfony--ux-dropzone--dropzone', 'data-symfony--ux-dropzone--dropzone-my-key-value' => 'true', 'data-symfony--ux-dropzone--dropzone-second-key-class' => 'loading', 'data-symfony--ux-dropzone--dropzone-other-outlet' => '.test'],
         ];
 
         yield 'short-single-controller-no-data' => [
             'controllerName' => 'my-controller',
             'controllerValues' => [],
             'controllerClasses' => [],
+            'controllerOutlets' => [],
             'expectedString' => 'data-controller="my-controller"',
             'expectedArray' => ['data-controller' => 'my-controller'],
         ];
@@ -66,6 +70,7 @@ final class StimulusTwigExtensionTest extends TestCase
             'controllerName' => 'my-controller',
             'controllerValues' => ['myValue' => 'scalar-value'],
             'controllerClasses' => [],
+            'controllerOutlets' => [],
             'expectedString' => 'data-controller="my-controller" data-my-controller-my-value-value="scalar-value"',
             'expectedArray' => ['data-controller' => 'my-controller', 'data-my-controller-my-value-value' => 'scalar-value'],
         ];
@@ -74,6 +79,7 @@ final class StimulusTwigExtensionTest extends TestCase
             'controllerName' => 'false-controller',
             'controllerValues' => ['isEnabled' => false],
             'controllerClasses' => [],
+            'controllerOutlets' => [],
             'expectedString' => 'data-controller="false-controller" data-false-controller-is-enabled-value="false"',
             'expectedArray' => ['data-controller' => 'false-controller', 'data-false-controller-is-enabled-value' => 'false'],
         ];
@@ -82,6 +88,7 @@ final class StimulusTwigExtensionTest extends TestCase
             'controllerName' => 'true-controller',
             'controllerValues' => ['isEnabled' => true],
             'controllerClasses' => [],
+            'controllerOutlets' => [],
             'expectedString' => 'data-controller="true-controller" data-true-controller-is-enabled-value="true"',
             'expectedArray' => ['data-controller' => 'true-controller', 'data-true-controller-is-enabled-value' => 'true'],
         ];
@@ -90,6 +97,7 @@ final class StimulusTwigExtensionTest extends TestCase
             'controllerName' => 'null-controller',
             'controllerValues' => ['firstName' => null],
             'controllerClasses' => [],
+            'controllerOutlets' => [],
             'expectedString' => 'data-controller="null-controller"',
             'expectedArray' => ['data-controller' => 'null-controller'],
         ];
@@ -98,8 +106,18 @@ final class StimulusTwigExtensionTest extends TestCase
             'controllerName' => 'my-controller',
             'controllerValues' => [],
             'controllerClasses' => ['loading' => 'spinner'],
+            'controllerOutlets' => [],
             'expectedString' => 'data-controller="my-controller" data-my-controller-loading-class="spinner"',
             'expectedArray' => ['data-controller' => 'my-controller', 'data-my-controller-loading-class' => 'spinner'],
+        ];
+
+        yield 'short-single-controller-no-data-with-outlet' => [
+            'controllerName' => 'my-controller',
+            'controllerValues' => [],
+            'controllerClasses' => [],
+            'controllerOutlets' => ['other-controller' => '.target'],
+            'expectedString' => 'data-controller="my-controller" data-my-controller-other-controller-outlet=".target"',
+            'expectedArray' => ['data-controller' => 'my-controller', 'data-my-controller-other-controller-outlet' => '.target'],
         ];
     }
 

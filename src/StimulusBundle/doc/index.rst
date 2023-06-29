@@ -162,6 +162,7 @@ stimulus_controller
 
 This bundle ships with a special ``stimulus_controller()`` Twig function
 that can be used to render `Stimulus Controllers & Values`_ and `CSS Classes`_.
+Stimulus Controllers can also reference other controllers by using `Outlets`_.
 
 For example:
 
@@ -200,6 +201,30 @@ If you want to set CSS classes:
 
     <!-- or without values -->
     <div {{ stimulus_controller('chart', controllerClasses = { 'loading': 'spinner' }) }}>
+        Hello
+    </div>
+
+And with outlets:
+
+.. code-block:: html+twig
+
+    <div {{ stimulus_controller('chart', { 'name': 'Likes', 'data': [1, 2, 3, 4] }, { 'loading': 'spinner' }, { 'other': '.target' ) }}>
+        Hello
+    </div>
+
+    <!-- would render -->
+    <div
+       data-controller="chart"
+       data-chart-name-value="Likes"
+       data-chart-data-value="&#x5B;1,2,3,4&#x5D;"
+       data-chart-loading-class="spinner"
+       data-chart-other-outlet=".target"
+    >
+       Hello
+    </div>
+
+    <!-- or without values/classes -->
+    <div {{ stimulus_controller('chart', controllerOutlets = { 'other': '.target' }) }}>
         Hello
     </div>
 
@@ -478,6 +503,7 @@ it will normalize it:
 .. _`AssetMapper`: https://symfony.com/doc/current/frontend/asset-mapper.html
 .. _`Stimulus Controllers & Values`: https://stimulus.hotwired.dev/reference/values
 .. _`CSS Classes`: https://stimulus.hotwired.dev/reference/css-classes
+.. _`Outlets`: https://stimulus.hotwired.dev/reference/outlets
 .. _`Stimulus Actions`: https://stimulus.hotwired.dev/reference/actions
 .. _`parameters`: https://stimulus.hotwired.dev/reference/actions#action-parameters
 .. _`Stimulus Targets`: https://stimulus.hotwired.dev/reference/targets

@@ -1,5 +1,5 @@
 .php-cs-fixer.cache
-.phpunit.cache
+.phpunit.result.cache
 composer.lock
 vendor/
 tests/fixtures/var

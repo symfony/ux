@@ -35,7 +35,7 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
         return new \ArrayIterator($this->toArray());
     }
 
-    public function addController(string $controllerName, array $controllerValues = [], array $controllerClasses = []): void
+    public function addController(string $controllerName, array $controllerValues = [], array $controllerClasses = [], array $controllerOutlets = []): void
     {
         $controllerName = $this->normalizeControllerName($controllerName);
         $this->controllers[] = $controllerName;
@@ -55,6 +55,12 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
             $key = $this->normalizeKeyName($key);
 
             $this->attributes['data-'.$controllerName.'-'.$key.'-class'] = $class;
+        }
+
+        foreach ($controllerOutlets as $outlet => $selector) {
+            $outlet = $this->normalizeKeyName($outlet);
+
+            $this->attributes['data-'.$controllerName.'-'.$outlet.'-outlet'] = $selector;
         }
     }
 
