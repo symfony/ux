@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by jmsche at 2023-06-14T12:21:53Z
+
+I've just seen that [the PR on Webpack Encore bundle](https://github.com/symfony/webpack-encore-bundle/pull/206) adds an `addOutlet()` function instead, but I feel it's more meaningful and less error prone to add it to the controller directly.
+
+Also, should I PR against Encore bundle (v1) if this PR gets merged?
