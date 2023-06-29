@@ -46,6 +46,7 @@ class AutocompleteFormRenderingTest extends KernelTestCase
         $firstCat = CategoryFactory::createOne(['name' => 'First cat']);
         CategoryFactory::createOne(['name' => 'in space']);
         CategoryFactory::createOne(['name' => 'ate pizza']);
+        $fooCat = CategoryFactory::createOne(['name' => 'I contain "foo" which CategoryAutocompleteType uses its query_builder option.']);
 
         $this->browser()
             ->throwExceptions()
@@ -53,14 +54,26 @@ class AutocompleteFormRenderingTest extends KernelTestCase
             // the field renders empty (but the placeholder is there)
             ->assertElementCount('#product_category_autocomplete option', 1)
             ->assertNotContains('First cat')
+
             ->post('/test-form', [
                 'body' => [
                     'product' => ['category' => ['autocomplete' => $firstCat->getId()]],
                 ],
             ])
+            // the option does NOT match something returned by query_builder
+            // so ONLY the placeholder shows up
+            ->assertElementCount('#product_category_autocomplete option', 1)
+            ->assertNotContains('First cat')
+
+            ->assertNotContains('First cat')
+            ->post('/test-form', [
+                'body' => [
+                    'product' => ['category' => ['autocomplete' => $fooCat->getId()]],
+                ],
+            ])
             // the one option + placeholder now shows up
             ->assertElementCount('#product_category_autocomplete option', 2)
-            ->assertContains('First cat')
+            ->assertContains('which CategoryAutocompleteType uses')
         ;
     }
 
