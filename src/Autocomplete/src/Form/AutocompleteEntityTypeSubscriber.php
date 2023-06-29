@@ -43,9 +43,8 @@ final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
         // pass to AutocompleteChoiceTypeExtension
         $options['autocomplete'] = true;
         $options['autocomplete_url'] = $this->autocompleteUrl;
-        unset($options['searchable_fields'], $options['security'], $options['filter_query']);
 
-        $form->add('autocomplete', EntityType::class, $options);
+        $form->add('autocomplete', EntityType::class, $this->withoutExcludedOptions($options));
     }
 
     public function preSubmit(FormEvent $event)
@@ -103,5 +102,30 @@ final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
             FormEvents::PRE_SET_DATA => 'preSetData',
             FormEvents::PRE_SUBMIT => 'preSubmit',
         ];
+    }
+
+    /**
+     * If you create a custom Form Type based on {@link ParentEntityAutocompleteType} and make it accept any non-standard
+     * options, these options need to be removed from the $options array passed to EntityType because it doesn't
+     * accept those custom options.
+     *
+     * @see https://github.com/symfony/ux/issues/420
+     */
+    private function withoutExcludedOptions(array $options): array
+    {
+        $optionBlacklist = [
+            // Options added by ParentEntityAutocompleteType
+            'searchable_fields', 'security', 'filter_query', 'property',
+            // Any other options that were added to the custom AutocompleteType that EntityType doesn't understand
+            ...$options['autocomplete_excluded_options'],
+            // The list of blacklisted options itself (EntityType doesn't understand that either!)
+            'autocomplete_excluded_options',
+        ];
+
+        foreach ($optionBlacklist as $option) {
+            unset($options[$option]);
+        }
+
+        return $options;
     }
 }

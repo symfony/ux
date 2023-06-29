@@ -82,6 +82,8 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
             'security' => false,
             // set the max results number that a query on automatic endpoint return.
             'max_results' => 10,
+            /* @see AutocompleteEntityTypeSubscriber::withoutExcludedOptions() */
+            'autocomplete_excluded_options' => [],
         ]);
 
         $resolver->setRequired(['class']);

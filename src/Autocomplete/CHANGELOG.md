@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## Next
+
+-   Allow not passing custom options to the nested `EntityType` by passing a list through another custom option
+    called `autocomplete_excluded_options` - #420
+
 ## 2.9.0
 
 -   Add support for symfony/asset-mapper
