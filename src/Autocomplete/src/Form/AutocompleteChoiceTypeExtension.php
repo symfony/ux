@@ -53,7 +53,9 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
         $attr['data-controller'] = trim(($attr['data-controller'] ?? '').' '.$controllerName);
 
         $values = [];
-        if ($form->getConfig()->hasAttribute('autocomplete_url')) {
+        if ($options['autocomplete_url']) {
+            $values['url'] = $options['autocomplete_url'];
+        } elseif ($form->getConfig()->hasAttribute('autocomplete_url')) {
             $values['url'] = $form->getConfig()->getAttribute('autocomplete_url');
         }
 

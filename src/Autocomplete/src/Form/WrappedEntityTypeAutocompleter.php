@@ -36,12 +36,12 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
 
     public function getEntityClass(): string
     {
-        return $this->getForm()->getConfig()->getOption('class');
+        return $this->getFormOption('class');
     }
 
     public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder
     {
-        $queryBuilder = $this->getForm()->getConfig()->getOption('query_builder');
+        $queryBuilder = $this->getFormOption('query_builder');
         $queryBuilder = $queryBuilder ?: $repository->createQueryBuilder('entity');
 
         if ($filterQuery = $this->getFilterQuery()) {
@@ -70,7 +70,7 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
 
     public function getLabel(object $entity): string
     {
-        $choiceLabel = $this->getForm()->getConfig()->getOption('choice_label');
+        $choiceLabel = $this->getFormOption('choice_label');
 
         if (null === $choiceLabel) {
             return (string) $entity;
@@ -114,7 +114,17 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
 
     public function getGroupBy(): mixed
     {
-        return $this->getForm()->getConfig()->getOption('group_by');
+        return $this->getFormOption('group_by');
+    }
+
+    private function getFormOption(string $name): mixed
+    {
+        $form = $this->getForm();
+        // Remove when dropping support for ParentEntityAutocompleteType
+        $form = $form->has('autocomplete') ? $form->get('autocomplete') : $form;
+        $formOptions = $form->getConfig()->getOptions();
+
+        return $formOptions[$name] ?? null;
     }
 
     private function getForm(): FormInterface

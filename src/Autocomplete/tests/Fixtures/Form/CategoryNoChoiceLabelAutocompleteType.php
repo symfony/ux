@@ -2,11 +2,11 @@
 
 namespace Symfony\UX\Autocomplete\Tests\Fixtures\Form;
 
+use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
-use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 
 #[AsEntityAutocompleteField]
 class CategoryNoChoiceLabelAutocompleteType extends AbstractType
@@ -21,6 +21,6 @@ class CategoryNoChoiceLabelAutocompleteType extends AbstractType
 
     public function getParent(): string
     {
-        return ParentEntityAutocompleteType::class;
+        return BaseEntityAutocompleteType::class;
     }
 }
