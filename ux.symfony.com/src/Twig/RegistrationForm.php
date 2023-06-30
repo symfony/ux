@@ -29,7 +29,7 @@ class RegistrationForm extends AbstractController
 
     public function hasValidationErrors(): bool
     {
-        return $this->getFormInstance()->isSubmitted() && !$this->getFormInstance()->isValid();
+        return $this->getForm()->isSubmitted() && !$this->getForm()->isValid();
     }
 
     #[LiveAction]
@@ -42,7 +42,7 @@ class RegistrationForm extends AbstractController
         // to a normal controller: that's even better.
         // $newUser = $this->getFormInstance()->getData();
 
-        $this->newUserEmail = $this->getFormInstance()
+        $this->newUserEmail = $this->getForm()
             ->get('email')
             ->getData();
         $this->isSuccessful = true;
