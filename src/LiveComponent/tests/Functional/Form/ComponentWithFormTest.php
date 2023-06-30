@@ -296,10 +296,10 @@ class ComponentWithFormTest extends KernelTestCase
 
         $browser
             ->post('/_components/form_with_many_different_fields_type/submitAndResetForm', [
-                'body' => json_encode([
+                'body' => ['data' => json_encode([
                     'props' => $dehydratedProps,
                     'updated' => ['form.textarea' => 'short'],
-                ]),
+                ])],
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(200)
@@ -309,7 +309,7 @@ class ComponentWithFormTest extends KernelTestCase
         // try resetting without submitting
         $browser
             ->post('/_components/form_with_many_different_fields_type/resetFormWithoutSubmitting', [
-                'body' => json_encode(['props' => $dehydratedProps]),
+                'body' => ['data' => json_encode(['props' => $dehydratedProps])],
                 'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(200)
