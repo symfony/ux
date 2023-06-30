@@ -3,13 +3,13 @@
 namespace Symfony\UX\Autocomplete\Tests\Fixtures\Form;
 
 use Doctrine\ORM\EntityRepository;
+use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 use Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
-use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 
 #[AsEntityAutocompleteField]
 class CategoryAutocompleteType extends AbstractType

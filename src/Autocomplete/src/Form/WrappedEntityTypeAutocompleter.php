@@ -36,12 +36,12 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
 
     public function getEntityClass(): string
     {
-        return $this->getFormOption('class');
+        return $this->getForm()->getConfig()->getOption('class');
     }
 
     public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder
     {
-        $queryBuilder = $this->getFormOption('query_builder');
+        $queryBuilder = $this->getForm()->getConfig()->getOption('query_builder');
         $queryBuilder = $queryBuilder ?: $repository->createQueryBuilder('entity');
 
         if ($filterQuery = $this->getFilterQuery()) {
@@ -70,7 +70,7 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
 
     public function getLabel(object $entity): string
     {
-        $choiceLabel = $this->getFormOption('choice_label');
+        $choiceLabel = $this->getForm()->getConfig()->getOption('choice_label');
 
         if (null === $choiceLabel) {
             return (string) $entity;
@@ -114,15 +114,7 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
 
     public function getGroupBy(): mixed
     {
-        return $this->getFormOption('group_by');
-    }
-
-    private function getFormOption(string $name): mixed
-    {
-        $form = $this->getForm();
-        $formOptions = $form['autocomplete']->getConfig()->getOptions();
-
-        return $formOptions[$name] ?? null;
+        return $this->getForm()->getConfig()->getOption('group_by');
     }
 
     private function getForm(): FormInterface
