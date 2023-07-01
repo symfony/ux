@@ -58,8 +58,8 @@ final class TwigComponentPass implements CompilerPassInterface
         }
 
         $factoryDefinition = $container->findDefinition('ux.twig_component.component_factory');
-        $factoryDefinition->setArgument(0, ServiceLocatorTagPass::register($container, $componentReferences));
-        $factoryDefinition->setArgument(3, $componentConfig);
-        $factoryDefinition->setArgument(4, $componentClassMap);
+        $factoryDefinition->setArgument(1, ServiceLocatorTagPass::register($container, $componentReferences));
+        $factoryDefinition->setArgument(4, $componentConfig);
+        $factoryDefinition->setArgument(5, $componentClassMap);
     }
 }

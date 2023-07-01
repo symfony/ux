@@ -31,13 +31,12 @@ final class ComponentFactory
      * @param array<class-string, string> $classMap
      */
     public function __construct(
+        private Environment $environment,
         private ServiceLocator $components,
         private PropertyAccessorInterface $propertyAccessor,
         private EventDispatcherInterface $eventDispatcher,
         private array $config,
-        private array $classMap,
-        private Environment $environment,
-        private string $twigExtension
+        private array $classMap
     ) {
     }
 
@@ -46,14 +45,14 @@ final class ComponentFactory
         $name = $this->classMap[$name] ?? $name;
 
         if (!$config = $this->config[$name] ?? null) {
-            if ($this->isStaticComponent($name)) {
+            if (($template = $this->findStaticComponentTemplate($name)) !== null) {
                 return new ComponentMetadata([
                     'key' => $name,
-                    'template' => $this->getTemplateFromName($name),
+                    'template' => $template,
                 ]);
             }
 
-            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s. And no template %s. founded', $name, implode(', ', array_keys($this->config)), $this->getTemplateFromName($name)));
+            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s. And no template anonymous component founded', $name, implode(', ', array_keys($this->config))));
         }
 
         return new ComponentMetadata($config);
@@ -134,6 +133,12 @@ final class ComponentFactory
             return;
         }
 
+        if ($component instanceof StaticComponent) {
+            $component->mount($data);
+
+            return;
+        }
+
         $parameters = [];
 
         foreach ($method->getParameters() as $refParameter) {
@@ -163,7 +168,7 @@ final class ComponentFactory
                 return new StaticComponent();
             }
 
-            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s. And no template %s. founded', $name, implode(', ', array_keys($this->components->getProvidedServices())), $this->getTemplateFromName($name)));
+            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s. And no anonymous component founded', $name, implode(', ', array_keys($this->components->getProvidedServices()))));
         }
 
         return $this->components->get($name);
@@ -205,12 +210,31 @@ final class ComponentFactory
 
     private function isStaticComponent(string $name): bool
     {
-        return $this->environment->getLoader()->exists($this->getTemplateFromName($name));
+        return null !== $this->findStaticComponentTemplate($name);
     }
 
-    private function getTemplateFromName(string $name): string
+    public function findStaticComponentTemplate(string $name): ?string
     {
-        return str_replace('.', '/', $name).$this->twigExtension;
+        $loader = $this->environment->getLoader();
+        $componentPath = rtrim(str_replace(':', '/', $name));
+
+        if ($loader->exists($componentPath)) {
+            return $componentPath;
+        }
+
+        if ($loader->exists($componentPath.'.html.twig')) {
+            return $componentPath.'.html.twig';
+        }
+
+        if ($loader->exists('components/'.$componentPath)) {
+            return 'components/'.$componentPath;
+        }
+
+        if ($loader->exists('/components/'.$componentPath.'.html.twig')) {
+            return '/components/'.$componentPath.'.html.twig';
+        }
+
+        return null;
     }
 
     /**

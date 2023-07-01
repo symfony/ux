@@ -105,6 +105,7 @@ final class ComponentRenderer implements ComponentRendererInterface
 
             // expose public properties and properties marked with ExposeInTemplate attribute
             iterator_to_array($this->exposedVariables($component, $metadata->isPublicPropsExposed())),
+            $component instanceof StaticComponent ? $component->getProps() : []
         );
         $event = new PreRenderEvent($mounted, $metadata, $variables);
 

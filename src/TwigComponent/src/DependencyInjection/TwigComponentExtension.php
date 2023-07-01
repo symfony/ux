@@ -40,9 +40,6 @@ final class TwigComponentExtension extends Extension
             throw new LogicException('The TwigBundle is not registered in your application. Try running "composer require symfony/twig-bundle".');
         }
 
-        $configuration = new Configuration();
-        $config = $this->processConfiguration($configuration, $configs);
-
         $container->registerAttributeForAutoconfiguration(
             AsTwigComponent::class,
             static function (ChildDefinition $definition, AsTwigComponent $attribute) {
@@ -52,12 +49,11 @@ final class TwigComponentExtension extends Extension
 
         $container->register('ux.twig_component.component_factory', ComponentFactory::class)
             ->setArguments([
+                new Reference('twig'),
                 class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : null,
                 new Reference('property_accessor'),
                 new Reference('event_dispatcher'),
                 class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : [],
-                new Reference('twig'),
-                $config['template_extension'],
             ])
         ;
 

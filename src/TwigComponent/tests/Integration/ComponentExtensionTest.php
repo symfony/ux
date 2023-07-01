@@ -151,18 +151,27 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('custom td (1)', $output);
     }
 
-    public function testCanRenderStaticComponent(): void
-    {
-        $output = self::getContainer()->get(Environment::class)->render('render_static_component.html.twig');
-
-        $this->assertStringContainsString('I am static', $output);
-    }
-
     public function testComponentWithNamespace(): void
     {
         $output = $this->renderComponent('foo:bar:baz');
 
         $this->assertStringContainsString('Content...', $output);
+    }
+
+    public function testRenderAnonymousComponent(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component.html.twig');
+
+        $this->assertStringContainsString('Click me', $output);
+        $this->assertStringContainsString('class="primary"', $output);
+    }
+
+    public function testRenderAnonymousComponentOverwriteProps(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_overwrite_props.html.twig');
+
+        $this->assertStringContainsString('Click me', $output);
+        $this->assertStringContainsString('class="secondary"', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string
