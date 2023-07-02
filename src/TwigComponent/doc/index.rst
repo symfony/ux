@@ -835,6 +835,10 @@ The ``with`` data is what's mounted on the component object.
 Passing blocks to embedded components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+.. versionadded:: 2.10
+
+    The `outerBlocks` variable has been added since 2.10.
+
 By combining nested components and embedded components very powerful structures can be created.
 There's one important thing to remember: **each embedded component, a.k.a. a component with
 blocks, inside a template, a.k.a. a nested component, starts its own template**.
