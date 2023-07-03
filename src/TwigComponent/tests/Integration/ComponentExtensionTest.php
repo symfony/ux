@@ -174,6 +174,14 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('class="secondary"', $output);
     }
 
+    public function testRenderAnonymousComponentInNestedDirectory(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_nested_directory.html.twig');
+
+        $this->assertStringContainsString('Submit', $output);
+        $this->assertStringContainsString('class="primary"', $output);
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [
