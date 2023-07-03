@@ -1,10 +1,24 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfony\UX\TwigComponent\Twig;
 
 use Twig\Compiler;
 use Twig\Node\Node;
 
+/**
+ * @author Matheo Daninos <matheo.daninos@gmail.com>
+ *
+ * @internal
+ */
 class PropsNode extends Node
 {
     public function __construct(array $propsNames, array $values, $lineno = 0, string $tag = null)
