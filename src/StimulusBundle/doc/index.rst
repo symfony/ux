@@ -342,7 +342,7 @@ directory and the ``controllers.json`` file if you need to use different paths:
     stimulus:
         # the default values
         controller_paths:
-            - %kernel.project_dir%/assets/controllers
+            - '%kernel.project_dir%/assets/controllers'
         controllers_json: '%kernel.project_dir%/assets/controllers.json'
 
 .. _manual-installation:
