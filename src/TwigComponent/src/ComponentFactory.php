@@ -45,7 +45,7 @@ final class ComponentFactory
         $name = $this->classMap[$name] ?? $name;
 
         if (!$config = $this->config[$name] ?? null) {
-            if (($template = $this->findStaticComponentTemplate($name)) !== null) {
+            if (($template = $this->findAnonymousComponentTemplate($name)) !== null) {
                 return new ComponentMetadata([
                     'key' => $name,
                     'template' => $template,
@@ -133,7 +133,7 @@ final class ComponentFactory
             return;
         }
 
-        if ($component instanceof StaticComponent) {
+        if ($component instanceof AnonymousComponent) {
             $component->mount($data);
 
             return;
@@ -164,8 +164,8 @@ final class ComponentFactory
         $name = $this->classMap[$name] ?? $name;
 
         if (!$this->components->has($name)) {
-            if ($this->isStaticComponent($name)) {
-                return new StaticComponent();
+            if ($this->isAnonymousComponent($name)) {
+                return new AnonymousComponent();
             }
 
             throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s. And no anonymous component founded', $name, implode(', ', array_keys($this->components->getProvidedServices()))));
@@ -208,12 +208,12 @@ final class ComponentFactory
         return $data;
     }
 
-    private function isStaticComponent(string $name): bool
+    private function isAnonymousComponent(string $name): bool
     {
-        return null !== $this->findStaticComponentTemplate($name);
+        return null !== $this->findAnonymousComponentTemplate($name);
     }
 
-    public function findStaticComponentTemplate(string $name): ?string
+    public function findAnonymousComponentTemplate(string $name): ?string
     {
         $loader = $this->environment->getLoader();
         $componentPath = rtrim(str_replace(':', '/', $name));

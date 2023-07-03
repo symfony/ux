@@ -2,7 +2,7 @@
 
 namespace Symfony\UX\TwigComponent;
 
-class StaticComponent
+class AnonymousComponent
 {
     private array $props = [];
 
