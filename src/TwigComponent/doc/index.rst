@@ -832,12 +832,12 @@ The ``with`` data is what's mounted on the component object.
 
     Embedded components *cannot* currently be used with LiveComponents.
 
-Passing blocks to embedded components
+Passing Blocks to Embedded Components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 2.10
 
-    The `outerBlocks` variable has been added since 2.10.
+    The ``outerBlocks`` variable was added in 2.10.
 
 By combining nested components and embedded components very powerful structures can be created.
 There's one important thing to remember: **each embedded component, a.k.a. a component with
@@ -856,18 +856,18 @@ for example a SuccessAlert component.
 
 .. code-block:: twig
 
-    {# templates/successAlert.html.twig #}
+    {# templates/SuccessAlert.html.twig #}
     {% component Alert with { type: 'success' } %}
         I can override the content, but that's pretty dull.
     {% endcomponent %}
 
 What if this SuccessAlert component wants to make the content of its nested Alert component configurable?
-Well, you can use the special `outerBlocks` variable for those cases. This makes it possible to refer
+Well, you can use the special ``outerBlocks`` variable for those cases. This makes it possible to refer
 to blocks that are passed in from another higher component.
 
 .. code-block:: twig
 
-    {# templates/successAlert.html.twig #}
+    {# templates/SuccessAlert.html.twig #}
     {% component Alert with { type: 'success' } %}
         {{ blocks(outerBlocks.content) }}
     {% endcomponent %}
@@ -881,48 +881,19 @@ to blocks that are passed in from another higher component.
 
 Note that to pass a block multiple components down, each component would need to pass it along.
 
-.. code-block:: twig
-
-    {# templates/level1.html.twig #}
-    {% component Level2 %}
-        {% block foo %}
-            I'm providing/overriding the foo block of Level2
-        {% endblock %}
-    {% endcomponent %}
-
-.. code-block:: twig
-
-    {# templates/level2.html.twig #}
-    {% component Target %}
-        {% block foo %}
-            {# overriding the foo block of Target #}
-            {# but actually passing it along from the upper component #}
-            {# it could add some extra stuff here of course #}
-            {# and even append/prepend the content of Target's foo block by using {{ parent() }} #}
-
-            {{ blocks(outerBlocks.foo) }}
-        {% endblock %}
-    {% endcomponent %}
-
-.. code-block:: html+twig
-
-    {# templates/target.html.twig #}
-    <div>{% block foo %}default content for foo{% endblock %}</div>
-
-Context of embedded components
+Context of Embedded Components
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 Every embedded component can be viewed as another template inside a template, hence the name.
 Or in other words, in the other direction, it's as if the embedded component's blocks are copy-pasted
-into that component's template. This has a few interesting consequences.
+into the target component's template. This has a few interesting consequences.
 
-First of all, although `this` is referring to the component of the template into which an (embedded)
-component is nested, *INSIDE* an embedded component it is referring to the *embedded* component,
+First, although ``this`` refers to the component of the template into which an component is nested, *INSIDE* an embedded component it is referring to the *embedded* component,
 *NOT* the component into which it's being nested.
 
 .. code-block:: twig
 
-    {# templates/successAlert.html.twig #}
+    {# templates/SuccessAlert.html.twig #}
     {{ this.someFunction }} {# this refers to SuccessAlert #}
 
     {% component Alert with { type: 'success' } %}
@@ -933,7 +904,7 @@ On the other hand, all variables are also available to the embedded component.
 
 .. code-block:: twig
 
-    {# templates/successAlert.html.twig #}
+    {# templates/SuccessAlert.html.twig #}
     {% set name = 'Fabien' %}
     {% component Alert with { type: 'success' } %}
         Hello {{ name }}
@@ -941,7 +912,7 @@ On the other hand, all variables are also available to the embedded component.
 
 Note that even ALL variables from upper components are available to lower components. However,
 because variables are merged in the context, variables with the same name are overridden by
-lower components. (That's also why `this` refers to the embedded, or "current" component)
+lower components. (That's also why ``this`` refers to the embedded, or "current" component)
 
 Finally, the most interesting thing is that, because the embedded components are literally
 resolved when rendering the nested component's template, you can even access the variables
@@ -950,7 +921,7 @@ copy-pasted into the nested component's template.
 
 .. code-block:: twig
 
-    {# templates/successAlert.html.twig #}
+    {# templates/SuccessAlert.html.twig #}
     {% for message in messages %}
         {% block message %}
             A default {{ message }}
