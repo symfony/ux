@@ -352,6 +352,21 @@ clicked). To do that, use ``norender`` modifier:
 
     <input data-model="norender|max">
 
+For a form using ``ComponentWithFormTrait``, override the ``getDataModelValue()`` method::
+
+    private function getDataModelValue(): ?string
+    {
+        return 'norender|*';
+    }
+
+.. tip::
+
+    You can also define this value inside Twig::
+
+    .. code-block:: html+twig
+
+        {{ form_start(form, {attr: {'data-model': 'norender|*'}}) }}
+
 Now, as you type, the ``max`` "model" will be updated in JavaScript, but
 it won't, yet, make an Ajax call to re-render the component. Whenever
 the next re-render *does* happen, the updated ``max`` value will be
