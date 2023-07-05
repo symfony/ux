@@ -85,7 +85,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             })
             ->post('/_components/component2/increase', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode(['props' => $dehydrated->getProps()]),
+                'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
@@ -109,7 +109,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             })
             ->post('/alt/alternate_route/increase', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode(['props' => $dehydrated->getProps()]),
+                'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
             ->assertOn('/alt/alternate_route/increase')
@@ -182,7 +182,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 1')
             ->post('/_components/disabled_csrf/increase', [
-                'body' => json_encode(['props' => $dehydrated->getProps()]),
+                'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
@@ -221,7 +221,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             // with no custom header, it redirects like a normal browser
             ->post('/_components/component2/redirect', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode(['props' => $dehydrated->getProps()]),
+                'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertRedirectedTo('/')
 
@@ -231,7 +231,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                     'Accept' => 'application/vnd.live-component+html',
                     'X-CSRF-TOKEN' => $token,
                 ],
-                'body' => json_encode(['props' => $dehydrated->getProps()]),
+                'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertStatus(204)
             ->assertHeaderEquals('Location', '/')
@@ -260,10 +260,12 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             })
             ->post('/_components/component6/inject', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode([
-                    'props' => $dehydrated->getProps(),
-                    'args' => $arguments,
-                ]),
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                        'args' => $arguments,
+                    ]),
+                ],
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')

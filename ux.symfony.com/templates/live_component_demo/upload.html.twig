@@ -1,0 +1,13 @@
+{% extends 'liveDemoBase.html.twig' %}
+
+{% block code_block_left %}
+    <twig:CodeBlock filename="src/Twig/UploadFiles.php" height="400px" />
+{% endblock %}
+
+{% block code_block_right %}
+    <twig:CodeBlock filename="templates/components/UploadFiles.html.twig" height="400px" />
+{% endblock %}
+
+{% block demo_content %}
+    {{ component('UploadFiles') }}
+{% endblock %}

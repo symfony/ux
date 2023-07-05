@@ -15,6 +15,7 @@ export default class {
         updated: {[key: string]: any},
         children: ChildrenFingerprints,
         updatedPropsFromParent: {[key: string]: any},
+        files: {[key: string]: FileList},
     ): { url: string; fetchOptions: RequestInit } {
         const splitUrl = this.url.split('?');
         let [url] = splitUrl;
@@ -26,9 +27,15 @@ export default class {
             Accept: 'application/vnd.live-component+html',
         };
 
+        const totalFiles = Object.entries(files).reduce(
+            (total, current) => total + current.length,
+            0
+        );
+
         const hasFingerprints = Object.keys(children).length > 0;
         if (
             actions.length === 0 &&
+            totalFiles === 0 &&
             this.willDataFitInUrl(JSON.stringify(props), JSON.stringify(updated), params, JSON.stringify(children), JSON.stringify(updatedPropsFromParent))
         ) {
             params.set('props', JSON.stringify(props));
@@ -42,7 +49,6 @@ export default class {
             fetchOptions.method = 'GET';
         } else {
             fetchOptions.method = 'POST';
-            fetchOptions.headers['Content-Type'] = 'application/json';
             const requestData: any = { props, updated };
             if (Object.keys(updatedPropsFromParent).length > 0) {
                 requestData.propsFromParent = updatedPropsFromParent;
@@ -51,11 +57,15 @@ export default class {
                 requestData.children = children;
             }
 
+            if (
+                this.csrfToken &&
+                (actions.length || totalFiles)
+            ) {
+                fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
+            }
+
             if (actions.length > 0) {
                 // one or more ACTIONs
-                if (this.csrfToken) {
-                    fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
-                }
 
                 if (actions.length === 1) {
                     // simple, single action
@@ -68,7 +78,17 @@ export default class {
                 }
             }
 
-            fetchOptions.body = JSON.stringify(requestData);
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(requestData));
+
+            for(const [key, value] of Object.entries(files)) {
+                const length = value.length;
+                for (let i = 0; i < length ; ++i) {
+                    formData.append(key, value[i]);
+                }
+            }
+
+            fetchOptions.body = formData;
         }
 
         const paramsString = params.toString();

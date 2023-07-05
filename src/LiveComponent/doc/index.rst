@@ -1153,6 +1153,75 @@ the component now extends ``AbstractController``! That is totally
 allowed, and gives you access to all of your normal controller
 shortcuts. We even added a flash message!
 
+.. _files
+
+Uploading files
+---------------
+
+.. versionadded:: 2.9
+
+    The ability to upload files to actions was added in version 2.9.
+
+Files aren't sent to the component by default. You need to use a live action
+to handle the files and tell the component when the file should be sent:
+
+.. code-block:: html+twig
+
+    <p>
+        <input type="file" name="my_file" />
+        <button data-action="live#action" data-action-name="files|my_action" />
+    </p>
+
+To send a file (or files) with an action use `files` modifier.
+Without an argument it will send all pending files to your action.
+You can also specify a modifier parameter to choose which files should be upload.
+
+
+.. code-block:: html+twig
+
+    <p>
+        <input type="file" name="my_file" />
+        <input type="file" name="multiple[]" multiple />
+
+        {# Send only file from first input #}
+        <button data-action="live#action" data-action-name="files(my_file)|myAction" />
+        {# You can chain modifiers to send multiple files #}
+        <button data-action="live#action" data-action-name="files(my_file)|files(multiple[])|myAction" />
+        {# Or send all pending files #}
+        <button data-action="live#action" data-action-name="files|myAction" />
+    </p>
+
+The files will be available in a regular `$request->files` files bag::
+
+    // src/Components/FileUpload.php
+    namespace App\Components;
+
+    use Symfony\Component\HttpFoundation\Request;
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\Attribute\LiveAction;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+    #[AsLiveComponent]
+    class FileUpload
+    {
+        use DefaultActionTrait;
+
+        #[LiveAction]
+        public function myAction(Request $request)
+        {
+            $file = $request->files->get('my_file');
+            $multiple = $request->files->all('multiple');
+
+            // Handle files
+        }
+    }
+
+.. tip::
+
+    Remember that in order to send multiple files from a single input you
+    need to specify `multiple` attribute on HTML element and end `name`
+    with `[]`.
+
 .. _forms:
 
 Forms

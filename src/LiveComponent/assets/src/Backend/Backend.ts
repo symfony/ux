@@ -13,6 +13,7 @@ export interface BackendInterface {
         updated: {[key: string]: any},
         children: ChildrenFingerprints,
         updatedPropsFromParent: {[key: string]: any},
+        files: {[key: string]: FileList},
     ): BackendRequest;
 }
 
@@ -34,13 +35,15 @@ export default class implements BackendInterface {
         updated: {[key: string]: any},
         children: ChildrenFingerprints,
         updatedPropsFromParent: {[key: string]: any},
+        files: {[key: string]: FileList},
     ): BackendRequest {
         const { url, fetchOptions } = this.requestBuilder.buildRequest(
             props,
             actions,
             updated,
             children,
-            updatedPropsFromParent
+            updatedPropsFromParent,
+            files
         );
 
         return new BackendRequest(

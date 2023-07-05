@@ -31,7 +31,7 @@ final class LiveResponderTest extends KernelTestCase
         $this->browser()
             ->throwExceptions()
             ->post('/_components/component_with_emit/actionThatEmits', [
-                'body' => json_encode(['props' => $dehydrated->getProps()]),
+                'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
             ->assertSee('Event: event1')
@@ -46,7 +46,7 @@ final class LiveResponderTest extends KernelTestCase
         $crawler = $this->browser()
             ->throwExceptions()
             ->post('/_components/component_with_emit/actionThatDispatchesABrowserEvent', [
-                'body' => json_encode(['props' => $dehydrated->getProps()]),
+                'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
             ->crawler()

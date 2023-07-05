@@ -1724,6 +1724,7 @@ class Component {
         this.defaultDebounce = 150;
         this.backendRequest = null;
         this.pendingActions = [];
+        this.pendingFiles = {};
         this.isRequestPending = false;
         this.requestDebounceTimeout = null;
         this.children = new Map();
@@ -1800,6 +1801,9 @@ class Component {
         });
         this.debouncedStartRequest(debounce);
         return promise;
+    }
+    files(key, input) {
+        this.pendingFiles[key] = input;
     }
     render() {
         const promise = this.nextRequestPromise;
@@ -1900,7 +1904,13 @@ class Component {
         const thisPromiseResolve = this.nextRequestPromiseResolve;
         this.resetPromise();
         this.unsyncedInputsTracker.resetUnsyncedFields();
-        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints(), this.valueStore.getUpdatedPropsFromParent());
+        const filesToSend = {};
+        for (const [key, value] of Object.entries(this.pendingFiles)) {
+            if (value.files) {
+                filesToSend[key] = value.files;
+            }
+        }
+        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints(), this.valueStore.getUpdatedPropsFromParent(), filesToSend);
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
         this.pendingActions = [];
         this.valueStore.flushDirtyPropsToPending();
@@ -1909,6 +1919,9 @@ class Component {
             this.backendRequest = null;
             const backendResponse = new BackendResponse(response);
             const html = await backendResponse.getBody();
+            for (const input of Object.values(this.pendingFiles)) {
+                input.value = '';
+            }
             const headers = backendResponse.response.headers;
             if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
                 const controls = { displayError: true };
@@ -2130,7 +2143,7 @@ class RequestBuilder {
         this.url = url;
         this.csrfToken = csrfToken;
     }
-    buildRequest(props, actions, updated, children, updatedPropsFromParent) {
+    buildRequest(props, actions, updated, children, updatedPropsFromParent, files) {
         const splitUrl = this.url.split('?');
         let [url] = splitUrl;
         const [, queryString] = splitUrl;
@@ -2139,8 +2152,10 @@ class RequestBuilder {
         fetchOptions.headers = {
             Accept: 'application/vnd.live-component+html',
         };
+        const totalFiles = Object.entries(files).reduce((total, current) => total + current.length, 0);
         const hasFingerprints = Object.keys(children).length > 0;
         if (actions.length === 0 &&
+            totalFiles === 0 &&
             this.willDataFitInUrl(JSON.stringify(props), JSON.stringify(updated), params, JSON.stringify(children), JSON.stringify(updatedPropsFromParent))) {
             params.set('props', JSON.stringify(props));
             params.set('updated', JSON.stringify(updated));
@@ -2154,7 +2169,6 @@ class RequestBuilder {
         }
         else {
             fetchOptions.method = 'POST';
-            fetchOptions.headers['Content-Type'] = 'application/json';
             const requestData = { props, updated };
             if (Object.keys(updatedPropsFromParent).length > 0) {
                 requestData.propsFromParent = updatedPropsFromParent;
@@ -2162,10 +2176,11 @@ class RequestBuilder {
             if (hasFingerprints) {
                 requestData.children = children;
             }
+            if (this.csrfToken &&
+                (actions.length || totalFiles)) {
+                fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
+            }
             if (actions.length > 0) {
-                if (this.csrfToken) {
-                    fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
-                }
                 if (actions.length === 1) {
                     requestData.args = actions[0].args;
                     url += `/${encodeURIComponent(actions[0].name)}`;
@@ -2175,7 +2190,15 @@ class RequestBuilder {
                     requestData.actions = actions;
                 }
             }
-            fetchOptions.body = JSON.stringify(requestData);
+            const formData = new FormData();
+            formData.append('data', JSON.stringify(requestData));
+            for (const [key, value] of Object.entries(files)) {
+                const length = value.length;
+                for (let i = 0; i < length; ++i) {
+                    formData.append(key, value[i]);
+                }
+            }
+            fetchOptions.body = formData;
         }
         const paramsString = params.toString();
         return {
@@ -2193,8 +2216,8 @@ class Backend {
     constructor(url, csrfToken = null) {
         this.requestBuilder = new RequestBuilder(url, csrfToken);
     }
-    makeRequest(props, actions, updated, children, updatedPropsFromParent) {
-        const { url, fetchOptions } = this.requestBuilder.buildRequest(props, actions, updated, children, updatedPropsFromParent);
+    makeRequest(props, actions, updated, children, updatedPropsFromParent, files) {
+        const { url, fetchOptions } = this.requestBuilder.buildRequest(props, actions, updated, children, updatedPropsFromParent, files);
         return new BackendRequest(fetch(url, fetchOptions), actions.map((backendAction) => backendAction.name), Object.keys(updated));
     }
 }
@@ -2658,6 +2681,7 @@ class LiveControllerDefault extends Controller {
             { event: 'change', callback: (event) => this.handleChangeEvent(event) },
             { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
         ];
+        this.pendingFiles = {};
     }
     initialize() {
         this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
@@ -2706,6 +2730,7 @@ class LiveControllerDefault extends Controller {
         const directives = parseDirectives(rawAction);
         let debounce = false;
         directives.forEach((directive) => {
+            let pendingFiles = {};
             const validModifiers = new Map();
             validModifiers.set('prevent', () => {
                 event.preventDefault();
@@ -2721,6 +2746,14 @@ class LiveControllerDefault extends Controller {
             validModifiers.set('debounce', (modifier) => {
                 debounce = modifier.value ? parseInt(modifier.value) : true;
             });
+            validModifiers.set('files', (modifier) => {
+                if (!modifier.value) {
+                    pendingFiles = this.pendingFiles;
+                }
+                else if (this.pendingFiles[modifier.value]) {
+                    pendingFiles[modifier.value] = this.pendingFiles[modifier.value];
+                }
+            });
             directive.modifiers.forEach((modifier) => {
                 var _a;
                 if (validModifiers.has(modifier.name)) {
@@ -2730,6 +2763,12 @@ class LiveControllerDefault extends Controller {
                 }
                 console.warn(`Unknown modifier ${modifier.name} in action "${rawAction}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
             });
+            for (const [key, input] of Object.entries(pendingFiles)) {
+                if (input.files) {
+                    this.component.files(key, input);
+                }
+                delete this.pendingFiles[key];
+            }
             this.component.action(directive.action, directive.named, debounce);
             if (getModelDirectiveFromElement(event.currentTarget, false)) {
                 this.pendingActionTriggerModelElement = event.currentTarget;
@@ -2799,11 +2838,21 @@ class LiveControllerDefault extends Controller {
         this.updateModelFromElementEvent(target, 'change');
     }
     updateModelFromElementEvent(element, eventName) {
+        var _a;
         if (!elementBelongsToThisComponent(element, this.component)) {
             return;
         }
         if (!(element instanceof HTMLElement)) {
             throw new Error('Could not update model for non HTMLElement');
+        }
+        if (element instanceof HTMLInputElement && element.type === 'file') {
+            const key = element.name;
+            if ((_a = element.files) === null || _a === void 0 ? void 0 : _a.length) {
+                this.pendingFiles[key] = element;
+            }
+            else if (this.pendingFiles[key]) {
+                delete this.pendingFiles[key];
+            }
         }
         const modelDirective = getModelDirectiveFromElement(element, false);
         if (!modelDirective) {

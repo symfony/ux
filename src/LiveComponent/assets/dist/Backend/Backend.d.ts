@@ -10,6 +10,8 @@ export interface BackendInterface {
         [key: string]: any;
     }, children: ChildrenFingerprints, updatedPropsFromParent: {
         [key: string]: any;
+    }, files: {
+        [key: string]: FileList;
     }): BackendRequest;
 }
 export interface BackendAction {
@@ -23,5 +25,7 @@ export default class implements BackendInterface {
         [key: string]: any;
     }, children: ChildrenFingerprints, updatedPropsFromParent: {
         [key: string]: any;
+    }, files: {
+        [key: string]: FileList;
     }): BackendRequest;
 }

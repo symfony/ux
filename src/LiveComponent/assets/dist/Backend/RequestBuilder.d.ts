@@ -7,6 +7,8 @@ export default class {
         [key: string]: any;
     }, children: ChildrenFingerprints, updatedPropsFromParent: {
         [key: string]: any;
+    }, files: {
+        [key: string]: FileList;
     }): {
         url: string;
         fetchOptions: RequestInit;
