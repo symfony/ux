@@ -765,13 +765,15 @@ independently. If you're using `Live Components`_, then there
 *are* some guidelines related to how the re-rendering of parent and
 child components works. Read `Live Nested Components`_.
 
-Embedded Components
--------------------
+.. _embedded-components:
+
+Passing Blocks to Components
+----------------------------
 
 .. tip::
 
-    Embedded components (i.e. components with blocks) can be written in a more
-    readable way by using the `Component HTML Syntax`_.
+    The `Component HTML Syntax`_ allows you to pass blocks to components in an
+    even more readable way.
 
 You can write your component's Twig template with blocks that can be overridden
 when rendering using the ``{% component %}`` syntax. These blocks can be thought of as
@@ -830,29 +832,29 @@ The ``with`` data is what's mounted on the component object.
 
 .. note::
 
-    Embedded components *cannot* currently be used with LiveComponents.
+    The ``{% component %}`` syntax *cannot* currently be used with LiveComponents.
 
-Passing Blocks to Embedded Components
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Inheritance & Forwarding "Outer Blocks"
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 2.10
 
     The ``outerBlocks`` variable was added in 2.10.
 
-By combining nested components and embedded components very powerful structures can be created.
-There's one important thing to remember: **each embedded component, a.k.a. a component with
-blocks, inside a template, a.k.a. a nested component, starts its own template**.
-Any blocks that are available in your component template are *NOT* available *inside* the embedded component.
+When passing blocks via the ``{% component %}`` syntax, there is one important thing
+to understand: the content behaves as if it lives in its **own**, independent template,
+which extends the component's template.
 
-Imagine this simple Alert component, which allows its content to be set by a higher component,
-for example a SuccessAlert component.
+This has a few interesting side effects. For example, imagine a simple ``Alert`` component:
 
 .. code-block:: html+twig
 
-    {# templates/alert.html.twig #}
+    {# templates/Alert.html.twig #}
     <div class="alert alert-{{ type }}">
         {% block content %}{% endblock %}
     </div>
+
+And a ``SuccessAlert`` component that uses it:
 
 .. code-block:: twig
 
@@ -881,15 +883,14 @@ to blocks that are passed in from another higher component.
 
 Note that to pass a block multiple components down, each component would need to pass it along.
 
-Context of Embedded Components
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Context / Variables Inside of Blocks
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Every embedded component can be viewed as another template inside a template, hence the name.
-Or in other words, in the other direction, it's as if the embedded component's blocks are copy-pasted
-into the target component's template. This has a few interesting consequences.
+The content inside of the ``{% block component %}`` should be viewed as living in its own,
+independent template, which extends the component's template. This has a few interesting consequences.
 
-First, although ``this`` refers to the component of the template into which an component is nested, *INSIDE* an embedded component it is referring to the *embedded* component,
-*NOT* the component into which it's being nested.
+First, once you're inside of ``{% block component %}``, the ``this`` variable represents
+the component you're now rendering and you have access to all of that component's variables:
 
 .. code-block:: twig
 
@@ -898,9 +899,12 @@ First, although ``this`` refers to the component of the template into which an c
 
     {% component Alert with { type: 'success' } %}
         {{ this.someFunction }} {# this refers to Alert! #}
+
+        {{ type }} {# references a "type" prop from Alert #}
     {% endcomponent %}
 
-On the other hand, all variables are also available to the embedded component.
+Conveniently, in addition to the variables from the `Alert` component, you still have
+access to whatever variables are available in the original template:
 
 .. code-block:: twig
 
@@ -910,30 +914,32 @@ On the other hand, all variables are also available to the embedded component.
         Hello {{ name }}
     {% endcomponent %}
 
-Note that even ALL variables from upper components are available to lower components. However,
-because variables are merged in the context, variables with the same name are overridden by
-lower components. (That's also why ``this`` refers to the embedded, or "current" component)
+Note that ALL variables from upper components (e.g. ``SuccessAlert`` are available to lower
+components (e.g. ``Alert``. However, because variables are merged, variables with the same name
+are overridden by lower components. (That's also why ``this`` refers to the embedded, or
+"current" component)
 
-Finally, the most interesting thing is that, because the embedded components are literally
-resolved when rendering the nested component's template, you can even access the variables
-from THAT template as well. Again, it's as if the embedded component's blocks are being
-copy-pasted into the nested component's template.
+Finally, the most interesting thing is that, the content inside of ``{% component %}`` is
+executed as if it is "copy-and-pasted" into the block of the target template. This means
+you can access variables from the block you're overriding. For example:
 
 .. code-block:: twig
 
     {# templates/SuccessAlert.html.twig #}
     {% for message in messages %}
-        {% block message %}
+        {% block alert_message %}
             A default {{ message }}
         {% endblock %}
     {% endfor %}
+
+When overriding the ``alert_message`` block, you have access to the ``message`` variable:
 
 .. code-block:: twig
 
     {# templates/some_page.html.twig #}
     {% component SuccessAlert %}
-        {% block message %}
-            I can override the message block and access the {{ message }} too!
+        {% block alert_message %}
+            I can override the alert_message block and access the {{ message }} too!
         {% endblock %}
     {% endcomponent %}
 
