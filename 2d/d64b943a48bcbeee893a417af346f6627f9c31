@@ -1,0 +1,164 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-03T18:57:30Z
+
+> Two tests are failing for me locally (and in 2 seemingly random CI configurations), while logic tells me they shouldn't and I'm unable to find the cause right now. Help would be appreciated
+
+Loos like they're related to batch controller? I don't see anything obvious, unfortunately. It must be related to the new data format, but you've updated things like I would expect.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-05-03T19:14:08Z
+
+To clarify, on the back-end, the uploaded files will be available via `$request->files`?
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2023-05-04T12:16:04Z
+
+> So, I'm a +1 for this. However, while I think the "small steps" approach is the way to go, I'm not sure it makes sense to merge this in without having _some_ fully-functional version of it (i.e. these are building blocks, but not useable in any way yet). Perhaps we do need a bigger PR, but building it piece-by-piece is a nice method (this WAS relatively easy to review).
+
+Sure thing, I will push it a bit until we can actually upload files this way (so that they are available via `$request->files`) :+1:
+
+> To clarify, on the back-end, the uploaded files will be available via $request->files?
+
+With this PR - not yet, but this is the initial goal right now, and more sophisticated backend stuff will follow :+1:
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-05-04T14:02:40Z
+
+I think if we can access `$request->files` within a component action, that would be enough for a first step. @weaverryan, do you agree?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-06T00:14:48Z
+
+That would probably be enough. We’ll need some frontend implementation, and some thought should be given to when these are sent. Like, it probably doesn’t make sense to upload a file during a normal re-render / model send, as you’d upload the file… but your component wouldn’t be saving yet… so there is some complexity with that. Sending on an action makes more sense. But my point is, we need to think through a minimally viable, real-world workflow :). But I think that would be a great first place to land.
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2023-05-09T11:00:42Z
+
+I'm back with more goodies :) I have taken inspiration from previous PR (#299). It was so easy to implement that I was surprised - current project structure is really pleasant to work with :+1:
+
+How it works?
+
+Whenever any file input changes, underlying files are being stored in live component (in `pendingFiles`) for upload later. They take the key by default from `data-model`, with fallback to `name` HTML attribute as usually.
+
+A new action modifier is introduced - `files`. When used without parameter it will send all pending files with an action. When used with parameter it will only send files associated with passed key (can be chained for multiple keys).
+
+I have added a very simple (and ugly, but that's what happens when I touch Twig files) demo to ux.symfony.com just to showcase this. It would probably need some love if we want to show it publicly. Or you can check it out and experiment with it to see how things work and remove it.
+
+The bad news here is that I have no idea how to approach functional testing this (in JS, there is nothing to test in PHP as this is regular file upload with nothing added on top of it). As far as I gone digging I believe current test suite doesn't support adding files to mocked requests.
+
+Regarding failing tests in PHP - I have switched them from asserting status and context to expecting exceptions. For some reason underlying library in some cases unconditionally handles exceptions even when they are expected. And it fails only in some versions probably because the logic looks for exception page by class names that could've changed between versions (?). Seems weird to me, but the change makes them work and pass.
+
+I have also added a simple docs section. English is not my native language, so it surely needs a bit of love too.
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2023-05-10T12:55:01Z
+
+@kbond Thanks a lot for your help. I have adapted the docs to your suggestions and removed the `data-model` fallback. It probably made sense in the previous PR, but this time we are not binding files to model data right now, so the usage was purely theoretical.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-16T10:54:49Z
+
+@Lustmored Sorry for the delay - and thank you for the demo - SUPER useful. And yea, we'll be able to think of a nice example for a final demo and make it pretty - nothing to worry about now.
+
+You're right that it works really smoothly! I have two questions:
+
+A) How are/should the files be "cleared? For example, in your demo, imagine that we DO process the file uploads in the `LiveAction` and store them somewhere. Right now, on the page, the file upload fields always remain "attached":
+
+<img width="457" alt="Screenshot 2023-05-16 at 6 50 46 AM" src="https://github.com/symfony/ux/assets/121003/baf1ad62-b1f9-4722-b60e-237856e6ec9c">
+
+And so also, every time you trigger the `LiveAction`, the file is sent again. I would imagine that, once a file is sent on an action, we would need to find the corresponding file input and "clear" that upload? Or were you thinking of something different?
+
+B) I added a normal string `LiveProp(writable: true)` to the demo component and I was happy to see that when the component re-renders for some "normal" reason, any files that I have attached to "file inputs" are not lost during the re-render. I don't see any code for this related to morphdom... so my assumption is that the re-rendering system naturally does *not* touch the file inputs and "undo" the attaching. That... likely makes sense, as I think when you select a file, no HTML on the page changes (and `morphdom`'s job is to modify HTML), so it "just works". I guess this is more of a statement to make sure you agree than a question ;).
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2023-05-19T10:03:50Z
+
+Regarding your questions:
+
+A) The file should not be sent again and again - changing the field triggers queuing it for upload and when it is being sent - it's removed from `pendingFiles`. So as far as I do nothing for the input, the file should be sent again only after the input changes.
+I'm not sure if/when we should clear the input element - with a tiny rewiring we could do that whenever the files from input are sent to an action. Should I proceed this way?
+B) Yes, I agree - selecting files only make changes to the underlying `FileList` object under `input.files`, so there is no HTML change at all.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-05-20T12:34:46Z
+
+> A) The file should not be sent again and again - changing the field triggers queuing it for upload and when it is being sent - it's removed from pendingFiles. So as far as I do nothing for the input, the file should be sent again only after the input changes.
+
+that’s very nice!
+
+> I'm not sure if/when we should clear the input element - with a tiny rewiring we could do that whenever the files from input are sent to an action. Should I proceed this way?
+
+I think so, yes. Let’s think about the use-cases. I MAY have a situation where, after I process the upload, I don’t even render the file field anymore. That use-case, I think, already works wonderfully. The other case is that I DO keep the file field… in case you want to upload again. My thinking is that if we don’t clear that field for them, then they’ll be stuck with this filled-in field with no way to clear it. So yes, unless I’m not thinking of some angle or use-case, let’s proceed with clearing when they are sent :)
+
+thank you!
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-05-20T13:23:44Z
+
+I agree with clearing the field.
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2023-05-25T13:40:06Z
+
+So with a bit of rewiring the inputs are now cleared and I made sure the same files aren't sent over again (they were actually as I missed clearing one queue) :+1:
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-06-26T21:20:42Z
+
+@Lustmored I just rebased and made some tweaks to the demo. But I think this is ready to go as a V1 - it works great!
+
+We DO need some documentation - do you want to try that? Also, here are the rough spots / questions I'm thinking about. These aren't blockers, but these are not as smooth as I'd like:
+
+A) How would it look to use this in a Symfony form? Perhaps we should create a 2nd demo that submits to a `LiveAction` (and has some other, non-file fields in the form) and show how everything could be done.
+
+B) I added validation, but it looks terrible (not your fault). Previously, you were storing the `UploadedFile` on a property. I removed that because I think it may be confusing: users may expect this to persist between re-renders (thinking out loud... with @kbond's filesystem work... I wonder if we COULD have `LiveProps` that are `File` objects and which have a custom hydrator so they are dehydrated to a string then re-hydrated back to the `File` object later). Anyway, having the `UploadedFile` on a property makes validation easier: you can use `ValidatableComponentTrait`. But I think this isn't super useful, at least not yet because, in a real situation, you would probably have one/some "file" fields in your form and a few other normal fields. If you have the `UploadedFile` on a property and you call `$this->validate()`, it will validate all the fields on the form, which doesn't seem ideal. So, I'm validating manually, and it's not great.
+
+Cheers!
+
+---------------------------------------------------------------------------
+
+by Lustmored at 2023-06-30T10:30:44Z
+
+@weaverryan Regarding the documentation - I think I'm not the best person for the job, but given some guide points about what to document and how to approach it, I can surely give it a try :+1:
+
+Regarding your points - both are excellent and valid points. And also a reason I wanted to start small, as both the topics can be approached separately (maybe even others will hop in to help) once we have any kind of working upload support. But I have some thought, so here they are:
+
+A) Regarding forms - I believe one change that could be useful would be to automatically submit all form files on `submit` event and only clean them from upload queue if response is not 422 (or otherwise detected to be valid), so that subsequent submits resubmit the files, as one would expect. I think that resolves most of the use cases, but does so without validation on the fly. That would probably still require some manual work on component. I'm not sure if there's a good default for when we should submit files for validation.
+It could also play nicely with filesystem library, but I'd have to play with it a bit to see where it goes.
+
+B) For that problem I believe @kbond filesystem approach could be the best way to go. It solves many (if not all) problems regarding hydration/temporary storage/validation and so on. Before working on this PR I was working with him on bringing functions useful for live components into the library, so that there is a chance it will be very pleasant combo out of the box. That's what I intent to experiment with after merging this PR and see where it goes. To be honest I have no vision of scope required to achieve easy work with files without that library.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-06-30T18:47:22Z
+
+>  I believe one change that could be useful would be to automatically submit all form files on submit event and only clean them from upload queue if response is not 422 (or otherwise detected to be valid), so that subsequent submits resubmit the files, as one would expect
+
+That's a really interesting idea. Thinking out loud, we would need to:
+
+1) Add the `files` modifier to the `<form` tag that `ComponentWithFormTrait` uses (or document to do this... or something) so that the files submit with the form.
+
+2) Have some new syntax (?) on the `files` modifier that says "don't clear me on 422".
+
+> B) For that problem I believe @kbond filesystem approach could be the best way to go.
+
+Fair enough. Validation is ugly, but not impossible. So let's move forward.
+
+I'm going to merge this and write some docs. My hope is that we (I'll definitely need your lead on this) can continue to push this forward as this v1 is functional, but not what either of us want in the end!
+
+Thanks!
