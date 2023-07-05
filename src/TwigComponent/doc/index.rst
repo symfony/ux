@@ -914,12 +914,12 @@ access to whatever variables are available in the original template:
         Hello {{ name }}
     {% endcomponent %}
 
-Note that ALL variables from upper components (e.g. ``SuccessAlert`` are available to lower
-components (e.g. ``Alert``. However, because variables are merged, variables with the same name
+Note that ALL variables from upper components (e.g. ``SuccessAlert``) are available to lower
+components (e.g. ``Alert``). However, because variables are merged, variables with the same name
 are overridden by lower components. (That's also why ``this`` refers to the embedded, or
 "current" component)
 
-Finally, the most interesting thing is that, the content inside of ``{% component %}`` is
+Finally, the most interesting thing is that the content inside of ``{% component %}`` is
 executed as if it is "copy-and-pasted" into the block of the target template. This means
 you can access variables from the block you're overriding. For example:
 
