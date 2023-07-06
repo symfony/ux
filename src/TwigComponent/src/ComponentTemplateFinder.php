@@ -20,7 +20,8 @@ class ComponentTemplateFinder implements ComponentTemplateFinderInterface
 {
     public function __construct(
         private Environment $environment
-    ) {}
+    ) {
+    }
 
     public function findAnonymousComponentTemplate(string $name): ?string
     {

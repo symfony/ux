@@ -148,7 +148,6 @@ final class ComponentRenderer implements ComponentRendererInterface
                 throw new \LogicException(sprintf('Cannot use %s on methods with required parameters (%s::%s).', ExposeInTemplate::class, $component::class, $method->name));
             }
 
-
             if ($attribute->destruct) {
                 foreach ($component->{$method->name}() as $prop => $value) {
                     yield $prop => $value;

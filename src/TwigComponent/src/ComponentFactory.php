@@ -17,7 +17,6 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Event\PostMountEvent;
 use Symfony\UX\TwigComponent\Event\PreMountEvent;
-use Twig\Environment;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>

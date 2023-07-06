@@ -22,12 +22,12 @@ namespace Symfony\UX\TwigComponent\Attribute;
 final class ExposeInTemplate
 {
     /**
-     * @param string|null $name   The variable name to expose. Leave as null
-     *                            to default to property name.
-     * @param string|null $getter The getter method to use. Leave as null
-     *                            to default to PropertyAccessor logic.
-     * @param bool $destruct      The content should be used as array of variables
-     *                            names
+     * @param string|null $name     The variable name to expose. Leave as null
+     *                              to default to property name.
+     * @param string|null $getter   The getter method to use. Leave as null
+     *                              to default to PropertyAccessor logic.
+     * @param bool        $destruct The content should be used as array of variables
+     *                              names
      */
     public function __construct(public ?string $name = null, public ?string $getter = null, public bool $destruct = false)
     {

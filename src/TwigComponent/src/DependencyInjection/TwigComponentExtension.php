@@ -44,7 +44,7 @@ final class TwigComponentExtension extends Extension
 
         $container->register('ux.twig_component.component_template_finder', ComponentTemplateFinder::class)
             ->setArguments([
-                new Reference('twig')
+                new Reference('twig'),
             ])
         ;
 
