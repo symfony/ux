@@ -60,7 +60,7 @@ code to your ``assets/app.js`` file:
     // assets/app.js
     import { registerSvelteControllerComponents } from '@symfony/ux-svelte';
 
-    registerSvelteControllerComponents(require.context('./svelte/controllers', true, /\\.(j|t)sx?$/));
+    registerSvelteControllerComponents(require.context('./svelte/controllers', true, /\.svelte$/));
 
 This will load all Svelte components located in the ``assets/svelte/controllers``
 directory. These are known as **Svelte controller components**: top-level
