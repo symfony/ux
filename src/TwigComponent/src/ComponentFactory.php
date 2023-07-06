@@ -31,7 +31,7 @@ final class ComponentFactory
      * @param array<class-string, string> $classMap
      */
     public function __construct(
-        private Environment $environment,
+        private ComponentTemplateFinderInterface $componentTemplateFinder,
         private ServiceLocator $components,
         private PropertyAccessorInterface $propertyAccessor,
         private EventDispatcherInterface $eventDispatcher,
@@ -45,14 +45,14 @@ final class ComponentFactory
         $name = $this->classMap[$name] ?? $name;
 
         if (!$config = $this->config[$name] ?? null) {
-            if (($template = $this->findAnonymousComponentTemplate($name)) !== null) {
+            if (($template = $this->componentTemplateFinder->findAnonymousComponentTemplate($name)) !== null) {
                 return new ComponentMetadata([
                     'key' => $name,
                     'template' => $template,
                 ]);
             }
 
-            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s. And no template anonymous component founded', $name, implode(', ', array_keys($this->config))));
+            $this->throwUnknownComponentException($name);
         }
 
         return new ComponentMetadata($config);
@@ -168,7 +168,7 @@ final class ComponentFactory
                 return new AnonymousComponent();
             }
 
-            throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s. And no anonymous component founded', $name, implode(', ', array_keys($this->components->getProvidedServices()))));
+            $this->throwUnknownComponentException($name);
         }
 
         return $this->components->get($name);
@@ -210,31 +210,7 @@ final class ComponentFactory
 
     private function isAnonymousComponent(string $name): bool
     {
-        return null !== $this->findAnonymousComponentTemplate($name);
-    }
-
-    public function findAnonymousComponentTemplate(string $name): ?string
-    {
-        $loader = $this->environment->getLoader();
-        $componentPath = rtrim(str_replace(':', '/', $name));
-
-        if ($loader->exists($componentPath)) {
-            return $componentPath;
-        }
-
-        if ($loader->exists($componentPath.'.html.twig')) {
-            return $componentPath.'.html.twig';
-        }
-
-        if ($loader->exists('components/'.$componentPath)) {
-            return 'components/'.$componentPath;
-        }
-
-        if ($loader->exists('/components/'.$componentPath.'.html.twig')) {
-            return '/components/'.$componentPath.'.html.twig';
-        }
-
-        return null;
+        return null !== $this->componentTemplateFinder->findAnonymousComponentTemplate($name);
     }
 
     /**
@@ -242,6 +218,6 @@ final class ComponentFactory
      */
     private function throwUnknownComponentException(string $name): void
     {
-        throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->config))));
+        throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s. And no matching anonymous component template was found', $name, implode(', ', array_keys($this->config))));
     }
 }

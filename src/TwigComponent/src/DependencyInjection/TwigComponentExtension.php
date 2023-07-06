@@ -22,6 +22,8 @@ use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\ComponentStack;
+use Symfony\UX\TwigComponent\ComponentTemplateFinder;
+use Symfony\UX\TwigComponent\ComponentTemplateFinderInterface;
 use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 use Symfony\UX\TwigComponent\Twig\ComponentLexer;
@@ -40,6 +42,14 @@ final class TwigComponentExtension extends Extension
             throw new LogicException('The TwigBundle is not registered in your application. Try running "composer require symfony/twig-bundle".');
         }
 
+        $container->register('ux.twig_component.component_template_finder', ComponentTemplateFinder::class)
+            ->setArguments([
+                new Reference('twig')
+            ])
+        ;
+
+        $container->setAlias(ComponentRendererInterface::class, 'ux.twig_component.component_renderer');
+
         $container->registerAttributeForAutoconfiguration(
             AsTwigComponent::class,
             static function (ChildDefinition $definition, AsTwigComponent $attribute) {
@@ -49,7 +59,7 @@ final class TwigComponentExtension extends Extension
 
         $container->register('ux.twig_component.component_factory', ComponentFactory::class)
             ->setArguments([
-                new Reference('twig'),
+                new Reference('ux.twig_component.component_template_finder'),
                 class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : null,
                 new Reference('property_accessor'),
                 new Reference('event_dispatcher'),
@@ -69,7 +79,7 @@ final class TwigComponentExtension extends Extension
             ])
         ;
 
-        $container->setAlias(ComponentRendererInterface::class, 'ux.twig_component.component_renderer');
+        $container->setAlias(ComponentTemplateFinderInterface::class, 'ux.twig_component.component_template_finder');
 
         $container->register('ux.twig_component.twig.component_extension', ComponentExtension::class)
             ->addTag('twig.extension')
