@@ -105,7 +105,6 @@ final class ComponentRenderer implements ComponentRendererInterface
 
             // expose public properties and properties marked with ExposeInTemplate attribute
             iterator_to_array($this->exposedVariables($component, $metadata->isPublicPropsExposed())),
-            $component instanceof AnonymousComponent ? $component->getProps() : []
         );
         $event = new PreRenderEvent($mounted, $metadata, $variables);
 
@@ -147,6 +146,15 @@ final class ComponentRenderer implements ComponentRendererInterface
 
             if ($method->getNumberOfRequiredParameters()) {
                 throw new \LogicException(sprintf('Cannot use %s on methods with required parameters (%s::%s).', ExposeInTemplate::class, $component::class, $method->name));
+            }
+
+
+            if ($attribute->destruct) {
+                foreach ($component->{$method->name}() as $prop => $value) {
+                    yield $prop => $value;
+                }
+
+                return;
             }
 
             yield $name => $component->{$method->name}();

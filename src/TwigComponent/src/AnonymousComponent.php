@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\TwigComponent;
 
+use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
+
 /**
  * @author Matheo Daninos <matheo.daninos@gmail.com>
  *
@@ -18,20 +20,16 @@ namespace Symfony\UX\TwigComponent;
  */
 class AnonymousComponent
 {
-    private array $props = [];
+    private array $props;
 
-    public function setProps(array $props)
+    public function mount($props = []): void
     {
         $this->props = $props;
     }
 
+    #[ExposeInTemplate(destruct: true)]
     public function getProps(): array
     {
         return $this->props;
-    }
-
-    public function mount(array $props = [])
-    {
-        $this->setProps($props);
     }
 }
