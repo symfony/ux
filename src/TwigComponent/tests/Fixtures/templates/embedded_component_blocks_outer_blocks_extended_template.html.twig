@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block foo %}Hello world!{% endblock %}
+
+{% block body %}
+<twig:BasicComponent>
+    {{ block(outerBlocks.foo) }}
+</twig:BasicComponent>
+{% endblock %}

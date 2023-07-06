@@ -36,13 +36,6 @@ final class BlockStack
             // identifies the block definition.
             $hostEmbeddedTemplateIndex = $this->findHostEmbeddedTemplateIndex();
 
-            if (0 === $hostEmbeddedTemplateIndex) {
-                // If there is no embedded template index, that means we're in a normal template.
-                // It wouldn't make sense to make these available as outer blocks,
-                // since the block is already printed in place.
-                continue;
-            }
-
             // Change the name of outer blocks to something unique so blocks of nested components aren't overridden,
             // which otherwise might cause a recursion loop when nesting components.
             $newName = self::OUTER_BLOCK_PREFIX.$blockName.'_'.mt_rand();
