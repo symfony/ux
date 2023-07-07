@@ -1402,7 +1402,7 @@ a :ref:`LiveAction <actions>`::
 
 Next, tell the ``form`` element to use this action:
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {# templates/components/PostForm.html.twig #}
     {# ... #}
@@ -1959,7 +1959,7 @@ and ``live_collection_entry_*`` as prefixes instead.
 
 For example, by default the add button is placed after the items (the comments in our case). Let's move it before them.
 
-.. code-block:: html+twig
+.. code-block:: twig
 
     {%- block live_collection_widget -%}
         {%- if button_add is defined and not button_add.rendered -%}
