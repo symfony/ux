@@ -36,7 +36,7 @@ class PropsNode extends Node
 
             if (!$this->hasNode($name)) {
                 $compiler
-                    ->write('throw new \Exception("'.$name.' should be defined for component '.$this->getTemplateName().'");')
+                    ->write('throw new \Twig\Error\RuntimeError("'.$name.' should be defined for component '.$this->getTemplateName().'");')
                     ->write('}')
                 ;
 
