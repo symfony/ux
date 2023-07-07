@@ -60,7 +60,7 @@ A real-time product search component might look like this::
 
 Done! Now render it wherever you want:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <twig:ProductSearch />
 
@@ -225,7 +225,7 @@ Let's make our component more flexible by adding a ``$max`` property::
 With this change, we can control the ``$max`` property when rendering
 the component:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <twig:RandomNumber max="500" />
 
@@ -1359,7 +1359,7 @@ The previous component can already be used to edit an existing post or create
 a new post. For a new post, either pass in a new ``Post`` object to ``initialFormData``,
 or omit it entirely to let the ``initialFormData`` property default to ``null``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/post/new.html.twig #}
     {# ... #}
@@ -1402,7 +1402,7 @@ a :ref:`LiveAction <actions>`::
 
 Next, tell the ``form`` element to use this action:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/PostForm.html.twig #}
     {# ... #}
@@ -1448,7 +1448,7 @@ If validation fails, you'll want the live component to render with the form
 errors instead of creating a fresh form. To do that, pass the ``form`` variable
 into the component:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/post/edit.html.twig #}
     <twig:PostForn :initialFormData="post" :form="form" />
@@ -1959,7 +1959,7 @@ and ``live_collection_entry_*`` as prefixes instead.
 
 For example, by default the add button is placed after the items (the comments in our case). Let's move it before them.
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {%- block live_collection_widget -%}
         {%- if button_add is defined and not button_add.rendered -%}
@@ -2591,7 +2591,7 @@ child model changes, that should also update a model on the
 parent. To do this, pass a ``dataModel`` (or ``data-model``)
 attribute to the child:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/PostForm.html.twig #}
     <twig:TextareaField 
@@ -2628,7 +2628,7 @@ syntax. The following is the same as above:
 
 If your child component has multiple models, separate each with a space:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <twig:TextareaField data-model="user.firstName:first user.lastName:last" />
 
@@ -2766,7 +2766,7 @@ or existing child components may not disappear when they should.
 To fix this, add a ``key`` prop to each child component that's unique
 to that component:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/InvoiceCreator.html.twig #}
     {% for lineItem in invoice.lineItems %}
@@ -2790,7 +2790,7 @@ Let's get fancier. After looping over the current line items, you
 decide to render one more component to create a *new* line item.
 In that case, you can pass in a ``key`` set to something like ``new_line_item``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/InvoiceCreator.html.twig #}
     // ... loop and render the existing line item components
@@ -2869,7 +2869,7 @@ To fix this, you have two options:
 
 \1) Make the ``key`` dynamic so it will be different after adding a new item:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <twig:InvoiceLineItemForm :key="'new_line_item_'~lineItems|length" />
 
