@@ -841,6 +841,24 @@ Inheritance & Forwarding "Outer Blocks"
 
     The ``outerBlocks`` variable was added in 2.10.
 
+Consider this simple example to explain the basic usage of ``outerBlocks`` which serves as a
+means to refer to blocks defined in the same template:
+
+.. code-block:: html+twig
+
+  {% extends 'base.html.twig' %}
+
+  {% block call_to_action %}<strong>Attention! Free Puppies!</strong>{% endblock %}
+
+  {% block body %}
+    {% component Alert %}
+      {% block content %}{{ block(outerBlocks.call_to_action) }}{% endblock %}
+    {% endcomponent %}
+  {% endblock %}
+
+Although this is not a super practical example. The ``outerBlocks`` variable becomes a lot
+more useful with nested components.
+
 When passing blocks via the ``{% component %}`` syntax, there is one important thing
 to understand: the content behaves as if it lives in its **own**, independent template,
 which extends the component's template.
