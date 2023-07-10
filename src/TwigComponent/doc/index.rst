@@ -841,8 +841,10 @@ Inheritance & Forwarding "Outer Blocks"
 
     The ``outerBlocks`` variable was added in 2.10.
 
-Consider this simple example to explain the basic usage of ``outerBlocks`` which serves as a
-means to refer to blocks defined in the same template:
+The content inside a ``{% component ... %}`` tag should be viewed as living in
+its own, independent template, which extends the component's template. This means that
+any blocks that live in the "outer" template are not available inside the ``{% component %}`` tag.
+However, a special ``outerBlocks`` variable is added as a way to refer to those blocks:
 
 .. code-block:: html+twig
 
@@ -856,14 +858,17 @@ means to refer to blocks defined in the same template:
     {% endcomponent %}
   {% endblock %}
 
-Although this is not a super practical example. The ``outerBlocks`` variable becomes a lot
-more useful with nested components.
+The ``outerBlocks`` variable becomes specially useful with nested components. For example,
+imagine we want to create a ``SuccessAlert`` component that's usable like this:
 
-When passing blocks via the ``{% component %}`` syntax, there is one important thing
-to understand: the content behaves as if it lives in its **own**, independent template,
-which extends the component's template.
+.. code-block:: twig
 
-This has a few interesting side effects. For example, imagine a simple ``Alert`` component:
+    {# templates/some_page.html.twig #}
+    {% component SuccessAlert %}
+        {% content %}We will successfully <em>forward</em> this block content!{% endblock %}
+    {% endcomponent %}
+
+But we already have a generic ``Alert`` component, and we want to re-use it:
 
 .. code-block:: html+twig
 
@@ -872,43 +877,26 @@ This has a few interesting side effects. For example, imagine a simple ``Alert``
         {% block content %}{% endblock %}
     </div>
 
-And a ``SuccessAlert`` component that uses it:
+To do this, the ``SuccessAlert`` component can grab the ``content`` block that's passed to it
+via the ``outerBlocks`` variable and forward it into ``Alert``:
 
 .. code-block:: twig
 
     {# templates/SuccessAlert.html.twig #}
     {% component Alert with { type: 'success' } %}
-        I can override the content, but that's pretty dull.
+        {% block content %}{{ blocks(outerBlocks.content) }}{% endblock %}
     {% endcomponent %}
 
-What if this SuccessAlert component wants to make the content of its nested Alert component configurable?
-Well, you can use the special ``outerBlocks`` variable for those cases. This makes it possible to refer
-to blocks that are passed in from another higher component.
-
-.. code-block:: twig
-
-    {# templates/SuccessAlert.html.twig #}
-    {% component Alert with { type: 'success' } %}
-        {{ blocks(outerBlocks.content) }}
-    {% endcomponent %}
-
-.. code-block:: twig
-
-    {# templates/some_page.html.twig #}
-    {% component SuccessAlert %}
-        Look mom, I'm a complex component!
-    {% endcomponent %}
-
-Note that to pass a block multiple components down, each component would need to pass it along.
+Note that to pass a block multiple components down, each component needs to pass it.
 
 Context / Variables Inside of Blocks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The content inside of the ``{% block component %}`` should be viewed as living in its own,
+The content inside of the ``{% component ... %}`` should be viewed as living in its own,
 independent template, which extends the component's template. This has a few interesting consequences.
 
-First, once you're inside of ``{% block component %}``, the ``this`` variable represents
-the component you're now rendering and you have access to all of that component's variables:
+First, once you're inside of ``{% component ... %}``, the ``this`` variable represents
+the component you're now rendering *and* you have access to all of that component's variables:
 
 .. code-block:: twig
 
@@ -921,7 +909,7 @@ the component you're now rendering and you have access to all of that component'
         {{ type }} {# references a "type" prop from Alert #}
     {% endcomponent %}
 
-Conveniently, in addition to the variables from the `Alert` component, you still have
+Conveniently, in addition to the variables from the ``Alert`` component, you still have
 access to whatever variables are available in the original template:
 
 .. code-block:: twig
@@ -934,12 +922,12 @@ access to whatever variables are available in the original template:
 
 Note that ALL variables from upper components (e.g. ``SuccessAlert``) are available to lower
 components (e.g. ``Alert``). However, because variables are merged, variables with the same name
-are overridden by lower components. (That's also why ``this`` refers to the embedded, or
-"current" component)
+are overridden by lower components (that's also why ``this`` refers to the embedded, or
+"current" component).
 
-Finally, the most interesting thing is that the content inside of ``{% component %}`` is
+The most interesting thing is that the content inside of ``{% component ... %}`` is
 executed as if it is "copy-and-pasted" into the block of the target template. This means
-you can access variables from the block you're overriding. For example:
+you can access variables from the block you're overriding! For example:
 
 .. code-block:: twig
 
