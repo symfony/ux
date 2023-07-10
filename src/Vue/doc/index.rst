@@ -54,7 +54,7 @@ code to your ``assets/app.js`` file:
     // assets/app.js
     import { registerVueControllerComponents } from '@symfony/ux-vue';
 
-    registerVueControllerComponents(require.context('./vue/controllers', true, /\\.(j|t)sx?$/));
+    registerVueControllerComponents(require.context('./vue/controllers', true, /\.vue$/));
 
 This will load all Vue components located in the ``assets/vue/controllers``
 directory. These are known as **Vue controller components**: top-level
