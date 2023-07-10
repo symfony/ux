@@ -578,7 +578,7 @@ Set an attribute's value to ``true`` to render just the attribute name:
 .. code-block:: html+twig
 
     {# templates/components/MyComponent.html.twig #}
-    <input{{ attributes}}/>
+    <input{{ attributes }}/>
 
     {# render component #}
     {{ component('MyComponent', { type: 'text', value: '', autofocus: true }) }}
@@ -591,7 +591,7 @@ Set an attribute's value to ``false`` to exclude the attribute:
 .. code-block:: html+twig
 
     {# templates/components/MyComponent.html.twig #}
-    <input{{ attributes}}/>
+    <input{{ attributes }}/>
 
     {# render component #}
     {{ component('MyComponent', { type: 'text', value: '', autofocus: false }) }}
