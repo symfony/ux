@@ -19,6 +19,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\UX\Autocomplete\EntityFetcherInterface;
 
 /**
  * Helps transform ParentEntityAutocompleteType into a EntityType that will not load all options.
@@ -28,7 +29,8 @@ use Symfony\Component\Form\FormEvents;
 final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private ?string $autocompleteUrl = null
+        private ?string $autocompleteUrl = null,
+        private ?EntityFetcherInterface $entityFetcher = null,
     ) {
     }
 
@@ -43,7 +45,7 @@ final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
         // pass to AutocompleteChoiceTypeExtension
         $options['autocomplete'] = true;
         $options['autocomplete_url'] = $this->autocompleteUrl;
-        unset($options['searchable_fields'], $options['security'], $options['filter_query']);
+        unset($options['searchable_fields'], $options['security'], $options['filter_query'], $options['entity_fetcher']);
 
         $form->add('autocomplete', EntityType::class, $options);
     }
@@ -57,38 +59,17 @@ final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
         if (!isset($data['autocomplete']) || '' === $data['autocomplete']) {
             $options['choices'] = [];
         } else {
-            /** @var EntityManagerInterface $em */
-            $em = $options['em'];
-            $repository = $em->getRepository($options['class']);
-
-            $idField = $options['id_reader']->getIdField();
-            $idType = PersisterHelper::getTypeOfField($idField, $em->getClassMetadata($options['class']), $em)[0];
+            /** @var EntityFetcherInterface $entityFetcher */
+            $entityFetcher = $this->entityFetcher ?? new AutocompleteEntityFetcher($options['em'], $options['id_reader']);
 
             if ($options['multiple']) {
-                $params = [];
-                $idx = 0;
-
-                foreach ($data['autocomplete'] as $id) {
-                    $params[":id_$idx"] = new Parameter("id_$idx", $id, $idType);
-                    ++$idx;
-                }
-
-                $queryBuilder = $repository->createQueryBuilder('o');
-
-                if ($params) {
-                    $queryBuilder
-                        ->where(sprintf("o.$idField IN (%s)", implode(', ', array_keys($params))))
-                        ->setParameters(new ArrayCollection($params));
-                }
-
-                $options['choices'] = $queryBuilder->getQuery()->getResult();
+                $entities = $entityFetcher->fetchMultipleEntities($options['class'], $data['autocomplete']);
             } else {
-                $options['choices'] = $repository->createQueryBuilder('o')
-                    ->where("o.$idField = :id")
-                    ->setParameter('id', $data['autocomplete'], $idType)
-                    ->getQuery()
-                    ->getResult();
+                $entity = $entityFetcher->fetchSingleEntity($options['class'], $data['autocomplete']);
+                $entities = null === $entity ? [] : [$entity];
             }
+
+            $options['choices'] = $entities;
         }
 
         // reset some critical lazy options

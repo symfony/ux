@@ -20,6 +20,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\UX\Autocomplete\EntityFetcherInterface;
 
 /**
  * All form types that want to expose autocomplete functionality should use this for its getParent().
@@ -45,8 +46,15 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
             'alias' => $attribute->getAlias() ?: AsEntityAutocompleteField::shortName($formType::class),
         ]);
 
+        $entityFetcher = null;
+        if (\is_callable($options['entity_fetcher'])) {
+            $entityFetcher = $options['entity_fetcher']($options);
+        } elseif (\is_object($options['entity_fetcher'])) {
+            $entityFetcher = $options['entity_fetcher'];
+        }
+
         $builder
-            ->addEventSubscriber(new AutocompleteEntityTypeSubscriber($autocompleteUrl))
+            ->addEventSubscriber(new AutocompleteEntityTypeSubscriber($autocompleteUrl, $entityFetcher))
             ->setDataMapper($this);
     }
 
@@ -77,6 +85,9 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
             //         ->setParameter('filter', '%'.$query.'%');
             // }
             'filter_query' => null,
+            // override the default doctrine entity fetcher
+            // or a callable: function(Symfony\Component\OptionsResolver\Options $options): Symfony\UX\Autocomplete\EntityFetcherInterface
+            'entity_fetcher' => null,
             // set to the string role that's required to view the autocomplete results
             // or a callable: function(Symfony\Component\Security\Core\Security $security): bool
             'security' => false,
@@ -88,6 +99,7 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
         $resolver->setAllowedTypes('security', ['boolean', 'string', 'callable']);
         $resolver->setAllowedTypes('max_results', ['int', 'null']);
         $resolver->setAllowedTypes('filter_query', ['callable', 'null']);
+        $resolver->setAllowedTypes('entity_fetcher', [EntityFetcherInterface::class, 'callable', 'null']);
         $resolver->setNormalizer('searchable_fields', function (Options $options, ?array $searchableFields) {
             if (null !== $searchableFields && null !== $options['filter_query']) {
                 throw new RuntimeException('Both the searchable_fields and filter_query options cannot be set.');
