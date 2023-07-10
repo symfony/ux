@@ -861,7 +861,7 @@ However, a special ``outerBlocks`` variable is added as a way to refer to those 
 The ``outerBlocks`` variable becomes specially useful with nested components. For example,
 imagine we want to create a ``SuccessAlert`` component that's usable like this:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/some_page.html.twig #}
     {% component SuccessAlert %}
