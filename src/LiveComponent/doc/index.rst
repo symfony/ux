@@ -2961,7 +2961,7 @@ The ``data-live-id`` attribute is a unique identifier for an element or a compon
 It's used when a component re-renders and helps Live Components "connect" elements
 or components in the existing HTML with the new HTML. The logic works like this:
 
-Suppose an element or component in the new HTML has a ``data-live-id="some-id`` attribute.
+Suppose an element or component in the new HTML has a ``data-live-id="some-id"`` attribute.
 Then:
 
 A) If there **is** an element or component with ``data-live-id="some-id"`` in the
