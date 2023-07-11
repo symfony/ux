@@ -1,0 +1,30 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-07-05T18:39:24Z
+
+Hey! I just did a quick proof and edit of the docs so far - a team effort to explain these important concepts on a simple way. I've tried to remove the wording "embedded component". Even I mix up "embedded" and "nested" in my mind. It's not as succinct, but saying "when you pass a block to a component" instead of "when you render an embedded component" I think is much more clear.
+
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-07-05T18:44:14Z
+
+> Hey! I just did a quick proof and edit of the docs so far - a team effort to explain these important concepts on a simple way. I've tried to remove the wording "embedded component". Even I mix up "embedded" and "nested" in my mind. It's not as succinct, but saying "when you pass a block to a component" instead of "when you render an embedded component" I think is much more clear.
+
+Love it. Indeed I also always have to think twice to correctly separate nested vs embedded components. It took a while to get this terminology right in my head, but it will take perhaps equally long to stop referring to them as embedded components :-)
+Perhaps on a technical level, calling them that is actually still the most correct, especially seeing their similarity to the `embed` syntax, and even more so since the `ComponentNode` is in fact extending the `EmbedNode`. 🤓
+But again, I'm all for simplicity and even more for clarity in the documentation!
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-07-05T18:51:11Z
+
+> Perhaps on a technical level, calling them that is actually still the most correct
+
+I think so yes. So we may sometimes still use that term - but let's see if we can avoid it for the "outside" world :)
+
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-07-06T20:06:42Z
+
+@weaverryan As discussed on Slack, I also allowed references to outer blocks from with a regular (non-nested) component.
+Note that these blocks probably only make sense within an extending template, because otherwise the block would be rendered where it is defined ànd where it is referred as an outerblock. It even that might be desirable in some specific use cases, who knows 🤷
