@@ -192,6 +192,11 @@ final class TwigPreLexerTest extends TestCase
             '{% component \'foobar\' with { \'data-turbo-stream\': true } %}{% endcomponent %}',
         ];
 
+        yield 'component_with_empty_attributes' => [
+            '<twig:foobar data-turbo-stream="" my-attribute=\'\'></twig:foobar>',
+            '{% component \'foobar\' with { \'data-turbo-stream\': \'\', \'my-attribute\': \'\' } %}{% endcomponent %}',
+        ];
+
         yield 'ignore_twig_comment' => [
             '{# <twig:Alert/> #} <twig:Alert/>',
             '{# <twig:Alert/> #} {{ component(\'Alert\') }}',
