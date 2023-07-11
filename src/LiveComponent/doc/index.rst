@@ -2824,7 +2824,7 @@ it emits a ``lineItem:created`` event to the parent::
         #[PostMount]
         public function postMount(): void
         {
-            if(!$this->lineItem) {
+            if (!$this->lineItem) {
                 $this->lineItem = new InvoiceLineItem();
             }
         }
