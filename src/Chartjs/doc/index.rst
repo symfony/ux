@@ -184,15 +184,13 @@ custom Stimulus controller:
 
             // For instance you can format Y axis
             event.detail.config.options.scales = {
-                yAxes: [
-                    {
-                        ticks: {
-                            callback: function (value, index, values) {
-                                /* ... */
-                            },
+                y: {
+                    ticks: {
+                        callback: function (value, index, values) {
+                            /* ... */
                         },
                     },
-                ],
+                },
             };
         }
 
