@@ -55,6 +55,7 @@ export default class Component {
     private doEmit;
     updateFromNewElementFromParentRender(toEl: HTMLElement): void;
     onChildComponentModelUpdate(modelName: string, value: any, childComponent: Component): void;
+    private isTurboEnabled;
     private tryStartingRequest;
     private performRequest;
     private processRerender;
