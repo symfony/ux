@@ -81,6 +81,16 @@ final class EmbeddedComponentTest extends KernelTestCase
     }
 
     /**
+     * Rule 5 bis: A block inside an extending template can be use inside a component in that template and is NOT rendered in the original location.
+     */
+    public function testBlockCanBeUsedViaTheOuterBlocks(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('embedded_component_blocks_outer_blocks_extended_template.html.twig');
+        $this->assertStringContainsStringIgnoringIndentation('<div>Hello world!</div>', $output);
+        $this->assertStringNotContainsString("Hello world!\n<div", $output);
+    }
+
+    /**
      * Rule 8: Defining a block for a component overrides any default content that block has in the component's template.
      *         This also means that when passing block down that you will lose that default content.
      *         That can be avoided by using {{ parent() }} like you normally would.
