@@ -865,7 +865,7 @@ imagine we want to create a ``SuccessAlert`` component that's usable like this:
 
     {# templates/some_page.html.twig #}
     {% component SuccessAlert %}
-        {% content %}We will successfully <em>forward</em> this block content!{% endblock %}
+        {% block content %}We will successfully <em>forward</em> this block content!{% endblock %}
     {% endcomponent %}
 
 But we already have a generic ``Alert`` component, and we want to re-use it:
