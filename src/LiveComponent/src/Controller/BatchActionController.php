@@ -38,6 +38,7 @@ final class BatchActionController
                 '_component_action_args' => $action['args'] ?? [],
                 '_mounted_component' => $_mounted_component,
                 '_live_component' => $serviceId,
+                '_routeScope' => $request->attributes->get('_routeScope'),
             ]);
 
             $response = $this->kernel->handle($subRequest, HttpKernelInterface::SUB_REQUEST, false);
