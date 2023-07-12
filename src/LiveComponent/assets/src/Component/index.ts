@@ -337,6 +337,10 @@ export default class Component {
         });
     }
 
+    private isTurboEnabled(): boolean {
+        return typeof Turbo !== 'undefined' && !this.element.closest('[data-turbo="false"]');
+    }
+
     private tryStartingRequest(): void {
         if (!this.backendRequest) {
             this.performRequest()
@@ -430,7 +434,7 @@ export default class Component {
 
         if (backendResponse.response.headers.get('Location')) {
             // action returned a redirect
-            if (typeof Turbo !== 'undefined') {
+            if (this.isTurboEnabled()) {
                 Turbo.visit(backendResponse.response.headers.get('Location'));
             } else {
                 window.location.href = backendResponse.response.headers.get('Location') || '';

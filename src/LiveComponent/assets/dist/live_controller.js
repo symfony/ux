@@ -1893,6 +1893,9 @@ class Component {
             this.set(modelBinding.modelName, value, modelBinding.shouldRender, modelBinding.debounce);
         });
     }
+    isTurboEnabled() {
+        return typeof Turbo !== 'undefined' && !this.element.closest('[data-turbo="false"]');
+    }
     tryStartingRequest() {
         if (!this.backendRequest) {
             this.performRequest();
@@ -1949,7 +1952,7 @@ class Component {
             return;
         }
         if (backendResponse.response.headers.get('Location')) {
-            if (typeof Turbo !== 'undefined') {
+            if (this.isTurboEnabled()) {
                 Turbo.visit(backendResponse.response.headers.get('Location'));
             }
             else {
