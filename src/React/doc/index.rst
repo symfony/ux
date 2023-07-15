@@ -54,7 +54,7 @@ code to your ``assets/app.js`` file:
     // assets/app.js
     import { registerReactControllerComponents } from '@symfony/ux-react';
 
-    registerReactControllerComponents(require.context('./react/controllers', true, /\\.(j|t)sx?$/));
+    registerReactControllerComponents(require.context('./react/controllers', true, /\.(j|t)sx?$/));
 
 This will load all React components located in the ``assets/react/controllers``
 directory. These are known as **React controller components**: top-level
