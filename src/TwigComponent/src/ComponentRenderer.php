@@ -131,6 +131,12 @@ final class ComponentRenderer implements ComponentRendererInterface
             /** @var ExposeInTemplate $attribute */
             $value = $attribute->getter ? $component->{rtrim($attribute->getter, '()')}() : $this->propertyAccessor->getValue($component, $property->name);
 
+            if ($attribute->destruct) {
+                foreach ($value as $key => $destructedValue) {
+                    yield $key => $destructedValue;
+                }
+            }
+
             yield $attribute->name ?? $property->name => $value;
         }
 

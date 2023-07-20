@@ -23,7 +23,6 @@ use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\ComponentTemplateFinder;
-use Symfony\UX\TwigComponent\ComponentTemplateFinderInterface;
 use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 use Symfony\UX\TwigComponent\Twig\ComponentLexer;
