@@ -26,7 +26,7 @@ final class ExposeInTemplate
      *                              to default to property name.
      * @param string|null $getter   The getter method to use. Leave as null
      *                              to default to PropertyAccessor logic.
-     * @param bool        $destruct The content should be used as array of variables
+     * @param bool        $destruct The content should be used as array of variable
      *                              names
      */
     public function __construct(public ?string $name = null, public ?string $getter = null, public bool $destruct = false)
