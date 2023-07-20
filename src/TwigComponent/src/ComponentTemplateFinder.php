@@ -16,7 +16,7 @@ use Twig\Environment;
 /**
  * @author Matheo Daninos <matheo.daninos@gmail.com>
  */
-class ComponentTemplateFinder implements ComponentTemplateFinderInterface
+final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
 {
     public function __construct(
         private Environment $environment

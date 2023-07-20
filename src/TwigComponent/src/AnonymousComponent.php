@@ -18,7 +18,7 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
  *
  * @internal
  */
-class AnonymousComponent
+final class AnonymousComponent
 {
     private array $props;
 
