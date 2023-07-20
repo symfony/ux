@@ -430,6 +430,17 @@ will import all your custom controllers as well as those from ``controllers.json
 It will also dynamically enable "debug" mode in Stimulus when your application
 is running in debug mode.
 
+Finally, to output any ``autoimport`` CSS files in your ``controllers.json`` file,
+include the ``ux_controller_link_tags()`` function in your base template:
+
+.. code-block:: html+twig
+
+    {% block stylesheets %}
+        {{ ux_controller_link_tags() }}
+
+        <!-- ... -->
+    {% endblock %}
+
 How are the Stimulus Controllers Loaded?
 ----------------------------------------
 
