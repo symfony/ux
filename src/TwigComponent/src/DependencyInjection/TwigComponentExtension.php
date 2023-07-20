@@ -79,7 +79,7 @@ final class TwigComponentExtension extends Extension
             ])
         ;
 
-        $container->setAlias(ComponentTemplateFinderInterface::class, 'ux.twig_component.component_template_finder');
+        $container->register(ComponentTemplateFinder::class, 'ux.twig_component.component_template_finder');
 
         $container->register('ux.twig_component.twig.component_extension', ComponentExtension::class)
             ->addTag('twig.extension')
