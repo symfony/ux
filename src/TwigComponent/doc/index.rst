@@ -884,7 +884,7 @@ via the ``outerBlocks`` variable and forward it into ``Alert``:
 
     {# templates/SuccessAlert.html.twig #}
     {% component Alert with { type: 'success' } %}
-        {% block content %}{{ blocks(outerBlocks.content) }}{% endblock %}
+        {% block content %}{{ block(outerBlocks.content) }}{% endblock %}
     {% endcomponent %}
 
 Note that to pass a block multiple components down, each component needs to pass it.
