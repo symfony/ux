@@ -1,5 +1,5 @@
 {% props label, primary = true %}
 
-<button class="{{ primary ? 'primary' : 'secondary' }}">
+<button {{ attributes.defaults({class: primary ? 'primary' : 'secondary'}) }}>
     {{ label }}
 </button>
