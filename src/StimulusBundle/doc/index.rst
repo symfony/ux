@@ -500,7 +500,7 @@ it will normalize it:
 .. _`@symfony/stimulus-bridge`: https://github.com/symfony/stimulus-bridge
 .. _`Stimulus`: https://stimulus.hotwired.dev/
 .. _`Webpack Encore`: https://symfony.com/doc/current/frontend.html
-.. _`AssetMapper`: https://symfony.com/doc/current/frontend/asset-mapper.html
+.. _`AssetMapper`: https://symfony.com/doc/current/frontend/asset_mapper.html
 .. _`Stimulus Controllers & Values`: https://stimulus.hotwired.dev/reference/values
 .. _`CSS Classes`: https://stimulus.hotwired.dev/reference/css-classes
 .. _`Outlets`: https://stimulus.hotwired.dev/reference/outlets
