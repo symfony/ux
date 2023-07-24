@@ -35,7 +35,7 @@ Then install the bundle using Composer and Symfony Flex:
 
 The Flex recipe will automatically set things up for you, like adding
 ``.enableSvelte()`` to your ``webpack.config.js`` file and adding code
-to load your Vue components inside ``assets/app.js``.
+to load your Svelte components inside ``assets/app.js``.
 
 Next, install a package to help Svelte:
 
