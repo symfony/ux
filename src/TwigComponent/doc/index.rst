@@ -1050,6 +1050,70 @@ And in your component template you can access your embedded block
         {% block footer %}{% endblock %}
      </div>
 
+Anonymous Components
+--------------------
+
+Sometimes a component is simple enough that it doesn't have any complex logic or injected services.
+In this case, you can skip the class and only create the template. The component name is determined
+by the location of the template (see `Twig Template Namespaces`_):
+
+.. code-block:: html+twig
+
+    {# templates/components/Button/Primary.html.twig #}
+    <button {{ attributes.defaults({ class: 'primary' }) }}>
+        {% block content %}{% endblock %}
+    </button>
+
+Then use your component with ``:`` to navigate through sub-directories (if there are any):
+
+.. code-block:: html+twig
+
+    {# index.html.twig #}
+    ...
+    <div>
+       <twig:Button:Primary>Click Me!</twig:Button:Primary>
+    </div>
+
+    {# renders as: #}
+    <button class="primary">Click Me!</button>
+
+Like normal, you can pass extra attributes that will be rendered on the element:
+
+.. code-block:: html+twig
+
+    {# index.html.twig #}
+    ...
+    <div>
+       <twig:Button:Primary type="button" name="foo">Click Me!</twig:Button:Primary>
+    </div>
+
+    {# renders as: #}
+    <button class="primary" type="button" name="foo">Click Me!</button>
+
+You can also pass a variable (prop) into your template:
+
+.. code-block:: html+twig
+
+    {# index.html.twig #}
+    ...
+    <div>
+        <twig:Button icon="fa-plus" type="primary" role="button">Click Me!</twig:Button>
+    </div>
+
+To tell the system that ``icon`` and ``type`` are props and not attributes, use the ``{% props %}`` tag at the top of your template.
+
+.. code-block:: html+twig
+
+    {# templates/components/Button.html.twig #}
+    {% props icon = null, type = 'primary' %}
+
+    <button {{ attributes.defaults({ class: 'btn btn-'~type }) }}>
+        {% block content %}{% endblock %}
+        {% if icon %}
+            <span class="fa-solid fa-{{ icon }}"></span>
+        {% endif %}
+    </button>
+
 Test Helpers
 ------------
 
