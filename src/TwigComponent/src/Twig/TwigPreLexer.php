@@ -22,7 +22,9 @@ class TwigPreLexer
     private int $length;
     private int $position = 0;
     private int $line;
-    /** @var array<string: name, bool: hasDefaultBlock> */
+    /**
+     * @var array<array{name: string, hasDefaultBlock: bool}>
+     */
     private array $currentComponents = [];
 
     public function __construct(int $startingLine = 1)
@@ -199,6 +201,15 @@ class TwigPreLexer
             $this->consumeWhitespace();
             if ($this->check('>') || $this->check('/>')) {
                 break;
+            }
+
+            if ($this->check('{{...') || $this->check('{{ ...')) {
+                $this->consume('{{...');
+                $this->consume('{{ ...');
+                $attributes[] = '...'.trim($this->consumeUntil('}}'));
+                $this->consume('}}');
+
+                continue;
             }
 
             $isAttributeDynamic = false;

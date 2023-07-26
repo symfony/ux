@@ -997,6 +997,12 @@ normal ``{{ }}`` syntax:
     // and pass object, or table, or anything you imagine
     <twig:Alert :foo="['col' => ['foo', 'oof']]" />
 
+To forward attributes to another component, use `{{...}}` spread operator syntax:
+
+.. code-block:: html+twig
+
+    <twig:Alert{{ ...myAttributes }} />
+
 Passing Blocks to your Component
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
