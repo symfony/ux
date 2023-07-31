@@ -1,0 +1,113 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2023-07-11T04:18:12Z
+
+Icon customization could be useful too
+
+---------------------------------------------------------------------------
+
+by jmsche at 2023-07-11T12:59:24Z
+
+Hi,
+
+I'm wondering:
+
+* could it be possible to have a form extension instead of a new form type? and so have an option available for the PasswordType like `'toggle' => true`
+* like @norkunas, I think being allowed to customize the icons would be great
+* about the hidden/visible labels, it would be nice to be able to pass a TranslatableMessage that would be translated automatically, else it would require to inject the TranslatorInterface or override the template
+* maybe allow labels to be nullable (would display icons only)
+
+---------------------------------------------------------------------------
+
+by feymo at 2023-07-11T13:19:57Z
+
+Thanks for your feedbacks @norkunas and @jmsche  ! 👍🏼
+I'm working on adding icons customization as well right now
+
+About the `TranslatableMessage` support, my first idea was to, when translation is used, either indeed inject TranslatorInterface in the Form object, or pass labels options from twig view using trans filter (as shown in `doc/index.rst` code such as
+```twig
+{{ form_row(form.password, { 'hidden_label': 'password_hide'|trans, 'visible_label': 'password_show'|trans }) }}
+```
+will work with provided theme. But i'll look into `TranslatableMessage` support, since it could ease even more translation support 👍🏼
+About using a `FormExtension` instead of a new `FormType`, i chose to stick with the others packages logic (such as `Dropzone`) and define a new `FormType`. But we could totally use a `FormExtension` if needed or preferred, no problem for me 😃
+
+---------------------------------------------------------------------------
+
+by jmsche at 2023-07-11T13:37:08Z
+
+I think Autocomplete uses an extension as well :)
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2023-07-11T19:50:06Z
+
+We can help with that: https://stimulus-password-visibility.stimulus-components.com/
+
+Their template is:
+
+```html
+<div data-controller="password-visibility">
+  <input type="password" data-password-visibility-target="input" spellcheck="false" />
+
+  <button type="button" data-action="password-visibility#toggle">
+    <span data-password-visibility-target="icon">Eye</span>
+    <span data-password-visibility-target="icon" class="hidden">Eye Slash</span>
+  </button>
+</div>
+```
+
+---------------------------------------------------------------------------
+
+by feymo at 2023-07-12T00:12:10Z
+
+Thanks for the suggestion @seb-jean 👍🏼  but i must admit i'm not fully on board with their template approach on this one. I'd rather instantiate the stimulus controller on the password input (which is the main "actor" in this case), then create the action button and update its content without having all options loaded in the browser by default all the time. To me, the logic belongs to the stimulus controller scope, not the DOM
+
+---------------------------------------------------------------------------
+
+by feymo at 2023-07-12T00:23:16Z
+
+Based on your reviews and suggestions (thanks again for those 🙏🏼 ) :
+- I've changed the `FormType` to use a `FormExtension`
+- Icons are now customizable (and passing `null` hide the default icon)
+- Labels are now nullable too
+
+I'm still working on the translation support for labels 👍🏼
+
+---------------------------------------------------------------------------
+
+by feymo at 2023-07-12T20:32:58Z
+
+Thanks again @jmsche for your review and suggestions 👍🏼
+- Toggle button classlist is now customizable
+- Translation support has been implemented (with translation key or `TranslatableMessage`)
+- Documentation is up-to-date with the latest changes & improvements made
+
+---------------------------------------------------------------------------
+
+by jmsche at 2023-07-12T20:53:44Z
+
+Some quick notes as I'm on a phone, I'll review this more deeply tomorrow:
+
+- maybe write "button" instead of "bon" everywhere?
+- it's missing a .gitattributes file to lighten vendor installation
+- the option about classes could end with "classes" instead of "class" as it may contain several classes
+
+Thanks for all your work :)
+
+---------------------------------------------------------------------------
+
+by feymo at 2023-07-13T10:18:00Z
+
+Absolutely @jmsche ! Commiting your suggestion resolved the conversation and i forgot about it but i agree, i'll add a translation domain option for labels 👍🏼
+
+---------------------------------------------------------------------------
+
+by feymo at 2023-07-13T12:56:58Z
+
+No worries at all, it was super relevant and interesting ! Thank you for your time and reactivity ! 👍🏼
+
+---------------------------------------------------------------------------
+
+by feymo at 2023-07-13T19:53:55Z
+
+@weaverryan i've updated PR description to include all changes added with reviews and suggestions made, if you want to take a look and try it out, i think it looks quite clean and ready now 😄 👍🏼 🚀
