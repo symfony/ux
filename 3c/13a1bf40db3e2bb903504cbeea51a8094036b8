@@ -1,0 +1,120 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-17T14:47:18Z
+
+@1ed Can you give a hint about what your component looked like that suffered from this issue? I could add a test case
+
+---------------------------------------------------------------------------
+
+by 1ed at 2023-04-17T15:44:48Z
+
+It's a big live form with an autocomplete multi-select inside a live collection type and Tom-Select rearranges options sometimes.
+
+```php
+[
+    "data" => 2,
+    "formName" => "project",
+    "project" => [
+        "name" => "name",
+        "participatingDepartments" => [
+            [
+                "department" => "1",
+                "members" => ["0" => "12", "1" => "289", "2" => "290"],
+            ],
+        ],
+    ],
+    "isValidated" => false,
+    "validatedFields" => [],
+];
+```
+e.g. `members` changing from `["0" => "12", "1" => "289", "2" => "290"]` to `["1" => "289", "0" => "12", "2" => "290"]`
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-18T20:20:10Z
+
+> and Tom-Select rearranges options sometimes.
+
+Dude, THAT has been the bane of my existence 😆. TomSelect works great, but the internals are ugly - and this unnecessary rearranging (and then it *depending* internally on the order it just made) made a mess for getting it working with live components.
+
+> e.g. members changing from ["0" => "12", "1" => "289", "2" => "290"] to ["1" => "289", "0" => "12", "2" => "290"]
+
+To make sure I understand, what does that `$project` property look like on your component? Does it hold an array? An object? Is it writable or not writable? Are you on 2.7 or 2.8 latest?
+
+If you're on 2.8, then I'm missing some piece to the puzzle. When we dehydrate the component, we send those exact props + checksum to the live component. Then, those exact props + checksum are sent back on an Ajax request (on a key called `props`. If any of those models changed, that's actually sent back via a different key called `updated`. I'm having trouble seeing how anything could change the order of the `props` data (it's very possible I'm missing some detail).
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by 1ed at 2023-04-18T20:29:17Z
+
+I've tried to write some tests too but can not figure it out yet. I'll try to create a simple reproducer.
+
+---------------------------------------------------------------------------
+
+by simondaigre at 2023-07-31T17:27:08Z
+
+@weaverryan I have the same issue :(
+
+No Tomselect here, just a form with a Dto.
+Does the Javascript side of the Live component reorder props before submitting them ?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-07-31T19:27:52Z
+
+> Does the Javascript side of the Live component reorder props before submitting them ?
+
+It shouldn't, but it's possible. You can see that the order is suddenly wrong? It'd be interesting to see what the `data-live-props-value` looks like on the HTML element on page load vs what the `props` key looks like in the first Ajax request (assuming the first is the one that fails)
+
+---------------------------------------------------------------------------
+
+by simondaigre at 2023-07-31T19:38:55Z
+
+data-live-props-value :
+```json
+{
+  "data":1132,
+  "formName":"add_to_cart_event",
+  "add_to_cart_event":{
+     "addToCartTicketingModels":{
+        "2618":{
+           "quantity":"0"
+        },
+        "2632":{
+           "quantity":"0"
+        },
+        "2619":{
+           "quantity":"0"
+        },
+        "2620":{
+           "quantity":"0"
+        }
+     },
+     "_token":"5b0402.hVyZMfpiUUDyIM6v9cFyT2jqooFuHnHPkLE39sIVYHQ.xD7fbpEtOzqjcvievKk1PzjTlt4CUxO91uhYwqZNJzHJJMFHvTE4ebFalw"
+  },
+  "isValidated":false,
+  "validatedFields":[
+
+  ],
+  "@checksum":"mV1EXCTdg39uFjZ9hlmUTsXuALRxu7k5F0fEs5zaY0s="
+}
+```
+
+Submitted Ajax :
+
+```
+props: {"data":1132,"formName":"add_to_cart_event","add_to_cart_event":{"addToCartTicketingModels":{"2618":{"quantity":"0"},"2619":{"quantity":"0"},"2620":{"quantity":"0"},"2632":{"quantity":"0"}},"_token":"5b0402.hVyZMfpiUUDyIM6v9cFyT2jqooFuHnHPkLE39sIVYHQ.xD7fbpEtOzqjcvievKk1PzjTlt4CUxO91uhYwqZNJzHJJMFHvTE4ebFalw"},"isValidated":false,"validatedFields":[],"@checksum":"mV1EXCTdg39uFjZ9hlmUTsXuALRxu7k5F0fEs5zaY0s="}
+updated: {"add_to_cart_event.addToCartTicketingModels.2619.quantity":"1","validatedFields":["add_to_cart_event.addToCartTicketingModels.2619.quantity"]}
+```
+
+As you can see something reorder `addToCartTicketingModels` content, but I can't found where.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-07-31T19:45:20Z
+
+Ah! Fascinating! Well, it doesn't really matter *what* is doing it - though it may be as simple as the `...spread` operator - https://github.com/symfony/ux/blob/2.x/src/LiveComponent/assets/src/Component/ValueStore.ts#L85 - I don't know if that re-orders, but it may, as the "order" of objects isn't really a relevant/important thing.
+
+The point is: you've exposed the bug, so let's get this merged.
