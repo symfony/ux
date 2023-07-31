@@ -1,0 +1,32 @@
+{
+    "name": "@symfony/ux-toggle-password",
+    "description": "Toggle visibility of password inputs for Symfony Forms",
+    "license": "MIT",
+    "version": "1.0.0",
+    "main": "dist/controller.js",
+    "types": "dist/controller.d.ts",
+    "config": {
+        "css_source": "src/style.css"
+    },
+    "symfony": {
+        "controllers": {
+            "toggle-password": {
+                "main": "dist/controller.js",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {
+                    "@symfony/ux-toggle-password/dist/style.min.css": true
+                }
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    }
+}

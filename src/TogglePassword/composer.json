@@ -1,0 +1,53 @@
+{
+    "name": "symfony/ux-toggle-password",
+    "type": "symfony-bundle",
+    "description": "Toggle visibility of password inputs for Symfony Forms",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Félix Eymonot",
+            "email": "felix.eymonot@alximy.io"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\TogglePassword\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\TogglePassword\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.1",
+        "symfony/config": "^5.4|^6.0",
+        "symfony/dependency-injection": "^5.4|^6.0",
+        "symfony/form": "^5.4|^6.0",
+        "symfony/http-kernel": "^5.4|^6.0",
+        "symfony/options-resolver": "^5.4|^6.0",
+        "symfony/translation": "^5.4|^6.0"
+    },
+    "require-dev": {
+        "symfony/framework-bundle": "^5.4|^6.0",
+        "symfony/phpunit-bridge": "^5.4|^6.0",
+        "symfony/twig-bundle": "^5.4|^6.0",
+        "symfony/var-dumper": "^5.4|^6.0",
+        "twig/twig": "^2.14.7|^3.0.4"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}
