@@ -152,17 +152,24 @@ final class ComponentFactoryTest extends KernelTestCase
     public function testCannotGetConfigByNameForNonRegisteredComponent(): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/^Unknown component "invalid"\. The registered components are:.* component_a/');
+        $this->expectExceptionMessage('Unknown component "tabl". Did you mean this: "table"?');
 
-        $this->factory()->metadataFor('invalid');
+        $this->factory()->metadataFor('tabl');
     }
 
-    public function testCannotGetInvalidComponent(): void
+    /**
+     * @testWith ["tabl", "Unknown component \"tabl\". Did you mean this: \"table\"?"]
+     *           ["Basic", "Unknown component \"Basic\". Did you mean this: \"BasicComponent\"?"]
+     *           ["basic", "Unknown component \"basic\". Did you mean this: \"BasicComponent\"?"]
+     *           ["with", "Unknown component \"with\". Did you mean one of these: \"with_attributes\", \"with_exposed_variables\", \"WithSlots\"?"]
+     *           ["anonAnon", "Unknown component \"anonAnon\". And no matching anonymous component template was found."]
+     */
+    public function testCannotGetInvalidComponent(string $name, string $expectedExceptionMessage): void
     {
         $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessageMatches('/^Unknown component "invalid"\. The registered components are:.* component_a/');
+        $this->expectExceptionMessage($expectedExceptionMessage);
 
-        $this->factory()->get('invalid');
+        $this->factory()->get($name);
     }
 
     public function testInputPropsStoredOnMountedComponent(): void
