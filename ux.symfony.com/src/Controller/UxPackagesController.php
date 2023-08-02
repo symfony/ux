@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Food;
 use App\Form\DropzoneForm;
 use App\Form\TimeForAMealForm;
+use App\Form\TogglePasswordForm;
 use App\Service\PackageRepository;
 use Doctrine\Common\Collections\Collection;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -120,6 +121,14 @@ class UxPackagesController extends AbstractController
     public function translator(): Response
     {
         return $this->render('ux_packages/translator.html.twig');
+    }
+
+    #[Route('/toggle-password', name: 'app_toggle_password')]
+    public function togglePassword(): Response
+    {
+        return $this->render('ux_packages/toggle_password.html.twig', [
+            'form' => $this->createForm(TogglePasswordForm::class),
+        ]);
     }
 
     private function getDeliciousWord(): string
