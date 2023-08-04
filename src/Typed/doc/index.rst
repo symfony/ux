@@ -108,10 +108,10 @@ Stimulus controller:
             console.log(event.detail.options); // Options that will be used to initialize Typed
             event.detail.options.onBegin = (typed) => {
                 console.log("Typed is ready to type cool messages!");
-            });
+            };
             event.detail.options.onStop = (typed) => {
                 console.log("OK. Enough is enough.");
-            });
+            };
         }
 
         _onConnect(event) {
