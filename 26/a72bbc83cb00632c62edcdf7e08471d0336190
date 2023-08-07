@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2023-08-01T03:49:02Z
+
+> Wow! Fast turn-around on this :). We also need a mention in the docs - probably one example at the bottom of https://github.com/symfony/ux/blob/2.x/src/TwigComponent/doc/index.rst#passing-props-as-html-attributes would do it
+
+Added
