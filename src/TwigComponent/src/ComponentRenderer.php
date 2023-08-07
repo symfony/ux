@@ -131,6 +131,12 @@ final class ComponentRenderer implements ComponentRendererInterface
             /** @var ExposeInTemplate $attribute */
             $value = $attribute->getter ? $component->{rtrim($attribute->getter, '()')}() : $this->propertyAccessor->getValue($component, $property->name);
 
+            if ($attribute->destruct) {
+                foreach ($value as $key => $destructedValue) {
+                    yield $key => $destructedValue;
+                }
+            }
+
             yield $attribute->name ?? $property->name => $value;
         }
 
@@ -146,6 +152,14 @@ final class ComponentRenderer implements ComponentRendererInterface
 
             if ($method->getNumberOfRequiredParameters()) {
                 throw new \LogicException(sprintf('Cannot use %s on methods with required parameters (%s::%s).', ExposeInTemplate::class, $component::class, $method->name));
+            }
+
+            if ($attribute->destruct) {
+                foreach ($component->{$method->name}() as $prop => $value) {
+                    yield $prop => $value;
+                }
+
+                return;
             }
 
             yield $name => $component->{$method->name}();

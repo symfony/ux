@@ -49,6 +49,7 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
     {
         return [
             new ComponentTokenParser(fn () => $this->container->get(ComponentFactory::class)),
+            new PropsTokenParser(),
         ];
     }
 

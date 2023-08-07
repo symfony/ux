@@ -30,11 +30,12 @@ final class ComponentFactory
      * @param array<class-string, string> $classMap
      */
     public function __construct(
+        private ComponentTemplateFinderInterface $componentTemplateFinder,
         private ServiceLocator $components,
         private PropertyAccessorInterface $propertyAccessor,
         private EventDispatcherInterface $eventDispatcher,
         private array $config,
-        private array $classMap,
+        private array $classMap
     ) {
     }
 
@@ -43,6 +44,13 @@ final class ComponentFactory
         $name = $this->classMap[$name] ?? $name;
 
         if (!$config = $this->config[$name] ?? null) {
+            if (($template = $this->componentTemplateFinder->findAnonymousComponentTemplate($name)) !== null) {
+                return new ComponentMetadata([
+                    'key' => $name,
+                    'template' => $template,
+                ]);
+            }
+
             $this->throwUnknownComponentException($name);
         }
 
@@ -124,6 +132,12 @@ final class ComponentFactory
             return;
         }
 
+        if ($component instanceof AnonymousComponent) {
+            $component->mount($data);
+
+            return;
+        }
+
         $parameters = [];
 
         foreach ($method->getParameters() as $refParameter) {
@@ -149,6 +163,10 @@ final class ComponentFactory
         $name = $this->classMap[$name] ?? $name;
 
         if (!$this->components->has($name)) {
+            if ($this->isAnonymousComponent($name)) {
+                return new AnonymousComponent();
+            }
+
             $this->throwUnknownComponentException($name);
         }
 
@@ -189,11 +207,16 @@ final class ComponentFactory
         return $data;
     }
 
+    private function isAnonymousComponent(string $name): bool
+    {
+        return null !== $this->componentTemplateFinder->findAnonymousComponentTemplate($name);
+    }
+
     /**
      * @return never
      */
     private function throwUnknownComponentException(string $name): void
     {
-        throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s', $name, implode(', ', array_keys($this->config))));
+        throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s. And no matching anonymous component template was found', $name, implode(', ', array_keys($this->config))));
     }
 }
