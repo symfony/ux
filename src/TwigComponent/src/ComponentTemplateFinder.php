@@ -28,8 +28,8 @@ final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
         $loader = $this->environment->getLoader();
         $componentPath = rtrim(str_replace(':', '/', $name));
 
-        if ($loader->exists($componentPath)) {
-            return $componentPath;
+        if ($loader->exists('components/'.$componentPath.'.html.twig')) {
+            return 'components/'.$componentPath.'.html.twig';
         }
 
         if ($loader->exists($componentPath.'.html.twig')) {
@@ -40,8 +40,8 @@ final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
             return 'components/'.$componentPath;
         }
 
-        if ($loader->exists('components/'.$componentPath.'.html.twig')) {
-            return 'components/'.$componentPath.'.html.twig';
+        if ($loader->exists($componentPath)) {
+            return $componentPath;
         }
 
         return null;
