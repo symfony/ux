@@ -216,5 +216,31 @@ final class TwigPreLexerTest extends TestCase
             '{% verbatim %}<twig:Alert/>{% endverbatim %}',
             '{% verbatim %}<twig:Alert/>{% endverbatim %}',
         ];
+
+        yield 'component_attr_spreading_self_closing' => [
+            '<twig:foobar bar="baz"{{...attr}}/>',
+            '{{ component(\'foobar\', { bar: \'baz\', ...attr }) }}',
+        ];
+        yield 'component_attr_spreading_self_closing2' => [
+            '<twig:foobar bar="baz"{{ ...customAttrs }} />',
+            '{{ component(\'foobar\', { bar: \'baz\', ...customAttrs }) }}',
+        ];
+        yield 'component_attr_spreading_self_closing3' => [
+            '<twig:foobar bar="baz" {{...attr }} />',
+            '{{ component(\'foobar\', { bar: \'baz\', ...attr }) }}',
+        ];
+
+        yield 'component_attr_spreading_with_content1' => [
+            '<twig:foobar bar="baz"{{...attr}}>content</twig:foobar>',
+            '{% component \'foobar\' with { bar: \'baz\', ...attr } %}{% block content %}content{% endblock %}{% endcomponent %}',
+        ];
+        yield 'component_attr_spreading_with_content2' => [
+            '<twig:foobar bar="baz"{{ ...customAttrs }}>content</twig:foobar>',
+            '{% component \'foobar\' with { bar: \'baz\', ...customAttrs } %}{% block content %}content{% endblock %}{% endcomponent %}',
+        ];
+        yield 'component_attr_spreading_with_content3' => [
+            '<twig:foobar bar="baz" {{ ...attr }}>content</twig:foobar>',
+            '{% component \'foobar\' with { bar: \'baz\', ...attr } %}{% block content %}content{% endblock %}{% endcomponent %}',
+        ];
     }
 }

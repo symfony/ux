@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.11.0
+
+-   Support ...spread operator with html syntax (requires Twig 3.7.0 or higher)
+
 ## 2.9.0
 
 -   The `ComponentAttributes::defaults()` method now accepts any iterable argument.
