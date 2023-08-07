@@ -134,6 +134,14 @@ class PackageRepository
                 'Trigger native browser notifications from inside PHP',
                 'I need to send browser notifications',
             ),
+            new Package(
+                'toggle-password',
+                'Toggle Password',
+                'app_toggle_password',
+                'linear-gradient(142.8deg, #FD963C -14.8%, #BE0404 95.43%)',
+                'Switch the visibility of a password field',
+                'I need to toggle the visibility of a password field',
+            ),
             (new Package(
                 'typed',
                 'Typed',

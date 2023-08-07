@@ -589,6 +589,9 @@
     "symfony/ux-swup": {
         "version": "v2.1.1"
     },
+    "symfony/ux-toggle-password": {
+        "version": "2.x-dev"
+    },
     "symfony/ux-translator": {
         "version": "2.9999999",
         "recipe": {
