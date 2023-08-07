@@ -1,0 +1,276 @@
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-18T14:05:10Z
+
+Love this! (attempted this in https://github.com/symfony/ux/pull/283 a while back but now that we have html-syntax and default slots, it's much more useful).
+
+What about component properties/attributes?
+
+```html
+<twig:button.button class="foo" :username="user.name" :isAdmin>
+    Click Me!
+</twig:button.button>
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-18T20:30:27Z
+
+Ah, awesome! I'd really like to get this working too! To follow-up on Kevin's comment:
+
+We need a way to differentiate a "variable" being passed to the template vs an attribute. Fortunately, we are not the first to face this problem ;) https://laravel.com/docs/10.x/blade#data-properties-attributes - so it may require some new tag on top of the component template - like `{% prop type='info', message %}` for a `type` prop that defaults to `info` and also a `message` prop with no default. I'm open to other syntax ideas! And can we get this working?
+
+I'm also not sure, as a convention, to start mixing `<twig:SuccessButton/>` uppercase syntax with `<twig:button.success>` lowercase syntax. I can see how this differentiation could help you recognize an anonymous component from a class-backed component. But I'd like it to be easy to switch from an anonymous component to a class-backed one, without needing to go find everywhere you use that component in your templates and update the name.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-18T20:54:32Z
+
+> I'm open to other syntax ideas! And can we get this working?
+
+I like this syntax (if it's possible).
+
+> I'm also not sure, as a convention, to start mixing <twig:SuccessButton/> uppercase syntax with <twig:button.success> lowercase syntax.
+
+If I understand the new html syntax correctly, upper camel case is not required. `<twig:SuccessButton/>`, `<twig:success-button/>` and `<twig:success_button/>` are all valid (as long it matches your components name).
+
+Assuming that's true, I don't know we can have a universal way to easily migrate from anon to non-anon. I feel like find-and-replace would be the best migration path.
+
+I wonder if, to start, we should pass the full template?
+
+```html
+<twig:path/to/button.html.twig type="info" class="mb-1"/>
+```
+
+Or maybe we can drop the `.html.twig`:
+
+```html
+<twig:path/to/button type="info" class="mb-1"/>
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-18T23:11:37Z
+
+If we, as a standard, always used upper camel case - like <twig:SuccessButton> - even for anonymous components (so, the template would be SuccessButton.html.twig, then we’re good. Simply introducing a SuccessButton component class would be enough.
+
+What likely wouldn’t be as clean are anonymous components that live in sub-directories.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-18T23:30:15Z
+
+I think this would still be possible with what I propose.
+
+For `<twig:{name}/>`, the following chain could occur (first match wins):
+1. Check if `{name}` is a _real_ component
+2. `{name}` exists as an _absolute_ twig template
+3. `{name}.html.twig` exists as an _absolute_ twig template
+4. `components/{name}` exists as twig template
+5. `components/{name}.html.twig` exists as twig template
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-04-19T09:51:52Z
+
+>  so it may require some new tag on top of the component template - like {% prop type='info', message %} for a type prop that defaults to info and also a message prop with no default. I'm open to other syntax ideas!
+
+I was thinking about something similar, but I think it's important to let the ability to type checking. So my proposal is something like so:
+```php
+{% prop 'info' is 'string'  default 'info' %}
+{% prop 'foo' is 'bool' default 'false' %}
+```
+
+>  But I'd like it to be easy to switch from an anonymous component to a class-backed one,
+
+This is a really good point! Because in my use the front-end developer first is the template, and then a Symfony developer as the back-end logic. So I think we should let the ability to add the component class without touching the templates.
+
+> What likely wouldn’t be as clean are anonymous components that live in sub-directories
+
+And why not also look at every subdirectory, and we just force to have every template with a different name under the components directory?
+
+> I think this would still be possible with what I propose.
+
+Hum yes, this is interesting, I like this priority check idea!
+
+By mixing your comments the solution could be:
+
+first, imagine you have the following template: components/Button/Primary.html.twig
+
+then in an other template you use like so:
+```php
+   <twig:Button.Primary/>
+```
+
+and then if you create a new component class:
+```php
+#[AsTwigComponent('Button.Primary')]
+class ButtonPrimary
+{
+}
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-19T15:15:23Z
+
+> I was thinking about something similar, but I think it's important to let the ability to type checking. So my proposal is something like so:
+
+That syntax looks complex to me :). My opinion: if you are about types, use a class-backed component. There is nowhere else in Twig (e.g. `include()`) where there is type-safety when calling a template. Besides, we don't want to start seeing things like `{% prop 'foo' is 'App\\Entity\\Foo' default 'null' %}` ;)
+
+So, I'd go back to my original proposal (well, I've modified to `props` with an `s`):
+
+```twig
+{% props type='info', message %}
+```
+
+> For <twig:{name}/>, the following chain could occur (first match wins):
+>
+> 1. Check if `{name}` is a _real_ component
+> 2. `{name}` exists as an _absolute_ twig template
+> 3. `{name}.html.twig` exists as an _absolute_ twig template
+> 4. `components/{name}` exists as twig template
+> 5. `components/{name}.html.twig` exists as twig template
+
+I might remove 2 & 3 (motivation: keep these anonymous components looking/feeling like everything else)? And is 4 really needed - I guess you'd have `<twig:foo.html.twig>`, which looks weird to me.
+
+For 2 & 3, if we want to allow Twig components to live in other paths, probably we could add a different extension point for that - e.g. Blade components allow you to configure a "namespace" of sorts - e.g. a `Dashboard` namespace could be configured to look in `templates/dashboard/` and then if you use `<twig:dashboard:Panel>`, that would look in `templates/dashboard/Panel.html.twig`. But... that's to think about later.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-19T16:35:53Z
+
+> first, imagine you have the following template: components/Button/Primary.html.twig
+
+I think we should keep the directory separator as `/` for now so there's no need for any string manipulation.
+
+> I might remove 2 & 3 (motivation: keep these anonymous components looking/feeling like everything else)? And is 4 really needed - I guess you'd have <twig:foo.html.twig>, which looks weird to me.
+
+As long as (for an end-app), `<twig:form/input/text />` resolves to `components/form/input/text.html.twig` I'm good but...
+
+While it looks weird, I think this is the easiest way to allow including anon. templates from 3rd party bundles: `<twig:@SomeBundle/form/input/text />`
+
+Is the performance of running the chain part of your objection? I _do_ think we should put the best-practice/most-common scenarios highest on the chain.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-19T16:43:57Z
+
+> (motivation: keep these anonymous components looking/feeling like everything else)
+
+I think a lot of people, myself included, would want to use these as super-charged include tags and may not have any intention of using _real_ components.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-04-19T17:01:40Z
+
+Ok fair - we can keep 2 & 3 :)
+
+---------------------------------------------------------------------------
+
+by AmProsius at 2023-05-05T17:46:03Z
+
+I don't want to wake sleeping dogs, but why is the directory separator different from the [template namespace](https://symfony.com/bundles/ux-twig-component/current/index.html#twig-template-namespaces)?
+
+That would mean an anonymous twig component would be written differently than a class component:
+
+```twig
+{# components/button/button.html.twig #}
+
+<button class="btn btn-{{ variant }}">
+    {% block content %}{% endblock %}
+</button>
+
+{# Anonymous component #}
+
+<twig:button.button variant="primary">Click me</twig:button.button>
+{# or #}
+<twig:button/button variant="primary">Click me</twig:button/button>
+
+{# Class component #}
+
+<twig:button:button variant="primary">Click me</twig:button:button>
+```
+
+It would be great if the directory separators would be similar. That way, devs will be able to just remove the component class and the components would still work.
+Plus it removes mental overload, because you don't have to remember when to use which separator.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-05-05T18:09:08Z
+
+Hey @AmProsius! Thanks for your comment! I think you are right and this is the direction we gonna took here! I will keep working on this PR this week! 😁 I was just focused on the bug we have with the new twig component syntax 😁 Cheers!
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2023-05-08T10:13:09Z
+
+For this PR you could take help from https://laravel.com/docs/10.x/blade#anonymous-components 😄
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-05-11T21:57:28Z
+
+Hey all! I think we need to work first on what @weaverryan talks about in this comment https://github.com/symfony/ux/issues/844#issuecomment-1543805445 before continuing this PR 😁
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-07-01T08:42:45Z
+
+Hey all! I am back on this! I updated the first comment if you want some examples, but what I did is:
+- now you put your static components in template templates/*, templates/*.html.twig,  templates/component/*,   templates/component/*.html.twig
+- You have new props that let you define optional or require props for your component
+
+Tell me what you think about this change! Cheers 🧡
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-07-03T13:25:03Z
+
+From your description above:
+
+> As can see you can use `.` to navigate through the directories.
+
+This should be `:`, correct?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-07-03T13:36:22Z
+
+Ha yes good catch! I changed to :
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-07-07T10:06:10Z
+
+I don't think the failure is related to this PR.
+
+I made some change it's ready for review again 😁
+
+Thats was super good idea to add this props, I tried on a real project and it's super usefull 😁
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-07-13T16:00:55Z
+
+@kbond @weaverryan friendly ping here. I think we are really close, I am so thrilled to have this feature 😁
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-07-20T16:09:04Z
+
+@weaverryan for the doc I plan to let a colleague do it, it's her first PR 😁
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-07-31T14:14:33Z
+
+I think it's been decided that `:` is the dir separator? Do you mind updating the PR description?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-08-07T14:56:52Z
+
+Hey all! I am back from holiday! And back to making this PR live 😎
+
+@kbond PR description updated 👍
