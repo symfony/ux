@@ -12,6 +12,7 @@
 namespace Symfony\UX\TwigComponent\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\TwigComponent\Tests\Fixtures\User;
 use Twig\Environment;
 
 /**
@@ -180,6 +181,16 @@ final class ComponentExtensionTest extends KernelTestCase
 
         $this->assertStringContainsString('Submit', $output);
         $this->assertStringContainsString('class="primary"', $output);
+    }
+
+    public function testRenderAnonymousComponentWithNonScalarProps(): void
+    {
+        $user = new User('Fabien', 'test@test.com');
+
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_none_scalar_prop.html.twig', ['user' => $user]);
+
+        $this->assertStringContainsString('Fabien', $output);
+        $this->assertStringContainsString('test@test.com', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string
