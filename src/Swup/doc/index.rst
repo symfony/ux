@@ -144,6 +144,7 @@ Stimulus controller:
     // assets/controllers/myswup_controller.js
 
     import { Controller } from '@hotwired/stimulus';
+    import SwupProgressPlugin from '@swup/progress-plugin';
 
     export default class extends Controller {
         connect() {
@@ -160,6 +161,7 @@ Stimulus controller:
         _onPreConnect(event) {
             // Swup has not been initialized - options can be changed
             console.log(event.detail.options); // Options that will be used to initialize Swup
+            event.detail.options.plugins.push(new SwupProgressPlugin()); // Adding the progress bar plugin
         }
 
         _onConnect(event) {
