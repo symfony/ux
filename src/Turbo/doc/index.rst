@@ -343,7 +343,7 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
                 if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
                     // If the request comes from Turbo, set the content type as text/vnd.turbo-stream.html and only send the HTML to update
                     $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
-                    return $this->render('task/success.stream.html.twig', ['task' => $task]);
+                    return $this->renderBlock('task/new.html.twig', 'success_stream', ['task' => $task]);
                 }
 
                 // If the client doesn't support JavaScript, or isn't using Turbo, the form still works as usual.
@@ -360,14 +360,16 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
 
 .. code-block:: html+twig
 
-    {# success.stream.html.twig #}
-    <turbo-stream action="replace" target="my_div_id">
+    {# end of new.html.twig #}
+    {% block success_stream %}
+    <turbo-stream action="replace" targets="#my_div_id">
         <template>
             The element having the id "my_div_id" will be replaced by this block, without a full page reload!
 
             <div>The task "{{ task }}" has been created!</div>
         </template>
     </turbo-stream>
+    {% endblock %}
 
 Supported actions are ``append``, ``prepend``, ``replace``, ``update``
 and ``remove``. `Read the Turbo Streams documentation for more details`_.
@@ -379,19 +381,15 @@ When you return a Turbo stream, *only* the elements in that stream template will
 be updated. This means that if you want to reset the form, you need to include
 a new form in the stream template.
 
-To do that, first isolate your form rendering into a template partial so you can
-reuse it. Also surround the form by an element with an ``id`` so you can target
-it from the stream:
+To do that, first isolate your form rendering into a block so you can reuse it:
 
-.. code-block:: html+twig
+.. code-block:: diff
 
-    {# templates/task/_form.html.twig #}
-    <div id="task-form">
-        {# render your form however you want #}
-        {{ form(form) }}
-    </div>
+    {# new.html.twig #}
+    +{% block task_form %}
+     {{ form(form) }}
+    +{% endblock %}
 
-Include this from your existing template (e.g. `new.html.twig`) to render it.
 Now, create a "fresh" form and pass it into your stream:
 
 .. code-block:: diff
@@ -405,7 +403,7 @@ Now, create a "fresh" form and pass it into your stream:
         {
             $form = $this->createForm(TaskType::class, new Task());
 
-   +        $emptyForm = clone $form ;
+   +        $emptyForm = clone $form;
             $form->handleRequest($request);
 
             if ($form->isSubmitted() && $form->isValid()) {
@@ -414,7 +412,7 @@ Now, create a "fresh" form and pass it into your stream:
                 if (TurboBundle::STREAM_FORMAT === $request->getPreferredFormat()) {
                     $request->setRequestFormat(TurboBundle::STREAM_FORMAT);
 
-                    return $this->render('task/success.stream.html.twig', [
+                    return $this->renderBlock('task/new.html.twig', 'success_stream', [
                         'task' => $task,
    +                    'form' => $emptyForm,
                     ]);
@@ -432,14 +430,16 @@ Now, create a "fresh" form and pass it into your stream:
 
 Now, in your stream template, "replace" the entire form:
 
-.. code-block:: html+twig
+.. code-block:: diff
 
-    {# success.stream.html.twig #}
-    <turbo-stream action="replace" target="task-form">
-        <template>
-            {{ include('task/_form.html.twig') }}
-        </template>
-    </turbo-stream>
+    {# new.html.twig #}
+     {% block success_stream %}
+    +<turbo-stream action="replace" targets="form[name=task]">
+    +    <template>
+    +        {{ block('task_form') }}
+    +    </template>
+    +</turbo-stream>
+     <turbo-stream action="replace" targets="#my_div_id">
 
 .. _chat-example:
 
@@ -564,7 +564,7 @@ Let's create our chat::
 
     {# chat/message.stream.html.twig #}
     {# New messages received through the Mercure connection are appended to the div with the "messages" ID. #}
-    <turbo-stream action="append" target="messages">
+    <turbo-stream action="append" targets="#messages">
         <template>
             <div>{{ message }}</div>
         </template>
@@ -621,7 +621,7 @@ created, modified or deleted:
 
     {# templates/broadcast/Book.stream.html.twig #}
     {% block create %}
-        <turbo-stream action="append" target="books">
+        <turbo-stream action="append" targets="#books">
             <template>
                 <div id="{{ 'book_' ~ id }}">{{ entity.title }} (#{{ id }})</div>
             </template>
@@ -629,7 +629,7 @@ created, modified or deleted:
     {% endblock %}
 
     {% block update %}
-        <turbo-stream action="update" target="book_{{ id }}">
+        <turbo-stream action="update" targets="#book_{{ id }}">
             <template>
                 {{ entity.title }} (#{{ id }}, updated)
             </template>
@@ -637,7 +637,7 @@ created, modified or deleted:
     {% endblock %}
 
     {% block remove %}
-        <turbo-stream action="remove" target="book_{{ id }}"></turbo-stream>
+        <turbo-stream action="remove" targets="#book_{{ id }}"></turbo-stream>
     {% endblock %}
 
 By convention, Symfony UX Turbo will look for a template named
