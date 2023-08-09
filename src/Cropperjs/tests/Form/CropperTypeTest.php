@@ -52,7 +52,7 @@ class CropperTypeTest extends TestCase
                             '<input type="hidden" id="form_photo_options" name="form[photo][options]" '.
                                 'data-controller="mycropper symfony--ux-cropperjs--cropper" '.
                                 'data-symfony--ux-cropperjs--cropper-public-url-value="/public/url.jpg" '.
-                                'data-symfony--ux-cropperjs--cropper-options-value="{&quot;viewMode&quot;:1,&quot;dragMode&quot;:&quot;move&quot;}" />'.
+                                'data-symfony--ux-cropperjs--cropper-options-value="{&quot;viewMode&quot;:1,&quot;dragMode&quot;:&quot;move&quot;}">'.
                         '</div>'.
                     '</div>'.
                 '</div>'.
@@ -86,7 +86,7 @@ class CropperTypeTest extends TestCase
                             '<input type="hidden" id="form_photo_options" name="form[photo][options]" '.
                                 'data-controller="mycropper symfony--ux-cropperjs--cropper" '.
                                 'data-symfony--ux-cropperjs--cropper-public-url-value="/public/url.jpg" '.
-                                'data-symfony--ux-cropperjs--cropper-options-value="[]" />'.
+                                'data-symfony--ux-cropperjs--cropper-options-value="[]">'.
                         '</div>'.
                     '</div>'.
                 '</div>'.
