@@ -38,7 +38,7 @@ return [
         'path' => 'var/translations/configuration.js',
     ],
     'bootstrap' => [
-        'url' => 'https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/+esm',
+        'url' => 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/+esm',
     ],
     '@popperjs/core' => [
         'url' => 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/+esm',
