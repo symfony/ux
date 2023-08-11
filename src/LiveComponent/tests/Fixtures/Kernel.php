@@ -24,6 +24,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\LiveComponent\LiveComponentBundle;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\Entity2Normalizer;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\MoneyNormalizer;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
@@ -129,7 +130,10 @@ final class Kernel extends BaseKernel
             ->set(Entity2Normalizer::class)->autoconfigure()->autowire()
             ->load(__NAMESPACE__.'\\Component\\', __DIR__.'/Component')
             ->set(TestingDeterministicIdTwigExtension::class)
-            ->args([service('ux.live_component.deterministic_id_calculator')]);
+            ->args([service('ux.live_component.deterministic_id_calculator')])
+            ->set('some_service_id', Component1::class)
+                ->tag('twig.component', ['live' => true])
+        ;
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
