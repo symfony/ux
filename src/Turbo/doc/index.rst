@@ -369,8 +369,9 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
         </template>
     </turbo-stream>
 
-Supported actions are ``append``, ``prepend``, ``replace``, ``update``
-and ``remove``. `Read the Turbo Streams documentation for more details`_.
+Supported actions are ``append``, ``prepend``, ``replace``, ``update``,
+``remove``, ``before`` and ``after``.
+`Read the Turbo Streams documentation for more details`_.
 
 Resetting the Form
 ~~~~~~~~~~~~~~~~~~
