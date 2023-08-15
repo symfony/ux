@@ -22,9 +22,7 @@ use Symfony\WebpackEncoreBundle\Dto\AbstractStimulusDto;
 final class ComponentAttributes
 {
     /**
-     * @internal
-     *
-     * @param array<string, string> $attributes
+     * @param array<string, string|bool> $attributes
      */
     public function __construct(private array $attributes)
     {
@@ -53,7 +51,7 @@ final class ComponentAttributes
     }
 
     /**
-     * @return array<string, string>
+     * @return array<string, string|bool>
      */
     public function all(): array
     {
