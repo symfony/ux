@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2023-08-02T11:13:36Z
+
+Should we list all components in case it didn't find any alternatives? :slightly_smiling_face:
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-08-02T11:20:47Z
+
+I'm thinking no. I don't think the Symfony code base does that.
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-08-08T03:35:27Z
+
+Rebased
