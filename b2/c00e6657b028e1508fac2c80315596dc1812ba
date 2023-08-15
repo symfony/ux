@@ -1,0 +1,16 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-08-07T15:13:58Z
+
+Hi!
+
+This is a nice PR, but the issue is tricky: each plugin we add increases the download size of the controller. So, even if you aren't using the progress bar plugin, it will now be downloaded by the user (with Encore, it'll be packaged into the final built files & with asset mapper, the `import` will be followed and downloaded).
+
+Instead, I think we should encourage people to create a small swup controller where they configure the exact behavior they want - so enhancing the docs here https://symfony.com/bundles/ux-swup/current/index.html#extend-the-default-behavior to show hooking up the progress bar would be 🙌 .
+
+---------------------------------------------------------------------------
+
+by yassinefikri at 2023-08-08T08:39:47Z
+
+I agree, i also think that extending the controller will give easier access to customize the progress bar plugin options
+i will update the PR as you mentioned
