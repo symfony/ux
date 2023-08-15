@@ -25,9 +25,13 @@ final class ComponentDefaultActionPass implements CompilerPassInterface
 {
     public function process(ContainerBuilder $container): void
     {
-        foreach ($container->findTaggedServiceIds('twig.component') as $class => $component) {
+        foreach ($container->findTaggedServiceIds('twig.component') as $id => $component) {
             if (!($component[0]['live'] ?? false)) {
                 continue;
+            }
+
+            if (!$class = $container->getDefinition($id)->getClass()) {
+                throw new \LogicException(sprintf('Live component service "%s" must have a class.', $id));
             }
 
             $defaultAction = trim($component[0]['default_action'] ?? '__invoke', '()');
