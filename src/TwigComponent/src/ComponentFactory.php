@@ -217,6 +217,32 @@ final class ComponentFactory
      */
     private function throwUnknownComponentException(string $name): void
     {
-        throw new \InvalidArgumentException(sprintf('Unknown component "%s". The registered components are: %s. And no matching anonymous component template was found', $name, implode(', ', array_keys($this->config))));
+        $message = sprintf('Unknown component "%s".', $name);
+        $lowerName = strtolower($name);
+        $nameLength = \strlen($lowerName);
+        $alternatives = [];
+
+        foreach (array_keys($this->config) as $type) {
+            $lowerType = strtolower($type);
+            $lev = levenshtein($lowerName, $lowerType);
+
+            if ($lev <= $nameLength / 3 || str_contains($lowerType, $lowerName)) {
+                $alternatives[] = $type;
+            }
+        }
+
+        if ($alternatives) {
+            if (1 === \count($alternatives)) {
+                $message .= ' Did you mean this: "';
+            } else {
+                $message .= ' Did you mean one of these: "';
+            }
+
+            $message .= implode('", "', $alternatives).'"?';
+        } else {
+            $message .= ' And no matching anonymous component template was found.';
+        }
+
+        throw new \InvalidArgumentException($message);
     }
 }
