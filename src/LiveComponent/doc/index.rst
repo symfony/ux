@@ -1386,7 +1386,7 @@ a :ref:`LiveAction <actions>`::
             $this->submitForm();
 
             /** @var Post $post */
-            $post = $this->getFormInstance()->getData();
+            $post = $this->getForm()->getData();
             $entityManager->persist($post);
             $entityManager->flush();
 
@@ -1480,7 +1480,7 @@ the form::
         $this->submitForm();
 
         // now you can access the latest data
-        $post = $this->getFormInstance()->getData();
+        $post = $this->getForm()->getData();
         // (same as above)
         $post = $this->initialFormData;
     }
@@ -1516,7 +1516,7 @@ before the form is submitted::
 
         // this would *not* work
         // $this->submitForm();
-        // $post = $this->getFormInstance()->getData();
+        // $post = $this->getForm()->getData();
         // $post->setTitle('... some auto-generated-title');
     }
 
