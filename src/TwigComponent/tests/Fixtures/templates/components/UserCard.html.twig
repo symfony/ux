@@ -1,4 +1,6 @@
-<div class='user-card'>
+{% props user %}
+
+<div {{ attributes }} class='user-card'>
     <p>{{ user.name }}</p>
     <p>{{ user.email }}</p>
 </div>
