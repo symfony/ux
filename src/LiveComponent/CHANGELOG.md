@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.11.0
+
+-   Add helper for testing live components.
+
 ## 2.9.0
 
 -   Add support for symfony/asset-mapper

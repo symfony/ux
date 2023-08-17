@@ -50,6 +50,7 @@ final class InteractsWithTwigComponentsTest extends KernelTestCase
         $this->assertStringContainsString('propA: prop a value', $rendered);
         $this->assertStringContainsString('propB: prop b value', $rendered);
         $this->assertStringContainsString('service: service a value', $rendered);
+        $this->assertCount(2, $rendered->crawler()->filter('ul li'));
     }
 
     /**
