@@ -30,7 +30,7 @@ final class ComponentFactory
      * @param array<class-string, string> $classMap
      */
     public function __construct(
-        private ComponentTemplateFinderInterface $componentTemplateFinder,
+        private AnonymousComponentTemplateParserInterface $componentTemplateFinder,
         private ServiceLocator $components,
         private PropertyAccessorInterface $propertyAccessor,
         private EventDispatcherInterface $eventDispatcher,
@@ -77,7 +77,7 @@ final class ComponentFactory
         $originalData = $data;
         $data = $this->preMount($component, $data);
 
-        $this->mount($component, $data);
+        $this->mount($component, $data, $componentMetadata);
 
         // set data that wasn't set in mount on the component directly
         foreach ($data as $property => $value) {
@@ -103,6 +103,10 @@ final class ComponentFactory
             }
 
             $data[$key] = $value;
+
+            if (!\is_scalar($value) && null !== $value) {
+                throw new \LogicException(sprintf('A "%s" prop was passed when creating the "%s" component. No matching %s property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a %s). Did you mean to pass this to your component or is there a typo on its name?', $key, $componentMetadata->getName(), $key, get_debug_type($value)));
+            }
         }
 
         return new MountedComponent(
@@ -121,7 +125,7 @@ final class ComponentFactory
         return $this->getComponent($name);
     }
 
-    private function mount(object $component, array &$data): void
+    private function mount(object $component, array &$data, ComponentMetadata $metadata): void
     {
         try {
             $method = (new \ReflectionClass($component))->getMethod('mount');
@@ -131,7 +135,7 @@ final class ComponentFactory
         }
 
         if ($component instanceof AnonymousComponent) {
-            $component->mount($data);
+            $component->mount($data, $this->componentTemplateFinder->findComponentProps($metadata->getTemplate()));
 
             return;
         }

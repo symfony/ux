@@ -16,7 +16,7 @@ use Twig\Environment;
 /**
  * @author Matheo Daninos <matheo.daninos@gmail.com>
  */
-final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
+final class AnonymousAnonymousComponentTemplateParser implements AnonymousComponentTemplateParserInterface
 {
     public function __construct(
         private Environment $environment
@@ -45,5 +45,24 @@ final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
         }
 
         return null;
+    }
+
+    public function findComponentProps(string $name): array
+    {
+        $loader = $this->environment->getLoader();
+        $templateContent = $loader->getSourceContext($this->findAnonymousComponentTemplate($name))->getCode();
+
+        $pattern = '/{%\s*props\s*(.*?)\s*%}/';
+        preg_match($pattern, $templateContent, $matches);
+
+        if (isset($matches[1])) {
+            $props = $matches[1];
+            $props = preg_replace('/\s/', '', $props);
+            $propsArray = explode(',', $props);
+
+            return array_map(fn (string $propName) => strtok($propName, '='), $propsArray);
+        }
+
+        return [];
     }
 }
