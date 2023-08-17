@@ -14,12 +14,7 @@ namespace Symfony\UX\TwigComponent;
 /**
  * @author Matheo Daninos <matheo.daninos@gmail.com>
  */
-interface AnonymousComponentTemplateParserInterface
+interface ComponentTemplateFinderInterface
 {
     public function findAnonymousComponentTemplate(string $name): ?string;
-
-    /**
-     * @return array<string>
-     */
-    public function findComponentProps(string $name): array;
 }

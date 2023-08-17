@@ -17,12 +17,12 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\UX\TwigComponent\AnonymousAnonymousComponentTemplateParser;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\ComponentStack;
+use Symfony\UX\TwigComponent\ComponentTemplateFinder;
 use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 use Symfony\UX\TwigComponent\Twig\ComponentLexer;
@@ -41,7 +41,7 @@ final class TwigComponentExtension extends Extension
             throw new LogicException('The TwigBundle is not registered in your application. Try running "composer require symfony/twig-bundle".');
         }
 
-        $container->register('ux.twig_component.component_template_finder', AnonymousAnonymousComponentTemplateParser::class)
+        $container->register('ux.twig_component.component_template_finder', ComponentTemplateFinder::class)
             ->setArguments([
                 new Reference('twig'),
             ])
@@ -78,7 +78,7 @@ final class TwigComponentExtension extends Extension
             ])
         ;
 
-        $container->register(AnonymousAnonymousComponentTemplateParser::class, 'ux.twig_component.component_template_finder');
+        $container->register(ComponentTemplateFinder::class, 'ux.twig_component.component_template_finder');
 
         $container->register('ux.twig_component.twig.component_extension', ComponentExtension::class)
             ->addTag('twig.extension')

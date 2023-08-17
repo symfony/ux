@@ -22,16 +22,8 @@ final class AnonymousComponent
 {
     private array $props;
 
-    public function mount(&$data = [], $propNames = []): void
+    public function mount($props = []): void
     {
-        $props = [];
-        foreach ($propNames as $propName) {
-            if (isset($data[$propName])) {
-                $props[$propName] = $data[$propName];
-                unset($data[$propName]);
-            }
-        }
-
         $this->props = $props;
     }
 
