@@ -1,0 +1,51 @@
+---------------------------------------------------------------------------
+
+by kbond at 2023-04-29T17:13:00Z
+
+Again, with the system I describe in https://github.com/symfony/ux/issues/818#issuecomment-1527750014, we could make a really nice chainable test experience:
+
+```php
+$this->createLiveComponent('my_component')
+    ->assertSeeIn('div.count', 1)
+    ->call('increase')
+    ->assertSeeIn('div.count', 2)
+    ->call('increase', ['amount' => 3])
+    ->assertSeeIn('div.count', 5)
+;
+```
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-08-16T10:15:37Z
+
+Hey @kbond, I am using this PR a lot to test my component and it's working great! Do you need a hand in order to finish it?
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-08-16T13:31:44Z
+
+> I am using this PR a lot to test my component and it's working great! Do you need a hand in order to finish it?
+
+I was really just waiting for this feedback! Think it's current state is enough to start?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-08-16T14:42:14Z
+
+> Think it's current state is enough to start?
+
+I guess, I mean I didn't have a complex need yet but for my current need, it's working perfectly fine.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-08-16T14:53:58Z
+
+Ok, I'll add `refresh()`/`response()` methods + docs and I think we should be good to go here.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-08-16T16:41:01Z
+
+Ok, I believe this to be ready!
+
+I also added 586a572b463cfb6d085829c33501592289512a5b but can move to another PR if desired.
