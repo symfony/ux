@@ -11,6 +11,9 @@
 
 namespace Symfony\UX\LiveComponent\Tests;
 
+use Symfony\Component\Cache\Adapter\NullAdapter;
+use Symfony\Component\Cache\Adapter\PhpArrayAdapter;
+use Symfony\UX\LiveComponent\DependencyInjection\LiveComponentExtension;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Util\DehydratedProps;
@@ -38,8 +41,12 @@ trait LiveComponentTestHelper
         return $this->factory()->get($name);
     }
 
-    private function mountComponent(string $name, array $data = []): MountedComponent
+    private function mountComponent(string $name, array $data = [], $addDummyLiveId = true): MountedComponent
     {
+        if ($addDummyLiveId && empty($data['attributes']['data-live-id'])) {
+            $data['attributes']['data-live-id'] = 'in-a-real-scenario-it-would-already-have-one';
+        }
+
         return $this->factory()->create($name, $data);
     }
 
@@ -61,5 +68,15 @@ trait LiveComponentTestHelper
         \assert($liveMetadataFactory instanceof LiveComponentMetadataFactory);
 
         return $this->hydrator()->hydrate($component, $props, $updatedProps, $liveMetadataFactory->getMetadata($name));
+    }
+
+    private function addTemplateMap(string $obscuredName, string $templateName): void
+    {
+        if (!self::$booted) {
+            self::bootKernel();
+        }
+
+        $phpArrayAdapter = new PhpArrayAdapter(self::$kernel->getCacheDir().'/'.LiveComponentExtension::TEMPLATES_MAP_FILENAME, new NullAdapter());
+        $phpArrayAdapter->warmUp(['map' => [$obscuredName => $templateName]]);
     }
 }

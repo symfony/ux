@@ -18,6 +18,7 @@ use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\LiveResponder;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
+use Symfony\UX\LiveComponent\Twig\TemplateMap;
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\MountedComponent;
@@ -47,6 +48,7 @@ class LiveControllerAttributesCreator
         private UrlGeneratorInterface $urlGenerator,
         private LiveResponder $liveResponder,
         private ?CsrfTokenManagerInterface $csrfTokenManager,
+        private TemplateMap $templateMap,
     ) {
     }
 
@@ -80,16 +82,23 @@ class LiveControllerAttributesCreator
 
         $mountedAttributes = $mounted->getAttributes();
 
-        if ($isChildComponent) {
-            if (!isset($mountedAttributes->all()['data-live-id'])) {
-                $id = $deterministicId ?: $this->idCalculator
-                    ->calculateDeterministicId(key: $mounted->getInputProps()[self::KEY_PROP_NAME] ?? null);
-                $attributesCollection->setLiveId($id);
-                // we need to add this to the mounted attributes so that it is
-                // will be included in the "attributes" part of the props data.
-                $mountedAttributes = $mountedAttributes->defaults(['data-live-id' => $id]);
-            }
+        if ($mounted->hasExtraMetadata('hostTemplate') && $mounted->hasExtraMetadata('embeddedTemplateIndex')) {
+            $mountedAttributes = $mountedAttributes->defaults([
+                'data-host-template' => $this->templateMap->obscuredName($mounted->getExtraMetadata('hostTemplate')),
+                'data-embedded-template-index' => $mounted->getExtraMetadata('embeddedTemplateIndex'),
+            ]);
+        }
 
+        if (!isset($mountedAttributes->all()['data-live-id'])) {
+            $id = $deterministicId ?: $this->idCalculator
+                ->calculateDeterministicId(key: $mounted->getInputProps()[self::KEY_PROP_NAME] ?? null);
+            $attributesCollection->setLiveId($id);
+            // we need to add this to the mounted attributes so that it is
+            // will be included in the "attributes" part of the props data.
+            $mountedAttributes = $mountedAttributes->defaults(['data-live-id' => $id]);
+        }
+
+        if ($isChildComponent) {
             $fingerprint = $this->fingerprintCalculator->calculateFingerprint(
                 $mounted->getInputProps(),
                 $this->metadataFactory->getMetadata($mounted->getName())

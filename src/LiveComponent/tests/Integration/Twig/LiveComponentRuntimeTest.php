@@ -31,6 +31,7 @@ final class LiveComponentRuntimeTest extends KernelTestCase
             'prop1' => null,
             'prop2' => new \DateTime('2022-10-06-0'),
             'prop3' => 'howdy',
+            'attributes' => ['data-live-id' => 'in-a-real-scenario-it-would-already-have-one'],
         ]);
 
         $this->assertStringStartsWith('/_components/component1?props=%7B%22prop1%22:null,%22prop2%22:%222022-10-06T00:00:00%2B00:00%22,%22prop3%22:%22howdy%22,%22', $url);

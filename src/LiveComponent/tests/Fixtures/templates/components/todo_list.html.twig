@@ -7,7 +7,11 @@
         {% if includeDataLiveId %}
             {% set componentProps = componentProps|merge({'data-live-id': ('todo-item-' ~ loop.index) }) %}
         {% endif %}
-        {{ component('todo_item', componentProps) }}
+        {% if loop.index is odd %}
+            {{ component('todo_item', componentProps) }}
+        {% else %}
+            {% component 'todo_item' with componentProps %}{% endcomponent %}
+        {% endif %}
     {% endfor %}
     </ul>
 </div>

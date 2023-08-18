@@ -1,0 +1,6 @@
+{% component component2 %}
+    {% block content %}
+        {{ parent() }}
+        Embedded content with access to context, like count={{ this.count }}
+    {% endblock %}
+{% endcomponent %}
