@@ -149,8 +149,12 @@ final class ComponentAttributes
         return $clone->defaults($controllersAttributes);
     }
 
-    public function remove($key): void
+    public function remove($key): self
     {
-        unset($this->attributes[$key]);
+        $attributes = $this->attributes;
+
+        unset($attributes[$key]);
+
+        return new self($attributes);
     }
 }

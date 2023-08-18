@@ -189,6 +189,7 @@ final class ComponentExtensionTest extends KernelTestCase
 
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_none_scalar_prop.html.twig', ['user' => $user]);
 
+        $this->assertStringContainsString('class="foo"', $output);
         $this->assertStringContainsString('Fabien', $output);
         $this->assertStringContainsString('test@test.com', $output);
     }

@@ -31,7 +31,7 @@ class PropsNode extends Node
         foreach ($this->getAttribute('names') as $name) {
             $compiler
                 ->addDebugInfo($this)
-                ->write('$context[\'attributes\']->remove(\''.$name.'\');')
+                ->write('$context[\'attributes\'] = $context[\'attributes\']->remove(\''.$name.'\');')
                 ->write('if (!isset($context[\''.$name.'\'])) {')
             ;
 
