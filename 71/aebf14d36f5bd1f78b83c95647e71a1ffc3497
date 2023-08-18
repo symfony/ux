@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-05-31T20:24:42Z
+
+@kbond FYI: had some weird issues with the tests for PHP 8.0 (but ultimately stupid mistake on my part) which are now fixed. Everything is green so I'd love to hear your feedback!
+
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-06-10T22:47:52Z
+
+Rebased my branch + removed an `isChildComponent` check in the `LiveControllerAttributesCreator` so any component gets a live-id (as discussed with @weaverryan).
+This is needed now so embedded components also get a live-id, otherwise actions to nested components wouldn't be linked to the embedded component (but some higher non-embedded component).
+
+It used to be that
+1.  only non-embedded components would get a live-id, since
+    * only those are rendered via `ComponentRenderer::render()`,
+    * and only that function uses the `ComponentStack`,
+    * by which the `isChildComponent` is determined
+1. while embedded components are rendered via `ComponentRenderer::embeddedContext()` + `Template::display()`.
+
+Since embedded components couldn't be live, it follows that live components would always have a live-id (since all of them were guaranteed non-embedded and follow flow 1).
+Ergo, now we have to add live-ids on embedded (live) components as well.
+
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-06-26T21:28:59Z
+
+I noticed that live (now embedded) components would always re-render, unlike non-embedded components which would only re-render if a LiveProp changed that also allowed the parent component to update the child component. If none of those LiveProps changed no re-render would happen as of 2.8.
+
+This is because of the `InterceptChildComponentRenderSubscriber` acting on the `PreCreateForRenderEvent` and short-circuiting the render process, returning a fake/incomplete html for a child component. It's the frontend that decides whether the props have changed and whether another callback to the backend is desired.
+
+However, because non-embedded components are rendered via the `createAndRender` function, while embedded components are rendered via `ComponentRenderer::embeddedContext()` + `loadTemplate()`, the latter don't get a chance to be short-circuited, and have their non-updateable properties be removed, resulting in skipping an redundant and perhaps even unwanted re-render.
+
+I added a new commit to take care of this.
+
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-07-01T20:01:13Z
+
+I added a change to make embedded components also be part of the component stack, by which it is determined to add a fingerprint.
+Previously, I just removed the `isChildComponent`-check in the `LiveControllerAttributesCreator` but after discussing this with @weaverryan, who told me it can be CPU-heavy to generate fingerprints, I decided to handle it this way, by also adding embedded components to the component stack. This way at least root components don't get an unnecessary fingerprint.
+
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-08-08T19:24:10Z
+
+@kbond @weaverryan can you guys have another look at this PR?
