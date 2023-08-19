@@ -28,6 +28,11 @@ Source code for [ux.symfony.com](https://ux.symfony.com).
     symfony server:start -d
     ```
 
+6. Compile the Sass files:
+    ```bash
+    php bin/console sass:build --watch
+    ```
+
 ### Running the Test Suite
 
 ```bash
