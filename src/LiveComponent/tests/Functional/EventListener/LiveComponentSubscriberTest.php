@@ -290,7 +290,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             })
             ->post('/_components/component2/increase', [
                 'headers' => ['X-CSRF-TOKEN' => $token],
-                'body' => json_encode(['props' => $dehydrated->getProps()]),
+                'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
