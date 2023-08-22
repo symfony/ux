@@ -192,6 +192,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('class="foo"', $output);
         $this->assertStringContainsString('Fabien', $output);
         $this->assertStringContainsString('test@test.com', $output);
+        $this->assertStringContainsString('class variable defined? no', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string
