@@ -60,14 +60,20 @@ A real-time product search component might look like this::
 
 Done! Now render it wherever you want:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
-    {{ component('ProductSearch') }}
+    <twig:ProductSearch />
 
 As a user types into the box, the component will automatically re-render
 and show the new results!
 
 Want some demos? Check out https://ux.symfony.com/live-component#demo
+
+.. versionadded:: 2.8
+
+    Before version 2.8, you could not make use of ``<twig:... />`` and instead 
+    components like this had to be rendered as ``{{ component('ProductSearch') }}``.
+    Using ``<twig:... />`` makes them feel more like real html-components!
 
 Installation
 ------------
@@ -219,9 +225,9 @@ Let's make our component more flexible by adding a ``$max`` property::
 With this change, we can control the ``$max`` property when rendering
 the component:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
-    {{ component('RandomNumber', { max: 500 }) }}
+    <twig:RandomNumber max="500" />
 
 But what's up with the ``LiveProp`` attribute? A property with the
 ``LiveProp`` attribute becomes a "stateful" property for this component.
@@ -1275,9 +1281,7 @@ Great! In the template for some page (e.g. an "Edit post" page), render a
     {% block body %}
         <h1>Edit Post</h1>
 
-        {{ component('PostForm', {
-            initialFormData: post,
-        }) }}
+        <twig:PostForm :initialFormData="post" />
     {% endblock %}
 
 Ok: time to build that ``PostForm`` component! The Live Components
@@ -1355,14 +1359,12 @@ The previous component can already be used to edit an existing post or create
 a new post. For a new post, either pass in a new ``Post`` object to ``initialFormData``,
 or omit it entirely to let the ``initialFormData`` property default to ``null``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/post/new.html.twig #}
     {# ... #}
 
-    {{ component('PostForm', {
-        form: form
-    }) }}
+    <twig:PostForm :form="form" />
 
 Submitting the Form via a LiveAction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1446,13 +1448,10 @@ If validation fails, you'll want the live component to render with the form
 errors instead of creating a fresh form. To do that, pass the ``form`` variable
 into the component:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/post/edit.html.twig #}
-    {{ component('PostForm', {
-        initialFormData: post,
-        form: form
-    }) }}
+    <twig:PostForn :initialFormData="post" :form="form" />
 
 Using Form Data in a LiveAction
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2473,9 +2472,7 @@ todo items:
             ...
         {% endfor %}
 
-        {{ component('TodoFooter', {
-            count: todos|length
-        }) }}
+        <twig:TodoFooter :count="todos|length" />
     </div>
 
 Suppose the user updates the ``listName`` model and the parent component
@@ -2505,7 +2502,7 @@ changes, the child will make a second Ajax request to re-render itself.
 
     To work, the name of the prop that's passed when rendering the ``TodoFooter``
     component must match the property name that has the ``updateFromParent`` - e.g.
-    ``{{ component('TodoFooter', { count: todos|length }) }}``. If you pass in a
+    ``<twig:TodoFooter :count="todos|length" />``. If you pass in a
     different name and set the ``count`` property via a ref:``mount()`` method, the
     child component will not re-render correctly.
 
@@ -2531,10 +2528,11 @@ that will change if the component should be totally re-rendered:
     <div {{ attributes }}>
         <!-- ... -->
 
-        {{ component('TodoFooter', {
-            count: todos|length,
-            'data-live-id': 'todo-footer-'~todos|length
-        }) }}
+        <twig:TodoFooter 
+            :count="todos|length"
+            :data-live-id="'todo-footer-'~todos|length"
+        />
+
     </div>
 
 In this case, if the number of todos change, then the ``data-live-id``
@@ -2593,13 +2591,13 @@ child model changes, that should also update a model on the
 parent. To do this, pass a ``dataModel`` (or ``data-model``)
 attribute to the child:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/PostForm.html.twig #}
-    {{ component('TextareaField', {
-        dataModel: 'content',
-        error: _errors.get('content'),
-    }) }}
+    <twig:TextareaField 
+        data-model="content"
+        :error="_errors.get('content')"
+    />
 
 This does two things:
 
@@ -2625,18 +2623,14 @@ syntax. The following is the same as above:
 
 .. code-block:: html+twig
 
-    <!-- same as dataModel: 'content' -->
-    {{ component('TextareaField', {
-        dataModel: 'content:value',
-    }) }}
+    <!-- same as data-model: 'content' -->
+    <twig:TextareaField data-model="content:value" />
 
 If your child component has multiple models, separate each with a space:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
-    {{ component('TextareaField', {
-        dataModel: 'user.firstName:first user.lastName:last',
-    }) }}
+    <twig:TextareaField data-model="user.firstName:first user.lastName:last" />
 
 In this case, the child component will receive ``first`` and ``last``
 props. And, when those update, the ``user.firstName`` and ``user.lastName``
@@ -2706,11 +2700,11 @@ In the ``EditPost`` template, you render the
                 value="{{ post.title }}"
             >
 
-            {{ component('MarkdownTextarea', {
-                name: 'post[content]',
-                dataModel: 'post.content:value',
-                label: 'Content',
-            }) }}
+            <twig:MarkdownTextarea
+                name="post[content]"
+                data-model="post.content:value"
+                label="Content"
+            />
 
             <button
                 data-action="live#action"
@@ -2772,14 +2766,14 @@ or existing child components may not disappear when they should.
 To fix this, add a ``key`` prop to each child component that's unique
 to that component:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/InvoiceCreator.html.twig #}
     {% for lineItem in invoice.lineItems %}
-        {{ component('InvoiceLineItemForm', {
-            lineItem: lineItem,
-            key: lineItem.id,
-        }) }}
+        <twig:InvoiceLineItemForm
+            :lineItem="lineItem"
+            :key="lineItem.id"
+        />
     {% endfor %}
 
 The ``key`` will be used to generate a ``data-live-id`` attribute,
@@ -2796,14 +2790,12 @@ Let's get fancier. After looping over the current line items, you
 decide to render one more component to create a *new* line item.
 In that case, you can pass in a ``key`` set to something like ``new_line_item``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/InvoiceCreator.html.twig #}
     // ... loop and render the existing line item components
 
-    {{ component('InvoiceLineItemForm', {
-        key: 'new_line_item',
-    }) }}
+    <twig:InvoiceLineItemForm key="new_line_item" />
 
 Imagine you also have a ``LiveAction`` inside of ``InvoiceLineItemForm``
 that saves the new line item to the database. To be extra fancy,
@@ -2877,11 +2869,9 @@ To fix this, you have two options:
 
 \1) Make the ``key`` dynamic so it will be different after adding a new item:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
-    {{ component('InvoiceLineItemForm', {
-        key: 'new_line_item_'~lineItems|length,
-    }) }}
+    <twig:InvoiceLineItemForm :key="'new_line_item_'~lineItems|length" />
 
 \2) Reset the state of the ``InvoiceLineItemForm`` component after it's saved::
 
