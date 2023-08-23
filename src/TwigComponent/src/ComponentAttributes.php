@@ -35,6 +35,10 @@ final class ComponentAttributes
             function (string $carry, string $key) {
                 $value = $this->attributes[$key];
 
+                if (!\is_scalar($value) && null !== $value) {
+                    throw new \LogicException(sprintf('A "%s" prop was passed when creating the component. No matching "%s" property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a %s). Did you mean to pass this to your component or is there a typo on its name?', $key, $key, get_debug_type($value)));
+                }
+
                 if (null === $value) {
                     trigger_deprecation('symfony/ux-twig-component', '2.8.0', 'Passing "null" as an attribute value is deprecated and will throw an exception in 3.0.');
                     $value = true;
@@ -143,5 +147,14 @@ final class ComponentAttributes
 
         // add the remaining attributes for values/classes
         return $clone->defaults($controllersAttributes);
+    }
+
+    public function remove($key): self
+    {
+        $attributes = $this->attributes;
+
+        unset($attributes[$key]);
+
+        return new self($attributes);
     }
 }

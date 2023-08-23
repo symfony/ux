@@ -91,14 +91,6 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->createComponent('component_c');
     }
 
-    public function testExceptionThrownIfUnableToWritePassedDataToPropertyAndIsNotScalar(): void
-    {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('But, the value is not a scalar (it\'s a stdClass)');
-
-        $this->createComponent('component_a', ['propB' => 'B', 'service' => new \stdClass()]);
-    }
-
     public function testStringableObjectCanBePassedToComponent(): void
     {
         $attributes = $this->factory()->create('component_a', ['propB' => 'B', 'data-item-id-param' => new class() {

@@ -28,17 +28,21 @@ class PropsNode extends Node
 
     public function compile(Compiler $compiler): void
     {
+        $compiler
+            ->addDebugInfo($this)
+            ->write('$propsNames = [];')
+        ;
+
         foreach ($this->getAttribute('names') as $name) {
             $compiler
-                ->addDebugInfo($this)
-                ->write('if (!isset($context[\''.$name.'\'])) {')
-            ;
+                ->write('$propsNames[] = \''.$name.'\';')
+                ->write('$context[\'attributes\'] = $context[\'attributes\']->remove(\''.$name.'\');')
+                ->write('if (!isset($context[\''.$name.'\'])) {');
 
             if (!$this->hasNode($name)) {
                 $compiler
                     ->write('throw new \Twig\Error\RuntimeError("'.$name.' should be defined for component '.$this->getTemplateName().'");')
-                    ->write('}')
-                ;
+                    ->write('}');
 
                 continue;
             }
@@ -47,8 +51,20 @@ class PropsNode extends Node
                 ->write('$context[\''.$name.'\'] = ')
                 ->subcompile($this->getNode($name))
                 ->raw(";\n")
-                ->write('}')
-            ;
+                ->write('}');
         }
+
+        $compiler
+            ->write('$attributesKeys = array_keys($context[\'attributes\']->all());')
+            ->raw("\n")
+            ->write('foreach ($context as $key => $value) {')
+            ->raw("\n")
+            ->write('if (in_array($key, $attributesKeys) && !in_array($key, $propsNames)) {')
+            ->raw("\n")
+            ->raw('unset($context[$key]);')
+            ->raw("\n")
+            ->write('}')
+            ->write('}')
+        ;
     }
 }
