@@ -1,0 +1,59 @@
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-08-15T10:02:45Z
+
+@weaverryan friendly ping here. I think we should merge a solution for this issue before the next release. Sorry about that 😔
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-08-15T11:21:37Z
+
+This originates from https://github.com/symfony/ux/pull/255/files#diff-ad19b699a899e152e1619ea828ba39d72a419702a33769092f35f39d65c23073R75 - because any "extra" props become attributes, which need to be strings. The idea was to give a better error now than some "cannot be cast to a string" type of error when the attributes are rendered. Perhaps we could put some check into `ComponentAttributes` for this.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-08-17T11:58:17Z
+
+Ok so here is how I trying to do this now: before mounting I extract the props defined in the component template, then when we mount the component, the component only takes as props the props defined in the tag, the rest goes to the attributes object.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-08-17T15:06:05Z
+
+> Ok so here is how I trying to do this now: before mounting I extract the props defined in the component template, then when we mount the component, the component only takes as props the props defined in the tag, the rest goes to the attributes object.
+
+Thanks for this :). I have an idea - I'm wondering if it is feasible or not. What if:
+
+A) We move the check for scalar props into `ComponentAttributes`. So, we move this - https://github.com/symfony/ux/pull/1041/files#diff-ad19b699a899e152e1619ea828ba39d72a419702a33769092f35f39d65c23073R108 - into `ComponentAttributes::__toString()` (https://github.com/symfony/ux/blob/2.x/src/TwigComponent/src/ComponentAttributes.php#L31) (note, back in the day throwing an exception from `__string()` caused a nasty, non-obvious exception - I can't remember if that's true anymore.
+
+B) At this point, if I understand correctly, ALL props I've passed to my anonymous component will be inside `ComponentAttributes`. We fix this entirely inside `PropsNode`: when we see `{% props`, we do 2 things:
+ * 1) Like now, if the variable doesn't exist, we use the default from `{% props`. So, this is what we have already.
+ * 2) We also *remove* any props in `{% props` from `ComponentAttributes`.
+
+ And, voila! As long as you have `{% props` at the top of your template (a requirement), then by the time you render `{{ attributes }}`, anything that are actually props will have already been removed. If we do this, I think `AnonymousComponent` won't even need to mount `$props` anymore or put it into a property - I think it could be empty.
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-08-17T17:41:55Z
+
+@weaverryan I think I manage to implement your solution! Tell me what you think about it! 😁
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-08-18T10:18:58Z
+
+Thanks for your review! Looks like the tests failing are related to the form changed but not this PR
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-08-22T17:42:06Z
+
+Friendly ping @WebMamba - I think that last tweak, relative to the work you've already done, is quite minor :)
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-08-22T22:52:32Z
+
+Sorry for the delay I am on holiday with all my family so I don't have a lot of time for coding! Here is a fix tell me what you think about it 😁
