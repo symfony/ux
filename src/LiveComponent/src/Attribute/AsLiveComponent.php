@@ -65,9 +65,15 @@ final class AsLiveComponent extends AsTwigComponent
      *
      * @return \ReflectionMethod[]
      */
-    public static function preReRenderMethods(object $component): \Traversable
+    public static function preReRenderMethods(object $component): iterable
     {
-        yield from self::attributeMethodsFor(PreReRender::class, $component);
+        $methods = iterator_to_array(self::attributeMethodsFor(PreReRender::class, $component));
+
+        usort($methods, static function (\ReflectionMethod $a, \ReflectionMethod $b) {
+            return $a->getAttributes(PreReRender::class)[0]->newInstance()->priority <=> $b->getAttributes(PreReRender::class)[0]->newInstance()->priority;
+        });
+
+        return array_reverse($methods);
     }
 
     /**

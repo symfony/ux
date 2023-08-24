@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Tests\Unit\Attribute;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component5;
 
 /**
@@ -36,12 +37,31 @@ final class AsLiveComponentTest extends TestCase
         $this->assertSame('method5', $methods[0]->getName());
     }
 
-    public function testCanGetPreReRenderMethods(): void
+    public function testPreMountHooksAreOrderedByPriority(): void
     {
-        $methods = iterator_to_array(AsLiveComponent::preReRenderMethods(new Component5()));
+        $hooks = AsLiveComponent::preReRenderMethods(
+            new class() {
+                #[PreReRender(priority: -10)]
+                public function hook1()
+                {
+                }
 
-        $this->assertCount(1, $methods);
-        $this->assertSame('method3', $methods[0]->getName());
+                #[PreReRender(priority: 10)]
+                public function hook2()
+                {
+                }
+
+                #[PreReRender]
+                public function hook3()
+                {
+                }
+            }
+        );
+
+        $this->assertCount(3, $hooks);
+        $this->assertSame('hook2', $hooks[0]->name);
+        $this->assertSame('hook3', $hooks[1]->name);
+        $this->assertSame('hook1', $hooks[2]->name);
     }
 
     public function testCanGetLiveListeners(): void
