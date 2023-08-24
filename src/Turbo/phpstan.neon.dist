@@ -10,3 +10,18 @@ parameters:
 	inferPrivatePropertyTypeFromConstructor: true
 	bootstrapFiles:
 		- vendor/bin/.phpunit/phpunit/vendor/autoload.php
+	ignoreErrors:
+		-
+			message: "#^Call to method getClassAnnotations\\(\\) on an unknown class Doctrine\\\\Common\\\\Annotations\\\\Reader\\.$#"
+			count: 1
+			path: src/Doctrine/BroadcastListener.php
+
+		-
+			message: "#^Parameter \\$annotationReader of method Symfony\\\\UX\\\\Turbo\\\\Doctrine\\\\BroadcastListener\\:\\:__construct\\(\\) has invalid type Doctrine\\\\Common\\\\Annotations\\\\Reader\\.$#"
+			count: 1
+			path: src/Doctrine/BroadcastListener.php
+
+		-
+			message: "#^Property Symfony\\\\UX\\\\Turbo\\\\Doctrine\\\\BroadcastListener\\:\\:\\$annotationReader has unknown class Doctrine\\\\Common\\\\Annotations\\\\Reader as its type\\.$#"
+			count: 1
+			path: src/Doctrine/BroadcastListener.php

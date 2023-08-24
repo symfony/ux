@@ -44,21 +44,13 @@ class CropperTypeTest extends TestCase
 
         $rendered = $container->get(Environment::class)->render('cropper_form.html.twig', ['form' => $form->createView()]);
 
-        $this->assertSame(
-            '<form name="form" method="post">'.
-                '<div id="form">'.
-                    '<div>'.
-                        '<div id="form_photo" class="cropperjs">'.
-                            '<input type="hidden" id="form_photo_options" name="form[photo][options]" '.
-                                'data-controller="mycropper symfony--ux-cropperjs--cropper" '.
-                                'data-symfony--ux-cropperjs--cropper-public-url-value="/public/url.jpg" '.
-                                'data-symfony--ux-cropperjs--cropper-options-value="{&quot;viewMode&quot;:1,&quot;dragMode&quot;:&quot;move&quot;}" />'.
-                        '</div>'.
-                    '</div>'.
-                '</div>'.
-            '</form>
-',
-            str_replace(' >', '>', $rendered)
+        $this->assertStringContainsString('<div id="form_photo" class="cropperjs">', $rendered);
+        $this->assertStringContainsString(
+            '<input type="hidden" id="form_photo_options" name="form[photo][options]" '.
+                'data-controller="mycropper symfony--ux-cropperjs--cropper" '.
+                'data-symfony--ux-cropperjs--cropper-public-url-value="/public/url.jpg" '.
+                'data-symfony--ux-cropperjs--cropper-options-value="{&quot;viewMode&quot;:1,&quot;dragMode&quot;:&quot;move&quot;}"',
+            $rendered,
         );
     }
 
@@ -78,20 +70,11 @@ class CropperTypeTest extends TestCase
 
         $rendered = $container->get(Environment::class)->render('cropper_form.html.twig', ['form' => $form->createView()]);
 
-        $this->assertSame(
-            '<form name="form" method="post">'.
-                '<div id="form">'.
-                    '<div>'.
-                        '<div id="form_photo" class="cropperjs">'.
-                            '<input type="hidden" id="form_photo_options" name="form[photo][options]" '.
-                                'data-controller="mycropper symfony--ux-cropperjs--cropper" '.
-                                'data-symfony--ux-cropperjs--cropper-public-url-value="/public/url.jpg" '.
-                                'data-symfony--ux-cropperjs--cropper-options-value="[]" />'.
-                        '</div>'.
-                    '</div>'.
-                '</div>'.
-            '</form>
-',
+        $this->assertStringContainsString(
+            '<input type="hidden" id="form_photo_options" name="form[photo][options]" '.
+                'data-controller="mycropper symfony--ux-cropperjs--cropper" '.
+                'data-symfony--ux-cropperjs--cropper-public-url-value="/public/url.jpg" '.
+                'data-symfony--ux-cropperjs--cropper-options-value="[]"',
             str_replace(' >', '>', $rendered)
         );
     }

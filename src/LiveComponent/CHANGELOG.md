@@ -3,6 +3,9 @@
 ## 2.11.0
 
 -   Add helper for testing live components.
+-   Add initial file upload support.
+-   Respect `data-turbo="false"` when handling redirects.
+-   Fix checksum calculation for deeply nested data.
 
 ## 2.9.0
 

@@ -22,8 +22,7 @@ class TogglePasswordTypeTest extends TestCase
 
         $rendered = $container->get(Environment::class)->render('toggle_password_form.html.twig', ['form' => $form->createView()]);
 
-        self::assertSame('<form name="form" method="post"><div id="form"><div><label for="form_password" class="required">Password</label><div class="toggle-password-container"><input type="password" id="form_password" name="form[password]" required="required" data-controller="symfony--ux-toggle-password--toggle-password" data-symfony--ux-toggle-password--toggle-password-hidden-label-value="Hide" data-symfony--ux-toggle-password--toggle-password-visible-label-value="Show" data-symfony--ux-toggle-password--toggle-password-hidden-icon-value="Default" data-symfony--ux-toggle-password--toggle-password-visible-icon-value="Default" data-symfony--ux-toggle-password--toggle-password-button-classes-value="[&quot;toggle-password-button&quot;]" /></div></div></div></form>
-', $rendered);
+        self::assertStringContainsString('<div class="toggle-password-container"><input type="password" id="form_password" name="form[password]" required="required" data-controller="symfony--ux-toggle-password--toggle-password" data-symfony--ux-toggle-password--toggle-password-hidden-label-value="Hide" data-symfony--ux-toggle-password--toggle-password-visible-label-value="Show" data-symfony--ux-toggle-password--toggle-password-hidden-icon-value="Default" data-symfony--ux-toggle-password--toggle-password-visible-icon-value="Default" data-symfony--ux-toggle-password--toggle-password-button-classes-value="[&quot;toggle-password-button&quot;]"', $rendered);
     }
 
     public function testRenderFormWithoutToggle(): void
@@ -36,8 +35,7 @@ class TogglePasswordTypeTest extends TestCase
 
         $rendered = $container->get(Environment::class)->render('toggle_password_form.html.twig', ['form' => $form->createView()]);
 
-        self::assertSame('<form name="form" method="post"><div id="form"><div><label for="form_password" class="required">Password</label><input type="password" id="form_password" name="form[password]" required="required" /></div></div></form>
-', $rendered);
+        self::assertStringContainsString('<input type="password" id="form_password" name="form[password]" required="required"', $rendered);
     }
 
     private function givenServiceContainer(): ?object

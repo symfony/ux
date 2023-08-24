@@ -57,6 +57,8 @@ class StimulusTestKernel extends Kernel
                 ],
             ],
             'test' => true,
+            'handle_all_throwables' => true,
+            'php_errors' => ['log' => true],
         ]);
 
         $container->extension('twig', [
