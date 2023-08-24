@@ -830,9 +830,11 @@ The ``with`` data is what's mounted on the component object.
         {% endblock %}
     {% endcomponent %}
 
-.. note::
+.. versionadded:: 2.11
 
-    The ``{% component %}`` syntax *cannot* currently be used with LiveComponents.
+    The ``{% component %}`` syntax can also be used with LiveComponents since 2.11.
+    However, there are some caveats related to the context between parent and child
+    components during re-rending. Read `Passing Blocks to Live Components`_.
 
 Inheritance & Forwarding "Outer Blocks"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1004,8 +1006,10 @@ This requires Twig 3.7.0 or higher:
 
     <twig:Alert{{ ...myAttributes }} />
 
-Passing Blocks to your Component
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. _passing-blocks:
+
+Passing Content (Blocks) to Components
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can also pass content directly to your component:
 
@@ -1121,5 +1125,6 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`live component`: https://symfony.com/bundles/ux-live-component/current/index.html
 .. _`Vue`: https://v3.vuejs.org/guide/computed.html
 .. _`Live Nested Components`: https://symfony.com/bundles/ux-live-component/current/index.html#nested-components
+.. _`Passing Blocks to Live Components`: https://symfony.com/bundles/ux-live-component/current/index.html#passing-blocks
 .. _`embed tag`: https://twig.symfony.com/doc/3.x/tags/embed.html
 .. _`Stimulus controller`: https://symfony.com/bundles/StimulusBundle/current/index.html
