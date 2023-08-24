@@ -259,6 +259,19 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         ;
     }
 
+    public function testItWorksWithNamespacedTemplateNamesForEmbeddedComponents(): void
+    {
+        $templateName = 'render_embedded_with_blocks.html.twig';
+        $obscuredName = 'fb7992f74bbb43c08e47b7cf5c880edb';
+        $this->addTemplateMap($obscuredName, $templateName);
+
+        $this->browser()
+            ->visit('/render-namespaced-template/render_embedded_with_blocks')
+            ->assertSuccessful()
+            ->assertElementAttributeContains('.component2', 'data-live-props-value', '"data-host-template":"'.$obscuredName.'"')
+        ;
+    }
+
     public function testItUseBlocksFromEmbeddedContextUsingMultipleComponents(): void
     {
         $templateName = 'render_multiple_embedded_with_blocks.html.twig';
