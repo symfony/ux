@@ -29,6 +29,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\Entity2Normalizer;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\MoneyNormalizer;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 use Zenstruck\Foundry\ZenstruckFoundryBundle;
 
 use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
@@ -50,6 +51,13 @@ final class Kernel extends BaseKernel
         $twig ??= $this->container->get('twig');
 
         return new Response($twig->render("{$template}.html.twig"));
+    }
+
+    public function renderNamespacedTemplate(string $template, Environment $twig = null): Response
+    {
+        $twig ??= $this->container->get('twig');
+
+        return new Response($twig->render('@'.FilesystemLoader::MAIN_NAMESPACE.'/'.$template.'.html.twig'));
     }
 
     public function registerBundles(): iterable
@@ -142,6 +150,7 @@ final class Kernel extends BaseKernel
             ->prefix('/_components');
 
         $routes->add('template', '/render-template/{template}')->controller('kernel::renderTemplate');
+        $routes->add('render_namespaced_template', '/render-namespaced-template/{template}')->controller('kernel::renderNamespacedTemplate');
         $routes->add('homepage', '/')->controller('kernel::index');
         $routes->add('alternate_live_route', '/alt/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
     }

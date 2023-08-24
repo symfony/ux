@@ -68,7 +68,7 @@ final class ComponentNode extends EmbedNode
             ->raw('), ')
             ->raw($this->getAttribute('only') ? '[]' : '$context')
             ->raw(', ')
-            ->string($this->getAttribute('name'))
+            ->string($this->parseTemplateName($this->getAttribute('name')))
             ->raw(', ')
             ->raw($this->getAttribute('index'))
             ->raw(");\n")
@@ -90,5 +90,21 @@ final class ComponentNode extends EmbedNode
             ->write('}')
             ->raw("\n")
         ;
+    }
+
+    /**
+     * Copied from Twig\Loader\FilesystemLoader, and adjusted to needs for this class.
+     */
+    private function parseTemplateName(string $name): mixed
+    {
+        if (isset($name[0]) && '@' == $name[0]) {
+            if (false === $pos = strpos($name, '/')) {
+                throw new \LogicException(sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
+            }
+
+            return substr($name, $pos + 1);
+        }
+
+        return $name;
     }
 }
