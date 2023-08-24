@@ -2506,7 +2506,7 @@ changes, the child will make a second Ajax request to re-render itself.
     To work, the name of the prop that's passed when rendering the ``TodoFooter``
     component must match the property name that has the ``updateFromParent`` - e.g.
     ``{{ component('TodoFooter', { count: todos|length }) }}``. If you pass in a
-    different name and set the ``count`` property via a ref:``mount()`` method, the
+    different name and set the ``count`` property via a `mount() <https://symfony.com/bundles/ux-twig-component/current/index.html#the-mount-method>`_ method, the
     child component will not re-render correctly.
 
 Child components keep their modifiable LiveProp values
