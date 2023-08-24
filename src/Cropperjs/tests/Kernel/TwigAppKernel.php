@@ -37,7 +37,21 @@ class TwigAppKernel extends Kernel
     public function registerContainerConfiguration(LoaderInterface $loader)
     {
         $loader->load(function (ContainerBuilder $container) {
-            $container->loadFromExtension('framework', ['secret' => '$ecret', 'test' => true, 'http_method_override' => false]);
+            $frameworkConfig = [
+                'secret' => '$ecret',
+                'test' => true,
+                'http_method_override' => false,
+                'php_errors' => ['log' => true],
+                'validation' => [
+                    'email_validation_mode' => 'html5',
+                ],
+            ];
+
+            if (self::VERSION_ID >= 60200) {
+                $frameworkConfig['handle_all_throwables'] = true;
+            }
+
+            $container->loadFromExtension('framework', $frameworkConfig);
             $container->loadFromExtension('twig', ['default_path' => __DIR__.'/templates', 'strict_variables' => true, 'exception_controller' => null]);
 
             // create a public alias - FormFactoryInterface is removed otherwise

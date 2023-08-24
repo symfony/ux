@@ -92,3 +92,5 @@ jobs:
             - name: Run tests
               working-directory: src/Turbo
               run: vendor/bin/simple-phpunit
+              env:
+                  SYMFONY_DEPRECATIONS_HELPER: 'max[self]=1'

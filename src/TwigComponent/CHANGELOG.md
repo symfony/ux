@@ -3,7 +3,10 @@
 ## 2.11.0
 
 -   Support ...spread operator with html syntax (requires Twig 3.7.0 or higher)
+-   Add support for anonymous Twig components.
 -   Add `RenderedComponent::crawler()` and `toString()` methods.
+-   Allow a block outside a Twig component to be available inside via `outerBlocks`.
+-   Fix `<twig:component>` syntax where an attribute is set to an empty value.
 
 ## 2.9.0
 

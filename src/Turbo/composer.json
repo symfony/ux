@@ -38,7 +38,6 @@
         "symfony/stimulus-bundle": "^2.9.1"
     },
     "require-dev": {
-        "doctrine/annotations": "^1.12",
         "doctrine/doctrine-bundle": "^2.4.3",
         "doctrine/orm": "^2.8 | 3.0",
         "phpstan/phpstan": "^1.10",
@@ -49,6 +48,7 @@
         "symfony/messenger": "^5.4|^6.0",
         "symfony/panther": "^1.0|^2.0",
         "symfony/phpunit-bridge": "^5.4|^6.0",
+        "symfony/process": "^5.4|6.3.*",
         "symfony/property-access": "^5.4|^6.0",
         "symfony/security-core": "^5.4|^6.0",
         "symfony/stopwatch": "^5.4|^6.0",
