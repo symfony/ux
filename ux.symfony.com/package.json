@@ -3,16 +3,13 @@
         "@babel/cli": "^7.21.5",
         "@babel/core": "^7.21.8",
         "@babel/preset-react": "^7.18.6",
-        "sass": "^1.62.1",
         "svelte": "^3.59.1"
     },
     "license": "MIT",
     "private": true,
     "scripts": {
-        "build": "yarn build-sass && yarn build-react && yarn build-svelte",
+        "build": "yarn build-react && yarn build-svelte",
         "build-react": "babel assets/react --out-dir assets/build/react --presets=@babel/preset-react",
-        "build-sass": "sass assets/styles/app.scss assets/styles/app.css",
-        "watch-sass": "sass assets/styles/app.scss assets/styles/app.css --watch",
         "build-svelte": "node bin/compile_svelte.js"
     }
 }

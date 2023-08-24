@@ -24,5 +24,8 @@ jobs:
               with:
                 working-directory: ux.symfony.com
 
+            - name: Build Sass assets
+              run: php bin/console sass:build
+
             - name: Tests
               run: vendor/bin/phpunit

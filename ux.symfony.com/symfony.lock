@@ -654,6 +654,9 @@
     "symfony/yaml": {
         "version": "v6.0.3"
     },
+    "symfonycasts/sass-bundle": {
+        "version": "v0.1.0"
+    },
     "theseer/tokenizer": {
         "version": "1.2.1"
     },
