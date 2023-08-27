@@ -6,9 +6,9 @@
 
 {% for fileInfo in files %}
     {% if fileInfo.isDirectory %}
-        <li class="file-tree-main">
+        <li class="file-tree-main file-tree-dir">
             <span {{- _self.summaryAttributes(fileInfo.description) -}}>
-                <i class="fas fa-folder-open pe-2"></i>
+                <twig:Icon name="folder-open" class="d-inline-block m-0 mr-2"/>
                 {{ fileInfo.filename }}
             </span>
 
@@ -19,9 +19,10 @@
             </ul>
         </li>
     {% else %}
-        <li class="file-tree-main">
+        <li class="file-tree-main file-tree-file">
             <span {{- _self.summaryAttributes(fileInfo.description) -}}>
-                <i class="fas fa-folder pe-2"></i>{{ fileInfo.filename }}
+                <twig:Icon name="folder" class="d-inline-block m-0 mr-2" />
+                {{ fileInfo.filename }}
             </span>
         </li>
     {% endif %}

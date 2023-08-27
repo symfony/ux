@@ -3,7 +3,7 @@
   <div class="container-fluid">
     <a href="{{ path('app_homepage') }}" class="logo{{ whiteMode|default ? '-white' }}"></a>
     <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavToggler" aria-controls="mainNavToggler" aria-expanded="false" aria-label="Toggle navigation">
-        <i class="fa-solid fa-bars {{ whiteMode|default ? 'nav-white-mode' }}"></i>
+        <twig:Icon name="menu" class="{{ whiteMode|default ? 'nav-white-mode' }}" />
     </button>
     <div class="navbar-collapse collapse mt-3 mt-lg-0" id="mainNavToggler" style="">
         <div class="me-auto"></div>
@@ -21,7 +21,7 @@
                 id="components-dropdown-button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-            >Components <i class="fa-solid fa-angle-down"></i></button>
+            >Components <twig:Icon name="chevron-down" /></button>
             <ul class="dropdown-menu" aria-labelledby="components-dropdown-button">
                 {% for package in twigPackageHelper.topNavPackages %}
                 <li>
@@ -45,11 +45,10 @@
         {#
         TODO: add dark mode
         <a class="nav-options" href="#">
-            <i class="fa-solid fa-moon me-4 nav-options-icon"></i>
         </a>
         #}
         <a class=" my-2 my-lg-0 ms-2 ms-lg-0 nav-options" href="https://github.com/symfony/ux" rel="external noopener noreferrer">
-            <i class="fa-brands fa-github nav-options-icon"></i>
+            <twig:Icon name="github" class="nav-options-icon" />
         </a>
     </div>
   </div>

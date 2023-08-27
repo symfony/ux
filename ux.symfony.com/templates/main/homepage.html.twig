@@ -47,7 +47,10 @@
     <p class="eyebrows" style="margin-top: 70px;">Stimulus Controllers</p>
     <div class="d-md-flex justify-content-md-between text-center text-md-start">
         <h2 class="ubuntu pt-2 component-headlines">Write custom JavaScript inside <span class="hero">Stimulus Controllers</span></h2>
-        <a style="height: 100%;" class="btn btn-md btn-outline-dark my-3 my-md-0" href="https://symfony.com/doc/current/frontend/ux.html">Read full Documentation <i class="fa-solid fa-arrow-right ms-2" style="transform: rotate(-45deg);"></i></a>
+        <a style="height: 100%;" class="btn btn-md btn-outline-dark my-3 my-md-0" href="https://symfony.com/doc/current/frontend/ux.html">
+            Read full Documentation
+            <twig:Icon name="arrow-right" style="transform: rotate(-45deg);"/>
+        </a>
     </div>
 
     <div class="arrow mb-3 d-none d-md-block"></div>
@@ -77,7 +80,7 @@
         </div>
         <div class="col-12 col-md-2 text-center">
             <button class="btn btn-sm btn-dark mt-3" {{ stimulus_action('markdown', 'render') }}>
-                Convert <i class="fa fa-arrow-right"></i>
+                Convert <twig:Icon name="arrow-right" />
             </button>
         </div>
         <div class="col-12 col-md-5 mt-3 mt-md-0">
@@ -91,7 +94,10 @@
     <p class="eyebrows" style="margin-top: 111px;">Components</p>
     <div class="d-md-flex justify-content-md-between text-center text-md-start">
         <h2 class="ubuntu pt-2 component-headlines">Install extra <span class="hero">Components</span></h2>
-        <a style="height: 100%;" class="btn btn-md btn-outline-dark mt-3 mt-md-0"  href="{{ path('app_all_components')}}">Browse all Components <i class="fa-solid fa-arrow-right-long ms-2"></i></a>
+        <a style="height: 100%;" class="btn btn-md btn-outline-dark mt-3 mt-md-0"  href="{{ path('app_all_components')}}">
+            Browse all Components
+            <twig:Icon name="arrow-right" style="transform: rotate(-45deg);"/>
+        </a>
     </div>
     <div class="row mt-3 mt-md-5">
         {{ include('main/_componentsList.html.twig') }}

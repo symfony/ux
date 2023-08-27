@@ -37,12 +37,7 @@
     border-radius: 12px;
 }
 
-.component-container-shadow {
-    box-shadow: 0px 8px 16px -10px rgba(0, 0, 0, 0.12);
-}
-.component-container-shadow:hover {
-    box-shadow: 2px 3px 9px 4px rgb(0 0 0 / 12%);
-}
+
 
 .demo-container {
     background-color: white;
@@ -143,54 +138,48 @@
     line-height: 50px;
 }
 
+
+.file-tree ul {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+.file-tree li > span {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
 .file-tree-main::before {
     background: none!important;
 }
 
-.file-tree ul>:not(ul),
 .file-tree ul {
   position: relative;
+  padding-inline-start: 1rem;
 }
-.file-tree ul :not(span) {
-  margin-left: 20px;
-}
-.file-tree ul span {
-  display: inline;
-}
+
 .file-tree .tooltip-inner {
     max-width: 350px;
 }
 .file-tree.nodots ul :not(span) {
   margin-left: 12px;
 }
-.file-tree ul::before,
-.file-tree ul>:not(ul)::before {
+.file-tree ul::before {
   content: '';
-  width: 10px;
+  width: 1rem;
+  background: url(../images/dot.svg) left top / 2px 2px;
   display: block;
   position: absolute;
-}
-.file-tree ul::before,
-.file-tree ul>:not(ul)::before {
-  background: url(../images/dot.svg) left top / 2px 2px;
-}
-
-.file-tree.nodots ul::before,
-.file-tree.nodots ul>:not(span)::before {
-  background-image: none;
 }
 .file-tree ul::before {
   top: 0;
   height: 100%;
   background-repeat: repeat-y;
-  left: 5px;
+  background-position: center;
+  left: 0;
   z-index: -1;
-}
-.file-tree ul>:not(ul)::before {
-  top: 8px;
-  height: calc(100% - 8px);
-  background-repeat: repeat-x;
-  left: -15px;
 }
 
 

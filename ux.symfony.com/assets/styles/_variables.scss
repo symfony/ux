@@ -12,3 +12,23 @@ $n-900: #0D0D0D;
 $red: #FB4040;
 $yellow: #FBC640;
 $green: #84DE2C;
+
+
+
+
+@at-root :root {
+
+  // Borders
+  --border-radius-small: .5rem;
+  --border-radius: 1rem;
+  --border-radius-large: 1.5rem;
+  --border-color: #{$n-100};
+
+  // Spaces
+  --space-smaller: .5rem;
+  --space-small: .75rem;
+  --space-regular: 1rem;
+  --space-large: 1.5rem;
+  --space-larger: 2rem;
+
+}

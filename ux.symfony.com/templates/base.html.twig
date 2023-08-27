@@ -1,13 +1,13 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <meta charset="UTF-8">
         <title>{% block title %}Symfony UX: JavaScript tools you'll love{% endblock %}</title>
-        <link rel="shortcut icon" type="image/svg+xml" href="{{ asset('favicon-sf-ux.svg') }}">
-        <link rel="alternate icon" type="image/png" sizes="16x16" href="{{ asset('favicon-16x16.png') }}">
-        <link rel="alternate icon" type="image/png" sizes="32x32" href="{{ asset('favicon-16x16.png') }}">
+        <link rel="icon" href="/favicon.ico" sizes="48x48">
+        <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml">
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="manifest" href="/site.webmanifest" />
         <link rel="mask-icon" href="https://symfony.com/favicons/safari-pinned-tab.svg" color="#5bbad5">
-        <link rel="apple-touch-icon" sizes="180x180" href="{{ asset('apple-touch-icon.png') }}">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         {% block stylesheets %}
             <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:200,400,600|Playfair+Display:400,700i|Space+Mono|Ubuntu:400,700&display=swap">
@@ -16,35 +16,57 @@
         {% endblock %}
 
         {% block javascripts %}
-            <script src="https://kit.fontawesome.com/2ac393ea81.js" crossorigin="anonymous"></script>
             {{ importmap('app') }}
         {% endblock %}
     </head>
     <body>
         {% block body %}{% endblock %}
 
-        <footer class="p-5 mt-5">
-            <div class="row">
-                <div class="col-12 col-md-4 text-center text-md-start">
-                    <p style="font-size: 14px;">&copy; {{ 'now'|date('Y')}} Symfony Inc. All rights reserved.</p>
-                </div>
-                <div class="col-12 col-md-2 order-md-3 text-center text-md-end">
-                    <a href="https://github.com/symfony/ux" rel="external noopener noreferrer" style="color: #0A0A0A;">
-                        <i class="fab fa-github"></i>
-                    </a>
-                </div>
-                <div class="col-12 col-md-6 order-md-2">
-                    <p class="mt-3 mt-md-0 text-center" style="font-size: 11px; text-transform: uppercase;">
-                        crafted by
-                        <span style="font-weight: 700;">
-                            <a href="https://symfonycasts.com" rel="external noopener noreferrer">SymfonyCasts</a> &amp;
-                            <a href="https://locastic.com" rel="external noopener noreferrer">Locastic</a>,
-                        </span>
-                        hosted with
-                        <span style="font-weight: 700;">
-                            <a href="https://platform.sh" rel="external noopener noreferrer">Platform.sh</a>
-                        </span>
-                    </p>
+        <footer>
+            <div class="container-fluid container-xxl py-5 px-lg-5">
+                <div class="row" style="--bs-gutter-x: 0;">
+                    <div class="col-12 col-xl-3 order-xl-3 text-center text-xl-end">
+                        <a href="https://github.com/symfony/ux" rel="external noopener noreferrer"
+                           style="color: #0A0A0A; font-size: 1.5rem;">
+                            <twig:Icon name="github" />
+                        </a>
+                        <a href="https://symfony.com" rel="external noopener noreferrer"
+                           style="color: #0A0A0A; font-size: 1.5rem;">
+                            <twig:Icon name="symfony" />
+                        </a>
+                    </div>
+                    <div class="col-12 col-xl-6 order-xl-2">
+                        <p class="mb-xl-0 mt-3 mt-xl-0 text-center" style="font-size: 12px; text-transform: uppercase;">
+                            <span class="d-block d-md-inline">
+                                crafted by
+                                <a href="https://symfonycasts.com"
+                                   rel="external noopener noreferrer"
+                                   style="font-weight: 700;"
+                                >SymfonyCasts</a>
+                                &amp;
+                                <a href="https://locastic.com"
+                                   rel="external noopener noreferrer"
+                                   style="font-weight: 700;"
+                                >Locastic</a><span class="d-none d-md-inline">,</span>
+                            </span>
+                            <span class="d-block d-md-inline">
+                                hosted with
+                                <span style="font-weight: 700;">
+                                    <a href="https://platform.sh"
+                                       rel="external noopener noreferrer"
+                                       style="font-weight: 700;"
+                                    >Platform.sh</a>
+                                </span>
+                            </span>
+                        </p>
+                    </div>
+                    <div class="col-12 col-xl-3 text-center text-xl-start">
+                        <p class="mb-0" style="font-size: 11px; text-transform: uppercase;">
+                            &copy;
+                            <a href="https://symfony.com" style="font-weight: 700;">Symfony</a>
+                            All rights reserved.
+                        </p>
+                    </div>
                 </div>
             </div>
         </footer>
