@@ -99,6 +99,8 @@ The official UX packages are:
 * `ux-react`_: Render `React`_ component from Twig (`see demo <https://ux.symfony.com/react>`_)
 * `ux-svelte`_: Render `Svelte`_ component from Twig (`see demo <https://ux.symfony.com/svelte>`_)
 * `ux-swup`_: Integration with `Swup`_ (`see demo <https://ux.symfony.com/swup>`_)
+* `ux-toggle-password`_: Toggle visibility of password inputs
+  (`see demo <https://ux.symfony.com/toggle-password>`_)
 * `ux-translator`_: Use your Symfony translations in JavaScript `Swup`_ (`see demo <https://ux.symfony.com/translator>`_)
 * `ux-turbo`_: Integration with `Turbo Drive`_ for a single-page-app experience
   (`see demo <https://ux.symfony.com/turbo>`_)
@@ -530,6 +532,7 @@ it will normalize it:
 .. _`ux-react`: https://symfony.com/bundles/ux-react/current/index.html
 .. _ux-translator: https://symfony.com/bundles/ux-translator/current/index.html
 .. _`ux-swup`: https://symfony.com/bundles/ux-swup/current/index.html
+.. _`ux-toggle-password`: https://symfony.com/bundles/ux-toggle-password/current/index.html
 .. _`ux-turbo`: https://symfony.com/bundles/ux-turbo/current/index.html
 .. _`ux-twig-component`: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _`ux-typed`: https://symfony.com/bundles/ux-typed/current/index.html
