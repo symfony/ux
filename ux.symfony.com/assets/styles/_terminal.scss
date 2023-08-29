@@ -26,15 +26,17 @@
 
 .terminal-wrapper .terminal-controls {
     position: absolute;
-    top: 6px;
+    top: 8px;
     left: 12px;
+    display: flex;
+    align-items: center;
+    gap: .5rem;
 }
 .terminal-wrapper .terminal-controls span {
     display: inline-block;
-    width: 12px;
-    height: 12px;
+    width: .75rem;
+    height: .75rem;
     border-radius: 50%;
-    margin-right: 10px;
 }
 
 .red {

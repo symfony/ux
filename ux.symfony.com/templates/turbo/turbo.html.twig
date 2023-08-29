@@ -27,8 +27,9 @@
 
                 <div class="alert alert-secondary d-flex justify-content-start col-12 col-md-9 mt-5">
                     <img width="18px" height="18px" src="{{ asset('images/info-icon.png') }}" alt="Icon to indication information">
-                    <p class="info-tooltips ms-2 mb-0"><i class="fa-solid fa-arrow-left"></i>
-                    Click any links on this site or submit this form.
+                    <p class="info-tooltips ms-2 mb-0">
+                        <twig:Icon name="arrow-left"/>
+                        Click any links on this site or submit this form.
                     Zero full page refreshes!</p>
                 </div>
             </div>
@@ -42,7 +43,7 @@
                         {% if name and animal %}
                             <div>Say hello to {{ name }} the brave & noble {{ animal }}!</div>
 
-                            <a href="{{ path('app_turbo') }}"><i class="fa-solid fa-arrow-left-long"></i> Back</a>
+                            <a href="{{ path('app_turbo') }}"><twig:Icon name="arrow-left" /> Back</a>
                         {% else %}
                             <div class="mb-3">Build yourself a new pet</div>
                             <form method="POST" novalidate>
@@ -78,7 +79,7 @@
                     The frame displays just part of the full page from
                     <a href="{{ path('app_turbo_todo_list') }}">{{ url('app_turbo_todo_list') }}</a>.
                     All link clicks and form submits stay *inside* the frame.
-                    <i class="fa-solid fa-arrow-right"></i></p>
+                    <twig:Icon name="arrow-right" /></p>
                 </div>
             </div>
 
@@ -109,10 +110,10 @@
 
                 <div class="alert alert-secondary d-flex justify-content-start col-12 col-md-9 mt-5">
                     <img width="18px" height="18px" src="{{ asset('images/info-icon.png') }}" alt="Icon to indication information">
-                    <p class="info-tooltips ms-2 mb-0"><i class="fa-solid fa-arrow-left"></i>
+                    <p class="info-tooltips ms-2 mb-0"><twig:Icon name="arrow-left" />
                     Chat with someone else viewing this page (or open a
                     2nd browser tab to talk to yourself)! Submitting also
-                    updates the <a href="#message-count-header"><i class="fa fa-comment"></i> icon</a> in the header.</p>
+                    updates the <a href="#message-count-header"><twig:Icon name="comment" /> icon</a> in the header.</p>
                 </div>
             </div>
             <div class="col-12 col-md-6 demo-chat">

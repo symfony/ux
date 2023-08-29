@@ -13,12 +13,12 @@
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
         title="View on GitHub"
-    ><i class="fa-brands fa-github"></i></a>
+    ><twig:Icon name="github" /></a>
     <button
         type="button"
         class="btn btn-copy btn-sm"
         {{ stimulus_action('ux-clipboard', 'copy') }}
-    ><i class="fa-solid fa-copy"></i>
+    ><twig:Icon name="copy"/>
         <span {{ stimulus_target('ux-clipboard', 'button') }}> Copy</span>
     </button>
 </div>

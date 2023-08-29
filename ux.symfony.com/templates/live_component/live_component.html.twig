@@ -17,8 +17,6 @@
     {% endcomponent %}
 {% endblock %}
 
-
-
 {% block code_block_left %}
     <twig:CodeBlock filename="src/Twig/SearchPackages.php" />
 {% endblock %}
@@ -33,12 +31,12 @@
 {% block demo_content %}
     {{ component('SearchPackages') }}
 
-    <div class="d-flex eyebrows pt-5">
-        <div>Automatic debouncing</div>
-        <i class="fa-solid fa-circle px-2 align-self-center" style="font-size: 3px;"></i>
+    <div class="d-flex eyebrows pt-5 align-items-center justify-content-center">
+        <div>Automatic <em>debouncing</em></div>
+        <twig:Icon name="circle-fill" style="font-size: .25rem" class="mx-1" />
         <div>Loading states</div>
-        <i class="fa-solid fa-circle px-2 align-self-center" style="font-size: 3px;"></i>
-        <div>Required writing ZERO JavaScript</div>
+        <twig:Icon name="circle-fill" style="font-size: .25rem" class="mx-1" />
+        <div>Required writing <em>ZERO JavaScript</em></div>
     </div>
 {% endblock %}
 
@@ -48,7 +46,11 @@
     <h2 class="eyebrows mt-5" id="demos">Live Component Demos</h2>
     <div class="d-md-flex justify-content-md-between text-center text-md-start">
         <h2 class="ubuntu pt-2 component-headlines">Find out what else you can <span style="color: #AE5929;">build</span></h2>
-        <a style="height: 100%;" class="btn btn-md btn-outline-dark mt-3 mt-md-0" href="https://symfony.com/bundles/ux-live-component/current/index.html">Read full Documentation <i class="fa-solid fa-arrow-right ms-2" style="transform: rotate(-45deg);"></i></a>
+        <a style="height: 100%;" class="btn btn-md btn-outline-dark my-3 my-md-0"
+           href="https://symfony.com/bundles/ux-live-component/current/index.html">
+            Read full Documentation
+            <twig:Icon name="arrow-right" style="transform: rotate(-45deg);"/>
+        </a>
     </div>
 
     <div class="row mt-5 pb-5">

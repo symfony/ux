@@ -15,11 +15,11 @@ class Alert
     {
     }
 
-    public function getIconClass(): string
+    public function getIcon(): string
     {
         return match ($this->type) {
-            'success' => 'fa fa-circle-check',
-            'danger' => 'fa fa-circle-exclamation',
+            'success' => 'circle-check',
+            'danger' => 'circle-exclamation',
         };
     }
 

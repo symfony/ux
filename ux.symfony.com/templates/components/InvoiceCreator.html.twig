@@ -59,7 +59,7 @@
                     data-action-name="addLineItem"
                     class="btn btn-sm btn-secondary"
                     type="button"
-                ><span class="fa fa-plus-circle"></span> Add Item</button>
+                ><twig:Icon name="plus" /> Add Item</button>
             </div>
         </div>
 
@@ -100,12 +100,14 @@
             class="btn btn-primary"
             {{ areAnyLineItemsEditing ? 'disabled' : '' }}
         >
-            <span data-loading="action(saveInvoice)|show" class="fa fa-spin fa-spinner"></span>
+            <span data-loading="action(saveInvoice)|show">
+                <twig:Icon name="spinner" style="animation: spin 1s linear infinite;" />
+            </span>
             {% if savedSuccessfully %}
-                <span class="fa fa-check-circle text-success"></span>
+                <twig:Icon name="circle-check" class="text-success" />
             {% endif %}
             {% if saveFailed %}
-                <span class="fa fa-exclamation-circle"></span>
+                <twig:Icon name="circle-exclamation" />
             {% endif %}
             Save Invoice
         </button>

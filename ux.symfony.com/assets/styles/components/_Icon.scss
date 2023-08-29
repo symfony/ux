@@ -1,0 +1,14 @@
+.Icon {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    height: 1em;
+    width: 1em;
+    color: var(--icon-color);
+    vertical-align: -.125em;
+    svg {
+        fill: currentColor;
+        height: 100%;
+        width: 100%;
+    }
+}
