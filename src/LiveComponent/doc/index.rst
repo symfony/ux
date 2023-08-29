@@ -2911,6 +2911,36 @@ To fix this, you have two options:
         }
     }
 
+.. _passing-blocks:
+
+Passing Content (Blocks) to Components
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Passing content via blocks to Live components works completely the same way you would `pass content to Twig Components`_.
+Except with one important difference: when a component is re-rendered, any variables defined only in the
+"outside" template will not be available. For example, this won't work:
+
+.. code-block:: twig
+
+    {# templates/some_page.html.twig #}
+    {% set message = 'Variables from the outer part of the template are only available during  the initial render' %}
+
+    {% component Alert %}
+        {% block content %}{{ message }}{% endblock %}
+    {% endcomponent %}
+
+Local variables do remain available:
+
+.. code-block:: twig
+
+    {# templates/some_page.html.twig #}
+    {% component Alert %}
+        {% block content %}
+            {% set message = 'this works during re-rendering!' %}
+            {{ message }}
+        {% endblock %}
+    {% endcomponent %}
+
 Advanced Functionality
 ----------------------
 
@@ -3127,3 +3157,4 @@ bound to Symfony's BC policy for the moment.
 .. _`the traditional collection type`: https://symfony.com/doc/current/form/form_themes.html#fragment-naming-for-collections
 .. _`How to Work with Form Themes`: https://symfony.com/doc/current/form/form_themes.html
 .. _`Symfony's built-in form theming techniques`: https://symfony.com/doc/current/form/form_themes.html
+.. _`pass content to Twig Components`: https://symfony.com/bundles/ux-twig-component/current/index.html#passing-blocks
