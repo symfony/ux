@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Error {{ status_code }} - Symfony UX{% endblock %}
+
+{% block header %}
+    <header class="AppHeader">
+        <nav class="navbar">
+            <div class="container-xxl px-4 px-md-5">
+                <a href="{{ url('app_homepage') }}" class="AppHeader_logo">
+                    <span aria-hidden="false">Symfony UX</span>
+                </a>
+                <twig:ThemeSwitcher class="AppNav_item AppNav_item--icon"/>
+            </div>
+        </nav>
+    </header>
+{% endblock %}
+
+{% block main %}
+    <main style="display: grid; place-content: center;text-align: center;" >
+        <div class="d-flex flex-column align-items-center position-relative" style="gap:.5rem;">
+            <span class="eyebrows" style="font-size: 1rem;">Error</span>
+            <h1 class="ubuntu" style="font-size: calc(6rem + 10vw); line-height: .75;letter-spacing: -.5rem;">{{ status_code }}</h1>
+            <p class="hero-sub-text">{{ status_text }}</p>
+            <a class="btn btn-outline-primary stretched-link" href="{{ url('app_homepage') }}">Back to the homepage</a>
+        </div>
+    </main>
+{% endblock %}
+
+{% block footer %}{% endblock %}

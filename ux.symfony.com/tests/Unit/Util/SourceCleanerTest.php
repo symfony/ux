@@ -100,7 +100,7 @@ class SourceCleanerTest extends TestCase
     public function testItRemovesExcessHtml(): void
     {
         $input = <<<EOF
-            <div class="p-4 markdown-container rainbow-gradient mt-5 row" {{ stimulus_controller('markdown') }}>
+            <div class="p-4 markdown-container shadow-blur shadow-blur--rainbow mt-5 row" {{ stimulus_controller('markdown') }}>
                 <div class="col-12 col-md-5">
                     <textarea rows="3" class="form-control" aria-label="Type markdown into this box"
                         {{ stimulus_target('markdown', 'input') }}

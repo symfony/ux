@@ -1,0 +1,49 @@
+.AppHeader {
+  position: absolute;
+  top: 1rem; // TODO responsive
+  left: 0;
+  right: 0;
+  z-index: 2;
+
+  @media (min-width: 576px) {
+    top: 2rem;
+  }
+  @media (min-width: 768px) {
+    top: 3rem;
+  }
+}
+
+.AppHeader {
+  --text-color: var(--bs-body-color);
+  color: var(--text-color);
+}
+.AppHeader--white {
+  --text-color: #fff;
+}
+
+.AppHeader_logo {
+  --height: 2rem;
+  height: var(--height);
+  width: calc(161 / 30 * var(--height));
+  background: url(../images/sf-ux.svg);
+  background-size: 100%;
+
+  transition: filter 250ms ease-in;
+
+  span {
+    display: none;
+  }
+
+  .AppHeader--white &,
+  [data-bs-theme="dark"] & {
+    filter: invert(1);
+  }
+}
+
+.AppHeader_toggler:focus {
+  box-shadow: none;
+}
+
+.AppHeader_toggler {
+  color: currentColor;
+}

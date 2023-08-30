@@ -1,73 +1,99 @@
-@import './variables';
-@import '../../vendor/twbs/bootstrap/scss/bootstrap';
+// Bootstrap foundation
+@import "../../vendor/twbs/bootstrap/scss/functions";
 
-@import './container';
-@import './navigation';
-@import './images';
-@import './type';
-@import './terminal';
-@import './highlight';
-@import './live_demos';
+// Default variable overrides
+@import "variables";
 
-@import './components/Icon';
-@import './components/PackageBox';
+// $enable-cssgrid: true
+// $enable-grid-classes: true;
 
-body {
-    font-family: Inter;
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 26px;
-    letter-spacing: 0px;
-    color: #0A0A0A;
-}
+// Bootstrap variables
+@import "../../vendor/twbs/bootstrap/scss/variables";
+@import "../../vendor/twbs/bootstrap/scss/variables-dark";
 
-a, a.page-link, a.page-link:hover {
-    text-decoration: none;
-    color: #0A0A0A;
-}
+// Boostrap remainder of required parts
+@import "../../vendor/twbs/bootstrap/scss/maps";
+@import "../../vendor/twbs/bootstrap/scss/mixins";
+@import "../../vendor/twbs/bootstrap/scss/utilities";
+@import "../../vendor/twbs/bootstrap/scss/root";
 
+// Layout & components
+@import "../../vendor/twbs/bootstrap/scss/reboot";
+@import "../../vendor/twbs/bootstrap/scss/type";
+@import "../../vendor/twbs/bootstrap/scss/images";
+@import "../../vendor/twbs/bootstrap/scss/containers";
+@import "../../vendor/twbs/bootstrap/scss/grid";
+@import "../../vendor/twbs/bootstrap/scss/tables";
+@import "../../vendor/twbs/bootstrap/scss/forms";
+@import "../../vendor/twbs/bootstrap/scss/buttons";
+@import "../../vendor/twbs/bootstrap/scss/transitions";
+@import "../../vendor/twbs/bootstrap/scss/dropdown";
+// @import "../../vendor/twbs/bootstrap/scss/button-group";
+@import "../../vendor/twbs/bootstrap/scss/nav";
+@import "../../vendor/twbs/bootstrap/scss/navbar";
+@import "../../vendor/twbs/bootstrap/scss/card";
+// @import "../../vendor/twbs/bootstrap/scss/accordion";
+// @import "../../vendor/twbs/bootstrap/scss/breadcrumb";
+@import "../../vendor/twbs/bootstrap/scss/pagination";
+@import "../../vendor/twbs/bootstrap/scss/badge";
+@import "../../vendor/twbs/bootstrap/scss/alert";
+// @import "../../vendor/twbs/bootstrap/scss/progress";
+// @import "../../vendor/twbs/bootstrap/scss/list-group";
+@import "../../vendor/twbs/bootstrap/scss/close";
+// @import "../../vendor/twbs/bootstrap/scss/toasts";
+@import "../../vendor/twbs/bootstrap/scss/modal";
+@import "../../vendor/twbs/bootstrap/scss/tooltip";
+// @import "../../vendor/twbs/bootstrap/scss/popover";
+// @import "../../vendor/twbs/bootstrap/scss/carousel";
+// @import "../../vendor/twbs/bootstrap/scss/spinners";
+// @import "../../vendor/twbs/bootstrap/scss/offcanvas";
+// @import "../../vendor/twbs/bootstrap/scss/placeholders";
+// Helpers
+@import "../../vendor/twbs/bootstrap/scss/helpers";
+// Utilities
+@import "../../vendor/twbs/bootstrap/scss/utilities/api";
 
-.navbar-toggler:focus {
-    box-shadow: none;
-}
+// Base
+@import "app/html";
+@import "app/root";
+@import "app/typography";
 
-.dropdown button {
-    border: none;
-    background: none;
-    display: block;
-}
-.nav-white-mode .nav-options, i.nav-white-mode {
-    color: #fff;
-}
+// Layouts
+@import "layouts/grid";
 
-footer {
-    height: 100px;
-}
+// Components
+@import "components/demo-container";
+@import "components/DocsLink";
+@import "components/file_tree";
+@import "components/Icon";
+@import "components/PackageHeader";
+@import "components/PackageBox";
+@import "components/Terminal";
+@import "components/TerminalCommand";
+@import "components/ThemeSwitcher";
 
-.hero-background {
-    background: url(../images/background_homepage.png);
-}
+// Utilities
+@import "utilities/arrow";
+@import "utilities/background";
+@import "utilities/info-tooltips";
+@import "utilities/font";
+@import "utilities/shadow";
+@import "utilities/text";
 
-#cropper-preview {
-    overflow: hidden;
-    width: 200px;
-    height: 200px;
-}
+// Vendors customization
+@import "vendor/bootstrap";
+@import "vendor/highlight";
+@import "vendor/tom-select";
 
-.alert-right-message {
-    position: absolute;
-    top: 0;
-    right: 0;
-    z-index: 2;
-    padding: 1.25rem 1rem;
-    font-size: .8rem;
-}
+// Sections
+@import "sections/header";
+@import "sections/nav";
+@import "sections/hero";
 
-.page-item.active .page-link {
-    background-color: $n-700;
-    border-color: $n-700;
-}
+@import "./container";
+@import "./images";
 
+// TODO move Terminal/CodeBlock
 .btn-expand-code {
     position: absolute;
     bottom: 0;

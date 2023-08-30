@@ -1,10 +1,10 @@
 <div {{ attributes.defaults({
-    class: this.classString,
+    class: 'Terminal ' ~ this.classString,
 }) }}>
     {% if showFilename %}
-        <div class="py-2 ps-4 pe-2 mb-0 d-flex justify-content-between align-items-center">
-            <a id="{{ this.elementId }}" href="#{{ this.elementId }}" class="filename-header">{{ filename }}</a>
-            <div>
+        <div class="Terminal_header py-2 ps-4 pe-2 mb-0 d-flex justify-content-between align-items-center">
+            <a id="{{ this.elementId }}" href="#{{ this.elementId }}" class="Terminal_title">{{ filename }}</a>
+            <div class="Terminal_actions">
                 {{ include('partials/code-block-buttons.html.twig', {
                     source: this.rawSource,
                     link: this.githubLink,
@@ -12,20 +12,18 @@
             </div>
         </div>
     {% endif %}
-    <div class="terminal-body" {{ stimulus_controller('code-expander')}} style="position: relative">
+    <div class="Terminal_body" {{ stimulus_controller('code-expander')}}>
         {% if not showFilename %}
-            {{ include('partials/code-block-buttons.html.twig', {
-                source: this.rawSource,
-                link: this.githubLink,
-            }) }}
+            <div class="Terminal_actions">
+                {{ include('partials/code-block-buttons.html.twig', {
+                    source: this.rawSource,
+                    link: this.githubLink,
+                }) }}
+            </div>
         {% endif %}
-        <pre
-            class="py-2 ps-4"
-            style="height: {{ height }}; overflow: auto;"
-            {{ stimulus_target('code-expander', 'codeContent') }}
-        >
+        <pre style="height: {{ height }};" {{ stimulus_target('code-expander', 'codeContent') }}><code>
             {{- this.highlightSource()|raw -}}
-        </pre>
+        </code></pre>
 
         {% block code_content_bottom %}
             <button

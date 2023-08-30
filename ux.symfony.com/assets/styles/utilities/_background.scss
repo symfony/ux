@@ -1,0 +1,9 @@
+.background-glass {
+  --glass-opacity: .75;
+  --glass-color: 255 255 255;
+  background: rgba(var(--glass-color) / var(--glass-opacity));
+
+  [data-bs-theme="dark"] & {
+    --glass-color: 0 0 0;
+  }
+}

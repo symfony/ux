@@ -1,0 +1,22 @@
+.ts-dropdown, .ts-control, .ts-control input {
+  color: var(--bs-body-color);
+}
+
+.ts-dropdown, .ts-dropdown.form-control, .ts-dropdown.form-select {
+  background: var(--bs-body-bg);
+  border: 1px solid var(--bs-border-color-translucent);
+}
+
+.disabled .ts-control {
+  opacity: 0.5;
+  background: var(--bs-body-bg);
+}
+
+.ts-control, .ts-wrapper.single.input-active .ts-control {
+  background: var(--bs-body-bg);
+}
+
+.ts-dropdown .active {
+  background-color: var(--bs-body-bg);
+  color: var(--bs-body-color);
+}

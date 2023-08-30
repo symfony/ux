@@ -3,10 +3,17 @@
 {% set package = twigPackageHelper.currentPackage() %}
 {% block title %}{{ package.humanName }} | Symfony UX Packages{% endblock %}
 
-{% block body %}
+{% block header %}
+    {{ include('_header.html.twig', {
+        theme: 'white'
+    }) }}
+{% endblock %}
+
+{% block content %}
+
     {% block package_header %}{% endblock %}
 
-    <div class="container-fluid container-xxl px-5 pt-5">
+    <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
         <div class="arrow mb-3 d-none d-md-block"></div>
 
         <div class="row mb-5">
@@ -42,4 +49,5 @@
             package: package
         }) }}
     {% endblock %}
+
 {% endblock %}

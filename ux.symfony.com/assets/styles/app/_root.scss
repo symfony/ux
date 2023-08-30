@@ -1,0 +1,25 @@
+@at-root :root {
+
+  // Borders
+  --border-radius-small: .5rem;
+  --border-radius: 1rem;
+  --border-radius-large: 1.5rem;
+  --border-color: #{$n-100};
+
+  // Spaces
+  --space-smaller: .5rem;
+  --space-small: .75rem;
+  --space-regular: 1rem;
+  --space-large: 1.5rem;
+  --space-larger: 2rem;
+
+  // Fonts
+  //  --font-family-title: "Inter";
+  --font-family-text: "Inter";
+  // --font-family-code: "Inter";
+
+  // Colors
+  --color-primary: var(--bs-body-color);
+  --color-secondary: var(--bs-secondary-color);
+  --color-tertiary: var(--bs-tertiary-color);
+}

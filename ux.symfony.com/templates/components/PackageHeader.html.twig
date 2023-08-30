@@ -1,10 +1,6 @@
-<div class="mb-5" style="background: {{ package.gradient }};">
-    <div class="container-fluid container-xxl px-5 pt-5 position-relative">
-        {{ include('_main_nav.html.twig', {
-            whiteMode: true,
-            withChatIcon: withChatIcon,
-            messageCount: withChatIcon ? this.messageCount : 0
-        }) }}
+<div class="PackageHeader mb-5" style="background: {{ package.gradient }}, {{ package.color }};">
+    <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5 position-relative">
+
         <p class="eyebrows text-center font-white mt-5" style="opacity: 0.6;">{{ eyebrowText|raw }}</p>
 
         <h1 class="ubuntu text-center font-white">{% block title_header %}{% endblock %}</h1>
@@ -14,13 +10,14 @@
                 {% block sub_content %}{% endblock %}
             </p>
         </div>
-        <div class="d-flex justify-content-center">
-            <pre
-                {{ stimulus_controller('clipboard') }}
-                class="install-terminal-header-container p-2 font-white"
-            ><input readonly aria-label="The package's composer installation command"
-                    size="{{ (package.composerRequireCommand|length) }}" {{ stimulus_target('clipboard', 'source') }} value="{{ package.composerRequireCommand }}"
-                ><div class="d-inline ms-2 p-2" style="background: #5920A0; border-radius: 5px;"><button type="button" {{ stimulus_action('clipboard', 'copy') }}><twig:Icon name="copy" /></button></div></pre>
+
+        <div class="d-flex justify-content-center ">
+            <twig:TerminalCommand
+                aria-label="The package's composer installation command"
+                command="{{ package.composerRequireCommand }}"
+                style="--color-accent: {{ package.color }}; transform: translateY(50%);"
+            />
         </div>
+
     </div>
 </div>

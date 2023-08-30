@@ -2,27 +2,29 @@
 
 {% block title %}All Symfony UX Packages{% endblock %}
 
-{% block body %}
-<div class="container-fluid container-xxl px-5 pt-5">
-    {{ include('_main_nav.html.twig') }}
-
-    <h1 class="text-center ubuntu mt-5">All Packages</h1>
+{% block content %}
+<div class="hero">
+    <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
+        <h1 class="text-center ubuntu mt-5">All Packages</h1>
         <p class="text-center mt-2 mb-5">A treasure chest of packages to solve your<br>frontend problems.</p>
 
-    {{ include('main/_packagesList.html.twig') }}
+    </div>
 </div>
 
-<div style="background-color: #F2F2F2;">
-    <div class="container-fluid container-xxl mt-5 p-5">
-        <div class="d-sm-flex justify-content-center">
-            <div class="me-sm-2" style="width: 400px;">
+<div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
+    {{ include('main/_packagesList.html.twig') }}
+</div>
+{% endblock %}
+
+{% block aside %}
+    <div style="background-color: var(--bs-secondary-bg);" class="mt-5">
+        <div class="container-fluid container-xxl p-5">
+            <div style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));">
                 {{ component('DocsLink', {
                     url: 'https://symfonycasts.com/screencast/stimulus',
                     title: 'Screencasts',
                     text: 'Jump right into with the Symfony UX & Stimulus screencast.'
                 }) }}
-            </div>
-            <div class="mt-3 mt-sm-0 ms-sm-2" style="width: 400px;">
                 {{ component('DocsLink', {
                     url: 'https://symfony.com/doc/current/frontend/ux.html',
                     title: 'Documentation',
@@ -31,6 +33,4 @@
             </div>
         </div>
     </div>
-</div>
-
 {% endblock %}

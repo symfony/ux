@@ -1,14 +1,17 @@
 .PackageBox {
+  --gradient: #000;
+  --color: #000;
   --space-large: 1.5rem;
+  --bg-color: var(--bs-body-bg);
 
-  border: 1px solid var(--border-color);
+  border: 1px solid var(--bs-secondary-bg);
   border-radius: var(--border-radius);
   display: flex;
   gap: var(--space-large);
   padding: var(--space-large);
   position: relative;
   place-self: stretch;
-  background: rgba(255, 255, 255, .98);
+  background: var(--bg-color);
   transition:
           border-color 750ms ease-in-out,
           transform 750ms ease-in-out;
@@ -17,7 +20,6 @@
     transition:
             border-color 200ms ease-in-out,
             transform 200ms ease-in-out;
-    border-color: rgba(230, 222, 222, 0.8);
     transform: translateY(-.25rem);
   }
 }
@@ -30,7 +32,7 @@
   opacity: 0;
   filter: blur(.75rem);
   transform: translateZ(-1em);
-  background: var(--gradient);
+  background: var(--gradient), var(--color);
   transition: opacity 600ms ease-in-out;
   z-index: -1;
 }
@@ -44,7 +46,7 @@
   content: "";
   position: absolute;
   inset: 0 0;
-  background: #fff;
+  background: var(--bg-color);
   border-radius: var(--border-radius);
   z-index: -1;
   transition: opacity 600ms ease-in-out;
@@ -56,11 +58,11 @@
   z-index: -1;
 }
 
-
 .PackageBox_logo {
   --logo-size: 6rem;
 
   background: var(--gradient);
+  background-color: var(--color);
   width: var(--logo-size);
   height: var(--logo-size);
   border-radius: var(--border-radius-large);
@@ -68,6 +70,10 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+
+  [data-bs-theme="dark"] & {
+    background-blend-mode: darken;
+  }
 
   img {
     width: calc(0.4 * var(--logo-size));
@@ -84,7 +90,13 @@
             filter 250ms ease-in-out,
             transform 250ms ease-in-out;
     }
+  }
 
+  @media screen and (max-width: 960px) {
+    --logo-size: 5rem;
+  }
+  @media screen and (max-width: 740px) {
+    --logo-size: 4rem;
   }
 }
 
@@ -131,3 +143,5 @@
     margin-bottom: 0;
   }
 }
+
+

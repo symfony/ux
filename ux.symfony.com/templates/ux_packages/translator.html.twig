@@ -42,19 +42,21 @@
 
         <div class="row mb-3">
             <div class="col-5">
-                <div class="h3 text-center">Code</div>
+                <div class="h3 text-center text-body">Code</div>
             </div>
             <div class="col">
-                <div class="h3 text-center">Result</div>
+                <div class="h3 text-center text-body">Result</div>
             </div>
             <div class="col-4">
-                <div class="h3 text-center">Parameters</div>
+                <div class="h3 text-center text-body">Parameters</div>
             </div>
         </div>
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'helloCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre {{ stimulus_target('translator-demo', 'helloCode') }}></pre>
+                </div>
             </div>
             <div class="col">
                 <span {{ stimulus_target('translator-demo', 'helloOutput') }}></span>
@@ -63,7 +65,9 @@
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'sayHelloCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre {{ stimulus_target('translator-demo', 'sayHelloCode') }}></pre>
+                </div>
             </div>
             <div class="col">
                 <span {{ stimulus_target('translator-demo', 'sayHelloOutput') }}></span>
@@ -87,7 +91,9 @@
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'invitationTitleCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre {{ stimulus_target('translator-demo', 'invitationTitleCode') }}></pre>
+                </div>
             </div>
             <div class="col">
                 <span {{ stimulus_target('translator-demo', 'invitationTitleOutput') }}></span>
@@ -128,7 +134,9 @@
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'numOfApplesCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre {{ stimulus_target('translator-demo', 'numOfApplesCode') }}></pre>
+                </div>
             </div>
             <div class="col">
                 <span {{ stimulus_target('translator-demo', 'numOfApplesOutput') }}></span>
@@ -154,7 +162,9 @@
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'finishPlaceCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre {{ stimulus_target('translator-demo', 'finishPlaceCode') }}></pre>
+                </div>
             </div>
             <div class="col">
                 <span {{ stimulus_target('translator-demo', 'finishPlaceOutput') }}></span>
@@ -179,7 +189,9 @@
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'publishedAtCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre {{ stimulus_target('translator-demo', 'publishedAtCode') }}></pre>
+                </div>
             </div>
             <div class="col">
                 <span {{ stimulus_target('translator-demo', 'publishedAtOutput') }}></span>
@@ -203,7 +215,9 @@
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'progressAtCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre {{ stimulus_target('translator-demo', 'progressAtCode') }}></pre>
+                </div>
             </div>
             <div class="col">
                 <span {{ stimulus_target('translator-demo', 'progressAtOutput') }}></span>
@@ -226,7 +240,9 @@
 
         <div class="row">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'valueOfObjectCode') }}></pre>
+                <div class="Terminal_body">
+                <pre {{ stimulus_target('translator-demo', 'valueOfObjectCode') }}></pre>
+                </div>
             </div>
             <div class="col">
                 <span {{ stimulus_target('translator-demo', 'valueOfObjectOutput') }}></span>
@@ -248,4 +264,5 @@
             </div>
         </div>
     </div>
+</div>
 {% endblock %}
