@@ -1,6 +1,6 @@
 {% extends 'packageBase.html.twig' %}
 
-{% block component_header %}
+{% block package_header %}
     {% component PackageHeader with {
         package: 'live-component',
         eyebrowText: 'Reactive Twig Templates'
@@ -42,7 +42,7 @@
 
 {% block documentation_links %}{% endblock %}
 
-{% block component_bottom %}
+{% block package_bottom %}
     <h2 class="eyebrows mt-5" id="demos">Live Component Demos</h2>
     <div class="d-md-flex justify-content-md-between text-center text-md-start">
         <h2 class="ubuntu pt-2 component-headlines">Find out what else you can <span style="color: #AE5929;">build</span></h2>

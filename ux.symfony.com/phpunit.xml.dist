@@ -34,10 +34,7 @@
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
     </listeners>
 
-    <!-- Run `composer require symfony/panther` before enabling this extension -->
-    <!--
     <extensions>
-        <extension class="Symfony\Component\Panther\ServerExtension" />
+        <extension class="Zenstruck\Browser\Test\BrowserExtension" />
     </extensions>
-    -->
 </phpunit>

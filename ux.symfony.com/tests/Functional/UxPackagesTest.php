@@ -11,6 +11,16 @@ class UxPackagesTest extends KernelTestCase
 {
     use HasBrowser;
 
+    public function testAllPackagesPage(): void
+    {
+        $this->browser()
+            ->visit('/packages')
+            ->assertSuccessful()
+            ->assertSeeIn('title', 'Symfony UX Packages')
+            ->assertSee('All Packages')
+        ;
+    }
+
     /**
      * @dataProvider getSmokeTests
      */

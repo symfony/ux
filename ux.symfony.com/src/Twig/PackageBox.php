@@ -6,7 +6,7 @@ use App\Model\Package;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent()]
-class ComponentBox
+class PackageBox
 {
     public Package $package;
 }
