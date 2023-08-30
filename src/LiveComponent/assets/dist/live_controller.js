@@ -2380,7 +2380,7 @@ class LoadingPlugin {
         return loadingDirectives;
     }
     showElement(element) {
-        element.style.display = 'inline-block';
+        element.style.display = 'revert';
     }
     hideElement(element) {
         element.style.display = 'none';
