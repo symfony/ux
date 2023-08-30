@@ -18,11 +18,11 @@
         <div class="dropdown  my-2 my-lg-0">
             <button
                 class="nav-options me-4 ms-0"
-                id="components-dropdown-button"
+                id="packages-dropdown-button"
                 data-bs-toggle="dropdown"
                 aria-expanded="false"
-            >Components <twig:Icon name="chevron-down" /></button>
-            <ul class="dropdown-menu" aria-labelledby="components-dropdown-button">
+            >Packages <twig:Icon name="chevron-down" /></button>
+            <ul class="dropdown-menu" aria-labelledby="packages-dropdown-button">
                 {% for package in twigPackageHelper.topNavPackages %}
                 <li>
                     <a class="dropdown-item" href="{{ path(package.route) }}">
@@ -37,7 +37,7 @@
                 </li>
                 {% endfor %}
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="{{ path('app_all_components') }}">Browse all Components</a></li>
+                <li><a class="dropdown-item" href="{{ path('app_all_packages') }}">Browse all Packages</a></li>
             </ul>
         </div>
         <p class="nav-options mb-0 me-4 d-none d-lg-inline">|</p>

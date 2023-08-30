@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
 {% set package = twigPackageHelper.currentPackage() %}
-{% block title %}{{ package.humanName }} | Symfony UX Components{% endblock %}
+{% block title %}{{ package.humanName }} | Symfony UX Packages{% endblock %}
 
 {% block body %}
-    {% block component_header %}{% endblock %}
+    {% block package_header %}{% endblock %}
 
     <div class="container-fluid container-xxl px-5 pt-5">
         <div class="arrow mb-3 d-none d-md-block"></div>
@@ -34,7 +34,7 @@
             package: package,
         }) }}
 
-        {% block component_bottom %}{% endblock %}
+        {% block package_bottom %}{% endblock %}
     </div>
 
     {% block documentation_links %}

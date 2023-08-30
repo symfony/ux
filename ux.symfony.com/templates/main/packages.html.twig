@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}All Symfony UX Components{% endblock %}
+{% block title %}All Symfony UX Packages{% endblock %}
 
 {% block body %}
 <div class="container-fluid container-xxl px-5 pt-5">
     {{ include('_main_nav.html.twig') }}
 
-    <h1 class="text-center ubuntu mt-5">All Components</h1>
+    <h1 class="text-center ubuntu mt-5">All Packages</h1>
         <p class="text-center mt-2 mb-5">A treasure chest of packages to solve your<br>frontend problems.</p>
 
-    {{ include('main/_componentsList.html.twig') }}
+    {{ include('main/_packagesList.html.twig') }}
 </div>
 
 <div style="background-color: #F2F2F2;">
