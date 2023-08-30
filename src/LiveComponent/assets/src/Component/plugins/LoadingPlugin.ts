@@ -173,7 +173,7 @@ export default class implements PluginInterface {
     }
 
     private showElement(element: HTMLElement|SVGElement) {
-        element.style.display = 'inline-block';
+        element.style.display = 'revert';
     }
 
     private hideElement(element: HTMLElement|SVGElement) {
