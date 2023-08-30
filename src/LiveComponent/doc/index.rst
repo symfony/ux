@@ -1798,7 +1798,7 @@ via the ``LiveCollectionType``::
 
 Now, create a Twig component to render the form::
 
-    namespace App\Twig;
+    namespace App\Components;
 
     use App\Entity\BlogPost;
     use App\Form\BlogPostFormType;
@@ -1809,7 +1809,7 @@ Now, create a Twig component to render the form::
     use Symfony\UX\LiveComponent\DefaultActionTrait;
     use Symfony\UX\LiveComponent\LiveCollectionTrait;
 
-    #[AsLiveComponent]
+    #[AsLiveComponent('blog-post-collection-type')]
     class BlogPostCollectionType extends AbstractController
     {
         use LiveCollectionTrait;
@@ -1824,13 +1824,23 @@ Now, create a Twig component to render the form::
         }
     }
 
-There is no need for a custom template just render the form as usual:
+Create a custom template for the component :
 
 .. code-block:: html+twig
 
+    {# templates/components/blog-post-collection-type.html.twig #}
     <div {{ attributes }}>
         {{ form(form) }}
     </div>
+
+Render the component : 
+
+.. code-block:: html+twig
+
+    {# templates/blog-post/edit.html.twig #}
+    {{ component('BlogPostCollectionType', {
+          initialFormData: post,
+    }) }}
 
 This automatically renders add and delete buttons that are connected to the live component.
 If you want to customize how the buttons and the collection rows are rendered, you can use
