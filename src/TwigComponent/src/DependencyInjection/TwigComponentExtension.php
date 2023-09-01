@@ -16,8 +16,10 @@ use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\Command\ComponentDebugCommand;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
@@ -27,6 +29,8 @@ use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 use Symfony\UX\TwigComponent\Twig\ComponentLexer;
 use Symfony\UX\TwigComponent\Twig\TwigEnvironmentConfigurator;
+
+use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -91,5 +95,15 @@ final class TwigComponentExtension extends Extension
         $container->register('ux.twig_component.twig.environment_configurator', TwigEnvironmentConfigurator::class)
             ->setDecoratedService(new Reference('twig.configurator.environment'))
             ->setArguments([new Reference('ux.twig_component.twig.environment_configurator.inner')]);
+
+        $container->register('console.command.stimulus_component_debug', ComponentDebugCommand::class)
+            ->setArguments([
+                new Parameter('twig.default_path'),
+                new Reference('ux.twig_component.component_factory'),
+                new Reference('twig'),
+               tagged_iterator('twig.component'),
+            ])
+            ->addTag('console.command')
+        ;
     }
 }

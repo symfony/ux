@@ -3145,6 +3145,12 @@ the change of one specific key:
         }
     }
 
+Debugging Components
+--------------------
+
+Need to list or debug some component issues.
+The `Twig Component debug command`_ can help you.
+
 Test Helper
 -----------
 
@@ -3254,3 +3260,4 @@ bound to Symfony's BC policy for the moment.
 .. _`How to Work with Form Themes`: https://symfony.com/doc/current/form/form_themes.html
 .. _`Symfony's built-in form theming techniques`: https://symfony.com/doc/current/form/form_themes.html
 .. _`pass content to Twig Components`: https://symfony.com/bundles/ux-twig-component/current/index.html#passing-blocks
+.. _`Twig Component debug command`: https://symfony.com/bundles/ux-twig-component/current/index.html#debugging-components

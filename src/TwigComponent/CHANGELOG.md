@@ -7,6 +7,7 @@
 -   Add `RenderedComponent::crawler()` and `toString()` methods.
 -   Allow a block outside a Twig component to be available inside via `outerBlocks`.
 -   Fix `<twig:component>` syntax where an attribute is set to an empty value.
+-   Add component debug command for TwigComponent and LiveComponent.
 
 ## 2.9.0
 
