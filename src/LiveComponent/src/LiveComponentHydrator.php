@@ -16,10 +16,12 @@ use Symfony\Component\PropertyAccess\Exception\ExceptionInterface as PropertyAcc
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Exception\HydrationException;
 use Symfony\UX\LiveComponent\Hydration\HydrationExtensionInterface;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
@@ -373,10 +375,10 @@ final class LiveComponentHydrator
         // at this point, we have an object and can assume $propMetadata->getType()
         // is set correctly (needed for hydration later)
 
-        return $this->dehydrateObjectValue($value, $propMetadata->getType(), $propMetadata->getFormat(), $component::class, $propMetadata->getName());
+        return $this->dehydrateObjectValue($value, $propMetadata->getType(), $propMetadata->getFormat(), $component);
     }
 
-    private function dehydrateObjectValue(object $value, string $classType, ?string $dateFormat, string $componentClassForError, string $propertyPathForError): mixed
+    private function dehydrateObjectValue(object $value, string $classType, ?string $dateFormat, object $component): mixed
     {
         if ($value instanceof \DateTimeInterface) {
             return $value->format($dateFormat ?: \DateTimeInterface::RFC3339);
@@ -392,7 +394,22 @@ final class LiveComponentHydrator
             }
         }
 
-        throw new \LogicException(sprintf('Unable to dehydrate value of type "%s" for property "%s" on component "%s". Either (1) change this to a simpler value, (2) add the hydrateWith/dehydrateWith options to LiveProp or (3) set "useSerializerForHydration: true" on the LiveProp.', $value::class, $propertyPathForError, $componentClassForError));
+        $reflexionExtractor = new ReflectionExtractor();
+        $properties = $reflexionExtractor->getProperties($classType);
+        $propertiesValues = [];
+        foreach ($properties as $property) {
+            if ($reflexionExtractor->isReadable($classType, $property)) {
+                $propertyValue = $this->propertyAccessor->getValue($value, $property);
+                $type = $reflexionExtractor->getTypes($classType, $property)[0]->getBuiltinType();
+                if ($type === 'object') {
+                    $type = $reflexionExtractor->getTypes($classType, $property)[0]->getClassName();
+                }
+                $propMetadata = new LivePropMetadata($property, new LiveProp(true), $type, false, true, null);
+                $propertiesValues[$property] = $this->dehydrateValue($propertyValue, $propMetadata, $component);
+            }
+        }
+
+        return $propertiesValues;
     }
 
     private function hydrateValue(mixed $value, LivePropMetadata $propMetadata, object $component): mixed
@@ -412,7 +429,7 @@ final class LiveComponentHydrator
         if ($propMetadata->collectionValueType() && Type::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {
             $collectionClass = $propMetadata->collectionValueType()->getClassName();
             foreach ($value as $key => $objectItem) {
-                $value[$key] = $this->hydrateObjectValue($objectItem, $collectionClass, true, $component::class, sprintf('%s.%s', $propMetadata->getName(), $key));
+                $value[$key] = $this->hydrateObjectValue($objectItem, $collectionClass, true, $component::class, sprintf('%s.%s', $propMetadata->getName(), $key), $component);
             }
         }
 
@@ -434,10 +451,10 @@ final class LiveComponentHydrator
             return $value;
         }
 
-        return $this->hydrateObjectValue($value, $propMetadata->getType(), $propMetadata->allowsNull(), $component::class, $propMetadata->getName());
+        return $this->hydrateObjectValue($value, $propMetadata->getType(), $propMetadata->allowsNull(), $component::class, $propMetadata->getName(), $component);
     }
 
-    private function hydrateObjectValue(mixed $value, string $className, bool $allowsNull, string $componentClassForError, string $propertyPathForError): ?object
+    private function hydrateObjectValue(mixed $value, string $className, bool $allowsNull, string $componentClassForError, string $propertyPathForError, object $component): ?object
     {
         // enum
         if (is_a($className, \BackedEnum::class, true)) {
@@ -465,6 +482,23 @@ final class LiveComponentHydrator
             if ($extension->supports($className)) {
                 return $extension->hydrate($value, $className);
             }
+        }
+
+        if (is_array($value)) {
+            $object = new $className;
+            $extractor = new ReflectionExtractor();
+            foreach ($value as $property => $propertyValue) {
+                $type = $extractor->getTypes($className, $property)[0]->getBuiltinType();
+                $buildIn = true;
+                if ($type === 'object') {
+                    $type = $extractor->getTypes($className, $property)[0]->getClassName();
+                    $buildIn = false;
+                }
+                $propMetadata = new LivePropMetadata($property, new LiveProp(true), $type, $buildIn, true, null);
+                $this->propertyAccessor->setValue($object, $property, $this->hydrateValue($propertyValue, $propMetadata, $component));
+            }
+
+            return $object;
         }
 
         throw new HydrationException(sprintf('Unable to hydrate value of type "%s" for property "%s" on component "%s". Change this to a simpler value, add the hydrateWith/dehydrateWith options to LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer..', $className, $propertyPathForError, $componentClassForError));
