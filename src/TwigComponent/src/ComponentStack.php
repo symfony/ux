@@ -16,7 +16,7 @@ namespace Symfony\UX\TwigComponent;
  *
  * @internal
  */
-class ComponentStack
+class ComponentStack implements \IteratorAggregate
 {
     /**
      * @var MountedComponent[]
@@ -59,5 +59,13 @@ class ComponentStack
     public function hasParentComponent(): bool
     {
         return (bool) $this->getParentComponent();
+    }
+
+    /**
+     * @return MountedComponent[]|\ArrayIterator
+     */
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator(array_reverse($this->components));
     }
 }
