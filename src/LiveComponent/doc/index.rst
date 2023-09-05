@@ -1087,7 +1087,7 @@ the ``#[LiveArg()]`` attribute::
     }
 
 Normally, the argument name in PHP - e.g. ``$id`` - should match the
-argument named used in Twig ``id={{ item.id }}``. But if they don't
+argument name used in Twig ``id={{ item.id }}``. But if they don't
 match, you can pass an argument to ``LiveArg``, like we did with ``itemName``.
 
 Actions and CSRF Protection
@@ -1153,7 +1153,7 @@ the component now extends ``AbstractController``! That is totally
 allowed, and gives you access to all of your normal controller
 shortcuts. We even added a flash message!
 
-.. _files
+.. _files:
 
 Uploading files
 ---------------
@@ -1172,7 +1172,7 @@ to handle the files and tell the component when the file should be sent:
         <button data-action="live#action" data-action-name="files|my_action" />
     </p>
 
-To send a file (or files) with an action use `files` modifier.
+To send a file (or files) with an action use ``files`` modifier.
 Without an argument it will send all pending files to your action.
 You can also specify a modifier parameter to choose which files should be upload.
 
@@ -1191,7 +1191,7 @@ You can also specify a modifier parameter to choose which files should be upload
         <button data-action="live#action" data-action-name="files|myAction" />
     </p>
 
-The files will be available in a regular `$request->files` files bag::
+The files will be available in a regular ``$request->files`` files bag::
 
     // src/Components/FileUpload.php
     namespace App\Components;
@@ -1219,8 +1219,8 @@ The files will be available in a regular `$request->files` files bag::
 .. tip::
 
     Remember that in order to send multiple files from a single input you
-    need to specify `multiple` attribute on HTML element and end `name`
-    with `[]`.
+    need to specify ``multiple`` attribute on HTML element and end ``name``
+    with ``[]``.
 
 .. _forms:
 
