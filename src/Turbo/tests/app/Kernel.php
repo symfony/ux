@@ -291,7 +291,7 @@ class Kernel extends BaseKernel
                 if (!$artist) {
                     throw new NotFoundHttpException();
                 }
-                $artist->name = $artist->name.' after change';
+                $artist->name .= ' after change';
 
                 $doctrine->flush();
             }

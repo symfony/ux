@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.12.0
+
+-   Add `onUpdated` hook for `LiveProp`
+
 ## 2.11.0
 
 -   Add helper for testing live components.

@@ -3063,6 +3063,62 @@ Then specify this new route on your component:
           use DefaultActionTrait;
       }
 
+Add a Hook on LiveProp Update
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.12
+
+    The ``onUpdated`` option was added in LiveComponents 2.12.
+
+If you want to run custom code after a specific LiveProp is updated,
+you can do it by adding an ``onUpdated`` option set to a public method name
+on the component:
+
+.. code-block:: diff
+
+    // ...
+
+    #[AsLiveComponent]
+    class ProductSearch
+    {
+      - #[LiveProp(writable: true)]
+      + #[LiveProp(writable: true, onUpdated: 'onQueryUpdated')]
+        public string $query = '';
+
+        // ...
+
+        public function onQueryUpdated($previousValue): void
+        {
+            // $this->query already contains a new value
+            // and its previous value is passed as an argument
+        }
+    }
+}
+
+As soon as the `query` LiveProp is updated, the ``onQueryUpdated()`` method
+will be called. The previous value is passed there as the first argument.
+
+If you're allowing object properties to be writable, you can also listen to
+the change of one specific key:
+
+.. code-block::
+
+    // ...
+
+    #[AsLiveComponent]
+    class EditPost
+    {
+        #[LiveProp(writable: ['title', 'content'], onUpdated: ['title' => 'onTitleUpdated'])]
+        public Post $post;
+
+        // ...
+
+        public function onTitleUpdated($previousValue): void
+        {
+            // ...
+        }
+    }
+
 Test Helper
 -----------
 
