@@ -98,6 +98,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->setArguments([
                 tagged_iterator(LiveComponentBundle::HYDRATION_EXTENSION_TAG),
                 new Reference('property_accessor'),
+                new Reference('property_info'),
                 new Reference('serializer'),
                 '%kernel.secret%',
             ])

@@ -16,7 +16,7 @@ use Symfony\Component\PropertyAccess\Exception\ExceptionInterface as PropertyAcc
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -47,6 +47,7 @@ final class LiveComponentHydrator
     public function __construct(
         private iterable $hydrationExtensions,
         private PropertyAccessorInterface $propertyAccessor,
+        private PropertyTypeExtractorInterface $propertyTypeExtractor,
         private NormalizerInterface|DenormalizerInterface $normalizer,
         private string $secret
     ) {
@@ -343,22 +344,15 @@ final class LiveComponentHydrator
         }
 
         if (\is_array($value)) {
-            if ($propMetadata->collectionValueType() && Type::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {
-                $collectionClass = $propMetadata->collectionValueType()->getClassName();
-                foreach ($value as $key => $objectItem) {
-                    if (!$objectItem instanceof $collectionClass) {
-                        throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of %s objects, but at least on key had a different value of %s', $propMetadata->getName(), $component::class, $collectionClass, get_debug_type($objectItem)));
-                    }
-
-                    $value[$key] = $this->dehydrateObjectValue($objectItem, $collectionClass, $propMetadata->getFormat(), $component::class, sprintf('%s.%s', $propMetadata->getName(), $key));
+            foreach ($value as $key => $objectItem) {
+                $type = \gettype($objectItem);
+                if ('object' === $type) {
+                    $type = $objectItem::class;
                 }
-            }
 
-            if (!$this->isValueValidDehydratedValue($value)) {
-                $badKeys = $this->getNonScalarKeys($value, $propMetadata->getName());
-                $badKeysText = implode(', ', array_map(fn ($key) => sprintf('%s: %s', $key, $badKeys[$key]), array_keys($badKeys)));
+                $propMetadata = new LivePropMetadata($key, new LiveProp(true), $type, false, true, null);
 
-                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" is an array, but it contains one or more keys that are not scalars: %s', $propMetadata->getName(), $component::class, $badKeysText));
+                $value[$key] = $this->dehydrateValue($objectItem, $propMetadata, $component);
             }
 
             return $value;
@@ -394,19 +388,11 @@ final class LiveComponentHydrator
             }
         }
 
-        $reflexionExtractor = new ReflectionExtractor();
-        $properties = $reflexionExtractor->getProperties($classType);
         $propertiesValues = [];
-        foreach ($properties as $property) {
-            if ($reflexionExtractor->isReadable($classType, $property)) {
-                $propertyValue = $this->propertyAccessor->getValue($value, $property);
-                $type = $reflexionExtractor->getTypes($classType, $property)[0]->getBuiltinType();
-                if ($type === 'object') {
-                    $type = $reflexionExtractor->getTypes($classType, $property)[0]->getClassName();
-                }
-                $propMetadata = new LivePropMetadata($property, new LiveProp(true), $type, false, true, null);
-                $propertiesValues[$property] = $this->dehydrateValue($propertyValue, $propMetadata, $component);
-            }
+        foreach ((new \ReflectionClass($classType))->getProperties() as $property) {
+            $propertyValue = $this->propertyAccessor->getValue($value, $property->getName());
+            $propMetadata = $this->generateLivePropMetadata($classType, $property->getName());
+            $propertiesValues[$property->getName()] = $this->dehydrateValue($propertyValue, $propMetadata, $component);
         }
 
         return $propertiesValues;
@@ -484,17 +470,10 @@ final class LiveComponentHydrator
             }
         }
 
-        if (is_array($value)) {
-            $object = new $className;
-            $extractor = new ReflectionExtractor();
+        if (\is_array($value)) {
+            $object = new $className();
             foreach ($value as $property => $propertyValue) {
-                $type = $extractor->getTypes($className, $property)[0]->getBuiltinType();
-                $buildIn = true;
-                if ($type === 'object') {
-                    $type = $extractor->getTypes($className, $property)[0]->getClassName();
-                    $buildIn = false;
-                }
-                $propMetadata = new LivePropMetadata($property, new LiveProp(true), $type, $buildIn, true, null);
+                $propMetadata = $this->generateLivePropMetadata($className, $property);
                 $this->propertyAccessor->setValue($object, $property, $this->hydrateValue($propertyValue, $propMetadata, $component));
             }
 
@@ -592,5 +571,36 @@ final class LiveComponentHydrator
             }
         }
         ksort($data);
+    }
+
+    private function generateLivePropMetadata(string $className, string $propertyName): LivePropMetadata
+    {
+        $reflexionClass = new \ReflectionClass($className);
+        $property = $reflexionClass->getProperty($propertyName);
+
+        $collectionValueType = null;
+        $infoTypes = $this->propertyTypeExtractor->getTypes($className, $propertyName) ?? [];
+        foreach ($infoTypes as $infoType) {
+            if ($infoType->isCollection()) {
+                foreach ($infoType->getCollectionValueTypes() as $valueType) {
+                    $collectionValueType = $valueType;
+                    break;
+                }
+            }
+        }
+
+        $type = $property->getType();
+        if ($type instanceof \ReflectionUnionType || $type instanceof \ReflectionIntersectionType) {
+            throw new \LogicException(sprintf('Union or intersection types are not supported for LiveProps. You may want to change the type of property %s in %s.', $property->getName(), $property->getDeclaringClass()->getName()));
+        }
+
+        return new LivePropMetadata(
+            $property->getName(),
+            new LiveProp(true),
+            $type ? $type->getName() : null,
+            $type ? $type->isBuiltin() : false,
+            $type ? $type->allowsNull() : true,
+            $collectionValueType,
+        );
     }
 }
