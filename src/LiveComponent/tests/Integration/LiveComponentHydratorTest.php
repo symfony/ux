@@ -144,6 +144,140 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
     public function provideDehydrationHydrationTests(): iterable
     {
+        yield 'onUpdated: exception if method not exists' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true, onUpdated: 'onFirstNameUpdated')]
+                public string $firstName;
+            })
+                ->mountWith(['firstName' => 'Ryan'])
+                ->userUpdatesProps(['firstName' => 'Victor'])
+                ->expectsExceptionDuringHydration(\Exception::class, '/onFirstNameUpdated\(\)" specified as LiveProp "onUpdated" hook does not exist/');
+        }];
+
+        yield 'onUpdated: with string value' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true, onUpdated: 'onFirstNameUpdated')]
+                public string $firstName;
+
+                public function onFirstNameUpdated($oldValue)
+                {
+                    if ('Victor' === $this->firstName) {
+                        $this->firstName = 'Revert to '.$oldValue;
+                    }
+                }
+            })
+                ->mountWith(['firstName' => 'Ryan'])
+                ->userUpdatesProps(['firstName' => 'Victor'])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame('Revert to Ryan', $object->firstName);
+                });
+        }];
+
+        yield 'onUpdated: with integer value' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true, onUpdated: 'onNumberUpdated')]
+                public int $number;
+
+                public function onNumberUpdated($oldValue)
+                {
+                    if (9 === $this->number) {
+                        $this->number = $oldValue;
+                    }
+                }
+            })
+                ->mountWith(['number' => 10])
+                ->userUpdatesProps(['number' => 9])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame(10, $object->number);
+                });
+        }];
+
+        yield 'onUpdated: with object value' => [function () {
+            $product = create(ProductFixtureEntity::class, [
+                'name' => 'Chicken',
+            ])->object();
+
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: ['name'], onUpdated: ['name' => 'onNameUpdated'])]
+                public ProductFixtureEntity $product;
+
+                public function onNameUpdated($oldValue)
+                {
+                    if ('Rabbit' === $this->product->name) {
+                        $this->product->name = 'Revert to '.$oldValue;
+                    }
+                }
+            })
+                ->mountWith(['product' => $product])
+                ->userUpdatesProps(['product.name' => 'Rabbit'])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame('Revert to Chicken', $object->product->name);
+                });
+        }];
+
+        yield 'onUpdated: with IDENTITY' => [function () {
+            $entityOriginal = create(Entity1::class)->object();
+            $entityNext = create(Entity1::class)->object();
+            \assert($entityOriginal instanceof Entity1);
+            \assert($entityNext instanceof Entity1);
+
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: [LiveProp::IDENTITY], onUpdated: [LiveProp::IDENTITY => 'onEntireEntityUpdated'])]
+                public Entity1 $entity1;
+
+                public function onEntireEntityUpdated($oldValue)
+                {
+                    // Sanity check
+                    if ($this->entity1 === $oldValue) {
+                        throw new \Exception('Old value is the same entity?!');
+                    }
+                    if (2 === $this->entity1->id) {
+                        // Revert the value
+                        $this->entity1 = $oldValue;
+                    }
+                }
+            })
+                ->mountWith(['entity1' => $entityOriginal])
+                ->userUpdatesProps(['entity1' => $entityNext->id])
+                ->assertObjectAfterHydration(function (object $object) use ($entityOriginal) {
+                    $this->assertSame(
+                        $entityOriginal->id,
+                        $object->entity1->id
+                    );
+                });
+        }];
+
+        yield 'onUpdated: with IDENTITY to null' => [function () {
+            $entity1 = create(Entity1::class)->object();
+            \assert($entity1 instanceof Entity1);
+
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: [LiveProp::IDENTITY], onUpdated: [LiveProp::IDENTITY => 'onEntireEntityUpdated'])]
+                public ?Entity1 $entity1;
+
+                public function onEntireEntityUpdated($oldValue)
+                {
+                    // Sanity check
+                    if ($this->entity1 === $oldValue) {
+                        throw new \Exception('Old value is the same entity?!');
+                    }
+                    if (null === $this->entity1) {
+                        // Revert the value
+                        $this->entity1 = $oldValue;
+                    }
+                }
+            })
+                ->mountWith(['entity1' => $entity1])
+                ->userUpdatesProps(['entity1' => null])
+                ->assertObjectAfterHydration(function (object $object) use ($entity1) {
+                    $this->assertNotNull($object->entity1);
+                    $this->assertSame(
+                        $entity1->id,
+                        $object->entity1->id
+                    );
+                });
+        }];
+
         yield 'string: (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class() {
                 #[LiveProp()]

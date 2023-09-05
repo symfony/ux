@@ -50,6 +50,15 @@ final class LiveProp
     private bool $acceptUpdatesFromParent;
 
     /**
+     * @var string|string[]|null
+     *
+     * A hook that will be called after the property is updated.
+     * Set it to a method name on the Live Component that should be called.
+     * The old value of the property will be passed as an argument to it.
+     */
+    private null|string|array $onUpdated;
+
+    /**
      * @param bool|array  $writable                  If true, this property can be changed by the frontend.
      *                                               Or set to an array of paths within this object/array
      *                                               that are writable.
@@ -73,7 +82,8 @@ final class LiveProp
         array $serializationContext = [],
         string $fieldName = null,
         string $format = null,
-        bool $updateFromParent = false
+        bool $updateFromParent = false,
+        string|array $onUpdated = null,
     ) {
         $this->writable = $writable;
         $this->hydrateWith = $hydrateWith;
@@ -83,6 +93,7 @@ final class LiveProp
         $this->fieldName = $fieldName;
         $this->format = $format;
         $this->acceptUpdatesFromParent = $updateFromParent;
+        $this->onUpdated = $onUpdated;
 
         if ($this->useSerializerForHydration && ($this->hydrateWith || $this->dehydrateWith)) {
             throw new \InvalidArgumentException('Cannot use useSerializerForHydration with hydrateWith or dehydrateWith.');
@@ -171,5 +182,10 @@ final class LiveProp
     public function acceptUpdatesFromParent(): bool
     {
         return $this->acceptUpdatesFromParent;
+    }
+
+    public function onUpdated(): null|string|array
+    {
+        return $this->onUpdated;
     }
 }

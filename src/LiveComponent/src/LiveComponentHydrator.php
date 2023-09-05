@@ -20,6 +20,7 @@ use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Exception\HydrationException;
 use Symfony\UX\LiveComponent\Hydration\HydrationExtensionInterface;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
@@ -207,6 +208,42 @@ final class LiveComponentHydrator
                 // This is a writable field. The user likely sent a value that was
                 // unexpected and can't be set - e.g. a string field for an `int` property.
                 // We ignore this, and allow the original value to remain set.
+            }
+
+            // A special hook that will be called if the LiveProp was changed
+            // and $onUpdated argument is set on the attribute
+            if ($propMetadata->onUpdated()) {
+                if (\is_string($propMetadata->onUpdated())) {
+                    $this->ensureOnUpdatedMethodExists($component, $propMetadata->onUpdated());
+
+                    if ($dehydratedUpdatedProps->hasPropValue($frontendName)) {
+                        $propertyOldValue = $dehydratedOriginalProps->getPropValue($frontendName);
+                        $component->{$propMetadata->onUpdated()}($propertyOldValue);
+                    }
+                } elseif (\is_array($propMetadata->onUpdated())) {
+                    foreach ($propMetadata->onUpdated() as $propName => $funcName) {
+                        $this->ensureOnUpdatedMethodExists($component, $funcName);
+
+                        if (LiveProp::IDENTITY === $propName) {
+                            if ($dehydratedUpdatedProps->hasPropValue($frontendName)
+                                && $dehydratedOriginalProps->getPropValue($frontendName) !== $dehydratedUpdatedProps->getPropValue($frontendName)
+                            ) {
+                                $propertyOldValue = $this->hydrateValue(
+                                    $dehydratedOriginalProps->getPropValue($frontendName),
+                                    $propMetadata,
+                                    $component,
+                                );
+                                $component->{$funcName}($propertyOldValue);
+                            }
+                        } else {
+                            $key = sprintf('%s.%s', $frontendName, $propName);
+                            if ($dehydratedUpdatedProps->hasPropValue($key)) {
+                                $propertyOldValue = $dehydratedOriginalProps->getPropValue($key);
+                                $component->{$funcName}($propertyOldValue);
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -558,5 +595,14 @@ final class LiveComponentHydrator
             }
         }
         ksort($data);
+    }
+
+    private function ensureOnUpdatedMethodExists(object $component, string $methodName): void
+    {
+        if (method_exists($component, $methodName)) {
+            return;
+        }
+
+        throw new \Exception(sprintf('Method "%s:%s()" specified as LiveProp "onUpdated" hook does not exist', $component::class, $methodName));
     }
 }
