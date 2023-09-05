@@ -85,6 +85,12 @@ final class ComponentNode extends EmbedNode
         $compiler->raw('->display($embeddedContext, $embeddedBlocks);');
         $compiler->raw("\n");
 
+        $compiler->write('$this->extensions[')
+            ->string(ComponentExtension::class)
+            ->raw(']->finishEmbeddedComponentRender()')
+            ->raw(";\n")
+        ;
+
         $compiler
             ->outdent()
             ->write('}')
