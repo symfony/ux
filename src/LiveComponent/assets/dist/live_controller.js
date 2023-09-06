@@ -2154,6 +2154,7 @@ class RequestBuilder {
         const fetchOptions = {};
         fetchOptions.headers = {
             Accept: 'application/vnd.live-component+html',
+            'X-Requested-With': 'XMLHttpRequest',
         };
         const totalFiles = Object.entries(files).reduce((total, current) => total + current.length, 0);
         const hasFingerprints = Object.keys(children).length > 0;

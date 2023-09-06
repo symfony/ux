@@ -25,6 +25,7 @@ export default class {
         const fetchOptions: RequestInit = {};
         fetchOptions.headers = {
             Accept: 'application/vnd.live-component+html',
+            'X-Requested-With': 'XMLHttpRequest',
         };
 
         const totalFiles = Object.entries(files).reduce(
