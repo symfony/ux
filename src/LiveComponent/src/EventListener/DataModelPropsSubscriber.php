@@ -13,11 +13,9 @@ namespace Symfony\UX\LiveComponent\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
-use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Util\LiveComponentStack;
 use Symfony\UX\LiveComponent\Util\ModelBindingParser;
-use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\Event\PreMountEvent;
-use Symfony\UX\TwigComponent\MountedComponent;
 
 /**
  * Parses the "data-model" key, which triggers extra props to be passed in.
@@ -33,7 +31,7 @@ final class DataModelPropsSubscriber implements EventSubscriberInterface
 {
     private ModelBindingParser $modelBindingParser;
 
-    public function __construct(private ComponentStack $componentStack, private PropertyAccessorInterface $propertyAccessor)
+    public function __construct(private LiveComponentStack $componentStack, private PropertyAccessorInterface $propertyAccessor)
     {
         $this->modelBindingParser = new ModelBindingParser();
     }
@@ -58,7 +56,7 @@ final class DataModelPropsSubscriber implements EventSubscriberInterface
 
         // find the first parent of the component about to be rendered that is a Live Component
         // only those can have properties controlled via the data-model attribute
-        $parentMountedComponent = $this->getCurrentLiveComponent($this->componentStack);
+        $parentMountedComponent = $this->componentStack->getCurrentLiveComponent();
         if (null === $parentMountedComponent) {
             throw new \LogicException('You can only pass "data-model" when rendering a component when you\'re rendering inside of a parent component.');
         }
@@ -78,21 +76,5 @@ final class DataModelPropsSubscriber implements EventSubscriberInterface
         return [
             PreMountEvent::class => 'onPreMount',
         ];
-    }
-
-    private function getCurrentLiveComponent(ComponentStack $componentStack): ?MountedComponent
-    {
-        foreach ($componentStack as $mountedComponent) {
-            if ($this->isLiveComponent($mountedComponent->getComponent()::class)) {
-                return $mountedComponent;
-            }
-        }
-
-        return null;
-    }
-
-    private function isLiveComponent(string $classname): bool
-    {
-        return [] !== (new \ReflectionClass($classname))->getAttributes(AsLiveComponent::class);
     }
 }

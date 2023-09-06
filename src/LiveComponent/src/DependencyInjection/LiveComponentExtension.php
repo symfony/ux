@@ -41,6 +41,7 @@ use Symfony\UX\LiveComponent\Twig\TemplateCacheWarmer;
 use Symfony\UX\LiveComponent\Twig\TemplateMap;
 use Symfony\UX\LiveComponent\Util\ChildComponentPartialRenderer;
 use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
+use Symfony\UX\LiveComponent\Util\LiveComponentStack;
 use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
 use Symfony\UX\LiveComponent\Util\TwigAttributeHelperFactory;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -113,7 +114,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         $container->register('ux.live_component.event_listener.data_model_props_subscriber', DataModelPropsSubscriber::class)
             ->addTag('kernel.event_subscriber')
             ->setArguments([
-                new Reference('ux.twig_component.component_stack'),
+                new Reference('ux.twig_component.live_component_stack'),
                 new Reference('property_accessor'),
             ])
         ;
@@ -130,9 +131,15 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         $container->register('ux.live_component.live_responder', LiveResponder::class);
         $container->setAlias(LiveResponder::class, 'ux.live_component.live_responder');
 
-        $container->register('ux.live_component.intercept_child_component_render_subscriber', InterceptChildComponentRenderSubscriber::class)
+        $container->register('ux.twig_component.live_component_stack', LiveComponentStack::class)
             ->setArguments([
                 new Reference('ux.twig_component.component_stack'),
+            ])
+        ;
+
+        $container->register('ux.live_component.intercept_child_component_render_subscriber', InterceptChildComponentRenderSubscriber::class)
+            ->setArguments([
+                new Reference('ux.twig_component.live_component_stack'),
             ])
             ->addTag('container.service_subscriber', ['key' => DeterministicTwigIdCalculator::class, 'id' => 'ux.live_component.deterministic_id_calculator'])
             ->addTag('container.service_subscriber', ['key' => ChildComponentPartialRenderer::class, 'id' => 'ux.live_component.child_component_partial_renderer'])
