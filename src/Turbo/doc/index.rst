@@ -804,7 +804,7 @@ to ``turbo_stream_listen()``:
 
 .. code-block:: html+twig
 
-    <div id="messages" {{ turbo_stream_listen('App\Entity\Book', 'hub2') }}></div>
+    <div id="messages" {{ turbo_stream_listen('App\\Entity\\Book', 'hub2') }}></div>
 
 Registering a Custom Transport
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
