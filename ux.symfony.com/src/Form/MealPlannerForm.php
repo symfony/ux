@@ -53,7 +53,7 @@ class MealPlannerForm extends AbstractType
         /** @var ?MealPlan $data */
         $data = $event->getData();
 
-        $this->addFoodField($event->getForm(), $data?->getMeal());
+        $this->addFoodField($event->getForm(), $data?->getMeal(), $data?->getFood());
         $this->addPizzaSizeField($event->getForm(), $data?->getPizzaSize());
     }
 
@@ -83,10 +83,10 @@ class MealPlannerForm extends AbstractType
         );
     }
 
-    public function addFoodField(FormInterface $form, ?Meal $meal): void
+    public function addFoodField(FormInterface $form, ?Meal $meal, ?Food $food = null): void
     {
         $mainFood = $this->factory
-            ->createNamedBuilder('mainFood', EnumType::class, $meal, [
+            ->createNamedBuilder('mainFood', EnumType::class, $food, [
                 'class' => Food::class,
                 'placeholder' => null === $meal ? 'Select a meal first' : sprintf('What\'s for %s?', $meal->getReadable()),
                 'choices' => $meal?->getFoodChoices(),
