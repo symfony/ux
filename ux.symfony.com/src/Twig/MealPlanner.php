@@ -15,8 +15,11 @@ class MealPlanner extends AbstractController
     use ComponentWithFormTrait;
     use DefaultActionTrait;
 
+    #[LiveProp(fieldName: 'formData')]
+    public ?MealPlan $mealPlan;
+
     protected function instantiateForm(): FormInterface
     {
-        return $this->createForm(MealPlannerForm::class);
+        return $this->createForm(MealPlannerForm::class, $this->mealPlan);
     }
 }
