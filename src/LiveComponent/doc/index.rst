@@ -2266,7 +2266,7 @@ There are three ways to emit an event:
 Listen to Events
 ~~~~~~~~~~~~~~~~
 
-To listen to an event, add a method with a `#[LiveListener]` above it::
+To listen to an event, add a method with a ``#[LiveListener]`` above it::
 
     #[LiveProp]
     public int $productCount = 0;
@@ -2280,7 +2280,7 @@ To listen to an event, add a method with a `#[LiveListener]` above it::
 Thanks to this, when any other component emits the ``productAdded`` event, an Ajax
 call will be made to call this method and re-render the component.
 
-Behind the scenes, event listeners are also `LiveActions <actions>`, so you can
+Behind the scenes, event listeners are also ``LiveActions <actions>``, so you can
 autowire any services you need.
 
 Passing Data to Listeners
@@ -2299,7 +2299,7 @@ You can also pass extra (scalar) data to the listeners::
     }
 
 In your listeners, you can access this by adding a matching argument
-name with `#[LiveArg]` in front::
+name with ``#[LiveArg]`` in front::
 
     #[LiveListener('productAdded')]
     public function incrementProductCount(#[LiveArg] int $product)
