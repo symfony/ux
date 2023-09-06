@@ -83,7 +83,7 @@ class MealPlannerForm extends AbstractType
         );
     }
 
-    public function addFoodField(FormInterface $form, ?Meal $meal, ?Food $food = null): void
+    public function addFoodField(FormInterface $form, ?Meal $meal, Food $food = null): void
     {
         $mainFood = $this->factory
             ->createNamedBuilder('mainFood', EnumType::class, $food, [
