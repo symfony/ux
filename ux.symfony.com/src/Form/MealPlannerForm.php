@@ -26,6 +26,7 @@ class MealPlannerForm extends AbstractType
                 'placeholder' => 'Which meal is it?',
                 'autocomplete' => true,
             ])
+            // see: https://github.com/SymfonyCasts/dynamic-forms
             ->addDependent('mainFood', 'meal', function (DependentField $field, ?Meal $meal) {
                 $field->add(EnumType::class, [
                     'class' => Food::class,
