@@ -16,6 +16,7 @@ describe('buildRequest', () => {
         expect(fetchOptions.method).toEqual('GET');
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
+            'X-Requested-With': 'XMLHttpRequest',
         });
     });
 
@@ -38,6 +39,7 @@ describe('buildRequest', () => {
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
             'X-CSRF-TOKEN': '_the_csrf_token',
+            'X-Requested-With': 'XMLHttpRequest',
         });
         const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
@@ -100,6 +102,7 @@ describe('buildRequest', () => {
         expect(fetchOptions.headers).toEqual({
             // no token
             Accept: 'application/vnd.live-component+html',
+            'X-Requested-With': 'XMLHttpRequest',
         });
         const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
@@ -180,6 +183,7 @@ describe('buildRequest', () => {
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
             'X-CSRF-TOKEN': '_the_csrf_token',
+            'X-Requested-With': 'XMLHttpRequest',
         });
         const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
@@ -204,6 +208,7 @@ describe('buildRequest', () => {
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
             'X-CSRF-TOKEN': '_the_csrf_token',
+            'X-Requested-With': 'XMLHttpRequest',
         });
         const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
