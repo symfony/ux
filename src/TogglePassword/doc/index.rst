@@ -34,8 +34,8 @@ needed if you're using AssetMapper):
     $ yarn install --force
     $ yarn watch
 
-Usage
------
+Usage with Symfony Forms
+------------------------
 
 Any ``PasswordType`` can be transformed into a toggle password field by adding the ``toggle`` option::
 
@@ -258,6 +258,29 @@ Then in your form, add your controller as an HTML attribute::
 
         // ...
     }
+
+Usage without Symfony Forms
+---------------------------
+
+You can also use the TogglePassword with native HTML inputs:
+
+.. code-block:: html+twig
+
+    // ...
+
+    <div class="toggle-password-container"> // Add "toggle-password-container" or a class that applies position: relative to this container.
+        <label for="password">Password</label>
+        <input
+            id="password"
+            name="password"
+            type="password"
+            {{ stimulus_controller('symfony/ux-toggle-password/toggle-password', {
+                    buttonClasses: ['toggle-password-button'], // Add as many classes as you wish. "toggle-password-button" is needed to activate the default CSS.
+            }) }}
+        >
+    </div>
+
+    // ...
 
 Backward Compatibility promise
 ------------------------------
