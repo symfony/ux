@@ -1,0 +1,10 @@
+<button {{ attributes.defaults({
+    class: "ThemeSwitcher",
+    type: "button",
+}) }}
+    data-controller="theme-switcher"
+    data-action="theme-switcher#switch"
+>
+    <twig:Icon name="theme-light" />
+    <twig:Icon name="theme-dark" />
+</button>

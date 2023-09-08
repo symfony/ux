@@ -1,0 +1,48 @@
+.alert-right-message {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  padding: 1.25rem 1rem;
+  font-size: .8rem;
+}
+
+.form-control::placeholder {
+  color: $n-300;
+  font-weight: lighter;
+}
+
+.btn-outline-primary {
+  opacity: .75;
+  &:hover {
+    opacity: 1;
+  }
+
+  [data-bs-theme="dark"] & {
+    --color: var(--bs-body-color);
+
+    --bs-btn-color: var(--color);
+    --bs-btn-border-color: var(--color);
+    --bs-btn-hover-color: var(--bs-body-bg);
+    --bs-btn-hover-bg: var(--color);
+    --bs-btn-hover-border-color: var(--color);
+    --bs-btn-focus-shadow-rgb: 34, 34, 34;
+    --bs-btn-active-color: var(--color);
+    --bs-btn-active-bg: var(--color);
+    --bs-btn-active-border-color: var(--color);
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: var(--color);
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-disabled-border-color: var(--color);
+  }
+
+}
+
+
+.form-range::-moz-range-track {
+  background: var(--bs-secondary-bg-subtle);
+}
+
+.form-range::-moz-range-thumb {
+  background: var(--bs-secondary-color);
+}

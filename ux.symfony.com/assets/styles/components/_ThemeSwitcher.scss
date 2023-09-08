@@ -1,0 +1,40 @@
+.ThemeSwitcher {
+  --mod-light: 1;
+  --mod-dark: 0;
+
+  [data-bs-theme="dark"] & {
+    --mod-light: 0;
+    --mod-dark: 1;
+  }
+
+  position: relative;
+  display: inline-flex;
+  background: none;
+  border: none;
+  height: 1em;
+  width: 1em;
+  color: var(--bs-body-color);
+
+  .Icon {
+    position: absolute;
+    border: none;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    color: inherit;
+    transition: opacity 250ms ease-in-out,
+    scale 250ms linear;
+  }
+
+  .Icon--theme-light {
+    opacity: calc(var(--mod-light));
+    scale: calc(var(--mod-light));
+  }
+
+  .Icon--theme-dark {
+    opacity: calc(var(--mod-dark));
+    scale: calc(var(--mod-dark));
+  }
+}
+
+

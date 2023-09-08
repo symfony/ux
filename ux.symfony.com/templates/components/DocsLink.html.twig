@@ -1,16 +1,15 @@
-<a
-    {{ attributes.defaults({
-        href: url,
-        rel: isExternal ? 'external noopener noreferrer',
-    }) }}
->
-    <div class="light-container p-4">
-        <p class="ubuntu-header">
-            {{ title }}
+<div {{ attributes.defaults({ class: 'DocsLink' }) }}>
+    <div class="DocsLink_content">
+        <p class="DocsLink_title ubuntu-header">
+            <a href="{{ url }}" class="DocsLink_link"
+               rel="{{ isExternal ? 'external noopened noreferrer' }}"
+            >{{ title }}</a>
             {% if isExternal %}
-                <twig:Icon name="arrow-right" style="transform: rotate(-45deg);" />
+                <twig:Icon name="arrow-right" style="transform: rotate(-45deg);" class="DocsLink_arrow"/>
             {% endif %}
         </p>
-        <p>{{ text }}</p>
+        <div class="DocsLink_description">
+            <p>{{ text }}</p>
+        </div>
     </div>
-</a>
+</div>

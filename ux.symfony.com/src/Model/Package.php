@@ -13,6 +13,7 @@ class Package
         private string $name,
         private string $humanName,
         private string $route,
+        private string $color,
         private string $gradient,
         private string $description,
         private string $createString,
@@ -33,6 +34,11 @@ class Package
     public function getRoute(): string
     {
         return $this->route;
+    }
+
+    public function getColor(): string
+    {
+        return $this->color;
     }
 
     public function getGradient(): string

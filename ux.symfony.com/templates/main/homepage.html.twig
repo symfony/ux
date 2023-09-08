@@ -1,21 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-<div class="container-fluid container-xxl px-5 pt-5 hero-background">
-    {{ include('_main_nav.html.twig') }}
-    <div class="row justify-content-center g-5 pt-3 mt-2">
-      <div class="col-12 text-center text-lg-start col-lg-6">
-        <span class="eyebrows">curated by symfony</span>
-        <h1 class="ubuntu my-3">JavaScript <span class="hero">tools</span> you can't live without.</h1>
-        <p>A set of PHP & JavaScript packages to solve every day frontend problems featuring Stimulus and Turbo.</p>
-      </div>
-      <div class="col-12 col-sm-8 col-lg-6">
-          {{ component('HomepageTerminalSwapper') }}
-      </div>
+{% block content %}
+<div class="hero hero-background">
+    <div class="container-fluid container-xxl px-4 py-4 px-md-5 py-md-5">
+
+        <div class="row justify-content-center g-5 pt-3 mt-2">
+          <div class="col-12 text-center text-lg-start col-lg-6">
+            <span class="eyebrows">curated by symfony</span>
+            <h1 class="ubuntu my-3">JavaScript <em class="rainbow-emphasis">tools</em> you can't live without.</h1>
+            <p>A set of PHP &amp; JavaScript packages to solve every day frontend problems featuring Stimulus and Turbo.</p>
+          </div>
+          <div class="col-12 col-sm-10 col-md-8 col-lg-6">
+              {{ component('HomepageTerminalSwapper', {class: 'shadow-blur shadow-blur--rainbow', style: '--shadow-bottom: 2rem;'}) }}
+          </div>
+        </div>
     </div>
 </div>
 
-<div class="container-fluid container-xxl px-5 py-5">
+<div class="container-fluid container-xxl px-4 py-4 px-md-5 py-md-5">
     <h2 class="ubuntu">Install it</h2>
 
     <div class="arrow mb-3 d-none d-md-block"></div>
@@ -32,7 +34,7 @@
         </div>
 
         <div class="col-12 col-md-6 mt-3 mt-md-0">
-            <div {{ stimulus_controller('tooltips')}} class="ux-container file-tree flex-grow-1 ms-2 py-3 pe-5">
+            <div {{ stimulus_controller('tooltips') }} class="ux-container file-tree flex-grow-1 ms-2 py-3">
                 <div style="height: 185px; overflow: auto;">
                     <ul class="list-unstyled file-tree-main">
                         {{ include('main/_fileTreeLevel.html.twig', {
@@ -45,9 +47,9 @@
     </div>
 
     <p class="eyebrows" style="margin-top: 70px;">Stimulus Controllers</p>
-    <div class="d-md-flex justify-content-md-between text-center text-md-start">
-        <h2 class="ubuntu pt-2 component-headlines">Write custom JavaScript inside <span class="hero">Stimulus Controllers</span></h2>
-        <a style="height: 100%;" class="btn btn-md btn-outline-dark my-3 my-md-0" href="https://symfony.com/doc/current/frontend/ux.html">
+    <div class="d-md-flex justify-content-md-between align-items-center text-center text-md-start">
+        <h2 class="ubuntu pt-2 component-headlines">Write custom JavaScript inside <em class="rainbow-emphasis">Stimulus Controllers</em></h2>
+        <a style="height: 100%;" class="btn btn-md btn-outline-primary my-3 my-md-0" href="https://symfony.com/doc/current/frontend/ux.html">
             Read full Documentation
             <twig:Icon name="arrow-right" style="transform: rotate(-45deg);"/>
         </a>
@@ -72,29 +74,29 @@
     </div>
 
     {% block markdown_example %}
-    <div class="p-4 markdown-container rainbow-gradient mt-5 row" {{ stimulus_controller('markdown') }}>
-        <div class="col-12 col-md-5">
-            <textarea rows="3" class="form-control" aria-label="Type markdown into this box"
-                {{ stimulus_target('markdown', 'input') }}
-            >Writing JavaScript is a **dream** with Stimulus 🤩</textarea>
-        </div>
-        <div class="col-12 col-md-2 text-center">
-            <button class="btn btn-sm btn-dark mt-3" {{ stimulus_action('markdown', 'render') }}>
-                Convert <twig:Icon name="arrow-right" />
-            </button>
-        </div>
-        <div class="col-12 col-md-5 mt-3 mt-md-0">
-            <div style="min-height: 86px;" class="markdown-form-render-container p-2" {{ stimulus_target('markdown', 'preview') }} >
-                <small class="fw-light">(click "Convert")</small>
+        <div class="p-4 markdown-container background-glass shadow-blur shadow-blur--rainbow  mt-5 row" {{ stimulus_controller('markdown') }}>
+            <div class="col-12 col-md-5">
+                <textarea rows="3" class="form-control" aria-label="Type markdown into this box"
+                    {{ stimulus_target('markdown', 'input') }}
+                >Writing JavaScript is a **dream** with Stimulus 🤩</textarea>
+            </div>
+            <div class="col-12 col-md-2 d-flex justify-content-center align-items-center py-3">
+                <button class="btn btn-dark"
+                    {{ stimulus_action('markdown', 'render') }}
+                >Convert <twig:Icon name="arrow-right"/></button>
+            </div>
+            <div class="col-12 col-md-5">
+                <div style="min-height: 86px;" class="markdown-form-render-container p-2" {{ stimulus_target('markdown', 'preview') }} >
+                    <small class="fw-light">(click "Convert")</small>
+                </div>
             </div>
         </div>
-    </div>
     {% endblock %}
 
     <p class="eyebrows" style="margin-top: 111px;">Packages</p>
-    <div class="d-md-flex justify-content-md-between text-center text-md-start">
-        <h2 class="ubuntu pt-2 component-headlines">Install extra <span class="hero">Packages</span></h2>
-        <a style="height: 100%;" class="btn btn-md btn-outline-dark mt-3 mt-md-0"  href="{{ path('app_all_packages')}}">
+    <div class="d-md-flex justify-content-md-between text-center align-items-center text-md-start">
+        <h2 class="ubuntu pt-2 component-headlines">Install extra <em class="rainbow-emphasis">Packages</em></h2>
+        <a style="height: 100%;" class="btn btn-md btn-outline-primary mt-3 mt-md-0"  href="{{ path('app_all_packages')}}">
             Browse all Packages
             <twig:Icon name="arrow-right" style="transform: rotate(-45deg);"/>
         </a>
@@ -102,9 +104,5 @@
     <div class="row mt-3 mt-md-5">
         {{ include('main/_packagesList.html.twig') }}
     </div>
-
-    {#
-    {{ include('main/_testimonials.html.twig') }}
-    #}
 </div>
 {% endblock %}

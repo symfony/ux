@@ -1,6 +1,6 @@
 {% macro summaryAttributes(description) %}
     {% if description %}
-        data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right" title="{{ description|e('html_attr') }}"
+        data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="auto"  title="{{ description|e('html_attr') }}"
     {% endif %}
 {% endmacro %}
 

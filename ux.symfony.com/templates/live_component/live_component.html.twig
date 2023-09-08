@@ -43,10 +43,11 @@
 {% block documentation_links %}{% endblock %}
 
 {% block package_bottom %}
+
     <h2 class="eyebrows mt-5" id="demos">Live Component Demos</h2>
-    <div class="d-md-flex justify-content-md-between text-center text-md-start">
+    <div class="d-md-flex justify-content-md-between text-center align-items-center text-md-start">
         <h2 class="ubuntu pt-2 component-headlines">Find out what else you can <span style="color: #AE5929;">build</span></h2>
-        <a style="height: 100%;" class="btn btn-md btn-outline-dark my-3 my-md-0"
+        <a style="height: 100%;" class="btn btn-md btn-outline-primary my-3 my-md-0"
            href="https://symfony.com/bundles/ux-live-component/current/index.html">
             Read full Documentation
             <twig:Icon name="arrow-right" style="transform: rotate(-45deg);"/>
@@ -54,20 +55,25 @@
     </div>
 
     <div class="row mt-5 pb-5">
-        {% for demo in demos %}
-            <div class="col-12 col-sm-6 col-md-4 mt-3">
-                <a href="{{ path(demo.route) }}">
+        <div style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));">
+            {% for demo in demos %}
+                <div class="demo-box position-relative" style="display: flex;flex-direction: column;">
                     <div class="demo-container text-center" style="height: 180px; overflow: hidden">
-                        <img src="{{ asset(demo.screenshotFilename) }}" style="border-top-left-radius: 12px; border-top-right-radius: 12px; height: 100%;" alt="Screenshot of the {{ demo.name }} demo">
+                        <img src="{{ asset(demo.screenshotFilename) }}"
+                             class="img-dark-negative"
+                             style="border-top-left-radius: 12px; border-top-right-radius: 12px; height: 100%;"
+                             alt="Screenshot of the {{ demo.name }} demo">
                     </div>
-                    <div class="demo-container-inner p-3">
-                        <h4 class="ubuntu">{{ demo.name }}</h4>
+                    <div class="demo-container-inner p-3" style="flex: 1 auto;">
+                        <h4 class="ubuntu">
+                            <a href="{{ path(demo.route) }}" class="stretched-link">{{ demo.name }}</a>
+                        </h4>
                         <div>
                             {{ demo.description }}
                         </div>
                     </div>
-                </a>
-            </div>
-        {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}

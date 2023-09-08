@@ -2,49 +2,57 @@
 
 {% block title %}{{ demo.name }} Demo | Live Components{% endblock %}
 
-{% block body %}
-<div style="background-color: #272727;">
-    <div class="container-fluid container-xxl px-5 py-4" >
-        <div class="d-md-flex justify-content-md-between text-center text-md-start">
-            <a href="{{ path('app_live_component') }}#demos" style="height:100%;" class="btn btn-outline-light align-self-center">
-                <twig:Icon name="arrow-left" />
-                Back to all demos
-            </a>
-            <div class="font-white text-center mt-4 mt-md-0"><span class="eyebrows">DEMO</span><br><h1 class="inter">{{ demo.name }}</h1></div>
-            <a href="{{ path('app_homepage') }}" class="logo-white d-none d-md-inline align-self-center"></a>
+{% block header %}
+    <header style="">
+        <div class="container-fluid container-xxl px-5 py-4" >
+            <div class="d-md-flex justify-content-md-between text-center text-md-start align-items-center">
+                <a href="{{ path('app_live_component') }}#demos" style="height:100%;" class="btn btn-outline-primary align-self-center">
+                    <twig:Icon name="arrow-left" />
+                    Back to all demos
+                </a>
+                <twig:ThemeSwitcher />
+            </div>
+        </div>
+    </header>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container-fluid container-xxl px-4 px-md-5 mb-5">
+        <div class="text-center mt-md-0">
+            <span class="eyebrows">DEMO</span>
+            <h1 class="ubuntu text-center">{{ demo.name }}</h1>
+            <div style="font-size: 1rem; line-height: 1.75rem;" class="mt-4">
+                {{ demo.longDescription|markdown_to_html }}
+            </div>
         </div>
     </div>
-</div>
 
-    {% for message in app.flashes('live_demo_success') %}
-        <div class="container-fluid container-xxl alert alert-success" data-turbo-cache="false">{{ message }}</div>
-    {% endfor %}
+    <div class="container-fluid container-xxl px-4 px-md-5">
+        {% for message in app.flashes('live_demo_success') %}
+            <div class="alert alert-success" data-turbo-cache="false">{{ message }}</div>
+        {% endfor %}
+    </div>
 
-    <div class="container-fluid container-xxl px-5 pt-5">
-
-        <section style="color: rgb(100 116 139); font-size: 14px; line-height: 1.75rem;" class="mb-2">
-            {{ demo.longDescription|markdown_to_html }}
-        </section>
-
+    <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5 mb-5">
         <div class="mb-3" style="position: relative;">
-            <div class="p-4 markdown-container rainbow-gradient" id="demo">
+            <div class="p-4 markdown-container bg-body shadow-blur shadow-blur--rainbow" id="demo">
                 {% block demo_content %}{% endblock %}
             </div>
-
             <div class="arrow-2 mb-3 d-sm-block" style="position:absolute; bottom: 0; left: 0; transform: scaleX(-1) translateY(70px) translateX(20px)"></div>
         </div>
 
         {% block code_block_full %}
-        <div class="arrow mb-3 d-none d-md-block"></div>
-
-        <div class="row mb-5">
-            <div class="col-12 col-md-6">
-                {% block code_block_left %}{% endblock %}
+            <div class="arrow mb-3 d-none d-md-block"></div>
+            <div class="row mb-5">
+                <div class="col-12 col-md-6">
+                    {% block code_block_left %}{% endblock %}
+                </div>
+                <div class="col-12 col-md-6 mt-3 mt-md-0">
+                    {% block code_block_right %}{% endblock %}
+                </div>
             </div>
-            <div class="col-12 col-md-6 mt-3 mt-md-0">
-                {% block code_block_right %}{% endblock %}
-            </div>
-        </div>
         {% endblock %}
     </div>
+
 {% endblock %}
