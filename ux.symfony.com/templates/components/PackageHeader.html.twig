@@ -13,7 +13,7 @@
 
         <div class="d-flex justify-content-center ">
             <twig:TerminalCommand
-                aria-label="The package's composer installation command"
+                aria-label="Composer command to install {{ package.humanName }}"
                 command="{{ package.composerRequireCommand }}"
                 style="--color-accent: {{ package.color }}; transform: translateY(50%);"
             />

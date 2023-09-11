@@ -2,15 +2,15 @@
 
 namespace App\Twig;
 
-use App\Service\PackageRepository;
+use App\Service\UxPackageRepository;
 use App\Util\SourceCleaner;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsTwigComponent()]
+#[AsTwigComponent]
 class HomepageTerminalSwapper
 {
-    public function __construct(private PackageRepository $packageRepository)
+    public function __construct(private UxPackageRepository $packageRepository)
     {
     }
 

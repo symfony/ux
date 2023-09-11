@@ -96,13 +96,13 @@
     <p class="eyebrows" style="margin-top: 111px;">Packages</p>
     <div class="d-md-flex justify-content-md-between text-center align-items-center text-md-start">
         <h2 class="ubuntu pt-2 component-headlines">Install extra <em class="rainbow-emphasis">Packages</em></h2>
-        <a style="height: 100%;" class="btn btn-md btn-outline-primary mt-3 mt-md-0"  href="{{ path('app_all_packages')}}">
+        <a style="height: 100%;" class="btn btn-md btn-outline-primary mt-3 mt-md-0"  href="{{ path('app_packages')}}">
             Browse all Packages
             <twig:Icon name="arrow-right" style="transform: rotate(-45deg);"/>
         </a>
     </div>
     <div class="row mt-3 mt-md-5">
-        {{ include('main/_packagesList.html.twig') }}
+        {{ block('list', 'main/packages.html.twig') }}
     </div>
 </div>
 {% endblock %}

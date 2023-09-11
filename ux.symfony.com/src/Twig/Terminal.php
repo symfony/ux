@@ -5,7 +5,7 @@ namespace App\Twig;
 use App\Util\SourceCleaner;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent()]
+#[AsTwigComponent]
 class Terminal
 {
     public int $bottomPadding = 100;

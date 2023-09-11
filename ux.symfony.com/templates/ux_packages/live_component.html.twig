@@ -1,0 +1,80 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block package_header %}
+    {% component PackageHeader with {
+        package: 'live-component',
+        eyebrowText: 'Reactive Twig Templates'
+    } %}
+        {% block title_header %}
+            An Interactive UI
+            <span class="playfair ps-2">entirely built in Twig</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Your frontend Swiss Army Knife: build a highly-interactive
+            UI from the comfort of Twig. No JS needed.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    <twig:CodeBlock filename="src/Twig/SearchPackages.php" />
+{% endblock %}
+
+{% block code_block_right %}
+    <twig:CodeBlock filename="templates/components/SearchPackages.html.twig" />
+{% endblock %}
+
+{% block demo_title %}
+    Live Components
+{% endblock %}
+{% block demo_content %}
+    {{ component('SearchPackages') }}
+
+    <div class="d-flex eyebrows pt-5 align-items-center justify-content-center">
+        <div>Automatic <em>debouncing</em></div>
+        <twig:Icon name="circle-fill" style="font-size: .25rem" class="mx-1" />
+        <div>Loading states</div>
+        <twig:Icon name="circle-fill" style="font-size: .25rem" class="mx-1" />
+        <div>Required writing <em>ZERO JavaScript</em></div>
+    </div>
+{% endblock %}
+
+{% block documentation_links %}{% endblock %}
+
+{% block package_links %}
+<section class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
+    <h2 class="eyebrows mt-5" id="demos">Live Component Demos</h2>
+    <div class="d-md-flex justify-content-md-between text-center align-items-center text-md-start">
+        <h2 class="ubuntu pt-2 component-headlines">Find out what else you can <span style="color: #AE5929;">build</span></h2>
+        <a style="height: 100%;" class="btn btn-md btn-outline-primary my-3 my-md-0"
+           href="https://symfony.com/bundles/ux-live-component/current/index.html">
+            Read full Documentation
+            <twig:Icon name="arrow-right" style="transform: rotate(-45deg);"/>
+        </a>
+    </div>
+
+    <div class="row mt-5 pb-5">
+        <div style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));">
+            {% for demo in demos %}
+                <div class="demo-box position-relative" style="display: flex;flex-direction: column;">
+                    <div class="demo-container text-center" style="height: 180px; overflow: hidden">
+                        <img src="{{ asset(demo.screenshotFilename) }}"
+                             class="img-dark-negative"
+                             style="border-top-left-radius: 12px; border-top-right-radius: 12px; height: 100%;"
+                             alt="Screenshot of the {{ demo.name }} demo">
+                    </div>
+                    <div class="demo-container-inner p-3" style="flex: 1 auto;">
+                        <h4 class="ubuntu">
+                            <a href="{{ path(demo.route) }}" class="stretched-link">{{ demo.name }}</a>
+                        </h4>
+                        <div>
+                            {{ demo.description }}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

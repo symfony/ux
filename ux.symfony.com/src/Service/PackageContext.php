@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Model\Package;
+use App\Model\UxPackage;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 /**
@@ -13,12 +13,12 @@ class PackageContext
     private ?string $packageName = null;
 
     public function __construct(
-        private PackageRepository $packageRepository,
+        private UxPackageRepository $packageRepository,
         private RequestStack $requestStack,
     ) {
     }
 
-    public function getCurrentPackage(): Package
+    public function getCurrentPackage(): UxPackage
     {
         if (null !== $this->packageName) {
             return $this->packageRepository->find($this->packageName);

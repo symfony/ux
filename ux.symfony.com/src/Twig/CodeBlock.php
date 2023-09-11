@@ -8,7 +8,7 @@ use Highlight\Highlighter;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent()]
+#[AsTwigComponent]
 class CodeBlock
 {
     public string $filename;
@@ -32,8 +32,7 @@ class CodeBlock
 
     public function __construct(
         private Highlighter $highlighter,
-        #[Autowire('%kernel.project_dir%')]
-        private string $rootDir
+        #[Autowire('%kernel.project_dir%')] private string $rootDir,
     ) {
     }
 

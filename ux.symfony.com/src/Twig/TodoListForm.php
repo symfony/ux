@@ -11,7 +11,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\LiveCollectionTrait;
 
-#[AsLiveComponent()]
+#[AsLiveComponent]
 class TodoListForm extends AbstractController
 {
     use DefaultActionTrait;

@@ -1,0 +1,38 @@
+{% extends 'packageBase.html.twig' %}
+
+{% block package_header %}
+    {% component PackageHeader with {
+        package: 'chartjs',
+        eyebrowText: 'Charts from PHP'
+    } %}
+        {% block title_header %}
+            Render beautiful graphs with
+            <span class="playfair ps-2">chart.js</span>
+        {% endblock %}
+
+        {% block sub_content %}
+            Leverage the power of <a class="font-white text-underline" href="https://www.chartjs.org/" rel="noopener nofollow noreferrer">Chart.js</a>
+            entirely from PHP.
+        {% endblock %}
+    {% endcomponent %}
+{% endblock %}
+
+{% block code_block_left %}
+    <twig:CodeBlock filename="src/Controller/UxPackage/ChartjsController.php" height="250px"/>
+{% endblock %}
+
+{% block code_block_right %}
+    <twig:CodeBlock
+        filename="templates/ux_packages/chartjs.html.twig"
+        height="250px"
+        targetTwigBlock="demo_content"
+    />
+{% endblock %}
+
+{% block demo_title %}UX Chart.js{% endblock %}
+
+{% block demo_content %}
+    <div style="height: 300px;">
+        {{ render_chart(chart) }}
+    </div>
+{% endblock %}

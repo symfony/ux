@@ -64,7 +64,6 @@ class AutocompleteFormRenderingTest extends KernelTestCase
             // so ONLY the placeholder shows up
             ->assertElementCount('#product_category_autocomplete option', 1)
             ->assertNotContains('First cat')
-
             ->post('/test-form', [
                 'body' => [
                     'product' => ['category' => ['autocomplete' => $fooCat->getId()]],

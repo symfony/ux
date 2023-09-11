@@ -2,16 +2,16 @@
 
 namespace App\Twig;
 
-use App\Service\PackageRepository;
+use App\Service\UxPackageRepository;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent()]
+#[AsTwigComponent]
 class Alert
 {
     public string $type = 'success';
     public string $message;
 
-    public function __construct(private PackageRepository $packageRepository)
+    public function __construct(private UxPackageRepository $packageRepository)
     {
     }
 

@@ -8,7 +8,7 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 use function Symfony\Component\String\u;
 
-#[AsTwigComponent()]
+#[AsTwigComponent]
 class Icon
 {
     /**

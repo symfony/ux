@@ -32,7 +32,7 @@
 
 {% block demo_content %}
     <div {{ svelte_component('PackageSearch', {
-        packages: packagesData
+        packages: packagesData,
     }) }}>
         Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
     </div>
