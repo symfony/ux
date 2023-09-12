@@ -90,6 +90,7 @@ final class Kernel extends BaseKernel
             'secrets' => false,
             'session' => ['storage_factory_id' => 'session.storage.factory.mock_file'],
             'http_method_override' => false,
+            'property_info' => ['enabled' => true],
         ]);
 
         $c->extension('twig', [
