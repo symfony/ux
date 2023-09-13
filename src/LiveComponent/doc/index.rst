@@ -1158,9 +1158,9 @@ shortcuts. We even added a flash message!
 Uploading files
 ---------------
 
-.. versionadded:: 2.9
+.. versionadded:: 2.11
 
-    The ability to upload files to actions was added in version 2.9.
+    The ability to upload files to actions was added in version 2.11.
 
 Files aren't sent to the component by default. You need to use a live action
 to handle the files and tell the component when the file should be sent:
