@@ -26,7 +26,7 @@ final class TemplateCacheWarmer implements CacheWarmerInterface
     {
     }
 
-    public function warmUp(string $cacheDir): void
+    public function warmUp(string $cacheDir): array
     {
         $map = [];
         foreach ($this->templateIterator as $item) {
@@ -34,6 +34,8 @@ final class TemplateCacheWarmer implements CacheWarmerInterface
         }
 
         (new PhpArrayAdapter($cacheDir.'/'.$this->cacheFilename, new NullAdapter()))->warmUp(['map' => $map]);
+
+        return [];
     }
 
     public function isOptional(): bool
