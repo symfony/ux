@@ -6,7 +6,7 @@
     <header style="">
         <div class="container-fluid container-xxl px-5 py-4" >
             <div class="d-md-flex justify-content-md-between text-center text-md-start align-items-center">
-                <a href="{{ path('app_live_component') }}#demos" style="height:100%;" class="btn btn-outline-primary align-self-center">
+                <a href="{{ path('app_demos') }}#demos" style="height:100%;" class="btn btn-outline-primary align-self-center">
                     <twig:Icon name="arrow-left" />
                     Back to all demos
                 </a>
@@ -20,7 +20,9 @@
 
     <div class="container-fluid container-xxl px-4 px-md-5 mb-5">
         <div class="text-center mt-md-0">
-            <span class="eyebrows">DEMO</span>
+            <p class="eyebrows">
+                <a href="{{ url('app_demos') }}">DEMO</a>
+            </p>
             <h1 class="ubuntu text-center">{{ demo.name }}</h1>
             <div style="font-size: 1rem; line-height: 1.75rem;" class="mt-4">
                 {{ demo.longDescription|markdown_to_html }}

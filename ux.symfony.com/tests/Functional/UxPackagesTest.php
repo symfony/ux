@@ -2,8 +2,8 @@
 
 namespace App\Tests\Functional;
 
-use App\Model\Package;
-use App\Service\PackageRepository;
+use App\Model\UxPackage;
+use App\Service\UxPackageRepository;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Zenstruck\Browser\Test\HasBrowser;
 
@@ -24,7 +24,7 @@ class UxPackagesTest extends KernelTestCase
     /**
      * @dataProvider getSmokeTests
      */
-    public function testPackagePagesAllLoad(Package $package, string $expectedText): void
+    public function testPackagePagesAllLoad(UxPackage $package, string $expectedText): void
     {
         $this->browser()
             ->visit('/'.$package->getName())
@@ -36,7 +36,7 @@ class UxPackagesTest extends KernelTestCase
 
     public function getSmokeTests(): \Generator
     {
-        $repository = new PackageRepository();
+        $repository = new UxPackageRepository();
         foreach ($repository->findAll() as $package) {
             if ('live-component' === $package->getName()) {
                 // Live Component has a different bottom section

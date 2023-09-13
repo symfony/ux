@@ -9,7 +9,7 @@ use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent()]
+#[AsLiveComponent]
 class MealPlanner extends AbstractController
 {
     use ComponentWithFormTrait;

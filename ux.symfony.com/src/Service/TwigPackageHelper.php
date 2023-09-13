@@ -2,18 +2,18 @@
 
 namespace App\Service;
 
-use App\Model\Package;
+use App\Model\UxPackage;
 
 class TwigPackageHelper
 {
     public function __construct(
-        private PackageRepository $packageRepository,
+        private UxPackageRepository $packageRepository,
         private PackageContext $packageContext
     ) {
     }
 
     /**
-     * @return array<Package>
+     * @return array<UxPackage>
      */
     public function getTopNavPackages(): array
     {
@@ -26,7 +26,7 @@ class TwigPackageHelper
         ];
     }
 
-    public function getCurrentPackage(): Package
+    public function getCurrentPackage(): UxPackage
     {
         return $this->packageContext->getCurrentPackage();
     }

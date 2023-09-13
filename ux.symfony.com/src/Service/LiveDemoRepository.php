@@ -16,7 +16,7 @@ class LiveDemoRepository
                 'auto-validating-form',
                 name: 'Auto-Validating Form',
                 description: 'Create a form that validates each field in-real-time as the user enters data!',
-                route: 'app_live_components_demo_auto_validating_form',
+                route: 'app_demo_live_component_auto_validating_form',
                 longDescription: <<<EOF
 Enter a bad email or leave the password empty, and see how the
 form validates in real time!
@@ -29,7 +29,7 @@ EOF
                 'form-collection-type',
                 name: 'Embedded CollectionType Form',
                 description: 'Create embedded forms with functional "add" and "remove" buttons all in Twig.',
-                route: 'app_live_components_demo_form_collection_type',
+                route: 'app_demo_live_component_form_collection_type',
                 longDescription: <<<EOF
 Unlock the potential of Symfony's <a href="https://symfony.com/doc/current/reference/forms/types/collection.html"><code>CollectionType</code></a> while
 writing zero JavaScript.
@@ -41,7 +41,7 @@ EOF
                 'dependent-form-fields',
                 name: 'Dependent Form Fields',
                 description: 'After selecting the first field, automatically reload the options for a second field.',
-                route: 'app_live_components_demo_dependent_form_fields',
+                route: 'app_demo_live_component_dependent_form_fields',
                 longDescription: <<<EOF
 Say goodbye to the hassle of dependent form fields with Live Components.
 <br>
@@ -52,7 +52,7 @@ EOF
                 'voting',
                 name: 'Up & Down Voting',
                 description: 'Save up & down votes live in pure Twig & PHP.',
-                route: 'app_live_components_demo_voting',
+                route: 'app_demo_live_component_voting',
                 longDescription: <<<EOF
 With each row as its own component, it's easy to add up & down voting + keep track of which items have been voted on.
 <br>
@@ -60,20 +60,20 @@ This uses a <a href="https://symfony.com/bundles/ux-live-component/current/index
 EOF
             ),
             new LiveDemo(
-                'inline_edit',
+                'inline-edit',
                 name: 'Inline Editing',
                 description: 'Activate an inline editing form with real-time validation.',
-                route: 'app_live_components_demo_inline_edit',
+                route: 'app_demo_live_component_inline_edit',
                 longDescription: <<<EOF
 Inline editing? Simple. Use LiveComponents to track if you're in "edit" mode, let
 the user update any fields on your entity, and save through a <code>LiveAction</code>.
 EOF
             ),
             new LiveDemo(
-                'chartjs_updating',
+                'chartjs',
                 name: 'Auto-Updating Chart',
                 description: 'Render & Update a Chart.js chart in real-time.',
-                route: 'app_live_components_demo_chartjs',
+                route: 'app_demo_live_component_chartjs',
                 longDescription: <<<EOF
 What do you get with Live Components + UX Chart.js + UX Autocomplete?
 <br>
@@ -84,7 +84,7 @@ EOF
                 'invoice',
                 name: 'Invoice Creator',
                 description: 'Create an invoice + line items that updates as you type.',
-                route: 'app_live_components_invoice',
+                route: 'app_demo_live_component_invoice',
                 longDescription: <<<EOF
 Create or edit an `Invoice` entity along with child components for each related `InvoiceItem` entity.
 <br>
@@ -92,10 +92,10 @@ Children components emit events to communicate to the parent and everything is s
 EOF
             ),
             new LiveDemo(
-                'product_form',
+                'product-form',
                 name: 'Product Form + Category Modal',
                 description: 'Create a Category on the fly - from inside a product form - via a modal.',
-                route: 'app_live_components_product_form',
+                route: 'app_demo_live_component_product_form',
                 longDescription: <<<EOF
 Open a child modal component to create a new Category.
 EOF
@@ -104,7 +104,7 @@ EOF
                 'upload',
                 name: 'Uploading files',
                 description: 'Upload file from your live component through a LiveAction.',
-                route: 'app_live_components_upload',
+                route: 'app_demo_live_component_upload',
                 longDescription: <<<EOF
 File uploads are tricky. Submit them to a `#[LiveAction]` with the `files` modifier on `data-live-action` then process them.
 EOF

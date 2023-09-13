@@ -7,12 +7,17 @@
     <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
         <h1 class="text-center ubuntu mt-5">All Packages</h1>
         <p class="text-center mt-2 mb-5">A treasure chest of packages to solve your<br>frontend problems.</p>
-
     </div>
 </div>
 
 <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
-    {{ include('main/_packagesList.html.twig') }}
+    {% block list %}
+        <div style="display: grid; gap: 3rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));">
+            {% for package in packages %}
+                <twig:PackageBox :package="package"/>
+            {% endfor %}
+        </div>
+    {% endblock %}
 </div>
 {% endblock %}
 

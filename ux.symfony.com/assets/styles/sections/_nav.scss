@@ -47,18 +47,6 @@
   }
 }
 
-.AppNav_separator {
-  display: flex;
-  color: inherit;
-  width: 2px;
-  border-radius: 1px;
-  height: 1rem;
-  margin: 0;
-  border-left: 1px dashed var(--text-color);
-  opacity: .5;
-  display: none; // TODO remove if ok
-}
-
 .nav-component-img {
   height: 22px;
   width: 22px;

@@ -2,12 +2,12 @@
 
 namespace App\Twig;
 
-use App\Service\PackageRepository;
+use App\Service\UxPackageRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent()]
+#[AsLiveComponent]
 class SearchPackages
 {
     use DefaultActionTrait;
@@ -15,7 +15,7 @@ class SearchPackages
     #[LiveProp(writable: true)]
     public ?string $query = null;
 
-    public function __construct(private PackageRepository $packageRepo)
+    public function __construct(private UxPackageRepository $packageRepo)
     {
     }
 

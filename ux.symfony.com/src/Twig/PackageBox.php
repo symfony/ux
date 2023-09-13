@@ -2,11 +2,11 @@
 
 namespace App\Twig;
 
-use App\Model\Package;
+use App\Model\UxPackage;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent()]
+#[AsTwigComponent]
 class PackageBox
 {
-    public Package $package;
+    public UxPackage $package;
 }

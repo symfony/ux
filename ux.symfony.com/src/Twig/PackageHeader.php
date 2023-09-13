@@ -2,15 +2,15 @@
 
 namespace App\Twig;
 
-use App\Model\Package;
+use App\Model\UxPackage;
 use App\Repository\ChatRepository;
-use App\Service\PackageRepository;
+use App\Service\UxPackageRepository;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent()]
+#[AsTwigComponent]
 class PackageHeader
 {
-    public Package $package;
+    public UxPackage $package;
 
     public string $eyebrowText = '';
 
@@ -19,7 +19,7 @@ class PackageHeader
      */
     public bool $withChatIcon = false;
 
-    public function __construct(private PackageRepository $packageRepository, private ChatRepository $chatRepository)
+    public function __construct(private UxPackageRepository $packageRepository, private ChatRepository $chatRepository)
     {
     }
 

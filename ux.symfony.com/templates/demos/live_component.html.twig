@@ -1,0 +1,46 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Demos - Live Component - Symfony UX{% endblock %}
+
+{% block content %}
+
+<div class="hero">
+    <div class="container-fluid container-xxl px-4 px-md-5 mb-5 pt-md-5">
+        <div class="text-center mt-5">
+            <span class="eyebrows">Demos</span>
+            <h1 class="ubuntu">Live Component</h1>
+        </div>
+    </div>
+</div>
+
+<div class="hero">
+    <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
+        <h1 class="text-center ubuntu mt-5">Live Component</h1>
+    </div>
+</div>
+
+<div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
+    {% block list %}
+        <div style="display: grid; gap: 3rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));">
+            {% for demo in demos %}
+                    <div class="demo-box position-relative" style="display: flex;flex-direction: column;">
+                        <div class="demo-container text-center" style="height: 180px; overflow: hidden">
+                            <img src="{{ asset(demo.screenshotFilename) }}"
+                                 class="img-dark-negative"
+                                 style="border-top-left-radius: 12px; border-top-right-radius: 12px; height: 100%;"
+                                 alt="Screenshot of the {{ demo.name }} demo">
+                        </div>
+                        <div class="demo-container-inner p-3" style="flex: 1 auto;">
+                            <h4 class="ubuntu">
+                                <a href="{{ path(demo.route) }}" class="stretched-link">{{ demo.name }}</a>
+                            </h4>
+                            <div>
+                                {{ demo.description }}
+                            </div>
+                        </div>
+                    </div>
+            {% endfor %}
+        </div>
+    {% endblock %}
+</div>
+{% endblock %}

@@ -1,6 +1,6 @@
 controllers:
     resource: ../src/Controller/
-    type: annotation
+    type: attribute
 
 kernel:
     resource: ../src/Kernel.php

@@ -13,7 +13,7 @@ use Symfony\UX\LiveComponent\LiveResponder;
 use Symfony\UX\LiveComponent\ValidatableComponentTrait;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsLiveComponent()]
+#[AsLiveComponent]
 class InvoiceCreatorLineItem
 {
     use DefaultActionTrait;
@@ -30,7 +30,7 @@ class InvoiceCreatorLineItem
     #[Assert\Positive]
     public int $quantity = 1;
 
-    #[LiveProp()]
+    #[LiveProp]
     public bool $isEditing = false;
 
     public function __construct(private ProductRepository $productRepository)

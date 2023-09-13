@@ -12,7 +12,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\ValidatableComponentTrait;
 
-#[AsLiveComponent()]
+#[AsLiveComponent]
 class InlineEditFood extends AbstractController
 {
     use DefaultActionTrait;

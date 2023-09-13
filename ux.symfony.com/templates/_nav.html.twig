@@ -18,7 +18,7 @@
                             <div class="nav-component-img d-flex justify-content-center align-items-center me-2"
                                  style="background: {{ package.color }}">
                                 <img width="10" height="10"
-                                     src="{{ asset('images/'~package.imageFilename) }}"
+                                     src="{{ asset('images/ux_packages/'~package.imageFilename) }}"
                                      alt="Image for the {{ package.humanName }} UX package">
                             </div>
                             {{ package.humanName }}
@@ -30,17 +30,16 @@
                 <hr class="dropdown-divider">
             </li>
             <li>
-                <a class="dropdown-item" href="{{ path('app_all_packages') }}">Browse all Packages</a>
+                <a class="dropdown-item" href="{{ path('app_packages') }}">Browse all Packages</a>
             </li>
         </ul>
     </div>
-    <span class="AppNav_separator" aria-hidden="true"></span>
+    <a href="{{ path('app_demos') }}" class="AppNav_item">Demos</a>
     <a class="AppNav_item AppNav_item--icon"
        href="https://github.com/symfony/ux"
        rel="external noopener noreferrer"
     >
         <twig:Icon name="github"/>
     </a>
-    <span class="AppNav_separator" aria-hidden="true"></span>
     <twig:ThemeSwitcher class="AppNav_item AppNav_item--icon" />
 {% endblock %}

@@ -18,7 +18,7 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\ValidatableComponentTrait;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsLiveComponent()]
+#[AsLiveComponent]
 class InvoiceCreator extends AbstractController
 {
     use DefaultActionTrait;
