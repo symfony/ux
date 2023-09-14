@@ -488,7 +488,7 @@ final class LiveComponentHydrator
             return $object;
         }
 
-        throw new HydrationException(sprintf('Unable to hydrate value of type "%s" for property "%s" on component "%s". Change this to a simpler value, add the hydrateWith/dehydrateWith options to LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer..', $className, $propertyPathForError, $componentClassForError));
+        throw new HydrationException(sprintf('Unable to hydrate value of type "%s" for property "%s" on component "%s". it looks like something went wrong by trying to guess your property types.', $className, $propertyPathForError, $componentClassForError));
     }
 
     private function isValueValidDehydratedValue(mixed $value): bool
