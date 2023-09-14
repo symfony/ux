@@ -242,7 +242,7 @@ LiveProp Data Types
 
 LiveProps must be a value that can be sent to JavaScript. Supported values
 are scalars (int, float, string, bool, null), arrays (of scalar values), enums,
-DateTime objects & Doctrine entity objects.
+DateTime objects, Doctrine entity objects, DTO, or array of DTO.
 
 See :ref:`hydration` for handling more complex data.
 
@@ -625,10 +625,33 @@ persisted entities, which dehydrate to an ``id``).
 Hydration, DTO's & the Serializer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-If you try to use a ``LiveProp`` for some unsupported type (e.g.a DTO object),
-it will fail. A best practice is to use simple data.
+.. versionadded:: 2.11
 
-But there are two options to make this work:
+    Dto are now a supported type for LiveComponent
+
+To use a ``LiveProp`` with DTO simply type properly your property
+
+.. code-block:: php
+
+    class ComponentWithAddressDto
+    {
+        public AddressDto $addressDto;
+    }
+
+And to work with DTO collection, you simply need to specified the collection type in your phpdoc
+
+.. code-block:: php
+
+    class ComponentWithAddressDto
+    {
+        /**
+         * @var AddressDto[]
+        /*
+        public array $addressDtoCollection;
+    }
+
+If this solution doesn't feat your need
+there are two others options to make this work:
 
 1) Hydrating with the Serializer
 ................................
