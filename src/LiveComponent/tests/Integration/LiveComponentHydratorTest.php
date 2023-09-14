@@ -803,7 +803,6 @@ final class LiveComponentHydratorTest extends KernelTestCase
                         'address' => '1 rue du Bac',
                         'city' => 'Paris',
                     ],
-                    '@checksum' => '2P/KES0BbGw1KNZsOn4CSEpN1HJ1s...+bQPY=',
                 ])
                 ->userUpdatesProps(['address' => ['address' => '4 rue des lilas', 'city' => 'Asnieres']])
                 ->assertObjectAfterHydration(function (object $object) {
@@ -837,8 +836,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                             'address' => '1 rue du Bac',
                             'city' => 'Paris',
                         ],
-                    ],
-                    '@checksum' => 'tjeTtPH8xCyM2TIxP+FOnRakGHNBE...qQiVA=',
+                    ]
                 ])
                 ->userUpdatesProps(['customerDetails' => ['lastName' => 'Matheo', 'firstName' => 'Daninos', 'address' => ['address' => '3 rue du Bac', 'city' => 'Paris']]])
                 ->assertObjectAfterHydration(function (object $object) {
@@ -879,7 +877,6 @@ final class LiveComponentHydratorTest extends KernelTestCase
                             ],
                         ],
                     ],
-                    '@checksum' => 'tjeTtPH8xCyM2TIxP+FOnRakGHNBE...qQiVA=',
                 ])
                 ->userUpdatesProps(['customerDetailsCollection' => [['lastName' => 'Matheo', 'firstName' => 'Daninos', 'address' => ['address' => '3 rue du Bac', 'city' => 'Paris']]]])
                 ->assertObjectAfterHydration(function (object $object) {
