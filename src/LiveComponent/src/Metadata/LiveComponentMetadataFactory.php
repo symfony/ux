@@ -59,13 +59,13 @@ class LiveComponentMetadataFactory
                 continue;
             }
 
-            $metadatas[$property->getName()] = $this->createLivePropMetadata($class->getName(), $property->getName(), $property, $attribute);
+            $metadatas[$property->getName()] = $this->createLivePropMetadata($class->getName(), $property->getName(), $property, $attribute->newInstance());
         }
 
         return array_values($metadatas);
     }
 
-    public function createLivePropMetadata(string $className, string $propertyName, \ReflectionProperty $property, \ReflectionAttribute $attribute = null): LivePropMetadata
+    public function createLivePropMetadata(string $className, string $propertyName, \ReflectionProperty $property, LiveProp $liveProp): LivePropMetadata
     {
         $collectionValueType = null;
         $infoTypes = $this->propertyTypeExtractor->getTypes($className, $propertyName) ?? [];
@@ -85,7 +85,7 @@ class LiveComponentMetadataFactory
 
         return new LivePropMetadata(
             $property->getName(),
-            null !== $attribute ? $attribute->newInstance() : new LiveProp(true),
+            $liveProp,
             $type?->getName(),
             $type && $type->isBuiltin(),
             !$type || $type->allowsNull(),

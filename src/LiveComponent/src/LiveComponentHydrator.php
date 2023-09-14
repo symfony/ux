@@ -394,14 +394,14 @@ final class LiveComponentHydrator
             }
         }
 
-        $hydratedObject = [];
+        $dehydratedObjectValues = [];
         foreach ((new \ReflectionClass($classType))->getProperties() as $property) {
             $propertyValue = $this->propertyAccessor->getValue($value, $property->getName());
-            $propMetadata = $this->liveComponentMetadataFactory->createLivePropMetadata($classType, $property->getName(), $property);
-            $hydratedObject[$property->getName()] = $this->dehydrateValue($propertyValue, $propMetadata, $component);
+            $propMetadata = $this->liveComponentMetadataFactory->createLivePropMetadata($classType, $property->getName(), $property, new LiveProp());
+            $dehydratedObjectValues[$property->getName()] = $this->dehydrateValue($propertyValue, $propMetadata, $component);
         }
 
-        return $hydratedObject;
+        return $dehydratedObjectValues;
     }
 
     private function hydrateValue(mixed $value, LivePropMetadata $propMetadata, object $component): mixed
@@ -481,7 +481,7 @@ final class LiveComponentHydrator
             foreach ($value as $propertyName => $propertyValue) {
                 $reflexionClass = new \ReflectionClass($className);
                 $property = $reflexionClass->getProperty($propertyName);
-                $propMetadata = $this->liveComponentMetadataFactory->createLivePropMetadata($className, $propertyName, $property);
+                $propMetadata = $this->liveComponentMetadataFactory->createLivePropMetadata($className, $propertyName, $property, new LiveProp());
                 $this->propertyAccessor->setValue($object, $propertyName, $this->hydrateValue($propertyValue, $propMetadata, $component));
             }
 
