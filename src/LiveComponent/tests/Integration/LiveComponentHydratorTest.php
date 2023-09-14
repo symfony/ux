@@ -836,7 +836,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                             'address' => '1 rue du Bac',
                             'city' => 'Paris',
                         ],
-                    ]
+                    ],
                 ])
                 ->userUpdatesProps(['customerDetails' => ['lastName' => 'Matheo', 'firstName' => 'Daninos', 'address' => ['address' => '3 rue du Bac', 'city' => 'Paris']]])
                 ->assertObjectAfterHydration(function (object $object) {

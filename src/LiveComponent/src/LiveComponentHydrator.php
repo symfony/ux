@@ -325,14 +325,14 @@ final class LiveComponentHydrator
         return $propertyValue;
     }
 
-    private function dehydrateValue(mixed $value, LivePropMetadata $propMetadata, object $component): mixed
+    private function dehydrateValue(mixed $value, LivePropMetadata $propMetadata, object $parentObject): mixed
     {
         if ($method = $propMetadata->dehydrateMethod()) {
-            if (!method_exists($component, $method)) {
-                throw new \LogicException(sprintf('The "%s" component has a dehydrateMethod of "%s" but the method does not exist.', $component::class, $method));
+            if (!method_exists($parentObject, $method)) {
+                throw new \LogicException(sprintf('The dehydration failed for class "%s" because the "%s" method does not exist.', $parentObject::class, $method));
             }
 
-            return $component->$method($value);
+            return $parentObject->$method($value);
         }
 
         if ($propMetadata->useSerializerForHydration()) {
@@ -348,37 +348,37 @@ final class LiveComponentHydrator
                 $collectionClass = $propMetadata->collectionValueType()->getClassName();
                 foreach ($value as $key => $objectItem) {
                     if (!$objectItem instanceof $collectionClass) {
-                        throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of %s objects, but at least on key had a different value of %s', $propMetadata->getName(), $component::class, $collectionClass, get_debug_type($objectItem)));
+                        throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of %s objects, but at least on key had a different value of %s', $propMetadata->getName(), $parentObject::class, $collectionClass, get_debug_type($objectItem)));
                     }
 
-                    $value[$key] = $this->dehydrateObjectValue($objectItem, $collectionClass, $propMetadata->getFormat(), $component);
+                    $value[$key] = $this->dehydrateObjectValue($objectItem, $collectionClass, $propMetadata->getFormat(), $parentObject);
                 }
             }
 
             if (!$this->isValueValidDehydratedValue($value)) {
                 $badKeys = $this->getNonScalarKeys($value, $propMetadata->getName());
                 $badKeysText = implode(', ', array_map(fn ($key) => sprintf('%s: %s', $key, $badKeys[$key]), array_keys($badKeys)));
-                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" is an array, but it contains one or more keys that are not scalars: %s', $propMetadata->getName(), $component::class, $badKeysText));
+                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" is an array, but it contains one or more keys that are not scalars: %s', $propMetadata->getName(), $parentObject::class, $badKeysText));
             }
 
             return $value;
         }
 
         if (!\is_object($value)) {
-            throw new \LogicException(sprintf('Unable to dehydrate value of type "%s" for property "%s" on component "%s". Change this to a simpler type of an object that can be dehydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', get_debug_type($value), $propMetadata->getName(), $component::class));
+            throw new \LogicException(sprintf('The "%s" object has a hydrateMethod of "%s" but the method does not exist.', $parentObject::class, $propMetadata->hydrateMethod()));
         }
 
         if (!$propMetadata->getType() || $propMetadata->isBuiltIn()) {
-            throw new \LogicException(sprintf('The "%s" property on component "%s" is missing its property-type. Add the "%s" type so the object can be hydrated later.', $propMetadata->getName(), $component::class, $value::class));
+            throw new \LogicException(sprintf('The "%s" property on component "%s" is missing its property-type. Add the "%s" type so the object can be hydrated later.', $propMetadata->getName(), $parentObject::class, $value::class));
         }
 
         // at this point, we have an object and can assume $propMetadata->getType()
         // is set correctly (needed for hydration later)
 
-        return $this->dehydrateObjectValue($value, $propMetadata->getType(), $propMetadata->getFormat(), $component);
+        return $this->dehydrateObjectValue($value, $propMetadata->getType(), $propMetadata->getFormat(), $parentObject);
     }
 
-    private function dehydrateObjectValue(object $value, string $classType, ?string $dateFormat, object $component): mixed
+    private function dehydrateObjectValue(object $value, string $classType, ?string $dateFormat, object $parentObject): mixed
     {
         if ($value instanceof \DateTimeInterface) {
             return $value->format($dateFormat ?: \DateTimeInterface::RFC3339);
@@ -398,20 +398,20 @@ final class LiveComponentHydrator
         foreach ((new \ReflectionClass($classType))->getProperties() as $property) {
             $propertyValue = $this->propertyAccessor->getValue($value, $property->getName());
             $propMetadata = $this->liveComponentMetadataFactory->createLivePropMetadata($classType, $property->getName(), $property, new LiveProp());
-            $dehydratedObjectValues[$property->getName()] = $this->dehydrateValue($propertyValue, $propMetadata, $component);
+            $dehydratedObjectValues[$property->getName()] = $this->dehydrateValue($propertyValue, $propMetadata, $parentObject);
         }
 
         return $dehydratedObjectValues;
     }
 
-    private function hydrateValue(mixed $value, LivePropMetadata $propMetadata, object $component): mixed
+    private function hydrateValue(mixed $value, LivePropMetadata $propMetadata, object $parentObject): mixed
     {
         if ($propMetadata->hydrateMethod()) {
-            if (!method_exists($component, $propMetadata->hydrateMethod())) {
-                throw new \LogicException(sprintf('The "%s" component has a hydrateMethod of "%s" but the method does not exist.', $component::class, $propMetadata->hydrateMethod()));
+            if (!method_exists($parentObject, $propMetadata->hydrateMethod())) {
+                throw new \LogicException(sprintf('The "%s" object has a hydrateMethod of "%s" but the method does not exist.', $parentObject::class, $propMetadata->hydrateMethod()));
             }
 
-            return $component->{$propMetadata->hydrateMethod()}($value);
+            return $parentObject->{$propMetadata->hydrateMethod()}($value);
         }
 
         if ($propMetadata->useSerializerForHydration()) {
@@ -421,7 +421,7 @@ final class LiveComponentHydrator
         if ($propMetadata->collectionValueType() && Type::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {
             $collectionClass = $propMetadata->collectionValueType()->getClassName();
             foreach ($value as $key => $objectItem) {
-                $value[$key] = $this->hydrateObjectValue($objectItem, $collectionClass, true, $component::class, sprintf('%s.%s', $propMetadata->getName(), $key), $component);
+                $value[$key] = $this->hydrateObjectValue($objectItem, $collectionClass, true, $parentObject::class, sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
             }
         }
 
@@ -443,7 +443,7 @@ final class LiveComponentHydrator
             return $value;
         }
 
-        return $this->hydrateObjectValue($value, $propMetadata->getType(), $propMetadata->allowsNull(), $component::class, $propMetadata->getName(), $component);
+        return $this->hydrateObjectValue($value, $propMetadata->getType(), $propMetadata->allowsNull(), $parentObject::class, $propMetadata->getName(), $parentObject);
     }
 
     private function hydrateObjectValue(mixed $value, string $className, bool $allowsNull, string $componentClassForError, string $propertyPathForError, object $component): ?object
