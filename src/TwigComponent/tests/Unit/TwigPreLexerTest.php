@@ -25,7 +25,7 @@ final class TwigPreLexerTest extends TestCase
         $this->assertSame($expectedOutput, $lexer->preLexComponents($input));
     }
 
-    public function getLexTests(): iterable
+    public static function getLexTests(): iterable
     {
         yield 'simple_component' => [
             '<twig:foo />',
