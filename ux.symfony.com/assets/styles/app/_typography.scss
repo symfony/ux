@@ -5,14 +5,6 @@ h1 {
   letter-spacing: -0.035em;
 }
 
-h1.inter {
-  font-family: Inter;
-  font-size: 16px;
-  font-weight: 700;
-  line-height: 26px;
-  letter-spacing: 0px;
-}
-
 h1.ubuntu {
   line-height: 60px;
 }
@@ -89,7 +81,7 @@ h4.ubuntu {
 
 .eyebrows {
   text-transform: uppercase;
-  font-family: Inter;
+  font-family: var(--font-family-text);
   font-size: 0.7rem;
   font-weight: 600;
   line-height: 1.6;
