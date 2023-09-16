@@ -76,7 +76,7 @@
 .Terminal_body {
     background-color: $n-800;
     height: 100%;
-    font-family: 'Space Mono', monospace;
+    font-family: var(--font-family-code);
     font-size: 14px;
     line-height: 160%;
     color: #FFF;
