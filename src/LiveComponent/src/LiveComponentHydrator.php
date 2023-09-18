@@ -213,35 +213,7 @@ final class LiveComponentHydrator
             // A special hook that will be called if the LiveProp was changed
             // and $onUpdated argument is set on the attribute
             if ($propMetadata->onUpdated()) {
-                if (\is_string($propMetadata->onUpdated())) {
-                    $this->ensureOnUpdatedMethodExists($component, $propMetadata->onUpdated());
-
-                    if ($dehydratedUpdatedProps->hasPropValue($frontendName)) {
-                        $propertyOldValue = $dehydratedOriginalProps->getPropValue($frontendName);
-                        $component->{$propMetadata->onUpdated()}($propertyOldValue);
-                    }
-                } elseif (\is_array($propMetadata->onUpdated())) {
-                    foreach ($propMetadata->onUpdated() as $propName => $funcName) {
-                        $this->ensureOnUpdatedMethodExists($component, $funcName);
-
-                        if (LiveProp::IDENTITY === $propName) {
-                            if ($dehydratedUpdatedProps->hasPropValue($frontendName)) {
-                                $propertyOldValue = $this->hydrateValue(
-                                    $dehydratedOriginalProps->getPropValue($frontendName),
-                                    $propMetadata,
-                                    $component,
-                                );
-                                $component->{$funcName}($propertyOldValue);
-                            }
-                        } else {
-                            $key = sprintf('%s.%s', $frontendName, $propName);
-                            if ($dehydratedUpdatedProps->hasPropValue($key)) {
-                                $propertyOldValue = $dehydratedOriginalProps->getPropValue($key);
-                                $component->{$funcName}($propertyOldValue);
-                            }
-                        }
-                    }
-                }
+                $this->processOnUpdatedHook($component, $frontendName, $propMetadata, $dehydratedUpdatedProps, $dehydratedOriginalProps);
             }
         }
 
@@ -250,6 +222,39 @@ final class LiveComponentHydrator
         }
 
         return $attributes;
+    }
+
+    private function processOnUpdatedHook(object $component, string $frontendName, LivePropMetadata $propMetadata, DehydratedProps $dehydratedUpdatedProps, DehydratedProps $dehydratedOriginalProps): void
+    {
+        if (\is_string($propMetadata->onUpdated())) {
+            $this->ensureOnUpdatedMethodExists($component, $propMetadata->onUpdated());
+
+            if ($dehydratedUpdatedProps->hasPropValue($frontendName)) {
+                $propertyOldValue = $dehydratedOriginalProps->getPropValue($frontendName);
+                $component->{$propMetadata->onUpdated()}($propertyOldValue);
+            }
+        } elseif (\is_array($propMetadata->onUpdated())) {
+            foreach ($propMetadata->onUpdated() as $propName => $funcName) {
+                $this->ensureOnUpdatedMethodExists($component, $funcName);
+
+                if (LiveProp::IDENTITY === $propName) {
+                    if ($dehydratedUpdatedProps->hasPropValue($frontendName)) {
+                        $propertyOldValue = $this->hydrateValue(
+                            $dehydratedOriginalProps->getPropValue($frontendName),
+                            $propMetadata,
+                            $component,
+                        );
+                        $component->{$funcName}($propertyOldValue);
+                    }
+                } else {
+                    $key = sprintf('%s.%s', $frontendName, $propName);
+                    if ($dehydratedUpdatedProps->hasPropValue($key)) {
+                        $propertyOldValue = $dehydratedOriginalProps->getPropValue($key);
+                        $component->{$funcName}($propertyOldValue);
+                    }
+                }
+            }
+        }
     }
 
     public function addChecksumToData(array $data): array
