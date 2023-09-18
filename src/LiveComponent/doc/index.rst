@@ -3070,9 +3070,9 @@ Add a Hook on LiveProp Update
 
     The ``onUpdated`` option was added in LiveComponents 2.12.
 
-If you want to run a custom code after a specific LiveProp was updated,
-you can do it by adding a ``onUpdated`` option. Specify a method name
-that will be called. The method should be public and created on the Component:
+If you want to run custom code after a specific LiveProp is updated,
+you can do it by adding an ``onUpdated`` option set to a public method name
+on the component:
 
 .. code-block:: diff
 
@@ -3098,8 +3098,8 @@ that will be called. The method should be public and created on the Component:
 As soon as the `query` LiveProp is updated, the ``onQueryUpdated()`` method
 will be called. The previous value is passed there as the first argument.
 
-It also works with non-scalar types, expand ``onUpdated`` configuration
-to an array with format ``['field_name' => 'function_name']``:
+If you're allowing object properties to be writable, you can also listen to
+the change of one specific key:
 
 .. code-block::
 
@@ -3108,34 +3108,12 @@ to an array with format ``['field_name' => 'function_name']``:
     #[AsLiveComponent]
     class EditPost
     {
-        #[LiveProp(writable: [LiveProp::IDENTITY, 'title', 'content'], onUpdated: ['title' => 'onTitleUpdated'])]
+        #[LiveProp(writable: ['title', 'content'], onUpdated: ['title' => 'onTitleUpdated'])]
         public Post $post;
 
         // ...
 
         public function onTitleUpdated($previousValue): void
-        {
-            // ...
-        }
-    }
-
-You can iterate more fields with corresponding function names if you want.
-Also, you can even create a hook for the entire entity identity change - use
-``LiveProp::IDENTITY`` as a key for the function name:
-
-.. code-block::
-
-    // ...
-
-    #[AsLiveComponent]
-    class EditPost
-    {
-        #[LiveProp(writable: [LiveProp::IDENTITY, 'title', 'content'], onUpdated: [LiveProp::IDENTITY => 'onEntirePostChanged'])]
-        public Post $post;
-
-        // ...
-
-        public function onEntirePostChanged($previousValue): void
         {
             // ...
         }

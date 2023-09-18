@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## ...
+## 2.12.0
 
 -   Add `onUpdated` hook for `LiveProp`
 
