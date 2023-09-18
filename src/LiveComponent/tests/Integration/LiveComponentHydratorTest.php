@@ -192,7 +192,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 });
         }];
 
-        yield 'onUpdated: with object value' => [function () {
+        yield 'onUpdated: set to an array' => [function () {
             $product = create(ProductFixtureEntity::class, [
                 'name' => 'Chicken',
             ])->object();
