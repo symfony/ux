@@ -82,11 +82,7 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
 
     public function finishEmbeddedComponentRender(): void
     {
-        try {
-            $this->container->get(ComponentRenderer::class)->finishEmbeddedComponentRender();
-        } catch (\Throwable $e) {
-            $this->throwRuntimeError($name, $e);
-        }
+        $this->container->get(ComponentRenderer::class)->finishEmbeddedComponentRender();
     }
 
     private function throwRuntimeError(string $name, \Throwable $e): void
