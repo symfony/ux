@@ -580,41 +580,36 @@ final class LiveComponentHydrator
      */
     private function processOnUpdatedHook(object $component, string $frontendName, LivePropMetadata $propMetadata, DehydratedProps $dehydratedUpdatedProps, DehydratedProps $dehydratedOriginalProps): void
     {
-        if (\is_string($propMetadata->onUpdated())) {
-            if (!$dehydratedUpdatedProps->hasPropValue($frontendName)) {
-                return;
-            }
+        $onUpdated = $propMetadata->onUpdated();
+        if (\is_string($onUpdated)) {
+            $onUpdated = [LiveProp::IDENTITY => $onUpdated];
+        }
 
-            $this->ensureOnUpdatedMethodExists($component, $propMetadata->onUpdated());
-            $propertyOldValue = $dehydratedOriginalProps->getPropValue($frontendName);
-            $component->{$propMetadata->onUpdated()}($propertyOldValue);
-        } elseif (\is_array($propMetadata->onUpdated())) {
-            foreach ($propMetadata->onUpdated() as $propName => $funcName) {
-                if (LiveProp::IDENTITY === $propName) {
-                    if (!$dehydratedUpdatedProps->hasPropValue($frontendName)) {
-                        continue;
-                    }
-
-                    $this->ensureOnUpdatedMethodExists($component, $funcName);
-                    $propertyOldValue = $this->hydrateValue(
-                        $dehydratedOriginalProps->getPropValue($frontendName),
-                        $propMetadata,
-                        $component,
-                    );
-                    $component->{$funcName}($propertyOldValue);
-
-                    continue;
-                }
-
-                $key = sprintf('%s.%s', $frontendName, $propName);
-                if (!$dehydratedUpdatedProps->hasPropValue($key)) {
+        foreach ($onUpdated as $propName => $funcName) {
+            if (LiveProp::IDENTITY === $propName) {
+                if (!$dehydratedUpdatedProps->hasPropValue($frontendName)) {
                     continue;
                 }
 
                 $this->ensureOnUpdatedMethodExists($component, $funcName);
-                $propertyOldValue = $dehydratedOriginalProps->getPropValue($key);
+                $propertyOldValue = $this->hydrateValue(
+                    $dehydratedOriginalProps->getPropValue($frontendName),
+                    $propMetadata,
+                    $component,
+                );
                 $component->{$funcName}($propertyOldValue);
+
+                continue;
             }
+
+            $key = sprintf('%s.%s', $frontendName, $propName);
+            if (!$dehydratedUpdatedProps->hasPropValue($key)) {
+                continue;
+            }
+
+            $this->ensureOnUpdatedMethodExists($component, $funcName);
+            $propertyOldValue = $dehydratedOriginalProps->getPropValue($key);
+            $component->{$funcName}($propertyOldValue);
         }
     }
 }
