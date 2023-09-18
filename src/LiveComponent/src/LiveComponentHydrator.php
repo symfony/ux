@@ -225,9 +225,7 @@ final class LiveComponentHydrator
                         $this->ensureOnUpdatedMethodExists($component, $funcName);
 
                         if (LiveProp::IDENTITY === $propName) {
-                            if ($dehydratedUpdatedProps->hasPropValue($frontendName)
-                                && $dehydratedOriginalProps->getPropValue($frontendName) !== $dehydratedUpdatedProps->getPropValue($frontendName)
-                            ) {
+                            if ($dehydratedUpdatedProps->hasPropValue($frontendName)) {
                                 $propertyOldValue = $this->hydrateValue(
                                     $dehydratedOriginalProps->getPropValue($frontendName),
                                     $propMetadata,
