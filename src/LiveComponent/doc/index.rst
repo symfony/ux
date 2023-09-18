@@ -3101,7 +3101,7 @@ will be called. The previous value is passed there as the first argument.
 It also works with non-scalar types, expand ``onUpdated`` configuration
 to an array with format ``['field_name' => 'function_name']``:
 
-.. code-block:: php
+.. code-block::
 
     // ...
 
@@ -3123,7 +3123,7 @@ You can iterate more fields with corresponding function names if you want.
 Also, you can even create a hook for the entire entity identity change - use
 ``LiveProp::IDENTITY`` as a key for the function name:
 
-.. code-block:: php
+.. code-block::
 
     // ...
 
