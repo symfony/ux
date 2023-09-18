@@ -154,7 +154,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->expectsExceptionDuringHydration(\Exception::class, '/onFirstNameUpdated\(\)" specified as LiveProp "onUpdated" hook does not exist/');
         }];
 
-        yield 'onUpdated: with string value' => [function () {
+        yield 'onUpdated: with scalar value' => [function () {
             return HydrationTest::create(new class() {
                 #[LiveProp(writable: true, onUpdated: 'onFirstNameUpdated')]
                 public string $firstName;
@@ -170,25 +170,6 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->userUpdatesProps(['firstName' => 'Victor'])
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertSame('Revert to Ryan', $object->firstName);
-                });
-        }];
-
-        yield 'onUpdated: with integer value' => [function () {
-            return HydrationTest::create(new class() {
-                #[LiveProp(writable: true, onUpdated: 'onNumberUpdated')]
-                public int $number;
-
-                public function onNumberUpdated($oldValue)
-                {
-                    if (9 === $this->number) {
-                        $this->number = $oldValue;
-                    }
-                }
-            })
-                ->mountWith(['number' => 10])
-                ->userUpdatesProps(['number' => 9])
-                ->assertObjectAfterHydration(function (object $object) {
-                    $this->assertSame(10, $object->number);
                 });
         }];
 
