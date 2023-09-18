@@ -35,13 +35,19 @@ final class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerConfigurator $c): void
     {
-        $c->extension('framework', [
+        $frameworkConfig = [
             'secret' => 'S3CRET',
             'test' => true,
             'router' => ['utf8' => true],
             'secrets' => false,
             'http_method_override' => false,
-        ]);
+            'php_errors' => ['log' => true],
+        ];
+        if (self::VERSION_ID >= 60200) {
+            $frameworkConfig['handle_all_throwables'] = true;
+        }
+        $c->extension('framework', $frameworkConfig);
+
         $c->extension('twig', [
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
         ]);
