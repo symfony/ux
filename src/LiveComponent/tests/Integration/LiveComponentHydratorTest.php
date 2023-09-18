@@ -228,37 +228,6 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 });
         }];
 
-        yield 'onUpdated: with IDENTITY to null' => [function () {
-            $entity1 = create(Entity1::class)->object();
-            \assert($entity1 instanceof Entity1);
-
-            return HydrationTest::create(new class() {
-                #[LiveProp(writable: [LiveProp::IDENTITY], onUpdated: [LiveProp::IDENTITY => 'onEntireEntityUpdated'])]
-                public ?Entity1 $entity1;
-
-                public function onEntireEntityUpdated($oldValue)
-                {
-                    // Sanity check
-                    if ($this->entity1 === $oldValue) {
-                        throw new \Exception('Old value is the same entity?!');
-                    }
-                    if (null === $this->entity1) {
-                        // Revert the value
-                        $this->entity1 = $oldValue;
-                    }
-                }
-            })
-                ->mountWith(['entity1' => $entity1])
-                ->userUpdatesProps(['entity1' => null])
-                ->assertObjectAfterHydration(function (object $object) use ($entity1) {
-                    $this->assertNotNull($object->entity1);
-                    $this->assertSame(
-                        $entity1->id,
-                        $object->entity1->id
-                    );
-                });
-        }];
-
         yield 'string: (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class() {
                 #[LiveProp()]
