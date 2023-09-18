@@ -3123,6 +3123,20 @@ uses Symfony's test client to render and make requests to your components::
             $response = $testComponent->call('redirect')->response(); // Symfony\Component\HttpFoundation\Response
 
             $this->assertSame(302, $response->getStatusCode());
+
+            // authenticate a user ($user is instance of UserInterface)
+            $testComponent->actingAs($user);
+
+            // customize the test client
+            $client = self::getContainer()->get('test.client');
+
+            // do some stuff with the client (ie login user via form)
+
+            $testComponent = $this->createLiveComponent(
+                name: 'MyComponent',
+                data: ['foo' => 'bar'],
+                client: $client,
+            );
         }
     }
 

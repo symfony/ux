@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Test;
 
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\ComponentFactory;
 
@@ -19,7 +20,7 @@ use Symfony\UX\TwigComponent\ComponentFactory;
  */
 trait InteractsWithLiveComponents
 {
-    protected function createLiveComponent(string $name, array $data = []): TestLiveComponent
+    protected function createLiveComponent(string $name, array $data = [], KernelBrowser $client = null): TestLiveComponent
     {
         if (!$this instanceof KernelTestCase) {
             throw new \LogicException(sprintf('The "%s" trait can only be used on "%s" classes.', __TRAIT__, KernelTestCase::class));
@@ -37,7 +38,7 @@ trait InteractsWithLiveComponents
             $metadata,
             $data,
             $factory,
-            self::getContainer()->get('test.client'),
+            $client ?? self::getContainer()->get('test.client'),
             self::getContainer()->get('ux.live_component.component_hydrator'),
             self::getContainer()->get('ux.live_component.metadata_factory'),
             self::getContainer()->get('router'),

@@ -14,6 +14,7 @@ namespace Symfony\UX\LiveComponent\Test;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -74,6 +75,16 @@ final class TestLiveComponent
         );
 
         return (new MountedComponent($this->metadata->getName(), $component, $componentAttributes))->getComponent();
+    }
+
+    /**
+     * @param UserInterface $user
+     */
+    public function actingAs(object $user, string $firewallContext = 'main'): self
+    {
+        $this->client->loginUser($user, $firewallContext);
+
+        return $this;
     }
 
     /**
