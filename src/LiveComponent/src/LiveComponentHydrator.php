@@ -603,6 +603,6 @@ final class LiveComponentHydrator
             return;
         }
 
-        throw new \Exception(sprintf('Method "%s:%s()" specified as LiveProp "onUpdated" hook does not exist', $component::class, $methodName));
+        throw new \Exception(sprintf('Method "%s:%s()" specified as LiveProp "onUpdated" hook does not exist.', $component::class, $methodName));
     }
 }
