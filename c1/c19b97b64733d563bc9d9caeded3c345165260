@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2023-09-17T23:44:18Z
+
+Fixed the previous fail (handle_all_throwable does not exist before Symfony 6.2)
+
+The new one (phpcs) is fixed in https://github.com/symfony/ux/pull/1122
