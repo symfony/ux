@@ -105,4 +105,9 @@ final class LivePropMetadata
     {
         return $this->liveProp->format();
     }
+
+    public function onUpdated(): null|string|array
+    {
+        return $this->liveProp->onUpdated();
+    }
 }
