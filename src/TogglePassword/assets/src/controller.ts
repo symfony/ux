@@ -19,10 +19,10 @@ export default class extends Controller<HTMLInputElement> {
     declare readonly buttonClassesValue: Array<string>;
 
     static values = {
-        visibleLabel: String,
-        visibleIcon: String,
-        hiddenLabel: String,
-        hiddenIcon: String,
+        visibleLabel: { type: String, default: 'Show' },
+        visibleIcon: { type: String, default: 'Default' },
+        hiddenLabel: { type: String, default: 'Hide' },
+        hiddenIcon: { type: String, default: 'Default' },
         buttonClasses: Array,
     };
 
