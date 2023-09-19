@@ -14,6 +14,8 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveArg;
+use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -49,6 +51,18 @@ final class Component2
     public function redirect(UrlGeneratorInterface $urlGenerator): RedirectResponse
     {
         return new RedirectResponse($urlGenerator->generate('homepage'), 302, ['X-Custom-Header' => '1']);
+    }
+
+    #[LiveListener('triggerIncrease')]
+    public function increaseEvent1(#[LiveArg] int $amount = 1): void
+    {
+        $this->count += $amount;
+    }
+
+    #[LiveListener('triggerIncrease')]
+    public function increaseEvent2(#[LiveArg] int $amount = 1): void
+    {
+        $this->count += $amount;
     }
 
     #[PreDehydrate]

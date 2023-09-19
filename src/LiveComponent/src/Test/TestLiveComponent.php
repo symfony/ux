@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -100,7 +101,24 @@ final class TestLiveComponent
      */
     public function emit(string $event, array $arguments = []): self
     {
-        return $this->call($event, $arguments);
+        $listeners = AsLiveComponent::liveListeners($this->component());
+        $actions = [];
+
+        foreach ($listeners as $listener) {
+            if ($listener['event'] === $event) {
+                $actions[] = ['name' => $listener['action'], 'args' => $arguments];
+            }
+        }
+
+        if (!$actions) {
+            throw new \InvalidArgumentException(sprintf('Event "%s" does not exist on component "%s".', $event, $this->metadata->getName()));
+        }
+
+        if (1 === \count($listeners)) {
+            return $this->call($actions[0]['name'], $arguments);
+        }
+
+        return $this->request(['actions' => $actions], '_batch');
     }
 
     public function set(string $prop, mixed $value): self

@@ -63,6 +63,28 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertSame(33.3, $testComponent->component()->arg3);
     }
 
+    public function testCanEmitEvent(): void
+    {
+        $testComponent = $this->createLiveComponent('component2');
+
+        $this->assertStringContainsString('Count: 1', $testComponent->render());
+        $this->assertSame(1, $testComponent->component()->count);
+
+        $testComponent->emit('triggerIncrease', ['amount' => 2]);
+
+        $this->assertStringContainsString('Count: 5', $testComponent->render());
+        $this->assertSame(5, $testComponent->component()->count);
+    }
+
+    public function testInvalidEventName(): void
+    {
+        $testComponent = $this->createLiveComponent('component2');
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $testComponent->emit('invalid');
+    }
+
     public function testCanSetLiveProp(): void
     {
         $testComponent = $this->createLiveComponent('component_with_writable_props');
