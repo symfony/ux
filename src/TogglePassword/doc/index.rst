@@ -275,6 +275,10 @@ You can also use the TogglePassword with native HTML inputs:
             name="password"
             type="password"
             {{ stimulus_controller('symfony/ux-toggle-password/toggle-password', {
+                    {# visibleLabel: 'Show password', // If you want to modify this label. #}
+                    {# visibleIcon: 'Some svg icon', // If you want to modify this icon. #}
+                    {# hiddenLabel: 'Hide password', // If you want to modify this label. #}
+                    {# hiddenIcon: 'Some svg icon', // If you want to modify this icon. #}
                     buttonClasses: ['toggle-password-button'], // Add as many classes as you wish. "toggle-password-button" is needed to activate the default CSS.
             }) }}
         >
