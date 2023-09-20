@@ -1,6 +1,11 @@
 .PackageHeader {
   h1 {
     text-shadow: 0 .25rem .25rem rgba(0, 0, 0, .05);
+
+    em {
+      font-family: var(--font-family-decorative);
+      padding-inline-start: .5rem;
+    }
   }
 
   .AppHeader + * &  {
@@ -13,9 +18,9 @@
   }
 
   .nav-options {
-    font-family: Ubuntu;
-    font-size: 15px;
+    font-family: var(--font-family-title);
     font-weight: 700;
+    font-size: 15px;
     line-height: 20px;
     letter-spacing: 0px;
     color: #fff;
