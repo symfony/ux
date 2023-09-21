@@ -1565,6 +1565,9 @@ class ExternalMutationTracker {
             if (!this.shouldTrackChangeCallback(element)) {
                 continue;
             }
+            if (this.isElementAddedByTranslation(element)) {
+                continue;
+            }
             let isChangeInAddedElement = false;
             for (const addedElement of this.addedElements) {
                 if (addedElement.contains(element)) {
@@ -1601,6 +1604,9 @@ class ExternalMutationTracker {
             }
             if (this.removedElements.includes(node)) {
                 this.removedElements.splice(this.removedElements.indexOf(node), 1);
+                return;
+            }
+            if (this.isElementAddedByTranslation(node)) {
                 return;
             }
             this.addedElements.push(node);
@@ -1710,6 +1716,9 @@ class ExternalMutationTracker {
             styleObject[property] = parts.slice(1).join(':').trim();
         });
         return styleObject;
+    }
+    isElementAddedByTranslation(element) {
+        return element.tagName === 'FONT' && element.getAttribute('style') === 'vertical-align: inherit;';
     }
 }
 
