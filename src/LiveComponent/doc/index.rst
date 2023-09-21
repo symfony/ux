@@ -242,7 +242,7 @@ LiveProp Data Types
 
 LiveProps must be a value that can be sent to JavaScript. Supported values
 are scalars (int, float, string, bool, null), arrays (of scalar values), enums,
-DateTime objects, Doctrine entity objects, DTO, or array of DTO.
+DateTime objects, Doctrine entity objects, DTOs, or array of DTOs.
 
 See :ref:`hydration` for handling more complex data.
 
@@ -622,25 +622,21 @@ Note that being able to change the "identity" of an object is something
 that works only for objects that are dehydrated to a scalar value (like
 persisted entities, which dehydrate to an ``id``).
 
-Hydration, DTO's & the Serializer
+Using DTO's on a LiveProp
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 2.11
 
-    Dto are now a supported type for LiveComponent
+    The automatic (de)hydration of DTO objects was introduced in LiveComponents 2.11.
 
-To use a ``LiveProp`` with DTO simply type properly your property
-
-.. code-block:: php
+You can also use a DTO (i.e. data transfer object / any simple class) with LiveProp as long as the property has the correct type::
 
     class ComponentWithAddressDto
     {
         public AddressDto $addressDto;
     }
 
-And to work with DTO collection, you simply need to specified the collection type in your phpdoc
-
-.. code-block:: php
+To work with a collection of DTOs, specify the collection type inside PHPDoc::
 
     class ComponentWithAddressDto
     {
@@ -650,11 +646,18 @@ And to work with DTO collection, you simply need to specified the collection typ
         public array $addressDtoCollection;
     }
 
+Here is how the (de)hydration of DTO objects works:
+
+- It finds all properties on your DTO that are readable and writable and dehydrates each one.
+- the PropertyAccess component is used, which means getter and setter methods are supported, in addition to public properties.
+- The DTO cannot have any constructor arguments.
+
 If this solution doesn't feat your need
+
 there are two others options to make this work:
 
-1) Hydrating with the Serializer
-................................
+Hydrating with the Serializer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 2.8
 
@@ -671,8 +674,8 @@ option::
 
 You can also set a ``serializationContext`` option on the ``LiveProp``.
 
-2) Hydrating with Methods: hydrateWith & dehydrateWith
-......................................................
+Hydrating with Methods: hydrateWith & dehydrateWith
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 You can take full control of the hydration process by setting the ``hydrateWith``
 and ``dehydrateWith`` options on ``LiveProp``::
