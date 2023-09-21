@@ -16,6 +16,8 @@ use Symfony\Component\PropertyAccess\Exception\ExceptionInterface as PropertyAcc
 use Symfony\Component\PropertyAccess\Exception\NoSuchPropertyException;
 use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
+use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
@@ -358,14 +360,14 @@ final class LiveComponentHydrator
             if (!$this->isValueValidDehydratedValue($value)) {
                 $badKeys = $this->getNonScalarKeys($value, $propMetadata->getName());
                 $badKeysText = implode(', ', array_map(fn ($key) => sprintf('%s: %s', $key, $badKeys[$key]), array_keys($badKeys)));
-                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" is an array, but it contains one or more keys that are not scalars: %s', $propMetadata->getName(), $parentObject::class, $badKeysText));
+                throw new \LogicException(throw new \LogicException(sprintf('Unable to dehydrate value of type "%s" for property "%s" on component "%s". Change this to a simpler type of an object that can be dehydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', get_debug_type($value), $propMetadata->getName(), $parentObject::class)));
             }
 
             return $value;
         }
 
         if (!\is_object($value)) {
-            throw new \LogicException(sprintf('The "%s" object has a hydrateMethod of "%s" but the method does not exist.', $parentObject::class, $propMetadata->hydrateMethod()));
+            throw new \LogicException(sprintf('Unable to dehydrate value of type "%s" for property "%s" on component "%s". Change this to a simpler type of an object that can be dehydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', get_debug_type($value), $propMetadata->getName(), $parentObject::class));
         }
 
         if (!$propMetadata->getType() || $propMetadata->isBuiltIn()) {
@@ -395,10 +397,10 @@ final class LiveComponentHydrator
         }
 
         $dehydratedObjectValues = [];
-        foreach ((new \ReflectionClass($classType))->getProperties() as $property) {
-            $propertyValue = $this->propertyAccessor->getValue($value, $property->getName());
-            $propMetadata = $this->liveComponentMetadataFactory->createLivePropMetadata($classType, $property->getName(), $property, new LiveProp());
-            $dehydratedObjectValues[$property->getName()] = $this->dehydrateValue($propertyValue, $propMetadata, $parentObject);
+        foreach ((new PropertyInfoExtractor([new ReflectionExtractor()]))->getProperties($classType) as $property) {
+            $propertyValue = $this->propertyAccessor->getValue($value, $property);
+            $propMetadata = $this->liveComponentMetadataFactory->createLivePropMetadata($classType, $property, new \ReflectionProperty($classType, $property), new LiveProp());
+            $dehydratedObjectValues[$property] = $this->dehydrateValue($propertyValue, $propMetadata, $parentObject);
         }
 
         return $dehydratedObjectValues;
@@ -479,8 +481,8 @@ final class LiveComponentHydrator
         if (\is_array($value)) {
             $object = new $className();
             foreach ($value as $propertyName => $propertyValue) {
-                $reflexionClass = new \ReflectionClass($className);
-                $property = $reflexionClass->getProperty($propertyName);
+                $reflectionClass = new \ReflectionClass($className);
+                $property = $reflectionClass->getProperty($propertyName);
                 $propMetadata = $this->liveComponentMetadataFactory->createLivePropMetadata($className, $propertyName, $property, new LiveProp());
                 $this->propertyAccessor->setValue($object, $propertyName, $this->hydrateValue($propertyValue, $propMetadata, $component));
             }
