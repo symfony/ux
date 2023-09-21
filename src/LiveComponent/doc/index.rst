@@ -623,7 +623,7 @@ that works only for objects that are dehydrated to a scalar value (like
 persisted entities, which dehydrate to an ``id``).
 
 Using DTO's on a LiveProp
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. versionadded:: 2.11
 
