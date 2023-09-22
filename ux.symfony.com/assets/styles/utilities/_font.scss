@@ -1,9 +1,9 @@
 .ubuntu {
-  font-family: Ubuntu;
+  font-family: var(--font-family-title);
 }
 
 .playfair {
-  font-family: Playfair Display;
+  font-family: var(--font-family-decorative);
 }
 
 .font-title {

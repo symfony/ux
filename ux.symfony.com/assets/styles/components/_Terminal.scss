@@ -48,6 +48,11 @@
     text-overflow: ellipsis;
     white-space: nowrap;
     padding-inline-start: .25rem;
+
+    code {
+        font-size: inherit;
+        opacity: .8;
+    }
 }
 
 .Terminal_controls {
@@ -58,8 +63,8 @@
 }
 .Terminal_controls span {
     display: inline-block;
-    width: .75rem;
-    height: .75rem;
+    width: .65rem;
+    height: .65rem;
     border-radius: 50%;
 
     &.red {
@@ -71,7 +76,12 @@
     &.green {
         background: $green;
     }
+    [data-bs-theme="dark"] & {
+        opacity: .85;
+        filter: grayscale(.4);
+    }
 }
+
 
 .Terminal_body {
     background-color: $n-800;

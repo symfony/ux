@@ -21,18 +21,10 @@ h2.ubuntu {
   letter-spacing: -2px;
 }
 
-h2.playfair {
-  font-size: 38px;
-  font-style: italic;
-  font-weight: 700;
-  line-height: 51px;
-  letter-spacing: -2px;
-}
-
 h3, a.component-title {
-  font-family: Ubuntu;
+  font-family: var(--font-family-title);
+  font-weight: 700;
   font-size: 28px !important;
-  font-weight: 700 !important;
   line-height: 32px !important;
   letter-spacing: -1px;
   color: #0A0A0A;
@@ -63,18 +55,18 @@ h4.ubuntu {
 }
 
 .ubuntu-header {
-  font-family: Ubuntu;
-  font-size: 24px;
+  font-family: var(--font-family-title);
   font-weight: 700;
+  font-size: 24px;
   line-height: 24px;
   letter-spacing: -1px;
   text-decoration: none;
 }
 
 .ubuntu-title {
-  font-family: Ubuntu;
-  font-size: 19px;
+  font-family: var(--font-family-title);
   font-weight: 700;
+  font-size: 19px;
   line-height: 22px;
   letter-spacing: -0.668767511844635px;
 }
@@ -82,8 +74,8 @@ h4.ubuntu {
 .eyebrows {
   text-transform: uppercase;
   font-family: var(--font-family-text);
-  font-size: 0.7rem;
   font-weight: 600;
+  font-size: 0.7rem;
   line-height: 1.6;
   letter-spacing: 0.125rem;
 }
@@ -105,12 +97,6 @@ h4.ubuntu {
   h2.ubuntu {
     font-size: 28px;
     line-height: 32px;
-    letter-spacing: -1px;
-  }
-
-  h2.playfair {
-    font-size: 28px;
-    line-height: 37px;
     letter-spacing: -1px;
   }
 
