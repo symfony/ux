@@ -34,8 +34,12 @@ jobs:
         strategy:
            fail-fast: false
            matrix:
-               php-version: ['8.1']
-               dependency-version: ['lowest', 'highest']
+               php-version: ['8.1', '8.2']
+               include:
+                  - php-version: '8.1'
+                    dependency-version: 'lowest'
+                  - php-version: '8.2'
+                    dependency-version: 'highest'
 
         services:
             mercure:

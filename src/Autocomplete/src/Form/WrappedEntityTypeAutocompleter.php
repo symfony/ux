@@ -4,12 +4,12 @@ namespace Symfony\UX\Autocomplete\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\ChoiceList\Factory\Cache\ChoiceLabel;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyAccess\PropertyPathInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadata;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadataFactory;
 use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;

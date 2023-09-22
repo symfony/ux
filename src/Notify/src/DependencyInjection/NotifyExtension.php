@@ -26,7 +26,7 @@ use Symfony\UX\Notify\Twig\NotifyRuntime;
  */
 final class NotifyExtension extends ConfigurableExtension implements PrependExtensionInterface
 {
-    public function loadInternal(array $config, ContainerBuilder $container)
+    public function loadInternal(array $config, ContainerBuilder $container): void
     {
         $container->register('notify.twig_extension', TwigNotifyExtension::class)
             ->addTag('twig.extension')
@@ -41,7 +41,7 @@ final class NotifyExtension extends ConfigurableExtension implements PrependExte
         ;
     }
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         if (!$this->isAssetMapperAvailable($container)) {
             return;

@@ -69,14 +69,13 @@ class StimulusControllerLoaderFunctionalTest extends WebTestCase
         sort($preLoadHrefs);
         $this->assertStringStartsWith('/assets/@symfony/stimulus-bundle/controllers-', $preLoadHrefs[0]);
         $this->assertStringStartsWith('/assets/@symfony/stimulus-bundle/loader-', $preLoadHrefs[1]);
-        $this->assertStringStartsWith('/assets/app-', $preLoadHrefs[2]);
-        $this->assertStringStartsWith('/assets/controllers/hello-with-dashes-controller-', $preLoadHrefs[3]);
-        $this->assertStringStartsWith('/assets/controllers/hello_with_underscores-controller-', $preLoadHrefs[4]);
-        $this->assertStringStartsWith('/assets/controllers/subdir/deeper-controller-', $preLoadHrefs[5]);
-        $this->assertStringStartsWith('/assets/controllers/subdir/deeper-with-dashes-controller-', $preLoadHrefs[6]);
-        $this->assertStringStartsWith('/assets/controllers/subdir/deeper_with_underscores-controller-', $preLoadHrefs[7]);
-        $this->assertStringStartsWith('/assets/fake-vendor/ux-package2/package-hello-controller-', $preLoadHrefs[8]);
-        $this->assertStringStartsWith('/assets/more-controllers/hello-controller-', $preLoadHrefs[9]);
+        $this->assertStringStartsWith('/assets/controllers/hello-with-dashes-controller-', $preLoadHrefs[2]);
+        $this->assertStringStartsWith('/assets/controllers/hello_with_underscores-controller-', $preLoadHrefs[3]);
+        $this->assertStringStartsWith('/assets/controllers/subdir/deeper-controller-', $preLoadHrefs[4]);
+        $this->assertStringStartsWith('/assets/controllers/subdir/deeper-with-dashes-controller-', $preLoadHrefs[5]);
+        $this->assertStringStartsWith('/assets/controllers/subdir/deeper_with_underscores-controller-', $preLoadHrefs[6]);
+        $this->assertStringStartsWith('/assets/fake-vendor/ux-package2/package-hello-controller-', $preLoadHrefs[7]);
+        $this->assertStringStartsWith('/assets/more-controllers/hello-controller-', $preLoadHrefs[8]);
     }
 
     protected static function getKernelClass(): string

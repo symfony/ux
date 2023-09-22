@@ -17,22 +17,22 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Money;
 
 final class MoneyNormalizer implements NormalizerInterface, DenormalizerInterface
 {
-    public function denormalize(mixed $data, string $type, string $format = null, array $context = [])
+    public function denormalize(mixed $data, string $type, string $format = null, array $context = []): Money
     {
         return new Money(...\explode('|', $data));
     }
 
-    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = [])
+    public function supportsDenormalization(mixed $data, string $type, string $format = null, array $context = []): bool
     {
         return Money::class === $type;
     }
 
-    public function normalize(mixed $object, string $format = null, array $context = [])
+    public function normalize(mixed $object, string $format = null, array $context = []): float|array|\ArrayObject|bool|int|string|null
     {
         return \implode('|', [$object->amount, $object->currency]);
     }
 
-    public function supportsNormalization(mixed $data, string $format = null, array $context = [])
+    public function supportsNormalization(mixed $data, string $format = null, array $context = []): bool
     {
         return $data instanceof Money;
     }
