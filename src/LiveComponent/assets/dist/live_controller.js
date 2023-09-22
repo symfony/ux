@@ -1216,6 +1216,15 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                 return true;
             }
             if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement) {
+                if (typeof fromEl.__x !== 'undefined') {
+                    if (!window.Alpine) {
+                        throw new Error('Unable to access Alpine.js though the global window.Alpine variable. Please make sure Alpine.js is loaded before Symfony UX LiveComponent.');
+                    }
+                    if (typeof window.Alpine.morph !== 'function') {
+                        throw new Error('Unable to access Alpine.js morph function. Please make sure the Alpine.js Morph plugin is installed and loaded, see https://alpinejs.dev/plugins/morph for more information.');
+                    }
+                    window.Alpine.morph(fromEl.__x, toEl);
+                }
                 if (childComponentMap.has(fromEl)) {
                     const childComponent = childComponentMap.get(fromEl);
                     childComponent.updateFromNewElementFromParentRender(toEl);

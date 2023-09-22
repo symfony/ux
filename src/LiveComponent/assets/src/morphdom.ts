@@ -42,6 +42,25 @@ export function executeMorphdom(
 
             // skip special checking if this is, for example, an SVG
             if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement) {
+                // We assume fromEl is an Alpine component if it has `__x` property.
+                // If it's the case, then we should morph `fromEl` to `ToEl` (thanks to https://alpinejs.dev/plugins/morph)
+                // in order to keep the component state and UI in sync.
+                if (typeof fromEl.__x !== 'undefined') {
+                    if (!window.Alpine) {
+                        throw new Error(
+                            'Unable to access Alpine.js though the global window.Alpine variable. Please make sure Alpine.js is loaded before Symfony UX LiveComponent.'
+                        );
+                    }
+
+                    if (typeof window.Alpine.morph !== 'function') {
+                        throw new Error(
+                            'Unable to access Alpine.js morph function. Please make sure the Alpine.js Morph plugin is installed and loaded, see https://alpinejs.dev/plugins/morph for more information.'
+                        );
+                    }
+
+                    window.Alpine.morph(fromEl.__x, toEl);
+                }
+
                 if (childComponentMap.has(fromEl)) {
                     const childComponent = childComponentMap.get(fromEl) as Component;
 
