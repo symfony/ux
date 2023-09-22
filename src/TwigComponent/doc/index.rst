@@ -906,9 +906,11 @@ the component you're now rendering *and* you have access to all of that componen
     {{ this.someFunction }} {# this refers to SuccessAlert #}
 
     {% component Alert with { type: 'success' } %}
-        {{ this.someFunction }} {# this refers to Alert! #}
+        {% block content %}
+            {{ this.someFunction }} {# this refers to Alert! #}
 
-        {{ type }} {# references a "type" prop from Alert #}
+            {{ type }} {# references a "type" prop from Alert #}
+        {% endblock %}
     {% endcomponent %}
 
 Conveniently, in addition to the variables from the ``Alert`` component, you still have
@@ -919,7 +921,9 @@ access to whatever variables are available in the original template:
     {# templates/SuccessAlert.html.twig #}
     {% set name = 'Fabien' %}
     {% component Alert with { type: 'success' } %}
-        Hello {{ name }}
+        {% block content %}
+            Hello {{ name }}
+        {% endblock %}
     {% endcomponent %}
 
 Note that ALL variables from upper components (e.g. ``SuccessAlert``) are available to lower
