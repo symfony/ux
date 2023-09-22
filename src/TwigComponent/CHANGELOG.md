@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.12.0
+
+-   Added a `debug:twig-component` command.
+-   Fixed bad exception when the error comes from a Twig template.
+-   Fixed deprecation with `TemplateCacheWarmer` return type.
+
 ## 2.11.0
 
 -   Support ...spread operator with html syntax (requires Twig 3.7.0 or higher)
