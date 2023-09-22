@@ -1114,6 +1114,65 @@ To tell the system that ``icon`` and ``type`` are props and not attributes, use 
         {% endif %}
     </button>
 
+Debugging Components
+--------------------
+
+As your application grows, you'll eventually have a lot of components.
+This command will help you to debug some components issues.
+First, the debug:twig-component command lists all your application components
+who live in ``templates/components``:
+
+.. code-block:: terminal
+
+    $ php bin/console debug:component
+
+    +---------------+-----------------------------+------------------------------------+------+
+    | Component     | Class                       | Template                           | Live |
+    +---------------+-----------------------------+------------------------------------+------+
+    | Coucou        | App\Components\Alert        | components/Coucou.html.twig        |      |
+    | RandomNumber  | App\Components\RandomNumber | components/RandomNumber.html.twig  | X    |
+    | Test          | App\Components\foo\Test     | components/foo/Test.html.twig      |      |
+    | Button        | Anonymous component         | components/Button.html.twig        |      |
+    | foo:Anonymous | Anonymous component         | components/foo/Anonymous.html.twig |      |
+    +---------------+-----------------------------+------------------------------------+------+
+
+.. tip::
+
+    The Live column show you which component is a LiveComponent.
+
+If you have some components who doesn't live in ``templates/components``,
+but in ``templates/bar`` for example you can pass an option:
+
+.. code-block:: terminal
+
+    $ php bin/console debug:twig-component --dir=bar
+
+    +----------------+-------------------------------+------------------------------+------+
+    | Component      | Class                         | Template                     | Live |
+    +----------------+-------------------------------+------------------------------+------+
+    | OtherDirectory | App\Components\OtherDirectory | bar/OtherDirectory.html.twig |      |
+    +----------------+-------------------------------+------------------------------+------+
+
+And the name of some component to this argument to print the
+component details:
+
+.. code-block:: terminal
+
+    $ php bin/console debug:component RandomNumber
+
+    +---------------------------------------------------+-----------------------------------+
+    | Property                                          | Value                             |
+    +---------------------------------------------------+-----------------------------------+
+    | Component                                         | RandomNumber                      |
+    | Live                                              | X                                 |
+    | Class                                             | App\Components\RandomNumber       |
+    | Template                                          | components/RandomNumber.html.twig |
+    | Properties (type / name / default value if exist) | string $name = toto               |
+    |                                                   | string $type = test               |
+    | Live Properties                                   | int $max = 1000                   |
+    |                                                   | int $min = 10                     |
+    +---------------------------------------------------+-----------------------------------+
+
 Test Helpers
 ------------
 

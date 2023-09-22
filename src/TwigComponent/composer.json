@@ -34,6 +34,7 @@
         "twig/twig": "^2.14.7|^3.0.4"
     },
     "require-dev": {
+        "symfony/console": "^5.4|^6.0",
         "symfony/css-selector": "^5.4|^6.0",
         "symfony/dom-crawler": "^5.4|^6.0",
         "symfony/framework-bundle": "^5.4|^6.0",
