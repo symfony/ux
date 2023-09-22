@@ -625,9 +625,9 @@ persisted entities, which dehydrate to an ``id``).
 Using DTO's on a LiveProp
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.11
+.. versionadded:: 2.12
 
-    The automatic (de)hydration of DTO objects was introduced in LiveComponents 2.11.
+    The automatic (de)hydration of DTO objects was introduced in LiveComponents 2.12.
 
 You can also use a DTO (i.e. data transfer object / any simple class) with LiveProp as long as the property has the correct type::
 
@@ -648,13 +648,15 @@ To work with a collection of DTOs, specify the collection type inside PHPDoc::
 
 Here is how the (de)hydration of DTO objects works:
 
-- It finds all properties on your DTO that are readable and writable and dehydrates each one.
-- the PropertyAccess component is used, which means getter and setter methods are supported, in addition to public properties.
+- All "properties" (public properties or fake properties via
+  getter/setter methods) are read & dehydrated. If a property is settable
+  but not gettable (or vice versa), an error will be thrown.
+- The PropertyAccess component is used to get/set the value, which means
+  getter and setter methods are supported, in addition to public properties.
 - The DTO cannot have any constructor arguments.
 
-If this solution doesn't feat your need
-
-there are two others options to make this work:
+If this solution doesn't fit your need there are two others options to
+make this work:
 
 Hydrating with the Serializer
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
