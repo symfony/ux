@@ -1,0 +1,133 @@
+---------------------------------------------------------------------------
+
+by kbond at 2023-09-01T13:54:46Z
+
+4. Could you also add a section to the docs (twig & live)
+
+---------------------------------------------------------------------------
+
+by StevenRenaux at 2023-09-01T14:05:30Z
+
+@kbond I will try to work on your suggestions
+
+1. In the listing of components, could you add a Live?
+I suggest to add a column `Type` directly with AsTwigComponent, AsLiveComponent or empty if Anonymous.
+I can get it with the ReflectionClass and the method `getAttributes`.
+
+2. When showing details about a component, can you indicate whether it is live or not?
+As I suggest for the 1. I can add a property `Type`
+
+3. Also in the details, can you list the live props?
+I can try to divide in two sections the Props part like  `Properties (name / default value if exist)` and after `Live Properties`
+
+4. Could you also add a section to the docs (twig & live)
+Yeah it will be a TODO ;)
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-09-01T17:35:38Z
+
+Sounds good!
+
+> I can get it with the ReflectionClass and the method getAttributes.
+
+I think this is available in the metadata (has a `live` key) - this would be a more robust way to check.
+
+---------------------------------------------------------------------------
+
+by StevenRenaux at 2023-09-04T09:33:48Z
+
+Hi @kbond
+
+I updated the code with your suggestions.
+To know if it's a LiveComponent I used `$metadata->get('live')` as you suggested to get one asked component.
+But to get the list of all of them I was originaly in a loop after a `$reflectionClass->getAttributes()`  so I took the position to just make a check if the attribute depend on AsTwigComponent::class or AsLiveComponent::class. Let me know if I also need to update this part :wink:
+
+For one component :
+
+```
+$ php bin/console debug:component RandomNumber
++---------------------------------------------------+-----------------------------------+
+| Property                                          | Value                             |
++---------------------------------------------------+-----------------------------------+
+| Component                                         | RandomNumber                      |
+| Type                                              | AsLiveComponent                   |
+| Class                                             | App\Components\RandomNumber       |
+| Template                                          | components/RandomNumber.html.twig |
+| Properties (type / name / default value if exist) | string $name = toto               |
+|                                                   | string $type = test               |
+| Live Properties                                   | int $max = 1000                   |
+|                                                   | int $min = 10                     |
++---------------------------------------------------+-----------------------------------+
+```
+
+And for all :
+
+```
+$ php bin/console debug:component
++---------------+-----------------------------+------------------------------------+-----------------+
+| Component     | Class                       | Template                           | Type            |
++---------------+-----------------------------+------------------------------------+-----------------+
+| Coucou        | App\Components\Alert        | components/Coucou.html.twig        | AsTwigComponent |
+| RandomNumber  | App\Components\RandomNumber | components/RandomNumber.html.twig  | AsLiveComponent |
+| Test          | App\Components\foo\Test     | components/foo/Test.html.twig      | AsTwigComponent |
+| Button        | Anonymous component         | components/Button.html.twig        |                 |
+| foo:Anonymous | Anonymous component         | components/foo/Anonymous.html.twig |                 |
++---------------+-----------------------------+------------------------------------+-----------------+
+```
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-09-07T15:01:10Z
+
+> But to get the list of all of them I was originaly in a loop after a $reflectionClass->getAttributes() so I took the position to just make a check if the attribute depend on AsTwigComponent::class or AsLiveComponent::class. Let me know if I also need to update this part 😉
+
+The issue with using these attributes is components can be registered without (ie 3rd party bundle registering components purely with a tag).
+
+---------------------------------------------------------------------------
+
+by StevenRenaux at 2023-09-11T07:38:41Z
+
+> > But to get the list of all of them I was originaly in a loop after a $reflectionClass->getAttributes() so I took the position to just make a check if the attribute depend on AsTwigComponent::class or AsLiveComponent::class. Let me know if I also need to update this part 😉
+>
+> The issue with using these attributes is components can be registered without (ie 3rd party bundle registering components purely with a tag).
+
+Updated as you submitted ;)
+
+---------------------------------------------------------------------------
+
+by StevenRenaux at 2023-09-11T07:40:52Z
+
+> I was thinking about this part too... What about a command option to customize (with `/components` being the default)?
+
+If you want components with a specific dir:
+```
+
+php bin/console debug:twig-component --dir=bar
++----------------+-------------------------------+------------------------------+-----------------+
+| Component      | Class                         | Template                     | Type            |
++----------------+-------------------------------+------------------------------+-----------------+
+| OtherDirectory | App\Components\OtherDirectory | bar/OtherDirectory.html.twig | AsTwigComponent |
++----------------+-------------------------------+------------------------------+-----------------+
+
+```
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-09-15T14:25:54Z
+
+Yes I was thinking the same thing when I read for the first time this PR. Thanks @StevenRenaux for digging into all of this
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-09-19T22:20:03Z
+
+Ok then. But I'll be watching for some PR's to centralize some of that stuff ;).
+
+@StevenRenaux Can you fix the conflict? I can usually do that with our merge tool, but the rebase is looking oddly ugly.
+
+---------------------------------------------------------------------------
+
+by StevenRenaux at 2023-09-20T07:20:33Z
+
+@weaverryan Conflict resolution done and let me know when it will be done and I will update this command :wink:
