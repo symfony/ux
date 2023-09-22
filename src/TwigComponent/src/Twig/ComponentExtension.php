@@ -87,9 +87,15 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
 
     private function throwRuntimeError(string $name, \Throwable $e): void
     {
+        // if it's already a Twig RuntimeError, just rethrow it
+        if ($e instanceof RuntimeError) {
+            throw $e;
+        }
+
         if (!($e instanceof \Exception)) {
             $e = new \Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
         }
+
         throw new RuntimeError(sprintf('Error rendering "%s" component: %s', $name, $e->getMessage()), previous: $e);
     }
 }
