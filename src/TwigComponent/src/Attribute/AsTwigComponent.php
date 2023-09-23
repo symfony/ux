@@ -21,7 +21,7 @@ class AsTwigComponent
         private ?string $name = null,
         private ?string $template = null,
         private bool $exposePublicProps = true,
-        private string $attributesVar = 'attributes'
+        private string $attributesVar = 'attributes',
     ) {
     }
 
@@ -39,47 +39,56 @@ class AsTwigComponent
     }
 
     /**
-     * @internal
+     * @param object|class-string $component
      *
-     * @return \ReflectionMethod[]
+     * @return ?\ReflectionMethod
+     *
+     * @internal
      */
-    public static function preMountMethods(object $component): iterable
+    public static function mountMethod(object|string $component): ?\ReflectionMethod
     {
-        return self::attributeMethodsByPriorityFor($component, PreMount::class);
+        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            if ('mount' === $method->getName()) {
+                return $method;
+            }
+        }
+
+        return null;
     }
 
     /**
-     * @internal
+     * @param object|class-string $component
      *
      * @return \ReflectionMethod[]
+     *
+     * @internal
      */
-    public static function postMountMethods(object $component): iterable
+    public static function postMountMethods(object|string $component): array
     {
         return self::attributeMethodsByPriorityFor($component, PostMount::class);
     }
 
     /**
-     * @internal
+     * @param object|class-string $component
      *
      * @return \ReflectionMethod[]
+     *
+     * @internal
      */
-    protected static function attributeMethodsFor(string $attribute, object $component): \Traversable
+    public static function preMountMethods(object|string $component): array
     {
-        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($method->getAttributes($attribute, \ReflectionAttribute::IS_INSTANCEOF)[0] ?? null) {
-                yield $method;
-            }
-        }
+        return self::attributeMethodsByPriorityFor($component, PreMount::class);
     }
 
     /**
-     * @param class-string $attributeClass
+     * @param object|class-string $component
+     * @param class-string        $attributeClass
      *
      * @return \ReflectionMethod[]
      *
      * @internal
      */
-    protected static function attributeMethodsByPriorityFor(object $component, string $attributeClass): array
+    protected static function attributeMethodsByPriorityFor(object|string $component, string $attributeClass): array
     {
         $methods = iterator_to_array(self::attributeMethodsFor($attributeClass, $component));
 
@@ -88,5 +97,19 @@ class AsTwigComponent
         });
 
         return array_reverse($methods);
+    }
+
+    /**
+     * @return \Traversable<\ReflectionMethod>
+     *
+     * @internal
+     */
+    protected static function attributeMethodsFor(string $attribute, object|string $component): \Traversable
+    {
+        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->getAttributes($attribute, \ReflectionAttribute::IS_INSTANCEOF)[0] ?? null) {
+                yield $method;
+            }
+        }
     }
 }

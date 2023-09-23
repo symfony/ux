@@ -2,7 +2,9 @@
 
 ## 2.13.0
 
+-   Deprecate calling `ComponentTemplateFinder` constructor without `directory` argument.
 -   Add profiler integration: `TwigComponentDataCollector` and debug toolbar templates
+-   Add search feature in `debug:twig-component` command.
 
 ## 2.12.0
 

@@ -25,8 +25,12 @@ class TwigComponentExtensionTest extends TestCase
     public function testDataCollectorWithDebugMode()
     {
         $container = $this->createContainer();
+        $container->setParameter('kernel.debug', true);
         $container->registerExtension(new TwigComponentExtension());
-        $container->loadFromExtension('twig_component', []);
+        $container->loadFromExtension('twig_component', [
+            'defaults' => [],
+            'anonymous_template_directory' => 'components/',
+        ]);
         $this->compileContainer($container);
 
         $this->assertTrue($container->hasDefinition('ux.twig_component.data_collector'));
@@ -37,7 +41,10 @@ class TwigComponentExtensionTest extends TestCase
         $container = $this->createContainer();
         $container->setParameter('kernel.debug', false);
         $container->registerExtension(new TwigComponentExtension());
-        $container->loadFromExtension('twig_component', []);
+        $container->loadFromExtension('twig_component', [
+            'defaults' => [],
+            'anonymous_template_directory' => 'components/',
+        ]);
         $this->compileContainer($container);
 
         $this->assertFalse($container->hasDefinition('ux.twig_component.data_collector'));

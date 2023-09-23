@@ -32,8 +32,7 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
         $loader = new Loader\PhpFileLoader($container, new FileLocator(__DIR__.'/../../config'));
         $loader->load('services.php');
 
-        $configuration = $this->getConfiguration($configs, $container);
-        $config = $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration($this, $configs);
 
         $container->findDefinition('stimulus.asset_mapper.controllers_map_generator')
             ->replaceArgument(2, $config['controller_paths'])
@@ -62,11 +61,6 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
                 ],
             ],
         ]);
-    }
-
-    public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface
-    {
-        return $this;
     }
 
     public function getConfigTreeBuilder(): TreeBuilder

@@ -14,6 +14,7 @@ namespace Symfony\UX\TwigComponent\Tests\Integration;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\BasicComponent;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC;
@@ -119,6 +120,75 @@ final class ComponentFactoryTest extends KernelTestCase
         self::bootKernel(['environment' => 'missing_key_with_collision']);
         $component = $this->createComponent('ComponentB');
         self::assertInstanceOf(ComponentB::class, $component);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testLegacyAutoNaming(): void
+    {
+        self::bootKernel(['environment' => 'legacy_autonaming']);
+        $component = $this->createComponent('BasicComponent');
+        self::assertInstanceOf(BasicComponent::class, $component);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testLegacyAnonymous(): void
+    {
+        self::bootKernel(['environment' => 'legacy_anonymous']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->factory()->metadataFor('anonymous:AButton');
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->factory()->metadataFor('AButton');
+
+        $metadata = $this->factory()->metadataFor('foo:bar:baz');
+        $this->assertSame('components/components/foo:bar:baz.html.twig', $metadata->getTemplate());
+    }
+
+    public function testAnonymous(): void
+    {
+        self::bootKernel(['environment' => 'anonymous_directory']);
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->factory()->metadataFor('anonymous:AButton');
+
+        $metadata = $this->factory()->metadataFor('AButton');
+        $this->assertSame('components/anonymous/AButton.html.twig', $metadata->getTemplate());
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->factory()->metadataFor('foo:bar:baz');
+    }
+
+    public function testAutoNamingInSubDirectory(): void
+    {
+        $metadata = $this->factory()->metadataFor('SubDirectory:ComponentInSubDirectory');
+        $this->assertSame('SubDirectory:ComponentInSubDirectory', $metadata->getName());
+        $this->assertSame('components/SubDirectory/ComponentInSubDirectory.html.twig', $metadata->getTemplate());
+    }
+
+    public function testAutoNamingWithNamePrefixAndDirectory(): void
+    {
+        $metadata = $this->factory()->metadataFor('AcmePrefix:AcmeRootComponent');
+        $this->assertSame('AcmePrefix:AcmeRootComponent', $metadata->getName());
+        $this->assertSame('acme_components/AcmeRootComponent.html.twig', $metadata->getTemplate());
+
+        $metadata = $this->factory()->metadataFor('AcmePrefix:AcmeSubDir:AcmeOtherComponent');
+        $this->assertSame('AcmePrefix:AcmeSubDir:AcmeOtherComponent', $metadata->getName());
+        $this->assertSame('acme_components/AcmeSubDir/AcmeOtherComponent.html.twig', $metadata->getTemplate());
+    }
+
+    public function testAutoNamingWithNamePrefixOnly(): void
+    {
+        self::bootKernel(['environment' => 'no_template_directory']);
+        $metadata = $this->factory()->metadataFor('AcmePrefix:AcmeRootComponent');
+        $this->assertSame('AcmePrefix:AcmeRootComponent', $metadata->getName());
+        // the "AcmePrefix" is never part of the template directory name
+        // if the user wants it to be, they can set the "template_directory" option
+        $this->assertSame('components/AcmeRootComponent.html.twig', $metadata->getTemplate());
     }
 
     public function testCanGetMetadataForComponentByName(): void
