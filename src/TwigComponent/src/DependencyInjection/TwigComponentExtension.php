@@ -43,7 +43,7 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_it
  */
 final class TwigComponentExtension extends Extension implements ConfigurationInterface
 {
-    const DEPRECATED_DEFAULT_KEY = '__deprecated__use_old_naming_behavior';
+    private const DEPRECATED_DEFAULT_KEY = '__deprecated__use_old_naming_behavior';
 
     public function load(array $configs, ContainerBuilder $container): void
     {
@@ -135,7 +135,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                     ->defaultValue([self::DEPRECATED_DEFAULT_KEY])
                     ->useAttributeAsKey('namespace')
                     ->validate()
-                        ->always(function($v) {
+                        ->always(function ($v) {
                             foreach ($v as $namespace => $defaults) {
                                 if (!str_ends_with($namespace, '\\')) {
                                     throw new InvalidConfigurationException(sprintf('The twig_component.defaults namespace "%s" is invalid: it must end in a "\"', $namespace));
@@ -147,6 +147,12 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                     ->end()
                     // validate that namespace ends in \
                     ->arrayPrototype()
+                        ->beforeNormalization()
+                            ->ifString()
+                            ->then(function (string $v) {
+                                return ['template_directory' => $v];
+                            })
+                        ->end()
                         ->children()
                             ->scalarNode('template_directory')
                                 ->defaultValue('components')

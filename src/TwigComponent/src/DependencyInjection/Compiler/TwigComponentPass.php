@@ -101,6 +101,6 @@ final class TwigComponentPass implements CompilerPassInterface
             $componentName = substr($componentName, \strlen($defaults['name_prefix']) + 1);
         }
 
-        return sprintf('%s/%s.html.twig', $directory, str_replace(':', '/', $componentName));
+        return sprintf('%s/%s.html.twig', rtrim($directory, '/'), str_replace(':', '/', $componentName));
     }
 }

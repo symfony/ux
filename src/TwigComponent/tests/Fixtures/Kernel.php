@@ -61,7 +61,7 @@ final class Kernel extends BaseKernel
             }
             $c->extension('twig_component', [
                 'defaults' => [
-                    'Symfony\UX\TwigComponent\Tests\Fixtures\Component\\' => [],
+                    'Symfony\UX\TwigComponent\Tests\Fixtures\Component\\' => 'components/',
                     'Symfony\UX\TwigComponent\Tests\Fixtures\AcmeComponent\\' => $acmeDefaults,
                 ],
             ]);
