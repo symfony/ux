@@ -6,12 +6,12 @@
     </div>
 
     <div class="PackageBox_content">
-        <h3 class="PackageBox_title">
+        <{{ titleTag }} class="PackageBox_title">
             <a href="{{ path(package.route) }}" class="PackageBox_link">{{ package.humanName }}</a>
             <span class="PackageBox_arrow">
                 <twig:Icon name="arrow-right" />
             </span>
-        </h3>
+        </{{ titleTag }}>
         <div class="PackageBox_description">
             {{ package.description|markdown_to_html }}
         </div>

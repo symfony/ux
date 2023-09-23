@@ -1,13 +1,14 @@
 <div {{ attributes.defaults({class: 'TerminalCommand'}).defaults(stimulus_controller('clipboard')) }}>
-    <input
+    <pre
         class="TerminalCommand_input"
         aria-label="{{ label|default }}"
-        size="{{ command|length }}"
-        value="{{ command }}"
-        {{ stimulus_target('clipboard', 'source') }}
-        readonly
+    ><code {{ stimulus_target('clipboard', 'source') }}>{{ command }}</code></pre>
+    <button
+        type="button"
+        class="TerminalCommand_action btn btn-copy"
+        aria-label="Copy command"
+        {{ stimulus_action('clipboard', 'copy') }}
     >
-    <button type="button" class="TerminalCommand_action btn btn-copy" {{ stimulus_action('clipboard', 'copy') }}>
         <twig:Icon name="copy"/>
     </button>
 </div>

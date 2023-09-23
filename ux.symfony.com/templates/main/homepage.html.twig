@@ -102,7 +102,11 @@
         </a>
     </div>
     <div class="row mt-3 mt-md-5">
-        {{ block('list', 'main/packages.html.twig') }}
+        <div style="display: grid; gap: 3rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));">
+            {% for package in packages %}
+                <twig:PackageBox :package="package" titleTag="h3" />
+            {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}
