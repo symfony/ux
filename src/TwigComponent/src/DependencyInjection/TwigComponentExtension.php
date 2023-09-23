@@ -11,6 +11,9 @@
 
 namespace Symfony\UX\TwigComponent\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\DependencyInjection\Argument\AbstractArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -37,7 +40,7 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_it
  *
  * @internal
  */
-final class TwigComponentExtension extends Extension
+final class TwigComponentExtension extends Extension implements ConfigurationInterface
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
@@ -105,5 +108,25 @@ final class TwigComponentExtension extends Extension
             ])
             ->addTag('console.command')
         ;
+    }
+
+    public function getConfigTreeBuilder()
+    {
+        $treeBuilder = new TreeBuilder('twig_component');
+        $rootNode = $treeBuilder->getRootNode();
+        \assert($rootNode instanceof ArrayNodeDefinition);
+
+        $rootNode
+            ->children()
+                ->arrayNode('controller_paths')
+                    ->defaultValue(['%kernel.project_dir%/assets/controllers'])
+                    ->scalarPrototype()->end()
+                ->end()
+                ->scalarNode('controllers_json')
+                    ->defaultValue('%kernel.project_dir%/assets/controllers.json')
+                ->end()
+            ->end();
+
+        return $treeBuilder;
     }
 }
