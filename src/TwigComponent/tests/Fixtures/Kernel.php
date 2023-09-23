@@ -52,6 +52,21 @@ final class Kernel extends BaseKernel
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
         ]);
 
+        if ('legacy_autonaming' != $this->environment) {
+            $acmeDefaults = [
+                'name_prefix' => 'AcmePrefix',
+            ];
+            if ('no_template_directory' !== $this->environment) {
+                $acmeDefaults['template_directory'] = 'acme_components';
+            }
+            $c->extension('twig_component', [
+                'defaults' => [
+                    'Symfony\UX\TwigComponent\Tests\Fixtures\Component\\' => [],
+                    'Symfony\UX\TwigComponent\Tests\Fixtures\AcmeComponent\\' => $acmeDefaults,
+                ],
+            ]);
+        }
+
         $services = $c->services()
             ->defaults()
                 ->autowire()

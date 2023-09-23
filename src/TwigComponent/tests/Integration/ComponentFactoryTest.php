@@ -14,9 +14,11 @@ namespace Symfony\UX\TwigComponent\Tests\Integration;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\BasicComponent;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Component\SubDirectory\ComponentInSubDirectory;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\WithSlots;
 
 /**
@@ -119,6 +121,44 @@ final class ComponentFactoryTest extends KernelTestCase
         self::bootKernel(['environment' => 'missing_key_with_collision']);
         $component = $this->createComponent('ComponentB');
         self::assertInstanceOf(ComponentB::class, $component);
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testLegacyAutoNaming(): void
+    {
+        self::bootKernel(['environment' => 'legacy_autonaming']);
+        $component = $this->createComponent('BasicComponent');
+        self::assertInstanceOf(BasicComponent::class, $component);
+    }
+
+    public function testAutoNamingInSubDirectory(): void
+    {
+        $metadata = $this->factory()->metadataFor('SubDirectory:ComponentInSubDirectory');
+        $this->assertSame('SubDirectory:ComponentInSubDirectory', $metadata->getName());
+        $this->assertSame('components/SubDirectory/ComponentInSubDirectory.html.twig', $metadata->getTemplate());
+    }
+
+    public function testAutoNamingWithNamePrefixAndDirectory(): void
+    {
+        $metadata = $this->factory()->metadataFor('AcmePrefix:AcmeRootComponent');
+        $this->assertSame('AcmePrefix:AcmeRootComponent', $metadata->getName());
+        $this->assertSame('acme_components/AcmeRootComponent.html.twig', $metadata->getTemplate());
+
+        $metadata = $this->factory()->metadataFor('AcmePrefix:AcmeSubDir:AcmeOtherComponent');
+        $this->assertSame('AcmePrefix:AcmeSubDir:AcmeOtherComponent', $metadata->getName());
+        $this->assertSame('acme_components/AcmeSubDir/AcmeOtherComponent.html.twig', $metadata->getTemplate());
+    }
+
+    public function testAutoNamingWithNamePrefixOnly(): void
+    {
+        self::bootKernel(['environment' => 'no_template_directory']);
+        $metadata = $this->factory()->metadataFor('AcmePrefix:AcmeRootComponent');
+        $this->assertSame('AcmePrefix:AcmeRootComponent', $metadata->getName());
+        // the "AcmePrefix" is never part of the template directory name
+        // if the user wants it to be, they can set the "template_directory" option
+        $this->assertSame('components/AcmeRootComponent.html.twig', $metadata->getTemplate());
     }
 
     public function testCanGetMetadataForComponentByName(): void
