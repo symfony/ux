@@ -30,7 +30,7 @@ And (2) a template:
 
 Done! Now render it wherever you want:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {{ component('Alert', { message: 'Hello Twig Components!' }) }}
 
@@ -133,14 +133,14 @@ Naming Your Component
 
 To give your component a name, TwigComponent looks at the namespace(s)
 configured in :ref:`twig_component.yaml <default_config>` and finds the
-first match. If your have the recommended ``App\Twig\\Components\\``, then:
+first match. If your have the recommended ``App\Twig\Components\``, then:
 
-=========================================  ==================
+========================================  ===================
 Component Class                            Component Name
-=========================================  ==================
-``App\\Twig\\Components\\Alert``           ``Alert``
-``App\\Twig\\Components\\Button\\Primary`` ``Button:Primary``
-=========================================  ==================
+========================================  ===================
+``App\Twig\Components\Alert``              ``Alert``
+``App\Twig\Components\Button\Primary``     ``Button:Primary``
+========================================  ===================
 
 The ``:`` character is used in the name instead of ``\``. See
 :ref:`Configuration <configuration>` for more info.
@@ -326,7 +326,7 @@ could do this?
         I'm writing <strong>HTML</strong> right here!
     </twig:Alert>
 
-We can! When you add content between the the ``<twig:Alert>`` open and
+We can! When you add content between the ``<twig:Alert>`` open and
 close tag, it's passed to your component template as the block called
 ``content``. You can render it like any normal block:
 
@@ -392,7 +392,7 @@ In the template, the ``getProducts()`` method can be accessed via
 And because this component doesn't have any public properties that we
 need to populate, you can render it with:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <twig:FeaturedProducts />
 
@@ -438,7 +438,7 @@ component is instantiated. Because the method has an ``$isSuccess``
 argument, if we pass an ``isSuccess`` prop when rendering, it will be
 passed to ``mount()``.
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     <twig:Alert
         :isSuccess="false"
@@ -692,7 +692,7 @@ First, inside of ``<twig:{Component}>``, the ``this`` variable represents
 the component you're *now* rendering *and* you have access to all of *that*
 component's variables:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/SuccessAlert.html.twig #}
     {{ this.someFunction }} {# this === SuccessAlert #}
@@ -706,10 +706,9 @@ component's variables:
 Conveniently, in addition to the variables from the ``Alert`` component, you
 *also* have access to whatever variables are available in the original template:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/SuccessAlert.html.twig #}
-
     {% set name = 'Fabien' %}
     <twig:Alert type="success">
         Hello {{ name }}
@@ -736,7 +735,7 @@ This means you can **access variables from the block you're overriding**! For ex
 
 When overriding the ``alert_message`` block, you have access to the ``message`` variable:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/some_page.html.twig #}
     <twig:SuccessAlert>
@@ -748,7 +747,7 @@ When overriding the ``alert_message`` block, you have access to the ``message`` 
 Inheritance & Forwarding "Outer Blocks"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.10`
+.. versionadded:: 2.10
 
     The ``outerBlocks`` variable was added in 2.10.
 
@@ -793,7 +792,7 @@ We already have a generic ``Alert`` component, so let's re-use it:
 To do this, the ``SuccessAlert`` component can grab the ``content`` block
 that's passed to it via the ``outerBlocks`` variable and forward it into ``Alert``:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {# templates/components/SuccessAlert.html.twig #}
     <twig:Alert type="success">
@@ -1272,5 +1271,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Vue`: https://v3.vuejs.org/guide/computed.html
 .. _`Live Nested Components`: https://symfony.com/bundles/ux-live-component/current/index.html#nested-components
 .. _`Passing Blocks to Live Components`: https://symfony.com/bundles/ux-live-component/current/index.html#passing-blocks
-.. _`embed tag`: https://twig.symfony.com/doc/3.x/tags/embed.html
 .. _`Stimulus controller`: https://symfony.com/bundles/StimulusBundle/current/index.html

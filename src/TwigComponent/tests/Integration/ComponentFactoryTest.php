@@ -18,7 +18,6 @@ use Symfony\UX\TwigComponent\Tests\Fixtures\Component\BasicComponent;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentA;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentC;
-use Symfony\UX\TwigComponent\Tests\Fixtures\Component\SubDirectory\ComponentInSubDirectory;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\WithSlots;
 
 /**
