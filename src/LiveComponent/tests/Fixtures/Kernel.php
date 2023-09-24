@@ -83,18 +83,40 @@ final class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerConfigurator $c): void
     {
-        $c->extension('framework', [
+        $frameworkConfig = [
             'secret' => 'S3CRET',
             'test' => true,
             'router' => ['utf8' => true],
             'secrets' => false,
-            'session' => ['storage_factory_id' => 'session.storage.factory.mock_file'],
+            'session' => [
+                'storage_factory_id' => 'session.storage.factory.mock_file',
+                'handler_id' => null,
+                'cookie_secure' => 'auto',
+                'cookie_samesite' => 'lax',
+            ],
+            'validation' => [
+                'email_validation_mode' => 'html5',
+            ],
+            'php_errors' => [
+                'log' => false,
+            ],
             'http_method_override' => false,
             'property_info' => ['enabled' => true],
-        ]);
+        ];
+        if (self::VERSION_ID >= 60200) {
+            $frameworkConfig['handle_all_throwables'] = true;
+        }
+
+        $c->extension('framework', $frameworkConfig);
 
         $c->extension('twig', [
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
+        ]);
+
+        $c->extension('twig_component', [
+            'defaults' => [
+                'Symfony\UX\LiveComponent\Tests\Fixtures\Component\\' => 'components/',
+            ],
         ]);
 
         $c->extension('zenstruck_foundry', [
