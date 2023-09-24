@@ -1204,6 +1204,44 @@ independently. If you're using `Live Components`_, then there
 *are* some guidelines related to how the re-rendering of parent and
 child components works. Read `Live Nested Components`_.
 
+Configuration
+-------------
+
+To see the full list of configuration options, run:
+
+.. code-block:: terminal
+
+    $ php bin/console config:dump twig_component
+
+The most important configuration is the ``defaults`` key, which allows
+you to define options for different namespaces of your components. This
+controls how components are named and where their templates live:
+
+.. code-block:: yaml
+
+    # config/packages/twig_component.yaml
+    twig_component:
+        defaults:
+            # short form: components under this namespace:
+            #    - name will be the class name that comes after the prefix
+            #        App\Twig\Components\Alert => Alert
+            #        App\Twig\Components\Button\Primary => Button:Primary
+            #    - templates will live in "components/"
+            #        Alert => templates/components/Alert.html.twig
+            #        Button:Primary => templates/components/Button/Primary.html.twig
+            App\Twig\Components: components/
+
+            # long form
+            App\Pizza\Components:
+                template_directory: components/pizza
+                # component names will have an extra "Pizza:" prefix
+                #    App\Pizza\Components\Alert => Pizza:Alert
+                #    App\Pizza\Components\Button\Primary => Pizza:Button:Primary
+                name_prefix: Pizza
+
+If a component class matches multiple namespaces, the first matched will
+be used.
+
 Debugging Components
 --------------------
 
