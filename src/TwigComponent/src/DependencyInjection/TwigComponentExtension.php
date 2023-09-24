@@ -123,7 +123,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
         ;
     }
 
-    public function getConfigTreeBuilder()
+    public function getConfigTreeBuilder(): TreeBuilder
     {
         $treeBuilder = new TreeBuilder('twig_component');
         $rootNode = $treeBuilder->getRootNode();
