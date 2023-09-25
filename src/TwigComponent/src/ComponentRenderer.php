@@ -104,7 +104,10 @@ final class ComponentRenderer implements ComponentRendererInterface
 
     public function finishEmbeddedComponentRender(): void
     {
-        $this->componentStack->pop();
+        $mounted = $this->componentStack->pop();
+
+        $event = new PostRenderEvent($mounted);
+        $this->dispatcher->dispatch($event);
     }
 
     private function preRender(MountedComponent $mounted, array $context = []): PreRenderEvent
