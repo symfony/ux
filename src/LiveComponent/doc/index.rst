@@ -2175,6 +2175,32 @@ To validate only on "change", use the ``on(change)`` modifier:
         class="{{ _errors.has('post.content') ? 'is-invalid' : '' }}"
     >
 
+Deferring the Loading
+---------------------
+
+Certain components might be heavy to load. You can defer the loading of these components
+until after the rest of the page has loaded. To do this, use the ``defer`` attribute:
+
+.. code-block:: twig
+
+    {{ component('SomeHeavyComponent', { defer: true }) }}
+
+Doing so will render an empty "placeholder" tag with the live attributes. Once the ``live:connect`` event is triggered,
+the component will be rendered asynchronously.
+
+By default the rendered tag is a ``div``. You can change this by specifying the ``loading-tag`` attribute:
+
+.. code-block:: twig
+
+    {{ component('SomeHeavyComponent', { defer: true, loading-tag: 'span' }) }}
+
+If you need to signify that the component is loading, use the ``loading-template`` attribute.
+This lets you provide a Twig template that will render inside the "placeholder" tag:
+
+.. code-block:: twig
+
+    {{ component('SomeHeavyComponent', { defer: true, loading-template: 'spinning-wheel.html.twig' }) }}
+
 Polling
 -------
 

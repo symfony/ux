@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.13.0
+
+-   Add deferred rendering of Live Components
+
 ## 2.12.0
 
 -   Add `onUpdated` hook for `LiveProp`

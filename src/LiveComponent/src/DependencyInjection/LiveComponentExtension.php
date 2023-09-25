@@ -25,6 +25,7 @@ use Symfony\UX\LiveComponent\ComponentValidatorInterface;
 use Symfony\UX\LiveComponent\Controller\BatchActionController;
 use Symfony\UX\LiveComponent\EventListener\AddLiveAttributesSubscriber;
 use Symfony\UX\LiveComponent\EventListener\DataModelPropsSubscriber;
+use Symfony\UX\LiveComponent\EventListener\DeferLiveComponentSubscriber;
 use Symfony\UX\LiveComponent\EventListener\InterceptChildComponentRenderSubscriber;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
 use Symfony\UX\LiveComponent\EventListener\ResetDeterministicIdSubscriber;
@@ -212,6 +213,14 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ])
             ->addTag('kernel.event_subscriber')
             ->addTag('container.service_subscriber', ['key' => LiveControllerAttributesCreator::class, 'id' => 'ux.live_component.live_controller_attributes_creator'])
+        ;
+
+        $container->register('ux.live_component.defer_live_component_subscriber', DeferLiveComponentSubscriber::class)
+            ->setArguments([
+                new Reference('ux.twig_component.component_stack'),
+                new Reference('ux.live_component.live_controller_attributes_creator'),
+            ])
+            ->addTag('kernel.event_subscriber')
         ;
 
         $container->register('ux.live_component.deterministic_id_calculator', DeterministicTwigIdCalculator::class);

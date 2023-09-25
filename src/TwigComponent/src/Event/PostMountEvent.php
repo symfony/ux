@@ -18,8 +18,11 @@ use Symfony\Contracts\EventDispatcher\Event;
  */
 final class PostMountEvent extends Event
 {
-    public function __construct(private object $component, private array $data)
-    {
+    public function __construct(
+        private object $component,
+        private array $data,
+        private array $extraMetadata = [],
+    ) {
     }
 
     public function getComponent(): object
@@ -35,5 +38,20 @@ final class PostMountEvent extends Event
     public function setData(array $data): void
     {
         $this->data = $data;
+    }
+
+    public function getExtraMetadata(): array
+    {
+        return $this->extraMetadata;
+    }
+
+    public function addExtraMetadata(string $key, mixed $value): void
+    {
+        $this->extraMetadata[$key] = $value;
+    }
+
+    public function removeExtraMetadata(string $key): void
+    {
+        unset($this->extraMetadata[$key]);
     }
 }
