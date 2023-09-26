@@ -388,4 +388,58 @@ describe('LiveController rendering Tests', () => {
         // verify the component *did* render ok
         expect(test.element).toHaveTextContent('The season is: autumn');
     });
+
+    it('select the placeholder option tag after render', async () => {
+        const test = await createTest({}, (data: any) => `
+            <div ${initComponent(data)}>
+                <form>
+                    <select id="select_option_1">
+                        <option value="">Choose option 1</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                    
+                    <select id="select_option_2">
+                        <option value="">Choose option 2</option>
+                        <option value="1_1">One - One</option>
+                        <option value="1_2">One - Two</option>
+                        <option value="2_1">Two - One</option>
+                        <option value="2_2">Two - Two</option>
+                        <option value="3_1">Three - One</option>
+                        <option value="3_2">Three - Two</option>
+                    </select>
+                </form>
+            </div>
+        `);
+
+        test.expectsAjaxCall()
+            .willReturn((data) => `
+                <div ${initComponent(data)}>
+                    <form>
+                        <select id="select_option_1">
+                            <option value="">Choose option 1</option>
+                            <option value="1">One</option>
+                            <option value="2" selected>Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                        
+                        <select id="select_option_2">
+                            <option value="">Choose option 2</option>
+                            <option value="2_1">Two - One</option>
+                            <option value="2_2">Two - Two</option>
+                        </select>
+                    </form>
+                </div>
+            `);
+
+        await test.component.render();
+        const selectOption2 = test.element.querySelector('#select_option_2') as HTMLSelectElement;
+
+        // verify the placeholder of the select option 2 is selected
+        expect(selectOption2.children[0].hasAttribute('selected')).toBe(true);
+
+        // verify the selectedIndex of the select option 2 is 0
+        expect(selectOption2.selectedIndex).toBe(0);
+    });
 });

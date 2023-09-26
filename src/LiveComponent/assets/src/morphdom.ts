@@ -84,7 +84,7 @@ export function executeMorphdom(
                 }
 
                 // https://github.com/patrick-steele-idem/morphdom#can-i-make-morphdom-blaze-through-the-dom-tree-even-faster-yes
-                if (fromEl.isEqualNode(toEl)) {
+                if (fromEl.nodeName.toUpperCase() !== 'OPTION' && fromEl.isEqualNode(toEl)) {
                     // the nodes are equal, but the "value" on some might differ
                     // lets try to quickly compare a bit more deeply
                     const normalizedFromEl = cloneHTMLElement(fromEl);

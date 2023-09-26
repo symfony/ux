@@ -1237,7 +1237,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                 if (elementChanges) {
                     elementChanges.applyToElement(toEl);
                 }
-                if (fromEl.isEqualNode(toEl)) {
+                if (fromEl.nodeName.toUpperCase() !== 'OPTION' && fromEl.isEqualNode(toEl)) {
                     const normalizedFromEl = cloneHTMLElement(fromEl);
                     normalizeAttributesForComparison(normalizedFromEl);
                     const normalizedToEl = cloneHTMLElement(toEl);
