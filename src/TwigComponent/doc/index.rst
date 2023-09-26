@@ -1128,7 +1128,7 @@ who live in ``templates/components``:
 
 .. code-block:: terminal
 
-    $ php bin/console debug:component
+    $ php bin/console debug:twig-component
 
     +---------------+-----------------------------+------------------------------------+------+
     | Component     | Class                       | Template                           | Live |
@@ -1162,7 +1162,7 @@ component details:
 
 .. code-block:: terminal
 
-    $ php bin/console debug:component RandomNumber
+    $ php bin/console debug:twig-component RandomNumber
 
     +---------------------------------------------------+-----------------------------------+
     | Property                                          | Value                             |
