@@ -14,6 +14,9 @@
   z-index: 1;
   max-inline-size: 100%;
   max-width: 100%;
+  width: fit-content;
+  align-items: center;
+  align-self: center;
 
   &::before {
     content: '';
@@ -39,6 +42,7 @@
   padding: 0 .5rem;
   width: inherit;
   overflow: scroll;
+  margin: 0;
 }
 
 .TerminalCommand_action {

@@ -9,4 +9,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 class PackageBox
 {
     public UxPackage $package;
+
+    public string $titleTag = 'h3';
 }
