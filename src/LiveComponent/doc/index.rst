@@ -633,6 +633,7 @@ You can also use a DTO (i.e. data transfer object / any simple class) with LiveP
 
     class ComponentWithAddressDto
     {
+        #[LiveProp]
         public AddressDto $addressDto;
     }
 
@@ -642,7 +643,8 @@ To work with a collection of DTOs, specify the collection type inside PHPDoc::
     {
         /**
          * @var AddressDto[]
-        /*
+         */
+        #[LiveProp]
         public array $addressDtoCollection;
     }
 
