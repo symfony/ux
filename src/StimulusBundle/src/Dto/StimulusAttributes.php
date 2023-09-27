@@ -58,7 +58,7 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
         }
 
         foreach ($controllerOutlets as $outlet => $selector) {
-            $outlet = $this->normalizeKeyName($outlet);
+            $outlet = $this->normalizeControllerName($outlet);
 
             $this->attributes['data-'.$controllerName.'-'.$outlet.'-outlet'] = $selector;
         }
