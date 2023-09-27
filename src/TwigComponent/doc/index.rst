@@ -955,6 +955,46 @@ When overriding the ``alert_message`` block, you have access to the ``message`` 
         {% endblock %}
     {% endcomponent %}
 
+
+.. versionadded:: 2.12
+
+    The ability to refer to the scope of higher components via the ``outerScope`` variable was added in 2.12.
+
+As mentioned before, variables from lower components are merged with those from upper components. When you need
+access to some properties or functions from higher components, that can be done via the ``outerScope...`` variable:
+
+.. code-block:: twig
+
+    {# templates/SuccessAlert.html.twig #}
+    {% set name = 'Fabien' %}
+    {% set message = 'Hello' %}
+    {% component Alert with { type: 'success', name: 'Bart' } %}
+        Hello {{ name }} {# Hello Bart #}
+
+        {{ message }} {{ outerScope.name }} {# Hello Fabien #}
+
+        {{ outerScope.this.someFunction }} {# this refers to SuccessAlert #}
+
+        {{ outerScope.this.someProp }} {# references a "someProp" prop from SuccessAlert #}
+    {% endcomponent %}
+
+You can keep referring to components higher up as well. Just add another ``outerScope``.
+Remember though that the ``outerScope`` reference only starts once you're INSIDE the (embedded) component.
+
+.. code-block:: twig
+
+    {# templates/FancyProfileCard.html.twig #}
+    {% component Card %}
+        {% block header %}
+            {% component Alert with { message: outerScope.this.someProp } %} {# not yet INSIDE the Alert template #}
+                {% block content %}
+                    {{ message }} {# same value as below, indirectly refers to FancyProfileCard::someProp #}
+                    {{ outerScope.outerScope.this.someProp }} {# directly refers to FancyProfileCard::someProp #}
+                {% endblock %}
+            {% endcomponent %}
+        {% endblock %}
+    {% endcomponent %}
+
 Component HTML Syntax
 ---------------------
 

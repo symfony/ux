@@ -124,6 +124,9 @@ final class ComponentRenderer implements ComponentRendererInterface
             // first so values can be overridden
             $context,
 
+            // keep reference to old context
+            ['outerScope' => $context],
+
             // add the component as "this"
             ['this' => $component],
 
