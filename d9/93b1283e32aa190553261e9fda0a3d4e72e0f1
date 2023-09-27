@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2023-06-20T10:22:00Z
+
+IMO a child component should not have access to its parent.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-06-23T00:24:40Z
+
+> IMO a child component should not have access to its parent.
+
+Well... the tricky thing is that you ARE still kind of "inside" the parent template - i.e. you're inside `component.html.twig` and want to access the `Component` object... but you currently can't if you're coding inside the `<twig:Foo>` section of that template.
+
+I'm not on one side or the other yet.
+
+---------------------------------------------------------------------------
+
+by sneakyvv at 2023-08-23T11:21:59Z
+
+Since #920 is merged now, I rebased this branch on the current HEAD.
