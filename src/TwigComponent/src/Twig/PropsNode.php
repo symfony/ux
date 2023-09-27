@@ -37,7 +37,7 @@ class PropsNode extends Node
             $compiler
                 ->write('$propsNames[] = \''.$name.'\';')
                 ->write('$context[\'attributes\'] = $context[\'attributes\']->remove(\''.$name.'\');')
-                ->write('if (!isset($context[\''.$name.'\'])) {');
+                ->write('if (!isset($context[\'__props\'][\''.$name.'\'])) {');
 
             if (!$this->hasNode($name)) {
                 $compiler
