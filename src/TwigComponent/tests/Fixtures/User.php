@@ -7,7 +7,8 @@ class User
     public function __construct(
         private readonly string $name,
         private readonly string $email,
-    ) {}
+    ) {
+    }
 
     public function getName(): string
     {

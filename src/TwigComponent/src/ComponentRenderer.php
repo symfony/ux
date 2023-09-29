@@ -76,7 +76,7 @@ final class ComponentRenderer implements ComponentRendererInterface
                 $event->getTemplateIndex(),
             )->render($event->getVariables());
         } finally {
-            $this->componentStack->pop();
+            $mounted = $this->componentStack->pop();
 
             $event = new PostRenderEvent($mounted);
             $this->dispatcher->dispatch($event);

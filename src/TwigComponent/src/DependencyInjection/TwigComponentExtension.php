@@ -11,13 +11,16 @@
 
 namespace Symfony\UX\TwigComponent\DependencyInjection;
 
+use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Argument\AbstractArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
+use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Command\ComponentDebugCommand;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -41,6 +44,8 @@ final class TwigComponentExtension extends Extension
 {
     public function load(array $configs, ContainerBuilder $container): void
     {
+        $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../../config'));
+
         if (!isset($container->getParameter('kernel.bundles')['TwigBundle'])) {
             throw new LogicException('The TwigBundle is not registered in your application. Try running "composer require symfony/twig-bundle".');
         }
@@ -105,5 +110,9 @@ final class TwigComponentExtension extends Extension
             ])
             ->addTag('console.command')
         ;
+
+        if ($container->getParameter('kernel.debug') && class_exists(Stopwatch::class)) {
+            $loader->load('debug.php');
+        }
     }
 }
