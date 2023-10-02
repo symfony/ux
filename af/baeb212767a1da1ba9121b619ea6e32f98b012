@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-02T13:17:33Z
+
+This is the correct change for Symfony 6.4 :). To keep things working with symfony 6.3, let's make this conditional. If the `AssetDependency` class exists, use the old code. Else use the new code. Can you make that change?
+
+---------------------------------------------------------------------------
+
+by andersonamuller at 2023-10-02T18:06:49Z
+
+> This is the correct change for Symfony 6.4 :). To keep things working with symfony 6.3, let's make this conditional. If the `AssetDependency` class exists, use the old code. Else use the new code. Can you make that change?
+
+@weaverryan Is this what you had in mind? Sorry for the missing tests, don't have much time to dig on that now.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-02T18:08:47Z
+
+Nailed it! Just an extra, empty line in there now ;).
+
+There is also one test failing on StimulusBundle - it could be unrelated, I just can't tell - that needs to be debugged to see what the underlying problem is.
