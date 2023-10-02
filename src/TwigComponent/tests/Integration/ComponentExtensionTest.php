@@ -195,6 +195,13 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('class variable defined? no', $output);
     }
 
+    public function testComponentPropsOverwriteContextValue(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_variable_already_in_context.html.twig');
+
+        $this->assertStringContainsString('<p>foo</p>', $output);
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [
