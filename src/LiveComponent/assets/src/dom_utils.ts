@@ -20,6 +20,10 @@ export function getValueFromElement(element: HTMLElement, valueStore: ValueStore
                 const modelValue = valueStore.get(modelNameData.action);
                 if (Array.isArray(modelValue)) {
                     return getMultipleCheckboxValue(element, modelValue);
+                } else if (Object(modelValue) === modelValue) {
+                    // we might get objects of values from forms, like {'1': 'foo', '2': 'bar'}
+                    // this occurs in symfony forms with expanded ChoiceType when first checked options get unchecked
+                    return getMultipleCheckboxValue(element, Object.values(modelValue));
                 }
             }
 

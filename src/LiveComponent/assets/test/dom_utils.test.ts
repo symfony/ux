@@ -32,6 +32,9 @@ describe('getValueFromElement', () => {
 
         expect(getValueFromElement(input, createStore({ foo: ['bar'] })))
             .toEqual(['bar', 'the_checkbox_value']);
+
+        expect(getValueFromElement(input, createStore({ foo: {'1': 'bar'} })))
+            .toEqual(['bar', 'the_checkbox_value']);
     });
 
     it('Correctly removes data from valued unchecked checkbox', () => {
@@ -49,6 +52,8 @@ describe('getValueFromElement', () => {
         expect(getValueFromElement(input, createStore({ foo: ['bar'] })))
             .toEqual(['bar']);
         expect(getValueFromElement(input, createStore({ foo: ['bar', 'the_checkbox_value'] })))
+            .toEqual(['bar']);
+        expect(getValueFromElement(input, createStore({ foo: {'1': 'bar', '2': 'the_checkbox_value'} })))
             .toEqual(['bar']);
     });
 

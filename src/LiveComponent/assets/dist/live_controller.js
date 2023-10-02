@@ -162,6 +162,9 @@ function getValueFromElement(element, valueStore) {
                 if (Array.isArray(modelValue)) {
                     return getMultipleCheckboxValue(element, modelValue);
                 }
+                else if (Object(modelValue) === modelValue) {
+                    return getMultipleCheckboxValue(element, Object.values(modelValue));
+                }
             }
             if (element.hasAttribute('value')) {
                 return element.checked ? element.getAttribute('value') : null;
