@@ -38,6 +38,7 @@
         "symfony/validator": "^5.4|^6.0"
     },
     "require-dev": {
+        "symfony/expression-language": "^5.4|^6.0",
         "symfony/framework-bundle": "^5.4|^6.0",
         "symfony/phpunit-bridge": "^5.4|^6.0",
         "symfony/twig-bundle": "^5.4|^6.0",
