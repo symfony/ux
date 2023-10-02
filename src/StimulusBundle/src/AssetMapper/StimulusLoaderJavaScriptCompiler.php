@@ -62,11 +62,16 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
              * and mark it as a "content" dependency so that this file's contents
              * will be recalculated when the contents of any controller changes.
              */
-            $asset->addDependency(new AssetDependency(
-                $mappedControllerAsset->asset,
-                $mappedControllerAsset->isLazy,
-                true,
-            ));
+            if (class_exists(AssetDependency::class)) {
+                // Backwards compatibility with Symfony 6.3
+                $asset->addDependency(new AssetDependency(
+                    $mappedControllerAsset->asset,
+                    $mappedControllerAsset->isLazy,
+                    true,
+                ));
+            } else {
+                $asset->addDependency($mappedControllerAsset->asset);
+            }
 
             if ($mappedControllerAsset->isLazy) {
                 $lazyControllers[] = sprintf('%s: () => import(%s)', json_encode($name), json_encode($relativeImportPath, \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_SLASHES));
