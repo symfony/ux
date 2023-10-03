@@ -1,0 +1,70 @@
+---------------------------------------------------------------------------
+
+by jmsche at 2023-09-22T14:52:30Z
+
+I think all asset mapper requirements can be updated with `^6.3|^7.0` (so -dev is not required anymore)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-09-25T14:21:17Z
+
+This is looking good, but when I check 2 random jobs - https://github.com/symfony/ux/actions/runs/6295950088/job/17090056239?pr=1135 and https://github.com/symfony/ux/actions/runs/6295950088/job/17090056789?pr=1135 the dependencies are still Symfony 6.4.
+
+What is blocking Symfony 7 from being installed on those jobs? It may be that some other dependency that we can't yet control is blocking us, but we should check and make sure the cause :)
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-09-25T14:58:26Z
+
+At least some of the dependency issues are caused by zenstruck/foundry & zenstruck/browser. They both rely on upstream packages that do not yet support Symfony 7. I'll be working on this.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-02T17:12:06Z
+
+Friendly ping @JoppeDC - there are a few conflicts now (probably easy). And if you can double-check *why* Symfony 7 isn't installed in those cases (as long as we know the reason and it's not "we're doing something wrong"), I'll be happy.
+
+---------------------------------------------------------------------------
+
+by JoppeDC at 2023-10-02T18:36:28Z
+
+I've resolved the conflicts. As for the 6.x installs, i've noticed they are blocked by a few packages. Mostly the zenstruck/* as mentioned above, but also some packages included in this update.
+
+- zenstruck/browser
+- zenstruck/foundry
+- symfony/ux-twig-component
+- symfony/stimulus-bundle
+
+---------------------------------------------------------------------------
+
+by JoppeDC at 2023-10-02T18:47:32Z
+
+Although i notice that the StimulusBundle package still has a failing test. The `AssetDependency` class seems to no longer be available in 6.4 / 7.x. (This is due to removing the assetmapper 6.3 constraint)
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-10-02T18:52:58Z
+
+FYI, zenstruck/browser & foundry should at least be installable with Symfony 7 now.
+
+---------------------------------------------------------------------------
+
+by JoppeDC at 2023-10-02T18:58:51Z
+
+Amazing @kbond , thanks a lot. Just tested locally on some of the packages, and it seems like its indeed resolving to 7.x now :) Will need to fix the StimulusBundle issue first and then i can verify in the new pipeline run that 7.x is installed :)
+
+---------------------------------------------------------------------------
+
+by JoppeDC at 2023-10-02T21:27:18Z
+
+Cool. I've got most issues resolved. There's still an issue related to the SecurityBundle, which i will have to check out further tomorrow.
+
+(We were using `Symfony\Component\Security\Core\Security`, which was deprecated in 6.x and removed in 7. The solution to this is to use `Symfony\Bundle\SecurityBundle\Security`, but this was not yet available in 5.x, and thus breaks the lowest test.)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-03T12:43:24Z
+
+Let's drop support for 5.4 in Autocomplete and then use the new class.
