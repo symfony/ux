@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.13.0
+
+-   Add profiler integration: `TwigComponentDataCollector` and debug toolbar templates
+
 ## 2.12.0
 
 -   Added a `debug:twig-component` command.
