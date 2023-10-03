@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\TwigComponent;
 
-use Composer\InstalledVersions;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
@@ -66,7 +65,7 @@ final class ComponentRenderer implements ComponentRendererInterface
         $event = $this->preRender($mounted);
 
         try {
-            if (InstalledVersions::getVersion('twig/twig') < 3) {
+            if ($this->twig::MAJOR_VERSION < 3) {
                 return $this->twig->loadTemplate($event->getTemplate(), $event->getTemplateIndex())->render($event->getVariables());
             }
 

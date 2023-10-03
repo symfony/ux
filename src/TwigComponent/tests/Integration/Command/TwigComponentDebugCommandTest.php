@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent\Tests\Unit;
+namespace Symfony\UX\TwigComponent\Tests\Integration\Command;
 
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\Console\Tester\CommandTester;
 
-class ComponentDebugCommandTest extends KernelTestCase
+class TwigComponentDebugCommandTest extends KernelTestCase
 {
     public function testWithNoComponent(): void
     {
@@ -29,7 +29,7 @@ class ComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Component', $display);
         $this->assertStringContainsString('Class', $display);
         $this->assertStringContainsString('Template', $display);
-        $this->assertStringContainsString('Live', $display);
+        $this->assertStringContainsString('Type', $display);
     }
 
     public function testWithNoMatchComponent(): void
@@ -39,6 +39,38 @@ class ComponentDebugCommandTest extends KernelTestCase
 
         $this->assertEquals(1, $result);
         $this->assertStringContainsString('Unknown component "NoMatchComponent".', $commandTester->getDisplay());
+    }
+
+    public function testWithOnePartialMatchComponent(): void
+    {
+        $commandTester = $this->createCommandTester();
+        $commandTester->setInputs([]);
+        $result = $commandTester->execute(['name' => 'DivComponentNoPas']);
+
+        $this->assertEquals(0, $result);
+        // Choices
+        $this->assertStringNotContainsString('] DivComponent\n', $commandTester->getDisplay());
+        $this->assertStringContainsString('] DivComponentNoPass', $commandTester->getDisplay());
+        // Component table
+        $this->assertStringContainsString('Component\\DivComponentNoPass', $commandTester->getDisplay());
+    }
+
+    public function testWithMultiplePartialMatchComponent(): void
+    {
+        $commandTester = $this->createCommandTester();
+        $commandTester->setInputs(['DivComponent5']);
+        $result = $commandTester->execute(['name' => 'DivCompon']);
+
+        $this->assertEquals(0, $result);
+        // Choices
+        $this->assertStringContainsString('Select one of the following component to display its information', $commandTester->getDisplay());
+        $this->assertStringContainsString('] DivComponent4', $commandTester->getDisplay());
+        $this->assertStringContainsString('] DivComponent5', $commandTester->getDisplay());
+        $this->assertStringContainsString('] DivComponent6', $commandTester->getDisplay());
+        // Component table
+        $this->assertStringNotContainsString('Component\\DivComponent4', $commandTester->getDisplay());
+        $this->assertStringContainsString('Component\\DivComponent5', $commandTester->getDisplay());
+        $this->assertStringNotContainsString('Component\\DivComponent6', $commandTester->getDisplay());
     }
 
     public function testComponentWithClass(): void
@@ -103,25 +135,42 @@ class ComponentDebugCommandTest extends KernelTestCase
 
         $this->tableDisplayCheck($display);
         $this->assertStringContainsString('Button', $display);
-        $this->assertStringContainsString('Anonymous component', $display);
+        $this->assertStringContainsString('Anonymous', $display);
         $this->assertStringContainsString('components/Button.html.twig', $display);
         $this->assertStringContainsString('label', $display);
         $this->assertStringContainsString('primary = true', $display);
     }
 
-    public function testWithDirectoryOption()
+    public function testWithoutPublicPros(): void
     {
         $commandTester = $this->createCommandTester();
-        $commandTester->execute(['--dir' => 'bar']);
+        $commandTester->execute(['name' => 'no_public_props']);
 
         $commandTester->assertCommandIsSuccessful();
 
         $display = $commandTester->getDisplay();
 
-        $this->assertStringContainsString('foo:bar:baz', $display);
-        $this->assertStringContainsString('OtherDirectory', $display);
-        $this->assertStringContainsString('components/foo/bar/baz.html.twig', $display);
-        $this->assertStringContainsString('bar/OtherDirectory.html.twig', $display);
+        $this->tableDisplayCheck($display);
+        $this->assertStringContainsString('NoPublicProps', $display);
+        $this->assertStringNotContainsString('prop1', $display);
+    }
+
+    public function testWithExposedVariables(): void
+    {
+        $commandTester = $this->createCommandTester();
+        $commandTester->execute(['name' => 'with_exposed_variables']);
+
+        $commandTester->assertCommandIsSuccessful();
+
+        $display = $commandTester->getDisplay();
+
+        $this->tableDisplayCheck($display);
+        $this->assertStringContainsString('WithExposedVariables', $display);
+        $this->assertStringContainsString('prop1', $display);
+        $this->assertStringContainsString('customProp2', $display);
+        $this->assertStringNotContainsString('prop2', $display);
+        $this->assertStringContainsString('customProp3', $display);
+        $this->assertStringNotContainsString('prop3', $display);
     }
 
     private function createCommandTester(): CommandTester
@@ -135,7 +184,6 @@ class ComponentDebugCommandTest extends KernelTestCase
     private function tableDisplayCheck(string $display): void
     {
         $this->assertStringContainsString('Component', $display);
-        $this->assertStringContainsString('Live', $display);
         $this->assertStringContainsString('Class', $display);
         $this->assertStringContainsString('Template', $display);
         $this->assertStringContainsString('Properties', $display);

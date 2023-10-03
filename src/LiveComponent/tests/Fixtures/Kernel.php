@@ -114,6 +114,13 @@ final class Kernel extends BaseKernel
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
         ]);
 
+        $c->extension('twig_component', [
+            'defaults' => [
+                'Symfony\UX\LiveComponent\Tests\Fixtures\Component\\' => 'components/',
+            ],
+            'anonymous_template_directory' => 'components/',
+        ]);
+
         $c->extension('zenstruck_foundry', [
             'auto_refresh_proxies' => false,
         ]);

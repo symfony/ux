@@ -11,6 +11,10 @@
 
 namespace Symfony\UX\TwigComponent\DependencyInjection;
 
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\TreeBuilder;
+use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Argument\AbstractArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
@@ -20,9 +24,8 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\Component\Stopwatch\Stopwatch;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Command\ComponentDebugCommand;
+use Symfony\UX\TwigComponent\Command\TwigComponentDebugCommand;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
@@ -33,15 +36,15 @@ use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 use Symfony\UX\TwigComponent\Twig\ComponentLexer;
 use Symfony\UX\TwigComponent\Twig\TwigEnvironmentConfigurator;
 
-use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_iterator;
-
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @internal
  */
-final class TwigComponentExtension extends Extension
+final class TwigComponentExtension extends Extension implements ConfigurationInterface
 {
+    private const DEPRECATED_DEFAULT_KEY = '__deprecated__use_old_naming_behavior';
+
     public function load(array $configs, ContainerBuilder $container): void
     {
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../../config'));
@@ -50,9 +53,20 @@ final class TwigComponentExtension extends Extension
             throw new LogicException('The TwigBundle is not registered in your application. Try running "composer require symfony/twig-bundle".');
         }
 
+        $config = $this->processConfiguration($this, $configs);
+        $defaults = $config['defaults'];
+        if ($defaults === [self::DEPRECATED_DEFAULT_KEY]) {
+            trigger_deprecation('symfony/ux-twig-component', '2.13', 'Not setting the "twig_component.defaults" config option is deprecated. Check the documentation for an example configuration.');
+            $container->setParameter('ux.twig_component.legacy_autonaming', true);
+
+            $defaults = [];
+        }
+        $container->setParameter('ux.twig_component.component_defaults', $defaults);
+
         $container->register('ux.twig_component.component_template_finder', ComponentTemplateFinder::class)
             ->setArguments([
                 new Reference('twig'),
+                $config['anonymous_template_directory'],
             ])
         ;
 
@@ -101,18 +115,82 @@ final class TwigComponentExtension extends Extension
             ->setDecoratedService(new Reference('twig.configurator.environment'))
             ->setArguments([new Reference('ux.twig_component.twig.environment_configurator.inner')]);
 
-        $container->register('console.command.stimulus_component_debug', ComponentDebugCommand::class)
+        $container->register('ux.twig_component.command.debug', TwigComponentDebugCommand::class)
             ->setArguments([
                 new Parameter('twig.default_path'),
                 new Reference('ux.twig_component.component_factory'),
                 new Reference('twig'),
-               tagged_iterator('twig.component'),
+                class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : [],
+                $config['anonymous_template_directory'],
             ])
             ->addTag('console.command')
         ;
 
-        if ($container->getParameter('kernel.debug') && class_exists(Stopwatch::class)) {
+        $container->setAlias('console.command.stimulus_component_debug', 'ux.twig_component.command.debug')
+            ->setDeprecated('symfony/ux-twig-component', '2.13', '%alias_id%');
+
+        if ($container->getParameter('kernel.debug')) {
             $loader->load('debug.php');
         }
+    }
+
+    public function getConfigTreeBuilder(): TreeBuilder
+    {
+        $treeBuilder = new TreeBuilder('twig_component');
+        $rootNode = $treeBuilder->getRootNode();
+        \assert($rootNode instanceof ArrayNodeDefinition);
+
+        $rootNode
+            ->validate()
+            ->always(function ($v) {
+                if (!isset($v['anonymous_template_directory'])) {
+                    trigger_deprecation('symfony/twig-component-bundle', '2.13', 'Not setting the "twig_component.anonymous_template_directory" config option is deprecated. It will default to "components" in 3.0.');
+                    $v['anonymous_template_directory'] = null;
+                }
+
+                return $v;
+            })
+            ->end()
+            ->children()
+                ->arrayNode('defaults')
+                    ->defaultValue([self::DEPRECATED_DEFAULT_KEY])
+                    ->useAttributeAsKey('namespace')
+                    ->validate()
+                        ->always(function ($v) {
+                            foreach ($v as $namespace => $defaults) {
+                                if (!str_ends_with($namespace, '\\')) {
+                                    throw new InvalidConfigurationException(sprintf('The twig_component.defaults namespace "%s" is invalid: it must end in a "\"', $namespace));
+                                }
+                            }
+
+                            return $v;
+                        })
+                    ->end()
+                    ->arrayPrototype()
+                        ->beforeNormalization()
+                            ->ifString()
+                            ->then(function (string $v) {
+                                return ['template_directory' => $v];
+                            })
+                        ->end()
+                        ->children()
+                            ->scalarNode('template_directory')
+                                ->defaultValue('components')
+                            ->end()
+                            ->scalarNode('name_prefix')
+                                ->defaultValue('')
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
+                ->scalarNode('anonymous_template_directory')
+                    ->info('Defaults to `components`')
+                ->end()
+                ->scalarNode('controllers_json')
+                    ->defaultValue('%kernel.project_dir%/assets/controllers.json')
+                ->end()
+            ->end();
+
+        return $treeBuilder;
     }
 }
