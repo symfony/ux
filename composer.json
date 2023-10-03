@@ -5,8 +5,8 @@
         "dev"
     ],
     "require-dev": {
-        "symfony/filesystem": "^5.2|^6.0",
-        "symfony/finder": "^5.4|^6.0",
+        "symfony/filesystem": "^5.2|^6.0|^7.0",
+        "symfony/finder": "^5.4|^6.0|^7.0",
         "php-cs-fixer/shim": "^3.13"
     }
 }

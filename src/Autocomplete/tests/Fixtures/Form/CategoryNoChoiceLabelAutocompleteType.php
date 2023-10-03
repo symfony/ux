@@ -7,7 +7,7 @@ use Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Category;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
 use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 

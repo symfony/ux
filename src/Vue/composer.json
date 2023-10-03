@@ -36,12 +36,12 @@
         "symfony/stimulus-bundle": "^2.9.1"
     },
     "require-dev": {
-        "symfony/asset-mapper": "6.3.x-dev",
-        "symfony/finder": "^5.4|^6.0",
-        "symfony/framework-bundle": "^5.4|^6.0",
-        "symfony/phpunit-bridge": "^5.4|^6.0",
-        "symfony/twig-bundle": "^5.4|^6.0",
-        "symfony/var-dumper": "^5.4|^6.0"
+        "symfony/asset-mapper": "^6.3|^7.0",
+        "symfony/finder": "^5.4|^6.0|^7.0",
+        "symfony/framework-bundle": "^5.4|^6.0|^7.0",
+        "symfony/phpunit-bridge": "^5.4|^6.0|^7.0",
+        "symfony/twig-bundle": "^5.4|^6.0|^7.0",
+        "symfony/var-dumper": "^5.4|^6.0|^7.0"
     },
     "extra": {
         "thanks": {

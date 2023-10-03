@@ -78,7 +78,7 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
             // }
             'filter_query' => null,
             // set to the string role that's required to view the autocomplete results
-            // or a callable: function(Symfony\Component\Security\Core\Security $security): bool
+            // or a callable: function(Symfony\Bundle\SecurityBundle\Security $security): bool
             'security' => false,
             // set the max results number that a query on automatic endpoint return.
             'max_results' => 10,
@@ -102,13 +102,13 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
         return 'ux_entity_autocomplete';
     }
 
-    public function mapDataToForms($data, $forms)
+    public function mapDataToForms($data, $forms): void
     {
         $form = current(iterator_to_array($forms, false));
         $form->setData($data);
     }
 
-    public function mapFormsToData($forms, &$data)
+    public function mapFormsToData($forms, &$data): void
     {
         $form = current(iterator_to_array($forms, false));
         $data = $form->getData();

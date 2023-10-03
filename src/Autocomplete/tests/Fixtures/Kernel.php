@@ -54,7 +54,7 @@ final class Kernel extends BaseKernel
         $form->handleRequest($request);
 
         return new Response($twig->render('form.html.twig', [
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]));
     }
 
@@ -118,18 +118,17 @@ final class Kernel extends BaseKernel
         ]);
 
         $c->extension('security', [
-            'enable_authenticator_manager' => true,
             'password_hashers' => [
-                PasswordAuthenticatedUserInterface::class => 'plaintext'
+                PasswordAuthenticatedUserInterface::class => 'plaintext',
             ],
             'providers' => [
                 'users_in_memory' => [
                     'memory' => [
                         'users' => [
-                            'mr_autocompleter' => ['password' => 'symfonypass', 'roles' => ['ROLE_USER']]
+                            'mr_autocompleter' => ['password' => 'symfonypass', 'roles' => ['ROLE_USER']],
                         ],
                     ],
-                ]
+                ],
             ],
             'firewalls' => [
                 'main' => [
@@ -157,14 +156,14 @@ final class Kernel extends BaseKernel
             ->public()
             ->arg(1, new Reference('ux.autocomplete.entity_search_util'))
             ->tag(AutocompleteFormTypePass::ENTITY_AUTOCOMPLETER_TAG, [
-                'alias' => 'custom_product'
+                'alias' => 'custom_product',
             ]);
 
         $services->set(CustomGroupByProductAutocompleter::class)
             ->public()
             ->arg(1, new Reference('ux.autocomplete.entity_search_util'))
             ->tag(AutocompleteFormTypePass::ENTITY_AUTOCOMPLETER_TAG, [
-                'alias' => 'custom_group_by_product'
+                'alias' => 'custom_group_by_product',
             ]);
 
         $services->alias('public.results_executor', 'ux.autocomplete.results_executor')

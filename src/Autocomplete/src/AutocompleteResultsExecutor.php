@@ -12,13 +12,13 @@
 namespace Symfony\UX\Autocomplete;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\PropertyAccess\Exception\UnexpectedTypeException;
 use Symfony\Component\PropertyAccess\PropertyAccessor;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyAccess\PropertyPath;
 use Symfony\Component\PropertyAccess\PropertyPathInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Symfony\Component\Security\Core\Security;
 use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
 
 /**

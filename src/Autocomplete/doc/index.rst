@@ -101,7 +101,7 @@ Or, create the field by hand::
     // src/Form/FoodAutocompleteField.php
     // ...
 
-    use Symfony\Component\Security\Core\Security;
+    use Symfony\Bundle\SecurityBundle\Security;
     use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
     use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 
@@ -231,7 +231,7 @@ to the options above, you can also pass:
     that should be required to access the endpoint. Or, pass a callback and
     return ``true`` to grant access or ``false`` to deny access::
 
-        use Symfony\Component\Security\Core\Security;
+        use Symfony\Bundle\SecurityBundle\Security;
 
         [
             'security' => function(Security $security): bool {
@@ -418,8 +418,8 @@ and tag this service with ``ux.entity_autocompleter``, including an ``alias`` op
     use App\Entity\Food;
     use Doctrine\ORM\EntityRepository;
     use Doctrine\ORM\QueryBuilder;
+    use Symfony\Bundle\SecurityBundle\Security;
     use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
-    use Symfony\Component\Security\Core\Security;
     use Symfony\UX\Autocomplete\EntityAutocompleterInterface;
 
     #[AutoconfigureTag('ux.entity_autocompleter', ['alias' => 'food'])]

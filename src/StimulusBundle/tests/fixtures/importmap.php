@@ -10,14 +10,13 @@
 return [
     'app' => [
         'path' => 'app.js',
-        'preload' => true,
+        'entrypoint' => true,
     ],
     '@hotwired/stimulus' => [
         'url' => 'https://ga.jspm.io/npm:@hotwired/stimulus@3.2.1/dist/stimulus.js',
     ],
     '@symfony/stimulus-bundle' => [
         'path' => '@symfony/stimulus-bundle/loader.js',
-        'preload' => true,
     ],
     'needed-vendor' => [
         'url' => 'https://cdn.jsdelivr.net/npm/needed-vendor@3.2.0/dist/needed-vendor+esm',

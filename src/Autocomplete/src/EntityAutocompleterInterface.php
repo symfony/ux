@@ -13,7 +13,7 @@ namespace Symfony\UX\Autocomplete;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\Security\Core\Security;
+use Symfony\Bundle\SecurityBundle\Security;
 
 /**
  * Interface for classes that will have an "autocomplete" endpoint exposed.
