@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Metadata;
 
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
+use Symfony\Component\PropertyInfo\Type;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\TwigComponent\ComponentFactory;
 
@@ -54,12 +55,12 @@ class LiveComponentMetadataFactory
                 continue;
             }
 
-            if (isset($metadatas[$property->getName()])) {
+            if (isset($metadatas[$propertyName = $property->getName()])) {
                 // property name was already used
                 continue;
             }
 
-            $metadatas[$property->getName()] = $this->createLivePropMetadata($class->getName(), $property->getName(), $property, $attribute->newInstance());
+            $metadatas[$propertyName] = $this->createLivePropMetadata($class->getName(), $propertyName, $property, $attribute->newInstance());
         }
 
         return array_values($metadatas);
@@ -67,8 +68,14 @@ class LiveComponentMetadataFactory
 
     public function createLivePropMetadata(string $className, string $propertyName, \ReflectionProperty $property, LiveProp $liveProp): LivePropMetadata
     {
-        $collectionValueType = null;
+        $type = $property->getType();
+        if ($type instanceof \ReflectionUnionType || $type instanceof \ReflectionIntersectionType) {
+            throw new \LogicException(sprintf('Union or intersection types are not supported for LiveProps. You may want to change the type of property %s in %s.', $property->getName(), $property->getDeclaringClass()->getName()));
+        }
+
         $infoTypes = $this->propertyTypeExtractor->getTypes($className, $propertyName) ?? [];
+
+        $collectionValueType = null;
         foreach ($infoTypes as $infoType) {
             if ($infoType->isCollection()) {
                 foreach ($infoType->getCollectionValueTypes() as $valueType) {
@@ -78,9 +85,17 @@ class LiveComponentMetadataFactory
             }
         }
 
-        $type = $property->getType();
-        if ($type instanceof \ReflectionUnionType || $type instanceof \ReflectionIntersectionType) {
-            throw new \LogicException(sprintf('Union or intersection types are not supported for LiveProps. You may want to change the type of property %s in %s.', $property->getName(), $property->getDeclaringClass()->getName()));
+        if (null === $type && null === $collectionValueType && isset($infoTypes[0])) {
+            $infoType = Type::BUILTIN_TYPE_OBJECT === $infoTypes[0]->getBuiltinType() ? $infoTypes[0]->getClassName() : $infoTypes[0]->getBuiltinType();
+
+            return new LivePropMetadata(
+                $property->getName(),
+                $liveProp,
+                $infoType,
+                null === $infoTypes[0]->getClassName(),
+                $infoTypes[0]->isNullable(),
+                null,
+            );
         }
 
         return new LivePropMetadata(
@@ -94,9 +109,9 @@ class LiveComponentMetadataFactory
     }
 
     /**
-     * @return \ReflectionProperty[]
+     * @return iterable<\ReflectionProperty>
      */
-    private static function propertiesFor(\ReflectionClass $class): \Traversable
+    private static function propertiesFor(\ReflectionClass $class): iterable
     {
         foreach ($class->getProperties() as $property) {
             yield $property;
