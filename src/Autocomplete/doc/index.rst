@@ -103,7 +103,7 @@ Or, create the field by hand::
 
     use Symfony\Bundle\SecurityBundle\Security;
     use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
-    use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
+    use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
 
     #[AsEntityAutocompleteField]
     class FoodAutocompleteField extends AbstractType
@@ -128,15 +128,19 @@ Or, create the field by hand::
 
         public function getParent(): string
         {
-            return ParentEntityAutocompleteType::class;
+            return BaseEntityAutocompleteType::class;
         }
     }
+
+.. versionadded:: 2.13
+
+    ``BaseEntityAutocompleteType`` is a new replacement for ``ParentEntityAutocompleteType``.
 
 There are 3 important things:
 
 #. The class needs the ``#[AsEntityAutocompleteField]`` attribute so that
    it's noticed by the autocomplete system.
-#. The ``getParent()`` method must return ``ParentEntityAutocompleteType``.
+#. The ``getParent()`` method must return ``BaseEntityAutocompleteType``.
 #. Inside ``configureOptions()``, you can configure your field using whatever
    normal ``EntityType`` options you need plus a few extra options (see `Form Options Reference`_).
 
@@ -216,7 +220,7 @@ e.g. ``FoodAutocompleteField`` from above):
     is automatically translated using the ``AutocompleteBundle`` domain.
 
 For the Ajax-powered autocomplete field classes (i.e. those whose
-``getParent()`` returns ``ParentEntityAutocompleteType``), in addition
+``getParent()`` returns ``BaseEntityAutocompleteType``), in addition
 to the options above, you can also pass:
 
 ``searchable_fields`` (default: ``null``)

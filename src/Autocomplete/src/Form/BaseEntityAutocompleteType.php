@@ -76,6 +76,11 @@ final class BaseEntityAutocompleteType extends AbstractType
         return EntityType::class;
     }
 
+    public function getBlockPrefix(): string
+    {
+        return 'ux_entity_autocomplete';
+    }
+
     /**
      * Uses the provided URL, or auto-generate from the provided alias.
      */

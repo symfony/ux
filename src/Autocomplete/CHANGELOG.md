@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.13.0
+
+-   Add new BaseEntityAutocompleteType
+
 ## 2.9.0
 
 -   Add support for symfony/asset-mapper

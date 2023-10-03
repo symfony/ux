@@ -140,6 +140,7 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
 
         $container
             ->register('ux.autocomplete.entity_type', ParentEntityAutocompleteType::class)
+            ->setDeprecated('symfony/ux-autocomplete', '2.13', 'The "%service_id%" form type is deprecated since 2.13. Use "ux.autocomplete.base_entity_type" instead.')
             ->setArguments([
                 new Reference('router'),
             ])

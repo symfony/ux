@@ -30,10 +30,10 @@ class AutocompleteFormRenderingTest extends KernelTestCase
         $this->browser()
             ->throwExceptions()
             ->get('/test-form')
-            ->assertElementAttributeContains('#product_category_autocomplete', 'data-controller', 'custom-autocomplete symfony--ux-autocomplete--autocomplete')
-            ->assertElementAttributeContains('#product_category_autocomplete', 'data-symfony--ux-autocomplete--autocomplete-url-value', '/test/autocomplete/category_autocomplete_type')
-            ->assertElementAttributeContains('#product_category_autocomplete', 'data-symfony--ux-autocomplete--autocomplete-min-characters-value', '2')
-            ->assertElementAttributeContains('#product_category_autocomplete', 'data-symfony--ux-autocomplete--autocomplete-max-results-value', '25')
+            ->assertElementAttributeContains('#product_category', 'data-controller', 'custom-autocomplete symfony--ux-autocomplete--autocomplete')
+            ->assertElementAttributeContains('#product_category', 'data-symfony--ux-autocomplete--autocomplete-url-value', '/test/autocomplete/category_autocomplete_type')
+            ->assertElementAttributeContains('#product_category', 'data-symfony--ux-autocomplete--autocomplete-min-characters-value', '2')
+            ->assertElementAttributeContains('#product_category', 'data-symfony--ux-autocomplete--autocomplete-max-results-value', '25')
 
             ->assertElementAttributeContains('#product_portionSize', 'data-controller', 'symfony--ux-autocomplete--autocomplete')
             ->assertElementAttributeContains('#product_tags', 'data-controller', 'symfony--ux-autocomplete--autocomplete')
@@ -52,25 +52,25 @@ class AutocompleteFormRenderingTest extends KernelTestCase
             ->throwExceptions()
             ->get('/test-form')
             // the field renders empty (but the placeholder is there)
-            ->assertElementCount('#product_category_autocomplete option', 1)
+            ->assertElementCount('#product_category option', 1)
             ->assertNotContains('First cat')
 
             ->post('/test-form', [
                 'body' => [
-                    'product' => ['category' => ['autocomplete' => $firstCat->getId()]],
+                    'product' => ['category' => (string) $firstCat->getId()],
                 ],
             ])
             // the option does NOT match something returned by query_builder
             // so ONLY the placeholder shows up
-            ->assertElementCount('#product_category_autocomplete option', 1)
+            ->assertElementCount('#product_category option', 1)
             ->assertNotContains('First cat')
             ->post('/test-form', [
                 'body' => [
-                    'product' => ['category' => ['autocomplete' => $fooCat->getId()]],
+                    'product' => ['category' => (string) $fooCat->getId()],
                 ],
             ])
             // the one option + placeholder now shows up
-            ->assertElementCount('#product_category_autocomplete option', 2)
+            ->assertElementCount('#product_category option', 2)
             ->assertContains('which CategoryAutocompleteType uses')
         ;
     }
@@ -83,23 +83,21 @@ class AutocompleteFormRenderingTest extends KernelTestCase
         $this->browser()
             ->throwExceptions()
             ->get('/test-form')
-            ->assertElementCount('#product_ingredients_autocomplete option', 0)
+            ->assertElementCount('#product_ingredients option', 0)
             ->assertNotContains('Flour')
             ->assertNotContains('Sugar')
             ->post('/test-form', [
                 'body' => [
                     'product' => [
                         'ingredients' => [
-                            'autocomplete' => [
-                                (string) $ingredient1->getId(),
-                                (string) $ingredient2->getId(),
-                            ],
+                            (string) $ingredient1->getId(),
+                            (string) $ingredient2->getId(),
                         ],
                     ],
                 ],
             ])
             // assert that selected options are not lost
-            ->assertElementCount('#product_ingredients_autocomplete option', 2)
+            ->assertElementCount('#product_ingredients option', 2)
             ->assertContains('Flour')
             ->assertContains('Sugar')
         ;
@@ -110,7 +108,7 @@ class AutocompleteFormRenderingTest extends KernelTestCase
         $this->browser()
             ->throwExceptions()
             ->get('/test-form')
-            ->assertElementCount('#product_ingredients_autocomplete option', 0)
+            ->assertElementCount('#product_ingredients option', 0)
             ->assertNotContains('Flour')
             ->assertNotContains('Sugar')
             ->post('/test-form', [
@@ -122,7 +120,7 @@ class AutocompleteFormRenderingTest extends KernelTestCase
                     ],
                 ],
             ])
-            ->assertElementCount('#product_ingredients_autocomplete option', 0)
+            ->assertElementCount('#product_ingredients option', 0)
         ;
     }
 }
