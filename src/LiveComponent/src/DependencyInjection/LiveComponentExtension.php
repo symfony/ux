@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Command\LiveComponentDebugCommand;
 use Symfony\UX\LiveComponent\ComponentValidator;
 use Symfony\UX\LiveComponent\ComponentValidatorInterface;
 use Symfony\UX\LiveComponent\Controller\BatchActionController;
@@ -233,6 +234,13 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         $container->register('ux.live_component.twig.cache_warmer', TemplateCacheWarmer::class)
             ->setArguments([new Reference('twig.template_iterator'), self::TEMPLATES_MAP_FILENAME])
             ->addTag('kernel.cache_warmer');
+
+        $container->register('ux.live_component.command.debug', LiveComponentDebugCommand::class)
+            ->setArguments([
+                new Reference('ux.twig_component.component_factory'),
+                new Reference('ux.live_component.metadata_factory'),
+            ])
+            ->addTag('console.command');
     }
 
     private function isAssetMapperAvailable(ContainerBuilder $container): bool
