@@ -130,7 +130,7 @@ EOF
     private function findComponents(): array
     {
         $components = [];
-        foreach ($this->componentClassMap as $name => $class) {
+        foreach ($this->componentClassMap as $class => $name) {
             $components[$name] ??= $this->componentFactory->metadataFor($name);
         }
         foreach ($this->findAnonymousComponents() as $name => $template) {
