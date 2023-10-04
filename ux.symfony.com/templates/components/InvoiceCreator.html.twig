@@ -44,12 +44,12 @@
                     </thead>
                     <tbody>
                         {% for key, line in lineItems %}
-                            {{ component('InvoiceCreatorLineItem', {
-                                key: key,
-                                productId: line.productId,
-                                quantity: line.quantity,
-                                isEditing: line.isEditing,
-                            }) }}
+                            <twig:InvoiceCreatorLineItem
+                                key="{{ key }}"
+                                productId="{{ line.productId }}"
+                                quantity="{{ line.quantity }}"
+                                isEditing="{{ line.isEditing }}"
+                            />
                         {% endfor %}
                     </tbody>
                 </table>

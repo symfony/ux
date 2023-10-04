@@ -11,9 +11,7 @@
 {% block demo_content %}
     <table class="table">
         {% for food in foods %}
-            {{ component('FoodVote', {
-                food: food
-            }) }}
+            <twig:FoodVote :food="food" />
         {% endfor %}
     </table>
 {% endblock %}

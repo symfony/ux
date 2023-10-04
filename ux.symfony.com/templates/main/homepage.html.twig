@@ -11,7 +11,7 @@
             <p>A set of PHP &amp; JavaScript packages to solve every day frontend problems featuring Stimulus and Turbo.</p>
           </div>
           <div class="col-12 col-sm-10 col-md-8 col-lg-6">
-              {{ component('HomepageTerminalSwapper', {class: 'shadow-blur shadow-blur--rainbow', style: '--shadow-bottom: 2rem;'}) }}
+              <twig:HomepageTerminalSwapper class="shadow-blur shadow-blur--rainbow" style="--shadow-bottom: 2rem;" />
           </div>
         </div>
     </div>
@@ -24,13 +24,11 @@
 
     <div class="row">
         <div class="col-12 col-md-6">
-            {% component Terminal %}
-                {% block content %}
-                    composer require symfony/webpack-encore-bundle symfony/stimulus-bundle
-                    npm install
-                    npm run watch
-                {% endblock %}
-            {% endcomponent %}
+            <twig:Terminal>
+                composer require symfony/webpack-encore-bundle symfony/stimulus-bundle
+                npm install
+                npm run watch
+            </twig:Terminal>
         </div>
 
         <div class="col-12 col-md-6 mt-3 mt-md-0">

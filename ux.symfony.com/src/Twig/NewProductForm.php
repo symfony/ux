@@ -73,6 +73,6 @@ class NewProductForm extends AbstractController
 
         $this->addFlash('live_demo_success', 'Product created! Add another one!');
 
-        return $this->redirectToRoute('app_live_components_product_form');
+        return $this->redirectToRoute('app_demo_live_component_product_form');
     }
 }

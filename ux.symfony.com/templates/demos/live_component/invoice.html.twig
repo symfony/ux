@@ -55,9 +55,7 @@ we emit the event directly.
 {% block demo_content %}
     <div class="row">
         <div class="col-8">
-            {{ component('InvoiceCreator', {
-                invoice: invoice
-            }) }}
+            <twig:InvoiceCreator :invoice="invoice"/>
         </div>
     </div>
     <div class="mt-3">
