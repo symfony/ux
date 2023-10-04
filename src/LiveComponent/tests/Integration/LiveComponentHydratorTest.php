@@ -24,6 +24,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\BlogPostWithSerializationContext
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\CustomerDetails;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Embeddable2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Money;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\ParentDTO;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Temperature;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\CategoryFixtureEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Embeddable1;
@@ -966,6 +967,35 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->assertObjectAfterHydration(function (object $object) {
                     $this->assertSame($object->customerDetailsCollection[0]->address->address, '3 rue du Bac');
                     $this->assertSame($object->customerDetailsCollection[0]->address->city, 'Paris');
+                });
+        }];
+
+        yield 'Object: (de)hydrates nested objects with phpdoc typehints' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true)]
+                public ?ParentDTO $parent = null;
+
+                public function mount()
+                {
+                    $this->parent = new ParentDTO();
+                    $this->parent->name = 'Mozart';
+                }
+            })
+                ->mountWith([])
+                ->assertDehydratesTo([
+                    'parent' => [
+                        'name' => 'Mozart',
+                        'child' => null,
+                    ],
+                ])
+                ->userUpdatesProps(['parent' => ['name' => 'Wolfgang', 'child' => ['age' => 2]]])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertSame($object->parent->name, 'Wolfgang');
+                    $this->assertSame($object->parent->child->age, 2);
+                })
+                ->userUpdatesProps(['parent' => ['name' => 'Wolfgang', 'child' => null]])
+                ->assertObjectAfterHydration(function (object $object) {
+                    $this->assertNull($object->parent->child);
                 });
         }];
 
