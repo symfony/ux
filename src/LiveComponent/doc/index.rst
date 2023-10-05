@@ -363,7 +363,7 @@ For a form using ``ComponentWithFormTrait``, override the ``getDataModelValue()`
 
     You can also define this value inside Twig::
 
-    .. code-block:: html+twig
+    .. code-block:: twig
 
         {{ form_start(form, {attr: {'data-model': 'norender|*'}}) }}
 
