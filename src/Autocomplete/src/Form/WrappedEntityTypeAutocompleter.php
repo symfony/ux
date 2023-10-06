@@ -120,7 +120,9 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
     private function getFormOption(string $name): mixed
     {
         $form = $this->getForm();
-        $formOptions = $form['autocomplete']->getConfig()->getOptions();
+        // Remove when dropping support for ParentEntityAutocompleteType
+        $form = $form->has('autocomplete') ? $form->get('autocomplete') : $form;
+        $formOptions = $form->getConfig()->getOptions();
 
         return $formOptions[$name] ?? null;
     }

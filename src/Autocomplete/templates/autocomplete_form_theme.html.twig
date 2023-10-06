@@ -1,9 +1,15 @@
 {# EasyAdminAutocomplete form type #}
 {% block ux_entity_autocomplete_widget %}
-    {{ form_widget(form.autocomplete, { attr: form.autocomplete.vars.attr|merge({ required: required }) }) }}
+    {% if form.autocomplete is defined %}
+        {{ form_widget(form.autocomplete, { attr: form.autocomplete.vars.attr|merge({ required: required }) }) }}
+    {% else %}
+        {{ form_widget(form) }}
+    {% endif %}
 {% endblock ux_entity_autocomplete_widget %}
 
 {% block ux_entity_autocomplete_label %}
-    {% set id = form.autocomplete.vars.id %}
+    {% if form.autocomplete is defined %}
+        {% set id = form.autocomplete.vars.id %}
+    {% endif %}
     {{ block('form_label') }}
 {% endblock ux_entity_autocomplete_label %}

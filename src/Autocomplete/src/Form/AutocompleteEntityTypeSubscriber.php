@@ -22,6 +22,8 @@ use Symfony\Component\Form\FormEvents;
  * Helps transform ParentEntityAutocompleteType into a EntityType that will not load all options.
  *
  * @internal
+ *
+ * @deprecated since 2.13
  */
 final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
 {

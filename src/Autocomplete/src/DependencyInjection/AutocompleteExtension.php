@@ -27,6 +27,7 @@ use Symfony\UX\Autocomplete\Doctrine\EntityMetadataFactory;
 use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
 use Symfony\UX\Autocomplete\Form\AutocompleteChoiceTypeExtension;
+use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
 use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 use Symfony\UX\Autocomplete\Form\WrappedEntityTypeAutocompleter;
 use Symfony\UX\Autocomplete\Maker\MakeAutocompleteField;
@@ -131,7 +132,15 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
     private function registerFormServices(ContainerBuilder $container): void
     {
         $container
+            ->register('ux.autocomplete.base_entity_type', BaseEntityAutocompleteType::class)
+            ->setArguments([
+                new Reference('router'),
+            ])
+            ->addTag('form.type');
+
+        $container
             ->register('ux.autocomplete.entity_type', ParentEntityAutocompleteType::class)
+            ->setDeprecated('symfony/ux-autocomplete', '2.13', 'The "%service_id%" form type is deprecated since 2.13. Use "ux.autocomplete.base_entity_type" instead.')
             ->setArguments([
                 new Reference('router'),
             ])

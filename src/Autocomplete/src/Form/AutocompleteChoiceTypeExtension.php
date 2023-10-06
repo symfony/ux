@@ -55,6 +55,8 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
         $values = [];
         if ($options['autocomplete_url']) {
             $values['url'] = $options['autocomplete_url'];
+        } elseif ($form->getConfig()->hasAttribute('autocomplete_url')) {
+            $values['url'] = $form->getConfig()->getAttribute('autocomplete_url');
         }
 
         if ($options['options_as_html']) {
