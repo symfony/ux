@@ -13,6 +13,8 @@ namespace Symfony\UX\LiveComponent\Tests\Unit\Attribute;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\PostHydrate;
 use Symfony\UX\LiveComponent\Attribute\PreDehydrate;
 use Symfony\UX\LiveComponent\Attribute\PreReRender;
@@ -104,6 +106,15 @@ final class AsLiveComponentTest extends TestCase
         $this->assertSame('hook1', $hooks[2]->name);
     }
 
+    public function testCanGetPostHydrateMethodsFromClassString(): void
+    {
+        $methods = AsLiveComponent::postHydrateMethods(DummyLiveComponent::class);
+
+        $this->assertCount(1, $methods);
+        $this->assertSame('method', $methods[0]->getName());
+        $this->assertSame(DummyLiveComponent::class, $methods[0]->getDeclaringClass()?->getName());
+    }
+
     public function testCanGetLiveListeners(): void
     {
         $liveListeners = AsLiveComponent::liveListeners(new Component5());
@@ -115,6 +126,17 @@ final class AsLiveComponentTest extends TestCase
         ], $liveListeners[0]);
     }
 
+    public function testCanGetLiveListenersFromClassString(): void
+    {
+        $liveListeners = AsLiveComponent::liveListeners(DummyLiveComponent::class);
+
+        $this->assertCount(1, $liveListeners);
+        $this->assertSame([
+            'action' => 'method',
+            'event' => 'event_name',
+        ], $liveListeners[0]);
+    }
+
     public function testCanCheckIfMethodIsAllowed(): void
     {
         $component = new Component5();
@@ -122,5 +144,19 @@ final class AsLiveComponentTest extends TestCase
         $this->assertTrue(AsLiveComponent::isActionAllowed($component, 'method1'));
         $this->assertFalse(AsLiveComponent::isActionAllowed($component, 'method2'));
         $this->assertTrue(AsLiveComponent::isActionAllowed($component, 'aListenerActionMethod'));
+    }
+}
+
+#[AsLiveComponent]
+class DummyLiveComponent
+{
+    #[PreDehydrate]
+    #[PreReRender]
+    #[PostHydrate]
+    #[LiveListener('event_name')]
+    #[LiveAction]
+    public function method(): bool
+    {
+        return true;
     }
 }
