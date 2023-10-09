@@ -28,6 +28,9 @@ jobs:
               with:
                 working-directory: ux.symfony.com
 
+            - name: Importmap dependencies
+              run: php bin/console importmap:install
+
             - name: Build Sass assets
               run: php bin/console sass:build
 
