@@ -9,9 +9,6 @@
 {% endblock %}
 
 {% block demo_content %}
-    {{ component('TodoListForm', {
-        form: form,
-        todoList: todoList
-    }) }}
+    <twig:TodoListForm :form="form" :todoList="todoList" />
 {% endblock %}
 

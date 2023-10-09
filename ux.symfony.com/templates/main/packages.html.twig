@@ -25,16 +25,16 @@
     <div style="background-color: var(--bs-secondary-bg);" class="mt-5">
         <div class="container-fluid container-xxl p-5">
             <div style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));">
-                {{ component('DocsLink', {
-                    url: 'https://symfonycasts.com/screencast/stimulus',
-                    title: 'Screencasts',
-                    text: 'Jump right into with the Symfony UX & Stimulus screencast.'
-                }) }}
-                {{ component('DocsLink', {
-                    url: 'https://symfony.com/doc/current/frontend/ux.html',
-                    title: 'Documentation',
-                    text: 'Ready to get started? The official symfony.com UX Docs.'
-                }) }}
+                <twig:DocsLink
+                    url="https://symfonycasts.com/screencast/stimulus"
+                    title="Screencasts"
+                    text="Jump right into with the Symfony UX & Stimulus screencast."
+                />
+                <twig:DocsLink
+                    url="https://symfony.com/doc/current/frontend/ux.html"
+                    title="Documentation"
+                    text="Ready to get started? The official symfony.com UX Docs."
+                />
             </div>
         </div>
     </div>

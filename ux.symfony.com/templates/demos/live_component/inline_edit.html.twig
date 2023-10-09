@@ -9,7 +9,5 @@
 {% endblock %}
 
 {% block demo_content %}
-    {{ component('InlineEditFood', {
-        food: food
-    }) }}
+    <twig:InlineEditFood :food="food" />
 {% endblock %}

@@ -29,9 +29,7 @@
     <div class="row align-items-center">
         <div class="col-6">
             {% block alert_success_example %}
-                {{ component('Alert', {
-                    message: 'I am a success alert!',
-                }) }}
+                <twig:Alert message="I am a success alert!" />
             {% endblock %}
         </div>
         <div class="col-6">
@@ -48,10 +46,10 @@
     <div class="row my-2 align-items-center">
         <div class="col-6">
             {% block alert_danger_example %}
-                {{ component('Alert', {
-                    type: 'danger',
-                    message: 'Oh no! The dinos escaped!',
-                }) }}
+                <twig:Alert
+                    type="danger"
+                    message="Oh no! The dinos escaped!"
+                />
             {% endblock %}
         </div>
         <div class="col-6">
