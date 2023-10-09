@@ -2401,7 +2401,7 @@ use the ``name()`` modifier:
 
 Or, in PHP::
 
-    $this->emit('productAdded', name: 'ProductList');
+    $this->emit('productAdded', componentName: 'ProductList');
 
 Emitting only to Yourself
 .........................
