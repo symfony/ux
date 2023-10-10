@@ -25,7 +25,7 @@ final class ModelBindingParserTest extends TestCase
         $this->assertEquals($expectedBindings, $parser->parse($input));
     }
 
-    public function getModelStringTests(): \Generator
+    public static function getModelStringTests(): \Generator
     {
         yield 'empty_string' => ['', []];
 
