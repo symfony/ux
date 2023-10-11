@@ -34,6 +34,10 @@ class TwigPreLexer
 
     public function preLexComponents(string $input): string
     {
+        if (!str_contains($input, '<twig:')) {
+            return $input;
+        }
+
         $this->input = $input;
         $this->length = \strlen($input);
         $output = '';
@@ -259,6 +263,10 @@ class TwigPreLexer
      */
     private function consume(string $string): bool
     {
+        if ($string[0] !== $this->input[$this->position]) {
+            return false;
+        }
+
         $stringLength = \strlen($string);
         if (substr($this->input, $this->position, $stringLength) === $string) {
             $this->position += $stringLength;
