@@ -67,7 +67,7 @@ When warming up the Symfony cache, all of your translations will be dumped as Ja
 For a better developer experience, TypeScript types definitions are also generated aside those JavaScript files.
 
 Then, you will be able to import those JavaScript translations in your assets.
-Don't worry about your final bundle size, only the translations you use will be included in your final bundle, thanks to the [tree shaking](https://webpack.js.org/guides/tree-shaking/).
+Don't worry about your final bundle size, only the translations you use will be included in your final bundle, thanks to the `tree shaking <https://webpack.js.org/guides/tree-shaking/>`_.
 
 Configuring the default locale
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
