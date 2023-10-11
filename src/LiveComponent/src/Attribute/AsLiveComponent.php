@@ -48,8 +48,10 @@ final class AsLiveComponent extends AsTwigComponent
 
     /**
      * @internal
+     *
+     * @param object|class-string $component
      */
-    public static function isActionAllowed(object $component, string $action): bool
+    public static function isActionAllowed(object|string $component, string $action): bool
     {
         foreach (self::attributeMethodsFor(LiveAction::class, $component) as $method) {
             if ($action === $method->getName()) {
@@ -63,9 +65,11 @@ final class AsLiveComponent extends AsTwigComponent
     /**
      * @internal
      *
+     * @param object|class-string $component
+     *
      * @return \ReflectionMethod[]
      */
-    public static function preReRenderMethods(object $component): iterable
+    public static function preReRenderMethods(object|string $component): iterable
     {
         return self::attributeMethodsByPriorityFor($component, PreReRender::class);
     }
@@ -73,9 +77,11 @@ final class AsLiveComponent extends AsTwigComponent
     /**
      * @internal
      *
+     * @param object|class-string $component
+     *
      * @return \ReflectionMethod[]
      */
-    public static function postHydrateMethods(object $component): iterable
+    public static function postHydrateMethods(object|string $component): iterable
     {
         return self::attributeMethodsByPriorityFor($component, PostHydrate::class);
     }
@@ -83,14 +89,23 @@ final class AsLiveComponent extends AsTwigComponent
     /**
      * @internal
      *
+     * @param object|class-string $component
+     *
      * @return \ReflectionMethod[]
      */
-    public static function preDehydrateMethods(object $component): iterable
+    public static function preDehydrateMethods(object|string $component): iterable
     {
         return self::attributeMethodsByPriorityFor($component, PreDehydrate::class);
     }
 
-    public static function liveListeners(object $component): array
+    /**
+     * @internal
+     *
+     * @param object|class-string $component
+     *
+     * @return array<array{action: string, event: string}>
+     */
+    public static function liveListeners(object|string $component): array
     {
         $listeners = [];
         foreach (self::attributeMethodsFor(LiveListener::class, $component) as $method) {
