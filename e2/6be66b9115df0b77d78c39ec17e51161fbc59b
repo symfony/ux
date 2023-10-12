@@ -1,0 +1,107 @@
+---------------------------------------------------------------------------
+
+by jakubtobiasz at 2023-09-26T16:34:33Z
+
+> Thinking ahead: if we, in the future, extended this to "don't load until the element is in the viewport", how would we name that?
+
+I guess we can call it `lazy` then. Or maybe there's a case to keep both, and have the current way (`defer`) and the new one (`lazy`).
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-09-26T17:04:27Z
+
+Indeed, I think `defer` better communicates what this does and `lazy` would better describe the viewport idea.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-09-26T19:03:00Z
+
+> Indeed, I think defer better communicates what this does and lazy would better describe the viewport idea.
+
+So, in the future, to be deferred and lazy, you'd need the following?
+
+```html
+<twig:MyComponent defer lazy />
+```
+
+I think that would work best as we could utilize lazy with polling:
+
+```html
+<twig:MyComponent defer lazy data-poll />
+```
+
+The above would only load when in the viewport and then only poll when still in the viewport.
+
+---------------------------------------------------------------------------
+
+by jakubtobiasz at 2023-09-26T20:15:45Z
+
+> So, in the future, to be deferred and lazy, you'd need the following?
+
+I guess `deferred` **or** `lazy` should be enough 🤔.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-09-26T21:42:30Z
+
+> I guess deferred or lazy should be enough 🤔.
+
+I think we'd need both to allow the following to be possibly:
+
+```html
+<twig:MyComponent lazy data-poll />
+```
+
+This would load the component initially, then only poll when in the viewport.
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-09-30T19:10:45Z
+
+Question: should this be `data-defer`? If I understand correctly, since the `defer` attribute isn't rendered in the actual browser dom, it isn't an issue but... consistency? I don't have a strong opinion myself, just wanted to bring this up for discussion. Assuming we add a `lazy` attribute later for viewport/current tab detection, this will need to be `data-lazy` (and we already have `data-poll`).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-01T16:38:56Z
+
+> Question: should this be `data-defer`? If I understand correctly, since the `defer` attribute isn't rendered in the actual browser dom, it isn't an issue but... consistency? I don't have a strong opinion myself, just wanted to bring this up for discussion. Assuming we add a `lazy` attribute later for viewport/current tab detection, this will need to be `data-lazy` (and we already have `data-poll`).
+
+My (very personal) interpretation:
+* `eager` = "now"
+* `defer` = "bottom of the todo-list"
+* `lazy` = "much later / when it'll be needed"
+
+So "defer" is more to me like the kernel.terminate..  and lazy quite working there..
+
+Two other ideas:
+* "`async`" simple and not related to "when" it will be renderer..
+* `data-render=live`
+
+---------------------------------------------------------------------------
+
+by jakubtobiasz at 2023-10-02T04:53:44Z
+
+The name `defer` is inspired by attributes available for `script` tag.
+
+> If async is present: The script is downloaded in parallel to parsing the page, and executed as soon as it is available (before parsing completes)
+If defer is present (and not async): The script is downloaded in parallel to parsing the page, and executed after the page has finished parsing
+
+The component is "executed" after the page loads (and it's also "downloaded" then in our case 😅).
+
+In terms of `data-` prefix, I guess we get get rid of it in the Twig files, and add this prefix only in the rendered template in all cases 🤔.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-02T16:20:14Z
+
+> I think we'd need both to allow the following to be possibly:
+ > <twig:MyComponent lazy data-poll />
+> This would load the component initially, then only poll when in the viewport.
+
+I was imagining these as 2 different mechanism. The ability to "only poll when in viewport" would be a property of the `data-poll` specifically - so something like;
+
+```html
+<twig:MyComponent lazy data-poll="lazy|$render" />
+```
+
+Yes, that `|$render` at the end is a little bulky. But the point is, `lazy` is a modifier of the polling.
