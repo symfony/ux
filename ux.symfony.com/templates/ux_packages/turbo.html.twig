@@ -14,7 +14,7 @@
             courtesy of <a class="font-white text-underline" href="https://turbo.hotwired.dev/" rel="external noopener noreferrer">Turbo</a>
 
             <div style="position: absolute;  bottom: 4rem;  left: 50%;  transform: translateX(-50%);">
-                {{ include('ux_packages/turbo/_chatMessageCount.html.twig', {messageCount: this.messageCount }) }}
+                {{ include('ux_packages/turbo/_chatMessageCount.html.twig', {messageCount: this.messageCount}) }}
             </div>
         {% endblock %}
 
@@ -54,13 +54,13 @@
                                 <div class="d-flex justify-content-between">
                                     <div class="flex-grow-1">
                                         {{ form_row(form.name, {
-                                            row_attr: { class: 'form-floating' },
-                                            attr: { placeholder: 'Enter a name' },
+                                            row_attr: {class: 'form-floating'},
+                                            attr: {placeholder: 'Enter a name'},
                                         }) }}
                                     </div>
                                     <div class="flex-grow-1 ms-2">
                                         {{ form_row(form.animal, {
-                                            row_attr: { class: 'form-floating' },
+                                            row_attr: {class: 'form-floating'},
                                         }) }}
                                     </div>
                                 </div>
@@ -145,4 +145,3 @@
 
     </div>
 {% endblock %}
-

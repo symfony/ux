@@ -36,7 +36,6 @@ the new `Category` to the database and then does two important things:
    (see `bootstrap-modal-controller.js`).
     </twig:CodeWithExplanationRow>
 
-
     <twig:TabbedCodeBlocks :files="[
         'src/Twig/BootstrapModal.php',
         'templates/components/BootstrapModal.html.twig',
@@ -49,7 +48,7 @@ the new `Category` to the database and then does two important things:
 {% endblock %}
 
 {% block code_block_right %}
-    {% component CodeBlock with { filename: 'templates/components/InlineEditFood.html.twig', height: '400px' } %}
+    {% component CodeBlock with {filename: 'templates/components/InlineEditFood.html.twig', height: '400px'} %}
         {% block content %}
             {{- source('components/InlineEditFood.html.twig') -}}
         {% endblock %}

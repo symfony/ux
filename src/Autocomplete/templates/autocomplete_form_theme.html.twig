@@ -1,7 +1,7 @@
 {# EasyAdminAutocomplete form type #}
 {% block ux_entity_autocomplete_widget %}
     {% if form.autocomplete is defined %}
-        {{ form_widget(form.autocomplete, { attr: form.autocomplete.vars.attr|merge({ required: required }) }) }}
+        {{ form_widget(form.autocomplete, {attr: form.autocomplete.vars.attr|merge({required: required})}) }}
     {% else %}
         {{ form_widget(form) }}
     {% endif %}
