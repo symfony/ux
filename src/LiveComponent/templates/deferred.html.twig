@@ -1,0 +1,7 @@
+<{{ loadingTag }} {{ attributes }} data-action="live:connect->live#$render">
+    {% block loadingContent %}
+        {% if loadingTemplate != null %}
+            {{ include(loadingTemplate) }}
+        {% endif %}
+    {% endblock %}
+</{{ loadingTag }}>

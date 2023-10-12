@@ -88,7 +88,9 @@ final class ComponentFactory
             }
         }
 
-        $data = $this->postMount($component, $data);
+        $postMount = $this->postMount($component, $data);
+        $data = $postMount['data'];
+        $extraMetadata = $postMount['extraMetadata'];
 
         // create attributes from "attributes" key if exists
         $attributesVar = $componentMetadata->getAttributesVar();
@@ -109,7 +111,8 @@ final class ComponentFactory
             $componentMetadata->getName(),
             $component,
             new ComponentAttributes(array_merge($attributes, $data)),
-            $originalData
+            $originalData,
+            $extraMetadata,
         );
     }
 
@@ -188,11 +191,15 @@ final class ComponentFactory
         return $data;
     }
 
+    /**
+     * @return array{data: array<string, mixed>, extraMetadata: array<string, mixed>}
+     */
     private function postMount(object $component, array $data): array
     {
         $event = new PostMountEvent($component, $data);
         $this->eventDispatcher->dispatch($event);
         $data = $event->getData();
+        $extraMetadata = $event->getExtraMetadata();
 
         foreach (AsTwigComponent::postMountMethods($component) as $method) {
             $newData = $component->{$method->name}($data);
@@ -202,7 +209,10 @@ final class ComponentFactory
             }
         }
 
-        return $data;
+        return [
+            'data' => $data,
+            'extraMetadata' => $extraMetadata,
+        ];
     }
 
     private function isAnonymousComponent(string $name): bool

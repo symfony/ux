@@ -19,13 +19,6 @@ namespace Symfony\UX\TwigComponent;
 final class MountedComponent
 {
     /**
-     * Any extra metadata that might be useful to set.
-     *
-     * @var array<string, mixed>
-     */
-    private array $extraMetadata = [];
-
-    /**
      * @param array|null $inputProps if the component was just originally created,
      *                               (not hydrated from a request), this is the
      *                               array of initial props used to create the component
@@ -34,7 +27,8 @@ final class MountedComponent
         private string $name,
         private object $component,
         private ComponentAttributes $attributes,
-        private ?array $inputProps = []
+        private ?array $inputProps = [],
+        private array $extraMetadata = [],
     ) {
     }
 
