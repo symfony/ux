@@ -39,14 +39,14 @@
                             }) }}
                         </td>
                         <td>
-                            {{ form_row(itemForm.vars.button_delete, { label: 'X', attr: { class: 'btn btn-outline-danger' } }) }}
+                            {{ form_row(itemForm.vars.button_delete, {label: 'X', attr: {class: 'btn btn-outline-danger'}}) }}
                         </td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
 
-        {{ form_widget(form.todoItems.vars.button_add, { label: '+ Add Item', attr: { class: 'btn btn-outline-primary' } }) }}
+        {{ form_widget(form.todoItems.vars.button_add, {label: '+ Add Item', attr: {class: 'btn btn-outline-primary'}}) }}
 
         <button type="submit" class="btn btn-success" formnovalidate>Save</button>
     {{ form_end(form) }}

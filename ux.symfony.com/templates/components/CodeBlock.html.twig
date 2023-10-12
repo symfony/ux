@@ -9,7 +9,7 @@
             </div>
         </div>
     {% endif %}
-    <div class="Terminal_body" {{ stimulus_controller('code-expander')}}>
+    <div class="Terminal_body" {{ stimulus_controller('code-expander') }}>
         {% if not showFilename %}
             <div class="Terminal_actions">
                 <twig:CodeBlockButtons source="{{ this.rawSource }}" link="{{ this.githubLink }}"/>
