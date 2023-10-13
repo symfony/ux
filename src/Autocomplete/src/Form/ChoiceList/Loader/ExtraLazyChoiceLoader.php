@@ -21,8 +21,6 @@ use Symfony\Component\Form\ChoiceList\Loader\ChoiceLoaderInterface;
 class ExtraLazyChoiceLoader implements ChoiceLoaderInterface
 {
     private ?ChoiceListInterface $choiceList = null;
-    private array $choices = [];
-    private bool $cached = false;
 
     public function __construct(
         private readonly ChoiceLoaderInterface $decorated,
@@ -31,38 +29,21 @@ class ExtraLazyChoiceLoader implements ChoiceLoaderInterface
 
     public function loadChoiceList(callable $value = null): ChoiceListInterface
     {
-        if (null !== $this->choiceList && $this->cached) {
-            return $this->choiceList;
-        }
-
-        $this->cached = true;
-
-        return $this->choiceList = new ArrayChoiceList($this->choices, $value);
+        return $this->choiceList ??= new ArrayChoiceList([], $value);
     }
 
     public function loadChoicesForValues(array $values, callable $value = null): array
     {
-        if ($this->choices !== $choices = $this->decorated->loadChoicesForValues($values, $value)) {
-            $this->cached = false;
-        }
+        $choices = $this->decorated->loadChoicesForValues($values, $value);
+        $this->choiceList = new ArrayChoiceList($choices, $value);
 
-        return $this->choices = $choices;
+        return $choices;
     }
 
     public function loadValuesForChoices(array $choices, callable $value = null): array
     {
         $values = $this->decorated->loadValuesForChoices($choices, $value);
-
-        if ([] === $values || [''] === $values) {
-            $newChoices = [];
-        } else {
-            $newChoices = $choices;
-        }
-
-        if ($this->choices !== $newChoices) {
-            $this->choices = $newChoices;
-            $this->cached = false;
-        }
+        $this->loadChoicesForValues($values, $value);
 
         return $values;
     }
