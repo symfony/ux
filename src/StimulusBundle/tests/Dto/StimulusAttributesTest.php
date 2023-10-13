@@ -80,7 +80,8 @@ final class StimulusAttributesTest extends TestCase
 
     public function testAddControllerNormalizesControllerName()
     {
-        $this->stimulusAttributes->addController('@symfony/ux-dropzone/dropzone',
+        $this->stimulusAttributes->addController(
+            '@symfony/ux-dropzone/dropzone',
             ['my"Key"' => true],
             ['second"Key"' => 'loading']
         );

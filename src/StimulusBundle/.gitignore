@@ -3,3 +3,4 @@
 composer.lock
 vendor/
 tests/fixtures/var
+!tests/fixtures/assets/vendor

@@ -33,6 +33,8 @@ class StimulusControllerLoaderFunctionalTest extends WebTestCase
             ->crawler()
         ;
 
+        self::assertEquals(1, $crawler->filter('script[type="importmap"]')->count());
+
         $importMapJson = $crawler->filter('script[type="importmap"]')->html();
         $importMap = json_decode($importMapJson, true);
         $importMapKeys = array_keys($importMap['imports']);
@@ -55,27 +57,28 @@ class StimulusControllerLoaderFunctionalTest extends WebTestCase
             '/assets/more-controllers/other-controller.js',
             // 5x from importmap.php
             '@hotwired/stimulus',
-            '@scoped/needed-vendor',
             '@symfony/stimulus-bundle',
             'app',
-            'needed-vendor',
         ], $importMapKeys);
 
-        // "app" & loader.js are pre-loaded. So, all non-lazy controllers should be preloaded:
         $preLoadHrefs = $crawler->filter('link[rel="modulepreload"]')->each(function ($link) {
             return $link->attr('href');
         });
-        $this->assertCount(10, $preLoadHrefs);
-        sort($preLoadHrefs);
-        $this->assertStringStartsWith('/assets/@symfony/stimulus-bundle/controllers-', $preLoadHrefs[0]);
+
+        $this->assertCount(11, $preLoadHrefs);
+        $this->assertStringStartsWith('/assets/app-', $preLoadHrefs[0]);
         $this->assertStringStartsWith('/assets/@symfony/stimulus-bundle/loader-', $preLoadHrefs[1]);
-        $this->assertStringStartsWith('/assets/controllers/hello-with-dashes-controller-', $preLoadHrefs[2]);
-        $this->assertStringStartsWith('/assets/controllers/hello_with_underscores-controller-', $preLoadHrefs[3]);
-        $this->assertStringStartsWith('/assets/controllers/subdir/deeper-controller-', $preLoadHrefs[4]);
-        $this->assertStringStartsWith('/assets/controllers/subdir/deeper-with-dashes-controller-', $preLoadHrefs[5]);
-        $this->assertStringStartsWith('/assets/controllers/subdir/deeper_with_underscores-controller-', $preLoadHrefs[6]);
-        $this->assertStringStartsWith('/assets/fake-vendor/ux-package2/package-hello-controller-', $preLoadHrefs[7]);
-        $this->assertStringStartsWith('/assets/more-controllers/hello-controller-', $preLoadHrefs[8]);
+        $this->assertStringStartsWith('/assets/vendor/stimulus-', $preLoadHrefs[2]);
+        $this->assertStringStartsWith('/assets/@symfony/stimulus-bundle/controllers-', $preLoadHrefs[3]);
+        $this->assertStringStartsWith('/assets/fake-vendor/ux-package2/package-hello-controller-', $preLoadHrefs[4]);
+        $controllers = \array_slice($preLoadHrefs, 5, 6);
+        sort($controllers, \SORT_STRING);
+        $this->assertStringStartsWith('/assets/controllers/hello-with-dashes-controller-', $controllers[0]);
+        $this->assertStringStartsWith('/assets/controllers/hello_with_underscores-controller-', $controllers[1]);
+        $this->assertStringStartsWith('/assets/controllers/subdir/deeper-controller-', $controllers[2]);
+        $this->assertStringStartsWith('/assets/controllers/subdir/deeper-with-dashes-controller-', $controllers[3]);
+        $this->assertStringStartsWith('/assets/controllers/subdir/deeper_with_underscores-controller-', $controllers[4]);
+        $this->assertStringStartsWith('/assets/more-controllers/hello-controller-', $controllers[5]);
     }
 
     protected static function getKernelClass(): string

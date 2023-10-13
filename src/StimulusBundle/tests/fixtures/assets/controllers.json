@@ -14,9 +14,7 @@
                 "autoimport": {
                     "in/asset/mapper/controller_second1.css": true,
                     "in/asset/mapper.controller_second2.css": false,
-                    "@fake-vendor/ux-package1/dist/styles.css": true,
-                    "needed-vendor/file.css": true,
-                    "@scoped/needed-vendor/the/file2.css": true
+                    "@fake-vendor/ux-package1/dist/styles.css": true
                 }
             }
         },

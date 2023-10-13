@@ -64,20 +64,11 @@ class UxControllersTwigRuntimeTest extends TestCase
             'href="/assets/@fake-vendor/ux-package1/styles.css"',
             $runtime->renderLinkTags()
         );
-        $this->assertStringContainsString(
-            'href="https://cdn.jsdelivr.net/npm/needed-vendor@3.2.0/file.css"',
-            $runtime->renderLinkTags()
-        );
-        $this->assertStringContainsString(
-            'href="https://cdn.jsdelivr.net/npm/scoped/needed-vendor@1.2.3/the/file2.css"',
-            $runtime->renderLinkTags()
-        );
 
         // loop through a controllers.json file with several autoimports
         // cases for the assets:
         //   1) asset path is in the pipeline
         //   2) path starts with the "package name" (try with scoped and non-scoped)
         //      then look right inside the package
-        //   3) look inside importmap.php for a "url" package and map to jsdelivr
     }
 }
