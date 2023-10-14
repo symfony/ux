@@ -7,7 +7,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Count;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
-use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
+use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
 
 #[AsEntityAutocompleteField]
 class FoodAutocompleteField extends AbstractType
@@ -16,6 +16,7 @@ class FoodAutocompleteField extends AbstractType
     {
         $resolver->setDefaults([
             'class' => Food::class,
+            'searchable_fields' => ['name'],
             'label' => 'What sounds tasty?',
             'choice_label' => 'name',
             'multiple' => true,
@@ -28,6 +29,6 @@ class FoodAutocompleteField extends AbstractType
 
     public function getParent(): string
     {
-        return ParentEntityAutocompleteType::class;
+        return BaseEntityAutocompleteType::class;
     }
 }
