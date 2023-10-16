@@ -2,7 +2,11 @@ name: Symfony UX
 
 on:
     push:
+        paths-ignore:
+            - 'ux.symfony.com/**'
     pull_request:
+        paths-ignore:
+            - 'ux.symfony.com/**'
 
 jobs:
     coding-style-php:

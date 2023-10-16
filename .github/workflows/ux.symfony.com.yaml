@@ -2,7 +2,11 @@ name: ux.symfony.com
 
 on:
     push:
+        paths:
+            - 'ux.symfony.com/**'
     pull_request:
+        paths:
+            - 'ux.symfony.com/**'
 
 jobs:
     tests:
