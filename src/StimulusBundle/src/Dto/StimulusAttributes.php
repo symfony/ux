@@ -79,7 +79,9 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
         ];
 
         foreach ($parameters as $name => $value) {
-            $this->attributes['data-'.$controllerName.'-'.$name.'-param'] = $this->getFormattedValue($value);
+            $key = $this->normalizeKeyName($name);
+
+            $this->attributes['data-'.$controllerName.'-'.$key.'-param'] = $this->getFormattedValue($value);
         }
     }
 
