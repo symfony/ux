@@ -63,14 +63,14 @@ file to control the template directory for your components:
 
 .. _default_config:
 
-```
-# config/packages/twig_component.yaml
-twig_component:
-    anonymous_template_directory: 'components/'
-    defaults:
-        # Namespace & directory for components
-        App\Twig\Components: 'components/'
-```
+.. code-block:: yaml
+
+    # config/packages/twig_component.yaml
+    twig_component:
+        anonymous_template_directory: 'components/'
+        defaults:
+            # Namespace & directory for components
+            App\Twig\Components: 'components/'
 
 Component Basics
 ----------------
