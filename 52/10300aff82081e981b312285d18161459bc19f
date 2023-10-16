@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-15T17:29:37Z
+
+> I also realised there is no rule to include the symfony licence header in every PHP files, should we add it ?
+
+Yup - that'd be great 👍
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-15T18:20:39Z
+
+Rule added / applied
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-15T20:34:58Z
+
+> [list_syntax](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer/blob/master/doc/rules/list_notation/list_syntax.rst) -> not sure to see the necessity of this rule, do we need it ?
+
+No idea - we can remove it and see what happens. Reading your notes, if there are other changes you want to make, go ahead and make them and we'll see how they look.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-15T20:58:52Z
+
+I'm happy with this config :)
+
+I'm gonna suggest some other CI updates now 👼
