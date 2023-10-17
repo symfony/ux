@@ -16,6 +16,7 @@ use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\UX\TwigComponent\ComponentTemplateFinder;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
+use Twig\Loader\LoaderInterface;
 
 /**
  * @author Simon André <smn.andre@gmail.com>
@@ -36,8 +37,8 @@ final class ComponentTemplateFinderTest extends TestCase
             'components/b.html.twig',
             'components/c',
         ];
-        $environment = $this->createEnvironment($templates);
-        $finder = new ComponentTemplateFinder($environment, 'components');
+        $loader = $this->createLoader($templates);
+        $finder = new ComponentTemplateFinder($loader, 'components');
 
         $this->assertEquals('components/aa.html.twig', $finder->findAnonymousComponentTemplate('aa'));
         $this->assertEquals('components/aa/bb.html.twig', $finder->findAnonymousComponentTemplate('aa:bb'));
@@ -87,6 +88,17 @@ final class ComponentTemplateFinderTest extends TestCase
     /**
      * @group legacy
      */
+    public function testTriggerDeprecationWhenEnvironmentAsFirstArgument(): void
+    {
+        $environment = $this->createEnvironment([]);
+
+        $this->expectDeprecation('Since symfony/ux-twig-component 2.13: The "Symfony\UX\TwigComponent\ComponentTemplateFinder::__construct()" method will require "Twig\Loader\LoaderInterface $loader" as first argument in 3.0. Passing an "Environment" instance is deprecated.');
+        $finder = new ComponentTemplateFinder($environment, 'foo');
+    }
+
+    /**
+     * @group legacy
+     */
     public function testTriggerDeprecationWhenDirectoryArgumentIsNullOrNotProvided(): void
     {
         $environment = $this->createEnvironment([]);
@@ -106,18 +118,21 @@ final class ComponentTemplateFinderTest extends TestCase
             'bar/foo/bar.html.twig',
             'foo/foo/bar.html.twig',
         ];
-        $environment = $this->createEnvironment($templates);
-        $finder = new ComponentTemplateFinder($environment, 'foo');
+        $loader = $this->createLoader($templates);
+        $finder = new ComponentTemplateFinder($loader, 'foo');
 
         $this->assertEquals('foo/bar.html.twig', $finder->findAnonymousComponentTemplate('bar'));
         $this->assertEquals('foo/foo/bar.html.twig', $finder->findAnonymousComponentTemplate('foo:bar'));
         $this->assertEquals('foo/foo/bar.html.twig', $finder->findAnonymousComponentTemplate('foo:bar'));
     }
 
+    private function createLoader(array $templates): LoaderInterface
+    {
+        return new ArrayLoader(array_combine($templates, $templates));
+    }
+
     private function createEnvironment(array $templates): Environment
     {
-        $loader = new ArrayLoader(array_combine($templates, $templates));
-
-        return new Environment($loader);
+        return new Environment($this->createLoader($templates));
     }
 }
