@@ -1,0 +1,133 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-16T15:25:31Z
+
+Nice catch @norival !
+
+@weaverryan  : Is it seen as a bugfix.. or a new feature ? In the later, BC break alert :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-16T18:03:25Z
+
+> This allows giving a parameter name as 'myParam', and it will be printed as 'data-controller-name-my-param-param', which will be interpreted as 'myParam' by the Stimulus controller.
+
+What would the `myParam` have `data-controller...` attribute looked like before this PR? I'm also interested if there is any possibility that changing from the old string to the new string could potentially break someone's app... or if the old attribute was totally wrong and unusable, and now this fixes it.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-17T01:29:55Z
+
+Well after playing with this a bit, i'm 100% to consider this a bugfix.
+
+And it's more a "HTML/DOM/JS" problem than a specific Stimulus one.
+
+```html
+<div data-foo-bar="foo-bar" data-fooBar="fooBar">...</div>
+<div data-fooBar="fooBar" data-foo-bar="foo-bar">...</div>
+```
+
+<img width="437" alt="data-foobar" src="https://github.com/symfony/ux/assets/1359581/adf2ca17-5721-4330-85c3-ea45abe2bcb5">
+
+Data attributes are case-incensitive (and [parsed in lowercase](https://html.spec.whatwg.org/#attribute-name-state)), and the snake to camelCase conversion between HTML and JS is the [expected behaviour](https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes#javascript_access).
+
+## Big Crocodile
+
+Given a parameter named `bigCrocodile`
+
+### Before
+
+Before the fix made by @norival , the HTML code rendered by the function was
+
+```html
+<button
+    data-action="foo#bar"
+    data-foo-bigCrocodile-param="green"
+  >...</button>
+  ```
+
+  But in the Stimulus controller, the parameters passed were in lowercase
+
+  ```js
+  {bigcrocodile: "green"}
+  ```
+
+### After
+
+After the fix, the HTML code will be
+
+```html
+<button
+    data-action="foo#bar"
+    data-foo-big-crocodile-param="green"
+  >...</button>
+  ```
+
+and the parameters passed to the action
+
+  ```js
+  {bigCrocodile: "green"}
+  ```
+
+That also means that is someone called the stimulusAction with snake-case parameters, nothing changes (they still get the parameter in camelCase)
+
+---------------------------------------------------------------------------
+
+by norival at 2023-10-17T08:53:44Z
+
+Great analysis @smnandre ! :smiley:
+
+Actually, I think there is a case where it would break things.
+
+If you declare the parameters in the twig function like this:
+
+```twig
+{{ stimulus_action('controller', 'action', 'click', {bigCrocodile: "green"}) }}
+```
+this will render `...data-controller-bigcrocodile-param="green"` and register it as `event.params.bigcrocodile`. After the 'fix', it would render `...data-controller-big-crocodile-param="green"` and register it as `event.params.bigCrocodile`. So this would break the controller code using this parameter.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-17T09:18:16Z
+
+> this will render `...data-controller-bigcrocodile-param="green"`
+
+I don't find where this transformation is done (bigCrocodile -> bigcrocodile in HTML) ?
+
+---------------------------------------------------------------------------
+
+by norival at 2023-10-17T09:44:33Z
+
+> I don't find where this transformation is done (bigCrocodile -> bigcrocodile in HTML) ?
+
+My bad, the HTML is indeed `data-controller-bigCrocodile-param="green"`, but in the DOM, it is interpreted as `data-controller-bigcrocodile-param="green"`, and, when getting the dataset from JS, it is `{controllerBigcrocodileParam: "green"}` (in Firefox and Chrome, at least).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-17T10:14:49Z
+
+I checked, and Stimulus handles it (on macOs / Firefox + Chrome) as {bigcrocodile: green} indeed. So there is a difference.
+
+**But...** if a developer passed "bigCrocodile" in HTML and then manually used "bigcrocodile" in the JS code.... they should have made the PR you just wrote instead :))
+
+---------------------------------------------------------------------------
+
+by norival at 2023-10-17T10:23:10Z
+
+> **But...** if a developer passed "bigCrocodile" in HTML and then manually used "bigcrocodile" in the JS code.... they should have made the PR you just wrote instead :))
+
+Haha, I agree, that would be a bit weird :sweat_smile:
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-17T13:16:45Z
+
+Can you update the CHANGELOG entry to make it a little longer and explain the behavior change if you were relying on the broken behavior?
+
+---------------------------------------------------------------------------
+
+by norival at 2023-10-17T14:25:52Z
+
+> Can you update the CHANGELOG entry to make it a little longer and explain the behavior change if you were relying on the broken behavior?
+
+@weaverryan done! Is it ok like that?
