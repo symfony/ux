@@ -199,6 +199,16 @@ final class StimulusTwigExtensionTest extends TestCase
             'expectedString' => 'data-action="click->symfony--ux-dropzone--dropzone#onClick"',
             'expectedArray' => ['data-action' => 'click->symfony--ux-dropzone--dropzone#onClick'],
         ];
+
+        yield 'normalize-name, with normalized parameters names' => [
+            'controllerName' => 'my-controller',
+            'actionName' => 'onClick',
+            'eventName' => null,
+            'parameters' => ['boolParam' => true, 'intParam' => 4, 'stringParam' => 'test'],
+            'expectedString' => 'data-action="onClick"',
+            'expectedString' => 'data-action="my-controller#onClick" data-my-controller-bool-param-param="true" data-my-controller-int-param-param="4" data-my-controller-string-param-param="test"',
+            'expectedArray' => ['data-action' => 'my-controller#onClick', 'data-my-controller-bool-param-param' => 'true', 'data-my-controller-int-param-param' => '4', 'data-my-controller-string-param-param' => 'test'],
+        ];
     }
 
     public function testAppendStimulusAction(): void
