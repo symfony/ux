@@ -24,10 +24,10 @@ describe('TurboStreamController', () => {
     let container;
 
     beforeEach(() => {
-        global.EventSource = jest.fn(() => ({
-            addEventListener: jest.fn(),
-            removeEventListener: jest.fn(),
-            close: jest.fn(),
+        global.EventSource = vi.fn(() => ({
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            close: vi.fn(),
         }));
 
         container = mountDOM(

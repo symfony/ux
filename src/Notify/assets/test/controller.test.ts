@@ -41,14 +41,14 @@ describe('NotifyController', () => {
     afterEach(() => {
         clearDOM();
         application.stop();
-        jest.clearAllMocks();
+        vi.clearAllMocks();
     });
 
-    const addEventListenerMock = jest.fn();
-    const removeEventListenerMock = jest.fn();
-    const closeMock = jest.fn();
+    const addEventListenerMock = vi.fn();
+    const removeEventListenerMock = vi.fn();
+    const closeMock = vi.fn();
 
-    global.EventSource = jest.fn().mockImplementation(() => {
+    global.EventSource = vi.fn().mockImplementation(() => {
         return {
             addEventListener: addEventListenerMock,
             removeEventListener: removeEventListenerMock,
