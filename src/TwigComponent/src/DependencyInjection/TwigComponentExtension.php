@@ -65,11 +65,9 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
 
         $container->register('ux.twig_component.component_template_finder', ComponentTemplateFinder::class)
             ->setArguments([
-                new Reference('twig'),
+                new Reference('twig.loader'),
                 $config['anonymous_template_directory'],
-            ])
-        ;
-
+            ]);
         $container->setAlias(ComponentRendererInterface::class, 'ux.twig_component.component_renderer');
 
         $container->registerAttributeForAutoconfiguration(
@@ -100,8 +98,6 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                 new Reference('ux.twig_component.component_stack'),
             ])
         ;
-
-        $container->register(ComponentTemplateFinder::class, 'ux.twig_component.component_template_finder');
 
         $container->register('ux.twig_component.twig.component_extension', ComponentExtension::class)
             ->addTag('twig.extension')
