@@ -98,6 +98,11 @@ final class LiveAttributesCollection
         $this->attributes['data-live-browser-dispatch'] = $browserEventsToDispatch;
     }
 
+    public function setQueryUrlMapping(array $queryUrlMapping): void
+    {
+        $this->attributes['data-live-query-mapping-value'] = $queryUrlMapping;
+    }
+
     private function escapeAttribute(string $value): string
     {
         if (method_exists(EscaperExtension::class, 'escape')) {

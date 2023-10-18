@@ -75,7 +75,7 @@ final class ComponentFactory
     public function mountFromObject(object $component, array $data, ComponentMetadata $componentMetadata): MountedComponent
     {
         $originalData = $data;
-        $data = $this->preMount($component, $data);
+        $data = $this->preMount($component, $data, $componentMetadata);
 
         $this->mount($component, $data);
 
@@ -88,7 +88,7 @@ final class ComponentFactory
             }
         }
 
-        $postMount = $this->postMount($component, $data);
+        $postMount = $this->postMount($component, $data, $componentMetadata);
         $data = $postMount['data'];
         $extraMetadata = $postMount['extraMetadata'];
 
@@ -174,9 +174,9 @@ final class ComponentFactory
         return $this->components->get($name);
     }
 
-    private function preMount(object $component, array $data): array
+    private function preMount(object $component, array $data, ComponentMetadata $componentMetadata): array
     {
-        $event = new PreMountEvent($component, $data);
+        $event = new PreMountEvent($component, $data, $componentMetadata);
         $this->eventDispatcher->dispatch($event);
         $data = $event->getData();
 
@@ -194,9 +194,9 @@ final class ComponentFactory
     /**
      * @return array{data: array<string, mixed>, extraMetadata: array<string, mixed>}
      */
-    private function postMount(object $component, array $data): array
+    private function postMount(object $component, array $data, ComponentMetadata $componentMetadata): array
     {
-        $event = new PostMountEvent($component, $data);
+        $event = new PostMountEvent($component, $data, $componentMetadata);
         $this->eventDispatcher->dispatch($event);
         $data = $event->getData();
         $extraMetadata = $event->getExtraMetadata();

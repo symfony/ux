@@ -18,6 +18,7 @@ import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModel
 import { PluginInterface } from './Component/plugins/PluginInterface';
 import getModelBinding from './Directive/get_model_binding';
 import ComponentRegistry from './ComponentRegistry';
+import QueryStringPlugin from './Component/plugins/QueryStringPlugin';
 
 export { Component };
 export const getComponent = (element: HTMLElement): Promise<Component> =>
@@ -44,6 +45,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         debounce: { type: Number, default: 150 },
         id: String,
         fingerprint: { type: String, default: '' },
+        queryMapping: { type: Object, default: {} },
     };
 
     declare readonly nameValue: string;
@@ -54,6 +56,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     declare readonly hasDebounceValue: boolean;
     declare readonly debounceValue: number;
     declare readonly fingerprintValue: string;
+    declare readonly queryMappingValue: { [p: string]: { name: string } };
 
     /** The component, wrapped in the convenience Proxy */
     private proxiedComponent: Component;
@@ -102,6 +105,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
             new PageUnloadingPlugin(),
             new PollingPlugin(),
             new SetValueOntoModelFieldsPlugin(),
+            new QueryStringPlugin(this.queryMappingValue),
         ];
         plugins.forEach((plugin) => {
             this.component.addPlugin(plugin);

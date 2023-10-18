@@ -2,6 +2,7 @@
 
 ## 2.13.0
 
+-   [BC BREAK] Add component metadata to `PreMountEvent` and `PostMountEvent`
 -   Added configuration to separate your components into different "namespaces"
 -   Add `outerScope` variable reach variables from the parent template of an
     "embedded" component.

@@ -22,10 +22,10 @@ class LiveComponentMetadataTest extends TestCase
     public function testGetOnlyPropsThatAcceptUpdatesFromParent()
     {
         $propMetadatas = [
-            new LivePropMetadata('noUpdateFromParent1', new LiveProp(updateFromParent: false), null, false, false, null),
-            new LivePropMetadata('noUpdateFromParent2', new LiveProp(updateFromParent: false), null, false, false, null),
-            new LivePropMetadata('yesUpdateFromParent1', new LiveProp(updateFromParent: true), null, false, false, null),
-            new LivePropMetadata('yesUpdateFromParent2', new LiveProp(updateFromParent: true), null, false, false, null),
+            new LivePropMetadata('noUpdateFromParent1', new LiveProp(updateFromParent: false), null, false, false, null, false),
+            new LivePropMetadata('noUpdateFromParent2', new LiveProp(updateFromParent: false), null, false, false, null, false),
+            new LivePropMetadata('yesUpdateFromParent1', new LiveProp(updateFromParent: true), null, false, false, null, false),
+            new LivePropMetadata('yesUpdateFromParent2', new LiveProp(updateFromParent: true), null, false, false, null, false),
         ];
         $liveComponentMetadata = new LiveComponentMetadata(new ComponentMetadata([]), $propMetadatas);
         $inputProps = [

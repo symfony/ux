@@ -592,9 +592,6 @@ var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof win
                 let insertionPoint = oldParent.firstChild;
                 let newChild;
 
-                newParent.children;
-                oldParent.children;
-
                 // run through all the new content
                 while (nextNewChild) {
 
@@ -2729,6 +2726,127 @@ class ComponentRegistry {
     }
 }
 
+function isValueEmpty(value) {
+    if (null === value || value === '' || undefined === value || (Array.isArray(value) && value.length === 0)) {
+        return true;
+    }
+    if (typeof value !== 'object') {
+        return false;
+    }
+    for (const key of Object.keys(value)) {
+        if (!isValueEmpty(value[key])) {
+            return false;
+        }
+    }
+    return true;
+}
+function toQueryString(data) {
+    const buildQueryStringEntries = (data, entries = {}, baseKey = '') => {
+        Object.entries(data).forEach(([iKey, iValue]) => {
+            const key = baseKey === '' ? iKey : `${baseKey}[${iKey}]`;
+            if ('' === baseKey && isValueEmpty(iValue)) {
+                entries[key] = '';
+            }
+            else if (null !== iValue) {
+                if (typeof iValue === 'object') {
+                    entries = Object.assign(Object.assign({}, entries), buildQueryStringEntries(iValue, entries, key));
+                }
+                else {
+                    entries[key] = encodeURIComponent(iValue)
+                        .replace(/%20/g, '+')
+                        .replace(/%2C/g, ',');
+                }
+            }
+        });
+        return entries;
+    };
+    const entries = buildQueryStringEntries(data);
+    return Object.entries(entries)
+        .map(([key, value]) => `${key}=${value}`)
+        .join('&');
+}
+function fromQueryString(search) {
+    search = search.replace('?', '');
+    if (search === '')
+        return {};
+    const insertDotNotatedValueIntoData = (key, value, data) => {
+        const [first, second, ...rest] = key.split('.');
+        if (!second)
+            return (data[key] = value);
+        if (data[first] === undefined) {
+            data[first] = Number.isNaN(Number.parseInt(second)) ? {} : [];
+        }
+        insertDotNotatedValueIntoData([second, ...rest].join('.'), value, data[first]);
+    };
+    const entries = search.split('&').map((i) => i.split('='));
+    const data = {};
+    entries.forEach(([key, value]) => {
+        value = decodeURIComponent(value.replace(/\+/g, '%20'));
+        if (!key.includes('[')) {
+            data[key] = value;
+        }
+        else {
+            if ('' === value)
+                return;
+            const dotNotatedKey = key.replace(/\[/g, '.').replace(/]/g, '');
+            insertDotNotatedValueIntoData(dotNotatedKey, value, data);
+        }
+    });
+    return data;
+}
+class UrlUtils extends URL {
+    has(key) {
+        const data = this.getData();
+        return Object.keys(data).includes(key);
+    }
+    set(key, value) {
+        const data = this.getData();
+        data[key] = value;
+        this.setData(data);
+    }
+    get(key) {
+        return this.getData()[key];
+    }
+    remove(key) {
+        const data = this.getData();
+        delete data[key];
+        this.setData(data);
+    }
+    getData() {
+        if (!this.search) {
+            return {};
+        }
+        return fromQueryString(this.search);
+    }
+    setData(data) {
+        this.search = toQueryString(data);
+    }
+}
+class HistoryStrategy {
+    static replace(url) {
+        history.replaceState(history.state, '', url);
+    }
+}
+
+class QueryStringPlugin {
+    constructor(mapping) {
+        this.mapping = mapping;
+    }
+    attachToComponent(component) {
+        component.on('render:finished', (component) => {
+            const urlUtils = new UrlUtils(window.location.href);
+            const currentUrl = urlUtils.toString();
+            Object.entries(this.mapping).forEach(([prop, mapping]) => {
+                const value = component.valueStore.get(prop);
+                urlUtils.set(mapping.name, value);
+            });
+            if (currentUrl !== urlUtils.toString()) {
+                HistoryStrategy.replace(urlUtils);
+            }
+        });
+    }
+}
+
 const getComponent = (element) => LiveControllerDefault.componentRegistry.getComponent(element);
 class LiveControllerDefault extends Controller {
     constructor() {
@@ -2756,6 +2874,7 @@ class LiveControllerDefault extends Controller {
             new PageUnloadingPlugin(),
             new PollingPlugin(),
             new SetValueOntoModelFieldsPlugin(),
+            new QueryStringPlugin(this.queryMappingValue),
         ];
         plugins.forEach((plugin) => {
             this.component.addPlugin(plugin);
@@ -2976,6 +3095,7 @@ LiveControllerDefault.values = {
     debounce: { type: Number, default: 150 },
     id: String,
     fingerprint: { type: String, default: '' },
+    queryMapping: { type: Object, default: {} },
 };
 LiveControllerDefault.componentRegistry = new ComponentRegistry();
 

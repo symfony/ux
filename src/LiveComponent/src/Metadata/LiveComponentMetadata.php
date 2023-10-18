@@ -61,4 +61,15 @@ class LiveComponentMetadata
 
         return array_intersect_key($inputProps, array_flip($propNames));
     }
+
+    public function hasQueryStringBindings(): bool
+    {
+        foreach ($this->getAllLivePropsMetadata() as $livePropMetadata) {
+            if ($livePropMetadata->queryStringMapping()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }
