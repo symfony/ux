@@ -22,17 +22,19 @@ Then, install this bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-toggle-password
 
-If you're using WebpackEncore, install your assets and restart Encore (not
+If you're using Webpack Encore, install your assets and restart Encore (not
 needed if you're using AssetMapper):
 
 .. code-block:: terminal
 
+    # yarn
+    $ yarn install --force
+    $ yarn watch
+
+    # npm
     $ npm install --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn install --force
-    $ yarn watch
 
 Usage with Symfony Forms
 ------------------------
