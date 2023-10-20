@@ -54,7 +54,7 @@ EOF
                 longDescription: <<<EOF
 Say goodbye to the hassle of dependent form fields with Live Components.
 <br>
-Whip up a <a href="https://symfony.com/doc/current/form/dynamic_form_modification.html#form-events-submitted-data">form with dynamic events</a>and then head out for a well-deserved lunch.
+Whip up a <a href="https://symfony.com/doc/current/form/dynamic_form_modification.html#form-events-submitted-data">form with dynamic events</a> and then head out for a well-deserved lunch.
 EOF
             ),
             new LiveDemo(
