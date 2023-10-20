@@ -17,9 +17,14 @@ class SourceCleaner
 {
     public static function cleanupPhpFile(string $contents, bool $removeClass = false): string
     {
-        $contents = u($contents)
-            ->replace("<?php\n", '')
-            ->replaceMatches('/namespace[^\n]*/', '');
+        $contents = u($contents)->replace("<?php\n", '');
+
+        // Remove LICENCE header
+        if ($contents->indexOf('* This file is part of the Symfony package')) {
+            $contents = $contents->after(' */');
+        }
+
+        $contents = $contents->replaceMatches('/namespace[^\n]*/', '');
 
         if ($removeClass) {
             $contents = $contents->replaceMatches('/class[^\n]*\n{/', '')

@@ -26,6 +26,11 @@ class MealPlannerForm extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        /**
+         * Install DynamicFormBuilder:.
+         *
+         *    composer require symfonycasts/dynamic-forms
+         */
         $builder = new DynamicFormBuilder($builder);
 
         $builder

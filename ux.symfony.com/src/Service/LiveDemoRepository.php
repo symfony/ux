@@ -52,9 +52,8 @@ EOF
                 description: 'After selecting the first field, automatically reload the options for a second field.',
                 route: 'app_demo_live_component_dependent_form_fields',
                 longDescription: <<<EOF
-Say goodbye to the hassle of dependent form fields with Live Components.
-<br>
-Whip up a <a href="https://symfony.com/doc/current/form/dynamic_form_modification.html#form-events-submitted-data">form with dynamic events</a> and then head out for a well-deserved lunch.
+Unleash the power of form events, thanks to <a href="/live-component"><code>LiveComponent</code></a>
+and <a href="https://github.com/SymfonyCasts/dynamic-forms"><code>DynamicForms</code></a>.
 EOF
             ),
             new LiveDemo(
