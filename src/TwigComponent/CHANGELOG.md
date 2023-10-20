@@ -5,6 +5,7 @@
 -   Deprecate calling `ComponentTemplateFinder` constructor without `directory` argument.
 -   Add profiler integration: `TwigComponentDataCollector` and debug toolbar templates
 -   Add search feature in `debug:twig-component` command.
+-   Add `{% require % as % %}` to reference components via alias.
 
 ## 2.12.0
 

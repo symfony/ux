@@ -167,7 +167,7 @@ class TwigPreLexer
             throw new SyntaxError(sprintf('Expected closing tag "</twig:%s>" not found.', $lastComponent), $this->line);
         }
 
-        return $output;
+        return $this->processRequires($output);
     }
 
     private function consumeComponentName(string $customExceptionMessage = null): string
@@ -494,5 +494,34 @@ class TwigPreLexer
         $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = true;
 
         return '{% block content %}';
+    }
+
+    private function processRequires(string $input)
+    {
+        // matches "{% require Some:Component:Name as ComponentAlias %}"
+        $pattern = '/{%\s*require\s+([A-Za-z0-9_:@.\-]+)\s+as\s+([A-Za-z0-9_:@.\-]+)\s*%}\n?/';
+        $matches = [];
+        preg_match_all($pattern, $input, $matches, \PREG_SET_ORDER);
+        // replace all "{{ component('ComponentAlias' ... ) }}" with "{{ component('Some/Component/Name', ...) }}"
+        // and all "{% component 'ComponentAlias' ... %}" with "{% component 'Some/Component/Name' ... %}"
+        foreach ($matches as $match) {
+            $input = str_replace(
+                sprintf("{{ component('%s'", $match[2]),
+                sprintf("{{ component('%s'", $match[1]),
+                $input
+            );
+            $input = str_replace(
+                sprintf("{%% component '%s'", $match[2]),
+                sprintf("{%% component '%s'", $match[1]),
+                $input
+            );
+            $input = str_replace(
+                $match[0],
+                '',
+                $input
+            );
+        }
+
+        return $input;
     }
 }
