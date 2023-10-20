@@ -72,6 +72,9 @@ class ControllersMapGenerator
             $name = str_replace(['_', '/'], ['-', '--'], $name);
 
             $asset = $this->assetMapper->getAssetFromSourcePath($file->getRealPath());
+            if (null === $packageControllerConfig) {
+                throw new \RuntimeException(sprintf('Asset "%s" is not accessible.', $file->getRealPath()));
+            }
             $isLazy = preg_match('/\/\*\s*stimulusFetch:\s*\'lazy\'\s*\*\//i', $asset->content);
 
             $controllersMap[$name] = new MappedControllerAsset($asset, $isLazy);
