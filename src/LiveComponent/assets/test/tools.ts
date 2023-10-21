@@ -13,6 +13,10 @@ let activeTests: FunctionalTest[] = [];
 let application: Application;
 
 export function shutdownTests() {
+    if (application) {
+        application.stop();
+    }
+
     if (activeTests.length === 0) {
         // no test was run, apparently
         return;
@@ -366,7 +370,9 @@ export function createTestForExistingComponent(component: Component): Functional
 
 export async function startStimulus(element: string|HTMLElement) {
     // start the Stimulus app just once per test suite
-    if (!application) {
+    if (application) {
+        await application.start();
+    } else {
         application = Application.start();
         application.register('live', LiveController);
     }
