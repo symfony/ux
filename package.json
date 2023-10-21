@@ -5,8 +5,7 @@
     ],
     "scripts": {
         "build": "node bin/build_javascript.js && node bin/build_styles.js",
-        "test": "vitest src --run",
-        "test:vitest": "yarn workspaces run vitest --run",
+        "test": "bin/run-vitest-all.sh",
         "test:jest": "yarn workspaces run jest",
         "lint": "yarn workspaces run eslint src test",
         "format": "prettier src/*/assets/src/*.ts src/*/assets/test/*.js {,src/*/}*.{json,md} --write",
