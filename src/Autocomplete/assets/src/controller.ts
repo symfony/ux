@@ -86,7 +86,35 @@ export default class extends Controller {
 
     disconnect() {
         this.stopMutationObserver();
+
+        // TomSelect.destroy() resets the element to its original HTML. This
+        // causes the selected value to be lost. We store it.
+        let currentSelectedValues: string[] = [];
+        if (this.selectElement) {
+            if (this.selectElement.multiple) {
+                // For multiple selects, store the array of selected values
+                currentSelectedValues = Array.from(this.selectElement.options)
+                    .filter((option) => option.selected)
+                    .map((option) => option.value);
+            } else {
+                // For single select, store the single value
+                currentSelectedValues = [this.selectElement.value];
+            }
+        }
+
         this.tomSelect.destroy();
+
+        if (this.selectElement) {
+            if (this.selectElement.multiple) {
+                // Restore selections for multiple selects
+                Array.from(this.selectElement.options).forEach((option) => {
+                    option.selected = currentSelectedValues.includes(option.value);
+                });
+            } else {
+                // Restore selection for single select
+                this.selectElement.value = currentSelectedValues[0];
+            }
+        }
     }
 
     #getCommonConfig(): Partial<TomSettings> {

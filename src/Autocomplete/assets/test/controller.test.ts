@@ -726,4 +726,53 @@ describe('AutocompleteController', () => {
         expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
         expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
     });
+
+    it('preserves the selected value and HTML with disconnect on single select', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <select data-testid="main-element" data-controller="autocomplete">
+                <option value="">Select a dog</option>
+                <option value="1">dog1</option>
+                <option value="2">dog2</option>
+                <option value="3">dog3</option>
+            </select>
+        `);
+
+        tomSelect.addItem('2');
+
+        const selectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
+        // trigger the disconnect
+        selectElement.removeAttribute('data-controller');
+        await waitFor(() => {
+            expect(selectElement.className).not.toContain('tomselected');
+        });
+        expect(selectElement.value).toBe('2');
+    });
+
+    it('preserves the selected value and HTML with disconnect on multiple select', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <select multiple data-testid="main-element" data-controller="autocomplete">
+                <option value="">Select a dog</option>
+                <option value="1">dog1</option>
+                <option value="2">dog2</option>
+                <option value="3">dog3</option>
+            </select>
+        `);
+
+        tomSelect.addItem('2');
+        tomSelect.addItem('3');
+
+        const getSelectedValues = () => {
+            return Array.from(selectElement.selectedOptions).map((option) => option.value).sort();
+        }
+
+        const selectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
+        expect(getSelectedValues()).toEqual(['2', '3']);
+
+        // trigger the disconnect
+        selectElement.removeAttribute('data-controller');
+        await waitFor(() => {
+            expect(selectElement.className).not.toContain('tomselected');
+        });
+        expect(getSelectedValues()).toEqual(['2', '3']);
+    });
 });
