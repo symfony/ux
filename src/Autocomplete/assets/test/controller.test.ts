@@ -15,9 +15,10 @@ import AutocompleteController, {
     AutocompleteConnectOptions,
     AutocompletePreConnectOptions,
 } from '../src/controller';
-import fetchMock from 'fetch-mock-jest';
 import userEvent from '@testing-library/user-event';
 import TomSelect from 'tom-select';
+import createFetchMock from 'vitest-fetch-mock';
+import { vi } from 'vitest';
 
 const shortDelay = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -50,19 +51,21 @@ const startAutocompleteTest = async (html: string): Promise<{ container: HTMLEle
     return { container, tomSelect };
 }
 
+const fetchMocker = createFetchMock(vi);
 describe('AutocompleteController', () => {
     beforeAll(() => {
         const application = Application.start();
         application.register('autocomplete', AutocompleteController);
+
+        fetchMocker.enableMocks();
+    });
+
+    beforeEach(() => {
+        fetchMocker.resetMocks();
     });
 
     afterEach(() => {
         document.body.innerHTML = '';
-
-        if (!fetchMock.done()) {
-            throw new Error('Mocked requests did not match');
-        }
-        fetchMock.reset();
     });
 
     it('connect without options', async () => {
@@ -74,6 +77,7 @@ describe('AutocompleteController', () => {
         `);
 
         expect(tomSelect.input).toBe(getByTestId(container, 'main-element'));
+        expect(fetchMock.requests().length).toEqual(0);
     });
 
     it('connect with ajax URL on a select element', async () => {
@@ -88,8 +92,7 @@ describe('AutocompleteController', () => {
         `);
 
         // initial Ajax request on focus
-        fetchMock.mock(
-            '/path/to/autocomplete?query=',
+        fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: [
                     {
@@ -100,8 +103,7 @@ describe('AutocompleteController', () => {
             }),
         );
 
-        fetchMock.mock(
-            '/path/to/autocomplete?query=foo',
+        fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: [
                     {
@@ -132,6 +134,10 @@ describe('AutocompleteController', () => {
         await waitFor(() => {
             expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(2);
         });
+
+        expect(fetchMock.requests().length).toEqual(2);
+        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
     });
 
     it('connect with ajax URL on an input element', async () => {
@@ -146,8 +152,7 @@ describe('AutocompleteController', () => {
         `);
 
         // initial Ajax request on focus
-        fetchMock.mock(
-            '/path/to/autocomplete?query=',
+        fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: [
                     {
@@ -158,8 +163,7 @@ describe('AutocompleteController', () => {
             }),
         );
 
-        fetchMock.mock(
-            '/path/to/autocomplete?query=foo',
+        fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: [
                     {
@@ -190,6 +194,10 @@ describe('AutocompleteController', () => {
         await waitFor(() => {
             expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(2);
         });
+
+        expect(fetchMock.requests().length).toEqual(2);
+        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
     });
 
     it('limits updates when min-characters', async () => {
@@ -212,6 +220,8 @@ describe('AutocompleteController', () => {
         await waitFor(() => {
             expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(0);
         });
+
+        expect(fetchMock.requests().length).toEqual(0);
     });
 
     it('min-characters can be a falsy value', async () => {
@@ -241,8 +251,7 @@ describe('AutocompleteController', () => {
         const controlInput = tomSelect.control_input;
 
         // ajax call from initial focus
-        fetchMock.mock(
-            '/path/to/autocomplete?query=',
+        fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: [
                     {
@@ -267,8 +276,7 @@ describe('AutocompleteController', () => {
         });
 
         // now trigger a load
-        fetchMock.mock(
-            '/path/to/autocomplete?query=foo',
+        fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: [
                     {
@@ -290,8 +298,7 @@ describe('AutocompleteController', () => {
         });
 
         // now go below the min characters, but it should still load
-        fetchMock.mock(
-            '/path/to/autocomplete?query=fo',
+        fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: [
                     {
@@ -315,6 +322,11 @@ describe('AutocompleteController', () => {
         await waitFor(() => {
             expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(3);
         });
+
+        expect(fetchMock.requests().length).toEqual(3);
+        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
+        expect(fetchMock.requests()[2].url).toEqual('/path/to/autocomplete?query=fo');
     });
 
     it('adds work-around for live-component & multiple select', async () => {
@@ -359,8 +371,7 @@ describe('AutocompleteController', () => {
         `);
 
         // initial Ajax request on focus
-        fetchMock.mock(
-            '/path/to/autocomplete?query=',
+        fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: [
                     {value: 1, text: 'dog1'},
@@ -390,8 +401,7 @@ describe('AutocompleteController', () => {
             throw new Error('cannot find dropdown content element');
         }
 
-        fetchMock.mock(
-            '/path/to/autocomplete?query=&page=2',
+        fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: [
                     {value: 11, text: 'dog11'},
@@ -407,6 +417,10 @@ describe('AutocompleteController', () => {
         await waitFor(() => {
             expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(12);
         });
+
+        expect(fetchMock.requests().length).toEqual(2);
+        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=&page=2');
     });
 
     it('continues working even if options html rearranges', async () => {
@@ -625,8 +639,7 @@ describe('AutocompleteController', () => {
         `);
 
         // initial Ajax request on focus with group_by options
-        fetchMock.mock(
-            '/path/to/autocomplete?query=',
+        fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: {
                     options: [
@@ -665,8 +678,7 @@ describe('AutocompleteController', () => {
             }),
         );
 
-        fetchMock.mock(
-            '/path/to/autocomplete?query=foo',
+        fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: {
                     options: [
@@ -709,5 +721,9 @@ describe('AutocompleteController', () => {
             expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(2);
             expect(container.querySelectorAll('.optgroup-header')).toHaveLength(1);
         });
+
+        expect(fetchMock.requests().length).toEqual(2);
+        expect(fetchMock.requests()[0].url).toEqual('/path/to/autocomplete?query=');
+        expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
     });
 });
