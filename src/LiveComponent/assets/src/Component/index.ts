@@ -160,6 +160,10 @@ export default class Component {
     set(model: string, value: any, reRender = false, debounce: number|boolean = false): Promise<BackendResponse> {
         const promise = this.nextRequestPromise;
         const modelName = normalizeModelName(model);
+
+        if (!this.valueStore.has(modelName)) {
+            throw new Error(`Invalid model name "${model}".`);
+        }
         const isChanged = this.valueStore.set(modelName, value);
 
         this.hooks.triggerHook('model:set', model, value, this);
