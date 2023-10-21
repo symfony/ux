@@ -26,7 +26,11 @@
                 {{ stimulus_target('code-expander', 'expandCodeButton') }}
                 {{ stimulus_action('code-expander', 'expandCode') }}
                 style="display: none;"
-            >Expand code</button>
+            >
+                <twig:Icon name="arrow-down" />
+                Expand code
+                <twig:Icon name="arrow-down" />
+            </button>
         {% endblock %}
     </div>
 </div>
