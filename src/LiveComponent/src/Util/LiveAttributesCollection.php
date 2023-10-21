@@ -98,6 +98,11 @@ final class LiveAttributesCollection
         $this->attributes['data-live-browser-dispatch'] = $browserEventsToDispatch;
     }
 
+    public function setRequestMethod(string $requestMethod): void
+    {
+        $this->attributes['data-live-request-method-value'] = $requestMethod;
+    }
+
     public function setQueryUrlMapping(array $queryUrlMapping): void
     {
         $this->attributes['data-live-query-mapping-value'] = $queryUrlMapping;

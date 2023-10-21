@@ -32,6 +32,10 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
             type: StringConstructor;
             default: string;
         };
+        requestMethod: {
+            type: StringConstructor;
+            default: string;
+        };
         queryMapping: {
             type: ObjectConstructor;
             default: {};
@@ -48,6 +52,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     readonly hasDebounceValue: boolean;
     readonly debounceValue: number;
     readonly fingerprintValue: string;
+    readonly requestMethodValue: 'get' | 'post';
     readonly queryMappingValue: {
         [p: string]: {
             name: string;

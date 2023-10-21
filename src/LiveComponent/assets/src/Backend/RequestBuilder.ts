@@ -2,10 +2,12 @@ import { BackendAction, ChildrenFingerprints } from './Backend';
 
 export default class {
     private url: string;
+    private method: 'get' | 'post';
     private readonly csrfToken: string | null;
 
-    constructor(url: string, csrfToken: string | null = null) {
+    constructor(url: string, method: 'get' | 'post' = 'post', csrfToken: string | null = null) {
         this.url = url;
+        this.method = method;
         this.csrfToken = csrfToken;
     }
 
@@ -37,6 +39,7 @@ export default class {
         if (
             actions.length === 0 &&
             totalFiles === 0 &&
+            this.method === 'get' &&
             this.willDataFitInUrl(JSON.stringify(props), JSON.stringify(updated), params, JSON.stringify(children), JSON.stringify(updatedPropsFromParent))
         ) {
             params.set('props', JSON.stringify(props));

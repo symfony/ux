@@ -99,6 +99,8 @@ class LiveControllerAttributesCreator
         }
 
         $liveMetadata = $this->metadataFactory->getMetadata($mounted->getName());
+        $requestMethod = $liveMetadata->getComponentMetadata()?->get('method') ?? 'post';
+        $attributesCollection->setRequestMethod($requestMethod);
 
         if ($liveMetadata->hasQueryStringBindings()) {
             $queryMapping = [];

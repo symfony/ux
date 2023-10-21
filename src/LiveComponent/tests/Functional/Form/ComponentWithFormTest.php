@@ -147,7 +147,14 @@ class ComponentWithFormTest extends KernelTestCase
         ];
 
         $this->browser()
-            ->get('/_components/form_with_collection_type?props='.urlencode(json_encode($dehydratedProps)).'&updated='.urlencode(json_encode($updatedProps)))
+            ->post('/_components/form_with_collection_type', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydratedProps,
+                        'updated' => $updatedProps,
+                    ]),
+                ],
+            ])
             // normal validation happened
             ->assertContains('The content field is too short')
             // title is STILL validated as all fields should be validated
@@ -197,7 +204,13 @@ class ComponentWithFormTest extends KernelTestCase
 
         $browser = $this->browser()
             ->throwExceptions()
-            ->get($getUrl($dehydratedProps))
+            ->post('/_components/form_with_many_different_fields_type', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydratedProps,
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertContains('<input type="checkbox" id="form_choice_multiple_1" name="form[choice_multiple][]" value="2" checked="checked"')
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1"')
@@ -209,7 +222,14 @@ class ComponentWithFormTest extends KernelTestCase
         $updatedProps = ['form' => ['choice_multiple' => ['1', '2']]];
 
         $crawler = $browser
-            ->get($getUrl($dehydratedProps, $updatedProps))
+            ->post('/_components/form_with_many_different_fields_type', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydratedProps,
+                        'updated' => $updatedProps,
+                    ]),
+                ],
+            ])
             ->assertContains('<input type="checkbox" id="form_choice_multiple_1" name="form[choice_multiple][]" value="2" checked="checked"')
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1" checked="checked"')
             ->crawler()
@@ -227,7 +247,14 @@ class ComponentWithFormTest extends KernelTestCase
         ]];
 
         $crawler = $browser
-            ->get($getUrl($dehydratedProps, $updatedProps))
+            ->post('/_components/form_with_many_different_fields_type', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydratedProps,
+                        'updated' => $updatedProps,
+                    ]),
+                ],
+            ])
             ->assertContains('<input type="checkbox" id="form_choice_multiple_1" name="form[choice_multiple][]" value="2"')
             ->assertContains('<input type="checkbox" id="form_choice_multiple_0" name="form[choice_multiple][]" value="1"')
             ->assertContains('<input type="checkbox" id="form_checkbox" name="form[checkbox]" required="required" value="1" checked="checked"')
@@ -244,7 +271,14 @@ class ComponentWithFormTest extends KernelTestCase
         ]];
 
         $browser
-            ->get($getUrl($dehydratedProps, $updatedProps))
+            ->post('/_components/form_with_many_different_fields_type', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydratedProps,
+                        'updated' => $updatedProps,
+                    ]),
+                ],
+            ])
             ->assertContains('<option value="2" selected="selected">')
             ->assertContains('<option value="1" selected="selected">')
         ;
@@ -255,7 +289,13 @@ class ComponentWithFormTest extends KernelTestCase
         $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'))->getProps();
 
         $this->browser()
-            ->get('/_components/form_with_live_collection_type?props='.urlencode(json_encode($dehydrated)))
+            ->post('/_components/form_with_live_collection_type', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated,
+                    ]),
+                ],
+            ])
             ->assertContains('<button type="button" id="blog_post_form_comments_add"')
             ->assertContains('<button type="button" id="blog_post_form_comments_0_delete"')
         ;
@@ -267,24 +307,22 @@ class ComponentWithFormTest extends KernelTestCase
 
         $dehydratedProps = $this->dehydrateComponent($mounted)->getProps();
 
-        $getUrl = function (array $props, array $updatedProps = null) {
-            $url = '/_components/form_with_many_different_fields_type?props='.urlencode(json_encode($props));
-            if (null !== $updatedProps) {
-                $url .= '&updated='.urlencode(json_encode($updatedProps));
-            }
-
-            return $url;
-        };
-
         $browser = $this->browser();
         $crawler = $browser
-            ->get($getUrl($dehydratedProps, [
-                'form' => [
-                    'text' => 'foo',
-                    'textarea' => 'longer than 5',
+            ->post('/_components/form_with_many_different_fields_type', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydratedProps,
+                        'updated' => [
+                            'form' => [
+                                'text' => 'foo',
+                                'textarea' => 'longer than 5',
+                            ],
+                            'validatedFields' => ['form.text', 'form.textarea'],
+                        ],
+                    ]),
                 ],
-                'validatedFields' => ['form.text', 'form.textarea'],
-            ]))
+            ])
             ->assertStatus(422)
             ->assertContains('textarea is too long')
             ->crawler()
@@ -325,7 +363,13 @@ class ComponentWithFormTest extends KernelTestCase
         $token = null;
 
         $this->browser()
-            ->get('/_components/form_with_live_collection_type?props='.urlencode(json_encode($dehydratedProps)))
+            ->post('/_components/form_with_live_collection_type', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydratedProps,
+                    ]),
+                ],
+            ])
             ->use(function (Crawler $crawler) use (&$dehydratedProps, &$token, &$updatedProps) {
                 // mimic user typing
                 $updatedProps = [
@@ -398,7 +442,13 @@ class ComponentWithFormTest extends KernelTestCase
         $dehydrated = $this->dehydrateComponent($this->mountComponent('form_with_collection_type'))->getProps();
 
         $this->browser()
-            ->get('/_components/form_with_collection_type?props='.urlencode(json_encode($dehydrated)))
+            ->post('/_components/form_with_collection_type', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated,
+                    ]),
+                ],
+            ])
             ->assertElementAttributeContains('form', 'data-model', 'on(change)|*')
         ;
     }

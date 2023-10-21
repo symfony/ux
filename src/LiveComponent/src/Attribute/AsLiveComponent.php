@@ -42,8 +42,15 @@ final class AsLiveComponent extends AsTwigComponent
         string $attributesVar = 'attributes',
         public bool $csrf = true,
         public string $route = 'ux_live_component',
+        public string $method = 'post',
     ) {
         parent::__construct($name, $template, $exposePublicProps, $attributesVar);
+
+        $this->method = strtolower($this->method);
+
+        if (!\in_array($this->method, ['get', 'post'])) {
+            throw new \UnexpectedValueException('$method must be either \'get\' or \'post\'');
+        }
     }
 
     /**
@@ -56,6 +63,7 @@ final class AsLiveComponent extends AsTwigComponent
             'live' => true,
             'csrf' => $this->csrf,
             'route' => $this->route,
+            'method' => $this->method,
         ]);
     }
 

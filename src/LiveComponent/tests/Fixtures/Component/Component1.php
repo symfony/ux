@@ -20,7 +20,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-#[AsLiveComponent('component1')]
+#[AsLiveComponent('component1', method: 'get')]
 final class Component1
 {
     use DefaultActionTrait;

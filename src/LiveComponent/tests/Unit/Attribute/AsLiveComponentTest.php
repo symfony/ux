@@ -193,3 +193,8 @@ class DummyLiveComponent
         return true;
     }
 }
+
+#[AsLiveComponent(method: 'get')]
+class GetMethodComponent
+{
+}
