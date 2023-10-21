@@ -7,13 +7,6 @@ export default mergeConfig(
     defineConfig({
         test: {
             setupFiles: [path.join(__dirname, 'test', 'setup.js')],
-            deps: {
-                optimizer: {
-                    web: {
-                        include: ['vitest-canvas-mock'],
-                    },
-                },
-            },
         }
     })
 );
