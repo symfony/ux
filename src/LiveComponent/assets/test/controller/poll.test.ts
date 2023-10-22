@@ -46,7 +46,7 @@ describe('LiveController polling Tests', () => {
 
     it('is controllable via modifiers', async () => {
         const test = await createTest({ renderCount: 0 }, (data: any) => `
-            <div ${initComponent(data)} data-poll="delay(500)|$render">
+            <div ${initComponent(data)} data-poll="delay(250)|$render">
                 <span>Render count: ${data.renderCount}</span>
             </div>
         `);
@@ -62,18 +62,18 @@ describe('LiveController polling Tests', () => {
                 data.renderCount = 2;
             });
 
-        // only wait for about 500ms this time
+        // only wait for about 250ms this time
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'), {
-            timeout: 600
+            timeout: 300
         });
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 2'), {
-            timeout: 600
+            timeout: 300
         });
     });
 
     it('can also call a live action', async () => {
         const test = await createTest({ renderCount: 0 }, (data: any) => `
-            <div ${initComponent(data)} data-poll="delay(500)|saveAction">
+            <div ${initComponent(data)} data-poll="delay(250)|saveAction">
                 <span>Render count: ${data.renderCount}</span>
             </div>
         `);
@@ -91,18 +91,18 @@ describe('LiveController polling Tests', () => {
                 data.renderCount = 2;
             });
 
-        // only wait for about 500ms this time
+        // only wait for about 250ms this time
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'), {
-            timeout: 600
+            timeout: 300
         });
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 2'), {
-            timeout: 600
+            timeout: 300
         });
     });
 
     it('polling should stop if data-poll is removed', async () => {
         const test = await createTest({ keepPolling: true, renderCount: 0 }, (data: any) => `
-            <div ${initComponent(data)} ${data.keepPolling ? 'data-poll="delay(500)|$render"' : ''}>
+            <div ${initComponent(data)} ${data.keepPolling ? 'data-poll="delay(250)|$render"' : ''}>
                 <span>Render count: ${data.renderCount}</span>
             </div>
         `);
@@ -119,27 +119,27 @@ describe('LiveController polling Tests', () => {
                 data.keepPolling = false;
             });
 
-        // only wait for about 500ms this time
+        // only wait for about 250ms this time
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'), {
-            timeout: 600
+            timeout: 300
         });
         await waitFor(() => expect(test.element).toHaveTextContent('Render count: 2'), {
-            timeout: 600
+            timeout: 300
         });
-        // wait 1 more second... no more Ajax calls should be made
+        // wait 500ms more... no more Ajax calls should be made
         const timeoutPromise = new Promise((resolve) => {
             setTimeout(() => {
                 resolve(true);
-            }, 1000);
+            }, 500);
         });
         await waitFor(() => timeoutPromise, {
-            timeout: 1500
+            timeout: 750
         });
     });
 
     it('stops polling after it disconnects', async () => {
        const test = await createTest({ renderCount: 0 }, (data: any) => `
-           <div ${initComponent(data)} data-poll="delay(500)|$render">
+           <div ${initComponent(data)} data-poll="delay(250)|$render">
                <span>Render count: ${data.renderCount}</span>
            </div>
        `);
@@ -150,20 +150,20 @@ describe('LiveController polling Tests', () => {
                data.renderCount = 1;
            });
 
-       // only wait for about 500ms this time
+       // only wait for about 250ms this time
        await waitFor(() => expect(test.element).toHaveTextContent('Render count: 1'), {
-           timeout: 600
+           timeout: 300
        });
        // "remove" our controller from the page
        document.body.innerHTML = '<div>something else</div>';
-        // wait 1 more second... no more Ajax calls should be made
+        // wait 500ms more second... no more Ajax calls should be made
         const timeoutPromise = new Promise((resolve) => {
             setTimeout(() => {
                 resolve(true);
-            }, 1000);
+            }, 500);
         });
         await waitFor(() => timeoutPromise, {
-            timeout: 1500
+            timeout: 750
         });
    });
 
