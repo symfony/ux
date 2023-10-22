@@ -3,7 +3,8 @@
     "description": "Integration of Vue.js in Symfony",
     "license": "MIT",
     "version": "1.0.0",
-    "main": "dist/register_controller.js",
+    "module": "dist/register_controller.js",
+    "type": "module",
     "types": "dist/register_controller.d.ts",
     "symfony": {
         "controllers": {

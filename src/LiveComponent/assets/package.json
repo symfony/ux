@@ -1,7 +1,8 @@
 {
     "name": "@symfony/ux-live-component",
     "description": "Live Component: bring server-side re-rendering & model binding to any element.",
-    "main": "dist/live_controller.js",
+    "module": "dist/live_controller.js",
+    "type": "module",
     "types": "dist/live_controller.d.ts",
     "version": "1.0.0",
     "config": {

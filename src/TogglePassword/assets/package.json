@@ -3,7 +3,8 @@
     "description": "Toggle visibility of password inputs for Symfony Forms",
     "license": "MIT",
     "version": "1.0.0",
-    "main": "dist/controller.js",
+    "module": "dist/controller.js",
+    "type": "module",
     "types": "dist/controller.d.ts",
     "config": {
         "css_source": "src/style.css"
