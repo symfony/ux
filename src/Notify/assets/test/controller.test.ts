@@ -13,6 +13,7 @@ import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import NotifyController from '../src/controller';
+import { vi } from 'vitest';
 
 // Controller used to check the actual controller was properly booted
 class CheckController extends Controller {

@@ -18,6 +18,5 @@
         "jsx": "react"
     },
     "exclude": ["src/*/assets/dist"],
-    "include": ["src/*/assets/src", "src/*/assets/test"],
-    "types": ["vite/client", "vitest/globals"]
+    "include": ["src/*/assets/src", "src/*/assets/test"]
 }
