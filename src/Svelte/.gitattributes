@@ -2,7 +2,7 @@
 /.gitignore export-ignore
 /.symfony.bundle.yaml export-ignore
 /assets/.gitignore export-ignore
-/assets/jest.config.js export-ignore
+/assets/vitest.config.js export-ignore
 /assets/test export-ignore
 /tests export-ignore
 /assets/src/*.ts export-ignore

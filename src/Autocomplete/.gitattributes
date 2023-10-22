@@ -4,6 +4,5 @@
 /phpunit.xml.dist export-ignore
 /assets/.gitignore export-ignore
 /assets/src/**/*.ts export-ignore
-/assets/jest.config.js export-ignore
 /assets/test export-ignore
 /tests export-ignore

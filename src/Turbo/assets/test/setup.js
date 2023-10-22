@@ -7,6 +7,5 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-import '@symfony/stimulus-testing/setup';
+// polyfill for some odd error inside of Turbo in the test environment
+window.SubmitEvent = function () {};

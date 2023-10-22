@@ -9,6 +9,6 @@
 
 'use strict';
 
-import 'jest-canvas-mock';
+import 'vitest-canvas-mock';
 // eslint-disable-next-line
 global.ResizeObserver = require('resize-observer-polyfill');
