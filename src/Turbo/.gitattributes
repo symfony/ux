@@ -5,5 +5,5 @@
 /phpstan.neon.dist export-ignore
 /assets/src/**/*.ts export-ignore
 /assets/test export-ignore
-/assets/jest.config.js export-ignore
+/assets/vitest.config.js export-ignore
 /tests export-ignore

@@ -6,7 +6,6 @@
     "scripts": {
         "build": "node bin/build_javascript.js && node bin/build_styles.js",
         "test": "bin/run-vitest-all.sh",
-        "test:jest": "yarn workspaces run jest",
         "lint": "yarn workspaces run eslint src test",
         "format": "prettier src/*/assets/src/*.ts src/*/assets/test/*.js {,src/*/}*.{json,md} --write",
         "check-lint": "yarn lint --no-fix",
@@ -23,12 +22,9 @@
         "@symfony/stimulus-testing": "^2.0.1",
         "@typescript-eslint/eslint-plugin": "^5.2.0",
         "@typescript-eslint/parser": "^5.2.0",
-        "babel-jest": "^27.3.1",
         "clean-css-cli": "^5.6.2",
         "eslint": "^8.1.0",
         "eslint-config-prettier": "^8.0.0",
-        "eslint-plugin-jest": "^25.2.2",
-        "jest": "^27.3.1",
         "prettier": "^2.2.1",
         "rollup": "^3.7.0",
         "tslib": "^2.3.1",
@@ -63,9 +59,6 @@
             {
                 "files": [
                     "src/*/assets/test/**/*.ts"
-                ],
-                "extends": [
-                    "plugin:jest/recommended"
                 ]
             }
         ]

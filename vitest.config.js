@@ -5,7 +5,7 @@ export default defineConfig({
     test: {
         globals: true,
         environment: 'jsdom',
-        setupFiles: [path.join(__dirname, 'test', 'setup-vitest.js')],
+        setupFiles: [path.join(__dirname, 'test', 'setup.js')],
         coverage: {
             reporter: ['text', 'html'],
         },

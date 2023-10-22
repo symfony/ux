@@ -31,7 +31,6 @@
     },
     "devDependencies": {
         "@hotwired/turbo": "^7.1.0",
-        "@hotwired/stimulus": "^3.0.0",
-        "jest-canvas-mock": "^2.3.0"
+        "@hotwired/stimulus": "^3.0.0"
     }
 }
