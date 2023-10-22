@@ -1,0 +1,85 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-20T18:46:21Z
+
+Thanks for this 💯! I'm going to try to find time to dig a bit this weekend.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-21T01:25:16Z
+
+Does it support parralel runs ? something like
+
+```
+npm workspace run -p 5 eslint
+```
+
+(not working, just to illustrate)
+
+---------------------------------------------------------------------------
+
+by ChqThomas at 2023-10-21T09:00:52Z
+
+@smnandre  Not in the current state as this project uses yarn 1.22 (classic) but with yarn v3+ you can:
+
+```bash
+yarn workspaces foreach --parallel run test
+```
+
+https://v3.yarnpkg.com/cli/workspaces/foreach
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-21T13:24:32Z
+
+@ChqThomas ok thanks
+
+So it's probably out of the scope of your current work..
+
+I'd like to work the CI to speed things a bit (a lot?), because i must admin having to wait 2 minutes of JS scripts every time i touch a PHP file is not something i love :)
+
+<img width="858" alt="Capture d’écran 2023-10-21 à 15 14 04" src="https://github.com/symfony/ux/assets/1359581/30c78f7b-3969-4378-bec1-5567caa62a4c">
+
+And, as far as i know, it would not be a good idea to condition JS runs to .js files change (as php and js files can impact each other in our packages)
+
+I'm looking at [esbuild](https://esbuild.github.io/) right now, it could help us
+
+Should i create an issue to discuss this ?
+
+WDYT ?
+
+(cc @weaverryan )
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-21T17:40:45Z
+
+> Should i create an issue to discuss this ?
+
+Sure - I'd be interested to see what you have in mind 👍
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-21T19:27:06Z
+
+Ok, checked into this. Fantastic work - it got me really excited and I think this is going to work! Using your detailed notes, I added a few more commits and resolved many of the remaining issues. So, we're actually quite close now. I also added a little script that will run all the workspace tests and continue going even if some fail. Just running `yarn vitest` from the root directory doesn't work, as it ignores the `vitest.config.js` that's inside some of the packages (it was only using the root). But the new script seems to work and have the desired effect of not stopping if one workspace has a failing test.
+
+A few svelte tests are failing... the markup apparently changed that Svelte is outputting? I'm not sure what's going on there - but there's a good chance we can just change the assertions to match the new markup, though I can't explain the change.
+
+EDIT: I've fixed the rest. I think this might be working! @ChqThomas do you want to remove jest and see if anything else needs to be done? I'm not worried about benchmarking, btw - the tests are fast. If we need to do something faster or run them in parallel, that's a separate thing.
+
+---------------------------------------------------------------------------
+
+by ChqThomas at 2023-10-21T22:06:13Z
+
+@weaverryan Wow that was fast!
+
+> A few svelte tests are failing... the markup apparently changed that Svelte is outputting? I'm not sure what's going on there - but there's a good chance we can just change the assertions to match the new markup, though I can't explain the change.
+
+I can't explain it either, Svelte add HTML comments to identify components in dev mode, seems like they are not stripped out of the output with the Vitest plugin like they were with the Jest one. Updating the assertions is fine 👍
+
+> EDIT: I've fixed the rest. I think this might be working! @ChqThomas do you want to remove jest and see if anything else needs to be done? I'm not worried about benchmarking, btw - the tests are fast. If we need to do something faster or run them in parallel, that's a separate thing.
+
+Yup I'll take a final look and completely remove jest config
+
+Great work 😄
