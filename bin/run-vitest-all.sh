@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Get all workspace names
-workspaces=$(yarn workspaces --json info | jq -r 'if .type == "log" then .data | fromjson | keys[] else empty end')
+workspaces=$(yarn workspaces info | grep -o '@symfony/[^"]*')
 
 # Flag to track if any test fails
 all_tests_passed=true
