@@ -2220,31 +2220,49 @@ To validate only on "change", use the ``on(change)`` modifier:
         class="{{ _errors.has('post.content') ? 'is-invalid' : '' }}"
     >
 
-Deferring the Loading
----------------------
+Deferring / Lazy Loading Components
+-----------------------------------
 
-Certain components might be heavy to load. You can defer the loading of these components
-until after the rest of the page has loaded. To do this, use the ``defer`` attribute:
+.. versionadded:: 2.13.0
+
+    The ability to defer loading a component was added in Live Components 2.13.
+
+If a component is heavy to render, you can defer rendering it until after
+the page has loaded. To do this, add the ``defer`` option:
 
 .. code-block:: twig
 
     {{ component('SomeHeavyComponent', { defer: true }) }}
 
-Doing so will render an empty "placeholder" tag with the live attributes. Once the ``live:connect`` event is triggered,
-the component will be rendered asynchronously.
+This renders an empty ``<div>`` tag, but triggers an Ajax call to render the
+real component once the page has loaded.
 
-By default the rendered tag is a ``div``. You can change this by specifying the ``loading-tag`` attribute:
+.. note::
 
-.. code-block:: twig
+    Behind the scenes, your component *is* created & mounted during the initial
+    page load, but it isn't rendered. So keep your heavy work to methods in
+    your component (e.g. ``getProducts()``) that are only called when rendering.
 
-    {{ component('SomeHeavyComponent', { defer: true, loading-tag: 'span' }) }}
-
-If you need to signify that the component is loading, use the ``loading-template`` attribute.
-This lets you provide a Twig template that will render inside the "placeholder" tag:
+To add some loading text before the real component is loaded, use the
+``loading-template`` option to point to a template:
 
 .. code-block:: twig
 
     {{ component('SomeHeavyComponent', { defer: true, loading-template: 'spinning-wheel.html.twig' }) }}
+
+Or override the ``content`` block:
+
+.. code-block:: twig
+
+    {% component SomeHeavyComponent with { defer: true }) }}
+        {% block content %}Loading...{% endblock %}
+    {{ end_component() }}
+
+To change the initial tag from a ``div`` to something else, use the ``loading-tag`` option:
+
+.. code-block:: twig
+
+    {{ component('SomeHeavyComponent', { defer: true, loading-tag: 'span' }) }}
 
 Polling
 -------
