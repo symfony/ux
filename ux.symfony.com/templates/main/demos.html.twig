@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}All Symfony UX Demos{% endblock %}
+{% set meta = {
+    title: "Interactive Demos",
+    description: "Discover all that Symfony UX offers through our collection of demos, each provided with commented source code (PHP & JS)",
+    canonical: url('app_demos'),
+} %}
 
 {% block content %}
 

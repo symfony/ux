@@ -1,7 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{# {% set package = twigPackageHelper.currentPackage() %} #}
-{% block title %}{{ package.humanName }} | Symfony UX Packages{% endblock %}
+{% set meta = {
+    title: package.humanName,
+    description: package.description,
+    canonical: url(package.route),
+} %}
 
 {% block header %}
     {{ include('_header.html.twig', {

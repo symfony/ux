@@ -1,6 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}All Symfony UX Packages{% endblock %}
+{% set meta = {
+    title: "All Packages",
+    description: "Symfony UX: a treasure chest of packages to solve your frontend problems",
+    canonical: url('app_packages'),
+} %}
 
 {% block content %}
 <div class="hero">
