@@ -4,8 +4,6 @@ import { normalizeModelName } from '../string_utils';
 export default class {
     /**
      * Original, read-only props that represent the original component state.
-     *
-     * @private
      */
     private props: any = {};
 
@@ -104,10 +102,14 @@ export default class {
     /**
      * Called when an update request finishes successfully.
      */
-    reinitializeAllProps(props: any): void {
+    reinitializeAllProps(props: any): string[] {
+        const changedProps = this.deepDiff(props);
+
         this.props = props;
         this.updatedPropsFromParent = {};
         this.pendingProps = {};
+
+        return changedProps;
     }
 
     /**
@@ -138,8 +140,6 @@ export default class {
         for (const [key, value] of Object.entries(props)) {
             const currentValue = this.get(key);
 
-            // if the readonly identifier is different, then overwrite the
-            // prop entirely
             if (currentValue !== value) {
                 changed = true;
             }
@@ -150,5 +150,27 @@ export default class {
         }
 
         return changed;
+    }
+
+    private deepDiff(newObj: any, prefix = '', changedProps: string[] = []): string[] {
+        for (const [key, value] of Object.entries(newObj)) {
+            const currentPath = prefix ? `${prefix}.${key}` : key;
+            const currentValue = this.get(currentPath);
+
+            if (currentValue !== value) {
+                if (typeof currentValue !== 'object' || typeof value !== 'object') {
+                    // if a prop is dirty, the prop hasn't changed, because the dirty value will take precedence
+                    if (this.dirtyProps[currentPath] !== undefined) {
+                        continue;
+                    }
+
+                    changedProps.push(currentPath);
+                } else {
+                    this.deepDiff(value, currentPath, changedProps);
+                }
+            }
+        }
+
+        return changedProps;
     }
 }

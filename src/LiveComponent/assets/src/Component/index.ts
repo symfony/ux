@@ -472,7 +472,7 @@ export default class Component {
         }
 
         const newProps = this.elementDriver.getComponentProps(newElement);
-        this.valueStore.reinitializeAllProps(newProps);
+        const changedProps = this.valueStore.reinitializeAllProps(newProps);
 
         const eventsToEmit = this.elementDriver.getEventsToEmit(newElement);
         const browserEventsToDispatch = this.elementDriver.getBrowserEventsToDispatch(newElement);
@@ -495,6 +495,10 @@ export default class Component {
         // reset the modified values back to their client-side version
         Object.keys(modifiedModelValues).forEach((modelName) => {
             this.valueStore.set(modelName, modifiedModelValues[modelName]);
+        });
+
+        changedProps.forEach((modelName) => {
+            this.hooks.triggerHook('model:set', modelName, this.valueStore.get(modelName), this);
         });
 
         eventsToEmit.forEach(({ event, data, target, componentName }) => {

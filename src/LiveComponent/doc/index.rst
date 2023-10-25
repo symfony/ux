@@ -873,6 +873,8 @@ The following hooks are available (along with the arguments that are passed):
 * ``loading.state:started`` args ``(element: HTMLElement, request: BackendRequest)``
 * ``loading.state:finished`` args ``(element: HTMLElement)``
 * ``model:set`` args ``(model: string, value: any, component: Component)``
+  Triggered immediately when a prop is changed via any means on the frontend
+  or a prop is changed on the server during a re-render/action.
 
 Adding a Stimulus Controller to your Component Root Element
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
