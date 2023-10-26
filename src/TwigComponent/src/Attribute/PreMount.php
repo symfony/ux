@@ -12,6 +12,10 @@
 namespace Symfony\UX\TwigComponent\Attribute;
 
 /**
+ * An attribute to register a PreMount hook.
+ *
+ * @see https://symfony.com/bundles/ux-twig-component#premount-hook
+ *
  * @author Kevin Bond <kevinbond@gmail.com>
  */
 #[\Attribute(\Attribute::TARGET_METHOD)]

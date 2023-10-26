@@ -12,15 +12,52 @@
 namespace Symfony\UX\TwigComponent\Attribute;
 
 /**
+ * An attribute to register a TwigComponent.
+ *
+ * @see https://symfony.com/bundles/ux-twig-component
+ *
  * @author Kevin Bond <kevinbond@gmail.com>
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class AsTwigComponent
 {
     public function __construct(
+        /**
+         * The component name (ie: Button).
+         *
+         * With the default configuration, the template path is resolved using
+         * the component's class name.
+         *
+         *      App\Twig\Components\Alert   ->  <twig:Alert />
+         *      App\Twig\Components\Foo\Bar ->  <twig:Foo:Bar />
+         *
+         * @see https://symfony.com/bundles/ux-twig-component#naming-your-component
+         */
         private ?string $name = null,
+
+        /**
+         * The template path of the component (ie: components/Button.html.twig).
+         *
+         * With the default configuration, the template path is resolved using
+         * the component's name.
+         *
+         *      Button  ->  templates/components/Button.html.twig
+         *      Foo:Bar ->  templates/components/Foo/Bar.html.twig
+         *
+         * @see https://symfony.com/bundles/ux-twig-component#component-template-path
+         */
         private ?string $template = null,
+
+        /**
+         * Whether to expose every public property as a Twig variable.
+         *
+         * @see https://symfony.com/bundles/ux-twig-component#passing-data-props-into-your-component
+         */
         private bool $exposePublicProps = true,
+
+        /**
+         * The name of the special "attributes" variable in the template.
+         */
         private string $attributesVar = 'attributes',
     ) {
     }

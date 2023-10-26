@@ -16,6 +16,8 @@ namespace Symfony\UX\TwigComponent\Attribute;
  * in a component template (`someProp` vs `this.someProp`). These
  * properties must be "accessible" (have a getter).
  *
+ * @see https://symfony.com/bundles/ux-twig-component#exposeintemplate-attribute
+ *
  * @author Kevin Bond <kevinbond@gmail.com>
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY | \Attribute::TARGET_METHOD)]

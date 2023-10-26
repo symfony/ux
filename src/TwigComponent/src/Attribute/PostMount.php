@@ -12,6 +12,10 @@
 namespace Symfony\UX\TwigComponent\Attribute;
 
 /**
+ * An attribute to register a PostMount hook.
+ *
+ * @see https://symfony.com/bundles/ux-twig-component#postmount-hook
+ *
  * @author Kevin Bond <kevinbond@gmail.com>
  */
 #[\Attribute(\Attribute::TARGET_METHOD)]
