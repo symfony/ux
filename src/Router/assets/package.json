@@ -1,0 +1,16 @@
+{
+    "name": "@symfony/ux-router",
+    "description": "Symfony Router for JavaScript",
+    "license": "MIT",
+    "version": "1.0.0",
+    "main": "dist/router_controller.js",
+    "types": "dist/router_controller.d.ts",
+    "symfony": {
+        "importmap": {
+            "intl-messageformat": "^10.2.5",
+            "@symfony/ux-router": "path:%PACKAGE%/dist/router_controller.js",
+            "@app/routes": "path:var/routes/index.js",
+            "@app/routes/configuration": "path:var/routes/configuration.js"
+        }
+    }
+}
