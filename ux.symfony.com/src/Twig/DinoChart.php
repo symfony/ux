@@ -29,6 +29,7 @@ class DinoChart
 
     #[LiveProp(writable: true)]
     public int $fromYear = -200;
+
     #[LiveProp(writable: true)]
     public int $toYear = -65;
 
@@ -58,6 +59,24 @@ class DinoChart
                         abs($this->fromYear),
                         abs($this->toYear)
                     ),
+                ],
+                'legend' => [
+                    'labels' => [
+                        'boxHeight' => 20,
+                        'boxWidth' => 50,
+                        'padding' => 20,
+                        'font' => [
+                            'size' => 14,
+                        ],
+                    ],
+                ],
+            ],
+            'elements' => [
+                'line' => [
+                    'borderWidth' => 5,
+                    'tension' => 0.25,
+                    'borderCapStyle' => 'round',
+                    'borderJoinStyle' => 'round',
                 ],
             ],
             'maintainAspectRatio' => false,
