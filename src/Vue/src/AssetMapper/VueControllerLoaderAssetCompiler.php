@@ -11,10 +11,11 @@
 
 namespace Symfony\UX\Vue\AssetMapper;
 
+use Symfony\Component\AssetMapper\AssetDependency;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\AssetMapper\Compiler\AssetCompilerInterface;
-use Symfony\Component\AssetMapper\Compiler\AssetCompilerPathResolverTrait;
 use Symfony\Component\AssetMapper\MappedAsset;
+use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -24,8 +25,6 @@ use Symfony\Component\Finder\Finder;
  */
 class VueControllerLoaderAssetCompiler implements AssetCompilerInterface
 {
-    use AssetCompilerPathResolverTrait;
-
     public function __construct(
         private string $controllerPath,
         private array $nameGlobs,
@@ -41,10 +40,15 @@ class VueControllerLoaderAssetCompiler implements AssetCompilerInterface
     {
         $importLines = [];
         $componentParts = [];
-        $loaderPublicPath = $asset->publicPathWithoutDigest;
         foreach ($this->findControllerAssets($assetMapper) as $name => $mappedAsset) {
-            $controllerPublicPath = $mappedAsset->publicPathWithoutDigest;
-            $relativeImportPath = $this->createRelativePath($loaderPublicPath, $controllerPublicPath);
+            // @legacy: backwards compatibility with Symfony 6.3
+            if (class_exists(AssetDependency::class)) {
+                $controllerPublicPath = $mappedAsset->publicPathWithoutDigest;
+                $loaderPublicPath = $asset->publicPathWithoutDigest;
+                $relativeImportPath = Path::makeRelative($controllerPublicPath, \dirname($loaderPublicPath));
+            } else {
+                $relativeImportPath = Path::makeRelative($mappedAsset->sourcePath, \dirname($asset->sourcePath));
+            }
 
             $controllerNameForVariable = sprintf('component_%s', \count($componentParts));
 

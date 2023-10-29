@@ -12,6 +12,7 @@ declare(strict_types=1);
  */
 
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\UX\StimulusBundle\AssetMapper\AutoImportLocator;
 use Symfony\UX\StimulusBundle\AssetMapper\ControllersMapGenerator;
 use Symfony\UX\StimulusBundle\AssetMapper\StimulusLoaderJavaScriptCompiler;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
@@ -64,6 +65,15 @@ return static function (ContainerConfigurator $container): void {
                 service('stimulus.asset_mapper.ux_package_reader'),
                 abstract_arg('controller paths'),
                 abstract_arg('controllers_json_path'),
+                // @legacy - only allowing null for framework-bundle 6.3
+                service('stimulus.asset_mapper.auto_import_locator')->nullOnInvalid(),
+            ])
+
+        // @legacy - is removed in 6.3
+        ->set('stimulus.asset_mapper.auto_import_locator', AutoImportLocator::class)
+            ->args([
+                service('asset_mapper.importmap.config_reader'),
+                service('asset_mapper'),
             ])
 
         ->set('stimulus.asset_mapper.loader_javascript_compiler', StimulusLoaderJavaScriptCompiler::class)

@@ -12,7 +12,9 @@
 namespace Symfony\UX\StimulusBundle\AssetMapper;
 
 use Symfony\Component\AssetMapper\AssetMapperInterface;
+use Symfony\Component\AssetMapper\ImportMap\ImportMapGenerator;
 use Symfony\Component\Finder\Finder;
+use Symfony\UX\StimulusBundle\Ux\UxPackageMetadata;
 use Symfony\UX\StimulusBundle\Ux\UxPackageReader;
 
 /**
@@ -31,6 +33,7 @@ class ControllersMapGenerator
         private UxPackageReader $uxPackageReader,
         private array $controllerPaths,
         private string $controllersJsonPath,
+        private ?AutoImportLocator $autoImportLocator = null,
     ) {
     }
 
@@ -72,7 +75,8 @@ class ControllersMapGenerator
             $name = str_replace(['_', '/'], ['-', '--'], $name);
 
             $asset = $this->assetMapper->getAssetFromSourcePath($file->getRealPath());
-            $isLazy = preg_match('/\/\*\s*stimulusFetch:\s*\'lazy\'\s*\*\//i', $asset->content);
+            $content = $asset->content ?: file_get_contents($asset->sourcePath);
+            $isLazy = preg_match('/\/\*\s*stimulusFetch:\s*\'lazy\'\s*\*\//i', $content);
 
             $controllersMap[$name] = new MappedControllerAsset($asset, $isLazy);
         }
@@ -129,10 +133,37 @@ class ControllersMapGenerator
                     throw new \RuntimeException(sprintf('Could not find an asset mapper path that points to the "%s" controller in package "%s", defined in controllers.json.', $controllerName, $packageMetadata->packageName));
                 }
 
-                $controllersMap[$controllerNormalizedName] = new MappedControllerAsset($asset, $lazy);
+                $autoImports = $this->collectAutoImports($localControllerConfig['autoimport'] ?? [], $packageMetadata);
+
+                $controllersMap[$controllerNormalizedName] = new MappedControllerAsset($asset, $lazy, $autoImports);
             }
         }
 
         return $controllersMap;
+    }
+
+    /**
+     * @return MappedControllerAutoImport[]
+     */
+    private function collectAutoImports(array $autoImports, UxPackageMetadata $currentPackageMetadata): array
+    {
+        // @legacy: Backwards compatibility with Symfony 6.3
+        if (!class_exists(ImportMapGenerator::class)) {
+            return [];
+        }
+        if (null === $this->autoImportLocator) {
+            throw new \InvalidArgumentException(sprintf('The "autoImportLocator" argument to "%s" is required when using AssetMapper 6.4', self::class));
+        }
+
+        $autoImportItems = [];
+        foreach ($autoImports as $path => $enabled) {
+            if (!$enabled) {
+                continue;
+            }
+
+            $autoImportItems[] = $this->autoImportLocator->locateAutoImport($path, $currentPackageMetadata);
+        }
+
+        return $autoImportItems;
     }
 }

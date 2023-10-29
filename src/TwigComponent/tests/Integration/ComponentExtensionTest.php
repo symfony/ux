@@ -14,6 +14,7 @@ namespace Symfony\UX\TwigComponent\Tests\Integration;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\Tests\Fixtures\User;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -62,7 +63,12 @@ final class ComponentExtensionTest extends KernelTestCase
 
     public function testCanNotRenderComponentWithInvalidExpressions(): void
     {
-        $this->expectException(\TypeError::class);
+        if (Environment::MAJOR_VERSION === 2) {
+            $this->expectException(\TypeError::class);
+        } else {
+            $this->expectException(RuntimeError::class);
+        }
+
         self::getContainer()->get(Environment::class)->render('invalid_flexible_component.html.twig');
     }
 

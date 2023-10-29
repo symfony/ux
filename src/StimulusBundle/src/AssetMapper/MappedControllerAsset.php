@@ -23,6 +23,10 @@ class MappedControllerAsset
     public function __construct(
         public MappedAsset $asset,
         public bool $isLazy,
+        /**
+         * @var MappedControllerAutoImport[]
+         */
+        public array $autoImports = [],
     ) {
     }
 }

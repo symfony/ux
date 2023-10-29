@@ -13,6 +13,7 @@ namespace Symfony\UX\StimulusBundle\Tests\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
+use Symfony\Component\AssetMapper\ImportMap\ImportMapConfigReader;
 use Symfony\Component\AssetMapper\MappedAsset;
 use Symfony\UX\StimulusBundle\AssetMapper\ControllersMapGenerator;
 use Symfony\UX\StimulusBundle\Twig\UxControllersTwigRuntime;
@@ -20,8 +21,15 @@ use Symfony\UX\StimulusBundle\Ux\UxPackageReader;
 
 class UxControllersTwigRuntimeTest extends TestCase
 {
+    /**
+     * @group legacy
+     */
     public function testRenderLinkTags()
     {
+        if (class_exists(ImportMapConfigReader::class)) {
+            $this->markTestSkipped('Skip test for AssetMapper 6.4+');
+        }
+
         $controllersMapGenerator = $this->createMock(ControllersMapGenerator::class);
         $controllersMapGenerator->expects($this->any())
             ->method('getControllersJsonPath')
@@ -47,7 +55,7 @@ class UxControllersTwigRuntimeTest extends TestCase
             $controllersMapGenerator,
             $assetMapper,
             new UxPackageReader(__DIR__.'/../fixtures'),
-            __DIR__.'/../fixtures'
+            __DIR__.'/../fixtures/legacy'
         );
 
         $this->assertStringNotContainsString(

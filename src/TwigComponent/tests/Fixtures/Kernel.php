@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Fixtures;
 
+use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
@@ -80,6 +81,7 @@ final class Kernel extends BaseKernel
                 ->autowire()
                 ->autoconfigure()
             ->load(__NAMESPACE__.'\\', __DIR__)
+            ->set('logger', NullLogger::class)
             ->set('component_b', ComponentB::class)->autoconfigure()->autowire()
             ->set('component_d', ComponentB::class)->tag('twig.component', [
                 'key' => 'component_d',
