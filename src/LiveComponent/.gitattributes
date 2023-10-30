@@ -1,9 +1,7 @@
 /.gitattributes export-ignore
 /.gitignore export-ignore
 /.symfony.bundle.yaml export-ignore
-/phpunit.xml.dist export-ignore
-/assets/.gitignore export-ignore
-/assets/src/**/*.ts export-ignore
+/assets/src export-ignore
 /assets/test export-ignore
 /phpunit.xml.dist export-ignore
 /tests export-ignore
