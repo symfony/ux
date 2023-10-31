@@ -31,11 +31,14 @@
         "php": ">=8.1",
         "symfony/console": "^5.4|^6.0|^7.0",
         "symfony/filesystem": "^5.4|^6.0|^7.0",
-        "symfony/string": "^5.4|^6.0|^7.0"
+        "symfony/routing": "^5.4|^6.0|^7.0",
+        "symfony/string": "^5.4|^6.0|^7.0",
+        "twig/twig": "^2.14.7|^3.0.4"
     },
     "require-dev": {
         "symfony/framework-bundle": "^5.4|^6.0|^7.0",
         "symfony/phpunit-bridge": "^5.2|^6.0|^7.0",
+        "symfony/twig-bundle": "^5.4|^6.0|^7.0",
         "symfony/var-dumper": "^5.4|^6.0|^7.0"
     },
     "extra": {

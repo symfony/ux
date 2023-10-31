@@ -12,6 +12,7 @@
 namespace Symfony\UX\Router\CacheWarmer;
 
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
+use Symfony\UX\Router\RoutesPicker;
 use Symfony\UX\Router\RoutesDumper;
 
 /**
@@ -22,6 +23,7 @@ use Symfony\UX\Router\RoutesDumper;
 class RoutesCacheWarmer implements CacheWarmerInterface
 {
     public function __construct(
+        private RoutesPicker $routesPicker,
         private RoutesDumper $routesDumper,
     ) {
     }
@@ -33,9 +35,9 @@ class RoutesCacheWarmer implements CacheWarmerInterface
 
     public function warmUp(string $cacheDir, string $buildDir = null): array
     {
-        $this->routesDumper->dump(
-            // TODO: pass routes collection
-        );
+        $this->routesDumper->dump($this->routesPicker->pick(
+            onlyExposed: true
+        ));
 
         // No need to preload anything
         return [];
