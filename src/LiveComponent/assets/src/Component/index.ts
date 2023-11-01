@@ -341,6 +341,16 @@ export default class Component {
         return typeof Turbo !== 'undefined' && !this.element.closest('[data-turbo="false"]');
     }
 
+    private isSamePageUrl(url: string): boolean {
+        const currentUrl = new URL(window.location.href, document.baseURI);
+        const otherUrl = new URL(url, document.baseURI);
+
+        currentUrl.hash = '';
+        otherUrl.hash = '';
+
+        return currentUrl.toString() === otherUrl.toString();
+    }
+
     private tryStartingRequest(): void {
         if (!this.backendRequest) {
             this.performRequest()
@@ -437,7 +447,11 @@ export default class Component {
             if (this.isTurboEnabled()) {
                 Turbo.visit(backendResponse.response.headers.get('Location'));
             } else {
+                const isSamePage = this.isSamePageUrl(backendResponse.response.headers.get('Location') || '')
                 window.location.href = backendResponse.response.headers.get('Location') || '';
+                if (isSamePage) {
+                    window.location.reload();
+                }
             }
 
             return;

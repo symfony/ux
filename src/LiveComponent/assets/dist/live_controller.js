@@ -1917,6 +1917,13 @@ class Component {
     isTurboEnabled() {
         return typeof Turbo !== 'undefined' && !this.element.closest('[data-turbo="false"]');
     }
+    isSamePageUrl(url) {
+        const currentUrl = new URL(window.location.href, document.baseURI);
+        const otherUrl = new URL(url, document.baseURI);
+        currentUrl.hash = '';
+        otherUrl.hash = '';
+        return currentUrl.toString() === otherUrl.toString();
+    }
     tryStartingRequest() {
         if (!this.backendRequest) {
             this.performRequest();
@@ -1977,7 +1984,11 @@ class Component {
                 Turbo.visit(backendResponse.response.headers.get('Location'));
             }
             else {
+                const isSamePage = this.isSamePageUrl(backendResponse.response.headers.get('Location') || '');
                 window.location.href = backendResponse.response.headers.get('Location') || '';
+                if (isSamePage) {
+                    window.location.reload();
+                }
             }
             return;
         }
