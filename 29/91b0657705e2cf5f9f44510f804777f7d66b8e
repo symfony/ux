@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-01T19:57:11Z
+
+This is ready :). It keeps BC with AssetMapper 6.3 so we can release a StimulusBundle before 6.4. Then we'll drop 6.3 support.
+
+---------------------------------------------------------------------------
+
+by tacman at 2023-11-02T09:42:12Z
+
+Is there a way to test in a project?  It looks like your branch is in the monorepo, but not pushed to symfony/asset-mapper, so I'm not sure how to require that branch.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-02T13:11:38Z
+
+Yup - you can test by following this - https://github.com/symfony/ux#contributing (obviously, pull down my fork, switch into the branch, then run that `link` command)
