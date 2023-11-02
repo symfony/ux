@@ -1482,7 +1482,7 @@ this, create your controller like normal, including the submit logic::
 
             return $this->render('post/edit.html.twig', [
                 'post' => $post,
-                'form' => $form,
+                'form' => $form, // use $form->createView() in Symfony <6.2
             ]);
         }
     }
