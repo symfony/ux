@@ -9,24 +9,18 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\StimulusBundle\Ux;
+namespace Symfony\UX\StimulusBundle\AssetMapper;
 
 /**
- * @internal
- *
  * @experimental
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
-class UxPackageMetadata
+class MappedControllerAutoImport
 {
     public function __construct(
-        public string $packageDirectory,
-        public array $symfonyConfig,
-        /**
-         * The package name, without the @.
-         */
-        public string $packageName,
+        public string $path,
+        public bool $isBareImport
     ) {
     }
 }

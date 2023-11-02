@@ -12,6 +12,7 @@
 namespace Symfony\UX\StimulusBundle\Twig;
 
 use Symfony\Component\AssetMapper\AssetMapperInterface;
+use Symfony\Component\AssetMapper\ImportMap\ImportMapGenerator;
 use Symfony\UX\StimulusBundle\AssetMapper\ControllersMapGenerator;
 use Symfony\UX\StimulusBundle\Ux\UxPackageReader;
 use Twig\Extension\RuntimeExtensionInterface;
@@ -40,6 +41,12 @@ final class UxControllersTwigRuntime implements RuntimeExtensionInterface
      */
     public function renderLinkTags(): string
     {
+        if (class_exists(ImportMapGenerator::class)) {
+            trigger_deprecation('symfony/ux-stimulus-bundle', '2.13.0', 'Calling ux_controller_link_tags() is deprecated and does nothing with symfony/asset-mapper 6.4. The link tags are rendered automatically via the importmap() function.');
+
+            return '';
+        }
+
         $controllersFile = $this->controllersMapGenerator->getControllersJsonPath();
         if (!is_file($controllersFile)) {
             return '';
@@ -66,6 +73,7 @@ final class UxControllersTwigRuntime implements RuntimeExtensionInterface
         return implode("\n", $links);
     }
 
+    // duplicated & adapted in ControllersMapGenerator
     private function getLinkHref(string $autoImport, string $uxPackageName): string
     {
         // see if this is a mapped asset path

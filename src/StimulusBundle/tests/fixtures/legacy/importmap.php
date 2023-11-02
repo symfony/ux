@@ -9,29 +9,22 @@
  * file that was distributed with this source code.
  */
 
+// @legacy for AssetMapper 6.3 support
 return [
     'app' => [
         'path' => 'app.js',
         'entrypoint' => true,
     ],
     '@hotwired/stimulus' => [
-        'version' => '3.2.1',
+        'url' => 'https://ga.jspm.io/npm:@hotwired/stimulus@3.2.1/dist/stimulus.js',
     ],
     '@symfony/stimulus-bundle' => [
         'path' => '@symfony/stimulus-bundle/loader.js',
     ],
     'needed-vendor' => [
-        'version' => '3.2.0',
-    ],
-    'needed-vendor/file.css' => [
-        'version' => '3.2.0',
-        'type' => 'css',
+        'url' => 'https://cdn.jsdelivr.net/npm/needed-vendor@3.2.0/dist/needed-vendor+esm',
     ],
     '@scoped/needed-vendor' => [
-        'version' => '1.2.3',
-    ],
-    '@scoped/needed-vendor/the/file2.css' => [
-        'version' => '1.2.3',
-        'type' => 'css',
+        'url' => 'https://cdn.jsdelivr.net/npm/@scoped/needed-vendor@1.2.3',
     ],
 ];

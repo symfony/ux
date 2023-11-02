@@ -31,6 +31,7 @@ class VueControllerLoaderAssetCompilerTest extends TestCase
                 if (str_contains($sourcePath, 'MyVueController')) {
                     return new MappedAsset(
                         'MyVueController.js',
+                        '/project/assets/vue/controllers/MyVueController.js',
                         publicPathWithoutDigest: '/assets/vue/controllers/MyVueController.js',
                     );
                 }
@@ -38,6 +39,7 @@ class VueControllerLoaderAssetCompilerTest extends TestCase
                 if (str_contains($sourcePath, 'DeeperVueController')) {
                     return new MappedAsset(
                         'subdir/DeeperVueController.js',
+                        '/project/assets/vue/controllers/subdir/DeeperVueController.js',
                         publicPathWithoutDigest: '/assets/vue/controllers/subdir/DeeperVueController.js',
                     );
                 }
@@ -50,7 +52,7 @@ class VueControllerLoaderAssetCompilerTest extends TestCase
             ['*.js']
         );
 
-        $loaderAsset = new MappedAsset('loader.js', publicPathWithoutDigest: '/assets/symfony/ux-vue/loader.js');
+        $loaderAsset = new MappedAsset('loader.js', '/project/assets/vendor/StimulusBundle/loader.js', publicPathWithoutDigest: '/assets/symfony/ux-vue/loader.js');
         $startingContents = file_get_contents(__DIR__.'/../../assets/dist/loader.js');
 
         $compiledContents = $compiler->compile($startingContents, $loaderAsset, $assetMapper);

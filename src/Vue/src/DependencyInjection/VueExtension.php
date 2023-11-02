@@ -12,7 +12,6 @@
 namespace Symfony\UX\Vue\DependencyInjection;
 
 use Symfony\Component\AssetMapper\AssetMapperInterface;
-use Symfony\Component\AssetMapper\Compiler\AssetCompilerPathResolverTrait;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -44,17 +43,14 @@ class VueExtension extends Extension implements PrependExtensionInterface, Confi
             ->setPublic(false)
         ;
 
-        // on older versions, the absence of this trait will trigger an error if the service is loaded
-        if (trait_exists(AssetCompilerPathResolverTrait::class)) {
-            $container->setDefinition('vue.asset_mapper.vue_controller_loader_compiler', new Definition(VueControllerLoaderAssetCompiler::class))
-                ->setArguments([
-                    $config['controllers_path'],
-                    $config['name_glob'],
-                ])
-                // run before the core JavaScript compiler
-                ->addTag('asset_mapper.compiler', ['priority' => 100])
-            ;
-        }
+        $container->setDefinition('vue.asset_mapper.vue_controller_loader_compiler', new Definition(VueControllerLoaderAssetCompiler::class))
+            ->setArguments([
+                $config['controllers_path'],
+                $config['name_glob'],
+            ])
+            // run before the core JavaScript compiler
+            ->addTag('asset_mapper.compiler', ['priority' => 100])
+        ;
     }
 
     public function prepend(ContainerBuilder $container)

@@ -14,8 +14,8 @@ namespace Symfony\UX\StimulusBundle\AssetMapper;
 use Symfony\Component\AssetMapper\AssetDependency;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\AssetMapper\Compiler\AssetCompilerInterface;
-use Symfony\Component\AssetMapper\Compiler\AssetCompilerPathResolverTrait;
 use Symfony\Component\AssetMapper\MappedAsset;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * Compiles the loader.js file to dynamically import the controllers.
@@ -26,8 +26,6 @@ use Symfony\Component\AssetMapper\MappedAsset;
  */
 class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
 {
-    use AssetCompilerPathResolverTrait;
-
     public function __construct(
         private ControllersMapGenerator $controllersMapGenerator,
         private bool $isDebug,
@@ -44,7 +42,6 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
         $importLines = [];
         $eagerControllerParts = [];
         $lazyControllers = [];
-        $loaderPublicPath = $asset->publicPathWithoutDigest;
 
         // add file dependencies so the cache rebuilds
         $asset->addFileDependency($this->controllersMapGenerator->getControllersJsonPath());
@@ -53,8 +50,16 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
         }
 
         foreach ($this->controllersMapGenerator->getControllersMap() as $name => $mappedControllerAsset) {
-            $controllerPublicPath = $mappedControllerAsset->asset->publicPathWithoutDigest;
-            $relativeImportPath = $this->createRelativePath($loaderPublicPath, $controllerPublicPath);
+            // @legacy: backwards compatibility with Symfony 6.3
+            if (class_exists(AssetDependency::class)) {
+                $loaderPublicPath = $asset->publicPathWithoutDigest;
+                $controllerPublicPath = $mappedControllerAsset->asset->publicPathWithoutDigest;
+                $relativeImportPath = Path::makeRelative($controllerPublicPath, \dirname($loaderPublicPath));
+            } else {
+                $relativeImportPath = Path::makeRelative($mappedControllerAsset->asset->sourcePath, \dirname($asset->sourcePath));
+            }
+
+            $relativeImportPath = json_encode($relativeImportPath, \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_SLASHES);
 
             /*
              * The AssetDependency will already be added by AssetMapper itself when
@@ -65,7 +70,7 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
              * will be recalculated when the contents of any controller changes.
              */
             if (class_exists(AssetDependency::class)) {
-                // Backwards compatibility with Symfony 6.3
+                // @legacy: Backwards compatibility with Symfony 6.3
                 $asset->addDependency(new AssetDependency(
                     $mappedControllerAsset->asset,
                     $mappedControllerAsset->isLazy,
@@ -75,18 +80,40 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
                 $asset->addDependency($mappedControllerAsset->asset);
             }
 
+            $autoImportPaths = [];
+            foreach ($mappedControllerAsset->autoImports as $autoImport) {
+                if ($autoImport->isBareImport) {
+                    $autoImportPaths[] = json_encode($autoImport->path, \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_SLASHES);
+                } else {
+                    $autoImportPaths[] = json_encode(Path::makeRelative($autoImport->path, \dirname($asset->sourcePath)), \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_SLASHES);
+                }
+            }
+
             if ($mappedControllerAsset->isLazy) {
-                $lazyControllers[] = sprintf('%s: () => import(%s)', json_encode($name), json_encode($relativeImportPath, \JSON_THROW_ON_ERROR | \JSON_UNESCAPED_SLASHES));
+                if (!$mappedControllerAsset->autoImports) {
+                    $lazyControllers[] = sprintf('%s: () => import(%s)', json_encode($name), $relativeImportPath);
+                } else {
+                    // import $relativeImportPath and also the auto-imports
+                    // and use a Promise.all() to wait for all of them
+                    $lazyControllers[] = sprintf('%s: () => Promise.all([import(%s), %s]).then((ret) => ret[0])', json_encode($name), $relativeImportPath, implode(', ', array_map(fn ($path) => "import($path)", $autoImportPaths)));
+                }
+
                 continue;
             }
 
             $controllerNameForVariable = sprintf('controller_%s', \count($eagerControllerParts));
 
             $importLines[] = sprintf(
-                "import %s from '%s';",
+                'import %s from %s;',
                 $controllerNameForVariable,
                 $relativeImportPath
             );
+            foreach ($autoImportPaths as $autoImportRelativePath) {
+                $importLines[] = sprintf(
+                    'import %s;',
+                    $autoImportRelativePath
+                );
+            }
             $eagerControllerParts[] = sprintf('"%s": %s', $name, $controllerNameForVariable);
         }
 
