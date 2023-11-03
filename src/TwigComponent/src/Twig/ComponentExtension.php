@@ -13,8 +13,8 @@ namespace Symfony\UX\TwigComponent\Twig;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
-use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
+use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -34,7 +34,6 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
     {
         return [
             ComponentRenderer::class,
-            ComponentFactory::class,
         ];
     }
 
@@ -48,7 +47,7 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
     public function getTokenParsers(): array
     {
         return [
-            new ComponentTokenParser(fn () => $this->container->get(ComponentFactory::class)),
+            new ComponentTokenParser(),
             new PropsTokenParser(),
         ];
     }
@@ -62,7 +61,7 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
         }
     }
 
-    public function preRender(string $name, array $props): ?string
+    public function extensionPreCreateForRender(string $name, array $props): ?string
     {
         try {
             return $this->container->get(ComponentRenderer::class)->preCreateForRender($name, $props);
@@ -71,10 +70,10 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
         }
     }
 
-    public function embeddedContext(string $name, array $props, array $context, string $hostTemplateName, int $index): array
+    public function startEmbeddedComponentRender(string $name, array $props, array $context, string $hostTemplateName, int $index): PreRenderEvent
     {
         try {
-            return $this->container->get(ComponentRenderer::class)->embeddedContext($name, $props, $context, $hostTemplateName, $index);
+            return $this->container->get(ComponentRenderer::class)->startEmbeddedComponentRender($name, $props, $context, $hostTemplateName, $index);
         } catch (\Throwable $e) {
             $this->throwRuntimeError($name, $e);
         }

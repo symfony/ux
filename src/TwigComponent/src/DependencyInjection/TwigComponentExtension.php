@@ -102,7 +102,6 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
         $container->register('ux.twig_component.twig.component_extension', ComponentExtension::class)
             ->addTag('twig.extension')
             ->addTag('container.service_subscriber', ['key' => ComponentRenderer::class, 'id' => 'ux.twig_component.component_renderer'])
-            ->addTag('container.service_subscriber', ['key' => ComponentFactory::class, 'id' => 'ux.twig_component.component_factory'])
         ;
 
         $container->register('ux.twig_component.twig.lexer', ComponentLexer::class);

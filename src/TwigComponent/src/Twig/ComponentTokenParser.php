@@ -12,7 +12,6 @@
 namespace Symfony\UX\TwigComponent\Twig;
 
 use Symfony\UX\TwigComponent\BlockStack;
-use Symfony\UX\TwigComponent\ComponentFactory;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
@@ -29,40 +28,22 @@ use Twig\TokenParser\AbstractTokenParser;
  */
 final class ComponentTokenParser extends AbstractTokenParser
 {
-    /** @var ComponentFactory|callable():ComponentFactory */
-    private $factory;
-
     private array $lineAndFileCounts = [];
-
-    /**
-     * @param callable():ComponentFactory $factory
-     */
-    public function __construct(callable $factory)
-    {
-        $this->factory = $factory;
-    }
 
     public function parse(Token $token): Node
     {
         $stream = $this->parser->getStream();
-        $parent = $this->parser->getExpressionParser()->parseExpression();
-        $componentName = $this->componentName($parent);
-        $componentMetadata = $this->factory()->metadataFor($componentName);
+        $componentName = $this->componentName($this->parser->getExpressionParser()->parseExpression());
 
-        [$variables, $only] = $this->parseArguments();
+        [$propsExpression, $only] = $this->parseArguments();
 
-        if (null === $variables) {
-            $variables = new ArrayExpression([], $parent->getTemplateLine());
-        }
-
-        $parentToken = new Token(Token::STRING_TYPE, $componentMetadata->getTemplate(), $token->getLine());
-        $fakeParentToken = new Token(Token::STRING_TYPE, '__parent__', $token->getLine());
-
-        // inject a fake parent to make the parent() function work
+        // Write a fake: "extends __parent__" into the "embedded" template.
+        // The `__parent__` will be passed in as a context variable.
+        $fakeParentToken = new Token(Token::NAME_TYPE, '__parent__', $token->getLine());
         $stream->injectTokens([
             new Token(Token::BLOCK_START_TYPE, '', $token->getLine()),
             new Token(Token::NAME_TYPE, 'extends', $token->getLine()),
-            $parentToken,
+            $fakeParentToken,
             new Token(Token::BLOCK_END_TYPE, '', $token->getLine()),
 
             // Add an empty block which can act as a fallback for when an outer
@@ -77,21 +58,16 @@ final class ComponentTokenParser extends AbstractTokenParser
             new Token(Token::BLOCK_END_TYPE, '', $token->getLine()),
         ]);
 
+        // create the "fake" ModuleNode template then add it to the parser
         $module = $this->parser->parse($stream, fn (Token $token) => $token->test("end{$this->getTag()}"), true);
-
-        // override the parent with the correct one
-        if ($fakeParentToken === $parentToken) {
-            $module->setNode('parent', $parent);
-        }
-
         $this->parser->embedTemplate($module);
 
-        // use deterministic index for the embedded template, so it can be loaded in a controlled manner
+        // override the embedded index with a deterministic value, so it can be loaded in a controlled manner
         $module->setAttribute('index', $this->generateEmbeddedTemplateIndex(TemplateNameParser::parse($stream->getSourceContext()->getName()), $token->getLine()));
 
         $stream->expect(Token::BLOCK_END_TYPE);
 
-        return new ComponentNode($componentName, $module->getTemplateName(), $module->getAttribute('index'), $variables, $only, $token->getLine(), $this->getTag());
+        return new ComponentNode($componentName, $module->getTemplateName(), $module->getAttribute('index'), $propsExpression, $only, $token->getLine(), $this->getTag());
     }
 
     public function getTag(): string
@@ -112,15 +88,9 @@ final class ComponentTokenParser extends AbstractTokenParser
         throw new \LogicException('Could not parse component name.');
     }
 
-    private function factory(): ComponentFactory
-    {
-        if (\is_callable($this->factory)) {
-            $this->factory = ($this->factory)();
-        }
-
-        return $this->factory;
-    }
-
+    /**
+     * @return array{ArrayExpression|null, bool}
+     */
     private function parseArguments(): array
     {
         $stream = $this->parser->getStream();
@@ -132,7 +102,6 @@ final class ComponentTokenParser extends AbstractTokenParser
         }
 
         $only = false;
-
         if ($stream->nextIf(Token::NAME_TYPE, 'only')) {
             $only = true;
         }
