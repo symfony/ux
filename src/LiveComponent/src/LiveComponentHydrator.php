@@ -244,9 +244,21 @@ final class LiveComponentHydrator
         return match ($type) {
             'int' => (int) $value,
             'float' => (float) $value,
-            'bool' => (bool) $value,
+            'bool' => self::coerceStringToBoolean($value),
             default => throw new \LogicException(sprintf('Cannot coerce value "%s" to type "%s"', $value, $type)),
         };
+    }
+
+    private static function coerceStringToBoolean(string $value): bool
+    {
+        $booleanMap = [
+            '0' => false,
+            '1' => true,
+            'false' => false,
+            'true' => true,
+        ];
+
+        return $booleanMap[$value] ?? (bool) $value;
     }
 
     private function calculateChecksum(array $dehydratedPropsData): ?string
