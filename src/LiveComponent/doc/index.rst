@@ -1715,7 +1715,7 @@ Now, create a Twig component to render the form::
         use DefaultActionTrait;
 
         #[LiveProp]
-        public initialFormData $post;
+        public Post $initialFormData;
 
         protected function instantiateForm(): FormInterface
         {
@@ -1759,7 +1759,6 @@ and ``removeComment()`` actions:
 
                 {{ form_widget(commentForm) }}
             {% endfor %}
-            </div>
 
             {# avoid an extra label for this field #}
             {% do form.comments.setRendered %}
