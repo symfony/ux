@@ -25,6 +25,9 @@ use Symfony\UX\TwigComponent\ComponentFactory;
  */
 class LiveComponentMetadataFactory
 {
+    /** @var LiveComponentMetadata[] */
+    private array $liveComponentMetadata = [];
+
     public function __construct(
         private ComponentFactory $componentFactory,
         private PropertyTypeExtractorInterface $propertyTypeExtractor,
@@ -33,12 +36,16 @@ class LiveComponentMetadataFactory
 
     public function getMetadata(string $name): LiveComponentMetadata
     {
+        if (isset($this->liveComponentMetadata[$name])) {
+            return $this->liveComponentMetadata[$name];
+        }
+
         $componentMetadata = $this->componentFactory->metadataFor($name);
 
         $reflectionClass = new \ReflectionClass($componentMetadata->getClass());
         $livePropsMetadata = $this->createPropMetadatas($reflectionClass);
 
-        return new LiveComponentMetadata($componentMetadata, $livePropsMetadata);
+        return $this->liveComponentMetadata[$name] = new LiveComponentMetadata($componentMetadata, $livePropsMetadata);
     }
 
     /**
