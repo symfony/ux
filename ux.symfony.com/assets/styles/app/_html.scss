@@ -10,7 +10,7 @@ body {
 
 a, a.page-link, a.page-link:hover {
   text-decoration: none;
-  color: var(--color-primary);
+  color: inherit;
 }
 
 ::selection {
@@ -27,6 +27,7 @@ a, a.page-link, a.page-link:hover {
   min-width: 320px;
   overflow-x: clip;
 }
+
 main {
   flex-grow: 1;
 }
@@ -34,4 +35,29 @@ header,
 main,
 footer {
   flex-shrink: 0;
+}
+
+a.link {
+  --color: #d9438e;
+  color: var(--color);
+  position: relative;
+  &:after {
+    position: absolute;
+    content:"";
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    display: block;
+    transition: all .2s ease-in-out;
+    background: var(--color);
+    transform: scaleX(0);
+    transform-origin: center left;
+  }
+  &:hover {
+    &:after {
+      transform: scaleX(1);
+      transition: transform .15s ease-in-out revert;
+    }
+  }
 }

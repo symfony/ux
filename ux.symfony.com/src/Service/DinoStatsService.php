@@ -17,6 +17,21 @@ class DinoStatsService
 
     private const ALL_DINOS = 'all';
 
+    private const COLORS = [
+        'de3232',
+        'de6732',
+        'dede32',
+        '67de32',
+        '32de32',
+        '32de67',
+        '32dede',
+        '3267de',
+        '3232de',
+        '6732de',
+        'de32de',
+        'de3267',
+    ];
+
     public static function getAllTypes(): array
     {
         return [
@@ -48,8 +63,11 @@ class DinoStatsService
 
         $datasets = [];
 
+        $colors = self::COLORS;
+        shuffle($colors);
+
         foreach ($types as $type) {
-            $color = sprintf('rgb(%d, %d, %d, .4)', mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
+            $color = '#'.(next($colors) ?: reset($colors));
 
             $datasets[] = [
                 'label' => ucwords($type),
