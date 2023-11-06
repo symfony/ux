@@ -1,5 +1,5 @@
 /.gitattributes export-ignore
 /.gitignore export-ignore
 /.symfony.bundle.yaml export-ignore
-/assets/src/**/*.ts export-ignore
+/assets/src export-ignore
 /assets/test export-ignore

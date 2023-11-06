@@ -3,7 +3,7 @@
 /.symfony.bundle.yaml export-ignore
 /phpunit.xml.dist export-ignore
 /phpstan.neon.dist export-ignore
-/assets/src/**/*.ts export-ignore
+/assets/src export-ignore
 /assets/test export-ignore
 /assets/vitest.config.js export-ignore
 /tests export-ignore
