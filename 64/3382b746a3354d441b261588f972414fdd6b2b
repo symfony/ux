@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-04T15:58:09Z
+
+Just tried, both "TwigComponent should pass" tests are OK
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-04T16:01:27Z
+
+DebugCommand seems OK after a couple of tests
