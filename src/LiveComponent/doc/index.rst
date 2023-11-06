@@ -1915,7 +1915,7 @@ Inline rendering:
 
     <div {{ attributes }}>
         {{ form_start(form) }}
-            {{ form_row(form.title)
+            {{ form_row(form.title) }}
 
             <h3>Comments:</h3>
             {% for key, commentForm in form.comments %}
