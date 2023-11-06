@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Metadata;
 
 use Symfony\Component\PropertyInfo\PropertyTypeExtractorInterface;
 use Symfony\Component\PropertyInfo\Type;
+use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\TwigComponent\ComponentFactory;
 
@@ -23,7 +24,7 @@ use Symfony\UX\TwigComponent\ComponentFactory;
  *
  * @internal
  */
-class LiveComponentMetadataFactory
+class LiveComponentMetadataFactory implements ResetInterface
 {
     /** @var LiveComponentMetadata[] */
     private array $liveComponentMetadata = [];
@@ -127,5 +128,10 @@ class LiveComponentMetadataFactory
         if ($parent = $class->getParentClass()) {
             yield from self::propertiesFor($parent);
         }
+    }
+
+    public function reset(): void
+    {
+        $this->liveComponentMetadata = [];
     }
 }
