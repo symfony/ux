@@ -408,7 +408,7 @@ const getControllerElement = (container: HTMLElement): HTMLElement => {
     return element;
 };
 
-const dataToJsonAttribute = (data: any): string => {
+export const dataToJsonAttribute = (data: any): string => {
     const container = document.createElement('div');
     container.dataset.foo = JSON.stringify(data);
 

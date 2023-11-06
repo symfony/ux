@@ -11,7 +11,8 @@ export default class {
     getDirtyProps(): any;
     getUpdatedPropsFromParent(): any;
     flushDirtyPropsToPending(): void;
-    reinitializeAllProps(props: any): void;
+    reinitializeAllProps(props: any): string[];
     pushPendingPropsBackToDirty(): void;
     storeNewPropsFromParent(props: any): boolean;
+    private deepDiff;
 }

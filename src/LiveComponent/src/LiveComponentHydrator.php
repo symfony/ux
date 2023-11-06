@@ -257,15 +257,15 @@ final class LiveComponentHydrator
         return base64_encode(hash_hmac('sha256', json_encode($dehydratedPropsData), $this->secret, true));
     }
 
-    private function verifyChecksum(array $identifierPops, string $error = 'Invalid checksum sent when updating the live component.'): void
+    private function verifyChecksum(array $identifierProps, string $error = 'Invalid checksum sent when updating the live component.'): void
     {
-        if (!\array_key_exists(self::CHECKSUM_KEY, $identifierPops)) {
+        if (!\array_key_exists(self::CHECKSUM_KEY, $identifierProps)) {
             throw new HydrationException(sprintf('Missing %s. key', self::CHECKSUM_KEY));
         }
-        $sentChecksum = $identifierPops[self::CHECKSUM_KEY];
-        unset($identifierPops[self::CHECKSUM_KEY]);
+        $sentChecksum = $identifierProps[self::CHECKSUM_KEY];
+        unset($identifierProps[self::CHECKSUM_KEY]);
 
-        $expectedChecksum = $this->calculateChecksum($identifierPops);
+        $expectedChecksum = $this->calculateChecksum($identifierProps);
 
         if (hash_equals($expectedChecksum, $sentChecksum)) {
             return;

@@ -402,9 +402,11 @@ class ValueStore {
         this.dirtyProps = {};
     }
     reinitializeAllProps(props) {
+        const changedProps = this.deepDiff(props);
         this.props = props;
         this.updatedPropsFromParent = {};
         this.pendingProps = {};
+        return changedProps;
     }
     pushPendingPropsBackToDirty() {
         this.dirtyProps = Object.assign(Object.assign({}, this.pendingProps), this.dirtyProps);
@@ -422,6 +424,24 @@ class ValueStore {
             this.updatedPropsFromParent = props;
         }
         return changed;
+    }
+    deepDiff(newObj, prefix = '', changedProps = []) {
+        for (const [key, value] of Object.entries(newObj)) {
+            const currentPath = prefix ? `${prefix}.${key}` : key;
+            const currentValue = this.get(currentPath);
+            if (currentValue !== value) {
+                if (typeof currentValue !== 'object' || typeof value !== 'object') {
+                    if (this.dirtyProps[currentPath] !== undefined) {
+                        continue;
+                    }
+                    changedProps.push(currentPath);
+                }
+                else {
+                    this.deepDiff(value, currentPath, changedProps);
+                }
+            }
+        }
+        return changedProps;
     }
 }
 
@@ -1998,7 +2018,7 @@ class Component {
             throw error;
         }
         const newProps = this.elementDriver.getComponentProps(newElement);
-        this.valueStore.reinitializeAllProps(newProps);
+        const changedProps = this.valueStore.reinitializeAllProps(newProps);
         const eventsToEmit = this.elementDriver.getEventsToEmit(newElement);
         const browserEventsToDispatch = this.elementDriver.getBrowserEventsToDispatch(newElement);
         this.externalMutationTracker.handlePendingChanges();
@@ -2007,6 +2027,9 @@ class Component {
         this.externalMutationTracker.start();
         Object.keys(modifiedModelValues).forEach((modelName) => {
             this.valueStore.set(modelName, modifiedModelValues[modelName]);
+        });
+        changedProps.forEach((modelName) => {
+            this.hooks.triggerHook('model:set', modelName, this.valueStore.get(modelName), this);
         });
         eventsToEmit.forEach(({ event, data, target, componentName }) => {
             if (target === 'up') {

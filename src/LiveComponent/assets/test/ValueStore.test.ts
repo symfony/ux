@@ -337,4 +337,41 @@ describe('ValueStore', () => {
             expect(store.getUpdatedPropsFromParent()).toEqual(changed ? newProps : {});
         });
     });
+
+    it('returns the correctly changed models from reinitializeAllProps()', () => {
+        const store = new ValueStore({
+            firstName: 'Ryan',
+            lastName: 'Weaver',
+            user: {
+                firstName: 'Ryan',
+                lastName: 'Weaver',
+            },
+            product: 5,
+            color: 'purple',
+        });
+
+        // "dirty" props are not returned because the dirty value remains
+        // and overrides the new value
+        store.set('color', 'orange');
+
+        const changedProps = store.reinitializeAllProps({
+            firstName: 'Ryan',
+            lastName: 'Bond',
+            user: {
+                firstName: 'Ryan',
+                lastName: 'Bond',
+            },
+            product: {
+                id: 5,
+                name: 'cool stuff',
+            },
+            color: 'green'
+        });
+
+        expect(changedProps).toEqual([
+            'lastName',
+            'user.lastName',
+            'product',
+        ]);
+    });
 });
