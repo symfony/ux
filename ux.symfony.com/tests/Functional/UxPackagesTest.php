@@ -25,7 +25,7 @@ class UxPackagesTest extends KernelTestCase
         $this->browser()
             ->visit('/packages')
             ->assertSuccessful()
-            ->assertSeeIn('title', 'Symfony UX Packages')
+            ->assertSeeIn('title', 'Packages')
             ->assertSee('All Packages')
         ;
     }
