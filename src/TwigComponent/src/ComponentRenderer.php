@@ -64,16 +64,23 @@ final class ComponentRenderer implements ComponentRendererInterface
 
         $event = $this->preRender($mounted);
 
+        $variables = $event->getVariables();
+        // see ComponentNode. When rendering an individual embedded component,
+        // *not* through its parent, we need to set the parent template.
+        if ($event->getTemplateIndex()) {
+            $variables['__parent__'] = $event->getParentTemplateForEmbedded();
+        }
+
         try {
             if ($this->twig::MAJOR_VERSION < 3) {
-                return $this->twig->loadTemplate($event->getTemplate(), $event->getTemplateIndex())->render($event->getVariables());
+                return $this->twig->loadTemplate($event->getTemplate(), $event->getTemplateIndex())->render($variables);
             }
 
             return $this->twig->loadTemplate(
                 $this->twig->getTemplateClass($event->getTemplate()),
                 $event->getTemplate(),
                 $event->getTemplateIndex(),
-            )->render($event->getVariables());
+            )->render($variables);
         } finally {
             $mounted = $this->componentStack->pop();
 
@@ -82,7 +89,7 @@ final class ComponentRenderer implements ComponentRendererInterface
         }
     }
 
-    public function embeddedContext(string $name, array $props, array $context, string $hostTemplateName, int $index): array
+    public function startEmbeddedComponentRender(string $name, array $props, array $context, string $hostTemplateName, int $index): PreRenderEvent
     {
         $context[PreRenderEvent::EMBEDDED] = true;
 
@@ -92,13 +99,7 @@ final class ComponentRenderer implements ComponentRendererInterface
 
         $this->componentStack->push($mounted);
 
-        $embeddedContext = $this->preRender($mounted, $context)->getVariables();
-
-        if (!isset($embeddedContext['outerBlocks'])) {
-            $embeddedContext['outerBlocks'] = new BlockStack();
-        }
-
-        return $embeddedContext;
+        return $this->preRender($mounted, $context);
     }
 
     public function finishEmbeddedComponentRender(): void
