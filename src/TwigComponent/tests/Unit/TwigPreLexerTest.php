@@ -32,9 +32,39 @@ final class TwigPreLexerTest extends TestCase
             '{{ component(\'foo\') }}',
         ];
 
+        yield 'simple_component_with_require' => [
+            '{% require foo as bar %}<twig:bar />',
+            '{{ component(\'foo\') }}',
+        ];
+
+        yield 'simple_component_with_long_name' => [
+            '{% require long:component:name as foo %}<twig:foo />',
+            '{{ component(\'long:component:name\') }}',
+        ];
+
+        yield 'simple_component_with_alias_substring_of_other_component' => [
+            '{% require long:component:name as foo %}<twig:foo:bar />',
+            '{{ component(\'foo:bar\') }}',
+        ];
+
+        yield 'simple_component_with_multiple_requires' => [
+            '{% require long:component:name as foo %}{% require other:long:component:name as bar %}<twig:bar /><twig:foo />',
+            '{{ component(\'other:long:component:name\') }}{{ component(\'long:component:name\') }}',
+        ];
+
+        yield 'simple_component_with_require_not_used' => [
+            '{% require long:component:name as bar %}<twig:foo />',
+            '{{ component(\'foo\') }}',
+        ];
+
         yield 'component_with_attributes' => [
             '<twig:foo bar="baz" with_quotes="It\'s with quotes" />',
             "{{ component('foo', { bar: 'baz', with_quotes: 'It\'s with quotes' }) }}",
+        ];
+
+        yield 'component_with_attributes_and_require' => [
+            '{% require long:component:name as foo %}<twig:foo bar="baz" with_quotes="It\'s with quotes" />',
+            "{{ component('long:component:name', { bar: 'baz', with_quotes: 'It\'s with quotes' }) }}",
         ];
 
         yield 'component_with_dynamic_attributes' => [
@@ -42,9 +72,19 @@ final class TwigPreLexerTest extends TestCase
             '{{ component(\'foo\', { dynamic: (dynamicVar), otherDynamic: anotherVar }) }}',
         ];
 
+        yield 'component_with_dynamic_attributes_with_require' => [
+            '{% require long:component:name as foo %}<twig:foo dynamic="{{ dynamicVar }}" :otherDynamic="anotherVar" />',
+            '{{ component(\'long:component:name\', { dynamic: (dynamicVar), otherDynamic: anotherVar }) }}',
+        ];
+
         yield 'component_with_closing_tag' => [
             '<twig:foo></twig:foo>',
             '{% component \'foo\' %}{% endcomponent %}',
+        ];
+
+        yield 'component_with_closing_tag_with_require' => [
+            '{% require long:component:name as foo %}<twig:foo></twig:foo>',
+            '{% component \'long:component:name\' %}{% endcomponent %}',
         ];
 
         yield 'component_with_block' => [
@@ -100,17 +140,33 @@ final class TwigPreLexerTest extends TestCase
             '<twig:foo:bar></twig:foo:bar>',
             '{% component \'foo:bar\' %}{% endcomponent %}',
         ];
+        yield 'component_with_require_with_character_:_on_his_name' => [
+            '{% require long:component:name as foo:bar %}<twig:foo:bar></twig:foo:bar>',
+            '{% component \'long:component:name\' %}{% endcomponent %}',
+        ];
         yield 'component_with_character_@_on_his_name' => [
             '<twig:@foo></twig:@foo>',
             '{% component \'@foo\' %}{% endcomponent %}',
+        ];
+        yield 'component_with_character_@_on_his_name_with_require' => [
+            '{% require long:component:n@me as @foo %}<twig:@foo></twig:@foo>',
+            '{% component \'long:component:n@me\' %}{% endcomponent %}',
         ];
         yield 'component_with_character_-_on_his_name' => [
             '<twig:foo-bar></twig:foo-bar>',
             '{% component \'foo-bar\' %}{% endcomponent %}',
         ];
+        yield 'component_with_character_-_on_his_name_with_require' => [
+            '{% require long:component-name as foo-bar %}<twig:foo-bar></twig:foo-bar>',
+            '{% component \'long:component-name\' %}{% endcomponent %}',
+        ];
         yield 'component_with_character_._on_his_name' => [
             '<twig:foo.bar></twig:foo.bar>',
             '{% component \'foo.bar\' %}{% endcomponent %}',
+        ];
+        yield 'component_with_character_._on_his_name_with_require' => [
+            '{% require long:component.name as foo.bar %}<twig:foo.bar></twig:foo.bar>',
+            '{% component \'long:component.name\' %}{% endcomponent %}',
         ];
         yield 'nested_component_2_levels' => [
             '<twig:foo><twig:block name="child"><twig:bar><twig:block name="message">Hello World!</twig:block></twig:bar></twig:block></twig:foo>',
@@ -200,6 +256,11 @@ final class TwigPreLexerTest extends TestCase
         yield 'ignore_twig_comment' => [
             '{# <twig:Alert/> #} <twig:Alert/>',
             '{# <twig:Alert/> #} {{ component(\'Alert\') }}',
+        ];
+
+        yield 'ignore_twig_comment_with_require' => [
+            '{% require component:alert as Alert %} {# <twig:Alert/> #} <twig:Alert/>',
+            ' {# <twig:Alert/> #} {{ component(\'component:alert\') }}',
         ];
 
         yield 'file_ended_with_comments' => [
