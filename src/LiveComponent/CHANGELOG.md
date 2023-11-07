@@ -2,7 +2,15 @@
 
 ## 2.13.0
 
--   Add deferred rendering of Live Components
+-   Add deferred/lazy rendering of Live Components.
+-   Fix option tag synchronization.
+-   Handle array-like objects when working with checkboxes.
+-   Add Symfony 7 support.
+-   Normalize "true" & "false" model values
+-   Fix DTO hydration from phpdoc typehints.
+-   Fix instantiating LiveComponentMetadata multiple times.
+-   Change JavaScript package to `type: module`.
+-   Throwing an error when setting an invalid model name.
 
 ## 2.12.0
 

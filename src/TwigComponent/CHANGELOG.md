@@ -2,9 +2,19 @@
 
 ## 2.13.0
 
+-   Added configuration to separate your components into different "namespaces"
+-   Add `outerScope` variable reach variables from the parent template of an
+    "embedded" component.
 -   Deprecate calling `ComponentTemplateFinder` constructor without `directory` argument.
 -   Add profiler integration: `TwigComponentDataCollector` and debug toolbar templates
 -   Add search feature in `debug:twig-component` command.
+-   Fix inconsistencies with how `{% component %}`/`<twig:component>` syntaxes are
+    rendered vs `component()`: `PostRenderEvent` is now dispatched & the template
+    resolution happens at runtime.
+-   Fix priority of passed in props vs default props with anonymous components.
+-   Add Symfony 7 support.
+-   TwigPreLexer: improve performance.
+-   Fix twig:lint bug with anonymous component tag.
 
 ## 2.12.0
 

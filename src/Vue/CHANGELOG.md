@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.13.0
+
+-   Add Symfony 7 support.
+-   Change JavaScript package to `type: module`
+
 ## 2.9.0
 
 -   Replace `symfony/webpack-encore-bundle` by `symfony/stimulus-bundle` in dependencies

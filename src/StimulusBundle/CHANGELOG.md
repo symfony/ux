@@ -8,6 +8,10 @@
     flatcase (`event.params.bigcrocodile`). This was fixed, which means
     they are now correctly registered as camelCase
     (`event.params.bigCrocodile`).
+-   Added AssetMapper 6.4 support.
+-   Add Symfony 7 support.
+-   Fix missing double dash in namespaced Stimulus outlets.
+-   Change JavaScript package to `type: module`
 
 ## 2.10.0
 

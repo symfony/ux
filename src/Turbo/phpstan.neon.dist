@@ -25,3 +25,13 @@ parameters:
 			message: "#^Property Symfony\\\\UX\\\\Turbo\\\\Doctrine\\\\BroadcastListener\\:\\:\\$annotationReader has unknown class Doctrine\\\\Common\\\\Annotations\\\\Reader as its type\\.$#"
 			count: 1
 			path: src/Doctrine/BroadcastListener.php
+
+		-
+			message: "#^Class Symfony\\\\WebpackEncoreBundle\\\\Twig\\\\StimulusTwigExtension not found\\.$#"
+			count: 2
+			path: src/Bridge/Mercure/TurboStreamListenRenderer.php
+
+		-
+			message: "#^Parameter \\$stimulus of method Symfony\\\\UX\\\\Turbo\\\\Bridge\\\\Mercure\\\\TurboStreamListenRenderer\\:\\:__construct\\(\\) has invalid type Symfony\\\\WebpackEncoreBundle\\\\Twig\\\\StimulusTwigExtension\\.$#"
+			count: 1
+			path: src/Bridge/Mercure/TurboStreamListenRenderer.php
