@@ -17,7 +17,6 @@ use Symfony\UX\Turbo\Bridge\Mercure\Broadcaster;
  * Marks the entity as broadcastable.
  *
  * @Annotation
- *
  * @Target({"CLASS"})
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
