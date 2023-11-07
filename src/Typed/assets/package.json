@@ -3,7 +3,8 @@
     "description": "Typed integration for Symfony",
     "license": "MIT",
     "version": "1.0.0",
-    "main": "dist/controller.js",
+    "module": "dist/controller.js",
+    "type": "module",
     "types": "dist/controller.d.ts",
     "symfony": {
         "controllers": {
