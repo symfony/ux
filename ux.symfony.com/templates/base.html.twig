@@ -5,10 +5,7 @@
         <title>{% block title %}{{ meta.title|default }}{{ meta.title_suffix|default(' - Symfony UX') }}{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="color-scheme" content="light dark">
-        <link rel="preconnect" href="https://cdn.jsdelivr.net">
         {% block stylesheets %}
-            {{ ux_controller_link_tags() }}
-            <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
         {% endblock %}
         {% if meta.canonical|default %}
             <link rel="canonical" href="{{ meta.canonical }}">
