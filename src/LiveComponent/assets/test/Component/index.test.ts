@@ -28,7 +28,7 @@ const makeTestComponent = (): { component: Component, backend: MockBackend } => 
     const component = new Component(
         document.createElement('div'),
         'test-component',
-        { firstName: '' },
+        { firstName: '', product: { name: '' } },
         [],
         () => [],
         null,
@@ -64,6 +64,14 @@ describe('Component class', () => {
             await waitFor(() => expect(backendResponse).not.toBeNull());
             // @ts-ignore
             expect(await backendResponse?.getBody()).toEqual('<div data-live-props-value="{}"></div>');
+        });
+
+        it('errors when an invalid model is passed', async () => {
+            const { component } = makeTestComponent();
+
+            // setting nested - totally ok
+            component.set('product.name', 'Ryan', false);
+            expect(() => { component.set('notARealModel', 'Ryan', false) }).toThrow('Invalid model name "notARealModel"');
         });
     });
 
