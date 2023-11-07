@@ -26,7 +26,7 @@
         }
     },
     "dependencies": {
-        "morphdom": "^2.6.1"
+        "idiomorph": "^0.0.9"
     },
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0"

@@ -1,5 +1,5 @@
 import { cloneHTMLElement, setValueOnElement } from './dom_utils';
-import morphdom from 'morphdom';
+import 'idiomorph';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
 import Component from './Component';
 import ExternalMutationTracker from './Rendering/ExternalMutationTracker';
@@ -19,25 +19,24 @@ export function executeMorphdom(
         childComponentMap.set(childComponent.element, childComponent);
     });
 
-    morphdom(rootFromElement, rootToElement, {
-        getNodeKey: (node: Node) => {
-            if (!(node instanceof HTMLElement)) {
-                return;
+    Idiomorph.morph(rootFromElement, rootToElement, {callbacks: {
+        beforeNodeMorphed: (fromEl: Element, toEl: Element) => {
+            // Idiomorph loop also over Text node
+            if (!(fromEl instanceof Element) || !(toEl instanceof Element)) {
+                return true;
             }
 
-            // Pretend an added element has a unique id so that morphdom treats
-            // it like a unique element, causing it to always attempt to remove
-            // it (which we can then prevent) instead of potentially updating
-            // it from an element that was added by the server in the same location.
-            if (externalMutationTracker.wasElementAdded(node)) {
-                return 'added_element_' + Math.random();
-            }
-
-            return getKeyFromElement(node);
-        },
-        onBeforeElUpdated: (fromEl: Element, toEl: Element) => {
             if (fromEl === rootFromElement) {
                 return true;
+            }
+
+            // Track children if data-live-id changed
+            if (fromEl.hasAttribute('data-live-id')) {
+                if (fromEl.getAttribute('data-live-id') !== toEl.getAttribute('data-live-id')) {
+                    for (const child of fromEl.children) {
+                        child.setAttribute('parent-live-id-changed', '')
+                    }
+                }
             }
 
             // skip special checking if this is, for example, an SVG
@@ -100,11 +99,18 @@ export function executeMorphdom(
                 }
             }
 
+            // Update child if parent has his live-id changed
+            if (fromEl.hasAttribute('parent-live-id-changed')) {
+                fromEl.removeAttribute('parent-live-id-changed');
+
+                return true;
+            }
+
             // look for data-live-ignore, and don't update
             return !fromEl.hasAttribute('data-live-ignore');
         },
 
-        onBeforeNodeDiscarded(node) {
+        beforeNodeRemoved(node) {
             if (!(node instanceof HTMLElement)) {
                 // text element
                 return true;
@@ -117,5 +123,5 @@ export function executeMorphdom(
 
             return !node.hasAttribute('data-live-ignore');
         },
-    });
+    }});
 }
