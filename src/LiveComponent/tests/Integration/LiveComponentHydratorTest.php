@@ -1461,6 +1461,20 @@ final class LiveComponentHydratorTest extends KernelTestCase
     }
 
     /**
+     * @dataProvider truthyValueProvider
+     */
+    public function testCoerceTruthyValuesForScalarTypes($prop, $value, $expected): void
+    {
+        $dehydratedProps = $this->dehydrateComponent($this->mountComponent('scalar_types'))->getProps();
+
+        $updatedProps = [$prop => $value];
+        $hydratedComponent = $this->getComponent('scalar_types');
+        $this->hydrateComponent($hydratedComponent, 'scalar_types', $dehydratedProps, $updatedProps);
+
+        $this->assertSame($expected, $hydratedComponent->$prop);
+    }
+
+    /**
      * @dataProvider falseyValueProvider
      */
     public function testCoerceFalseyValuesForScalarTypes($prop, $value, $expected): void
@@ -1474,6 +1488,15 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->assertSame($expected, $hydratedComponent->$prop);
     }
 
+    public static function truthyValueProvider(): iterable
+    {
+        yield ['int', '1', 1];
+        yield ['float', '1', 1.0];
+        yield ['float', 'true', 0.0];
+        yield ['bool', 'true', true];
+        yield ['bool', '1', true];
+    }
+
     public static function falseyValueProvider(): iterable
     {
         yield ['int', '', 0];
@@ -1484,6 +1507,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         yield ['float', 'apple', 0.0];
         yield ['bool', '', false];
         yield ['bool', '   ', false];
+        yield ['bool', 'false', false];
 
         yield ['nullableInt', '', null];
         yield ['nullableInt', '   ', null];
