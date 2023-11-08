@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\LiveComponent\Attribute;
 
+use Symfony\UX\LiveComponent\Metadata\UrlMapping;
+
 /**
  * An attribute to mark a property as a "LiveProp".
  *
@@ -97,10 +99,11 @@ final class LiveProp
         private string|array|null $onUpdated = null,
 
         /**
-         * If true, this property will be synchronized with a query parameter
-         * in the URL.
+         * Whether to synchronize this property with a query parameter
+         * in the URL. Pass true to configure the mapping automatically, or a
+         * {@see UrlMapping} instance to configure the mapping.
          */
-        private bool $url = false,
+        private bool|UrlMapping $url = false,
 
         /**
          * A hook that will be called when this LiveProp is used.
@@ -114,6 +117,10 @@ final class LiveProp
         private ?string $modifier = null,
     ) {
         self::validateHydrationStrategy($this);
+
+        if (true === $url) {
+            $this->url = new UrlMapping();
+        }
     }
 
     /**
@@ -277,15 +284,15 @@ final class LiveProp
         return $clone;
     }
 
-    public function url(): bool
+    public function url(): UrlMapping|false
     {
         return $this->url;
     }
 
-    public function withUrl(bool $url): self
+    public function withUrl(bool|UrlMapping $url): self
     {
         $clone = clone $this;
-        $clone->url = $url;
+        $clone->url = (true === $url) ? new UrlMapping() : $url;
 
         return $clone;
     }

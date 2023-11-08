@@ -14,6 +14,7 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\LiveComponent\Metadata\UrlMapping;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address;
 
 #[AsLiveComponent('component_with_url_bound_props')]
@@ -57,4 +58,7 @@ class ComponentWithUrlBoundProps
     {
         return $prop->withUrl($this->prop8InUrl);
     }
+
+    #[LiveProp(url: new UrlMapping('q'))]
+    public ?string $prop9 = null;
 }

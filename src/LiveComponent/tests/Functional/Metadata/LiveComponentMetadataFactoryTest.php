@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\Metadata;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
+use Symfony\UX\LiveComponent\Metadata\UrlMapping;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithUrlBoundProps;
 
 class LiveComponentMetadataFactoryTest extends KernelTestCase
@@ -30,20 +31,22 @@ class LiveComponentMetadataFactoryTest extends KernelTestCase
             $propsMetadataByName[$propMetadata->getName()] = $propMetadata;
         }
 
-        $this->assertTrue($propsMetadataByName['prop1']->queryStringMapping());
+        $this->assertNotNull($propsMetadataByName['prop1']->urlMapping());
 
-        $this->assertTrue($propsMetadataByName['prop2']->queryStringMapping());
+        $this->assertNotNull($propsMetadataByName['prop2']->urlMapping());
 
-        $this->assertTrue($propsMetadataByName['prop3']->queryStringMapping());
+        $this->assertNotNull($propsMetadataByName['prop3']->urlMapping());
 
-        $this->assertFalse($propsMetadataByName['prop4']->queryStringMapping());
+        $this->assertNull($propsMetadataByName['prop4']->urlMapping());
 
-        $this->assertTrue($propsMetadataByName['prop5']->queryStringMapping());
+        $this->assertNotNull($propsMetadataByName['prop5']->urlMapping());
 
-        $this->assertTrue($propsMetadataByName['prop6']->queryStringMapping());
+        $this->assertNotNull($propsMetadataByName['prop6']->urlMapping());
 
-        $this->assertTrue($propsMetadataByName['prop7']->queryStringMapping());
+        $this->assertNotNull($propsMetadataByName['prop7']->urlMapping());
 
-        $this->assertFalse($propsMetadataByName['prop8']->queryStringMapping());
+        $this->assertNull($propsMetadataByName['prop8']->urlMapping());
+
+        $this->assertEquals(new UrlMapping(as: 'q'), $propsMetadataByName['prop9']->urlMapping());
     }
 }

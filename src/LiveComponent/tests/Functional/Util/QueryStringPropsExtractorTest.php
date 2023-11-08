@@ -64,6 +64,7 @@ class QueryStringPropsExtractorTest extends KernelTestCase
             'invalid scalar value' => ['prop1[]=foo&prop1[]=bar', []],
             'invalid array value' => ['prop3=foo', []],
             'invalid object value' => ['prop5=foo', []],
+            'aliased prop' => ['q=foo', ['prop9' => 'foo']],
         ];
     }
 }
