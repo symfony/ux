@@ -2249,7 +2249,7 @@ To add some loading text before the real component is loaded, use the
 
     {{ component('SomeHeavyComponent', { defer: true, loading-template: 'spinning-wheel.html.twig' }) }}
 
-Or override the ``content`` block:
+Or override the ``loadingContent`` block:
 
 .. code-block:: twig
 

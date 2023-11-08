@@ -1434,9 +1434,9 @@ When overriding the ``alert_message`` block, you have access to the ``message`` 
     {% endcomponent %}
 
 
-.. versionadded:: 2.12
+.. versionadded:: 2.13
 
-    The ability to refer to the scope of higher components via the ``outerScope`` variable was added in 2.12.
+    The ability to refer to the scope of higher components via the ``outerScope`` variable was added in 2.13.
 
 As mentioned before, variables from lower components are merged with those from upper components. When you need
 access to some properties or functions from higher components, that can be done via the ``outerScope...`` variable:
