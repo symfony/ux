@@ -46,14 +46,14 @@ class QueryStringPropsExtractorTest extends KernelTestCase
     {
         yield from [
             'no query string' => ['', []],
-            'empty value for nullable string' => ['prop1=', ['prop1' => null]],
-            'string value' => ['prop1=foo', ['prop1' => 'foo']],
-            'empty value for nullable int' => ['prop2=', ['prop2' => null]],
-            'int value' => ['prop2=42', ['prop2' => 42]],
-            'array value' => ['prop3[]=foo&prop3[]=bar', ['prop3' => ['foo', 'bar']]],
-            'array value indexed' => ['prop3[1]=foo&prop3[0]=bar', ['prop3' => [1 => 'foo', 0 => 'bar']]],
-            'not bound prop' => ['prop4=foo', []],
-            'object value' => ['prop5[address]=foo&prop5[city]=bar', ['prop5' => (function () {
+            'empty value for nullable string' => ['stringProp=', ['stringProp' => null]],
+            'string value' => ['stringProp=foo', ['stringProp' => 'foo']],
+            'empty value for nullable int' => ['intProp=', ['intProp' => null]],
+            'int value' => ['intProp=42', ['intProp' => 42]],
+            'array value' => ['arrayProp[]=foo&arrayProp[]=bar', ['arrayProp' => ['foo', 'bar']]],
+            'array value indexed' => ['arrayProp[1]=foo&arrayProp[0]=bar', ['arrayProp' => [1 => 'foo', 0 => 'bar']]],
+            'not bound prop' => ['unboundProp=foo', []],
+            'object value' => ['objectProp[address]=foo&objectProp[city]=bar', ['objectProp' => (function () {
                 $address = new Address();
                 $address->address = 'foo';
                 $address->city = 'bar';
@@ -61,9 +61,10 @@ class QueryStringPropsExtractorTest extends KernelTestCase
                 return $address;
             })(),
             ]],
-            'invalid scalar value' => ['prop1[]=foo&prop1[]=bar', []],
-            'invalid array value' => ['prop3=foo', []],
-            'invalid object value' => ['prop5=foo', []],
+            'invalid scalar value' => ['stringProp[]=foo&stringProp[]=bar', []],
+            'invalid array value' => ['arrayProp=foo', []],
+            'invalid object value' => ['objectProp=foo', []],
+            'aliased prop' => ['q=foo', ['boundPropWithAlias' => 'foo']],
         ];
     }
 }

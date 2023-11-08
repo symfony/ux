@@ -14,6 +14,7 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\LiveComponent\Metadata\UrlMapping;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address;
 
 #[AsLiveComponent('component_with_url_bound_props')]
@@ -22,39 +23,59 @@ class ComponentWithUrlBoundProps
     use DefaultActionTrait;
 
     #[LiveProp(url: true)]
-    public ?string $prop1 = null;
+    public ?string $stringProp = null;
 
     #[LiveProp(url: true)]
-    public ?int $prop2 = null;
+    public ?int $intProp = null;
 
     #[LiveProp(url: true)]
-    public array $prop3 = [];
+    public array $arrayProp = [];
 
     #[LiveProp]
-    public ?string $prop4 = null;
+    public ?string $unboundProp = null;
 
     #[LiveProp(url: true)]
-    public ?Address $prop5 = null;
+    public ?Address $objectProp = null;
 
-    #[LiveProp(fieldName: 'field6', url: true)]
-    public ?string $prop6 = null;
+    #[LiveProp(fieldName: 'field1', url: true)]
+    public ?string $propWithField1 = null;
 
-    #[LiveProp(fieldName: 'getProp7Name()', url: true)]
-    public ?string $prop7 = null;
+    #[LiveProp(fieldName: 'getField2()', url: true)]
+    public ?string $propWithField2 = null;
 
-    #[LiveProp(modifier: 'modifyProp8')]
-    public ?string $prop8 = null;
+    #[LiveProp(modifier: 'modifyMaybeBoundProp')]
+    public ?string $maybeBoundProp = null;
 
     #[LiveProp]
-    public ?bool $prop8InUrl = false;
+    public ?bool $maybeBoundPropInUrl = false;
 
-    public function getProp7Name(): string
+    public function getField2(): string
     {
-        return 'field7';
+        return 'field2';
     }
 
-    public function modifyProp8(LiveProp $prop): LiveProp
+    public function modifyMaybeBoundProp(LiveProp $prop): LiveProp
     {
-        return $prop->withUrl($this->prop8InUrl);
+        return $prop->withUrl($this->maybeBoundPropInUrl);
     }
+
+    #[LiveProp(url: new UrlMapping(as: 'q'))]
+    public ?string $boundPropWithAlias = null;
+
+    #[LiveProp(url: true, modifier: 'modifyBoundPropWithCustomAlias')]
+    public ?string $boundPropWithCustomAlias = null;
+
+    #[LiveProp]
+    public ?string $customAlias = null;
+
+    public function modifyBoundPropWithCustomAlias(LiveProp $liveProp): LiveProp
+    {
+        if ($this->customAlias) {
+            $liveProp = $liveProp->withUrl(new UrlMapping(as: $this->customAlias));
+        }
+
+        return $liveProp;
+    }
+
+
 }
