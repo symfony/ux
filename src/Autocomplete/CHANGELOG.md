@@ -3,6 +3,7 @@
 ## 2.13.0
 
 -   Add new BaseEntityAutocompleteType
+-   Drop symfony 5.4 support.
 -   Add Symfony 7 support.
 -   Change JavaScript package to `type: module`
 
