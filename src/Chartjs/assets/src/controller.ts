@@ -10,7 +10,12 @@
 'use strict';
 
 import { Controller } from '@hotwired/stimulus';
-import Chart from 'chart.js/auto';
+import { Chart, registerables } from 'chart.js';
+
+// ChartJs 3.x
+if (registerables != undefined) {
+    Chart.register(...registerables);
+}
 
 let isChartInitialized = false;
 
