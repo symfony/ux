@@ -146,7 +146,7 @@ Component Class                            Component Name
 The ``:`` character is used in the name instead of ``\``. See
 :ref:`Configuration <configuration>` for more info.
 
-Instead of letting TwigComponent choose a name, you can also set on yourself::
+Instead of letting TwigComponent choose a name, you can also set one yourself::
 
     #[AsTwigComponent('alert')]
     class Alert
