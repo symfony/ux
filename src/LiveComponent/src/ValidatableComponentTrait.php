@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent;
 
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Component\Validator\Constraints\GroupSequence;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Contracts\Service\Attribute\Required;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -52,12 +53,12 @@ trait ValidatableComponentTrait
      *
      * This stores the validation errors: accessible via the getError() method.
      */
-    public function validate(bool $throw = true): void
+    public function validate(bool $throw = true, string|GroupSequence|array $groups = null): void
     {
         // set fields back to empty, as now the *entire* object is validated.
         $this->validatedFields = [];
         $this->isValidated = true;
-        $this->getValidationErrors()->setAll($this->getValidator()->validate($this));
+        $this->getValidationErrors()->setAll($this->getValidator()->validate($this, $groups));
 
         if ($throw && \count($this->getValidationErrors()) > 0) {
             throw new UnprocessableEntityHttpException('Component validation failed');
@@ -71,13 +72,13 @@ trait ValidatableComponentTrait
      * validate the *entire* "post" property. It will then loop
      * over all the errors and collect only those for "post.title".
      */
-    public function validateField(string $propertyName, bool $throw = true): void
+    public function validateField(string $propertyName, bool $throw = true, string|GroupSequence|array $groups = null): void
     {
         if (!\in_array($propertyName, $this->validatedFields, true)) {
             $this->validatedFields[] = $propertyName;
         }
 
-        $errors = $this->getValidator()->validateField($this, $propertyName);
+        $errors = $this->getValidator()->validateField($this, $propertyName, $groups);
         $this->getValidationErrors()->set($propertyName, $errors);
 
         if ($throw && \count($errors) > 0) {

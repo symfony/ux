@@ -3,6 +3,8 @@
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"
+-   Add capability to use validation groups in Live Components validation trait.
+
 
 ## 2.13.0
 

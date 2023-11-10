@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent;
 
+use Symfony\Component\Validator\Constraints\GroupSequence;
 use Symfony\Component\Validator\ConstraintViolation;
 
 /**
@@ -32,12 +33,12 @@ interface ComponentValidatorInterface
      *
      * @return ConstraintViolation[][]
      */
-    public function validate(object $component): array;
+    public function validate(object $component, string|GroupSequence|array $groups = null): array;
 
     /**
      * Returns an array of violations for this one specific property.
      *
      * @return ConstraintViolation[]
      */
-    public function validateField(object $component, string $propertyName): array;
+    public function validateField(object $component, string $propertyName, string|GroupSequence|array $groups = null): array;
 }
