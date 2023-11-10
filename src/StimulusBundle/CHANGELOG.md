@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.13.2
+
+-   Revert "Change JavaScript package to `type: module`"
+
 ## 2.13.0
 
 -   Normalize parameters names given to twig helper 'stimulus_action()'.
