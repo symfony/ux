@@ -4,7 +4,6 @@
     "license": "MIT",
     "version": "1.0.0",
     "module": "dist/register_controller.js",
-    "type": "module",
     "types": "dist/register_controller.d.ts",
     "symfony": {
         "controllers": {

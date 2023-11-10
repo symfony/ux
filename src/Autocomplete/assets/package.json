@@ -2,7 +2,6 @@
     "name": "@symfony/ux-autocomplete",
     "description": "JavaScript-powered autocompletion functionality for forms.",
     "module": "dist/controller.js",
-    "type": "module",
     "types": "dist/controller.d.ts",
     "version": "1.0.0",
     "license": "MIT",

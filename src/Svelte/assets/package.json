@@ -2,7 +2,6 @@
     "name": "@symfony/ux-svelte",
     "description": "Integration of Svelte in Symfony",
     "module": "dist/register_controller.js",
-    "type": "module",
     "version": "1.0.0",
     "license": "MIT",
     "symfony": {
