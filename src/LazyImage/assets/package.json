@@ -3,8 +3,7 @@
     "description": "Lazy image loader and utilities for Symfony",
     "license": "MIT",
     "version": "1.1.0",
-    "module": "dist/controller.js",
-    "type": "module",
+    "main": "dist/controller.js",
     "types": "dist/controller.d.ts",
     "symfony": {
         "controllers": {

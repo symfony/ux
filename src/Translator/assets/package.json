@@ -3,8 +3,7 @@
     "description": "Symfony Translator for JavaScript",
     "license": "MIT",
     "version": "1.0.0",
-    "module": "dist/translator_controller.js",
-    "type": "module",
+    "main": "dist/translator_controller.js",
     "types": "dist/translator_controller.d.ts",
     "symfony": {
         "importmap": {
