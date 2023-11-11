@@ -3,8 +3,7 @@
     "description": "Integration of @hotwired/stimulus into Symfony",
     "version": "1.0.0",
     "license": "MIT",
-    "module": "dist/loader.js",
-    "type": "module",
+    "main": "dist/loader.js",
     "symfony": {
         "needsPackageAsADependency": false,
         "importmap": {

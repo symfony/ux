@@ -4,8 +4,7 @@
     "license": "MIT",
     "private": true,
     "version": "0.1.0",
-    "module": "dist/turbo_controller.js",
-    "type": "module",
+    "main": "dist/turbo_controller.js",
     "types": "dist/turbo_controller.d.ts",
     "symfony": {
         "controllers": {
