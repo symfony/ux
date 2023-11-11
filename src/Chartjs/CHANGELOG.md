@@ -2,6 +2,10 @@
 
 ## 2.13.2
 
+-   Changee "module" key back to "main" in package.json
+
+## 2.13.1
+
 -   Revert "Change JavaScript package to `type: module`"
 
 ## 2.13.0
