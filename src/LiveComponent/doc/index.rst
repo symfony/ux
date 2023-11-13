@@ -791,6 +791,22 @@ Want to change the value of a model or even trigger an action from your
 own custom JavaScript? No problem, thanks to a JavaScript ``Component``
 object, which is attached to each root component element.
 
+Before going any further, check that the controller entry ``@symfony/ux-live-component`` has been added to ``assets/controllers.json``, like this::
+
+    // controllers.json
+    {
+        "controllers": {
+            // ...
+            "@symfony/ux-live-component": {
+                "live": {
+                    "enabled": true,
+                    "fetch": "eager"
+                }
+            }
+        },
+    }
+
+
 For example, to write your custom JavaScript, you create a Stimulus
 controller and put it around (or attached to) your root component element:
 
@@ -840,6 +856,21 @@ of the change:
 
     input.dispatchEvent(new Event('change', { bubbles: true }));
 
+With AssetMapper
+~~~~~~~~~~~~~~~~
+
+If you're using AssetMapper, you new to add one new entry to you ``importmap.php``::
+
+    // importmap.php
+    return [
+        // ...
+
+        '@symfony/stimulus-bundle' => [
+            'path' => '@symfony/stimulus-bundle/loader.js',
+        ],
+    ];
+
+
 JavaScript Component Hooks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -873,6 +904,7 @@ The following hooks are available (along with the arguments that are passed):
 * ``loading.state:started`` args ``(element: HTMLElement, request: BackendRequest)``
 * ``loading.state:finished`` args ``(element: HTMLElement)``
 * ``model:set`` args ``(model: string, value: any, component: Component)``
+
 
 Adding a Stimulus Controller to your Component Root Element
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
