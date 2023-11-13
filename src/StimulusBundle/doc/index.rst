@@ -432,16 +432,10 @@ will import all your custom controllers as well as those from ``controllers.json
 It will also dynamically enable "debug" mode in Stimulus when your application
 is running in debug mode.
 
-Finally, to output any ``autoimport`` CSS files in your ``controllers.json`` file,
-include the ``ux_controller_link_tags()`` function in your base template:
+.. tip::
 
-.. code-block:: html+twig
-
-    {% block stylesheets %}
-        {{ ux_controller_link_tags() }}
-
-        <!-- ... -->
-    {% endblock %}
+    For AssetMapper 6.3 only, you also need a ``{{ ux_controller_link_tags() }``
+    in ``base.html.twig``. This is not needed in AssetMapper 6.4+.
 
 How are the Stimulus Controllers Loaded?
 ----------------------------------------
