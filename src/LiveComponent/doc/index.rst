@@ -859,7 +859,7 @@ of the change:
 With AssetMapper
 ~~~~~~~~~~~~~~~~
 
-If you're using AssetMapper, you new to add one new entry to you ``importmap.php``::
+If you're using AssetMapper, you need to add one new entry to you ``importmap.php``::
 
     // importmap.php
     return [
