@@ -2254,7 +2254,7 @@ Or override the ``loadingContent`` block:
 .. code-block:: twig
 
     {% component SomeHeavyComponent with { defer: true }) }}
-        {% block content %}Loading...{% endblock %}
+        {% block loadingContent %}Loading...{% endblock %}
     {{ end_component() }}
 
 To change the initial tag from a ``div`` to something else, use the ``loading-tag`` option:
