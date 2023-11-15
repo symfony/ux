@@ -235,7 +235,7 @@ available in every component template:
 
 .. code-block:: html+twig
 
-    <div {{ attributes.defaults({ class: 'alert alert'~ type }) }}">
+    <div {{ attributes.defaults({ class: 'alert alert-'~ type }) }}>
         {{ message }}
     </div>
 
