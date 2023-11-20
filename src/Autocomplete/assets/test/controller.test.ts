@@ -329,29 +329,6 @@ describe('AutocompleteController', () => {
         expect(fetchMock.requests()[2].url).toEqual('/path/to/autocomplete?query=fo');
     });
 
-    it('adds work-around for live-component & multiple select', async () => {
-        const { container } = await startAutocompleteTest(`
-            <div>
-                <label for="the-select" data-testid="main-element-label">Select something</label>
-                <select
-                    id="the-select"
-                    data-testid="main-element"
-                    data-controller="check autocomplete"
-                    multiple
-                ></select>
-            </div>
-        `);
-
-        expect(getByTestId(container, 'main-element')).toHaveAttribute('data-live-ignore');
-        expect(getByTestId(container, 'main-element-label')).toHaveAttribute('data-live-ignore');
-        const tsDropdown = container.querySelector('.ts-wrapper');
-
-        await waitFor(() => {
-            expect(tsDropdown).not.toBeNull();
-        });
-        expect(tsDropdown).toHaveAttribute('data-live-ignore');
-    });
-
     it('loads new pages on scroll', async () => {
         document.addEventListener('autocomplete:pre-connect', (event: any) => {
             const options = (event.detail as AutocompletePreConnectOptions).options;
@@ -443,13 +420,13 @@ describe('AutocompleteController', () => {
         // wait for the MutationObserver to be able to flush
         await shortDelay(10);
 
-        // something external mutations the elements into a different order
-        selectElement.children[1].setAttribute('value', '2');
-        selectElement.children[1].innerHTML = 'dog2';
-        selectElement.children[2].setAttribute('value', '3');
-        selectElement.children[2].innerHTML = 'dog3';
-        selectElement.children[3].setAttribute('value', '1');
-        selectElement.children[3].innerHTML = 'dog1';
+        // something external sets new HTML, with a different order
+        selectElement.innerHTML = `
+            <option value="">Select a dog</option>
+            <option value="2">dog2</option>
+            <option value="3">dog3</option>
+            <option value="1">dog1</option>
+        `;
 
         // wait for the MutationObserver to flush these changes
         await shortDelay(10);
@@ -488,26 +465,20 @@ describe('AutocompleteController', () => {
         await shortDelay(10);
 
         // TomSelect will move the "2" option out of its optgroup and onto the bottom
-        // let's imitate an Ajax call reversing that
-        const selectedOption2 = selectElement.children[3];
-        if (!(selectedOption2 instanceof HTMLOptionElement)) {
-            throw new Error('cannot find option 3');
-        }
-        const smallDogGroup = selectElement.children[1];
-        if (!(smallDogGroup instanceof HTMLOptGroupElement)) {
-            throw new Error('cannot find small dog group');
-        }
-
-        // add a new element, which is really just the old dog2
-        const newOption2 = document.createElement('option');
-        newOption2.setAttribute('value', '2');
-        newOption2.innerHTML = 'dog2';
-        // but the new HTML will correctly mark this as selected
-        newOption2.setAttribute('selected', '');
-        smallDogGroup.appendChild(newOption2);
-
-        // remove the dog2 element from the bottom
-        selectElement.removeChild(selectedOption2);
+        // let's imitate an Ajax call reversing that order
+        selectElement.innerHTML = `
+            <option value="">Select a dog</option>
+            <optgroup label="big dogs">
+                <option value="4">dog4</option>
+                <option value="5">dog5</option>
+                <option value="6">dog6</option>
+            </optgroup>
+            <optgroup label="small dogs">
+                <option value="1">dog1</option>
+                <option value="2" selected>dog2</option>
+                <option value="3">dog3</option>
+            </optgroup>
+        `;
 
         // TomSelect will still have the correct value
         expect(tomSelect.getValue()).toEqual('2');
@@ -529,42 +500,101 @@ describe('AutocompleteController', () => {
             </select>
         `);
 
+        // select 3 to start
+        tomSelect.addItem('3');
         const selectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
+        expect(selectElement.value).toBe('3');
 
         // something external changes the set of options, including add a new one
-        selectElement.children[1].setAttribute('value', '4');
-        selectElement.children[1].innerHTML = 'dog4';
-        selectElement.children[2].setAttribute('value', '5');
-        selectElement.children[2].innerHTML = 'dog5';
-        selectElement.children[3].setAttribute('value', '6');
-        selectElement.children[3].innerHTML = 'dog6';
-        const newOption7 = document.createElement('option');
-        newOption7.setAttribute('value', '7');
-        newOption7.innerHTML = 'dog7';
-        selectElement.appendChild(newOption7);
-        const newOption8 = document.createElement('option');
-        newOption8.setAttribute('value', '8');
-        newOption8.innerHTML = 'dog8';
-        selectElement.appendChild(newOption8);
+        selectElement.innerHTML = `
+            <option value="">Select a dog</option>
+            <option value="4">dog4</option>
+            <option value="5">dog5</option>
+            <option value="6">dog6</option>
+            <option value="7">dog7</option>
+            <option value="8">dog8</option>
+        `;
+
+        let newTomSelect: TomSelect|null = null;
+        container.addEventListener('autocomplete:connect', (event: any) => {
+            newTomSelect = (event.detail as AutocompleteConnectOptions).tomSelect;
+        });
 
         // wait for the MutationObserver to flush these changes
         await shortDelay(10);
 
-        const controlInput = tomSelect.control_input;
-        userEvent.click(controlInput);
+        // the previously selected option is no longer there
+        expect(selectElement.value).toBe('');
+        userEvent.click(container.querySelector('.ts-control') as HTMLElement);
         await waitFor(() => {
             // make sure all 5 new options are there
             expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(5);
         });
 
-        tomSelect.addItem('7');
+        if (null === newTomSelect) {
+            throw new Error('Missing TomSelect instance');
+        }
+        // @ts-ignore
+        newTomSelect.addItem('7');
         expect(selectElement.value).toBe('7');
 
         // remove an element, the control should update
         selectElement.removeChild(selectElement.children[1]);
         await shortDelay(10);
-        userEvent.click(controlInput);
+        userEvent.click(container.querySelector('.ts-control') as HTMLElement);
         await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(4);
+        });
+
+        // change again, but the selected value is still there
+        selectElement.innerHTML = `
+            <option value="">Select a dog</option>
+            <option value="1">dog4</option>
+            <option value="2">dog5</option>
+            <option value="3">dog6</option>
+            <option value="7">dog7</option>
+        `;
+        await shortDelay(10);
+        expect(selectElement.value).toBe('7');
+    });
+
+    it('updates properly if options on a multiple select change', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <select multiple data-testid='main-element' data-controller='autocomplete'>
+                <option value=''>Select dogs</option>
+                <option value='1'>dog1</option>
+                <option value='2'>dog2</option>
+                <option value='3'>dog3</option>
+            </select>
+        `);
+
+        tomSelect.addItem('3');
+        tomSelect.addItem('2');
+        const getSelectedValues = () => {
+            return Array.from(selectElement.selectedOptions).map((option) => option.value).sort();
+        }
+        const selectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
+        expect(getSelectedValues()).toEqual(['2', '3']);
+
+        // something external changes the set of options, including add new ones
+        selectElement.innerHTML = `
+            <option value=''>Select a dog</option>
+            <option value='2'>dog2</option>
+            <option value='4'>dog4</option>
+            <option value='5'>dog5</option>
+            <option value='6'>dog6</option>
+            <option value='7'>dog7</option>
+        `;
+
+        // wait for the MutationObserver to flush these changes
+        await shortDelay(10);
+
+        // only the "2" option from before is still there
+        expect(getSelectedValues()).toEqual(['2']);
+        userEvent.click(container.querySelector('.ts-control') as HTMLElement);
+        await waitFor(() => {
+            // make sure that, out of the 5 total options, 4 are still selectable
+            // (the "2" option is not selectable because it's already selected)
             expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(4);
         });
     });
@@ -616,15 +646,25 @@ describe('AutocompleteController', () => {
         const selectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
         expect(tomSelect.control_input.placeholder).toBe('Select a dog');
 
-        selectElement.children[0].innerHTML = 'Select a cat';
+        let newTomSelect: TomSelect|null = null;
+        container.addEventListener('autocomplete:connect', (event: any) => {
+            newTomSelect = (event.detail as AutocompleteConnectOptions).tomSelect;
+        });
+
+        selectElement.innerHTML = `
+            <option value="">Select a cat</option>
+            <option value="1">dog1</option>
+            <option value="2">dog2</option>
+            <option value="3">dog3</option>
+        `;
+
         // wait for the MutationObserver
         await shortDelay(10);
-        expect(tomSelect.control_input.placeholder).toBe('Select a cat');
-
-        // a different way to change the placeholder
-        selectElement.children[0].childNodes[0].nodeValue = 'Select a kangaroo';
-        await shortDelay(10);
-        expect(tomSelect.control_input.placeholder).toBe('Select a kangaroo');
+        if (null === newTomSelect) {
+            throw new Error('Missing TomSelect instance');
+        }
+        // @ts-ignore
+        expect(newTomSelect.control_input.placeholder).toBe('Select a cat');
     });
 
     it('group related options', async () => {

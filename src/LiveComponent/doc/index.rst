@@ -3243,6 +3243,23 @@ an element, that changes is preserved (see :ref:`smart-rerender-algorithm`).
     ``data-live-id`` attribute. During a re-render, if this value changes, all
     of the children of the element will be re-rendered, even those with ``data-live-ignore``.
 
+Overwrite HTML Instead of Morphing
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Normally, when a component re-renders, the new HTML is "morphed" onto the existing
+elements on the page. In some rare cases, you may want to simply overwrite the existing
+inner HTML of an element with the new HTML instead of morphing it. This can be done by adding a
+``data-skip-morph`` attribute:
+
+.. code-block:: html
+
+    <select data-skip-morph>
+        <option>...</option>
+    </select>
+
+In this case, any changes to the ``<select>`` element attributes will still be
+"morphed" onto the existing element, but the inner HTML will be overwritten.
+
 Define another route for your Component
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

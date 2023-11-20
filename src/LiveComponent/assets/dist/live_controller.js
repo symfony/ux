@@ -1264,6 +1264,13 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                     fromEl.removeAttribute('parent-live-id-changed');
                     return true;
                 }
+                if (fromEl.hasAttribute('data-skip-morph')) {
+                    fromEl.innerHTML = toEl.innerHTML;
+                    return true;
+                }
+                if (fromEl.parentElement && fromEl.parentElement.hasAttribute('data-skip-morph')) {
+                    return false;
+                }
                 return !fromEl.hasAttribute('data-live-ignore');
             },
             beforeNodeRemoved(node) {

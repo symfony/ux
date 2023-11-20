@@ -29,26 +29,25 @@ class default_1 extends Controller {
         _default_1_instances.add(this);
         this.isObserving = false;
         this.hasLoadedChoicesPreviously = false;
+        this.originalOptions = [];
     }
     initialize() {
-        if (this.requiresLiveIgnore()) {
-            this.element.setAttribute('data-live-ignore', '');
-            if (this.element.id) {
-                const label = document.querySelector(`label[for="${this.element.id}"]`);
-                if (label) {
-                    label.setAttribute('data-live-ignore', '');
-                }
-            }
-        }
-        else {
-            if (!this.mutationObserver) {
-                this.mutationObserver = new MutationObserver((mutations) => {
-                    this.onMutations(mutations);
-                });
-            }
+        if (!this.mutationObserver) {
+            this.mutationObserver = new MutationObserver((mutations) => {
+                this.onMutations(mutations);
+            });
         }
     }
     connect() {
+        if (this.selectElement) {
+            this.originalOptions = this.createOptionsDataStructure(this.selectElement);
+        }
+        this.initializeTomSelect();
+    }
+    initializeTomSelect() {
+        if (this.selectElement) {
+            this.selectElement.setAttribute('data-skip-morph', '');
+        }
         if (this.urlValue) {
             this.tomSelect = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createAutocompleteWithRemoteData).call(this, this.urlValue, this.hasMinCharactersValue ? this.minCharactersValue : null);
             return;
@@ -97,9 +96,12 @@ class default_1 extends Controller {
     resetTomSelect() {
         if (this.tomSelect) {
             this.stopMutationObserver();
-            this.tomSelect.clearOptions();
-            this.tomSelect.settings.maxOptions = this.getMaxOptions();
-            this.tomSelect.sync();
+            const currentHtml = this.element.innerHTML;
+            const currentValue = this.tomSelect.getValue();
+            this.tomSelect.destroy();
+            this.element.innerHTML = currentHtml;
+            this.initializeTomSelect();
+            this.tomSelect.setValue(currentValue);
             this.startMutationObserver();
         }
     }
@@ -112,22 +114,6 @@ class default_1 extends Controller {
             this.tomSelect.enable();
         }
         this.startMutationObserver();
-    }
-    updateTomSelectPlaceholder() {
-        const input = this.element;
-        let placeholder = input.getAttribute('placeholder') || input.getAttribute('data-placeholder');
-        if (!placeholder && !this.tomSelect.allowEmptyOption) {
-            const option = input.querySelector('option[value=""]');
-            if (option) {
-                placeholder = option.textContent;
-            }
-        }
-        if (placeholder) {
-            this.stopMutationObserver();
-            this.tomSelect.settings.placeholder = placeholder;
-            this.tomSelect.control_input.setAttribute('placeholder', placeholder);
-            this.startMutationObserver();
-        }
     }
     startMutationObserver() {
         if (!this.isObserving && this.mutationObserver) {
@@ -147,73 +133,51 @@ class default_1 extends Controller {
         }
     }
     onMutations(mutations) {
-        const addedOptionElements = [];
-        const removedOptionElements = [];
-        let hasAnOptionChanged = false;
         let changeDisabledState = false;
-        let changePlaceholder = false;
+        let requireReset = false;
         mutations.forEach((mutation) => {
             switch (mutation.type) {
-                case 'childList':
-                    if (mutation.target instanceof HTMLOptionElement) {
-                        if (mutation.target.value === '') {
-                            changePlaceholder = true;
-                            break;
-                        }
-                        hasAnOptionChanged = true;
-                        break;
-                    }
-                    mutation.addedNodes.forEach((node) => {
-                        if (node instanceof HTMLOptionElement) {
-                            if (removedOptionElements.includes(node)) {
-                                removedOptionElements.splice(removedOptionElements.indexOf(node), 1);
-                                return;
-                            }
-                            addedOptionElements.push(node);
-                        }
-                    });
-                    mutation.removedNodes.forEach((node) => {
-                        if (node instanceof HTMLOptionElement) {
-                            if (addedOptionElements.includes(node)) {
-                                addedOptionElements.splice(addedOptionElements.indexOf(node), 1);
-                                return;
-                            }
-                            removedOptionElements.push(node);
-                        }
-                    });
-                    break;
                 case 'attributes':
-                    if (mutation.target instanceof HTMLOptionElement) {
-                        hasAnOptionChanged = true;
-                        break;
-                    }
                     if (mutation.target === this.element && mutation.attributeName === 'disabled') {
                         changeDisabledState = true;
                         break;
                     }
-                    break;
-                case 'characterData':
-                    if (mutation.target instanceof Text && mutation.target.parentElement instanceof HTMLOptionElement) {
-                        if (mutation.target.parentElement.value === '') {
-                            changePlaceholder = true;
-                            break;
-                        }
-                        hasAnOptionChanged = true;
+                    if (mutation.target === this.element && mutation.attributeName === 'multiple') {
+                        requireReset = true;
+                        break;
                     }
+                    break;
             }
         });
-        if (hasAnOptionChanged || addedOptionElements.length > 0 || removedOptionElements.length > 0) {
+        const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
+        const areOptionsEquivalent = this.areOptionsEquivalent(newOptions);
+        if (!areOptionsEquivalent || requireReset) {
+            this.originalOptions = newOptions;
             this.resetTomSelect();
         }
         if (changeDisabledState) {
             this.changeTomSelectDisabledState(this.formElement.disabled);
         }
-        if (changePlaceholder) {
-            this.updateTomSelectPlaceholder();
-        }
     }
-    requiresLiveIgnore() {
-        return this.element instanceof HTMLSelectElement && this.element.multiple;
+    createOptionsDataStructure(selectElement) {
+        return Array.from(selectElement.options).map((option) => {
+            const optgroup = option.closest('optgroup');
+            return {
+                value: option.value,
+                text: option.text,
+                group: optgroup ? optgroup.label : null,
+            };
+        });
+    }
+    areOptionsEquivalent(newOptions) {
+        if (this.originalOptions.length !== newOptions.length) {
+            return false;
+        }
+        const normalizeOption = (option) => `${option.value}-${option.text}-${option.group}`;
+        const originalOptionsSet = new Set(this.originalOptions.map(normalizeOption));
+        const newOptionsSet = new Set(newOptions.map(normalizeOption));
+        return (originalOptionsSet.size === newOptionsSet.size &&
+            [...originalOptionsSet].every((option) => newOptionsSet.has(option)));
     }
 }
 _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _default_1_getCommonConfig() {
@@ -233,18 +197,11 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
         },
     };
-    const requiresLiveIgnore = this.requiresLiveIgnore();
     const config = {
         render,
         plugins,
         onItemAdd: () => {
             this.tomSelect.setTextboxValue('');
-        },
-        onInitialize: function () {
-            if (requiresLiveIgnore) {
-                const tomSelect = this;
-                tomSelect.wrapper.setAttribute('data-live-ignore', '');
-            }
         },
         closeAfterSelect: true,
     };

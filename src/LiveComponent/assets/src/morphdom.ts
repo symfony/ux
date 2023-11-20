@@ -112,11 +112,21 @@ export function executeMorphdom(
                     return true;
                 }
 
+                if (fromEl.hasAttribute('data-skip-morph')) {
+                    fromEl.innerHTML = toEl.innerHTML;
+
+                    return true;
+                }
+
+                if (fromEl.parentElement && fromEl.parentElement.hasAttribute('data-skip-morph')) {
+                    return false;
+                }
+
                 // look for data-live-ignore, and don't update
                 return !fromEl.hasAttribute('data-live-ignore');
             },
 
-            beforeNodeRemoved(node) {
+            beforeNodeRemoved(node: Node) {
                 if (!(node instanceof HTMLElement)) {
                     // text element
                     return true;
