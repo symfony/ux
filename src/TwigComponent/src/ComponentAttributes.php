@@ -80,7 +80,7 @@ final class ComponentAttributes
         }
 
         foreach ($this->attributes as $key => $value) {
-            if (\in_array($key, ['class', 'data-controller'], true) && isset($attributes[$key])) {
+            if (\in_array($key, ['class', 'data-controller', 'data-action'], true) && isset($attributes[$key])) {
                 $attributes[$key] = "{$attributes[$key]} {$value}";
 
                 continue;
