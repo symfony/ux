@@ -53,7 +53,7 @@ export default class Component {
     emitSelf(name: string, data: any): void;
     private performEmit;
     private doEmit;
-    updateFromNewElementFromParentRender(toEl: HTMLElement): void;
+    updateFromNewElementFromParentRender(toEl: HTMLElement): boolean;
     onChildComponentModelUpdate(modelName: string, value: any, childComponent: Component): void;
     private isTurboEnabled;
     private tryStartingRequest;

@@ -1912,7 +1912,7 @@ class Component {
     updateFromNewElementFromParentRender(toEl) {
         const props = this.elementDriver.getComponentProps(toEl);
         if (props === null) {
-            return;
+            return false;
         }
         const isChanged = this.valueStore.storeNewPropsFromParent(props);
         const fingerprint = toEl.dataset.liveFingerprintValue;
@@ -1922,6 +1922,7 @@ class Component {
         if (isChanged) {
             this.render();
         }
+        return isChanged;
     }
     onChildComponentModelUpdate(modelName, value, childComponent) {
         if (!childComponent.id) {
