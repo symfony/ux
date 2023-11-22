@@ -5368,7 +5368,7 @@ icss-utils@^5.0.0:
 
 idiomorph@^0.0.9:
   version "0.0.9"
-  resolved "https://npm.apple.com/idiomorph/-/idiomorph-0.0.9.tgz#938d5964031381b0713398fb283aa3754306fa1b"
+  resolved "https://registry.yarnpkg.com/idiomorph/-/idiomorph-0.0.9.tgz#938d5964031381b0713398fb283aa3754306fa1b"
   integrity sha512-X7SGsldE5jQD+peLjNLAnIJDEZtGpuLrNRUBrTWMMnzrx9gwy5U+SCRhaifO2v2Z+8j09IY2J+EYaxHsOLTD0A==
 
 ignore@^5.2.0:
