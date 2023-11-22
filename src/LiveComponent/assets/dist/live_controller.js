@@ -1208,7 +1208,8 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
     childComponents.forEach((childComponent) => {
         childComponentMap.set(childComponent.element, childComponent);
     });
-    Idiomorph.morph(rootFromElement, rootToElement, { callbacks: {
+    Idiomorph.morph(rootFromElement, rootToElement, {
+        callbacks: {
             beforeNodeMorphed: (fromEl, toEl) => {
                 if (!(fromEl instanceof Element) || !(toEl instanceof Element)) {
                     return true;
@@ -1275,7 +1276,8 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                 }
                 return !node.hasAttribute('data-live-ignore');
             },
-        } });
+        },
+    });
     childComponentMap.forEach((childComponent, element) => {
         var _a;
         const childComponentInResult = findChildComponent((_a = childComponent.id) !== null && _a !== void 0 ? _a : '', rootFromElement);
