@@ -592,6 +592,9 @@ var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof win
                 let insertionPoint = oldParent.firstChild;
                 let newChild;
 
+                newParent.children;
+                oldParent.children;
+
                 // run through all the new content
                 while (nextNewChild) {
 
@@ -1205,68 +1208,82 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
     childComponents.forEach((childComponent) => {
         childComponentMap.set(childComponent.element, childComponent);
     });
-    Idiomorph.morph(rootFromElement, rootToElement, {
-        beforeNodeMorphed: (fromEl, toEl) => {
-            if (!(fromEl instanceof Element) || !(toEl instanceof Element)) {
-                return true;
-            }
-            if (fromEl === rootFromElement) {
-                return true;
-            }
-            if (fromEl.hasAttribute('data-live-id')) {
-                if (fromEl.getAttribute('data-live-id') !== toEl.getAttribute('data-live-id')) {
-                    for (const child of fromEl.children) {
-                        child.setAttribute('parent-live-id-changed', '');
+    Idiomorph.morph(rootFromElement, rootToElement, { callbacks: {
+            beforeNodeMorphed: (fromEl, toEl) => {
+                if (!(fromEl instanceof Element) || !(toEl instanceof Element)) {
+                    return true;
+                }
+                if (fromEl === rootFromElement) {
+                    return true;
+                }
+                let idChanged = false;
+                if (fromEl.hasAttribute('data-live-id')) {
+                    if (fromEl.getAttribute('data-live-id') !== toEl.getAttribute('data-live-id')) {
+                        for (const child of fromEl.children) {
+                            child.setAttribute('parent-live-id-changed', '');
+                        }
+                        idChanged = true;
                     }
                 }
-            }
-            if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement) {
-                if (typeof fromEl.__x !== 'undefined') {
-                    if (!window.Alpine) {
-                        throw new Error('Unable to access Alpine.js though the global window.Alpine variable. Please make sure Alpine.js is loaded before Symfony UX LiveComponent.');
+                if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement) {
+                    if (typeof fromEl.__x !== 'undefined') {
+                        if (!window.Alpine) {
+                            throw new Error('Unable to access Alpine.js though the global window.Alpine variable. Please make sure Alpine.js is loaded before Symfony UX LiveComponent.');
+                        }
+                        if (typeof window.Alpine.morph !== 'function') {
+                            throw new Error('Unable to access Alpine.js morph function. Please make sure the Alpine.js Morph plugin is installed and loaded, see https://alpinejs.dev/plugins/morph for more information.');
+                        }
+                        window.Alpine.morph(fromEl.__x, toEl);
                     }
-                    if (typeof window.Alpine.morph !== 'function') {
-                        throw new Error('Unable to access Alpine.js morph function. Please make sure the Alpine.js Morph plugin is installed and loaded, see https://alpinejs.dev/plugins/morph for more information.');
+                    if (childComponentMap.has(fromEl)) {
+                        const childComponent = childComponentMap.get(fromEl);
+                        return !childComponent.updateFromNewElementFromParentRender(toEl) && idChanged;
                     }
-                    window.Alpine.morph(fromEl.__x, toEl);
-                }
-                if (childComponentMap.has(fromEl)) {
-                    const childComponent = childComponentMap.get(fromEl);
-                    childComponent.updateFromNewElementFromParentRender(toEl);
-                    return false;
-                }
-                if (modifiedFieldElements.includes(fromEl)) {
-                    setValueOnElement(toEl, getElementValue(fromEl));
-                }
-                const elementChanges = externalMutationTracker.getChangedElement(fromEl);
-                if (elementChanges) {
-                    elementChanges.applyToElement(toEl);
-                }
-                if (fromEl.nodeName.toUpperCase() !== 'OPTION' && fromEl.isEqualNode(toEl)) {
-                    const normalizedFromEl = cloneHTMLElement(fromEl);
-                    normalizeAttributesForComparison(normalizedFromEl);
-                    const normalizedToEl = cloneHTMLElement(toEl);
-                    normalizeAttributesForComparison(normalizedToEl);
-                    if (normalizedFromEl.isEqualNode(normalizedToEl)) {
+                    if (externalMutationTracker.wasElementAdded(fromEl)) {
+                        fromEl.insertAdjacentElement('afterend', toEl);
                         return false;
                     }
+                    if (modifiedFieldElements.includes(fromEl)) {
+                        setValueOnElement(toEl, getElementValue(fromEl));
+                    }
+                    const elementChanges = externalMutationTracker.getChangedElement(fromEl);
+                    if (elementChanges) {
+                        elementChanges.applyToElement(toEl);
+                    }
+                    if (fromEl.nodeName.toUpperCase() !== 'OPTION' && fromEl.isEqualNode(toEl)) {
+                        const normalizedFromEl = cloneHTMLElement(fromEl);
+                        normalizeAttributesForComparison(normalizedFromEl);
+                        const normalizedToEl = cloneHTMLElement(toEl);
+                        normalizeAttributesForComparison(normalizedToEl);
+                        if (normalizedFromEl.isEqualNode(normalizedToEl)) {
+                            return false;
+                        }
+                    }
                 }
-            }
-            if (fromEl.hasAttribute('parent-live-id-changed')) {
-                fromEl.removeAttribute('parent-live-id-changed');
-                return true;
-            }
-            return !fromEl.hasAttribute('data-live-ignore');
-        },
-        beforeNodeRemoved(node) {
-            if (!(node instanceof HTMLElement)) {
-                return true;
-            }
-            if (externalMutationTracker.wasElementAdded(node)) {
-                return false;
-            }
-            return !node.hasAttribute('data-live-ignore');
-        },
+                if (fromEl.hasAttribute('parent-live-id-changed')) {
+                    fromEl.removeAttribute('parent-live-id-changed');
+                    return true;
+                }
+                return !fromEl.hasAttribute('data-live-ignore');
+            },
+            beforeNodeRemoved(node) {
+                if (!(node instanceof HTMLElement)) {
+                    return true;
+                }
+                if (externalMutationTracker.wasElementAdded(node)) {
+                    return false;
+                }
+                return !node.hasAttribute('data-live-ignore');
+            },
+        } });
+    childComponentMap.forEach((childComponent, element) => {
+        var _a;
+        const childComponentInResult = findChildComponent((_a = childComponent.id) !== null && _a !== void 0 ? _a : '', rootFromElement);
+        if (null === childComponentInResult || element === childComponentInResult) {
+            return;
+        }
+        childComponentInResult === null || childComponentInResult === void 0 ? void 0 : childComponentInResult.replaceWith(element);
+        childComponent.updateFromNewElementFromParentRender(childComponentInResult);
     });
 }
 

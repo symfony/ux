@@ -30,12 +30,14 @@ export function executeMorphdom(
                 return true;
             }
 
+            let idChanged = false;
             // Track children if data-live-id changed
             if (fromEl.hasAttribute('data-live-id')) {
                 if (fromEl.getAttribute('data-live-id') !== toEl.getAttribute('data-live-id')) {
                     for (const child of fromEl.children) {
                         child.setAttribute('parent-live-id-changed', '')
                     }
+                    idChanged = true;
                 }
             }
 
@@ -63,8 +65,11 @@ export function executeMorphdom(
                 if (childComponentMap.has(fromEl)) {
                     const childComponent = childComponentMap.get(fromEl) as Component;
 
-                    childComponent.updateFromNewElementFromParentRender(toEl);
+                    return !childComponent.updateFromNewElementFromParentRender(toEl) && idChanged;
+                }
 
+                if (externalMutationTracker.wasElementAdded(fromEl)) {
+                    fromEl.insertAdjacentElement('afterend', toEl);
                     return false;
                 }
 
@@ -124,4 +129,14 @@ export function executeMorphdom(
             return !node.hasAttribute('data-live-ignore');
         },
     }});
+
+    childComponentMap.forEach((childComponent, element) => {
+        const childComponentInResult = findChildComponent(childComponent.id ?? '', rootFromElement);
+        if (null === childComponentInResult || element === childComponentInResult) {
+            return;
+        }
+
+        childComponentInResult?.replaceWith(element);
+        childComponent.updateFromNewElementFromParentRender(childComponentInResult);
+    });
 }
