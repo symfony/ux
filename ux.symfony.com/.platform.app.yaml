@@ -46,6 +46,8 @@ hooks:
         set -x -e
 
         curl -s https://get.symfony.com/cloud/configurator | (>&2 bash)
+        # temporary until symfony-build runs importmap:install
+        NO_ASSET_MAPPER=1
 
         (>&2 symfony-build)
 
