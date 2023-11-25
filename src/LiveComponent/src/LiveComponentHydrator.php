@@ -439,7 +439,7 @@ final class LiveComponentHydrator
         if ($propMetadata->collectionValueType() && Type::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {
             $collectionClass = $propMetadata->collectionValueType()->getClassName();
             foreach ($value as $key => $objectItem) {
-                $value[$key] = $this->hydrateObjectValue($objectItem, $collectionClass, true, $parentObject::class, sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
+                $value[$key] = $this->hydrateObjectValue($objectItem, $collectionClass, true, $propMetadata->getFormat(), $parentObject::class, sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
             }
         }
 
@@ -461,10 +461,10 @@ final class LiveComponentHydrator
             return $value;
         }
 
-        return $this->hydrateObjectValue($value, $propMetadata->getType(), $propMetadata->allowsNull(), $parentObject::class, $propMetadata->getName(), $parentObject);
+        return $this->hydrateObjectValue($value, $propMetadata->getType(), $propMetadata->allowsNull(), $propMetadata->getFormat(), $parentObject::class, $propMetadata->getName(), $parentObject);
     }
 
-    private function hydrateObjectValue(mixed $value, string $className, bool $allowsNull, string $componentClassForError, string $propertyPathForError, object $component): ?object
+    private function hydrateObjectValue(mixed $value, string $className, bool $allowsNull, ?string $dateFormat, string $componentClassForError, string $propertyPathForError, object $component): ?object
     {
         // enum
         if (is_a($className, \BackedEnum::class, true)) {
@@ -483,6 +483,10 @@ final class LiveComponentHydrator
 
             if (!\is_string($value)) {
                 throw new BadRequestHttpException(sprintf('The model path "%s" was sent an invalid data type "%s" for a date.', $propertyPathForError, get_debug_type($value)));
+            }
+
+            if (null !== $dateFormat) {
+                return $className::createFromFormat($dateFormat, $value);
             }
 
             return new $className($value);
