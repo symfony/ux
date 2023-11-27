@@ -125,7 +125,7 @@
             <span class="sf-toolbar-value">{{ collector.renderCount }}</span>
             <span class="sf-toolbar-info-piece-additional-detail">
                 <span class="sf-toolbar-label">in</span>
-                <span class="sf-toolbar-value">{{ collector.renderTime }}</span>
+                <span class="sf-toolbar-value">{{ collector.renderTime|round }}</span>
                 <span class="sf-toolbar-label">ms</span>
             </span>
         {% endset %}
@@ -165,7 +165,7 @@
             <div class="metric-divider"></div>
             <div class="metric-group">
                 {{ _self.metric(collector.renderCount, "Render Count") }}
-                {{ _self.metric(collector.renderTime, "Render Time", "ms") }}
+                {{ _self.metric(collector.renderTime|round, "Render Time", "ms") }}
             </div>
             <div class="metric-divider"></div>
             <div class="metric-group">

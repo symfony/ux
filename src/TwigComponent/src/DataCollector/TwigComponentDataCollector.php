@@ -88,9 +88,9 @@ class TwigComponentDataCollector extends AbstractDataCollector implements LateDa
         return $this->data['render_count'] ?? 0;
     }
 
-    public function getRenderTime(): int
+    public function getRenderTime(): float
     {
-        return $this->data['render_time'] ?? 0;
+        return (float) ($this->data['render_time'] ?? 0);
     }
 
     private function collectDataFromLogger(): void
@@ -149,7 +149,7 @@ class TwigComponentDataCollector extends AbstractDataCollector implements LateDa
                 $renders[$renderId] += [
                     'render_end' => $profile[0],
                     'render_time' => $renderTime,
-                    'render_memory' => $profile[1],
+                    'render_memory' => (int) $profile[1],
                 ];
 
                 ++$components[$componentName]['render_count'];
