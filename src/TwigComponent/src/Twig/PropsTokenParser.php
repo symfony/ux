@@ -39,11 +39,10 @@ class PropsTokenParser extends AbstractTokenParser
             $names[] = $name;
 
             if (!$stream->nextIf(Token::PUNCTUATION_TYPE)) {
+                $stream->expect(\Twig\Token::BLOCK_END_TYPE);
                 break;
             }
         }
-
-        $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
         return new PropsNode($names, $values, $token->getLine(), $token->getValue());
     }
