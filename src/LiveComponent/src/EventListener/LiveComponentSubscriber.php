@@ -282,6 +282,10 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         $request = $event->getRequest();
         $response = $event->getResponse();
 
+        if (!$event->isMainRequest()) {
+            return;
+        }
+
         if (!$this->isLiveComponentRequest($request)) {
             return;
         }

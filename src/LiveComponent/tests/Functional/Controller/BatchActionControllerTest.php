@@ -154,6 +154,40 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
+    public function testRedirectWithAcceptHeader(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/_components/with_actions', ['query' => ['props' => json_encode($dehydrated->getProps())]])
+            ->assertSuccessful()
+            ->interceptRedirects()
+            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+                $rootElement = $crawler->filter('ul')->first();
+                $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
+
+                $browser->post('/_components/with_actions/_batch', [
+                    'body' => [
+                        'data' => json_encode([
+                            'props' => $liveProps,
+                            'actions' => [
+                                ['name' => 'redirect'],
+                                ['name' => 'exception'],
+                            ],
+                        ]),
+                    ],
+                    'headers' => [
+                        'Accept' => ['application/vnd.live-component+html'],
+                        'X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value'),
+                    ],
+                ]);
+            })
+            ->assertStatus(204)
+            ->assertHeaderContains('X-Live-Redirect', '1')
+        ;
+    }
+
     public function testException(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
