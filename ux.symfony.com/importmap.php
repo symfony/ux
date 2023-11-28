@@ -110,10 +110,10 @@ return [
         'version' => '3.59.1',
     ],
     'highlight.js/lib/core' => [
-        'version' => '10.3.0',
+        'version' => '11.7.0',
     ],
     'highlight.js/lib/languages/javascript' => [
-        'version' => '10.3.0',
+        'version' => '11.7.0',
     ],
     'intl-messageformat' => [
         'version' => '10.3.5',
