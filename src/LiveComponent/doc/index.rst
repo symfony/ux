@@ -1944,8 +1944,6 @@ Override the specific block for comment items:
 
     <div {{ attributes }}>
         {{ form_start(form) }}
-
-        {{ form_start(form) }}
             {{ form_row(form.title)
 
             <h3>Comments:</h3>
