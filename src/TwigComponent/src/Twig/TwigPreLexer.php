@@ -263,6 +263,10 @@ class TwigPreLexer
      */
     private function consume(string $string): bool
     {
+        if (strlen($this->input) >= $this->position) {
+            return false;
+        }
+
         if ($string[0] !== $this->input[$this->position]) {
             return false;
         }
