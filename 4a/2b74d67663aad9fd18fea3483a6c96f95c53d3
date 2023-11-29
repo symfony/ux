@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-08T20:32:43Z
+
+After this one is merged and deployed, i'll fix all those 2-cols blocks with flex / align-items, so we don't need to hard-code the height anymore.
+
+But as it will touch many templates / blocks i'll wait a bit :)
+
+And.... i LOVE this new install command :)
