@@ -5,8 +5,6 @@
             {% component Terminal with {bottomPadding: 20} %}
                 {% block content %}
                     composer require {{ package.composerName }}
-                    npm install --force
-                    npm run watch
                 {% endblock %}
             {% endcomponent %}
         </div>
