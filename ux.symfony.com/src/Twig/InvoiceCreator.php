@@ -133,7 +133,7 @@ class InvoiceCreator extends AbstractController
             // it's new! Let's redirect to the edit page
             $this->addFlash('live_demo_success', 'Invoice saved!');
 
-            return $this->redirectToRoute('app_live_components_invoice', [
+            return $this->redirectToRoute('app_demo_live_component_invoice', [
                 'id' => $this->invoice->getId(),
             ]);
         }
