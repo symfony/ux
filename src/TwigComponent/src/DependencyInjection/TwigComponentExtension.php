@@ -53,7 +53,8 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
             throw new LogicException('The TwigBundle is not registered in your application. Try running "composer require symfony/twig-bundle".');
         }
 
-        $config = $this->processConfiguration($this, $configs);
+        $configuration = $this->getConfiguration($configs, $container);
+        $config = $this->processConfiguration($configuration, $configs);
         $defaults = $config['defaults'];
         if ($defaults === [self::DEPRECATED_DEFAULT_KEY]) {
             trigger_deprecation('symfony/ux-twig-component', '2.13', 'Not setting the "twig_component.defaults" config option is deprecated. Check the documentation for an example configuration.');
@@ -187,5 +188,10 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
             ->end();
 
         return $treeBuilder;
+    }
+
+    public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface
+    {
+        return $this;
     }
 }
