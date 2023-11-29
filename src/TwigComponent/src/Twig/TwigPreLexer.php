@@ -263,10 +263,6 @@ class TwigPreLexer
      */
     private function consume(string $string): bool
     {
-        if ($string[0] !== $this->input[$this->position]) {
-            return false;
-        }
-
         $stringLength = \strlen($string);
         if (substr($this->input, $this->position, $stringLength) === $string) {
             $this->position += $stringLength;
@@ -405,8 +401,16 @@ class TwigPreLexer
         $start = $this->position;
 
         $depth = 1;
+        $inComment = false;
         while ($this->position < $this->length) {
-            if ('</twig:block' === substr($this->input, $this->position, 12)) {
+            if ($inComment && '#}' === substr($this->input, $this->position, 2)) {
+                $inComment = false;
+            }
+            if (!$inComment && '{#' === substr($this->input, $this->position, 2)) {
+                $inComment = true;
+            }
+
+            if (!$inComment && '</twig:block>' === substr($this->input, $this->position, 13)) {
                 if (1 === $depth) {
                     break;
                 } else {
@@ -414,7 +418,7 @@ class TwigPreLexer
                 }
             }
 
-            if ('{% endblock %}' === substr($this->input, $this->position, 14)) {
+            if (!$inComment && '{% endblock %}' === substr($this->input, $this->position, 14)) {
                 if (1 === $depth) {
                     // in this case, we want to advanced ALL the way beyond the endblock
                     $this->position += 14;
@@ -424,11 +428,11 @@ class TwigPreLexer
                 }
             }
 
-            if ('<twig:block' === substr($this->input, $this->position, 11)) {
+            if (!$inComment && '<twig:block' === substr($this->input, $this->position, 11)) {
                 ++$depth;
             }
 
-            if ('{% block' === substr($this->input, $this->position, 8)) {
+            if (!$inComment && '{% block' === substr($this->input, $this->position, 8)) {
                 ++$depth;
             }
 
