@@ -2319,12 +2319,12 @@ There are three ways to emit an event:
 
 1. From Twig:
 
-.. code-block:: html+twig
+   .. code-block:: html+twig
 
-    <button
-        data-action="live#emit"
-        data-event="productAdded"
-    >
+       <button
+           data-action="live#emit"
+           data-event="productAdded"
+       >
 
 2. From your PHP component via ``ComponentToolsTrait``::
 
