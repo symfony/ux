@@ -70,7 +70,7 @@ file to control the template directory for your components:
         anonymous_template_directory: 'components/'
         defaults:
             # Namespace & directory for components
-            App\Twig\Components: 'components/'
+            App\Twig\Components\: 'components/'
 
 Component Basics
 ----------------
