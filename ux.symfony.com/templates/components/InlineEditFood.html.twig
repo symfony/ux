@@ -27,8 +27,8 @@
                         class="btn btn-outline btn-outline-{{ error ? 'danger' : 'secondary' }}"
                     >Save</button>
 
-                    {% if this.getError('food.name') %}
-                        <div class="invalid-feedback">{{ this.getError('food.name').message }}</div>
+                    {% if error %}
+                        <div class="invalid-feedback">{{ error.message }}</div>
                     {% endif %}
                 </div>
                 <div class="form-text">Clear the field to trigger validation!</div>
