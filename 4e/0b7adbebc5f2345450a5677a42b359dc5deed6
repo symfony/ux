@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-30T21:13:06Z
+
+All credits to you for signaling the bug and doing the PR :))
+
+@weaverryan should we send a bugfix release soon for this one, as it will happen to every user using StimulusBundle without AssetMapper installed no ?
