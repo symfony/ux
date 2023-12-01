@@ -1144,7 +1144,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Use the format option to control the date format' => [function () {
             return HydrationTest::create(new class() {
-                #[LiveProp(writable: true, format: 'Y-m-d')]
+                #[LiveProp(writable: true, format: 'Y. m. d.')]
                 public \DateTime $createdAt;
 
                 public function __construct()
@@ -1156,13 +1156,13 @@ final class LiveComponentHydratorTest extends KernelTestCase
                    'createdAt' => new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York')),
                ])
                 ->assertDehydratesTo([
-                   'createdAt' => '2023-03-05',
+                   'createdAt' => '2023. 03. 05.',
                ])
                 ->userUpdatesProps([
-                   'createdAt' => '2024-04-06',
+                   'createdAt' => '2024. 04. 06.',
                ])
                 ->assertObjectAfterHydration(function (object $object) {
-                    self::assertSame('2024-04-06', $object->createdAt->format('Y-m-d'));
+                    self::assertSame('2024. 04. 06.', $object->createdAt->format('Y. m. d.'));
                 })
             ;
         }];
