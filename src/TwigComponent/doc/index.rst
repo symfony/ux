@@ -812,7 +812,7 @@ Component Attributes
 A common need for components is to configure/render attributes for the
 root node. Attributes are any props that are passed when rendering that
 cannot be mounted on the component itself. This extra data is added to a
-``ComponentAttributes`` object that'ss available as ``attributes`` in your
+``ComponentAttributes`` object that's available as ``attributes`` in your
 component's template:
 
 .. code-block:: html+twig
