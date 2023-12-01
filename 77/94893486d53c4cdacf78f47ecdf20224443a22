@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2023-11-20T05:36:24Z
+
+What if I want to override the `data-action` totally, will it be possible? :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-22T00:22:36Z
+
+> What if I want to override the data-action totally, will it be possible? :)
+
+Nope :). It's a valid question. Right now, `data-controller` and `class` are already "merge". This is hardcoded in. I've talked with @kbond a bit about adding some sort of API to replace vs merge. That's something we need to add. In the mean time, this is the "closer to proper" behavior.
+
+So, we can't have it both ways right now. Currently, it's not possible to merge a `data-action` from the inside with a `data-action` from the outside. However, at the very least, you could introduce some other "prop" flag and use that to turn on / off an internal `data-action` after this PR. Since `data-controller` merges, this is closer to the correct behavior.
