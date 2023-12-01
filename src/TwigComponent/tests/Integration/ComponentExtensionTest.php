@@ -208,6 +208,14 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('<p>foo</p>', $output);
     }
 
+    public function testComponentPropsWithTrailingComma(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_props_trailing_comma.html.twig');
+
+        $this->assertStringContainsString('Hello foo, bar, and foobar', $output);
+        $this->assertStringContainsString('Hello FOO, 123, and 456', $output);
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [
