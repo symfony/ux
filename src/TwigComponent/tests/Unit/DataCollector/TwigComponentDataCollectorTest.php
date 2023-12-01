@@ -51,7 +51,7 @@ class TwigComponentDataCollectorTest extends TestCase
         $this->assertIsIterable($dataCollector->getRenders());
         $this->assertEmpty($dataCollector->getRenders());
 
-        $this->assertSame(0, $dataCollector->getRenderTime());
+        $this->assertEquals(0.0, $dataCollector->getRenderTime());
     }
 
     public function testReset(): void
