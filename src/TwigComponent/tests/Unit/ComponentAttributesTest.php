@@ -146,6 +146,28 @@ final class ComponentAttributesTest extends TestCase
         ], $attributes->all());
     }
 
+    public function testCanAddStimulusActionViaStimulusAttributes(): void
+    {
+        // if PHP less than 8.1, skip
+        if (version_compare(\PHP_VERSION, '8.1.0', '<')) {
+            $this->markTestSkipped('PHP 8.1+ required');
+        }
+
+        $attributes = new ComponentAttributes([
+            'class' => 'foo',
+            'data-action' => 'live#foo',
+        ]);
+
+        $stimulusAttributes = new StimulusAttributes(new Environment(new ArrayLoader()));
+        $stimulusAttributes->addAction('foo', 'barMethod');
+        $attributes = $attributes->defaults([...$stimulusAttributes]);
+
+        $this->assertEquals([
+            'class' => 'foo',
+            'data-action' => 'foo#barMethod live#foo',
+        ], $attributes->all());
+    }
+
     public function testBooleanBehaviour(): void
     {
         $attributes = new ComponentAttributes(['disabled' => true]);
