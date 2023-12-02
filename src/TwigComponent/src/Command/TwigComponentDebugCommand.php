@@ -153,9 +153,7 @@ EOF
         $finderTemplates->files()->in($anonymousPath)->notPath('/_');
         foreach ($finderTemplates as $template) {
             $component = str_replace('/', ':', $template->getRelativePathname());
-            if (str_ends_with($component, '.html.twig')) {
-                $component = substr($component, 0, -10);
-            }
+            $component = preg_replace('/(\.html)?\.twig$/', '', $component);
             $components[$component] = $component;
         }
 
