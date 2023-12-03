@@ -27,6 +27,7 @@ use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\Twig\PropsNode;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 
 #[AsCommand(name: 'debug:twig-component', description: 'Display components and them usages for an application')]
 class TwigComponentDebugCommand extends Command
@@ -137,8 +138,13 @@ EOF
             $metadata = $this->componentFactory->metadataFor($name);
             $components[$name] ??= $metadata;
             $template = $metadata->getTemplate();
-            $resolvedPath = $loader->getSourceContext($template)->getPath();
-            $usedResolvedTemplatePaths[$resolvedPath] = true;
+
+            try {
+                $resolvedPath = $loader->getSourceContext($template)->getPath();
+                $usedResolvedTemplatePaths[$resolvedPath] = true;
+            } catch (LoaderError) {
+                // Ignore unresolvable paths.
+            }
         }
 
         foreach ($this->findAnonymousComponents() as $name) {
