@@ -11,6 +11,8 @@
 -   Added `tom-select/dist/css/tom-select.bootstrap4.css` to `autoimport` - this
     will cause this to appear in your `controllers.json` file by default, but disabled
     see.
+-   Allow passing `extra_options` key in an array passed as a `3rd` argument of the `->add()` method.
+    It will be used during the Ajax call to fetch results.
 
 ## 2.13.2
 

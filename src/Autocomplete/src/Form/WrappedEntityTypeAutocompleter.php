@@ -22,17 +22,18 @@ use Symfony\Component\PropertyAccess\PropertyPathInterface;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadata;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadataFactory;
 use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;
-use Symfony\UX\Autocomplete\EntityAutocompleterInterface;
+use Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface;
 
 /**
  * An entity auto-completer that wraps a form type to get its information.
  *
  * @internal
  */
-final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterface
+final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocompleterInterface
 {
     private ?FormInterface $form = null;
     private ?EntityMetadata $entityMetadata = null;
+    private array $options = [];
 
     public function __construct(
         private string $formType,
@@ -139,7 +140,7 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
     private function getForm(): FormInterface
     {
         if (null === $this->form) {
-            $this->form = $this->formFactory->create($this->formType);
+            $this->form = $this->formFactory->create($this->formType, options: $this->options);
         }
 
         return $this->form;
@@ -167,5 +168,14 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
         }
 
         return $this->entityMetadata;
+    }
+
+    public function setOptions(array $options): void
+    {
+        if (null !== $this->form) {
+            throw new \LogicException('The options can only be set before the form is created.');
+        }
+
+        $this->options = $options;
     }
 }

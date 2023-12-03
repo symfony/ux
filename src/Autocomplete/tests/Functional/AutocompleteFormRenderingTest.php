@@ -31,7 +31,7 @@ class AutocompleteFormRenderingTest extends KernelTestCase
             ->throwExceptions()
             ->get('/test-form')
             ->assertElementAttributeContains('#product_category', 'data-controller', 'custom-autocomplete symfony--ux-autocomplete--autocomplete')
-            ->assertElementAttributeContains('#product_category', 'data-symfony--ux-autocomplete--autocomplete-url-value', '/test/autocomplete/category_autocomplete_type')
+            ->assertElementAttributeContains('#product_category', 'data-symfony--ux-autocomplete--autocomplete-url-value', '/test/autocomplete/category_autocomplete_type?extra_options=')
             ->assertElementAttributeContains('#product_category', 'data-symfony--ux-autocomplete--autocomplete-min-characters-value', '2')
             ->assertElementAttributeContains('#product_category', 'data-symfony--ux-autocomplete--autocomplete-max-results-value', '25')
 
@@ -122,5 +122,59 @@ class AutocompleteFormRenderingTest extends KernelTestCase
             ])
             ->assertElementCount('#product_ingredients option', 0)
         ;
+    }
+
+    public function testItUsesPassedExtraOptions()
+    {
+        $ingredient1 = IngredientFactory::createOne(['name' => 'Flour']);
+        $ingredient2 = IngredientFactory::createOne(['name' => 'Sugar']);
+        $ingredient3 = IngredientFactory::createOne(['name' => 'Modified Flour']);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test-form')
+            ->assertElementCount('#product_ingredients option', 0)
+            ->assertNotContains('Flour')
+            ->assertNotContains('Sugar')
+            ->assertNotContains('Modified Flour')
+            // request all three ingredients
+            ->post('/test-form', [
+                'body' => [
+                    'product' => [
+                        'ingredients' => [
+                            (string) $ingredient1->getId(),
+                            (string) $ingredient2->getId(),
+                            (string) $ingredient3->getId(),
+                        ],
+                    ],
+                ],
+            ])
+            // assert that "Modified Flour" is not included
+            ->assertElementCount('#product_ingredients option', 2)
+            ->assertContains('Flour')
+            ->assertContains('Sugar')
+            ->assertNotContains('Modified Flour')
+        ;
+    }
+
+    public function testItReturnsErrorWhenSendingMalformedExtraOptions(): void
+    {
+        $extraOptionsWithoutChecksum = $this->encodeData(['foo' => 'bar']);
+        $extraOptionsWithInvalidChecksum = $this->encodeData(['foo' => 'bar', '@checksum' => 'invalid']);
+        $extraOptionsWithValidChecksum = $this->encodeData(['foo' => 'bar', '@checksum' => 'O2nYjcGr/l8GmUuYUSfE52hoyEL0NtDhBzUbn17KVHQ=']);
+
+        $this->browser()
+            ->post(sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $extraOptionsWithoutChecksum))
+            ->assertStatus(400)
+            ->post(sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $extraOptionsWithInvalidChecksum))
+            ->assertStatus(400)
+            ->post(sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $extraOptionsWithValidChecksum))
+            ->assertStatus(200)
+        ;
+    }
+
+    private function encodeData(array $data): string
+    {
+        return base64_encode(json_encode($data));
     }
 }

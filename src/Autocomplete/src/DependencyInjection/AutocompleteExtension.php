@@ -21,6 +21,7 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\UX\Autocomplete\AutocompleteResultsExecutor;
 use Symfony\UX\Autocomplete\AutocompleterRegistry;
+use Symfony\UX\Autocomplete\Checksum\ChecksumCalculator;
 use Symfony\UX\Autocomplete\Controller\EntityAutocompleteController;
 use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadataFactory;
@@ -116,6 +117,7 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
                 new Reference('ux.autocomplete.autocompleter_registry'),
                 new Reference('ux.autocomplete.results_executor'),
                 new Reference('router'),
+                new Reference('ux.autocomplete.checksum_calculator'),
             ])
             ->addTag('controller.service_arguments')
         ;
@@ -126,6 +128,13 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
                 new Reference('maker.doctrine_helper', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ])
             ->addTag('maker.command')
+        ;
+
+        $container
+            ->register('ux.autocomplete.checksum_calculator', ChecksumCalculator::class)
+            ->setArguments([
+                '%kernel.secret%',
+            ])
         ;
     }
 
@@ -149,6 +158,7 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
         $container
             ->register('ux.autocomplete.choice_type_extension', AutocompleteChoiceTypeExtension::class)
             ->setArguments([
+                new Reference('ux.autocomplete.checksum_calculator'),
                 new Reference('translator', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ])
             ->addTag('form.type_extension');
