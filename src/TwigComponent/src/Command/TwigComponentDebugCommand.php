@@ -130,11 +130,33 @@ EOF
     private function findComponents(): array
     {
         $components = [];
-        foreach ($this->componentClassMap as $class => $name) {
-            $components[$name] ??= $this->componentFactory->metadataFor($name);
+        $usedResolvedTemplatePaths = [];
+        $loader = $this->twig->getLoader();
+
+        foreach ($this->componentClassMap as $name) {
+            $metadata = $this->componentFactory->metadataFor($name);
+            $components[$name] ??= $metadata;
+            $template = $metadata->getTemplate();
+            $resolvedPath = $loader->getSourceContext($template)->getPath();
+            $usedResolvedTemplatePaths[$resolvedPath] = true;
         }
-        foreach ($this->findAnonymousComponents() as $name => $template) {
-            $components[$name] ??= $this->componentFactory->metadataFor($name);
+
+        foreach (array_keys($this->findAnonymousComponents()) as $name) {
+            // Ignore if anonymous component name is same as a class based component.
+            if (isset($components[$name])) {
+                continue;
+            }
+
+            $metadata = $this->componentFactory->metadataFor($name);
+            $template = $metadata->getTemplate();
+            $resolvedPath = $loader->getSourceContext($template)->getPath();
+
+            // Ignore if this template is used by a class based component.
+            if (isset($usedResolvedTemplatePaths[$resolvedPath])) {
+                continue;
+            }
+
+            $components[$name] = $metadata;
         }
 
         return $components;
