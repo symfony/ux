@@ -141,7 +141,7 @@ EOF
             $usedResolvedTemplatePaths[$resolvedPath] = true;
         }
 
-        foreach (array_keys($this->findAnonymousComponents()) as $name) {
+        foreach ($this->findAnonymousComponents() as $name) {
             // Ignore if anonymous component name is same as a class based component.
             if (isset($components[$name])) {
                 continue;
@@ -163,9 +163,9 @@ EOF
     }
 
     /**
-     * Return a map of component name => template.
+     * Returns a component names inside anonymous component directory.
      *
-     * @return array<string, string>
+     * @return list<string>
      */
     private function findAnonymousComponents(): array
     {
@@ -173,10 +173,11 @@ EOF
         $anonymousPath = $this->twigTemplatesPath.'/'.$this->anonymousDirectory;
         $finderTemplates = new Finder();
         $finderTemplates->files()->in($anonymousPath)->notPath('/_');
+
         foreach ($finderTemplates as $template) {
             $component = str_replace('/', ':', $template->getRelativePathname());
             $component = preg_replace('/(\.html)?\.twig$/', '', $component);
-            $components[$component] = $component;
+            $components[] = $component;
         }
 
         return $components;
