@@ -155,7 +155,15 @@ export default class implements PluginInterface {
     getLoadingDirectives(element: HTMLElement|SVGElement) {
         const loadingDirectives: ElementLoadingDirectives[] = [];
 
-        element.querySelectorAll('[data-loading]').forEach((element => {
+        let matchingElements = element.querySelectorAll('[data-loading]');
+
+        // querySelectorAll doesn't include the element itself
+        if (element.hasAttribute('data-loading')) {
+            // add element at the beginning of matchingElements
+            matchingElements = [element, ...matchingElements];
+        }
+
+        matchingElements.forEach((element => {
             if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
                 throw new Error('Invalid Element Type');
             }
