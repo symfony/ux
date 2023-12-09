@@ -48,6 +48,35 @@ describe('LiveController data-loading Tests', () => {
         expect(getByTestId(test.element, 'loading-element')).not.toBeVisible();
     });
 
+    it('executes basic loading functionality on root element', async () => {
+        const test = await createTest({food: 'pizza'}, (data: any) => `
+            <div ${initComponent(data)} data-loading="addClass(opacity-20)">
+                <span>I like: ${data.food}</span> 
+                <button data-action="live#$render">Re-Render</button>
+            </div>
+        `);
+
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
+                // to help detect when rendering is done
+                data.food = 'popcorn';
+            })
+            // delay so we can check loading
+            .delayResponse(50);
+
+        // wait for element to hide itself on start up
+        await waitFor(() => expect(test.element).not.toHaveClass('opacity-20'));
+
+        getByText(test.element, 'Re-Render').click();
+        // element should instantly be visible
+        expect(test.element).toHaveClass('opacity-20');
+
+        // wait for loading to finish
+        await waitFor(() => expect(test.element).toHaveTextContent('I like: popcorn'));
+        // loading element should now be hidden
+        expect(test.element).not.toHaveClass('opacity-20');
+    });
+
     it('takes into account the "action" modifier', async () => {
         const test = await createTest({}, (data: any) => `
             <div ${initComponent(data)}> 

@@ -2392,7 +2392,11 @@ class LoadingPlugin {
     }
     getLoadingDirectives(element) {
         const loadingDirectives = [];
-        element.querySelectorAll('[data-loading]').forEach((element => {
+        let matchingElements = element.querySelectorAll('[data-loading]');
+        if (element.hasAttribute('data-loading')) {
+            matchingElements = [element, ...matchingElements];
+        }
+        matchingElements.forEach((element => {
             if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
                 throw new Error('Invalid Element Type');
             }
