@@ -99,7 +99,17 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
 
     public function getValue(object $entity): string
     {
-        return $this->getEntityMetadata()->getIdValue($entity);
+        $choiceValue = $this->getFormOption('choice_value');
+
+        if (\is_string($choiceValue) || $choiceValue instanceof PropertyPathInterface) {
+            return $this->propertyAccessor->getValue($entity, $choiceValue);
+        }
+
+        if ($choiceValue instanceof Cache\ChoiceValue) {
+            $choiceValue = $choiceValue->getOption();
+        }
+
+        return $choiceValue($entity);
     }
 
     public function isGranted(Security $security): bool
