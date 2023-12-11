@@ -77,7 +77,7 @@
         "@symfony/ux-toggle-password": {
             "toggle-password": {
                 "enabled": true,
-                "fetch": "eager",
+                "fetch": "lazy",
                 "autoimport": {
                     "@symfony/ux-toggle-password/dist/style.min.css": true
                 }
