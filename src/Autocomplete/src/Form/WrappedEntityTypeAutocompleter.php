@@ -14,7 +14,7 @@ namespace Symfony\UX\Autocomplete\Form;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Form\ChoiceList\Factory\Cache\ChoiceLabel;
+use Symfony\Component\Form\ChoiceList\Factory\Cache;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -89,7 +89,7 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
             return $this->propertyAccessor->getValue($entity, $choiceLabel);
         }
 
-        if ($choiceLabel instanceof ChoiceLabel) {
+        if ($choiceLabel instanceof Cache\ChoiceLabel) {
             $choiceLabel = $choiceLabel->getOption();
         }
 
