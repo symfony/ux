@@ -1,0 +1,26 @@
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-11-30T15:57:14Z
+
+Hum, I think if we have a problem with comments we also have an issue with the verbatim tag? And I think an easier solution could be if the pointer consumes `{#` then moves the pointer position to the next `#}` as we do at the top. With this method, you can remove all your condition
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-30T20:13:13Z
+
+I just wanted to fix the specific issue there.. and i guess a lot more people uses block in comments (in a dev phase it is a frequent thing) than verbatim :)
+
+But it's an issue indeed.
+
+I do believe we can fix _and improve_ some things here... but i'd suggest to do it a bit differently and that seems to me another (bigger) discussion.
+
+WDYT ?
+We can open an issue if you want to discuss this next move ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-30T20:22:32Z
+
+> Hum, I think if we have a problem with comments we also have an issue with the verbatim tag? And I think an easier solution could be if the pointer consumes `{#` then moves the pointer position to the next `#}` as we do at the top. With this method, you can remove all your condition
+
+Sadly not if we want to handle properly verbatim + comments + strings +  ....
