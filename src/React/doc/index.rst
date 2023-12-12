@@ -18,8 +18,11 @@ Installation
     This package works best with WebpackEncore. To use it with AssetMapper, see
     :ref:`Using with AssetMapper <using-with-asset-mapper>`.
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
-Then install the bundle using Composer and Symfony Flex:
+.. caution::
+
+    Before you start, make sure you have `StimulusBundle configured in your app`_.
+
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
