@@ -1,0 +1,36 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-16T00:41:45Z
+
+Imho, the "caution" may be a bit _too strong_ (red block)... maybe a "info" should do the job ?
+
+I made a quick check (i was not sure) so, for information, those packages require `symfony/stimulus-bundle` in their composer file, so the risk of installing them without Stimulus bundle is null
+
+* Chartjs
+* Notify
+* React
+* Svelte
+* Turbo
+* Vue
+
+(not saying that does not deserve a message in the doc)
+
+And those ones do not
+
+* Autocomplete
+* CropperJS
+* Dropzone
+* LazyImage
+* LiveComponent
+* Swup
+* TogglePassword
+* Translator
+* Typed
+
+Finally (to cover all the packages), TwigComponent does not depend / use / require StimulusBundle.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-12-01T20:10:55Z
+
+This can definitely be a gotcha. We could require stimulus-bundle in the rest of the packages. It is not technically required, but it is *practically* required.
