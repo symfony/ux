@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\TwigComponent\Twig\TwigPreLexer;
+use Twig\Error\SyntaxError;
 
 final class TwigPreLexerTest extends TestCase
 {
@@ -23,6 +24,26 @@ final class TwigPreLexerTest extends TestCase
     {
         $lexer = new TwigPreLexer();
         $this->assertSame($expectedOutput, $lexer->preLexComponents($input));
+    }
+
+    /**
+     * @dataProvider getInvalidSyntaxTests
+     */
+    public function testPreLexThrowsExceptionOnInvalidSyntax(string $input, string $expectedMessage): void
+    {
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        $lexer = new TwigPreLexer();
+        $lexer->preLexComponents($input);
+    }
+
+    public static function getInvalidSyntaxTests(): iterable
+    {
+        yield 'component_with_unclosed_block' => [
+            '<twig:foo name="bar">{% block a %}</twig:foo>',
+            'Expected closing tag "</twig:foo>" not found at line 1.',
+        ];
     }
 
     public static function getLexTests(): iterable
@@ -60,6 +81,11 @@ final class TwigPreLexerTest extends TestCase
         yield 'traditional_blocks_around_component_do_not_confuse' => [
             'Hello {% block foo_block %}Foo{% endblock %}<twig:foo />{% block bar_block %}Bar{% endblock %}',
             'Hello {% block foo_block %}Foo{% endblock %}{{ component(\'foo\') }}{% block bar_block %}Bar{% endblock %}',
+        ];
+
+        yield 'component_with_commented_block' => [
+            '<twig:foo name="bar">{#  {% block baz %}#}</twig:foo>',
+            '{% component \'foo\' with { name: \'bar\' } %}{#  {% block baz %}#}{% endcomponent %}',
         ];
 
         yield 'component_with_component_inside_block' => [
