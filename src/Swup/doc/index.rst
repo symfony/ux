@@ -156,8 +156,8 @@ Stimulus controller:
 
         disconnect() {
             // You should always remove listeners when the controller is disconnected to avoid side-effects
-            this.element.removeEventListener('swup:pre-connect', this._onConnect);
-            this.element.removeEventListener('swup:connect', this._onPreConnect);
+            this.element.removeEventListener('swup:connect', this._onConnect);
+            this.element.removeEventListener('swup:pre-connect', this._onPreConnect);
         }
 
         _onPreConnect(event) {
