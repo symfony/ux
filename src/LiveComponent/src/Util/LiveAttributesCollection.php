@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Util;
 
 use Twig\Environment;
+use Twig\Extension\EscaperExtension;
 
 /**
  * An array of attributes that can eventually be returned as an escaped array.
@@ -99,6 +100,11 @@ final class LiveAttributesCollection
 
     private function escapeAttribute(string $value): string
     {
-        return twig_escape_filter($this->twig, $value, 'html_attr');
+        if (method_exists(EscaperExtension::class, 'escape')) {
+            return EscaperExtension::escape($this->twig, $value, 'html_attr');
+        }
+
+        // since twig/twig 3.9.0: Using the internal "twig_escape_filter" function is deprecated.
+        return (string) twig_escape_filter($this->twig, $value, 'html_attr');
     }
 }
