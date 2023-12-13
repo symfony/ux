@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.x
+
+-   Added Typescript controllers support
+
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"
