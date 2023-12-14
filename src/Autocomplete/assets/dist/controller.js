@@ -317,6 +317,9 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             item: function (item) {
                 return `<div>${item.text}</div>`;
             },
+            loading_more: () => {
+                return `<div class="loading-more-results">${this.loadingMoreTextValue}</div>`;
+            },
             no_more_results: () => {
                 return `<div class="no-more-results">${this.noMoreResultsTextValue}</div>`;
             },
@@ -342,6 +345,7 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
 default_1.values = {
     url: String,
     optionsAsHtml: Boolean,
+    loadingMoreText: String,
     noResultsFoundText: String,
     noMoreResultsText: String,
     minCharacters: Number,

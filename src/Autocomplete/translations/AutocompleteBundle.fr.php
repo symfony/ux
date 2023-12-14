@@ -10,6 +10,7 @@
  */
 
 return [
+    'Loading more results...' => 'Chargement d\'autres résultats...',
     'No results found' => 'Aucun résultat trouvé',
     'No more results' => 'Aucun autre résultat trouvé',
 ];

@@ -213,6 +213,10 @@ e.g. ``FoodAutocompleteField`` from above):
     an autocomplete-Ajax endpoint (e.g. for a custom ``ChoiceType``), then set this
     to change the field into an AJAX-powered select.
 
+``loading_more_text`` (default: 'Loading more results...')
+    Rendered at the bottom of the list while fetching more results. This message is
+    automatically translated using the ``AutocompleteBundle`` domain.
+
 ``no_results_found_text`` (default: 'No results found')
     Rendered when no matching results are found. This message is automatically translated
     using the ``AutocompleteBundle`` domain.

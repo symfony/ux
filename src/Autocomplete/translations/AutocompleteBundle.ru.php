@@ -10,6 +10,7 @@
  */
 
 return [
+    // 'Loading more results...' => 'Loading more results...',
     'No results found' => 'Совпадений не найдено',
     // 'No more results' => 'No more results',
 ];

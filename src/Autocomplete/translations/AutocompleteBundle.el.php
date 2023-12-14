@@ -10,6 +10,7 @@
  */
 
 return [
+    // 'Loading more results...' => 'Loading more results...',
     'No results found' => 'Δεν βρέθηκαν αποτελέσματα',
     // 'No more results' => 'No more results',
 ];

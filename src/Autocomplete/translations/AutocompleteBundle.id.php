@@ -10,6 +10,7 @@
  */
 
 return [
+    // 'Loading more results...' => 'Loading more results...',
     'No results found' => 'Tidak ada hasil yang ditemukan',
     'No more results' => 'Tidak ada hasil lagi',
 ];

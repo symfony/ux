@@ -10,6 +10,7 @@
  */
 
 return [
+    'Loading more results...' => 'További találatok betöltése...',
     'No results found' => 'Nincs találat',
     'No more results' => 'Nincs több találat',
 ];
