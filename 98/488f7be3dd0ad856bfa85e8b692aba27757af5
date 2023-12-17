@@ -1,0 +1,106 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-07T14:00:14Z
+
+THANK YOU for getting this rolling ❤️. To make LiveComponents stable (which we will do shortly), the most important changes are those that could be BC breaks (which we need to do now). This is one of the main ones left. I'll check this out a bit later today.
+
+> 1 - test/controller/child.test.ts > Component parent -> child initialization and rendering tests > replaces old child with new child if the "id" changes
+> In idiomorph they don't use the id the same way morphdom does. So this is the expected behavior, I am not sure if we should replicate the old behavior or not?
+
+Hmm. It is probably important that the child is replaced if `data-live-id` changes. But I'm not sure that `id is important, and yes, I think this was maybe just something that morphdom did that we adopted. What if we change the test to look for `data-live-id` instead of `id`?
+
+And sorry for closing - tripped over my keyboard ;)
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-11-07T16:44:28Z
+
+> Hmm. It is probably important that the child is replaced if data-live-id changes. But I'm not sure that id is important, and yes, I think this was maybe just something that morphdom did that we adopted. What if we change the test to look for data-live-idinstead ofid`?
+
+This test is already implemented and worked, thanks to some tweaks 😁
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-11-08T13:47:01Z
+
+After looking at this PR, in order to finish it, what I need from you @weaverryan: is to look at the 3 last failing tests and tell me if this is a behavior we should keep or not. Sorry to ask you that, but I am missing some context and can't understand why this test is made for. Thanks you 😁
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-08T14:39:22Z
+
+> Sorry to ask you that, but I am missing some context and can't understand why this test is made for. Thanks you
+
+Perfectly ok - this is complex functionality that I created! I will get back to you today.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-08T20:30:26Z
+
+Wow nice work @WebMamba  <3
+
+i'll try tomorrow, hoping my demo is still working and that has no impact on the DOM/CSS behaviour 😅
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-09T11:52:05Z
+
+> i'll try tomorrow, hoping my demo is still working and that has no impact on the DOM/CSS behaviour 😅
+
+That will be an *excellent* test for this :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-09T12:08:32Z
+
+> 2 - test/controller/child.test.ts > Component parent -> child initialization and rendering tests > tracks various children correctly, even if position changes
+
+Yes, this is important. The key thing is that each child in this test has a `data-live-id` attribute, like `data-live-id="1"` and `data-live-id="2"`. During a re-render, if these change position (e.g. they swap order), the frontend needs to be smart enough to use the `data-live-id` like a primary key. For example, suppose we start with:
+
+```html
+<div data-live-id="1" ....>Child component 1</div>
+Other content
+<div data-live-id="2" ....>Child component 2</div>
+```
+
+Then, after a re-render, the HTML is suddenly:
+
+```html
+<div data-live-id="2" ....>Child component 2</div>
+Other content
+<div data-live-id="1" ....>Child component 1</div>
+```
+
+When handling this, the system needs to be smart enough to realize that "Child component 1" is still the `data-live-id="1"` element, even though it moved. With morphdom, we set `data-live-id` as a "node key" - https://github.com/symfony/ux/pull/1255/files#diff-2b908dc8da942269988fea0e6d18a6bddac3329dc9a64254ba3b6deb57534db3L36 - so morphdom "just handled this". Having `data-live-id` as a "primary key" for all elements (not just child components) is pretty critical. Sometimes people use that in complex situations to force some element to re-render vs morph by changing the `data-live-id` between re-renders on purpose.
+
+> test/controller/render-with-external-changes.test.ts > LiveController rendering with external changes tests > will not remove an added element
+> Looks like a similar issue to the problem above. Idiomorph doesn't need to morph every child, so the child is not added to the ExternalMutationTracker?
+
+Hmm, I'm not sure what the cause is, but the test should pass / the behavior is still desired. The `ExternalMutationTracker` works independent of the morph system. After the component loads, `ExternalMutationTracker` sits and watches for any DOM mutations. Then, later, after a re-render, it's *used* to help the morph system. So, I think the statement `Idiomorph doesn't need to morph every child, so the child is not added to the ExternalMutationTracker` is incorrect, if that helps :). This feels to me like we're not handling the newly added element that is inside `ExternalMutationTracker` when we use `idiomorph`. Though, I still see that logic - https://github.com/symfony/ux/pull/1255/files#diff-2b908dc8da942269988fea0e6d18a6bddac3329dc9a64254ba3b6deb57534db3R113 - so I'm not sure what the problem is
+
+Let me know if this helps or not. I'm glad we're tackling this now
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-10T21:07:50Z
+
+⚠️  This could be related to other things... I'll do some in-depth A/B tests sunday and bring some metrics to the table.
+
+---
+
+So for now i have some bugs/differences with an embedded livecomponent, which is sometimes voided ...
+... but the biggest difference is a sensible difference in performance.. every actions in the browser (impacting live components) feeling significantly slower.
+
+So i insist, it may be related to other things on my machine, but i write it here by precaution (and to remember to continue those tests soon)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-21T16:56:09Z
+
+Sorry did not have really the time to make a "scientific" comparaison... and i have big performances issues with something between
+- macOS
+- symfony cli
+- firefox
+- symfony 7
+
+And i cannot find what / why.... so don't wait for me on this one i won't have time before some time :))
