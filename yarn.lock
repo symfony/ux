@@ -5437,6 +5437,11 @@ icss-utils@^5.0.0:
   resolved "https://registry.yarnpkg.com/icss-utils/-/icss-utils-5.1.0.tgz#c6be6858abd013d768e98366ae47e25d5887b1ae"
   integrity sha512-soFhflCVWLfRNOPU3iv5Z9VUdT44xFRbzjLsEzSr5AQmgqPMTHdU3PMT1Cf1ssx8fLNJDA1juftYl+PUcv3MqA==
 
+idiomorph@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/idiomorph/-/idiomorph-0.0.9.tgz#938d5964031381b0713398fb283aa3754306fa1b"
+  integrity sha512-X7SGsldE5jQD+peLjNLAnIJDEZtGpuLrNRUBrTWMMnzrx9gwy5U+SCRhaifO2v2Z+8j09IY2J+EYaxHsOLTD0A==
+
 ignore@^5.2.0:
   version "5.2.4"
   resolved "https://registry.yarnpkg.com/ignore/-/ignore-5.2.4.tgz#a291c0c6178ff1b960befe47fcdec301674a6324"
@@ -6869,11 +6874,6 @@ moo-color@^1.0.2:
   integrity sha512-i/+ZKXMDf6aqYtBhuOcej71YSlbjT3wCO/4H1j8rPvxDJEifdwgg5MaFyu6iYAT8GBZJg2z0dkgK4YMzvURALQ==
   dependencies:
     color-name "^1.1.4"
-
-morphdom@^2.6.1:
-  version "2.7.0"
-  resolved "https://registry.yarnpkg.com/morphdom/-/morphdom-2.7.0.tgz#9ef0c4bc15ac8725df398d127c6984f62e7f89e8"
-  integrity sha512-8L8DwbdjjWwM/aNqj7BSoSn4G7SQLNiDcxCnMWbf506jojR6lNQ5YOmQqXEIE8u3C492UlkN4d0hQwz97+M1oQ==
 
 mri@^1.1.0:
   version "1.2.0"

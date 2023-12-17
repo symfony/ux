@@ -437,7 +437,7 @@ describe('LiveController rendering Tests', () => {
         const selectOption2 = test.element.querySelector('#select_option_2') as HTMLSelectElement;
 
         // verify the placeholder of the select option 2 is selected
-        expect(selectOption2.children[0].hasAttribute('selected')).toBe(true);
+        expect(selectOption2.children[0].selected).toBe(true);
 
         // verify the selectedIndex of the select option 2 is 0
         expect(selectOption2.selectedIndex).toBe(0);
