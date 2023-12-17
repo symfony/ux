@@ -50,8 +50,8 @@ final class LiveComponentHydrator
         private iterable $hydrationExtensions,
         private PropertyAccessorInterface $propertyAccessor,
         private LiveComponentMetadataFactory $liveComponentMetadataFactory,
-        private NormalizerInterface|DenormalizerInterface $normalizer,
-        private string $secret
+        private NormalizerInterface|DenormalizerInterface|null $serializer,
+        private string $secret,
     ) {
     }
 
@@ -357,8 +357,14 @@ final class LiveComponentHydrator
             if (!interface_exists(NormalizerInterface::class)) {
                 throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the Serializer component is not installed. Try running "composer require symfony/serializer".', $propMetadata->getName(), $parentObject::class));
             }
+            if (null === $this->serializer) {
+                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but no serializer has been set.', $propMetadata->getName(), $parentObject::class));
+            }
+            if (!$this->serializer instanceof NormalizerInterface) {
+                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the given serializer does not implement NormalizerInterface.', $propMetadata->getName(), $parentObject::class));
+            }
 
-            return $this->normalizer->normalize($value, 'json', $propMetadata->serializationContext());
+            return $this->serializer->normalize($value, 'json', $propMetadata->serializationContext());
         }
 
         if (\is_bool($value) || null === $value || is_numeric($value) || \is_string($value)) {
@@ -438,8 +444,14 @@ final class LiveComponentHydrator
             if (!interface_exists(DenormalizerInterface::class)) {
                 throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the Serializer component is not installed. Try running "composer require symfony/serializer".', $propMetadata->getName(), $parentObject::class));
             }
+            if (null === $this->serializer) {
+                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but no serializer has been set.', $propMetadata->getName(), $parentObject::class));
+            }
+            if (!$this->serializer instanceof DenormalizerInterface) {
+                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the given serializer does not implement DenormalizerInterface.', $propMetadata->getName(), $parentObject::class));
+            }
 
-            return $this->normalizer->denormalize($value, $propMetadata->getType(), 'json', $propMetadata->serializationContext());
+            return $this->serializer->denormalize($value, $propMetadata->getType(), 'json', $propMetadata->serializationContext());
         }
 
         if ($propMetadata->collectionValueType() && Type::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {

@@ -101,7 +101,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 tagged_iterator(LiveComponentBundle::HYDRATION_EXTENSION_TAG),
                 new Reference('property_accessor'),
                 new Reference('ux.live_component.metadata_factory'),
-                new Reference('serializer'),
+                new Reference('serializer', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 '%kernel.secret%',
             ])
         ;
