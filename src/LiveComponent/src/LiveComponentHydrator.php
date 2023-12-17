@@ -354,6 +354,10 @@ final class LiveComponentHydrator
         }
 
         if ($propMetadata->useSerializerForHydration()) {
+            if (!interface_exists(NormalizerInterface::class)) {
+                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the Serializer component is not installed. Try running "composer require symfony/serializer".', $propMetadata->getName(), $parentObject::class));
+            }
+
             return $this->normalizer->normalize($value, 'json', $propMetadata->serializationContext());
         }
 
@@ -374,8 +378,6 @@ final class LiveComponentHydrator
             }
 
             if (!$this->isValueValidDehydratedValue($value)) {
-                $badKeys = $this->getNonScalarKeys($value, $propMetadata->getName());
-                $badKeysText = implode(', ', array_map(fn ($key) => sprintf('%s: %s', $key, $badKeys[$key]), array_keys($badKeys)));
                 throw new \LogicException(throw new \LogicException(sprintf('Unable to dehydrate value of type "%s" for property "%s" on component "%s". Change this to a simpler type of an object that can be dehydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', get_debug_type($value), $propMetadata->getName(), $parentObject::class)));
             }
 
@@ -433,6 +435,10 @@ final class LiveComponentHydrator
         }
 
         if ($propMetadata->useSerializerForHydration()) {
+            if (!interface_exists(DenormalizerInterface::class)) {
+                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the Serializer component is not installed. Try running "composer require symfony/serializer".', $propMetadata->getName(), $parentObject::class));
+            }
+
             return $this->normalizer->denormalize($value, $propMetadata->getType(), 'json', $propMetadata->serializationContext());
         }
 
@@ -530,23 +536,6 @@ final class LiveComponentHydrator
         }
 
         return true;
-    }
-
-    private function getNonScalarKeys(array $value, string $path = ''): array
-    {
-        $nonScalarKeys = [];
-        foreach ($value as $k => $v) {
-            if (\is_array($v)) {
-                $nonScalarKeys = array_merge($nonScalarKeys, $this->getNonScalarKeys($v, sprintf('%s.%s', $path, $k)));
-                continue;
-            }
-
-            if (!$this->isValueValidDehydratedValue($v)) {
-                $nonScalarKeys[sprintf('%s.%s', $path, $k)] = get_debug_type($v);
-            }
-        }
-
-        return $nonScalarKeys;
     }
 
     /**
