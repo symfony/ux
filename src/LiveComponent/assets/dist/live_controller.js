@@ -592,9 +592,6 @@ var commonjsGlobal = typeof globalThis !== 'undefined' ? globalThis : typeof win
                 let insertionPoint = oldParent.firstChild;
                 let newChild;
 
-                newParent.children;
-                oldParent.children;
-
                 // run through all the new content
                 while (nextNewChild) {
 
