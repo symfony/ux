@@ -28,6 +28,8 @@ use Symfony\UX\StimulusBundle\Ux\UxPackageReader;
  */
 class ControllersMapGenerator
 {
+    private const FILENAME_REGEX = '/^.*[-_](controller\.[jt]s)$/';
+
     public function __construct(
         private AssetMapperInterface $assetMapper,
         private UxPackageReader $uxPackageReader,
@@ -66,12 +68,14 @@ class ControllersMapGenerator
         $finder = new Finder();
         $finder->in($this->controllerPaths)
             ->files()
-            ->name('/^.*[-_]controller\.js$/');
+            ->name(self::FILENAME_REGEX);
 
         $controllersMap = [];
         foreach ($finder as $file) {
             $name = $file->getRelativePathname();
-            $name = str_replace(['_controller.js', '-controller.js'], '', $name);
+            // use regex to extract 'controller'-postfix including extension
+            preg_match(self::FILENAME_REGEX, $name, $matches);
+            $name = str_replace(['_'.$matches[1], '-'.$matches[1]], '', $name);
             $name = str_replace(['_', '/'], ['-', '--'], $name);
 
             $asset = $this->assetMapper->getAssetFromSourcePath($file->getRealPath());
