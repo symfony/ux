@@ -68,7 +68,7 @@ return [
         'version' => '3.0.6',
     ],
     'delegate-it' => [
-        'version' => '6.0.1',
+        'version' => '3.0.1',
     ],
     '@swup/debug-plugin' => [
         'version' => '3.0.0',
@@ -155,5 +155,8 @@ return [
     'cropperjs/dist/cropper.min.css' => [
         'version' => '1.6.1',
         'type' => 'css',
+    ],
+    'scheduler' => [
+        'version' => '0.23.0',
     ],
 ];

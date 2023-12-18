@@ -11,6 +11,6 @@ import { trans, getLocale, setLocale, setLocaleFallbacks } from '@symfony/ux-tra
 
 setLocaleFallbacks(localeFallbacks);
 
-export { trans };
+export { trans, setLocale };
 
 export * from '@app/translations';
