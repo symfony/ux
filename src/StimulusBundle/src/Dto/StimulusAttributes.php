@@ -14,6 +14,7 @@ declare(strict_types=1);
 namespace Symfony\UX\StimulusBundle\Dto;
 
 use Twig\Environment;
+use Twig\Extension\EscaperExtension;
 
 /**
  * Helper to build Stimulus-related HTML attributes.
@@ -214,6 +215,11 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
 
     private function escapeAsHtmlAttr(mixed $value): string
     {
+        if (method_exists(EscaperExtension::class, 'escape')) {
+            return EscaperExtension::escape($this->env, $value, 'html_attr');
+        }
+
+        // since twig/twig 3.9.0: Using the internal "twig_escape_filter" function is deprecated.
         return (string) twig_escape_filter($this->env, $value, 'html_attr');
     }
 
