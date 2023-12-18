@@ -1,5 +1,9 @@
 {% extends 'packageBase.html.twig' %}
 
+{% block importmap %}
+    {{ importmap('app-react') }}
+{% endblock %}
+
 {% block package_header %}
     {% component PackageHeader with {
         package: 'react',

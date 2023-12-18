@@ -1,5 +1,9 @@
 {% extends 'packageBase.html.twig' %}
 
+{% block importmap %}
+    {{ importmap('app-svelte') }}
+{% endblock %}
+
 {% block package_header %}
     {% component PackageHeader with {
         package: 'svelte',
