@@ -1,0 +1,272 @@
+---------------------------------------------------------------------------
+
+by kbond at 2023-10-25T21:03:24Z
+
+Nice work here! I'm curious how multiple components using this feature would behave. What about multiple of the same component?
+
+---------------------------------------------------------------------------
+
+by squrious at 2023-10-26T08:57:35Z
+
+> Nice work here! I'm curious how multiple components using this feature would behave. What about multiple of the same component?
+Thanks!
+
+Hum that's actually a very good question :smile:
+
+I think this is related to the _alias_ feature in some way; and we should be able to configure/override some part of the mapping in the component attributes. Like, maybe
+```html
+{% component('MyComponent', { query-mapping: {"prop": "alias1}}) %}
+{% component('MyComponent', { query-mapping: {"prop": "alias2}}) %}
+```
+
+---------------------------------------------------------------------------
+
+by squrious at 2023-10-26T10:08:43Z
+
+Actually I'm wondering if the DTO support really worth it. For the moment it's quite limited:
+- As we should not use dots in query parameters, we use `_`. This is kind of naming strategy that should be abstracted.
+- Nested DTO properties are not allowed. This is mainly because I didn't yet implement any config to _select_ some properties of a DTO prop, so it avoids problems such as self recursion etc.
+
+The DTO support, if shipped with this feature, seems close to the Serializer concepts (max depth, projection, sub context, naming strategy, etc.). On the other hand, handling scalar values is really easy. So handling a custom DTO in a custom way, so the developer can eventually manage the scalar properties he/she wants, should be easy too.
+
+That's all to say, I suggest to drop the incomplete support of DTOs, and instead provide an extension point (an interface or some tag injection) so :
+- The default extractor handles scalars and arrays of scalars
+- Additional strategies could be added in custom services by the developer
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-26T10:38:38Z
+
+> Actually I'm wondering if the DTO support really worth it. For the moment it's quite limited
+
+My immediate reaction when I saw you had DTO support was "wow" but also "that sounds like it may get super complex" :).
+
+> That's all to say, I suggest to drop the incomplete support of DTOs, and instead provide an extension point (an interface or some tag injection) so :
+
+Agreed! Though I am also not *that* concerned immediately about adding the extension point. If you have something obvious in mind, sure, let's add it. But it is not a need.
+
+---------------------------------------------------------------------------
+
+by norkunas at 2023-10-26T10:57:33Z
+
+> Actually I'm wondering if the DTO support really worth it. For the moment it's quite limited:
+>
+> * As we should not use dots in query parameters, we use `_`. This is kind of naming strategy that should be abstracted.
+> * Nested DTO properties are not allowed. This is mainly because I didn't yet implement any config to _select_ some properties of a DTO prop, so it avoids problems such as self recursion etc.
+>
+> The DTO support, if shipped with this feature, seems close to the Serializer concepts (max depth, projection, sub context, naming strategy, etc.). On the other hand, handling scalar values is really easy. So handling a custom DTO in a custom way, so the developer can eventually manage the scalar properties he/she wants, should be easy too.
+>
+> That's all to say, I suggest to drop the incomplete support of DTOs, and instead provide an extension point (an interface or some tag injection) so :
+>
+> * The default extractor handles scalars and arrays of scalars
+> * Additional strategies could be added in custom services by the developer
+
+:disappointed:
+
+Live component could set same urls as like submitting a form with GET method where query string is set to `parent[field][..]` etc. with brackets, I'd expect to work this same way, so I could refactor our live search to REAL live search :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-26T11:11:53Z
+
+> Live component could set same urls as like submitting a form with GET method where query string is set to parent[field][..] etc. with brackets, I'd expect to work this same way, so I could refactor our live search to REAL live search :)
+
+As I said, I'm interested in getting a rich feature without going crazy on complexities. However, @norkunas may have a point here. We already have a dehydration system that is able to convert a DTO to an array of simple data - e.g. `AddressDto` dehydrates to `['street' => '404 Page Drive', 'city' => 'London', ...]`. So, in theory, if `AddressDto` has `url: true`, could we set its "query string mapping" to be `address[street]=404%20Page%20Drive&address[city]=London`?
+
+---------------------------------------------------------------------------
+
+by squrious at 2023-10-26T13:47:48Z
+
+> > Live component could set same urls as like submitting a form with GET method where query string is set to parent[field][..] etc. with brackets, I'd expect to work this same way, so I could refactor our live search to REAL live search :)
+>
+> As I said, I'm interested in getting a rich feature without going crazy on complexities. However, @norkunas may have a point here. We already have a dehydration system that is able to convert a DTO to an array of simple data - e.g. `AddressDto` dehydrates to `['street' => '404 Page Drive', 'city' => 'London', ...]`. So, in theory, if `AddressDto` has `url: true`, could we set its "query string mapping" to be `address[street]=404%20Page%20Drive&address[city]=London`?
+
+Seems legit, associative arrays should already be supported. That would have been a better solution that the underscores for the current DTO support. I'll take a look :)
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-10-27T10:00:50Z
+
+> We already have a dehydration system that is able to convert a DTO to an array of simple data - e.g. AddressDto dehydrates to ['street' => '404 Page Drive', 'city' => 'London', ...]. So, in theory, if AddressDto has url: true, could we set its "query string mapping" to be address[street]=404%20Page%20Drive&address[city]=London
+
+I agree here, but I think we should do some refactoring on the Hydrator class instead of building new hydration logic. We don't want to maintain two hydrations logic since we want this feature to mirror the rest. So we should add some public function to hydrade or dehydrate function.
+
+What do you think about making some refactoring? I have the following implementation in mind:
+- we keep the `LiveComponentHydrator`
+- this `LiveComponentHydrator` takes as argument a tag iterator of `PropertyHydrator`
+a `PropertyHydrator` is an object that implemented the following interface:
+
+````php
+  interface PropertyHydratorInterface
+{
+    public function hydrate(): mixed;
+
+    public function dehydrate(): array;
+
+    public function support(): bool;
+}
+```
+- The `LiveComponentHydrator` foreach properties of the component loop over the tag iterator of `PropertyHydrator` find the one that support the property type.
+This is a similar implementation we already did for the DoctrineHydrator. We can have the following `PropertyHydrator`:
+DateTime, Enum, Scalar, Dto, Collection, Array.
+What do you think?
+
+---------------------------------------------------------------------------
+
+by squrious at 2023-10-30T16:20:29Z
+
+Hi there!
+
+I addressed most of your comments, in separated commits:
+- Pass query mapping with standard Stimulus value
+- Don't update the URL on first load even if some props are initialized on the PHP side
+- Use the component hydrator to parse query string data on first render
+
+The latter now allows to initialize complex objects from the URL, with the `prop[foo]=some+string&prop[bar]=42` syntax. It also simplifies a lot the piece of code for the mapping, as we don't need the type guessing logic anymore. I still need to set up more complex use cases to test edge cases :wink:
+
+---------------------------------------------------------------------------
+
+by squrious at 2023-11-03T13:57:26Z
+
+Hi! I made some updates, especially on the URL utils. I ported the code from Livewire [as suggested](https://github.com/symfony/ux/pull/1230#discussion_r1372978397), which brings some improvements:
+- No need to "expand" prop names anymore, we can set complex parameters directly in the URL. I guess it could also better handle dynamically added nested complex objects, as we don't need to know the data structure before updating query params.
+- Array values are explicitly indexed in the URL. That's fine but also required additional sort on server side, as `InputBag::all()` doesn't sort the values by itself.
+- Parameters order is kept between URL changes (former implementation always put objects and arrays at the end of the query string).
+
+The only main change I made to the original code is to avoid null values in the URL. I found it annoying that setting a single property in a DTO brings all other uninitialized values in the query string. Furthermore, depending on the input type of the prop, nulls may be wrongly casted (got the case with a numeric input filled with `0` because of this).
+
+Also, now the URL is updated once after render. But in Livewire, it seems it is updated on each prop change, because all props may have their own history strategy. Not sure about how we could handle this in our feature?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-06T20:13:55Z
+
+> Also, now the URL is updated once after render. But in Livewire, it seems it is updated on each prop change, because all props may have their own history strategy. Not sure about how we could handle this in our feature?
+
+Hmm, that's a good point. Though, if I have 2 props that *both* will use `history: true`, does Livewire actually add *two* entries into the history (even if both prop changes resulted from a single re-render)? You don't need to actually dig in and answer that, but that looks weird to me. If I change `search` and `mode` and *then* click a button to re-render, that should result in just one history entry.
+
+But what if `search` is `history: true` and `mode` is `history: false`? Obviously, if I ONLY change `mode`, then no new history entry should be made. And if I ONLY change `search`, then a new history entry *should* be added. But what if I change both at the same time and *then* re-render? I think the correct answer is that one new history entry should be added. So, by this logic (and please tell me if you disagree), we *should* update the URL for all props at the same time. And if even *one* of the changed props has `history: true`, then we would use `pushState()` to add a new history entry.
+
+---------------------------------------------------------------------------
+
+by squrious at 2023-11-07T13:20:21Z
+
+> I think the correct answer is that one new history entry should be added. So, by this logic (and please tell me if you disagree), we should update the URL for all props at the same time. And if even one of the changed props has history: true, then we would use pushState() to add a new history entry.
+
+That seems to me the better way to go. Thanks for your advises! I keep this in mind for the future implementation of the `history` feature.
+
+---------------------------------------------------------------------------
+
+by squrious at 2023-11-08T14:00:34Z
+
+> Nice work here! I'm curious how multiple components using this feature would behave. What about multiple of the same component?
+
+Hello! I made some experimentation on my local project to handle the case of multiple components. I think we should handle an optional attribute to prefix all parameter names in the component (so it acts like a "scope"). Thought about something like:
+
+```html
+<twig:MyComponent query-param-prefix='prefix_'>
+```
+So the URL looks like `?prefix_prop1=foo`.
+
+And maybe we could also leverage the special `key` attribute as a shortcut for a such attribute?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-09T15:55:56Z
+
+That seems reasonable. Though, if 2 components are on the same page and are using the `url` functionality, as long as their parameter names don't collide, won't it work already? If `ComponentA` is adding a `search` param and `ComponentB` is adding a `page` param, if the URL is currently `?search=hello&page=1` and `ComponentA` re-renders, will the current implementation "keep" the `page` param - e.g. update it to `?search=changed&page=1`?
+
+Also, I'm super busy this week - but this is an important PR. As far as you know, is this ready to go (other than needing a rebase - thanks!) and is it waiting for a detailed review?
+
+---------------------------------------------------------------------------
+
+by squrious at 2023-11-09T17:02:41Z
+
+> That seems reasonable. Though, if 2 components are on the same page and are using the `url` functionality, as long as their parameter names don't collide, won't it work already? If `ComponentA` is adding a `search` param and `ComponentB` is adding a `page` param, if the URL is currently `?search=hello&page=1` and `ComponentA` re-renders, will the current implementation "keep" the `page` param - e.g. update it to `?search=changed&page=1`?
+
+Yes, I confirm that two different components can share the URL if their parameters don't collide. I added an implementation that uses the special `query-param-prefix` attribute to prefix parameters, and used `key` as a shortcut (but it is easily removable).
+
+> Also, I'm super busy this week - but this is an important PR. As far as you know, is this ready to go (other than needing a rebase - thanks!) and is it waiting for a detailed review?
+
+Rebase done :wink:
+
+I think the current code runs well and is tested enough. We already discussed the expected behaviors a lot so it should be fine. But I added two more commits which may need a quick check, if you have the time of course!
+- [aff83f2](https://github.com/symfony/ux/pull/1230/commits/aff83f258ce1e0b98a3122e7aceae22900088214) : Simplify the mapping structure on PHP side, and fix some edge cases in URL data management on JS side
+- [23d4b7c](https://github.com/symfony/ux/pull/1230/commits/23d4b7c9b124a69e7f046124503fefaddd10df24): The prefix attribute implementation mentioned above
+
+Btw, I also worked on the other features (keep, alias, history) and they work pretty nicely.  I can create a new PR when this one gets merged :)
+
+---------------------------------------------------------------------------
+
+by squrious at 2023-11-15T16:57:33Z
+
+> Down to the small stuff. I played with this and it works FANTASTICALLY - super excited to have this!
+
+I'm glad to hear that!
+
+Latest commit handles bc break for TwigComponent and fix empty params removal :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-29T06:24:10Z
+
+Sorry for the flood i did not start thinking i'd write many comments :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-29T21:25:20Z
+
+> You can also check my [demo app](https://github.com/squrious/symfony-ux-demo-live-url) to try the feature.
+
+Finally took the time to install it and play a bit and .... this demo is 🔥 !!  (this PR too)
+
+---------------------------------------------------------------------------
+
+by squrious at 2023-12-01T09:15:26Z
+
+@smnandre Updates are coming, I compile all fixes in a single commit ;)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-12-01T18:26:43Z
+
+Not sure yet about those things (is there something or ... not at all)
+
+But could you explain me what happens if:
+* someone adds any query parameters to the _component endpoint ? should they be used ?
+* someone has a component with a non writable field BUT queryMapping = true  ?
+* someone has a component with a writable field AND queryMapping = true ?
+
+My intuition would be "it must be writable if a query can change that value" but i'm not sure if some use cases contredict that
+
+On the opposite, i think the "standard" live hydration starts by setting values, before hydrating the "new ones"... Would that not interfere in a way with the query data ?
+
+---------------------------------------------------------------------------
+
+by squrious at 2023-12-04T08:38:54Z
+
+>     someone adds any query parameters to the _component endpoint ? should they be used ?
+
+You mean the route used by the LiveComponent bundle to render components? I'd say it should not be processed at all.
+
+> My intuition would be "it must be writable if a query can change that value" but i'm not sure if some use cases contredict that
+
+You can consider a prop that is not writable directly from the component but can be updated on server side. For example, an array whom items can be added through an input field and deleted with a button, but with a LiveAction. It is _possible_, even if I'd tend to avoid in favor of a stimulus controller.
+
+> On the opposite, i think the "standard" live hydration starts by setting values, before hydrating the "new ones"... Would that not interfere in a way with the query data ?
+
+I don't think there could be interference here, because the LiveComponentHydrator is used only on live updates. The query data are used on the first load, and at this point the component is mounted with the regular TwigComponent's factory.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-12-18T19:22:58Z
+
+Sorry - one last change :p. Can you rebase? We have a conflict, I believe, from #1341. Then we'll get this merged!
+
+---------------------------------------------------------------------------
+
+by squrious at 2023-12-19T08:38:21Z
+
+> Sorry - one last change :p. Can you rebase? We have a conflict, I believe, from #1341. Then we'll get this merged!
+
+Should be ok now ;)
