@@ -1,0 +1,44 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2023-12-16T07:51:36Z
+
+⚠️  ~do not merge for now... i may have a problem with the loading order...~
+
+Update: good
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-12-18T18:44:46Z
+
+This seems to work now with dedicated entrypoint "extending" app.js
+
+```js
+// app-svelte.js
+import {registerSvelteControllerComponents} from '@symfony/ux-svelte';
+
+import './app.js';
+
+registerSvelteControllerComponents();
+```
+
+--
+
+Info/note:
+
+We could also compose things, like that:
+
+```twig
+{% extends 'packageBase.html.twig' %}
+
+{% block importmap %}
+    {{ importmap(['app', 'app-react']) }}
+{% endblock %}
+```
+
+```js
+// app-react.js
+
+import {registerReactControllerComponents} from '@symfony/ux-react';
+
+registerReactControllerComponents();
+```
