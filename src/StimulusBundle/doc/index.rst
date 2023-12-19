@@ -44,7 +44,7 @@ necessary files. If not, or you're curious, see :ref:`Manual Setup <manual-insta
 Usage
 -----
 
-You can now create custom Stimulus controllers inside of the ``assets/controllers.``
+You can now create custom Stimulus controllers inside of the ``assets/controllers``
 directory. In fact, you should have an example controller there already: ``hello_controller.js``:
 
 .. code-block:: javascript
@@ -70,6 +70,13 @@ will activate.
 
 There's a *lot* more to learn about Stimulus. See the `Stimulus Documentation`_
 for all the goodies.
+
+TypeScript Controllers
+~~~~~~~~~~~~~~~~~~~~~~
+
+If you want to use `TypeScript`_ to define your controllers, you can! You only need to install and setup the
+`sensiolabs/typescript-bundle`_. Make sure to add the ``assets/controllers`` path to the `sensiolabs_typescript.source_dir`
+configuration, create your controller in that directory and you're good to go.
 
 .. _ux-packages:
 
@@ -541,3 +548,5 @@ it will normalize it:
 .. _`Vue`: https://vuejs.org/
 .. _`stimulus-use`: https://stimulus-use.github.io/stimulus-use
 .. _`stimulus-components`: https://stimulus-components.netlify.app/
+.. _`TypeScript`: https://www.typescriptlang.org/
+.. _`sensiolabs/typescript-bundle`: https://github.com/sensiolabs/AssetMapperTypeScriptBundle
