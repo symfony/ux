@@ -19,6 +19,7 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
 use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -226,6 +227,71 @@ final class LiveComponentHydrator
         return $attributes;
     }
 
+    /**
+     * Hydrate a value from a dehydrated value.
+     *
+     * Depending on the prop configuration, the value may be hydrated by a custom method or the Serializer component.
+     *
+     * @internal
+     *
+     * @throws SerializerExceptionInterface
+     */
+    public function hydrateValue(mixed $value, LivePropMetadata $propMetadata, object $parentObject): mixed
+    {
+        if ($propMetadata->hydrateMethod()) {
+            if (!method_exists($parentObject, $propMetadata->hydrateMethod())) {
+                throw new \LogicException(sprintf('The "%s" object has a hydrateMethod of "%s" but the method does not exist.', $parentObject::class, $propMetadata->hydrateMethod()));
+            }
+
+            return $parentObject->{$propMetadata->hydrateMethod()}($value);
+        }
+
+        if ($propMetadata->useSerializerForHydration()) {
+            if (!interface_exists(DenormalizerInterface::class)) {
+                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the Serializer component is not installed. Try running "composer require symfony/serializer".', $propMetadata->getName(), $parentObject::class));
+            }
+            if (null === $this->serializer) {
+                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but no serializer has been set.', $propMetadata->getName(), $parentObject::class));
+            }
+            if (!$this->serializer instanceof DenormalizerInterface) {
+                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the given serializer does not implement DenormalizerInterface.', $propMetadata->getName(), $parentObject::class));
+            }
+
+            if (null === $propMetadata->getType()) {
+                throw new \LogicException(sprintf('The "%s::%s" object should be hydrated with the Serializer, but no type could be guessed.', $parentObject::class, $propMetadata->getName()));
+            }
+
+            return $this->serializer->denormalize($value, $propMetadata->getType(), 'json', $propMetadata->serializationContext());
+        }
+
+        if ($propMetadata->collectionValueType() && Type::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {
+            $collectionClass = $propMetadata->collectionValueType()->getClassName();
+            foreach ($value as $key => $objectItem) {
+                $value[$key] = $this->hydrateObjectValue($objectItem, $collectionClass, true, $propMetadata->getFormat(), $parentObject::class, sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
+            }
+        }
+
+        // no type? no hydration
+        if (!$propMetadata->getType()) {
+            return $value;
+        }
+
+        if (null === $value) {
+            return null;
+        }
+
+        if (\is_string($value) && $propMetadata->isBuiltIn() && \in_array($propMetadata->getType(), ['int', 'float', 'bool'], true)) {
+            return self::coerceStringValue($value, $propMetadata->getType(), $propMetadata->allowsNull());
+        }
+
+        // for all other built-ins: int, boolean, array, return as is
+        if ($propMetadata->isBuiltIn()) {
+            return $value;
+        }
+
+        return $this->hydrateObjectValue($value, $propMetadata->getType(), $propMetadata->allowsNull(), $propMetadata->getFormat(), $parentObject::class, $propMetadata->getName(), $parentObject);
+    }
+
     public function addChecksumToData(array $data): array
     {
         $data[self::CHECKSUM_KEY] = $this->calculateChecksum($data);
@@ -428,58 +494,6 @@ final class LiveComponentHydrator
         }
 
         return $dehydratedObjectValues;
-    }
-
-    private function hydrateValue(mixed $value, LivePropMetadata $propMetadata, object $parentObject): mixed
-    {
-        if ($propMetadata->hydrateMethod()) {
-            if (!method_exists($parentObject, $propMetadata->hydrateMethod())) {
-                throw new \LogicException(sprintf('The "%s" object has a hydrateMethod of "%s" but the method does not exist.', $parentObject::class, $propMetadata->hydrateMethod()));
-            }
-
-            return $parentObject->{$propMetadata->hydrateMethod()}($value);
-        }
-
-        if ($propMetadata->useSerializerForHydration()) {
-            if (!interface_exists(DenormalizerInterface::class)) {
-                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the Serializer component is not installed. Try running "composer require symfony/serializer".', $propMetadata->getName(), $parentObject::class));
-            }
-            if (null === $this->serializer) {
-                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but no serializer has been set.', $propMetadata->getName(), $parentObject::class));
-            }
-            if (!$this->serializer instanceof DenormalizerInterface) {
-                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the given serializer does not implement DenormalizerInterface.', $propMetadata->getName(), $parentObject::class));
-            }
-
-            return $this->serializer->denormalize($value, $propMetadata->getType(), 'json', $propMetadata->serializationContext());
-        }
-
-        if ($propMetadata->collectionValueType() && Type::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {
-            $collectionClass = $propMetadata->collectionValueType()->getClassName();
-            foreach ($value as $key => $objectItem) {
-                $value[$key] = $this->hydrateObjectValue($objectItem, $collectionClass, true, $propMetadata->getFormat(), $parentObject::class, sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
-            }
-        }
-
-        // no type? no hydration
-        if (!$propMetadata->getType()) {
-            return $value;
-        }
-
-        if (null === $value) {
-            return null;
-        }
-
-        if (\is_string($value) && $propMetadata->isBuiltIn() && \in_array($propMetadata->getType(), ['int', 'float', 'bool'], true)) {
-            return self::coerceStringValue($value, $propMetadata->getType(), $propMetadata->allowsNull());
-        }
-
-        // for all other built-ins: int, boolean, array, return as is
-        if ($propMetadata->isBuiltIn()) {
-            return $value;
-        }
-
-        return $this->hydrateObjectValue($value, $propMetadata->getType(), $propMetadata->allowsNull(), $propMetadata->getFormat(), $parentObject::class, $propMetadata->getName(), $parentObject);
     }
 
     private function hydrateObjectValue(mixed $value, string $className, bool $allowsNull, ?string $dateFormat, string $componentClassForError, string $propertyPathForError, object $component): ?object

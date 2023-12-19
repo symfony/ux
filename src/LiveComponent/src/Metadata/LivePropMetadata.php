@@ -30,6 +30,7 @@ final class LivePropMetadata
         private bool $isBuiltIn,
         private bool $allowsNull,
         private ?Type $collectionValueType,
+        private bool $queryStringMapping,
     ) {
     }
 
@@ -51,6 +52,11 @@ final class LivePropMetadata
     public function allowsNull(): bool
     {
         return $this->allowsNull;
+    }
+
+    public function queryStringMapping(): bool
+    {
+        return $this->queryStringMapping;
     }
 
     public function calculateFieldName(object $component, string $fallback): string

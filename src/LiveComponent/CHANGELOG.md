@@ -15,6 +15,7 @@
 -   Fix instantiating LiveComponentMetadata multiple times.
 -   Change JavaScript package to `type: module`.
 -   Throwing an error when setting an invalid model name.
+-   Add support for URL binding in `LiveProp`
 
 ## 2.12.0
 

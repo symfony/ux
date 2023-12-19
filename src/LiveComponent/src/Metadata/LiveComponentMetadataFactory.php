@@ -95,24 +95,22 @@ class LiveComponentMetadataFactory implements ResetInterface
 
         if (null === $type && null === $collectionValueType && isset($infoTypes[0])) {
             $infoType = Type::BUILTIN_TYPE_OBJECT === $infoTypes[0]->getBuiltinType() ? $infoTypes[0]->getClassName() : $infoTypes[0]->getBuiltinType();
-
-            return new LivePropMetadata(
-                $property->getName(),
-                $liveProp,
-                $infoType,
-                null === $infoTypes[0]->getClassName(),
-                $infoTypes[0]->isNullable(),
-                null,
-            );
+            $isTypeBuiltIn = null === $infoTypes[0]->getClassName();
+            $isTypeNullable = $infoTypes[0]->isNullable();
+        } else {
+            $infoType = $type?->getName();
+            $isTypeBuiltIn = $type?->isBuiltin() ?? false;
+            $isTypeNullable = $type?->allowsNull() ?? true;
         }
 
         return new LivePropMetadata(
             $property->getName(),
             $liveProp,
-            $type?->getName(),
-            $type && $type->isBuiltin(),
-            !$type || $type->allowsNull(),
+            $infoType,
+            $isTypeBuiltIn,
+            $isTypeNullable,
             $collectionValueType,
+            $liveProp->url()
         );
     }
 

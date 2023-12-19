@@ -98,10 +98,23 @@ class LiveControllerAttributesCreator
             $mountedAttributes = $mountedAttributes->defaults(['data-live-id' => $id]);
         }
 
+        $liveMetadata = $this->metadataFactory->getMetadata($mounted->getName());
+
+        if ($liveMetadata->hasQueryStringBindings()) {
+            $queryMapping = [];
+            foreach ($liveMetadata->getAllLivePropsMetadata() as $livePropMetadata) {
+                if ($livePropMetadata->queryStringMapping()) {
+                    $frontendName = $livePropMetadata->calculateFieldName($mounted, $livePropMetadata->getName());
+                    $queryMapping[$frontendName] = ['name' => $frontendName];
+                }
+            }
+            $attributesCollection->setQueryUrlMapping($queryMapping);
+        }
+
         if ($isChildComponent) {
             $fingerprint = $this->fingerprintCalculator->calculateFingerprint(
                 $mounted->getInputProps(),
-                $this->metadataFactory->getMetadata($mounted->getName())
+                $liveMetadata
             );
             if ($fingerprint) {
                 $attributesCollection->setFingerprint($fingerprint);

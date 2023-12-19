@@ -59,6 +59,13 @@ final class LiveProp
     private null|string|array $onUpdated;
 
     /**
+     * @var bool
+     *
+     * Tells if this property should be bound to the URL
+     */
+    private bool $url;
+
+    /**
      * @param bool|array  $writable                  If true, this property can be changed by the frontend.
      *                                               Or set to an array of paths within this object/array
      *                                               that are writable.
@@ -73,6 +80,8 @@ final class LiveProp
      *                                               from the value used when originally rendering
      *                                               this child, the value in the child will be updated
      *                                               to match the new value and the child will be re-rendered
+     * @param bool        $url                       if true, this property will be synchronized with a query parameter
+     *                                               in the URL
      */
     public function __construct(
         bool|array $writable = false,
@@ -84,6 +93,7 @@ final class LiveProp
         string $format = null,
         bool $updateFromParent = false,
         string|array $onUpdated = null,
+        bool $url = false,
     ) {
         $this->writable = $writable;
         $this->hydrateWith = $hydrateWith;
@@ -94,6 +104,7 @@ final class LiveProp
         $this->format = $format;
         $this->acceptUpdatesFromParent = $updateFromParent;
         $this->onUpdated = $onUpdated;
+        $this->url = $url;
 
         if ($this->useSerializerForHydration && ($this->hydrateWith || $this->dehydrateWith)) {
             throw new \InvalidArgumentException('Cannot use useSerializerForHydration with hydrateWith or dehydrateWith.');
@@ -187,5 +198,10 @@ final class LiveProp
     public function onUpdated(): null|string|array
     {
         return $this->onUpdated;
+    }
+
+    public function url(): bool
+    {
+        return $this->url;
     }
 }

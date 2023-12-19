@@ -38,9 +38,9 @@ class TwigComponentLoggerListenerTest extends TestCase
         $eventB = new PreCreateForRenderEvent('b');
         $logger->onPreCreateForRender($eventB);
 
-        $eventC = new PreMountEvent(new \stdClass(), []);
+        $eventC = new PreMountEvent(new \stdClass(), [], new ComponentMetadata([]));
         $logger->onPreMount($eventC);
-        $eventD = new PostMountEvent(new \stdClass(), []);
+        $eventD = new PostMountEvent(new \stdClass(), [], new ComponentMetadata([]));
         $logger->onPostMount($eventD);
 
         $mounted = new MountedComponent('foo', new \stdClass(), new ComponentAttributes([]));
