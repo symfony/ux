@@ -3,6 +3,7 @@
 ## 2.14.0
 
 -   Add support for URL binding in `LiveProp`
+-   Allow multiple `LiveListener` attributes on a single method.
 
 ## 2.13.2
 

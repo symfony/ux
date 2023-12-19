@@ -19,6 +19,7 @@ use Symfony\UX\LiveComponent\Attribute\PostHydrate;
 use Symfony\UX\LiveComponent\Attribute\PreDehydrate;
 use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component5;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithRepeatedLiveListener;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -135,6 +136,38 @@ final class AsLiveComponentTest extends TestCase
             'action' => 'method',
             'event' => 'event_name',
         ], $liveListeners[0]);
+    }
+
+    public function testCanGetRepeatedLiveListeners(): void
+    {
+        $liveListeners = AsLiveComponent::liveListeners(new ComponentWithRepeatedLiveListener());
+
+        $this->assertCount(4, $liveListeners);
+        $this->assertSame([
+            [
+                'action' => 'onBar',
+                'event' => 'bar',
+            ],
+            [
+                'action' => 'onFooBar',
+                'event' => 'foo',
+            ],
+            [
+                'action' => 'onFooBar',
+                'event' => 'bar',
+            ],
+            [
+                'action' => 'onFooBar',
+                'event' => 'foo:bar',
+            ],
+        ], $liveListeners);
+    }
+
+    public function testCanGetRepeatedLiveListenersFromClassString(): void
+    {
+        $liveListeners = AsLiveComponent::liveListeners(ComponentWithRepeatedLiveListener::class);
+
+        $this->assertCount(4, $liveListeners);
     }
 
     public function testCanCheckIfMethodIsAllowed(): void
