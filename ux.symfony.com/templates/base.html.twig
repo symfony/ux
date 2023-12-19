@@ -25,7 +25,9 @@
                     document.documentElement.setAttribute('data-bs-theme', darkMode ? 'dark' : 'light');
                 })();
             </script>
-            {{ importmap('app') }}
+            {% block importmap %}
+                {{ importmap('app') }}
+            {% endblock %}
         {% endblock %}
     </head>
     <body>

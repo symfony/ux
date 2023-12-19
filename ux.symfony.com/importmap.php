@@ -18,6 +18,18 @@ return [
         'path' => './assets/app.js',
         'entrypoint' => true,
     ],
+    'app-react' => [
+        'path' => './assets/app-react.js',
+        'entrypoint' => true,
+    ],
+    'app-svelte' => [
+        'path' => './assets/app-svelte.js',
+        'entrypoint' => true,
+    ],
+    'app-vue' => [
+        'path' => './assets/app-vue.js',
+        'entrypoint' => true,
+    ],
     '@symfony/stimulus-bundle' => [
         'path' => '@symfony/stimulus-bundle/loader.js',
     ],
