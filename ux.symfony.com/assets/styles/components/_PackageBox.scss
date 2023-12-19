@@ -118,12 +118,8 @@
   font-size: 28px !important;
   line-height: 32px !important;
   letter-spacing: -1px;
-  color: #0A0A0A;
+  color: var(--bs-body-color);
   text-decoration: none;
-  
-  [data-bs-theme="dark"] & {
-    filter: invert(1);
-  }
 }
 
 .PackageBox_link {
