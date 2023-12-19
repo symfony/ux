@@ -1,0 +1,64 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-27T13:50:31Z
+
+Just a first step to remove the PHP package easily... i keep in mind the @kbond [suggestion](https://github.com/symfony/ux/issues/683#issuecomment-1736079237) to use shiki
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-06T20:53:08Z
+
+The issue I have with shiki is that it's a Node package that you run on the server. And I think you'd even need Node on production (not just locally) so it can be called at runtime. I'm not real excited by that.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-06T21:07:13Z
+
+> The issue I have with shiki is that it's a Node package that you run on the server. And I think you'd even need Node on production (not just locally) so it can be called at runtime. I'm not real excited by that.
+
+I agree and still looking for a more integrated solution. In the meanwhile i think the JS version is OK and provide good results.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-08T20:28:44Z
+
+Rebased and ready
+
+---------------------------------------------------------------------------
+
+by wouterj at 2023-11-08T21:34:44Z
+
+Mostly for my own interest (as we're using highlight.php in the Symfony docs as well, and I'm working integrating it in our new rst-parser): is there something truly wrong about highlight.php? We can override the PHP grammar with a customized grammar (we do this in the Symfony docs), and we can even try loading the latest highlight.js grammar. Or is there a BC break in the new grammars that causes highlight.php to no longer support them?
+
+_Btw, I've been side-tracked in creating a PHP version of shiki - i.e. using TextMate grammars (used by VScode and Jetbrains) to highlight code using a PHP library. But I'm facing some challenges with supporting TextMate grammars. Maybe you'll see a new highlighter some day in my GitHub 😉_
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-08T21:58:44Z
+
+> Mostly for my own interest (as we're using highlight.php in the Symfony docs as well, and I'm working integrating it in our new rst-parser): is there something truly wrong about highlight.php? We can override the PHP grammar with a customized grammar (we do this in the Symfony docs), and we can even try loading the latest highlight.js grammar. Or is there a BC break in the new grammars that causes highlight.php to no longer support them?
+>
+
+For what it's worth, I'm not too fond of using abandoned packages / librairies... and it seems this is the case for this one (as the author explained [multiple](https://github.com/scrivo/highlight.php/issues/73) [times](https://github.com/scrivo/highlight.php/pull/109) he's working in another direction)
+
+I don't know if those are "BC" or just easy fix, but currently on the ux.symfony.com pages (using hightlight php) the PHP attributes cannot be selected, for example.
+
+Also, i'd really want to demo some things with CSS 4 stuff in the next weeks/months, and i'd like to avoid spending too much time checking everytime if this is working in highlight.php or if i need to find some time to fix it. But maybe i'm too pessimist and everything is ok.
+
+So i genuinely don't know if we can easily "fix what need to be fixed" or if this is deeper than that. And i'd love to ear more about your experience with it, and your view on what/how we should use in the next monthes!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-08T22:00:43Z
+
+> Btw, I've been side-tracked in creating a PHP version of shiki - i.e. using TextMate grammars (used by VScode and Jetbrains) to highlight code using a PHP library. But I'm facing some challenges with supporting TextMate grammars. Maybe you'll see a new highlighter some day in my GitHub 😉
+
+Shiki was the advice @kbond gave me [at first ](https://github.com/symfony/ux/issues/683#issuecomment-1735619160), but a full PHP version would be even better!
+
+I'd love to beta-test your solution when/if you want to share it !
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-12-14T00:32:02Z
+
+Do you see something blocking here @weaverryan  ?
