@@ -111,16 +111,13 @@
         color: $n-200;
         background: none;
     }
-
     .btn-copy {
-        background-color: $n-700;
         color: $n-200;
-        &:active {
-            background-color: $n-700;
-            color: $n-200;
-        }
+        background: none;
+        transition: all 250ms ease-in-out;
         &:hover {
-            background-color: $n-600;
+            color: $n-100;
+            background-color: $n-800;
         }
     }
     .btn-link:hover {
