@@ -115,6 +115,15 @@ return [
     'highlight.js/lib/languages/javascript' => [
         'version' => '11.7.0',
     ],
+    'highlight.js/lib/languages/php' => [
+        'version' => '11.7.0',
+    ],
+    'highlight.js/lib/languages/twig' => [
+        'version' => '11.7.0',
+    ],
+    'highlight.js/lib/languages/xml' => [
+        'version' => '11.7.0',
+    ],
     'intl-messageformat' => [
         'version' => '10.3.5',
     ],

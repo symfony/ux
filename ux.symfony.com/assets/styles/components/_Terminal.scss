@@ -140,10 +140,16 @@
     overflow-inline: auto;
 }
 .Terminal_body pre {
-    padding: 1rem;
+    padding: 0;
     margin: 0;
 }
-
 .Terminal_content {
     font-size: .9rem;
+    overflow-x: auto;
+    overflow-y: auto;
+    padding: 1rem;
+
+    pre {
+        overflow: visible;
+    }
 }

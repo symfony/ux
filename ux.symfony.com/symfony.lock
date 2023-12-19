@@ -181,9 +181,6 @@
     "ralouphie/getallheaders": {
         "version": "3.0.3"
     },
-    "scrivo/highlight.php": {
-        "version": "v9.18.1.9"
-    },
     "sebastian/cli-parser": {
         "version": "1.0.1"
     },

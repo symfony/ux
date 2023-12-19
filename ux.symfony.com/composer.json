@@ -16,7 +16,6 @@
         "kornrunner/blurhash": "^1.2.2",
         "league/commonmark": "^2.4",
         "pagerfanta/twig": "^3.8",
-        "scrivo/highlight.php": "^9.18.1.10",
         "symfony/asset": "6.4.*",
         "symfony/asset-mapper": "6.4.*",
         "symfony/console": "6.4.*",

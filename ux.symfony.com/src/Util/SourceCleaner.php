@@ -17,22 +17,25 @@ class SourceCleaner
 {
     public static function cleanupPhpFile(string $contents, bool $removeClass = false): string
     {
+        // Remove <?php
         $contents = u($contents)->replace("<?php\n", '');
 
         // Remove LICENCE header
         if ($contents->indexOf('* This file is part of the Symfony package')) {
-            $contents = $contents->after(' */');
+            $contents = $contents->before('/*')->trim()->append($contents->after(' */')->trim());
         }
 
+        // Remove namespace(s)
         $contents = $contents->replaceMatches('/namespace[^\n]*/', '');
 
+        // Remove class declaration
         if ($removeClass) {
             $contents = $contents->replaceMatches('/class[^\n]*\n{/', '')
                 ->trim('{}')
-                // remove use statements
+                // Remove use statements
                 ->replaceMatches('/^use [^\n]*$/m', '');
 
-            // unindent all lines by 4 spaces
+            // Unindent all lines by 4 spaces
             $lines = explode("\n", $contents);
             $lines = array_map(function (string $line) {
                 return substr($line, 4);
