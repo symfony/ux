@@ -233,12 +233,12 @@
         "version": "0.1.4"
     },
     "symfony/asset-mapper": {
-        "version": "6.3",
+        "version": "6.4",
         "recipe": {
             "repo": "github.com/symfony/recipes",
             "branch": "main",
-            "version": "6.3",
-            "ref": "445f56412ec437dc0f9f2c31716c867d207bcd62"
+            "version": "6.4",
+            "ref": "8a0d17c04c791b3d7bdd083e1e2b2a53439dc3b0"
         },
         "files": [
             "assets/app.js",
@@ -655,6 +655,9 @@
     },
     "symfonycasts/sass-bundle": {
         "version": "v0.1.0"
+    },
+    "symfonycasts/tailwind-bundle": {
+        "version": "v0.5.0"
     },
     "theseer/tokenizer": {
         "version": "1.2.1"

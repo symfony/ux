@@ -1,0 +1,9 @@
+{% props css %}
+
+<iframe
+    style="width: 70%; height: 500px; margin: 40px; border: 1px solid; border-radius: 5px;" {{ stimulus_controller('iframe-content', {
+    content: include('components/_iframe_content.html.twig', {
+        content: block('content'),
+        css: css,
+    })
+}) }}></iframe>

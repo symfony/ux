@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>{{ component.name }}</h1>
+
+    <twig:UIComponentIFrame css="tailwind" foo="bar">
+        <twig:Toast>
+            <div class="ms-3 text-sm font-normal">Successfully Saved!</div>
+        </twig:Toast>
+    </twig:UIComponentIFrame>
+
+    A) Show the HTML code for the Toast component
+    B) Show the Stimulus code for the toast controller
+    C) Show an install for the `stimulus-use` package
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Components</h1>
+
+    {% for component in components %}
+        <div>
+            <a href="{{ path('app_ui_component_show', {
+                key: component.key
+            }) }}">
+                {{ component.name }}
+            </a>
+        </div>
+    {% endfor %}
+{% endblock %}

@@ -52,6 +52,7 @@
         "symfony/yaml": "6.4.*",
         "symfonycasts/dynamic-forms": "^0.1.0",
         "symfonycasts/sass-bundle": "^0.2.0",
+        "symfonycasts/tailwind-bundle": "^0.5.0",
         "twbs/bootstrap": "^5.3",
         "twig/extra-bundle": "^2.12|^3.6.1",
         "twig/intl-extra": "^3.6",
@@ -91,7 +92,8 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "importmap:install": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"
