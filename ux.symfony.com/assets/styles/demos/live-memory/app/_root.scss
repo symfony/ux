@@ -1,0 +1,32 @@
+// -----------------------------------------------------------------
+// Root
+// -----------------------------------------------------------------
+
+:root {
+  --radius: 1rem;
+  --space: 1rem;
+  --space-large: 1.5rem;
+  --font-title: system-ui, sans-serif;
+  --font-text: system-ui, sans-serif;
+  --font-code: ui-monospace, "SF Mono", SFMono-Regular, 'Source Code Pro', Consolas, monospace;
+  --container-max-width: 1280px;
+}
+
+:root,
+[data-theme=light],
+[data-bs-theme=light] {
+  --color-text: #212529;
+  --color-text-rgb: 33 37 41;
+  --color-background: #fff;
+  --color-background-rgb: 255 255 255;
+  --color-border: #DEE2E6;
+}
+
+[data-theme=dark],
+[data-bs-theme=dark] {
+  --color-text: #DEE2E6;
+  --color-text-rgb: 222 226 230;
+  --color-background: #212529;
+  --color-background-rgb: 33 37 41;
+  --color-border: #1a1d20;
+}

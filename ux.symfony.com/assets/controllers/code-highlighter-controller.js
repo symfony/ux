@@ -11,6 +11,8 @@ hljs.registerLanguage('twig', hljs_twig);
 // xml is the language used for HTML
 hljs.registerLanguage('xml', hljs_xml);
 
+
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static targets = ['codeBlock'];
 

@@ -87,7 +87,7 @@
         "@symfony/ux-turbo": {
             "turbo-core": {
                 "enabled": true,
-                "fetch": "eager"
+                "fetch": "lazy"
             },
             "mercure-turbo-stream": {
                 "enabled": true,
@@ -97,7 +97,7 @@
         "@symfony/ux-typed": {
             "typed": {
                 "enabled": true,
-                "fetch": "eager"
+                "fetch": "lazy"
             }
         },
         "@symfony/ux-vue": {

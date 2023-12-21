@@ -35,6 +35,17 @@ all generated from Symfony & Twig.
 EOF
             ),
             new LiveDemo(
+                'live-memory',
+                name: 'LiveMemory Card Game',
+                description: 'A Memorable Game UX with Live Components!',
+                route: 'app_demo_live_memory',
+                longDescription: <<<EOF
+A Memorable Game UX with Live Components! Discover how to use Live Components to create a game with a vibrant interface,
+ rich interactions and real-time updates. This journey will take you through many features of Live Components, and you'll
+  learn how to use them to create a fun and engaging game.
+EOF,
+            ),
+            new LiveDemo(
                 'form-collection-type',
                 name: 'Embedded CollectionType Form',
                 description: 'Create embedded forms with functional "add" and "remove" buttons all in Twig.',
@@ -118,6 +129,32 @@ File uploads are tricky. Submit them to a `#[LiveAction]` with the `files` modif
 EOF
             ),
         ];
+    }
+
+    public function getPrevious(string $identifier, bool $loop = false): ?LiveDemo
+    {
+        $demos = $this->findAll();
+        while ($demo = current($demos)) {
+            if ($demo->getIdentifier() === $identifier) {
+                return prev($demos) ?: ($loop ? end($demos) : null);
+            }
+            next($demos);
+        }
+
+        return null;
+    }
+
+    public function getNext(string $identifier, bool $loop = false): ?LiveDemo
+    {
+        $demos = $this->findAll();
+        while ($demo = current($demos)) {
+            if ($demo->getIdentifier() === $identifier) {
+                return next($demos) ?: ($loop ? reset($demos) : null);
+            }
+            next($demos);
+        }
+
+        return null;
     }
 
     public function find(string $identifier): LiveDemo

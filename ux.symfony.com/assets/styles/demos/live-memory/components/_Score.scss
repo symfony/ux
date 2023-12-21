@@ -1,0 +1,145 @@
+// -----------------------------------------------------------------
+// Score
+// -----------------------------------------------------------------
+
+.LiveMemory-Score {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  align-items: stretch;
+  justify-items: stretch;
+  border-radius: 1vmin;
+  overflow: hidden;
+  visibility: hidden;
+}
+
+.LiveMemory-Score.on {
+  visibility: visible;
+  z-index: 1;
+}
+
+.LiveMemory-Score.on .result {
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+}
+
+.LiveMemory-Score .trophy {
+  height: 20vmin;
+  position: relative;
+  min-height: 130px;
+  aspect-ratio: 1;
+}
+
+.LiveMemory-Score .trophy img {
+  max-height: 100%;
+  max-width: 100%;
+  animation: live-memory-trophy steps(8) 2s infinite alternate-reverse;
+  display: block;
+  object-fit: cover;
+  min-width: 1rem;
+  min-height: 1rem;
+}
+
+.LiveMemory-Score .trophy.gameover img {
+  filter: grayscale(1) opacity(.2);
+}
+
+@keyframes live-memory-trophy {
+  0% {
+    transform: rotateY(0deg);
+  }
+  49% {
+    transform: rotateY(80deg);
+  }
+  50% {
+    transform: rotateY(100deg);
+  }
+  100% {
+    transform: rotateY(180deg);
+  }
+}
+
+.LiveMemory-Score {
+  --font-size: .9rem;
+}
+
+.LiveMemory-Score .title {
+  font-family: var(--font-title);
+  font-size: clamp(1rem, 2vw, 2rem);
+  color: rgb(255 255 255 / 75%);
+}
+
+.LiveMemory-Score .text {
+  font-family: monospace;
+  font-size: var(--font-size);
+  color: #fff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.LiveMemory-ScoreRow .typing {
+  --duration: .5s;
+  --wait: 0;
+  --chars: 40;
+  width: 0;
+  animation: live-memory-typing steps(var(--chars)) forwards;
+  animation-duration: var(--duration);
+  animation-delay: calc(var(--wait) * var(--duration));
+  text-overflow: clip;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: clip;
+}
+
+.LiveMemory-ScoreRow.total {
+  margin-block-start: 1vmin;
+}
+
+.LiveMemory-ScoreRow .dots {
+  opacity: .25;
+}
+
+@keyframes live-memory-typing {
+  0% {
+    width: 0;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+.LiveMemory-Score button {
+  border: 0;
+  background: 0;
+  opacity: .75;
+  font-size: 1.1rem;
+  animation: steps(3) live-memory-button-blinking infinite alternate-reverse;
+  cursor: pointer;
+  color: #ffffff;
+
+  &::after {
+    position: absolute;
+    inset: 0;
+    content: " ";
+    display: block;
+    background: none;
+    z-index: 2;
+  }
+}
+
+.LiveMemory-Score button:hover {
+  opacity: 1;
+  animation-play-state: paused;
+}
+
+@keyframes live-memory-button-blinking {
+  70% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

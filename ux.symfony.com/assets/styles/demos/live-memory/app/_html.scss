@@ -1,0 +1,47 @@
+
+:root {
+  font-size: 100%;
+}
+
+body {
+  font-family: var(--font-text), sans-serif;
+  font-weight: 400;
+  min-height: 100vh;
+  min-width: 320px;
+  overflow-x: clip;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  background: var(--color-background);
+  color: var(--color-text);
+  transition: background 500ms linear, color 500ms ease-in-out;
+}
+
+::selection {
+  background: var(--color-text);
+  color: var(--color-background);
+  -webkit-text-fill-color: currentColor;
+}
+
+a {
+  text-decoration: none;
+  text-underline-offset: .25ex;
+  color: inherit;
+}
+
+main {
+  flex: 1 1 auto;
+  width: 100%;
+  display: grid;
+}
+
+.wrapper {
+  padding: 0 1rem;
+  max-inline-size: var(--container-max-width);
+  margin-inline: auto;
+}
+
+.wrapper--full {
+  max-inline-size: 100%;
+}

@@ -1,0 +1,50 @@
+<div
+    id="live-memory-board"
+    class="LiveMemory-Board" {{ attributes.without('class') }}
+    data-live-memory-theme="{{ game.theme }}"
+>
+
+    <style>
+      .shadow-blur::after {
+        --gradient: var({{ '--live-memory-gradient-' ~ game.theme }}) !important;
+      }
+    </style>
+
+    <div class="LiveMemory-Header">
+        {{ include('components/LiveMemory/Metrics.html.twig') }}
+    </div>
+
+    <div class="LiveMemory-Main">
+
+        <div class="LiveMemory-Tableau">
+            {{ include('components/LiveMemory/Tableau.html.twig') }}
+        </div>
+
+        <div id="live-memory-overlay" class="LiveMemory-Overlay  {{ game.isEnded ? 'on' }}">
+            {% for i in 0..5 %}<div></div>{% endfor %}
+        </div>
+
+        <div id="live-memory-score" class="LiveMemory-Score {{ game.isEnded ? 'on' }}">
+            {% if game.isEnded %}
+                {{ include('components/LiveMemory/Score.html.twig', {game}) }}
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="LiveMemory-Footer">
+        <span>Dev & Design by <a href="https://github.com/smnandre" rel="external author" class="author">Simon André</a></span>
+        <span>A <a href="{{ url('app_demos') }}">Symfony UX demo</a></span>
+        <span><a href="https://github.com/symfony/ux">Version 1.0</a></span>
+    </div>
+
+    {% if app.debug %}
+        <div class="LiveMemory-Debug">
+            {% for i in 1..4 %}
+                <button type="button" data-action="live#action" data-action-name="play(level={{ i }})">
+                    {{ max(i+2, 4) }}x{{ min(i+2, 4) }}
+                </button>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+</div>

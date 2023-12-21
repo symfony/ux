@@ -1,0 +1,28 @@
+
+.LiveMemory-Debug {
+  position: absolute;
+  top: 3.5rem;
+  left: 0;
+  display: flex;
+  gap: .5rem;
+  align-items: center;
+  padding: .5rem;
+  font-size: .65rem;
+  font-weight: lighter;
+  opacity: 0.01;
+  transition: opacity 250ms;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.LiveMemory-Debug button {
+  font-family: var(--font-code);
+  padding: .1rem;
+  color: var(--color-text);
+  cursor: pointer;
+  opacity: .75;
+  &:hover {
+    opacity: 1;
+  }
+}

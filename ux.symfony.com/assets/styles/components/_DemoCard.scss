@@ -1,0 +1,103 @@
+// -----------------------------------------------------------------
+// DemoCard
+// -----------------------------------------------------------------
+
+.DemoCard {
+  --radius: .75rem;
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  border-radius: var(--radius);
+  border: 1px solid var(--bs-secondary-bg-subtle);
+
+  transition: color 250ms ease-in-out, transform 750ms ease-in-out, box-shadow 750ms ease-in-out;
+  transform: translateY(0);
+  box-shadow: 0 0 0 transparent;
+}
+.DemoCard:hover {
+  transition: color 250ms ease-in-out, transform 250ms ease-in-out, box-shadow 250ms ease-in-out;
+  transform: translateY(-.25rem);
+  box-shadow: 0 0.125rem 2rem .25rem var(--bs-secondary-bg-subtle);
+}
+
+.DemoCard__badge {
+  position: absolute;
+  right: .75rem;
+  top: .75rem;
+  color: var(--bs-body-color);
+  padding: .25rem;
+  font-size: .8rem;
+  text-transform: initial;
+  background: linear-gradient(113.84deg, #D65831 0%, #D2D631 36.52%, #31D673 71.83%, #3aa3ff 100%);
+  background: var(--gradient);
+  border-radius: 50%;
+  animation: linear 2000s infinite alternate;
+}
+@keyframes badge--rotation {
+  0% {
+    transform: rotate(0deg)
+  }
+  100% {
+    transform: rotate(180deg)
+  }
+}
+
+.DemoCard__media {
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  display: grid;
+  width: 100%;
+  min-height: 100px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  place-content: center;
+  background: #000;
+}
+
+.DemoCard__image {
+  max-height: 100%;
+  width: 100%;
+  display: block;
+  transition: transform 500ms linear;
+  transform: scale(1) translateY(0);
+  border-radius: .25rem;
+  transform-style: preserve-3d;
+  opacity: .80;
+}
+.DemoCard:hover .DemoCard__image {
+  opacity: .90;
+}
+
+.DemoCard__content {
+  padding: .75rem 1rem;
+  flex: 1;
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+  gap: .5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.DemoCard__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin: 0;
+  font-family: var(--font-family-title);
+  padding: .25rem;
+}
+
+.DemoCard__description {
+  font-size: 0.9rem;
+  font-stretch: semi-condensed;
+  font-weight: 400;
+  transition: all 250ms ease-in-out;
+  opacity: .65;
+  line-height: 1.4;
+  padding: .25rem;
+  margin: 0;
+}
+.DemoCard:hover .DemoCard__description {
+    opacity: .85;
+}
