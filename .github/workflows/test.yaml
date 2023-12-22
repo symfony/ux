@@ -98,6 +98,7 @@ jobs:
                     dependency-version: 'highest'
                 component: ${{ fromJson(needs.tests-php-components.outputs.components )}}
                 exclude:
+                  - component: PasswordStrength  # has no tests
                   - component: Swup  # has no tests
                   - component: Turbo # has its own workflow (test-turbo.yml)
                   - component: Typed  # has no tests
