@@ -19,7 +19,7 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
  * @experimental
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
-final class AsLiveComponent extends AsTwigComponent
+class AsLiveComponent extends AsTwigComponent
 {
     public function __construct(
         string $name = null,
