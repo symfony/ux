@@ -11,20 +11,8 @@
 
 namespace Symfony\UX\LiveComponent\Hydration;
 
-use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
-use Doctrine\Persistence\ObjectManager;
-
-class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
+class DoctrineEntityHydrationExtension extends AbstractDoctrineHydrationExtension implements HydrationExtensionInterface
 {
-    /**
-     * @param ManagerRegistry[] $managerRegistries
-     */
-    public function __construct(
-        private iterable $managerRegistries,
-    ) {
-    }
-
     public function supports(string $className): bool
     {
         return null !== $this->objectManagerFor($className);
@@ -53,56 +41,6 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
 
     public function dehydrate(object $object): mixed
     {
-        $id = $this
-            ->objectManagerFor($class = $object::class)
-            ->getClassMetadata($class)
-            ->getIdentifierValues($object)
-        ;
-
-        switch (\count($id)) {
-            case 0:
-                // a non-persisted entity
-                return [];
-            case 1:
-                return array_values($id)[0];
-        }
-
-        // composite id
-        return $id;
-    }
-
-    private function objectManagerFor(string $class): ?ObjectManager
-    {
-        if (!class_exists($class)) {
-            return null;
-        }
-
-        // todo cache/warmup an array of classes that are "doctrine objects"
-        foreach ($this->managerRegistries as $registry) {
-            if ($om = $registry->getManagerForClass($class)) {
-                return self::ensureManagedObject($om, $class);
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * Ensure the $class is not embedded or a mapped superclass.
-     */
-    private static function ensureManagedObject(ObjectManager $om, string $class): ?ObjectManager
-    {
-        if (!$om instanceof EntityManagerInterface) {
-            // todo might need to add some checks once ODM support is added
-            return $om;
-        }
-
-        $metadata = $om->getClassMetadata($class);
-
-        if ($metadata->isEmbeddedClass || $metadata->isMappedSuperclass) {
-            return null;
-        }
-
-        return $om;
+        return $this->getIdentifierValue($object);
     }
 }
