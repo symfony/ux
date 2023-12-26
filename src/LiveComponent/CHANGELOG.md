@@ -2,7 +2,7 @@
 
 ## 2.13.3
 
--   Add support for Doctrine ArrayCollection (de)Hydration. 
+-   Add support for Doctrine ArrayCollection (de)Hydration.
 
 ## 2.13.2
 
