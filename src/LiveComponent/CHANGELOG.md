@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.13.3
+
+-   Add support for Doctrine ArrayCollection (de)Hydration. 
+
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"
