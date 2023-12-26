@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2023-12-15T00:54:55Z
+
+It's the same bug for all the pacakges failing in the CI ?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2023-12-15T08:29:31Z
+
+With this PR in complement #1330 the CI should be green again! 😁
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-12-24T18:09:37Z
+
+Could we merge this one @weaverryan @kbond  ?
+
+( if it's all good for you @WebMamba )
+
+I'd like to bring the green back on the CI, having a better vision of current PR checks
