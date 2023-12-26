@@ -31,7 +31,7 @@ class ArrayCollectionHydrationExtension extends AbstractDoctrineHydrationExtensi
     {
         $output = new ArrayCollection();
         foreach ($value as $item) {
-            $object = $this->findObject($item['class'], $item['identifierValues']);
+            $object = $this->findObject($item['class'], $item['identifierValue']);
 
             if ($object) {
                 $output->add($object);
@@ -47,7 +47,7 @@ class ArrayCollectionHydrationExtension extends AbstractDoctrineHydrationExtensi
         foreach ($object as $class) {
             $output[] = [
                 'class' => $class::class,
-                'identifierValues' => $this->getIdentifierValue($class),
+                'identifierValue' => $this->getIdentifierValue($class),
             ];
         }
 
