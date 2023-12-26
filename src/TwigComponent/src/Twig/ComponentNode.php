@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent\Twig;
 
 use Symfony\UX\TwigComponent\BlockStack;
 use Twig\Compiler;
+use Twig\Extension\CoreExtension;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Node;
 
@@ -43,6 +44,17 @@ final class ComponentNode extends Node
     {
         $compiler->addDebugInfo($this);
 
+        // since twig/twig 3.9.0: Using the internal "twig_to_array" function is deprecated.
+        $compiler
+            ->write('$toArray = function ($data) {')
+        ;
+
+        if (method_exists(CoreExtension::class, 'toArray')) {
+            $compiler->write('return Twig\Extension\CoreExtension::toArray($data);};');
+        } else {
+            $compiler->write('return twig_to_array($data);};');
+        }
+
         /*
          * Block 1) PreCreateForRender handling
          *
@@ -55,7 +67,7 @@ final class ComponentNode extends Node
             ->raw(']->extensionPreCreateForRender(')
             ->string($this->getAttribute('component'))
             ->raw(', ')
-            ->raw('twig_to_array(')
+            ->raw('$toArray(')
         ;
         $this->writeProps($compiler)
             ->raw(')')
@@ -86,7 +98,7 @@ final class ComponentNode extends Node
             ->string(ComponentExtension::class)
             ->raw(']->startEmbeddedComponentRender(')
             ->string($this->getAttribute('component'))
-            ->raw(', twig_to_array(')
+            ->raw(', $toArray(')
         ;
         $this->writeProps($compiler)
             ->raw('), ')
