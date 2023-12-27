@@ -980,7 +980,7 @@ You can test how your component is mounted and rendered using the
             $this->assertStringContainsString('bar', $rendered);
 
             // use the crawler
-            $this->assertCount(5, $rendered->crawler('ul li'));
+            $this->assertCount(5, $rendered->crawler->filter('ul li'));
         }
 
         public function testEmbeddedComponentRenders(): void
