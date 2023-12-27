@@ -200,11 +200,10 @@ them as "props" via the a 2nd argument to ``component()``:
         message: 'Danger Will Robinson!'
     }) }}
 
-Behind the scenes, a new ``Alert`` will be instantiated and the
-``message`` key (and ``type`` if passed) will be set onto the
-``$message`` property of the object. Then, the component is rendered! If
-a property has a setter method (e.g. ``setMessage()``), that will be
-called instead of setting the property directly.
+Behind the scenes, a new ``Alert`` will be instantiated and the ``message`` key (and
+``type`` if passed) will be set onto the ``$message`` property of the object. This works
+as long as the ``$message`` property is writable (i.e. it is public or there is a
+``setMessage()`` method).
 
 .. note::
 
