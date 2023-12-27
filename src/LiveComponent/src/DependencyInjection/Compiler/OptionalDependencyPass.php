@@ -15,7 +15,7 @@ use Symfony\Component\DependencyInjection\Argument\IteratorArgument;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Reference;
-use Symfony\UX\LiveComponent\Hydration\ArrayCollectionHydrationExtension;
+use Symfony\UX\LiveComponent\Hydration\DoctrineArrayCollectionHydrationExtension;
 use Symfony\UX\LiveComponent\Hydration\DoctrineEntityHydrationExtension;
 use Symfony\UX\LiveComponent\LiveComponentBundle;
 
@@ -36,7 +36,7 @@ final class OptionalDependencyPass implements CompilerPassInterface
                 ->addTag(LiveComponentBundle::HYDRATION_EXTENSION_TAG)
             ;
 
-            $container->register('ux.live_component.array_collection_hydration_extension', ArrayCollectionHydrationExtension::class)
+            $container->register('ux.live_component.doctrine_array_collection_hydration_extension', DoctrineArrayCollectionHydrationExtension::class)
                 ->setArguments([new IteratorArgument([new Reference('doctrine')])]) // TODO: add support for multiple entity managers
                 ->addTag(LiveComponentBundle::HYDRATION_EXTENSION_TAG)
             ;

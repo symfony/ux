@@ -20,7 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @internal
  */
-class ArrayCollectionHydrationExtension extends AbstractDoctrineHydrationExtension implements HydrationExtensionInterface
+class DoctrineArrayCollectionHydrationExtension extends AbstractDoctrineHydrationExtension implements HydrationExtensionInterface
 {
     public function supports(string $className): bool
     {
