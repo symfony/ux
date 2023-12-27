@@ -31,14 +31,13 @@ final class OptionalDependencyPass implements CompilerPassInterface
     public function process(ContainerBuilder $container): void
     {
         if ($container->hasDefinition('doctrine')) {
-            $doctrineArguments = [new IteratorArgument([new Reference('doctrine')])]; // TODO: add support for multiple entity managers
             $container->register('ux.live_component.doctrine_entity_hydration_extension', DoctrineEntityHydrationExtension::class)
-                ->setArguments($doctrineArguments)
+                ->setArguments([new IteratorArgument([new Reference('doctrine')])]) // TODO: add support for multiple entity managers
                 ->addTag(LiveComponentBundle::HYDRATION_EXTENSION_TAG)
             ;
 
             $container->register('ux.live_component.array_collection_hydration_extension', ArrayCollectionHydrationExtension::class)
-                ->setArguments($doctrineArguments)
+                ->setArguments([new IteratorArgument([new Reference('doctrine')])]) // TODO: add support for multiple entity managers
                 ->addTag(LiveComponentBundle::HYDRATION_EXTENSION_TAG)
             ;
         }
