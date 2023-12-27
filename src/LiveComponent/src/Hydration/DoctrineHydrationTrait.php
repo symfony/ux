@@ -17,7 +17,6 @@ use Doctrine\Persistence\ObjectManager;
 
 trait DoctrineHydrationTrait
 {
-
     private function objectManagerFor(string $className): ?ObjectManager
     {
         if (!class_exists($className)) {
@@ -63,9 +62,10 @@ trait DoctrineHydrationTrait
     protected function getObject(string $className, mixed $id): object
     {
         $object = $this->objectManagerFor($className)->find($className, $id);
-        if(!$object instanceof $className) {
+        if (!$object instanceof $className) {
             throw new EntityNotFoundException(sprintf('Cannot find entity "%s" with id "%s".', $className, $id));
         }
+
         return $object;
     }
 
