@@ -20,8 +20,14 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @internal
  */
-class DoctrineArrayCollectionHydrationExtension extends AbstractDoctrineHydrationExtension implements HydrationExtensionInterface
+class DoctrineArrayCollectionHydrationTrait implements HydrationExtensionInterface
 {
+    use DoctrineHydrationTrait;
+
+    public function __construct(protected readonly iterable $managerRegistries)
+    {
+    }
+
     public function supports(string $className): bool
     {
         return ArrayCollection::class === $className;
@@ -31,11 +37,7 @@ class DoctrineArrayCollectionHydrationExtension extends AbstractDoctrineHydratio
     {
         $output = new ArrayCollection();
         foreach ($value as $item) {
-            $object = $this->findObject($item['class'], $item['identifierValue']);
-
-            if ($object) {
-                $output->add($object);
-            }
+            $output->add($this->getObject($item['class'], $item['identifierValue']));
         }
 
         return $output;
@@ -44,10 +46,16 @@ class DoctrineArrayCollectionHydrationExtension extends AbstractDoctrineHydratio
     public function dehydrate(object $object): mixed
     {
         $output = [];
-        foreach ($object as $class) {
+        foreach ($object as $entityObject) {
+            $identifierValue = $this->getIdentifierValue($entityObject);
+
+            if (empty($identifierValue)) {
+                throw new \InvalidArgumentException(sprintf('Cannot hydrate ArrayCollection that contains a non-persisted entity "%s".', $entityObject::class));
+            }
+
             $output[] = [
-                'class' => $class::class,
-                'identifierValue' => $this->getIdentifierValue($class),
+                'class' => $entityObject::class,
+                'identifierValue' => $identifierValue,
             ];
         }
 

@@ -11,8 +11,14 @@
 
 namespace Symfony\UX\LiveComponent\Hydration;
 
-class DoctrineEntityHydrationExtension extends AbstractDoctrineHydrationExtension implements HydrationExtensionInterface
+class DoctrineEntityHydrationTrait implements HydrationExtensionInterface
 {
+    use DoctrineHydrationTrait;
+
+    public function __construct(protected readonly iterable $managerRegistries)
+    {
+    }
+
     public function supports(string $className): bool
     {
         return null !== $this->objectManagerFor($className);

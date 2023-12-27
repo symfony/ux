@@ -12,36 +12,22 @@
 namespace Symfony\UX\LiveComponent\Hydration;
 
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Persistence\ObjectManager;
 
-/**
- * @author Jean-Paul van der Wegen <info@jpvdw.nl>
- *
- * @experimental
- *
- * @internal
- */
-abstract class AbstractDoctrineHydrationExtension
+trait DoctrineHydrationTrait
 {
-    /**
-     * @param ManagerRegistry[] $managerRegistries
-     */
-    public function __construct(
-        private iterable $managerRegistries,
-    ) {
-    }
 
-    protected function objectManagerFor(string $class): ?ObjectManager
+    private function objectManagerFor(string $className): ?ObjectManager
     {
-        if (!class_exists($class)) {
+        if (!class_exists($className)) {
             return null;
         }
 
         // todo cache/warmup an array of classes that are "doctrine objects"
         foreach ($this->managerRegistries as $registry) {
-            if ($om = $registry->getManagerForClass($class)) {
-                return self::ensureManagedObject($om, $class);
+            if ($om = $registry->getManagerForClass($className)) {
+                return self::ensureManagedObject($om, $className);
             }
         }
 
@@ -51,14 +37,14 @@ abstract class AbstractDoctrineHydrationExtension
     /**
      * Ensure the $class is not embedded or a mapped superclass.
      */
-    private static function ensureManagedObject(ObjectManager $om, string $class): ?ObjectManager
+    private static function ensureManagedObject(ObjectManager $om, string $className): ?ObjectManager
     {
         if (!$om instanceof EntityManagerInterface) {
             // todo might need to add some checks once ODM support is added
             return $om;
         }
 
-        $metadata = $om->getClassMetadata($class);
+        $metadata = $om->getClassMetadata($className);
 
         if ($metadata->isEmbeddedClass || $metadata->isMappedSuperclass) {
             return null;
@@ -68,24 +54,26 @@ abstract class AbstractDoctrineHydrationExtension
     }
 
     /**
+     * @template T of object
+     *
      * @psalm-param class-string<T> $className
      *
-     * @return object|null
-     *
-     * @psalm-return T|null
-     *
-     * @template T of object
+     * @psalm-return T
      */
-    protected function findObject(string $className, mixed $id)
+    protected function getObject(string $className, mixed $id): object
     {
-        return $this->objectManagerFor($className)->find($className, $id);
+        $object = $this->objectManagerFor($className)->find($className, $id);
+        if(!$object instanceof $className) {
+            throw new EntityNotFoundException(sprintf('Cannot find entity "%s" with id "%s".', $className, $id));
+        }
+        return $object;
     }
 
-    protected function getIdentifierValue(object $object): mixed
+    private function getIdentifierValue(object $object): mixed
     {
         $id = $this
-            ->objectManagerFor($class = $object::class)
-            ->getClassMetadata($class)
+            ->objectManagerFor($className = $object::class)
+            ->getClassMetadata($className)
             ->getIdentifierValues($object)
         ;
 
