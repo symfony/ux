@@ -326,7 +326,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
-        yield 'Doctrine ArrayCollection with persisted entities: (de)hydration works correctly' => [function () {
+        yield 'DTO with Doctrine ArrayCollection with persisted entities: (de)hydration works correctly' => [function () {
             $firstProduct = create(ProductFixtureEntity::class, ['id' => 1, 'name' => 'first'])->object();
             \assert($firstProduct instanceof ProductFixtureEntity);
 
@@ -366,13 +366,66 @@ final class LiveComponentHydratorTest extends KernelTestCase
                         $doctrineEntityDto->getProduct(),
                         $object->doctrineEntityDto->getProduct()
                     );
-                    self::assertSame(
-                        $doctrineEntityDto->getProductList()->first(),
-                        $object->doctrineEntityDto->getProductList()->first()
+                    self::assertTrue(
+                        $object->doctrineEntityDto->getProductList()->contains($doctrineEntityDto->getProductList()->first())
                     );
-                    self::assertSame(
-                        $doctrineEntityDto->getProductList()->last(),
-                        $object->doctrineEntityDto->getProductList()->last()
+                    self::assertTrue(
+                        $object->doctrineEntityDto->getProductList()->contains($doctrineEntityDto->getProductList()->last())
+                    );
+                })
+            ;
+        }];
+
+        yield 'ArrayCollection with persisted entities: (de)hydration works correctly' => [function () {
+            $firstProduct = create(ProductFixtureEntity::class, ['id' => 1, 'name' => 'first'])->object();
+            \assert($firstProduct instanceof ProductFixtureEntity);
+
+            $secondProduct = create(ProductFixtureEntity::class, ['id' => 2, 'name' => 'second'])->object();
+            \assert($secondProduct instanceof ProductFixtureEntity);
+
+            $thirdProduct = create(ProductFixtureEntity::class, ['id' => 3, 'name' => 'third'])->object();
+            \assert($secondProduct instanceof ProductFixtureEntity);
+
+            $arrayCollection = new ArrayCollection([$firstProduct, $secondProduct]);
+            \assert($arrayCollection instanceof ArrayCollection);
+
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true)]
+                public ArrayCollection $arrayCollection;
+            })
+                ->mountWith(['arrayCollection' => $arrayCollection])
+                ->assertDehydratesTo([
+                    'arrayCollection' => [
+                        [
+                            'className' => $firstProduct::class,
+                            'identifierValue' => $firstProduct->id,
+                        ],
+                        [
+                            'className' => $secondProduct::class,
+                            'identifierValue' => $secondProduct->id,
+                        ],
+                    ],
+                ])
+                ->userUpdatesProps(['arrayCollection' => [
+                        [
+                            'className' => $firstProduct::class,
+                            'identifierValue' => $firstProduct->id,
+                        ],
+                        [
+                            'className' => $thirdProduct::class,
+                            'identifierValue' => $thirdProduct->id,
+                        ],
+                    ],
+                ])
+                ->assertObjectAfterHydration(function (object $object) use ($firstProduct, $secondProduct, $thirdProduct) {
+                    self::assertTrue(
+                        $object->arrayCollection->contains($firstProduct)
+                    );
+                    self::assertFalse(
+                        $object->arrayCollection->contains($secondProduct)
+                    );
+                    self::assertTrue(
+                        $object->arrayCollection->contains($thirdProduct)
                     );
                 })
             ;
