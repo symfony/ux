@@ -55,9 +55,8 @@ trait DoctrineHydrationTrait
     /**
      * @template T of object
      *
-     * @psalm-param class-string<T> $className
-     *
-     * @psalm-return T
+     * @param class-string<T> $className
+     * @throws EntityNotFoundException
      */
     protected function getObject(string $className, mixed $id): object
     {
