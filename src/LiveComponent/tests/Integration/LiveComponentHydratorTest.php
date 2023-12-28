@@ -336,18 +336,18 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $productList = new ArrayCollection([$firstProduct, $secondProduct]);
             \assert($productList instanceof ArrayCollection);
 
-            $doctrineEntityForm = create(HoldsArrayCollectionAndEntity::class)->object();
-            $doctrineEntityForm->setProduct($firstProduct);
-            $doctrineEntityForm->setProductList($productList);
-            \assert($doctrineEntityForm instanceof HoldsArrayCollectionAndEntity);
+            $doctrineEntityDto = create(HoldsArrayCollectionAndEntity::class)->object();
+            $doctrineEntityDto->setProduct($firstProduct);
+            $doctrineEntityDto->setProductList($productList);
+            \assert($doctrineEntityDto instanceof HoldsArrayCollectionAndEntity);
 
             return HydrationTest::create(new class() {
                 #[LiveProp()]
-                public HoldsArrayCollectionAndEntity $doctrineEntityForm;
+                public HoldsArrayCollectionAndEntity $doctrineEntityDto;
             })
-                ->mountWith(['doctrineEntityForm' => $doctrineEntityForm])
+                ->mountWith(['doctrineEntityForm' => $doctrineEntityDto])
                 ->assertDehydratesTo([
-                    'doctrineEntityForm' => [
+                    'doctrineEntityDto' => [
                         'product' => $firstProduct->id,
                         'productList' => [
                             [
@@ -361,18 +361,18 @@ final class LiveComponentHydratorTest extends KernelTestCase
                         ],
                     ],
                 ])
-                ->assertObjectAfterHydration(function (object $object) use ($doctrineEntityForm) {
+                ->assertObjectAfterHydration(function (object $object) use ($doctrineEntityDto) {
                     self::assertSame(
-                        $doctrineEntityForm->getProduct(),
-                        $object->doctrineEntityForm->getProduct()
+                        $doctrineEntityDto->getProduct(),
+                        $object->doctrineEntityDto->getProduct()
                     );
                     self::assertSame(
-                        $doctrineEntityForm->getProductList()->first(),
-                        $object->doctrineEntityForm->getProductList()->first()
+                        $doctrineEntityDto->getProductList()->first(),
+                        $object->doctrineEntityDto->getProductList()->first()
                     );
                     self::assertSame(
-                        $doctrineEntityForm->getProductList()->last(),
-                        $object->doctrineEntityForm->getProductList()->last()
+                        $doctrineEntityDto->getProductList()->last(),
+                        $object->doctrineEntityDto->getProductList()->last()
                     );
                 })
             ;
