@@ -347,7 +347,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             })
                 ->mountWith(['doctrineEntityForm' => $doctrineEntityForm])
                 ->assertDehydratesTo([
-                    'formDto' => [
+                    'doctrineEntityForm' => [
                         'product' => $firstProduct->id,
                         'productList' => [
                             [
