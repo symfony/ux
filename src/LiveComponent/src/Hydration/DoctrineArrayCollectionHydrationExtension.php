@@ -20,7 +20,7 @@ use Doctrine\Common\Collections\ArrayCollection;
  *
  * @internal
  */
-class DoctrineArrayCollectionHydrationTrait implements HydrationExtensionInterface
+class DoctrineArrayCollectionHydrationExtension implements HydrationExtensionInterface
 {
     use DoctrineHydrationTrait;
 

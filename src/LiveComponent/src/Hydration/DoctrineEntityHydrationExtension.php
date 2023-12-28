@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Hydration;
 
-class DoctrineEntityHydrationTrait implements HydrationExtensionInterface
+class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
 {
     use DoctrineHydrationTrait;
 

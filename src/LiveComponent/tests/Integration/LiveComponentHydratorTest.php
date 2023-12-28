@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Integration;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -23,6 +24,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\BlogPostWithSerializationContext;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\CustomerDetails;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Embeddable2;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsArrayCollectionAndEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Money;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\ParentDTO;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Temperature;
@@ -319,6 +321,58 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     self::assertSame(
                         $entity1->id,
                         $object->entity1->id
+                    );
+                })
+            ;
+        }];
+
+        yield 'Doctrine ArrayCollection with persisted entities: (de)hydration works correctly' => [function () {
+            $firstProduct = create(ProductFixtureEntity::class, ['id' => 1, 'name' => 'first'])->object();
+            \assert($firstProduct instanceof ProductFixtureEntity);
+
+            $secondProduct = create(ProductFixtureEntity::class, ['id' => 2, 'name' => 'second'])->object();
+            \assert($secondProduct instanceof ProductFixtureEntity);
+
+            $productList = new ArrayCollection([$firstProduct, $secondProduct]);
+            \assert($productList instanceof ArrayCollection);
+
+            $doctrineEntityForm = create(HoldsArrayCollectionAndEntity::class)->object();
+            $doctrineEntityForm->setProduct($firstProduct);
+            $doctrineEntityForm->setProductList($productList);
+            \assert($doctrineEntityForm instanceof HoldsArrayCollectionAndEntity);
+
+            return HydrationTest::create(new class() {
+                #[LiveProp()]
+                public HoldsArrayCollectionAndEntity $doctrineEntityForm;
+            })
+                ->mountWith(['doctrineEntityForm' => $doctrineEntityForm])
+                ->assertDehydratesTo([
+                    'formDto' => [
+                        'product' => $firstProduct->id,
+                        'productList' => [
+                            [
+                                'class' => $firstProduct::class,
+                                'identifierValue' => $firstProduct->id,
+                            ],
+                            [
+                                'class' => $secondProduct::class,
+                                'identifierValue' => $secondProduct->id,
+                            ],
+                        ],
+                    ]
+                ])
+                ->assertObjectAfterHydration(function (object $object) use ($doctrineEntityForm) {
+                    self::assertSame(
+                        $doctrineEntityForm->getProduct(),
+                        $object->doctrineEntityForm->getProduct()
+                    );
+                    self::assertSame(
+                        $doctrineEntityForm->getProductList()->first(),
+                        $object->doctrineEntityForm->getProductList()->first()
+                    );
+                    self::assertSame(
+                        $doctrineEntityForm->getProductList()->last(),
+                        $object->doctrineEntityForm->getProductList()->last()
                     );
                 })
             ;
