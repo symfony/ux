@@ -37,7 +37,7 @@ class DoctrineArrayCollectionHydrationExtension implements HydrationExtensionInt
     {
         $output = new ArrayCollection();
         foreach ($value as $item) {
-            $output->add($this->getObject($item['class'], $item['identifierValue']));
+            $output->add($this->getObject($item['className'], $item['identifierValue']));
         }
 
         return $output;
@@ -54,7 +54,7 @@ class DoctrineArrayCollectionHydrationExtension implements HydrationExtensionInt
             }
 
             $output[] = [
-                'class' => $entityObject::class,
+                'className' => $entityObject::class,
                 'identifierValue' => $identifierValue,
             ];
         }
