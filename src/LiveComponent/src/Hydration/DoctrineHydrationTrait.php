@@ -56,6 +56,7 @@ trait DoctrineHydrationTrait
      * @template T of object
      *
      * @param class-string<T> $className
+     *
      * @throws EntityNotFoundException
      */
     protected function getObject(string $className, mixed $id): object
