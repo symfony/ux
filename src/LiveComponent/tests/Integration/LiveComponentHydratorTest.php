@@ -345,7 +345,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 #[LiveProp()]
                 public HoldsArrayCollectionAndEntity $doctrineEntityDto;
             })
-                ->mountWith(['doctrineEntityForm' => $doctrineEntityDto])
+                ->mountWith(['doctrineEntityDto' => $doctrineEntityDto])
                 ->assertDehydratesTo([
                     'doctrineEntityDto' => [
                         'product' => $firstProduct->id,
