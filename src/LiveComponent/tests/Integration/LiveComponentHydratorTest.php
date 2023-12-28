@@ -351,15 +351,15 @@ final class LiveComponentHydratorTest extends KernelTestCase
                         'product' => $firstProduct->id,
                         'productList' => [
                             [
-                                'class' => $firstProduct::class,
+                                'className' => $firstProduct::class,
                                 'identifierValue' => $firstProduct->id,
                             ],
                             [
-                                'class' => $secondProduct::class,
+                                'className' => $secondProduct::class,
                                 'identifierValue' => $secondProduct->id,
                             ],
                         ],
-                    ]
+                    ],
                 ])
                 ->assertObjectAfterHydration(function (object $object) use ($doctrineEntityForm) {
                     self::assertSame(
