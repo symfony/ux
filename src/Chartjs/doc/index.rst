@@ -217,7 +217,7 @@ Then in your render call, add your controller as an HTML attribute:
     {{ render_chart(chart, {'data-controller': 'mychart'}) }}
 
 There is also a ``chartjs:init`` event that is called just *one* time before your
-first chart is rendered. That's an ideal place to `register plugins globally <Using Plugins>`_
+first chart is rendered. That's an ideal place to `register Chart.js plugins globally`_
 or make other changes to any "static"/global part of Chart.js. For example,
 to add a global `Tooltip positioner`_:
 
@@ -247,4 +247,5 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`a lot of plugins`: https://github.com/chartjs/awesome#plugins
 .. _`zoom plugin`: https://www.chartjs.org/chartjs-plugin-zoom/latest/
 .. _`zoom plugin documentation`: https://www.chartjs.org/chartjs-plugin-zoom/latest/guide/integration.html
+.. _`register Chart.js plugins globally`: https://www.chartjs.org/docs/latest/developers/plugins.html
 .. _`Tooltip positioner`: https://www.chartjs.org/docs/latest/samples/tooltip/position.html
