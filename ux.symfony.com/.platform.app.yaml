@@ -33,7 +33,7 @@ web:
             expires: 1h
             passthru: "/index.php"
             rules:
-                '\.(gif|jpe?g|png|css|js|woff|woff2|ttf|eot|svg)$':
+                '\.(gif|jpe?g|png|css|js|woff|woff2|ttf|eot|svg|webp|ico)$':
                     expires: 365d
 
 disk: 256
