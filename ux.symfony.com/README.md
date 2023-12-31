@@ -2,48 +2,63 @@
 
 Source code for [ux.symfony.com](https://ux.symfony.com).
 
-## Contributing
+## Installation
 
-### Local Development
+### Source code
 
-1. Install the project:
-    ```bash
-    git clone git@github.com:symfony/ux
-    cd ux/ux.symfony.com/
-    ```
+Install the project:
+```bash
+git clone git@github.com:symfony/ux
+cd ux/ux.symfony.com/
+```
 
-2. Install the dependencies:
-    ```bash
-    symfony composer install
-    ```
+Install the dependencies:
+```bash
+symfony composer install
+```
 
-3. (optional) Configure Docker:
-    ```bash
-    docker compose up -d
-    ```
+### Services
 
-5. Run database migrations:
-    ```bash
-    symfony console doctrine:migration:migrate
-    ```
+(optional) Configure Docker to launch Mercure
+```bash
+docker compose up -d
+```
 
-6. Populate the database:
-    ```bash
-    symfony console app:load-data
-    ```
+### Database
 
-7. Compile the Sass files:
-    ```bash
-    symfony console sass:build --watch
-    ```
+Run database migrations:
+```bash
+symfony console doctrine:migration:migrate
+```
 
-8. Start the web server:
-    ```bash
-    symfony server:start -d
-    ```
+Populate the database:
+```bash
+symfony console app:load-data
+```
 
+### Assets
 
-### Running the Test Suite
+Download the importmap packages locally:
+```bash
+symfony console importmap:install
+```
+
+Compile the Sass files:
+```bash
+symfony console sass:build
+
+# (optional) Add the --watch flag to automatically recompile the Sass files on change.
+symfony console sass:build --watch
+```
+
+### Local server
+
+Start the local web server (in background):
+```bash
+symfony server:start -d
+```
+
+## Testing
 
 ```bash
 symfony php bin/phpunit
