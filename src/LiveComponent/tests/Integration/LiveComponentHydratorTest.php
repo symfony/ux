@@ -609,7 +609,8 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     'invoice.lineItems.2' => ['name' => 'item3_updated', 'quantity' => 2, 'price' => 2000],
                 ])
                 ->assertObjectAfterHydration(function (object $object) {
-                    self::assertSame([
+                    self::assertSame(
+                        [
                         'number' => '456',
                         'lineItems' => [
                             ['name' => 'item1', 'quantity' => 5, 'price' => 100],
@@ -752,7 +753,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             return HydrationTest::create(new class() {
                 #[LiveProp()]
                 /** @var \Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ProductFixtureEntity[] */
-                public $products = [];
+                public array $products = [];
             })
                 ->mountWith(['products' => [$prod1, $prod2, $prod3]])
                 ->assertDehydratesTo([
