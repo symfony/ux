@@ -21,7 +21,6 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Form\BlogPostFormType;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
-use Zenstruck\Foundry\Test\ResetDatabase;
 
 /**
  * @author Jakub Caban <kuba.iluvatar@gmail.com>
@@ -31,7 +30,6 @@ class ComponentWithFormTest extends KernelTestCase
     use Factories;
     use HasBrowser;
     use LiveComponentTestHelper;
-    use ResetDatabase;
 
     public function testFormValuesRebuildAfterFormChanges(): void
     {

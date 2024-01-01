@@ -11,20 +11,18 @@ declare(strict_types=1);
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent\Tests\Functional\Form;
+namespace Symfony\UX\LiveComponent\Tests\Functional;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
-use Zenstruck\Foundry\Test\ResetDatabase;
 
 class ValidatableComponentTraitTest extends KernelTestCase
 {
     use Factories;
     use HasBrowser;
     use LiveComponentTestHelper;
-    use ResetDatabase;
 
     public function testFormValuesRebuildAfterFormChanges(): void
     {

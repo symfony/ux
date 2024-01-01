@@ -28,7 +28,7 @@ final class AsLiveComponentTest extends TestCase
     public function testPreDehydrateMethodsAreOrderedByPriority(): void
     {
         $hooks = AsLiveComponent::preDehydrateMethods(
-            new class() {
+            new class () {
                 #[PreDehydrate(priority: -10)]
                 public function hook1()
                 {
@@ -55,7 +55,7 @@ final class AsLiveComponentTest extends TestCase
     public function testPostHydrateMethodsAreOrderedByPriority(): void
     {
         $hooks = AsLiveComponent::postHydrateMethods(
-            new class() {
+            new class () {
                 #[PostHydrate(priority: -10)]
                 public function hook1()
                 {
@@ -82,7 +82,7 @@ final class AsLiveComponentTest extends TestCase
     public function testPreMountHooksAreOrderedByPriority(): void
     {
         $hooks = AsLiveComponent::preReRenderMethods(
-            new class() {
+            new class () {
                 #[PreReRender(priority: -10)]
                 public function hook1()
                 {

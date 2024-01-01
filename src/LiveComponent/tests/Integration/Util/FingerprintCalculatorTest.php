@@ -16,14 +16,12 @@ use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
 use Zenstruck\Foundry\Test\Factories;
-use Zenstruck\Foundry\Test\ResetDatabase;
 
 use function Zenstruck\Foundry\create;
 
 final class FingerprintCalculatorTest extends KernelTestCase
 {
     use Factories;
-    use ResetDatabase;
 
     public function testFingerprintEqual()
     {

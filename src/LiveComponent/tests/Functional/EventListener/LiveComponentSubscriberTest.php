@@ -18,7 +18,6 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
-use Zenstruck\Foundry\Test\ResetDatabase;
 
 use function Zenstruck\Foundry\create;
 
@@ -30,7 +29,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
     use Factories;
     use HasBrowser;
     use LiveComponentTestHelper;
-    use ResetDatabase;
 
     /**
      * The deterministic id of the "component2" component in render_embedded_with_blocks.html.twig.

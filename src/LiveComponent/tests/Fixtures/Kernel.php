@@ -126,10 +126,16 @@ final class Kernel extends BaseKernel
         ]);
 
         $c->extension('doctrine', [
-            'dbal' => ['url' => '%env(resolve:DATABASE_URL)%'],
+            'dbal' => [
+                'url' => '%env(resolve:DATABASE_URL)%',
+                'schema_manager_factory' => 'doctrine.dbal.default_schema_manager_factory',
+            ],
             'orm' => [
                 'auto_generate_proxy_classes' => true,
                 'auto_mapping' => true,
+                'enable_lazy_ghost_objects' => true,
+                'report_fields_where_declared' => true,
+                'validate_xml_mapping' => true,
                 'mappings' => [
                     'Default' => [
                         'is_bundle' => false,
