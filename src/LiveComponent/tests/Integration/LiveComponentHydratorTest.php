@@ -750,11 +750,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $prod2 = new ProductFixtureEntity();
             $prod3 = create(ProductFixtureEntity::class, ['name' => 'item3'])->object();
 
-            return HydrationTest::create(new class() {
-                #[LiveProp()]
-                /** @var \Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ProductFixtureEntity[] */
-                public array $products = [];
-            })
+            return HydrationTest::create(new DummyObjectWithObjects())
                 ->mountWith(['products' => [$prod1, $prod2, $prod3]])
                 ->assertDehydratesTo([
                     'products' => [$prod1->id, [], $prod3->id],
@@ -1642,4 +1638,11 @@ class HydrationTestCase
         public ?string $expectHydrationExceptionMessage,
     ) {
     }
+}
+
+class DummyObjectWithObjects
+{
+    #[LiveProp()]
+    /** @var ProductFixtureEntity[] */
+    public array $products = [];
 }
