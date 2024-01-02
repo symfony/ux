@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixtures;
 
+use Composer\InstalledVersions;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
@@ -125,8 +126,10 @@ final class Kernel extends BaseKernel
             'auto_refresh_proxies' => false,
         ]);
 
-        $c->extension('doctrine', [
-            'dbal' => ['url' => '%env(resolve:DATABASE_URL)%'],
+        $doctrineConfig = [
+            'dbal' => [
+                'url' => '%env(resolve:DATABASE_URL)%',
+            ],
             'orm' => [
                 'auto_generate_proxy_classes' => true,
                 'auto_mapping' => true,
@@ -147,7 +150,20 @@ final class Kernel extends BaseKernel
                     ],
                 ],
             ],
-        ]);
+        ];
+        if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
+            if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
+                $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
+            }
+            // https://github.com/doctrine/DoctrineBundle/pull/1661
+            if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
+                $doctrineConfig['orm']['report_fields_where_declared'] = true;
+                $doctrineConfig['orm']['validate_xml_mapping'] = true;
+                $doctrineConfig['dbal']['schema_manager_factory'] = 'doctrine.dbal.default_schema_manager_factory';
+            }
+        }
+
+        $c->extension('doctrine', $doctrineConfig);
 
         $c->extension('zenstruck_foundry', [
             'auto_refresh_proxies' => false,
