@@ -842,6 +842,21 @@ of the change:
 
     input.dispatchEvent(new Event('change', { bubbles: true }));
 
+Adding a Stimulus Controller to your Component Root Element
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.9
+
+    The ability to use the ``defaults()`` method with ``stimulus_controller()``
+    was added in TwigComponents 2.9 and requires ``symfony/stimulus-bundle``.
+    Previously, ``stimulus_controller()`` was passed to ``attributes.add()``.
+
+To add a custom Stimulus controller to your root component element:
+
+.. code-block:: html+twig
+
+    <div {{ attributes.defaults(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
+
 JavaScript Component Hooks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -875,21 +890,6 @@ The following hooks are available (along with the arguments that are passed):
 * ``loading.state:started`` args ``(element: HTMLElement, request: BackendRequest)``
 * ``loading.state:finished`` args ``(element: HTMLElement)``
 * ``model:set`` args ``(model: string, value: any, component: Component)``
-
-Adding a Stimulus Controller to your Component Root Element
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.9
-
-    The ability to use the ``defaults()`` method with ``stimulus_controller()``
-    was added in TwigComponents 2.9 and requires ``symfony/stimulus-bundle``.
-    Previously, ``stimulus_controller()`` was passed to ``attributes.add()``.
-
-To add a custom Stimulus controller to your root component element:
-
-.. code-block:: html+twig
-
-    <div {{ attributes.defaults(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
 
 Loading States
 --------------
