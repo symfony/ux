@@ -34,7 +34,7 @@ final class ComponentRenderer implements ComponentRendererInterface
         private EventDispatcherInterface $dispatcher,
         private ComponentFactory $factory,
         private PropertyAccessorInterface $propertyAccessor,
-        private ComponentStack $componentStack
+        private ComponentStack $componentStack,
     ) {
     }
 

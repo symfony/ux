@@ -20,7 +20,7 @@ class MappedControllerAutoImport
 {
     public function __construct(
         public string $path,
-        public bool $isBareImport
+        public bool $isBareImport,
     ) {
     }
 }

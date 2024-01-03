@@ -246,7 +246,7 @@ class IntlMessageParser
 
     private function tryParseUnquoted(
         int $nestingLevel,
-        string $parentArgType
+        string $parentArgType,
     ): string|null {
         if ($this->isEOF()) {
             return null;
@@ -273,7 +273,7 @@ class IntlMessageParser
      */
     private function parseArgument(
         int $nestingLevel,
-        bool $expectingCloseTag
+        bool $expectingCloseTag,
     ): array {
         $openingBracePosition = clone $this->position;
         $this->bump(); // `{`
@@ -381,7 +381,7 @@ class IntlMessageParser
         int $nestingLevel,
         bool $expectingCloseTag,
         string $value,
-        Position $openingBracePosition
+        Position $openingBracePosition,
     ): array {
         // Parse this range:
         // {name, type, style}
@@ -611,7 +611,7 @@ class IntlMessageParser
     }
 
     private function tryParseArgumentClose(
-        Position $openingBracePosition
+        Position $openingBracePosition,
     ): array {
         // Parse: {value, number, ::currency/GBP }
         //
@@ -683,7 +683,7 @@ class IntlMessageParser
 
     private function parseNumberSkeletonFromString(
         string $skeleton,
-        Location $location
+        Location $location,
     ) {
         $tokens = [];
 
@@ -712,7 +712,7 @@ class IntlMessageParser
         int $nestingLevel,
         string $parentArgType,
         bool $expectCloseTag,
-        array $parsedFirstIdentifier
+        array $parsedFirstIdentifier,
     ): array {
         $hasOtherClause = false;
         $options = [];

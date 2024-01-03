@@ -41,7 +41,7 @@ final class AsLiveComponent extends AsTwigComponent
         bool $exposePublicProps = true,
         string $attributesVar = 'attributes',
         public bool $csrf = true,
-        public string $route = 'ux_live_component'
+        public string $route = 'ux_live_component',
     ) {
         parent::__construct($name, $template, $exposePublicProps, $attributesVar);
     }

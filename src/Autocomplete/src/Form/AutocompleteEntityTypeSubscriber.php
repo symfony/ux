@@ -28,7 +28,7 @@ use Symfony\Component\Form\FormEvents;
 final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private ?string $autocompleteUrl = null
+        private ?string $autocompleteUrl = null,
     ) {
     }
 

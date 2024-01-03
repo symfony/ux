@@ -26,7 +26,7 @@ final class PostMountEvent extends Event
         private object $component,
         private array $data,
         array|ComponentMetadata $metadata = [],
-        $extraMetadata = []
+        $extraMetadata = [],
     ) {
         if (\is_array($metadata)) {
             trigger_deprecation('symfony/ux-twig-component', '2.13', 'In TwigComponent 3.0, the third argument of "%s()" will be a "%s" object and the "$extraMetadata" array should be passed as the fourth argument.', __METHOD__, ComponentMetadata::class);

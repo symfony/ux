@@ -39,7 +39,7 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
         private FormFactoryInterface $formFactory,
         private EntityMetadataFactory $metadataFactory,
         private PropertyAccessorInterface $propertyAccessor,
-        private EntitySearchUtil $entitySearchUtil
+        private EntitySearchUtil $entitySearchUtil,
     ) {
     }
 
