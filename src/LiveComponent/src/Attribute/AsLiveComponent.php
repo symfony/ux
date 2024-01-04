@@ -14,6 +14,10 @@ namespace Symfony\UX\LiveComponent\Attribute;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
+ * An attribute to register a LiveComponent.
+ *
+ * @see https://symfony.com/bundles/ux-live-component
+ *
  * @author Kevin Bond <kevinbond@gmail.com>
  *
  * @experimental
@@ -21,6 +25,15 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class AsLiveComponent extends AsTwigComponent
 {
+    /**
+     * @param string|null $name              The component name (ie: TodoList)
+     * @param string|null $template          The template path of the component (ie: components/TodoList.html.twig).
+     * @param string|null $defaultAction     The default action to call when the component is mounted (ie: __invoke)
+     * @param bool        $exposePublicProps Whether to expose every public property as a Twig variable
+     * @param string      $attributesVar     The name of the special "attributes" variable in the template
+     * @param bool        $csrf              Whether to enable CSRF protection (default: true)
+     * @param string      $route             The route used to render the component & handle actions (default: ux_live_component)
+     */
     public function __construct(
         string $name = null,
         string $template = null,
