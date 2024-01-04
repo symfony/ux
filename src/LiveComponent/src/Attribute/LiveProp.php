@@ -59,9 +59,7 @@ final class LiveProp
     private null|string|array $onUpdated;
 
     /**
-     * @var bool
-     *
-     * Tells if this property should be bound to the URL
+     * Tells if this property should be bound to the URL.
      */
     private bool $url;
 
