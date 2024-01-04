@@ -12,11 +12,21 @@
 namespace Symfony\UX\LiveComponent\Attribute;
 
 /**
+ * An Attribute to register a LiveListener method.
+ *
+ * When any component emits the event, an Ajax call will be made to call this
+ * method and re-render the component.
+ *
+ * @see https://symfony.com/bundles/ux-live-component/current/index.html#listeners
+ *
  * @experimental
  */
 #[\Attribute(\Attribute::TARGET_METHOD)]
 class LiveListener extends LiveAction
 {
+    /**
+     * @param string $eventName The name of the event to listen to (e.g. "itemUpdated")
+     */
     public function __construct(private string $eventName)
     {
     }
