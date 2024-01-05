@@ -69,10 +69,7 @@ export default class {
      */
     set(name: string, value: any): boolean {
         const normalizedName = normalizeModelName(name);
-
-        const currentValue = this.get(normalizedName);
-
-        if (currentValue === value) {
+        if (this.get(normalizedName) === value) {
             return false;
         }
 

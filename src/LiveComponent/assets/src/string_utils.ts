@@ -5,19 +5,24 @@
  *      [
  *          'foo',
  *          'bar baz',
+ *          ' foobar  foobaz ',
  *      ]
  *
  * Output:
- *      ['foo', 'bar', 'baz']
+ *      ['foo', 'bar', 'baz', 'foobar', 'foobaz']
  *
  */
 export function combineSpacedArray(parts: Array<string>) {
     const finalParts: Array<string> = [];
     parts.forEach((part) => {
-        finalParts.push(...part.split(' '));
+        finalParts.push(...trimAll(part).split(' '));
     });
 
     return finalParts;
+}
+
+export function trimAll(str: string) {
+    return str.replace(/[\s]+/g, ' ').trim();
 }
 
 /**

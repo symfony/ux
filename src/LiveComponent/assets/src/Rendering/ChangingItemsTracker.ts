@@ -62,23 +62,11 @@ export default class {
     }
 
     getChangedItems(): { name: string, value: string }[] {
-        const changedItems: { name: string, value: string }[] = [];
-
-        this.changedItems.forEach((value, key) => {
-            changedItems.push({ name: key, value: value.new });
-        });
-
-        return changedItems;
+        return Array.from(this.changedItems, ([name, { new: value }]) => ({ name, value }));
     }
 
     getRemovedItems(): string[] {
-        const removedItems: string[] = [];
-
-        this.removedItems.forEach((value, key) => {
-            removedItems.push(key);
-        });
-
-        return removedItems;
+        return Array.from(this.removedItems.keys());
     }
 
     isEmpty(): boolean {
