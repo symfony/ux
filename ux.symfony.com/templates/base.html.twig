@@ -26,6 +26,14 @@
                 })();
             </script>
             {% block importmap %}
+                <script>
+                    if (!HTMLScriptElement.supports('importmap')) {
+                        document.head.appendChild(Object.assign(document.createElement("script"),{
+                            src:"https://cdn.jsdelivr.net/npm/es-module-shims@1.8.2/dist/es-module-shims.min.js",
+                            async:true,
+                        }));
+                    }
+                </script>
                 {{ importmap('app') }}
             {% endblock %}
         {% endblock %}
