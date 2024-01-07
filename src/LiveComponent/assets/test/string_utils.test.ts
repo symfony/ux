@@ -10,6 +10,11 @@ describe('combinedSpacedArray', () => {
         const items = combineSpacedArray(['hidden other', 'bar']);
         expect(items).toEqual(['hidden', 'other', 'bar']);
     });
+
+    it('parse array with multispaced item', () => {
+        const items = combineSpacedArray([' hidden  other', 'bar']);
+        expect(items).toEqual(['hidden', 'other', 'bar']);
+    });
 });
 
 describe('normalizeModelName', () => {

@@ -139,9 +139,12 @@ function parseDirectives(content) {
 function combineSpacedArray(parts) {
     const finalParts = [];
     parts.forEach((part) => {
-        finalParts.push(...part.split(' '));
+        finalParts.push(...trimAll(part).split(' '));
     });
     return finalParts;
+}
+function trimAll(str) {
+    return str.replace(/[\s]+/g, ' ').trim();
 }
 function normalizeModelName(model) {
     return (model
@@ -381,8 +384,7 @@ class ValueStore {
     }
     set(name, value) {
         const normalizedName = normalizeModelName(name);
-        const currentValue = this.get(normalizedName);
-        if (currentValue === value) {
+        if (this.get(normalizedName) === value) {
             return false;
         }
         this.dirtyProps[normalizedName] = value;
@@ -1392,9 +1394,7 @@ class HookManager {
     }
     triggerHook(hookName, ...args) {
         const hooks = this.hooks.get(hookName) || [];
-        hooks.forEach((callback) => {
-            callback(...args);
-        });
+        hooks.forEach((callback) => callback(...args));
     }
 }
 
@@ -1449,18 +1449,10 @@ class ChangingItemsTracker {
         }
     }
     getChangedItems() {
-        const changedItems = [];
-        this.changedItems.forEach((value, key) => {
-            changedItems.push({ name: key, value: value.new });
-        });
-        return changedItems;
+        return Array.from(this.changedItems, ([name, { new: value }]) => ({ name, value }));
     }
     getRemovedItems() {
-        const removedItems = [];
-        this.removedItems.forEach((value, key) => {
-            removedItems.push(key);
-        });
-        return removedItems;
+        return Array.from(this.removedItems.keys());
     }
     isEmpty() {
         return this.changedItems.size === 0 && this.removedItems.size === 0;
@@ -1469,27 +1461,19 @@ class ChangingItemsTracker {
 
 class ElementChanges {
     constructor() {
-        this.addedClasses = [];
-        this.removedClasses = [];
+        this.addedClasses = new Set();
+        this.removedClasses = new Set();
         this.styleChanges = new ChangingItemsTracker();
         this.attributeChanges = new ChangingItemsTracker();
     }
     addClass(className) {
-        if (this.removedClasses.includes(className)) {
-            this.removedClasses = this.removedClasses.filter((name) => name !== className);
-            return;
-        }
-        if (!this.addedClasses.includes(className)) {
-            this.addedClasses.push(className);
+        if (!this.removedClasses.delete(className)) {
+            this.addedClasses.add(className);
         }
     }
     removeClass(className) {
-        if (this.addedClasses.includes(className)) {
-            this.addedClasses = this.addedClasses.filter((name) => name !== className);
-            return;
-        }
-        if (!this.removedClasses.includes(className)) {
-            this.removedClasses.push(className);
+        if (!this.addedClasses.delete(className)) {
+            this.removedClasses.add(className);
         }
     }
     addStyle(styleName, newValue, originalValue) {
@@ -1505,10 +1489,10 @@ class ElementChanges {
         this.attributeChanges.removeItem(attributeName, originalValue);
     }
     getAddedClasses() {
-        return this.addedClasses;
+        return [...this.addedClasses];
     }
     getRemovedClasses() {
-        return this.removedClasses;
+        return [...this.removedClasses];
     }
     getChangedStyles() {
         return this.styleChanges.getChangedItems();
@@ -1523,12 +1507,8 @@ class ElementChanges {
         return this.attributeChanges.getRemovedItems();
     }
     applyToElement(element) {
-        this.addedClasses.forEach((className) => {
-            element.classList.add(className);
-        });
-        this.removedClasses.forEach((className) => {
-            element.classList.remove(className);
-        });
+        element.classList.add(...this.addedClasses);
+        element.classList.remove(...this.removedClasses);
         this.styleChanges.getChangedItems().forEach((change) => {
             element.style.setProperty(change.name, change.value);
             return;
@@ -1544,8 +1524,8 @@ class ElementChanges {
         });
     }
     isEmpty() {
-        return (this.addedClasses.length === 0 &&
-            this.removedClasses.length === 0 &&
+        return (this.addedClasses.size === 0 &&
+            this.removedClasses.size === 0 &&
             this.styleChanges.isEmpty() &&
             this.attributeChanges.isEmpty());
     }
@@ -2381,9 +2361,7 @@ class LoadingPlugin {
         let loadingDirective;
         switch (finalAction) {
             case 'show':
-                loadingDirective = () => {
-                    this.showElement(element);
-                };
+                loadingDirective = () => this.showElement(element);
                 break;
             case 'hide':
                 loadingDirective = () => this.hideElement(element);
@@ -2443,7 +2421,7 @@ class LoadingPlugin {
     removeClass(element, classes) {
         element.classList.remove(...combineSpacedArray(classes));
         if (element.classList.length === 0) {
-            this.removeAttributes(element, ['class']);
+            element.removeAttribute('class');
         }
     }
     addAttributes(element, attributes) {
