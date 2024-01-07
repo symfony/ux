@@ -44,7 +44,7 @@ final class ResetDeterministicIdSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private DeterministicTwigIdCalculator $idCalculator,
-        private ComponentStack $componentStack
+        private ComponentStack $componentStack,
     ) {
     }
 

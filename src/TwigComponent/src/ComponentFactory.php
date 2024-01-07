@@ -35,7 +35,7 @@ final class ComponentFactory
         private PropertyAccessorInterface $propertyAccessor,
         private EventDispatcherInterface $eventDispatcher,
         private array $config,
-        private array $classMap
+        private array $classMap,
     ) {
     }
 

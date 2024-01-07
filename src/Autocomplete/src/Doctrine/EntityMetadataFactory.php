@@ -20,7 +20,7 @@ use Doctrine\Persistence\ObjectManager;
 class EntityMetadataFactory
 {
     public function __construct(
-        private DoctrineRegistryWrapper $doctrine
+        private DoctrineRegistryWrapper $doctrine,
     ) {
     }
 

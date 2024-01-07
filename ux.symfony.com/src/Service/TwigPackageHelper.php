@@ -17,7 +17,7 @@ class TwigPackageHelper
 {
     public function __construct(
         private UxPackageRepository $packageRepository,
-        private PackageContext $packageContext
+        private PackageContext $packageContext,
     ) {
     }
 
