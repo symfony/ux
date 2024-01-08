@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.14.0
+
+-   Add support for URL binding in `LiveProp`
+
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"
@@ -15,7 +19,6 @@
 -   Fix instantiating LiveComponentMetadata multiple times.
 -   Change JavaScript package to `type: module`.
 -   Throwing an error when setting an invalid model name.
--   Add support for URL binding in `LiveProp`
 
 ## 2.12.0
 
