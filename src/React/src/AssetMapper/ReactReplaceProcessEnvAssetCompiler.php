@@ -23,7 +23,7 @@ use Symfony\Component\AssetMapper\MappedAsset;
 class ReactReplaceProcessEnvAssetCompiler implements AssetCompilerInterface
 {
     public function __construct(
-        private bool $isDebug
+        private bool $isDebug,
     ) {
     }
 

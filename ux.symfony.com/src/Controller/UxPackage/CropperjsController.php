@@ -25,7 +25,7 @@ class CropperjsController extends AbstractController
 {
     public function __construct(
         private Packages $assets,
-        private string $projectDir
+        private string $projectDir,
     ) {
     }
 

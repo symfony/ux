@@ -12,6 +12,10 @@
 namespace Symfony\UX\LiveComponent\Attribute;
 
 /**
+ * An attribute to configure a LiveArg (custom argument passed to a LiveAction).
+ *
+ * @see https://symfony.com/bundles/ux-live-component/current/index.html#actions-arguments
+ *
  * @author Tomas Norkūnas <norkunas.tom@gmail.com>
  *
  * @experimental
@@ -19,8 +23,12 @@ namespace Symfony\UX\LiveComponent\Attribute;
 #[\Attribute(\Attribute::TARGET_PARAMETER)]
 final class LiveArg
 {
-    public function __construct(public ?string $name = null)
-    {
+    public function __construct(
+        /**
+         * @param string|null $name The name of the argument received by the LiveAction
+         */
+        public ?string $name = null,
+    ) {
     }
 
     /**

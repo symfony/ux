@@ -155,4 +155,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Symfony Translator`: https://symfony.com/doc/current/translation.html
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
-.. _`ICU Message Format`: https://symfony.com/doc/current/translation/message_format.html
+.. _`ICU Message Format`: https://symfony.com/doc/current/reference/formats/message_format.html
