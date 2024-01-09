@@ -61,7 +61,7 @@ return [
         'version' => '3.3.0',
     ],
     '@hotwired/stimulus' => [
-        'version' => '3.2.1',
+        'version' => '3.2.2',
     ],
     'tom-select' => [
         'version' => '2.2.2',
@@ -179,5 +179,8 @@ return [
     ],
     'scheduler' => [
         'version' => '0.23.0',
+    ],
+    'stimulus-use' => [
+        'version' => '0.52.1',
     ],
 ];
