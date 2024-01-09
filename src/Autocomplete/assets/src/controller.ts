@@ -15,6 +15,7 @@ export default class extends Controller {
     static values = {
         url: String,
         optionsAsHtml: Boolean,
+        loadingMoreText: String,
         noResultsFoundText: String,
         noMoreResultsText: String,
         minCharacters: Number,
@@ -24,6 +25,7 @@ export default class extends Controller {
 
     declare readonly urlValue: string;
     declare readonly optionsAsHtmlValue: boolean;
+    declare readonly loadingMoreTextValue: string;
     declare readonly noMoreResultsTextValue: string;
     declare readonly noResultsFoundTextValue: string;
     declare readonly minCharactersValue: number;
@@ -223,6 +225,9 @@ export default class extends Controller {
                 },
                 item: function (item: any) {
                     return `<div>${item.text}</div>`;
+                },
+                loading_more: (): string => {
+                    return `<div class="loading-more-results">${this.loadingMoreTextValue}</div>`;
                 },
                 no_more_results: (): string => {
                     return `<div class="no-more-results">${this.noMoreResultsTextValue}</div>`;

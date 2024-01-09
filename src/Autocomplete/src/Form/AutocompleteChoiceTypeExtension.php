@@ -79,6 +79,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             $values['min-characters'] = $options['min_characters'];
         }
 
+        $values['loading-more-text'] = $this->trans($options['loading_more_text']);
         $values['no-results-found-text'] = $this->trans($options['no_results_found_text']);
         $values['no-more-results-text'] = $this->trans($options['no_more_results_text']);
         $values['preload'] = $options['preload'];
@@ -99,6 +100,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             'tom_select_options' => [],
             'options_as_html' => false,
             'allow_options_create' => false,
+            'loading_more_text' => 'Loading more results...',
             'no_results_found_text' => 'No results found',
             'no_more_results_text' => 'No more results',
             'min_characters' => null,

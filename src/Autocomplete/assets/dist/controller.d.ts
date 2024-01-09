@@ -12,6 +12,7 @@ export default class extends Controller {
     static values: {
         url: StringConstructor;
         optionsAsHtml: BooleanConstructor;
+        loadingMoreText: StringConstructor;
         noResultsFoundText: StringConstructor;
         noMoreResultsText: StringConstructor;
         minCharacters: NumberConstructor;
@@ -20,6 +21,7 @@ export default class extends Controller {
     };
     readonly urlValue: string;
     readonly optionsAsHtmlValue: boolean;
+    readonly loadingMoreTextValue: string;
     readonly noMoreResultsTextValue: string;
     readonly noResultsFoundTextValue: string;
     readonly minCharactersValue: number;

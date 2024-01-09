@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+-   Add support for the `render.loading_more` Tom Select Virtual Scroll option (`loading_more_text`)
+
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"

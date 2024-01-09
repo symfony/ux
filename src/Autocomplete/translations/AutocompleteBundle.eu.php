@@ -10,6 +10,7 @@
  */
 
 return [
+    // 'Loading more results...' => 'Loading more results...',
     'No results found' => 'Ez da bat datorrenik aurkitu',
     // 'No more results' => 'No more results',
 ];
