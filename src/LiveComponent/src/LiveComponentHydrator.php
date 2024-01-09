@@ -441,6 +441,10 @@ final class LiveComponentHydrator
             if ($propMetadata->collectionValueType() && Type::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {
                 $collectionClass = $propMetadata->collectionValueType()->getClassName();
                 foreach ($value as $key => $objectItem) {
+                    if (null !== $collectionClass && null === $objectItem) {
+                        $objectItem = new $collectionClass();
+                    }
+
                     if (!$objectItem instanceof $collectionClass) {
                         throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of %s objects, but at least on key had a different value of %s', $propMetadata->getName(), $parentObject::class, $collectionClass, get_debug_type($objectItem)));
                     }
