@@ -15,6 +15,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityNotFoundException;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * @internal
+ */
 trait DoctrineHydrationTrait
 {
     private function objectManagerFor(string $className): ?ObjectManager
