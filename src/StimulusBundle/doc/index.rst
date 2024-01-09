@@ -74,9 +74,10 @@ for all the goodies.
 TypeScript Controllers
 ~~~~~~~~~~~~~~~~~~~~~~
 
-If you want to use `TypeScript`_ to define your controllers, you can! You only need to install and setup the
-`sensiolabs/typescript-bundle`_. Make sure to add the ``assets/controllers`` path to the `sensiolabs_typescript.source_dir`
-configuration, create your controller in that directory and you're good to go.
+If you want to use `TypeScript`_ to define your controllers, you can! Install and set up the
+`sensiolabs/typescript-bundle`_. Then be sure to add the ``assets/controllers`` path to the
+`sensiolabs_typescript.source_dir` configuration. Finally, create your controller in that
+directory and you're good to go.
 
 .. _ux-packages:
 
