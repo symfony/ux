@@ -336,7 +336,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $productList = new ArrayCollection([$firstProduct, $secondProduct]);
             \assert($productList instanceof ArrayCollection);
 
-            $doctrineEntityDto = create(HoldsArrayCollectionAndEntity::class)->object();
+            $doctrineEntityDto = new HoldsArrayCollectionAndEntity();
             $doctrineEntityDto->setProduct($firstProduct);
             $doctrineEntityDto->setProductList($productList);
             \assert($doctrineEntityDto instanceof HoldsArrayCollectionAndEntity);
