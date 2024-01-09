@@ -3,6 +3,7 @@
 ## 2.14.0
 
 -   Add support for URL binding in `LiveProp`
+-   Fix initialization objectItem when new is added.
 
 ## 2.13.2
 
