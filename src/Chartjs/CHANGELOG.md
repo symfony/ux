@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+-   Add support for Chart.js version 4
+
 ## 2.13.2
 
 -   Changee "module" key back to "main" in package.json
