@@ -183,6 +183,104 @@ final class TwigPreLexerTest extends TestCase
             EOF
         ];
 
+        yield 'component_where_entire_default_block_is_twig_embed' => [
+            <<<EOF
+            <twig:Alert>
+                <p>
+                    {% embed "my_embed.html.twig" with { foo: 'bar' } %}{% endembed %}
+                </p>
+            </twig:Alert>
+            EOF,
+            <<<EOF
+            {% component 'Alert' %}
+                {% block content %}<p>
+                    {% embed "my_embed.html.twig" with { foo: 'bar' } %}{% endembed %}
+                </p>
+            {% endblock %}{% endcomponent %}
+            EOF,
+        ];
+        yield 'component_where_entire_default_block_is_twig_embed_with_block_string' => [
+            <<<EOF
+            <twig:Alert>
+                <p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block "foo" %}
+                    {% endembed %}
+                </p>
+            </twig:Alert>
+            EOF,
+            <<<EOF
+            {% component 'Alert' %}
+                {% block content %}<p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block "foo" %}
+                    {% endembed %}
+                </p>
+            {% endblock %}{% endcomponent %}
+            EOF,
+        ];
+        yield 'component_where_entire_default_block_is_twig_embed_with_block_variable' => [
+            <<<EOF
+            <twig:Alert>
+                <p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block fooVar %}
+                    {% endembed %}
+                </p>
+            </twig:Alert>
+            EOF,
+            <<<EOF
+            {% component 'Alert' %}
+                {% block content %}<p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block fooVar %}
+                    {% endembed %}
+                </p>
+            {% endblock %}{% endcomponent %}
+            EOF,
+        ];
+        yield 'component_where_entire_default_block_is_twig_embed_with_block_expanded' => [
+            <<<EOF
+            <twig:Alert>
+                <p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block %}bar{% endblock %}
+                    {% endembed %}
+                </p>
+            </twig:Alert>
+            EOF,
+            <<<EOF
+            {% component 'Alert' %}
+                {% block content %}<p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block %}bar{% endblock %}
+                    {% endembed %}
+                </p>
+            {% endblock %}{% endcomponent %}
+            EOF,
+        ];
+
+        yield 'component_where_entire_default_block_is_twig_embed_with_block_variable_and_manipulations' => [
+            <<<EOF
+            <twig:Alert>
+                <p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block doSomething(fooVar)|u.camel.title.truncate(5) %}
+                    {% endembed %}
+                </p>
+            </twig:Alert>
+            EOF,
+            <<<EOF
+            {% component 'Alert' %}
+                {% block content %}<p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block doSomething(fooVar)|u.camel.title.truncate(5) %}
+                    {% endembed %}
+                </p>
+            {% endblock %}{% endcomponent %}
+            EOF,
+        ];
+
         yield 'string_inside_of_twig_code_not_escaped' => [
             <<<EOF
             <twig:TabbedCodeBlocks :files="[
