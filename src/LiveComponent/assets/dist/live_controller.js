@@ -2370,27 +2370,27 @@ class StandardElementDriver {
 class LoadingPlugin {
     attachToComponent(component) {
         component.on('loading.state:started', (element, request) => {
-            this.startLoading(element, request);
+            this.startLoading(component, element, request);
         });
         component.on('loading.state:finished', (element) => {
-            this.finishLoading(element);
+            this.finishLoading(component, element);
         });
-        this.finishLoading(component.element);
+        this.finishLoading(component, component.element);
     }
-    startLoading(targetElement, backendRequest) {
-        this.handleLoadingToggle(true, targetElement, backendRequest);
+    startLoading(component, targetElement, backendRequest) {
+        this.handleLoadingToggle(component, true, targetElement, backendRequest);
     }
-    finishLoading(targetElement) {
-        this.handleLoadingToggle(false, targetElement, null);
+    finishLoading(component, targetElement) {
+        this.handleLoadingToggle(component, false, targetElement, null);
     }
-    handleLoadingToggle(isLoading, targetElement, backendRequest) {
+    handleLoadingToggle(component, isLoading, targetElement, backendRequest) {
         if (isLoading) {
             this.addAttributes(targetElement, ['busy']);
         }
         else {
             this.removeAttributes(targetElement, ['busy']);
         }
-        this.getLoadingDirectives(targetElement).forEach(({ element, directives }) => {
+        this.getLoadingDirectives(component, targetElement).forEach(({ element, directives }) => {
             if (isLoading) {
                 this.addAttributes(element, ['data-live-is-loading']);
             }
@@ -2474,9 +2474,10 @@ class LoadingPlugin {
         }
         loadingDirective();
     }
-    getLoadingDirectives(element) {
+    getLoadingDirectives(component, element) {
         const loadingDirectives = [];
-        let matchingElements = element.querySelectorAll('[data-loading]');
+        let matchingElements = [...element.querySelectorAll('[data-loading]')];
+        matchingElements = matchingElements.filter((elt) => elementBelongsToThisComponent(elt, component));
         if (element.hasAttribute('data-loading')) {
             matchingElements = [element, ...matchingElements];
         }

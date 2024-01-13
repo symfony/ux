@@ -223,4 +223,51 @@ describe('LiveController data-loading Tests', () => {
         await (new Promise(resolve => setTimeout(resolve, 30)));
         expect(getByTestId(test.element, 'loading-element')).not.toBeVisible();
     });
+
+    it('does not trigger loading inside component children', async () => {
+       const childTemplate = (data: any) => `
+            <div ${initComponent(data, {id: 'child-id'})} data-testid="child">
+                <span data-loading="show" data-testid="child-loading-element-showing">Loading...</span>
+                <span data-loading="hide" data-testid="child-loading-element-hiding">Loading...</span>
+            </div>
+        `;
+
+        const test = await createTest({} , (data: any) => `
+            <div ${initComponent(data, {id: 'parent-id'})} data-testid="parent">
+                <span data-loading="show" data-testid="parent-loading-element-showing">Loading...</span>
+                <span data-loading="hide" data-testid="parent-loading-element-hiding">Loading...</span>
+                ${childTemplate({})}
+                <button data-action="live#$render">Render</button>
+            </div>
+        `);
+
+        test.expectsAjaxCall()
+            // delay so we can check loading
+            .delayResponse(20);
+
+        // All showing elements should be hidden / hiding elements should be visible
+        await waitFor(() => expect(getByTestId(test.element, 'parent-loading-element-showing')).not.toBeVisible());
+        await waitFor(() => expect(getByTestId(test.element, 'parent-loading-element-hiding')).toBeVisible());
+        await waitFor(() => expect(getByTestId(test.element, 'child-loading-element-showing')).not.toBeVisible());
+        await waitFor(() => expect(getByTestId(test.element, 'child-loading-element-hiding')).toBeVisible());
+
+        getByText(test.element, 'Render').click();
+
+        // Parent: showing elements should be visible / hiding elements should be hidden
+        expect(getByTestId(test.element, 'parent-loading-element-showing')).toBeVisible();
+        expect(getByTestId(test.element, 'parent-loading-element-hiding')).not.toBeVisible();
+        // Child: no change
+        expect(getByTestId(test.element, 'child-loading-element-showing')).not.toBeVisible();
+        expect(getByTestId(test.element, 'child-loading-element-hiding')).toBeVisible();
+
+        // wait for loading to finish
+        await (new Promise(resolve => setTimeout(resolve, 30)));
+
+        // Parent: back to original state
+        expect(getByTestId(test.element, 'parent-loading-element-showing')).not.toBeVisible();
+        expect(getByTestId(test.element, 'parent-loading-element-hiding')).toBeVisible();
+        // Child: no change
+        expect(getByTestId(test.element, 'child-loading-element-showing')).not.toBeVisible();
+        expect(getByTestId(test.element, 'child-loading-element-hiding')).toBeVisible();
+    });
 });
