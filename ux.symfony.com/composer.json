@@ -29,6 +29,7 @@
         "symfony/notifier": "6.4.*",
         "symfony/proxy-manager-bridge": "6.4.*",
         "symfony/runtime": "6.4.*",
+        "symfony/serializer": "6.4.*",
         "symfony/stimulus-bundle": "2.x-dev",
         "symfony/translation": "6.4.*",
         "symfony/twig-bundle": "6.4.*",
@@ -91,7 +92,8 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
-            "assets:install %PUBLIC_DIR%": "symfony-cmd"
+            "assets:install %PUBLIC_DIR%": "symfony-cmd",
+            "importmap:install": "symfony-cmd"
         },
         "post-install-cmd": [
             "@auto-scripts"

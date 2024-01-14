@@ -6,6 +6,7 @@
                 "fetch": "lazy",
                 "autoimport": {
                     "tom-select/dist/css/tom-select.default.css": false,
+                    "tom-select/dist/css/tom-select.bootstrap4.css": false,
                     "tom-select/dist/css/tom-select.bootstrap5.css": true
                 }
             }
