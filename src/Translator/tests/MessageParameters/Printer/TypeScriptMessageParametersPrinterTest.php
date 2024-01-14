@@ -26,7 +26,7 @@ class TypeScriptMessageParametersPrinterTest extends TestCase
         static::assertSame($expectedTypeScriptType, $typeScriptMessageParametersPrinter->print($parameters));
     }
 
-    public function providePrint()
+    public static function providePrint()
     {
         yield [
             [],
