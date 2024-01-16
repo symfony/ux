@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LiveComponent\Attribute;
 
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 /**
@@ -33,6 +34,7 @@ final class AsLiveComponent extends AsTwigComponent
      * @param string      $attributesVar     The name of the special "attributes" variable in the template
      * @param bool        $csrf              Whether to enable CSRF protection (default: true)
      * @param string      $route             The route used to render the component & handle actions (default: ux_live_component)
+     * @param int         $urlReferenceType  Which type of URL should be generated for the given route. Use the constants from UrlGeneratorInterface (default: absolute path, e.g. "/dir/file").
      */
     public function __construct(
         string $name = null,
@@ -43,6 +45,7 @@ final class AsLiveComponent extends AsTwigComponent
         public bool $csrf = true,
         public string $route = 'ux_live_component',
         public string $method = 'post',
+        public int $urlReferenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
     ) {
         parent::__construct($name, $template, $exposePublicProps, $attributesVar);
 
@@ -64,6 +67,7 @@ final class AsLiveComponent extends AsTwigComponent
             'csrf' => $this->csrf,
             'route' => $this->route,
             'method' => $this->method,
+            'url_reference_type' => $this->urlReferenceType,
         ]);
     }
 

@@ -3279,6 +3279,26 @@ Then specify this new route on your component:
           use DefaultActionTrait;
       }
 
+.. versionadded:: 2.14
+
+    The ``urlReferenceType`` option  was added in LiveComponents 2.14.
+
+You can also control the type of the generated URL:
+
+.. code-block:: diff
+
+      // src/Components/RandomNumber.php
+    + use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+      use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+      use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+    - #[AsLiveComponent]
+    + #[AsLiveComponent(urlReferenceType: UrlGeneratorInterface::ABSOLUTE_URL)]
+      class RandomNumber
+      {
+          use DefaultActionTrait;
+      }
+
 Add a Hook on LiveProp Update
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

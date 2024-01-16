@@ -45,6 +45,6 @@ final class LiveComponentRuntime
 
         $metadata = $this->factory->metadataFor($mounted->getName());
 
-        return $this->urlGenerator->generate($metadata->get('route'), $params);
+        return $this->urlGenerator->generate($metadata->get('route'), $params, $metadata->get('url_reference_type'));
     }
 }
