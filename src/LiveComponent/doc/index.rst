@@ -2083,6 +2083,8 @@ then render it manually after:
 
     {{ form_widget(form.todoItems.vars.button_add, { label: '+ Add Item', attr: { class: 'btn btn-outline-primary' } }) }}
 
+.. _validation:
+
 Validation (without a Form)
 ---------------------------
 
@@ -2303,6 +2305,130 @@ You can also trigger a specific "action" instead of a normal re-render:
         data-poll="delay(2000)|save"
         #}
     >
+
+Changing the URL when a LiveProp changes
+----------------------------------------
+
+.. versionadded:: 2.14
+
+    The ``url`` option was introduced in Live Components 2.14.
+
+If you want the URL to update when a ``LiveProp`` changes, you can do that with the ``url`` option::
+
+    // src/Components/SearchModule.php
+    namespace App\Components;
+
+    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+    use Symfony\UX\LiveComponent\Attribute\LiveProp;
+    use Symfony\UX\LiveComponent\DefaultActionTrait;
+
+    #[AsLiveComponent]
+    class SearchModule
+    {
+        use DefaultActionTrait;
+
+        #[LiveProp(writable: true, url: true)]
+        public string $query = '';
+    }
+
+Now, when the user changes the value of the ``query`` prop, a query parameter in the URL will be updated to reflect the
+new state of your component, for example: ``https://my.domain/search?query=my+search+string``.
+
+If you load this URL in your browser, the ``LiveProp`` value will be initialized using the query string
+(e.g. ``my search string``).
+
+.. note::
+
+    The URL is changed via ``history.replaceState()``. So no new entry is added.
+
+.. warning::
+
+    You can use multiple components with URL bindings in the same page, as long as bound field names don't collide.
+    Otherwise, you will observe unexpected behaviors.
+
+Supported Data Types
+~~~~~~~~~~~~~~~~~~~~
+
+You can use scalars, arrays and objects in your URL bindings:
+
+============================================  =================================================
+JavaScript ``prop`` value                     URL representation
+============================================  =================================================
+``'some search string'``                      ``prop=some+search+string``
+``42``                                        ``prop=42``
+``['foo', 'bar']``                            ``prop[0]=foo&prop[1]=bar``
+``{ foo: 'bar', baz: 42 }``                   ``prop[foo]=bar&prop[baz]=42``
+
+
+When a page is loaded with a query parameter that's bound to a ``LiveProp`` (e.g. ``/search?query=my+search+string``),
+the value - ``my search string`` - goes through the hydration system before it's set onto the property. If a value can't
+be hydrated, it will be ignored.
+
+Multiple Query Parameter Bindings
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+You can use as many URL bindings as you want in your component. To ensure the state is fully represented in the URL,
+all bound props will be set as query parameters, even if their values didn't change.
+
+For example, if you declare the following bindings::
+
+    // ...
+    #[AsLiveComponent]
+    class SearchModule
+    {
+        #[LiveProp(writable: true, url: true)]
+        public string $query = '';
+
+        #[LiveProp(writable: true, url: true)]
+        public string $mode = 'fulltext';
+
+        // ...
+    }
+
+
+And you only set the ``query`` value, then your URL will be updated to
+``https://my.domain/search?query=my+query+string&mode=fulltext``.
+
+Validating the Query Parameter Values
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Like any writable ``LiveProp``, because the user can modify this value, you should consider adding
+:ref:`validation <validation>`. When you bind a ``LiveProp`` to the URL, the initial value is not automatically
+validated. To validate it, you have to set up a `PostMount hook`_::
+
+    // ...
+    use Symfony\Component\Validator\Constraints as Assert;
+    use Symfony\UX\LiveComponent\ValidatableComponentTrait;
+    use Symfony\UX\TwigComponent\Attribute\PostMount;
+
+    #[AsLiveComponent]
+    class SearchModule
+    {
+        use ValidatableComponentTrait;
+
+        #[LiveProp(writable: true, url: true)]
+        public string $query = '';
+
+        #[LiveProp(writable: true, url: true)]
+        #[Assert\NotBlank]
+        public string $mode = 'fulltext';
+
+        #[PostMount]
+        public function postMount(): void
+        {
+            // Validate 'mode' field without throwing an exception, so the component can be mounted anyway and a
+            // validation error can be shown to the user
+            if (!$this->validateField('mode', false)) {
+                // Do something when validation fails
+            }
+        }
+
+        // ...
+    }
+
+.. note::
+
+    You can use `validation groups`_ if you want to use specific validation rules only in the PostMount hook.
 
 .. _emit:
 
@@ -3317,3 +3443,5 @@ bound to Symfony's BC policy for the moment.
 .. _`Symfony's built-in form theming techniques`: https://symfony.com/doc/current/form/form_themes.html
 .. _`pass content to Twig Components`: https://symfony.com/bundles/ux-twig-component/current/index.html#passing-blocks
 .. _`Twig Component debug command`: https://symfony.com/bundles/ux-twig-component/current/index.html#debugging-components
+.. _`PostMount hook`: https://symfony.com/bundles/ux-twig-component/current/index.html#postmount-hook
+.. _`validation groups`: https://symfony.com/doc/current/form/validation_groups.html
