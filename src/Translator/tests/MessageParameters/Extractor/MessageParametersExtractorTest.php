@@ -26,7 +26,7 @@ class MessageParametersExtractorTest extends TestCase
         static::assertEquals($messageParametersExtractor->extract($message), $expectedParameters);
     }
 
-    public function provideExtract()
+    public static function provideExtract()
     {
         yield [
             'Symfony is great!',

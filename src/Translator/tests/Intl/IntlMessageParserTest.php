@@ -30,7 +30,7 @@ class IntlMessageParserTest extends TestCase
         static::assertEquals($expectedAst, $intlMessageParser->parse());
     }
 
-    public function provideParse()
+    public static function provideParse()
     {
         yield 'no parameters' => [
             'Hello world!',

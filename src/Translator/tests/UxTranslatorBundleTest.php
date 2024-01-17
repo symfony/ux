@@ -18,7 +18,7 @@ use Symfony\UX\Translator\Tests\Kernel\FrameworkAppKernel;
 
 class UxTranslatorBundleTest extends TestCase
 {
-    public function provideKernels()
+    public static function provideKernels()
     {
         yield 'empty' => [new EmptyAppKernel('test', true)];
         yield 'framework' => [new FrameworkAppKernel('test', true)];
