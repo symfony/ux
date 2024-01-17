@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-14T21:20:18Z
+
+~I was not able to update the asset-mapper recipe:~
+
+```
+The original recipe version you have installed could not be found, it may be too old.
+Update the recipe by re-installing the latest version with:
+  composer recipes:install symfony/asset-mapper --force -v
+```
+
+When I run `composer recipes:install symfony/asset-mapper --force -v`:
+
+```
+Executing script importmap:require
+Executed script importmap:require  [OK]
+Executing script importmap:require
+Executed script importmap:require  [OK]
+Executing script importmap:require
+Executed script importmap:require  [OK]
+Executing script importmap:require
+Executed script importmap:require  [OK]
+(repeated forever?)
+```
+
+_Edit, fixed, it was not repeated forever - I think one for each importmap entry?_
