@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by squrious at 2023-12-21T11:56:54Z
+
+> Is the browser's history updated?
+
+No, the current behavior is to update the URL in place. There could be a feature to push new history entries in the future.
+
+> What happens if multiple components on the same page use this feature? Should this be avoided?
+
+If multiple components use this feature on the same page, things should work fine as long as they don't use the same field names. Otherwise parameters will collide, so the last rendered component will take priority on URL parameters, overriding ones set by the other components.
+
+Should this be part of the documentation too?
+
+---------------------------------------------------------------------------
+
+by kbond at 2023-12-21T13:17:13Z
+
+> Should this be part of the documentation too?
+
+Maybe just a warning
