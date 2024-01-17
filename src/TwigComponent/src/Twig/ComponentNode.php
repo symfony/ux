@@ -45,14 +45,10 @@ final class ComponentNode extends Node
         $compiler->addDebugInfo($this);
 
         // since twig/twig 3.9.0: Using the internal "twig_to_array" function is deprecated.
-        $compiler
-            ->write('$toArray = function ($data) {')
-        ;
-
         if (method_exists(CoreExtension::class, 'toArray')) {
-            $compiler->write('return Twig\Extension\CoreExtension::toArray($data);};');
+            $twig_to_array = 'Twig\Extension\CoreExtension::toArray';
         } else {
-            $compiler->write('return twig_to_array($data);};');
+            $twig_to_array = 'twig_to_array';
         }
 
         /*
@@ -67,7 +63,8 @@ final class ComponentNode extends Node
             ->raw(']->extensionPreCreateForRender(')
             ->string($this->getAttribute('component'))
             ->raw(', ')
-            ->raw('$toArray(')
+            ->raw($twig_to_array)
+            ->raw('(')
         ;
         $this->writeProps($compiler)
             ->raw(')')
@@ -98,7 +95,9 @@ final class ComponentNode extends Node
             ->string(ComponentExtension::class)
             ->raw(']->startEmbeddedComponentRender(')
             ->string($this->getAttribute('component'))
-            ->raw(', $toArray(')
+            ->raw(', ')
+            ->raw($twig_to_array)
+            ->raw('(')
         ;
         $this->writeProps($compiler)
             ->raw('), ')
