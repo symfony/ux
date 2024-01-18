@@ -821,6 +821,12 @@ controller and put it around (or attached to) your root component element:
         }
     }
 
+With AssetMapper, you need to add ``@symfony/ux-live-component`` in the 
+``importmap.php`` configuration file: 
+
+.. code-block:: terminal
+    $ ./bin/console importmap:require @symfony/ux-live-component --path=@symfony/ux-live-component/live_controller.js
+
 You can also access the ``Component`` object via a special property
 on the root component element, though ``getComponent()`` is the
 recommended way, as it will work even if the component is not yet
