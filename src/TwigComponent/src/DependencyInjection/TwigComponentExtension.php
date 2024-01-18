@@ -74,7 +74,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
         $container->registerAttributeForAutoconfiguration(
             AsTwigComponent::class,
             static function (ChildDefinition $definition, AsTwigComponent $attribute) {
-                $definition->addTag('twig.component', array_filter($attribute->serviceConfig()));
+                $definition->addTag('twig.component', $attribute->serviceConfig());
             }
         );
 

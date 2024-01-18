@@ -21,6 +21,41 @@ use Symfony\UX\TwigComponent\Attribute\PreMount;
  */
 final class AsTwigComponentTest extends TestCase
 {
+    /**
+     * @dataProvider provideServiceConfigData
+     */
+    public function testServiceConfigValues(AsTwigComponent $attribute, array $expectedConfig): void
+    {
+        $this->assertSame($expectedConfig, $attribute->serviceConfig());
+    }
+
+    public static function provideServiceConfigData(): iterable
+    {
+        yield 'No values' => [
+            new AsTwigComponent(),
+            [
+                'expose_public_props' => true,
+                'attributes_var' => 'attributes',
+            ],
+        ];
+        yield 'Default values' => [
+             new AsTwigComponent(null, null, true, 'attributes'),
+             [
+                 'expose_public_props' => true,
+                 'attributes_var' => 'attributes',
+             ],
+        ];
+        yield 'Name and template set' => [
+             new AsTwigComponent('foo', 'template'),
+             [
+                'key' => 'foo',
+                'template' => 'template',
+                 'expose_public_props' => true,
+                 'attributes_var' => 'attributes',
+             ],
+        ];
+    }
+
     public function testPreMountHooksAreOrderedByPriority(): void
     {
         $hooks = AsTwigComponent::preMountMethods(

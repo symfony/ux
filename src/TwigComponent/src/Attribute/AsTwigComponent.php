@@ -67,12 +67,12 @@ class AsTwigComponent
      */
     public function serviceConfig(): array
     {
-        return [
+        return array_filter([
             'key' => $this->name,
             'template' => $this->template,
             'expose_public_props' => $this->exposePublicProps,
             'attributes_var' => $this->attributesVar,
-        ];
+        ]);
     }
 
     /**
