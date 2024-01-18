@@ -1058,6 +1058,63 @@ Exclude specific attributes:
       My Component!
     </div>
 
+Nested Attributes
+~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.17
+
+    The Nested Attributes feature was added in TwigComponents 2.17.
+
+You can have attributes that aren't meant to be used on the *root* element
+but one of its *descendants*. This is useful for, say, a dialog component where
+you want to allow customizing the attributes of the dialog's content, title,
+and footer. Here's an example of this:
+
+.. code-block:: html+twig
+
+    {# templates/components/Dialog.html.twig #}
+    <div{{ attributes }}>
+        <div{{ attributes.nested('title') }}>
+            {% block title %}Default Title{% endblock %}
+        </div>
+        <div{{ attributes.nested('body') }}>
+            {% block content %}{% endblock %}
+        </div>
+        <div{{ attributes.nested('footer') }}>
+            {% block footer %}Default Footer{% endblock %}
+        </div>
+    </div>
+
+    {# render #}
+    <twig:Dialog class="foo" title:class="bar" body:class="baz" footer:class="qux">
+        Some content
+    </twig:MyDialog>
+
+    {# output #}
+    <div class="foo">
+        <div class="bar">
+            Default Title
+        </div>
+        <div class="baz">
+            Some content
+        </div>
+        <div class="qux">
+            Default Footer
+        </div>
+    </div>
+
+The nesting is recursive so you could potentially do something like this:
+
+.. code-block:: html+twig
+
+    <twig:Form
+        :form="form"
+        class="ui-form"
+        row:class="ui-form-row"
+        row:label:class="ui-form-label"
+        row:widget:class="ui-form-widget"
+    />
+
 Component with Complex Variants (CVA)
 -------------------------------------
 
