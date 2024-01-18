@@ -39,20 +39,20 @@ final class AsTwigComponentTest extends TestCase
             ],
         ];
         yield 'Default values' => [
-             new AsTwigComponent(null, null, true, 'attributes'),
-             [
-                 'expose_public_props' => true,
-                 'attributes_var' => 'attributes',
-             ],
+            new AsTwigComponent(null, null, true, 'attributes'),
+            [
+                'expose_public_props' => true,
+                'attributes_var' => 'attributes',
+            ],
         ];
         yield 'Name and template set' => [
-             new AsTwigComponent('foo', 'template'),
-             [
+            new AsTwigComponent('foo', 'template'),
+            [
                 'key' => 'foo',
                 'template' => 'template',
-                 'expose_public_props' => true,
-                 'attributes_var' => 'attributes',
-             ],
+                'expose_public_props' => true,
+                'attributes_var' => 'attributes',
+            ],
         ];
     }
 
