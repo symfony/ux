@@ -199,4 +199,113 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame($attributes->all(), iterator_to_array($attributes));
         $this->assertCount(1, $attributes);
     }
+
+    public function testDefaultBehaviourNotation(): void
+    {
+        $attributes = new ComponentAttributes([
+            'data-1' => 'value',
+            'data-2' => '$:value',
+            'data-3' => '^:value',
+            'data-4' => '@:value',
+            'data-5' => true,
+            'data-6' => '^:value',
+            'data-7' => '$:value',
+        ]);
+
+        $attributes = $attributes->defaults([
+            'data-1' => 'default',
+            'data-2' => 'default',
+            'data-3' => 'default',
+            'data-4' => 'default',
+            'data-5' => false,
+            'data-6' => false,
+            'data-7' => true,
+        ]);
+
+        $this->assertSame([
+            'data-1' => 'value',
+            'data-2' => 'default value',
+            'data-3' => 'value default',
+            'data-4' => 'value',
+            'data-5' => true,
+            'data-6' => 'value',
+            'data-7' => 'value',
+        ], $attributes->all());
+    }
+
+    public function testCanOverrideCustomBehaviourAttributes(): void
+    {
+        $attributes = new ComponentAttributes([
+            'class' => '@:value',
+            'data-controller' => '@:value',
+            'data-action' => '@:value',
+        ]);
+
+        $attributes = $attributes->defaults([
+            'class' => 'default',
+            'data-controller' => 'default',
+            'data-action' => 'default',
+        ]);
+
+        $this->assertSame([
+            'class' => 'value',
+            'data-controller' => 'value',
+            'data-action' => 'value',
+        ], $attributes->all());
+    }
+
+    public function testCanPrefixCustomBehaviourAttributes(): void
+    {
+        $attributes = new ComponentAttributes([
+            'class' => '^:value',
+            'data-controller' => '^:value',
+            'data-action' => '^:value',
+        ]);
+
+        $attributes = $attributes->defaults([
+            'class' => 'default',
+            'data-controller' => 'default',
+            'data-action' => 'default',
+        ]);
+
+        $this->assertSame([
+            'class' => 'value default',
+            'data-controller' => 'value default',
+            'data-action' => 'value default',
+        ], $attributes->all());
+    }
+
+    public function testCanSuffixCustomBehaviourAttributes(): void
+    {
+        $attributes = new ComponentAttributes([
+            'class' => '$:value',
+            'data-controller' => '$:value',
+            'data-action' => '$:value',
+        ]);
+
+        $attributes = $attributes->defaults([
+            'class' => 'default',
+            'data-controller' => 'default',
+            'data-action' => 'default',
+        ]);
+
+        $this->assertSame([
+            'class' => 'default value',
+            'data-controller' => 'default value',
+            'data-action' => 'default value',
+        ], $attributes->all());
+    }
+
+    public function testBehaviourNotationIsNotRendered(): void
+    {
+        $attributes = new ComponentAttributes([
+            'data-first' => 'value',
+            'data-second' => '$:value',
+            'data-third' => '^:value',
+            'data-fourth' => '@:value',
+            'data-fifth' => true,
+        ]);
+
+        $this->assertSame(' data-first="value" data-second="value" data-third="value" data-fourth="value" data-fifth', (string) $attributes);
+    }
 }

@@ -3,6 +3,7 @@
 ## Unreleased
 
 -   Make `ComponentAttributes` traversable/countable.
+-   Add attribute merging behaviour notation.
 
 ## 2.13.0
 

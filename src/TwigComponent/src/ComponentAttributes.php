@@ -21,6 +21,13 @@ use Symfony\WebpackEncoreBundle\Dto\AbstractStimulusDto;
  */
 final class ComponentAttributes implements \IteratorAggregate, \Countable
 {
+    private const PREFIX = '^:';
+    private const SUFFIX = '$:';
+    private const REPLACE = '@:';
+
+    private const BEHAVIOUR_REGEX = '#^([\^$@]:)(.+)$#';
+    private const AUTOSUFFIX_TAGS = ['class', 'data-controller', 'data-action'];
+
     /**
      * @param array<string, string|bool> $attributes
      */
@@ -47,7 +54,7 @@ final class ComponentAttributes implements \IteratorAggregate, \Countable
                 return match ($value) {
                     true => "{$carry} {$key}",
                     false => $carry,
-                    default => sprintf('%s %s="%s"', $carry, $key, $value),
+                    default => sprintf('%s %s="%s"', $carry, $key, preg_replace(self::BEHAVIOUR_REGEX, '$2', (string) $value)),
                 };
             },
             ''
@@ -80,10 +87,18 @@ final class ComponentAttributes implements \IteratorAggregate, \Countable
         }
 
         foreach ($this->attributes as $key => $value) {
-            if (\in_array($key, ['class', 'data-controller', 'data-action'], true) && isset($attributes[$key])) {
-                $attributes[$key] = "{$attributes[$key]} {$value}";
+            [$behaviour, $value] = self::parseBehaviour($value);
 
-                continue;
+            if (null === $behaviour && \in_array($key, self::AUTOSUFFIX_TAGS, true)) {
+                $behaviour = self::SUFFIX;
+            }
+
+            if (isset($attributes[$key]) && \is_string($attributes[$key])) {
+                $value = match ($behaviour) {
+                    self::PREFIX => "{$value} {$attributes[$key]}",
+                    self::SUFFIX => "{$attributes[$key]} {$value}",
+                    default => $value,
+                };
             }
 
             $attributes[$key] = $value;
@@ -166,5 +181,21 @@ final class ComponentAttributes implements \IteratorAggregate, \Countable
     public function count(): int
     {
         return \count($this->attributes);
+    }
+
+    /**
+     * @return array{0: self::PREFIX|self::SUFFIX|self::REPLACE|null, 1: mixed}
+     */
+    private static function parseBehaviour(mixed $value): array
+    {
+        if (!\is_string($value)) {
+            return [null, $value];
+        }
+
+        if (!preg_match(self::BEHAVIOUR_REGEX, $value, $matches)) {
+            return [null, $value];
+        }
+
+        return [$matches[1], $matches[2]];
     }
 }
