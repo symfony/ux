@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Twig;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Node;
 
@@ -19,6 +20,7 @@ use Twig\Node\Node;
  *
  * @internal
  */
+#[YieldReady]
 class PropsNode extends Node
 {
     public function __construct(array $propsNames, array $values, $lineno = 0, ?string $tag = null)
@@ -47,22 +49,31 @@ class PropsNode extends Node
 
             $compiler
                 ->write('$propsNames[] = \''.$name.'\';')
+                ->write("\n")
                 ->write('$context[\'attributes\'] = $context[\'attributes\']->remove(\''.$name.'\');')
+                ->write("\n")
                 ->write('if (!isset($context[\''.$name.'\'])) {');
 
             if (!$this->hasNode($name)) {
                 $compiler
+                    ->indent()
                     ->write('throw new \Twig\Error\RuntimeError("'.$name.' should be defined for component '.$this->getTemplateName().'");')
-                    ->write('}');
+                    ->write("\n")
+                    ->outdent()
+                    ->write('}')
+                    ->write("\n");
 
                 continue;
             }
 
             $compiler
+                ->indent()
                 ->write('$context[\''.$name.'\'] = ')
                 ->subcompile($this->getNode($name))
                 ->raw(";\n")
-                ->write('}');
+                ->outdent()
+                ->write('}')
+                ->write("\n");
         }
 
         $compiler
@@ -70,12 +81,18 @@ class PropsNode extends Node
             ->raw("\n")
             ->write('foreach ($context as $key => $value) {')
             ->raw("\n")
+            ->indent()
             ->write('if (in_array($key, $attributesKeys) && !in_array($key, $propsNames)) {')
             ->raw("\n")
+            ->indent()
             ->raw('unset($context[$key]);')
             ->raw("\n")
+            ->outdent()
             ->write('}')
+            ->raw("\n")
+            ->outdent()
             ->write('}')
+            ->raw("\n")
         ;
 
         // overwrite the context value if a props with a similar name and a default value exist
