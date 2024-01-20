@@ -13,9 +13,11 @@ namespace Symfony\UX\TwigComponent\Twig;
 
 use Symfony\UX\TwigComponent\BlockStack;
 use Twig\Compiler;
+use Twig\Environment;
 use Twig\Extension\CoreExtension;
 use Twig\Node\Expression\AbstractExpression;
 use Twig\Node\Node;
+use Twig\Node\NodeOutputInterface;
 
 /**
  * @author Fabien Potencier <fabien@symfony.com>
@@ -23,7 +25,7 @@ use Twig\Node\Node;
  *
  * @internal
  */
-final class ComponentNode extends Node
+final class ComponentNode extends Node implements NodeOutputInterface
 {
     public function __construct(string $component, string $embeddedTemplateName, int $embeddedTemplateIndex, ?AbstractExpression $props, bool $only, int $lineno, string $tag)
     {
@@ -64,24 +66,25 @@ final class ComponentNode extends Node
             ->string($this->getAttribute('component'))
             ->raw(', ')
             ->raw($twig_to_array)
-            ->raw('(')
-        ;
+            ->raw('(');
         $this->writeProps($compiler)
             ->raw(')')
-            ->raw(");\n")
-        ;
+            ->raw(");\n");
 
         $compiler
             ->write('if (null !== $preRendered) {')
             ->raw("\n")
-            ->indent()
-            ->write('echo $preRendered;')
-            ->raw("\n")
+            ->indent();
+        if (method_exists(Environment::class, 'useYield') && $compiler->getEnvironment()->useYield()) {
+            $compiler->write('yield from $preRendered; ');
+        } else {
+            $compiler->write('echo $preRendered; ');
+        }
+        $compiler->raw("\n")
             ->outdent()
             ->write('} else {')
             ->raw("\n")
-            ->indent()
-        ;
+            ->indent();
 
         /*
          * Block 2) Create the component & return render info
@@ -97,8 +100,7 @@ final class ComponentNode extends Node
             ->string($this->getAttribute('component'))
             ->raw(', ')
             ->raw($twig_to_array)
-            ->raw('(')
-        ;
+            ->raw('(');
         $this->writeProps($compiler)
             ->raw('), ')
             ->raw($this->getAttribute('only') ? '[]' : '$context')
@@ -106,8 +108,7 @@ final class ComponentNode extends Node
             ->string(TemplateNameParser::parse($this->getAttribute('embedded_template')))
             ->raw(', ')
             ->raw($this->getAttribute('embedded_index'))
-            ->raw(");\n")
-        ;
+            ->raw(");\n");
         $compiler
             ->write('$embeddedContext = $preRenderEvent->getVariables();')
             ->raw("\n")
@@ -121,8 +122,7 @@ final class ComponentNode extends Node
             // happens to contain a {% component %} tag. So we don't need to worry
             // about trying to allow a specific embedded template to be targeted.
             ->write('$embeddedContext["__parent__"] = $preRenderEvent->getTemplate();')
-            ->raw("\n")
-        ;
+            ->raw("\n");
 
         /*
          * Block 3) Add & update the block stack
@@ -143,14 +143,17 @@ final class ComponentNode extends Node
             ->string('outerBlocks')
             ->raw(']->convert($blocks, ')
             ->raw($this->getAttribute('embedded_index'))
-            ->raw(");\n")
-        ;
+            ->raw(");\n");
 
         /*
          * Block 4) Render the component template
          *
          * This will actually render the child component template.
          */
+        if (method_exists(Environment::class, 'useYield') && $compiler->getEnvironment()->useYield()) {
+            $compiler
+                ->write('yield from ');
+        }
         $compiler
             ->write('$this->loadTemplate(')
             ->string($this->getAttribute('embedded_template'))
@@ -160,10 +163,16 @@ final class ComponentNode extends Node
             ->repr($this->getTemplateLine())
             ->raw(', ')
             ->string($this->getAttribute('embedded_index'))
-            ->raw(')')
-            ->raw('->display($embeddedContext, $embeddedBlocks);')
-            ->raw("\n")
-        ;
+            ->raw(')');
+
+        if (method_exists(Environment::class, 'useYield') && $compiler->getEnvironment()->useYield()) {
+            $compiler->raw('->unwrap()->yield(');
+        } else {
+            $compiler->raw('->display(');
+        }
+        $compiler
+            ->raw('$embeddedContext, $embeddedBlocks')
+            ->raw(");\n");
 
         $compiler->write('$this->extensions[')
             ->string(ComponentExtension::class)

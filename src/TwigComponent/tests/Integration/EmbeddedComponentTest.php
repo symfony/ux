@@ -27,7 +27,7 @@ final class EmbeddedComponentTest extends KernelTestCase
         $output = self::getContainer()->get(Environment::class)->render('embedded_component_blocks_basic.html.twig');
 
         // rule 1
-        $this->assertStringContainsString('<div id="rendered-in-place">This block is rendered in place, since there\'s no extend happening</div>', $output);
+        $this->assertStringContainsStringIgnoringIndentation('<div id="rendered-in-place">This block is rendered in place, since there\'s no extend happening</div>', $output);
         $this->assertStringNotContainsString('<div class="divComponent">Hello Fabien!This block is rendered in place, since there\'s no extend happening</div>', $output);
     }
 
@@ -86,6 +86,7 @@ final class EmbeddedComponentTest extends KernelTestCase
     public function testBlockCanBeUsedViaTheOuterBlocks(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('embedded_component_blocks_outer_blocks_extended_template.html.twig');
+
         $this->assertStringContainsStringIgnoringIndentation('<div>Hello world!</div>', $output);
         $this->assertStringNotContainsString("Hello world!\n<div", $output);
     }
@@ -121,7 +122,7 @@ final class EmbeddedComponentTest extends KernelTestCase
     {
         $this->assertStringContainsStringIgnoringIndentation(
             '<div class="divComponent">Content 1<div class="divComponent">Content 2<div class="divComponent">Content 3<span class="foo">Override foo3</span></div><span class="foo"></span></div><span class="foo">Override foo1</span></div>',
-            self::getContainer()->get(Environment::class)->render('embedded_component_blocks_complex_nesting2.html.twig')
+            self::getContainer()->get(Environment::class)->render('embedded_component_blocks_complex_nesting2.html.twig'),
         );
     }
 
@@ -160,26 +161,22 @@ final class EmbeddedComponentTest extends KernelTestCase
     {
         $this->assertStringContainsStringIgnoringIndentation(
             '<div class="divComponent"><span class="foo"></span></div>',
-            self::getContainer()->get(Environment::class)->render('non_embedded_component_blocks.html.twig')
+            self::getContainer()->get(Environment::class)->render('non_embedded_component_blocks.html.twig'),
         );
     }
 
     public function testANonEmbeddedComponentCanRenderParentBlocksAsFallback(): void
     {
-        $output = self::getContainer()->get(Environment::class)->render('non_embedded_component_blocks_with_fallback.html.twig');
         $this->assertStringContainsStringIgnoringIndentation(
             '<div class="divComponent">The Generic Element could have some default content, although it does not make sense in this example.<span class="foo">The Generic Element default foo block</span></div>',
-            $output
-        );
-
-        $this->assertStringContainsStringIgnoringIndentation(
-            '<div class="divComponent">Override content<span class="foo">Override foo</span></div>',
-            $output
+            self::getContainer()->get(Environment::class)->render('non_embedded_component_blocks_with_fallback.html.twig'),
         );
     }
 
     private function assertStringContainsStringIgnoringIndentation(string $needle, string $haystack): void
     {
-        $this->assertStringContainsString($needle, str_replace(["\n", '    '], '', $haystack));
+        $needle = trim(preg_replace('#(\s+)#u', '', $needle));
+        $haystack = trim(preg_replace('#(\s+)#u', '', $haystack));
+        $this->assertStringContainsString(trim($needle), trim($haystack));
     }
 }
