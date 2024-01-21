@@ -1,0 +1,107 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-21T20:19:45Z
+
+Thanks for getting this rolling - that's awesome! Might it make sense to have the setting not as an attribute but on the `#[AsLiveComponent]` attribute? If you have a component that requires POST for some reason, then it will ALWAYS need to be POSTed - it shouldn't need to have a `data-force-post` passed each time.
+
+---------------------------------------------------------------------------
+
+by hepisec at 2023-10-21T20:24:42Z
+
+I tried that first as this was your first suggestion. But I was not able to pass the property to the frontend yet. Would `LiveComponentHydrator` be the right place to do so?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-21T20:37:53Z
+
+> But I was not able to pass the property to the frontend yet. Would LiveComponentHydrator be the right place to do so?
+
+Try https://github.com/symfony/ux/blob/2.x/src/LiveComponent/src/Util/LiveControllerAttributesCreator.php
+
+If we added a new `forcePost: true` option to `AsLiveComponent`, we should be able to get it in there. Let me know if you need help - I can dig in a bit further. Ultimately, we'll add an attribute that would map to a new "value" in the Live stimulus controller. Then the JS part shouldn't be too much different :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-22T09:33:09Z
+
+Should we make that a default ?
+
+I agree with @hepisec, and i'm even ready to say that any data sent to the server should be in POST...
+
+---------------------------------------------------------------------------
+
+by hepisec at 2023-10-22T11:29:41Z
+
+I've added support for `#[AsLiveComponent(forcePost: true)]` to the PR. I leave the decision for the default value up to you. I'd like to see the security considerations covered in the documentation.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-24T19:48:38Z
+
+Is there something checking the request _**is**_ sent in POST in the backend side ?
+
+I think somehow the LiveComponentSubscriber should be updated no ?
+
+---------------------------------------------------------------------------
+
+by hepisec at 2023-10-25T09:00:27Z
+
+I've added a check for `forcePost` in `LiveComponentSubscriber::onKernelController`.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-06T19:41:33Z
+
+After talking with a few people, I think we should reverse your PR. We should make components use POST by default, with an option to opt into GET. The reason is the one given in your description. And, more generally, if you think of a live component re-render as a type of "form submit" (and, if the user is changing a prop value... then they likely *are* filling out a form in one way or another), then form submits should almost always be POST (Symfony forms, for example, default to `POST`).
+
+Could you change the option from `forcePost` to `method` and default it to `post`? We could throw an exception in the attribute's constructor if some value other than `get` or post` were passed.
+
+---------------------------------------------------------------------------
+
+by hepisec at 2023-11-07T21:17:30Z
+
+I'll update the PR in the next days to have POST by default, as suggested by @weaverryan
+
+---------------------------------------------------------------------------
+
+by hepisec at 2023-11-13T22:06:10Z
+
+I've finished the work on this issue. As POST is now the new default method and GET is only allowed when `#[AsLiveComponent(method: 'get')]` is set, I had to update several tests / fixtures to work with the new default method.
+
+Thanks everyone so far, I'm looking forward to your feedback.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-12-19T18:56:56Z
+
+Friendly ping to you @hepisec :). Let us know if you have time to do the final steps! Thanks!
+
+---------------------------------------------------------------------------
+
+by hepisec at 2023-12-23T11:39:18Z
+
+I'm starting right now.
+
+---------------------------------------------------------------------------
+
+by hepisec at 2023-12-23T20:45:34Z
+
+It should be done now. The failed tests seem to be related to TwigComponent and are 8.2 only.
+
+I wish you all happy holidays.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-17T15:10:10Z
+
+Hey @hepisec!
+
+Sorry for the delay - this is ready to merge. Can you rebase this please?
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by hepisec at 2024-01-18T19:40:36Z
+
+Rebase done. Looking forward to my first finished contribution to symfony/ux :-)
