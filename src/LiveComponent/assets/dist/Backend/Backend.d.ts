@@ -20,7 +20,7 @@ export interface BackendAction {
 }
 export default class implements BackendInterface {
     private readonly requestBuilder;
-    constructor(url: string, csrfToken?: string | null);
+    constructor(url: string, method?: 'get' | 'post', csrfToken?: string | null);
     makeRequest(props: any, actions: BackendAction[], updated: {
         [key: string]: any;
     }, children: ChildrenFingerprints, updatedPropsFromParent: {

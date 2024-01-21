@@ -56,7 +56,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component1?props='.urlencode(json_encode($dehydrated->getProps())))
+            ->post('/_components/component1', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Prop1: '.$entity->id)
@@ -72,7 +78,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/alt/alternate_route?props='.urlencode(json_encode($dehydrated->getProps())))
+            ->post('/alt/alternate_route', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertOn('/alt/alternate_route', parts: ['path'])
             ->assertContains('From alternate route. (count: 0)')
@@ -98,7 +110,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component2?props='.urlencode(json_encode($dehydrated->getProps())))
+            ->post('/_components/component2', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 1')
@@ -124,7 +142,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/alt/alternate_route?props='.urlencode(json_encode($dehydrated->getProps())))
+            ->post('/alt/alternate_route', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertContains('count: 0')
             ->use(function (Crawler $crawler) use (&$token) {
@@ -145,6 +169,14 @@ final class LiveComponentSubscriberTest extends KernelTestCase
     {
         $this->browser()
             ->get('/_components/component2/increase')
+            ->assertStatus(405)
+        ;
+    }
+
+    public function testCannotExecuteComponentDefaultActionForGetRequestWhenMethodIsPost(): void
+    {
+        $this->browser()
+            ->get('/_components/with_method_post/__invoke')
             ->assertStatus(405)
         ;
     }
@@ -201,7 +233,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/disabled_csrf?props='.urlencode(json_encode($dehydrated->getProps())))
+            ->post('/_components/disabled_csrf', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 1')
@@ -222,7 +260,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->visit('/render-template/render_component2')
             ->assertSuccessful()
             ->assertSee('PreReRenderCalled: No')
-            ->get('/_components/component2?props='.urlencode(json_encode($dehydrated->getProps())))
+            ->post('/_components/component2', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertSee('PreReRenderCalled: Yes')
         ;
@@ -252,7 +296,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertSeeElement('.component2')
             ->assertElementAttributeContains('.component2', 'data-live-props-value', '"data-host-template":"'.$obscuredName.'"')
             ->assertElementAttributeContains('.component2', 'data-live-props-value', '"data-embedded-template-index":'.self::DETERMINISTIC_ID)
-            ->get('/_components/component2?props='.urlencode(json_encode($dehydrated->getProps())))
+            ->post('/_components/component2', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertSee('PreReRenderCalled: Yes')
             ->assertSee('Embedded content with access to context, like count=1')
@@ -357,7 +407,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component2?props='.urlencode(json_encode($dehydrated->getProps())))
+            ->post('/_components/component2', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->use(function (Crawler $crawler) use (&$token) {
                 // get a valid token to use for actions
@@ -394,7 +450,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         $arguments = ['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3'];
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/component6?props='.urlencode(json_encode($dehydrated->getProps())))
+            ->post('/_components/component6', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Arg1: not provided')
@@ -427,7 +489,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/with_nullable_entity?props='.urlencode(json_encode($dehydrated->getProps())))
+            ->post('/_components/with_nullable_entity', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertContains('Prop1: default')
         ;

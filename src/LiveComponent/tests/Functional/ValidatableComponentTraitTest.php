@@ -30,20 +30,29 @@ class ValidatableComponentTraitTest extends KernelTestCase
     {
         $dehydratedProps = $this->dehydrateComponent($this->mountComponent('validating_component'))->getProps();
 
-        $createUrl = function (array $props, array $updated = []) {
-            return '/_components/validating_component?props='.urlencode(json_encode($props)).'&updated='.urlencode(json_encode($updated));
-        };
-
         $browser = $this->browser();
         $browser
-            ->get($createUrl($dehydratedProps))
+            ->post('/_components/validating_component', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydratedProps,
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertContains('Has Error: no')
             ->assertContains('Error: ""')
         ;
 
         $crawler = $browser
-            ->get($createUrl($dehydratedProps, ['name' => 'h', 'validatedFields' => ['name']]))
+            ->post('/_components/validating_component', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydratedProps,
+                        'updated' => ['name' => 'h', 'validatedFields' => ['name']],
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertContains('Has Error: yes')
             ->assertContains('Error: "This value is too short. It should have 3 characters or more."')
@@ -53,9 +62,15 @@ class ValidatableComponentTraitTest extends KernelTestCase
         $div = $crawler->filter('[data-controller="live"]');
         $dehydratedProps = json_decode($div->attr('data-live-props-value'), true);
 
-        // make a normal GET request with no updates and verify validation still happens
+        // make a normal POST request with no updates and verify validation still happens
         $browser
-            ->get($createUrl($dehydratedProps))
+            ->post('/_components/validating_component', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydratedProps,
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertContains('Has Error: yes')
         ;

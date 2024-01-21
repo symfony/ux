@@ -2,7 +2,7 @@ import RequestBuilder from '../../src/Backend/RequestBuilder';
 
 describe('buildRequest', () => {
     it('sets basic data on GET request', () => {
-        const builder = new RequestBuilder('/_components?existing_param=1', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components?existing_param=1', 'get', '_the_csrf_token');
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },
             [],
@@ -21,7 +21,7 @@ describe('buildRequest', () => {
     });
 
     it('sets basic data on POST request', () => {
-        const builder = new RequestBuilder('/_components', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },
             [{
@@ -52,7 +52,7 @@ describe('buildRequest', () => {
     });
 
     it('sets basic data on POST request with batch actions', () => {
-        const builder = new RequestBuilder('/_components', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },
             [{
@@ -87,7 +87,7 @@ describe('buildRequest', () => {
 
     // when data is too long it makes a post request
     it('makes a POST request when data is too long', () => {
-        const builder = new RequestBuilder('/_components', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components', 'get', '_the_csrf_token');
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan'.repeat(1000) },
             [],
@@ -112,8 +112,38 @@ describe('buildRequest', () => {
         }));
     });
 
+    it('makes a POST request when method is post', () => {
+        const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
+        const { url, fetchOptions } = builder.buildRequest(
+            {
+                firstName: 'Ryan'
+            },
+            [],
+            { firstName: 'Kevin' },
+            {},
+            {},
+            {}
+        );
+
+        expect(url).toEqual('/_components');
+        expect(fetchOptions.method).toEqual('POST');
+        expect(fetchOptions.headers).toEqual({
+            // no token
+            Accept: 'application/vnd.live-component+html',
+            'X-Requested-With': 'XMLHttpRequest',
+        });
+        const body = <FormData>fetchOptions.body;
+        expect(body).toBeInstanceOf(FormData);
+        expect(body.get('data')).toEqual(JSON.stringify({
+            props: {
+                firstName: 'Ryan'
+            },
+            updated: { firstName: 'Kevin' },
+        }));
+    });
+
     it('sends propsFromParent when specified', () => {
-        const builder = new RequestBuilder('/_components?existing_param=1', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components?existing_param=1', 'get', '_the_csrf_token');
         const { url } = builder.buildRequest(
             { firstName: 'Ryan' },
             [],
@@ -167,7 +197,7 @@ describe('buildRequest', () => {
     };
 
     it('Sends file with request', () => {
-        const builder = new RequestBuilder('/_components', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
 
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },
@@ -192,7 +222,7 @@ describe('buildRequest', () => {
     });
 
     it('Sends multiple files with request', () => {
-        const builder = new RequestBuilder('/_components', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
 
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },

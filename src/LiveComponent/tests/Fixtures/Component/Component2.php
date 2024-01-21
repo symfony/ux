@@ -25,7 +25,7 @@ use Symfony\UX\LiveComponent\Attribute\PreDehydrate;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-#[AsLiveComponent('component2', defaultAction: 'defaultAction()')]
+#[AsLiveComponent('component2', defaultAction: 'defaultAction()', method: 'get')]
 final class Component2
 {
     #[LiveProp]

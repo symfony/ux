@@ -4,6 +4,8 @@
 
 -   Add support for URL binding in `LiveProp`
 -   Allow multiple `LiveListener` attributes on a single method.
+-   Requests to LiveComponent are sent as POST by default
+-   Add method prop to AsLiveComponent to still allow GET requests, usage: `#[AsLiveComponent(method: 'get')]`
 
 ## 2.13.2
 

@@ -2169,8 +2169,9 @@ class BackendRequest {
 }
 
 class RequestBuilder {
-    constructor(url, csrfToken = null) {
+    constructor(url, method = 'post', csrfToken = null) {
         this.url = url;
+        this.method = method;
         this.csrfToken = csrfToken;
     }
     buildRequest(props, actions, updated, children, updatedPropsFromParent, files) {
@@ -2187,6 +2188,7 @@ class RequestBuilder {
         const hasFingerprints = Object.keys(children).length > 0;
         if (actions.length === 0 &&
             totalFiles === 0 &&
+            this.method === 'get' &&
             this.willDataFitInUrl(JSON.stringify(props), JSON.stringify(updated), params, JSON.stringify(children), JSON.stringify(updatedPropsFromParent))) {
             params.set('props', JSON.stringify(props));
             params.set('updated', JSON.stringify(updated));
@@ -2244,8 +2246,8 @@ class RequestBuilder {
 }
 
 class Backend {
-    constructor(url, csrfToken = null) {
-        this.requestBuilder = new RequestBuilder(url, csrfToken);
+    constructor(url, method = 'post', csrfToken = null) {
+        this.requestBuilder = new RequestBuilder(url, method, csrfToken);
     }
     makeRequest(props, actions, updated, children, updatedPropsFromParent, files) {
         const { url, fetchOptions } = this.requestBuilder.buildRequest(props, actions, updated, children, updatedPropsFromParent, files);
@@ -2840,7 +2842,7 @@ class LiveControllerDefault extends Controller {
     initialize() {
         this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
         const id = this.element.dataset.liveId || null;
-        this.component = new Component(this.element, this.nameValue, this.propsValue, this.listenersValue, (currentComponent, onlyParents, onlyMatchName) => LiveControllerDefault.componentRegistry.findComponents(currentComponent, onlyParents, onlyMatchName), this.fingerprintValue, id, new Backend(this.urlValue, this.csrfValue), new StandardElementDriver());
+        this.component = new Component(this.element, this.nameValue, this.propsValue, this.listenersValue, (currentComponent, onlyParents, onlyMatchName) => LiveControllerDefault.componentRegistry.findComponents(currentComponent, onlyParents, onlyMatchName), this.fingerprintValue, id, new Backend(this.urlValue, this.requestMethodValue, this.csrfValue), new StandardElementDriver());
         this.proxiedComponent = proxifyComponent(this.component);
         this.element.__component = this.proxiedComponent;
         if (this.hasDebounceValue) {
@@ -3073,6 +3075,7 @@ LiveControllerDefault.values = {
     debounce: { type: Number, default: 150 },
     id: String,
     fingerprint: { type: String, default: '' },
+    requestMethod: { type: String, default: 'post' },
     queryMapping: { type: Object, default: {} },
 };
 LiveControllerDefault.componentRegistry = new ComponentRegistry();

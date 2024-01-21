@@ -7,7 +7,7 @@ namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent('deferred_component')]
+#[AsLiveComponent('deferred_component', method: 'get')]
 final class DeferredComponent
 {
     use DefaultActionTrait;

@@ -25,8 +25,8 @@ export interface BackendAction {
 export default class implements BackendInterface {
     private readonly requestBuilder: RequestBuilder;
 
-    constructor(url: string, csrfToken: string | null = null) {
-        this.requestBuilder = new RequestBuilder(url, csrfToken);
+    constructor(url: string, method: 'get' | 'post' = 'post', csrfToken: string | null = null) {
+        this.requestBuilder = new RequestBuilder(url, method, csrfToken);
     }
 
     makeRequest(

@@ -16,7 +16,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent('track_renders')]
+#[AsLiveComponent('track_renders', method: 'get')]
 final class TrackRenders
 {
     use DefaultActionTrait;

@@ -94,11 +94,11 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
                 ), $content);
                 // new props are JUST the "textLength" + a checksum for it specifically
                 $this->assertStringContainsString(sprintf(
-                    '<li data-live-name-value="todo_item" data-live-id="%s0" data-live-fingerprint-value="sMvvf7q68tz&#x2F;Cuk&#x2B;vDeisDiq&#x2B;7YPWzT&#x2B;WZFzI37dGHY&#x3D;" data-live-props-value="&#x7B;&quot;textLength&quot;&#x3A;18,&quot;&#x40;checksum&quot;&#x3A;&quot;LGxXa9fMKrJ6PelkUPfqmdwnfkk&#x2B;LORgoJHXyPpS3Pw&#x3D;&quot;&#x7D;"></li>',
+                    '<li data-live-name-value="todo_item" data-live-id="%s0" data-live-request-method-value="post" data-live-fingerprint-value="sMvvf7q68tz&#x2F;Cuk&#x2B;vDeisDiq&#x2B;7YPWzT&#x2B;WZFzI37dGHY&#x3D;" data-live-props-value="&#x7B;&quot;textLength&quot;&#x3A;18,&quot;&#x40;checksum&quot;&#x3A;&quot;LGxXa9fMKrJ6PelkUPfqmdwnfkk&#x2B;LORgoJHXyPpS3Pw&#x3D;&quot;&#x7D;"></li>',
                     AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX_EMBEDDED
                 ), $content);
                 $this->assertStringContainsString(sprintf(
-                    '<li data-live-name-value="todo_item" data-live-id="%s1" data-live-fingerprint-value="8AooEz36WYQyxj54BCaDm&#x2F;jKbcdDdPDLaNO4&#x2F;49bcQk&#x3D;" data-live-props-value="&#x7B;&quot;textLength&quot;&#x3A;10,&quot;&#x40;checksum&quot;&#x3A;&quot;BXUk7q6LI&#x5C;&#x2F;6Qx3c62Xiui6287YndmoK3QmVq6e5mcGk&#x3D;&quot;&#x7D;"></li>',
+                    '<li data-live-name-value="todo_item" data-live-id="%s1" data-live-request-method-value="post" data-live-fingerprint-value="8AooEz36WYQyxj54BCaDm&#x2F;jKbcdDdPDLaNO4&#x2F;49bcQk&#x3D;" data-live-props-value="&#x7B;&quot;textLength&quot;&#x3A;10,&quot;&#x40;checksum&quot;&#x3A;&quot;BXUk7q6LI&#x5C;&#x2F;6Qx3c62Xiui6287YndmoK3QmVq6e5mcGk&#x3D;&quot;&#x7D;"></li>',
                     AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX
                 ), $content);
             });
