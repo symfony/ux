@@ -1946,7 +1946,6 @@ class Component {
         this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = false;
         this.backendRequest.promise.then(async (response) => {
-            this.backendRequest = null;
             const backendResponse = new BackendResponse(response);
             const html = await backendResponse.getBody();
             for (const input of Object.values(this.pendingFiles)) {
@@ -1960,10 +1959,12 @@ class Component {
                 if (controls.displayError) {
                     this.renderError(html);
                 }
+                this.backendRequest = null;
                 thisPromiseResolve(backendResponse);
                 return response;
             }
             this.processRerender(html, backendResponse);
+            this.backendRequest = null;
             thisPromiseResolve(backendResponse);
             if (this.isRequestPending) {
                 this.isRequestPending = false;

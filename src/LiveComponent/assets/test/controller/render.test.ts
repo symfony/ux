@@ -329,6 +329,65 @@ describe('LiveController rendering Tests', () => {
         await waitFor(() => expect(test.element).toHaveTextContent('Title: "greetings to you"'));
     });
 
+    it('waits for the rendering process of previous request to finish before starting a new one', async () => {
+        const test = await createTest({
+            title: 'greetings',
+            contents: '',
+        }, (data: any) => `
+           <div ${initComponent(data)}>
+               <input data-model='title' value='${data.title}'>
+
+               Title: "${data.title}"
+
+               <button data-action='live#$render'>Reload</button>
+           </div>
+       `);
+
+        let didSecondRenderStart = false;
+        let secondRenderStartedAt = 0;
+        test.component.on('render:started', () => {
+            if (didSecondRenderStart) {
+                return;
+            }
+            didSecondRenderStart = true;
+
+            test.component.on('loading.state:started', () => {
+                secondRenderStartedAt = Date.now();
+            });
+
+            test.expectsAjaxCall();
+            test.component.render();
+        });
+
+        let firstRenderFinishedAt = 0;
+        test.component.on('render:finished', () => {
+            // set the finish time for the first render only
+            if (firstRenderFinishedAt === 0) {
+                firstRenderFinishedAt = Date.now();
+            }
+
+            // the sleep guarantees that if the 2nd request was correctly
+            // delayed, its start time will be at least 10ms after the first
+            // render finished. Without this, even if the 2nd request is
+            // correctly delayed, the "first render finish" and "second render
+            // start" times could be the same, because no time has passed.
+            const sleep = (milliseconds: number) => {
+                const startTime = new Date().getTime();
+                while (new Date().getTime() < startTime + milliseconds);
+            }
+            sleep(10);
+        });
+
+        test.expectsAjaxCall();
+
+        await test.component.render();
+
+        await waitFor(() => expect(didSecondRenderStart).toBe(true));
+        await waitFor(() => expect(firstRenderFinishedAt).not.toBe(0));
+        await waitFor(() => expect(secondRenderStartedAt).not.toBe(0));
+        expect(secondRenderStartedAt).toBeGreaterThan(firstRenderFinishedAt);
+    });
+
     it('can update svg', async () => {
         const test = await createTest({ text: 'SVG' }, (data: any) => `
             <div ${initComponent(data)}>
