@@ -1,0 +1,78 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-16T22:44:03Z
+
+Seems to me a very specific use case.. could it be handled with router configuration ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-17T19:37:53Z
+
+Wait, so you'll POST from domainA.com to domainB.com ?
+
+Should this be on a component - per - component basis... or a config wide one (that seem more logical to me) ?
+
+---------------------------------------------------------------------------
+
+by 1ed at 2024-01-17T19:44:45Z
+
+> Wait, so you'll POST from domainA.com to domainB.com ?
+>
+> Should this be on a component - per - component basis... or a config wide one (that seem more logical to me) ?
+
+As the route can be configured on the component level, for me it is logical to do the same with the URL generated for that route.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-17T19:58:03Z
+
+> As the route can be configured on the component level, for me it is logical to do the same with the URL generated for that route.
+
+Yes i mean, should this be possible to config it on an app-level too, as the route can be configured there for all components ?
+
+Last thing, is there any implication/effect with the "liveQuery" thing ?
+
+---------------------------------------------------------------------------
+
+by 1ed at 2024-01-17T20:42:13Z
+
+> > As the route can be configured on the component level, for me it is logical to do the same with the URL generated for that route.
+>
+> Yes i mean, should this be possible to config it on an app-level too, as the route can be configured there for all components ?
+
+Ah, I see. That would mean we need to introduce configuration for the live component and add a config entry for it, e.g. something like
+
+```yaml
+live_component:
+    default_url_reference_type: 'absolute_path' # support strings and UrlGeneratorInterface consts too -> map strings back to consts
+```
+
+read the configuration and use this as the default value for the metadata (the default in `AsLiveComponent` should be null) e.g. in `LiveComponentMetadataFactory`. That can be done, maybe in a different PR.
+
+> Last thing, is there any implication/effect with the "liveQuery" thing ?
+
+I'm not sure, I'm not familiar with that, but I took a look at the PR and I think using the browser's history api and getting query string values from the request should not be affected by this.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-18T01:07:21Z
+
+Could you add a test with an action (just to be sure everything work with in JS and in the request handling ?
+
+(and that way we'd have a regression test later on this)
+
+---------------------------------------------------------------------------
+
+by 1ed at 2024-01-19T09:44:37Z
+
+> Could you add a test with an action (just to be sure everything work with in JS and in the request handling ?
+>
+> (and that way we'd have a regression test later on this)
+
+I just added a test for that (but without js, for that we would need to setup panther, I think).
+
+---------------------------------------------------------------------------
+
+by 1ed at 2024-01-22T14:34:10Z
+
+I think this is ready. Can we merge it in this form or it needs more work?
