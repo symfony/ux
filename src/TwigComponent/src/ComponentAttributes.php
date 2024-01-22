@@ -19,7 +19,7 @@ use Symfony\WebpackEncoreBundle\Dto\AbstractStimulusDto;
  *
  * @immutable
  */
-final class ComponentAttributes
+final class ComponentAttributes implements \IteratorAggregate, \Countable
 {
     /**
      * @param array<string, string|bool> $attributes
@@ -156,5 +156,15 @@ final class ComponentAttributes
         unset($attributes[$key]);
 
         return new self($attributes);
+    }
+
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator($this->attributes);
+    }
+
+    public function count(): int
+    {
+        return \count($this->attributes);
     }
 }
