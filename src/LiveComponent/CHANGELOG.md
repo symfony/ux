@@ -6,6 +6,8 @@
 -   Allow multiple `LiveListener` attributes on a single method.
 -   Requests to LiveComponent are sent as POST by default
 -   Add method prop to AsLiveComponent to still allow GET requests, usage: `#[AsLiveComponent(method: 'get')]`
+-   Add a new `urlReferenceType` parameter to `AsLiveComponent`, which allows to
+    generate different type URL (e.g. absolute) for the component Ajax calls.
 
 ## 2.13.2
 

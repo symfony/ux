@@ -61,7 +61,7 @@ class LiveControllerAttributesCreator
         $attributesCollection = $this->attributeHelper->create();
         $attributesCollection->setLiveController($mounted->getName());
 
-        $url = $this->urlGenerator->generate($metadata->get('route'), ['_live_component' => $mounted->getName()]);
+        $url = $this->urlGenerator->generate($metadata->get('route'), ['_live_component' => $mounted->getName()], $metadata->get('url_reference_type'));
         $attributesCollection->setUrl($url);
 
         $liveListeners = AsLiveComponent::liveListeners($mounted->getComponent());

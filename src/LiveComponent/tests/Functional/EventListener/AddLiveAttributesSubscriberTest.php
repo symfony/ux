@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\DomCrawler\Crawler;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
 
@@ -153,5 +154,63 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         ];
 
         $this->assertEquals($expected, $queryMapping);
+    }
+
+    public function testAbsoluteUrl(): void
+    {
+        $div = $this->browser()
+            ->visit('/render-template/render_with_absolute_url')
+            ->assertSuccessful()
+            ->assertContains('Count: 0')
+            ->crawler()
+            ->filter('div')
+        ;
+
+        $props = json_decode($div->attr('data-live-props-value'), true);
+
+        $this->assertSame('live', $div->attr('data-controller'));
+        $this->assertSame('http://localhost/_components/with_absolute_url', $div->attr('data-live-url-value'));
+        $this->assertNotNull($div->attr('data-live-csrf-value'));
+        $this->assertCount(3, $props);
+        $this->assertArrayHasKey('@checksum', $props);
+        $this->assertArrayHasKey('@attributes', $props);
+        $this->assertArrayHasKey('data-live-id', $props['@attributes']);
+        $this->assertArrayHasKey('count', $props);
+        $this->assertSame($props['count'], 0);
+    }
+
+    public function testAbsoluteUrlWithLiveQueryProp()
+    {
+        $token = null;
+        $props = [];
+        $div = $this->browser()
+            ->get('/render-template/render_with_absolute_url?count=1')
+            ->assertSuccessful()
+            ->assertContains('Count: 1')
+            ->use(function (Crawler $crawler) use (&$token, &$props) {
+                $div = $crawler->filter('div')->first();
+                $token = $div->attr('data-live-csrf-value');
+                $props = json_decode($div->attr('data-live-props-value'), true);
+            })
+            ->post('http://localhost/_components/with_absolute_url/increase', [
+                'headers' => ['X-CSRF-TOKEN' => $token],
+                'body' => ['data' => json_encode(['props' => $props])],
+            ])
+            ->assertContains('Count: 2')
+            ->crawler()
+            ->filter('div')
+        ;
+
+        $props = json_decode($div->attr('data-live-props-value'), true);
+
+        $this->assertSame('live', $div->attr('data-controller'));
+        $this->assertSame('http://localhost/_components/with_absolute_url', $div->attr('data-live-url-value'));
+        $this->assertNotNull($div->attr('data-live-csrf-value'));
+        $this->assertCount(3, $props);
+        $this->assertArrayHasKey('@checksum', $props);
+        $this->assertArrayHasKey('@attributes', $props);
+        $this->assertArrayHasKey('data-live-id', $props['@attributes']);
+        $this->assertArrayHasKey('count', $props);
+        $this->assertSame($props['count'], 2);
     }
 }
