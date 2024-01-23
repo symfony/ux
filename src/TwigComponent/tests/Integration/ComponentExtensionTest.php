@@ -14,7 +14,6 @@ namespace Symfony\UX\TwigComponent\Tests\Integration;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\Tests\Fixtures\User;
 use Twig\Environment;
-use Twig\Error\RuntimeError;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -255,6 +254,13 @@ final class ComponentExtensionTest extends KernelTestCase
             />
             HTML,
         ];
+    }
+
+    public function testComponentWithClassMerge(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('class_merge.html.twig');
+
+        $this->assertStringContainsString('class="alert alert-red alert-lg font-semibold rounded-md dark:bg-gray-600 flex p-4"', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string

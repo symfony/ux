@@ -14,6 +14,7 @@ namespace Symfony\UX\TwigComponent\Twig;
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\TwigComponent\ComponentRenderer;
+use Symfony\UX\TwigComponent\CVA;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
@@ -41,6 +42,7 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
     {
         return [
             new TwigFunction('component', [$this, 'render'], ['is_safe' => ['all']]),
+            new TwigFunction('cva', [$this, 'cva']),
         ];
     }
 
@@ -82,6 +84,29 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
     public function finishEmbeddedComponentRender(): void
     {
         $this->container->get(ComponentRenderer::class)->finishEmbeddedComponentRender();
+    }
+
+    /**
+     * @param array{
+     *     base: string|string[]|null,
+     *     variants: array<string, array<string, string>>,
+     *     compoundVariants: array<array<string, string>>,
+     *     defaultVariants: array<string, string>
+     *  } $cva
+     *
+     * base some base class you want to have in every matching recipes
+     * variants your recipes class
+     * compoundVariants compounds allow you to add extra class when multiple variation are matching in the same time
+     * defaultVariants allow you to add a default class when no recipe is matching
+     */
+    public function cva(array $cva): CVA
+    {
+        return new CVA(
+            $cva['base'] ?? null,
+            $cva['variants'] ?? null,
+            $cva['compoundVariants'] ?? null,
+            $cva['defaultVariants'] ?? null,
+        );
     }
 
     private function throwRuntimeError(string $name, \Throwable $e): void
