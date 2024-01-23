@@ -10,7 +10,7 @@
 'use strict';
 
 import { shutdownTests, createTest, initComponent } from '../tools';
-import { getByText, waitFor } from '@testing-library/dom';
+import { getByTestId, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import { htmlToElement } from '../../src/dom_utils';
 
@@ -206,6 +206,41 @@ describe('LiveController rendering Tests', () => {
         expect(ignoreElement).not.toBeNull();
         // check that even the ignored element re-rendered
         expect(ignoreElement?.outerHTML).toEqual('<div data-live-ignore="">Inside Ignore Name: <span>Kevin</span></div>');
+    });
+
+    it('overwrites HTML instead of morph with data-skip-morph', async () => {
+        const test = await createTest({ firstName: 'Ryan' }, (data: any) => `
+            <div ${initComponent(data)}>
+                <div data-skip-morph data-name="${data.firstName}">Inside Skip Name: <span data-testid="inside-skip-morph">${data.firstName}</span></div>
+
+                Outside Skip Name: ${data.firstName}
+
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `);
+
+        const spanBefore = getByTestId(test.element, 'inside-skip-morph');
+        expect(spanBefore).toHaveTextContent('Ryan');
+
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
+                // change the data on the server so the template renders differently
+                data.firstName = 'Kevin';
+            });
+
+        getByText(test.element, 'Reload').click();
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Outside Skip Name: Kevin'));
+        // make sure the outer element is still updated
+        const skipElement = test.element.querySelector('div[data-skip-morph]');
+        if (!(skipElement instanceof HTMLElement)) {
+            throw new Error('skipElement is not an HTMLElement');
+        }
+        expect(skipElement.dataset.name).toEqual('Kevin');
+        const spanAfter = getByTestId(test.element, 'inside-skip-morph');
+        expect(spanAfter).toHaveTextContent('Kevin');
+        // but it is not just a mutation of the original element
+        expect(spanAfter).not.toBe(spanBefore);
     });
 
     it('cancels a re-render if the page is navigating away', async () => {

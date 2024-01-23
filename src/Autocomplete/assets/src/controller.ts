@@ -38,33 +38,31 @@ export default class extends Controller {
     private mutationObserver: MutationObserver;
     private isObserving = false;
     private hasLoadedChoicesPreviously = false;
+    private originalOptions: Array<{ value: string; text: string; group: string | null }> = [];
 
     initialize() {
-        if (this.requiresLiveIgnore()) {
-            // unfortunately, TomSelect does enough weird things that, for a
-            // multi select, if the HTML in the `<select>` element changes,
-            // we can't reliably update TomSelect to see those changes. So,
-            // as a workaround, we tell LiveComponents to entirely ignore trying
-            // to update this item
-            this.element.setAttribute('data-live-ignore', '');
-            if (this.element.id) {
-                const label = document.querySelector(`label[for="${this.element.id}"]`);
-                if (label) {
-                    label.setAttribute('data-live-ignore', '');
-                }
-            }
-        } else {
-            // for non-multiple selects, we use a MutationObserver to update
-            // the TomSelect instance if the options themselves change
-            if (!this.mutationObserver) {
-                this.mutationObserver = new MutationObserver((mutations: MutationRecord[]) => {
-                    this.onMutations(mutations);
-                });
-            }
+        if (!this.mutationObserver) {
+            this.mutationObserver = new MutationObserver((mutations: MutationRecord[]) => {
+                this.onMutations(mutations);
+            });
         }
     }
 
     connect() {
+        if (this.selectElement) {
+            this.originalOptions = this.createOptionsDataStructure(this.selectElement);
+        }
+
+        this.initializeTomSelect();
+    }
+
+    initializeTomSelect() {
+        // live components support: morphing the options causes issues, due
+        // to the fact that TomSelect reorders the options when you select them
+        if (this.selectElement) {
+            this.selectElement.setAttribute('data-skip-morph', '');
+        }
+
         if (this.urlValue) {
             this.tomSelect = this.#createAutocompleteWithRemoteData(
                 this.urlValue,
@@ -112,21 +110,12 @@ export default class extends Controller {
             },
         };
 
-        const requiresLiveIgnore = this.requiresLiveIgnore();
-
         const config: RecursivePartial<TomSettings> = {
             render,
             plugins,
             // clear the text input after selecting a value
             onItemAdd: () => {
                 this.tomSelect.setTextboxValue('');
-            },
-            // see initialize() method for explanation
-            onInitialize: function () {
-                if (requiresLiveIgnore) {
-                    const tomSelect = this as any;
-                    tomSelect.wrapper.setAttribute('data-live-ignore', '');
-                }
             },
             closeAfterSelect: true,
         };
@@ -309,9 +298,17 @@ export default class extends Controller {
     private resetTomSelect(): void {
         if (this.tomSelect) {
             this.stopMutationObserver();
-            this.tomSelect.clearOptions();
-            this.tomSelect.settings.maxOptions = this.getMaxOptions();
-            this.tomSelect.sync();
+
+            // Grab the current HTML then restore it after destroying TomSelect
+            // This is needed because TomSelect's destroy revert the element to
+            // its original HTML.
+            const currentHtml = this.element.innerHTML;
+            const currentValue: any = this.tomSelect.getValue();
+            this.tomSelect.destroy();
+            this.element.innerHTML = currentHtml;
+            this.initializeTomSelect();
+            this.tomSelect.setValue(currentValue);
+
             this.startMutationObserver();
         }
     }
@@ -324,33 +321,6 @@ export default class extends Controller {
             this.tomSelect.enable();
         }
         this.startMutationObserver();
-    }
-
-    /**
-     * TomSelect doesn't give us a way to update the placeholder, so most of
-     * this code is copied from TomSelect's source code.
-     *
-     * @private
-     */
-    private updateTomSelectPlaceholder(): void {
-        const input = this.element;
-        let placeholder = input.getAttribute('placeholder') || input.getAttribute('data-placeholder');
-        if (!placeholder && !this.tomSelect.allowEmptyOption) {
-            const option = input.querySelector('option[value=""]');
-
-            if (option) {
-                placeholder = option.textContent;
-            }
-        }
-
-        if (placeholder) {
-            this.stopMutationObserver();
-            // override settings so it's used again later
-            this.tomSelect.settings.placeholder = placeholder;
-            // and set it right now
-            this.tomSelect.control_input.setAttribute('placeholder', placeholder);
-            this.startMutationObserver();
-        }
     }
 
     private startMutationObserver(): void {
@@ -373,93 +343,66 @@ export default class extends Controller {
     }
 
     private onMutations(mutations: MutationRecord[]): void {
-        const addedOptionElements: HTMLOptionElement[] = [];
-        const removedOptionElements: HTMLOptionElement[] = [];
-        let hasAnOptionChanged = false;
         let changeDisabledState = false;
-        let changePlaceholder = false;
+        let requireReset = false;
 
         mutations.forEach((mutation) => {
             switch (mutation.type) {
-                case 'childList':
-                    // look for changes to any <option> elements - e.g. text
-                    if (mutation.target instanceof HTMLOptionElement) {
-                        if (mutation.target.value === '') {
-                            changePlaceholder = true;
-
-                            break;
-                        }
-
-                        hasAnOptionChanged = true;
-                        break;
-                    }
-
-                    // look for new or removed <option> elements
-                    mutation.addedNodes.forEach((node) => {
-                        if (node instanceof HTMLOptionElement) {
-                            // check if a previously-removed is being added back
-                            if (removedOptionElements.includes(node)) {
-                                removedOptionElements.splice(removedOptionElements.indexOf(node), 1);
-                                return;
-                            }
-
-                            addedOptionElements.push(node);
-                        }
-                    });
-                    mutation.removedNodes.forEach((node) => {
-                        if (node instanceof HTMLOptionElement) {
-                            // check if a previously-added is being removed
-                            if (addedOptionElements.includes(node)) {
-                                addedOptionElements.splice(addedOptionElements.indexOf(node), 1);
-                                return;
-                            }
-
-                            removedOptionElements.push(node);
-                        }
-                    });
-                    break;
                 case 'attributes':
-                    // look for changes to any <option> elements (e.g. value attribute)
-                    if (mutation.target instanceof HTMLOptionElement) {
-                        hasAnOptionChanged = true;
-                        break;
-                    }
-
                     if (mutation.target === this.element && mutation.attributeName === 'disabled') {
                         changeDisabledState = true;
 
                         break;
                     }
 
-                    break;
-                case 'characterData':
-                    // an alternative way for an option's text to change
-                    if (mutation.target instanceof Text && mutation.target.parentElement instanceof HTMLOptionElement) {
-                        if (mutation.target.parentElement.value === '') {
-                            changePlaceholder = true;
+                    if (mutation.target === this.element && mutation.attributeName === 'multiple') {
+                        requireReset = true;
 
-                            break;
-                        }
-
-                        hasAnOptionChanged = true;
+                        break;
                     }
+
+                    break;
             }
         });
 
-        if (hasAnOptionChanged || addedOptionElements.length > 0 || removedOptionElements.length > 0) {
+        const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
+        const areOptionsEquivalent = this.areOptionsEquivalent(newOptions);
+        if (!areOptionsEquivalent || requireReset) {
+            this.originalOptions = newOptions;
             this.resetTomSelect();
         }
 
         if (changeDisabledState) {
             this.changeTomSelectDisabledState(this.formElement.disabled);
         }
-
-        if (changePlaceholder) {
-            this.updateTomSelectPlaceholder();
-        }
     }
 
-    private requiresLiveIgnore(): boolean {
-        return this.element instanceof HTMLSelectElement && this.element.multiple;
+    private createOptionsDataStructure(
+        selectElement: HTMLSelectElement
+    ): Array<{ value: string; text: string; group: string | null }> {
+        return Array.from(selectElement.options).map((option) => {
+            const optgroup = option.closest('optgroup');
+            return {
+                value: option.value,
+                text: option.text,
+                group: optgroup ? optgroup.label : null,
+            };
+        });
+    }
+
+    private areOptionsEquivalent(newOptions: Array<{ value: string; text: string; group: string | null }>): boolean {
+        if (this.originalOptions.length !== newOptions.length) {
+            return false;
+        }
+
+        const normalizeOption = (option: { value: string; text: string; group: string | null }) =>
+            `${option.value}-${option.text}-${option.group}`;
+        const originalOptionsSet = new Set(this.originalOptions.map(normalizeOption));
+        const newOptionsSet = new Set(newOptions.map(normalizeOption));
+
+        return (
+            originalOptionsSet.size === newOptionsSet.size &&
+            [...originalOptionsSet].every((option) => newOptionsSet.has(option))
+        );
     }
 }

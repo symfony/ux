@@ -574,19 +574,6 @@ consider registering the needed type extension ``AutocompleteChoiceTypeExtension
         // ... your tests
     }
 
-Known Issue when using with Live Component
-------------------------------------------
-
-You *can* use autocomplete inside of a `Live Component`_: the autocomplete JavaScript
-widget should work normally and even update if your element changes (e.g. if you
-add or change ``<option>`` elements. Internally, a ``MutationObserver`` inside
-the UX autocomplete controller detects these changes and forwards them to TomSelect.
-
-However, if you use the ``multiple`` option, due to complexities in TomSelect, the
-autocomplete widget *will* work, but it will not update if you change any options.
-For example, if your change the "options" for a ``select`` during re-render, those
-will not update on the frontend.
-
 Backward Compatibility promise
 ------------------------------
 
@@ -599,4 +586,3 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`controller.ts`: https://github.com/symfony/ux/blob/2.x/src/Autocomplete/assets/src/controller.ts
 .. _`Tom Select Render Templates`: https://tom-select.js.org/docs/#render-templates
 .. _`Tom Select Option Group`: https://tom-select.js.org/examples/optgroups/
-.. _`Live Component`: https://symfony.com/bundles/ux-live-component/current/index.html
