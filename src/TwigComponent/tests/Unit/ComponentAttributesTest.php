@@ -188,7 +188,7 @@ final class ComponentAttributesTest extends TestCase
     {
         $attributes = new ComponentAttributes(['disabled' => null]);
 
-        $this->assertSame(['disabled' => true], $attributes->all());
+        $this->assertSame(['disabled' => null], $attributes->all());
         $this->assertSame(' disabled', (string) $attributes);
     }
 
@@ -203,9 +203,18 @@ final class ComponentAttributesTest extends TestCase
     {
         $attributes = new ComponentAttributes([
             'style' => ['foo', null, false, true, '', new \stdClass(), 'bar'],
+            'class' => ['baz', ''],
         ]);
 
-        $this->assertSame(' style="foo bar"', (string) $attributes);
-        $this->assertSame(['style' => 'foo bar'], $attributes->all());
+        $this->assertSame(' style="foo bar" class="baz"', (string) $attributes);
+        $this->assertSame(['style' => 'foo bar', 'class' => 'baz'], $attributes->all());
+
+        $attributes = $attributes->defaults([
+            'style' => ['baz', false],
+            'class' => ['', 'qux'],
+        ]);
+
+        $this->assertSame(' style="foo bar" class="qux baz"', (string) $attributes);
+        $this->assertSame(['style' => 'foo bar', 'class' => 'qux baz'], $attributes->all());
     }
 }
