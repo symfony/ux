@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+-   Allow `string[]` for component attribute values (filter non-strings).
+
 ## 2.13.0
 
 -   [BC BREAK] Add component metadata to `PreMountEvent` and `PostMountEvent`

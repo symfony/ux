@@ -188,7 +188,24 @@ final class ComponentAttributesTest extends TestCase
     {
         $attributes = new ComponentAttributes(['disabled' => null]);
 
-        $this->assertSame(['disabled' => null], $attributes->all());
+        $this->assertSame(['disabled' => true], $attributes->all());
         $this->assertSame(' disabled', (string) $attributes);
+    }
+
+    public function testCannotPassNonScalarValues(): void
+    {
+        $this->expectException(\LogicException::class);
+
+        (string) new ComponentAttributes(['data-foo' => new \stdClass()]);
+    }
+
+    public function testListAttributeValues(): void
+    {
+        $attributes = new ComponentAttributes([
+            'style' => ['foo', null, false, true, '', new \stdClass(), 'bar'],
+        ]);
+
+        $this->assertSame(' style="foo bar"', (string) $attributes);
+        $this->assertSame(['style' => 'foo bar'], $attributes->all());
     }
 }

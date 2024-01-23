@@ -21,8 +21,10 @@ use Symfony\WebpackEncoreBundle\Dto\AbstractStimulusDto;
  */
 final class ComponentAttributes
 {
+    private bool $normalized = false;
+
     /**
-     * @param array<string, string|bool> $attributes
+     * @param array<string, string|bool|string[]> $attributes
      */
     public function __construct(private array $attributes)
     {
@@ -30,19 +32,12 @@ final class ComponentAttributes
 
     public function __toString(): string
     {
+        $this->ensureNormalized();
+
         return array_reduce(
             array_keys($this->attributes),
             function (string $carry, string $key) {
                 $value = $this->attributes[$key];
-
-                if (!\is_scalar($value) && null !== $value) {
-                    throw new \LogicException(sprintf('A "%s" prop was passed when creating the component. No matching "%s" property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a %s). Did you mean to pass this to your component or is there a typo on its name?', $key, $key, get_debug_type($value)));
-                }
-
-                if (null === $value) {
-                    trigger_deprecation('symfony/ux-twig-component', '2.8.0', 'Passing "null" as an attribute value is deprecated and will throw an exception in 3.0.');
-                    $value = true;
-                }
 
                 return match ($value) {
                     true => "{$carry} {$key}",
@@ -59,7 +54,7 @@ final class ComponentAttributes
      */
     public function all(): array
     {
-        return $this->attributes;
+        return $this->ensureNormalized()->attributes;
     }
 
     /**
@@ -78,6 +73,8 @@ final class ComponentAttributes
         if ($attributes instanceof \Traversable) {
             $attributes = iterator_to_array($attributes);
         }
+
+        self::normalize($attributes);
 
         foreach ($this->attributes as $key => $value) {
             if (\in_array($key, ['class', 'data-controller', 'data-action'], true) && isset($attributes[$key])) {
@@ -156,5 +153,35 @@ final class ComponentAttributes
         unset($attributes[$key]);
 
         return new self($attributes);
+    }
+
+    private function ensureNormalized(): self
+    {
+        if ($this->normalized) {
+            return $this;
+        }
+
+        self::normalize($this->attributes);
+        $this->normalized = true;
+
+        return $this;
+    }
+
+    private static function normalize(array &$attributes): void
+    {
+        foreach ($attributes as $key => &$value) {
+            if (null === $value) {
+                trigger_deprecation('symfony/ux-twig-component', '2.8.0', 'Passing "null" as an attribute value is deprecated and will throw an exception in 3.0.');
+                $value = true;
+            }
+
+            if (\is_array($value) && array_is_list($value)) {
+                $value = implode(' ', array_filter($value, static fn ($v) => \is_string($v) && '' !== $v));
+            }
+
+            if (!\is_scalar($value)) {
+                throw new \LogicException(sprintf('A "%s" prop was passed when creating the component. No matching "%s" property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a %s). Did you mean to pass this to your component or is there a typo on its name?', $key, $key, get_debug_type($value)));
+            }
+        }
     }
 }
