@@ -61,7 +61,28 @@ class default_1 extends Controller {
     }
     disconnect() {
         this.stopMutationObserver();
+        let currentSelectedValues = [];
+        if (this.selectElement) {
+            if (this.selectElement.multiple) {
+                currentSelectedValues = Array.from(this.selectElement.options)
+                    .filter((option) => option.selected)
+                    .map((option) => option.value);
+            }
+            else {
+                currentSelectedValues = [this.selectElement.value];
+            }
+        }
         this.tomSelect.destroy();
+        if (this.selectElement) {
+            if (this.selectElement.multiple) {
+                Array.from(this.selectElement.options).forEach((option) => {
+                    option.selected = currentSelectedValues.includes(option.value);
+                });
+            }
+            else {
+                this.selectElement.value = currentSelectedValues[0];
+            }
+        }
     }
     getMaxOptions() {
         return this.selectElement ? this.selectElement.options.length : 50;
