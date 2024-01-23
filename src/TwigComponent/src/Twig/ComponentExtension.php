@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent\Twig;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Twig\Error\RuntimeError;
@@ -41,6 +42,7 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
     {
         return [
             new TwigFunction('component', [$this, 'render'], ['is_safe' => ['all']]),
+            new TwigFunction('attributes', [$this, 'attributes']),
         ];
     }
 
@@ -59,6 +61,11 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
         } catch (\Throwable $e) {
             $this->throwRuntimeError($name, $e);
         }
+    }
+
+    public function attributes(array $attributes = []): ComponentAttributes
+    {
+        return $this->container->get(ComponentRenderer::class)->createAttributes($attributes);
     }
 
     public function extensionPreCreateForRender(string $name, array $props): ?string

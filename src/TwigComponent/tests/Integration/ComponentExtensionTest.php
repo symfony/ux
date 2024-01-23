@@ -216,6 +216,16 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('Hello FOO, 123, and 456', $output);
     }
 
+    public function testAttributesFunction(): void
+    {
+        $output = self::getContainer()->get(Environment::class)
+            ->createTemplate('<div{{ attributes({class: "foo", "data-controller": "bar"}) }}/>')
+            ->render()
+        ;
+
+        $this->assertSame('<div class="foo" data-controller="bar"/>', $output);
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [
