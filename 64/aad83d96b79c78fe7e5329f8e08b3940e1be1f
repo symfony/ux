@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-12-01T20:07:48Z
+
+Related: https://github.com/orchidjs/tom-select/issues/666
+
+I simply can't figure out how to make TomSelect keep the selected option value.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-21T21:41:10Z
+
+SO happy to say that this is ready 😅.
+
+tl;dr TomSelect rearranges the `<option>` elements. If something "morphes" the `<option>` element like LiveComponents (or Turbo 8) does, TomSelect can't handle this. This PR removes morphing for the`<option>` elements for Autocomplete and fixes & improves how we reinitialize TomSelect if the option elements DO change.
