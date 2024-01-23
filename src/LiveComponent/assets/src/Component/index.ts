@@ -390,7 +390,6 @@ export default class Component {
         this.isRequestPending = false;
 
         this.backendRequest.promise.then(async (response) => {
-            this.backendRequest = null;
             const backendResponse = new BackendResponse(response);
             const html = await backendResponse.getBody();
 
@@ -410,6 +409,7 @@ export default class Component {
                     this.renderError(html);
                 }
 
+                this.backendRequest = null;
                 thisPromiseResolve(backendResponse);
 
                 return response;
@@ -418,6 +418,7 @@ export default class Component {
             this.processRerender(html, backendResponse);
 
             // finally resolve this promise
+            this.backendRequest = null;
             thisPromiseResolve(backendResponse);
 
             // do we already have another request pending?
