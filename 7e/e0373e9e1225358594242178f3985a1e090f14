@@ -1,0 +1,52 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-22T09:43:28Z
+
+> so I can't see a problem with NOT destroying the element.
+
+Is that not best practice in term of memory, Turbo compatibility, etc ?
+* https://www.betterstimulus.com/integrating-libraries/lifecycle
+* https://stimulus.hotwired.dev/reference/lifecycle-callbacks
+* https://thoughtbot.com/blog/taking-the-most-out-of-stimulus
+
+If the controller creates the instance, it should handle the deletion too, no ?
+
+Could Sortable mess with the Dom / create duplicates ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-22T09:47:45Z
+
+> The tests pass
+
+Is there any test related to the disconnection ? 👼
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-10-22T21:36:55Z
+
+Indeed, destroying is a best practice. And looking at tom-select now, it DOES remove some event listeners (for me, removal of event listeners is the REAL important part of `disconnect()`.
+
+Sigh, in that case, maybe @rodnaph can create a reproducer so I can dive deeper into the underlying cause of why the value is lost?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-22T23:17:57Z
+
+I'm wondering if the cloning could conflict with stimulus... https://sortablejs.github.io/Sortable/#cloning
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-10-27T14:00:06Z
+
+So, after [many tests](https://github.com/symfony/ux/issues/1204#issuecomment-1779005663), there is indeed something we need to fix in our implementation...
+
+...but it seems your solution could be a good fix in the meanwhile (pro/cons 100% favor).
+
+WDYT to merge it and then open another issue to study why our implementation has hidden side-effets ?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-21T22:24:57Z
+
+This is ready to go. I kept the `destroy()`. The problem is that `TomSelect.destroy()` reverts the `innerHTML` of the `<select>`. This causes any value the user has selected to be lost. We restore it.
