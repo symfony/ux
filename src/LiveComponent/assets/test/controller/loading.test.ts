@@ -81,8 +81,8 @@ describe('LiveController data-loading Tests', () => {
             <div ${initComponent(data)}> 
                 <span data-loading="action(save)|show" data-testid="loading-element">Loading...</span>
 
-                <button data-action="live#action" data-action-name="save">Save</button>
-                <button data-action="live#action" data-action-name="otherAction">Other Action</button>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
+                <button data-action="live#action" data-live-action-param="otherAction">Other Action</button>
                 <button data-action="live#$render">Re-Render</button>
             </div>
         `);
@@ -176,8 +176,8 @@ describe('LiveController data-loading Tests', () => {
             <div ${initComponent(data)}> 
                 <span data-loading="action(otherAction)|show" data-testid="loading-element">Loading...</span>
 
-                <button data-action="live#action" data-action-name="debounce(50)|save">Save</button>
-                <button data-action="live#action" data-action-name="otherAction">Other Action</button>
+                <button data-action="live#action" data-live-action-param="debounce(50)|save">Save</button>
+                <button data-action="live#action" data-live-action-param="otherAction">Other Action</button>
             </div>
         `);
 
@@ -203,7 +203,7 @@ describe('LiveController data-loading Tests', () => {
            <div ${initComponent(data)}> 
                <span data-loading="action(save)|delay(50)|show" data-testid="loading-element">Loading...</span>
 
-               <button data-action="live#action" data-action-name="save">Save</button>
+               <button data-action="live#action" data-live-action-param="save">Save</button>
            </div>
        `);
 

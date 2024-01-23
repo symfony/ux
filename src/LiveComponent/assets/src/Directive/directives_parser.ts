@@ -26,10 +26,6 @@ export interface Directive {
      */
     args: string[];
     /**
-     * An object of named arguments
-     */
-    named: any;
-    /**
      * Any modifiers applied to the action
      */
     modifiers: DirectiveModifier[];
@@ -41,17 +37,8 @@ export interface Directive {
  * into an array of directives, with this format:
  *
  *      [
- *          { action: 'addClass', args: ['foo'], named: {}, modifiers: [] },
- *          { action: 'removeAttribute', args: ['bar'], named: {}, modifiers: [] }
- *      ]
- *
- * This also handles named arguments
- *
- *      save(foo=bar, baz=bazzles)
- *
- * Which would return:
- *      [
- *          { action: 'save', args: [], named: { foo: 'bar', baz: 'bazzles }, modifiers: [] }
+ *          { action: 'addClass', args: ['foo'], modifiers: [] },
+ *          { action: 'removeAttribute', args: ['bar'], modifiers: [] }
  *      ]
  *
  * @param {string} content The value of the attribute
@@ -64,10 +51,8 @@ export function parseDirectives(content: string|null): Directive[] {
     }
 
     let currentActionName = '';
-    let currentArgumentName = '';
     let currentArgumentValue = '';
     let currentArguments: string[] = [];
-    let currentNamedArguments: any = {};
     let currentModifiers: { name: string, value: string | null }[] = [];
     let state = 'action';
 
@@ -86,7 +71,6 @@ export function parseDirectives(content: string|null): Directive[] {
         directives.push({
             action: currentActionName,
             args: currentArguments,
-            named: currentNamedArguments,
             modifiers: currentModifiers,
             getString: () => {
                 // TODO - make a string representation of JUST this directive
@@ -95,36 +79,15 @@ export function parseDirectives(content: string|null): Directive[] {
             }
         });
         currentActionName = '';
-        currentArgumentName = '';
         currentArgumentValue = '';
         currentArguments = [];
-        currentNamedArguments = {};
         currentModifiers = [];
         state = 'action';
     }
     const pushArgument = function() {
-        const mixedArgTypesError = () => {
-            throw new Error(`Normal and named arguments cannot be mixed inside "${currentActionName}()"`)
-        }
-
-        if (currentArgumentName) {
-            if (currentArguments.length > 0) {
-                mixedArgTypesError();
-            }
-
-            // argument names are also trimmed to avoid space after ","
-            // "foo=bar, baz=bazzles"
-            currentNamedArguments[currentArgumentName.trim()] = currentArgumentValue;
-        } else {
-            if (Object.keys(currentNamedArguments).length > 0) {
-                mixedArgTypesError();
-            }
-
-            // value is trimmed to avoid space after ","
-            // "foo, bar"
-            currentArguments.push(currentArgumentValue.trim());
-        }
-        currentArgumentName = '';
+        // value is trimmed to avoid space after ","
+        // "foo, bar"
+        currentArguments.push(currentArgumentValue.trim());
         currentArgumentValue = '';
     }
 
@@ -133,16 +96,11 @@ export function parseDirectives(content: string|null): Directive[] {
             throw new Error(`The modifier "${currentActionName}()" does not support multiple arguments.`)
         }
 
-        if (Object.keys(currentNamedArguments).length > 0) {
-            throw new Error(`The modifier "${currentActionName}()" does not support named arguments.`)
-        }
-
         currentModifiers.push({
             name: currentActionName,
             value: currentArguments.length > 0 ? currentArguments[0] : null,
         });
         currentActionName = '';
-        currentArgumentName = '';
         currentArguments = [];
         state = 'action';
     }
@@ -192,14 +150,6 @@ export function parseDirectives(content: string|null): Directive[] {
                 if (char === ',') {
                     // end of current argument
                     pushArgument();
-
-                    break;
-                }
-
-                if (char === '=') {
-                    // this is a named argument!
-                    currentArgumentName = currentArgumentValue;
-                    currentArgumentValue = '';
 
                     break;
                 }

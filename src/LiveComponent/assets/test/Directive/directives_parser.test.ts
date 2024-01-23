@@ -29,7 +29,6 @@ describe('directives parser', () => {
         assertDirectiveEquals(directives[0], {
             action: 'hide',
             args: [],
-            named: {},
             modifiers: [],
         })
     });
@@ -40,7 +39,6 @@ describe('directives parser', () => {
         assertDirectiveEquals(directives[0], {
             action: 'addClass',
             args: ['opacity-50'],
-            named: {},
             modifiers: [],
         })
     });
@@ -51,7 +49,6 @@ describe('directives parser', () => {
         assertDirectiveEquals(directives[0], {
             action: 'addClass',
             args: ['opacity-50 disabled'],
-            named: {},
             modifiers: [],
         })
     });
@@ -63,7 +60,6 @@ describe('directives parser', () => {
             action: 'addClass',
             // space between arguments is trimmed
             args: ['opacity-50', 'disabled'],
-            named: {},
             modifiers: [],
         })
     });
@@ -74,13 +70,11 @@ describe('directives parser', () => {
         assertDirectiveEquals(directives[0], {
             action: 'addClass',
             args: ['opacity-50'],
-            named: {},
             modifiers: [],
         })
         assertDirectiveEquals(directives[1], {
             action: 'addAttribute',
             args: ['disabled'],
-            named: {},
             modifiers: [],
         })
     });
@@ -91,63 +85,16 @@ describe('directives parser', () => {
         assertDirectiveEquals(directives[0], {
             action: 'hide',
             args: [],
-            named: {},
             modifiers: [],
         })
         assertDirectiveEquals(directives[1], {
             action: 'addClass',
             args: ['opacity-50 disabled'],
-            named: {},
             modifiers: [],
         })
         assertDirectiveEquals(directives[2], {
             action: 'addAttribute',
             args: ['disabled'],
-            named: {},
-            modifiers: [],
-        })
-    });
-
-    it('parses single named argument', () => {
-        const directives = parseDirectives('save(foo=bar)');
-        expect(directives).toHaveLength(1);
-        assertDirectiveEquals(directives[0], {
-            action: 'save',
-            args: [],
-            named: { foo: 'bar' },
-            modifiers: [],
-        })
-    });
-
-    it('parses multiple named arguments', () => {
-        const directives = parseDirectives('save(foo=bar, baz=bazzles)');
-        expect(directives).toHaveLength(1);
-        assertDirectiveEquals(directives[0], {
-            action: 'save',
-            args: [],
-            named: { foo: 'bar', baz: 'bazzles' },
-            modifiers: [],
-        })
-    });
-
-    it('parses arguments and spaces are kept', () => {
-        const directives = parseDirectives('save(foo= bar)');
-        expect(directives).toHaveLength(1);
-        assertDirectiveEquals(directives[0], {
-            action: 'save',
-            args: [],
-            named: { foo: ' bar' },
-            modifiers: [],
-        })
-    });
-
-    it('parses argument names with space is trimmed', () => {
-        const directives = parseDirectives('save(foo  =bar)');
-        expect(directives).toHaveLength(1);
-        assertDirectiveEquals(directives[0], {
-            action: 'save',
-            args: [],
-            named: { foo: 'bar' },
             modifiers: [],
         })
     });
@@ -158,7 +105,6 @@ describe('directives parser', () => {
         assertDirectiveEquals(directives[0], {
             action: 'addClass',
             args: ['disabled'],
-            named: {},
             modifiers: [
                 { name: 'delay', value: null }
             ],
@@ -171,7 +117,6 @@ describe('directives parser', () => {
         assertDirectiveEquals(directives[0], {
             action: 'addClass',
             args: ['disabled'],
-            named: {},
             modifiers: [
                 { name: 'delay', value: '400' },
             ],
@@ -179,12 +124,11 @@ describe('directives parser', () => {
     });
 
     it('parses multiple modifiers', () => {
-        const directives = parseDirectives('prevent|debounce(400)|save(foo=bar)');
+        const directives = parseDirectives('prevent|debounce(400)|save');
         expect(directives).toHaveLength(1);
         assertDirectiveEquals(directives[0], {
             action: 'save',
             args: [],
-            named: { foo: 'bar' },
             modifiers: [
                 { name: 'prevent', value: null },
                 { name: 'debounce', value: '400' },
@@ -211,22 +155,10 @@ describe('directives parser', () => {
             }).toThrow('Missing space after addClass()')
         });
 
-        it('named and unnamed arguments cannot be mixed', () => {
-            expect(() => {
-                parseDirectives('save(foo=bar, baz)');
-            }).toThrow('Normal and named arguments cannot be mixed inside "save()"')
-        });
-
         it('modifier cannot have multiple arguments', () => {
             expect(() => {
                 parseDirectives('debounce(10, 20)|save');
             }).toThrow('The modifier "debounce()" does not support multiple arguments.')
-        });
-
-        it('modifier cannot have named arguments', () => {
-            expect(() => {
-                parseDirectives('debounce(foo=bar)|save');
-            }).toThrow('The modifier "debounce()" does not support named arguments.')
         });
     });
 });

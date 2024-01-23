@@ -149,7 +149,7 @@ describe('LiveController query string binding', () => {
         const test = await createTest({ prop: ''}, (data: any) => `
             <div ${initComponent(data, {queryMapping: {prop: {name: 'prop'}}})}>
                 Prop: ${data.prop}
-                <button data-action="live#action" data-action-name="changeProp">Change prop</button>
+                <button data-action="live#action" data-live-action-param="changeProp">Change prop</button>
             </div>
         `);
 

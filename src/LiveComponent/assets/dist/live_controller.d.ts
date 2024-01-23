@@ -95,10 +95,10 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     disconnect(): void;
     update(event: any): void;
     action(event: any): void;
-    emit(event: Event): void;
-    emitUp(event: Event): void;
-    emitSelf(event: Event): void;
     $render(): Promise<import("./Backend/BackendResponse").default>;
+    emit(event: any): void;
+    emitUp(event: any): void;
+    emitSelf(event: any): void;
     $updateModel(model: string, value: any, shouldRender?: boolean, debounce?: number | boolean): Promise<import("./Backend/BackendResponse").default>;
     propsUpdatedFromParentValueChanged(): void;
     fingerprintValueChanged(): void;
