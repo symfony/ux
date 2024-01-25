@@ -6,6 +6,7 @@ framework:
         excluded_patterns:
             - '*/assets/styles/_*.scss'
             - '*/assets/styles/**/_*.scss'
+            - '*/assets/icons/**'
         importmap_polyfill: false
 
 react:

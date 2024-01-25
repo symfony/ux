@@ -1,0 +1,30 @@
+// -----------------------------------------------------------------
+// IconSearch
+// -----------------------------------------------------------------
+
+.IconSearch {
+
+}
+
+.IconSearchBox {
+  position: sticky;
+  top: 0;
+  background: var(--bs-body-bg);
+  z-index: 2;
+}
+
+.IconSearchBox .btn {
+  --bs-btn-border-color: var(--bs-secondary-bg-subtle);
+  --bs-btn-hover-border-color: var(--bs-secondary-border-subtle);
+  --bs-btn-hover-bg: var(--bs-secondary-bg-subtle);
+}
+
+.IconSearch__Input {
+  border: var(--bs-border-width) solid var(--bs-border-color);
+
+  &:focus {
+    border-color: var(--bs-primary);
+    box-shadow: none;
+    outline: revert;
+  }
+}

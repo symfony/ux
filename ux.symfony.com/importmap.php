@@ -55,20 +55,23 @@ return [
     '@app/translations/configuration' => [
         'path' => 'var/translations/configuration.js',
     ],
+    '@symfony/ux-live-component' => [
+        'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
+    ],
     'bootstrap' => [
-        'version' => '5.3.2',
+        'version' => '5.3.3',
     ],
     '@popperjs/core' => [
         'version' => '2.11.8',
     ],
     'stimulus-clipboard' => [
-        'version' => '3.3.0',
+        'version' => '4.0.1',
     ],
     '@hotwired/stimulus' => [
-        'version' => '3.2.1',
+        'version' => '3.2.2',
     ],
     'tom-select' => [
-        'version' => '2.2.2',
+        'version' => '2.3.1',
     ],
     'react' => [
         'version' => '18.2.0',
@@ -77,89 +80,89 @@ return [
         'version' => '18.2.0',
     ],
     'vue' => [
-        'version' => '3.3.0',
+        'version' => '3.4.21',
         'package_specifier' => 'vue/dist/vue.esm-bundler.js',
     ],
     'swup' => [
-        'version' => '3.0.6',
+        'version' => '4.6.0',
     ],
     'delegate-it' => [
-        'version' => '3.0.1',
+        'version' => '6.0.1',
     ],
     '@swup/debug-plugin' => [
-        'version' => '3.0.0',
+        'version' => '4.0.4',
     ],
     '@swup/fade-theme' => [
-        'version' => '1.0.5',
+        'version' => '2.0.0',
     ],
     '@swup/forms-plugin' => [
-        'version' => '2.0.1',
+        'version' => '3.4.2',
     ],
     '@swup/slide-theme' => [
-        'version' => '1.0.5',
+        'version' => '2.0.0',
     ],
     '@swup/plugin' => [
-        'version' => '2.0.2',
+        'version' => '4.0.0',
     ],
     '@hotwired/turbo' => [
-        'version' => '8.0.2',
+        'version' => '8.0.3',
     ],
     'typed.js' => [
-        'version' => '2.0.16',
+        'version' => '2.1.0',
     ],
     'snarkdown' => [
         'version' => '2.0.0',
     ],
     'chart.js/auto' => [
-        'version' => '3.9.1',
+        'version' => '4.4.2',
     ],
     'cropperjs' => [
-        'version' => '1.5.13',
+        'version' => '1.6.1',
     ],
     'svelte/transition' => [
-        'version' => '3.59.1',
+        'version' => '4.2.12',
     ],
     'svelte/animate' => [
-        'version' => '3.59.1',
+        'version' => '4.2.12',
     ],
     'svelte/internal' => [
-        'version' => '3.59.1',
+        'version' => '4.2.12',
     ],
     'highlight.js/lib/core' => [
-        'version' => '11.7.0',
+        'version' => '11.9.0',
     ],
     'highlight.js/lib/languages/javascript' => [
-        'version' => '11.7.0',
+        'version' => '11.9.0',
     ],
     'highlight.js/lib/languages/php' => [
-        'version' => '11.7.0',
+        'version' => '11.9.0',
     ],
     'highlight.js/lib/languages/twig' => [
-        'version' => '11.7.0',
+        'version' => '11.9.0',
     ],
     'highlight.js/lib/languages/xml' => [
-        'version' => '11.7.0',
+        'version' => '11.9.0',
     ],
     'intl-messageformat' => [
         'version' => '10.5.11',
     ],
     '@vue/runtime-dom' => [
-        'version' => '3.3.4',
+        'version' => '3.4.21',
     ],
     '@vue/runtime-core' => [
-        'version' => '3.3.4',
+        'version' => '3.4.21',
     ],
     '@vue/shared' => [
-        'version' => '3.3.4',
+        'version' => '3.4.21',
     ],
     '@vue/reactivity' => [
-        'version' => '3.3.4',
+        'version' => '3.4.21',
     ],
     '@vue/compiler-dom' => [
-        'version' => '3.3.4',
+        'version' => '3.4.21',
     ],
     '@vue/compiler-core' => [
-        'version' => '3.3.4',
+        'version' => '3.4.21',
     ],
     'tslib' => [
         'version' => '2.6.2',
@@ -184,7 +187,24 @@ return [
     'scheduler' => [
         'version' => '0.23.0',
     ],
-    '@symfony/ux-live-component' => [
-        'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
+    'tippy.js' => [
+        'version' => '6.3.7',
+    ],
+    'tippy.js/dist/tippy.css' => [
+        'version' => '6.3.7',
+        'type' => 'css',
+    ],
+    'tippy.js/themes/translucent.css' => [
+        'version' => '6.3.7',
+        'type' => 'css',
+    ],
+    'path-to-regexp' => [
+        'version' => '6.2.1',
+    ],
+    '@swup/theme' => [
+        'version' => '2.1.0',
+    ],
+    '@kurkle/color' => [
+        'version' => '0.3.2',
     ],
 ];

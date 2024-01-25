@@ -1,0 +1,41 @@
+.DataList {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+.DataList__item {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  dt {
+    font-weight: 700;
+  }
+  dt::after {
+    content: ":";
+  }
+  dd {
+    color: var(--bs-code-color);
+    font-weight: 400;
+    margin: 0;
+    a {
+        position: relative;
+    }
+    a::before {
+        content: "";
+        position: absolute;
+        bottom: -2px;
+        left: 0;
+        height: 2px;
+        background-color: var(--bs-code-color);
+        transition: width 0.3s;
+        width: 0%;
+    }
+    a:hover::before {
+      # transition: decoration 0.3s;
+      width: 100%;
+    }
+  }
+}

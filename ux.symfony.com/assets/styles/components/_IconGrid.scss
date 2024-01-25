@@ -1,0 +1,159 @@
+.IconGrid {
+  --min: 5rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(var(--min), 1fr));
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: center;
+  transition: all 250ms ease;
+}
+
+[data-icon-size="large"] .IconGrid {
+  --min: 10rem;
+}
+
+.IconCard {
+  display: grid;
+  border-radius: 0.75rem;
+  border: 1px solid var(--bs-secondary-bg-subtle);
+  background: rgb(255 255 255 / 50%);
+  padding: 0.5rem;
+  aspect-ratio: 1;
+  position: relative;
+  transition: 150ms linear;
+}
+
+.IconCard:hover {
+  transition: 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transform: scale(1.07);
+}
+.IconCard__link {
+  background: none;
+  border: 0;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  position: relative;
+}
+
+.IconCard__icon {
+  width: 24px;
+  max-width: 2.5rem;
+  height: auto;
+  display: block;
+  max-height: 2.5rem;
+}
+
+.IconCard__name,
+.IconCard__prefix {
+  position: absolute;
+  text-align: center;
+  font-size: .7rem;
+  font-family: var(--font-family-code);
+  opacity: .25;
+  line-height: 1.1;
+  display: none;
+  transition: opacity 125ms linear;
+}
+
+.IconCard__name {
+  inset: auto .5rem .5rem;
+}
+
+.IconCard__prefix {
+  inset: .5rem .5rem auto;
+}
+
+.IconCard:hover .IconCard__name,
+.IconCard:hover .IconCard__prefix {
+  opacity: .75;
+}
+
+.IconCard__save,
+.IconCard__copy {
+  position: absolute;
+  border: 0;
+  background: none;
+  height: auto;
+  mix-blend-mode: overlay;
+  transition: opacity 125ms linear, scale 125ms linear;
+  opacity: 0;
+  scale: 1.1;
+  display: none;
+}
+
+.tippy-content button {
+  border: 0;
+    background: none;
+}
+.tippy-content {
+  font-stretch: semi-condensed;
+  font-family: var(--font-family-code);
+  font-size: 0.65rem;
+}
+.tippy-content span:first-child {
+  color : var(--bs-code-color);
+}
+.tippy-content span:not(:first-child) {
+  color : var(--color-text);
+}
+
+.IconCard__save {
+  top: .5rem;
+  right: .5rem;
+}
+
+.IconCard__copy {
+  bottom: .5rem;
+  right: .5rem;
+}
+
+.IconCard:hover .IconCard__save,
+.IconCard:hover .IconCard__copy {
+  opacity: .5;
+}
+
+.IconCard__save:hover,
+.IconCard__copy:hover {
+  opacity: 1;
+}
+
+[data-icon-size="large"] {
+  .IconCard a {
+    padding-block: 1rem;
+  }
+
+  //.IconCard__save {
+  //  opacity: 0.25;
+  //}
+  //.IconCard__copy {
+  //  opacity: 0.25;
+  //}
+  .IconCard__icon {
+    width: 50%;
+  }
+
+  .IconCard__save,
+  .IconCard__prefix {
+    display: block;
+  }
+
+  .IconCard__name {
+    display: block;
+  }
+}
+
+[data-bs-theme="dark"] {
+  .IconCard {
+    background: rgb(0 0 0 / 50%);
+  }
+
+  .IconCard__icon {
+    filter: invert(1) hue-rotate(180deg);
+  }
+}
+
+.Icons-icon:hover {
+  color: #f4645f;
+  transition: color 500ms linear;
+}

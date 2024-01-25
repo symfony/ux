@@ -1,0 +1,20 @@
+{% props icons = [] %}
+
+<div {{ attributes }} class="IconGrid" data-controller="icon-grid">
+
+    {% for icon in icons %}
+
+        <div class="IconCard" title="{{ icon }}">
+            <button class="IconCard__link" data-icon-link>
+                {% if iconSet is not defined %}
+                    <span class="IconCard__prefix">{{ icon.prefix }}</span>
+                {% endif %}
+                <img class="IconCard__icon" width="32" height="32" src="{{ icon.imageUrl }}" alt="Icon {{ icon.prefix }} {{ icon.name|humanize }}">
+                <span class="IconCard__name">{{ icon.name }}</span>
+            </button>
+        </div>
+
+    {% endfor %}
+
+</div>
+

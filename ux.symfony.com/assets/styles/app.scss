@@ -28,7 +28,7 @@
 @import "../../vendor/twbs/bootstrap/scss/buttons";
 @import "../../vendor/twbs/bootstrap/scss/transitions";
 @import "../../vendor/twbs/bootstrap/scss/dropdown";
-// @import "../../vendor/twbs/bootstrap/scss/button-group";
+ @import "../../vendor/twbs/bootstrap/scss/button-group";
 @import "../../vendor/twbs/bootstrap/scss/nav";
 @import "../../vendor/twbs/bootstrap/scss/navbar";
 @import "../../vendor/twbs/bootstrap/scss/card";
@@ -60,16 +60,24 @@
 @import "app/typography";
 
 // Layouts
+@import "layouts/container";
 @import "layouts/grid";
+@import "layouts/section";
 
 // Components
+@import "components/DataList";
 @import "components/demo-container";
 @import "components/DemoCard";
 @import "components/DocsLink";
 @import "components/file_tree";
 @import "components/Icon";
+@import "components/IconGrid";
+@import "components/IconModal";
+@import "components/IconSearch";
+@import "components/IconSetCard";
 @import "components/PackageHeader";
 @import "components/PackageBox";
+@import "components/Tabs";
 @import "components/Terminal";
 @import "components/TerminalCommand";
 @import "components/ThemeSwitcher";
@@ -102,10 +110,10 @@
     left: 0;
     width: 100%;
     color: rgb(156 163 175);
-    background-color: rgb(55 65 81);
+    background-color: rgb(9, 10, 11);
 }
 .btn-expand-code:hover, .btn-expand-code:active {
-    background-color: rgb(55 65 81) !important;
+    background-color: rgb(9, 10, 11) !important;
     color: #fff !important;
 }
 .code-description a {

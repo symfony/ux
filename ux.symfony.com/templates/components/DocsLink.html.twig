@@ -4,7 +4,9 @@
             <a href="{{ url }}" class="DocsLink_link"
                rel="{{ isExternal ? 'external noopened noreferrer' }}"
             >{{ title }}</a>
-            {% if isExternal %}
+            {% if icon|default %}
+                <twig:Icon name="{{ icon }}" class="DocsLink_arrow"/>
+            {% elseif isExternal  %}
                 <twig:Icon name="arrow-right" style="transform: rotate(-45deg);" class="DocsLink_arrow"/>
             {% endif %}
         </p>

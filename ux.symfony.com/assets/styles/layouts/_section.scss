@@ -1,0 +1,23 @@
+.section,
+section:not([class]) {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  justify-content: center;
+  padding-block: var(--padding, 4rem);
+  gap: var(--gap, 4rem);
+}
+
+.section--large {
+  --padding: 5rem;
+}
+
+.section-heading {
+  text-align: center;
+  margin-block: 0;
+  margin-inline: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--heading-color, var(--color-primary));
+}
