@@ -90,11 +90,11 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php-version: ['8.1', '8.2']
+                php-version: ['8.1', '8.3']
                 include:
                   - php-version: '8.1'
                     dependency-version: 'lowest'
-                  - php-version: '8.2'
+                  - php-version: '8.3'
                     dependency-version: 'highest'
                 component: ${{ fromJson(needs.tests-php-components.outputs.components )}}
                 exclude:
