@@ -12,7 +12,7 @@ jobs:
     coding-style-php:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.1'
@@ -24,7 +24,7 @@ jobs:
         name: JavaScript Coding Style
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
               run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -43,7 +43,7 @@ jobs:
         name: Check for UnBuilt JS Dist Files
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
               run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
@@ -76,7 +76,7 @@ jobs:
         outputs:
             components: ${{ steps.components.outputs.components }}
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - id: components
               run: |
@@ -103,7 +103,7 @@ jobs:
                   - component: Typed  # has no tests
 
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - uses: shivammathur/setup-php@v2
               with:
@@ -132,7 +132,7 @@ jobs:
     tests-js:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
               run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
