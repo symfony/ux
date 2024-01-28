@@ -17,7 +17,7 @@ use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
 /**
- * @experimental
+ * @internal
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */

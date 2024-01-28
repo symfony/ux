@@ -20,8 +20,6 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
  * @see https://symfony.com/bundles/ux-live-component
  *
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class AsLiveComponent extends AsTwigComponent

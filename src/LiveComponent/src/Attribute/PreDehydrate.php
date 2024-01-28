@@ -13,8 +13,6 @@ namespace Symfony\UX\LiveComponent\Attribute;
 
 /**
  * An attribute to register a PreDehydrate hook.
- *
- * @experimental
  */
 #[\Attribute(\Attribute::TARGET_METHOD)]
 final class PreDehydrate

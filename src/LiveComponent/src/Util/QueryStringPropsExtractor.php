@@ -20,8 +20,6 @@ use Symfony\UX\LiveComponent\Metadata\LivePropMetadata;
 /**
  * @author Nicolas Rigaud <squrious@protonmail.com>
  *
- * @experimental
- *
  * @internal
  */
 final class QueryStringPropsExtractor

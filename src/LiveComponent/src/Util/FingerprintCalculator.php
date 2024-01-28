@@ -24,8 +24,6 @@ use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class FingerprintCalculator

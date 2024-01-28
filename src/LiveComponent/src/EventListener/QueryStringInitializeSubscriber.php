@@ -20,8 +20,6 @@ use Symfony\UX\TwigComponent\Event\PreMountEvent;
 /**
  * @author Nicolas Rigaud <squrious@protonmail.com>
  *
- * @experimental
- *
  * @internal
  */
 class QueryStringInitializeSubscriber implements EventSubscriberInterface

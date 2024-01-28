@@ -15,8 +15,6 @@ namespace Symfony\UX\LiveComponent\Attribute;
  * An attribute to mark a property as a "LiveProp".
  *
  * @see https://symfony.com/bundles/ux-live-component/current/index.html#liveprops-stateful-component-properties
- *
- * @experimental
  */
 #[\Attribute(\Attribute::TARGET_PROPERTY)]
 final class LiveProp

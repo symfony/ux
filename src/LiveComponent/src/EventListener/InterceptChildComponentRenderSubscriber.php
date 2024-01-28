@@ -25,8 +25,6 @@ use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class InterceptChildComponentRenderSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface

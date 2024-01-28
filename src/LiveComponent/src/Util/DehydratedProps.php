@@ -16,8 +16,6 @@ namespace Symfony\UX\LiveComponent\Util;
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class DehydratedProps

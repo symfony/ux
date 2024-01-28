@@ -17,8 +17,6 @@ use Twig\Extension\EscaperExtension;
 /**
  * An array of attributes that can eventually be returned as an escaped array.
  *
- * @experimental
- *
  * @internal
  */
 final class LiveAttributesCollection

@@ -17,8 +17,6 @@ namespace Symfony\UX\LiveComponent\Attribute;
  * @see https://symfony.com/bundles/ux-live-component/current/index.html#actions-arguments
  *
  * @author Tomas Norkūnas <norkunas.tom@gmail.com>
- *
- * @experimental
  */
 #[\Attribute(\Attribute::TARGET_PARAMETER)]
 final class LiveArg

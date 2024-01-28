@@ -18,8 +18,6 @@ namespace Symfony\UX\LiveComponent\Attribute;
  * method and re-render the component.
  *
  * @see https://symfony.com/bundles/ux-live-component/current/index.html#listeners
- *
- * @experimental
  */
 #[\Attribute(\Attribute::TARGET_METHOD | \Attribute::IS_REPEATABLE)]
 class LiveListener extends LiveAction

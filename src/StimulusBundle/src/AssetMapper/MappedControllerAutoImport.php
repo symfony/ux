@@ -12,7 +12,7 @@
 namespace Symfony\UX\StimulusBundle\AssetMapper;
 
 /**
- * @experimental
+ * @internal
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */

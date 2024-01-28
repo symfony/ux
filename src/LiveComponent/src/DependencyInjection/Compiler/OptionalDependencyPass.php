@@ -21,8 +21,6 @@ use Symfony\UX\LiveComponent\LiveComponentBundle;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
- * @experimental
- *
  * @internal
  */
 final class OptionalDependencyPass implements CompilerPassInterface

@@ -11,7 +11,6 @@ A) Twig ``stimulus_`` functions & filters to add Stimulus controllers,
    actions & targets in your templates;
 
 B) Integration to load :ref:`UX Packages <ux-packages>` (extra Stimulus controllers)
-   (if you're using AssetMapper, this integration is `experimental`_)
 
 Installation
 ------------
@@ -552,7 +551,6 @@ it will normalize it:
 .. _`parameters`: https://stimulus.hotwired.dev/reference/actions#action-parameters
 .. _`Stimulus Targets`: https://stimulus.hotwired.dev/reference/targets
 .. _`StimulusBundle Flex recipe`: https://github.com/symfony/recipes/tree/main/symfony/stimulus-bundle
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`ux-autocomplete`: https://symfony.com/bundles/ux-autocomplete/current/index.html
 .. _`ux-chartjs`: https://symfony.com/bundles/ux-chartjs/current/index.html
 .. _`ux-cropperjs`: https://symfony.com/bundles/ux-cropperjs/current/index.html
