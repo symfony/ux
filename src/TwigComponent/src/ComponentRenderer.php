@@ -110,13 +110,27 @@ final class ComponentRenderer implements ComponentRendererInterface
         $this->dispatcher->dispatch($event);
     }
 
+    public function createAttributes(array $attributes = []): ComponentAttributes
+    {
+        $this->registerSafeClasses();
+
+        return new ComponentAttributes($attributes);
+    }
+
+    private function registerSafeClasses(): void
+    {
+        if ($this->safeClassesRegistered) {
+            return;
+        }
+
+        $this->twig->getExtension(EscaperExtension::class)->addSafeClass(ComponentAttributes::class, ['html']);
+
+        $this->safeClassesRegistered = true;
+    }
+
     private function preRender(MountedComponent $mounted, array $context = []): PreRenderEvent
     {
-        if (!$this->safeClassesRegistered) {
-            $this->twig->getExtension(EscaperExtension::class)->addSafeClass(ComponentAttributes::class, ['html']);
-
-            $this->safeClassesRegistered = true;
-        }
+        $this->registerSafeClasses();
 
         $component = $mounted->getComponent();
         $metadata = $this->factory->metadataFor($mounted->getName());

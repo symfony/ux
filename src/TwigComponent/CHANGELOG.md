@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+-   Add `attributes()` twig function.
+
 ## 2.13.0
 
 -   [BC BREAK] Add component metadata to `PreMountEvent` and `PostMountEvent`
