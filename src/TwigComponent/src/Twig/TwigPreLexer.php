@@ -12,6 +12,7 @@
 namespace Symfony\UX\TwigComponent\Twig;
 
 use Twig\Error\SyntaxError;
+use Twig\Lexer;
 
 /**
  * Rewrites <twig:component> syntaxes to {% component %} syntaxes.
@@ -42,6 +43,8 @@ class TwigPreLexer
         $this->length = \strlen($input);
         $output = '';
 
+        $inTwigEmbed = false;
+
         while ($this->position < $this->length) {
             // ignore content inside verbatim block #947
             if ($this->consume('{% verbatim %}')) {
@@ -67,14 +70,30 @@ class TwigPreLexer
                 }
             }
 
+            if ($this->consume('{% embed')) {
+                $inTwigEmbed = true;
+                $output .= '{% embed';
+                $output .= $this->consumeUntil('%}');
+
+                continue;
+            }
+
+            if ($this->consume('{% endembed %}')) {
+                $inTwigEmbed = false;
+                $output .= '{% endembed %}';
+
+                continue;
+            }
+
             $isTwigHtmlOpening = $this->consume('<twig:');
             $isTraditionalBlockOpening = false;
+
             if ($isTwigHtmlOpening || (0 !== \count($this->currentComponents) && $isTraditionalBlockOpening = $this->consume('{% block'))) {
                 $componentName = $isTraditionalBlockOpening ? 'block' : $this->consumeComponentName();
 
                 if ('block' === $componentName) {
                     // if we're already inside the "default" block, let's close it
-                    if (!empty($this->currentComponents) && $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock']) {
+                    if (!empty($this->currentComponents) && $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] && !$inTwigEmbed) {
                         $output .= '{% endblock %}';
 
                         $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = false;
@@ -83,8 +102,16 @@ class TwigPreLexer
                     if ($isTraditionalBlockOpening) {
                         // add what we've consumed so far
                         $output .= '{% block';
-                        $output .= $this->consumeUntil('%}');
-                        $output .= $this->consumeUntilEndBlock();
+                        $output .= $stringUntilClosingTag = $this->consumeUntil('%}');
+
+                        // If the last-consumed string does not match the Twig's block name regex, we assume the block is self-closing
+                        $isBlockSelfClosing = '' !== preg_replace(Lexer::REGEX_NAME, '', trim($stringUntilClosingTag));
+
+                        if ($isBlockSelfClosing && $this->consume('%}')) {
+                            $output .= '%}';
+                        } else {
+                            $output .= $this->consumeUntilEndBlock();
+                        }
 
                         continue;
                     }
@@ -420,8 +447,8 @@ class TwigPreLexer
 
             if (!$inComment && '{% endblock %}' === substr($this->input, $this->position, 14)) {
                 if (1 === $depth) {
-                    // in this case, we want to advanced ALL the way beyond the endblock
-                    $this->position += 14;
+                    // in this case, we want to advance ALL the way beyond the endblock
+                    $this->position += 14 /* strlen('{% endblock %}') */;
                     break;
                 } else {
                     --$depth;
