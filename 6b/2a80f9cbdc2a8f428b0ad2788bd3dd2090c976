@@ -1,0 +1,191 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-16T19:16:50Z
+
+I'm **personnaly**  👎
+
+Main reasons:
+* I'm really not in favor of mixing syntaxes...
+* I don't want twig:blocks to be used outside components
+* TwigComponent should not be a trojan horse to change all the Twig syntax
+
+When we'll rewrite the HTML prelexer, or the component rendering/ code generation...  we don't want to deal with all Twig. As we already have not all the time to solve or improve TwigComponent / LiveComponent things.
+
+I won't fight this in anyway of course, but really i'd rather go the other way around and forbid <twig:block /> outside TwigComponent "today"...
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-01-16T21:53:55Z
+
+So what's your alternative for smoothly migrating big code-base that uses `{% embed %}` with `{% block %}` inside, without adding a lot of works?
+
+To me, blocks inside `<twig:>`' component should accept any valid Twig syntax.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-16T22:24:47Z
+
+> To me, blocks inside <twig:>' component should accept any valid Twig syntax.
+
+On this, i 100% agree.  Even if "philosophically" i'm having doubt about this embed-in-template situation.
+I really agree (or we should announce this "non-compatibility").
+
+But this may/should not be done by writing more code about specific template tags (again, not criticising your work on this, far from it..) but i lost so many hours trying to debug things in Twig/Live components, that i'm 100% certain if we start to code specific things about every tag construct of twig, there is a big maintanability problem...
+
+So i really do not thing we should have any code concerning "embed"  in this repository. Or we should also have to handle "macro", "with"..... and "use".
+
+That beeing said, what are the alternatives right now ? I don't know :(  Can this by fixing exisiting block handling ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-01-17T07:14:22Z
+
+> But this may/should not be done by writing more code about specific template tags (again, not criticising your work on this, far from it..) but i lost so many hours trying to debug things in Twig/Live components, that i'm 100% certain if we start to code specific things about every tag construct of twig, there is a big maintanability problem...
+>
+> So i really do not thing we should have any code concerning "embed" in this repository. Or we should also have to handle "macro", "with"..... and "use".
+
+Yeah I understand your point too, maybe my approach is to naive and can be optimized for others Twig tokens like `macro`, `with`...
+
+> That beeing said, what are the alternatives right now ? I don't know :( Can this by fixing exisiting block handling ?
+
+TBH I don't know, all I can say during my debug phase is that the following code (without blocks in embed):
+```twig
+<twig:Alert>
+    <p>
+        {% embed "my_embed.html.twig" with { foo: 'bar' } %}{% endembed %}
+    </p>
+</twig:Alert>
+```
+
+is nicely converted to
+```twig
+{% component 'Alert' %}
+    {% block content %}<p>
+        {% embed "my_embed.html.twig" with { foo: 'bar' } %}{% endembed %}
+    </p>
+{% endblock %}{% endcomponent %}
+```
+
+But this code:
+```
+<twig:Alert>
+    <p>
+        {% embed "my_embed.html.twig" %}
+            {% block my_embed_block_1 "foo" %}
+            {% block my_embed_block_2 %}bar{% endblock %}
+        {% endembed %}
+    </p>
+</twig:Alert>
+```
+
+raises error `Expected closing tag "</twig:Alert>" not found at line 8`, and generates the following output (before raising the error):
+```twig
+{% component 'Alert' %}
+    {% block content %}<p>
+        {% embed "my_embed.html.twig" %}
+            {% endblock %}{% block my_embed_block_1 "foo" %}
+            {% block my_embed_block_2 %}bar{% endblock %}
+        {% endembed %}
+    </p>
+</twig:Alert>
+```
+
+You can see a `{% endblock %}` between `{% embed "my_embed.html.twig" %}` and `{% block my_embed_block_1 "foo" %}`, it has been added by the line
+```php
+if (!empty($this->currentComponents) && $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock']) {
+    $output .= '{% endblock %}';
+
+    $this->currentComponents[\count($this->currentComponents) - 1]['hasDefaultBlock'] = false;
+}
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-17T17:53:12Z
+
+Yo @Kocal!
+
+We should definitely fix this. But, to be clear, I think there are 2 separate issues. I think you fixed them both at once, but I want to clarity.
+
+**Issue 1**: blocks without `endblock`:
+
+```
+<twig:Terminal bottomPadding="145">
+    composer require symfony/asset-mapper symfony/stimulus-bundle
+    {% block my_embed_block_1 "foo" %}
+</twig:Terminal>
+```
+
+This errors - we're simply not processing the `{% block anything "content" %}` properly.
+
+**Issue 2**: the embed issue where we think blocks that are inside of the `embed` are blocks for the component.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-17T19:31:24Z
+
+I think fixing the block thing in the Prelexer would fix both, no ? https://github.com/symfony/ux/blob/a2418ef146f09a858bd12ed0116c3f8058d0a3a8/src/TwigComponent/src/Twig/TwigPreLexer.php#L86
+
+In all manner (and not related to this PR) we have to refacto/improve the PreLexer soon, as we do not handle a lot of minor / edge cases
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-17T19:32:44Z
+
+@Kocal  .. do you think you could extract this part in your code and try without any "embed" handling at first ? Or you do think both need to be fixed at once ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-01-19T19:14:29Z
+
+Hi everyone 👋, thanks for your suggestions, I'll try them ASAP!
+
+Cheers from the mountains 😛
+ ![PXL_20240119_120611011.jpg](https://github.com/symfony/ux/assets/2103975/23d75870-5b7f-4924-8ee1-9c99f7cfed6f)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-01-20T14:03:19Z
+
+I've applied your suggestions :)
+
+> do you think you could extract this part in your code and try without any "embed" handling at first ? Or you do think both need to be fixed at once ?
+
+@smnandre unfortunately removing the `$inTwigEmbed` logic makes the 4 tests "embeds + blocks" fail :/ But maybe I'm missing something
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-20T16:00:07Z
+
+I looked a bit and it's almost perfect. But i think @weaverryan was right, and we are solving two problems at once that deserve independant solutions.
+
+Here is a new test that fails (and probably not because of your code, it was just not tested before i guess)
+
+```php
+yield 'component_where_entire_default_block_is_twig_embed_with_endblock_name' => [
+            <<<EOF
+            <twig:Alert>
+                <p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block %}{% endblock my_embed_block %}
+                    {% endembed %}
+                </p>
+            </twig:Alert>
+            EOF,
+            <<<EOF
+            {% component 'Alert' %}
+                {% block content %}<p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block %}{% endblock my_embed_block %}
+                    {% endembed %}
+                </p>
+            {% endblock %}{% endcomponent %}
+            EOF,
+        ];
+```
+
+Trying to solve it, and thinking about what i suggested about the embed isolation, i realized.... we should never be in that situation in the first place :)
+
+A current component cannot have any impact on children embed content... So i think when we detect  an embed we should call the prelexer (as it's done in the block parsing)
+
+But it was already there, so let's merge your fix and adress all this after :)
