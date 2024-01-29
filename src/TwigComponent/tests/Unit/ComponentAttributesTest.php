@@ -191,4 +191,12 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(['disabled' => null], $attributes->all());
         $this->assertSame(' disabled', (string) $attributes);
     }
+
+    public function testIsTraversableAndCountable(): void
+    {
+        $attributes = new ComponentAttributes(['foo' => 'bar']);
+
+        $this->assertSame($attributes->all(), iterator_to_array($attributes));
+        $this->assertCount(1, $attributes);
+    }
 }

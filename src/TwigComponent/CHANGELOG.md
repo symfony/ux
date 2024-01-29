@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+-   Make `ComponentAttributes` traversable/countable.
+
 ## 2.13.0
 
 -   [BC BREAK] Add component metadata to `PreMountEvent` and `PostMountEvent`
