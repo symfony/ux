@@ -1,0 +1,16 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-14T00:47:32Z
+
+Do we add the "module" thing back now.. or in a distinct release to play safe ? cc @weaverryan
+
+---------------------------------------------------------------------------
+
+by evertharmeling at 2024-01-17T16:45:32Z
+
+> Thanks for getting this! Are the tests using chart.js 4? Irrc, they use what's in `yarn.lock`
+
+Not sure what's used in the [github flow](https://github.com/symfony/ux/actions/runs/7504456953/job/20431533425?pr=1389#step:5:13), but locally I tested it installing `v3.4.1` and `v4.0` manually and the suite passed.
+
+~~Or should I include [this 'hack'](https://github.com/symfony/ux/pull/610/files#diff-245392b692a50c38ecab4381b118862db514035c10983f3bd4f4b7f1f4be4692R238-R262) again to be sure? But probably we need a more robust solution for supporting multiple versions in the testsuite, as [Svelte](https://github.com/symfony/ux/blob/a2418ef146f09a858bd12ed0116c3f8058d0a3a8/src/Svelte/assets/package.json#L23) is atm supporting 2 versions and probably when Turbo 8 is released we need to continue supporting Turbo 7 at the same time. So it's something we'll come across more often.~~
+See #1417
