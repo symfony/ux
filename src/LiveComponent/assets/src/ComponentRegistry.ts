@@ -8,8 +8,8 @@ export default class {
      */
     private componentMapByComponent = new Map<Component, string>();
 
-    public registerComponent(element: HTMLElement, component: Component) {
-        this.componentMapByElement.set(element, component);
+    public registerComponent(component: Component) {
+        this.componentMapByElement.set(component.element, component);
         this.componentMapByComponent.set(component, component.name);
     }
 

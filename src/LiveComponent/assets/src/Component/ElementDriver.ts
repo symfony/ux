@@ -3,27 +3,23 @@ import {getModelDirectiveFromElement} from '../dom_utils';
 export interface ElementDriver {
     getModelName(element: HTMLElement): string|null;
 
-    getComponentProps(rootElement: HTMLElement): any;
+    getComponentProps(): any;
 
     /**
      * Given an HtmlElement and a child id, find the root element for that child.
+     * TODO: make this part of an options array to Component
      */
     findChildComponentElement(id: string, element: HTMLElement): HTMLElement|null;
 
     /**
-     * Given an element, find the "key" that should be used to identify it;
-     */
-    getKeyFromElement(element: HTMLElement): string|null;
-
-    /**
      * Given an element from a response, find all the events that should be emitted.
      */
-    getEventsToEmit(element: HTMLElement): Array<{event: string, data: any, target: string|null, componentName: string|null }>;
+    getEventsToEmit(): Array<{event: string, data: any, target: string|null, componentName: string|null }>;
 
     /**
      * Given an element from a response, find all the events that should be dispatched.
      */
-    getBrowserEventsToDispatch(element: HTMLElement): Array<{event: string, payload: any }>;
+    getBrowserEventsToDispatch(): Array<{event: string, payload: any }>;
 }
 
 export class StandardElementDriver implements ElementDriver {
@@ -43,7 +39,7 @@ export class StandardElementDriver implements ElementDriver {
         return JSON.parse(propsJson);
     }
 
-    findChildComponentElement(id: string, element: HTMLElement): HTMLElement|null {
+    findChildComponentElement(id: string): HTMLElement|null {
         return element.querySelector(`[data-live-id=${id}]`);
     }
 

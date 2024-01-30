@@ -11,7 +11,6 @@ export function executeMorphdom(
     getElementValue: (element: HTMLElement) => any,
     childComponents: Component[],
     findChildComponent: (id: string, element: HTMLElement) => HTMLElement | null,
-    getKeyFromElement: (element: HTMLElement) => string | null,
     externalMutationTracker: ExternalMutationTracker
 ) {
     const childComponentMap: Map<HTMLElement, Component> = new Map();

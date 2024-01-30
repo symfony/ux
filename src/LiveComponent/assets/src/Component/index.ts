@@ -11,10 +11,9 @@ import { PluginInterface } from './plugins/PluginInterface';
 import BackendResponse from '../Backend/BackendResponse';
 import { ModelBinding } from '../Directive/get_model_binding';
 import ExternalMutationTracker from '../Rendering/ExternalMutationTracker';
+import ComponentRegistry from '../ComponentRegistry';
 
 declare const Turbo: any;
-
-export type ComponentFinder = (currentComponent: Component, onlyParents: boolean, onlyMatchName: string|null) => Component[];
 
 class ChildComponentWrapper {
     component: Component;
@@ -30,11 +29,12 @@ export default class Component {
     readonly element: HTMLElement;
     readonly name: string;
     // key is the string event name and value is an array of action names
-    readonly listeners: Map<string, string[]>;
-    private readonly componentFinder: ComponentFinder;
+    readonly listeners: Map<string, string[]> = new Map();
     private backend: BackendInterface;
     private readonly elementDriver: ElementDriver;
     id: string|null;
+
+    static componentRegistry = new ComponentRegistry();
 
     /**
      * A fingerprint that identifies the props/input that was used on
@@ -67,35 +67,28 @@ export default class Component {
     private children: Map<string, ChildComponentWrapper> = new Map();
     private parent: Component|null = null;
 
-    private externalMutationTracker: ExternalMutationTracker;
+    private readonly externalMutationTracker: ExternalMutationTracker;
 
     /**
      * @param element The root element
-     * @param name    The name of the component
-     * @param props   Readonly component props
-     * @param listeners Array of event -> action listeners
-     * @param componentFinder
-     * @param fingerprint
+     * @param name    Component name - used for emitting events to specific components
+     * @param props   Starting component props
+     * @param fingerprint A deterministic fingerprint generated from the input/props
+     *                used to create this component. When a parent component re-renders,
+     *                it will send this fingerprint to the server. This is used to
+     *                determine if the input/props to this child component have changed
+     *                and thus, if the child component needs to be re-rendered.
      * @param id      Some unique id to identify this component. Needed to be a child component
      * @param backend Backend instance for updating
      * @param elementDriver Class to get "model" name from any element.
      */
-    constructor(element: HTMLElement, name: string, props: any, listeners: Array<{ event: string; action: string }>, componentFinder: ComponentFinder, fingerprint: string|null, id: string|null, backend: BackendInterface, elementDriver: ElementDriver) {
+    constructor(element: HTMLElement, name: string, props: any, fingerprint: string|null, id: string|null, backend: BackendInterface, elementDriver: ElementDriver) {
         this.element = element;
         this.name = name;
-        this.componentFinder = componentFinder;
         this.backend = backend;
         this.elementDriver = elementDriver;
         this.id = id;
         this.fingerprint = fingerprint;
-
-        this.listeners = new Map();
-        listeners.forEach((listener) => {
-            if (!this.listeners.has(listener.event)) {
-                this.listeners.set(listener.event, []);
-            }
-            this.listeners.get(listener.event)?.push(listener.action);
-        });
 
         this.valueStore = new ValueStore(props);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
@@ -124,13 +117,25 @@ export default class Component {
         plugin.attachToComponent(this);
     }
 
+    setListeners(listeners: Array<{ event: string; action: string }>) {
+        this.listeners.clear();
+        listeners.forEach((listener) => {
+            if (!this.listeners.has(listener.event)) {
+                this.listeners.set(listener.event, []);
+            }
+            this.listeners.get(listener.event)?.push(listener.action);
+        });
+    }
+
     connect(): void {
+        Component.componentRegistry.registerComponent(this);
         this.hooks.triggerHook('connect', this);
         this.unsyncedInputsTracker.activate();
         this.externalMutationTracker.start();
     }
 
     disconnect(): void {
+        Component.componentRegistry.unregisterComponent(this);
         this.hooks.triggerHook('disconnect', this);
         this.clearRequestDebounceTimeout();
         this.unsyncedInputsTracker.deactivate();
@@ -265,7 +270,7 @@ export default class Component {
     }
 
     private performEmit(name: string, data: any, emitUp: boolean, matchingName: string|null): void {
-        const components = this.componentFinder(this, emitUp, matchingName);
+        const components = Component.componentRegistry.findComponents(this, emitUp, matchingName);
         components.forEach((component) => {
             component.doEmit(name, data);
         });
@@ -494,7 +499,6 @@ export default class Component {
             (element: HTMLElement) => getValueFromElement(element, this.valueStore),
             Array.from(this.getChildren().values()),
             this.elementDriver.findChildComponentElement,
-            this.elementDriver.getKeyFromElement,
             this.externalMutationTracker
         );
         this.externalMutationTracker.start();

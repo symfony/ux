@@ -17,12 +17,11 @@ import PollingPlugin from './Component/plugins/PollingPlugin';
 import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModelFieldsPlugin';
 import { PluginInterface } from './Component/plugins/PluginInterface';
 import getModelBinding from './Directive/get_model_binding';
-import ComponentRegistry from './ComponentRegistry';
 import QueryStringPlugin from './Component/plugins/QueryStringPlugin';
 
 export { Component };
 export const getComponent = (element: HTMLElement): Promise<Component> =>
-    LiveControllerDefault.componentRegistry.getComponent(element);
+    Component.componentRegistry.getComponent(element);
 
 export interface LiveEvent extends CustomEvent {
     detail: {
@@ -73,8 +72,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     ];
     private pendingFiles: { [key: string]: HTMLInputElement } = {};
 
-    static componentRegistry = new ComponentRegistry();
-
     initialize() {
         this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
 
@@ -84,14 +81,13 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
             this.element,
             this.nameValue,
             this.propsValue,
-            this.listenersValue,
-            (currentComponent: Component, onlyParents: boolean, onlyMatchName: string | null) =>
-                LiveControllerDefault.componentRegistry.findComponents(currentComponent, onlyParents, onlyMatchName),
             this.fingerprintValue,
             id,
             new Backend(this.urlValue, this.requestMethodValue, this.csrfValue),
             new StandardElementDriver()
         );
+        // TODO: reset listeners on value change?
+        this.component.setListeners(this.listenersValue);
         this.proxiedComponent = proxifyComponent(this.component);
 
         // @ts-ignore Adding the dynamic property
@@ -115,7 +111,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     }
 
     connect() {
-        LiveControllerDefault.componentRegistry.registerComponent(this.element, this.component);
         this.component.connect();
 
         this.elementEventListeners.forEach(({ event, callback }) => {
@@ -126,7 +121,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     }
 
     disconnect() {
-        LiveControllerDefault.componentRegistry.unregisterComponent(this.component);
         this.component.disconnect();
 
         this.elementEventListeners.forEach(({ event, callback }) => {
