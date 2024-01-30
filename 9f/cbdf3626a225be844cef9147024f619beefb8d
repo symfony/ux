@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-07T00:30:03Z
+
+Poke @javiereguiluz  https://github.com/symfony/symfony/issues/52939
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-29T14:43:06Z
+
+@smnandre do you need anything from me on this? Like a deploy of a dev environment to test? Ultimately, I'd like to move this to a PR on Symfony :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-29T21:26:41Z
+
+We need something to test things with non-compatible browsers...
+
+Cannot find it anymore on Slack, but I suggested to get a BrowserStack / similar account.
+
+(on this website... to be honest, i'd skip polyfill entirely with overall support over 92% and this website beeing browsed almost only by tech working visitors haha)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-30T13:15:19Z
+
+> The code used here is minimal and won't easily change ... so I'd say we don't need to test it in a real legacy browser.
+
+But i'd like to be sure it's working ... and my first attempt did not (because `HTMLScriptElement.supports` was not available on old browser).
+
+We also (and i'm almost not kidding) can merge this, test live on ux.symfony.com and wait for people experiencing bug, and then fix/built on that.
+
+The last experiments i've done with AssetMapper showed me that the polyfill performance cost is far from minor (at least for someone so ~~crazy~~focused on performances).
+
+So believe me when i say i'm the first one wanting to remove it for the vast majority of users that do not need it :)
