@@ -22,7 +22,8 @@
             }
         },
         "importmap": {
-            "@hotwired/stimulus": "^3.0.0"
+            "@hotwired/stimulus": "^3.0.0",
+            "@symfony/ux-live-component": "path:%PACKAGE%/dist/live_controller.js"
         }
     },
     "dependencies": {
