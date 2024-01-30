@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-30T14:34:47Z
+
+" Symfony UX / Check for UnBuilt JS Dist Files (pull_request) Failing after 1m "
+
+;)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-30T14:56:27Z
+
+> " Symfony UX / Check for UnBuilt JS Dist Files (pull_request) Failing after 1m "
+
+That check exists basically for me personally 😆
