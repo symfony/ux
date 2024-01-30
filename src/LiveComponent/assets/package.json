@@ -26,7 +26,7 @@
         }
     },
     "dependencies": {
-        "idiomorph": "^0.0.9"
+        "idiomorph": "^0.3.0"
     },
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0"
