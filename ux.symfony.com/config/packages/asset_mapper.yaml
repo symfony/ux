@@ -6,6 +6,7 @@ framework:
         excluded_patterns:
             - '*/assets/styles/_*.scss'
             - '*/assets/styles/**/_*.scss'
+        importmap_polyfill: false
 
 react:
     controllers_path: '%kernel.project_dir%/assets/build/react/controllers'
