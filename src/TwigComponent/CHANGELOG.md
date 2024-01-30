@@ -1,8 +1,10 @@
 # CHANGELOG
 
-## Unreleased
+## 2.14.0
 
--   Make `ComponentAttributes` traversable/countable.
+-   Make `ComponentAttributes` traversable/countable
+-   Fixed lexing some `{# twig comments #}` with HTML Twig syntax
+-   Fix various usages of deprecated Twig code
 
 ## 2.13.0
 

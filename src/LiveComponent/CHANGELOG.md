@@ -3,11 +3,25 @@
 ## 2.14.0
 
 -   Add support for URL binding in `LiveProp`
--   Allow multiple `LiveListener` attributes on a single method.
+-   DOM morphing changed from `morphdom` to `idiomorph`
+-   Allow multiple `LiveListener` attributes on a single method
 -   Requests to LiveComponent are sent as POST by default
 -   Add method prop to AsLiveComponent to still allow GET requests, usage: `#[AsLiveComponent(method: 'get')]`
 -   Add a new `urlReferenceType` parameter to `AsLiveComponent`, which allows to
-    generate different type URL (e.g. absolute) for the component Ajax calls.
+    generate different type URL (e.g. absolute) for the component Ajax calls
+-   The `symfony/serializer` dependency is now optional
+-   Added a `data-skip-morph` attribute to allow skipping morphing of an element
+    (the element's attributes will be morphed, but its inner HTML will be overwritten
+    instead of morphed)
+-   Added an entry to the packages' `package.json` file so that `@symfony/ux-live-component`
+    will appear in the user's `importmap.php` file if using AssetMapper. This
+    will allow using the JavaScript from the package without extra setup.
+-   Fixed edge-case rendering bug where a 2nd Ajax request might start before
+    the 1st finished processing
+-   Fix usage of `{% embed %}` with `{% block %}` in `<twig:>` components
+-   Fixed `data-loading` not working when on root element of a component
+-   Fixed error when `class` attributes contained a space at start or end
+-   Fixed loading directives being matched in a child component
 
 ## 2.13.2
 

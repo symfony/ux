@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## 2.x
+## 2.14.0
 
 -   Added Typescript controllers support
 
