@@ -1,5 +1,6 @@
 import { cloneHTMLElement, setValueOnElement } from './dom_utils';
-import 'idiomorph';
+// @ts-ignore
+import { Idiomorph } from 'idiomorph/dist/idiomorph.esm.js';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
 import Component from './Component';
 import ExternalMutationTracker from './Rendering/ExternalMutationTracker';
