@@ -199,4 +199,29 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame($attributes->all(), iterator_to_array($attributes));
         $this->assertCount(1, $attributes);
     }
+
+    public function testRenderSingleAttribute(): void
+    {
+        $attributes = new ComponentAttributes(['attr1' => 'value1', 'attr2' => 'value2']);
+
+        $this->assertSame('value1', $attributes->render('attr1'));
+        $this->assertNull($attributes->render('attr3'));
+    }
+
+    public function testRenderingSingleAttributeExcludesFromString(): void
+    {
+        $attributes = new ComponentAttributes(['attr1' => 'value1', 'attr2' => 'value2']);
+
+        $this->assertSame('value1', $attributes->render('attr1'));
+        $this->assertSame(' attr2="value2"', (string) $attributes);
+    }
+
+    public function testCannotRenderNonStringAttribute(): void
+    {
+        $attributes = new ComponentAttributes(['attr1' => false]);
+
+        $this->expectException(\LogicException::class);
+
+        $attributes->render('attr1');
+    }
 }

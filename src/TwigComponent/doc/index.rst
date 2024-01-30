@@ -945,6 +945,79 @@ the exception of *class*. For ``class``, the defaults are prepended:
     {# renders as: #}
     <button class="bar foo" type="submit">Save</button>
 
+Render
+~~~~~~
+
+.. versionadded:: 2.15
+
+    The ability to *render* attributes was added in TwigComponents 2.15.
+
+You can take full control over the attributes that are rendered by using the
+``render()`` method.
+
+.. code-block:: html+twig
+
+    {# templates/components/MyComponent.html.twig #}
+    <div
+      style="{{ attributes.render('style') }} display:block;"
+      {{ attributes }} {# be sure to always render the remaining attributes! #}
+    >
+      My Component!
+    </div>
+
+    {# render component #}
+    {{ component('MyComponent', { style: 'color:red;' }) }}
+
+    {# renders as: #}
+    <div style="color:red; display:block;">
+      My Component!
+    </div>
+
+.. caution::
+
+    There are a few important things to know about using ``render()``:
+
+    1. You need to be sure to call your ``render()`` methods before calling ``{{ attributes }}`` or some
+       attributes could be rendered twice. For instance:
+
+            .. code-block:: html+twig
+
+                {# templates/components/MyComponent.html.twig #}
+                <div
+                    {{ attributes }} {# called before style is rendered #}
+                    style="{{ attributes.render('style') }} display:block;"
+                >
+                    My Component!
+                </div>
+
+                {# render component #}
+                {{ component('MyComponent', { style: 'color:red;' }) }}
+
+                {# renders as: #}
+                <div style="color:red;" style="color:red; display:block;"> {# style is rendered twice! #}
+                    My Component!
+                </div>
+
+    2. If you add an attribute without calling ``render()``, it will be rendered twice. For instance:
+
+         .. code-block:: html+twig
+
+              {# templates/components/MyComponent.html.twig #}
+              <div
+                 style="display:block;" {# not calling attributes.render('style') #}
+                 {{ attributes }}
+              >
+                 My Component!
+              </div>
+
+              {# render component #}
+              {{ component('MyComponent', { style: 'color:red;' }) }}
+
+              {# renders as: #}
+              <div style="display:block;" style="color:red;"> {# style is rendered twice! #}
+                 My Component!
+              </div>
+
 Only
 ~~~~
 

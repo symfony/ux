@@ -5,6 +5,7 @@
 -   Make `ComponentAttributes` traversable/countable
 -   Fixed lexing some `{# twig comments #}` with HTML Twig syntax
 -   Fix various usages of deprecated Twig code
+-   Add attribute rendering system
 
 ## 2.13.0
 

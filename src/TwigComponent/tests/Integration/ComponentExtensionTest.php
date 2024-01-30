@@ -216,6 +216,51 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('Hello FOO, 123, and 456', $output);
     }
 
+    /**
+     * @dataProvider renderingAttributesManuallyProvider
+     */
+    public function testRenderingAttributesManually(array $attributes, string $expected): void
+    {
+        $actual = trim($this->renderComponent('RenderAttributes', $attributes));
+
+        $this->assertSame($expected, trim($actual));
+    }
+
+    public static function renderingAttributesManuallyProvider(): iterable
+    {
+        yield [
+            ['class' => 'block'],
+            <<<HTML
+            <div
+                foo=""
+                bar="default"
+                baz="default "
+                qux=" default"
+                 class="block"
+            />
+            HTML,
+        ];
+
+        yield [
+            [
+                'class' => 'block',
+                'foo' => 'value',
+                'bar' => 'value',
+                'baz' => 'value',
+                'qux' => 'value',
+            ],
+            <<<HTML
+            <div
+                foo="value"
+                bar="value"
+                baz="default value"
+                qux="value default"
+                 class="block"
+            />
+            HTML,
+        ];
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [
