@@ -3,6 +3,7 @@ import {
     DirectiveModifier,
     parseDirectives
 } from '../../Directive/directives_parser';
+import { elementBelongsToThisComponent } from '../../dom_utils';
 import { combineSpacedArray } from '../../string_utils';
 import BackendRequest from '../../Backend/BackendRequest';
 import Component from '../../Component';
@@ -16,32 +17,32 @@ interface ElementLoadingDirectives {
 export default class implements PluginInterface {
     attachToComponent(component: Component): void {
         component.on('loading.state:started', (element: HTMLElement, request: BackendRequest) => {
-            this.startLoading(element, request);
+            this.startLoading(component, element, request);
         });
         component.on('loading.state:finished', (element: HTMLElement) => {
-            this.finishLoading(element);
+            this.finishLoading(component, element);
         });
         // hide "loading" elements to begin with
         // This is done with CSS, but only for the most basic cases
-        this.finishLoading(component.element);
+        this.finishLoading(component, component.element);
     }
 
-    startLoading(targetElement: HTMLElement|SVGElement, backendRequest: BackendRequest): void {
-        this.handleLoadingToggle(true, targetElement, backendRequest);
+    startLoading(component: Component, targetElement: HTMLElement|SVGElement, backendRequest: BackendRequest): void {
+        this.handleLoadingToggle(component, true, targetElement, backendRequest);
     }
 
-    finishLoading(targetElement: HTMLElement|SVGElement): void {
-        this.handleLoadingToggle(false, targetElement, null);
+    finishLoading(component: Component, targetElement: HTMLElement|SVGElement): void {
+        this.handleLoadingToggle(component,false, targetElement, null);
     }
 
-    private handleLoadingToggle(isLoading: boolean, targetElement: HTMLElement|SVGElement, backendRequest: BackendRequest|null) {
+    private handleLoadingToggle(component: Component, isLoading: boolean, targetElement: HTMLElement|SVGElement, backendRequest: BackendRequest|null) {
         if (isLoading) {
             this.addAttributes(targetElement, ['busy']);
         } else {
             this.removeAttributes(targetElement, ['busy']);
         }
 
-        this.getLoadingDirectives(targetElement).forEach(({ element, directives }) => {
+        this.getLoadingDirectives(component, targetElement).forEach(({ element, directives }) => {
             // so we can track, at any point, if an element is in a "loading" state
             if (isLoading) {
                 this.addAttributes(element, ['data-live-is-loading']);
@@ -148,9 +149,12 @@ export default class implements PluginInterface {
         loadingDirective();
     }
 
-    getLoadingDirectives(element: HTMLElement|SVGElement) {
+    getLoadingDirectives(component: Component, element: HTMLElement|SVGElement) {
         const loadingDirectives: ElementLoadingDirectives[] = [];
-        let matchingElements = element.querySelectorAll('[data-loading]');
+        let matchingElements = [...element.querySelectorAll('[data-loading]')];
+
+        // ignore elements which are inside a nested "live" component
+        matchingElements = matchingElements.filter((elt) => elementBelongsToThisComponent(elt, component));
 
         // querySelectorAll doesn't include the element itself
         if (element.hasAttribute('data-loading')) {
