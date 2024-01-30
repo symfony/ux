@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-30T14:54:31Z
+
+I love that idea !
+
+Would you accept we _try_ to freeze new features a **couple days** before each release, to avoid "AssetMapper/6.4"-like rush, and ensure we don't send things in hurry, without time for everyone to review ?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-30T14:55:56Z
+
+> Would you accept we try to freeze new features a couple days before each release, to avoid "AssetMapper/6.4"-like rush, and ensure we don't send things in hurry, without time for everyone to review ?
+
+Yes, that's a good idea. No hard date, but we can make this the intention. For example, there are a few big PR's that are ready / near ready right now that I'll not rush into this release.
