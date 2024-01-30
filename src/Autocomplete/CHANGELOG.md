@@ -1,8 +1,16 @@
 # CHANGELOG
 
-## Unreleased
+## 2.14.0
 
+-   Fixed behavior of Autocomplete when the underlying `select` or `option`
+    elements were modified to hopefully, more reliably, reset the autocomplete
+    instance. This is particularly important with LiveComponents.
 -   Add support for the `render.loading_more` Tom Select Virtual Scroll option (`loading_more_text`)
+-   Avoid losing the selected options when the Stimulus component is disconnected
+    and reconnected to the DOM.
+-   Added `tom-select/dist/css/tom-select.bootstrap4.css` to `autoimport` - this
+    will cause this to appear in your `controllers.json` file by default, but disabled
+    see.
 
 ## 2.13.2
 
