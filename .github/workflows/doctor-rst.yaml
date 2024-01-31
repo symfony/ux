@@ -24,7 +24,7 @@ jobs:
               id: extract_base_branch
 
             - name: Cache DOCtor-RST
-              uses: actions/cache@v3
+              uses: actions/cache@v4
               with:
                   path: .cache
                   key: doctor-rst-${{ steps.extract_base_branch.outputs.branch }}
