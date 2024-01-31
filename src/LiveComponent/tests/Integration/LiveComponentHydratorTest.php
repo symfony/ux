@@ -1165,6 +1165,34 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
     }
 
+    public function testHydrationWithInvalidDate(): void
+    {
+        $this->expectException(BadRequestHttpException::class);
+        $this->expectExceptionMessage('The model path "createdAt" was sent invalid date data "0" or in an invalid format. Make sure it\'s a valid date and it matches the expected format "Y. m. d.".');
+
+        $this->executeHydrationTestCase(function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true, format: 'Y. m. d.')]
+                public \DateTime $createdAt;
+
+                public function __construct()
+                {
+                    $this->createdAt = new \DateTime();
+                }
+            })
+                ->mountWith([
+                    'createdAt' => new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York')),
+                ])
+                ->assertDehydratesTo([
+                    'createdAt' => '2023. 03. 05.',
+                ])
+                ->userUpdatesProps([
+                    'createdAt' => '0', // <-- invalid date
+                ])
+            ;
+        });
+    }
+
     public function testPassingArrayToWritablePropForHydrationIsNotAllowed(): void
     {
         $component = new class() {
