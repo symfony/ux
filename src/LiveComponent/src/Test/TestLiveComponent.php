@@ -51,13 +51,25 @@ final class TestLiveComponent
             $this->metadataFactory->getMetadata($mounted->getName())
         );
 
-        $this->client->request('GET', $this->router->generate(
-            $this->metadata->get('route'),
-            [
-                '_live_component' => $this->metadata->getName(),
-                'props' => json_encode($props->getProps(), flags: \JSON_THROW_ON_ERROR),
-            ]
-        ));
+        if ('POST' === strtoupper($this->metadata->get('method'))) {
+            $this->client->request(
+                'POST',
+                $this->router->generate($this->metadata->get('route'), [
+                    '_live_component' => $this->metadata->getName(),
+                ]),
+                [
+                    'data' => json_encode(['props' => $props->getProps()], flags: \JSON_THROW_ON_ERROR),
+                ],
+            );
+        } else {
+            $this->client->request('GET', $this->router->generate(
+                $this->metadata->get('route'),
+                [
+                    '_live_component' => $this->metadata->getName(),
+                    'props' => json_encode($props->getProps(), flags: \JSON_THROW_ON_ERROR),
+                ]
+            ));
+        }
     }
 
     public function render(): RenderedComponent
