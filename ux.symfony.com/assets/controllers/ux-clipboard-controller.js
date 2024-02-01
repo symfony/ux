@@ -1,5 +1,6 @@
 import Clipboard from 'stimulus-clipboard'
 
+/* stimulusFetch: 'lazy' */
 export default class extends Clipboard {
     static values = {
         source: String,

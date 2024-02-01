@@ -33,6 +33,7 @@
         "symfony/stimulus-bundle": "2.x-dev",
         "symfony/translation": "6.4.*",
         "symfony/twig-bundle": "6.4.*",
+        "symfony/uid": "6.4.*",
         "symfony/ux-autocomplete": "2.x-dev",
         "symfony/ux-chartjs": "2.x-dev",
         "symfony/ux-cropperjs": "2.x-dev",
@@ -55,6 +56,7 @@
         "symfonycasts/sass-bundle": "^0.2.0",
         "twbs/bootstrap": "^5.3",
         "twig/extra-bundle": "^2.12|^3.6.1",
+        "twig/html-extra": "^3.8",
         "twig/intl-extra": "^3.6",
         "twig/markdown-extra": "^3.6",
         "twig/twig": "^2.12|^3.6.1"

@@ -30,6 +30,10 @@ return [
         'path' => './assets/app-vue.js',
         'entrypoint' => true,
     ],
+    'demos/live-memory' => [
+        'path' => './assets/demos/live-memory.js',
+        'entrypoint' => true,
+    ],
     '@symfony/stimulus-bundle' => [
         'path' => '@symfony/stimulus-bundle/loader.js',
     ],
@@ -179,5 +183,8 @@ return [
     ],
     'scheduler' => [
         'version' => '0.23.0',
+    ],
+    '@symfony/ux-live-component' => [
+        'path' => './vendor/symfony/ux-live-component/assets/dist/live_controller.js',
     ],
 ];

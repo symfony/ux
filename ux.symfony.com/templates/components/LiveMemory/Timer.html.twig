@@ -1,0 +1,46 @@
+<div {{ attributes.defaults({
+    'class': 'LiveMemory-Timer' ~ (this.blinking ? ' LiveMemory-Timer--blinking' : '')
+}) }}
+    {% if this.remainingTime > (this.warningThreshold * 1000) %}
+        data-poll="delay({{ this.remainingTime - (this.warningThreshold * 1000) }})|tick"
+    {% elseif this.remainingTime > 0 %}
+        data-poll="delay({{ this.remainingTime + 50 }})|tick"
+    {% endif %}
+>
+    <div class="LiveMemory-Timer-Display"
+        data-live-ignore="true"
+         style="
+            --delay: -{{ (999000 - this.remainingTime) }}ms;
+            --play-state: 'running';
+         ">
+
+        {% set digits = [
+            {steps: 10, unit: 100, iterations: 1},
+            {steps: 10, unit: 10, iterations: 10},
+            {steps: 10, unit: 1, iterations: 100},
+        ] %}
+
+        {% for digit in digits %}
+
+             {% set style = {
+                '--unit': digit.unit,
+                '--duration': digit.steps * digit.unit,
+                '--steps': digit.steps,
+                '--iterations': digit.iterations,
+             }|map((v, k) => '%s: %s;'|format(k,v)) %}
+
+            <div class="LiveMemory-Timer-Digit" style="{{ style|join(' ') }}" data-unit="{{ digit.unit }}">
+                <ul>
+                    {%- for i in (digit.steps - 1)..0 -%}
+                        {%- if i == 0 and digit.unit == 100 -%}
+                            <li>&nbsp;</li>
+                        {%- else -%}
+                            <li>{{ i }}</li>
+                        {%- endif -%}
+                    {%- endfor -%}
+                </ul>
+            </div>
+        {% endfor %}
+    </div>
+
+</div>

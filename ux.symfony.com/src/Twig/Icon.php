@@ -40,7 +40,7 @@ class Icon
      */
     public bool $stripXmlns = true;
 
-    private string $iconDirectory;
+    protected string $iconDirectory;
 
     public function __construct(
         #[Autowire('%kernel.project_dir%')] string $projectDir,

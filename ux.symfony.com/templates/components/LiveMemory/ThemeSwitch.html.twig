@@ -1,0 +1,16 @@
+
+
+<button {{ attributes.defaults({
+    class: "LiveMemory-ThemeSwitch",
+    type: "button",
+}) }}
+    data-controller="theme-switcher"
+    data-action="theme-switcher#switch"
+>
+    <span class="LiveMemory-ThemeSwitch-Mode LiveMemory-ThemeSwitch-Dark" data-theme="dark">
+        <twig:Icon name="theme-dark"  />
+    </span>
+    <span class="LiveMemory-ThemeSwitch-Mode LiveMemory-ThemeSwitch-Light" data-theme="light">
+        <twig:Icon name="theme-light" />
+    </span>
+</button>

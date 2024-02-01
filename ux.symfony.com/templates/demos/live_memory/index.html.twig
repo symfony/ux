@@ -1,0 +1,48 @@
+{% extends "base.html.twig" %}
+
+{% set meta = {
+    title: demo.name,
+    title_suffix: " - Symfony UX Demo",
+    description: demo.description,
+    canonical: url(demo.route),
+} %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('styles/demos/live-memory.css') }}"/>
+{% endblock %}
+
+{% block importmap %}
+    {{ importmap('demos/live-memory') }}
+{% endblock %}
+
+{% block body %}
+
+    {% block header %}
+        <header class="Header">
+            <nav class="HeaderMenu">
+                <a href="{{ url('app_demos') }}" class="HeaderButton" aria-label="Back to the demos">
+                    <twig:Icon name="arrow-left" />
+                    <span aria-hidden="true" hidden>Back to the demos</span>
+                </a>
+            </nav>
+            <nav class="HeaderLinks">
+                <twig:LiveMemory:ThemeSwitch/>
+            </nav>
+            <h1 class="HeaderLogo">
+                <a href="{{ url('app_demo_live_memory') }}" aria-label="Live Memory">
+                    <twig:LiveMemory:Logo class="shadow-blur" />
+                    <span aria-hidden="true" hidden>{{ demo.name }}</span>
+                </a>
+            </h1>
+        </header>
+    {% endblock %}
+
+    {% block content %}
+        <main class="wrapper">
+            <div class="LiveMemory shadow-blur shadow-blur--rainbow shadow-blur--before">
+                <twig:LiveMemory:Board />
+            </div>
+        </main>
+    {% endblock %}
+
+{% endblock %}

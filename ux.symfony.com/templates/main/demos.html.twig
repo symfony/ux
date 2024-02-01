@@ -14,25 +14,10 @@
         </div>
     </div>
 
-    <div class="container-fluid container-xxl px-4 py-4 py-md-5">
-        <div style="display: grid; gap: 3rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 320px), 1fr));">
+    <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
+        <div style="display: grid; gap: 3rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));">
             {% for demo in liveComponentDemos %}
-                <div class="demo-box position-relative" style="display: flex;flex-direction: column;">
-                    <div class="demo-container text-center" style="height: 180px; overflow: hidden">
-                        <img src="{{ asset(demo.screenshotFilename) }}"
-                             class="img-dark-negative"
-                             style="border-top-left-radius: 12px; border-top-right-radius: 12px; height: 100%;"
-                             alt="Screenshot of the {{ demo.name }} demo">
-                    </div>
-                    <div class="demo-container-inner p-3" style="flex: 1 auto;">
-                        <h4 class="ubuntu">
-                            <a href="{{ path(demo.route) }}" class="stretched-link">{{ demo.name }}</a>
-                        </h4>
-                        <div>
-                            {{ demo.description }}
-                        </div>
-                    </div>
-                </div>
+                <twig:DemoCard demo="{{ demo }}" />
             {% endfor %}
         </div>
     </div>

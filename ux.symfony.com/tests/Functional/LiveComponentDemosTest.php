@@ -45,6 +45,7 @@ class LiveComponentDemosTest extends KernelTestCase
         $this->browser()
             ->visit($url)
             ->assertSuccessful()
+            ->assertSeeIn('title', $liveDemo->getName())
             ->assertSeeIn('h1', $liveDemo->getName())
         ;
     }

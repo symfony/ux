@@ -1,0 +1,66 @@
+// -----------------------------------------------------------------
+// ThemeSwitch
+// -----------------------------------------------------------------
+
+.LiveMemory-ThemeSwitch {
+  position: relative;
+  transform-style: preserve-3d;
+  cursor: pointer;
+  border: 0;
+  padding: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 12%;
+  transition: transform 250ms linear;
+
+  [data-bs-theme="dark"] & {
+    transform: rotateY(180deg);
+  }
+
+  &[data-switch="dark"] {
+    transform: rotateY(180deg);
+  }
+
+  &[data-switch="light"] {
+    transform: rotateY(0deg);
+  }
+}
+
+.LiveMemory-ThemeSwitch-Mode {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-content: center;
+  align-items: center;
+  backface-visibility: hidden;
+  color: var(--color-text);
+  background: rgb(var(--color-background-rgb) / 50%);
+  border-radius: 4px;
+  opacity: .50;
+}
+
+.LiveMemory-ThemeSwitch:hover .LiveMemory-ThemeSwitch-Mode {
+  opacity: 1;
+  transition: 250ms;
+  background: rgb(var(--color-background-rgb) / 100%);
+}
+
+
+.LiveMemory-ThemeSwitch-Dark {
+  transform: rotateY(180deg);
+  &:hover {
+    background: var(--color-background);
+    border: var(--color-border);
+  }
+}
+
+.LiveMemory-ThemeSwitch-Light {
+  transform: rotateY(0deg);
+  &:hover {
+    background: var(--color-background);
+    border: var(--color-border);
+  }
+}

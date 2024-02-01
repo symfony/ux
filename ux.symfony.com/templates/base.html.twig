@@ -18,12 +18,8 @@
         <meta name="description" content="{% block description %}{{ meta.description|default }}{% endblock %}">
         {% block javascripts %}
             <script>
-                (() => {
-                    const userTheme = localStorage.getItem('user-theme');
-                    const browserTheme = window.matchMedia?.('(prefers-color-scheme: dark)')?.matches ? 'dark' : 'light';
-                    const darkMode = (userTheme ?? browserTheme) === 'dark';
-                    document.documentElement.setAttribute('data-bs-theme', darkMode ? 'dark' : 'light');
-                })();
+              const theme = localStorage.getItem('user-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+              document.documentElement.setAttribute('data-bs-theme', theme === 'dark' ? 'dark' : 'light');
             </script>
             {% block importmap %}
                 <script>
