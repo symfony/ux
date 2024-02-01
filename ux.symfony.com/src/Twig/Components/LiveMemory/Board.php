@@ -29,6 +29,7 @@ use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 /**
  * @demo   LiveMemory
+ *
  * @author Simon André <smn.andre@gmail.com>
  */
 #[AsLiveComponent('LiveMemory:Board')]

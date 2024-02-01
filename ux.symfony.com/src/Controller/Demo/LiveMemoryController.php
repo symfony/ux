@@ -11,8 +11,8 @@
 
 namespace App\Controller\Demo;
 
-use App\Service\LiveDemoRepository;
 use App\LiveMemory\GameStorageInterface;
+use App\Service\LiveDemoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.14.1
+
+-   Fixed bug with Stimulus controllers in subdirectories on Windows
+
 ## 2.14.0
 
 -   Added Typescript controllers support

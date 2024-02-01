@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.14.1
+
+-   Fixed a regression in the testing tools related to the default HTTP
+    method change
+
 ## 2.14.0
 
 -   Add support for URL binding in `LiveProp`
