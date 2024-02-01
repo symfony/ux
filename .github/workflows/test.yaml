@@ -28,7 +28,7 @@ jobs:
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
               run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
               id: yarn-cache
               with:
                   path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -47,7 +47,7 @@ jobs:
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
               run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
               id: yarn-cache
               with:
                   path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -136,7 +136,7 @@ jobs:
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
               run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-            - uses: actions/cache@v3
+            - uses: actions/cache@v4
               id: yarn-cache
               with:
                   path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
