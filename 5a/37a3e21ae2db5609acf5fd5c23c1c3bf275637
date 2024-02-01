@@ -1,0 +1,83 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-31T12:02:13Z
+
+> After #1218 has been released as part of 2.14.0 my tests fail. This change passes the actual method to the requests made by the test helper.
+
+If you set "method: 'get'" on some of the tests that now fail, does it fix the problem or not ? (without the changes from this PR)
+
+(just want to know if everything works in that case)
+
+---------------------------------------------------------------------------
+
+by daFish at 2024-01-31T12:48:15Z
+
+@smnandre Setting `method: 'get'` let's my test pass. Otherwise an `Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException` is thrown.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-31T13:10:16Z
+
+From your PR, could you try to, when in POST, send "props" in JSON and not in the query string ?
+
+Someything "like that" (did not test at all)
+
+```php
+  $this->client->request('POST', $this->router->generate(
+            $this->metadata->get('route'),
+            [
+                '_live_component' => $this->metadata->getName(),
+            ]
+        ), [
+            'json' => ['props' => $props->getProps()]
+        ]);
+```
+
+---------------------------------------------------------------------------
+
+by daFish at 2024-01-31T13:38:08Z
+
+This did the trick:
+```$this->client->request(
+            'POST',
+            $this->router->generate(
+                $this->metadata->get('route'),
+                [
+                    '_live_component' => $this->metadata->getName(),
+                ]
+            ),
+            [
+                'data' => json_encode(['props' => $props->getProps()]),
+            ],
+        );
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-31T14:22:02Z
+
+@daFish good news! Could you update your PR to include this change, and we'll see then if tests are OK or if there is something else to fix :)
+
+---------------------------------------------------------------------------
+
+by daFish at 2024-01-31T14:29:16Z
+
+Looks like there is more work todo. I'll see if I can do something about it. Any hints are appreciated.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-31T15:00:41Z
+
+Do all your tests pass with this change? 😄
+
+---------------------------------------------------------------------------
+
+by daFish at 2024-01-31T15:02:12Z
+
+Yes, they do. And the checks here are also passing. But some more feedback from others would also be appreciated.
+
+---------------------------------------------------------------------------
+
+by daFish at 2024-02-01T14:40:33Z
+
+Failure unrelated.
