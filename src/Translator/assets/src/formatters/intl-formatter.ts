@@ -1,4 +1,4 @@
-import {IntlMessageFormat} from 'intl-messageformat';
+import { IntlMessageFormat } from 'intl-messageformat';
 
 /**
  * @private
@@ -8,13 +8,13 @@ import {IntlMessageFormat} from 'intl-messageformat';
  * @param locale     The locale
  */
 export function formatIntl(id: string, parameters: Record<string, string | number> = {}, locale: string): string {
-    if (id === '' ) {
+    if (id === '') {
         return '';
     }
 
-    const intlMessage = new IntlMessageFormat(id, [locale.replace('_', '-')], undefined, {ignoreTag: true});
+    const intlMessage = new IntlMessageFormat(id, [locale.replace('_', '-')], undefined, { ignoreTag: true });
 
-    parameters = {...parameters};
+    parameters = { ...parameters };
 
     Object.entries(parameters).forEach(([key, value]) => {
         if (key.includes('%') || key.includes('{')) {

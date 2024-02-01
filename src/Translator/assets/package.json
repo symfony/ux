@@ -7,14 +7,14 @@
     "types": "dist/translator_controller.d.ts",
     "symfony": {
         "importmap": {
-            "intl-messageformat": "^10.2.5",
+            "intl-messageformat": "^10.5.11",
             "@symfony/ux-translator": "path:%PACKAGE%/dist/translator_controller.js",
             "@app/translations": "path:var/translations/index.js",
             "@app/translations/configuration": "path:var/translations/configuration.js"
         }
     },
     "peerDependencies": {
-        "intl-messageformat": "^10.2.5"
+        "intl-messageformat": "^10.5.11"
     },
     "peerDependenciesMeta": {
         "intl-messageformat": {
@@ -22,6 +22,6 @@
         }
     },
     "devDependencies": {
-        "intl-messageformat": "^10.2.5"
+        "intl-messageformat": "^10.5.11"
     }
 }
