@@ -745,6 +745,45 @@ When overriding the ``alert_message`` block, you have access to the ``message`` 
         </twig:block>
     </twig:SuccessAlert>
 
+.. versionadded:: 2.13
+
+    The ability to refer to the scope of higher components via the ``outerScope`` variable was added in 2.13.
+
+As mentioned before, variables from lower components are merged with those from upper components. When you need
+access to some properties or functions from higher components, that can be done via the ``outerScope...`` variable:
+
+.. code-block:: twig
+
+    {# templates/SuccessAlert.html.twig #}
+    {% set name = 'Fabien' %}
+    {% set message = 'Hello' %}
+    {% component Alert with { type: 'success', name: 'Bart' } %}
+        Hello {{ name }} {# Hello Bart #}
+
+        {{ message }} {{ outerScope.name }} {# Hello Fabien #}
+
+        {{ outerScope.this.someFunction }} {# this refers to SuccessAlert #}
+
+        {{ outerScope.this.someProp }} {# references a "someProp" prop from SuccessAlert #}
+    {% endcomponent %}
+
+You can keep referring to components higher up as well. Just add another ``outerScope``.
+Remember though that the ``outerScope`` reference only starts once you're INSIDE the (embedded) component.
+
+.. code-block:: twig
+
+    {# templates/FancyProfileCard.html.twig #}
+    {% component Card %}
+        {% block header %}
+            {% component Alert with { message: outerScope.this.someProp } %} {# not yet INSIDE the Alert template #}
+                {% block content %}
+                    {{ message }} {# same value as below, indirectly refers to FancyProfileCard::someProp #}
+                    {{ outerScope.outerScope.this.someProp }} {# directly refers to FancyProfileCard::someProp #}
+                {% endblock %}
+            {% endcomponent %}
+        {% endblock %}
+    {% endcomponent %}
+
 Inheritance & Forwarding "Outer Blocks"
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -1242,399 +1281,6 @@ controls how components are named and where their templates live:
 
 If a component class matches multiple namespaces, the first matched will
 be used.
-
-.. _embedded-components:
-
-Passing Blocks to Components
-----------------------------
-
-.. tip::
-
-    The `Component HTML Syntax`_ allows you to pass blocks to components in an
-    even more readable way.
-
-You can write your component's Twig template with blocks that can be overridden
-when rendering using the ``{% component %}`` syntax. These blocks can be thought of as
-*slots* which you may be familiar with from Vue. The ``component`` tag is very
-similar to Twig's native `embed tag`_.
-
-Consider a data table component. You pass it headers and rows but can expose
-blocks for the cells and an optional footer:
-
-.. code-block:: html+twig
-
-    {# templates/components/DataTable.html.twig #}
-    <div{{ attributes.defaults({class: 'data-table'}) }}>
-        <table>
-            <thead>
-                <tr>
-                    {% for header in this.headers %}
-                        <th class="{% block th_class %}data-table-header{% endblock %}">
-                            {{ header }}
-                        </th>
-                    {% endfor %}
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in this.data %}
-                    <tr>
-                        {% for cell in row %}
-                            <td class="{% block td_class %}data-table-cell{% endblock %}">
-                                {{ cell }}
-                            </td>
-                        {% endfor %}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-        {% block footer %}{% endblock %}
-    </div>
-
-When rendering, you can override the ``th_class``, ``td_class``, and ``footer`` blocks.
-The ``with`` data is what's mounted on the component object.
-
-.. code-block:: html+twig
-
-    {# templates/some_page.html.twig #}
-    {% component DataTable with {headers: ['key', 'value'], data: [[1, 2], [3, 4]]} %}
-        {% block th_class %}{{ parent() }} text-bold{% endblock %}
-
-        {% block td_class %}{{ parent() }} text-italic{% endblock %}
-
-        {% block footer %}
-            <div class="data-table-footer">
-                My footer
-            </div>
-        {% endblock %}
-    {% endcomponent %}
-
-.. versionadded:: 2.11
-
-    The ``{% component %}`` syntax can also be used with LiveComponents since 2.11.
-    However, there are some caveats related to the context between parent and child
-    components during re-rending. Read `Passing Blocks to Live Components`_.
-
-Inheritance & Forwarding "Outer Blocks"
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-.. versionadded:: 2.10
-
-    The ``outerBlocks`` variable was added in 2.10.
-
-The content inside a ``{% component ... %}`` tag should be viewed as living in
-its own, independent template, which extends the component's template. This means that
-any blocks that live in the "outer" template are not available inside the ``{% component %}`` tag.
-However, a special ``outerBlocks`` variable is added as a way to refer to those blocks:
-
-.. code-block:: html+twig
-
-  {% extends 'base.html.twig' %}
-
-  {% block call_to_action %}<strong>Attention! Free Puppies!</strong>{% endblock %}
-
-  {% block body %}
-    {% component Alert %}
-      {% block content %}{{ block(outerBlocks.call_to_action) }}{% endblock %}
-    {% endcomponent %}
-  {% endblock %}
-
-The ``outerBlocks`` variable becomes specially useful with nested components. For example,
-imagine we want to create a ``SuccessAlert`` component that's usable like this:
-
-.. code-block:: html+twig
-
-    {# templates/some_page.html.twig #}
-    {% component SuccessAlert %}
-        {% block content %}We will successfully <em>forward</em> this block content!{% endblock %}
-    {% endcomponent %}
-
-But we already have a generic ``Alert`` component, and we want to re-use it:
-
-.. code-block:: html+twig
-
-    {# templates/Alert.html.twig #}
-    <div class="alert alert-{{ type }}">
-        {% block content %}{% endblock %}
-    </div>
-
-To do this, the ``SuccessAlert`` component can grab the ``content`` block that's passed to it
-via the ``outerBlocks`` variable and forward it into ``Alert``:
-
-.. code-block:: twig
-
-    {# templates/SuccessAlert.html.twig #}
-    {% component Alert with { type: 'success' } %}
-        {% block content %}{{ block(outerBlocks.content) }}{% endblock %}
-    {% endcomponent %}
-
-Note that to pass a block multiple components down, each component needs to pass it.
-
-Context / Variables Inside of Blocks
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-The content inside of the ``{% component ... %}`` should be viewed as living in its own,
-independent template, which extends the component's template. This has a few interesting consequences.
-
-First, once you're inside of ``{% component ... %}``, the ``this`` variable represents
-the component you're now rendering *and* you have access to all of that component's variables:
-
-.. code-block:: twig
-
-    {# templates/SuccessAlert.html.twig #}
-    {{ this.someFunction }} {# this refers to SuccessAlert #}
-
-    {% component Alert with { type: 'success' } %}
-        {% block content %}
-            {{ this.someFunction }} {# this refers to Alert! #}
-
-            {{ type }} {# references a "type" prop from Alert #}
-        {% endblock %}
-    {% endcomponent %}
-
-Conveniently, in addition to the variables from the ``Alert`` component, you still have
-access to whatever variables are available in the original template:
-
-.. code-block:: twig
-
-    {# templates/SuccessAlert.html.twig #}
-    {% set name = 'Fabien' %}
-    {% component Alert with { type: 'success' } %}
-        {% block content %}
-            Hello {{ name }}
-        {% endblock %}
-    {% endcomponent %}
-
-Note that ALL variables from upper components (e.g. ``SuccessAlert``) are available to lower
-components (e.g. ``Alert``). However, because variables are merged, variables with the same name
-are overridden by lower components (that's also why ``this`` refers to the embedded, or
-"current" component).
-
-The most interesting thing is that the content inside of ``{% component ... %}`` is
-executed as if it is "copy-and-pasted" into the block of the target template. This means
-you can access variables from the block you're overriding! For example:
-
-.. code-block:: twig
-
-    {# templates/SuccessAlert.html.twig #}
-    {% for message in messages %}
-        {% block alert_message %}
-            A default {{ message }}
-        {% endblock %}
-    {% endfor %}
-
-When overriding the ``alert_message`` block, you have access to the ``message`` variable:
-
-.. code-block:: twig
-
-    {# templates/some_page.html.twig #}
-    {% component SuccessAlert %}
-        {% block alert_message %}
-            I can override the alert_message block and access the {{ message }} too!
-        {% endblock %}
-    {% endcomponent %}
-
-
-.. versionadded:: 2.13
-
-    The ability to refer to the scope of higher components via the ``outerScope`` variable was added in 2.13.
-
-As mentioned before, variables from lower components are merged with those from upper components. When you need
-access to some properties or functions from higher components, that can be done via the ``outerScope...`` variable:
-
-.. code-block:: twig
-
-    {# templates/SuccessAlert.html.twig #}
-    {% set name = 'Fabien' %}
-    {% set message = 'Hello' %}
-    {% component Alert with { type: 'success', name: 'Bart' } %}
-        Hello {{ name }} {# Hello Bart #}
-
-        {{ message }} {{ outerScope.name }} {# Hello Fabien #}
-
-        {{ outerScope.this.someFunction }} {# this refers to SuccessAlert #}
-
-        {{ outerScope.this.someProp }} {# references a "someProp" prop from SuccessAlert #}
-    {% endcomponent %}
-
-You can keep referring to components higher up as well. Just add another ``outerScope``.
-Remember though that the ``outerScope`` reference only starts once you're INSIDE the (embedded) component.
-
-.. code-block:: twig
-
-    {# templates/FancyProfileCard.html.twig #}
-    {% component Card %}
-        {% block header %}
-            {% component Alert with { message: outerScope.this.someProp } %} {# not yet INSIDE the Alert template #}
-                {% block content %}
-                    {{ message }} {# same value as below, indirectly refers to FancyProfileCard::someProp #}
-                    {{ outerScope.outerScope.this.someProp }} {# directly refers to FancyProfileCard::someProp #}
-                {% endblock %}
-            {% endcomponent %}
-        {% endblock %}
-    {% endcomponent %}
-
-Component HTML Syntax
----------------------
-
-.. versionadded:: 2.8
-
-    This syntax was been introduced in 2.8 and is still experimental: it may change in the future.
-
-Twig Components come with an HTML-like syntax to ease the readability of your template:
-
-.. code-block:: html+twig
-
-    <twig:Alert></twig:Alert>
-    // or use a self-closing tag
-    <twig:Alert />
-
-Passing Props as HTML Attributes
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-Passing props is done with HTML attributes. For example if you have this component::
-
-    #[AsTwigComponent]
-    class Alert
-    {
-        public string $message = '';
-        public bool $withActions = false;
-        public string $type = 'success';
-    }
-
-You can pass the ``message``, ``withActions`` or ``type`` props as attributes:
-
-.. code-block:: html+twig
-
-    // withActions will be set to true
-    <twig:Alert type="info" message="hello!" withActions />
-
-To pass in a dynamic value, prefix the attribute with ``:`` or use the
-normal ``{{ }}`` syntax:
-
-.. code-block:: html+twig
-
-    <twig:Alert message="hello!" :user="user.id" />
-
-    // equal to
-    <twig:Alert message="hello!" user="{{ user.id }}" />
-
-    // and pass object, or table, or anything you imagine
-    <twig:Alert :foo="['col' => ['foo', 'oof']]" />
-
-To forward attributes to another component, use `{{...}}` spread operator syntax.
-This requires Twig 3.7.0 or higher:
-
-.. code-block:: html+twig
-
-    <twig:Alert{{ ...myAttributes }} />
-
-.. _passing-blocks:
-
-Passing Content (Blocks) to Components
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-You can also pass content directly to your component:
-
-.. code-block:: html+twig
-
-    <twig:Alert type="success">
-        <div>Congratulations! You've won a free puppy!</div>
-    </twig:Alert>
-
-In your component template, this becomes a block named ``content``:
-
-.. code-block:: html+twig
-
-    <div class="alert alert-{{ type }}">
-        {% block content %}
-            // the content will appear in here
-        {% endblock %}
-     </div>
-
-In addition to the default block, you can also add named blocks:
-
-.. code-block:: html+twig
-
-    <twig:Alert type="success">
-        <div>Congrats on winning a free puppy!</div>
-
-        <twig:block name="footer">
-            <button class="btn btn-primary">Claim your prize</button>
-        </twig:block>
-    </twig:Alert>
-
-And in your component template you can access your embedded block
-
-.. code-block:: html+twig
-
-    <div class="alert alert-{{ type }}">
-        {% block content %}{% endblock %}
-        {% block footer %}{% endblock %}
-     </div>
-
-Anonymous Components
---------------------
-
-Sometimes a component is simple enough that it doesn't have any complex logic or injected services.
-In this case, you can skip the class and only create the template. The component name is determined
-by the location of the template (see `Twig Template Namespaces`_):
-
-.. code-block:: html+twig
-
-    {# templates/components/Button/Primary.html.twig #}
-    <button {{ attributes.defaults({ class: 'primary' }) }}>
-        {% block content %}{% endblock %}
-    </button>
-
-Then use your component with ``:`` to navigate through sub-directories (if there are any):
-
-.. code-block:: html+twig
-
-    {# index.html.twig #}
-    ...
-    <div>
-       <twig:Button:Primary>Click Me!</twig:Button:Primary>
-    </div>
-
-    {# renders as: #}
-    <button class="primary">Click Me!</button>
-
-Like normal, you can pass extra attributes that will be rendered on the element:
-
-.. code-block:: html+twig
-
-    {# index.html.twig #}
-    ...
-    <div>
-       <twig:Button:Primary type="button" name="foo">Click Me!</twig:Button:Primary>
-    </div>
-
-    {# renders as: #}
-    <button class="primary" type="button" name="foo">Click Me!</button>
-
-You can also pass a variable (prop) into your template:
-
-.. code-block:: html+twig
-
-    {# index.html.twig #}
-    ...
-    <div>
-        <twig:Button icon="fa-plus" type="primary" role="button">Click Me!</twig:Button>
-    </div>
-
-To tell the system that ``icon`` and ``type`` are props and not attributes, use the ``{% props %}`` tag at the top of your template.
-
-.. code-block:: html+twig
-
-    {# templates/components/Button.html.twig #}
-    {% props icon = null, type = 'primary' %}
-
-    <button {{ attributes.defaults({ class: 'btn btn-'~type }) }}>
-        {% block content %}{% endblock %}
-        {% if icon %}
-            <span class="fa-solid fa-{{ icon }}"></span>
-        {% endif %}
-    </button>
 
 Debugging Components
 --------------------
