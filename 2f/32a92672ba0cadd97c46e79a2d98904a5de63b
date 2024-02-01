@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-14T01:33:51Z
+
+As much i understand we don't want too many files on the repo for the demo... let's keep in mind the entire asset directory of the LiveMemory demo is < 1MB (750kB in fact) ...
+
+... and that's 10 times less than the Cropper images :)
+
+<img width="354" alt="Capture d’écran 2024-01-14 à 02 31 06" src="https://github.com/symfony/ux/assets/1359581/82014f9a-70e4-47d1-a521-4019f91cd88b">
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-14T01:58:58Z
+
+Update (bis): on the 110+ files "changed", there is 30 concerning the "website"
