@@ -49,7 +49,7 @@ processWorkspace() {
 }
 
 # Get all workspace names
-workspaces_info=$(yarn workspaces info)
+workspaces_info=$(yarn -s workspaces info)
 
 # Iterate over each workspace using process substitution
 while IFS= read -r workspace_info; do
