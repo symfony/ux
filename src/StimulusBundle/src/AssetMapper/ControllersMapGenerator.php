@@ -76,7 +76,7 @@ class ControllersMapGenerator
             // use regex to extract 'controller'-postfix including extension
             preg_match(self::FILENAME_REGEX, $name, $matches);
             $name = str_replace(['_'.$matches[1], '-'.$matches[1]], '', $name);
-            $name = str_replace(['_', '/'], ['-', '--'], $name);
+            $name = str_replace(['_', '/', '\\'], ['-', '--', '--'], $name);
 
             $asset = $this->assetMapper->getAssetFromSourcePath($file->getRealPath());
             $content = $asset->content ?: file_get_contents($asset->sourcePath);
