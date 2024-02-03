@@ -2,11 +2,13 @@ name: RST Linter
 
 on:
     push:
-        paths-ignore:
-            - 'ux.symfony.com/**'
+        paths:
+            - '**.rst'
+            - 'src/*/doc/**'
     pull_request:
-        paths-ignore:
-            - 'ux.symfony.com/**'
+        paths:
+            - '**.rst'
+            - 'src/*/doc/**'
 
 jobs:
     doctor-rst:
