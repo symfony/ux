@@ -20,7 +20,7 @@ class IdAccessor
     private $propertyAccessor;
     private $doctrine;
 
-    public function __construct(PropertyAccessorInterface $propertyAccessor = null, ManagerRegistry $doctrine = null)
+    public function __construct(?PropertyAccessorInterface $propertyAccessor = null, ?ManagerRegistry $doctrine = null)
     {
         $this->propertyAccessor = $propertyAccessor ?? (class_exists(PropertyAccess::class) ? PropertyAccess::createPropertyAccessor() : null);
         $this->doctrine = $doctrine;

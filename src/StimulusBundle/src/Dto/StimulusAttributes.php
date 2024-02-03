@@ -70,7 +70,7 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
     /**
      * @param array $parameters Parameters to pass to the action. Optional.
      */
-    public function addAction(string $controllerName, string $actionName, string $eventName = null, array $parameters = []): void
+    public function addAction(string $controllerName, string $actionName, ?string $eventName = null, array $parameters = []): void
     {
         $controllerName = $this->normalizeControllerName($controllerName);
         $this->actions[] = [
@@ -90,7 +90,7 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
      * @param string      $controllerName the Stimulus controller name
      * @param string|null $targetNames    The space-separated list of target names if a string is passed to the 1st argument. Optional.
      */
-    public function addTarget(string $controllerName, string $targetNames = null): void
+    public function addTarget(string $controllerName, ?string $targetNames = null): void
     {
         if (null === $targetNames) {
             return;

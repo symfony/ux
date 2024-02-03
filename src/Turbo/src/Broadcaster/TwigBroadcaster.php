@@ -30,7 +30,7 @@ final class TwigBroadcaster implements BroadcasterInterface
     /**
      * @param array<string, string> $templatePrefixes
      */
-    public function __construct(BroadcasterInterface $broadcaster, Environment $twig, array $templatePrefixes = [], IdAccessor $idAccessor = null)
+    public function __construct(BroadcasterInterface $broadcaster, Environment $twig, array $templatePrefixes = [], ?IdAccessor $idAccessor = null)
     {
         $this->broadcaster = $broadcaster;
         $this->twig = $twig;

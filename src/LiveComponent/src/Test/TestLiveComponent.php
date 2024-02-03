@@ -148,7 +148,7 @@ final class TestLiveComponent
         return $this->client->getResponse();
     }
 
-    private function request(array $content = [], string $action = null): self
+    private function request(array $content = [], ?string $action = null): self
     {
         $csrfToken = $this->csrfToken();
 

@@ -31,14 +31,14 @@ class RecipeFileTree
         ;
     }
 
-    private function addFile(string $filename, string $description = null): self
+    private function addFile(string $filename, ?string $description = null): self
     {
         $this->files[$filename] = ['type' => 'file', 'description' => $description];
 
         return $this;
     }
 
-    private function addDirectory(string $path, string $description = null): self
+    private function addDirectory(string $path, ?string $description = null): self
     {
         $this->files[$path] = ['type' => 'directory', 'description' => $description];
 

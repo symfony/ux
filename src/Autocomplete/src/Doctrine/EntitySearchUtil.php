@@ -27,7 +27,7 @@ class EntitySearchUtil
     /**
      * Adapted from easycorp/easyadmin EntityRepository.
      */
-    public function addSearchClause(QueryBuilder $queryBuilder, string $query, string $entityClass, array $searchableProperties = null): void
+    public function addSearchClause(QueryBuilder $queryBuilder, string $query, string $entityClass, ?array $searchableProperties = null): void
     {
         $entityMetadata = $this->metadataFactory->create($entityClass);
 

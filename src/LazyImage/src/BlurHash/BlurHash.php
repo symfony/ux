@@ -23,7 +23,7 @@ class BlurHash implements BlurHashInterface
 {
     private $imageManager;
 
-    public function __construct(ImageManager $imageManager = null)
+    public function __construct(?ImageManager $imageManager = null)
     {
         $this->imageManager = $imageManager;
     }

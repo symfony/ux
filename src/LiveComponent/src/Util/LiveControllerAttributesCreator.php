@@ -56,7 +56,7 @@ class LiveControllerAttributesCreator
      * Calculates the array of extra attributes that should be added to the root
      * component element to activate the live controller functionality.
      */
-    public function attributesForRendering(MountedComponent $mounted, ComponentMetadata $metadata, bool $isChildComponent, string $deterministicId = null): LiveAttributesCollection
+    public function attributesForRendering(MountedComponent $mounted, ComponentMetadata $metadata, bool $isChildComponent, ?string $deterministicId = null): LiveAttributesCollection
     {
         $attributesCollection = $this->attributeHelper->create();
         $attributesCollection->setLiveController($mounted->getName());

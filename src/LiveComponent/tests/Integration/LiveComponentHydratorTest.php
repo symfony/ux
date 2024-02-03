@@ -52,7 +52,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     use LiveComponentTestHelper;
     use ResetDatabase;
 
-    private function executeHydrationTestCase(callable $testFactory, int $minPhpVersion = null): void
+    private function executeHydrationTestCase(callable $testFactory, ?int $minPhpVersion = null): void
     {
         if (null !== $minPhpVersion && $minPhpVersion > \PHP_VERSION_ID) {
             $this->markTestSkipped(sprintf('Test requires PHP version %s or higher.', $minPhpVersion));
@@ -140,7 +140,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     /**
      * @dataProvider provideDehydrationHydrationTests
      */
-    public function testCanDehydrateAndHydrateComponentWithTestCases(callable $testFactory, int $minPhpVersion = null): void
+    public function testCanDehydrateAndHydrateComponentWithTestCases(callable $testFactory, ?int $minPhpVersion = null): void
     {
         $this->executeHydrationTestCase($testFactory, $minPhpVersion);
     }
@@ -1199,7 +1199,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     /**
      * @dataProvider provideInvalidHydrationTests
      */
-    public function testInvalidTypeHydration(callable $testFactory, int $minPhpVersion = null): void
+    public function testInvalidTypeHydration(callable $testFactory, ?int $minPhpVersion = null): void
     {
         $this->executeHydrationTestCase($testFactory, $minPhpVersion);
     }
@@ -1614,7 +1614,7 @@ class HydrationTest
         );
     }
 
-    public function expectsExceptionDuringHydration(string $exceptionClass, string $exceptionMessage = null): self
+    public function expectsExceptionDuringHydration(string $exceptionClass, ?string $exceptionMessage = null): self
     {
         $this->expectedHydrationException = $exceptionClass;
         $this->expectHydrationExceptionMessage = $exceptionMessage;

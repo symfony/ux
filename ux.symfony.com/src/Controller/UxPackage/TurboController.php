@@ -30,7 +30,7 @@ class TurboController extends AbstractController
 {
     #[Route('/turbo', name: 'app_turbo')]
     #[Route('/turbo/{name}/the/{animal}', name: 'app_turbo_with_animal')]
-    public function __invoke(UxPackageRepository $packageRepository, ChatRepository $chatRepository, Request $request, PackageContext $packageContext, string $name = null, string $animal = null): Response
+    public function __invoke(UxPackageRepository $packageRepository, ChatRepository $chatRepository, Request $request, PackageContext $packageContext, ?string $name = null, ?string $animal = null): Response
     {
         $package = $packageRepository->find('turbo');
 

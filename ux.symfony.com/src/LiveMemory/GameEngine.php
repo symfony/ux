@@ -71,7 +71,7 @@ final class GameEngine
         $game->setScore($game->getScore() + ($game->getCardCount() * $pointPerMatch));
     }
 
-    private function endGame(Game $game, \DateTimeImmutable $endedAt = null): void
+    private function endGame(Game $game, ?\DateTimeImmutable $endedAt = null): void
     {
         $game->setEndedAt($endedAt ?? new \DateTimeImmutable('now'));
         if ($game->isCompleted()) {

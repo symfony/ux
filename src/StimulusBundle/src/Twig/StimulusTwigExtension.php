@@ -70,7 +70,7 @@ final class StimulusTwigExtension extends AbstractExtension
     /**
      * @param array $parameters Parameters to pass to the action. Optional.
      */
-    public function renderStimulusAction(string $controllerName, string $actionName = null, string $eventName = null, array $parameters = []): StimulusAttributes
+    public function renderStimulusAction(string $controllerName, ?string $actionName = null, ?string $eventName = null, array $parameters = []): StimulusAttributes
     {
         $stimulusAttributes = $this->stimulusHelper->createStimulusAttributes();
         $stimulusAttributes->addAction($controllerName, $actionName, $eventName, $parameters);
@@ -81,7 +81,7 @@ final class StimulusTwigExtension extends AbstractExtension
     /**
      * @param array $parameters Parameters to pass to the action. Optional.
      */
-    public function appendStimulusAction(StimulusAttributes $stimulusAttributes, string $controllerName, string $actionName, string $eventName = null, array $parameters = []): StimulusAttributes
+    public function appendStimulusAction(StimulusAttributes $stimulusAttributes, string $controllerName, string $actionName, ?string $eventName = null, array $parameters = []): StimulusAttributes
     {
         $stimulusAttributes->addAction($controllerName, $actionName, $eventName, $parameters);
 
@@ -92,7 +92,7 @@ final class StimulusTwigExtension extends AbstractExtension
      * @param string      $controllerName the Stimulus controller name
      * @param string|null $targetNames    The space-separated list of target names if a string is passed to the 1st argument. Optional.
      */
-    public function renderStimulusTarget(string $controllerName, string $targetNames = null): StimulusAttributes
+    public function renderStimulusTarget(string $controllerName, ?string $targetNames = null): StimulusAttributes
     {
         $stimulusAttributes = $this->stimulusHelper->createStimulusAttributes();
         $stimulusAttributes->addTarget($controllerName, $targetNames);
@@ -104,7 +104,7 @@ final class StimulusTwigExtension extends AbstractExtension
      * @param string      $controllerName the Stimulus controller name
      * @param string|null $targetNames    The space-separated list of target names if a string is passed to the 1st argument. Optional.
      */
-    public function appendStimulusTarget(StimulusAttributes $stimulusAttributes, string $controllerName, string $targetNames = null): StimulusAttributes
+    public function appendStimulusTarget(StimulusAttributes $stimulusAttributes, string $controllerName, ?string $targetNames = null): StimulusAttributes
     {
         $stimulusAttributes->addTarget($controllerName, $targetNames);
 
