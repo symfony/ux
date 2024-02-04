@@ -18,6 +18,7 @@ use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Service\AnonymousComponentRegistry;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 
 /**
@@ -87,6 +88,7 @@ final class Kernel extends BaseKernel
                 'key' => 'component_d',
                 'template' => 'components/custom2.html.twig',
             ])
+            ->set('anonymous_component_registry', AnonymousComponentRegistry::class)->tag('ux.twig_component.anonymous_component_registry')
         ;
 
         if ('missing_key' === $this->environment) {

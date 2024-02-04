@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
+use Symfony\UX\TwigComponent\AnonymousComponentRegistryInterface;
 use Symfony\UX\TwigComponent\ComponentTemplateFinder;
 use Twig\Environment;
 use Twig\Loader\ArrayLoader;
@@ -124,6 +125,39 @@ final class ComponentTemplateFinderTest extends TestCase
         $this->assertEquals('foo/bar.html.twig', $finder->findAnonymousComponentTemplate('bar'));
         $this->assertEquals('foo/foo/bar.html.twig', $finder->findAnonymousComponentTemplate('foo:bar'));
         $this->assertEquals('foo/foo/bar.html.twig', $finder->findAnonymousComponentTemplate('foo:bar'));
+    }
+
+    public function testFindTemplateFromRegistry(): void
+    {
+        $registry = $this->createMock(AnonymousComponentRegistryInterface::class);
+        $registry->expects($this->once())
+            ->method('get')
+            ->with('bar')
+            ->willReturn('bar.html.twig')
+        ;
+        $loader = $this->createLoader([]);
+        $finder = new ComponentTemplateFinder($loader, '', [$registry]);
+
+        $this->assertEquals('bar.html.twig', $finder->findAnonymousComponentTemplate('bar'));
+    }
+
+    public function testThrowErrorWhenConflictBetweenRegistryAndLocalTemplate()
+    {
+        $templates = [
+            'components/bar.html.twig',
+        ];
+
+        $registry = $this->createMock(AnonymousComponentRegistryInterface::class);
+        $registry->expects($this->once())
+            ->method('get')
+            ->with('bar')
+            ->willReturn('bar.html.twig')
+        ;
+        $loader = $this->createLoader($templates);
+        $finder = new ComponentTemplateFinder($loader, 'components', [$registry]);
+
+        $this->expectException(\LogicException::class);
+        $finder->findAnonymousComponentTemplate('bar');
     }
 
     private function createLoader(array $templates): LoaderInterface

@@ -24,6 +24,7 @@ final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
     public function __construct(
         Environment|LoaderInterface $loader,
         private readonly ?string $directory = null,
+        private readonly iterable $anonymousComponentRegistries = [],
     ) {
         if ($loader instanceof Environment) {
             trigger_deprecation('symfony/ux-twig-component', '2.13', 'The "%s()" method will require "%s $loader" as first argument in 3.0. Passing an "Environment" instance is deprecated.', __METHOD__, LoaderInterface::class);
@@ -36,6 +37,26 @@ final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
     }
 
     public function findAnonymousComponentTemplate(string $name): ?string
+    {
+        $template = $this->findAnonymousComponentInTemplateDirectory($name);
+        $registryTemplate = $this->findAnonymousComponentFromRegistry($name);
+
+        if (null !== $template && null !== $registryTemplate) {
+            throw new \LogicException(sprintf('The component "%s" is defined in both the template directory and in a component registry.', $name));
+        }
+
+        if (null !== $template) {
+            return $template;
+        }
+
+        if (null !== $registryTemplate) {
+            return $registryTemplate;
+        }
+
+        return null;
+    }
+
+    private function findAnonymousComponentInTemplateDirectory(string $name): ?string
     {
         $loader = $this->loader;
         $componentPath = rtrim(str_replace(':', '/', $name));
@@ -64,6 +85,17 @@ final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
         $template = rtrim($this->directory, '/').'/'.$componentPath.'.html.twig';
         if ($loader->exists($template)) {
             return $template;
+        }
+
+        return null;
+    }
+
+    private function findAnonymousComponentFromRegistry(string $name): ?string
+    {
+        foreach ($this->anonymousComponentRegistries as $registry) {
+            if (null !== $template = $registry->get($name)) {
+                return $template;
+            }
         }
 
         return null;

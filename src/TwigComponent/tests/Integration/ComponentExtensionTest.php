@@ -12,6 +12,7 @@
 namespace Symfony\UX\TwigComponent\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Service\AnonymousComponentRegistry;
 use Symfony\UX\TwigComponent\Tests\Fixtures\User;
 use Twig\Environment;
 use Twig\Error\RuntimeError;
@@ -214,6 +215,15 @@ final class ComponentExtensionTest extends KernelTestCase
 
         $this->assertStringContainsString('Hello foo, bar, and foobar', $output);
         $this->assertStringContainsString('Hello FOO, 123, and 456', $output);
+    }
+
+    public function testRenderAnonymousComponentFromRegistry(): void
+    {
+        self::getContainer()->set('component_registry', new AnonymousComponentRegistry());
+
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_from_registry.html.twig');
+
+        $this->assertStringContainsString('I am an Icon', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string
