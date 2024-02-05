@@ -52,7 +52,7 @@
         "zenstruck/foundry": "^1.33"
     },
     "conflict": {
-        "doctrine/orm": "2.9.0 || 2.9.1"
+        "doctrine/orm": "2.9.0 || 2.9.1 || ^3.0"
     },
     "config": {
         "sort-packages": true
