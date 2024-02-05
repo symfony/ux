@@ -12,6 +12,9 @@
 namespace Symfony\UX\LiveComponent\Tests\Functional\Test;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\User\InMemoryUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Test\InteractsWithLiveComponents;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
 
@@ -139,5 +142,31 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->expectException(\LogicException::class);
 
         $testComponent->call('increase');
+    }
+
+    public function testRenderingIsLazy(): void
+    {
+        if (!class_exists(IsGranted::class)) {
+            $this->markTestSkipped('The security attributes are not available.');
+        }
+
+        $testComponent = $this->createLiveComponent('with_security');
+
+        $this->expectException(AccessDeniedException::class);
+
+        $testComponent->render();
+    }
+
+    public function testActingAs(): void
+    {
+        $testComponent = $this->createLiveComponent('with_security')
+            ->actingAs(new InMemoryUser('kevin', 'pass', ['ROLE_USER']))
+        ;
+
+        $this->assertStringNotContainsString('Username: kevin', $testComponent->render());
+
+        $testComponent->call('setUsername');
+
+        $this->assertStringContainsString('Username: kevin', $testComponent->render());
     }
 }
