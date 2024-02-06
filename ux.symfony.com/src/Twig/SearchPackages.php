@@ -21,7 +21,7 @@ class SearchPackages
 {
     use DefaultActionTrait;
 
-    #[LiveProp(writable: true)]
+    #[LiveProp(writable: true, url: true)]
     public ?string $query = null;
 
     public function __construct(private UxPackageRepository $packageRepo)
