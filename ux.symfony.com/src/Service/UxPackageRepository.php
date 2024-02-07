@@ -18,7 +18,7 @@ class UxPackageRepository
     /**
      * @return array<UxPackage>
      */
-    public function findAll(string $query = null): array
+    public function findAll(?string $query = null): array
     {
         $packages = [
             (new UxPackage(

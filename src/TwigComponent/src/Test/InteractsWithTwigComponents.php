@@ -30,7 +30,7 @@ trait InteractsWithTwigComponents
     /**
      * @param array<string,string> $blocks
      */
-    protected function renderTwigComponent(string $name, array $data = [], string $content = null, array $blocks = []): RenderedComponent
+    protected function renderTwigComponent(string $name, array $data = [], ?string $content = null, array $blocks = []): RenderedComponent
     {
         if (!$this instanceof KernelTestCase) {
             throw new \LogicException(sprintf('The "%s" trait can only be used on "%s" classes.', __TRAIT__, KernelTestCase::class));

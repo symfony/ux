@@ -38,7 +38,7 @@ final class TwigExtension extends AbstractExtension
     /**
      * @param object|string $topic
      */
-    public function turboStreamListen(Environment $env, $topic, string $transport = null): string
+    public function turboStreamListen(Environment $env, $topic, ?string $transport = null): string
     {
         $transport = $transport ?? $this->default;
 

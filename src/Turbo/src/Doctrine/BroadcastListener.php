@@ -50,7 +50,7 @@ final class BroadcastListener implements ResetInterface
      */
     private $removedEntities;
 
-    public function __construct(BroadcasterInterface $broadcaster, Reader $annotationReader = null)
+    public function __construct(BroadcasterInterface $broadcaster, ?Reader $annotationReader = null)
     {
         $this->reset();
 

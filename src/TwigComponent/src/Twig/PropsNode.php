@@ -21,7 +21,7 @@ use Twig\Node\Node;
  */
 class PropsNode extends Node
 {
-    public function __construct(array $propsNames, array $values, $lineno = 0, string $tag = null)
+    public function __construct(array $propsNames, array $values, $lineno = 0, ?string $tag = null)
     {
         parent::__construct($values, ['names' => $propsNames], $lineno, $tag);
     }

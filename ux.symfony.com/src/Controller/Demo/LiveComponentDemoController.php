@@ -41,7 +41,7 @@ class LiveComponentDemoController extends AbstractController
     }
 
     #[Route('/form-collection-type/{id}', name: 'app_demo_live_component_form_collection_type', defaults: ['id' => null])]
-    public function demoFormCollectionType(LiveDemoRepository $liveDemoRepository, Request $request, TodoListRepository $todoListRepository, TodoList $todoList = null): Response
+    public function demoFormCollectionType(LiveDemoRepository $liveDemoRepository, Request $request, TodoListRepository $todoListRepository, ?TodoList $todoList = null): Response
     {
         if (!$todoList) {
             $todoList = new TodoList();
@@ -106,7 +106,7 @@ class LiveComponentDemoController extends AbstractController
     }
 
     #[Route('/invoice/{id}', name: 'app_demo_live_component_invoice', defaults: ['id' => null])]
-    public function invoice(LiveDemoRepository $liveDemoRepository, Invoice $invoice = null): Response
+    public function invoice(LiveDemoRepository $liveDemoRepository, ?Invoice $invoice = null): Response
     {
         $invoice = $invoice ?? new Invoice();
 

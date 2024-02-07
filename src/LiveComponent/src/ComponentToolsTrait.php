@@ -33,12 +33,12 @@ trait ComponentToolsTrait
         $this->liveResponder = $liveResponder;
     }
 
-    public function emit(string $eventName, array $data = [], string $componentName = null): void
+    public function emit(string $eventName, array $data = [], ?string $componentName = null): void
     {
         $this->liveResponder->emit($eventName, $data, $componentName);
     }
 
-    public function emitUp(string $eventName, array $data = [], string $componentName = null): void
+    public function emitUp(string $eventName, array $data = [], ?string $componentName = null): void
     {
         $this->liveResponder->emitUp($eventName, $data, $componentName);
     }

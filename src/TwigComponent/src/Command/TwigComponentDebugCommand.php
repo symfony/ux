@@ -38,7 +38,7 @@ class TwigComponentDebugCommand extends Command
         private ComponentFactory $componentFactory,
         private Environment $twig,
         private readonly array $componentClassMap,
-        string $anonymousDirectory = null,
+        ?string $anonymousDirectory = null,
     ) {
         parent::__construct();
         $this->anonymousDirectory = $anonymousDirectory ?? 'components';

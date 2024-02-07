@@ -193,7 +193,7 @@ class ComponentWithFormTest extends KernelTestCase
             ],
         ], $dehydratedProps['form']);
 
-        $getUrl = function (array $props, array $updatedProps = null) {
+        $getUrl = function (array $props, ?array $updatedProps = null) {
             $url = '/_components/form_with_many_different_fields_type?props='.urlencode(json_encode($props));
             if (null !== $updatedProps) {
                 $url .= '&updated='.urlencode(json_encode($updatedProps));

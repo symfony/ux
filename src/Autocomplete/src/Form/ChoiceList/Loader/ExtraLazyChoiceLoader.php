@@ -27,12 +27,12 @@ class ExtraLazyChoiceLoader implements ChoiceLoaderInterface
     ) {
     }
 
-    public function loadChoiceList(callable $value = null): ChoiceListInterface
+    public function loadChoiceList(?callable $value = null): ChoiceListInterface
     {
         return $this->choiceList ??= new ArrayChoiceList([], $value);
     }
 
-    public function loadChoicesForValues(array $values, callable $value = null): array
+    public function loadChoicesForValues(array $values, ?callable $value = null): array
     {
         $choices = $this->decorated->loadChoicesForValues($values, $value);
         $this->choiceList = new ArrayChoiceList($choices, $value);
@@ -40,7 +40,7 @@ class ExtraLazyChoiceLoader implements ChoiceLoaderInterface
         return $choices;
     }
 
-    public function loadValuesForChoices(array $choices, callable $value = null): array
+    public function loadValuesForChoices(array $choices, ?callable $value = null): array
     {
         $values = $this->decorated->loadValuesForChoices($choices, $value);
         $this->loadChoicesForValues($values, $value);

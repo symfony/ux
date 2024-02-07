@@ -31,7 +31,7 @@ class LiveComponentController extends AbstractController
     }
 
     #[Route('/live-component/demos/{demo}', name: 'app_live_component_demo_redirect')]
-    public function redirectDemo(LiveDemoRepository $liveDemoRepository, string $demo = null): Response
+    public function redirectDemo(LiveDemoRepository $liveDemoRepository, ?string $demo = null): Response
     {
         if (null === $demo || '' === $demo) {
             return $this->redirectToRoute('app_demos');

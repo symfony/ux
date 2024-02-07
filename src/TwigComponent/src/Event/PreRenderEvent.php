@@ -60,7 +60,7 @@ final class PreRenderEvent extends Event
     /**
      * Change the twig template used.
      */
-    public function setTemplate(string $template, int $index = null): self
+    public function setTemplate(string $template, ?int $index = null): self
     {
         $this->template = $template;
         $this->templateIndex = $index;

@@ -37,8 +37,8 @@ final class AsLiveComponent extends AsTwigComponent
      * @param int         $urlReferenceType  Which type of URL should be generated for the given route. Use the constants from UrlGeneratorInterface (default: absolute path, e.g. "/dir/file").
      */
     public function __construct(
-        string $name = null,
-        string $template = null,
+        ?string $name = null,
+        ?string $template = null,
         private ?string $defaultAction = null,
         bool $exposePublicProps = true,
         string $attributesVar = 'attributes',

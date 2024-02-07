@@ -37,7 +37,7 @@ class TwigComponentDataCollector extends AbstractDataCollector implements LateDa
         $this->hasStub = class_exists(ClassStub::class);
     }
 
-    public function collect(Request $request, Response $response, \Throwable $exception = null): void
+    public function collect(Request $request, Response $response, ?\Throwable $exception = null): void
     {
     }
 

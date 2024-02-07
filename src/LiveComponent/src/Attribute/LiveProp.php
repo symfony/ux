@@ -96,7 +96,7 @@ final class LiveProp
          *
          * @var string|string[]|null
          */
-        private null|string|array $onUpdated = null,
+        private string|array|null $onUpdated = null,
 
         /**
          * If true, this property will be synchronized with a query parameter
@@ -193,7 +193,7 @@ final class LiveProp
         return $this->updateFromParent;
     }
 
-    public function onUpdated(): null|string|array
+    public function onUpdated(): string|array|null
     {
         return $this->onUpdated;
     }
