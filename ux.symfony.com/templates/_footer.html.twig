@@ -2,18 +2,22 @@
     <div class="container-fluid container-xxl py-5 px-lg-5">
         <div class="row align-items-center" style="--bs-gutter-x: 0;">
             <div class="col-12 col-xl-3 order-xl-3 text-center text-xl-end">
-                <a href="https://github.com/symfony/ux" rel="external noopener noreferrer"
-                   style="font-size: 1.5rem;"
-                   aria-label="Symfony UX on GitHub"
-                >
-                    <twig:Icon name="github"/>
-                </a>
-                <a href="https://symfony.com" rel="external noopener noreferrer"
-                   style="font-size: 1.5rem;"
-                   aria-label="Symfony website"
-                >
-                    <twig:Icon name="symfony"/>
-                </a>
+                <p class="d-flex align-items-center justify-content-center justify-content-xl-end mb-0" style="gap: .5rem;">
+                    <a href="https://github.com/symfony/ux" rel="external noopener noreferrer"
+                       style="font-size: 1.5rem;"
+                       aria-label="Symfony UX on GitHub"
+                       class="order-lg-1"
+                    >
+                        <twig:Icon name="github"/>
+                    </a>
+                    <a href="{{ url('app_changelog') }}" style="font-size: 11px; text-transform: uppercase;" class="order-lg-0">Changelog</a>
+                    <a href="https://symfony.com" rel="external noopener noreferrer"
+                       style="font-size: 1.5rem;"
+                       aria-label="Symfony website"
+                    >
+                        <twig:Icon name="symfony"/>
+                    </a>
+                </p>
             </div>
             <div class="col-12 col-xl-6 order-xl-2">
                 <p class="mb-xl-0 mt-3 mt-xl-0 text-center" style="font-size: 12px; text-transform: uppercase;">
