@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.14.2
+
+-   Fix using old `ClassUtils` class that's not used in newer versions of Doctrine
+
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"
