@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\StimulusBundle\Ux;
 
+use Composer\InstalledVersions;
+
 /**
  * @internal
  *
@@ -28,7 +30,12 @@ class UxPackageReader
     {
         // remove the '@' from the name to get back to the PHP package name
         $phpPackageName = substr($packageName, 1);
-        $phpPackagePath = $this->projectDir.'/vendor/'.$phpPackageName;
+        if (class_exists(InstalledVersions::class) && InstalledVersions::isInstalled($phpPackageName)) {
+            $phpPackagePath = InstalledVersions::getInstallPath($phpPackageName);
+        } else {
+            $phpPackagePath = $this->projectDir.'/vendor/'.$phpPackageName;
+        }
+
         if (!is_dir($phpPackagePath)) {
             throw new \RuntimeException(sprintf('Could not find package "%s" referred to from controllers.json.', $phpPackageName));
         }
