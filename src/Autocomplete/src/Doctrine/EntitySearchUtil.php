@@ -60,7 +60,7 @@ class EntitySearchUtil
                 }
 
                 $originalPropertyName = $associatedProperties[0];
-                $originalPropertyMetadata = $entityMetadata->getPropertyMetadata($originalPropertyName);
+                $originalPropertyMetadata = $entityMetadata->getAssociationMetadata($originalPropertyName);
                 $associatedEntityDto = $this->metadataFactory->create($originalPropertyMetadata['targetEntity']);
 
                 for ($i = 0; $i < $numAssociatedProperties - 1; ++$i) {
@@ -75,9 +75,8 @@ class EntitySearchUtil
                     }
 
                     if ($i < $numAssociatedProperties - 2) {
-                        $propertyMetadata = $associatedEntityDto->getPropertyMetadata($associatedPropertyName);
-                        $targetEntity = $propertyMetadata['targetEntity'];
-                        $associatedEntityDto = $this->metadataFactory->create($targetEntity);
+                        $propertyMetadata = $associatedEntityDto->getAssociationMetadata($associatedPropertyName);
+                        $associatedEntityDto = $this->metadataFactory->create($propertyMetadata['targetEntity']);
                     }
                 }
 

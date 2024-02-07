@@ -43,12 +43,40 @@ class EntityMetadata
 
     public function getPropertyMetadata(string $propertyName): array
     {
+        trigger_deprecation('symfony/ux-autocomplete', '2.15.0', 'Calling EntityMetadata::getPropertyMetadata() is deprecated. You should stop using it, as it will be removed in the future.');
+
+        try {
+            return $this->getFieldMetadata($propertyName);
+        } catch (\InvalidArgumentException $e) {
+            return $this->getAssociationMetadata($propertyName);
+        }
+    }
+
+    /**
+     * @internal
+     *
+     * @return array<string, mixed>
+     */
+    public function getFieldMetadata(string $propertyName): array
+    {
         if (\array_key_exists($propertyName, $this->metadata->fieldMappings)) {
-            return $this->metadata->fieldMappings[$propertyName];
+            // Cast to array, because in doctrine/orm:^3.0; $metadata will be a FieldMapping object
+            return (array) $this->metadata->fieldMappings[$propertyName];
         }
 
+        throw new \InvalidArgumentException(sprintf('The "%s" field does not exist in the "%s" entity.', $propertyName, $this->metadata->getName()));
+    }
+
+    /**
+     * @internal
+     *
+     * @return array<string, mixed>
+     */
+    public function getAssociationMetadata(string $propertyName): array
+    {
         if (\array_key_exists($propertyName, $this->metadata->associationMappings)) {
-            return $this->metadata->associationMappings[$propertyName];
+            // Cast to array, because in doctrine/orm:^3.0; $metadata will be an AssociationMapping object
+            return (array) $this->metadata->associationMappings[$propertyName];
         }
 
         throw new \InvalidArgumentException(sprintf('The "%s" field does not exist in the "%s" entity.', $propertyName, $this->metadata->getName()));
@@ -56,7 +84,11 @@ class EntityMetadata
 
     public function getPropertyDataType(string $propertyName): string
     {
-        return $this->getPropertyMetadata($propertyName)['type'];
+        if (\array_key_exists($propertyName, $this->metadata->fieldMappings)) {
+            return $this->getFieldMetadata($propertyName)['type'];
+        }
+
+        return $this->getAssociationMetadata($propertyName)['type'];
     }
 
     public function getIdValue(object $entity): string

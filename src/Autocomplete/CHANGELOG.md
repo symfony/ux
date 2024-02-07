@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+-   Add doctrine/orm 3 support.
+
 ## 2.14.0
 
 -   Fixed behavior of Autocomplete when the underlying `select` or `option`
