@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-30T21:41:00Z
+
+We could make a first call to fetch the releases
+
+https://data.jsdelivr.com/v1/packages/npm/@hotwired/turbo?specifier=stable
