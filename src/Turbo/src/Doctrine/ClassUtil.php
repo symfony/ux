@@ -22,12 +22,7 @@ final class ClassUtil
     public static function getEntityClass(object $entity): string
     {
         if ($entity instanceof LazyObjectInterface) {
-            $entityClass = get_parent_class($entity);
-            if (false === $entityClass) {
-                throw new \LogicException('Parent class missing');
-            }
-
-            return $entityClass;
+            return get_parent_class($entity) ?: $entity::class;
         }
 
         // @legacy for old versions of Doctrine
