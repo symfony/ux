@@ -17,6 +17,7 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Argument\AbstractArgument;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
@@ -24,6 +25,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\UX\TwigComponent\AnonymousComponentRegistryInterface;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Command\TwigComponentDebugCommand;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -64,10 +66,14 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
         }
         $container->setParameter('ux.twig_component.component_defaults', $defaults);
 
+        $container->registerForAutoconfiguration(AnonymousComponentRegistryInterface::class)
+            ->addTag('ux.twig_component.anonymous_component_registry');
+
         $container->register('ux.twig_component.component_template_finder', ComponentTemplateFinder::class)
             ->setArguments([
                 new Reference('twig.loader'),
                 $config['anonymous_template_directory'],
+                new TaggedIteratorArgument('ux.twig_component.anonymous_component_registry'),
             ]);
         $container->setAlias(ComponentRendererInterface::class, 'ux.twig_component.component_renderer');
 
