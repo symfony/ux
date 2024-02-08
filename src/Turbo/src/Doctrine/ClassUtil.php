@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Turbo\Doctrine;
 
+use Doctrine\Common\Util\ClassUtils as LegacyClassUtils;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
 /**
@@ -30,8 +31,8 @@ final class ClassUtil
         }
 
         // @legacy for old versions of Doctrine
-        if (class_exists(ClassUtils::class)) {
-            return ClassUtils::getClass($entity);
+        if (class_exists(LegacyClassUtils::class)) {
+            return LegacyClassUtils::getClass($entity);
         }
 
         return $entity::class;
