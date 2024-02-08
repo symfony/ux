@@ -1,14 +1,15 @@
 <?php
 
-namespace Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter;
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
 
-use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;
-use Symfony\UX\Autocomplete\EntityAutocompleterInterface;
-use Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Product;
+namespace Symfony\UX\Autocomplete\Tests\Fixtures\Autocompleter;
 
 class CustomGroupByProductAutocompleter extends CustomProductAutocompleter
 {
