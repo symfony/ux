@@ -1,0 +1,177 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-01T09:16:57Z
+
+```twig
+{# This is doing the same thing too, right ? #}
+data-foo="{{ attributes.get('data-foo') ?? 'replaced-default' }}"
+```
+
+```twig
+{# Could we do this ? #}
+data-foo="{{ attributes.get('data-foo', 'replaced-default') }}"
+```
+
+```twig
+{# Or even better... ? #}
+data-foo="{{ attributes.dataFoo ??  'replaced-default' }}"
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-02-01T17:58:37Z
+
+Those are interesting suggestions @smnandre ...
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-02T17:07:58Z
+
+What about killing `ComponentAttributeValue` so only this would be possible:
+
+```twig
+<div
+    class="{{ attributes.class }} appended-default"
+    style="prepended-default {{ attributes.style }}"
+    data-foo="{{ attributes.get('data-foo')|default('replaced-default') }}"
+    {{ attributes }}
+>
+```
+
+BTW, the only real reason I added that class was to make using a filter (like `tailwind_merge`) on your attributes would be simpler:
+
+```twig
+<div
+    class="{{ attributes.class.append('appended-default')|tailwind_merge }}"
+    {{ attributes }}
+>
+
+{# vs #}
+
+<div
+    class="{{ (attributes.class ~ ' appended-default')|tailwind_merge }} appended-default"
+    {{ attributes }}
+>
+```
+
+I should note that if we choose not to include this class, adding it in the future would be a bc break I think.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-03T00:37:51Z
+
+I like the fact this class exists, and i like the idea of "consuming" some attributes.
+
+I think we can improve the DX a bit more with utilities
+
+And the fact this could be forwared to a filter is a really valid point, pushing more the need to a short simple call chain.
+
+Lastely, i would really hate we suggest people to use any " ~ " :)
+
+But i would like to avoid this syntax, as it can be hard to dynamise (values and modes can depend on other things)
+
+```
+<div class="{{ attributes.class.append('alert') }}" >
+```
+
+--
+
+When we say "default preprended" in fact the "default" notion has no meaning, right ? It's something prepended in every case. Same for append.
+
+Then again, i see not a lot of real life usage for "append" (there probably are, but prefxing CSS or data value feels a lot more common need than adding something)
+
+That gives us two main calls to consider: default value, and prepend one.
+
+I still think default value can follow standard twig usages, but i'm eager to add a getter with default too.
+
+```twig
+<div class="{{ attributes.class|default('alert') }}" >
+<div class="{{ attributes.class ?? 'alert' }}" >
+<div class="{{ attributes.get('class', 'alert') }}" >
+```
+
+There we have only one problem, by doing so we forbid any usage of 'get' as attribute. Not a big problem, but something to keep in mind
+
+We can add a second method, like  prepend() or prependValue or getPrepend('class', 'alert') ...
+
+But then, why not use the 'get' method ? If we agree the prepend is the default behaviour, why not ....
+
+```twig
+{# Prepend #}
+<div class="{{ attributes.get('class', 'alert', true) }}" >
+<div class="{{ attributes.get('class', 'alert', 'prepend') }}" >
+
+{# Append #}
+<div class="{{ attributes.get('class', 'alert', false) }}" >
+<div class="{{ attributes.get('class', 'alert', 'append') }}" >
+```
+
+Lastly, if we want something even shorter / sweeter
+
+So my suggestion is :
+
+```twig
+{# jQuery mood (not sure i like that ^^, but really front-end-like #}
+
+<div class="{{ attributes.class('alert', true) }}" >
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-02-07T14:44:20Z
+
+Taking all of this into account, how about this:
+
+A) I think we more or less agree on this syntax. I did tweak how the last looks - I don't think this is a code change, but using `??` instead of `|default` looks better.
+
+```twig
+<div
+    class="{{ attributes.class }} appended-default"
+    style="prepended-default {{ attributes.style }}"
+    data-foo="{{ attributes.get('data-foo') ?? 'replaced-default' }}"
+    {{ attributes }}
+>
+```
+
+The `get()` method could also have a default value 2nd arg - `attributes.get('data-foo', 'default-value')`.
+
+B) Then, for the question of prepending vs replacing vs default values. I like Simon's idea of something like `attributes.get('class', 'alert', 'append')` - it feels pure to have everything on `.get()`. But this means that you need to switch from `attributes.class` to `attributes.get('class')` when you need this behavior. And so, I still like Kevin's initial `attributes.class.prepend('foo')` style.
+
+Given this @kbond - are there any tweaks this PR needs to match before review?
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-07T15:18:23Z
+
+> I don't think this is a code change, but using ?? instead of |default looks better.
+
+This actually won't be possible, `{{ attributes.class }}` and `{{ attributes.get('class') }}` always returns an object (even if the attribute does not exist). I don't believe `?:` would work either. I'd prefer to keep this behaviour as it keeps the syntax simpler. This is assuming we keep `ComponentAttributeValue` (which I think we want to do?).
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-02-07T16:02:24Z
+
+> This actually won't be possible, {{ attributes.class }} and {{ attributes.get('class') }} always returns an object (even if the attribute does not exist)
+
+Ah, ok. I see it now. This feels like a reason to NOT have `ComponentAttributeValue` then: fetching an attribute is a simple string fetch, nothing fancy. Iirc, the main problem removing this caused was the `|tailwind_merge` situation. Could that be handled with this slightly-different style?
+
+```twig
+<div
+    class="{{ attributes.prepend('class', 'prepended-stuff') }}"
+
+    or="this-idea"
+    class="{{ attributes.get('class', 'prepended-stuff', true) }}"
+>
+```
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-07T16:32:11Z
+
+I think so. What about, for this PR, we keep it simple and just have `__get(): ?string` and `get(): ?string` (with the rendering flag system).
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-02-07T19:42:24Z
+
+That sounds reasonable - then we can add args to `get()` later or add these `prepend` style methods also later. That'll let us start playing with things
