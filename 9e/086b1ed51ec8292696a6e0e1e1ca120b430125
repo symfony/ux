@@ -1,0 +1,233 @@
+---------------------------------------------------------------------------
+
+by alexander-schranz at 2023-12-09T10:06:38Z
+
+As I'm currently facing a similar issue in recreating some more complex Selection Type which is doing similar things like autocomplete. I wanted to share it here also here. https://gist.github.com/alexander-schranz/b1cb8843bc54dc368001375fe6998e61#file-mycontactchoicetype-php-L39 In my case I did also go with providing a list of options, so the loading part will have possibility todo such things. But instead of duplicating the options I just provide a list of which options should be forwarded (string[], instead of array<string, mixed>`. So I don't have to duplicate the value of the option inside the extra_options, item_loader_options in my case.
+
+---------------------------------------------------------------------------
+
+by alexander-schranz at 2023-12-14T17:16:49Z
+
+I try currently some magic to find out automatically my `extra_options` without have the need to define them in my custom Selection Type wanted to share it here, not sure if its too much magic:
+
+```php
+    public function buildView(FormView $view, FormInterface $form, array $options): void
+    {
+        $extraOptions = [];
+        $formType = $form->getConfig()->getType();
+
+        $innerType = $formType->getInnerType();
+        $defaultOptionsResolver = new OptionsResolver();
+        $innerType->configureOptions($defaultOptionsResolver);
+        $definedOptions = $defaultOptionsResolver->getDefinedOptions();
+        foreach ($defaultOptionsResolver->getMissingOptions() as $missingOption) {
+            $defaultOptionsResolver->remove($missingOption);
+        }
+        // Form, ChoiceType options which we keep always in mind and are important for form widget rendering e.g. required, disabled, ...
+        foreach ($options['extra_options'] as $extra_option) {
+            $definedOptions[] = $extra_option;
+        }
+
+        $defaultOptions = $defaultOptionsResolver->resolve([]);
+        foreach ($options as $key => $value) {
+            if (!\is_scalar($value)) {
+                // ignore all options which are non-scalar values
+                continue;
+            }
+
+            if (!\in_array($key, $definedOptions)) {
+                // we ignore all options which were not defined specifically for the inner type
+                continue;
+            }
+
+            if (isset($defaultOptions[$key]) && $defaultOptions[$key] === $value) {
+                // we ignore all options which have the same value as the default value
+                continue;
+            }
+
+            $extraOptions[$key] = $value;
+        }
+
+        $view->vars['extra_options'] = $extraOptions;
+    }
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'extra_options' => ['required', 'disabled'],
+        ]);
+    }
+```
+
+-----------
+
+What could also be used to avoid a seperate extra_options is the `$resolver->getRequiredOptions();` used as `extra_options`, and so via `$resolver->setRequired('some_value');` can be defined what is required:
+
+```php
+    public function buildView(FormView $view, FormInterface $form, array $options): void
+    {
+        $extraOptions = [];
+        $formType = $form->getConfig()->getType();
+
+        $innerType = $formType->getInnerType();
+        $defaultOptionsResolver = new OptionsResolver();
+        $requiredOptions = $defaultOptionsResolver->getRequiredOptions();
+        foreach ($defaultOptionsResolver->getMissingOptions() as $missingOption) {
+            $defaultOptionsResolver->remove($missingOption);
+        }
+
+        $defaultOptions = $defaultOptionsResolver->resolve([]);
+        foreach ($options as $key => $value) {
+            if (!\is_scalar($value)) {
+                // ignore all options which are non-scalar values
+                continue;
+            }
+
+            if (!\in_array($key, $requiredOptions)) {
+                // we ignore all options which are not required
+                continue;
+            }
+
+            if (isset($defaultOptions[$key]) && $defaultOptions[$key] === $value) {
+                // we ignore all options which have the same value as the default value
+                continue;
+            }
+
+            $extraOptions[$key] = $value;
+        }
+
+        $view->vars['extra_options'] = $extraOptions;
+    }
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-12-20T20:59:48Z
+
+Do you want some help/feedback/other on this ?
+
+---------------------------------------------------------------------------
+
+by jakubtobiasz at 2023-12-21T04:27:59Z
+
+Hi @smnandre,
+I've refactored one of two places I marked as "needs to be refactored". I have to write some functional tests for it, and... basically it will be ready to be fully reviewed.
+
+I'll let you know once ready to be reviewed :D. It should be ready today :D.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-12-21T05:14:44Z
+
+Great! Good luck then :)
+
+---------------------------------------------------------------------------
+
+by jakubtobiasz at 2023-12-24T07:25:09Z
+
+I guess I haven't missed anything, and it's ready to be reviewed 👍🏻. AFAIR LiveComponent build failures are not related to my PR.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-12-24T18:18:45Z
+
+Somewhere in the future documentation, should we add a small warning about the visibility of extra_options ? Something like "the given extra options can be retrieved and therefore should not contain sensible or personal information"
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-12-25T20:01:26Z
+
+Do you have a demo in mind (once its merged) ?
+
+I was thinking about it, and i think a "basic" demo would be great (with the kind of scenario you describe in the PR introduction).
+
+But even greater, and showing how all the UX component can together create some smart interface, i'd suggest something that combine LiveComponent and Autocomplete+option.
+
+Something like:
+
+![Frame 8](https://github.com/symfony/ux/assets/1359581/306a1988-2664-4a6f-a5aa-94274e7b5fcf)
+
+What do you think ? Have you any other idea ?
+
+---------------------------------------------------------------------------
+
+by jakubtobiasz at 2023-12-27T14:32:06Z
+
+FYI my solution seems to work. I set up a new Sylius branch locally with our new admin panel, and here're results :).
+
+```php
+final class TaxonTypeExtension extends AbstractTypeExtension
+{
+    /**
+     * @param array<string, mixed> $options
+     */
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $taxonId = $builder->getData()->getId();
+
+        $builder
+            ->add('parent', TaxonAutocompleteChoiceType::class, [
+                'label' => 'sylius.form.taxon.parent',
+                'extra_options' => [
+                    'excluded_taxons' => null !== $taxonId ? [$taxonId] : [],
+                ],
+            ])
+        ;
+    }
+
+    public static function getExtendedTypes(): iterable
+    {
+        return [TaxonType::class];
+    }
+}
+```
+
+```php
+// ...
+public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            'class' => $this->entityClass,
+            'searchable_fields' => ['translations.name'],
+            'choice_label' => 'fullname',
+            'query_builder' => function (Options $options) {
+                return function (EntityRepository $er) use ($options) {
+                    $qb = $er->createQueryBuilder('o');
+                    $qb->andWhere('o.enabled = true');
+
+                    $taxonsToBeExcluded = $options['extra_options']['excluded_taxons'] ?? [];
+                    if ([] !== $taxonsToBeExcluded) {
+                        $qb->andWhere($qb->expr()->notIn('o.id', $taxonsToBeExcluded));
+                    }
+
+                    return $qb;
+                };
+            }
+        ]);
+    }
+// ...
+```
+
+![CleanShot 2023-12-27 at 15 30 58@2x](https://github.com/symfony/ux/assets/80641364/9218552b-2356-4138-a935-f600e4381909)
+
+@smnandre about the demo... I wasn't thinking about it yet :D.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-12-27T14:59:46Z
+
+> @smnandre about the demo... I wasn't thinking about it yet :D.
+
+Oh it's not something required or asked in any way haha :)  Just to know if you had something in mind :))
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-29T11:21:21Z
+
+Friendly ping :) - I'd love to get this across the finish line. Thanks!
+
+---------------------------------------------------------------------------
+
+by jakubtobiasz at 2024-01-31T06:43:29Z
+
+Hi @weaverryan,
+I'll try to get back to it this weekend 😅.
