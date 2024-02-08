@@ -2738,7 +2738,7 @@ current value for all props, except for those that are marked as
 
 What if you *do* want your entire child component to re-render (including
 resetting writable live props) when some value in the parent changes? This
-can be done by manually giving your component a ``data-live-id`` attribute
+can be done by manually giving your component an ``id`` attribute
 that will change if the component should be totally re-rendered:
 
 .. code-block:: html+twig
@@ -2749,11 +2749,11 @@ that will change if the component should be totally re-rendered:
 
         {{ component('TodoFooter', {
             count: todos|length,
-            'data-live-id': 'todo-footer-'~todos|length
+            id: 'todo-footer-'~todos|length
         }) }}
     </div>
 
-In this case, if the number of todos change, then the ``data-live-id``
+In this case, if the number of todos change, then the ``id``
 attribute of the component will also change. This signals that the
 component should re-render itself completely, discarding any writable
 LiveProp values.
@@ -2959,14 +2959,14 @@ Rendering Quirks with List of Elements
 
 If you're rendering a list of elements in your component, to help LiveComponents
 understand which element is which between re-renders (i.e. if something re-orders
-or removes some of those elements), you can add a ``data-live-id`` attribute to
+or removes some of those elements), you can add a ``id`` attribute to
 each element
 
 .. code-block:: html+twig
 
     {# templates/components/Invoice.html.twig #}
     {% for lineItem in lineItems %}
-        <div data-live-id="{{ lineItem.id }}">
+        <div id="{{ lineItem.id }}">
             {{ lineItem.name }}
         </div>
     {% endfor %}
@@ -2998,9 +2998,9 @@ to that component:
         }) }}
     {% endfor %}
 
-The ``key`` will be used to generate a ``data-live-id`` attribute,
+The ``key`` will be used to generate an ``id`` attribute,
 which will be used to identify each child component. You can
-also pass in a ``data-live-id`` attribute directly, but ``key`` is
+also pass in a ``id`` attribute directly, but ``key`` is
 a bit more convenient.
 
 .. _rendering-loop-new-element:
@@ -3190,39 +3190,23 @@ The system doesn't handle every edge case, so here are some things to keep in mi
   that change is **lost**: the element will be re-added in its original location
   during the next re-render.
 
-The Mystical data-live-id Attribute
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The Mystical id Attribute
+~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The ``data-live-id`` attribute is mentioned several times throughout the documentation
+The ``id`` attribute is mentioned several times throughout the documentation
 to solve various problems. It's usually not needed, but can be the key to solving
 certain complex problems. But what is it?
 
 .. note::
 
-    The :ref:`key prop <key-prop>` is used to create a ``data-live-id`` attribute
+    The :ref:`key prop <key-prop>` is used to create a ``id`` attribute
     on child components. So everything in this section applies equally to the
     ``key`` prop.
 
-The ``data-live-id`` attribute is a unique identifier for an element or a component.
-It's used when a component re-renders and helps Live Components "connect" elements
-or components in the existing HTML with the new HTML. The logic works like this:
-
-Suppose an element or component in the new HTML has a ``data-live-id="some-id"`` attribute.
-Then:
-
-A) If there **is** an element or component with ``data-live-id="some-id"`` in the
-   existing HTML, then the old and new elements/components are considered to be the
-   "same". For elements, the new element will be used to update the old element even
-   if the two elements appear in different places - e.g. like if :ref:`elements are moved <rendering-loop-of-elements>`
-   or re-ordered. For components, because child components render independently
-   from their parent, the existing component will be "left alone" and not re-rendered
-   (unless some ``updateFromParent`` props have changed - see :ref:`child-component-independent-rerender`).
-
-B) If there is **not** an element or component with ``data-live-id="some-id"`` in
-   the existing HTML, then the new element or component is considered to be "new".
-   In both cases, the new element or component will be added to the page. If there
-   is a component/element with a ``data-live-id`` attribute that is *not* in the
-   new HTML, that component/element will be removed from the page.
+The ``id`` attribute is a unique identifier for an element or a component.
+It's used during the morphing process when a component re-renders: it helps the
+`morphing library`_ "connect" elements or components in the existing HTML with the new
+HTML.
 
 Skipping Updating Certain Elements
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3239,8 +3223,8 @@ an element, that changes is preserved (see :ref:`smart-rerender-algorithm`).
 
 .. note::
 
-    To *force* an ignored element to re-render, give its parent element a
-    ``data-live-id`` attribute. During a re-render, if this value changes, all
+    To *force* an ignored element to re-render, give its parent element an
+    ``id`` attribute. During a re-render, if this value changes, all
     of the children of the element will be re-rendered, even those with ``data-live-ignore``.
 
 Overwrite HTML Instead of Morphing
@@ -3482,3 +3466,4 @@ bound to Symfony's BC policy for the moment.
 .. _`Twig Component debug command`: https://symfony.com/bundles/ux-twig-component/current/index.html#debugging-components
 .. _`PostMount hook`: https://symfony.com/bundles/ux-twig-component/current/index.html#postmount-hook
 .. _`validation groups`: https://symfony.com/doc/current/form/validation_groups.html
+.. _morphing library: https://github.com/bigskysoftware/idiomorph

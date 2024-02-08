@@ -1,8 +1,8 @@
 import { Controller } from '@hotwired/stimulus';
 import Component from './Component';
-import ComponentRegistry from './ComponentRegistry';
+import { BackendInterface } from './Backend/Backend';
 export { Component };
-export declare const getComponent: (element: HTMLElement) => Promise<Component>;
+export { getComponent } from './ComponentRegistry';
 export interface LiveEvent extends CustomEvent {
     detail: {
         controller: LiveController;
@@ -17,9 +17,24 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     static values: {
         name: StringConstructor;
         url: StringConstructor;
-        props: ObjectConstructor;
+        props: {
+            type: ObjectConstructor;
+            default: {};
+        };
+        propsUpdatedFromParent: {
+            type: ObjectConstructor;
+            default: {};
+        };
         csrf: StringConstructor;
         listeners: {
+            type: ArrayConstructor;
+            default: never[];
+        };
+        eventsToEmit: {
+            type: ArrayConstructor;
+            default: never[];
+        };
+        eventsToDispatch: {
             type: ArrayConstructor;
             default: never[];
         };
@@ -27,7 +42,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
             type: NumberConstructor;
             default: number;
         };
-        id: StringConstructor;
         fingerprint: {
             type: StringConstructor;
             default: string;
@@ -44,10 +58,21 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     readonly nameValue: string;
     readonly urlValue: string;
     readonly propsValue: any;
+    propsUpdatedFromParentValue: any;
     readonly csrfValue: string;
     readonly listenersValue: Array<{
         event: string;
         action: string;
+    }>;
+    readonly eventsToEmitValue: Array<{
+        event: string;
+        data: any;
+        target: string | null;
+        componentName: string | null;
+    }>;
+    readonly eventsToDispatchValue: Array<{
+        event: string;
+        payload: any;
     }>;
     readonly hasDebounceValue: boolean;
     readonly debounceValue: number;
@@ -59,26 +84,31 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         };
     };
     private proxiedComponent;
+    private mutationObserver;
     component: Component;
     pendingActionTriggerModelElement: HTMLElement | null;
     private elementEventListeners;
     private pendingFiles;
-    static componentRegistry: ComponentRegistry;
+    static backendFactory: (controller: LiveControllerDefault) => BackendInterface;
     initialize(): void;
     connect(): void;
     disconnect(): void;
     update(event: any): void;
     action(event: any): void;
-    $render(): Promise<import("./Backend/BackendResponse").default>;
     emit(event: Event): void;
     emitUp(event: Event): void;
     emitSelf(event: Event): void;
-    private getEmitDirectives;
+    $render(): Promise<import("./Backend/BackendResponse").default>;
     $updateModel(model: string, value: any, shouldRender?: boolean, debounce?: number | boolean): Promise<import("./Backend/BackendResponse").default>;
+    propsUpdatedFromParentValueChanged(): void;
+    fingerprintValueChanged(): void;
+    private getEmitDirectives;
+    private createComponent;
+    private connectComponent;
+    private disconnectComponent;
     private handleInputEvent;
     private handleChangeEvent;
     private updateModelFromElementEvent;
-    handleConnectedControllerEvent(event: LiveEvent): void;
-    handleDisconnectedChildControllerEvent(event: LiveEvent): void;
     private dispatchEvent;
+    private onMutations;
 }

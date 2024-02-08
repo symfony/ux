@@ -43,7 +43,7 @@ describe('Component parent -> child data-model binding tests', () => {
             .willReturn((data: any) => `
                 <div ${initComponent(data)}>
                     Food Name ${data.foodName}
-                    <div data-live-id="the-child-id">
+                    <div id="the-child-id">
                 </div>
             `);
 
@@ -76,7 +76,7 @@ describe('Component parent -> child data-model binding tests', () => {
             .willReturn((data: any) => `
                 <div ${initComponent(data)}>
                     Food Name ${data.foodName}
-                    <div data-live-id="the-child-id">
+                    <div id="the-child-id">
                 </div>
             `);
 
@@ -135,7 +135,7 @@ describe('Component parent -> child data-model binding tests', () => {
             .willReturn((data: any) => `
                 <div ${initComponent(data)}>
                     Food Name ${data.foodName}
-                    <div data-live-id="the-child-id">
+                    <div id="the-child-id" data-live-preserve></div>
                 </div>
             `);
 

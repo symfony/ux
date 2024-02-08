@@ -1,4 +1,4 @@
-import { BackendAction, BackendInterface, ChildrenFingerprints } from '../Backend/Backend';
+import { BackendAction, BackendInterface } from '../Backend/Backend';
 import ValueStore from './ValueStore';
 import { normalizeModelName } from '../string_utils';
 import BackendRequest from '../Backend/BackendRequest';
@@ -9,31 +9,18 @@ import { ElementDriver } from './ElementDriver';
 import HookManager from '../HookManager';
 import { PluginInterface } from './plugins/PluginInterface';
 import BackendResponse from '../Backend/BackendResponse';
-import { ModelBinding } from '../Directive/get_model_binding';
 import ExternalMutationTracker from '../Rendering/ExternalMutationTracker';
+import { findComponents, registerComponent, unregisterComponent } from '../ComponentRegistry';
 
 declare const Turbo: any;
-
-export type ComponentFinder = (currentComponent: Component, onlyParents: boolean, onlyMatchName: string|null) => Component[];
-
-class ChildComponentWrapper {
-    component: Component;
-    modelBindings: ModelBinding[];
-
-    constructor(component: Component, modelBindings: ModelBinding[]) {
-        this.component = component;
-        this.modelBindings = modelBindings;
-    }
-}
 
 export default class Component {
     readonly element: HTMLElement;
     readonly name: string;
     // key is the string event name and value is an array of action names
     readonly listeners: Map<string, string[]>;
-    private readonly componentFinder: ComponentFinder;
     private backend: BackendInterface;
-    private readonly elementDriver: ElementDriver;
+    readonly elementDriver: ElementDriver;
     id: string|null;
 
     /**
@@ -43,12 +30,11 @@ export default class Component {
      * to determine if any "input" to the child component changed and thus,
      * if the child component needs to be re-rendered.
      */
-    fingerprint: string|null;
+    fingerprint = '';
 
     readonly valueStore: ValueStore;
     private readonly unsyncedInputsTracker: UnsyncedInputsTracker;
     private hooks: HookManager;
-
 
     defaultDebounce = 150;
 
@@ -64,9 +50,6 @@ export default class Component {
     private nextRequestPromise: Promise<BackendResponse>;
     private nextRequestPromiseResolve: (response: BackendResponse) => any;
 
-    private children: Map<string, ChildComponentWrapper> = new Map();
-    private parent: Component|null = null;
-
     private externalMutationTracker: ExternalMutationTracker;
 
     /**
@@ -74,20 +57,16 @@ export default class Component {
      * @param name    The name of the component
      * @param props   Readonly component props
      * @param listeners Array of event -> action listeners
-     * @param componentFinder
-     * @param fingerprint
      * @param id      Some unique id to identify this component. Needed to be a child component
      * @param backend Backend instance for updating
      * @param elementDriver Class to get "model" name from any element.
      */
-    constructor(element: HTMLElement, name: string, props: any, listeners: Array<{ event: string; action: string }>, componentFinder: ComponentFinder, fingerprint: string|null, id: string|null, backend: BackendInterface, elementDriver: ElementDriver) {
+    constructor(element: HTMLElement, name: string, props: any, listeners: Array<{ event: string; action: string }>, id: string|null, backend: BackendInterface, elementDriver: ElementDriver) {
         this.element = element;
         this.name = name;
-        this.componentFinder = componentFinder;
         this.backend = backend;
         this.elementDriver = elementDriver;
         this.id = id;
-        this.fingerprint = fingerprint;
 
         this.listeners = new Map();
         listeners.forEach((listener) => {
@@ -109,15 +88,6 @@ export default class Component {
         // start early to catch any mutations that happen before the component is connected
         // for example, the LoadingPlugin, which sets initial non-loading state
         this.externalMutationTracker.start();
-
-        this.onChildComponentModelUpdate = this.onChildComponentModelUpdate.bind(this);
-    }
-
-    /**
-     * @internal
-     */
-    _swapBackend(backend: BackendInterface) {
-        this.backend = backend;
     }
 
     addPlugin(plugin: PluginInterface) {
@@ -125,12 +95,14 @@ export default class Component {
     }
 
     connect(): void {
+        registerComponent(this);
         this.hooks.triggerHook('connect', this);
         this.unsyncedInputsTracker.activate();
         this.externalMutationTracker.start();
     }
 
     disconnect(): void {
+        unregisterComponent(this);
         this.hooks.triggerHook('disconnect', this);
         this.clearRequestDebounceTimeout();
         this.unsyncedInputsTracker.deactivate();
@@ -142,6 +114,7 @@ export default class Component {
      *
      *     * connect (component: Component) => {}
      *     * disconnect (component: Component) => {}
+     *     * request:started (requestConfig: any) => {}
      *     * render:started (html: string, response: BackendResponse, controls: { shouldRender: boolean }) => {}
      *     * render:finished (component: Component) => {}
      *     * response:error (backendResponse: BackendResponse, controls: { displayError: boolean }) => {}
@@ -219,39 +192,6 @@ export default class Component {
         return this.unsyncedInputsTracker.getUnsyncedModels();
     }
 
-    addChild(child: Component, modelBindings: ModelBinding[] = []): void {
-        if (!child.id) {
-            throw new Error('Children components must have an id.');
-        }
-
-        this.children.set(child.id, new ChildComponentWrapper(child, modelBindings));
-        child.parent = this;
-        child.on('model:set', this.onChildComponentModelUpdate);
-    }
-
-    removeChild(child: Component): void {
-        if (!child.id) {
-            throw new Error('Children components must have an id.');
-        }
-
-        this.children.delete(child.id);
-        child.parent = null;
-        child.off('model:set', this.onChildComponentModelUpdate);
-    }
-
-    getParent(): Component|null {
-        return this.parent;
-    }
-
-    getChildren(): Map<string, Component> {
-        const children: Map<string, Component> = new Map();
-        this.children.forEach((childComponent, id) => {
-            children.set(id, childComponent.component);
-        });
-
-        return children;
-    }
-
     emit(name: string, data: any, onlyMatchingComponentsNamed: string|null = null): void {
         return this.performEmit(name, data, false, onlyMatchingComponentsNamed);
     }
@@ -265,7 +205,7 @@ export default class Component {
     }
 
     private performEmit(name: string, data: any, emitUp: boolean, matchingName: string|null): void {
-        const components = this.componentFinder(this, emitUp, matchingName);
+        const components: Component[] = findComponents(this, emitUp, matchingName);
         components.forEach((component) => {
             component.doEmit(name, data);
         });
@@ -281,65 +221,6 @@ export default class Component {
         actions.forEach((action) => {
             // debounce slightly to allow for multiple actions to queue
             this.action(action, data, 1);
-        });
-    }
-
-    /**
-     * Called during morphdom: read props from toEl and re-render if necessary.
-     *
-     * @param toEl
-     */
-    updateFromNewElementFromParentRender(toEl: HTMLElement): boolean {
-        const props = this.elementDriver.getComponentProps(toEl);
-
-        // if no props are on the element, use the existing element completely
-        // this means the parent is signaling that the child does not need to be re-rendered
-        if (props === null) {
-            return false;
-        }
-
-        // push props directly down onto the value store
-        const isChanged = this.valueStore.storeNewPropsFromParent(props);
-
-        const fingerprint = toEl.dataset.liveFingerprintValue;
-        if (fingerprint !== undefined) {
-            this.fingerprint = fingerprint;
-        }
-
-        if (isChanged) {
-            this.render();
-        }
-
-        return isChanged;
-    }
-
-    /**
-     * Handles data-model binding from a parent component onto a child.
-     */
-    onChildComponentModelUpdate(modelName: string, value: any, childComponent: Component): void {
-        if (!childComponent.id) {
-            throw new Error('Missing id');
-        }
-
-        const childWrapper = this.children.get(childComponent.id);
-        if (!childWrapper) {
-            throw new Error('Missing child');
-        }
-
-        childWrapper.modelBindings.forEach((modelBinding) => {
-            const childModelName = modelBinding.innerModelName || 'value';
-
-            // skip, unless childModelName matches the model that just changed
-            if (childModelName !== modelName) {
-                return;
-            }
-
-            this.set(
-                modelBinding.modelName,
-                value,
-                modelBinding.shouldRender,
-                modelBinding.debounce
-            );
         });
     }
 
@@ -375,13 +256,22 @@ export default class Component {
             }
         }
 
+        const requestConfig = {
+            props: this.valueStore.getOriginalProps(),
+            actions: this.pendingActions,
+            updated: this.valueStore.getDirtyProps(),
+            children: {},
+            updatedPropsFromParent: this.valueStore.getUpdatedPropsFromParent(),
+            files: filesToSend,
+        };
+        this.hooks.triggerHook('request:started', requestConfig);
         this.backendRequest = this.backend.makeRequest(
-            this.valueStore.getOriginalProps(),
-            this.pendingActions,
-            this.valueStore.getDirtyProps(),
-            this.getChildrenFingerprints(),
-            this.valueStore.getUpdatedPropsFromParent(),
-            filesToSend,
+            requestConfig.props,
+            requestConfig.actions,
+            requestConfig.updated,
+            requestConfig.children,
+            requestConfig.updatedPropsFromParent,
+            requestConfig.files
         );
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
 
@@ -478,12 +368,6 @@ export default class Component {
             throw error;
         }
 
-        const newProps = this.elementDriver.getComponentProps(newElement);
-        this.valueStore.reinitializeAllProps(newProps);
-
-        const eventsToEmit = this.elementDriver.getEventsToEmit(newElement);
-        const browserEventsToDispatch = this.elementDriver.getBrowserEventsToDispatch(newElement);
-
         // make sure we've processed all external changes before morphing
         this.externalMutationTracker.handlePendingChanges();
         this.externalMutationTracker.stop();
@@ -492,12 +376,15 @@ export default class Component {
             newElement,
             this.unsyncedInputsTracker.getUnsyncedInputs(),
             (element: HTMLElement) => getValueFromElement(element, this.valueStore),
-            Array.from(this.getChildren().values()),
-            this.elementDriver.findChildComponentElement,
-            this.elementDriver.getKeyFromElement,
             this.externalMutationTracker
         );
         this.externalMutationTracker.start();
+
+        const newProps = this.elementDriver.getComponentProps();
+        this.valueStore.reinitializeAllProps(newProps);
+
+        const eventsToEmit = this.elementDriver.getEventsToEmit();
+        const browserEventsToDispatch = this.elementDriver.getBrowserEventsToDispatch();
 
         // reset the modified values back to their client-side version
         Object.keys(modifiedModelValues).forEach((modelName) => {
@@ -609,30 +496,24 @@ export default class Component {
         modal.focus();
     }
 
-    private getChildrenFingerprints(): ChildrenFingerprints {
-        const fingerprints: ChildrenFingerprints = {};
-
-        this.children.forEach((childComponent) => {
-            const child = childComponent.component;
-            if (!child.id) {
-                throw new Error('missing id');
-            }
-
-            fingerprints[child.id] = {
-                fingerprint: child.fingerprint as string,
-                tag: child.element.tagName.toLowerCase(),
-            };
-        });
-
-        return fingerprints;
-    }
-
     private resetPromise(): void {
         this.nextRequestPromise = new Promise((resolve) => {
             this.nextRequestPromiseResolve = resolve;
         });
     }
 
+    /**
+     * Called on a child component after the parent component render has requested
+     * that the child component update its props & re-render if necessary.
+     */
+    _updateFromParentProps(props: any) {
+        // push props directly down onto the value store
+        const isChanged = this.valueStore.storeNewPropsFromParent(props);
+
+        if (isChanged) {
+            this.render();
+        }
+    }
 }
 
 /**

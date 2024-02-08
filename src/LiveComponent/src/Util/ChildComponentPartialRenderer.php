@@ -51,7 +51,7 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
         /*
          * The props passed to create this child HAVE changed.
          * Send back a fake element with:
-         *      * data-live-id
+         *      * id
          *      * data-live-fingerprint-value (new fingerprint)
          *      * data-live-props-value (dehydrated props that "accept updates from parent")
          */
@@ -69,12 +69,13 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
         $readonlyDehydratedProps = $liveMetadata->getOnlyPropsThatAcceptUpdatesFromParent($props);
         $readonlyDehydratedProps = $this->getLiveComponentHydrator()->addChecksumToData($readonlyDehydratedProps);
 
-        $attributesCollection->setProps($readonlyDehydratedProps);
+        $attributesCollection->setPropsUpdatedFromParent($readonlyDehydratedProps);
         $attributes = $attributesCollection->toEscapedArray();
         // optional, but these just aren't needed by the frontend at this point
         unset($attributes['data-controller']);
         unset($attributes['data-live-url-value']);
         unset($attributes['data-live-csrf-value']);
+        unset($attributes['data-live-props-value']);
 
         return $this->createHtml($attributes, $childTag);
     }
@@ -88,6 +89,7 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
         $attributes = array_map(function ($key, $value) {
             return sprintf('%s="%s"', $key, $value);
         }, array_keys($attributes), $attributes);
+        $attributes[] = 'data-live-preserve="true"';
 
         return sprintf('<%s %s></%s>', $childTag, implode(' ', $attributes), $childTag);
     }

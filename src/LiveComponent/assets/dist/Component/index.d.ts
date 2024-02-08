@@ -3,17 +3,14 @@ import ValueStore from './ValueStore';
 import { ElementDriver } from './ElementDriver';
 import { PluginInterface } from './plugins/PluginInterface';
 import BackendResponse from '../Backend/BackendResponse';
-import { ModelBinding } from '../Directive/get_model_binding';
-export type ComponentFinder = (currentComponent: Component, onlyParents: boolean, onlyMatchName: string | null) => Component[];
 export default class Component {
     readonly element: HTMLElement;
     readonly name: string;
     readonly listeners: Map<string, string[]>;
-    private readonly componentFinder;
     private backend;
-    private readonly elementDriver;
+    readonly elementDriver: ElementDriver;
     id: string | null;
-    fingerprint: string | null;
+    fingerprint: string;
     readonly valueStore: ValueStore;
     private readonly unsyncedInputsTracker;
     private hooks;
@@ -25,14 +22,11 @@ export default class Component {
     private requestDebounceTimeout;
     private nextRequestPromise;
     private nextRequestPromiseResolve;
-    private children;
-    private parent;
     private externalMutationTracker;
     constructor(element: HTMLElement, name: string, props: any, listeners: Array<{
         event: string;
         action: string;
-    }>, componentFinder: ComponentFinder, fingerprint: string | null, id: string | null, backend: BackendInterface, elementDriver: ElementDriver);
-    _swapBackend(backend: BackendInterface): void;
+    }>, id: string | null, backend: BackendInterface, elementDriver: ElementDriver);
     addPlugin(plugin: PluginInterface): void;
     connect(): void;
     disconnect(): void;
@@ -44,17 +38,11 @@ export default class Component {
     files(key: string, input: HTMLInputElement): void;
     render(): Promise<BackendResponse>;
     getUnsyncedModels(): string[];
-    addChild(child: Component, modelBindings?: ModelBinding[]): void;
-    removeChild(child: Component): void;
-    getParent(): Component | null;
-    getChildren(): Map<string, Component>;
     emit(name: string, data: any, onlyMatchingComponentsNamed?: string | null): void;
     emitUp(name: string, data: any, onlyMatchingComponentsNamed?: string | null): void;
     emitSelf(name: string, data: any): void;
     private performEmit;
     private doEmit;
-    updateFromNewElementFromParentRender(toEl: HTMLElement): boolean;
-    onChildComponentModelUpdate(modelName: string, value: any, childComponent: Component): void;
     private isTurboEnabled;
     private tryStartingRequest;
     private performRequest;
@@ -63,7 +51,7 @@ export default class Component {
     private clearRequestDebounceTimeout;
     private debouncedStartRequest;
     private renderError;
-    private getChildrenFingerprints;
     private resetPromise;
+    _updateFromParentProps(props: any): void;
 }
 export declare function proxifyComponent(component: Component): Component;

@@ -35,7 +35,7 @@ class LiveControllerAttributesCreator
     /**
      * Prop name that can be passed into a component to keep it unique in a loop.
      *
-     * This is used to generate the unique data-live-id for the child component.
+     * This is used to generate the unique id for the child component.
      */
     public const KEY_PROP_NAME = 'key';
 
@@ -89,18 +89,21 @@ class LiveControllerAttributesCreator
             ]);
         }
 
-        if (!isset($mountedAttributes->all()['data-live-id'])) {
+        if (!isset($mountedAttributes->all()['id'])) {
             $id = $deterministicId ?: $this->idCalculator
                 ->calculateDeterministicId(key: $mounted->getInputProps()[self::KEY_PROP_NAME] ?? null);
             $attributesCollection->setLiveId($id);
             // we need to add this to the mounted attributes so that it is
             // will be included in the "attributes" part of the props data.
-            $mountedAttributes = $mountedAttributes->defaults(['data-live-id' => $id]);
+            $mountedAttributes = $mountedAttributes->defaults(['id' => $id]);
         }
 
         $liveMetadata = $this->metadataFactory->getMetadata($mounted->getName());
         $requestMethod = $liveMetadata->getComponentMetadata()?->get('method') ?? 'post';
-        $attributesCollection->setRequestMethod($requestMethod);
+        // set attribute if needed
+        if ('post' !== $requestMethod) {
+            $attributesCollection->setRequestMethod($requestMethod);
+        }
 
         if ($liveMetadata->hasQueryStringBindings()) {
             $queryMapping = [];

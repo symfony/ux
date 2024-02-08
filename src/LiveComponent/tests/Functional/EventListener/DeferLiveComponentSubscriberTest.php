@@ -35,7 +35,7 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         $this->assertSame('live:connect->live#$render', $div->attr('data-action'));
 
         $component = $this->mountComponent('deferred_component', [
-            'data-live-id' => $div->attr('data-live-id'),
+            'id' => $div->attr('id'),
         ]);
 
         $dehydrated = $this->dehydrateComponent($component);
@@ -62,7 +62,7 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         $this->assertSame('I\'m loading a reaaaally slow live component', trim($div->html()));
 
         $component = $this->mountComponent('deferred_component', [
-            'data-live-id' => $div->attr('data-live-id'),
+            'id' => $div->attr('id'),
         ]);
 
         $dehydrated = $this->dehydrateComponent($component);

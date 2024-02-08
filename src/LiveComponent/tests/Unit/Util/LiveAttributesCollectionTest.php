@@ -51,13 +51,13 @@ class LiveAttributesCollectionTest extends KernelTestCase
         $expected = [
             'data-controller' => 'live',
             'data-live-name-value' => 'my-component',
-            'data-live-id' => 'the-live-id',
+            'id' => 'the-live-id',
             'data-live-fingerprint-value' => 'the-fingerprint',
             'data-live-props-value' => '&#x7B;&quot;the&quot;&#x3A;&quot;props&quot;&#x7D;',
             'data-live-url-value' => 'the-live-url',
             'data-live-csrf-value' => 'the-csrf-token',
             'data-live-listeners-value' => '&#x7B;&quot;event_name&quot;&#x3A;&quot;theActionName&quot;&#x7D;',
-            'data-live-emit' => '&#x5B;&#x7B;&quot;event&quot;&#x3A;&quot;event_name1&quot;,&quot;data&quot;&#x3A;&#x7B;&quot;the&quot;&#x3A;&quot;data&quot;&#x7D;,&quot;target&quot;&#x3A;&quot;up&quot;,&quot;componentName&quot;&#x3A;&quot;the-component&quot;&#x7D;,&#x7B;&quot;event&quot;&#x3A;&quot;event_name2&quot;,&quot;data&quot;&#x3A;&#x7B;&quot;the&quot;&#x3A;&quot;data&quot;&#x7D;,&quot;target&quot;&#x3A;null,&quot;componentName&quot;&#x3A;null&#x7D;&#x5D;',
+            'data-live-events-to-emit-value' => '&#x5B;&#x7B;&quot;event&quot;&#x3A;&quot;event_name1&quot;,&quot;data&quot;&#x3A;&#x7B;&quot;the&quot;&#x3A;&quot;data&quot;&#x7D;,&quot;target&quot;&#x3A;&quot;up&quot;,&quot;componentName&quot;&#x3A;&quot;the-component&quot;&#x7D;,&#x7B;&quot;event&quot;&#x3A;&quot;event_name2&quot;,&quot;data&quot;&#x3A;&#x7B;&quot;the&quot;&#x3A;&quot;data&quot;&#x7D;,&quot;target&quot;&#x3A;null,&quot;componentName&quot;&#x3A;null&#x7D;&#x5D;',
             'data-live-query-mapping-value' => '&#x7B;&quot;foo&quot;&#x3A;&#x7B;&quot;name&quot;&#x3A;&quot;foo&quot;&#x7D;,&quot;bar&quot;&#x3A;&#x7B;&quot;name&quot;&#x3A;&quot;bar&quot;&#x7D;&#x7D;',
         ];
 

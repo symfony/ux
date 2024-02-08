@@ -2,6 +2,8 @@ import ValueStore from './Component/ValueStore';
 import { Directive, parseDirectives } from './Directive/directives_parser';
 import { normalizeModelName } from './string_utils';
 import Component from './Component';
+import { findChildren } from './ComponentRegistry';
+import getElementAsTagText from './Util/getElementAsTagText';
 
 /**
  * Return the "value" of any given element.
@@ -206,7 +208,7 @@ export function elementBelongsToThisComponent(element: Element, component: Compo
     }
 
     let foundChildComponent = false;
-    component.getChildren().forEach((childComponent) => {
+    findChildren(component).forEach((childComponent) => {
         if (foundChildComponent) {
             // return early
             return;
@@ -252,21 +254,6 @@ export function htmlToElement(html: string): HTMLElement {
     }
 
     return child;
-}
-
-/**
- * Returns just the outer element's HTML as a string - useful for error messages.
- *
- * For example:
- *      <div class="outer">And text inside <p>more text</p></div>
- *
- * Would return:
- *      <div class="outer">
- */
-export function getElementAsTagText(element: HTMLElement): string {
-    return element.innerHTML
-        ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML))
-        : element.outerHTML;
 }
 
 const getMultipleCheckboxValue = function (element: HTMLInputElement, currentValues: Array<string>): Array<string> {

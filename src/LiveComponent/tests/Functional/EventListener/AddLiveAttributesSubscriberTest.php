@@ -50,7 +50,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertSame(1, $props['count']);
         $this->assertArrayHasKey('@checksum', $props);
         $this->assertArrayHasKey('@attributes', $props);
-        $this->assertArrayHasKey('data-live-id', $props['@attributes']);
+        $this->assertArrayHasKey('id', $props['@attributes']);
     }
 
     public function testCanUseCustomAttributesVariableName(): void
@@ -99,13 +99,13 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
         $lis = $ul->children('li');
         // deterministic id: should not change, and counter should increase
-        $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'0', $lis->first()->attr('data-live-id'));
-        $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'1', $lis->last()->attr('data-live-id'));
+        $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'0', $lis->first()->attr('id'));
+        $this->assertSame(self::TODO_ITEM_DETERMINISTIC_PREFIX.'1', $lis->last()->attr('id'));
 
-        // the data-live-id attribute also needs to be part of the "props" so that it persists on renders
+        // the id attribute also needs to be part of the "props" so that it persists on renders
         $props = json_decode($lis->first()->attr('data-live-props-value'), true);
         $attributesProps = $props['@attributes'];
-        $this->assertArrayHasKey('data-live-id', $attributesProps);
+        $this->assertArrayHasKey('id', $attributesProps);
 
         // fingerprints
         // first and last both have the same length "text" input, and since "textLength"
@@ -130,9 +130,9 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         ;
 
         $lis = $ul->children('li');
-        // deterministic id: is not used: data-live-id was passed in manually
-        $this->assertSame('todo-item-1', $lis->first()->attr('data-live-id'));
-        $this->assertSame('todo-item-3', $lis->last()->attr('data-live-id'));
+        // deterministic id: is not used: id was passed in manually
+        $this->assertSame('todo-item-1', $lis->first()->attr('id'));
+        $this->assertSame('todo-item-3', $lis->last()->attr('id'));
     }
 
     public function testQueryStringMappingAttribute()
@@ -174,7 +174,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertCount(3, $props);
         $this->assertArrayHasKey('@checksum', $props);
         $this->assertArrayHasKey('@attributes', $props);
-        $this->assertArrayHasKey('data-live-id', $props['@attributes']);
+        $this->assertArrayHasKey('id', $props['@attributes']);
         $this->assertArrayHasKey('count', $props);
         $this->assertSame($props['count'], 0);
     }
@@ -209,7 +209,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
         $this->assertCount(3, $props);
         $this->assertArrayHasKey('@checksum', $props);
         $this->assertArrayHasKey('@attributes', $props);
-        $this->assertArrayHasKey('data-live-id', $props['@attributes']);
+        $this->assertArrayHasKey('id', $props['@attributes']);
         $this->assertArrayHasKey('count', $props);
         $this->assertSame($props['count'], 2);
     }

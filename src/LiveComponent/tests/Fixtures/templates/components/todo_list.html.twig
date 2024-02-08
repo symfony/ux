@@ -5,7 +5,7 @@
     {% for item in items %}
         {% set componentProps = { text: item.text, textLength: item.text|length } %}
         {% if includeDataLiveId %}
-            {% set componentProps = componentProps|merge({'data-live-id': ('todo-item-' ~ loop.index) }) %}
+            {% set componentProps = componentProps|merge({id: ('todo-item-' ~ loop.index) }) %}
         {% endif %}
         {% if loop.index is odd %}
             {{ component('todo_item', componentProps) }}
