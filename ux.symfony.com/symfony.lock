@@ -229,6 +229,9 @@
     "sebastian/version": {
         "version": "3.0.2"
     },
+    "spomky-labs/phpwa": {
+        "version": "1.0.x-dev"
+    },
     "stella-maris/clock": {
         "version": "0.1.4"
     },
@@ -424,6 +427,15 @@
     },
     "symfony/options-resolver": {
         "version": "v6.0.3"
+    },
+    "symfony/panther": {
+        "version": "2.1",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "1.0",
+            "ref": "292a3236e81f55b545b09b9954ab097248972ab3"
+        }
     },
     "symfony/phpunit-bridge": {
         "version": "6.4",

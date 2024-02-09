@@ -1,0 +1,65 @@
+pwa:
+    image_processor: 'pwa.image_processor.imagick'
+    manifest:
+        enabled: true
+        background_color: "#ffffff"
+        theme_color: "#212529"
+        name: 'Symfony UX'
+        short_name: 'symfony-ux'
+        description: 'A set of PHP & JavaScript packages, curated by Symfony, to solve your every day frontend problems. Featuring Stimulus and Turbo.'
+        orientation: "any"
+        display: "standalone"
+        scope: "/"
+        display_override: ['fullscreen', 'minimal-ui', 'window-controls-overlay']
+        id: "/"
+        start_url: "./"
+        icons:
+            - src: "images/pwa/favicon.ico"
+              sizes: [48]
+            - src: "images/pwa/favicon-512x512.png"
+              sizes: [512]
+            - src: "images/pwa/favicon.svg"
+              sizes: [0]
+            - src: "images/pwa/favicon.svg"
+              purpose: 'maskable'
+              sizes: [0]
+        screenshots:
+            - "images/pwa/screenshots/homepage-1303x1718.png"
+            - "images/pwa/screenshots/turbo-1303x1718.png"
+            - "images/pwa/screenshots/homepage-2056x1080.png"
+            - "images/pwa/screenshots/turbo-2056x1080.png"
+        categories: ['utility', 'productivity']
+        shortcuts:
+            - name: "Turbo"
+              short_name: "turbo"
+              description: "See Turbo in live action"
+              url: "app_turbo"
+              icons:
+                  - src: "images/pwa/turbo.svg"
+                    sizes: [0]
+                  - src: "images/pwa/turbo-96x96.png"
+                    sizes: [96]
+            - name: "Live Components"
+              short_name: "live-components"
+              description: "An Interactive UI entirely built in Twig"
+              url: "app_live_component"
+              icons:
+                  - src: "images/pwa/component.svg"
+                    sizes: [0]
+                  - src: "images/pwa/component-96x96.png"
+                    sizes: [96]
+    serviceworker:
+        enabled: true
+        src: "sw.js"
+        skip_waiting: true
+        workbox:
+            page_fallback: 'app_homepage'
+            warm_cache_urls:
+                - 'app_homepage'
+                - 'app_turbo'
+                - 'app_live_component'
+                - 'app_autocomplete'
+                - 'app_react'
+                - 'app_vue'
+                - 'app_translator'
+                - 'app_demos'
