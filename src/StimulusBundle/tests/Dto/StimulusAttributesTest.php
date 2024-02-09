@@ -24,7 +24,9 @@ final class StimulusAttributesTest extends TestCase
 
     protected function setUp(): void
     {
-        $this->stimulusAttributes = new StimulusAttributes(new Environment(new ArrayLoader()));
+        $this->stimulusAttributes = new StimulusAttributes(new Environment(new ArrayLoader(), [
+            'use_yield' => true,
+        ]));
     }
 
     public function testAddAction(): void
