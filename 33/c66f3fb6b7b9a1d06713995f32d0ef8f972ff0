@@ -1,0 +1,5 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-02-09T20:59:19Z
+
+Thanks @evertharmeling! We'll keep debugging the rest after this. For the TwigComponents deprecation, more work is needed - and I know that Simon has looked into it https://github.com/symfony/ux/issues/1390#issuecomment-1902764551
