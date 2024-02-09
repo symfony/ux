@@ -14,6 +14,7 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\EventListener;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
@@ -498,6 +499,55 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ])
             ->assertSuccessful()
             ->assertContains('Prop1: default')
+        ;
+    }
+
+    public function testCanHaveControllerAttributes(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_security'));
+
+        $this->browser()
+            ->post('/_components/with_security?props='.urlencode(json_encode($dehydrated->getProps())))
+            ->assertStatus(401)
+            ->actingAs(new InMemoryUser('kevin', 'pass', ['ROLE_USER']))
+            ->assertAuthenticated('kevin')
+            ->post('/_components/with_security?props='.urlencode(json_encode($dehydrated->getProps())))
+            ->assertSuccessful()
+        ;
+    }
+
+    public function testCanInjectSecurityUserIntoAction(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_security'));
+        $token = null;
+
+        $this->browser()
+            ->actingAs(new InMemoryUser('kevin', 'pass', ['ROLE_USER']))
+            ->post('/_components/with_security', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
+            ->assertSuccessful()
+            ->assertNotSee('username: kevin')
+            ->use(function (Crawler $crawler) use (&$token) {
+                // get a valid token to use for actions
+                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
+            })
+            ->throwExceptions()
+            ->post('/_components/with_security/setUsername', [
+                'headers' => ['X-CSRF-TOKEN' => $token],
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                        'args' => [],
+                    ]),
+                ],
+            ])
+            ->assertSuccessful()
+            ->assertSee('username: kevin')
         ;
     }
 }

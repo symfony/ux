@@ -16,6 +16,7 @@ use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
@@ -24,6 +25,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\UX\LiveComponent\LiveComponentBundle;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\Entity2Normalizer;
@@ -66,6 +68,7 @@ final class Kernel extends BaseKernel
         yield new FrameworkBundle();
         yield new TwigBundle();
         yield new DoctrineBundle();
+        yield new SecurityBundle();
         yield new TwigComponentBundle();
         yield new LiveComponentBundle();
         yield new ZenstruckFoundryBundle();
@@ -113,6 +116,14 @@ final class Kernel extends BaseKernel
 
         $c->extension('twig', [
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
+        ]);
+
+        $c->extension('security', [
+            'password_hashers' => [InMemoryUser::class => 'plaintext'],
+            'providers' => ['users' => ['memory' => ['users' => ['kevin' => ['password' => 'pass', 'roles' => ['ROLE_USER']]]]]],
+            'firewalls' => ['main' => [
+                'lazy' => true,
+            ]],
         ]);
 
         $c->extension('twig_component', [
