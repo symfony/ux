@@ -1354,7 +1354,7 @@ make it easy to deal with forms::
          * The initial data used to create the form.
          */
         #[LiveProp]
-        public Post $initialFormData = null;
+        public ?Post $initialFormData = null;
 
         protected function instantiateForm(): FormInterface
         {
