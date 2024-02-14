@@ -133,9 +133,7 @@ final class ComponentAttributesTest extends TestCase
             'data-live-data-value' => '{}',
         ]);
 
-        $stimulusAttributes = new StimulusAttributes(new Environment(new ArrayLoader(), [
-            'use_yield' => true,
-        ]));
+        $stimulusAttributes = new StimulusAttributes(new Environment(new ArrayLoader()));
         $stimulusAttributes->addController('foo', ['name' => 'ryan', 'some_array' => ['a', 'b']]);
         $attributes = $attributes->defaults($stimulusAttributes);
 
@@ -160,9 +158,7 @@ final class ComponentAttributesTest extends TestCase
             'data-action' => 'live#foo',
         ]);
 
-        $stimulusAttributes = new StimulusAttributes(new Environment(new ArrayLoader(), [
-            'use_yield' => true,
-        ]));
+        $stimulusAttributes = new StimulusAttributes(new Environment(new ArrayLoader()));
         $stimulusAttributes->addAction('foo', 'barMethod');
         $attributes = $attributes->defaults([...$stimulusAttributes]);
 

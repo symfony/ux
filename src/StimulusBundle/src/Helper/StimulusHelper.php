@@ -27,9 +27,7 @@ final class StimulusHelper
     public function __construct(?Environment $twig)
     {
         // Twig needed just for its escaping mechanism
-        $this->twig = $twig ?? new Environment(new ArrayLoader(), [
-            'use_yield' => true,
-        ]);
+        $this->twig = $twig ?? new Environment(new ArrayLoader());
     }
 
     public function createStimulusAttributes(): StimulusAttributes
