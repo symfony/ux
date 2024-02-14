@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-10T13:07:52Z
+
+I "revert" https://github.com/symfony/ux/pull/1478 in this PR
+
+Please do **_not_** set "use_yield = true" while our compatibility is not OK.
+
+This is something that has a major impact on TwigComponent and LiveComponent, and we'll probably need some changes on the CI to handle both modes.
+
+cc @weaverryan @kbond
