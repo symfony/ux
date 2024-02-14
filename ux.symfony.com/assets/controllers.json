@@ -87,7 +87,7 @@
         "@symfony/ux-turbo": {
             "turbo-core": {
                 "enabled": true,
-                "fetch": "lazy"
+                "fetch": "eager"
             },
             "mercure-turbo-stream": {
                 "enabled": true,
