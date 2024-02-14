@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.15.0
+
+-   [BC BREAK] The `data-live-id` attribute was changed to `id`.
+
 ## 2.14.1
 
 -   Fixed a regression in the testing tools related to the default HTTP
@@ -7,8 +11,10 @@
 
 ## 2.14.0
 
+-   [BC BREAK] DOM morphing changed from `morphdom` to `idiomorph`. As this is
+    a different morphing library, there may be some edge cases where the
+    morphing behavior is different.
 -   Add support for URL binding in `LiveProp`
--   DOM morphing changed from `morphdom` to `idiomorph`
 -   Allow multiple `LiveListener` attributes on a single method
 -   Requests to LiveComponent are sent as POST by default
 -   Add method prop to AsLiveComponent to still allow GET requests, usage: `#[AsLiveComponent(method: 'get')]`

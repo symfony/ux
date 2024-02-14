@@ -23,7 +23,6 @@ describe('LiveController data-loading Tests', () => {
             <div ${initComponent(data)}>
                 <span>I like: ${data.food}</span> 
                 <span data-loading="show" data-testid="loading-element">Loading...</span>
-                <button data-action="live#$render">Re-Render</button>
             </div>
         `);
 
@@ -38,7 +37,7 @@ describe('LiveController data-loading Tests', () => {
         // wait for element to hide itself on start up
         await waitFor(() => expect(getByTestId(test.element, 'loading-element')).not.toBeVisible());
 
-        getByText(test.element, 'Re-Render').click();
+        test.component.render();
         // element should instantly be visible
         expect(getByTestId(test.element, 'loading-element')).toBeVisible();
 
@@ -226,23 +225,31 @@ describe('LiveController data-loading Tests', () => {
 
     it('does not trigger loading inside component children', async () => {
        const childTemplate = (data: any) => `
-            <div ${initComponent(data, {id: 'child-id'})} data-testid="child">
+            <div
+                ${initComponent(data)}
+                id="child-id"
+                data-testid="child"
+                ${data.renderChild ? '' : 'data-live-preserve'}
+            >
                 <span data-loading="show" data-testid="child-loading-element-showing">Loading...</span>
                 <span data-loading="hide" data-testid="child-loading-element-hiding">Loading...</span>
             </div>
         `;
 
-        const test = await createTest({} , (data: any) => `
+        const test = await createTest({renderChild: true} , (data: any) => `
             <div ${initComponent(data, {id: 'parent-id'})} data-testid="parent">
                 <span data-loading="show" data-testid="parent-loading-element-showing">Loading...</span>
                 <span data-loading="hide" data-testid="parent-loading-element-hiding">Loading...</span>
-                ${childTemplate({})}
+                ${childTemplate({renderChild: data.renderChild})}
                 <button data-action="live#$render">Render</button>
             </div>
         `);
 
         test.expectsAjaxCall()
             // delay so we can check loading
+            .serverWillChangeProps((data: any) => {
+                data.renderChild = false;
+            })
             .delayResponse(20);
 
         // All showing elements should be hidden / hiding elements should be visible

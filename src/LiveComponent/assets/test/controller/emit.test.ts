@@ -64,4 +64,39 @@ describe('LiveController Emit Tests', () => {
         // wait a tiny bit - enough for a request to be sent if it was going to be
         await new Promise((resolve) => setTimeout(resolve, 10));
     });
+
+    it('emits event sent back after Ajax call', async () => {
+        const test = await createTest({ renderCount: 0 }, (data: any) => `
+            <div ${initComponent(data, {
+                name: 'simple-component',
+                listeners: [{ event: 'fooEvent', action: 'fooAction' }],
+                // emit only on the first re-render
+                eventEmit: data.renderCount === 1 ? [
+                    { event: 'fooEvent', data: { foo: 'bar' } }
+                ] : [],
+            })}>
+                Render Count: ${data.renderCount}
+                <button
+                    data-action="live#emit"
+                    data-event="fooEvent"
+                >Emit Simple</button>
+            </div>
+        `);
+
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data) => {
+                data.renderCount = 1;
+            })
+
+        test.component.render();
+
+        test.expectsAjaxCall()
+            .expectActionCalled('fooAction', { foo: 'bar' })
+            .serverWillChangeProps((data) => {
+                data.renderCount = 2;
+            });
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Render Count: 1'));
+        await waitFor(() => expect(test.element).toHaveTextContent('Render Count: 2'));
+    });
 });

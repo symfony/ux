@@ -2,22 +2,54 @@ import { cloneHTMLElement, setValueOnElement } from './dom_utils';
 // @ts-ignore
 import { Idiomorph } from 'idiomorph/dist/idiomorph.esm.js';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
-import Component from './Component';
 import ExternalMutationTracker from './Rendering/ExternalMutationTracker';
+
+const syncAttributes = function (fromEl: Element, toEl: Element): void {
+    for (let i = 0; i < fromEl.attributes.length; i++) {
+        const attr = fromEl.attributes[i];
+        toEl.setAttribute(attr.name, attr.value);
+    }
+};
 
 export function executeMorphdom(
     rootFromElement: HTMLElement,
     rootToElement: HTMLElement,
     modifiedFieldElements: Array<HTMLElement>,
     getElementValue: (element: HTMLElement) => any,
-    childComponents: Component[],
-    findChildComponent: (id: string, element: HTMLElement) => HTMLElement | null,
-    getKeyFromElement: (element: HTMLElement) => string | null,
     externalMutationTracker: ExternalMutationTracker
 ) {
-    const childComponentMap: Map<HTMLElement, Component> = new Map();
-    childComponents.forEach((childComponent) => {
-        childComponentMap.set(childComponent.element, childComponent);
+    /*
+     * Handle "data-live-preserve" elements.
+     *
+     * These are elements that are empty and have requested that their
+     * content be preserved from the matching element of the existing HTML.
+     *
+     * To handle them, we:
+     *  1) Create an array of the "current" HTMLElements that match each
+     *     "data-live-preserve" element.
+     *  2) Replace the "current" elements with clones so that the originals
+     *     aren't modified during the morphing process.
+     *  3) After the morphing is complete, we find the preserved elements and
+     *     replace them with the originals.
+     */
+    const preservedOriginalElements: HTMLElement[] = [];
+    rootToElement.querySelectorAll('[data-live-preserve]').forEach((newElement) => {
+        const id = newElement.id;
+        if (!id) {
+            throw new Error('The data-live-preserve attribute requires an id attribute to be set on the element');
+        }
+
+        const oldElement = rootFromElement.querySelector(`#${id}`);
+        if (!(oldElement instanceof HTMLElement)) {
+            throw new Error(`The element with id "${id}" was not found in the original HTML`);
+        }
+
+        const clonedOldElement = cloneHTMLElement(oldElement);
+        preservedOriginalElements.push(oldElement);
+        oldElement.replaceWith(clonedOldElement);
+
+        newElement.removeAttribute('data-live-preserve');
+        syncAttributes(newElement, oldElement);
     });
 
     Idiomorph.morph(rootFromElement, rootToElement, {
@@ -32,42 +64,29 @@ export function executeMorphdom(
                     return true;
                 }
 
-                let idChanged = false;
-                // Track children if data-live-id changed
-                if (fromEl.hasAttribute('data-live-id')) {
-                    if (fromEl.getAttribute('data-live-id') !== toEl.getAttribute('data-live-id')) {
-                        for (const child of fromEl.children) {
-                            child.setAttribute('parent-live-id-changed', '');
-                        }
-                        idChanged = true;
-                    }
-                }
-
                 // skip special checking if this is, for example, an SVG
                 if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement) {
                     // We assume fromEl is an Alpine component if it has `__x` property.
                     // If it's the case, then we should morph `fromEl` to `ToEl` (thanks to https://alpinejs.dev/plugins/morph)
                     // in order to keep the component state and UI in sync.
+                    // @ts-ignore
                     if (typeof fromEl.__x !== 'undefined') {
+                        // @ts-ignore
                         if (!window.Alpine) {
                             throw new Error(
                                 'Unable to access Alpine.js though the global window.Alpine variable. Please make sure Alpine.js is loaded before Symfony UX LiveComponent.'
                             );
                         }
 
+                        // @ts-ignore
                         if (typeof window.Alpine.morph !== 'function') {
                             throw new Error(
                                 'Unable to access Alpine.js morph function. Please make sure the Alpine.js Morph plugin is installed and loaded, see https://alpinejs.dev/plugins/morph for more information.'
                             );
                         }
 
+                        // @ts-ignore
                         window.Alpine.morph(fromEl.__x, toEl);
-                    }
-
-                    if (childComponentMap.has(fromEl)) {
-                        const childComponent = childComponentMap.get(fromEl) as Component;
-
-                        return !childComponent.updateFromNewElementFromParentRender(toEl) && idChanged;
                     }
 
                     if (externalMutationTracker.wasElementAdded(fromEl)) {
@@ -106,19 +125,17 @@ export function executeMorphdom(
                     }
                 }
 
-                // Update child if parent has his live-id changed
-                if (fromEl.hasAttribute('parent-live-id-changed')) {
-                    fromEl.removeAttribute('parent-live-id-changed');
-
-                    return true;
-                }
-
-                if (fromEl.hasAttribute('data-skip-morph')) {
+                // data-skip-morph implies you want this element's innerHTML to be
+                // replaced, not morphed. We add the same behavior to elements where
+                // the id has changed. So, even if a <div id="foo"> appears on the
+                // same place as a <div id="bar">, we replace the content to get
+                // totally fresh internals.
+                if (fromEl.hasAttribute('data-skip-morph') || (fromEl.id && fromEl.id !== toEl.id)) {
                     fromEl.innerHTML = toEl.innerHTML;
 
                     return true;
                 }
-
+                // if parent's innerHTML was replaced, skip morphing on child
                 if (fromEl.parentElement && fromEl.parentElement.hasAttribute('data-skip-morph')) {
                     return false;
                 }
@@ -143,13 +160,14 @@ export function executeMorphdom(
         },
     });
 
-    childComponentMap.forEach((childComponent, element) => {
-        const childComponentInResult = findChildComponent(childComponent.id ?? '', rootFromElement);
-        if (null === childComponentInResult || element === childComponentInResult) {
-            return;
+    preservedOriginalElements.forEach((oldElement) => {
+        const newElement = rootFromElement.querySelector(`#${oldElement.id}`);
+        if (!(newElement instanceof HTMLElement)) {
+            // should not happen, as preservedOriginalElements is built from
+            // the new HTML
+            throw new Error('Missing preserved element');
         }
 
-        childComponentInResult?.replaceWith(element);
-        childComponent.updateFromNewElementFromParentRender(childComponentInResult);
+        newElement.replaceWith(oldElement);
     });
 }

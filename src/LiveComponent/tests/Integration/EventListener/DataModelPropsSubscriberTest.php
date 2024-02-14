@@ -34,7 +34,7 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
             // Normally createAndRender is always called from within a Template via the ComponentExtension.
             // To avoid that the DeterministicTwigIdCalculator complains that there's no Template
             // to base the live id on, we'll add this dummy one, so it gets skipped.
-            'attributes' => ['data-live-id' => 'dummy-live-id'],
+            'attributes' => ['id' => 'dummy-live-id'],
         ]);
 
         $this->assertStringContainsString('<textarea data-model="content:value">Hello data-model!</textarea>', $html);
@@ -53,7 +53,7 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
         $renderer = self::getContainer()->get('ux.twig_component.component_renderer');
 
         $html = $renderer->createAndRender('parent_component_data_model', [
-            'attributes' => ['data-live-id' => 'dummy-live-id'],
+            'attributes' => ['id' => 'dummy-live-id'],
         ]);
 
         $this->assertStringContainsString('<textarea data-model="content">default content on mount</textarea>', $html);

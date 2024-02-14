@@ -42,7 +42,7 @@ final class TestLiveComponent
     ) {
         $this->client->catchExceptions(false);
 
-        $data['attributes']['data-live-id'] ??= 'in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed';
+        $data['attributes']['id'] ??= 'in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed';
 
         $mounted = $this->factory->create($this->metadata->getName(), $data);
         $props = $this->hydrator->dehydrate(

@@ -705,11 +705,15 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('does not try to set the value of inputs inside a child component', async () => {
-        const test = await createTest({ comment: 'cookie', childComment: 'mmmm' }, (data: any) => `
+        const test = await createTest({ comment: 'cookie', childComment: 'mmmm', skipChild: false }, (data: any) => `
             <div ${initComponent(data)}>
                 <textarea data-model="comment" id="parent-comment"></textarea>
 
-                <div ${initComponent({ comment: data.childComment }, {id: 'the-child-id'})}>
+                <div
+                    ${initComponent({ comment: data.childComment })}
+                    id="the-child-id"
+                    ${data.skipChild ? 'data-live-preserve' : ''}
+                >
                     <textarea data-model="comment" id="child-comment"></textarea>
                 </div>
             </div>
@@ -732,6 +736,7 @@ describe('LiveController data-model Tests', () => {
             // change the data to be extra tricky
             .serverWillChangeProps((data) => {
                 data.comment = 'i like apples';
+                data.skipChild = true;
             });
 
         await test.component.render();

@@ -43,8 +43,8 @@ trait LiveComponentTestHelper
 
     private function mountComponent(string $name, array $data = [], $addDummyLiveId = true): MountedComponent
     {
-        if ($addDummyLiveId && empty($data['attributes']['data-live-id'])) {
-            $data['attributes']['data-live-id'] = 'in-a-real-scenario-it-would-already-have-one';
+        if ($addDummyLiveId && empty($data['attributes']['id'])) {
+            $data['attributes']['id'] = 'in-a-real-scenario-it-would-already-have-one';
         }
 
         return $this->factory()->create($name, $data);

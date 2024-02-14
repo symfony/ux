@@ -53,7 +53,7 @@ final class LiveResponderTest extends KernelTestCase
         ;
 
         $div = $crawler->filter('div');
-        $browserDispatch = $div->attr('data-live-browser-dispatch');
+        $browserDispatch = $div->attr('data-live-events-to-dispatch-value');
         $this->assertNotNull($browserDispatch);
         $browserDispatchData = json_decode($browserDispatch, true);
         $this->assertSame([

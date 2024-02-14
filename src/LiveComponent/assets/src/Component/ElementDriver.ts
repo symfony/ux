@@ -1,32 +1,29 @@
 import {getModelDirectiveFromElement} from '../dom_utils';
+import LiveControllerDefault from '../live_controller';
 
 export interface ElementDriver {
     getModelName(element: HTMLElement): string|null;
 
-    getComponentProps(rootElement: HTMLElement): any;
-
-    /**
-     * Given an HtmlElement and a child id, find the root element for that child.
-     */
-    findChildComponentElement(id: string, element: HTMLElement): HTMLElement|null;
-
-    /**
-     * Given an element, find the "key" that should be used to identify it;
-     */
-    getKeyFromElement(element: HTMLElement): string|null;
+    getComponentProps(): any;
 
     /**
      * Given an element from a response, find all the events that should be emitted.
      */
-    getEventsToEmit(element: HTMLElement): Array<{event: string, data: any, target: string|null, componentName: string|null }>;
+    getEventsToEmit(): Array<{event: string, data: any, target: string|null, componentName: string|null }>;
 
     /**
      * Given an element from a response, find all the events that should be dispatched.
      */
-    getBrowserEventsToDispatch(element: HTMLElement): Array<{event: string, payload: any }>;
+    getBrowserEventsToDispatch(): Array<{event: string, payload: any }>;
 }
 
-export class StandardElementDriver implements ElementDriver {
+export class StimulusElementDriver implements ElementDriver {
+    private readonly controller: LiveControllerDefault;
+
+    constructor(controller: LiveControllerDefault) {
+        this.controller = controller;
+    }
+
     getModelName(element: HTMLElement): string|null {
         const modelDirective = getModelDirectiveFromElement(element, false);
 
@@ -37,29 +34,15 @@ export class StandardElementDriver implements ElementDriver {
         return modelDirective.action;
     }
 
-    getComponentProps(rootElement: HTMLElement): any {
-        const propsJson = rootElement.dataset.livePropsValue ?? '{}';
-
-        return JSON.parse(propsJson);
+    getComponentProps(): any {
+        return this.controller.propsValue;
     }
 
-    findChildComponentElement(id: string, element: HTMLElement): HTMLElement|null {
-        return element.querySelector(`[data-live-id=${id}]`);
+    getEventsToEmit(): Array<{event: string, data: any, target: string|null, componentName: string|null }> {
+        return this.controller.eventsToEmitValue;
     }
 
-    getKeyFromElement(element: HTMLElement): string|null {
-        return element.dataset.liveId || null;
-    }
-
-    getEventsToEmit(element: HTMLElement): Array<{event: string, data: any, target: string|null, componentName: string|null }> {
-        const eventsJson = element.dataset.liveEmit ?? '[]';
-
-        return JSON.parse(eventsJson);
-    }
-
-    getBrowserEventsToDispatch(element: HTMLElement): Array<{event: string, payload: any }> {
-        const eventsJson = element.dataset.liveBrowserDispatch ?? '[]';
-
-        return JSON.parse(eventsJson);
+    getBrowserEventsToDispatch(): Array<{event: string, payload: any }> {
+        return this.controller.eventsToDispatchValue;
     }
 }

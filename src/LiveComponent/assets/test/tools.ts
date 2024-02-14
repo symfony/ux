@@ -7,6 +7,8 @@ import { BackendAction, BackendInterface, ChildrenFingerprints } from '../src/Ba
 import BackendRequest from '../src/Backend/BackendRequest';
 import { Response } from 'node-fetch';
 import { setDeepData } from '../src/data_manipulation_utils';
+import LiveControllerDefault from '../src/live_controller';
+import { ElementDriver } from '../src/Component/ElementDriver';
 
 let activeTests: FunctionalTest[] = [];
 
@@ -42,13 +44,11 @@ class FunctionalTest {
     template: (props: any) => string;
     mockedBackend: MockedBackend;
 
-    constructor(component: Component, element: HTMLElement, template: (props: any) => string) {
+    constructor(component: Component, element: HTMLElement, mockedBackend: MockedBackend, template: (props: any) => string) {
         this.component = component;
         this.element = element;
+        this.mockedBackend = mockedBackend;
         this.template = template;
-
-        this.mockedBackend = new MockedBackend();
-        this.component._swapBackend(this.mockedBackend);
     }
 
     expectsAjaxCall = (): MockedAjaxCall => {
@@ -350,10 +350,14 @@ class MockedAjaxCall {
     }
 }
 
+const mockBackend = new MockedBackend();
+
 export async function createTest(props: any, template: (props: any) => string): Promise<FunctionalTest> {
+    LiveControllerDefault.backendFactory = () => mockBackend;
+
     const testData = await startStimulus(template(props));
 
-    const test = new FunctionalTest(testData.controller.component, testData.element, template);
+    const test = new FunctionalTest(testData.controller.component, testData.element, mockBackend, template);
     activeTests.push(test);
 
     return test;
@@ -362,7 +366,7 @@ export async function createTest(props: any, template: (props: any) => string): 
  * An internal way to create a FunctionalTest: useful for child components
  */
 export function createTestForExistingComponent(component: Component): FunctionalTest {
-    const test = new FunctionalTest(component, component.element, () => '');
+    const test = new FunctionalTest(component, component.element, mockBackend, () => '');
     activeTests.push(test);
 
     return test;
@@ -408,7 +412,7 @@ const getControllerElement = (container: HTMLElement): HTMLElement => {
     return element;
 };
 
-const dataToJsonAttribute = (data: any): string => {
+export const dataToJsonAttribute = (data: any): string => {
     const container = document.createElement('div');
     container.dataset.foo = JSON.stringify(data);
 
@@ -430,10 +434,11 @@ export function initComponent(props: any = {}, controllerValues: any = {}) {
         data-live-props-value="${dataToJsonAttribute(props)}"
         ${controllerValues.debounce ? `data-live-debounce-value="${controllerValues.debounce}"` : ''}
         ${controllerValues.csrf ? `data-live-csrf-value="${controllerValues.csrf}"` : ''}
-        ${controllerValues.id ? `data-live-id="${controllerValues.id}"` : ''}
+        ${controllerValues.id ? `id="${controllerValues.id}"` : ''}
         ${controllerValues.fingerprint ? `data-live-fingerprint-value="${controllerValues.fingerprint}"` : ''}
         ${controllerValues.listeners ? `data-live-listeners-value="${dataToJsonAttribute(controllerValues.listeners)}"` : ''}
-        ${controllerValues.browserDispatch ? `data-live-browser-dispatch="${dataToJsonAttribute(controllerValues.browserDispatch)}"` : ''}
+        ${controllerValues.eventEmit ? `data-live-events-to-emit-value="${dataToJsonAttribute(controllerValues.eventEmit)}"` : ''}
+        ${controllerValues.browserDispatch ? `data-live-events-to-dispatch-value="${dataToJsonAttribute(controllerValues.browserDispatch)}"` : ''}
         ${controllerValues.queryMapping ? `data-live-query-mapping-value="${dataToJsonAttribute(controllerValues.queryMapping)}"` : ''}
     `;
 }
@@ -458,4 +463,27 @@ export function setCurrentSearch(search: string){
 
 export function expectCurrentSearch (){
     return expect(decodeURIComponent(window.location.search));
+}
+
+export class noopElementDriver implements ElementDriver {
+    getBrowserEventsToDispatch(): Array<{ event: string; payload: any }> {
+        throw new Error('Method not implemented.');
+    }
+
+    getComponentProps(): any {
+        throw new Error('Method not implemented.');
+    }
+
+    getEventsToEmit(): Array<{
+        event: string;
+        data: any;
+        target: string | null;
+        componentName: string | null
+    }> {
+        throw new Error('Method not implemented.');
+    }
+
+    getModelName(element: HTMLElement): string | null {
+        throw new Error('Method not implemented.');
+    }
 }

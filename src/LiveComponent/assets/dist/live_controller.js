@@ -156,6 +156,90 @@ function normalizeModelName(model) {
         .join('.'));
 }
 
+function getElementAsTagText(element) {
+    return element.innerHTML
+        ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML))
+        : element.outerHTML;
+}
+
+let componentMapByElement = new WeakMap();
+let componentMapByComponent = new Map();
+const registerComponent = function (component) {
+    componentMapByElement.set(component.element, component);
+    componentMapByComponent.set(component, component.name);
+};
+const unregisterComponent = function (component) {
+    componentMapByElement.delete(component.element);
+    componentMapByComponent.delete(component);
+};
+const getComponent = function (element) {
+    return new Promise((resolve, reject) => {
+        let count = 0;
+        const maxCount = 10;
+        const interval = setInterval(() => {
+            const component = componentMapByElement.get(element);
+            if (component) {
+                clearInterval(interval);
+                resolve(component);
+            }
+            count++;
+            if (count > maxCount) {
+                clearInterval(interval);
+                reject(new Error(`Component not found for element ${getElementAsTagText(element)}`));
+            }
+        }, 5);
+    });
+};
+const findComponents = function (currentComponent, onlyParents, onlyMatchName) {
+    const components = [];
+    componentMapByComponent.forEach((componentName, component) => {
+        if (onlyParents && (currentComponent === component || !component.element.contains(currentComponent.element))) {
+            return;
+        }
+        if (onlyMatchName && componentName !== onlyMatchName) {
+            return;
+        }
+        components.push(component);
+    });
+    return components;
+};
+const findChildren = function (currentComponent) {
+    const children = [];
+    componentMapByComponent.forEach((componentName, component) => {
+        if (currentComponent === component) {
+            return;
+        }
+        if (!currentComponent.element.contains(component.element)) {
+            return;
+        }
+        let foundChildComponent = false;
+        componentMapByComponent.forEach((childComponentName, childComponent) => {
+            if (foundChildComponent) {
+                return;
+            }
+            if (childComponent === component) {
+                return;
+            }
+            if (childComponent.element.contains(component.element)) {
+                foundChildComponent = true;
+            }
+        });
+        children.push(component);
+    });
+    return children;
+};
+const findParent = function (currentComponent) {
+    let parentElement = currentComponent.element.parentElement;
+    while (parentElement) {
+        const component = componentMapByElement.get(parentElement);
+        if (component) {
+            return component;
+        }
+        parentElement = parentElement.parentElement;
+    }
+    return null;
+};
+
 function getValueFromElement(element, valueStore) {
     if (element instanceof HTMLInputElement) {
         if (element.type === 'checkbox') {
@@ -278,7 +362,7 @@ function elementBelongsToThisComponent(element, component) {
         return false;
     }
     let foundChildComponent = false;
-    component.getChildren().forEach((childComponent) => {
+    findChildren(component).forEach((childComponent) => {
         if (foundChildComponent) {
             return;
         }
@@ -310,11 +394,6 @@ function htmlToElement(html) {
         throw new Error(`Created element is not an HTMLElement: ${html.trim()}`);
     }
     return child;
-}
-function getElementAsTagText(element) {
-    return element.innerHTML
-        ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML))
-        : element.outerHTML;
 }
 const getMultipleCheckboxValue = function (element, currentValues) {
     const finalValues = [...currentValues];
@@ -1275,10 +1354,28 @@ function normalizeAttributesForComparison(element) {
     });
 }
 
-function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, getElementValue, childComponents, findChildComponent, getKeyFromElement, externalMutationTracker) {
-    const childComponentMap = new Map();
-    childComponents.forEach((childComponent) => {
-        childComponentMap.set(childComponent.element, childComponent);
+const syncAttributes = function (fromEl, toEl) {
+    for (let i = 0; i < fromEl.attributes.length; i++) {
+        const attr = fromEl.attributes[i];
+        toEl.setAttribute(attr.name, attr.value);
+    }
+};
+function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, getElementValue, externalMutationTracker) {
+    const preservedOriginalElements = [];
+    rootToElement.querySelectorAll('[data-live-preserve]').forEach((newElement) => {
+        const id = newElement.id;
+        if (!id) {
+            throw new Error('The data-live-preserve attribute requires an id attribute to be set on the element');
+        }
+        const oldElement = rootFromElement.querySelector(`#${id}`);
+        if (!(oldElement instanceof HTMLElement)) {
+            throw new Error(`The element with id "${id}" was not found in the original HTML`);
+        }
+        const clonedOldElement = cloneHTMLElement(oldElement);
+        preservedOriginalElements.push(oldElement);
+        oldElement.replaceWith(clonedOldElement);
+        newElement.removeAttribute('data-live-preserve');
+        syncAttributes(newElement, oldElement);
     });
     Idiomorph.morph(rootFromElement, rootToElement, {
         callbacks: {
@@ -1289,15 +1386,6 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                 if (fromEl === rootFromElement) {
                     return true;
                 }
-                let idChanged = false;
-                if (fromEl.hasAttribute('data-live-id')) {
-                    if (fromEl.getAttribute('data-live-id') !== toEl.getAttribute('data-live-id')) {
-                        for (const child of fromEl.children) {
-                            child.setAttribute('parent-live-id-changed', '');
-                        }
-                        idChanged = true;
-                    }
-                }
                 if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement) {
                     if (typeof fromEl.__x !== 'undefined') {
                         if (!window.Alpine) {
@@ -1307,10 +1395,6 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                             throw new Error('Unable to access Alpine.js morph function. Please make sure the Alpine.js Morph plugin is installed and loaded, see https://alpinejs.dev/plugins/morph for more information.');
                         }
                         window.Alpine.morph(fromEl.__x, toEl);
-                    }
-                    if (childComponentMap.has(fromEl)) {
-                        const childComponent = childComponentMap.get(fromEl);
-                        return !childComponent.updateFromNewElementFromParentRender(toEl) && idChanged;
                     }
                     if (externalMutationTracker.wasElementAdded(fromEl)) {
                         fromEl.insertAdjacentElement('afterend', toEl);
@@ -1333,11 +1417,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                         }
                     }
                 }
-                if (fromEl.hasAttribute('parent-live-id-changed')) {
-                    fromEl.removeAttribute('parent-live-id-changed');
-                    return true;
-                }
-                if (fromEl.hasAttribute('data-skip-morph')) {
+                if (fromEl.hasAttribute('data-skip-morph') || (fromEl.id && fromEl.id !== toEl.id)) {
                     fromEl.innerHTML = toEl.innerHTML;
                     return true;
                 }
@@ -1357,14 +1437,12 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
             },
         },
     });
-    childComponentMap.forEach((childComponent, element) => {
-        var _a;
-        const childComponentInResult = findChildComponent((_a = childComponent.id) !== null && _a !== void 0 ? _a : '', rootFromElement);
-        if (null === childComponentInResult || element === childComponentInResult) {
-            return;
+    preservedOriginalElements.forEach((oldElement) => {
+        const newElement = rootFromElement.querySelector(`#${oldElement.id}`);
+        if (!(newElement instanceof HTMLElement)) {
+            throw new Error('Missing preserved element');
         }
-        childComponentInResult === null || childComponentInResult === void 0 ? void 0 : childComponentInResult.replaceWith(element);
-        childComponent.updateFromNewElementFromParentRender(childComponentInResult);
+        newElement.replaceWith(oldElement);
     });
 }
 
@@ -1816,29 +1894,20 @@ class ExternalMutationTracker {
     }
 }
 
-class ChildComponentWrapper {
-    constructor(component, modelBindings) {
-        this.component = component;
-        this.modelBindings = modelBindings;
-    }
-}
 class Component {
-    constructor(element, name, props, listeners, componentFinder, fingerprint, id, backend, elementDriver) {
+    constructor(element, name, props, listeners, id, backend, elementDriver) {
+        this.fingerprint = '';
         this.defaultDebounce = 150;
         this.backendRequest = null;
         this.pendingActions = [];
         this.pendingFiles = {};
         this.isRequestPending = false;
         this.requestDebounceTimeout = null;
-        this.children = new Map();
-        this.parent = null;
         this.element = element;
         this.name = name;
-        this.componentFinder = componentFinder;
         this.backend = backend;
         this.elementDriver = elementDriver;
         this.id = id;
-        this.fingerprint = fingerprint;
         this.listeners = new Map();
         listeners.forEach((listener) => {
             var _a;
@@ -1853,20 +1922,18 @@ class Component {
         this.resetPromise();
         this.externalMutationTracker = new ExternalMutationTracker(this.element, (element) => elementBelongsToThisComponent(element, this));
         this.externalMutationTracker.start();
-        this.onChildComponentModelUpdate = this.onChildComponentModelUpdate.bind(this);
-    }
-    _swapBackend(backend) {
-        this.backend = backend;
     }
     addPlugin(plugin) {
         plugin.attachToComponent(this);
     }
     connect() {
+        registerComponent(this);
         this.hooks.triggerHook('connect', this);
         this.unsyncedInputsTracker.activate();
         this.externalMutationTracker.start();
     }
     disconnect() {
+        unregisterComponent(this);
         this.hooks.triggerHook('disconnect', this);
         this.clearRequestDebounceTimeout();
         this.unsyncedInputsTracker.deactivate();
@@ -1919,32 +1986,6 @@ class Component {
     getUnsyncedModels() {
         return this.unsyncedInputsTracker.getUnsyncedModels();
     }
-    addChild(child, modelBindings = []) {
-        if (!child.id) {
-            throw new Error('Children components must have an id.');
-        }
-        this.children.set(child.id, new ChildComponentWrapper(child, modelBindings));
-        child.parent = this;
-        child.on('model:set', this.onChildComponentModelUpdate);
-    }
-    removeChild(child) {
-        if (!child.id) {
-            throw new Error('Children components must have an id.');
-        }
-        this.children.delete(child.id);
-        child.parent = null;
-        child.off('model:set', this.onChildComponentModelUpdate);
-    }
-    getParent() {
-        return this.parent;
-    }
-    getChildren() {
-        const children = new Map();
-        this.children.forEach((childComponent, id) => {
-            children.set(id, childComponent.component);
-        });
-        return children;
-    }
     emit(name, data, onlyMatchingComponentsNamed = null) {
         return this.performEmit(name, data, false, onlyMatchingComponentsNamed);
     }
@@ -1955,7 +1996,7 @@ class Component {
         return this.doEmit(name, data);
     }
     performEmit(name, data, emitUp, matchingName) {
-        const components = this.componentFinder(this, emitUp, matchingName);
+        const components = findComponents(this, emitUp, matchingName);
         components.forEach((component) => {
             component.doEmit(name, data);
         });
@@ -1967,37 +2008,6 @@ class Component {
         const actions = this.listeners.get(name) || [];
         actions.forEach((action) => {
             this.action(action, data, 1);
-        });
-    }
-    updateFromNewElementFromParentRender(toEl) {
-        const props = this.elementDriver.getComponentProps(toEl);
-        if (props === null) {
-            return false;
-        }
-        const isChanged = this.valueStore.storeNewPropsFromParent(props);
-        const fingerprint = toEl.dataset.liveFingerprintValue;
-        if (fingerprint !== undefined) {
-            this.fingerprint = fingerprint;
-        }
-        if (isChanged) {
-            this.render();
-        }
-        return isChanged;
-    }
-    onChildComponentModelUpdate(modelName, value, childComponent) {
-        if (!childComponent.id) {
-            throw new Error('Missing id');
-        }
-        const childWrapper = this.children.get(childComponent.id);
-        if (!childWrapper) {
-            throw new Error('Missing child');
-        }
-        childWrapper.modelBindings.forEach((modelBinding) => {
-            const childModelName = modelBinding.innerModelName || 'value';
-            if (childModelName !== modelName) {
-                return;
-            }
-            this.set(modelBinding.modelName, value, modelBinding.shouldRender, modelBinding.debounce);
         });
     }
     isTurboEnabled() {
@@ -2020,7 +2030,16 @@ class Component {
                 filesToSend[key] = value.files;
             }
         }
-        this.backendRequest = this.backend.makeRequest(this.valueStore.getOriginalProps(), this.pendingActions, this.valueStore.getDirtyProps(), this.getChildrenFingerprints(), this.valueStore.getUpdatedPropsFromParent(), filesToSend);
+        const requestConfig = {
+            props: this.valueStore.getOriginalProps(),
+            actions: this.pendingActions,
+            updated: this.valueStore.getDirtyProps(),
+            children: {},
+            updatedPropsFromParent: this.valueStore.getUpdatedPropsFromParent(),
+            files: filesToSend,
+        };
+        this.hooks.triggerHook('request:started', requestConfig);
+        this.backendRequest = this.backend.makeRequest(requestConfig.props, requestConfig.actions, requestConfig.updated, requestConfig.children, requestConfig.updatedPropsFromParent, requestConfig.files);
         this.hooks.triggerHook('loading.state:started', this.element, this.backendRequest);
         this.pendingActions = [];
         this.valueStore.flushDirtyPropsToPending();
@@ -2084,14 +2103,14 @@ class Component {
             console.error('There was a problem with the component HTML returned:');
             throw error;
         }
-        const newProps = this.elementDriver.getComponentProps(newElement);
-        this.valueStore.reinitializeAllProps(newProps);
-        const eventsToEmit = this.elementDriver.getEventsToEmit(newElement);
-        const browserEventsToDispatch = this.elementDriver.getBrowserEventsToDispatch(newElement);
         this.externalMutationTracker.handlePendingChanges();
         this.externalMutationTracker.stop();
-        executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), Array.from(this.getChildren().values()), this.elementDriver.findChildComponentElement, this.elementDriver.getKeyFromElement, this.externalMutationTracker);
+        executeMorphdom(this.element, newElement, this.unsyncedInputsTracker.getUnsyncedInputs(), (element) => getValueFromElement(element, this.valueStore), this.externalMutationTracker);
         this.externalMutationTracker.start();
+        const newProps = this.elementDriver.getComponentProps();
+        this.valueStore.reinitializeAllProps(newProps);
+        const eventsToEmit = this.elementDriver.getEventsToEmit();
+        const browserEventsToDispatch = this.elementDriver.getBrowserEventsToDispatch();
         Object.keys(modifiedModelValues).forEach((modelName) => {
             this.valueStore.set(modelName, modifiedModelValues[modelName]);
         });
@@ -2180,24 +2199,16 @@ class Component {
         });
         modal.focus();
     }
-    getChildrenFingerprints() {
-        const fingerprints = {};
-        this.children.forEach((childComponent) => {
-            const child = childComponent.component;
-            if (!child.id) {
-                throw new Error('missing id');
-            }
-            fingerprints[child.id] = {
-                fingerprint: child.fingerprint,
-                tag: child.element.tagName.toLowerCase(),
-            };
-        });
-        return fingerprints;
-    }
     resetPromise() {
         this.nextRequestPromise = new Promise((resolve) => {
             this.nextRequestPromiseResolve = resolve;
         });
+    }
+    _updateFromParentProps(props) {
+        const isChanged = this.valueStore.storeNewPropsFromParent(props);
+        if (isChanged) {
+            this.render();
+        }
     }
 }
 function proxifyComponent(component) {
@@ -2336,7 +2347,10 @@ class Backend {
     }
 }
 
-class StandardElementDriver {
+class StimulusElementDriver {
+    constructor(controller) {
+        this.controller = controller;
+    }
     getModelName(element) {
         const modelDirective = getModelDirectiveFromElement(element, false);
         if (!modelDirective) {
@@ -2344,26 +2358,14 @@ class StandardElementDriver {
         }
         return modelDirective.action;
     }
-    getComponentProps(rootElement) {
-        var _a;
-        const propsJson = (_a = rootElement.dataset.livePropsValue) !== null && _a !== void 0 ? _a : '{}';
-        return JSON.parse(propsJson);
+    getComponentProps() {
+        return this.controller.propsValue;
     }
-    findChildComponentElement(id, element) {
-        return element.querySelector(`[data-live-id=${id}]`);
+    getEventsToEmit() {
+        return this.controller.eventsToEmitValue;
     }
-    getKeyFromElement(element) {
-        return element.dataset.liveId || null;
-    }
-    getEventsToEmit(element) {
-        var _a;
-        const eventsJson = (_a = element.dataset.liveEmit) !== null && _a !== void 0 ? _a : '[]';
-        return JSON.parse(eventsJson);
-    }
-    getBrowserEventsToDispatch(element) {
-        var _a;
-        const eventsJson = (_a = element.dataset.liveBrowserDispatch) !== null && _a !== void 0 ? _a : '[]';
-        return JSON.parse(eventsJson);
+    getBrowserEventsToDispatch() {
+        return this.controller.eventsToDispatchValue;
     }
 }
 
@@ -2476,7 +2478,7 @@ class LoadingPlugin {
     }
     getLoadingDirectives(component, element) {
         const loadingDirectives = [];
-        let matchingElements = [...element.querySelectorAll('[data-loading]')];
+        let matchingElements = [...Array.from(element.querySelectorAll('[data-loading]'))];
         matchingElements = matchingElements.filter((elt) => elementBelongsToThisComponent(elt, component));
         if (element.hasAttribute('data-loading')) {
             matchingElements = [element, ...matchingElements];
@@ -2741,53 +2743,6 @@ function getModelBinding (modelDirective) {
     };
 }
 
-class ComponentRegistry {
-    constructor() {
-        this.componentMapByElement = new WeakMap();
-        this.componentMapByComponent = new Map();
-    }
-    registerComponent(element, component) {
-        this.componentMapByElement.set(element, component);
-        this.componentMapByComponent.set(component, component.name);
-    }
-    unregisterComponent(component) {
-        this.componentMapByElement.delete(component.element);
-        this.componentMapByComponent.delete(component);
-    }
-    getComponent(element) {
-        return new Promise((resolve, reject) => {
-            let count = 0;
-            const maxCount = 10;
-            const interval = setInterval(() => {
-                const component = this.componentMapByElement.get(element);
-                if (component) {
-                    clearInterval(interval);
-                    resolve(component);
-                }
-                count++;
-                if (count > maxCount) {
-                    clearInterval(interval);
-                    reject(new Error(`Component not found for element ${getElementAsTagText(element)}`));
-                }
-            }, 5);
-        });
-    }
-    findComponents(currentComponent, onlyParents, onlyMatchName) {
-        const components = [];
-        this.componentMapByComponent.forEach((componentName, component) => {
-            if (onlyParents &&
-                (currentComponent === component || !component.element.contains(currentComponent.element))) {
-                return;
-            }
-            if (onlyMatchName && componentName !== onlyMatchName) {
-                return;
-            }
-            components.push(component);
-        });
-        return components;
-    }
-}
-
 function isValueEmpty(value) {
     if (null === value || value === '' || undefined === value || (Array.isArray(value) && value.length === 0)) {
         return true;
@@ -2909,7 +2864,52 @@ class QueryStringPlugin {
     }
 }
 
-const getComponent = (element) => LiveControllerDefault.componentRegistry.getComponent(element);
+class ChildComponentPlugin {
+    constructor(component) {
+        this.parentModelBindings = [];
+        this.component = component;
+        const modelDirectives = getAllModelDirectiveFromElements(this.component.element);
+        this.parentModelBindings = modelDirectives.map(getModelBinding);
+    }
+    attachToComponent(component) {
+        component.on('request:started', (requestData) => {
+            requestData.children = this.getChildrenFingerprints();
+        });
+        component.on('model:set', (model, value) => {
+            this.notifyParentModelChange(model, value);
+        });
+    }
+    getChildrenFingerprints() {
+        const fingerprints = {};
+        this.getChildren().forEach((child) => {
+            if (!child.id) {
+                throw new Error('missing id');
+            }
+            fingerprints[child.id] = {
+                fingerprint: child.fingerprint,
+                tag: child.element.tagName.toLowerCase(),
+            };
+        });
+        return fingerprints;
+    }
+    notifyParentModelChange(modelName, value) {
+        const parentComponent = findParent(this.component);
+        if (!parentComponent) {
+            return;
+        }
+        this.parentModelBindings.forEach((modelBinding) => {
+            const childModelName = modelBinding.innerModelName || 'value';
+            if (childModelName !== modelName) {
+                return;
+            }
+            parentComponent.set(modelBinding.modelName, value, modelBinding.shouldRender, modelBinding.debounce);
+        });
+    }
+    getChildren() {
+        return findChildren(this.component);
+    }
+}
+
 class LiveControllerDefault extends Controller {
     constructor() {
         super(...arguments);
@@ -2917,46 +2917,22 @@ class LiveControllerDefault extends Controller {
         this.elementEventListeners = [
             { event: 'input', callback: (event) => this.handleInputEvent(event) },
             { event: 'change', callback: (event) => this.handleChangeEvent(event) },
-            { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
         ];
         this.pendingFiles = {};
     }
     initialize() {
-        this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
-        const id = this.element.dataset.liveId || null;
-        this.component = new Component(this.element, this.nameValue, this.propsValue, this.listenersValue, (currentComponent, onlyParents, onlyMatchName) => LiveControllerDefault.componentRegistry.findComponents(currentComponent, onlyParents, onlyMatchName), this.fingerprintValue, id, new Backend(this.urlValue, this.requestMethodValue, this.csrfValue), new StandardElementDriver());
-        this.proxiedComponent = proxifyComponent(this.component);
-        this.element.__component = this.proxiedComponent;
-        if (this.hasDebounceValue) {
-            this.component.defaultDebounce = this.debounceValue;
-        }
-        const plugins = [
-            new LoadingPlugin(),
-            new ValidatedFieldsPlugin(),
-            new PageUnloadingPlugin(),
-            new PollingPlugin(),
-            new SetValueOntoModelFieldsPlugin(),
-            new QueryStringPlugin(this.queryMappingValue),
-        ];
-        plugins.forEach((plugin) => {
-            this.component.addPlugin(plugin);
-        });
+        this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
+        this.createComponent();
     }
     connect() {
-        LiveControllerDefault.componentRegistry.registerComponent(this.element, this.component);
-        this.component.connect();
-        this.elementEventListeners.forEach(({ event, callback }) => {
-            this.component.element.addEventListener(event, callback);
+        this.connectComponent();
+        this.mutationObserver.observe(this.element, {
+            attributes: true,
         });
-        this.dispatchEvent('connect');
     }
     disconnect() {
-        LiveControllerDefault.componentRegistry.unregisterComponent(this.component);
-        this.component.disconnect();
-        this.elementEventListeners.forEach(({ event, callback }) => {
-            this.component.element.removeEventListener(event, callback);
-        });
-        this.dispatchEvent('disconnect');
+        this.disconnectComponent();
+        this.mutationObserver.disconnect();
     }
     update(event) {
         if (event.type === 'input' || event.type === 'change') {
@@ -3014,9 +2990,6 @@ class LiveControllerDefault extends Controller {
             }
         });
     }
-    $render() {
-        return this.component.render();
-    }
     emit(event) {
         this.getEmitDirectives(event).forEach(({ name, data, nameMatch }) => {
             this.component.emit(name, data, nameMatch);
@@ -3031,6 +3004,18 @@ class LiveControllerDefault extends Controller {
         this.getEmitDirectives(event).forEach(({ name, data }) => {
             this.component.emitSelf(name, data);
         });
+    }
+    $render() {
+        return this.component.render();
+    }
+    $updateModel(model, value, shouldRender = true, debounce = true) {
+        return this.component.set(model, value, shouldRender, debounce);
+    }
+    propsUpdatedFromParentValueChanged() {
+        this.component._updateFromParentProps(this.propsUpdatedFromParentValue);
+    }
+    fingerprintValueChanged() {
+        this.component.fingerprint = this.fingerprintValue;
     }
     getEmitDirectives(event) {
         const element = event.currentTarget;
@@ -3059,8 +3044,43 @@ class LiveControllerDefault extends Controller {
         });
         return emits;
     }
-    $updateModel(model, value, shouldRender = true, debounce = true) {
-        return this.component.set(model, value, shouldRender, debounce);
+    createComponent() {
+        const id = this.element.id || null;
+        this.component = new Component(this.element, this.nameValue, this.propsValue, this.listenersValue, id, LiveControllerDefault.backendFactory(this), new StimulusElementDriver(this));
+        this.proxiedComponent = proxifyComponent(this.component);
+        this.element.__component = this.proxiedComponent;
+        if (this.hasDebounceValue) {
+            this.component.defaultDebounce = this.debounceValue;
+        }
+        const plugins = [
+            new LoadingPlugin(),
+            new ValidatedFieldsPlugin(),
+            new PageUnloadingPlugin(),
+            new PollingPlugin(),
+            new SetValueOntoModelFieldsPlugin(),
+            new QueryStringPlugin(this.queryMappingValue),
+            new ChildComponentPlugin(this.component),
+        ];
+        plugins.forEach((plugin) => {
+            this.component.addPlugin(plugin);
+        });
+    }
+    connectComponent() {
+        this.component.connect();
+        this.mutationObserver.observe(this.element, {
+            attributes: true,
+        });
+        this.elementEventListeners.forEach(({ event, callback }) => {
+            this.component.element.addEventListener(event, callback);
+        });
+        this.dispatchEvent('connect');
+    }
+    disconnectComponent() {
+        this.component.disconnect();
+        this.elementEventListeners.forEach(({ event, callback }) => {
+            this.component.element.removeEventListener(event, callback);
+        });
+        this.dispatchEvent('disconnect');
     }
     handleInputEvent(event) {
         const target = event.target;
@@ -3121,45 +3141,37 @@ class LiveControllerDefault extends Controller {
         const finalValue = getValueFromElement(element, this.component.valueStore);
         this.component.set(modelBinding.modelName, finalValue, modelBinding.shouldRender, modelBinding.debounce);
     }
-    handleConnectedControllerEvent(event) {
-        if (event.target === this.element) {
-            return;
-        }
-        const childController = event.detail.controller;
-        if (childController.component.getParent()) {
-            return;
-        }
-        const modelDirectives = getAllModelDirectiveFromElements(childController.element);
-        const modelBindings = modelDirectives.map(getModelBinding);
-        this.component.addChild(childController.component, modelBindings);
-        childController.element.addEventListener('live:disconnect', this.handleDisconnectedChildControllerEvent);
-    }
-    handleDisconnectedChildControllerEvent(event) {
-        const childController = event.detail.controller;
-        childController.element.removeEventListener('live:disconnect', this.handleDisconnectedChildControllerEvent);
-        if (childController.component.getParent() !== this.component) {
-            return;
-        }
-        this.component.removeChild(childController.component);
-    }
     dispatchEvent(name, detail = {}, canBubble = true, cancelable = false) {
         detail.controller = this;
         detail.component = this.proxiedComponent;
         this.dispatch(name, { detail, prefix: 'live', cancelable, bubbles: canBubble });
     }
+    onMutations(mutations) {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'attributes' &&
+                mutation.attributeName === 'id' &&
+                this.element.id !== this.component.id) {
+                this.disconnectComponent();
+                this.createComponent();
+                this.connectComponent();
+            }
+        });
+    }
 }
 LiveControllerDefault.values = {
     name: String,
     url: String,
-    props: Object,
+    props: { type: Object, default: {} },
+    propsUpdatedFromParent: { type: Object, default: {} },
     csrf: String,
     listeners: { type: Array, default: [] },
+    eventsToEmit: { type: Array, default: [] },
+    eventsToDispatch: { type: Array, default: [] },
     debounce: { type: Number, default: 150 },
-    id: String,
     fingerprint: { type: String, default: '' },
     requestMethod: { type: String, default: 'post' },
     queryMapping: { type: Object, default: {} },
 };
-LiveControllerDefault.componentRegistry = new ComponentRegistry();
+LiveControllerDefault.backendFactory = (controller) => new Backend(controller.urlValue, controller.requestMethodValue, controller.csrfValue);
 
 export { Component, LiveControllerDefault as default, getComponent };

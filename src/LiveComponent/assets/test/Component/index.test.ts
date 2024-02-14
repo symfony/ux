@@ -1,10 +1,10 @@
 import Component, { proxifyComponent } from '../../src/Component';
 import {BackendAction, BackendInterface} from '../../src/Backend/Backend';
-import { StandardElementDriver } from '../../src/Component/ElementDriver';
 import BackendRequest from '../../src/Backend/BackendRequest';
 import { Response } from 'node-fetch';
 import { waitFor } from '@testing-library/dom';
 import BackendResponse from '../../src/Backend/BackendResponse';
+import { noopElementDriver } from '../tools';
 
 interface MockBackend extends BackendInterface {
     actions: BackendAction[],
@@ -30,11 +30,9 @@ const makeTestComponent = (): { component: Component, backend: MockBackend } => 
         'test-component',
         { firstName: '', product: { name: '' } },
         [],
-        () => [],
-        null,
         null,
         backend,
-        new StandardElementDriver()
+        new noopElementDriver(),
     );
 
     return {

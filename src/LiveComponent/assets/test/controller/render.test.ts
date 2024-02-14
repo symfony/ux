@@ -179,10 +179,10 @@ describe('LiveController rendering Tests', () => {
         expect(test.element.innerHTML).toContain('I should not be removed');
     });
 
-    it('if data-live-id changes, data-live-ignore elements ARE re-rendered', async () => {
+    it('if id changes, data-live-ignore elements ARE re-rendered', async () => {
         const test = await createTest({ firstName: 'Ryan', containerId: 'original' }, (data: any) => `
             <div ${initComponent(data)}>
-                <div data-live-id="${data.containerId}">
+                <div id="${data.containerId}">
                     <div data-live-ignore>Inside Ignore Name: <span>${data.firstName}</span></div>
                 </div>
                 

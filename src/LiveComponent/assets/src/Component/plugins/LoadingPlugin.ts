@@ -151,7 +151,7 @@ export default class implements PluginInterface {
 
     getLoadingDirectives(component: Component, element: HTMLElement|SVGElement) {
         const loadingDirectives: ElementLoadingDirectives[] = [];
-        let matchingElements = [...element.querySelectorAll('[data-loading]')];
+        let matchingElements = [...Array.from(element.querySelectorAll('[data-loading]'))];
 
         // ignore elements which are inside a nested "live" component
         matchingElements = matchingElements.filter((elt) => elementBelongsToThisComponent(elt, component));

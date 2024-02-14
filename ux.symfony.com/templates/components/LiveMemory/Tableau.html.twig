@@ -11,7 +11,7 @@
             "--slot-y": y
         } %}
         <div class="LiveMemory-CardSlot"
-             data-live-id="slot-{{ key }}"
+             id="slot-{{ key }}"
              style="{{ style|map((v, k) => '%s: %s;'|format(k, v))|join(' ') }}"
         >
 
