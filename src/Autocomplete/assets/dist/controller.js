@@ -116,6 +116,7 @@ class default_1 extends Controller {
     }
     resetTomSelect() {
         if (this.tomSelect) {
+            this.dispatchEvent('before-reset', { tomSelect: this.tomSelect });
             this.stopMutationObserver();
             const currentHtml = this.element.innerHTML;
             const currentValue = this.tomSelect.getValue();
@@ -143,6 +144,7 @@ class default_1 extends Controller {
                 subtree: true,
                 attributes: true,
                 characterData: true,
+                attributeOldValue: true,
             });
             this.isObserving = true;
         }
@@ -164,7 +166,11 @@ class default_1 extends Controller {
                         break;
                     }
                     if (mutation.target === this.element && mutation.attributeName === 'multiple') {
-                        requireReset = true;
+                        const isNowMultiple = this.element.hasAttribute('multiple');
+                        const wasMultiple = mutation.oldValue === 'multiple';
+                        if (isNowMultiple !== wasMultiple) {
+                            requireReset = true;
+                        }
                         break;
                     }
                     break;
@@ -191,12 +197,14 @@ class default_1 extends Controller {
         });
     }
     areOptionsEquivalent(newOptions) {
-        if (this.originalOptions.length !== newOptions.length) {
+        const filteredOriginalOptions = this.originalOptions.filter((option) => option.value !== '');
+        const filteredNewOptions = newOptions.filter((option) => option.value !== '');
+        if (filteredOriginalOptions.length !== filteredNewOptions.length) {
             return false;
         }
         const normalizeOption = (option) => `${option.value}-${option.text}-${option.group}`;
-        const originalOptionsSet = new Set(this.originalOptions.map(normalizeOption));
-        const newOptionsSet = new Set(newOptions.map(normalizeOption));
+        const originalOptionsSet = new Set(filteredOriginalOptions.map(normalizeOption));
+        const newOptionsSet = new Set(filteredNewOptions.map(normalizeOption));
         return (originalOptionsSet.size === newOptionsSet.size &&
             [...originalOptionsSet].every((option) => newOptionsSet.has(option)));
     }

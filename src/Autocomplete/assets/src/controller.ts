@@ -325,6 +325,7 @@ export default class extends Controller {
 
     private resetTomSelect(): void {
         if (this.tomSelect) {
+            this.dispatchEvent('before-reset', { tomSelect: this.tomSelect });
             this.stopMutationObserver();
 
             // Grab the current HTML then restore it after destroying TomSelect
@@ -358,6 +359,7 @@ export default class extends Controller {
                 subtree: true,
                 attributes: true,
                 characterData: true,
+                attributeOldValue: true,
             });
             this.isObserving = true;
         }
@@ -384,7 +386,11 @@ export default class extends Controller {
                     }
 
                     if (mutation.target === this.element && mutation.attributeName === 'multiple') {
-                        requireReset = true;
+                        const isNowMultiple = this.element.hasAttribute('multiple');
+                        const wasMultiple = mutation.oldValue === 'multiple';
+                        if (isNowMultiple !== wasMultiple) {
+                            requireReset = true;
+                        }
 
                         break;
                     }
@@ -419,14 +425,18 @@ export default class extends Controller {
     }
 
     private areOptionsEquivalent(newOptions: Array<{ value: string; text: string; group: string | null }>): boolean {
-        if (this.originalOptions.length !== newOptions.length) {
+        // remove the empty option, which is added by TomSelect so may be missing from new options
+        const filteredOriginalOptions = this.originalOptions.filter((option) => option.value !== '');
+        const filteredNewOptions = newOptions.filter((option) => option.value !== '');
+
+        if (filteredOriginalOptions.length !== filteredNewOptions.length) {
             return false;
         }
 
         const normalizeOption = (option: { value: string; text: string; group: string | null }) =>
             `${option.value}-${option.text}-${option.group}`;
-        const originalOptionsSet = new Set(this.originalOptions.map(normalizeOption));
-        const newOptionsSet = new Set(newOptions.map(normalizeOption));
+        const originalOptionsSet = new Set(filteredOriginalOptions.map(normalizeOption));
+        const newOptionsSet = new Set(filteredNewOptions.map(normalizeOption));
 
         return (
             originalOptionsSet.size === newOptionsSet.size &&
