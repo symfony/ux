@@ -53,6 +53,12 @@ export function executeMorphdom(
     });
 
     Idiomorph.morph(rootFromElement, rootToElement, {
+        // We handle updating the value of fields that have been changed
+        // since the HTML was requested. However, the active element is
+        // a special case: replacing the value isn't enough. We need to
+        // prevent the value from being changed in the first place so the
+        // user's cursor position is maintained.
+        ignoreActiveValue: true,
         callbacks: {
             beforeNodeMorphed: (fromEl: Element, toEl: Element) => {
                 // Idiomorph loop also over Text node

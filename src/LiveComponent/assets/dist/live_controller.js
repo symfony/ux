@@ -617,7 +617,7 @@ var Idiomorph = (function () {
          * @returns {boolean}
          */
         function ignoreValueOfActiveElement(possibleActiveElement, ctx) {
-            return ctx.ignoreActiveValue && possibleActiveElement === document.activeElement;
+            return ctx.ignoreActiveValue && possibleActiveElement === document.activeElement && possibleActiveElement !== document.body;
         }
 
         /**
@@ -1378,6 +1378,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
         syncAttributes(newElement, oldElement);
     });
     Idiomorph.morph(rootFromElement, rootToElement, {
+        ignoreActiveValue: true,
         callbacks: {
             beforeNodeMorphed: (fromEl, toEl) => {
                 if (!(fromEl instanceof Element) || !(toEl instanceof Element)) {

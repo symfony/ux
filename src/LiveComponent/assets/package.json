@@ -27,7 +27,7 @@
         }
     },
     "dependencies": {
-        "idiomorph": "^0.3.0"
+        "idiomorph": "https://github.com/bigskysoftware/idiomorph.git"
     },
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0"
