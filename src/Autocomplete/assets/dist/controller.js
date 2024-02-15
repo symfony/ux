@@ -30,6 +30,7 @@ class default_1 extends Controller {
         this.isObserving = false;
         this.hasLoadedChoicesPreviously = false;
         this.originalOptions = [];
+        this.isRemoteOptions = false;
     }
     initialize() {
         if (!this.mutationObserver) {
@@ -50,6 +51,8 @@ class default_1 extends Controller {
         }
         if (this.urlValue) {
             this.tomSelect = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createAutocompleteWithRemoteData).call(this, this.urlValue, this.hasMinCharactersValue ? this.minCharactersValue : null);
+            this.isRemoteOptions = true;
+            this.startMutationObserver();
             return;
         }
         if (this.optionsAsHtmlValue) {
@@ -167,11 +170,15 @@ class default_1 extends Controller {
                         requireReset = true;
                         break;
                     }
+                    if (mutation.target === this.element && mutation.attributeName.includes('data-symfony--ux-autocomplete')) {
+                        requireReset = true;
+                        break;
+                    }
                     break;
             }
         });
         const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
-        const areOptionsEquivalent = this.areOptionsEquivalent(newOptions);
+        const areOptionsEquivalent = this.isRemoteOptions || this.areOptionsEquivalent(newOptions);
         if (!areOptionsEquivalent || requireReset) {
             this.originalOptions = newOptions;
             this.resetTomSelect();

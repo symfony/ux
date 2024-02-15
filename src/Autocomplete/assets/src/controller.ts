@@ -39,6 +39,7 @@ export default class extends Controller {
     private isObserving = false;
     private hasLoadedChoicesPreviously = false;
     private originalOptions: Array<{ value: string; text: string; group: string | null }> = [];
+    private isRemoteOptions = false;
 
     initialize() {
         if (!this.mutationObserver) {
@@ -68,6 +69,9 @@ export default class extends Controller {
                 this.urlValue,
                 this.hasMinCharactersValue ? this.minCharactersValue : null
             );
+
+            this.isRemoteOptions = true;
+            this.startMutationObserver();
 
             return;
         }
@@ -389,12 +393,18 @@ export default class extends Controller {
                         break;
                     }
 
+                    if (mutation.target === this.element && mutation.attributeName.match(/data-(symfony--ux-)?autocomplete/)) {
+                        requireReset = true;
+
+                        break;
+                    }
+
                     break;
             }
         });
 
         const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
-        const areOptionsEquivalent = this.areOptionsEquivalent(newOptions);
+        const areOptionsEquivalent = this.isRemoteOptions || this.areOptionsEquivalent(newOptions);
         if (!areOptionsEquivalent || requireReset) {
             this.originalOptions = newOptions;
             this.resetTomSelect();

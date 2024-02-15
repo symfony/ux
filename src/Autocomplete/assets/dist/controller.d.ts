@@ -34,6 +34,7 @@ export default class extends Controller {
     private isObserving;
     private hasLoadedChoicesPreviously;
     private originalOptions;
+    private isRemoteOptions;
     initialize(): void;
     connect(): void;
     initializeTomSelect(): void;
