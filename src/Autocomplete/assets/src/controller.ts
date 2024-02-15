@@ -393,7 +393,10 @@ export default class extends Controller {
                         break;
                     }
 
-                    if (mutation.target === this.element && mutation.attributeName.match(/data-(symfony--ux-)?autocomplete/)) {
+                    if (
+                        mutation.target === this.element &&
+                        mutation.attributeName.match(/data-(symfony--ux-)?autocomplete/)
+                    ) {
                         requireReset = true;
 
                         break;
