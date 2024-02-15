@@ -54,7 +54,7 @@ class EntityMetadataTest extends KernelTestCase
         $this->assertEquals(ClassMetadataInfo::MANY_TO_ONE, $metadata->getPropertyDataType('category'));
     }
 
-    public function testGetPropertyMetadata(): void
+    public function testGetFieldMetadata(): void
     {
         $metadata = $this->getMetadata();
         $this->assertSame([
@@ -66,7 +66,48 @@ class EntityMetadataTest extends KernelTestCase
             'nullable' => false,
             'precision' => null,
             'columnName' => 'name',
-        ], $metadata->getPropertyMetadata('name'));
+        ], $metadata->getFieldMetadata('name'));
+    }
+
+    public function testGetAssociationMetadata(): void
+    {
+        $metadata = $this->getMetadata();
+        $this->assertSame([
+            'fieldName' => 'category',
+            'joinColumns' => [
+                [
+                    'name' => 'category_id',
+                    'unique' => false,
+                    'nullable' => false,
+                    'onDelete' => null,
+                    'columnDefinition' => null,
+                    'referencedColumnName' => 'id',
+                ],
+            ],
+            'cascade' => [],
+            'inversedBy' => 'products',
+            'targetEntity' => 'Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Category',
+            'fetch' => 2,
+            'type' => 2,
+            'mappedBy' => null,
+            'isOwningSide' => true,
+            'sourceEntity' => 'Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Product',
+            'isCascadeRemove' => false,
+            'isCascadePersist' => false,
+            'isCascadeRefresh' => false,
+            'isCascadeMerge' => false,
+            'isCascadeDetach' => false,
+            'sourceToTargetKeyColumns' => [
+                'category_id' => 'id',
+            ],
+            'joinColumnFieldNames' => [
+                'category_id' => 'category_id',
+            ],
+            'targetToSourceKeyColumns' => [
+                'id' => 'category_id',
+            ],
+            'orphanRemoval' => false,
+        ], $metadata->getAssociationMetadata('category'));
     }
 
     public function testIsEmbeddedClassProperty(): void
