@@ -102,7 +102,7 @@ return [
         'version' => '2.0.2',
     ],
     '@hotwired/turbo' => [
-        'version' => '7.3.0',
+        'version' => '8.0.2',
     ],
     'typed.js' => [
         'version' => '2.0.16',
