@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!-- https://phpunit.de/manual/current/en/appendixes.configuration.html -->
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:noNamespaceSchemaLocation="vendor/bin/.phpunit/phpunit.xsd"
@@ -8,10 +7,16 @@
          failOnRisky="true"
          failOnWarning="true"
 >
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">./src</directory>
+        </include>
+    </coverage>
+
     <php>
-        <ini name="error_reporting" value="-1" />
-        <server name="KERNEL_CLASS" value="Symfony\UX\LiveComponent\Tests\Fixtures\Kernel" />
-        <server name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/data.db" />
+        <ini name="error_reporting" value="-1"/>
+        <server name="KERNEL_CLASS" value="Symfony\UX\LiveComponent\Tests\Fixtures\Kernel"/>
+        <server name="DATABASE_URL" value="sqlite:///%kernel.project_dir%/var/data.db"/>
         <env name="SHELL_VERBOSITY" value="-1"/>
         <server name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0&amp;max[direct]=0"/>
     </php>
@@ -21,12 +26,6 @@
             <directory>./tests/</directory>
         </testsuite>
     </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src</directory>
-        </whitelist>
-    </filter>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener"/>
