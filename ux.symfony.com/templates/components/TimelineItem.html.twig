@@ -1,24 +1,20 @@
-<article {{ attributes.defaults({class: "TimelineItem"}) }}>
+<article {{ attributes.defaults({class: "TimelineItem"}) }} id="{{ item.version }}">
 
     <div class="TimelineItem__Anchor">
-        <div class="TimelineItem__Version">
+        <a class="TimelineItem__Version" href="https://github.com/symfony/ux/releases/tag/{{ item.version }}"
+            target="_blank" rel="external noreferer">
             <code>{{ item.version|u.trim('v') }}</code>
-        </div>
+        </a>
         <div class="TimelineItem__Date">
             <span>{{ item.date|date('Y-m-d') }}</span>
         </div>
     </div>
 
     <div class="TimelineItem__Content">
-        <details>
+        <details {{ isOpen|default ? 'open' }}>
             <summary class="TimelineItem__Head">
-
-                <h2 class="TimelineItem__Title">{{ item.name }}</h2>
-
-                <button class="btn TimelineItem__Toggle" type="button">
-                    <twig:Icon name="arrow-down" />
-                </button>
-
+                <h2 class="TimelineItem__Title">{{ item.name|default(item.version) }}</h2>
+                <twig:Icon name="arrow-down" class="TimelineItem__Toggle" />
             </summary>
 
             <div class="TimelineItem__Text">

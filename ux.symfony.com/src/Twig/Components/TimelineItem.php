@@ -18,6 +18,8 @@ class TimelineItem
 {
     public array $item;
 
+    public bool $isOpen = false;
+
     public function getContent(): string
     {
         return $this->formatContent($this->item['body'] ?? '');

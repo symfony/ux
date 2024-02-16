@@ -39,14 +39,14 @@ final class ChangelogProvider
         return $this->cache->get('releases-symfony-ux-'.$page, function (CacheItemInterface $item) use ($page) {
             $item->expiresAfter(3600);
 
-            return $this->getReleases('symfony', 'ux', $page, 20);
+            return $this->getReleases('symfony', 'ux', $page);
         });
     }
 
     /**
      * @return array<int, array{id: int, name: string, version: string, date: string, body: string}>
      */
-    public function getReleases(string $owner, string $repo, int $page = 1, int $perPage = 50): array
+    public function getReleases(string $owner, string $repo, int $page = 1, int $perPage = 20): array
     {
         $response = $this->httpClient->request('GET', sprintf('https://api.github.com/repos/%s/%s/releases', $owner, $repo), [
             'query' => [
@@ -65,9 +65,6 @@ final class ChangelogProvider
                 'body' => $release['body'],
             ];
         }
-
-        // See headers links for pagination (?)
-        // $response->getHeaders()['link'][0];
 
         return $releases;
     }
