@@ -34,11 +34,11 @@ export default class extends Controller {
     private isObserving;
     private hasLoadedChoicesPreviously;
     private originalOptions;
-    private isRemoteOptions;
     initialize(): void;
     connect(): void;
     initializeTomSelect(): void;
     disconnect(): void;
+    urlValueChanged(): void;
     private getMaxOptions;
     get selectElement(): HTMLSelectElement | null;
     get formElement(): HTMLInputElement | HTMLSelectElement;
