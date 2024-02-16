@@ -126,7 +126,6 @@ class default_1 extends Controller {
             this.element.innerHTML = currentHtml;
             this.initializeTomSelect();
             this.tomSelect.setValue(currentValue);
-            this.startMutationObserver();
         }
     }
     changeTomSelectDisabledState(isDisabled) {
