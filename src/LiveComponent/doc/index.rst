@@ -3450,6 +3450,53 @@ the change of one specific key::
         }
     }
 
+Set LiveProp Options Dynamically
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.17
+
+    The ``modifier`` option was added in LiveComponents 2.17.
+
+
+If you need to configure a LiveProp's options dynamically, you can use the ``modifier`` option to use a custom
+method in your component that returns a modified version of your LiveProp::
+
+
+    #[AsLiveComponent]
+    class ProductSearch
+    {
+        #[LiveProp(writable: true, modifier: 'modifyAddedDate')]
+        public ?\DateTimeImmutable $addedDate = null;
+
+        #[LiveProp]
+        public string $dateFormat = 'Y-m-d';
+
+        // ...
+
+        public function modifyAddedDate(LiveProp $prop): LiveProp
+        {
+            return $prop->withFormat($this->dateFormat);
+        }
+    }
+
+Then, when using your component in a template, you can change the date format used for ``$addedDate``:
+
+.. code-block:: twig
+
+    {{ component('ProductSearch', {
+        dateFormat: 'd/m/Y'
+    }) }}
+
+
+All ``LiveProp::with*`` methods are immutable, so you need to use their return value as your new LiveProp.
+
+.. caution::
+
+    Avoid relying on props that also use a modifier in other modifiers methods. For example, if the ``$dateFormat``
+    property above also had a ``modifier`` option, then it wouldn't be safe to reference it from the ``modifyAddedDate``
+    modifier method. This is because the ``$dateFormat`` property may not have been hydrated by this point.
+
+
 Debugging Components
 --------------------
 

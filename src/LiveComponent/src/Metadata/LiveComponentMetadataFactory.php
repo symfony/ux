@@ -107,8 +107,7 @@ class LiveComponentMetadataFactory implements ResetInterface
             $infoType,
             $isTypeBuiltIn,
             $isTypeNullable,
-            $collectionValueType,
-            $liveProp->url()
+            $collectionValueType
         );
     }
 

@@ -38,4 +38,23 @@ class ComponentWithUrlBoundProps
 
     #[LiveProp(fieldName: 'field6', url: true)]
     public ?string $prop6 = null;
+
+    #[LiveProp(fieldName: 'getProp7Name()', url: true)]
+    public ?string $prop7 = null;
+
+    #[LiveProp(modifier: 'modifyProp8')]
+    public ?string $prop8 = null;
+
+    #[LiveProp]
+    public ?bool $prop8InUrl = false;
+
+    public function getProp7Name(): string
+    {
+        return 'field7';
+    }
+
+    public function modifyProp8(LiveProp $prop): LiveProp
+    {
+        return $prop->withUrl($this->prop8InUrl);
+    }
 }

@@ -28,7 +28,6 @@ final class LivePropMetadata
         private bool $isBuiltIn,
         private bool $allowsNull,
         private ?Type $collectionValueType,
-        private bool $queryStringMapping,
     ) {
     }
 
@@ -54,7 +53,7 @@ final class LivePropMetadata
 
     public function queryStringMapping(): bool
     {
-        return $this->queryStringMapping;
+        return $this->liveProp->url();
     }
 
     public function calculateFieldName(object $component, string $fallback): string
@@ -113,5 +112,37 @@ final class LivePropMetadata
     public function onUpdated(): string|array|null
     {
         return $this->liveProp->onUpdated();
+    }
+
+    public function hasModifier(): bool
+    {
+        return null !== $this->liveProp->modifier();
+    }
+
+    /**
+     * Applies a modifier specified in LiveProp attribute.
+     *
+     * If a modifier is specified, a modified clone is returned.
+     * Otherwise, the metadata is returned as it is.
+     */
+    public function withModifier(object $component): self
+    {
+        if (null === ($modifier = $this->liveProp->modifier())) {
+            return $this;
+        }
+
+        if (!method_exists($component, $modifier)) {
+            throw new \LogicException(sprintf('Method "%s::%s()" given in LiveProp "modifier" does not exist.', $component::class, $modifier));
+        }
+
+        $modifiedLiveProp = $component->{$modifier}($this->liveProp);
+        if (!$modifiedLiveProp instanceof LiveProp) {
+            throw new \LogicException(sprintf('Method "%s::%s()" should return an instance of "%s" (given: "%s").', $component::class, $modifier, LiveProp::class, get_debug_type($modifiedLiveProp)));
+        }
+
+        $clone = clone $this;
+        $clone->liveProp = $modifiedLiveProp;
+
+        return $clone;
     }
 }

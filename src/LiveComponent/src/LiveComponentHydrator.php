@@ -63,7 +63,7 @@ final class LiveComponentHydrator
         $takenFrontendPropertyNames = [];
 
         $dehydratedProps = new DehydratedProps();
-        foreach ($componentMetadata->getAllLivePropsMetadata() as $propMetadata) {
+        foreach ($componentMetadata->getAllLivePropsMetadata($component) as $propMetadata) {
             $propertyName = $propMetadata->getName();
             $frontendName = $propMetadata->calculateFieldName($component, $propertyName);
 
@@ -143,8 +143,9 @@ final class LiveComponentHydrator
         $attributes = new ComponentAttributes($dehydratedOriginalProps->getPropValue(self::ATTRIBUTES_KEY, []));
         $dehydratedOriginalProps->removePropValue(self::ATTRIBUTES_KEY);
 
-        foreach ($componentMetadata->getAllLivePropsMetadata() as $propMetadata) {
+        foreach ($componentMetadata->getAllLivePropsMetadata($component) as $propMetadata) {
             $frontendName = $propMetadata->calculateFieldName($component, $propMetadata->getName());
+
             if (!$dehydratedOriginalProps->hasPropValue($frontendName)) {
                 // this property was not sent, so skip
                 // even if this has writable paths, if no identity is sent,

@@ -101,10 +101,19 @@ final class LiveProp
          * in the URL.
          */
         private bool $url = false,
+
+        /**
+         * A hook that will be called when this LiveProp is used.
+         *
+         * Allows to modify the LiveProp options depending on the context. The
+         * original LiveProp attribute instance will be passed as an argument to
+         * it.
+         *
+         * @var string|null
+         */
+        private string|null $modifier = null,
     ) {
-        if ($this->useSerializerForHydration && ($this->hydrateWith || $this->dehydrateWith)) {
-            throw new \InvalidArgumentException('Cannot use useSerializerForHydration with hydrateWith or dehydrateWith.');
-        }
+        self::validateHydrationStrategy($this);
     }
 
     /**
@@ -117,6 +126,14 @@ final class LiveProp
         }
 
         return \in_array(self::IDENTITY, $this->writable, true);
+    }
+
+    public function withWritable(bool|array $writable): self
+    {
+        $clone = clone $this;
+        $clone->writable = $writable;
+
+        return $clone;
     }
 
     /**
@@ -141,12 +158,32 @@ final class LiveProp
         return $this->hydrateWith ? trim($this->hydrateWith, '()') : null;
     }
 
+    public function withHydrateWith(?string $hydrateWith): self
+    {
+        $clone = clone $this;
+        $clone->hydrateWith = $hydrateWith;
+
+        self::validateHydrationStrategy($clone);
+
+        return $clone;
+    }
+
     /**
      * @internal
      */
     public function dehydrateMethod(): ?string
     {
         return $this->dehydrateWith ? trim($this->dehydrateWith, '()') : null;
+    }
+
+    public function withDehydrateWith(?string $dehydrateWith): self
+    {
+        $clone = clone $this;
+        $clone->dehydrateWith = $dehydrateWith;
+
+        self::validateHydrationStrategy($clone);
+
+        return $clone;
     }
 
     /**
@@ -157,12 +194,32 @@ final class LiveProp
         return $this->useSerializerForHydration;
     }
 
+    public function withUseSerializerForHydration(bool $userSerializerForHydration): self
+    {
+        $clone = clone $this;
+        $clone->useSerializerForHydration = $userSerializerForHydration;
+
+        self::validateHydrationStrategy($clone);
+
+        return $clone;
+    }
+
     /**
      * @internal
      */
     public function serializationContext(): array
     {
         return $this->serializationContext;
+    }
+
+    public function withSerializationContext(array $serializationContext): self
+    {
+        $clone = clone $this;
+        $clone->serializationContext = $serializationContext;
+
+        self::validateHydrationStrategy($clone);
+
+        return $clone;
     }
 
     /**
@@ -181,9 +238,25 @@ final class LiveProp
         return $this->fieldName;
     }
 
+    public function withFieldName(?string $fieldName): self
+    {
+        $clone = clone $this;
+        $clone->fieldName = $fieldName;
+
+        return $clone;
+    }
+
     public function format(): ?string
     {
         return $this->format;
+    }
+
+    public function withFormat(?string $format): self
+    {
+        $clone = clone $this;
+        $clone->format = $format;
+
+        return $clone;
     }
 
     public function acceptUpdatesFromParent(): bool
@@ -196,8 +269,36 @@ final class LiveProp
         return $this->onUpdated;
     }
 
+    public function withOnUpdated(string|array|null $onUpdated): self
+    {
+        $clone = clone $this;
+        $clone->onUpdated = $onUpdated;
+
+        return $clone;
+    }
+
     public function url(): bool
     {
         return $this->url;
+    }
+
+    public function withUrl(bool $url): self
+    {
+        $clone = clone $this;
+        $clone->url = $url;
+
+        return $clone;
+    }
+
+    public function modifier(): string|null
+    {
+        return $this->modifier;
+    }
+
+    private static function validateHydrationStrategy(self $liveProp): void
+    {
+        if ($liveProp->useSerializerForHydration && ($liveProp->hydrateWith || $liveProp->dehydrateWith)) {
+            throw new \InvalidArgumentException('Cannot use useSerializerForHydration with hydrateWith or dehydrateWith.');
+        }
     }
 }

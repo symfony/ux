@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.17.0
+
+-   Add `modifier` option in `LiveProp` so options can be modified at runtime.
+
 ## 2.16.0
 
 -   LiveComponents is now stable and no longer experimental 🥳
