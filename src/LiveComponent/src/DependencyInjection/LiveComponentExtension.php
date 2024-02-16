@@ -256,7 +256,11 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->setArguments(['%kernel.cache_dir%/'.self::TEMPLATES_MAP_FILENAME]);
 
         $container->register('ux.live_component.twig.cache_warmer', TemplateCacheWarmer::class)
-            ->setArguments([new Reference('twig.template_iterator'), self::TEMPLATES_MAP_FILENAME])
+            ->setArguments([
+                new Reference('twig.template_iterator'),
+                self::TEMPLATES_MAP_FILENAME,
+                '%kernel.secret%',
+            ])
             ->addTag('kernel.cache_warmer');
     }
 

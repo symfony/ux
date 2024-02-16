@@ -28,7 +28,7 @@ final class TemplateMap
         $this->map = (new PhpArrayAdapter($cacheFile, new NullAdapter()))->getItem('map')->get();
     }
 
-    public function resolve(string $obscuredName)
+    public function resolve(string $obscuredName): string
     {
         return $this->map[$obscuredName] ?? throw new \RuntimeException(sprintf('Cannot find a template matching "%s". Cache may be corrupt.', $obscuredName));
     }
