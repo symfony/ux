@@ -119,8 +119,8 @@
   animation: steps(3) live-memory-button-blinking infinite alternate-reverse;
   cursor: pointer;
   color: #ffffff;
-
-  &::after {
+}
+.LiveMemory-Score button::after {
     position: absolute;
     inset: 0;
     content: " ";
@@ -128,7 +128,6 @@
     background: none;
     z-index: 2;
   }
-}
 
 .LiveMemory-Score button:hover {
   opacity: 1;

@@ -11,9 +11,9 @@
   font-weight: lighter;
   opacity: 0.01;
   transition: opacity 250ms;
-  &:hover {
-    opacity: 1;
-  }
+}
+.LiveMemory-Debug:hover {
+  opacity: 1;
 }
 
 .LiveMemory-Debug button {
@@ -22,7 +22,4 @@
   color: var(--color-text);
   cursor: pointer;
   opacity: .75;
-  &:hover {
-    opacity: 1;
-  }
 }
