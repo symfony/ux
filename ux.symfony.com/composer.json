@@ -59,6 +59,7 @@
         "twig/html-extra": "^3.8",
         "twig/intl-extra": "^3.6",
         "twig/markdown-extra": "^3.6",
+        "twig/string-extra": "^3.8",
         "twig/twig": "^2.12|^3.6.1"
     },
     "config": {
