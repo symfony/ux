@@ -30,6 +30,7 @@ final class ChangelogProvider
         foreach ($this->loadReleases($page) as $release) {
             $changelog[] = $release;
         }
+
         return $changelog;
     }
 

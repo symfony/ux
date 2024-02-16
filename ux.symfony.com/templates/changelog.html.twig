@@ -18,11 +18,15 @@
 
     <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
 
-        <div class="Timeline">
-            {% for entry in changelog %}
-                <twig:TimelineItem item="{{ entry }}" />
-            {% endfor %}
-        </div>
+        {% if changelog == "OK" %}
+
+            <div class="Timeline">
+                {% for entry in changelog %}
+                    <twig:TimelineItem item="{{ entry }}" />
+                {% endfor %}
+            </div>
+
+        {% endblock %}
 
     </div>
 
