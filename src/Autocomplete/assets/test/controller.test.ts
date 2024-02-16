@@ -815,4 +815,46 @@ describe('AutocompleteController', () => {
         });
         expect(getSelectedValues()).toEqual(['2', '3']);
     });
+
+    it('does not trigger a reset when the style of "multiple" attribute changes', async () => {
+        const { container } = await startAutocompleteTest(`
+            <select multiple data-testid='main-element' data-controller='autocomplete'>
+                <option value=''>Select dogs</option>
+                <option value='1'>dog1</option>
+                <option value='2'>dog2</option>
+                <option value='3'>dog3</option>
+            </select>
+        `);
+
+        let wasReset = false;
+        container.addEventListener('autocomplete:before-reset', () => {
+            wasReset = true;
+        });
+
+        const selectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
+        selectElement.setAttribute('multiple', 'multiple');
+        // wait for the mutation observe
+        await shortDelay(10);
+        expect(wasReset).toBe(false);
+    });
+
+    it('does not trigger a reset based on the extra, empty select', async () => {
+        const { container, tomSelect } = await startAutocompleteTest(`
+            <select data-testid='main-element' data-controller='autocomplete'>
+                <option value='1'>dog1</option>
+                <option value='2'>dog2</option>
+                <option value='3'>dog3</option>
+            </select>
+        `);
+
+        let wasReset = false;
+        container.addEventListener('autocomplete:before-reset', () => {
+            wasReset = true;
+        });
+
+        tomSelect.addItem('2');
+        // wait for the mutation observe
+        await shortDelay(10);
+        expect(wasReset).toBe(false);
+    });
 });
