@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by yceruto at 2024-02-15T16:11:25Z
+
+Hey Ryan! do you think this PR will also fix this issue https://github.com/symfony/ux/issues/1500?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-02-15T16:16:51Z
+
+> Hey Ryan! do you think this PR will also fix this issue https://github.com/symfony/ux/issues/1500?
+
+Checking that now. I don't think it will - this PR is about resetting *less*. That issue is about needing MORE resetting 🙃
