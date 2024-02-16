@@ -810,9 +810,9 @@ describe('LiveController data-model Tests', () => {
             <div ${initComponent(data)}>
                 <form data-model>
                     <textarea name="comment" data-testid="comment">${data.comment}</textarea>
-               </form>
+                </form>
 
-               <button data-action="live#$render">Reload</button>
+                <input data-testid="other-input">
            </div>
        `);
 
@@ -823,17 +823,18 @@ describe('LiveController data-model Tests', () => {
             // delay slightly so we can type in the textarea
             .delayResponse(10);
 
-        getByText(test.element, 'Reload').click();
+        const renderPromise = test.component.render();
         // mimic changing the field, but without (yet) triggering the change event
         const commentField = getByTestId(test.element, 'comment');
-        if (!(commentField instanceof HTMLTextAreaElement)) {
-            throw new Error('wrong type');
-        }
+        const inputField = getByTestId(test.element, 'other-input');
         userEvent.type(commentField, ' ftw!');
+        // To make the test more robust, make the textarea NOT the active element.
+        // The active element's value is ignored during morphing. Here, we want
+        // to test that even if the morph system *does* want to update the value
+        // of the textarea, the value will be kept.
+        userEvent.type(inputField, 'making this element active');
 
-        // wait for loading start and end
-        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
-        await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
+        await renderPromise;
 
         expect(commentField).toHaveValue('Live components ftw!');
 
@@ -845,10 +846,7 @@ describe('LiveController data-model Tests', () => {
                 data.comment = 'server changed comment';
             });
 
-        getByText(test.element, 'Reload').click();
-        // wait for loading start and end
-        await waitFor(() => expect(test.element).toHaveAttribute('busy'));
-        await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
+        await test.component.render();
 
         expect(commentField).toHaveValue('server changed comment');
     });

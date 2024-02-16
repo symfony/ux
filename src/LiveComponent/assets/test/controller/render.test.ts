@@ -149,6 +149,28 @@ describe('LiveController rendering Tests', () => {
         expect((test.element.querySelector('textarea') as HTMLTextAreaElement).value).toEqual('typing after the request starts');
     });
 
+    it('conserves cursor position of active model element', async () => {
+        const test = await createTest({ name: '' }, (data) => `
+            <div ${initComponent(data)}>
+                <input data-model="name" class="anything">
+            </div>
+        `);
+
+        test.expectsAjaxCall()
+            .expectUpdatedData({ name: 'Hello' })
+
+        const input = test.queryByDataModel('name') as HTMLInputElement;
+        userEvent.type(input, 'Hello');
+        userEvent.keyboard('{ArrowLeft}{ArrowLeft}');
+
+        await test.component.render();
+
+        // the cursor position should be preserved
+        expect(input.selectionStart).toBe(3);
+        userEvent.type(input, '!');
+        expect(input.value).toBe('Hel!lo');
+    });
+
     it('does not render over elements with data-live-ignore', async () => {
         const test = await createTest({ firstName: 'Ryan' }, (data: any) => `
             <div ${initComponent(data)}>
