@@ -50,4 +50,6 @@ export default class extends Controller {
     private onMutations;
     private createOptionsDataStructure;
     private areOptionsEquivalent;
+    private beforeMorphElement;
+    private beforeMorphAttribute;
 }

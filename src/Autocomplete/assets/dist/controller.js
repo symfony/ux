@@ -42,6 +42,12 @@ class default_1 extends Controller {
         if (this.selectElement) {
             this.originalOptions = this.createOptionsDataStructure(this.selectElement);
         }
+        const parentElement = this.element.parentElement;
+        if (!parentElement) {
+            return;
+        }
+        parentElement.addEventListener('turbo:before-morph-element', this.beforeMorphElement.bind(this));
+        parentElement.addEventListener('turbo:before-morph-attribute', this.beforeMorphAttribute.bind(this));
         this.initializeTomSelect();
     }
     initializeTomSelect() {
@@ -61,6 +67,12 @@ class default_1 extends Controller {
     }
     disconnect() {
         this.stopMutationObserver();
+        const parentElement = this.element.parentElement;
+        if (!parentElement) {
+            return;
+        }
+        parentElement.removeEventListener('turbo:before-morph-element', this.beforeMorphElement.bind(this));
+        parentElement.removeEventListener('turbo:before-morph-attribute', this.beforeMorphAttribute.bind(this));
         let currentSelectedValues = [];
         if (this.selectElement) {
             if (this.selectElement.multiple) {
@@ -156,15 +168,13 @@ class default_1 extends Controller {
         }
     }
     onMutations(mutations) {
-        let changeDisabledState = false;
         let requireReset = false;
+        if (this.tomSelect.isDisabled !== this.formElement.disabled) {
+            this.changeTomSelectDisabledState(this.formElement.disabled);
+        }
         mutations.forEach((mutation) => {
             switch (mutation.type) {
                 case 'attributes':
-                    if (mutation.target === this.element && mutation.attributeName === 'disabled') {
-                        changeDisabledState = true;
-                        break;
-                    }
                     if (mutation.target === this.element && mutation.attributeName === 'multiple') {
                         const isNowMultiple = this.element.hasAttribute('multiple');
                         const wasMultiple = mutation.oldValue === 'multiple';
@@ -178,12 +188,11 @@ class default_1 extends Controller {
         });
         const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
         const areOptionsEquivalent = this.areOptionsEquivalent(newOptions);
-        if (!areOptionsEquivalent || requireReset) {
+        const value = this.selectElement ? Array.from(this.selectElement.options || []).map((option) => option.value) : this.formElement.value;
+        const didValueChange = value !== this.tomSelect.getValue();
+        if (!areOptionsEquivalent || requireReset || didValueChange) {
             this.originalOptions = newOptions;
             this.resetTomSelect();
-        }
-        if (changeDisabledState) {
-            this.changeTomSelectDisabledState(this.formElement.disabled);
         }
     }
     createOptionsDataStructure(selectElement) {
@@ -214,6 +223,32 @@ class default_1 extends Controller {
         const newOptionsSet = new Set(filteredNewOptions.map(normalizeOption));
         return (originalOptionsSet.size === newOptionsSet.size &&
             [...originalOptionsSet].every((option) => newOptionsSet.has(option)));
+    }
+    beforeMorphElement(event) {
+        if (event.target.classList.contains('ts-wrapper')) {
+            event.preventDefault();
+            return;
+        }
+        if (event.target === this.element) {
+            const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
+            if (this.areOptionsEquivalent(newOptions)) {
+                event.preventDefault();
+                return;
+            }
+        }
+    }
+    beforeMorphAttribute(event) {
+        if (event.target.tagName === 'LABEL') {
+            console.log('before morph attribute', event.detail);
+        }
+        if (event.target.tagName === 'LABEL' && ['for', 'id'].includes(event.detail.attributeName)) {
+            event.preventDefault();
+            return;
+        }
+        if (event.target === this.element && event.detail.attributeName === 'class') {
+            event.preventDefault();
+            return;
+        }
     }
 }
 _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _default_1_getCommonConfig() {
