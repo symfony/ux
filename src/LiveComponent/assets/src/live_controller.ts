@@ -14,6 +14,7 @@ import getModelBinding from './Directive/get_model_binding';
 import QueryStringPlugin from './Component/plugins/QueryStringPlugin';
 import ChildComponentPlugin from './Component/plugins/ChildComponentPlugin';
 import getElementAsTagText from './Util/getElementAsTagText';
+import LazyPlugin from './Component/plugins/LazyPlugin';
 
 export { Component };
 export { getComponent } from './ComponentRegistry';
@@ -295,6 +296,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
 
         const plugins: PluginInterface[] = [
             new LoadingPlugin(),
+            new LazyPlugin(),
             new ValidatedFieldsPlugin(),
             new PageUnloadingPlugin(),
             new PollingPlugin(),

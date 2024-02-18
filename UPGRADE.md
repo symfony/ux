@@ -1,5 +1,9 @@
 # UPGRADE
 
+## FROM 2.16 to 2.17
+
+-   **Live Components**: Change `defer` attribute to `loading="defer"` #1515.
+
 ## FROM 2.15 to 2.16
 
 -   **Live Components**: Change `data-action-name` attribute to `data-live-action-param`

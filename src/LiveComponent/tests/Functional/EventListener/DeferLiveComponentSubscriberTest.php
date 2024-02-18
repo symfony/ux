@@ -109,4 +109,67 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         $this->assertSame(0, $crawler->filter('div')->count());
         $this->assertSame(1, $crawler->filter('li')->count());
     }
+
+    public function testLazyComponentIsNotRendered(): void
+    {
+        $crawler = $this->browser()
+            ->visit('/render-template/render_lazy_component')
+            ->assertSuccessful()
+            ->crawler();
+
+        $div = $crawler->filter('div');
+
+        $this->assertSame('', trim($div->html()));
+        $this->assertSame('lazy', $div->attr('loading'));
+        $this->assertSame('live:appear->live#$render', $div->attr('data-action'));
+    }
+
+    /**
+     * @dataProvider provideLoadingValues
+     */
+    public function testLazyComponentRenderingDependsOnLazyValue(mixed $lazy, bool $isRendered): void
+    {
+        $crawler = $this->browser()
+            ->visit('/render-template/render_lazy_component_with_value?loading='.$lazy)
+            ->assertSuccessful();
+
+        $crawler->assertElementCount('#count', $isRendered ? 1 : 0);
+        $crawler->assertElementCount('[loading="lazy"]', $isRendered ? 0 : 1);
+    }
+
+    public static function provideLoadingValues(): iterable
+    {
+        return [
+            ['lazy', false],
+            [false, true],
+            ['', true],
+        ];
+    }
+
+    public function testLazyComponentIsRenderedLaterWithInitialData(): void
+    {
+        $crawler = $this->browser()
+            ->visit('/render-template/render_lazy_component')
+            ->assertSuccessful()
+            ->crawler();
+
+        $componentDiv = $crawler->filter('div');
+        $this->assertEmpty(trim($componentDiv->html()));
+
+        $props = json_decode($componentDiv->attr('data-live-props-value'), true);
+
+        $browser = $this->browser()
+            ->throwExceptions()
+            ->post('/_components/tally_component', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $props,
+                    ]),
+                ],
+            ])->assertSuccessful()
+        ;
+
+        $browser->assertElementCount('#count', 1);
+        $browser->assertElementAttributeContains('#count', 'value', '7');
+    }
 }

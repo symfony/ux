@@ -487,7 +487,7 @@ export class noopElementDriver implements ElementDriver {
         throw new Error('Method not implemented.');
     }
 
-    getModelName(element: HTMLElement): string | null {
+    getModelName(): string | null {
         throw new Error('Method not implemented.');
     }
 }

@@ -9,7 +9,6 @@ import {
 import ValueStore from '../src/Component/ValueStore';
 import Component from '../src/Component';
 import Backend from '../src/Backend/Backend';
-import {StimulusElementDriver} from '../src/Component/ElementDriver';
 import { noopElementDriver } from './tools';
 
 const createStore = function(props: any = {}): ValueStore {

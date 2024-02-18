@@ -4,6 +4,10 @@
 
 -   Add `modifier` option in `LiveProp` so options can be modified at runtime.
 -   Fix collections hydration with serializer in LiveComponents
+-   Add `loading` attribute to defer the rendering on the component after the
+    page is rendered, either when the page loads (`loading="defer"`) or when
+    the component becomes visible in the viewport (`loading="lazy"`).
+-   Deprecate the `defer` attribute.
 
 ## 2.16.0
 
