@@ -25,6 +25,7 @@ export type ParametersOf<M, D extends DomainType> = M extends Message<infer Tran
         : never
     : never;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface Message<Translations extends TranslationsType, Locale extends LocaleType> {
     id: string;
     translations: {
