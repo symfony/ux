@@ -11,19 +11,19 @@
         </div>
     {% endif %}
 
-    <div class="Terminal_body" {{ stimulus_controller('code-expander') }}>
+    <div class="Terminal_body" data-controller="code-expander">
         {% if not showFilename %}
             <div class="Terminal_actions">
                 <twig:CodeBlockButtons source="{{ this.rawSource }}" link="{{ this.githubLink }}"/>
             </div>
         {% endif %}
         <div class="Terminal_content" style="height: {{ height }};"
-            {{ stimulus_target('code-expander', 'codeContent') }}
-            {{ stimulus_controller('code-highlighter') }}
+             data-code-expander-target="codeContent"
+             data-controller="code-highlighter"
         >
             {% for piece in this.prepareSource %}
                 {% if piece.highlight ?? true %}
-                    <pre><code class="language-{{ this.language }}" {{ stimulus_target('code-highlighter', 'codeBlock') }}>
+                    <pre><code class="language-{{ this.language }}" data-code-highlighter-target="codeBlock">
                         {{- piece.content -}}
                     </code></pre>
                 {% else %}
@@ -36,13 +36,13 @@
             <button
                 type="button"
                 class="btn btn-expand-code pt-2 text-center"
-                {{ stimulus_target('code-expander', 'expandCodeButton') }}
-                {{ stimulus_action('code-expander', 'expandCode') }}
+                data-code-expander-target="expandCodeButton"
+                data-action="code-expander#expandCode"
                 style="display: none;"
             >
-                <twig:Icon name="arrow-down" />
+                <twig:Icon name="arrow-down"/>
                 Expand code
-                <twig:Icon name="arrow-down" />
+                <twig:Icon name="arrow-down"/>
             </button>
         {% endblock %}
     </div>

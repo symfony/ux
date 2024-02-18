@@ -34,7 +34,7 @@
                 data-model="currentTypes"
                 multiple
                 id="dinoTypes"
-                {{ stimulus_controller('symfony/ux-autocomplete/autocomplete') }}
+                data-controller="symfony--ux-autocomplete--autocomplete"
             >
                 {% for type in allTypes %}
                     <option value="{{ type }}">{{ type }}</option>

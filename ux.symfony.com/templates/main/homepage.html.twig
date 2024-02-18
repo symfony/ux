@@ -37,7 +37,7 @@
         </div>
 
         <div class="col-12 col-md-6 mt-3 mt-md-0">
-            <div {{ stimulus_controller('tooltips') }} class="ux-container file-tree flex-grow-1 ms-2 py-3">
+            <div data-controller="tooltips" class="ux-container file-tree flex-grow-1 ms-2 py-3">
                 <div style="height: 185px; overflow: auto;">
                     <ul class="list-unstyled file-tree-main">
                         {{ include('main/_fileTreeLevel.html.twig', {
@@ -77,19 +77,19 @@
     </div>
 
     {% block markdown_example %}
-        <div class="p-4 markdown-container background-glass shadow-blur shadow-blur--rainbow  mt-5 row" {{ stimulus_controller('markdown') }}>
+        <div class="p-4 markdown-container background-glass shadow-blur shadow-blur--rainbow  mt-5 row" data-controller="markdown">
             <div class="col-12 col-md-5">
                 <textarea rows="3" class="form-control" aria-label="Type markdown into this box"
-                    {{ stimulus_target('markdown', 'input') }}
+                          data-markdown-target="input"
                 >Writing JavaScript is a **dream** with Stimulus 🤩</textarea>
             </div>
             <div class="col-12 col-md-2 d-flex justify-content-center align-items-center py-3">
-                <button class="btn btn-dark"
-                    {{ stimulus_action('markdown', 'render') }}
-                >Convert <twig:Icon name="arrow-right"/></button>
+                <button class="btn btn-dark" data-action="markdown#render">
+                    Convert <twig:Icon name="arrow-right"/>
+                </button>
             </div>
             <div class="col-12 col-md-5">
-                <div style="min-height: 86px;" class="markdown-form-render-container p-2" {{ stimulus_target('markdown', 'preview') }} >
+                <div style="min-height: 86px;" class="markdown-form-render-container p-2" data-markdown-target="preview">
                     <small class="fw-light">(click "Convert")</small>
                 </div>
             </div>

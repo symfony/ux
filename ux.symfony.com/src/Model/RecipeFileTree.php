@@ -23,7 +23,7 @@ class RecipeFileTree
             ->addFile('assets/app.js', 'Your main JavaScript file. It\'s job is to import and load all other files.')
             ->addFile('assets/controllers.json', 'Configures 3rd-party Stimulus controllers. This file is automatically updated when you install a UX package.')
             ->addDirectory('assets/controllers', 'The home of your custom Stimulus controllers!')
-            ->addFile('assets/controllers/hello_controller.js', 'An example controller. Add it to any element with <code class="text-nowrap">{{ stimulus_controller(\'hello\') }}</code>')
+            ->addFile('assets/controllers/hello_controller.js', 'An example controller. Add it to any element with <code class="text-nowrap">data-controller="hello"</code>')
             ->addDirectory('assets/styles')
             ->addFile('assets/styles/app.css', 'Your main CSS file')
             ->addFile('package.json', 'Holds your node dependencies, most importantly Stimulus & Webpack Encore.')

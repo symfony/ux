@@ -41,9 +41,8 @@
 {% block code_block_right %}
     <img
         src="{{ data_uri_thumbnail(legosFilePath, 40, 30) }}"
-        {{ stimulus_controller('symfony/ux-lazy-image/lazy-image', {
-            src: asset('images/legos.jpg')
-        }) }}
+        data-controller="symfony--ux-lazy-image--lazy-image"
+        data-symfony--ux-lazy-image--lazy-image-src="{{ asset('images/legos.jpg') }}"
         alt="A blurhash image that is replaced by the real image on load"
         width="578"
         height="275"

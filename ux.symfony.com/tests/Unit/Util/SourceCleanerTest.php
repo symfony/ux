@@ -109,19 +109,19 @@ class SourceCleanerTest extends TestCase
     public function testItRemovesExcessHtml(): void
     {
         $input = <<<EOF
-            <div class="p-4 markdown-container shadow-blur shadow-blur--rainbow mt-5 row" {{ stimulus_controller('markdown') }}>
+            <div class="p-4 markdown-container shadow-blur shadow-blur--rainbow mt-5 row" data-controller="markdown">
                 <div class="col-12 col-md-5">
                     <textarea rows="3" class="form-control" aria-label="Type markdown into this box"
-                        {{ stimulus_target('markdown', 'input') }}
+                        data-markdown-target="input"
                     >Writing JavaScript is a **dream** with Stimulus 🤩</textarea>
                 </div>
                 <div class="col-12 col-md-2 text-center">
-                    <button class="btn btn-sm btn-dark mt-3" {{ stimulus_action('markdown', 'render') }}>
+                    <button class="btn btn-sm btn-dark mt-3" data-action="markdown#render">
                         Convert <i class="fa fa-arrow-right"></i>
                     </button>
                 </div>
                 <div class="col-12 col-md-5 mt-3 mt-md-0">
-                    <div style="min-height: 86px;" class="markdown-form-render-container p-2" {{ stimulus_target('markdown', 'preview') }} >
+                    <div style="min-height: 86px;" class="markdown-form-render-container p-2" data-markdown-target="preview">
                         <small class="fw-light">(click "Convert")</small>
                     </div>
                 </div>
@@ -129,14 +129,14 @@ class SourceCleanerTest extends TestCase
             EOF;
 
         $expected = <<<EOF
-            <div {{ stimulus_controller('markdown') }}>
+            <div data-controller="markdown">
                 <textarea
-                    {{ stimulus_target('markdown', 'input') }}
+                    data-markdown-target="input"
                 >Writing JavaScript is a **dream** with Stimulus 🤩</textarea>
-                <button {{ stimulus_action('markdown', 'render') }}>
+                <button data-action="markdown#render">
                     Convert <i></i>
                 </button>
-                <div {{ stimulus_target('markdown', 'preview') }} >
+                <div data-markdown-target="preview">
                     <small>(click "Convert")</small>
                 </div>
             </div>
