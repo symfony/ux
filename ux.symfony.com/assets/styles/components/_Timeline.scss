@@ -123,13 +123,14 @@
 }
 
 .TimelineItem__Text h3 {
-  margin-bottom: 1rem;
   color: var(--bs-body-color);
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   font-family: var(--font-family-text);
   font-weight: 500;
   letter-spacing: 0;
   margin-block-start: 2rem;
+  margin-block-end: .25rem;
+  line-height: 1.4;
 }
 
 .TimelineItem__Text ul,
@@ -144,7 +145,9 @@
 }
 .TimelineItem__Text a:hover {
   color: #2072ea;
-  text-decoration: dotted underline;
+}
+.TimelineItem__Text p:last-child {
+  margin-bottom: 0;
 }
 
 @media screen and (max-width: 980px) {
