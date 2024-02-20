@@ -151,7 +151,13 @@ EOF;
     public static function removeExcessHtml(string $content): string
     {
         // remove all HTML attributes and values + whitespace around them
-        $content = preg_replace('/\s+[a-z0-9-]+="[^"]*"/', '', $content);
+        $content = preg_replace_callback('/\s+[a-z0-9-]+="[^"]*"/', function($matches) {
+            if (str_starts_with(trim($matches[0]), 'data-')) {
+                return $matches[0];
+            }
+
+            return '';
+        }, $content);
 
         // Find all the <div> elements without attributes
         preg_match_all('/<div>\s*(.*?)\s*<\/div>/s', $content, $matches);

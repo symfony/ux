@@ -30,7 +30,7 @@
 
 {% block demo_content %}
     {% block swup_specific_demo_content %}
-        <div {{ stimulus_controller('symfony/ux-swup/swup') }} id="swup" data-turbo="false">
+        <div data-controller="symfony--ux-swup--swup" id="swup" data-turbo="false">
             <div class="row">
                 {% for package in pager %}
                     {{ include('main/_package_in_list.html.twig') }}
