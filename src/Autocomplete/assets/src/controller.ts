@@ -429,6 +429,17 @@ export default class extends Controller {
         const filteredOriginalOptions = this.originalOptions.filter((option) => option.value !== '');
         const filteredNewOptions = newOptions.filter((option) => option.value !== '');
 
+        const originalPlaceholderOption = this.originalOptions.find((option) => option.value === '');
+        const newPlaceholderOption = newOptions.find((option) => option.value === '');
+        console.log(originalPlaceholderOption, newPlaceholderOption);
+        if (
+            originalPlaceholderOption &&
+            newPlaceholderOption &&
+            originalPlaceholderOption.text !== newPlaceholderOption.text
+        ) {
+            return false;
+        }
+
         if (filteredOriginalOptions.length !== filteredNewOptions.length) {
             return false;
         }
