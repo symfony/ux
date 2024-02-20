@@ -24,6 +24,7 @@
         "symfony/flex": "^2.3.1",
         "symfony/form": "6.4.*",
         "symfony/framework-bundle": "6.4.*",
+        "symfony/http-client": "6.4.*",
         "symfony/mercure-bundle": "^0.3.7",
         "symfony/monolog-bundle": "^3.8",
         "symfony/notifier": "6.4.*",
