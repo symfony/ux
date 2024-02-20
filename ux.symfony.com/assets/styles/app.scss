@@ -63,6 +63,7 @@
 @import "layouts/grid";
 
 // Components
+@import "components/Changelog";
 @import "components/demo-container";
 @import "components/DemoCard";
 @import "components/DocsLink";
@@ -73,7 +74,6 @@
 @import "components/Terminal";
 @import "components/TerminalCommand";
 @import "components/ThemeSwitcher";
-@import "components/Timeline";
 
 // Utilities
 @import "utilities/arrow";

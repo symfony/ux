@@ -17,13 +17,11 @@
     </div>
 
     <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
-
-            <div class="Timeline">
-                {% for entry in changelog %}
-                    <twig:TimelineItem item="{{ entry }}" isOpen="{{ loop.index < 6 }}" />
-                {% endfor %}
-            </div>
-
+        <div class="Changelog">
+            {% for entry in changelog %}
+                <twig:ChangelogItem item="{{ entry }}" isOpen="{{ loop.index < 6 }}" />
+            {% endfor %}
+        </div>
     </div>
 
 {% endblock %}

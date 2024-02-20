@@ -13,8 +13,8 @@ namespace App\Twig\Components;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('TimelineItem')]
-class TimelineItem
+#[AsTwigComponent('ChangelogItem')]
+class ChangelogItem
 {
     public array $item;
 
@@ -37,14 +37,16 @@ class TimelineItem
         $content = preg_replace('#in https://github.com/symfony/ux/pull/(\d+)/?#', 'in [#$1](https://github.com/symfony/ux/issues/$1)', $content);
 
         // Replace "https://github.com/symfony/ux/compare/v2.14.1...v2.14.2" with a mardown link to the full changelog
-        $content = preg_replace('#https://github.com/symfony/ux/compare/(v[^.]+)...(v[^.]+)#', '[$2...$3]($1)', $content);
+        $content = preg_replace('#(https://github.com/symfony/ux/compare/(v(\d+\.\d+\.\d+))...(v(\d+\.\d+\.\d+)))#', '[$2 -> $4]($1)', $content);
 
-        // Replace "@daFish in " with a markdown link to the user profile
-        $content = preg_replace('/@([a-zA-Z0-9_]+) in /', '[@$1](https://github.com/$1) in ', $content);
+        // Insert markdown link to the user's Github profile
+        // ...in: "by @weaverryan in "
+        $content = preg_replace('/by @([a-zA-Z0-9_]+) in /', 'by [@$1](https://github.com/$1) in ', $content);
+        // ...in: "@weaverryan made their first "
+        $content = preg_replace('/@([a-zA-Z0-9_]+) made their first /', '[@$1](https://github.com/$1) made their first ', $content);
 
-        // Replace "https://github.com/symfony/ux/compare/v2.14.1...v2.14.2" with a mardown link to the full changelog
-        $content = str_replace('https://github.com/symfony/ux/compare/', 'ZZ', $content);
-        $content = preg_replace('/ZZv(\d+\.\d+\.\d+)...v(\d+\.\d+\.\d+)/', '[$2...$1](https://github.com/symfony/ux/compare/$1..$2)', $content);
+        // Shorten "made their first contribution in" to "in"
+        $content = preg_replace('/made their first contribution in/', 'in', $content);
 
         return $content;
     }
