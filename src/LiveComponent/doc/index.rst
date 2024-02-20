@@ -3448,7 +3448,7 @@ bound to Symfony's BC policy for the moment.
 
 .. _`TwigComponent`: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _TwigComponent documentation: https://symfony.com/bundles/ux-twig-component/current/index.html
-.. _`Livewire`: https://laravel-livewire.com
+.. _`Livewire`: https://livewire.laravel.com
 .. _`Phoenix LiveView`: https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html
 .. _`Twig Component`: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _`Twig Component mount documentation`: https://symfony.com/bundles/ux-twig-component/current/index.html#the-mount-method
