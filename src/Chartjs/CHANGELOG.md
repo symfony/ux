@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.15.0
+
+-   Remove restriction that prevented Chart.js 3.9 #1518
+
 ## 2.14.0
 
 -   Add support for Chart.js version 4

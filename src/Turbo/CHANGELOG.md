@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.15.0
+
+-   Add Turbo 8 support #1476
+-   Fix missing `use` statement used during broadcast #1475
+
 ## 2.14.2
 
 -   Fix using old `ClassUtils` class that's not used in newer versions of Doctrine

@@ -1,8 +1,11 @@
 # CHANGELOG
 
-## Unreleased
+## 2.15.0
 
--   Add doctrine/orm 3 support.
+-   Add doctrine/orm 3 support #1468
+-   Allow passing extra options to the autocomplete fields #1322
+-   Fix 2 bugs where TomSelect would reset when not necessary #1502
+-   Add one missing German translation #1521
 
 ## 2.14.0
 
