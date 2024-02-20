@@ -27,7 +27,7 @@ class TimelineItem
 
     private function formatContent(string $content): string
     {
-        // Replace "### " with "## "
+        // Replace "## " with "### "
         $content = preg_replace('/^## /m', '### ', $content);
 
         // Replace #1234 with a mardown link to the issue
