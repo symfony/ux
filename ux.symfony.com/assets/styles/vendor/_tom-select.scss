@@ -1,5 +1,5 @@
 .ts-dropdown, .ts-control, .ts-control input {
-  color: var(--bs-body-color);
+  color: var(--bs-body-color) !important;
 }
 
 .ts-dropdown, .ts-dropdown.form-control, .ts-dropdown.form-select {
