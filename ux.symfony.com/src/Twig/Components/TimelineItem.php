@@ -31,7 +31,7 @@ class TimelineItem
         $content = preg_replace('/^## /m', '### ', $content);
 
         // Replace #1234 with a mardown link to the issue
-        $content = preg_replace('/#(\d+)#/', '[#$1](https://github.com/symfony/ux/issues/$1)', $content);
+        $content = preg_replace('/#(\d+)/', '[#$1](https://github.com/symfony/ux/issues/$1)', $content);
 
         // Replace "in https://github.com/symfony/ux/pull/1234" with a mardown link to the PR
         $content = preg_replace('#in https://github.com/symfony/ux/pull/(\d+)/?#', 'in [#$1](https://github.com/symfony/ux/issues/$1)', $content);
