@@ -2,7 +2,11 @@
 
 ## 2.15.0
 
--   [BC BREAK] The `data-live-id` attribute was changed to `id`.
+-   [BC BREAK] The `data-live-id` attribute was changed to `id` #1484
+-   Fixed child handling bug during re-rendering introduced with the
+    new morphing library in 2.14.0 #1484
+-   Fix bug where the active input would maintain its value, but lose its cursor position #1501
+-   Restrict Twig 3.9 for now #1486
 
 ## 2.14.1
 
