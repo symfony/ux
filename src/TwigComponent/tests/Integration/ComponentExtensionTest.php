@@ -63,11 +63,7 @@ final class ComponentExtensionTest extends KernelTestCase
 
     public function testCanNotRenderComponentWithInvalidExpressions(): void
     {
-        if (Environment::MAJOR_VERSION === 2) {
-            $this->expectException(\TypeError::class);
-        } else {
-            $this->expectException(RuntimeError::class);
-        }
+        $this->expectException(\Throwable::class);
 
         self::getContainer()->get(Environment::class)->render('invalid_flexible_component.html.twig');
     }

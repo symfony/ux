@@ -72,10 +72,6 @@ final class ComponentRenderer implements ComponentRendererInterface
         }
 
         try {
-            if ($this->twig::MAJOR_VERSION < 3) {
-                return $this->twig->loadTemplate($event->getTemplate(), $event->getTemplateIndex())->render($variables);
-            }
-
             return $this->twig->loadTemplate(
                 $this->twig->getTemplateClass($event->getTemplate()),
                 $event->getTemplate(),
