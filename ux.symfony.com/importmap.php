@@ -141,7 +141,7 @@ return [
         'version' => '11.7.0',
     ],
     'intl-messageformat' => [
-        'version' => '10.3.5',
+        'version' => '10.5.11',
     ],
     '@vue/runtime-dom' => [
         'version' => '3.3.4',
@@ -165,10 +165,10 @@ return [
         'version' => '2.6.2',
     ],
     '@formatjs/icu-messageformat-parser' => [
-        'version' => '2.6.2',
+        'version' => '2.7.6',
     ],
     '@formatjs/icu-skeleton-parser' => [
-        'version' => '1.6.2',
+        'version' => '1.8.0',
     ],
     '@formatjs/fast-memoize' => [
         'version' => '2.2.0',
