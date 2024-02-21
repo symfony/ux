@@ -518,7 +518,7 @@ final class LiveComponentHydrator
             }
 
             if (null !== $dateFormat) {
-                return $className::createFromFormat($dateFormat, $value);
+                return $className::createFromFormat($dateFormat, $value) ?: throw new BadRequestHttpException(sprintf('The model path "%s" was sent invalid date data "%s" or in an invalid format. Make sure it\'s a valid date and it matches the expected format "%s".', $propertyPathForError, $value, $dateFormat));
             }
 
             return new $className($value);
