@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by daFish at 2024-02-06T07:53:31Z
+
+@kbond Using your changes works in my case. I no longer get the CSRF-exception.
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-10T16:36:34Z
+
+Rebased and fixed the failing test I introduced in #1460.
