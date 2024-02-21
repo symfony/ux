@@ -63,6 +63,7 @@
 @import "layouts/grid";
 
 // Components
+@import "components/Changelog";
 @import "components/demo-container";
 @import "components/DemoCard";
 @import "components/DocsLink";
@@ -79,6 +80,7 @@
 @import "utilities/background";
 @import "utilities/info-tooltips";
 @import "utilities/font";
+@import "utilities/rich-text";
 @import "utilities/shadow";
 @import "utilities/text";
 

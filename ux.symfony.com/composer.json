@@ -24,6 +24,7 @@
         "symfony/flex": "^2.3.1",
         "symfony/form": "6.4.*",
         "symfony/framework-bundle": "6.4.*",
+        "symfony/http-client": "6.4.*",
         "symfony/mercure-bundle": "^0.3.7",
         "symfony/monolog-bundle": "^3.8",
         "symfony/notifier": "6.4.*",
@@ -59,6 +60,7 @@
         "twig/html-extra": "^3.8",
         "twig/intl-extra": "^3.6",
         "twig/markdown-extra": "^3.6",
+        "twig/string-extra": "^3.8",
         "twig/twig": "^2.12|^3.6.1"
     },
     "config": {
