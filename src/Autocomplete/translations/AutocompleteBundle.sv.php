@@ -10,7 +10,7 @@
  */
 
 return [
-    // 'Loading more results...' => 'Loading more results...',
+    'Loading more results...' => 'Laddar fler resultat...',
     'No results found' => 'Inga träffar',
-    // 'No more results' => 'No more results',
+    'No more results' => 'Inga fler resultat',
 ];

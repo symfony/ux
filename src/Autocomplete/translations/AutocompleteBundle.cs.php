@@ -10,7 +10,7 @@
  */
 
 return [
-    // 'Loading more results...' => 'Loading more results...',
+    'Loading more results...' => 'Načítání dalších výsledků...',
     'No results found' => 'Nenalezeny žádné položky',
-    // 'No more results' => 'No more results',
+    'No more results' => 'Žádné další výsledky',
 ];

@@ -10,7 +10,7 @@
  */
 
 return [
-    // 'Loading more results...' => 'Loading more results...',
+    'Loading more results...' => 'Daha fazla sonuç yükleniyor...',
     'No results found' => 'Sonuç bulunamadı',
-    // 'No more results' => 'No more results',
+    'No more results' => 'Başka sonuç yok',
 ];

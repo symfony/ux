@@ -10,7 +10,7 @@
  */
 
 return [
-    // 'Loading more results...' => 'Loading more results...',
+    'Loading more results...' => 'Carregando mais resultados...',
     'No results found' => 'Nenhum resultado encontrado',
-    // 'No more results' => 'No more results',
+    'No more results' => 'Não há mais resultados',
 ];

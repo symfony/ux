@@ -10,7 +10,7 @@
  */
 
 return [
-    // 'Loading more results...' => 'Loading more results...',
+    'Loading more results...' => 'Lueden méi Resultater...',
     'No results found' => 'Keng Resultater fonnt',
     'No more results' => 'Keng weider Resultater',
 ];

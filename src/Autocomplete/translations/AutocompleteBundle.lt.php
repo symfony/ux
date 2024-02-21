@@ -10,7 +10,7 @@
  */
 
 return [
-    // 'Loading more results...' => 'Loading more results...',
+    'Loading more results...' => 'Kraunama daugiau rezultatų...',
     'No results found' => 'Atitikmenų nerasta',
-    // 'No more results' => 'No more results',
+    'No more results' => 'Daugiau rezultatų nėra',
 ];
