@@ -1,0 +1,76 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-31T12:42:56Z
+
+Failure / deprecation look related to Foundry no ? cc @kbond  maybe ?
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-01T15:21:01Z
+
+> Failure / deprecation look related to Foundry no ?
+
+I'm not seeing anything with foundry in the actions log, can you link to where you're seeing this?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-01T19:06:33Z
+
+To Browser sorry i think ? cf the deprecations
+
+https://github.com/symfony/ux/actions/runs/7725916788/job/21061159963#step:7:147
+
+And _resetDatabase too ? But i'm really not sure there
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-01T19:43:53Z
+
+I'm seeing this:
+- https://github.com/symfony/ux/actions/runs/7725916788/job/21061159963#step:7:103 - direct deprecation caused by Twig\Node\Node::count()
+- https://github.com/symfony/ux/actions/runs/7725916788/job/21061161859#step:7:100 - wrong twig exception being expected
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-01T21:24:50Z
+
+Was talking about the deprecation in the other test suite ;)
+
+_resetDatabase and the others are generated inside Browser i believe.
+
+I'll look at the errors tomorrow !
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-05T19:59:39Z
+
+I'd need help there, as there is nothing counting Twig Nodes in the test code, and i'm not the most qualified i guess to fix this part of the tests.
+
+@kbond @weaverryan @WebMamba ?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-02-05T21:26:17Z
+
+Sure! What do you mean by counting twig nodes?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-05T21:35:01Z
+
+LiveComponent 8.1 fails because of direct deprecation
+
+see: https://github.com/symfony/ux/actions/runs/7770236144/job/21190171213?pr=1436
+
+```
+OK (220 tests, 708 assertions)
+
+Remaining direct deprecation notices (1)
+
+  1x: Return type of Twig\Node\Node::count() should either be compatible with Countable::count(): int,
+or the #[\ReturnTypeWillChange] attribute should be used to temporarily suppress the notice
+
+    1x in BatchActionControllerTest::testCanBatchActions from Symfony\UX\LiveComponent\Tests\Functional\Controller
+```
+
+--> [Symfony\UX\LiveComponent\Tests\Functional\Controller\BatchActionControllerTest](https://github.com/symfony/ux/blob/2.x/src/LiveComponent/tests/Functional/Controller/BatchActionControllerTest.php)
