@@ -16,6 +16,7 @@ use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
@@ -118,13 +119,19 @@ final class Kernel extends BaseKernel
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
         ]);
 
-        $c->extension('security', [
+        $security = [
             'password_hashers' => [InMemoryUser::class => 'plaintext'],
             'providers' => ['users' => ['memory' => ['users' => ['kevin' => ['password' => 'pass', 'roles' => ['ROLE_USER']]]]]],
             'firewalls' => ['main' => [
                 'lazy' => true,
             ]],
-        ]);
+        ];
+
+        if (!class_exists(Security::class)) {
+            $security['enable_authenticator_manager'] = true;
+        }
+
+        $c->extension('security', $security);
 
         $c->extension('twig_component', [
             'defaults' => [

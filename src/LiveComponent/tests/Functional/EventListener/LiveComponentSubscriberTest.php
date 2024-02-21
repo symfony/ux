@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Security\Core\User\InMemoryUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
 use Zenstruck\Browser\Test\HasBrowser;
@@ -504,6 +505,10 @@ final class LiveComponentSubscriberTest extends KernelTestCase
 
     public function testCanHaveControllerAttributes(): void
     {
+        if (!class_exists(IsGranted::class)) {
+            $this->markTestSkipped('The security attributes are not available.');
+        }
+
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_security'));
 
         $this->browser()
