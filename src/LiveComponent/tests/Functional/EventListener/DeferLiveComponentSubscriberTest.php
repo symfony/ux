@@ -77,6 +77,27 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         $this->assertStringContainsString('Long awaited data', $div->html());
     }
 
+    public function testItIncludesComponentTemplateBlockAsPlaceholder(): void
+    {
+        $div = $this->browser()
+            ->visit('/render-template/render_deferred_component_with_placeholder')
+            ->assertSuccessful()
+            ->crawler()
+            ->filter('div');
+
+        $this->assertSame('<span class="loading-row"></span><span class="loading-row"></span>', trim($div->html()));
+    }
+
+    public function testItDoesNotIncludesPlaceholderWhenRendered(): void
+    {
+        $div = $this->browser()
+            ->visit('/render-template/render_component_with_placeholder')
+            ->assertSuccessful()
+            ->crawler();
+
+        $this->assertStringNotContainsString('<span class="loading-row">', $div->html());
+    }
+
     public function testItAllowsToSetCustomLoadingHtmlTag(): void
     {
         $crawler = $this->browser()

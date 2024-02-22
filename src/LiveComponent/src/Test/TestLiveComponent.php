@@ -43,7 +43,7 @@ final class TestLiveComponent
         private UrlGeneratorInterface $router,
     ) {
         $this->client->catchExceptions(false);
-        $this->data['attributes']['data-live-id'] ??= 'in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed';
+        $this->data['attributes']['id'] ??= 'in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed';
     }
 
     public function render(): RenderedComponent
