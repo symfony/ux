@@ -17,7 +17,7 @@ web:
         socket_family: tcp
         protocol: http
     commands:
-        start: SERVER_NAME=":${PORT}" ./mercure run -config Caddyfile.dev
+        start: SERVER_NAME=":${PORT}" ./mercure run --config Caddyfile.dev
     locations:
         /:
             allow: false
