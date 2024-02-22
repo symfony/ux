@@ -200,20 +200,21 @@ final class ComponentAttributesTest extends TestCase
         $this->assertCount(1, $attributes);
     }
 
-    public function testRenderSingleAttribute(): void
+    public function testRenderAttributes(): void
     {
-        $attributes = new ComponentAttributes(['attr1' => 'value1', 'attr2' => 'value2']);
+        $attributes = new ComponentAttributes([
+            'attr1' => 'value1',
+            'attr2' => 'value2',
+            'attr3' => 'value3',
+            'attr4' => 'value4',
+        ]);
 
         $this->assertSame('value1', $attributes->render('attr1'));
-        $this->assertNull($attributes->render('attr3'));
-    }
-
-    public function testRenderingSingleAttributeExcludesFromString(): void
-    {
-        $attributes = new ComponentAttributes(['attr1' => 'value1', 'attr2' => 'value2']);
-
-        $this->assertSame('value1', $attributes->render('attr1'));
-        $this->assertSame(' attr2="value2"', (string) $attributes);
+        $this->assertSame('default value2', $attributes->prepend('attr2', 'default'));
+        $this->assertSame('value3 default', $attributes->append('attr3', 'default'));
+        $this->assertNull($attributes->render('attr5'));
+        $this->assertSame('default', $attributes->render('attr5', 'default'));
+        $this->assertSame(' attr4="value4"', (string) $attributes);
     }
 
     public function testCannotRenderNonStringAttribute(): void

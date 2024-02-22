@@ -952,14 +952,21 @@ Render
 
     The ability to *render* attributes was added in TwigComponents 2.15.
 
+.. versionadded:: 2.16
+
+    The ability to *render* attributes with a default, *prepend*, and *append* were
+    added in TwigComponents 2.16.
+
 You can take full control over the attributes that are rendered by using the
-``render()`` method.
+``render()``, ``prepend()``, and ``append()`` methods.
 
 .. code-block:: html+twig
 
     {# templates/components/MyComponent.html.twig #}
     <div
-      style="{{ attributes.render('style') }} display:block;"
+      class="{{ attributes.render('class', 'default') }}" {# second parameter is the default value #}
+      style="{{ attributes.append('style', 'display:block;') }}" {# second parameter value to append #}
+      data-controller="{{ attributes.append('data-controller', 'hello-controller') }}" {# second parameter value to prepend #}
       {{ attributes }} {# be sure to always render the remaining attributes! #}
     >
       My Component!
@@ -969,15 +976,15 @@ You can take full control over the attributes that are rendered by using the
     {{ component('MyComponent', { style: 'color:red;' }) }}
 
     {# renders as: #}
-    <div style="color:red; display:block;">
+    <div class="default" style="color:red; display:block;" data-controller="hello-controller">
       My Component!
     </div>
 
 .. caution::
 
-    There are a few important things to know about using ``render()``:
+    There are a few important things to know about using ``render()``/``prepend()``/``append()``:
 
-    1. You need to be sure to call your ``render()`` methods before calling ``{{ attributes }}`` or some
+    1. You need to be sure to call these methods before calling ``{{ attributes }}`` or some
        attributes could be rendered twice. For instance:
 
             .. code-block:: html+twig
@@ -998,7 +1005,7 @@ You can take full control over the attributes that are rendered by using the
                     My Component!
                 </div>
 
-    2. If you add an attribute without calling ``render()``, it will be rendered twice. For instance:
+    2. If you add an attribute without calling these methods, it will be rendered twice. For instance:
 
          .. code-block:: html+twig
 

@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.16.0
+
+-   Add default value to `ComponentAttributes::render()` #1531
+-   Add `ComponentAttributes::append()/prepend()` #1531
+
 ## 2.15.0
 
 -   Add the ability to render specific attributes from the `attributes` variable #1442

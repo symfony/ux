@@ -14,7 +14,6 @@ namespace Symfony\UX\TwigComponent\Tests\Integration;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\Tests\Fixtures\User;
 use Twig\Environment;
-use Twig\Error\RuntimeError;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -228,10 +227,13 @@ final class ComponentExtensionTest extends KernelTestCase
             ['class' => 'block'],
             <<<HTML
             <div
-                foo=""
-                bar="default"
-                baz="default "
-                qux=" default"
+                attr1=""
+                attr2="default"
+                attr3="default "
+                attr4=" default"
+                attr5="default"
+                attr6="default"
+                attr7="default"
                  class="block"
             />
             HTML,
@@ -240,17 +242,23 @@ final class ComponentExtensionTest extends KernelTestCase
         yield [
             [
                 'class' => 'block',
-                'foo' => 'value',
-                'bar' => 'value',
-                'baz' => 'value',
-                'qux' => 'value',
+                'attr1' => 'value1',
+                'attr2' => 'value2',
+                'attr3' => 'value3',
+                'attr4' => 'value4',
+                'attr5' => 'value5',
+                'attr6' => 'value6',
+                'attr7' => 'value7',
             ],
             <<<HTML
             <div
-                foo="value"
-                bar="value"
-                baz="default value"
-                qux="value default"
+                attr1="value1"
+                attr2="value2"
+                attr3="default value3"
+                attr4="value4 default"
+                attr5="value5"
+                attr6="default value6"
+                attr7="value7 default"
                  class="block"
             />
             HTML,

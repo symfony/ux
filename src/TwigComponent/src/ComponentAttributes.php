@@ -65,10 +65,10 @@ final class ComponentAttributes implements \IteratorAggregate, \Countable
         $this->rendered = [];
     }
 
-    public function render(string $attribute): ?string
+    public function render(string $attribute, ?string $default = null): ?string
     {
         if (null === $value = $this->attributes[$attribute] ?? null) {
-            return null;
+            return $default;
         }
 
         if (!\is_string($value)) {
@@ -78,6 +78,16 @@ final class ComponentAttributes implements \IteratorAggregate, \Countable
         $this->rendered[$attribute] = true;
 
         return $value;
+    }
+
+    public function prepend(string $attribute, string $value, string $separator = ' '): string
+    {
+        return trim(sprintf('%s%s%s', $value, $separator, $this->render($attribute)));
+    }
+
+    public function append(string $attribute, string $value, string $separator = ' '): string
+    {
+        return trim(sprintf('%s%s%s', $this->render($attribute), $separator, $value));
     }
 
     /**
