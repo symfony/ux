@@ -929,15 +929,21 @@ a class:
     <div data-loading="removeClass(opacity-50)">...</div>
 
     <!-- add multiple classes when loading -->
-    <div data-loading="addClass(opacity-50 disabled)">...</div>
+    <div data-loading="addClass(opacity-50 text-muted)">...</div>
 
-Sometimes you may want to add or remove an attribute when loading. That
+Sometimes you may want to add or remove an HTML attribute when loading. That
 can be accomplished with ``addAttribute`` or ``removeAttribute``:
 
 .. code-block:: html+twig
 
     <!-- add the "disabled" attribute when loading -->
     <div data-loading="addAttribute(disabled)">...</div>
+
+.. caution::
+
+    The ``addAttribute()`` and ``removeAttribute()`` functions only work with
+    empty HTML attributes (``disabled``, ``readonly``, ``required``, etc.) and
+    not with attributes that define their values (e.g. this won't work: ``addAttribute(style='color: red')``).
 
 You can also combine any number of directives by separating them with a
 space:
