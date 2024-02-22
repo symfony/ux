@@ -306,7 +306,7 @@ want to render on the root element:
 
     <twig:Alert message="hello!" id="custom-alert-id" />
 
-To pass an array of attributes, use `{{...}}` spread operator syntax.
+To pass an array of attributes, use ``{{...}}`` spread operator syntax.
 This requires Twig 3.7.0 or higher:
 
 .. code-block:: html+twig
