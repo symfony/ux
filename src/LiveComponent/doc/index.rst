@@ -96,9 +96,9 @@ needed if you're using AssetMapper):
     $ yarn install --force
     $ yarn watch
 
-In case your project `localizes its URLs`_ by adding the special
-``{_locale}`` parameter to the paths of its route definitions,
-you need to do the same with the UX Live Components route definition:
+If your project is localized in different languages (either via the `_locale route parameter`_
+or by `setting the locale in the request`_) add the ``{ _locale}`` attribute to
+the UX Live Components route definition to keep the locale between re-renders:
 
 .. code-block:: diff
 
@@ -3456,7 +3456,6 @@ bound to Symfony's BC policy for the moment.
 .. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`dependent form fields`: https://ux.symfony.com/live-component/demos/dependent-form-fields
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
-.. _`localizes its URLs`: https://symfony.com/doc/current/translation/locale.html#translation-locale-url
 .. _`attributes variable`: https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes
 .. _`CollectionType`: https://symfony.com/doc/current/form/form_collections.html
 .. _`the traditional collection type`: https://symfony.com/doc/current/form/form_themes.html#fragment-naming-for-collections
@@ -3467,3 +3466,5 @@ bound to Symfony's BC policy for the moment.
 .. _`PostMount hook`: https://symfony.com/bundles/ux-twig-component/current/index.html#postmount-hook
 .. _`validation groups`: https://symfony.com/doc/current/form/validation_groups.html
 .. _morphing library: https://github.com/bigskysoftware/idiomorph
+.. _`_locale route parameter`: https://symfony.com/doc/current/translation.html#the-locale-and-the-url
+.. _`setting the locale in the request`: https://symfony.com/doc/current/translation.html#translation-locale
