@@ -1931,7 +1931,7 @@ Inline rendering:
             {% endfor %}
 
             {# render the add button #}
-            {{ form_widget(form.comments.vars.button_add, { label: '+ Add comment', class: 'btn btn-outline-primary' }) }}
+            {{ form_widget(form.comments.vars.button_add, { label: '+ Add comment', attr: { class: 'btn btn-outline-primary' } }) }}
 
             {# render rest of the form #}
             {{ form_row(form) }}
