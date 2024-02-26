@@ -1,0 +1,36 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-22T03:31:53Z
+
+I tried things with blocks (but you'd have to manually "not render it" when not in lazy), with includes (but i wanted to keep code in the same template), so it feel a good balance.
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-22T04:00:00Z
+
+This is nice! Does rendering loading content traditionally take priority over the macro?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-22T04:04:31Z
+
+> This is nice! Does rendering loading content traditionally take priority over the macro?
+
+Yes, if you pass a loadingTemplate attribute it takes precedence. And the loadingTag is "around" for both cases.
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-22T16:03:54Z
+
+So the primary benefits are:
+- not requiring injecting the same loading template for every use
+- allows accessing the passed component props
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-22T16:06:09Z
+
+Exactly and the last one:
+* "styling" the block in a single place
+
+It's 100% optional and has no cost obviously :)
