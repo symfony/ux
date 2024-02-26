@@ -26,17 +26,17 @@ describe('LiveController Emit Tests', () => {
                 Render Count: ${data.renderCount}
                 <button
                     data-action="live#emit"
-                    data-event="fooEvent"
+                    data-live-event-param="fooEvent"
                 >Emit Simple</button>
 
                 <button
                     data-action="live#emit"
-                    data-event="name(simple-component)|fooEvent"
+                    data-live-event-param="name(simple-component)|fooEvent"
                 >Emit Named Matching</button>
 
                 <button
                     data-action="live#emit"
-                    data-event="name(other-component)|fooEvent"
+                    data-live-event-param="name(other-component)|fooEvent"
                 >Emit Named Not Matching</button>
             </div>
         `);

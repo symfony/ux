@@ -1036,14 +1036,21 @@ the work::
         // ...
     }
 
-To call this, add ``data-action="live#action"`` and ``data-action-name``
-to an element (e.g. a button or form):
+.. versionadded:: 2.16
+
+    The ``data-live-action-param`` attribute way of specifying the action
+    was added in Live Components 2.16. Previously, this was done with
+    ``data-live-action-name``.
+
+To call this, trigger the ``action`` method on the ``live`` Stimulus
+controller and pass ``resetMax`` as a `Stimulus action parameter`_ called
+``action``:
 
 .. code-block:: html+twig
 
     <button
         data-action="live#action"
-        data-action-name="resetMax"
+        data-live-action-param="resetMax"
     >Reset Min/Max</button>
 
 Done! When the user clicks this button, a POST request will be sent that
@@ -1058,14 +1065,12 @@ You can also add several "modifiers" to the action:
     <form>
         <button
             data-action="live#action"
-            data-action-name="prevent|debounce(300)|save"
+            data-live-action-param="debounce(300)|save"
         >Save</button>
     </form>
 
-The ``prevent`` modifier would prevent the form from submitting
-(``event.preventDefault()``). The ``debounce(300)`` modifier will add
-300ms of "debouncing" before the action is executed. In other words, if
-you click really fast 5 times, only one Ajax request will be made!
+The ``debounce(300)`` adds 300ms of "debouncing" before the action is executed.
+In other words, if you click really fast 5 times, only one Ajax request will be made!
 
 Actions & Services
 ~~~~~~~~~~~~~~~~~~
@@ -1099,22 +1104,28 @@ This means that, for example, you can use action autowiring::
 Actions & Arguments
 ~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.1
+.. versionadded:: 2.16
 
-    The ability to pass arguments to actions was added in version 2.1.
+    The ``data-live-{NAME}-param`` attribute way of specifying action
+    arguments was added in Live Components 2.16. Previously, this was done
+    inside the ``data-live-action-name`` attribute.
 
-You can also provide custom arguments to your action:
+You can also pass arguments to your action by adding each as a
+`Stimulus action parameter`_:
 
 .. code-block:: html+twig
 
     <form>
         <button
             data-action="live#action"
-            data-action-name="addItem(id={{ item.id }}, itemName=CustomItem)"
+            data-live-action-param="addItem"
+
+            data-live-id-param="{{ item.id }}"
+            data-live-item-name-param="CustomItem"
         >Add Item</button>
     </form>
 
-In your component, to allow each argument to be passed, we need to add
+In your component, to allow each argument to be passed, add
 the ``#[LiveArg()]`` attribute::
 
     // src/Components/ItemList.php
@@ -1134,10 +1145,6 @@ the ``#[LiveArg()]`` attribute::
             $this->name = $name;
         }
     }
-
-Normally, the argument name in PHP - e.g. ``$id`` - should match the
-argument name used in Twig ``id={{ item.id }}``. But if they don't
-match, you can pass an argument to ``LiveArg``, like we did with ``itemName``.
 
 Actions and CSRF Protection
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1216,10 +1223,11 @@ to handle the files and tell the component when the file should be sent:
 
 .. code-block:: html+twig
 
-    <p>
-        <input type="file" name="my_file" />
-        <button data-action="live#action" data-action-name="files|my_action" />
-    </p>
+    <input type="file" name="my_file" />
+    <button
+        data-action="live#action"
+        data-live-action-param="files|my_action"
+    />
 
 To send a file (or files) with an action use ``files`` modifier.
 Without an argument it will send all pending files to your action.
@@ -1233,11 +1241,11 @@ You can also specify a modifier parameter to choose which files should be upload
         <input type="file" name="multiple[]" multiple />
 
         {# Send only file from first input #}
-        <button data-action="live#action" data-action-name="files(my_file)|myAction" />
+        <button data-action="live#action" data-live-action-param="files(my_file)|myAction" />
         {# You can chain modifiers to send multiple files #}
-        <button data-action="live#action" data-action-name="files(my_file)|files(multiple[])|myAction" />
+        <button data-action="live#action" data-live-action-param="files(my_file)|files(multiple[])|myAction" />
         {# Or send all pending files #}
-        <button data-action="live#action" data-action-name="files|myAction" />
+        <button data-action="live#action" data-live-action-param="files|myAction" />
     </p>
 
 The files will be available in a regular ``$request->files`` files bag::
@@ -1456,8 +1464,8 @@ Next, tell the ``form`` element to use this action:
 
     {{ form_start(form, {
         attr: {
-            'data-action': 'live#action',
-            'data-action-name': 'prevent|save'
+            'data-action': 'live#action:prevent',
+            'data-live-action-param': 'save'
         }
     }) }}
 
@@ -1757,7 +1765,8 @@ and ``removeComment()`` actions:
             {% for key, commentForm in form.comments %}
                 <button
                     data-action="live#action"
-                    data-action-name="removeComment(index={{ key }})"
+                    data-live-action-param="removeComment"
+                    data-live-index-param="{{ key }}"
                     type="button"
                 >X</button>
 
@@ -1769,7 +1778,7 @@ and ``removeComment()`` actions:
 
             <button
                 data-action="live#action"
-                data-action-name="addComment"
+                data-live-action-param="addComment"
                 type="button"
             >+ Add Comment</button>
 
@@ -2172,8 +2181,8 @@ re-rendered. In your template, render errors using an ``_errors`` variable:
 
     <button
         type="submit"
-        data-action="live#action"
-        data-action-name="prevent|save"
+        data-action="live#action:prevent"
+        data-live-action-param="save"
     >Save</button>
 
 Once a component has been validated, the component will "remember" that
@@ -2447,13 +2456,18 @@ Emitting an Event
 
 There are three ways to emit an event:
 
+.. versionchanged:: 2.16
+
+    The ``data-live-event-param`` attribute was added in Live Components 2.16.
+    Previously, it was called ``data-event``.
+
 1. From Twig:
 
    .. code-block:: html+twig
 
        <button
            data-action="live#emit"
-           data-event="productAdded"
+           data-live-event-param="productAdded"
        >
 
 2. From your PHP component via ``ComponentToolsTrait``::
@@ -2550,7 +2564,7 @@ If you want to emit an event to only the parent components, use the
 
     <button
         data-action="live#emitUp"
-        data-event="productAdded"
+        data-live-event-param="productAdded"
     >
 
 Or, in PHP::
@@ -2567,7 +2581,7 @@ use the ``name()`` modifier:
 
     <button
         data-action="live#emit"
-        data-event="name(ProductList)|productAdded"
+        data-live-event-param="name(ProductList)|productAdded"
     >
 
 Or, in PHP::
@@ -2583,7 +2597,7 @@ To emit an event to only yourself, use the ``emitSelf()`` method:
 
     <button
         data-action="live#emitSelf"
-        data-event="productAdded"
+        data-live-event-param="productAdded"
     >
 
 Or, in PHP::
@@ -2766,7 +2780,7 @@ suppose your child component has:
 
 .. code-block:: html
 
-    <button data-action="live#action" data-action-name="save">Save</button>
+    <button data-action="live#action" data-live-action-param="save">Save</button>
 
 When the user clicks that button, it will attempt to call the ``save``
 action in the *child* component only, even if the ``save`` action
@@ -2930,7 +2944,7 @@ In the ``EditPost`` template, you render the
 
             <button
                 data-action="live#action"
-                data-action-name="save"
+                data-live-action-param="save"
             >Save</button>
         </form>
     </div>
@@ -3468,3 +3482,4 @@ bound to Symfony's BC policy for the moment.
 .. _morphing library: https://github.com/bigskysoftware/idiomorph
 .. _`_locale route parameter`: https://symfony.com/doc/current/translation.html#the-locale-and-the-url
 .. _`setting the locale in the request`: https://symfony.com/doc/current/translation.html#translation-locale
+.. _`Stimulus action parameter`: https://stimulus.hotwired.dev/reference/actions#action-parameters

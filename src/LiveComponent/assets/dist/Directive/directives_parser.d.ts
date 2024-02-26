@@ -5,7 +5,6 @@ export interface DirectiveModifier {
 export interface Directive {
     action: string;
     args: string[];
-    named: any;
     modifiers: DirectiveModifier[];
     getString: {
         (): string;

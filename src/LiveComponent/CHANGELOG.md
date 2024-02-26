@@ -1,5 +1,51 @@
 # CHANGELOG
 
+## 2.16.0
+
+-   [BC BREAK] The `data-action-name` attribute behavior was removed in favor of
+    using Stimulus "action parameters" and `data-live-action-param`. This is a
+    breaking change if you were using the `data-action-name` attribute directly
+    in your templates.
+
+    To upgrade your application, follow these changes:
+
+    ```diff
+    <button
+        data-action="live#action"
+    -    data-action-name="debounce(300)|save"
+    +    data-live-action-param="debounce(300)|save"
+    >Save</button>
+    ```
+
+    To pass arguments to an action, also use the Stimulus "action parameters" syntax:
+
+    ```diff
+    <button
+        data-action="live#action"
+    -     data-action-name="addItem(id={{ item.id }}, itemName=CustomItem)"
+    +     data-live-action-param="addItem"
+    +     data-live-id-param="{{ item.id }}"
+    +     data-live-item-name-param="CustomItem"
+    >Add Item</button>
+    ```
+
+    Additionally, the `prevent` modifier (e.g. `prevent|save`) was removed. Replace
+    this with the standard Stimulus `:prevent` action option:
+
+    ```diff
+    <button
+    -    data-action="live#action
+    +    data-action="live#action:prevent"
+    -    data-action-name="prevent|save"
+    +    data-live-action-param="save"
+     >Save</button>
+    ```
+
+-   [BC BREAK] The `data-event` attribute was removed in favor of using Stimulus
+    "action parameters": rename `data-event` to `data-live-event-param`. Additionally,
+    if you were passing arguments to the event name, use action parameter attributes
+    for those as well - e.g. `data-live-foo-param="bar"`.
+
 ## 2.15.0
 
 -   [BC BREAK] The `data-live-id` attribute was changed to `id` #1484

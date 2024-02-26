@@ -118,23 +118,26 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     }
 
     action(event: any) {
-        // using currentTarget means that the data-action and data-action-name
-        // must live on the same element: you can't add
-        // data-action="click->live#action" on a parent element and
-        // expect it to use the data-action-name from the child element
-        // that actually received the click
-        const rawAction = event.currentTarget.dataset.actionName;
+        const params = event.params;
+        if (!params.action) {
+            throw new Error(
+                `No action name provided on element: ${getElementAsTagText(
+                    event.currentTarget
+                )}. Did you forget to add the "data-live-action-param" attribute?`
+            );
+        }
+        const rawAction = params.action;
+        // all other params are considered action arguments
+        const actionArgs = { ...params };
+        delete actionArgs.action;
 
-        // data-action-name="prevent|debounce(1000)|save"
+        // data-live-action-param="debounce(1000)|save"
         const directives = parseDirectives(rawAction);
         let debounce: number | boolean = false;
 
         directives.forEach((directive) => {
             let pendingFiles: { [key: string]: HTMLInputElement } = {};
             const validModifiers: Map<string, (modifier: DirectiveModifier) => void> = new Map();
-            validModifiers.set('prevent', () => {
-                event.preventDefault();
-            });
             validModifiers.set('stop', () => {
                 event.stopPropagation();
             });
@@ -176,7 +179,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
                 }
                 delete this.pendingFiles[key];
             }
-            this.component.action(directive.action, directive.named, debounce);
+            this.component.action(directive.action, actionArgs, debounce);
 
             // possible case where this element is also a "model" element
             // if so, to be safe, slightly delay the action so that the
@@ -188,26 +191,26 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         });
     }
 
-    emit(event: Event) {
+    $render() {
+        return this.component.render();
+    }
+
+    emit(event: any) {
         this.getEmitDirectives(event).forEach(({ name, data, nameMatch }) => {
             this.component.emit(name, data, nameMatch);
         });
     }
 
-    emitUp(event: Event) {
+    emitUp(event: any) {
         this.getEmitDirectives(event).forEach(({ name, data, nameMatch }) => {
             this.component.emitUp(name, data, nameMatch);
         });
     }
 
-    emitSelf(event: Event) {
+    emitSelf(event: any) {
         this.getEmitDirectives(event).forEach(({ name, data }) => {
             this.component.emitSelf(name, data);
         });
-    }
-
-    $render() {
-        return this.component.render();
     }
 
     /**
@@ -230,13 +233,19 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         this.component.fingerprint = this.fingerprintValue;
     }
 
-    private getEmitDirectives(event: Event): Array<{ name: string; data: any; nameMatch: string | null }> {
-        const element = event.currentTarget as HTMLElement;
-        if (!element.dataset.event) {
-            throw new Error(`No data-event attribute found on element: ${getElementAsTagText(element)}`);
+    private getEmitDirectives(event: any): Array<{ name: string; data: any; nameMatch: string | null }> {
+        const params = event.params;
+        if (!params.event) {
+            throw new Error(
+                `No event name provided on element: ${getElementAsTagText(
+                    event.currentTarget
+                )}. Did you forget to add the "data-live-event-param" attribute?`
+            );
         }
-
-        const eventInfo = element.dataset.event;
+        const eventInfo = params.event;
+        // all other params are considered event arguments
+        const eventArgs = { ...params };
+        delete eventArgs.event;
 
         // data-event="name(product_list)|some_event"
         const directives = parseDirectives(eventInfo);
@@ -255,7 +264,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
 
             emits.push({
                 name: directive.action,
-                data: directive.named,
+                data: eventArgs,
                 nameMatch,
             });
         });

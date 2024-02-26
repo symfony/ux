@@ -6,10 +6,8 @@ function parseDirectives(content) {
         return directives;
     }
     let currentActionName = '';
-    let currentArgumentName = '';
     let currentArgumentValue = '';
     let currentArguments = [];
-    let currentNamedArguments = {};
     let currentModifiers = [];
     let state = 'action';
     const getLastActionName = function () {
@@ -25,52 +23,30 @@ function parseDirectives(content) {
         directives.push({
             action: currentActionName,
             args: currentArguments,
-            named: currentNamedArguments,
             modifiers: currentModifiers,
             getString: () => {
                 return content;
             }
         });
         currentActionName = '';
-        currentArgumentName = '';
         currentArgumentValue = '';
         currentArguments = [];
-        currentNamedArguments = {};
         currentModifiers = [];
         state = 'action';
     };
     const pushArgument = function () {
-        const mixedArgTypesError = () => {
-            throw new Error(`Normal and named arguments cannot be mixed inside "${currentActionName}()"`);
-        };
-        if (currentArgumentName) {
-            if (currentArguments.length > 0) {
-                mixedArgTypesError();
-            }
-            currentNamedArguments[currentArgumentName.trim()] = currentArgumentValue;
-        }
-        else {
-            if (Object.keys(currentNamedArguments).length > 0) {
-                mixedArgTypesError();
-            }
-            currentArguments.push(currentArgumentValue.trim());
-        }
-        currentArgumentName = '';
+        currentArguments.push(currentArgumentValue.trim());
         currentArgumentValue = '';
     };
     const pushModifier = function () {
         if (currentArguments.length > 1) {
             throw new Error(`The modifier "${currentActionName}()" does not support multiple arguments.`);
         }
-        if (Object.keys(currentNamedArguments).length > 0) {
-            throw new Error(`The modifier "${currentActionName}()" does not support named arguments.`);
-        }
         currentModifiers.push({
             name: currentActionName,
             value: currentArguments.length > 0 ? currentArguments[0] : null,
         });
         currentActionName = '';
-        currentArgumentName = '';
         currentArguments = [];
         state = 'action';
     };
@@ -102,11 +78,6 @@ function parseDirectives(content) {
                 }
                 if (char === ',') {
                     pushArgument();
-                    break;
-                }
-                if (char === '=') {
-                    currentArgumentName = currentArgumentValue;
-                    currentArgumentValue = '';
                     break;
                 }
                 currentArgumentValue += char;
@@ -325,7 +296,7 @@ function getAllModelDirectiveFromElements(element) {
     }
     const directives = parseDirectives(element.dataset.model);
     directives.forEach((directive) => {
-        if (directive.args.length > 0 || directive.named.length > 0) {
+        if (directive.args.length > 0) {
             throw new Error(`The data-model="${element.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
         }
         directive.action = normalizeModelName(directive.action);
@@ -342,7 +313,7 @@ function getModelDirectiveFromElement(element, throwOnMissing = true) {
         if (formElement && 'model' in formElement.dataset) {
             const directives = parseDirectives(formElement.dataset.model || '*');
             const directive = directives[0];
-            if (directive.args.length > 0 || directive.named.length > 0) {
+            if (directive.args.length > 0) {
                 throw new Error(`The data-model="${formElement.dataset.model}" format is invalid: it does not support passing arguments to the model.`);
             }
             directive.action = normalizeModelName(element.getAttribute('name'));
@@ -2942,15 +2913,18 @@ class LiveControllerDefault extends Controller {
         this.updateModelFromElementEvent(event.currentTarget, null);
     }
     action(event) {
-        const rawAction = event.currentTarget.dataset.actionName;
+        const params = event.params;
+        if (!params.action) {
+            throw new Error(`No action name provided on element: ${getElementAsTagText(event.currentTarget)}. Did you forget to add the "data-live-action-param" attribute?`);
+        }
+        const rawAction = params.action;
+        const actionArgs = Object.assign({}, params);
+        delete actionArgs.action;
         const directives = parseDirectives(rawAction);
         let debounce = false;
         directives.forEach((directive) => {
             let pendingFiles = {};
             const validModifiers = new Map();
-            validModifiers.set('prevent', () => {
-                event.preventDefault();
-            });
             validModifiers.set('stop', () => {
                 event.stopPropagation();
             });
@@ -2985,11 +2959,14 @@ class LiveControllerDefault extends Controller {
                 }
                 delete this.pendingFiles[key];
             }
-            this.component.action(directive.action, directive.named, debounce);
+            this.component.action(directive.action, actionArgs, debounce);
             if (getModelDirectiveFromElement(event.currentTarget, false)) {
                 this.pendingActionTriggerModelElement = event.currentTarget;
             }
         });
+    }
+    $render() {
+        return this.component.render();
     }
     emit(event) {
         this.getEmitDirectives(event).forEach(({ name, data, nameMatch }) => {
@@ -3006,9 +2983,6 @@ class LiveControllerDefault extends Controller {
             this.component.emitSelf(name, data);
         });
     }
-    $render() {
-        return this.component.render();
-    }
     $updateModel(model, value, shouldRender = true, debounce = true) {
         return this.component.set(model, value, shouldRender, debounce);
     }
@@ -3019,11 +2993,13 @@ class LiveControllerDefault extends Controller {
         this.component.fingerprint = this.fingerprintValue;
     }
     getEmitDirectives(event) {
-        const element = event.currentTarget;
-        if (!element.dataset.event) {
-            throw new Error(`No data-event attribute found on element: ${getElementAsTagText(element)}`);
+        const params = event.params;
+        if (!params.event) {
+            throw new Error(`No event name provided on element: ${getElementAsTagText(event.currentTarget)}. Did you forget to add the "data-live-event-param" attribute?`);
         }
-        const eventInfo = element.dataset.event;
+        const eventInfo = params.event;
+        const eventArgs = Object.assign({}, params);
+        delete eventArgs.event;
         const directives = parseDirectives(eventInfo);
         const emits = [];
         directives.forEach((directive) => {
@@ -3039,7 +3015,7 @@ class LiveControllerDefault extends Controller {
             });
             emits.push({
                 name: directive.action,
-                data: directive.named,
+                data: eventArgs,
                 nameMatch,
             });
         });

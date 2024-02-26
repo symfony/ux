@@ -141,7 +141,7 @@ export function getAllModelDirectiveFromElements(element: HTMLElement): Directiv
     const directives = parseDirectives(element.dataset.model);
 
     directives.forEach((directive) => {
-        if (directive.args.length > 0 || directive.named.length > 0) {
+        if (directive.args.length > 0) {
             throw new Error(
                 `The data-model="${element.dataset.model}" format is invalid: it does not support passing arguments to the model.`
             );
@@ -167,7 +167,7 @@ export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissin
             const directives = parseDirectives(formElement.dataset.model || '*');
             const directive = directives[0];
 
-            if (directive.args.length > 0 || directive.named.length > 0) {
+            if (directive.args.length > 0) {
                 throw new Error(
                     `The data-model="${formElement.dataset.model}" format is invalid: it does not support passing arguments to the model.`
                 );
