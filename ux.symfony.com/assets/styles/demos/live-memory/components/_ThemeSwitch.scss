@@ -12,19 +12,16 @@
   height: 2.25rem;
   border-radius: 12%;
   transition: transform 250ms linear;
-
-  [data-bs-theme="dark"] & {
+}
+[data-bs-theme="dark"] .LiveMemory-ThemeSwitch {
+  transform: rotateY(180deg);
+}
+.LiveMemory-ThemeSwitch[data-switch="dark"] {
     transform: rotateY(180deg);
-  }
-
-  &[data-switch="dark"] {
-    transform: rotateY(180deg);
-  }
-
-  &[data-switch="light"] {
+}
+.LiveMemory-ThemeSwitch[data-switch="light"] {
     transform: rotateY(0deg);
   }
-}
 
 .LiveMemory-ThemeSwitch-Mode {
   position: absolute;
@@ -48,19 +45,18 @@
   background: rgb(var(--color-background-rgb) / 100%);
 }
 
-
 .LiveMemory-ThemeSwitch-Dark {
   transform: rotateY(180deg);
-  &:hover {
+}
+.LiveMemory-ThemeSwitch-Dark:hover {
     background: var(--color-background);
     border: var(--color-border);
-  }
 }
 
 .LiveMemory-ThemeSwitch-Light {
   transform: rotateY(0deg);
-  &:hover {
+}
+.LiveMemory-ThemeSwitch-Light:hover {
     background: var(--color-background);
     border: var(--color-border);
-  }
 }

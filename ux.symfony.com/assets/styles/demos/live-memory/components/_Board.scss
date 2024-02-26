@@ -110,9 +110,6 @@ body::before {
   line-height: .5rem;
   word-spacing: -.125rem;
   mix-blend-mode: color-burn;
-  [data-bs-theme="dark"] & {
-    mix-blend-mode: overlay;
-  }
   font-size: .65rem;
   font-weight: lighter;
   font-family: monospace;
@@ -120,6 +117,11 @@ body::before {
   --footer-color: var(--color-text);
   --footer-color-subtle: var(--color-text);
 }
+[data-bs-theme="dark"] .LiveMemory-Footer {
+  mix-blend-mode: overlay;
+}
+
+
 .LiveMemory-Footer span:first-child {
   text-align: left;
 }
