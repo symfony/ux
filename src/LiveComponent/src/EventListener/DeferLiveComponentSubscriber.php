@@ -52,6 +52,7 @@ final class DeferLiveComponentSubscriber implements EventSubscriberInterface
             return;
         }
 
+        $componentTemplate = $event->getMetadata()->getTemplate();
         $event->setTemplate('@LiveComponent/deferred.html.twig');
 
         $variables = $event->getVariables();
@@ -65,6 +66,8 @@ final class DeferLiveComponentSubscriber implements EventSubscriberInterface
         if ($mountedComponent->hasExtraMetadata('loading-tag')) {
             $variables['loadingTag'] = $mountedComponent->getExtraMetadata('loading-tag');
         }
+
+        $variables['componentTemplate'] = $componentTemplate;
 
         $event->setVariables($variables);
     }

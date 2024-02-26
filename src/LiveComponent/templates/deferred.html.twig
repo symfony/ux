@@ -2,6 +2,11 @@
     {% block loadingContent %}
         {% if loadingTemplate != null %}
             {{ include(loadingTemplate) }}
+        {% else %}
+            {% from componentTemplate import placeholder %}
+            {% if placeholder is defined %}
+                {{ placeholder(__props|default) }}
+            {% endif %}
         {% endif %}
     {% endblock %}
 </{{ loadingTag }}>
