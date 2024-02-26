@@ -73,7 +73,7 @@ export default class {
 /**
  * Tracks field & models whose values are "unsynced".
  *
- * For a model, unsynced means that the value has been updated inside of
+ * For a model, unsynced means that the value has been updated inside
  * a field (e.g. an input), but that this new value hasn't
  * yet been set onto the actual model data. It is "unsynced"
  * from the underlying model data.

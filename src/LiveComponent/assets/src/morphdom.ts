@@ -1,4 +1,4 @@
-import { cloneHTMLElement, setValueOnElement } from './dom_utils';
+import { cloneHTMLElement, getModelDirectiveFromElement, setValueOnElement } from './dom_utils';
 // @ts-ignore
 import { Idiomorph } from 'idiomorph/dist/idiomorph.esm.js';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
@@ -53,12 +53,6 @@ export function executeMorphdom(
     });
 
     Idiomorph.morph(rootFromElement, rootToElement, {
-        // We handle updating the value of fields that have been changed
-        // since the HTML was requested. However, the active element is
-        // a special case: replacing the value isn't enough. We need to
-        // prevent the value from being changed in the first place so the
-        // user's cursor position is maintained.
-        ignoreActiveValue: true,
         callbacks: {
             beforeNodeMorphed: (fromEl: Element, toEl: Element) => {
                 // Idiomorph loop also over Text node
@@ -103,6 +97,23 @@ export function executeMorphdom(
                     // if this field's value has been modified since this HTML was
                     // requested, set the toEl's value to match the fromEl
                     if (modifiedFieldElements.includes(fromEl)) {
+                        setValueOnElement(toEl, getElementValue(fromEl));
+                    }
+
+                    // Special handling for the active element of a model field.
+                    // Make the "to" element match the "from" element's value
+                    // to avoid any value change during the morphing. After morphing,
+                    // the SetValuesOntoModelFieldsPlugin handles setting the value
+                    // to whatever is in the data store.
+                    // Avoiding changing the value during morphing is important
+                    // to maintain the cursor position.
+                    // We skip this for non-model elements and allow this to either
+                    // maintain the value if changed (see code above) or for the
+                    // morphing process to update it to the value from the server.
+                    if (fromEl === document.activeElement
+                        && fromEl !== document.body
+                        && null !== getModelDirectiveFromElement(fromEl, false)
+                    ) {
                         setValueOnElement(toEl, getElementValue(fromEl));
                     }
 

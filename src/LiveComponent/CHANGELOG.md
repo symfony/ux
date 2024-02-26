@@ -46,6 +46,8 @@
     if you were passing arguments to the event name, use action parameter attributes
     for those as well - e.g. `data-live-foo-param="bar"`.
 
+-   Reverted setting `ignoreActiveValue: true` in Idiomorph
+
 ## 2.15.0
 
 -   [BC BREAK] The `data-live-id` attribute was changed to `id` #1484
