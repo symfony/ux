@@ -36,7 +36,8 @@ final class TemplateCacheWarmer implements CacheWarmerInterface
             $map[hash('xxh128', $item.$this->secret)] = $item;
         }
 
-        (new PhpArrayAdapter($cacheDir.'/'.$this->cacheFilename, new NullAdapter()))->warmUp(['map' => $map]);
+        $cacheFile = sprintf('%s%s%s', $buildDir ?? $cacheDir, DIRECTORY_SEPARATOR, $this->cacheFilename);
+        PhpArrayAdapter::create($cacheFile, new NullAdapter())->warmUp(['map' => $map]);
 
         return [];
     }
