@@ -2242,8 +2242,12 @@ Deferring / Lazy Loading Components
 If a component is heavy to render, you can defer rendering it until after
 the page has loaded. To do this, add the ``defer`` option:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
+    {# With the HTML syntax #}
+    <twig:SomeHeavyComponent defer />
+
+    {# With the component function #}
     {{ component('SomeHeavyComponent', { defer: true }) }}
 
 This renders an empty ``<div>`` tag, but triggers an Ajax call to render the
@@ -2255,20 +2259,81 @@ real component once the page has loaded.
     page load, but it isn't rendered. So keep your heavy work to methods in
     your component (e.g. ``getProducts()``) that are only called when rendering.
 
-To add some loading text before the real component is loaded, use the
-``loading-template`` option to point to a template:
+You can define some content to be rendered while the component is loading, either
+inside the component template (the ``placeholder`` macro) or from the calling template
+(the ``loading-template`` attribute and the ``loadingContent`` block).
 
-.. code-block:: twig
+.. versionadded:: 2.17.0
 
+    Defining a placeholder macro into the component template was added in Live Components 2.17.0.
+
+In the component template, define a ``placeholder`` macro, outside of the
+component's main content. This macro will be called when the component is deferred:
+
+.. code-block:: html+twig
+
+    {# templates/recommended-products.html.twig #}
+    <div {{ attributes }}>
+        {# This will be rendered when the component is fully loaded #}
+        {% for product in this.products %}
+            <div>{{ product.name }}</div>
+        {% endfor %}
+    </div>
+
+    {% macro placeholder(props) %}
+        {# This content will (only) be rendered as loading content #}
+        <span class="loading-row"></span>
+    {% endmacro %}
+
+The ``props`` argument contains the props passed to the component.
+You can use it to customize the placeholder content. Let's say your
+component shows a certain number of products (defined with the ``size``
+prop). You can use it to define a placeholder that shows the same
+number of rows:
+
+.. code-block:: html+twig
+
+    {# In the calling template #}
+    <twig:RecommendedProducts size="3" defer />
+
+.. code-block:: html+twig
+
+    {# In the component template #}
+    {% macro placeholder(props) %}
+        {% for i in 1..props.size %}
+            <div class="loading-product">
+                ...
+            </div>
+        {% endfor %}
+    {% endmacro %}
+
+To customize the loading content from the calling template, you can use
+the ``loading-template`` option to point to a template:
+
+.. code-block:: html+twig
+
+    {# With the HTML syntax #}
+    <twig:SomeHeavyComponent defer loading-template="spinning-wheel.html.twig" />
+
+    {# With the component function #}
     {{ component('SomeHeavyComponent', { defer: true, loading-template: 'spinning-wheel.html.twig' }) }}
 
 Or override the ``loadingContent`` block:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
+    {# With the HTML syntax #}
+    <twig:SomeHeavyComponent defer>
+        <twig:block name="loadingContent">Custom Loading Content...</twig:block>
+    </twig:SomeHeavyComponent>
+
+    {# With the component tag #}
     {% component SomeHeavyComponent with { defer: true } %}
         {% block loadingContent %}Loading...{% endblock %}
     {% endcomponent %}
+
+When ``loading-template`` or ``loadingContent`` is defined, the ``placeholder``
+macro is ignored.
 
 To change the initial tag from a ``div`` to something else, use the ``loading-tag`` option:
 
