@@ -17,7 +17,7 @@ use Symfony\Component\AssetMapper\MappedAsset;
 use Symfony\Component\Filesystem\Path;
 
 /**
- * Experimental CSS compiler
+ * Experimental CSS compiler.
  *
  * This compiler combines all the SCSS files imported in `live-memory.min.css`
  * into a single CSS file, and removes SASS comments and empty lines.
@@ -34,7 +34,6 @@ class CssCompiler implements AssetCompilerInterface
     public function compile(string $content, MappedAsset $asset, AssetMapperInterface $assetMapper): string
     {
         return preg_replace_callback('#@import (?:"|\')(.*)(?:\'|");#m', function ($matches) use ($asset) {
-
             $file = $matches[1];
             $file = substr_replace($file, '/_', strrpos($file, '/'), 1);
             $file = './'.$file.'.scss';
