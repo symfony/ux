@@ -1,0 +1,720 @@
+---------------------------------------------------------------------------
+
+by sukei at 2024-01-28T00:10:04Z
+
+The weird thing here is that the action name to invoke is treated equally as its own arguments preventing the developer to use any argument named "action".
+
+I was thinking of something like that:
+
+```
+data-live-action-param="addItem(id, itemName)"
+data-live-args-param="escaped JSON string with id and itemName values"
+```
+
+The rationale here is to allow a rich action syntax and use an other parameter to prevent "injections" in the action DSL. Just like SQL or GraphQL prevents the same issue.
+
+Then we could create a really cool Twig helper to handle this for us.
+
+```
+{{ live_action("addItem(id, itemName)", { id, itemName }) }}
+```
+
+On top of that, I would keep the "prevent" into the action DSL to not having to mix native Stimulus syntax and Symfony Live syntax (e.g. prevent + debounce).
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-28T02:36:31Z
+
+> The weird thing here is that the action name to invoke is treated equally as its own arguments preventing the developer to use any argument named "action".
+
+That's true. But I'm not sure we should care. Having some reserved words is a pretty normal thing. And in this case, there is just one reserved word: `action`.
+
+> data-live-action-param="addItem(id, itemName)"
+> data-live-args-param="escaped JSON string with id and itemName values"
+
+I'm not against allowing this as an option - it seems perfectly acceptable to me. But I don't want to require people to write JSON or use a helper to write JSON. So if people want this, someone can make a PR :). It would even be a way for you to have an argument named `action`.
+
+> {{ live_action("addItem(id, itemName)", { id, itemName }) }}
+
+Yea! Why not? It'd be optional, but it looks nice. Or even:
+
+```twig
+{{ live_action('addItem', {
+    id: theId,
+    itemName: 'Foo'
+}) }}
+```
+
+Someone should make a PR for that :). And, btw, if we did this, it could render using the `data-live-id-param` format - it wouldn't need the JSON format.
+
+> On top of that, I would keep the "prevent" into the action DSL to not having to mix native Stimulus syntax and Symfony Live syntax (e.g. prevent + debounce).
+
+Nah. I mean, I understand why this might make sense. But we should lean on Stimulus as much as possible so that LiveComponent is as much Stimulus and a little "custom LiveComponents stuff" as possible.
+
+Cheers!
+
+---------------------------------------------------------------------------
+
+by sukei at 2024-01-28T11:56:18Z
+
+Hello! I made some tests on my side and what I found raised some more concerns. I'm not on my phone anymore, so I will explain that thing a little bit.
+
+# 1. The inflection of the parameters names
+
+The parameters names are inflected from `dash-case` to `lowerCamelCase` so you can't enforce the final form of the parameters:
+
+```
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="addItem"
+        data-live-item-id-param="42"
+        data-live-item-name-param="foo">add to cart</button>
+```
+
+Stimulus will produce the parameters `itemId` and `itemName`. My PHP project may use `$item_id` and `$item_name` as parameters or ; in my own case ; `$itemID`. The mapping between the two worlds seems impossible using the Stimulus way.
+
+# 2. Parameters types
+
+Stimulus uses the static `values` property to guess the types of passed values (e.g. `static values { data: Number }`) and map the values accordingly. This does not exists for the action parameters. Every type is guessed from the form of the value:
+
+```
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="dumpValues"
+        data-live-one-param="42"
+        data-live-two-param="foo"
+        data-live-three-param="true"
+        data-live-four-param="[1, 2]"
+        data-live-five-param='{"foo": "bar"}'></button>
+```
+
+Stimulus will interpret this as `one = number, two = string, three = boolean, four = JSON, five = JSON`. The types of the values may be obvious but what if the parameter `one` or `three` is a string on the PHP side? I think we lose the opportunity here to keep some types doing it that way.
+
+# 3. The Stimulus philosophy
+
+I think that Stimulus really shine when used as a thin bridge between heavy (or not that heavy) JS libraries and HTML. I may not use it as a "framework" to develop things on top of it. Once we said that, the `LiveComponent` should not be built as a "Stimulus Controller" but should be a different proposition THAT USE Stimulus as a bridge to make it works.
+
+# 4. Parameter name collision
+
+As I said previously, adding reserved or magic words is not ideal. This was already discussed.
+
+# Proposal war
+
+Here is what you propose:
+
+```
+<button type="button"
+        data-action="live#action:prevent"
+        data-live-action-param="debounce(300)|addItem"
+        data-live-item-id-param="42"
+        data-live-item-name-param="foo"
+>add to cart</button>
+```
+
+1. The parameters names convention on the PHP side is enforced by Stimulus.
+2. The parameters types are what Stimulus think they are.
+3. It separate modifiers across different philosopies (prevent and debounce are declared separately)
+4. The `action` parameter name is unusable since its now a reserved word.
+
+On the other side, my original proposal fix all the concerns I raised above. I would consider the `action` parameter as a LiveComponent DSL (like a SQL prepared statement) and the `args` parameter separately (like a SQL statement bound parameters):
+
+```
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="prevent|debounce(300)|addItem(itemID, itemName)"
+        data-live-args-param='{ "itemID": 42, "itemName": "foo" }'
+        >add to cart</button>
+```
+
+This allow the DSL to be rich, powerful and open for extension (think about allowing the developer to create its own modifiers).
+This prevent the DSL injections we are now sensitive to (it may even be considered as a security issue at this point).
+
+1. The parameters names are preserved.
+2. The parameters types are preserved (while they are serializable: int, float, string, bool, array, stdClass).
+3. It do not try to blend the two worlds and keep things collocated.
+5. No more parameter names collisions.
+
+## DX
+
+Disclaimer: I'm just talking about my own experience here.
+
+I found Stimulus attributes horrible to write and maintain, especially when using folders to organize many controllers. The Twig helpers really change my mind and the way I use it daily. I really do like writing:
+
+```
+<div {{ stimulus_controller('shopping/cart') }}>
+  <button type="button" {{ stimulus_action('shopping/cart', 'addItem', 'click', { itemId: 42, itemName: 'foo' }) }}>add to cart</button>
+</div>
+```
+
+over:
+
+```
+<div data-controller="shopping--cart">
+  <button type="button"
+          data-action="click->shopping--cart#addItem"
+          data-shopping--cart-item-id-param="42"
+          data-shopping--cart-item-name-param="foo">add to cart</button>
+</div>
+```
+
+The `--` dash, the `really-long-names`, and the inflection rules really grind my gears and I'm glad that Symfony handle this for me. Think about the controller named `ui/form/input_autosize_controller.ts` that became  the identifier `ui--form--input-autosize` and blend in the other attributes conventions (`data-ui--form--input-autosize-max-size-value`).
+
+You were concerned about the need to write JSON as attribute parameters. It may be harder without the Twig helpers, but if you want to send arrays or objects, you'll not have choice. Stimulus has some examples on its documentation and use single quote to ease the writing of the JSON attributes. The helper I may want to use will looks like:
+
+```
+<button type="button" {{ live_action("prevent|debounce(300)|addItem(itemID, itemName)", { itemID: 42, itemName: 'foo' }) }}>add to cart</button>
+```
+
+May produce:
+
+```
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="prevent|debounce(300)|addItem(itemID, itemName)"
+        data-live-args-param="&#x7B;&quot;itemID&quot;&#x3A;42,&quot;itemName&quot;&#x3A;&quot;foo&quot;&#x7D;"
+        >add to cart</button>
+```
+
+## PS
+
+If this proposal is approved, I would be glad to work on it.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-28T20:55:07Z
+
+You've made some very compelling points :). Especially about the inflection of the parameter names.
+
+So let's explore your idea a bit more (I'm ignoring the Twig `{{ live_action() }}` helper just to keep things simple):
+
+```
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="prevent|debounce(300)|addItem(itemID, itemName)"
+        data-live-args-param="&#x7B;&quot;itemID&quot;&#x3A;42,&quot;itemName&quot;&#x3A;&quot;foo&quot;&#x7D;"
+>add to cart</button>
+```
+
+You're separating the param names - `itemId` and `itemName` from their values to follow the idea of a prepared statement in SQL. But, is that necessary? In SQL, I might have:
+
+> # DO NOT DO AT HOME ;)
+> $sql = "SELECT * FROM product WHERE id = $id";
+
+The `$id` becomes part of the query string before it's executed. Suppose we combined the params and their values:
+
+```
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="prevent|debounce(300)|addItem(itemID=7, itemName='banana')"
+>add to cart</button>
+```
+
+I don't think we have that same problem. The string `banana` is not a variable that will be evaluated and become part of the attribute value. Even if we decided to add some sort of dynamic variable ability later - e.g. `data-live-action-param="addItem($itemName)` (where `$itemName` fetches the `itemName` prop/model value) - I still think it's not a problem, right?
+
+My point is:
+
+* I was using action parameters to avoid needing a parser for the argument values. But, you've highlighted some problems with this approach.
+* If we don't use that approach then (unless I'm missing the "injections" problem), then we might as well write a parser and have the nice `save(itemId=5, itemName='banana')` syntax.
+
+Or, maybe we live with the limitation of not using quotes and then not allowing `'` and `'(` in values. Or, we could use a syntax like `itemId: 5, itemName: 'banana'` and parse that as JavaScript (add `{` at the front and `}` at the end and use some version of `eval()` in JS). Unfortunately, that wouldn't be CSP-compliant.
+
+I'm not entirely sure of the best path forward. Making the syntax use JSON - `save("itemId": 5, "itemName": "banana")` would be possible, but ugly... especially since you're probably already using double quotes for your attributes.
+
+---------------------------------------------------------------------------
+
+by sukei at 2024-01-29T08:41:58Z
+
+We can't ignore the fact that some of the parameters are first extrapolated from a variable on the PHP side. Let me explain it further. Given:
+
+```twig
+{# Variables are passed to the template and their origins are unsure (DB, Form, User, etc.).  #}
+{% set itemID = 7 %}
+{% set itemName = 'banana' %}
+
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="prevent|debounce(300)|addItem(itemID={{ itemID }}, itemName='{{ itemName }}')"
+>add to cart</button>
+```
+
+Then, it'll be compiled to:
+
+```twig
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="prevent|debounce(300)|addItem(itemID=7, itemName='banana')"
+>add to cart</button>
+```
+
+But what about a variable with special characters?
+
+```twig
+{# Variables are passed to the template and their origins are unsure (DB, Form, User, etc.).  #}
+{% set itemID = 7 %}
+{% set itemName = 'cherry\')" data-ignore="' %}
+
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="prevent|debounce(300)|addItem(itemID={{ itemID }}, itemName='{{ itemName }}')"
+>add to cart</button>
+```
+
+Then, it'll be compiled to:
+
+```twig
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="prevent|debounce(300)|addItem(itemID=7, itemName='cherry')" data-ignore="')"
+>add to cart</button>
+```
+
+Note that it is just a POC and that Twig may mitigate the issue by escaping values someway into the process, but still, it can break the expression.
+
+Trying to remove this from the API is just a way to have a easier implementation that prevent us to work on the double escaping of quotes (inside the expression) and double quotes (of the surrounding attribute). If I ignore the eventual helper, I would write:
+
+```twig
+{# Variables are passed to the template and their origins are unsure (DB, Form, User, etc.).  #}
+{% set itemID = 7 %}
+{% set itemName = 'cherry\')" data-ignore="' %}
+
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="prevent|debounce(300)|addItem(itemID, itemName)"
+        data-live-args-param="{{ { itemID, itemName }|json_encode|e('html_attr') }}"
+>add to cart</button>
+```
+
+As a bonus, I should probably go deeper in the reasoning and escaping every var to completely disallow the usage of literals:
+
+```twig
+{# Variables are passed to the template and their origins are unsure (DB, Form, User, etc.).  #}
+{% set itemID = 7 %}
+{% set itemName = 'cherry\')" data-ignore="' %}
+
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="prevent|debounce(t)|addItem(itemID, itemName)"
+        data-live-args-param="{{ { itemID, itemName, t: 300 }|json_encode|e('html_attr') }}"
+>add to cart</button>
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-29T16:34:25Z
+
+> We can't ignore the fact that some of the parameters are first extrapolated from a variable on the PHP side. Let me explain it further.
+
+Ah, I see - good point. However, I think it's not strictly a security concern. Twig escapes your example, and it outputs as:
+
+```html
+<button type="button"
+        data-action="live#action"
+        data-live-action-param="prevent|debounce(300)|addItem(itemID=7, itemName='cherry&#039;)&quot; data-ignore=&quot;')"
+>add to cart</button>
+```
+
+I'm not against having `data-live-args-param="{{ { itemID, itemName }|json_encode|e('html_attr') }}"` type of option, but I'd like a version of this feature that works in raw HTML without needing to write JSON by hand (then we can add fancy helper functions after, which I think is a good idea).
+
+Unfortunately, using a JS syntax - e.g. `data-live-action-param="save(id: 5, name: 'Ryan')"` *would* work... except we'd need to use `eval()` and that'll cause problems with csp.
+
+So what about a simple query string?
+
+```html
+<button type="button"
+    data-action="live#action"
+    data-live-action-param="debounce(300)|addItem(itemId=7&itemName=cherry)"
+>add to cart</button>
+```
+
+The values would be url-encoded. In most simple cases, that wouldn't mean any change (like the above). But if you DO have a special character, it's supported - e.g. a complex value of `i like = (cherries) & bananas`
+
+```html
+<button type="button"
+    data-action="live#action"
+    data-live-action-param="debounce(300)|addItem(itemId=7&itemName=i%20like%20%3D%20%28cherries%29%20%26%20bananas)"
+>add to cart</button>
+```
+
+Of course, some optional `live_action()` helper could hide this urlencoding.
+
+Query params give us a (1) readable value (2) value that supports all characters (3) a recognizable format and (4) zero complex / extra code to parse it.
+
+---------------------------------------------------------------------------
+
+by sukei at 2024-01-29T20:29:45Z
+
+> Ah, I see - good point. However, I think it's not strictly a security concern. Twig escapes your example, and it outputs as:
+
+Yeah, you are right. I pointed it out too.
+
+> we'd need to use eval() and that'll cause problems with csp
+
+Yep, I don't want that too.
+
+> The values would be url-encoded.
+
+That's an interesting idea. I just fear that complex values such as objects and arrays may be hard to write. But it can be abstracted by the Twig helper so it may not be a big deal.
+
+```twig
+<button type="button"
+    data-action="live#action"
+    data-live-action-param="debounce(300)|addItem(command[itemID]=7&command[itemName]=cherry)"
+>add to cart</button>
+```
+
+If we go with this, I suggest to go further with something like this:
+
+```twig
+<button type="button"
+    data-action="live#action"
+    data-live-modifiers-param="prevent|debounce(300)"
+    data-live-action-param="addItem?command[itemID]=7&command[itemName]=cherry"
+>add to cart</button>
+```
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-30T11:55:16Z
+
+PR & description updated. I like where we've ended up - thanks for the push @sukei.
+
+> That's an interesting idea. I just fear that complex values such as objects and arrays may be hard to write. But it can be abstracted by the Twig helper so it may not be a big deal.
+
+💯
+
+> If we go with this, I suggest to go further with something like this:
+
+I kept the `addItem(id=5)` syntax instead of `addItem?id=5`. Subjective, but I do like how `addItem(id=5)` looks like a method call. And also, for 90% of the use-cases (a single argument with no weird characters), `addItem(id=5)` is the same syntax people are already using today.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-30T14:37:59Z
+
+Made a table on how we used Directiveparser and why...
+
+How are we after this PR ? If i'm not mistaken, it's used only in loading attributes and events ?
+
+```
+addItem(id=5)
+```
+
+Still think we should use a "json-php-namedparameter" syntax there :|  That can be done later i know i know :)
+
+```
+addItem(id: 5)
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-30T14:51:15Z
+
+Do you have a reason to not use stimulus syntax for args ?
+
+Unfortunately, using a JS syntax - e.g. data-live-action-param="save(id: 5, name: 'Ryan')" would work... except we'd need to use eval() and that'll cause problems with csp.
+
+```
+data-live-action-NAME-param=VALUE
+```
+
+Here:
+
+```
+data-live-action-id-param="5"
+data-live-action-name-param="Ryan"
+```
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-30T15:29:24Z
+
+> Do you have a reason to not use stimulus syntax for args ?
+
+That was the original proposal. @sukei made some good arguments against it - https://github.com/symfony/ux/pull/1418#issuecomment-1913571042 - especially item 1.
+
+> Unfortunately, using a JS syntax - e.g. data-live-action-param="save(id: 5, name: 'Ryan')" would work... except we'd need to use eval() and that'll cause problems with csp.
+
+Precisely. That's what pushed me to realize that a query string format is a great middle ground. For 95% of the use-cases (single argument and no weird characters) it looks dead-simple: `save(id=5)`
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-30T16:15:24Z
+
+> That was the original proposal. @sukei made some good arguments against it - [#1418 (comment)](https://github.com/symfony/ux/pull/1418#issuecomment-1913571042) - especially item 1.
+
+* lowerCamelCase is the Symfony official coding convention (and PER/PSR12 too)
+* dashed-case is the data-attribute one, the HTML one, and the Stimulus one
+
+We have LiveArg mapping done for this exact reason.
+
+For me we should stick to standards (that would allow other controllers to get this value easily, to observe it, etc ...)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-30T16:17:08Z
+
+> For 95% of the use-cases (single argument and no weird characters) it looks dead-simple: save(id=5)
+
+For 95% of use cases, data-xxx works perfectly (too).
+
+For 95% of the remaining use cases, (foo: bar, blip: blop) is perfect too
+
+But query strings has this big problem of its handling of "array" data, that is different in JS, in HTML and in PHP... :|
+
+They are harder to secure too, validate, update, too than isolated fields.
+
+---------------------------------------------------------------------------
+
+by sukei at 2024-01-31T08:41:59Z
+
+> We have LiveArg mapping done for this exact reason.
+
+You are right, this can do the trick for my use case.
+
+> But query strings has this big problem of its handling of "array" data, that is different in JS, in HTML and in PHP.
+
+I know, that's why I proposed JSON first. Its easier to implement IMO.
+
+> Do you have a reason to not use stimulus syntax for args ?
+
+Just have a look at my `2.` observation. I fear that the magic interpretation of types by Stimulus may hurt. What if I need the string `"true"` and it ends casted as a `true` boolean value? That's why I wouldn't go that way (note that query string may have similar issues and we should refer to the Form component to handle this).
+
+> dashed-case is the data-attribute one, the HTML one, and the Stimulus one
+
+`dashed-case` is the HTML one. The Stimulus one is the consequence of this: https://developer.mozilla.org/en-US/docs/Learn/HTML/Howto/Use_data_attributes#javascript_access. It just follows the standard inflection.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-31T13:06:03Z
+
+I pushed for json too, but there is one thing it does not allow: reusing those values easily in other JS / DOM parts (well... query string has the same problem)
+
+And finally Ryan convinced me about the DX aspect of it. Some people will want to just write some values, and we should not force them to use any special helper.
+
+In a perfect world, we would have two formats, but at first i fear it's too much work to maintain/document/test/etc...
+
+Concerning your "2" ..
+
+I do understand your point and i agree we should not let an external library implementation decide how our values are typed (casted?).
+But we _could_ type the values in the controller/component to inform stimulus what type we'd like, or expose some metadata in the props...  or re-typing after stimulus...
+
+What i mean is: there are solutions to all of this, and i'd rather we decide based on DX or maintenance..
+
+(but really i agree/understand with most of your points)
+
+---------------------------------------------------------------------------
+
+by sukei at 2024-01-31T13:41:18Z
+
+> but there is one thing it does not allow: reusing those values easily in other JS / DOM parts
+
+I do not understand the use-case, can you elaborate this point? For what I see, those values will be passed to the Stimulus Live Controller when calling the action method. Those values are "closed" to this specific use case. For sure, you can select the node and read the dataset from outside, but you will get raw values (everything is a string) and some noise in the parameters names (`data-live-item-id-param -> liveItemIdParam`). Isn't it easier to bind the values you need in a specific attribute when you really need to (`data-item-id -> itemId`)?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-31T14:25:12Z
+
+Yes this is better ... and this is why i don't think query strings are the best solution :)) But i think we do agree on 99% here, i must miss-express myself .. again :))
+
+---------------------------------------------------------------------------
+
+by anatholius at 2024-02-07T18:23:29Z
+
+Hi all
+
+Inspired by today's Ryan's stream and reading this discussion I prepared some of my thoughts about, `all-in-one-code`
+
+```Twig
+
+        <button
+            data-action="live#action"
+
+            {# example: #}
+            {# data-action-name="addItem(id={{ item.id }}, itemName=CustomItem)" #}
+            {# variation: #}
+            {# data-live-action-param="addItem(id={{ item.id }}&itemName=custom%20with%20space)" #}
+
+            {# proposal refactoring thorough values API #}
+            data-action-add-item-thread-name-value="addItem"
+            data-action-add-item-thread-id-param-value="{{ item.id }}"
+            data-action-add-item-thread-item-name-param-value="CustomItem"
+            {# or #}
+            data-action-add-item-thread-item-name-param-value="Custom with space"
+
+            {# or with `live-` prefix #}
+            {# NOTE: is that prefix necesarily needed? at all 'live-action' part #}
+            {#       could be known from `data-action` attr #}
+
+            {# example: #}
+            {# data-live-action-param="prevent|debounce(300)|addItem(itemID, itemName)" #}
+            {# proposal refactoring  thorough values API #}
+            data-live-action-prevent-thread-name-value="prevent"
+            data-live-action-debounce-thread-name-value="debounce"
+            data-live-action-debounce-thread-{time?}-param-value="300"
+            data-live-action-add-item-thread-name-value="addItem"
+            data-live-action-add-item-thread-id-param-value="{{ itemId }}"
+            data-live-action-add-item-thread-item-name-param-value="{{ itemName }}"
+
+            {# NOTE: In Stimulus controller we can easy get values object:
+                ```Stimulus
+                ... extends Controller {
+                    values = {
+                        liveActionPreventThreadName: this.liveActionPreventThreadNameValue,
+                        ...
+                        liveActionAddItemThreadItemName: this.liveActionAddItemThreadItemNameValue,
+                    }
+                }
+                ```
+                // just as example but it could be prepared automatically by digging deeper in `this`
+                parsing those name strings should be much easier than parsing some regex tries
+                - live (is it needed here? probably not)
+                - action (is it needed here? probably not)
+                - add-item
+                - thread (separator)
+                - name (this.___Value is going to be a `name` of `add-item` thread)
+                ...
+                - item-name
+                - param (separator)
+                  dashToCamel(previous part - 'item-name')=itemName is going to be a `param` name with value=this.___Value
+                _____
+                ...parsing to:...
+                #threads = [
+                    {
+                        name: addItem
+                        params: {
+                            id: ...
+                            itemName: ...
+                        }
+                    },
+                    ...
+                ]
+                having that kind of object should be easier to deal with in context of PROPS,
+                or some local stimulus controller STATE
+                and is unambiguous without special parsing
+            #}
+        >Add Item</button>
+```
+
+in Stimulus lifecycle: `initialize` before `connect` could be used to prepare this first
+
+I hope this can be helpful, WDYT?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-02-07T20:48:46Z
+
+We're down to debating between:
+
+**A) query parameter arguments**
+
+```html
+<button
+    data-action="live#action"
+    data-live-action-param="addItem(id={{ item.id }}&foo=bar)"
+>Add Item</button>
+```
+
+vs
+
+**B) individual "action params"**
+
+```html
+<button
+    data-action="live#action"
+    data-live-action-param="addItem(id={{ item.id }})"
+    data-live-id-param="{{ item.id }}"
+    data-live-foo-param="bar"
+>Add Item</button>
+```
+
+(A) It sounds like query params suffers from there being different array syntaxes in php vs JavaScript. Also this was mentioned as a con:
+
+> They are harder to secure too, validate, update, too than isolated fields.
+
+Though, I'm not really sure what this really means.
+
+(B) has the cons of needing to map some `LiveParam` arg names in edge cases & edge-case situations where we don't want the type-casting from Stimulus.
+
+Honestly, it's edge-cases vs edge-cases on 2 workable solutions. I vote for keeping things how they are: **query parameters**. We *would* have a way to deprecate this later and switch from (A) to (B) (by deprecating if you have `(` after your action name to detect you're passing args that way).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-07T21:08:52Z
+
+So how would you use spaces (that were the main demand before this) ?
+
+---------------------------------------------------------------------------
+
+by adeys at 2024-02-10T11:12:19Z
+
+Hi everyone,
+
+I'd like to contribute to the discussion about choosing between `A) query parameters arguments` and `B) stimulus action args parameter`. In my opinion, option B seems more favorable.
+
+**A) query parameters arguments:**
+From a Developer Experience (DX) standpoint, it appears less readable to me. Additionally, as some have pointed out, dealing with issues like spaces, data escaping, and array values may prove challenging.
+
+**B) stimulus action args parameter:**
+Given that LiveComponent is built on Stimulus, I believe it's beneficial to fully leverage its capabilities and encourage developers to explore its potential (although not mandatory). Despite the cons related to edge cases (such as non-flexible `LiveParam` arg name mapping and stimulus type casting), adopting a JSON format for parameters like `data-live-args-param='{ "first": "value" }'` could be a better approach.
+
+This approach may require developers to adhere to a strict JSON format, but I find it more readable, explicit, and capable of addressing concerns like custom `LiveParam` names mapping and argument types. It also simplifies dealing with complex data types, such as arrays or objects.
+
+To illustrate, developers can choose between two options:
+
+**a) for purists:**
+```html
+data-action="live#action:prevent"
+data-live-action-name="debounce(300)|addItem"
+data-live-args-param='{"id": {{ item.id }}, "options": {"first": {{ item.value }}, "second": "true"}}'
+```
+
+or
+
+**b) for helper users:**
+```html
+data-action="live#action:prevent"
+data-live-action-name="debounce(300)|addItem"
+data-live-args-param="{{ {id: item.id, options: {first: item.value, second: "true"}|json_encode }}"
+```
+
+I appreciate your consideration and look forward to your feedback.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-10T14:04:57Z
+
+My feeling is that we try to use more and more "standards" (Idiomorph as last example), and i'd find logical and safer to not make an exception here.
+
+> Honestly, it's edge-cases vs edge-cases on 2 workable solutions
+
+I think it is not "edge-cases vs edge-cases" ... at all :)
+
+Letting the user handle query string is imho a really bad DX, for the following reasons:
+- for anything but [a-zA-Z0-9] string, it requires an aditionnal function/helper from Twig
+- once in the queryString, it's harder to get, update, ...
+- it become really hard to have conditions in it
+
+```twig
+<button
+    data-action="live#action"
+    data-live-action-name="createUser"
+    data-live-first-name-param="{{ user.firstName }}"
+    data-live-last-name-param="{{ user.lastName }}"
+    {% if user.city is defined %}
+    data-live-city-param="{{ user.city }}"
+    {% endif  %}
+>
+Create User
+</button>
+```
+
+How would look like the same thing with the "query string" ?  😵‍💫
+
+I know there are drawbacks in both options, but i really don't think it's fair to compare specific type casting problems (that i do not negate) to ... requiring additionnal methods to handle _**every**_ string, accents, spaces.. almost all but identifiers in fact :|
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-02-21T01:21:19Z
+
+This is ready to go again - back to the original attributes version of the feature. Test failures are unrelated, but we need to get on top of those :)
