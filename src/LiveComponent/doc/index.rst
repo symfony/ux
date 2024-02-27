@@ -1040,7 +1040,7 @@ the work::
 
     The ``data-live-action-param`` attribute way of specifying the action
     was added in Live Components 2.16. Previously, this was done with
-    ``data-live-action-name``.
+    ``data-action-name``.
 
 To call this, trigger the ``action`` method on the ``live`` Stimulus
 controller and pass ``resetMax`` as a `Stimulus action parameter`_ called
@@ -1108,7 +1108,7 @@ Actions & Arguments
 
     The ``data-live-{NAME}-param`` attribute way of specifying action
     arguments was added in Live Components 2.16. Previously, this was done
-    inside the ``data-live-action-name`` attribute.
+    inside the ``data-action-name`` attribute.
 
 You can also pass arguments to your action by adding each as a
 `Stimulus action parameter`_:
