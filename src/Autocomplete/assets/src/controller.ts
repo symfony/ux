@@ -431,7 +431,7 @@ export default class extends Controller {
 
         const originalPlaceholderOption = this.originalOptions.find((option) => option.value === '');
         const newPlaceholderOption = newOptions.find((option) => option.value === '');
-        console.log(originalPlaceholderOption, newPlaceholderOption);
+
         if (
             originalPlaceholderOption &&
             newPlaceholderOption &&
