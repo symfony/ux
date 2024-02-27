@@ -201,7 +201,6 @@ class default_1 extends Controller {
         const filteredNewOptions = newOptions.filter((option) => option.value !== '');
         const originalPlaceholderOption = this.originalOptions.find((option) => option.value === '');
         const newPlaceholderOption = newOptions.find((option) => option.value === '');
-        console.log(originalPlaceholderOption, newPlaceholderOption);
         if (originalPlaceholderOption &&
             newPlaceholderOption &&
             originalPlaceholderOption.text !== newPlaceholderOption.text) {
