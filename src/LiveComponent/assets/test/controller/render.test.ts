@@ -157,7 +157,7 @@ describe('LiveController rendering Tests', () => {
         `);
 
         test.expectsAjaxCall()
-            .expectUpdatedData({ name: 'Hello' })
+            .expectUpdatedData({ name: 'Hello' });
 
         const input = test.queryByDataModel('name') as HTMLInputElement;
         userEvent.type(input, 'Hello');
@@ -169,6 +169,29 @@ describe('LiveController rendering Tests', () => {
         expect(input.selectionStart).toBe(3);
         userEvent.type(input, '!');
         expect(input.value).toBe('Hel!lo');
+    });
+
+    it('uses the new value of an unmapped field that was NOT modified even if active', async () => {
+        const test = await createTest({ title: 'greetings' }, (data: any) => `
+            <div ${initComponent(data)}>
+                <!-- An unmapped field -->
+                <input value="${data.title}">
+
+                Title: "${data.title}"
+            </div>
+        `);
+
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
+                // change the data on the server so the template renders differently
+                data.title = 'Hello';
+            });
+
+        const input = test.element.querySelector('input') as HTMLInputElement;
+        // focus the input, but don't change it
+        userEvent.type(input, '');
+        await test.component.render();
+        expect(input.value).toEqual('Hello');
     });
 
     it('does not render over elements with data-live-ignore', async () => {

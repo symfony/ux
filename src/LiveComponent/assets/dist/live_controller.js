@@ -1349,7 +1349,6 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
         syncAttributes(newElement, oldElement);
     });
     Idiomorph.morph(rootFromElement, rootToElement, {
-        ignoreActiveValue: true,
         callbacks: {
             beforeNodeMorphed: (fromEl, toEl) => {
                 if (!(fromEl instanceof Element) || !(toEl instanceof Element)) {
@@ -1373,6 +1372,11 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                         return false;
                     }
                     if (modifiedFieldElements.includes(fromEl)) {
+                        setValueOnElement(toEl, getElementValue(fromEl));
+                    }
+                    if (fromEl === document.activeElement
+                        && fromEl !== document.body
+                        && null !== getModelDirectiveFromElement(fromEl, false)) {
                         setValueOnElement(toEl, getElementValue(fromEl));
                     }
                     const elementChanges = externalMutationTracker.getChangedElement(fromEl);
