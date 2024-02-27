@@ -3,9 +3,11 @@ name: Symfony UX
 on:
     push:
         paths-ignore:
+            - 'src/*/doc/**'
             - 'ux.symfony.com/**'
     pull_request:
         paths-ignore:
+            - 'src/*/doc/**'
             - 'ux.symfony.com/**'
 
 jobs:
