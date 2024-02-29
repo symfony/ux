@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-22T16:08:04Z
+
+It only works with attributes in a toggle way .. you may want to use addClass there i think
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-02-22T16:22:11Z
+
+Thanks for the review. I updated the PR to show an example that won't work and explain that explicitly. Thanks.
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-02-27T12:37:24Z
+
+Sorry I forgot about this PR. I did all the changes that you suggested. Thanks for the reviews!
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-27T21:27:39Z
+
+> I did all the changes that you suggested.
+
+@javiereguiluz, did you miss pushing these changes?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-02-28T08:23:18Z
+
+@kbond yes, sorry 😊
