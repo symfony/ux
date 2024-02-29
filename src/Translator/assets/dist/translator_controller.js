@@ -38,41 +38,34 @@ function format(id, parameters = {}, locale) {
         parts = id.split('|');
     }
     else {
-        const matches = id.match(/(?:\|\||[^|])+/g);
-        if (matches !== null) {
-            parts = matches;
-        }
+        parts = id.match(/(?:\|\||[^|])+/g) || [];
     }
     const intervalRegex = /^(?<interval>({\s*(-?\d+(\.\d+)?[\s*,\s*\-?\d+(.\d+)?]*)\s*})|(?<left_delimiter>[[\]])\s*(?<left>-Inf|-?\d+(\.\d+)?)\s*,\s*(?<right>\+?Inf|-?\d+(\.\d+)?)\s*(?<right_delimiter>[[\]]))\s*(?<message>.*?)$/s;
     const standardRules = [];
     for (let part of parts) {
         part = part.trim().replace(/\|\|/g, '|');
-        let matches = part.match(intervalRegex);
-        if (matches !== null) {
+        const matches = part.match(intervalRegex);
+        if (matches) {
+            const matchGroups = matches.groups || {};
             if (matches[2]) {
                 for (const n of matches[3].split(',')) {
                     if (number === Number(n)) {
-                        return strtr(matches.groups['message'], parameters);
+                        return strtr(matchGroups.message, parameters);
                     }
                 }
             }
             else {
-                const leftNumber = '-Inf' === matches.groups['left'] ? Number.NEGATIVE_INFINITY : Number(matches.groups['left']);
-                const rightNumber = ['Inf', '+Inf'].includes(matches.groups['right']) ? Number.POSITIVE_INFINITY : Number(matches.groups['right']);
-                if (('[' === matches.groups['left_delimiter'] ? number >= leftNumber : number > leftNumber)
-                    && (']' === matches.groups['right_delimiter'] ? number <= rightNumber : number < rightNumber)) {
-                    return strtr(matches.groups['message'], parameters);
+                const leftNumber = '-Inf' === matchGroups.left ? Number.NEGATIVE_INFINITY : Number(matchGroups.left);
+                const rightNumber = ['Inf', '+Inf'].includes(matchGroups.right) ? Number.POSITIVE_INFINITY : Number(matchGroups.right);
+                if (('[' === matchGroups.left_delimiter ? number >= leftNumber : number > leftNumber)
+                    && (']' === matchGroups.right_delimiter ? number <= rightNumber : number < rightNumber)) {
+                    return strtr(matchGroups.message, parameters);
                 }
             }
         }
         else {
-            matches = part.match(/^\w+:\s*(.*?)$/);
-            if (matches !== null) {
-                standardRules.push(matches[1]);
-            }
-            else {
-                standardRules.push(part);
-            }
+            const ruleMatch = part.match(/^\w+:\s*(.*?)$/);
+            standardRules.push(ruleMatch ? ruleMatch[1] : part);
         }
     }
     const position = getPluralizationRule(number, locale);
