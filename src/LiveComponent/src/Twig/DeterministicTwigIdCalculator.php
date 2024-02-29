@@ -17,8 +17,6 @@ use Twig\Template;
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class DeterministicTwigIdCalculator

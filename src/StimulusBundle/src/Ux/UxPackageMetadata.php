@@ -14,8 +14,6 @@ namespace Symfony\UX\StimulusBundle\Ux;
 /**
  * @internal
  *
- * @experimental
- *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 class UxPackageMetadata

@@ -20,7 +20,7 @@ use Symfony\Component\Filesystem\Path;
 /**
  * Compiles the loader.js file to dynamically import the controllers.
  *
- * @experimental
+ * @internal
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */

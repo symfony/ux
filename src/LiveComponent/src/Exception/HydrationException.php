@@ -20,8 +20,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class HydrationException extends BadRequestHttpException

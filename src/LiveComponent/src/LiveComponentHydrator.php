@@ -35,8 +35,6 @@ use Symfony\UX\TwigComponent\ComponentAttributes;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
- * @experimental
- *
  * @internal
  */
 final class LiveComponentHydrator

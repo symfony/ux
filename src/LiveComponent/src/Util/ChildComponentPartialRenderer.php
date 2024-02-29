@@ -20,8 +20,6 @@ use Symfony\UX\TwigComponent\ComponentFactory;
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class ChildComponentPartialRenderer implements ServiceSubscriberInterface

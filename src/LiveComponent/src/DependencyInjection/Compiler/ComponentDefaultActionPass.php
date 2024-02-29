@@ -17,8 +17,6 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
- * @experimental
- *
  * @internal
  */
 final class ComponentDefaultActionPass implements CompilerPassInterface

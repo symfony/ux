@@ -17,8 +17,6 @@ use Symfony\Contracts\Service\Attribute\Required;
  * Trait with shortcut methods useful for live components.
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 trait ComponentToolsTrait
 {

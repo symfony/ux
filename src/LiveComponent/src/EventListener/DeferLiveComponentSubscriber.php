@@ -17,6 +17,11 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\UX\TwigComponent\Event\PostMountEvent;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 
+/**
+ * Handles the "defer" key, which causes the component to be rendered asynchronously.
+ *
+ * @internal
+ */
 final class DeferLiveComponentSubscriber implements EventSubscriberInterface
 {
     private const DEFAULT_LOADING_TAG = 'div';

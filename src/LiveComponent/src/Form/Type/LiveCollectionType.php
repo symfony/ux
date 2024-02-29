@@ -21,8 +21,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @author Gábor Egyed <gabor.egyed@gmail.com>
- *
- * @experimental
  */
 final class LiveCollectionType extends AbstractType
 {

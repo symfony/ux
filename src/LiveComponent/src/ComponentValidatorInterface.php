@@ -15,8 +15,6 @@ use Symfony\Component\Validator\ConstraintViolation;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 interface ComponentValidatorInterface
 {

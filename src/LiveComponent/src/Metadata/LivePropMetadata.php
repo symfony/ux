@@ -17,8 +17,6 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
- * @experimental
- *
  * @internal
  */
 final class LivePropMetadata

@@ -1374,9 +1374,9 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                     if (modifiedFieldElements.includes(fromEl)) {
                         setValueOnElement(toEl, getElementValue(fromEl));
                     }
-                    if (fromEl === document.activeElement
-                        && fromEl !== document.body
-                        && null !== getModelDirectiveFromElement(fromEl, false)) {
+                    if (fromEl === document.activeElement &&
+                        fromEl !== document.body &&
+                        null !== getModelDirectiveFromElement(fromEl, false)) {
                         setValueOnElement(toEl, getElementValue(fromEl));
                     }
                     const elementChanges = externalMutationTracker.getChangedElement(fromEl);

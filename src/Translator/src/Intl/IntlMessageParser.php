@@ -164,7 +164,7 @@ class IntlMessageParser
         ];
     }
 
-    private function tryParseLeftAngleBracket(): string|null
+    private function tryParseLeftAngleBracket(): ?string
     {
         if (
             !$this->isEOF()
@@ -186,7 +186,7 @@ class IntlMessageParser
      * a character that requires quoting (that is, "only where needed"), and works the same in
      * nested messages as on the top level of the pattern. The new behavior is otherwise compatible.
      */
-    private function tryParseQuote(string $parentArgType): string|null
+    private function tryParseQuote(string $parentArgType): ?string
     {
         if ($this->isEOF() || 39 !== $this->char() /* `'` */) {
             return null;
@@ -247,7 +247,7 @@ class IntlMessageParser
     private function tryParseUnquoted(
         int $nestingLevel,
         string $parentArgType,
-    ): string|null {
+    ): ?string {
         if ($this->isEOF()) {
             return null;
         }

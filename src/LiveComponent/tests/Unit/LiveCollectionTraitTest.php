@@ -18,8 +18,6 @@ use Symfony\UX\LiveComponent\LiveCollectionTrait;
 
 /**
  * @author Gábor Egyed <gabor.egyed@gmail.com>
- *
- * @experimental
  */
 final class LiveCollectionTraitTest extends TestCase
 {

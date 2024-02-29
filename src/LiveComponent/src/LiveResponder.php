@@ -12,8 +12,6 @@
 namespace Symfony\UX\LiveComponent;
 
 /**
- * @experimental
- *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 final class LiveResponder

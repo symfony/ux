@@ -16,8 +16,6 @@ use Twig\Environment;
 /**
  * Helper for building an array of attributes for the live controller element.
  *
- * @experimental
- *
  * @internal
  */
 final class TwigAttributeHelperFactory

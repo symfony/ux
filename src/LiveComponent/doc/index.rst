@@ -1,11 +1,6 @@
 Live Components
 ===============
 
-.. caution::
-
-    This component is currently experimental and is likely to change, or even
-    change drastically.
-
 Live components builds on top of the `TwigComponent`_ library
 to give you the power to automatically update your Twig components on
 the frontend as the user interacts with them. Inspired by
@@ -3528,8 +3523,10 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
-However it is currently considered `experimental`_, meaning it is not
-bound to Symfony's BC policy for the moment.
+For JavaScript files, the public API (i.e. documented features and exports
+from the main JavaScript file) is protected by the backward compatibility
+promise. However, any internal implementation in the JavaScript files
+(i.e. exports from internal files) is not protected.
 
 .. _`TwigComponent`: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _TwigComponent documentation: https://symfony.com/bundles/ux-twig-component/current/index.html
@@ -3538,7 +3535,6 @@ bound to Symfony's BC policy for the moment.
 .. _`Twig Component`: https://symfony.com/bundles/ux-twig-component/current/index.html
 .. _`Twig Component mount documentation`: https://symfony.com/bundles/ux-twig-component/current/index.html#the-mount-method
 .. _`Symfony form`: https://symfony.com/doc/current/forms.html
-.. _`experimental`: https://symfony.com/doc/current/contributing/code/experimental.html
 .. _`dependent form fields`: https://ux.symfony.com/live-component/demos/dependent-form-fields
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`attributes variable`: https://symfony.com/bundles/ux-twig-component/current/index.html#component-attributes

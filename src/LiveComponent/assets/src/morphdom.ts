@@ -110,9 +110,10 @@ export function executeMorphdom(
                     // We skip this for non-model elements and allow this to either
                     // maintain the value if changed (see code above) or for the
                     // morphing process to update it to the value from the server.
-                    if (fromEl === document.activeElement
-                        && fromEl !== document.body
-                        && null !== getModelDirectiveFromElement(fromEl, false)
+                    if (
+                        fromEl === document.activeElement &&
+                        fromEl !== document.body &&
+                        null !== getModelDirectiveFromElement(fromEl, false)
                     ) {
                         setValueOnElement(toEl, getElementValue(fromEl));
                     }

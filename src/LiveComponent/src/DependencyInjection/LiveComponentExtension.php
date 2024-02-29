@@ -55,8 +55,6 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_it
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
- * @experimental
- *
  * @internal
  */
 final class LiveComponentExtension extends Extension implements PrependExtensionInterface

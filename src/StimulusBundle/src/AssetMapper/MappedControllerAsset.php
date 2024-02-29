@@ -14,9 +14,9 @@ namespace Symfony\UX\StimulusBundle\AssetMapper;
 use Symfony\Component\AssetMapper\MappedAsset;
 
 /**
- * @experimental
- *
  * @author Ryan Weaver <ryan@symfonycasts.com>
+ *
+ * @internal
  */
 class MappedControllerAsset
 {

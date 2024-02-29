@@ -19,8 +19,6 @@ use Symfony\UX\LiveComponent\DependencyInjection\Compiler\OptionalDependencyPass
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
  */
 final class LiveComponentBundle extends Bundle
 {

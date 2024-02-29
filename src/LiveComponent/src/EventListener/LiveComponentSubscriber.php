@@ -42,8 +42,6 @@ use Symfony\UX\TwigComponent\MountedComponent;
  * @author Kevin Bond <kevinbond@gmail.com>
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface

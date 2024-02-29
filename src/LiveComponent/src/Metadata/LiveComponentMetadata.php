@@ -16,8 +16,6 @@ use Symfony\UX\TwigComponent\ComponentMetadata;
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class LiveComponentMetadata

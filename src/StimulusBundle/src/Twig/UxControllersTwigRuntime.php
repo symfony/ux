@@ -20,7 +20,7 @@ use Twig\Extension\RuntimeExtensionInterface;
 /**
  * Returns the link tags for all autoimported CSS files in controllers.json.
  *
- * @experimental
+ * @internal
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */

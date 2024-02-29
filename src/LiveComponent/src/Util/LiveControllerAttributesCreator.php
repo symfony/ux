@@ -26,8 +26,6 @@ use Symfony\UX\TwigComponent\MountedComponent;
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class LiveControllerAttributesCreator

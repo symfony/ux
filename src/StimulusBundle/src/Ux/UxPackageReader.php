@@ -16,8 +16,6 @@ use Composer\InstalledVersions;
 /**
  * @internal
  *
- * @experimental
- *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 class UxPackageReader

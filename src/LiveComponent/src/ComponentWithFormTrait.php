@@ -23,8 +23,6 @@ use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 trait ComponentWithFormTrait
 {

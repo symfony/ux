@@ -22,8 +22,6 @@ use Symfony\UX\StimulusBundle\Ux\UxPackageReader;
  *
  * @internal
  *
- * @experimental
- *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
 class ControllersMapGenerator
