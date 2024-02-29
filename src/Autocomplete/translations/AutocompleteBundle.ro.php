@@ -10,7 +10,7 @@
  */
 
 return [
-    // 'Loading more results...' => 'Loading more results...',
+    'Loading more results...' => 'Se încarcă mai multe rezultate...',
     'No results found' => 'Nu au fost găsite rezultate',
-    // 'No more results' => 'No more results',
+    'No more results' => 'Nu mai sunt alte rezultate',
 ];

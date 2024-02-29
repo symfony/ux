@@ -10,7 +10,7 @@
  */
 
 return [
-    // 'Loading more results...' => 'Loading more results...',
+    'Loading more results...' => 'در حال بارگذاری نتایج بیشتر...',
     'No results found' => 'هیچ نتیجه‌ای یافت نشد',
     'No more results' => 'نتیجه دیگری وجود ندارد',
 ];

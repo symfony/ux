@@ -10,7 +10,7 @@
  */
 
 return [
-    // 'Loading more results...' => 'Loading more results...',
+    'Loading more results...' => 'Indlæser flere resultater...',
     'No results found' => 'Ingen resultater fundet',
-    // 'No more results' => 'No more results',
+    'No more results' => 'Ingen flere resultater',
 ];

@@ -10,7 +10,7 @@
  */
 
 return [
-    // 'Loading more results...' => 'Loading more results...',
+    'Loading more results...' => 'Emaitza gehiago kargatzen...',
     'No results found' => 'Ez da bat datorrenik aurkitu',
-    // 'No more results' => 'No more results',
+    'No more results' => 'Ez dago emaitza gehiagorik',
 ];

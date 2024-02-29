@@ -10,7 +10,7 @@
  */
 
 return [
-    // 'Loading more results...' => 'Loading more results...',
+    'Loading more results...' => 'Učitavanje više rezultata...',
     'No results found' => 'Nema rezultata',
-    // 'No more results' => 'No more results',
+    'No more results' => 'Nema više rezultata',
 ];
