@@ -1058,6 +1058,198 @@ Exclude specific attributes:
       My Component!
     </div>
 
+Component with Complex Variants (CVA)
+-------------------------------------
+
+CVA (Class Variant Authority) is a concept from the JS world (https://cva.style/docs/getting-started/variants).
+It's a concept used by the famous shadcn/ui library (https://ui.shadcn.com).
+CVA allows you to display a component with different variants (color, size, etc.),
+to create highly reusable and customizable components.
+You can use the cva function to define variants for your component.
+The cva function take as argument an array key-value pairs.
+The base key allow you define a set of classes commune to all variants.
+In the variants key you define the different variants of your component.
+
+.. code-block:: html+twig
+
+    {# templates/components/Alert.html.twig #}
+    {% props color = 'blue', size = 'md' %}
+
+     {% set alert = cva({
+        base: 'alert ',
+        variants: {
+            color: {
+                blue: 'bg-blue',
+                red: 'bg-red',
+                green: 'bg-green',
+            },
+            size: {
+                sm: 'text-sm',
+                md: 'text-md',
+                lg: 'text-lg',
+            }
+        }
+    }) %}
+
+    <div class="{{ alert.apply({color, size}, attributes.render('class')) }}">
+         {% block content %}{% endblock %}
+    </div>
+
+
+    {# index.html.twig #}
+
+    <twig:Alert color="red" size="lg">
+        <div>My content</div>
+    </twig:Alert>
+    // class="alert bg-red text-lg"
+
+    <twig:Alert color="green" size="sm">
+        <div>My content</div>
+    </twig:Alert>
+    // class="alert bg-green text-sm"
+
+    <twig:Alert class="flex items-center justify-center">
+        <div>My content</div>
+    </twig:Alert>
+    // class="alert bg-blue text-md flex items-center justify-center"
+
+CVA and Tailwind CSS
+~~~~~~~~~~~~~~~~~~~~
+
+CVA work perfectly with tailwindcss. The only drawback is you can have class conflicts,
+to have a better control you can use this following bundle (
+https://github.com/tales-from-a-dev/twig-tailwind-extra
+) in addition to the cva function:
+
+.. code-block:: terminal
+
+    $ composer require tales-from-a-dev/twig-tailwind-extra
+
+.. code-block:: html+twig
+
+    {# templates/components/Alert.html.twig #}
+    {% props color = 'blue', size = 'md' %}
+
+   {% set alert = cva({
+        base: 'alert ',
+        variants: {
+            color: {
+                blue: 'bg-blue',
+                red: 'bg-red',
+                green: 'bg-green',
+            },
+            size: {
+                sm: 'text-sm',
+                md: 'text-md',
+                lg: 'text-lg',
+            }
+        }
+    }) %}
+
+    <div class="{{ alert.apply({color, size}, attributes.render('class')) | tailwind_merge }}">
+         {% block content %}{% endblock %}
+    </div>
+
+Compounds variants
+~~~~~~~~~~~~~~~~~~
+
+You can define compound variants. A compound variant is a variants that apply
+when multiple other variant conditions are met.
+
+.. code-block:: html+twig
+
+    {# templates/components/Alert.html.twig #}
+    {% props color = 'blue', size = 'md' %}
+
+    {% set alert = cva({
+        base: 'alert ',
+        variants: {
+            color: {
+                blue: 'bg-blue',
+                red: 'bg-red',
+                green: 'bg-green',
+            },
+            size: {
+                sm: 'text-sm',
+                md: 'text-md',
+                lg: 'text-lg',
+            }
+        },
+        compound: {
+            colors: ['red'],
+            size: ['md', 'lg'],
+            class: 'font-bold'
+        }
+    }) %}
+
+    <div class="{{ alert.apply({color, size}) }}">
+         {% block content %}{% endblock %}
+    </div>
+
+    {# index.html.twig #}
+
+    <twig:Alert color="red" size="lg">
+        <div>My content</div>
+    </twig:Alert>
+    // class="alert bg-red text-lg font-bold"
+
+    <twig:Alert color="green" size="sm">
+        <div>My content</div>
+    </twig:Alert>
+    // class="alert bg-green text-sm"
+
+    <twig:Alert color="red" size="md">
+        <div>My content</div>
+    </twig:Alert>
+    // class="alert bg-green text-lg font-bold"
+
+Default variants
+~~~~~~~~~~~~~~~~
+
+You can define defaults variants, so if no variants are matching you
+can still defined a default set of class to apply.
+
+.. code-block:: html+twig
+
+    {# templates/components/Alert.html.twig #}
+    {% props color = 'blue', size = 'md' %}
+
+    {% set alert = cva({
+        base: 'alert ',
+        variants: {
+            color: {
+                blue: 'bg-blue',
+                red: 'bg-red',
+                green: 'bg-green',
+            },
+            size: {
+                sm: 'text-sm',
+                md: 'text-md',
+                lg: 'text-lg',
+            },
+            rounded: {
+                sm: 'rounded-sm',
+                md: 'rounded-md',
+                lg: 'rounded-lg',
+            }
+        },
+        defaultsVariants: {
+            rounded: 'rounded-md',
+        }
+    }) %}
+
+    <div class="{{ alert.apply({color, size}) }}">
+         {% block content %}{% endblock %}
+    </div>
+
+    {# index.html.twig #}
+
+    <twig:Alert color="red" size="lg">
+        <div>My content</div>
+    </twig:Alert>
+    // class="alert bg-red text-lg font-bold rounded-md"
+
+
 Test Helpers
 ------------
 

@@ -1,0 +1,35 @@
+{% props color = 'blue', size = 'md' %}
+
+{% set alert = cva({
+        base: ['alert'],
+        variants: {
+            color: {
+                blue: 'alert-blue',
+                red: 'alert-red',
+                green: 'alert-green',
+                yellow: 'alert-yellow',
+            },
+            size: {
+                sm: 'alert-sm',
+                md: 'alert-md',
+                lg: 'alert-lg',
+            },
+            rounded: {
+                sm: 'rounded-sm',
+                md: 'rounded-md',
+                lg: 'rounded-lg',
+            }
+        },
+        compoundVariants: [{
+            color: ['red'],
+            size: ['lg'],
+            class: 'font-semibold'
+        }],
+        defaultVariants: {
+            rounded: 'md'
+        }
+}) %}
+
+<div class="{{ alert.apply({color, size}, attributes.render('class'), 'flex p-4') }}">
+    ...
+</div>

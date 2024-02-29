@@ -256,6 +256,13 @@ final class ComponentExtensionTest extends KernelTestCase
         ];
     }
 
+    public function testComponentWithClassMerge(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('class_merge.html.twig');
+
+        $this->assertStringContainsString('class="alert alert-red alert-lg font-semibold rounded-md dark:bg-gray-600 flex p-4"', $output);
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [
