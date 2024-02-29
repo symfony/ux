@@ -30,6 +30,7 @@ class default_1 extends Controller {
         this.isObserving = false;
         this.hasLoadedChoicesPreviously = false;
         this.originalOptions = [];
+        this.parentElement = null;
     }
     initialize() {
         if (!this.mutationObserver) {
@@ -42,12 +43,11 @@ class default_1 extends Controller {
         if (this.selectElement) {
             this.originalOptions = this.createOptionsDataStructure(this.selectElement);
         }
-        const parentElement = this.element.parentElement;
-        if (!parentElement) {
-            return;
+        this.parentElement = this.element.parentElement;
+        if (this.parentElement) {
+            this.parentElement.addEventListener('turbo:before-morph-element', this.beforeMorphElement.bind(this));
+            this.parentElement.addEventListener('turbo:before-morph-attribute', this.beforeMorphAttribute.bind(this));
         }
-        parentElement.addEventListener('turbo:before-morph-element', this.beforeMorphElement.bind(this));
-        parentElement.addEventListener('turbo:before-morph-attribute', this.beforeMorphAttribute.bind(this));
         this.initializeTomSelect();
     }
     initializeTomSelect() {
@@ -67,12 +67,11 @@ class default_1 extends Controller {
     }
     disconnect() {
         this.stopMutationObserver();
-        const parentElement = this.element.parentElement;
-        if (!parentElement) {
-            return;
+        if (this.parentElement) {
+            this.parentElement.removeEventListener('turbo:before-morph-element', this.beforeMorphElement.bind(this));
+            this.parentElement.removeEventListener('turbo:before-morph-attribute', this.beforeMorphAttribute.bind(this));
+            this.parentElement = null;
         }
-        parentElement.removeEventListener('turbo:before-morph-element', this.beforeMorphElement.bind(this));
-        parentElement.removeEventListener('turbo:before-morph-attribute', this.beforeMorphAttribute.bind(this));
         let currentSelectedValues = [];
         if (this.selectElement) {
             if (this.selectElement.multiple) {
@@ -187,7 +186,7 @@ class default_1 extends Controller {
             }
         });
         const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
-        const areOptionsEquivalent = this.areOptionsEquivalent(newOptions);
+        const areOptionsEquivalent = this.areOptionsEquivalent(this.originalOptions, newOptions);
         const value = this.selectElement ? Array.from(this.selectElement.options || []).map((option) => option.value) : this.formElement.value;
         const didValueChange = value !== this.tomSelect.getValue();
         if (!areOptionsEquivalent || requireReset || didValueChange) {
@@ -205,9 +204,10 @@ class default_1 extends Controller {
             };
         });
     }
-    areOptionsEquivalent(newOptions) {
-        const filteredOriginalOptions = this.originalOptions.filter((option) => option.value !== '');
+    areOptionsEquivalent(currentOptions, newOptions) {
+        const filteredCurrentOptions = currentOptions.filter((option) => option.value !== '');
         const filteredNewOptions = newOptions.filter((option) => option.value !== '');
+        console.log(filteredCurrentOptions, filteredNewOptions);
         const originalPlaceholderOption = this.originalOptions.find((option) => option.value === '');
         const newPlaceholderOption = newOptions.find((option) => option.value === '');
         if (originalPlaceholderOption &&
@@ -215,11 +215,11 @@ class default_1 extends Controller {
             originalPlaceholderOption.text !== newPlaceholderOption.text) {
             return false;
         }
-        if (filteredOriginalOptions.length !== filteredNewOptions.length) {
+        if (filteredCurrentOptions.length !== filteredNewOptions.length) {
             return false;
         }
         const normalizeOption = (option) => `${option.value}-${option.text}-${option.group}`;
-        const originalOptionsSet = new Set(filteredOriginalOptions.map(normalizeOption));
+        const originalOptionsSet = new Set(filteredCurrentOptions.map(normalizeOption));
         const newOptionsSet = new Set(filteredNewOptions.map(normalizeOption));
         return (originalOptionsSet.size === newOptionsSet.size &&
             [...originalOptionsSet].every((option) => newOptionsSet.has(option)));
@@ -229,9 +229,11 @@ class default_1 extends Controller {
             event.preventDefault();
             return;
         }
-        if (event.target === this.element) {
-            const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
-            if (this.areOptionsEquivalent(newOptions)) {
+        if (event.target === this.element && event.target.tagName === 'SELECT') {
+            const newOptions = this.createOptionsDataStructure(event.detail.newElement);
+            const currentOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
+            console.log(this.areOptionsEquivalent(currentOptions, newOptions));
+            if (this.areOptionsEquivalent(currentOptions, newOptions)) {
                 event.preventDefault();
                 return;
             }
