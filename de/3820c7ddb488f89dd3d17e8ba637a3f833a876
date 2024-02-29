@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-02-26T14:00:11Z
+
+Filling in missing translations via AI seems like a very reasonable idea. But I'm not, yet, comfortable with updating existing translations (done by humans) with the AI version.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-26T20:19:37Z
+
+Have all the first translations (all added with the bundle at first) been done by humans ? Some seem to me they could come from Google Translate.
+
+But i'll adapt the PR to just "add" translations first, we can discuss the existing ones after.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-26T23:01:59Z
+
+Reverted all changes made to existing messages
