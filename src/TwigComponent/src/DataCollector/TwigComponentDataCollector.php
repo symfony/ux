@@ -124,7 +124,6 @@ class TwigComponentDataCollector extends AbstractDataCollector implements LateDa
                     'is_embed' => $event->isEmbedded(),
                     'input_props' => $mountedComponent->getInputProps(),
                     'attributes' => $mountedComponent->getAttributes()->all(),
-                    'variables' => $event->getVariables(),
                     'template_index' => $event->getTemplateIndex(),
                     'component' => $mountedComponent->getComponent(),
                     'depth' => \count($ongoingRenders),
