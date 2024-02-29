@@ -1,0 +1,915 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-24T02:57:11Z
+
+Can you show what `twm` and `clm` stand for?
+
+Is there resources to provide some context on `cva`, `twm`, and `clm`?
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-01-24T08:11:35Z
+
+I'd probably better have something like https://styled-components.com/ or https://emotion.sh/docs/introduction because now it looks like that ux is going all tailwind :stuck_out_tongue:
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-01-24T08:59:04Z
+
+@kbond description updated! 😁
+
+> I'd probably better have something like https://styled-components.com/ or https://emotion.sh/docs/introduction because now it looks like that ux is going all tailwind 😛
+
+Yes, go LASTstack! No, you can actually use all of this without tailwind by using `clm`instead of `twm`but yeah I think you have to architecture your style in a class-utility way. I don't believe in styled-components and emotion because you write css in to string so you don't have proper autocomplete, and  it requires another heavy build step.
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-01-24T09:06:39Z
+
+> @kbond description updated! 😁
+>
+> > I'd probably better have something like https://styled-components.com/ or https://emotion.sh/docs/introduction because now it looks like that ux is going all tailwind 😛
+>
+> Yes, go LASTstack! No, you can actually use all of this without tailwind by using `clm`instead of `twm`but yeah I think you have to architecture your style in a class-utility way. I don't believe in styled-components and emotion because you write css in to string so you don't have proper autocomplete, and  it requires another heavy build step.
+
+Objects could be allowed instead of string :) no need for build step,as css could be inlined into head
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-24T14:36:03Z
+
+What about the following syntax:
+
+```twig
+{% props color = 'blue', size = 'md' %}
+
+<div{{ attributes.defaults({
+    class: cva('alert', {
+        'base': 'rounded-lg',
+        'variants': {
+            'color': {
+                'blue': 'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400',
+                'red': 'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400',
+                'green': 'text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400',
+                'yellow': 'text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400',
+            },
+            'size': {
+                'sm': 'px-4 py-3 text-sm',
+                'md': 'px-6 py-4 text-base',
+                'lg': 'px-8 py-5 text-lg',
+            }
+        }
+    }).apply(color, size),
+})>
+    ...
+</div>
+```
+
+clm/twm functions wouldn't exist but be applied automatically.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-01-25T09:40:50Z
+
+I am not sure about this syntax, because inside your div you can have other elements to tag with recipes and things can get really big and confusing. If I made two functions it's because I want the style to be separate from html, to make everything more readable.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-01-25T09:45:50Z
+
+> Objects could be allowed instead of string :) no need for build step,as css could be inlined into head
+
+Actually, the idea is not to make the perfect PR to deal with your component style, but to give utilities to manage your class. Maybe in another PR we can think about CSS in components, but this is not the topic of this PR. And actually don't believe in CSS in components but you can still convince me 😁
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-01-25T09:50:36Z
+
+> Actually, the idea is not to make the perfect PR to deal with your component style, but to give utilities to manage your class. Maybe in another PR we can think about CSS in components, but this is not the topic of this PR.
+
+Yes, sorry, just wanted to bring this in :grin:
+
+> And actually don't believe in CSS in components but you can still convince me 😁
+
+Why not ? :) if you don't use css frameworks, then it would be nice to have "non detached" css from components :) and that could work for every element not only the components :)
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-01-25T09:57:44Z
+
+I am playing with the ideas from @CMH-Benny  https://github.com/symfony/ux/pull/1416#discussion_r1465072527 and @kbond and @Kocal
+What do you think of that:
+```twig
+{% props color = 'blue', size = 'md', class = '' %}
+
+{% set alert =  cva('alert', {
+    'base': 'rounded-lg',
+    'variants': {
+        'color': {
+            'blue': 'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400',
+            'red': 'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400',
+            'green': 'text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400',
+            'yellow': 'text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400',
+        },
+        'size': {
+            'sm': 'px-4 py-3 text-sm',
+            'md': 'px-6 py-4 text-base',
+            'lg': 'px-8 py-5 text-lg',
+        }
+    }
+}) }} %}
+
+<div class="{{ alert.apply({color, size})|tw_merge }}">
+    ...
+</div>
+```
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-01-25T10:10:39Z
+
+That's really great, I prefer this solution!
+
+Also, do you need to pass `'alert'` as `cva()` 1st parameter?
+
+---------------------------------------------------------------------------
+
+by CMH-Benny at 2024-01-25T10:59:39Z
+
+> I am playing with the ideas from @CMH-Benny [#1416 (comment)](https://github.com/symfony/ux/pull/1416#discussion_r1465072527) and @kbond and @Kocal What do you think of that:
+>
+> ```
+> {% props color = 'blue', size = 'md', class = '' %}
+>
+> {% set alert =  cva('alert', {
+>     'base': 'rounded-lg',
+>     'variants': {
+>         'color': {
+>             'blue': 'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400',
+>             'red': 'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400',
+>             'green': 'text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400',
+>             'yellow': 'text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400',
+>         },
+>         'size': {
+>             'sm': 'px-4 py-3 text-sm',
+>             'md': 'px-6 py-4 text-base',
+>             'lg': 'px-8 py-5 text-lg',
+>         }
+>     }
+> }) }} %}
+>
+> <div class="{{ alert.apply({color, size})|tw_merge }}">
+>     ...
+> </div>
+> ```
+I like it!
+You know what, if tw_merge becomes a filter instead of a function, you could even leave it out, so people that don't use tailwind don't have that dependency without a choice but if they tailwind, they could install https://github.com/tales-from-a-dev/twig-tailwind-extra It makes it harder to setup, but it would be more modual. Just a thought :)
+
+What do you think?
+
+I have another question, if i do:
+```twig
+{{ alert.apply({color, size})|tw_merge }}
+```
+it will automatically pass it as key value pairs and would `alert.apply({color})` also work if I don't want the size classes and `alert.apply({size})`  if I only want the size classes?
+
+I am not deep into the twig syntax, to me {} is an assoc array notation and I am not aware if it's similar to JS where you can put a variable `{ x, y, z }` and it will automatically become `{ x: x, y: y, z: z }` - So is:
+`alert.apply({color}) === alert.apply({color: color})` ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-01-25T15:57:26Z
+
+> I am not deep into the twig syntax, to me {} is an assoc array notation and I am not aware if it's similar to JS where you can put a variable `{ x, y, z }` and it will automatically become `{ x: x, y: y, z: z }` - So is: `alert.apply({color}) === alert.apply({color: color})` ?
+
+Yus, like JavaScript `{ color }` expands to `{ color: color }`.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-01-26T16:25:11Z
+
+> Also, do you need to pass 'alert' as cva() 1st parameter?
+
+No, it's typo
+
+> t makes it harder to setup, but it would be more modual. Just a thought :) What do you think?
+
+I am agree. 😁
+
+I gonna try do to a new proposal this week-end
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-29T16:06:15Z
+
+Hi!
+
+Great iterating here! If I understand correctly, the currently-agreed-upon version that @WebMamba is going to work on is this:
+
+```twig
+{% props color = 'blue', size = 'md' %}
+
+{% set alert =  cva('alert', {
+    base: 'rounded-lg',
+    variants: {
+        color: {
+            blue: 'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400',
+            red: 'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400',
+            green: 'text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400',
+            yellow: 'text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400',
+        },
+        size: {
+            sm: 'px-4 py-3 text-sm',
+            md: 'px-6 py-4 text-base',
+            lg: 'px-8 py-5 text-lg',
+        }
+    }
+}) }} %}
+
+<div class="{{ alert.apply({color, size})|tw_merge }}">
+    ...
+</div>
+```
+
+(note, I removed all of the `'` in the keys - they're not needed, and this looks better 😉 ).
+
+If so, yes, I like this! But 2 things remain:
+
+A) How can this work with `attributes`? Like this:
+
+```
+<div {{ attributes.defaults({
+    class: alert.apply({color, size})|tw_merge
+}) }}>
+```
+
+B) And related, instead of creating a new `tw_merge` function, can we just tell people to use https://github.com/tales-from-a-dev/twig-tailwind-extra? AND, if that package is installed, could we automatically "merge" the `class` attribute on all `ComponentAttributes`? I think this may be tricky from an implementation standpoint, but if it's the best API, we should make it happen.
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-29T16:17:10Z
+
+> And related, instead of creating a new tw_merge function, can we just tell people to use https://github.com/tales-from-a-dev/twig-tailwind-extra?
+
++1 to this
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-01-29T17:02:34Z
+
+Hey! Thanks everyone for all of your ideas! So here is the details of what I did in my last commit:
+- no more dependencie on https://github.com/tales-from-a-dev/twig-tailwind-extra
+- remove twm function
+- remove clm function
+- use cva in a setter
+Here is how to use CVA now (from the tests implemented in this PR):
+```twig
+{% props color = 'blue', size = 'md', class = '' %}
+
+{% set alert = cva({
+    base: 'alert',
+    variants: {
+        color: {
+            blue: 'alert-blue',
+            red: 'alert-red',
+            green: 'alert-green',
+            yellow: 'alert-yellow',
+        },
+        size: {
+            sm: 'alert-sm',
+            md: 'alert-md',
+            lg: 'alert-lg',
+        }
+    },
+    compounds: [
+        {
+            color: ['red'],
+            size: ['lg'],
+            class: 'font-semibold'
+        }
+    ]
+}) %}
+
+<div {{ attributes.defaults({
+    class: alert.apply({color, size}, class)
+}) }}>
+    ...
+</div>
+```
+Then you can use your component like so:
+```twig
+<twig:Alert2 color='red' size='lg' class='dark:bg-gray-600'/>
+```
+And you will get the following result:
+```html
+<div  class="alert alert-red alert-lg font-semibold dark:bg-gray-600">
+    ...
+</div>
+```
+
+I didn't introduce compounds in my description but the idea is if the condition in the compounds are fullfield then the classes are apply.
+
+---------------------------------------------------------------------------
+
+by CMH-Benny at 2024-01-31T16:00:41Z
+
+Looks pretty good to me 👍
+
+It says it needs review - I am pretty new to follow PRs like this 😅
+Is there anything a rando like me can do to help to move forward or will this be reviewed as soon as somebody from the maintainers finds the time?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-01T18:18:40Z
+
+I need to insist on that point, but if `cva` does not "output" something, it should be either a tag or in this case... a filter
+
+> Most of the time though, a tag is not needed:
+    * If your tag generates some output, use a function instead.
+    * If your tag modifies some content and returns it, use a filter instead.
+    For instance, if you want to create a tag that converts a Markdown formatted text to HTML, create a markdown filter instead: (...)
+
+https://twig.symfony.com/doc/3.x/advanced.html#tags
+
+So it should be
+
+```twig
+
+{% set alert = {
+    base: 'alert',
+    variants: {
+        color: {
+            blue: 'alert-blue',
+            red: 'alert-red',
+            green: 'alert-green',
+            yellow: 'alert-yellow',
+        },
+        size: {
+            sm: 'alert-sm',
+            md: 'alert-md',
+            lg: 'alert-lg',
+        }
+    },
+    compounds: [
+        {
+            color: ['red'],
+            size: ['lg'],
+            class: 'font-semibold'
+        }
+    ]
+}|cva %}
+
+```
+
+:)
+
+---------------------------------------------------------------------------
+
+by CMH-Benny at 2024-02-01T19:57:17Z
+
+Somehow I can't reply directly, so I need to send a new comment 🙈
+
+> I need to insist on that point, but if `cva` does not "output" something, it should be either a tag or in this case... a filter
+>
+> > Most of the time though, a tag is not needed:
+> > * If your tag generates some output, use a function instead.
+> > * If your tag modifies some content and returns it, use a filter instead.
+> > For instance, if you want to create a tag that converts a Markdown formatted text to HTML, create a markdown filter instead: (...)
+>
+> https://twig.symfony.com/doc/3.x/advanced.html#tags
+>
+> So it should be
+>
+> ```
+> {% set alert = {
+>     base: 'alert',
+>     variants: {
+>         color: {
+>             blue: 'alert-blue',
+>             red: 'alert-red',
+>             green: 'alert-green',
+>             yellow: 'alert-yellow',
+>         },
+>         size: {
+>             sm: 'alert-sm',
+>             md: 'alert-md',
+>             lg: 'alert-lg',
+>         }
+>     },
+>     compounds: [
+>         {
+>             color: ['red'],
+>             size: ['lg'],
+>             class: 'font-semibold'
+>         }
+>     ]
+> }|cva %}
+> ```
+>
+> :)
+
+But it outputs something now, it's a CVA object you call apply on to output the fitting classes based on given properties, so a function now makes sense? Otherwise you would have to do:
+
+```twig
+{% props color='blue', size = 'md', class = '' %}
+{% set alert = {
+     base: 'alert',
+     variants: {
+         color: {
+             blue: 'alert-blue',
+             red: 'alert-red',
+             green: 'alert-green',
+             yellow: 'alert-yellow',
+         },
+         size: {
+             sm: 'alert-sm',
+             md: 'alert-md',
+             lg: 'alert-lg',
+         }
+     },
+     compounds: [
+         {
+             color: ['red'],
+             size: ['lg'],
+             class: 'font-semibold'
+         }
+     ]
+}|cva({color, size}, class) %}
+```
+
+And I am not sure if that works, "alert" becomes a loose object and how can the CVA now parse it and apply the correct variants? I think the provided solution looks good as it is, or do I miss anything? @smnandre
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-01T20:14:21Z
+
+Alert is an CVA instance in both cases
+
+```
+{# cva function #}
+{% set alert = cva({foo: bar}) %}
+
+{# cva filter #}
+{% set alert = {foo: bar}|cva %}
+```
+
+Those two syntaxes happen to give the same result. But the implementation is not the same, the optimisations neither, and ... one does not follow Twig (or Symfony) conventions.
+
+---------------------------------------------------------------------------
+
+by CMH-Benny at 2024-02-01T20:22:49Z
+
+Oh, now I get it - I learned something new again!
+
+So by "output" you don't mean it doesn't return anything, it means it doesn't directly add markup/text to the final output
+
+So if it's a function it needs to be used in `{{ cva(...) }}`
+But since it's only providing an object that needs to get applied() to actually create output, it should become a filter!
+So the full example would look like this:
+
+```twig
+{% props color='blue', size = 'md', class = '' %}
+{% set alert = {
+     base: 'alert',
+     variants: {
+         color: {
+             blue: 'alert-blue',
+             red: 'alert-red',
+             green: 'alert-green',
+             yellow: 'alert-yellow',
+         },
+         size: {
+             sm: 'alert-sm',
+             md: 'alert-md',
+             lg: 'alert-lg',
+         }
+     },
+     compounds: [
+         {
+             color: ['red'],
+             size: ['lg'],
+             class: 'font-semibold'
+         }
+     ]
+}|cva %}
+
+<div {{ attributes.defaults({
+    class: alert.apply({color, size}, class)
+}) }}>
+    ...
+</div>
+
+<div {{ alert.apply({color, size}, 'some other classes') }}>...</div>
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-01T21:31:34Z
+
+Exactly !
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-02T17:10:06Z
+
+Best practices aside, this reads better to me:
+
+```twig
+{% set alert = cva({
+    base: 'alert',
+    variants: {
+        color: {
+            blue: 'alert-blue',
+            red: 'alert-red',
+            green: 'alert-green',
+            yellow: 'alert-yellow',
+        },
+        size: {
+            sm: 'alert-sm',
+            md: 'alert-md',
+            lg: 'alert-lg',
+        }
+    },
+    compounds: [
+        {
+            color: ['red'],
+            size: ['lg'],
+            class: 'font-semibold'
+        }
+    ]
+}) %}
+```
+
+Than:
+
+```twig
+{% set alert = {
+    base: 'alert',
+    variants: {
+        color: {
+            blue: 'alert-blue',
+            red: 'alert-red',
+            green: 'alert-green',
+            yellow: 'alert-yellow',
+        },
+        size: {
+            sm: 'alert-sm',
+            md: 'alert-md',
+            lg: 'alert-lg',
+        }
+    },
+    compounds: [
+        {
+            color: ['red'],
+            size: ['lg'],
+            class: 'font-semibold'
+        }
+    ]
+}|cva %}
+```
+
+But maybe that's just me.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-02-02T21:48:08Z
+
+Yes the first one is more easier to read and review
+
+---------------------------------------------------------------------------
+
+by yguedidi at 2024-02-02T22:01:29Z
+
+if it get changed to a function, as it seems the first level of the structure is fixed, what about making them arguments?
+```twig
+{% set alertCva = cva(
+    base='alert',
+    variants={
+        color: {
+            blue: 'alert-blue',
+            red: 'alert-red',
+            green: 'alert-green',
+            yellow: 'alert-yellow',
+        },
+        size: {
+            sm: 'alert-sm',
+            md: 'alert-md',
+            lg: 'alert-lg',
+        }
+    },
+    compounds=[
+        {
+            color: ['red'],
+            size: ['lg'],
+            class: 'font-semibold'
+        }
+    ]
+) %}
+```
+
+so, without advanced compound it will look like this:
+```twig
+{% set alertCva = cva('alert', {
+    color: {
+        blue: 'alert-blue',
+        red: 'alert-red',
+        green: 'alert-green',
+        yellow: 'alert-yellow',
+    },
+    size: {
+        sm: 'alert-sm',
+        md: 'alert-md',
+        lg: 'alert-lg',
+    }
+}) %}
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-03T00:54:30Z
+
+I understand your opinions on the syntax / readability.
+
+My point is: this would not be accepted as a function in twig/twig or twig/extra-**, probably neither in symfony/symfony.
+
+We can 100% ignore that.. i'm just making sure it is an informed choice, especially if we later ask for Twig internal changes ;)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-02-03T14:09:14Z
+
+> So if it's a function it needs to be used in  `{{ cva(...) }}`
+> But since it's only providing an object that needs to get applied() to actually create output, it should become a filter!
+
+Why should it be a filter? Is this an opinionated rule or am I missing something...?
+
+---------------------------------------------------------------------------
+
+by CMH-Benny at 2024-02-03T14:19:02Z
+
+> > So if it's a function it needs to be used in  `{{ cva(...) }}`
+> > But since it's only providing an object that needs to get applied() to actually create output, it should become a filter!
+>
+> Why should it be a filter? Is this an opinionated rule or am I missing something...?
+
+As it was pointed out by @smnandre, it seems to be best practice.
+
+I myself, to be fully honest, don't really care so much about that. I also think the function reads/looks better, but if that breaks some conventions of twig then I am open to adapt to the filter. In the end I am just thankful that @WebMamba opened this PR, I am just looking forward to be able to use CVA in twig to build amazing components, so I am fine with either option, as long as it's merged at some point 😁
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-02-03T16:13:54Z
+
+> Since this isn't really twig-component specific (I don't think), should we at least try and get this into twig/html-extra? I know that is easier said than done.
+
+@kbond this is an interesting proposal. I think to get the all potential of this PR is to use it in a laststack, so with TwigComponent installed. So I think in any case we should document this feature in the TwigComponent documentation. TwigComponent doesn't have a dependency on twig/html-extra do you think we should add it then? What do think about a new ux-extra package?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-02-03T16:17:03Z
+
+@smnandre I see your point about the filter but here is not really `transforming` but more `creating` a CVA, so I think using function is still semantically correct.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-02-03T16:19:08Z
+
+> if it get changed to a function, as it seems the first level of the structure is fixed, what about making them arguments?
+
+Hummmm I am not sure about this. What do people think?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-03T17:01:56Z
+
+> `creating`
+
+It's not about creating thing.. it's about generating output or not.. :)  Twig "things" that create new objects are filters (today).
+
+Again, i just want you to take the decision with all information. :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-03T17:07:37Z
+
+> TwigComponent doesn't have a dependency on twig/html-extra do you think we should add it then? What do think about a new ux-extra package?
+
+I don't feel the absolute necessity TwigComponent is only about the "component" function (or HTML Syntax).
+
+If this `cva` filt.. function helps manage the style of _components_, it feel to me very legitimate to have it in the `ux-twig-component` package, no ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-03T17:10:59Z
+
+> Why should it be a filter? Is this an opinionated rule or am I missing something...?
+
+https://github.com/symfony/ux/pull/1416#issuecomment-1921941431
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-03T18:08:29Z
+
+> Hummmm I am not sure about this. What do people think?
+
+I think this makes sense but the syntax for named parameters in twig is a bit unfortunate ([that might change in the future though](https://github.com/twigphp/Twig/issues/3635)).
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-03T18:12:26Z
+
+> TwigComponent doesn't have a dependency on twig/html-extra do you think we should add it then?
+
+I'd actually be in favor of this as the `html_classes()` function from html-extra is quite useful.
+
+> What do think about a new ux-extra package?
+
+I don't think that's necessary. I'm totally fine having it live here for the time being. If it ever was added to html-extra, it'd likely be named `html_cva()` so there wouldn't be a conflict. At that point we could perhaps deprecate the function here.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-02-04T20:24:15Z
+
+> > Why should it be a filter? Is this an opinionated rule or am I missing something...?
+>
+> [#1416 (comment)](https://github.com/symfony/ux/pull/1416#issuecomment-1921941431)
+
+Thanks!
+
+Well I think it depends of how you read it...? 🤔
+
+I'm more in favor on a function, it takes one (or many, depends of how you implement it) argument, a Twig object which defines base/variants, which returns a new `CVA` object
+
+---------------------------------------------------------------------------
+
+by CMH-Benny at 2024-02-08T13:10:33Z
+
+So how to move forward now? To me it's kinda unclear, what needs to be done to proceed with this PR 😅
+Are there changes required? Is it fine and only needs the final review?
+
+Would be awesome to have this in the next release, tho 🎉
+
+---------------------------------------------------------------------------
+
+by yguedidi at 2024-02-09T14:31:05Z
+
+Just to share some thoughts about the filter vs function thing.
+
+First, let's distinguish between "outputs" and "returns".
+The only thing that really "outputs" is the use of `{{ }}`, it's doing the `echo`. We usually don't echo in functions nor filters, but we "return" a value.
+Then, both of them deal with data, be it a string, a string-able object or any object.
+A filter supports a single input. A function supports 0+ inputs (its arguments).
+The forced single input in filters makes them good for "transforming" the data, they are like a funnel.
+A function can be called with 0 or more arguments, and can "create" a data from nothing, or based on the arguments (and it could also transform one of its arguments like a filter).
+
+To me, here we are "creating" a CVA object, based on some arguments, that's why I would say the function is a better fit here.
+It's like the constructor of a CVA instance.
+Being like a constructor to me, I'd not use an array to construct it (aaaah good-old `$options` arrays...) but precise arguments.
+
+voila, hope this helps in the discussion/decision.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-02-09T17:55:02Z
+
+I currently traveling for a couple of days but when I am back:
+- I think to change to function argument, instead of having this array keys
+- I created a PR on twig/html-extra in parallel with this one
+- I think we can keep the function and not have a filter I agree with the argument brought by @yguedidi here.
+
+Sounds good for everyone here?
+
+---------------------------------------------------------------------------
+
+by CMH-Benny at 2024-02-15T19:21:19Z
+
+Any updates on this? 😅
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-02-18T11:41:37Z
+
+Hey all! I just pushed https://github.com/symfony/ux/pull/1416#issuecomment-1936354904 the following change, add a line to the change log and some documentation. Cheers 🧡
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-02-21T21:57:41Z
+
+@weaverryan thanks for your review 🧡 I addressed your comment! Sorry about the syntax mistake, I make this kind of error even in French 😭
+@kbond  do I use the arguments functions the right way? Is it what you have in mind?
+
+---------------------------------------------------------------------------
+
+by CMH-Benny at 2024-02-22T13:17:31Z
+
+Amazing progress, I am looking forward to be able to use this feature!
+Thank you so much everyone! 😄
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-27T21:30:44Z
+
+@WebMamba, is the PR description in sync with the current code?
+
+> `{% set alert =  cva('alert', 'rounded-lg',`
+
+The second arg cannot be a string, correct?
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-27T21:42:38Z
+
+For this example, is both `alert` and `rounded-lg` considered the "base"?
+
+```twig
+{% set alert = cva('alert', {
+    base: 'rounded-lg',
+    variants: {
+        color: {
+            blue: 'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400',
+            red: 'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400',
+            green: 'text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400',
+            yellow: 'text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400',
+        },
+        size: {
+            sm: 'px-4 py-3 text-sm',
+            md: 'px-6 py-4 text-base',
+            lg: 'px-8 py-5 text-lg',
+        }
+    }
+}) %}
+```
+
+What about making the only argument to the cva twig function an array so we can use it as quasi-named parameters:
+
+```twig
+{% set alert =  cva({
+    base: 'alert rounded-lg', {# or ['alert', 'rounded-lg'] #}
+    variants: {
+        color: {
+            blue: 'text-blue-800 bg-blue-50 dark:bg-gray-800 dark:text-blue-400',
+            red: 'text-red-800 bg-red-50 dark:bg-gray-800 dark:text-red-400',
+            green: 'text-green-800 bg-green-50 dark:bg-gray-800 dark:text-green-400',
+            yellow: 'text-yellow-800 bg-yellow-50 dark:bg-gray-800 dark:text-yellow-400',
+        },
+        size: {
+            sm: 'px-4 py-3 text-sm',
+            md: 'px-6 py-4 text-base',
+            lg: 'px-8 py-5 text-lg',
+        }
+    }
+}) %}
+```
+
+Is this intended to be a port of https://cva.style/docs/api-reference? If so, you use the term _compound_ but cva.style has _compoundVariants_ - should we match? Also, cva.style has _defaultVariants_?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-02-28T10:10:14Z
+
+@kbond
+> @WebMamba, is the PR description in sync with the current code?
+
+Big sorry I made a typo yesterday while editing the description 😬
+
+> What about making the only argument to the cva twig function an array so we can use it as quasi-named parameters
+
+This was my original proposal but we asked me to use named arguments instead, and I think it would be a good idea if Twig has named argument as you mention here: https://github.com/symfony/ux/pull/1416#issuecomment-1925417508
+
+> Is this intended to be a port of https://cva.style/docs/api-reference? If so, you use the term compound but cva.style has compoundVariants - should we match? Also, cva.style has defaultVariants?
+
+Thanks, I gonna make some changes to match the original name
+
+@weaverryan
+> The apply() method would change to allow for an unlimited number of "class" arguments. It's a bit verbose is my only complaint (assuming that this also would work).
+
+I like this idea thanks! I much prefer this approach to the .class. So let's try it!
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-28T15:11:53Z
+
+> Thanks, I gonna make some changes to match the original name
+
+If you use these _camelCase_ names (`compoundVariants` & `defaultVariants`), using twig named parameters is going to suffer from https://github.com/twigphp/Twig/issues/3475. Maybe this would just be a documentation thing but my preference would be to use an array only. If in the future, named arguments are fixed/improved in twig, we should be able to switch w/o BC break.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-02-28T15:14:29Z
+
+OK, thanks @kbond! I am on it
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-02-28T16:07:13Z
+
+Hey all! I updated the description of the PR but here is what the last commit brings:
+So now the CVA function has just one argument a big array key:
+- base: to define all the classes that are present in all variations, it's a string
+- variants: your different variants
+- compoundVariants: let you the ability to apply a set of classes only if a specific set of variants match
+- defaultVariants: let you define a default variant to pick if none of the variations match
+
+The function `apply can accept has many arguments you want to give you the ability to add as many sets of class as you want.
+And I made some renaming.
+Cheers 🧡
