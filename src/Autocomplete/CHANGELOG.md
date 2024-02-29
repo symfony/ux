@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.16.0
+
+-   Missing translations added for many languages #1527 #1528 #1535
+
 ## 2.15.0
 
 -   Add doctrine/orm 3 support #1468

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.16.0
+
+-   Introduce CVA to style TwigComponent #1416
+-   Drop Twig 2 support #1436
+-   Fix full context is stored in profiler #1552
+
 ## 2.15.0
 
 -   Add the ability to render specific attributes from the `attributes` variable #1442
