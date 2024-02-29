@@ -1,8 +1,9 @@
 # CHANGELOG
 
-## UNRELEASED
+## 2.16.0
 
--   Increase version range of `intl-messageformat` to `^10.5.11`, in order tou se a faster implementation of ICU messages parsing.
+-   Increase version range of `intl-messageformat` to `^10.5.11`, in order to see
+    a faster implementation of ICU messages parsing. #1443
 
 ## 2.13.2
 

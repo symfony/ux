@@ -2,10 +2,11 @@
 
 ## 2.16.0
 
+-   LiveComponents is now stable and no longer experimental 🥳
 -   [BC BREAK] The `data-action-name` attribute behavior was removed in favor of
     using Stimulus "action parameters" and `data-live-action-param`. This is a
     breaking change if you were using the `data-action-name` attribute directly
-    in your templates.
+    in your templates. #1418
 
     To upgrade your application, follow these changes:
 
@@ -44,9 +45,14 @@
 -   [BC BREAK] The `data-event` attribute was removed in favor of using Stimulus
     "action parameters": rename `data-event` to `data-live-event-param`. Additionally,
     if you were passing arguments to the event name, use action parameter attributes
-    for those as well - e.g. `data-live-foo-param="bar"`.
+    for those as well - e.g. `data-live-foo-param="bar"`. #1418
 
--   Reverted setting `ignoreActiveValue: true` in Idiomorph
+-   Reverted setting `ignoreActiveValue: true` in Idiomorph #1548
+-   New placeholder macro to generate defer/lazy skeleton #1532
+-   improve TestLiveComponent::actingAs() #1461
+-   Drop Twig 2 support #1436
+-   Add better error message when hydrating dates #1431
+-   Store TemplateMap in build_dir #1525
 
 ## 2.15.0
 
