@@ -40,7 +40,12 @@
     {% if app.debug %}
         <div class="LiveMemory-Debug">
             {% for i in 1..4 %}
-                <button type="button" data-action="live#action" data-action-name="play(level={{ i }})">
+                <button
+                    type="button"
+                    data-action="live#action"
+                    data-live-action-param="play"
+                    data-live-level-param="{{ i }}"
+                >
                     {{ max(i+2, 4) }}x{{ min(i+2, 4) }}
                 </button>
             {% endfor %}

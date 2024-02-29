@@ -13,7 +13,11 @@
 
         <div class="title">GAME OVER!</div>
         <div class="text">TIME ELAPSED</div>
-        <button data-action="live#action" data-action-name="play(level={{ game.level }})">INSERT COIN</button>
+        <button
+            data-action="live#action"
+            data-live-action-param="play"
+            data-live-level-param="{{ game.level }}"
+        >INSERT COIN</button>
 
     {% else %}
 
@@ -25,9 +29,13 @@
             <twig:LiveMemory:ScoreRow wait="6" label="TOTAL" value="{{ game.totalScore }}" class="total"/>
         </div>
         {% if game.level != 4 %}
-            <button data-action="live#action" data-action-name="play(level={{ game.level + 1 }})">NEXT LEVEL</button>
+            <button
+                data-action="live#action"
+                data-live-action-param="play"
+                data-live-level-param="{{ game.level + 1 }}"
+            >NEXT LEVEL</button>
         {% else %}
-            <button data-action="live#action" data-action-name="play">NEW GAME</button>
+            <button data-action="live#action" data-live-action-param="play">NEW GAME</button>
         {% endif %}
 
     {% endif %}

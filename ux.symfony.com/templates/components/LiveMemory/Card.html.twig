@@ -11,7 +11,12 @@
 
     {# We keep the back / button to flip until the card is matched #}
     {% if not matched|default %}
-        <button class="LiveMemory-Card__back" data-action="live#action" data-action-name="flip(key={{ key }})">
+        <button
+            class="LiveMemory-Card__back"
+            data-action="live#action"
+            data-live-action-param="flip"
+            data-live-key-param="{{ key }}"
+        >
             <img class="LiveMemory-Card__back_img LiveMemory-Card__img"
                  alt="LiveMemory Card Back - {{ back|upper }}"
                  src="{{ asset('images/demos/live-memory/back/%s.webp'|format(back)) }}"

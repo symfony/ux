@@ -50,18 +50,18 @@
             {{ quantity }}
         {% endif %}
     </td>
-    <td class="text-end">
+    <td class="text-end text-nowrap">
         {% if isEditing %}
             <button
                 data-action="live#action"
-                data-action-name="save"
+                data-live-action-param="save"
                 class="btn btn-success btn-sm"
                 type="button"
             >Save</button>
         {% else %}
             <button
                 data-action="live#action"
-                data-action-name="edit"
+                data-live-action-param="edit"
                 class="btn btn-primary btn-sm"
                 type="button"
             >Edit</button>
@@ -69,7 +69,8 @@
 
         <button
             data-action="live#emitUp"
-            data-event="removeLineItem(key={{ key }})"
+            data-live-event-param="removeLineItem"
+            data-live-key-param="{{ key }}"
             class="btn btn-link text-danger btn-sm ml-2"
             type="button"
         ><twig:Icon name="cross" /></button>
