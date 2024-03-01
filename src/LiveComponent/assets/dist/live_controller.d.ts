@@ -87,6 +87,8 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     private mutationObserver;
     component: Component;
     pendingActionTriggerModelElement: HTMLElement | null;
+    pendingActionCallable: (() => void) | null;
+    pendingActionTimeout: number;
     private elementEventListeners;
     private pendingFiles;
     static backendFactory: (controller: LiveControllerDefault) => BackendInterface;

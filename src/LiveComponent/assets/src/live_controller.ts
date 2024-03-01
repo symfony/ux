@@ -70,6 +70,8 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     /** The raw Component object */
     component: Component;
     pendingActionTriggerModelElement: HTMLElement | null = null;
+    pendingActionCallable: (() => void) | null = null;
+    pendingActionTimeout = 0;
 
     private elementEventListeners: Array<{ event: string; callback: (event: any) => void }> = [
         { event: 'input', callback: (event) => this.handleInputEvent(event) },
@@ -179,15 +181,34 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
                 }
                 delete this.pendingFiles[key];
             }
-            this.component.action(directive.action, actionArgs, debounce);
 
-            // possible case where this element is also a "model" element
+            this.pendingActionCallable = () => {
+                clearTimeout(this.pendingActionTimeout);
+                this.pendingActionCallable = null;
+                this.pendingActionTriggerModelElement = null;
+                this.component.action(directive.action, actionArgs, debounce);
+            };
+
+
+            // Possible case where this element is also a "model" element
             // if so, to be safe, slightly delay the action so that the
             // change/input listener on LiveController can process the
-            // model change *before* sending the action
-            if (getModelDirectiveFromElement(event.currentTarget, false)) {
-                this.pendingActionTriggerModelElement = event.currentTarget;
+            // model change *before* sending the action.
+            if (!getModelDirectiveFromElement(event.currentTarget, false)) {
+                this.pendingActionCallable();
+
+                return;
             }
+
+            this.pendingActionTriggerModelElement = event.currentTarget;
+            this.pendingActionTimeout = window.setTimeout(() => {
+                // it may have been triggered in the change/input listener
+                if (!this.pendingActionCallable) {
+                    return;
+                }
+
+                this.pendingActionCallable();
+            }, 10);
         });
     }
 
@@ -428,6 +449,11 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         const finalValue = getValueFromElement(element, this.component.valueStore);
 
         this.component.set(modelBinding.modelName, finalValue, modelBinding.shouldRender, modelBinding.debounce);
+
+        // in case there was an action waiting for this model update
+        if (this.pendingActionCallable) {
+            this.pendingActionCallable();
+        }
     }
 
     private dispatchEvent(name: string, detail: any = {}, canBubble = true, cancelable = false) {
