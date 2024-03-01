@@ -1144,7 +1144,7 @@ with the ``cva()`` function:
          {% block content %}{% endblock %}
     </div>
 
-Compounds Variants
+Compound Variants
 ~~~~~~~~~~~~~~~~~~
 
 You can define compound variants. A compound variant is a variant that applies
