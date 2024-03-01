@@ -1122,7 +1122,7 @@ CVA and Tailwind CSS
 
 CVA work perfectly with Tailwind CSS. The only drawback is that you can have class conflicts.
 To "merge" conflicting classes together and keep only the ones you need, use the
-``tailwind_merge()` method from [tales-from-a-dev/twig-tailwind-extra](https://github.com/tales-from-a-dev/twig-tailwind-extra)
+``tailwind_merge()` method from `tales-from-a-dev/twig-tailwind-extra`_
 with the ``cva()`` function:
 
 .. code-block:: terminal
@@ -1609,3 +1609,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Stimulus controller`: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`CVA (Class Variant Authority)`: https://cva.style/docs/getting-started/variants
 .. _`shadcn/ui`: https://ui.shadcn.com
+.. _`tales-from-a-dev/twig-tailwind-extra`: https://github.com/tales-from-a-dev/twig-tailwind-extra
