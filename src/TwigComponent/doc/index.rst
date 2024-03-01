@@ -1145,7 +1145,7 @@ with the ``cva()`` function:
     </div>
 
 Compound Variants
-~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~
 
 You can define compound variants. A compound variant is a variant that applies
 when multiple other variant conditions are met.
