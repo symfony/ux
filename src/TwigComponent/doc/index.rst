@@ -1063,16 +1063,14 @@ Component with Complex Variants (CVA)
 
 .. versionadded:: 2.16
 
-    The ``CVA`` function was added in TwigComponents 2.16.
+    The ``cva`` function was added in TwigComponents 2.16.
 
 [CVA (Class Variant Authority)](https://cva.style/docs/getting-started/variants) is a concept from the JavaScript
 world and used by the well-known [shadcn/ui](https://ui.shadcn.com).
 CVA allows you to display a component with different variants (color, size, etc.),
-to create highly reusable and customizable components.
-This is powered by a ``cva()`` Twig function where you define ``base`` classes that should always be present and then different ``variants`` and the corresponding classes:
-The cva function take as argument an array key-value pairs.
-The base key allow you define a set of classes commune to all variants.
-In the variants key you define the different variants of your component.
+to create highly reusable and customizable components. This is powered by a ``cva()`` Twig
+function where you define ``base`` classes that should always be present and then different
+``variants`` and the corresponding classes:
 
 .. code-block:: html+twig
 
@@ -1099,7 +1097,7 @@ In the variants key you define the different variants of your component.
          {% block content %}{% endblock %}
     </div>
 
-Then use the color and size variants to select the classes needed:
+Then use the ``color`` and ``size`` variants to select the classes needed:
 
 .. code-block:: html+twig
 
@@ -1123,7 +1121,7 @@ CVA and Tailwind CSS
 ~~~~~~~~~~~~~~~~~~~~
 
 CVA work perfectly with Tailwind CSS. The only drawback is that you can have class conflicts.
-To "merge" conflicting classes together and keep only the one you need, use the
+To "merge" conflicting classes together and keep only the ones you need, use the
 ``tailwind_merge()` method from [tales-from-a-dev/twig-tailwind-extra](https://github.com/tales-from-a-dev/twig-tailwind-extra)
 with the ``cva()`` function:
 
