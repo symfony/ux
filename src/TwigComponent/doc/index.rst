@@ -1061,11 +1061,15 @@ Exclude specific attributes:
 Component with Complex Variants (CVA)
 -------------------------------------
 
-CVA (Class Variant Authority) is a concept from the JS world (https://cva.style/docs/getting-started/variants).
-It's a concept used by the famous shadcn/ui library (https://ui.shadcn.com).
+.. versionadded:: 2.16
+
+    The ``CVA`` function was added in TwigComponents 2.16.
+
+[CVA (Class Variant Authority)](https://cva.style/docs/getting-started/variants) is a concept from the JavaScript
+world and used by the well-known [shadcn/ui](https://ui.shadcn.com).
 CVA allows you to display a component with different variants (color, size, etc.),
 to create highly reusable and customizable components.
-You can use the cva function to define variants for your component.
+This is powered by a ``cva()`` Twig function where you define ``base`` classes that should always be present and then different ``variants`` and the corresponding classes:
 The cva function take as argument an array key-value pairs.
 The base key allow you define a set of classes commune to all variants.
 In the variants key you define the different variants of your component.
@@ -1095,9 +1099,11 @@ In the variants key you define the different variants of your component.
          {% block content %}{% endblock %}
     </div>
 
+Then use the color and size variants to select the classes needed:
+
+.. code-block:: html+twig
 
     {# index.html.twig #}
-
     <twig:Alert color="red" size="lg">
         <div>My content</div>
     </twig:Alert>
@@ -1108,18 +1114,18 @@ In the variants key you define the different variants of your component.
     </twig:Alert>
     // class="alert bg-green text-sm"
 
-    <twig:Alert class="flex items-center justify-center">
+    <twig:Alert color="red" class="flex items-center justify-center">
         <div>My content</div>
     </twig:Alert>
-    // class="alert bg-blue text-md flex items-center justify-center"
+    // class="alert bg-red text-md flex items-center justify-center"
 
 CVA and Tailwind CSS
 ~~~~~~~~~~~~~~~~~~~~
 
-CVA work perfectly with tailwindcss. The only drawback is you can have class conflicts,
-to have a better control you can use this following bundle (
-https://github.com/tales-from-a-dev/twig-tailwind-extra
-) in addition to the cva function:
+CVA work perfectly with Tailwind CSS. The only drawback is that you can have class conflicts.
+To "merge" conflicting classes together and keep only the one you need, use the
+``tailwind_merge()` method from [tales-from-a-dev/twig-tailwind-extra](https://github.com/tales-from-a-dev/twig-tailwind-extra)
+with the ``cva()`` function:
 
 .. code-block:: terminal
 
@@ -1131,29 +1137,17 @@ https://github.com/tales-from-a-dev/twig-tailwind-extra
     {% props color = 'blue', size = 'md' %}
 
    {% set alert = cva({
-        base: 'alert ',
-        variants: {
-            color: {
-                blue: 'bg-blue',
-                red: 'bg-red',
-                green: 'bg-green',
-            },
-            size: {
-                sm: 'text-sm',
-                md: 'text-md',
-                lg: 'text-lg',
-            }
-        }
+       // ...
     }) %}
 
     <div class="{{ alert.apply({color, size}, attributes.render('class')) | tailwind_merge }}">
          {% block content %}{% endblock %}
     </div>
 
-Compounds variants
+Compounds Variants
 ~~~~~~~~~~~~~~~~~~
 
-You can define compound variants. A compound variant is a variants that apply
+You can define compound variants. A compound variant is a variant that applies
 when multiple other variant conditions are met.
 
 .. code-block:: html+twig
@@ -1175,7 +1169,8 @@ when multiple other variant conditions are met.
                 lg: 'text-lg',
             }
         },
-        compound: {
+        compoundVariants: {
+            // if colors=red AND size = (md or lg), add the `font-bold` class
             colors: ['red'],
             size: ['md', 'lg'],
             class: 'font-bold'
@@ -1203,11 +1198,10 @@ when multiple other variant conditions are met.
     </twig:Alert>
     // class="alert bg-green text-lg font-bold"
 
-Default variants
+Default Variants
 ~~~~~~~~~~~~~~~~
 
-You can define defaults variants, so if no variants are matching you
-can still defined a default set of class to apply.
+If no variants match, you can define a default set of classes to apply:
 
 .. code-block:: html+twig
 

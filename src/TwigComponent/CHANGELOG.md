@@ -5,20 +5,19 @@
 -   Introduce CVA to style TwigComponent #1416
 -   Drop Twig 2 support #1436
 -   Fix full context is stored in profiler #1552
+-   Add CVA (Class variant authority) integration #1416
 
 ## 2.15.0
 
 -   Add the ability to render specific attributes from the `attributes` variable #1442
 -   Restrict Twig 3.9 for now #1486
 -   Build reproducible TemplateMap to fix possible post-deploy breakage #1497
--   Add CVA (Class variant authority) integration #1416
 
 ## 2.14.0
 
 -   Make `ComponentAttributes` traversable/countable
 -   Fixed lexing some `{# twig comments #}` with HTML Twig syntax
 -   Fix various usages of deprecated Twig code
--   Add attribute rendering system
 
 ## 2.13.0
 
