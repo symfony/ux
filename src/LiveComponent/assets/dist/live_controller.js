@@ -2918,8 +2918,6 @@ class LiveControllerDefault extends Controller {
     constructor() {
         super(...arguments);
         this.pendingActionTriggerModelElement = null;
-        this.pendingActionCallable = null;
-        this.pendingActionTimeout = 0;
         this.elementEventListeners = [
             { event: 'input', callback: (event) => this.handleInputEvent(event) },
             { event: 'change', callback: (event) => this.handleChangeEvent(event) },
@@ -2993,23 +2991,10 @@ class LiveControllerDefault extends Controller {
                 }
                 delete this.pendingFiles[key];
             }
-            this.pendingActionCallable = () => {
-                clearTimeout(this.pendingActionTimeout);
-                this.pendingActionCallable = null;
-                this.pendingActionTriggerModelElement = null;
-                this.component.action(directive.action, actionArgs, debounce);
-            };
-            if (!getModelDirectiveFromElement(event.currentTarget, false)) {
-                this.pendingActionCallable();
-                return;
+            this.component.action(directive.action, actionArgs, debounce);
+            if (getModelDirectiveFromElement(event.currentTarget, false)) {
+                this.pendingActionTriggerModelElement = event.currentTarget;
             }
-            this.pendingActionTriggerModelElement = event.currentTarget;
-            this.pendingActionTimeout = window.setTimeout(() => {
-                if (!this.pendingActionCallable) {
-                    return;
-                }
-                this.pendingActionCallable();
-            }, 10);
         });
     }
     $render() {
@@ -3164,9 +3149,6 @@ class LiveControllerDefault extends Controller {
         }
         const finalValue = getValueFromElement(element, this.component.valueStore);
         this.component.set(modelBinding.modelName, finalValue, modelBinding.shouldRender, modelBinding.debounce);
-        if (this.pendingActionCallable) {
-            this.pendingActionCallable();
-        }
     }
     dispatchEvent(name, detail = {}, canBubble = true, cancelable = false) {
         detail.controller = this;
