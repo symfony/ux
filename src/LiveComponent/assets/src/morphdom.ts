@@ -27,14 +27,48 @@ export function executeMorphdom(
      * To handle them, we:
      *  1) Create an array of the "current" HTMLElements that match each
      *     "data-live-preserve" element.
-     *  2) Replace the "current" elements with clones so that the originals
-     *     aren't modified during the morphing process.
-     *  3) After the morphing is complete, we find the preserved elements and
-     *     replace them with the originals.
+     *  2) If we detect that a "current" preserved element is about to be morphed
+     *     (updated or removed), replace the "current" element with a clone so
+     *     the original isn't modified during the morphing process. Mark that
+     *     this element needs to be replaced after the morphing is complete.
+     *  3) After the morphing is complete, loop over the elements that were
+     *     replaced and swap the original element back into the new position.
+     *
+     * This allows Idiomorph to potentially morph the position of the preserved
+     * elements... but still allowing us to make sure that the element in the
+     * new position is exactly the original HTMLElement.
      */
-    const preservedOriginalElements: HTMLElement[] = [];
+    const originalElementIdsToSwapAfter: Array<string> = [];
+    const originalElementsToPreserve = new Map<string, HTMLElement>();
+
+    /**
+     * Called when a preserved element is about to be morphed.
+     *
+     * Instead of allowing the original to be morphed, a fake clone
+     * is created and morphed instead. The original is then marked
+     * to be replaced after the morph with wherever the final
+     * matching id element ends up.
+     */
+    const markElementAsNeedingPostMorphSwap = (id: string, replaceWithClone: boolean): HTMLElement | null => {
+        const oldElement = originalElementsToPreserve.get(id);
+        if (!(oldElement instanceof HTMLElement)) {
+            throw new Error(`Original element with id ${id} not found`);
+        }
+
+        originalElementIdsToSwapAfter.push(id);
+        if (!replaceWithClone) {
+            return null;
+        }
+
+        const clonedOldElement = cloneHTMLElement(oldElement);
+        oldElement.replaceWith(clonedOldElement);
+
+        return clonedOldElement;
+    };
+
     rootToElement.querySelectorAll('[data-live-preserve]').forEach((newElement) => {
         const id = newElement.id;
+
         if (!id) {
             throw new Error('The data-live-preserve attribute requires an id attribute to be set on the element');
         }
@@ -44,11 +78,8 @@ export function executeMorphdom(
             throw new Error(`The element with id "${id}" was not found in the original HTML`);
         }
 
-        const clonedOldElement = cloneHTMLElement(oldElement);
-        preservedOriginalElements.push(oldElement);
-        oldElement.replaceWith(clonedOldElement);
-
         newElement.removeAttribute('data-live-preserve');
+        originalElementsToPreserve.set(id, oldElement);
         syncAttributes(newElement, oldElement);
     });
 
@@ -62,6 +93,27 @@ export function executeMorphdom(
 
                 if (fromEl === rootFromElement) {
                     return true;
+                }
+
+                if (fromEl.id && originalElementsToPreserve.has(fromEl.id)) {
+                    if (fromEl.id === toEl.id) {
+                        // the preserved elements match, prevent morph and
+                        // keep the original element
+                        return false;
+                    }
+
+                    // a preserved element is being morphed into something else
+                    // this means that preserved element is being moved
+                    // to avoid the original element being morphed, we swap
+                    // it for a clone, manually morph the clone, and then
+                    // skip trying to morph the original element (we want it untouched)
+                    const clonedFromEl = markElementAsNeedingPostMorphSwap(fromEl.id, true);
+                    if (!clonedFromEl) {
+                        throw new Error('missing clone');
+                    }
+                    Idiomorph.morph(clonedFromEl, toEl);
+
+                    return false;
                 }
 
                 // skip special checking if this is, for example, an SVG
@@ -168,6 +220,18 @@ export function executeMorphdom(
                     return true;
                 }
 
+                if (node.id && originalElementsToPreserve.has(node.id)) {
+                    // a preserved element is being removed
+                    // to avoid the original element being destroyed (but still
+                    // allowing this spot on the dom to be removed),
+                    // clone the original element and place it into the
+                    // new position after morphing
+                    markElementAsNeedingPostMorphSwap(node.id, false);
+
+                    // allow this to be morphed to the new element
+                    return true;
+                }
+
                 if (externalMutationTracker.wasElementAdded(node)) {
                     // this element was added by an external mutation, so we don't want to discard it
                     return false;
@@ -178,14 +242,13 @@ export function executeMorphdom(
         },
     });
 
-    preservedOriginalElements.forEach((oldElement) => {
-        const newElement = rootFromElement.querySelector(`#${oldElement.id}`);
-        if (!(newElement instanceof HTMLElement)) {
-            // should not happen, as preservedOriginalElements is built from
-            // the new HTML
-            throw new Error('Missing preserved element');
+    originalElementIdsToSwapAfter.forEach((id: string) => {
+        const newElement = rootFromElement.querySelector(`#${id}`);
+        const originalElement = originalElementsToPreserve.get(id);
+        if (!(newElement instanceof HTMLElement) || !(originalElement instanceof HTMLElement)) {
+            // should not happen
+            throw new Error('Missing elements.');
         }
-
-        newElement.replaceWith(oldElement);
+        newElement.replaceWith(originalElement);
     });
 }

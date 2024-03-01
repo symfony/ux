@@ -394,8 +394,12 @@ export async function startStimulus(element: string|HTMLElement) {
 
     return {
         controller,
-        element: controllerElement
+        element: controllerElement,
     }
+}
+
+export const getStimulusApplication = (): Application => {
+    return application;
 }
 
 const getControllerElement = (container: HTMLElement): HTMLElement => {

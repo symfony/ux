@@ -16,10 +16,12 @@ import {
     shutdownTests,
     getComponent,
     dataToJsonAttribute,
+    getStimulusApplication
 } from '../tools';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import { findChildren } from '../../src/ComponentRegistry';
+import { Controller } from '@hotwired/stimulus';
 
 describe('Component parent -> child initialization and rendering tests', () => {
     afterEach(() => {
@@ -126,6 +128,74 @@ describe('Component parent -> child initialization and rendering tests', () => {
         expect(test.element).toHaveTextContent('Original Child Component')
         expect(test.element).toContainHTML('data-new="bar"');
         expect(test.element).not.toContainHTML('data-live-preserve');
+    });
+
+    it('data-live-preserve child in same location is not removed/re-added to the DOM', async () => {
+        const originalChild = `
+            <div ${initComponent({}, {id: 'the-child-id'})}>
+                <div data-controller="track-connect"></div>
+                Original Child Component
+            </div>
+        `;
+        const updatedChild = `
+            <div id="the-child-id" data-live-preserve></div>
+        `;
+
+        const test = await createTest({useOriginalChild: true}, (data: any) => `
+           <div ${initComponent(data)}>
+               ${data.useOriginalChild ? originalChild : updatedChild}
+           </div>
+       `);
+
+        getStimulusApplication().register('track-connect', class extends Controller {
+            disconnect() {
+                this.element.setAttribute('disconnected', '');
+            }
+        });
+
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
+                data.useOriginalChild = false;
+            });
+
+        await test.component.render();
+        // sanity check that the child is there
+        expect(test.element).toHaveTextContent('Original Child Component');
+        // check that the element was never disconnected/removed from the DOM
+        expect(test.element).not.toContainHTML('disconnected');
+    });
+
+    it('data-live-preserve element moved correctly when position changes and old element morphed into different element', async () => {
+        const originalChild = `
+            <div ${initComponent({}, {id: 'the-child-id'})} data-testid="child-component">
+                <div data-controller="track-connect"></div>
+                Original Child Component
+            </div>
+        `;
+        const updatedChild = `
+            <div id="the-child-id" data-live-preserve></div>
+        `;
+
+        // when morphing original -> updated, the outer div (which was the child)
+        // will be morphed into a normal div
+        const test = await createTest({useOriginalChild: true}, (data: any) => `
+           <div ${initComponent(data)}>
+               ${data.useOriginalChild ? originalChild : ''}
+               ${data.useOriginalChild ? '' : `<div class="wrapper">${updatedChild}</div>`}
+           </div>
+       `)
+
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
+                data.useOriginalChild = false;
+            });
+
+        const childElement = getByTestId(test.element, 'child-component');
+        await test.component.render();
+        // sanity check that the child is there
+        expect(test.element).toHaveTextContent('Original Child Component');
+        expect(test.element).toContainHTML('class="wrapper"');
+        expect(childElement.parentElement).toHaveClass('wrapper');
     });
 
     it('existing child component gets props & triggers re-render', async () => {
@@ -327,10 +397,8 @@ describe('Component parent -> child initialization and rendering tests', () => {
             .willReturn(childTemplate);
 
         // trigger the parent render, which will trigger the children to re-render
-        test.component.render();
+        await test.component.render();
 
-        // wait for parent Ajax call to finish
-        await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
 
         // wait for child to start and stop loading
         await waitFor(() => expect(getByTestId(test.element, 'child-component-1')).not.toHaveAttribute('busy'));
