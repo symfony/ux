@@ -189,7 +189,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
                 this.component.action(directive.action, actionArgs, debounce);
             };
 
-
             // Possible case where this element is also a "model" element
             // if so, to be safe, slightly delay the action so that the
             // change/input listener on LiveController can process the
