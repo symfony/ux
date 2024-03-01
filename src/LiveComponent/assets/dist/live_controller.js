@@ -1332,7 +1332,21 @@ const syncAttributes = function (fromEl, toEl) {
     }
 };
 function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, getElementValue, externalMutationTracker) {
-    const preservedOriginalElements = [];
+    const originalElementIdsToSwapAfter = [];
+    const originalElementsToPreserve = new Map();
+    const markElementAsNeedingPostMorphSwap = (id, replaceWithClone) => {
+        const oldElement = originalElementsToPreserve.get(id);
+        if (!(oldElement instanceof HTMLElement)) {
+            throw new Error(`Original element with id ${id} not found`);
+        }
+        originalElementIdsToSwapAfter.push(id);
+        if (!replaceWithClone) {
+            return null;
+        }
+        const clonedOldElement = cloneHTMLElement(oldElement);
+        oldElement.replaceWith(clonedOldElement);
+        return clonedOldElement;
+    };
     rootToElement.querySelectorAll('[data-live-preserve]').forEach((newElement) => {
         const id = newElement.id;
         if (!id) {
@@ -1342,10 +1356,8 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
         if (!(oldElement instanceof HTMLElement)) {
             throw new Error(`The element with id "${id}" was not found in the original HTML`);
         }
-        const clonedOldElement = cloneHTMLElement(oldElement);
-        preservedOriginalElements.push(oldElement);
-        oldElement.replaceWith(clonedOldElement);
         newElement.removeAttribute('data-live-preserve');
+        originalElementsToPreserve.set(id, oldElement);
         syncAttributes(newElement, oldElement);
     });
     Idiomorph.morph(rootFromElement, rootToElement, {
@@ -1356,6 +1368,17 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                 }
                 if (fromEl === rootFromElement) {
                     return true;
+                }
+                if (fromEl.id && originalElementsToPreserve.has(fromEl.id)) {
+                    if (fromEl.id === toEl.id) {
+                        return false;
+                    }
+                    const clonedFromEl = markElementAsNeedingPostMorphSwap(fromEl.id, true);
+                    if (!clonedFromEl) {
+                        throw new Error('missing clone');
+                    }
+                    Idiomorph.morph(clonedFromEl, toEl);
+                    return false;
                 }
                 if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement) {
                     if (typeof fromEl.__x !== 'undefined') {
@@ -1406,6 +1429,10 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                 if (!(node instanceof HTMLElement)) {
                     return true;
                 }
+                if (node.id && originalElementsToPreserve.has(node.id)) {
+                    markElementAsNeedingPostMorphSwap(node.id, false);
+                    return true;
+                }
                 if (externalMutationTracker.wasElementAdded(node)) {
                     return false;
                 }
@@ -1413,12 +1440,13 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
             },
         },
     });
-    preservedOriginalElements.forEach((oldElement) => {
-        const newElement = rootFromElement.querySelector(`#${oldElement.id}`);
-        if (!(newElement instanceof HTMLElement)) {
-            throw new Error('Missing preserved element');
+    originalElementIdsToSwapAfter.forEach((id) => {
+        const newElement = rootFromElement.querySelector(`#${id}`);
+        const originalElement = originalElementsToPreserve.get(id);
+        if (!(newElement instanceof HTMLElement) || !(originalElement instanceof HTMLElement)) {
+            throw new Error('Missing elements.');
         }
-        newElement.replaceWith(oldElement);
+        newElement.replaceWith(originalElement);
     });
 }
 
