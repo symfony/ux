@@ -22,8 +22,8 @@
                     </div>
 
                     <button
-                        data-action="live#action"
-                        data-action-name="prevent|save"
+                        data-action="live#action:prevent"
+                        data-live-action-param="save"
                         class="btn btn-outline btn-outline-{{ error ? 'danger' : 'secondary' }}"
                     >Save</button>
 
@@ -37,7 +37,7 @@
             <h2>{{ food.name }}</h2>
             <button
                 data-action="live#action"
-                data-action-name="activateEditing"
+                data-live-action-param="activateEditing"
                 class="btn btn-link"
                 title="Click to edit!"
             >

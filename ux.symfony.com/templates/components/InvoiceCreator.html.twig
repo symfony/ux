@@ -1,5 +1,5 @@
 <div {{ attributes }}>
-    <form data-action="live#action" data-action-name="prevent|saveInvoice">
+    <form data-action="live#action:prevent" data-live-action-param="saveInvoice">
         <div class="mb-3">
             <label for="customer-name">Customer name:</label>
             <input
@@ -56,7 +56,7 @@
 
                 <button
                     data-action="live#action"
-                    data-action-name="addLineItem"
+                    data-live-action-param="addLineItem"
                     class="btn btn-sm btn-secondary"
                     type="button"
                 ><twig:Icon name="plus" /> Add Item</button>
