@@ -21,7 +21,7 @@ jobs:
                   php-version: '8.1'
                   extensions: zip
 
-            - uses: ramsey/composer-install@v2
+            - uses: ramsey/composer-install@v3
               with:
                   working-directory: src/Turbo
 
@@ -68,7 +68,7 @@ jobs:
                   php-version: ${{ matrix.php-version }}
 
             - name: Install Turbo packages
-              uses: ramsey/composer-install@v2
+              uses: ramsey/composer-install@v3
               with:
                 working-directory: src/Turbo
                 dependency-versions: ${{ matrix.dependency-version }}
