@@ -75,6 +75,10 @@ export default class {
                 continue;
             }
 
+            if (this.isElementAddedByTranslation(element)) {
+                continue;
+            }
+
             // ignore changes in elements that were externally-added
             let isChangeInAddedElement = false;
             for (const addedElement of this.addedElements) {
@@ -130,6 +134,10 @@ export default class {
                 // this node was removed then added back, so no net change
                 this.removedElements.splice(this.removedElements.indexOf(node), 1);
 
+                return;
+            }
+
+            if (this.isElementAddedByTranslation(node)) {
                 return;
             }
 
@@ -292,5 +300,17 @@ export default class {
         });
 
         return styleObject;
+    }
+
+    /**
+     * Helps avoid tracking changes by Chrome's translation feature.
+     *
+     * When Chrome translates, it mutates the dom in a way that triggers MutationObserver.
+     * This includes adding new elements wrapped in a <font> tag. This causes live
+     * components to incorrectly think that these new elements should persist through
+     * re-renders, causing duplicate text.
+     */
+    private isElementAddedByTranslation(element: Element): boolean {
+        return element.tagName === 'FONT' && element.getAttribute('style') === 'vertical-align: inherit;'
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Symfony package.
  *
@@ -14,8 +15,6 @@ namespace Symfony\UX\LiveComponent\Util;
  * Helps organize the dehydrated props and data.
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  *
  * @internal
  */

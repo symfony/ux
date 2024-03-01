@@ -15,6 +15,11 @@ use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
 
+/**
+ * Handles hydration of Doctrine entities.
+ *
+ * @internal
+ */
 class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
 {
     /**

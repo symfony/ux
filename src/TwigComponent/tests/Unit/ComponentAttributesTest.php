@@ -146,6 +146,28 @@ final class ComponentAttributesTest extends TestCase
         ], $attributes->all());
     }
 
+    public function testCanAddStimulusActionViaStimulusAttributes(): void
+    {
+        // if PHP less than 8.1, skip
+        if (version_compare(\PHP_VERSION, '8.1.0', '<')) {
+            $this->markTestSkipped('PHP 8.1+ required');
+        }
+
+        $attributes = new ComponentAttributes([
+            'class' => 'foo',
+            'data-action' => 'live#foo',
+        ]);
+
+        $stimulusAttributes = new StimulusAttributes(new Environment(new ArrayLoader()));
+        $stimulusAttributes->addAction('foo', 'barMethod');
+        $attributes = $attributes->defaults([...$stimulusAttributes]);
+
+        $this->assertEquals([
+            'class' => 'foo',
+            'data-action' => 'foo#barMethod live#foo',
+        ], $attributes->all());
+    }
+
     public function testBooleanBehaviour(): void
     {
         $attributes = new ComponentAttributes(['disabled' => true]);
@@ -168,5 +190,38 @@ final class ComponentAttributesTest extends TestCase
 
         $this->assertSame(['disabled' => null], $attributes->all());
         $this->assertSame(' disabled', (string) $attributes);
+    }
+
+    public function testIsTraversableAndCountable(): void
+    {
+        $attributes = new ComponentAttributes(['foo' => 'bar']);
+
+        $this->assertSame($attributes->all(), iterator_to_array($attributes));
+        $this->assertCount(1, $attributes);
+    }
+
+    public function testRenderSingleAttribute(): void
+    {
+        $attributes = new ComponentAttributes(['attr1' => 'value1', 'attr2' => 'value2']);
+
+        $this->assertSame('value1', $attributes->render('attr1'));
+        $this->assertNull($attributes->render('attr3'));
+    }
+
+    public function testRenderingSingleAttributeExcludesFromString(): void
+    {
+        $attributes = new ComponentAttributes(['attr1' => 'value1', 'attr2' => 'value2']);
+
+        $this->assertSame('value1', $attributes->render('attr1'));
+        $this->assertSame(' attr2="value2"', (string) $attributes);
+    }
+
+    public function testCannotRenderNonStringAttribute(): void
+    {
+        $attributes = new ComponentAttributes(['attr1' => false]);
+
+        $this->expectException(\LogicException::class);
+
+        $attributes->render('attr1');
     }
 }

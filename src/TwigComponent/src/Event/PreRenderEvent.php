@@ -23,8 +23,13 @@ final class PreRenderEvent extends Event
     /** @internal */
     public const EMBEDDED = '__embedded';
 
+    /**
+     * Only relevant when rendering a specific embedded component.
+     * This is the "component template" that the embedded component
+     * should extend.
+     */
+    private string $parentTemplateForEmbedded;
     private string $template;
-
     private ?int $templateIndex = null;
 
     /**
@@ -33,9 +38,10 @@ final class PreRenderEvent extends Event
     public function __construct(
         private MountedComponent $mounted,
         private ComponentMetadata $metadata,
-        private array $variables
+        private array $variables,
     ) {
         $this->template = $this->metadata->getTemplate();
+        $this->parentTemplateForEmbedded = $this->template;
     }
 
     public function isEmbedded(): bool
@@ -54,10 +60,14 @@ final class PreRenderEvent extends Event
     /**
      * Change the twig template used.
      */
-    public function setTemplate(string $template, int $index = null): self
+    public function setTemplate(string $template, ?int $index = null): self
     {
         $this->template = $template;
         $this->templateIndex = $index;
+        // only if we are *not* targeting an embedded component, change the parent template
+        if (null === $index) {
+            $this->parentTemplateForEmbedded = $template;
+        }
 
         return $this;
     }
@@ -68,6 +78,11 @@ final class PreRenderEvent extends Event
     public function getTemplateIndex(): ?int
     {
         return $this->templateIndex;
+    }
+
+    public function getParentTemplateForEmbedded(): string
+    {
+        return $this->parentTemplateForEmbedded;
     }
 
     public function getComponent(): object

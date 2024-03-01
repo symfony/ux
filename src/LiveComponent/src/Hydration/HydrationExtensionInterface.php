@@ -11,6 +11,9 @@
 
 namespace Symfony\UX\LiveComponent\Hydration;
 
+/**
+ * Interface for custom hydration of objects.
+ */
 interface HydrationExtensionInterface
 {
     /**

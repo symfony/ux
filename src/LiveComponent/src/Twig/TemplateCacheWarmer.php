@@ -22,18 +22,24 @@ use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
  */
 final class TemplateCacheWarmer implements CacheWarmerInterface
 {
-    public function __construct(private \IteratorAggregate $templateIterator, private readonly string $cacheFilename)
-    {
+    public function __construct(
+        private readonly \IteratorAggregate $templateIterator,
+        private readonly string $cacheFilename,
+        private readonly string $secret,
+    ) {
     }
 
-    public function warmUp(string $cacheDir): void
+    public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
         $map = [];
         foreach ($this->templateIterator as $item) {
-            $map[bin2hex(random_bytes(16))] = $item;
+            $map[hash('xxh128', $item.$this->secret)] = $item;
         }
 
-        (new PhpArrayAdapter($cacheDir.'/'.$this->cacheFilename, new NullAdapter()))->warmUp(['map' => $map]);
+        $cacheFile = sprintf('%s%s%s', $buildDir ?? $cacheDir, \DIRECTORY_SEPARATOR, $this->cacheFilename);
+        PhpArrayAdapter::create($cacheFile, new NullAdapter())->warmUp(['map' => $map]);
+
+        return [];
     }
 
     public function isOptional(): bool

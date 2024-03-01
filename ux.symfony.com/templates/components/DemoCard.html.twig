@@ -1,0 +1,23 @@
+<article class="DemoCard">
+
+    <div class="DemoCard__media">
+        <img class="DemoCard__image"
+             src="{{ asset(demo.screenshotFilename) }}"
+             width="640"
+             alt="{{ demo.name }} demo preview"
+             loading="lazy"
+        >
+    </div>
+
+    <div class="DemoCard__content">
+        <h4 class="DemoCard__title">
+            <a href="{{ path(demo.route) }}" class="stretched-link">
+                {{ demo.name }}
+            </a>
+        </h4>
+        <p class="DemoCard__description">
+            {{ demo.description }}
+        </p>
+    </div>
+
+</article>

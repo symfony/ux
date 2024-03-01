@@ -13,8 +13,8 @@ namespace Symfony\UX\LiveComponent\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\UX\LiveComponent\Util\LiveComponentStack;
 use Symfony\UX\LiveComponent\Util\ModelBindingParser;
-use Symfony\UX\TwigComponent\ComponentStack;
 use Symfony\UX\TwigComponent\Event\PreMountEvent;
 
 /**
@@ -31,7 +31,7 @@ final class DataModelPropsSubscriber implements EventSubscriberInterface
 {
     private ModelBindingParser $modelBindingParser;
 
-    public function __construct(private ComponentStack $componentStack, private PropertyAccessorInterface $propertyAccessor)
+    public function __construct(private LiveComponentStack $componentStack, private PropertyAccessorInterface $propertyAccessor)
     {
         $this->modelBindingParser = new ModelBindingParser();
     }
@@ -54,8 +54,9 @@ final class DataModelPropsSubscriber implements EventSubscriberInterface
         unset($data['dataModel']);
         $data['data-model'] = $dataModel;
 
-        // the parent is still listed as the "current" component at this point
-        $parentMountedComponent = $this->componentStack->getCurrentComponent();
+        // find the first parent of the component about to be rendered that is a Live Component
+        // only those can have properties controlled via the data-model attribute
+        $parentMountedComponent = $this->componentStack->getCurrentLiveComponent();
         if (null === $parentMountedComponent) {
             throw new \LogicException('You can only pass "data-model" when rendering a component when you\'re rendering inside of a parent component.');
         }

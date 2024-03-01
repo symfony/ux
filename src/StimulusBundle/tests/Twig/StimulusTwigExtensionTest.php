@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Symfony StimulusBundle package.
+ * This file is part of the Symfony package.
+ *
  * (c) Fabien Potencier <fabien@symfony.com>
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -119,6 +121,15 @@ final class StimulusTwigExtensionTest extends TestCase
             'expectedString' => 'data-controller="my-controller" data-my-controller-other-controller-outlet=".target"',
             'expectedArray' => ['data-controller' => 'my-controller', 'data-my-controller-other-controller-outlet' => '.target'],
         ];
+
+        yield 'short-single-controller-no-data-with-namespaced-outlet' => [
+            'controllerName' => 'my-controller',
+            'controllerValues' => [],
+            'controllerClasses' => [],
+            'controllerOutlets' => ['namespaced--other-controller' => '.target'],
+            'expectedString' => 'data-controller="my-controller" data-my-controller-namespaced--other-controller-outlet=".target"',
+            'expectedArray' => ['data-controller' => 'my-controller', 'data-my-controller-namespaced--other-controller-outlet' => '.target'],
+        ];
     }
 
     public function testAppendStimulusController(): void
@@ -187,6 +198,16 @@ final class StimulusTwigExtensionTest extends TestCase
             'parameters' => [],
             'expectedString' => 'data-action="click->symfony--ux-dropzone--dropzone#onClick"',
             'expectedArray' => ['data-action' => 'click->symfony--ux-dropzone--dropzone#onClick'],
+        ];
+
+        yield 'normalize-name, with normalized parameters names' => [
+            'controllerName' => 'my-controller',
+            'actionName' => 'onClick',
+            'eventName' => null,
+            'parameters' => ['boolParam' => true, 'intParam' => 4, 'stringParam' => 'test'],
+            'expectedString' => 'data-action="onClick"',
+            'expectedString' => 'data-action="my-controller#onClick" data-my-controller-bool-param-param="true" data-my-controller-int-param-param="4" data-my-controller-string-param-param="test"',
+            'expectedArray' => ['data-action' => 'my-controller#onClick', 'data-my-controller-bool-param-param' => 'true', 'data-my-controller-int-param-param' => '4', 'data-my-controller-string-param-param' => 'test'],
         ];
     }
 

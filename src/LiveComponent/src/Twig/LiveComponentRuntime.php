@@ -19,8 +19,6 @@ use Symfony\UX\TwigComponent\ComponentFactory;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
- * @experimental
- *
  * @internal
  */
 final class LiveComponentRuntime
@@ -45,6 +43,6 @@ final class LiveComponentRuntime
 
         $metadata = $this->factory->metadataFor($mounted->getName());
 
-        return $this->urlGenerator->generate($metadata->get('route'), $params);
+        return $this->urlGenerator->generate($metadata->get('route'), $params, $metadata->get('url_reference_type'));
     }
 }

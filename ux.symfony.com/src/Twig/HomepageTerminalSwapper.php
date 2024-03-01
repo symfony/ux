@@ -1,16 +1,25 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Twig;
 
-use App\Service\PackageRepository;
+use App\Service\UxPackageRepository;
 use App\Util\SourceCleaner;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsTwigComponent()]
+#[AsTwigComponent]
 class HomepageTerminalSwapper
 {
-    public function __construct(private PackageRepository $packageRepository)
+    public function __construct(private UxPackageRepository $packageRepository)
     {
     }
 

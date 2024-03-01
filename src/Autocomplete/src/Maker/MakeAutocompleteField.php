@@ -39,7 +39,7 @@ class MakeAutocompleteField extends AbstractMaker
     private string $entityClass;
 
     public function __construct(
-        private ?DoctrineHelper $doctrineHelper = null
+        private ?DoctrineHelper $doctrineHelper = null,
     ) {
     }
 

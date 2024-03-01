@@ -1,0 +1,9 @@
+<div class="demo-container p-4">
+    <img width="30px" src="{{ asset('images/sf-logo.png') }}" alt="Symfony logo">
+    <p class="d-inline ms-2">{% block title %}{% endblock %}</p>
+</div>
+<div class="demo-container-inner p-4">
+    {% block content %}{% endblock %}
+</div>
+
+{% block content_secondary %}{% endblock %}

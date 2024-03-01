@@ -1,5 +1,122 @@
 # CHANGELOG
 
+## 2.16.0
+
+-   LiveComponents is now stable and no longer experimental 🥳
+-   [BC BREAK] The `data-action-name` attribute behavior was removed in favor of
+    using Stimulus "action parameters" and `data-live-action-param`. This is a
+    breaking change if you were using the `data-action-name` attribute directly
+    in your templates. #1418
+
+    To upgrade your application, follow these changes:
+
+    ```diff
+    <button
+        data-action="live#action"
+    -    data-action-name="debounce(300)|save"
+    +    data-live-action-param="debounce(300)|save"
+    >Save</button>
+    ```
+
+    To pass arguments to an action, also use the Stimulus "action parameters" syntax:
+
+    ```diff
+    <button
+        data-action="live#action"
+    -     data-action-name="addItem(id={{ item.id }}, itemName=CustomItem)"
+    +     data-live-action-param="addItem"
+    +     data-live-id-param="{{ item.id }}"
+    +     data-live-item-name-param="CustomItem"
+    >Add Item</button>
+    ```
+
+    Additionally, the `prevent` modifier (e.g. `prevent|save`) was removed. Replace
+    this with the standard Stimulus `:prevent` action option:
+
+    ```diff
+    <button
+    -    data-action="live#action
+    +    data-action="live#action:prevent"
+    -    data-action-name="prevent|save"
+    +    data-live-action-param="save"
+     >Save</button>
+    ```
+
+-   [BC BREAK] The `data-event` attribute was removed in favor of using Stimulus
+    "action parameters": rename `data-event` to `data-live-event-param`. Additionally,
+    if you were passing arguments to the event name, use action parameter attributes
+    for those as well - e.g. `data-live-foo-param="bar"`. #1418
+
+-   Reverted setting `ignoreActiveValue: true` in Idiomorph #1548
+-   New placeholder macro to generate defer/lazy skeleton #1532
+-   improve TestLiveComponent::actingAs() #1461
+-   Drop Twig 2 support #1436
+-   Add better error message when hydrating dates #1431
+-   Store TemplateMap in build_dir #1525
+
+## 2.15.0
+
+-   [BC BREAK] The `data-live-id` attribute was changed to `id` #1484
+-   Fixed child handling bug during re-rendering introduced with the
+    new morphing library in 2.14.0 #1484
+-   Fix bug where the active input would maintain its value, but lose its cursor position #1501
+-   Restrict Twig 3.9 for now #1486
+
+## 2.14.1
+
+-   Fixed a regression in the testing tools related to the default HTTP
+    method change
+
+## 2.14.0
+
+-   [BC BREAK] DOM morphing changed from `morphdom` to `idiomorph`. As this is
+    a different morphing library, there may be some edge cases where the
+    morphing behavior is different.
+-   Add support for URL binding in `LiveProp`
+-   Allow multiple `LiveListener` attributes on a single method
+-   Requests to LiveComponent are sent as POST by default
+-   Add method prop to AsLiveComponent to still allow GET requests, usage: `#[AsLiveComponent(method: 'get')]`
+-   Add a new `urlReferenceType` parameter to `AsLiveComponent`, which allows to
+    generate different type URL (e.g. absolute) for the component Ajax calls
+-   The `symfony/serializer` dependency is now optional
+-   Added a `data-skip-morph` attribute to allow skipping morphing of an element
+    (the element's attributes will be morphed, but its inner HTML will be overwritten
+    instead of morphed)
+-   Added an entry to the packages' `package.json` file so that `@symfony/ux-live-component`
+    will appear in the user's `importmap.php` file if using AssetMapper. This
+    will allow using the JavaScript from the package without extra setup.
+-   Fixed edge-case rendering bug where a 2nd Ajax request might start before
+    the 1st finished processing
+-   Fix usage of `{% embed %}` with `{% block %}` in `<twig:>` components
+-   Fixed `data-loading` not working when on root element of a component
+-   Fixed error when `class` attributes contained a space at start or end
+-   Fixed loading directives being matched in a child component
+
+## 2.13.2
+
+-   Revert "Change JavaScript package to `type: module`"
+
+## 2.13.0
+
+-   Add deferred/lazy rendering of Live Components.
+-   Fix option tag synchronization.
+-   Handle array-like objects when working with checkboxes.
+-   Add Symfony 7 support.
+-   Normalize "true" & "false" model values
+-   Fix DTO hydration from phpdoc typehints.
+-   Fix instantiating LiveComponentMetadata multiple times.
+-   Change JavaScript package to `type: module`.
+-   Throwing an error when setting an invalid model name.
+
+## 2.12.0
+
+-   Add support for (de)hydrating DTO classes in `LiveProp`.
+-   Fixed `emit()` method of `TestLiveComponent` to properly test events.
+-   Add `actionAs()` to `TestLiveComponent`.
+-   Fixed rendering bug when using Chrome's translation feature.
+-   Add `onUpdated()` hook for `LiveProp`.
+-   Fix support for Alpine.js & live components.
+
 ## 2.11.0
 
 -   Add helper for testing live components.

@@ -1,8 +1,9 @@
 import { BackendAction, ChildrenFingerprints } from './Backend';
 export default class {
     private url;
+    private method;
     private readonly csrfToken;
-    constructor(url: string, csrfToken?: string | null);
+    constructor(url: string, method?: 'get' | 'post', csrfToken?: string | null);
     buildRequest(props: any, actions: BackendAction[], updated: {
         [key: string]: any;
     }, children: ChildrenFingerprints, updatedPropsFromParent: {

@@ -1,24 +1,34 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 if (!file_exists(__DIR__.'/src')) {
     exit(0);
 }
 
+$fileHeaderComment = <<<'EOF'
+This file is part of the Symfony package.
+
+(c) Fabien Potencier <fabien@symfony.com>
+
+For the full copyright and license information, please view the LICENSE
+file that was distributed with this source code.
+EOF;
+
 return (new PhpCsFixer\Config())
     ->setRules([
+        '@PHPUnit75Migration:risky' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
-        '@PHPUnit75Migration:risky' => true,
-        'php_unit_dedicate_assert' => ['target' => '5.6'],
-        'array_syntax' => ['syntax' => 'short'],
-        'fopen_flags' => false,
-        'protected_to_private' => false,
-        'native_constant_invocation' => true,
-        'combine_nested_dirname' => true,
-        'list_syntax' => ['syntax' => 'short'],
-        'ordered_imports' => [
-            'imports_order' => ['const', 'class', 'function'],
-        ],
+        'header_comment' => ['header' => $fileHeaderComment],
+        'trailing_comma_in_multiline' => ['elements' => ['arrays', 'match', 'parameters']],
     ])
     ->setRiskyAllowed(true)
     ->setFinder(
@@ -28,6 +38,5 @@ return (new PhpCsFixer\Config())
             ->notPath('#/Fixtures/#')
             ->notPath('#/app/var/#')
             ->notPath('#/var/cache/#')
-            ->notPath('Turbo/Attribute/Broadcast.php') // Need https://github.com/FriendsOfPHP/PHP-CS-Fixer/issues/4702
     )
 ;

@@ -1,8 +1,10 @@
 <?php
 
 /*
- * This file is part of the Symfony StimulusBundle package.
+ * This file is part of the Symfony package.
+ *
  * (c) Fabien Potencier <fabien@symfony.com>
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -51,11 +53,11 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
 
         $compiledContents = $compiler->compile($startingContents, $loaderAsset, $this->createMock(AssetMapperInterface::class));
         $this->assertStringContainsString(
-            "import controller_0 from '../../controllers/foo-controller.js';",
+            'import controller_0 from "../../controllers/foo-controller.js";',
             $compiledContents,
         );
         $this->assertStringContainsString(
-            "import controller_1 from '../../in-root_controller.js';",
+            'import controller_1 from "../../in-root_controller.js";',
             $compiledContents,
         );
         $this->assertStringContainsString(
@@ -105,7 +107,7 @@ class StimulusLoaderJavaScriptCompilerTest extends TestCase
 
     private function createAsset(string $publicPath): MappedAsset
     {
-        $asset = new MappedAsset(basename($publicPath), publicPathWithoutDigest: $publicPath);
+        $asset = new MappedAsset(basename($publicPath), '/path/to/project/'.$publicPath, publicPathWithoutDigest: $publicPath);
 
         return $asset;
     }

@@ -1,5 +1,26 @@
 # CHANGELOG
 
+## 2.15.0
+
+-   Remove restriction that prevented Chart.js 3.9 #1518
+
+## 2.14.0
+
+-   Add support for Chart.js version 4
+
+## 2.13.2
+
+-   Change "module" key back to "main" in package.json
+
+## 2.13.1
+
+-   Revert "Change JavaScript package to `type: module`"
+
+## 2.13.0
+
+-   Add Symfony 7 support.
+-   Change JavaScript package to `type: module`
+
 ## 2.9.0
 
 -   Add support for symfony/asset-mapper

@@ -61,7 +61,7 @@ class EntitySearchUtilTest extends KernelTestCase
     /**
      * @return array<Product>
      */
-    private function callAddSearchClass(string $search, array $searchableProperties = null): array
+    private function callAddSearchClass(string $search, ?array $searchableProperties = null): array
     {
         /** @var ManagerRegistry $registry */
         $registry = self::getContainer()->get('doctrine');

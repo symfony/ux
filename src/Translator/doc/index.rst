@@ -17,9 +17,11 @@ Installation
     This package works best with WebpackEncore. To use it with AssetMapper, see
     :ref:`Using with AssetMapper <using-with-asset-mapper>`.
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
+.. caution::
 
-Install this bundle using Composer and Symfony Flex:
+    Before you start, make sure you have `StimulusBundle configured in your app`_.
+
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -67,7 +69,7 @@ When warming up the Symfony cache, all of your translations will be dumped as Ja
 For a better developer experience, TypeScript types definitions are also generated aside those JavaScript files.
 
 Then, you will be able to import those JavaScript translations in your assets.
-Don't worry about your final bundle size, only the translations you use will be included in your final bundle, thanks to the [tree shaking](https://webpack.js.org/guides/tree-shaking/).
+Don't worry about your final bundle size, only the translations you use will be included in your final bundle, thanks to the `tree shaking <https://webpack.js.org/guides/tree-shaking/>`_.
 
 Configuring the default locale
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -153,4 +155,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Symfony Translator`: https://symfony.com/doc/current/translation.html
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
-.. _`ICU Message Format`: https://symfony.com/doc/current/translation/message_format.html
+.. _`ICU Message Format`: https://symfony.com/doc/current/reference/formats/message_format.html

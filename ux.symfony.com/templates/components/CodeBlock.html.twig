@@ -1,40 +1,49 @@
 <div {{ attributes.defaults({
-    class: this.classString,
+    class: 'Terminal ' ~ this.classString,
 }) }}>
+
     {% if showFilename %}
-        <div class="py-2 ps-4 pe-2 mb-0 d-flex justify-content-between align-items-center">
-            <a id="{{ this.elementId }}" href="#{{ this.elementId }}" class="filename-header">{{ filename }}</a>
-            <div>
-                {{ include('partials/code-block-buttons.html.twig', {
-                    source: this.rawSource,
-                    link: this.githubLink,
-                }) }}
+        <div class="Terminal_header py-2 ps-4 pe-2 mb-0 d-flex justify-content-between align-items-center">
+            <a id="{{ this.elementId }}" href="#{{ this.elementId }}" class="Terminal_title"><code>{{ filename }}</code></a>
+            <div class="Terminal_actions">
+                <twig:CodeBlockButtons source="{{ this.rawSource }}" link="{{ this.githubLink }}"/>
             </div>
         </div>
     {% endif %}
-    <div class="terminal-body" {{ stimulus_controller('code-expander')}} style="position: relative">
+
+    <div class="Terminal_body" data-controller="code-expander">
         {% if not showFilename %}
-            {{ include('partials/code-block-buttons.html.twig', {
-                source: this.rawSource,
-                link: this.githubLink,
-            }) }}
+            <div class="Terminal_actions">
+                <twig:CodeBlockButtons source="{{ this.rawSource }}" link="{{ this.githubLink }}"/>
+            </div>
         {% endif %}
-        <pre
-            class="py-2 ps-4"
-            style="height: {{ height }}; overflow: auto;"
-            {{ stimulus_target('code-expander', 'codeContent') }}
+        <div class="Terminal_content" style="height: {{ height }};"
+             data-code-expander-target="codeContent"
+             data-controller="code-highlighter"
         >
-            {{- this.highlightSource()|raw -}}
-        </pre>
+            {% for piece in this.prepareSource %}
+                {% if piece.highlight ?? true %}
+                    <pre><code class="language-{{ this.language }}" data-code-highlighter-target="codeBlock">
+                        {{- piece.content -}}
+                    </code></pre>
+                {% else %}
+                    {{- piece.content|raw -}}
+                {% endif %}
+            {% endfor %}
+        </div>
 
         {% block code_content_bottom %}
             <button
                 type="button"
                 class="btn btn-expand-code pt-2 text-center"
-                {{ stimulus_target('code-expander', 'expandCodeButton') }}
-                {{ stimulus_action('code-expander', 'expandCode') }}
+                data-code-expander-target="expandCodeButton"
+                data-action="code-expander#expandCode"
                 style="display: none;"
-            >Expand code</button>
+            >
+                <twig:Icon name="arrow-down"/>
+                Expand code
+                <twig:Icon name="arrow-down"/>
+            </button>
         {% endblock %}
     </div>
 </div>

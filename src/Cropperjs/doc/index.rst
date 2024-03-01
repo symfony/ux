@@ -8,9 +8,11 @@ Symfony UX Cropper.js is a Symfony bundle integrating the
 Installation
 ------------
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
+.. caution::
 
-Then, install this bundle using Composer and Symfony Flex:
+    Before you start, make sure you have `StimulusBundle configured in your app`_.
+
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -104,8 +106,8 @@ custom Stimulus controller:
 
         disconnect() {
             // You should always remove listeners when the controller is disconnected to avoid side effects
-            this.element.removeEventListener('cropperjs:pre-connect', this._onConnect);
             this.element.removeEventListener('cropperjs:connect', this._onConnect);
+            this.element.removeEventListener('cropperjs:pre-connect', this._onPreConnect);
         }
 
         _onPreConnect(event) {

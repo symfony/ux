@@ -32,7 +32,13 @@ final class BatchActionControllerTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/with_actions', ['query' => ['props' => json_encode($dehydrated->getProps())]])
+            ->post('/_components/with_actions', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertSee('initial')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
@@ -83,7 +89,13 @@ final class BatchActionControllerTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/alt/alternate_route', ['query' => ['props' => json_encode($dehydrated->getProps())]])
+            ->post('/alt/alternate_route', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->assertSee('count: 0')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
@@ -129,7 +141,13 @@ final class BatchActionControllerTest extends KernelTestCase
 
         $this->browser()
             ->throwExceptions()
-            ->get('/_components/with_actions', ['query' => ['props' => json_encode($dehydrated->getProps())]])
+            ->post('/_components/with_actions', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->interceptRedirects()
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
@@ -154,12 +172,58 @@ final class BatchActionControllerTest extends KernelTestCase
         ;
     }
 
+    public function testRedirectWithAcceptHeader(): void
+    {
+        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
+
+        $this->browser()
+            ->throwExceptions()
+            ->post('/_components/with_actions', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
+            ->assertSuccessful()
+            ->interceptRedirects()
+            ->use(function (Crawler $crawler, KernelBrowser $browser) {
+                $rootElement = $crawler->filter('ul')->first();
+                $liveProps = json_decode($rootElement->attr('data-live-props-value'), true);
+
+                $browser->post('/_components/with_actions/_batch', [
+                    'body' => [
+                        'data' => json_encode([
+                            'props' => $liveProps,
+                            'actions' => [
+                                ['name' => 'redirect'],
+                                ['name' => 'exception'],
+                            ],
+                        ]),
+                    ],
+                    'headers' => [
+                        'Accept' => ['application/vnd.live-component+html'],
+                        'X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value'),
+                    ],
+                ]);
+            })
+            ->assertStatus(204)
+            ->assertHeaderContains('X-Live-Redirect', '1')
+        ;
+    }
+
     public function testException(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
         $this->browser()
-            ->get('/_components/with_actions', ['query' => ['props' => json_encode($dehydrated->getProps())]])
+            ->post('/_components/with_actions', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->expectException(\RuntimeException::class, 'Exception message')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {
@@ -188,7 +252,13 @@ final class BatchActionControllerTest extends KernelTestCase
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
 
         $this->browser()
-            ->get('/_components/with_actions', ['query' => ['props' => json_encode($dehydrated->getProps())]])
+            ->post('/_components/with_actions', [
+                'body' => [
+                    'data' => json_encode([
+                        'props' => $dehydrated->getProps(),
+                    ]),
+                ],
+            ])
             ->assertSuccessful()
             ->expectException(NotFoundHttpException::class, 'The action "nonLive" either doesn\'t exist or is not allowed')
             ->use(function (Crawler $crawler, KernelBrowser $browser) {

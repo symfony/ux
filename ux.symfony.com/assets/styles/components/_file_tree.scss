@@ -1,0 +1,47 @@
+.file-tree ul {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+
+.file-tree li > span {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.file-tree-main::before {
+  background: none !important;
+}
+
+.file-tree ul {
+  position: relative;
+  padding-inline-start: 1rem;
+}
+
+.file-tree .tooltip-inner {
+  max-width: 350px;
+}
+
+.file-tree.nodots ul :not(span) {
+  margin-left: 12px;
+}
+
+.file-tree ul::before {
+  content: '';
+  width: 1rem;
+  background: url(../images/dot.svg) left top / 2px 2px;
+  display: block;
+  position: absolute;
+}
+
+.file-tree ul::before {
+  top: 0;
+  height: 100%;
+  background-repeat: repeat-y;
+  background-position: center;
+  left: 0;
+  z-index: -1;
+}
+

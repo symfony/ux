@@ -34,7 +34,7 @@
                 data-model="currentTypes"
                 multiple
                 id="dinoTypes"
-                {{ stimulus_controller('symfony/ux-autocomplete/autocomplete') }}
+                data-controller="symfony--ux-autocomplete--autocomplete"
             >
                 {% for type in allTypes %}
                     <option value="{{ type }}">{{ type }}</option>
@@ -45,9 +45,13 @@
 
     <hr>
 
-    <div style="min-height: 400px;">
+    <div style="min-height: 480px; margin-bottom: 1.5rem;">
         {{ render_chart(chart) }}
     </div>
 
-    <small>Source: <a href="https://www.nhm.ac.uk/">National History Museum</a> courtesy of https://github.com/kjanjua26/jurassic-park</small>
+    <small>Source:
+        <a href="https://www.nhm.ac.uk/" class="link">National History Museum</a> courtesy of
+        <a href="https://github.com/kjanjua26/jurassic-park" class="link">https://github.com/kjanjua26/jurassic-park</a>
+    </small>
+
 </div>

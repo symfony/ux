@@ -12,6 +12,7 @@ export default class extends Controller {
     static values: {
         url: StringConstructor;
         optionsAsHtml: BooleanConstructor;
+        loadingMoreText: StringConstructor;
         noResultsFoundText: StringConstructor;
         noMoreResultsText: StringConstructor;
         minCharacters: NumberConstructor;
@@ -20,6 +21,7 @@ export default class extends Controller {
     };
     readonly urlValue: string;
     readonly optionsAsHtmlValue: boolean;
+    readonly loadingMoreTextValue: string;
     readonly noMoreResultsTextValue: string;
     readonly noResultsFoundTextValue: string;
     readonly minCharactersValue: number;
@@ -31,8 +33,10 @@ export default class extends Controller {
     private mutationObserver;
     private isObserving;
     private hasLoadedChoicesPreviously;
+    private originalOptions;
     initialize(): void;
     connect(): void;
+    initializeTomSelect(): void;
     disconnect(): void;
     private getMaxOptions;
     get selectElement(): HTMLSelectElement | null;
@@ -41,9 +45,9 @@ export default class extends Controller {
     get preload(): string | boolean;
     private resetTomSelect;
     private changeTomSelectDisabledState;
-    private updateTomSelectPlaceholder;
     private startMutationObserver;
     private stopMutationObserver;
     private onMutations;
-    private requiresLiveIgnore;
+    private createOptionsDataStructure;
+    private areOptionsEquivalent;
 }

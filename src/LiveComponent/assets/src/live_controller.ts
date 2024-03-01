@@ -1,15 +1,9 @@
 import { Controller } from '@hotwired/stimulus';
 import { parseDirectives, DirectiveModifier } from './Directive/directives_parser';
-import {
-    getModelDirectiveFromElement,
-    getElementAsTagText,
-    getValueFromElement,
-    elementBelongsToThisComponent,
-    getAllModelDirectiveFromElements,
-} from './dom_utils';
+import { getModelDirectiveFromElement, getValueFromElement, elementBelongsToThisComponent } from './dom_utils';
 import Component, { proxifyComponent } from './Component';
-import Backend from './Backend/Backend';
-import { StandardElementDriver } from './Component/ElementDriver';
+import Backend, { BackendInterface } from './Backend/Backend';
+import { StimulusElementDriver } from './Component/ElementDriver';
 import LoadingPlugin from './Component/plugins/LoadingPlugin';
 import ValidatedFieldsPlugin from './Component/plugins/ValidatedFieldsPlugin';
 import PageUnloadingPlugin from './Component/plugins/PageUnloadingPlugin';
@@ -17,11 +11,12 @@ import PollingPlugin from './Component/plugins/PollingPlugin';
 import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModelFieldsPlugin';
 import { PluginInterface } from './Component/plugins/PluginInterface';
 import getModelBinding from './Directive/get_model_binding';
-import ComponentRegistry from './ComponentRegistry';
+import QueryStringPlugin from './Component/plugins/QueryStringPlugin';
+import ChildComponentPlugin from './Component/plugins/ChildComponentPlugin';
+import getElementAsTagText from './Util/getElementAsTagText';
 
 export { Component };
-export const getComponent = (element: HTMLElement): Promise<Component> =>
-    LiveControllerDefault.componentRegistry.getComponent(element);
+export { getComponent } from './ComponentRegistry';
 
 export interface LiveEvent extends CustomEvent {
     detail: {
@@ -38,25 +33,40 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     static values = {
         name: String,
         url: String,
-        props: Object,
+        props: { type: Object, default: {} },
+        propsUpdatedFromParent: { type: Object, default: {} },
         csrf: String,
         listeners: { type: Array, default: [] },
+        eventsToEmit: { type: Array, default: [] },
+        eventsToDispatch: { type: Array, default: [] },
         debounce: { type: Number, default: 150 },
-        id: String,
         fingerprint: { type: String, default: '' },
+        requestMethod: { type: String, default: 'post' },
+        queryMapping: { type: Object, default: {} },
     };
 
     declare readonly nameValue: string;
     declare readonly urlValue: string;
     declare readonly propsValue: any;
+    declare propsUpdatedFromParentValue: any;
     declare readonly csrfValue: string;
     declare readonly listenersValue: Array<{ event: string; action: string }>;
+    declare readonly eventsToEmitValue: Array<{
+        event: string;
+        data: any;
+        target: string | null;
+        componentName: string | null;
+    }>;
+    declare readonly eventsToDispatchValue: Array<{ event: string; payload: any }>;
     declare readonly hasDebounceValue: boolean;
     declare readonly debounceValue: number;
     declare readonly fingerprintValue: string;
+    declare readonly requestMethodValue: 'get' | 'post';
+    declare readonly queryMappingValue: { [p: string]: { name: string } };
 
     /** The component, wrapped in the convenience Proxy */
     private proxiedComponent: Component;
+    private mutationObserver: MutationObserver;
     /** The raw Component object */
     component: Component;
     pendingActionTriggerModelElement: HTMLElement | null = null;
@@ -64,70 +74,30 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     private elementEventListeners: Array<{ event: string; callback: (event: any) => void }> = [
         { event: 'input', callback: (event) => this.handleInputEvent(event) },
         { event: 'change', callback: (event) => this.handleChangeEvent(event) },
-        { event: 'live:connect', callback: (event) => this.handleConnectedControllerEvent(event) },
     ];
     private pendingFiles: { [key: string]: HTMLInputElement } = {};
 
-    static componentRegistry = new ComponentRegistry();
+    static backendFactory: (controller: LiveControllerDefault) => BackendInterface = (controller) =>
+        new Backend(controller.urlValue, controller.requestMethodValue, controller.csrfValue);
 
     initialize() {
-        this.handleDisconnectedChildControllerEvent = this.handleDisconnectedChildControllerEvent.bind(this);
+        this.mutationObserver = new MutationObserver(this.onMutations.bind(this));
 
-        const id = this.element.dataset.liveId || null;
-
-        this.component = new Component(
-            this.element,
-            this.nameValue,
-            this.propsValue,
-            this.listenersValue,
-            (currentComponent: Component, onlyParents: boolean, onlyMatchName: string | null) =>
-                LiveControllerDefault.componentRegistry.findComponents(currentComponent, onlyParents, onlyMatchName),
-            this.fingerprintValue,
-            id,
-            new Backend(this.urlValue, this.csrfValue),
-            new StandardElementDriver()
-        );
-        this.proxiedComponent = proxifyComponent(this.component);
-
-        // @ts-ignore Adding the dynamic property
-        this.element.__component = this.proxiedComponent;
-
-        if (this.hasDebounceValue) {
-            this.component.defaultDebounce = this.debounceValue;
-        }
-
-        const plugins: PluginInterface[] = [
-            new LoadingPlugin(),
-            new ValidatedFieldsPlugin(),
-            new PageUnloadingPlugin(),
-            new PollingPlugin(),
-            new SetValueOntoModelFieldsPlugin(),
-        ];
-        plugins.forEach((plugin) => {
-            this.component.addPlugin(plugin);
-        });
+        this.createComponent();
     }
 
     connect() {
-        LiveControllerDefault.componentRegistry.registerComponent(this.element, this.component);
-        this.component.connect();
+        this.connectComponent();
 
-        this.elementEventListeners.forEach(({ event, callback }) => {
-            this.component.element.addEventListener(event, callback);
+        this.mutationObserver.observe(this.element, {
+            attributes: true,
         });
-
-        this.dispatchEvent('connect');
     }
 
-    disconnect() {
-        LiveControllerDefault.componentRegistry.unregisterComponent(this.component);
-        this.component.disconnect();
+    disconnect(): void {
+        this.disconnectComponent();
 
-        this.elementEventListeners.forEach(({ event, callback }) => {
-            this.component.element.removeEventListener(event, callback);
-        });
-
-        this.dispatchEvent('disconnect');
+        this.mutationObserver.disconnect();
     }
 
     /**
@@ -148,23 +118,26 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     }
 
     action(event: any) {
-        // using currentTarget means that the data-action and data-action-name
-        // must live on the same element: you can't add
-        // data-action="click->live#action" on a parent element and
-        // expect it to use the data-action-name from the child element
-        // that actually received the click
-        const rawAction = event.currentTarget.dataset.actionName;
+        const params = event.params;
+        if (!params.action) {
+            throw new Error(
+                `No action name provided on element: ${getElementAsTagText(
+                    event.currentTarget
+                )}. Did you forget to add the "data-live-action-param" attribute?`
+            );
+        }
+        const rawAction = params.action;
+        // all other params are considered action arguments
+        const actionArgs = { ...params };
+        delete actionArgs.action;
 
-        // data-action-name="prevent|debounce(1000)|save"
+        // data-live-action-param="debounce(1000)|save"
         const directives = parseDirectives(rawAction);
         let debounce: number | boolean = false;
 
         directives.forEach((directive) => {
             let pendingFiles: { [key: string]: HTMLInputElement } = {};
             const validModifiers: Map<string, (modifier: DirectiveModifier) => void> = new Map();
-            validModifiers.set('prevent', () => {
-                event.preventDefault();
-            });
             validModifiers.set('stop', () => {
                 event.stopPropagation();
             });
@@ -206,7 +179,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
                 }
                 delete this.pendingFiles[key];
             }
-            this.component.action(directive.action, directive.named, debounce);
+            this.component.action(directive.action, actionArgs, debounce);
 
             // possible case where this element is also a "model" element
             // if so, to be safe, slightly delay the action so that the
@@ -222,31 +195,57 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         return this.component.render();
     }
 
-    emit(event: Event) {
+    emit(event: any) {
         this.getEmitDirectives(event).forEach(({ name, data, nameMatch }) => {
             this.component.emit(name, data, nameMatch);
         });
     }
 
-    emitUp(event: Event) {
+    emitUp(event: any) {
         this.getEmitDirectives(event).forEach(({ name, data, nameMatch }) => {
             this.component.emitUp(name, data, nameMatch);
         });
     }
 
-    emitSelf(event: Event) {
+    emitSelf(event: any) {
         this.getEmitDirectives(event).forEach(({ name, data }) => {
             this.component.emitSelf(name, data);
         });
     }
 
-    private getEmitDirectives(event: Event): Array<{ name: string; data: any; nameMatch: string | null }> {
-        const element = event.currentTarget as HTMLElement;
-        if (!element.dataset.event) {
-            throw new Error(`No data-event attribute found on element: ${getElementAsTagText(element)}`);
-        }
+    /**
+     * Update a model value.
+     *
+     * @param {string} model The model to update
+     * @param {any} value The new value
+     * @param {boolean} shouldRender Whether a re-render should be triggered
+     * @param {number|boolean} debounce
+     */
+    $updateModel(model: string, value: any, shouldRender = true, debounce: number | boolean = true) {
+        return this.component.set(model, value, shouldRender, debounce);
+    }
 
-        const eventInfo = element.dataset.event;
+    propsUpdatedFromParentValueChanged() {
+        this.component._updateFromParentProps(this.propsUpdatedFromParentValue);
+    }
+
+    fingerprintValueChanged() {
+        this.component.fingerprint = this.fingerprintValue;
+    }
+
+    private getEmitDirectives(event: any): Array<{ name: string; data: any; nameMatch: string | null }> {
+        const params = event.params;
+        if (!params.event) {
+            throw new Error(
+                `No event name provided on element: ${getElementAsTagText(
+                    event.currentTarget
+                )}. Did you forget to add the "data-live-event-param" attribute?`
+            );
+        }
+        const eventInfo = params.event;
+        // all other params are considered event arguments
+        const eventArgs = { ...params };
+        delete eventArgs.event;
 
         // data-event="name(product_list)|some_event"
         const directives = parseDirectives(eventInfo);
@@ -265,7 +264,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
 
             emits.push({
                 name: directive.action,
-                data: directive.named,
+                data: eventArgs,
                 nameMatch,
             });
         });
@@ -273,24 +272,60 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         return emits;
     }
 
-    /**
-     * Update a model value.
-     *
-     * The extraModelName should be set to the "name" attribute of an element
-     * if it has one. This is only important in a parent/child component,
-     * where, in the child, you might be updating a "foo" model, but you
-     * also want this update to "sync" to the parent component's "bar" model.
-     * Typically, setup on a field like this:
-     *
-     *      <input data-model="foo" name="bar">
-     *
-     * @param {string} model The model to update
-     * @param {any} value The new value
-     * @param {boolean} shouldRender Whether a re-render should be triggered
-     * @param {number|boolean} debounce
-     */
-    $updateModel(model: string, value: any, shouldRender = true, debounce: number | boolean = true) {
-        return this.component.set(model, value, shouldRender, debounce);
+    private createComponent(): void {
+        const id = this.element.id || null;
+
+        this.component = new Component(
+            this.element,
+            this.nameValue,
+            this.propsValue,
+            this.listenersValue,
+            id,
+            LiveControllerDefault.backendFactory(this),
+            new StimulusElementDriver(this)
+        );
+        this.proxiedComponent = proxifyComponent(this.component);
+
+        // @ts-ignore Adding the dynamic property
+        this.element.__component = this.proxiedComponent;
+
+        if (this.hasDebounceValue) {
+            this.component.defaultDebounce = this.debounceValue;
+        }
+
+        const plugins: PluginInterface[] = [
+            new LoadingPlugin(),
+            new ValidatedFieldsPlugin(),
+            new PageUnloadingPlugin(),
+            new PollingPlugin(),
+            new SetValueOntoModelFieldsPlugin(),
+            new QueryStringPlugin(this.queryMappingValue),
+            new ChildComponentPlugin(this.component),
+        ];
+        plugins.forEach((plugin) => {
+            this.component.addPlugin(plugin);
+        });
+    }
+
+    private connectComponent() {
+        this.component.connect();
+        this.mutationObserver.observe(this.element, {
+            attributes: true,
+        });
+
+        this.elementEventListeners.forEach(({ event, callback }) => {
+            this.component.element.addEventListener(event, callback);
+        });
+
+        this.dispatchEvent('connect');
+    }
+
+    private disconnectComponent() {
+        this.component.disconnect();
+        this.elementEventListeners.forEach(({ event, callback }) => {
+            this.component.element.removeEventListener(event, callback);
+        });
+        this.dispatchEvent('disconnect');
     }
 
     private handleInputEvent(event: Event) {
@@ -395,48 +430,24 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         this.component.set(modelBinding.modelName, finalValue, modelBinding.shouldRender, modelBinding.debounce);
     }
 
-    handleConnectedControllerEvent(event: LiveEvent): void {
-        if (event.target === this.element) {
-            return;
-        }
-
-        const childController = event.detail.controller;
-        if (childController.component.getParent()) {
-            // child already has a parent - we are a grandparent
-            return;
-        }
-
-        const modelDirectives = getAllModelDirectiveFromElements(childController.element);
-        const modelBindings = modelDirectives.map(getModelBinding);
-
-        this.component.addChild(childController.component, modelBindings);
-
-        // live:disconnect needs to be registered on the child element directly
-        // that's because if the child component is removed from the DOM, then
-        // the parent controller is no longer an ancestor, so the live:disconnect
-        // event would not bubble up to it.
-        // @ts-ignore TS doesn't like the LiveEvent arg in the listener, not sure how to fix
-        childController.element.addEventListener('live:disconnect', this.handleDisconnectedChildControllerEvent);
-    }
-
-    handleDisconnectedChildControllerEvent(event: LiveEvent): void {
-        const childController = event.detail.controller;
-
-        // @ts-ignore TS doesn't like the LiveEvent arg in the listener, not sure how to fix
-        childController.element.removeEventListener('live:disconnect', this.handleDisconnectedChildControllerEvent);
-
-        // this shouldn't happen: but double-check we're the parent
-        if (childController.component.getParent() !== this.component) {
-            return;
-        }
-
-        this.component.removeChild(childController.component);
-    }
-
     private dispatchEvent(name: string, detail: any = {}, canBubble = true, cancelable = false) {
         detail.controller = this;
         detail.component = this.proxiedComponent;
 
         this.dispatch(name, { detail, prefix: 'live', cancelable, bubbles: canBubble });
+    }
+
+    private onMutations(mutations: MutationRecord[]): void {
+        mutations.forEach((mutation) => {
+            if (
+                mutation.type === 'attributes' &&
+                mutation.attributeName === 'id' &&
+                this.element.id !== this.component.id
+            ) {
+                this.disconnectComponent();
+                this.createComponent();
+                this.connectComponent();
+            }
+        });
     }
 }

@@ -1,8 +1,10 @@
 <?php
 
 /*
- * This file is part of the Symfony StimulusBundle package.
+ * This file is part of the Symfony package.
+ *
  * (c) Fabien Potencier <fabien@symfony.com>
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -29,6 +31,7 @@ class SvelteControllerLoaderAssetCompilerTest extends TestCase
                 if (str_contains($sourcePath, 'MySvelteController')) {
                     return new MappedAsset(
                         'MySvelteController.js',
+                        '/project/assets/svelte/controllers/MySvelteController.js',
                         publicPathWithoutDigest: '/assets/svelte/controllers/MySvelteController.js',
                     );
                 }
@@ -36,6 +39,7 @@ class SvelteControllerLoaderAssetCompilerTest extends TestCase
                 if (str_contains($sourcePath, 'DeeperSvelteController')) {
                     return new MappedAsset(
                         'subdir/DeeperSvelteController.js',
+                        '/project/assets/svelte/controllers/subdir/DeeperSvelteController.js',
                         publicPathWithoutDigest: '/assets/svelte/controllers/subdir/DeeperSvelteController.js',
                     );
                 }
@@ -48,7 +52,7 @@ class SvelteControllerLoaderAssetCompilerTest extends TestCase
             ['*.js']
         );
 
-        $loaderAsset = new MappedAsset('loader.js', publicPathWithoutDigest: '/assets/symfony/ux-svelte/loader.js');
+        $loaderAsset = new MappedAsset('loader.js', '/project/assets/vendor/StimulusBundle/loader.js', publicPathWithoutDigest: '/assets/symfony/ux-svelte/loader.js');
         $startingContents = file_get_contents(__DIR__.'/../../assets/dist/loader.js');
 
         $compiledContents = $compiler->compile($startingContents, $loaderAsset, $assetMapper);

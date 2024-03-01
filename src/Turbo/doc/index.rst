@@ -19,9 +19,11 @@ Or watch the `Turbo Screencast on SymfonyCasts`_.
 Installation
 ------------
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
+.. caution::
 
-Install this bundle using Composer and Symfony Flex:
+    Before you start, make sure you have `StimulusBundle configured in your app`_.
+
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -804,7 +806,7 @@ to ``turbo_stream_listen()``:
 
 .. code-block:: html+twig
 
-    <div id="messages" {{ turbo_stream_listen('App\Entity\Book', 'hub2') }}></div>
+    <div id="messages" {{ turbo_stream_listen('App\\Entity\\Book', 'hub2') }}></div>
 
 Registering a Custom Transport
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

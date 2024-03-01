@@ -6,10 +6,22 @@ export default class extends Controller<HTMLInputElement> {
     readonly hiddenIconValue: string;
     readonly buttonClassesValue: Array<string>;
     static values: {
-        visibleLabel: StringConstructor;
-        visibleIcon: StringConstructor;
-        hiddenLabel: StringConstructor;
-        hiddenIcon: StringConstructor;
+        visibleLabel: {
+            type: StringConstructor;
+            default: string;
+        };
+        visibleIcon: {
+            type: StringConstructor;
+            default: string;
+        };
+        hiddenLabel: {
+            type: StringConstructor;
+            default: string;
+        };
+        hiddenIcon: {
+            type: StringConstructor;
+            default: string;
+        };
         buttonClasses: ArrayConstructor;
     };
     isDisplayed: boolean;

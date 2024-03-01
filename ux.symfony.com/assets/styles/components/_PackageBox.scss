@@ -1,0 +1,155 @@
+.PackageBox {
+  --gradient: #000;
+  --color: #000;
+  --space-large: 1.5rem;
+  --bg-color: var(--bs-body-bg);
+
+  border: 1px solid var(--bs-secondary-bg);
+  border-radius: var(--border-radius);
+  display: flex;
+  gap: var(--space-large);
+  padding: var(--space-large);
+  position: relative;
+  place-self: stretch;
+  background: var(--bg-color);
+  transition:
+          border-color 750ms ease-in-out,
+          transform 750ms ease-in-out;
+
+  &:hover {
+    transition:
+            border-color 200ms ease-in-out,
+            transform 200ms ease-in-out;
+    transform: translateY(-.25rem);
+  }
+}
+
+.PackageBox::before {
+  content: "";
+  position: absolute;
+  inset: .25rem 0 -.25rem 0;
+  border-radius: var(--border-radius);
+  opacity: 0;
+  filter: blur(.75rem);
+  transform: translateZ(-1em);
+  background: var(--gradient), var(--color);
+  transition: opacity 600ms ease-in-out;
+  z-index: -1;
+}
+.PackageBox:hover::before {
+  transition: opacity 250ms ease-in-out;
+  opacity: .25;
+  z-index: -1;
+}
+
+.PackageBox::after {
+  content: "";
+  position: absolute;
+  inset: 0 0;
+  background: var(--bg-color);
+  border-radius: var(--border-radius);
+  z-index: -1;
+  transition: opacity 600ms ease-in-out;
+  opacity: .95;
+}
+.PackageBox:hover::after {
+  transition: opacity 250ms ease-in-out;
+  opacity: .99;
+  z-index: -1;
+}
+
+.PackageBox_logo {
+  --logo-size: 6rem;
+
+  background: var(--gradient);
+  background-color: var(--color);
+  width: var(--logo-size);
+  height: var(--logo-size);
+  border-radius: var(--border-radius-large);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  [data-bs-theme="dark"] & {
+    background-blend-mode: darken;
+  }
+
+  img {
+    width: calc(0.4 * var(--logo-size));
+    height: auto;
+    filter: drop-shadow(4px 4px 4px rgba(0, 0, 0, 0));
+    transition:
+            filter 600ms ease-in-out,
+            transform 600ms ease-in-out;
+
+    .PackageBox:hover & {
+      filter: drop-shadow(0 .25rem 1rem rgba(0, 0, 0, .3));
+      transform: scale(1.05);
+      transition:
+            filter 250ms ease-in-out,
+            transform 250ms ease-in-out;
+    }
+  }
+
+  @media screen and (max-width: 960px) {
+    --logo-size: 5rem;
+  }
+  @media screen and (max-width: 740px) {
+    --logo-size: 4rem;
+  }
+}
+
+.PackageBox_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 1 auto;
+}
+
+.PackageBox_title {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: .75rem;
+
+  font-family: var(--font-family-title);
+  font-weight: 700;
+  font-size: 28px !important;
+  line-height: 32px !important;
+  letter-spacing: -1px;
+  color: var(--bs-body-color);
+  text-decoration: none;
+}
+
+.PackageBox_link {
+  &:after {
+    content: '';
+    position: absolute;
+    inset: 0 0;
+    z-index: 40;
+  }
+}
+
+.PackageBox_arrow {
+  color: gray;
+  font-size: 1.5rem;
+  opacity: .5;
+  transition: opacity 600ms ease-in-out;
+  .PackageBox:hover & {
+    transition: opacity 250ms ease-in-out;
+    opacity: 1;
+  }
+}
+
+.PackageBox_description {
+  p {
+    line-height: 1.4;
+  }
+
+  :last-child {
+    margin-bottom: 0;
+  }
+}
+
+

@@ -30,7 +30,7 @@ class PropsTokenParser extends AbstractTokenParser
         $names = [];
         $values = [];
         while (!$stream->nextIf(Token::BLOCK_END_TYPE)) {
-            $name = $stream->expect(\Twig\Token::NAME_TYPE)->getValue();
+            $name = $stream->expect(Token::NAME_TYPE)->getValue();
 
             if ($stream->nextIf(Token::OPERATOR_TYPE, '=')) {
                 $values[$name] = $parser->getExpressionParser()->parseExpression();
@@ -39,11 +39,10 @@ class PropsTokenParser extends AbstractTokenParser
             $names[] = $name;
 
             if (!$stream->nextIf(Token::PUNCTUATION_TYPE)) {
+                $stream->expect(Token::BLOCK_END_TYPE);
                 break;
             }
         }
-
-        $stream->expect(\Twig\Token::BLOCK_END_TYPE);
 
         return new PropsNode($names, $values, $token->getLine(), $token->getValue());
     }

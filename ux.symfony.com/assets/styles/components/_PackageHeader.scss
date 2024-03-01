@@ -1,0 +1,32 @@
+.PackageHeader {
+  h1 {
+    text-shadow: 0 .25rem .25rem rgba(0, 0, 0, .05);
+
+    em {
+      font-family: var(--font-family-decorative);
+      padding-inline-start: .5rem;
+    }
+  }
+
+  .AppHeader + * &  {
+    padding-top: 3rem;
+  }
+
+  [data-bs-theme="dark"] & {
+    background-blend-mode: hue !important;
+    // background-blend-mode: soft-light;
+  }
+
+  .nav-options {
+    font-family: var(--font-family-title);
+    font-weight: 700;
+    font-size: 15px;
+    line-height: 20px;
+    letter-spacing: 0px;
+    color: #fff;
+  }
+
+  .nav-options-icon {
+    font-size: 20px;
+  }
+}

@@ -1,0 +1,26 @@
+{% props source, link %}
+
+<div
+    data-controller="ux-clipboard tooltips"
+    data-ux-clipboard-source-value="{{ source }}"
+    data-ux-clipboard-success-content="Copied!"
+    class="code-buttons"
+>
+    <a
+        href="{{ link }}"
+        type="button"
+        rel="external noopener noreferrer"
+        target="_blank"
+        class="btn btn-link btn-sm"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        title="View on GitHub"
+    ><twig:Icon name="github" /></a>
+    <button
+        type="button"
+        class="btn btn-copy btn-sm"
+        data-action="ux-clipboard#copy"
+    ><twig:Icon name="copy"/>
+        <span data-ux-clipboard-target="button"> Copy</span>
+    </button>
+</div>

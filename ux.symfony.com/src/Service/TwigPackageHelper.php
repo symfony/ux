@@ -1,19 +1,28 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Service;
 
-use App\Model\Package;
+use App\Model\UxPackage;
 
 class TwigPackageHelper
 {
     public function __construct(
-        private PackageRepository $packageRepository,
-        private PackageContext $packageContext
+        private UxPackageRepository $packageRepository,
+        private PackageContext $packageContext,
     ) {
     }
 
     /**
-     * @return array<Package>
+     * @return array<UxPackage>
      */
     public function getTopNavPackages(): array
     {
@@ -26,7 +35,7 @@ class TwigPackageHelper
         ];
     }
 
-    public function getCurrentPackage(): Package
+    public function getCurrentPackage(): UxPackage
     {
         return $this->packageContext->getCurrentPackage();
     }

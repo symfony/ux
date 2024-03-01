@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Twig;
 
 use App\Entity\Invoice;
@@ -18,7 +27,7 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\ValidatableComponentTrait;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsLiveComponent()]
+#[AsLiveComponent]
 class InvoiceCreator extends AbstractController
 {
     use DefaultActionTrait;
@@ -124,7 +133,7 @@ class InvoiceCreator extends AbstractController
             // it's new! Let's redirect to the edit page
             $this->addFlash('live_demo_success', 'Invoice saved!');
 
-            return $this->redirectToRoute('app_live_components_invoice', [
+            return $this->redirectToRoute('app_demo_live_component_invoice', [
                 'id' => $this->invoice->getId(),
             ]);
         }

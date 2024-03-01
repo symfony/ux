@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\TwigComponent;
 
-use Composer\InstalledVersions;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
@@ -35,7 +34,7 @@ final class ComponentRenderer implements ComponentRendererInterface
         private EventDispatcherInterface $dispatcher,
         private ComponentFactory $factory,
         private PropertyAccessorInterface $propertyAccessor,
-        private ComponentStack $componentStack
+        private ComponentStack $componentStack,
     ) {
     }
 
@@ -65,25 +64,28 @@ final class ComponentRenderer implements ComponentRendererInterface
 
         $event = $this->preRender($mounted);
 
-        try {
-            if (InstalledVersions::getVersion('twig/twig') < 3) {
-                return $this->twig->loadTemplate($event->getTemplate(), $event->getTemplateIndex())->render($event->getVariables());
-            }
+        $variables = $event->getVariables();
+        // see ComponentNode. When rendering an individual embedded component,
+        // *not* through its parent, we need to set the parent template.
+        if ($event->getTemplateIndex()) {
+            $variables['__parent__'] = $event->getParentTemplateForEmbedded();
+        }
 
+        try {
             return $this->twig->loadTemplate(
                 $this->twig->getTemplateClass($event->getTemplate()),
                 $event->getTemplate(),
                 $event->getTemplateIndex(),
-            )->render($event->getVariables());
+            )->render($variables);
         } finally {
-            $this->componentStack->pop();
+            $mounted = $this->componentStack->pop();
 
             $event = new PostRenderEvent($mounted);
             $this->dispatcher->dispatch($event);
         }
     }
 
-    public function embeddedContext(string $name, array $props, array $context, string $hostTemplateName, int $index): array
+    public function startEmbeddedComponentRender(string $name, array $props, array $context, string $hostTemplateName, int $index): PreRenderEvent
     {
         $context[PreRenderEvent::EMBEDDED] = true;
 
@@ -93,17 +95,15 @@ final class ComponentRenderer implements ComponentRendererInterface
 
         $this->componentStack->push($mounted);
 
-        try {
-            $embeddedContext = $this->preRender($mounted, $context)->getVariables();
+        return $this->preRender($mounted, $context);
+    }
 
-            if (!isset($embeddedContext['outerBlocks'])) {
-                $embeddedContext['outerBlocks'] = new BlockStack();
-            }
+    public function finishEmbeddedComponentRender(): void
+    {
+        $mounted = $this->componentStack->pop();
 
-            return $embeddedContext;
-        } finally {
-            $this->componentStack->pop();
-        }
+        $event = new PostRenderEvent($mounted);
+        $this->dispatcher->dispatch($event);
     }
 
     private function preRender(MountedComponent $mounted, array $context = []): PreRenderEvent
@@ -116,9 +116,14 @@ final class ComponentRenderer implements ComponentRendererInterface
 
         $component = $mounted->getComponent();
         $metadata = $this->factory->metadataFor($mounted->getName());
+        // expose public properties and properties marked with ExposeInTemplate attribute
+        $props = iterator_to_array($this->exposedVariables($component, $metadata->isPublicPropsExposed()));
         $variables = array_merge(
             // first so values can be overridden
             $context,
+
+            // keep reference to old context
+            ['outerScope' => $context],
 
             // add the component as "this"
             ['this' => $component],
@@ -128,9 +133,8 @@ final class ComponentRenderer implements ComponentRendererInterface
 
             // add attributes
             [$metadata->getAttributesVar() => $mounted->getAttributes()],
-
-            // expose public properties and properties marked with ExposeInTemplate attribute
-            iterator_to_array($this->exposedVariables($component, $metadata->isPublicPropsExposed())),
+            $props,
+            ['__props' => $props]
         );
         $event = new PreRenderEvent($mounted, $metadata, $variables);
 

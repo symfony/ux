@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Twig;
 
 use App\Entity\Category;
@@ -73,6 +82,6 @@ class NewProductForm extends AbstractController
 
         $this->addFlash('live_demo_success', 'Product created! Add another one!');
 
-        return $this->redirectToRoute('app_live_components_product_form');
+        return $this->redirectToRoute('app_demo_live_component_product_form');
     }
 }

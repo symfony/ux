@@ -2,14 +2,18 @@ name: Symfony UX Turbo
 
 on:
     push:
+        paths:
+            - 'src/Turbo/**'
     pull_request:
+        paths:
+            - 'src/Turbo/**'
 
 jobs:
     phpstan:
         runs-on: ubuntu-latest
         steps:
             -   name: Checkout
-                uses: actions/checkout@v2
+                uses: actions/checkout@v4
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -34,8 +38,12 @@ jobs:
         strategy:
            fail-fast: false
            matrix:
-               php-version: ['8.1']
-               dependency-version: ['lowest', 'highest']
+               php-version: ['8.1', '8.3']
+               include:
+                  - php-version: '8.1'
+                    dependency-version: 'lowest'
+                  - php-version: '8.3'
+                    dependency-version: 'highest'
 
         services:
             mercure:
@@ -52,7 +60,7 @@ jobs:
 
         steps:
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
 
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -69,7 +77,7 @@ jobs:
               id: yarn-cache-dir-path
               run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-            - uses: actions/cache@v2
+            - uses: actions/cache@v4
               id: yarn-cache
               with:
                   path: ${{ steps.yarn-cache-dir-path.outputs.dir }}

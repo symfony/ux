@@ -12,11 +12,10 @@
 namespace Symfony\UX\LiveComponent\Util;
 
 use Twig\Environment;
+use Twig\Extension\EscaperExtension;
 
 /**
  * An array of attributes that can eventually be returned as an escaped array.
- *
- * @experimental
  *
  * @internal
  */
@@ -48,9 +47,10 @@ final class LiveAttributesCollection
         $this->attributes['data-live-name-value'] = $componentName;
     }
 
+    // TODO rename that
     public function setLiveId(string $id): void
     {
-        $this->attributes['data-live-id'] = $id;
+        $this->attributes['id'] = $id;
     }
 
     public function setFingerprint(string $fingerprint): void
@@ -61,6 +61,11 @@ final class LiveAttributesCollection
     public function setProps(array $dehydratedProps): void
     {
         $this->attributes['data-live-props-value'] = $dehydratedProps;
+    }
+
+    public function setPropsUpdatedFromParent(array $dehydratedProps): void
+    {
+        $this->attributes['data-live-props-updated-from-parent-value'] = $dehydratedProps;
     }
 
     public function getProps(): array
@@ -89,16 +94,31 @@ final class LiveAttributesCollection
 
     public function setEventsToEmit(array $events): void
     {
-        $this->attributes['data-live-emit'] = $events;
+        $this->attributes['data-live-events-to-emit-value'] = $events;
     }
 
     public function setBrowserEventsToDispatch(array $browserEventsToDispatch): void
     {
-        $this->attributes['data-live-browser-dispatch'] = $browserEventsToDispatch;
+        $this->attributes['data-live-events-to-dispatch-value'] = $browserEventsToDispatch;
+    }
+
+    public function setRequestMethod(string $requestMethod): void
+    {
+        $this->attributes['data-live-request-method-value'] = $requestMethod;
+    }
+
+    public function setQueryUrlMapping(array $queryUrlMapping): void
+    {
+        $this->attributes['data-live-query-mapping-value'] = $queryUrlMapping;
     }
 
     private function escapeAttribute(string $value): string
     {
-        return twig_escape_filter($this->twig, $value, 'html_attr');
+        if (method_exists(EscaperExtension::class, 'escape')) {
+            return EscaperExtension::escape($this->twig, $value, 'html_attr');
+        }
+
+        // since twig/twig 3.9.0: Using the internal "twig_escape_filter" function is deprecated.
+        return (string) twig_escape_filter($this->twig, $value, 'html_attr');
     }
 }

@@ -13,11 +13,9 @@ namespace Symfony\UX\Turbo\Doctrine;
 
 use Doctrine\Common\Annotations\Reader;
 use Doctrine\Common\EventArgs;
-use Doctrine\Common\Util\ClassUtils;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\ORM\Event\PostFlushEventArgs;
-use Symfony\Component\VarExporter\LazyObjectInterface;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
@@ -50,7 +48,7 @@ final class BroadcastListener implements ResetInterface
      */
     private $removedEntities;
 
-    public function __construct(BroadcasterInterface $broadcaster, Reader $annotationReader = null)
+    public function __construct(BroadcasterInterface $broadcaster, ?Reader $annotationReader = null)
     {
         $this->reset();
 
@@ -128,21 +126,13 @@ final class BroadcastListener implements ResetInterface
 
     private function storeEntitiesToPublish(EntityManagerInterface $em, object $entity, string $property): void
     {
-        // handle proxies (both styles)
-        if ($entity instanceof LazyObjectInterface) {
-            $class = get_parent_class($entity);
-            if (false === $class) {
-                throw new \LogicException('Parent class missing');
-            }
-        } else {
-            $class = ClassUtils::getClass($entity);
-        }
+        $class = ClassUtil::getEntityClass($entity);
 
         if (!isset($this->broadcastedClasses[$class])) {
             $this->broadcastedClasses[$class] = [];
             $r = null;
 
-            if (\PHP_VERSION_ID >= 80000 && $options = ($r = new \ReflectionClass($class))->getAttributes(Broadcast::class)) {
+            if ($options = ($r = new \ReflectionClass($class))->getAttributes(Broadcast::class)) {
                 foreach ($options as $option) {
                     $this->broadcastedClasses[$class][] = $option->newInstance()->options;
                 }

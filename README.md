@@ -1,5 +1,5 @@
 <p align="center"><a href="https://symfony.com" target="_blank">
-    <img src="https://symfony.com/logos/symfony_black_02.svg">
+    <img src="https://symfony.com/logos/symfony_dynamic_01.svg" alt="Symfony Logo">
 </a></p>
 
 <h3 align="center">
@@ -22,7 +22,7 @@ or with [AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html
 ## Resources
 
 -   [Install Symfony UX](https://symfony.com/doc/current/frontend/ux.html).
--   [List of UX Packages](https://symfony.com/doc/current/frontend/ux.html#ux-packages-list).
+-   [List of UX Packages](https://symfony.com/bundles/StimulusBundle/current/index.html#the-ux-packages).
 -   [Symfony UX Official Demo](https://ux.symfony.com).
 -   Watch the [Stimulus Screencast on SymfonyCasts](https://symfonycasts.com/screencast/stimulus).
 

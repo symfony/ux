@@ -1,0 +1,9 @@
+{% props icon, label, value = null %}
+
+<div class="LiveMemory-Metric">
+    <dt>
+        <twig:LiveMemory:Icon name="{{ icon }}" />
+        <span>{{ label }}</span>
+    </dt>
+    <dd>{% block content %}{{ value ?? '-' }}{% endblock %}</dd>
+</div>

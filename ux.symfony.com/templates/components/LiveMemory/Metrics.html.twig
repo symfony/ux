@@ -1,0 +1,26 @@
+<div class="LiveMemory-Metrics">
+    <dl>
+        <twig:LiveMemory:Metric icon="moves" label="Moves" value="{{ game.flipCount }}" />
+
+        <twig:LiveMemory:Metric icon="cards" label="Cards">
+            {{ game.matchCount }}<small>/{{ game.cardCount }}</small>
+        </twig:LiveMemory:Metric>
+
+        {% if game.isStarted and not game.isEnded %}
+            <twig:LiveMemory:Metric icon="time" label="Timer">
+                <twig:LiveMemory:Timer
+                    key="live-memory-timer--{{ game.id }}"
+                    duration="{{ game.timeLimit }}"
+                    startedAt="{{ game.startedAt }}"
+                    running="{{ game.isStarted and not game.isEnded }}"
+                />
+            </twig:LiveMemory:Metric>
+        {% else %}
+            {% set value = game.timeLimit - (game.isEnded ? min(game.timeLimit, game.time) : 0) %}
+            {% set value = (value > 99 ? '%03d' : '%02d')|format(value)  %}
+            <twig:LiveMemory:Metric icon="time" label="Timer" value="{{ value }}" />
+        {% endif %}
+
+        <twig:LiveMemory:Metric  icon="score" label="Score" value="{{ game.score|default }}" />
+    </dl>
+</div>

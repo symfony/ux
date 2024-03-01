@@ -37,7 +37,7 @@ class NotifyRuntimeTest extends TestCase
         $this->assertSame($expected, $rendered);
     }
 
-    public function streamNotificationsDataProvider(): iterable
+    public static function streamNotificationsDataProvider(): iterable
     {
         $publicUrl = 'http&#x3A;&#x2F;&#x2F;localhost&#x3A;9090&#x2F;.well-known&#x2F;mercure';
 

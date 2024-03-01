@@ -11,9 +11,7 @@
 
 namespace Symfony\UX\Autocomplete\Form;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Query\Parameter;
 use Doctrine\ORM\Utility\PersisterHelper;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -24,11 +22,13 @@ use Symfony\Component\Form\FormEvents;
  * Helps transform ParentEntityAutocompleteType into a EntityType that will not load all options.
  *
  * @internal
+ *
+ * @deprecated since 2.13
  */
 final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
 {
     public function __construct(
-        private ?string $autocompleteUrl = null
+        private ?string $autocompleteUrl = null,
     ) {
     }
 
@@ -54,13 +54,15 @@ final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
         $form = $event->getForm();
         $options = $form->get('autocomplete')->getConfig()->getOptions();
 
+        /** @var EntityManagerInterface $em */
+        $em = $options['em'];
+        $repository = $em->getRepository($options['class']);
+        $queryBuilder = $options['query_builder'] ?: $repository->createQueryBuilder('o');
+        $rootAlias = $queryBuilder->getRootAliases()[0];
+
         if (!isset($data['autocomplete']) || '' === $data['autocomplete']) {
             $options['choices'] = [];
         } else {
-            /** @var EntityManagerInterface $em */
-            $em = $options['em'];
-            $repository = $em->getRepository($options['class']);
-
             $idField = $options['id_reader']->getIdField();
             $idType = PersisterHelper::getTypeOfField($idField, $em->getClassMetadata($options['class']), $em)[0];
 
@@ -69,22 +71,23 @@ final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
                 $idx = 0;
 
                 foreach ($data['autocomplete'] as $id) {
-                    $params[":id_$idx"] = new Parameter("id_$idx", $id, $idType);
+                    $params[":id_$idx"] = [$id, $idType];
                     ++$idx;
                 }
 
-                $queryBuilder = $repository->createQueryBuilder('o');
-
                 if ($params) {
                     $queryBuilder
-                        ->where(sprintf("o.$idField IN (%s)", implode(', ', array_keys($params))))
-                        ->setParameters(new ArrayCollection($params));
+                        ->andWhere(sprintf("$rootAlias.$idField IN (%s)", implode(', ', array_keys($params))))
+                    ;
+                    foreach ($params as $key => $param) {
+                        $queryBuilder->setParameter($key, $param[0], $param[1]);
+                    }
                 }
 
                 $options['choices'] = $queryBuilder->getQuery()->getResult();
             } else {
-                $options['choices'] = $repository->createQueryBuilder('o')
-                    ->where("o.$idField = :id")
+                $options['choices'] = $queryBuilder
+                    ->andWhere("$rootAlias.$idField = :id")
                     ->setParameter('id', $data['autocomplete'], $idType)
                     ->getQuery()
                     ->getResult();

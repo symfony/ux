@@ -1,8 +1,20 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfony\UX\LiveComponent\Tests\Functional\Test;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use Symfony\Component\Security\Core\User\InMemoryUser;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\UX\LiveComponent\Test\InteractsWithLiveComponents;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component2;
 
@@ -63,6 +75,28 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertSame(33.3, $testComponent->component()->arg3);
     }
 
+    public function testCanEmitEvent(): void
+    {
+        $testComponent = $this->createLiveComponent('component2');
+
+        $this->assertStringContainsString('Count: 1', $testComponent->render());
+        $this->assertSame(1, $testComponent->component()->count);
+
+        $testComponent->emit('triggerIncrease', ['amount' => 2]);
+
+        $this->assertStringContainsString('Count: 5', $testComponent->render());
+        $this->assertSame(5, $testComponent->component()->count);
+    }
+
+    public function testInvalidEventName(): void
+    {
+        $testComponent = $this->createLiveComponent('component2');
+
+        $this->expectException(\InvalidArgumentException::class);
+
+        $testComponent->emit('invalid');
+    }
+
     public function testCanSetLiveProp(): void
     {
         $testComponent = $this->createLiveComponent('component_with_writable_props');
@@ -108,5 +142,31 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->expectException(\LogicException::class);
 
         $testComponent->call('increase');
+    }
+
+    public function testRenderingIsLazy(): void
+    {
+        if (!class_exists(IsGranted::class)) {
+            $this->markTestSkipped('The security attributes are not available.');
+        }
+
+        $testComponent = $this->createLiveComponent('with_security');
+
+        $this->expectException(AccessDeniedException::class);
+
+        $testComponent->render();
+    }
+
+    public function testActingAs(): void
+    {
+        $testComponent = $this->createLiveComponent('with_security')
+            ->actingAs(new InMemoryUser('kevin', 'pass', ['ROLE_USER']))
+        ;
+
+        $this->assertStringNotContainsString('Username: kevin', $testComponent->render());
+
+        $testComponent->call('setUsername');
+
+        $this->assertStringContainsString('Username: kevin', $testComponent->render());
     }
 }

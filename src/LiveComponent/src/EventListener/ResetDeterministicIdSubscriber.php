@@ -36,15 +36,13 @@ use Symfony\UX\TwigComponent\Event\PostRenderEvent;
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 final class ResetDeterministicIdSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private DeterministicTwigIdCalculator $idCalculator,
-        private ComponentStack $componentStack
+        private ComponentStack $componentStack,
     ) {
     }
 

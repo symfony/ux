@@ -16,18 +16,18 @@
         },
         "importmap": {
             "@hotwired/stimulus": "^3.0.0",
-            "chart.js/auto": "^3.4.1"
+            "chart.js/auto": "^3.4.1 || ^4.0"
         }
     },
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "chart.js": "^3.4.1 <3.9"
+        "chart.js": "^3.4.1 || ^4.0"
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
         "@types/chart.js": "^2.9.34",
-        "chart.js": "^3.4.1 <3.9",
-        "jest-canvas-mock": "^2.3.0",
-        "resize-observer-polyfill": "^1.5.1"
+        "chart.js": "^3.4.1 || ^4.0",
+        "resize-observer-polyfill": "^1.5.1",
+        "vitest-canvas-mock": "^0.3.3"
     }
 }

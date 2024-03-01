@@ -42,8 +42,6 @@ use Symfony\UX\TwigComponent\MountedComponent;
  * @author Kevin Bond <kevinbond@gmail.com>
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
@@ -164,6 +162,17 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             throw new NotFoundHttpException(sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveAction attribute above it.', $action, $component::class));
         }
 
+        $componentName = $request->attributes->get('_component_name') ?? $request->attributes->get('_mounted_component')->getName();
+        $requestMethod = $this->container->get(ComponentFactory::class)->metadataFor($componentName)?->get('method') ?? 'post';
+
+        /**
+         * $requestMethod 'post' allows POST requests only
+         * $requestMethod 'get' allows GET and POST requests.
+         */
+        if ($request->isMethod('get') && 'post' === $requestMethod) {
+            throw new MethodNotAllowedHttpException([strtoupper($requestMethod)]);
+        }
+
         /*
          * Either we:
          *      A) We do NOT have a _mounted_component, so hydrate $component
@@ -281,6 +290,10 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     {
         $request = $event->getRequest();
         $response = $event->getResponse();
+
+        if (!$event->isMainRequest()) {
+            return;
+        }
 
         if (!$this->isLiveComponentRequest($request)) {
             return;

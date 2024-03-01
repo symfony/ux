@@ -12,7 +12,7 @@
 namespace Symfony\UX\LiveComponent\Attribute;
 
 /**
- * @experimental
+ * An attribute to register a PostHydrate hook.
  */
 #[\Attribute(\Attribute::TARGET_METHOD)]
 final class PostHydrate

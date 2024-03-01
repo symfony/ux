@@ -1,0 +1,19 @@
+<div class="PackageBox" style="--gradient: {{ package.gradient }};--color: {{ package.color }};">
+
+    <div class="PackageBox_logo">
+        <img width="36" height="36" src="{{ asset('images/ux_packages/' ~ package.imageFilename) }}"
+             alt="Image for the {{ package.humanName }} UX package">
+    </div>
+
+    <div class="PackageBox_content">
+        <{{ titleTag }} class="PackageBox_title">
+            <a href="{{ path(package.route) }}" class="PackageBox_link">{{ package.humanName }}</a>
+            <span class="PackageBox_arrow">
+                <twig:Icon name="arrow-right" />
+            </span>
+        </{{ titleTag }}>
+        <div class="PackageBox_description">
+            {{ package.description|markdown_to_html }}
+        </div>
+    </div>
+</div>

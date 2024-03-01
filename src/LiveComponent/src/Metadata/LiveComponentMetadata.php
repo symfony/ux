@@ -16,8 +16,6 @@ use Symfony\UX\TwigComponent\ComponentMetadata;
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class LiveComponentMetadata
@@ -60,5 +58,16 @@ class LiveComponentMetadata
         }, $writableProps);
 
         return array_intersect_key($inputProps, array_flip($propNames));
+    }
+
+    public function hasQueryStringBindings(): bool
+    {
+        foreach ($this->getAllLivePropsMetadata() as $livePropMetadata) {
+            if ($livePropMetadata->queryStringMapping()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

@@ -64,7 +64,7 @@ describe('SvelteController', () => {
 
         await waitFor(() => expect(component).toHaveClass('connected'));
         await waitFor(() => expect(component).toHaveClass('mounted'));
-        await waitFor(() => expect(component.innerHTML).toEqual('<div><div>Hello Symfony</div></div>'));
+        await waitFor(() => expect(component.innerHTML).toContain('<div><div>Hello Symfony</div></div>'));
     });
 
     it('connect without props', async () => {
@@ -83,7 +83,7 @@ describe('SvelteController', () => {
 
         await waitFor(() => expect(component).toHaveClass('connected'));
         await waitFor(() => expect(component).toHaveClass('mounted'));
-        await waitFor(() => expect(component.innerHTML).toEqual('<div><div>Hello without props</div></div>'));
+        await waitFor(() => expect(component.innerHTML).toContain('<div><div>Hello without props</div></div>'));
     });
 
     it('connect with props and intro', async () => {
@@ -104,6 +104,6 @@ describe('SvelteController', () => {
         await waitFor(() => expect(component).toHaveClass('connected'));
         await waitFor(() => expect(component).toHaveClass('mounted'));
         expect(component.innerHTML).toContain('style="animation:');
-        await waitFor(() => expect(component.innerHTML.trim()).toEqual('<div style=""><div>Hello Symfony with transition</div></div>'));
+        await waitFor(() => expect(component.innerHTML.trim()).toContain('<div>Hello Symfony with transition</div>'));
     });
 });

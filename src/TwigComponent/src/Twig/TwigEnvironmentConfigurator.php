@@ -19,7 +19,7 @@ class TwigEnvironmentConfigurator
     private EnvironmentConfigurator $decorated;
 
     public function __construct(
-        EnvironmentConfigurator $decorated
+        EnvironmentConfigurator $decorated,
     ) {
         $this->decorated = $decorated;
     }

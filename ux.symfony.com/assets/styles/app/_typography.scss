@@ -1,0 +1,108 @@
+
+h1 {
+  font-size: 52px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+h1.ubuntu {
+  line-height: 60px;
+}
+
+h1 .playfair {
+  font-style: italic;
+  line-height: 70px;
+}
+
+h2.ubuntu {
+  font-size: 42px;
+  font-weight: 700;
+  line-height: 48px;
+  letter-spacing: -2px;
+}
+
+h3, a.component-title {
+  font-family: var(--font-family-title);
+  font-weight: 700;
+  font-size: 28px;
+  line-height: 32px;
+  letter-spacing: -1px;
+  color: #0A0A0A;
+  text-decoration: none;
+}
+
+h4.ubuntu {
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 18.38px;
+}
+
+.component-headlines {
+  width: 50%;
+}
+
+@media (max-width: 900px) {
+  .component-headlines {
+    width: 56%;
+  }
+}
+
+@media (max-width: 767px) {
+  .component-headlines {
+    text-align: center;
+    width: 100%
+  }
+}
+
+.ubuntu-header {
+  font-family: var(--font-family-title);
+  font-weight: 700;
+  font-size: 24px;
+  line-height: 24px;
+  letter-spacing: -1px;
+  text-decoration: none;
+}
+
+.ubuntu-title {
+  font-family: var(--font-family-title);
+  font-weight: 700;
+  font-size: 19px;
+  line-height: 22px;
+  letter-spacing: -0.668767511844635px;
+}
+
+.eyebrows {
+  text-transform: uppercase;
+  font-family: var(--font-family-text);
+  font-weight: 600;
+  font-size: 0.7rem;
+  line-height: 1.6;
+  letter-spacing: 0.125rem;
+}
+
+
+@media (max-width: 576px) {
+  h1.ubuntu {
+    font-size: 36px;
+    line-height: 41px;
+    letter-spacing: -1px;
+  }
+
+  h1.playfair {
+    font-size: 36px;
+    line-height: 48px;
+    letter-spacing: -1px;
+  }
+
+  h2.ubuntu {
+    font-size: 28px;
+    line-height: 32px;
+    letter-spacing: -1px;
+  }
+
+  h3, a.component-title {
+    font-size: 22px;
+    line-height: 25px;
+    letter-spacing: -1px;
+  }
+}

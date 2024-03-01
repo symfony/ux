@@ -14,9 +14,11 @@ It allows visitors to switch the type of password field to text and vice versa.
 Installation
 ------------
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
+.. caution::
 
-Then, install this bundle using Composer and Symfony Flex:
+    Before you start, make sure you have `StimulusBundle configured in your app`_.
+
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -34,8 +36,8 @@ needed if you're using AssetMapper):
     $ yarn install --force
     $ yarn watch
 
-Usage
------
+Usage with Symfony Forms
+------------------------
 
 Any ``PasswordType`` can be transformed into a toggle password field by adding the ``toggle`` option::
 
@@ -258,6 +260,33 @@ Then in your form, add your controller as an HTML attribute::
 
         // ...
     }
+
+Usage without Symfony Forms
+---------------------------
+
+You can also use the TogglePassword with native HTML inputs:
+
+.. code-block:: html+twig
+
+    // ...
+
+    <div class="toggle-password-container"> // Add "toggle-password-container" or a class that applies position: relative to this container.
+        <label for="password">Password</label>
+        <input
+            id="password"
+            name="password"
+            type="password"
+            {{ stimulus_controller('symfony/ux-toggle-password/toggle-password', {
+                    {# visibleLabel: 'Show password', // If you want to modify this label. #}
+                    {# visibleIcon: 'Some svg icon', // If you want to modify this icon. #}
+                    {# hiddenLabel: 'Hide password', // If you want to modify this label. #}
+                    {# hiddenIcon: 'Some svg icon', // If you want to modify this icon. #}
+                    buttonClasses: ['toggle-password-button'], // Add as many classes as you wish. "toggle-password-button" is needed to activate the default CSS.
+            }) }}
+        >
+    </div>
+
+    // ...
 
 Backward Compatibility promise
 ------------------------------

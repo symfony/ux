@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Twig;
 
 use App\Entity\Product;
@@ -13,7 +22,7 @@ use Symfony\UX\LiveComponent\LiveResponder;
 use Symfony\UX\LiveComponent\ValidatableComponentTrait;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsLiveComponent()]
+#[AsLiveComponent]
 class InvoiceCreatorLineItem
 {
     use DefaultActionTrait;
@@ -30,7 +39,7 @@ class InvoiceCreatorLineItem
     #[Assert\Positive]
     public int $quantity = 1;
 
-    #[LiveProp()]
+    #[LiveProp]
     public bool $isEditing = false;
 
     public function __construct(private ProductRepository $productRepository)

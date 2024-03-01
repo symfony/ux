@@ -12,9 +12,11 @@ bringing the complexity of a React/Vue/Angular application.
 Installation
 ------------
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
+.. caution::
 
-Then install the bundle using Composer and Symfony Flex:
+    Before you start, make sure you have `StimulusBundle configured in your app`_.
+
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -154,8 +156,8 @@ Stimulus controller:
 
         disconnect() {
             // You should always remove listeners when the controller is disconnected to avoid side-effects
-            this.element.removeEventListener('swup:pre-connect', this._onConnect);
-            this.element.removeEventListener('swup:connect', this._onPreConnect);
+            this.element.removeEventListener('swup:connect', this._onConnect);
+            this.element.removeEventListener('swup:pre-connect', this._onPreConnect);
         }
 
         _onPreConnect(event) {

@@ -1,0 +1,17 @@
+{% extends 'liveDemoBase.html.twig' %}
+
+{% block code_block_left %}
+    <twig:CodeBlock filename="src/Twig/FoodVote.php" height="400px" />
+{% endblock %}
+
+{% block code_block_right %}
+    <twig:CodeBlock filename="templates/components/FoodVote.html.twig" height="400px" />
+{% endblock %}
+
+{% block demo_content %}
+    <table class="table">
+        {% for food in foods %}
+            <twig:FoodVote :food="food" />
+        {% endfor %}
+    </table>
+{% endblock %}

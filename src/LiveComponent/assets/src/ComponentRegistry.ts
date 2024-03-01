@@ -1,63 +1,119 @@
 import Component from './Component';
-import { getElementAsTagText } from './dom_utils';
+import getElementAsTagText from './Util/getElementAsTagText';
 
-export default class {
-    private componentMapByElement = new WeakMap<HTMLElement, Component>();
-    /**
-     * The value is the component's name.
-     */
-    private componentMapByComponent = new Map<Component, string>();
+let componentMapByElement = new WeakMap<HTMLElement, Component>();
+/**
+ * The value is the component's name.
+ */
+let componentMapByComponent = new Map<Component, string>();
 
-    public registerComponent(element: HTMLElement, component: Component) {
-        this.componentMapByElement.set(element, component);
-        this.componentMapByComponent.set(component, component.name);
-    }
+export const resetRegistry = function () {
+    componentMapByElement = new WeakMap<HTMLElement, Component>();
+    componentMapByComponent = new Map<Component, string>();
+};
 
-    public unregisterComponent(component: Component) {
-        this.componentMapByElement.delete(component.element);
-        this.componentMapByComponent.delete(component);
-    }
+export const registerComponent = function (component: Component) {
+    componentMapByElement.set(component.element, component);
+    componentMapByComponent.set(component, component.name);
+};
 
-    public getComponent(element: HTMLElement): Promise<Component> {
-        return new Promise((resolve, reject) => {
-            let count = 0;
-            const maxCount = 10;
-            const interval = setInterval(() => {
-                const component = this.componentMapByElement.get(element);
-                if (component) {
-                    clearInterval(interval);
-                    resolve(component);
-                }
-                count++;
+export const unregisterComponent = function (component: Component) {
+    componentMapByElement.delete(component.element);
+    componentMapByComponent.delete(component);
+};
 
-                if (count > maxCount) {
-                    clearInterval(interval);
-                    reject(new Error(`Component not found for element ${getElementAsTagText(element)}`));
-                }
-            }, 5);
-        });
-    }
+export const getComponent = function (element: HTMLElement): Promise<Component> {
+    return new Promise((resolve, reject) => {
+        let count = 0;
+        const maxCount = 10;
+        const interval = setInterval(() => {
+            const component = componentMapByElement.get(element);
+            if (component) {
+                clearInterval(interval);
+                resolve(component);
+            }
+            count++;
 
-    /**
-     * Returns a filtered list of all the currently-registered components
-     */
-    findComponents(currentComponent: Component, onlyParents: boolean, onlyMatchName: string | null): Component[] {
-        const components: Component[] = [];
-        this.componentMapByComponent.forEach((componentName: string, component: Component) => {
-            if (
-                onlyParents &&
-                (currentComponent === component || !component.element.contains(currentComponent.element))
-            ) {
+            if (count > maxCount) {
+                clearInterval(interval);
+                reject(new Error(`Component not found for element ${getElementAsTagText(element)}`));
+            }
+        }, 5);
+    });
+};
+
+/**
+ * Returns a filtered list of all the currently-registered components
+ */
+export const findComponents = function (
+    currentComponent: Component,
+    onlyParents: boolean,
+    onlyMatchName: string | null
+): Component[] {
+    const components: Component[] = [];
+    componentMapByComponent.forEach((componentName: string, component: Component) => {
+        if (onlyParents && (currentComponent === component || !component.element.contains(currentComponent.element))) {
+            return;
+        }
+
+        if (onlyMatchName && componentName !== onlyMatchName) {
+            return;
+        }
+
+        components.push(component);
+    });
+
+    return components;
+};
+
+/**
+ * Returns an array of components that are direct children of the given component.
+ */
+export const findChildren = function (currentComponent: Component): Component[] {
+    const children: Component[] = [];
+    componentMapByComponent.forEach((componentName: string, component: Component) => {
+        if (currentComponent === component) {
+            return;
+        }
+
+        if (!currentComponent.element.contains(component.element)) {
+            return;
+        }
+
+        // check if there are any other components between the two
+        let foundChildComponent = false;
+        componentMapByComponent.forEach((childComponentName: string, childComponent: Component) => {
+            if (foundChildComponent) {
+                // return early
                 return;
             }
 
-            if (onlyMatchName && componentName !== onlyMatchName) {
+            if (childComponent === component) {
                 return;
             }
 
-            components.push(component);
+            if (childComponent.element.contains(component.element)) {
+                foundChildComponent = true;
+            }
         });
 
-        return components;
+        children.push(component);
+    });
+
+    return children;
+};
+
+export const findParent = function (currentComponent: Component): Component | null {
+    // recursively traverse the node tree up to find a parent
+    let parentElement = currentComponent.element.parentElement;
+    while (parentElement) {
+        const component = componentMapByElement.get(parentElement);
+        if (component) {
+            return component;
+        }
+
+        parentElement = parentElement.parentElement;
     }
-}
+
+    return null;
+};

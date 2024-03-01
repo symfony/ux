@@ -13,10 +13,13 @@ namespace Symfony\UX\LiveComponent\Tests\Unit\Attribute;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
+use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\PostHydrate;
 use Symfony\UX\LiveComponent\Attribute\PreDehydrate;
 use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component5;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithRepeatedLiveListener;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -104,6 +107,15 @@ final class AsLiveComponentTest extends TestCase
         $this->assertSame('hook1', $hooks[2]->name);
     }
 
+    public function testCanGetPostHydrateMethodsFromClassString(): void
+    {
+        $methods = AsLiveComponent::postHydrateMethods(DummyLiveComponent::class);
+
+        $this->assertCount(1, $methods);
+        $this->assertSame('method', $methods[0]->getName());
+        $this->assertSame(DummyLiveComponent::class, $methods[0]->getDeclaringClass()?->getName());
+    }
+
     public function testCanGetLiveListeners(): void
     {
         $liveListeners = AsLiveComponent::liveListeners(new Component5());
@@ -115,6 +127,49 @@ final class AsLiveComponentTest extends TestCase
         ], $liveListeners[0]);
     }
 
+    public function testCanGetLiveListenersFromClassString(): void
+    {
+        $liveListeners = AsLiveComponent::liveListeners(DummyLiveComponent::class);
+
+        $this->assertCount(1, $liveListeners);
+        $this->assertSame([
+            'action' => 'method',
+            'event' => 'event_name',
+        ], $liveListeners[0]);
+    }
+
+    public function testCanGetRepeatedLiveListeners(): void
+    {
+        $liveListeners = AsLiveComponent::liveListeners(new ComponentWithRepeatedLiveListener());
+
+        $this->assertCount(4, $liveListeners);
+        $this->assertSame([
+            [
+                'action' => 'onBar',
+                'event' => 'bar',
+            ],
+            [
+                'action' => 'onFooBar',
+                'event' => 'foo',
+            ],
+            [
+                'action' => 'onFooBar',
+                'event' => 'bar',
+            ],
+            [
+                'action' => 'onFooBar',
+                'event' => 'foo:bar',
+            ],
+        ], $liveListeners);
+    }
+
+    public function testCanGetRepeatedLiveListenersFromClassString(): void
+    {
+        $liveListeners = AsLiveComponent::liveListeners(ComponentWithRepeatedLiveListener::class);
+
+        $this->assertCount(4, $liveListeners);
+    }
+
     public function testCanCheckIfMethodIsAllowed(): void
     {
         $component = new Component5();
@@ -123,4 +178,23 @@ final class AsLiveComponentTest extends TestCase
         $this->assertFalse(AsLiveComponent::isActionAllowed($component, 'method2'));
         $this->assertTrue(AsLiveComponent::isActionAllowed($component, 'aListenerActionMethod'));
     }
+}
+
+#[AsLiveComponent]
+class DummyLiveComponent
+{
+    #[PreDehydrate]
+    #[PreReRender]
+    #[PostHydrate]
+    #[LiveListener('event_name')]
+    #[LiveAction]
+    public function method(): bool
+    {
+        return true;
+    }
+}
+
+#[AsLiveComponent(method: 'get')]
+class GetMethodComponent
+{
 }

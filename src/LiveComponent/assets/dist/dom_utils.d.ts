@@ -8,4 +8,3 @@ export declare function getModelDirectiveFromElement(element: HTMLElement, throw
 export declare function elementBelongsToThisComponent(element: Element, component: Component): boolean;
 export declare function cloneHTMLElement(element: HTMLElement): HTMLElement;
 export declare function htmlToElement(html: string): HTMLElement;
-export declare function getElementAsTagText(element: HTMLElement): string;

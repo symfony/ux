@@ -35,7 +35,7 @@ final class ComponentFactory
         private PropertyAccessorInterface $propertyAccessor,
         private EventDispatcherInterface $eventDispatcher,
         private array $config,
-        private array $classMap
+        private array $classMap,
     ) {
     }
 
@@ -75,7 +75,7 @@ final class ComponentFactory
     public function mountFromObject(object $component, array $data, ComponentMetadata $componentMetadata): MountedComponent
     {
         $originalData = $data;
-        $data = $this->preMount($component, $data);
+        $data = $this->preMount($component, $data, $componentMetadata);
 
         $this->mount($component, $data);
 
@@ -88,7 +88,9 @@ final class ComponentFactory
             }
         }
 
-        $data = $this->postMount($component, $data);
+        $postMount = $this->postMount($component, $data, $componentMetadata);
+        $data = $postMount['data'];
+        $extraMetadata = $postMount['extraMetadata'];
 
         // create attributes from "attributes" key if exists
         $attributesVar = $componentMetadata->getAttributesVar();
@@ -109,7 +111,8 @@ final class ComponentFactory
             $componentMetadata->getName(),
             $component,
             new ComponentAttributes(array_merge($attributes, $data)),
-            $originalData
+            $originalData,
+            $extraMetadata,
         );
     }
 
@@ -171,9 +174,9 @@ final class ComponentFactory
         return $this->components->get($name);
     }
 
-    private function preMount(object $component, array $data): array
+    private function preMount(object $component, array $data, ComponentMetadata $componentMetadata): array
     {
-        $event = new PreMountEvent($component, $data);
+        $event = new PreMountEvent($component, $data, $componentMetadata);
         $this->eventDispatcher->dispatch($event);
         $data = $event->getData();
 
@@ -188,11 +191,15 @@ final class ComponentFactory
         return $data;
     }
 
-    private function postMount(object $component, array $data): array
+    /**
+     * @return array{data: array<string, mixed>, extraMetadata: array<string, mixed>}
+     */
+    private function postMount(object $component, array $data, ComponentMetadata $componentMetadata): array
     {
-        $event = new PostMountEvent($component, $data);
+        $event = new PostMountEvent($component, $data, $componentMetadata);
         $this->eventDispatcher->dispatch($event);
         $data = $event->getData();
+        $extraMetadata = $event->getExtraMetadata();
 
         foreach (AsTwigComponent::postMountMethods($component) as $method) {
             $newData = $component->{$method->name}($data);
@@ -202,7 +209,10 @@ final class ComponentFactory
             }
         }
 
-        return $data;
+        return [
+            'data' => $data,
+            'extraMetadata' => $extraMetadata,
+        ];
     }
 
     private function isAnonymousComponent(string $name): bool

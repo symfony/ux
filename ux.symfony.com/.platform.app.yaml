@@ -33,7 +33,7 @@ web:
             expires: 1h
             passthru: "/index.php"
             rules:
-                '\.(gif|jpe?g|png|css|js|woff|woff2|ttf|eot|svg)$':
+                '\.(gif|jpe?g|png|css|js|woff|woff2|ttf|eot|svg|webp|ico)$':
                     expires: 365d
 
 disk: 256
@@ -48,9 +48,6 @@ hooks:
         curl -s https://get.symfony.com/cloud/configurator | (>&2 bash)
 
         (>&2 symfony-build)
-
-        php bin/console sass:build
-        php bin/console asset-map:compile
 
     deploy: |
         set -x -e

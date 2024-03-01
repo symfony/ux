@@ -1,13 +1,12 @@
 {% extends 'packageBase.html.twig' %}
 
-{% block component_header %}
+{% block package_header %}
     {% component PackageHeader with {
         package: 'translator',
         eyebrowText: 'JavaScript-enabled Translation'
     } %}
         {% block title_header %}
-            Translations directly imported in
-            <span class="playfair ps-2">JavaScript</span>
+            Translations directly imported in <em>JavaScript</em>
         {% endblock %}
 
         {% block sub_content %}
@@ -27,12 +26,12 @@
 {% block demo_title %}UX Translator{% endblock %}
 
 {% block demo_content %}
-    <div {{ stimulus_controller('translator-demo') }}>
-        <div {{ stimulus_target('translator-demo', 'localeSwitcher') }} style="position: absolute; top: 16px; right: 16px ">
+    <div data-controller="translator-demo">
+        <div data-translator-demo-target="localeSwitcher" style="position: absolute; top: 16px; right: 16px ">
             <div class="row">
                 <label for="translator-demo-locale" class="col-3 col-form-label">Locale</label>
                 <div class="col">
-                    <select id="translator-demo-locale" {{ stimulus_action('translator-demo', 'setLocale') }} class="form-select">
+                    <select id="translator-demo-locale" class="form-select" data-action="translator-demo#setLocale">
                         <option value="en">🇬🇧 English</option>
                         <option value="fr">🇫🇷 French</option>
                     </select>
@@ -42,31 +41,35 @@
 
         <div class="row mb-3">
             <div class="col-5">
-                <div class="h3 text-center">Code</div>
+                <div class="h3 text-center text-body">Code</div>
             </div>
             <div class="col">
-                <div class="h3 text-center">Result</div>
+                <div class="h3 text-center text-body">Result</div>
             </div>
             <div class="col-4">
-                <div class="h3 text-center">Parameters</div>
+                <div class="h3 text-center text-body">Parameters</div>
             </div>
         </div>
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'helloCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre data-translator-demo-target="helloCode"></pre>
+                </div>
             </div>
             <div class="col">
-                <span {{ stimulus_target('translator-demo', 'helloOutput') }}></span>
+                <span data-translator-demo-target="helloOutput"></span>
             </div>
         </div>
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'sayHelloCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre data-translator-demo-target="sayHelloCode"></pre>
+                </div>
             </div>
             <div class="col">
-                <span {{ stimulus_target('translator-demo', 'sayHelloOutput') }}></span>
+                <span data-translator-demo-target="sayHelloOutput"></span>
             </div>
             <div class="col-4">
                 <div class="row mb-3">
@@ -77,8 +80,8 @@
                             value="Fabien"
                             class="form-control"
                             id="sayHelloNameInput"
-                            {{ stimulus_target('translator-demo', 'sayHelloNameInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
+                            data-translator-demo-target="sayHelloNameInput"
+                            data-action="translator-demo#render"
                         >
                     </div>
                 </div>
@@ -87,10 +90,12 @@
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'invitationTitleCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre data-translator-demo-target="invitationTitleCode"></pre>
+                </div>
             </div>
             <div class="col">
-                <span {{ stimulus_target('translator-demo', 'invitationTitleOutput') }}></span>
+                <span data-translator-demo-target="invitationTitleOutput"></span>
             </div>
             <div class="col-4">
                 <div class="row mb-3">
@@ -99,8 +104,8 @@
                         <select
                             id="invitationTitleOrganizationGenderInput"
                             class="form-select"
-                            {{ stimulus_target('translator-demo', 'invitationTitleOrganizationGenderInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
+                            data-translator-demo-target="invitationTitleOrganizationGenderInput"
+                            data-action="translator-demo#render"
                         >
                             <option value="female">Female</option>
                             <option value="male">Male</option>
@@ -118,8 +123,8 @@
                             type="text"
                             value="Clara"
                             class="form-control"
-                            {{ stimulus_target('translator-demo', 'invitationTitleOrganizationNameInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
+                            data-translator-demo-target="invitationTitleOrganizationNameInput"
+                            data-action="translator-demo#render"
                         >
                     </div>
                 </div>
@@ -128,10 +133,12 @@
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'numOfApplesCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre data-translator-demo-target="numOfApplesCode"></pre>
+                </div>
             </div>
             <div class="col">
-                <span {{ stimulus_target('translator-demo', 'numOfApplesOutput') }}></span>
+                <span data-translator-demo-target="numOfApplesOutput"></span>
             </div>
             <div class="col-4">
                 <div class="row mb-3">
@@ -144,8 +151,8 @@
                             value="2"
                             class="form-control"
                             id="numOfApplesCountInput"
-                            {{ stimulus_target('translator-demo', 'numOfApplesCountInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
+                            data-translator-demo-target="numOfApplesCountInput"
+                            data-action="translator-demo#render"
                         >
                     </div>
                 </div>
@@ -154,10 +161,12 @@
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'finishPlaceCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre data-translator-demo-target="finishPlaceCode"></pre>
+                </div>
             </div>
             <div class="col">
-                <span {{ stimulus_target('translator-demo', 'finishPlaceOutput') }}></span>
+                <span data-translator-demo-target="finishPlaceOutput"></span>
             </div>
             <div class="col-4">
                 <div class="row mb-3">
@@ -169,8 +178,8 @@
                             value="1"
                             class="form-control"
                             id="finishPlacePlaceInput"
-                            {{ stimulus_target('translator-demo', 'finishPlacePlaceInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
+                            data-translator-demo-target="finishPlacePlaceInput"
+                            data-action="translator-demo#render"
                         >
                     </div>
                 </div>
@@ -179,10 +188,12 @@
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'publishedAtCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre data-translator-demo-target="publishedAtCode"></pre>
+                </div>
             </div>
             <div class="col">
-                <span {{ stimulus_target('translator-demo', 'publishedAtOutput') }}></span>
+                <span data-translator-demo-target="publishedAtOutput"></span>
             </div>
             <div class="col-4">
                 <div class="row mb-3">
@@ -193,8 +204,8 @@
                             value="2023-04-27 08:12"
                             class="form-control"
                             id="publishedAtDateInput"
-                            {{ stimulus_target('translator-demo', 'publishedAtDateInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
+                            data-translator-demo-target="publishedAtDateInput"
+                            data-action="translator-demo#render"
                         >
                     </div>
                 </div>
@@ -203,10 +214,12 @@
 
         <div class="row mb-4">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'progressAtCode') }}></pre>
+                <div class="Terminal_body">
+                    <pre data-translator-demo-target="progressAtCode"></pre>
+                </div>
             </div>
             <div class="col">
-                <span {{ stimulus_target('translator-demo', 'progressAtOutput') }}></span>
+                <span data-translator-demo-target="progressAtOutput"></span>
             </div>
             <div class="col-4">
                 <div class="row mb-3">
@@ -216,8 +229,8 @@
                             id="progressAtProgressInput"
                             type="range"
                             class="form-range"
-                            {{ stimulus_target('translator-demo', 'progressAtProgressInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
+                            data-translator-demo-target="progressAtProgressInput"
+                            data-action="translator-demo#render"
                         />
                     </div>
                 </div>
@@ -226,10 +239,12 @@
 
         <div class="row">
             <div class="col-5">
-                <pre class="terminal-body" {{ stimulus_target('translator-demo', 'valueOfObjectCode') }}></pre>
+                <div class="Terminal_body">
+                <pre data-translator-demo-target="valueOfObjectCode"></pre>
+                </div>
             </div>
             <div class="col">
-                <span {{ stimulus_target('translator-demo', 'valueOfObjectOutput') }}></span>
+                <span data-translator-demo-target="valueOfObjectOutput"></span>
             </div>
             <div class="col-4">
                 <div class="row mb-3">
@@ -241,11 +256,12 @@
                             value="30"
                             class="form-control"
                             id="valueOfObjectValueInput"
-                            {{ stimulus_target('translator-demo', 'valueOfObjectValueInput') }}
-                            {{ stimulus_action('translator-demo', 'render') }}
+                            data-translator-demo-target="valueOfObjectValueInput"
+                            data-action="translator-demo#render"
                         >
                 </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

@@ -14,6 +14,8 @@ namespace Symfony\UX\LiveComponent\Test;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -26,12 +28,14 @@ use Symfony\UX\TwigComponent\Test\RenderedComponent;
  */
 final class TestLiveComponent
 {
+    private bool $performedInitialRequest = false;
+
     /**
      * @internal
      */
     public function __construct(
         private ComponentMetadata $metadata,
-        array $data,
+        private array $data,
         private ComponentFactory $factory,
         private KernelBrowser $client,
         private LiveComponentHydrator $hydrator,
@@ -39,23 +43,7 @@ final class TestLiveComponent
         private UrlGeneratorInterface $router,
     ) {
         $this->client->catchExceptions(false);
-
-        $data['attributes']['data-live-id'] ??= 'in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed';
-
-        $mounted = $this->factory->create($this->metadata->getName(), $data);
-        $props = $this->hydrator->dehydrate(
-            $mounted->getComponent(),
-            $mounted->getAttributes(),
-            $this->metadataFactory->getMetadata($mounted->getName())
-        );
-
-        $this->client->request('GET', $this->router->generate(
-            $this->metadata->get('route'),
-            [
-                '_live_component' => $this->metadata->getName(),
-                'props' => json_encode($props->getProps(), flags: \JSON_THROW_ON_ERROR),
-            ]
-        ));
+        $this->data['attributes']['id'] ??= 'in-a-real-scenario-it-would-already-have-one---provide-one-yourself-if-needed';
     }
 
     public function render(): RenderedComponent
@@ -77,6 +65,17 @@ final class TestLiveComponent
     }
 
     /**
+     * @param UserInterface $user
+     */
+    public function actingAs(object $user, string $firewallContext = 'main'): self
+    {
+        // we call loginUser() on the raw client in case the entire component requires authentication
+        $this->client->loginUser($user, $firewallContext);
+
+        return $this;
+    }
+
+    /**
      * @param array<string,mixed> $arguments
      */
     public function call(string $action, array $arguments = []): self
@@ -89,7 +88,24 @@ final class TestLiveComponent
      */
     public function emit(string $event, array $arguments = []): self
     {
-        return $this->call($event, $arguments);
+        $listeners = AsLiveComponent::liveListeners($this->component());
+        $actions = [];
+
+        foreach ($listeners as $listener) {
+            if ($listener['event'] === $event) {
+                $actions[] = ['name' => $listener['action'], 'args' => $arguments];
+            }
+        }
+
+        if (!$actions) {
+            throw new \InvalidArgumentException(sprintf('Event "%s" does not exist on component "%s".', $event, $this->metadata->getName()));
+        }
+
+        if (1 === \count($listeners)) {
+            return $this->call($actions[0]['name'], $arguments);
+        }
+
+        return $this->request(['actions' => $actions], '_batch');
     }
 
     public function set(string $prop, mixed $value): self
@@ -104,14 +120,14 @@ final class TestLiveComponent
 
     public function response(): Response
     {
-        return $this->client->getResponse();
+        return $this->client()->getResponse();
     }
 
-    private function request(array $content = [], string $action = null): self
+    private function request(array $content = [], ?string $action = null): self
     {
         $csrfToken = $this->csrfToken();
 
-        $this->client->request(
+        $this->client()->request(
             'POST',
             $this->router->generate(
                 $this->metadata->get('route'),
@@ -129,7 +145,7 @@ final class TestLiveComponent
 
     private function props(): array
     {
-        $crawler = $this->client->getCrawler();
+        $crawler = $this->client()->getCrawler();
 
         if (!\count($node = $crawler->filter('[data-live-props-value]'))) {
             throw new \LogicException('A live component action has redirected and you can no longer access the component.');
@@ -140,12 +156,50 @@ final class TestLiveComponent
 
     private function csrfToken(): ?string
     {
-        $crawler = $this->client->getCrawler();
+        $crawler = $this->client()->getCrawler();
 
         if (!\count($node = $crawler->filter('[data-live-csrf-value]'))) {
             return null;
         }
 
         return $node->attr('data-live-csrf-value');
+    }
+
+    private function client(): KernelBrowser
+    {
+        if ($this->performedInitialRequest) {
+            return $this->client;
+        }
+
+        $mounted = $this->factory->create($this->metadata->getName(), $this->data);
+        $props = $this->hydrator->dehydrate(
+            $mounted->getComponent(),
+            $mounted->getAttributes(),
+            $this->metadataFactory->getMetadata($mounted->getName())
+        );
+
+        if ('POST' === strtoupper($this->metadata->get('method'))) {
+            $this->client->request(
+                'POST',
+                $this->router->generate($this->metadata->get('route'), [
+                    '_live_component' => $this->metadata->getName(),
+                ]),
+                [
+                    'data' => json_encode(['props' => $props->getProps()], flags: \JSON_THROW_ON_ERROR),
+                ],
+            );
+        } else {
+            $this->client->request('GET', $this->router->generate(
+                $this->metadata->get('route'),
+                [
+                    '_live_component' => $this->metadata->getName(),
+                    'props' => json_encode($props->getProps(), flags: \JSON_THROW_ON_ERROR),
+                ]
+            ));
+        }
+
+        $this->performedInitialRequest = true;
+
+        return $this->client;
     }
 }

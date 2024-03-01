@@ -1,36 +1,46 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfony\UX\Autocomplete\Form;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\ChoiceList\Factory\Cache\ChoiceLabel;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyAccess\PropertyPathInterface;
-use Symfony\Component\Security\Core\Security;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadata;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadataFactory;
 use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;
-use Symfony\UX\Autocomplete\EntityAutocompleterInterface;
+use Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface;
 
 /**
  * An entity auto-completer that wraps a form type to get its information.
  *
  * @internal
  */
-final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterface
+final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocompleterInterface
 {
     private ?FormInterface $form = null;
     private ?EntityMetadata $entityMetadata = null;
+    private array $options = [];
 
     public function __construct(
         private string $formType,
         private FormFactoryInterface $formFactory,
         private EntityMetadataFactory $metadataFactory,
         private PropertyAccessorInterface $propertyAccessor,
-        private EntitySearchUtil $entitySearchUtil
+        private EntitySearchUtil $entitySearchUtil,
     ) {
     }
 
@@ -120,7 +130,9 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
     private function getFormOption(string $name): mixed
     {
         $form = $this->getForm();
-        $formOptions = $form['autocomplete']->getConfig()->getOptions();
+        // Remove when dropping support for ParentEntityAutocompleteType
+        $form = $form->has('autocomplete') ? $form->get('autocomplete') : $form;
+        $formOptions = $form->getConfig()->getOptions();
 
         return $formOptions[$name] ?? null;
     }
@@ -128,7 +140,7 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
     private function getForm(): FormInterface
     {
         if (null === $this->form) {
-            $this->form = $this->formFactory->create($this->formType);
+            $this->form = $this->formFactory->create($this->formType, options: $this->options);
         }
 
         return $this->form;
@@ -156,5 +168,14 @@ final class WrappedEntityTypeAutocompleter implements EntityAutocompleterInterfa
         }
 
         return $this->entityMetadata;
+    }
+
+    public function setOptions(array $options): void
+    {
+        if (null !== $this->form) {
+            throw new \LogicException('The options can only be set before the form is created.');
+        }
+
+        $this->options = $options;
     }
 }

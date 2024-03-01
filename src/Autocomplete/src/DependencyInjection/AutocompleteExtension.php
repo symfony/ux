@@ -21,12 +21,14 @@ use Symfony\Component\Form\Form;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\UX\Autocomplete\AutocompleteResultsExecutor;
 use Symfony\UX\Autocomplete\AutocompleterRegistry;
+use Symfony\UX\Autocomplete\Checksum\ChecksumCalculator;
 use Symfony\UX\Autocomplete\Controller\EntityAutocompleteController;
 use Symfony\UX\Autocomplete\Doctrine\DoctrineRegistryWrapper;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadataFactory;
 use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
 use Symfony\UX\Autocomplete\Form\AutocompleteChoiceTypeExtension;
+use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
 use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
 use Symfony\UX\Autocomplete\Form\WrappedEntityTypeAutocompleter;
 use Symfony\UX\Autocomplete\Maker\MakeAutocompleteField;
@@ -115,6 +117,7 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
                 new Reference('ux.autocomplete.autocompleter_registry'),
                 new Reference('ux.autocomplete.results_executor'),
                 new Reference('router'),
+                new Reference('ux.autocomplete.checksum_calculator'),
             ])
             ->addTag('controller.service_arguments')
         ;
@@ -126,12 +129,27 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
             ])
             ->addTag('maker.command')
         ;
+
+        $container
+            ->register('ux.autocomplete.checksum_calculator', ChecksumCalculator::class)
+            ->setArguments([
+                '%kernel.secret%',
+            ])
+        ;
     }
 
     private function registerFormServices(ContainerBuilder $container): void
     {
         $container
+            ->register('ux.autocomplete.base_entity_type', BaseEntityAutocompleteType::class)
+            ->setArguments([
+                new Reference('router'),
+            ])
+            ->addTag('form.type');
+
+        $container
             ->register('ux.autocomplete.entity_type', ParentEntityAutocompleteType::class)
+            ->setDeprecated('symfony/ux-autocomplete', '2.13', 'The "%service_id%" form type is deprecated since 2.13. Use "ux.autocomplete.base_entity_type" instead.')
             ->setArguments([
                 new Reference('router'),
             ])
@@ -140,6 +158,7 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
         $container
             ->register('ux.autocomplete.choice_type_extension', AutocompleteChoiceTypeExtension::class)
             ->setArguments([
+                new Reference('ux.autocomplete.checksum_calculator'),
                 new Reference('translator', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
             ])
             ->addTag('form.type_extension');

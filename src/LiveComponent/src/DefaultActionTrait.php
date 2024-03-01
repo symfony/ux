@@ -13,8 +13,6 @@ namespace Symfony\UX\LiveComponent;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
  */
 trait DefaultActionTrait
 {

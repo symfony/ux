@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Twig;
 
 use App\Service\DinoStatsService;
@@ -10,7 +19,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
-#[AsLiveComponent()]
+#[AsLiveComponent]
 class DinoChart
 {
     use DefaultActionTrait;
@@ -20,6 +29,7 @@ class DinoChart
 
     #[LiveProp(writable: true)]
     public int $fromYear = -200;
+
     #[LiveProp(writable: true)]
     public int $toYear = -65;
 
@@ -49,6 +59,24 @@ class DinoChart
                         abs($this->fromYear),
                         abs($this->toYear)
                     ),
+                ],
+                'legend' => [
+                    'labels' => [
+                        'boxHeight' => 20,
+                        'boxWidth' => 50,
+                        'padding' => 20,
+                        'font' => [
+                            'size' => 14,
+                        ],
+                    ],
+                ],
+            ],
+            'elements' => [
+                'line' => [
+                    'borderWidth' => 5,
+                    'tension' => 0.25,
+                    'borderCapStyle' => 'round',
+                    'borderJoinStyle' => 'round',
                 ],
             ],
             'maintainAspectRatio' => false,

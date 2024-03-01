@@ -17,26 +17,26 @@
         "importmap": {
             "@swup/fade-theme": "^1.0",
             "@swup/slide-theme": "^1.0",
-            "@swup/forms-plugin": "^1.0||^2.0",
-            "@swup/debug-plugin": "^1.0||^2.0||^3.0",
-            "swup": "^2.0||^3.0",
+            "@swup/forms-plugin": "^2.0",
+            "@swup/debug-plugin": "^3.0",
+            "swup": "^3.0",
             "@hotwired/stimulus": "^3.0.0"
         }
     },
     "peerDependencies": {
         "@swup/fade-theme": "^1.0",
         "@swup/slide-theme": "^1.0",
-        "@swup/forms-plugin": "^1.0||^2.0",
-        "@swup/debug-plugin": "^1.0||^2.0||^3.0",
-        "swup": "^2.0||^3.0",
+        "@swup/forms-plugin": "^2.0",
+        "@swup/debug-plugin": "^3.0",
+        "swup": "^3.0",
         "@hotwired/stimulus": "^3.0.0"
     },
     "devDependencies": {
         "@swup/fade-theme": "^1.0",
         "@swup/slide-theme": "^1.0",
-        "@swup/forms-plugin": "^1.0",
-        "@swup/debug-plugin": "^1.0",
-        "swup": "^2.0",
+        "@swup/forms-plugin": "^2.0",
+        "@swup/debug-plugin": "^3.0",
+        "swup": "^3.0",
         "@hotwired/stimulus": "^3.0.0"
     }
 }

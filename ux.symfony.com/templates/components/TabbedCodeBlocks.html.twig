@@ -1,26 +1,28 @@
 <div {{ attributes.defaults({
     class: 'position-relative'
 }) }}>
-    <div class="terminal-code">
-        <ul class="nav nav-tabs">
-            {# set this in the child template #}
+    <div class="Terminal">
+        <div class="Terminal_header pb-0">
+            <ul class="nav nav-tabs">
+                {# set this in the child template #}
+                {% for filename in files %}
+                    <li class="nav-item" role="presentation">
+                        <button
+                            class="nav-link {{ loop.first ? 'active' }}"
+                            data-bs-toggle="tab"
+                            data-bs-target="#{{ this.getItemId(filename) }}"
+                            type="button" role="tab"
+                            aria-controls="{{ this.getItemId(filename) }}"
+                            aria-selected="{{ loop.first ? 'true' : 'false' }}"
+                        >{{ filename }}</button>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="tab-content">
             {% for filename in files %}
-                <li class="nav-item" role="presentation">
-                  <button class="nav-link {{ loop.first ? 'active' }}" data-bs-toggle="tab" data-bs-target="#{{ this.getItemId(filename) }}" type="button" role="tab" aria-controls="{{ this.getItemId(filename) }}" aria-selected="{{ loop.first ? 'true' : 'false' }}">{{ filename }}</button>
-                </li>
-            {% endfor %}
-        </ul>
-        <div class="tab-content" >
-            {% for filename in files %}
-                <div
-                    class="tab-pane {{ loop.first ? 'active show' }}"
-                    id="{{ this.getItemId(filename) }}"
-                >
-                    <twig:CodeBlock
-                        filename="{{ filename }}"
-                        :showFilename="false"
-                        height="auto"
-                    />
+                <div class="tab-pane {{ loop.first ? 'active show' }}" id="{{ this.getItemId(filename) }}">
+                    <twig:CodeBlock filename="{{ filename }}" :showFilename="false" height="auto" />
                 </div>
             {% endfor %}
         </div>

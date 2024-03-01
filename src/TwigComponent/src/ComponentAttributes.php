@@ -19,8 +19,11 @@ use Symfony\WebpackEncoreBundle\Dto\AbstractStimulusDto;
  *
  * @immutable
  */
-final class ComponentAttributes
+final class ComponentAttributes implements \IteratorAggregate, \Countable
 {
+    /** @var array<string,true> */
+    private array $rendered = [];
+
     /**
      * @param array<string, string|bool> $attributes
      */
@@ -31,7 +34,10 @@ final class ComponentAttributes
     public function __toString(): string
     {
         return array_reduce(
-            array_keys($this->attributes),
+            array_filter(
+                array_keys($this->attributes),
+                fn (string $key) => !isset($this->rendered[$key])
+            ),
             function (string $carry, string $key) {
                 $value = $this->attributes[$key];
 
@@ -52,6 +58,26 @@ final class ComponentAttributes
             },
             ''
         );
+    }
+
+    public function __clone(): void
+    {
+        $this->rendered = [];
+    }
+
+    public function render(string $attribute): ?string
+    {
+        if (null === $value = $this->attributes[$attribute] ?? null) {
+            return null;
+        }
+
+        if (!\is_string($value)) {
+            throw new \LogicException(sprintf('Can only get string attributes (%s is a %s).', $attribute, get_debug_type($value)));
+        }
+
+        $this->rendered[$attribute] = true;
+
+        return $value;
     }
 
     /**
@@ -80,13 +106,17 @@ final class ComponentAttributes
         }
 
         foreach ($this->attributes as $key => $value) {
-            if (\in_array($key, ['class', 'data-controller'], true) && isset($attributes[$key])) {
+            if (\in_array($key, ['class', 'data-controller', 'data-action'], true) && isset($attributes[$key])) {
                 $attributes[$key] = "{$attributes[$key]} {$value}";
 
                 continue;
             }
 
             $attributes[$key] = $value;
+        }
+
+        foreach (array_keys($this->rendered) as $attribute) {
+            unset($attributes[$attribute]);
         }
 
         return new self($attributes);
@@ -156,5 +186,15 @@ final class ComponentAttributes
         unset($attributes[$key]);
 
         return new self($attributes);
+    }
+
+    public function getIterator(): \Traversable
+    {
+        return new \ArrayIterator($this->attributes);
+    }
+
+    public function count(): int
+    {
+        return \count($this->attributes);
     }
 }

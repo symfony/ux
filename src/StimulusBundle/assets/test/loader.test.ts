@@ -54,5 +54,7 @@ describe('loader', () => {
         // wait a moment for the MutationObserver to fire
         await new Promise(resolve => setTimeout(resolve, 10));
         expect(isController3Initialized).toBe(true);
+
+        application.stop();
     });
 });

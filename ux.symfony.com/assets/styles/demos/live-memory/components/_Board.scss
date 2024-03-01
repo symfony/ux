@@ -1,0 +1,144 @@
+// -----------------------------------------------------------------
+// Board
+// -----------------------------------------------------------------
+
+body::before {
+  position: fixed;
+  inset: 0;
+  content: "";
+  background: var(--background-cover-url);
+  background-attachment: fixed;
+  background-size: cover;
+  background-blend-mode: luminosity;
+  filter: blur(10px);
+  transform: scale(1.1);
+  opacity: .125;
+  transition: background 1s ease-in-out;
+}
+
+.LiveMemory {
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: rgb(var(--color-background-rgb) / 75%);
+  align-self: center;
+}
+
+.LiveMemory-Board {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  position: relative;
+}
+
+.LiveMemory-Main {
+  display: grid;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 1vmin;
+  background: rgb(var(--color-background-rgb) / 50%);
+  border: 1px solid var(--color-border);
+  width: 100%;
+  aspect-ratio: 1.6 auto;
+}
+
+.LiveMemory-Background {
+  position: absolute;
+  inset: 0;
+}
+
+.LiveMemory-Tableau {
+  position: relative;
+  justify-self: normal;
+  align-self: normal;
+  display: grid;
+  padding: 1vmin;
+}
+
+.LiveMemory-Cards {
+  --cards-x: max(var(--deck-x), var(--deck-y));
+  --cards-y: min(var(--deck-x), var(--deck-y));
+
+  grid-template-columns: repeat(var(--cards-x), 1fr);
+  grid-template-rows: repeat(var(--cards-y), 1fr);
+  display: grid;
+  justify-self: center;
+  aspect-ratio: var(--cards-x)/var(--cards-y);
+  --card-space: calc(max(1vmin));
+}
+
+.LiveMemory-CardSlot {
+  padding: max(.75rem, calc(.5 * var(--card-space)));
+  position: relative;
+  display: grid;
+  align-content: center;
+}
+
+@media (orientation: landscape) {
+  .LiveMemory-Cards {
+    height: calc(100% - (2 * var(--card-space)));
+    margin-block: var(--card-space);
+    max-width: 100%;
+  }
+}
+
+@media (orientation: portrait) {
+  .LiveMemory-Main {
+    aspect-ratio: 1 / 1.6 auto;
+  }
+  .LiveMemory-Cards {
+    width: calc(100% - (2 * var(--card-space)));
+    padding-inline: var(--card-space);
+    align-self: center;
+    --cards-x: min(var(--deck-x), var(--deck-y));
+    --cards-y: max(var(--deck-x), var(--deck-y));
+  }
+}
+
+.LiveMemory-Scores {
+  position: absolute;
+  inset: 0;
+}
+
+.LiveMemory-Footer {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  line-height: .5rem;
+  word-spacing: -.125rem;
+  mix-blend-mode: color-burn;
+  font-size: .65rem;
+  font-weight: lighter;
+  font-family: monospace;
+  text-transform: uppercase;
+  --footer-color: var(--color-text);
+  --footer-color-subtle: var(--color-text);
+}
+[data-bs-theme="dark"] .LiveMemory-Footer {
+  mix-blend-mode: overlay;
+}
+
+
+.LiveMemory-Footer span:first-child {
+  text-align: left;
+}
+.LiveMemory-Footer span:last-child {
+  text-align: right;
+}
+.LiveMemory-Footer > span {
+    text-align: center;
+}
+.LiveMemory-Footer a {
+  font-weight: lighter;
+  text-align: center;
+  color: var(--footer-color);
+}
+.LiveMemory-Footer a:hover {
+  color: inherit;
+  opacity: 1;
+  text-decoration: underline;
+}
+

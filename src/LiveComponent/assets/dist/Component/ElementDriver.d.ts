@@ -1,31 +1,30 @@
+import LiveControllerDefault from '../live_controller';
 export interface ElementDriver {
     getModelName(element: HTMLElement): string | null;
-    getComponentProps(rootElement: HTMLElement): any;
-    findChildComponentElement(id: string, element: HTMLElement): HTMLElement | null;
-    getKeyFromElement(element: HTMLElement): string | null;
-    getEventsToEmit(element: HTMLElement): Array<{
+    getComponentProps(): any;
+    getEventsToEmit(): Array<{
         event: string;
         data: any;
         target: string | null;
         componentName: string | null;
     }>;
-    getBrowserEventsToDispatch(element: HTMLElement): Array<{
+    getBrowserEventsToDispatch(): Array<{
         event: string;
         payload: any;
     }>;
 }
-export declare class StandardElementDriver implements ElementDriver {
+export declare class StimulusElementDriver implements ElementDriver {
+    private readonly controller;
+    constructor(controller: LiveControllerDefault);
     getModelName(element: HTMLElement): string | null;
-    getComponentProps(rootElement: HTMLElement): any;
-    findChildComponentElement(id: string, element: HTMLElement): HTMLElement | null;
-    getKeyFromElement(element: HTMLElement): string | null;
-    getEventsToEmit(element: HTMLElement): Array<{
+    getComponentProps(): any;
+    getEventsToEmit(): Array<{
         event: string;
         data: any;
         target: string | null;
         componentName: string | null;
     }>;
-    getBrowserEventsToDispatch(element: HTMLElement): Array<{
+    getBrowserEventsToDispatch(): Array<{
         event: string;
         payload: any;
     }>;

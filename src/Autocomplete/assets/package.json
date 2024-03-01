@@ -14,6 +14,7 @@
                 "enabled": true,
                 "autoimport": {
                     "tom-select/dist/css/tom-select.default.css": true,
+                    "tom-select/dist/css/tom-select.bootstrap4.css": false,
                     "tom-select/dist/css/tom-select.bootstrap5.css": false
                 }
             }
@@ -29,7 +30,7 @@
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "fetch-mock-jest": "^1.5.1",
-        "tom-select": "^2.2.2"
+        "tom-select": "^2.2.2",
+        "vitest-fetch-mock": "^0.2.2"
     }
 }

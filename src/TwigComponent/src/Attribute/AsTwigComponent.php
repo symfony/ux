@@ -12,16 +12,53 @@
 namespace Symfony\UX\TwigComponent\Attribute;
 
 /**
+ * An attribute to register a TwigComponent.
+ *
+ * @see https://symfony.com/bundles/ux-twig-component
+ *
  * @author Kevin Bond <kevinbond@gmail.com>
  */
 #[\Attribute(\Attribute::TARGET_CLASS)]
 class AsTwigComponent
 {
     public function __construct(
+        /**
+         * The component name (ie: Button).
+         *
+         * With the default configuration, the template path is resolved using
+         * the component's class name.
+         *
+         *      App\Twig\Components\Alert   ->  <twig:Alert />
+         *      App\Twig\Components\Foo\Bar ->  <twig:Foo:Bar />
+         *
+         * @see https://symfony.com/bundles/ux-twig-component#naming-your-component
+         */
         private ?string $name = null,
+
+        /**
+         * The template path of the component (ie: components/Button.html.twig).
+         *
+         * With the default configuration, the template path is resolved using
+         * the component's name.
+         *
+         *      Button  ->  templates/components/Button.html.twig
+         *      Foo:Bar ->  templates/components/Foo/Bar.html.twig
+         *
+         * @see https://symfony.com/bundles/ux-twig-component#component-template-path
+         */
         private ?string $template = null,
+
+        /**
+         * Whether to expose every public property as a Twig variable.
+         *
+         * @see https://symfony.com/bundles/ux-twig-component#passing-data-props-into-your-component
+         */
         private bool $exposePublicProps = true,
-        private string $attributesVar = 'attributes'
+
+        /**
+         * The name of the special "attributes" variable in the template.
+         */
+        private string $attributesVar = 'attributes',
     ) {
     }
 
@@ -39,47 +76,56 @@ class AsTwigComponent
     }
 
     /**
-     * @internal
+     * @param object|class-string $component
      *
-     * @return \ReflectionMethod[]
+     * @return ?\ReflectionMethod
+     *
+     * @internal
      */
-    public static function preMountMethods(object $component): iterable
+    public static function mountMethod(object|string $component): ?\ReflectionMethod
     {
-        return self::attributeMethodsByPriorityFor($component, PreMount::class);
+        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            if ('mount' === $method->getName()) {
+                return $method;
+            }
+        }
+
+        return null;
     }
 
     /**
-     * @internal
+     * @param object|class-string $component
      *
      * @return \ReflectionMethod[]
+     *
+     * @internal
      */
-    public static function postMountMethods(object $component): iterable
+    public static function postMountMethods(object|string $component): array
     {
         return self::attributeMethodsByPriorityFor($component, PostMount::class);
     }
 
     /**
-     * @internal
+     * @param object|class-string $component
      *
      * @return \ReflectionMethod[]
+     *
+     * @internal
      */
-    protected static function attributeMethodsFor(string $attribute, object $component): \Traversable
+    public static function preMountMethods(object|string $component): array
     {
-        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
-            if ($method->getAttributes($attribute, \ReflectionAttribute::IS_INSTANCEOF)[0] ?? null) {
-                yield $method;
-            }
-        }
+        return self::attributeMethodsByPriorityFor($component, PreMount::class);
     }
 
     /**
-     * @param class-string $attributeClass
+     * @param object|class-string $component
+     * @param class-string        $attributeClass
      *
      * @return \ReflectionMethod[]
      *
      * @internal
      */
-    protected static function attributeMethodsByPriorityFor(object $component, string $attributeClass): array
+    protected static function attributeMethodsByPriorityFor(object|string $component, string $attributeClass): array
     {
         $methods = iterator_to_array(self::attributeMethodsFor($attributeClass, $component));
 
@@ -88,5 +134,19 @@ class AsTwigComponent
         });
 
         return array_reverse($methods);
+    }
+
+    /**
+     * @return \Traversable<\ReflectionMethod>
+     *
+     * @internal
+     */
+    protected static function attributeMethodsFor(string $attribute, object|string $component): \Traversable
+    {
+        foreach ((new \ReflectionClass($component))->getMethods(\ReflectionMethod::IS_PUBLIC) as $method) {
+            if ($method->getAttributes($attribute, \ReflectionAttribute::IS_INSTANCEOF)[0] ?? null) {
+                yield $method;
+            }
+        }
     }
 }

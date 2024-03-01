@@ -17,8 +17,6 @@ use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 
 /**
  * @author Gábor Egyed <gabor.egyed@gmail.com>
- *
- * @experimental
  */
 final class LiveCollectionTypeTest extends TypeTestCase
 {

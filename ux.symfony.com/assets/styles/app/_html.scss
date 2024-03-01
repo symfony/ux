@@ -1,0 +1,63 @@
+body {
+  font-family: var(--font-family-text);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 26px;
+
+  // Dark Mode
+  transition: background-color 150ms linear;
+}
+
+a, a.page-link, a.page-link:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+::selection {
+  color: var(--bs-body-bg);
+  background-color: var(--bs-body-color);
+  -webkit-text-fill-color: currentColor;
+}
+
+.App {
+  align-items: stretch;
+  flex-direction: column;
+  display: flex;
+  min-height: 100vh;
+  min-width: 320px;
+  overflow-x: clip;
+}
+
+main {
+  flex-grow: 1;
+}
+header,
+main,
+footer {
+  flex-shrink: 0;
+}
+
+a.link {
+  --color: #d9438e;
+  color: var(--color);
+  position: relative;
+  &:after {
+    position: absolute;
+    content:"";
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    display: block;
+    transition: all .2s ease-in-out;
+    background: var(--color);
+    transform: scaleX(0);
+    transform-origin: center left;
+  }
+  &:hover {
+    &:after {
+      transform: scaleX(1);
+      transition: transform .15s ease-in-out revert;
+    }
+  }
+}

@@ -2,6 +2,8 @@ import ValueStore from './Component/ValueStore';
 import { Directive, parseDirectives } from './Directive/directives_parser';
 import { normalizeModelName } from './string_utils';
 import Component from './Component';
+import { findChildren } from './ComponentRegistry';
+import getElementAsTagText from './Util/getElementAsTagText';
 
 /**
  * Return the "value" of any given element.
@@ -20,6 +22,10 @@ export function getValueFromElement(element: HTMLElement, valueStore: ValueStore
                 const modelValue = valueStore.get(modelNameData.action);
                 if (Array.isArray(modelValue)) {
                     return getMultipleCheckboxValue(element, modelValue);
+                } else if (Object(modelValue) === modelValue) {
+                    // we might get objects of values from forms, like {'1': 'foo', '2': 'bar'}
+                    // this occurs in symfony forms with expanded ChoiceType when first checked options get unchecked
+                    return getMultipleCheckboxValue(element, Object.values(modelValue));
                 }
             }
 
@@ -135,7 +141,7 @@ export function getAllModelDirectiveFromElements(element: HTMLElement): Directiv
     const directives = parseDirectives(element.dataset.model);
 
     directives.forEach((directive) => {
-        if (directive.args.length > 0 || directive.named.length > 0) {
+        if (directive.args.length > 0) {
             throw new Error(
                 `The data-model="${element.dataset.model}" format is invalid: it does not support passing arguments to the model.`
             );
@@ -161,7 +167,7 @@ export function getModelDirectiveFromElement(element: HTMLElement, throwOnMissin
             const directives = parseDirectives(formElement.dataset.model || '*');
             const directive = directives[0];
 
-            if (directive.args.length > 0 || directive.named.length > 0) {
+            if (directive.args.length > 0) {
                 throw new Error(
                     `The data-model="${formElement.dataset.model}" format is invalid: it does not support passing arguments to the model.`
                 );
@@ -202,7 +208,7 @@ export function elementBelongsToThisComponent(element: Element, component: Compo
     }
 
     let foundChildComponent = false;
-    component.getChildren().forEach((childComponent) => {
+    findChildren(component).forEach((childComponent) => {
         if (foundChildComponent) {
             // return early
             return;
@@ -248,21 +254,6 @@ export function htmlToElement(html: string): HTMLElement {
     }
 
     return child;
-}
-
-/**
- * Returns just the outer element's HTML as a string - useful for error messages.
- *
- * For example:
- *      <div class="outer">And text inside <p>more text</p></div>
- *
- * Would return:
- *      <div class="outer">
- */
-export function getElementAsTagText(element: HTMLElement): string {
-    return element.innerHTML
-        ? element.outerHTML.slice(0, element.outerHTML.indexOf(element.innerHTML))
-        : element.outerHTML;
 }
 
 const getMultipleCheckboxValue = function (element: HTMLInputElement, currentValues: Array<string>): Array<string> {

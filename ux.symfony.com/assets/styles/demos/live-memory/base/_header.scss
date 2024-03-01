@@ -1,0 +1,48 @@
+// -----------------------------------------------------------------
+// Header
+// -----------------------------------------------------------------
+
+.Header {
+  padding: 1rem;
+  width: 100%;
+  max-inline-size: var(--container-max-width);
+  align-items: center;
+  margin-inline: auto;
+  display: grid;
+  grid-template-areas: "a logo b";
+  grid-template-columns: 1fr auto 1fr;
+}
+
+.HeaderLogo {
+  width: min(25vw, 220px);
+  mix-blend-mode: hard-light;
+  order: 2;
+}
+
+.HeaderLinks {
+  grid-area: b;
+  display: flex;
+  justify-content: flex-end;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.HeaderButton {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 12%;
+  opacity: .75;
+  display: grid;
+  place-content: center;
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  transition: 250ms all ease-in-out;
+}
+
+.HeaderButton:hover {
+  opacity: .85;
+  background: var(--color-background);
+  border: 1px solid var(--color-border);
+}

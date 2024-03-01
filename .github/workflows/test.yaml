@@ -2,13 +2,19 @@ name: Symfony UX
 
 on:
     push:
+        paths-ignore:
+            - 'src/*/doc/**'
+            - 'ux.symfony.com/**'
     pull_request:
+        paths-ignore:
+            - 'src/*/doc/**'
+            - 'ux.symfony.com/**'
 
 jobs:
     coding-style-php:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@master
+            - uses: actions/checkout@v4
             - uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.1'
@@ -20,11 +26,11 @@ jobs:
         name: JavaScript Coding Style
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@master
+            - uses: actions/checkout@v4
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
               run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-            - uses: actions/cache@v2
+            - uses: actions/cache@v4
               id: yarn-cache
               with:
                   path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -39,11 +45,11 @@ jobs:
         name: Check for UnBuilt JS Dist Files
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@master
+            - uses: actions/checkout@v4
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
               run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-            - uses: actions/cache@v2
+            - uses: actions/cache@v4
               id: yarn-cache
               with:
                   path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
@@ -72,7 +78,7 @@ jobs:
         outputs:
             components: ${{ steps.components.outputs.components }}
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - id: components
               run: |
@@ -86,8 +92,12 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php-version: ['8.1']
-                dependency-version: ['lowest', 'highest']
+                php-version: ['8.1', '8.3']
+                include:
+                  - php-version: '8.1'
+                    dependency-version: 'lowest'
+                  - php-version: '8.3'
+                    dependency-version: 'highest'
                 component: ${{ fromJson(needs.tests-php-components.outputs.components )}}
                 exclude:
                   - component: Swup  # has no tests
@@ -95,7 +105,7 @@ jobs:
                   - component: Typed  # has no tests
 
         steps:
-            - uses: actions/checkout@v3
+            - uses: actions/checkout@v4
 
             - uses: shivammathur/setup-php@v2
               with:
@@ -124,16 +134,16 @@ jobs:
     tests-js:
         runs-on: ubuntu-latest
         steps:
-            - uses: actions/checkout@master
+            - uses: actions/checkout@v4
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
               run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
-            - uses: actions/cache@v2
+            - uses: actions/cache@v4
               id: yarn-cache
               with:
                   path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
                   key: ${{ runner.os }}-yarn-${{ hashFiles('**/package.json') }}
                   restore-keys: |
                       ${{ runner.os }}-yarn-
-            - run: yarn --frozen-lockfile
+            - run: yarn --immutable
             - run: yarn test

@@ -1,0 +1,64 @@
+
+.LiveMemory-Overlay {
+  position: absolute;
+  inset: 0;
+  height: 105%;
+  background: rgb(var(--color-background-rgb) / 50%);
+  backdrop-filter: blur(1rem);
+  visibility: hidden;
+}
+.LiveMemory-Overlay.on {
+  visibility: visible;
+}
+
+.LiveMemory-Overlay:before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 80%);
+  transition: all 2000ms ease-out;
+  transition-duration: 0s;
+  opacity: .2;
+}
+.LiveMemory-Overlay.on:before {
+  opacity: .95;
+  transition-duration: 2s;
+}
+
+.LiveMemory-Overlay div {
+  height: 20%;
+  background: #0A0A0A;
+  width: 100%;
+  position: relative;
+  opacity: 75%;
+  animation-delay: 0ms;
+  animation-duration: 0ms;
+  animation: none;
+
+  transition-delay: 0ms;
+}
+
+.LiveMemory-Overlay.on div {
+  animation: slide 600ms linear;
+  transform: scaleX(1) scaleY(1.01);
+  transform-origin: left;
+  transition-delay: 750ms;
+  animation-delay: 0ms;
+  animation-fill-mode: forwards;
+}
+
+.LiveMemory-Overlay.on div:nth-child(2n) {
+  transform-origin: right;
+  transition-delay: 0ms;
+  animation-delay: 0ms;
+  animation-duration: 900ms;
+}
+
+@keyframes slide {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}

@@ -1,0 +1,20 @@
+<header class="AppHeader {{ theme is defined ? ('AppHeader--' ~ theme) }}">
+    <nav class="navbar navbar-expand-sm AppNav--white">
+        <div class="container-xxl px-4 px-md-5">
+            <a href="{{ path('app_homepage') }}" class="AppHeader_logo" aria-label="Homepage">
+                <span aria-hidden="false">Symfony UX</span>
+            </a>
+            <button class="AppHeader_toggler navbar-toggler collapsed" type="button"
+                data-bs-toggle="collapse" data-bs-target="#AppNav"
+                aria-controls="AppNav" aria-expanded="false" aria-label="Toggle navigation"
+            >
+                <twig:Icon name="menu"/>
+            </button>
+            <div class="AppHeader_nav AppNav_menu navbar-collapse collapse" id="AppNav">
+                {% block nav %}
+                    {{ include('_nav.html.twig') }}
+                {% endblock %}
+            </div>
+        </div>
+    </nav>
+</header>

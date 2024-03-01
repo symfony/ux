@@ -26,7 +26,7 @@ describe('LiveController Error Handling', () => {
         const test = await createTest({ counter: 4 }, (data: any) => `
             <div ${initComponent(data)}>
                 Current count: ${data.counter}
-                <button data-action="live#action" data-action-name="save">Save</button>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
                 <button data-action="live#$render">Render</button>
             </div>
         `);
@@ -62,7 +62,7 @@ describe('LiveController Error Handling', () => {
         const test = await createTest({ }, (data: any) => `
             <div ${initComponent(data)}>
                 Original component text
-                <button data-action="live#action" data-action-name="save">Save</button>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
             </div>
         `);
 

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Twig;
 
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -8,7 +17,7 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 use function Symfony\Component\String\u;
 
-#[AsTwigComponent()]
+#[AsTwigComponent]
 class Icon
 {
     /**
@@ -31,7 +40,7 @@ class Icon
      */
     public bool $stripXmlns = true;
 
-    private string $iconDirectory;
+    protected string $iconDirectory;
 
     public function __construct(
         #[Autowire('%kernel.project_dir%')] string $projectDir,

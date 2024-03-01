@@ -26,8 +26,6 @@ use Symfony\UX\TwigComponent\MountedComponent;
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class LiveControllerAttributesCreator
@@ -35,7 +33,7 @@ class LiveControllerAttributesCreator
     /**
      * Prop name that can be passed into a component to keep it unique in a loop.
      *
-     * This is used to generate the unique data-live-id for the child component.
+     * This is used to generate the unique id for the child component.
      */
     public const KEY_PROP_NAME = 'key';
 
@@ -56,12 +54,12 @@ class LiveControllerAttributesCreator
      * Calculates the array of extra attributes that should be added to the root
      * component element to activate the live controller functionality.
      */
-    public function attributesForRendering(MountedComponent $mounted, ComponentMetadata $metadata, bool $isChildComponent, string $deterministicId = null): LiveAttributesCollection
+    public function attributesForRendering(MountedComponent $mounted, ComponentMetadata $metadata, bool $isChildComponent, ?string $deterministicId = null): LiveAttributesCollection
     {
         $attributesCollection = $this->attributeHelper->create();
         $attributesCollection->setLiveController($mounted->getName());
 
-        $url = $this->urlGenerator->generate($metadata->get('route'), ['_live_component' => $mounted->getName()]);
+        $url = $this->urlGenerator->generate($metadata->get('route'), ['_live_component' => $mounted->getName()], $metadata->get('url_reference_type'));
         $attributesCollection->setUrl($url);
 
         $liveListeners = AsLiveComponent::liveListeners($mounted->getComponent());
@@ -89,19 +87,37 @@ class LiveControllerAttributesCreator
             ]);
         }
 
-        if (!isset($mountedAttributes->all()['data-live-id'])) {
+        if (!isset($mountedAttributes->all()['id'])) {
             $id = $deterministicId ?: $this->idCalculator
                 ->calculateDeterministicId(key: $mounted->getInputProps()[self::KEY_PROP_NAME] ?? null);
             $attributesCollection->setLiveId($id);
             // we need to add this to the mounted attributes so that it is
             // will be included in the "attributes" part of the props data.
-            $mountedAttributes = $mountedAttributes->defaults(['data-live-id' => $id]);
+            $mountedAttributes = $mountedAttributes->defaults(['id' => $id]);
+        }
+
+        $liveMetadata = $this->metadataFactory->getMetadata($mounted->getName());
+        $requestMethod = $liveMetadata->getComponentMetadata()?->get('method') ?? 'post';
+        // set attribute if needed
+        if ('post' !== $requestMethod) {
+            $attributesCollection->setRequestMethod($requestMethod);
+        }
+
+        if ($liveMetadata->hasQueryStringBindings()) {
+            $queryMapping = [];
+            foreach ($liveMetadata->getAllLivePropsMetadata() as $livePropMetadata) {
+                if ($livePropMetadata->queryStringMapping()) {
+                    $frontendName = $livePropMetadata->calculateFieldName($mounted, $livePropMetadata->getName());
+                    $queryMapping[$frontendName] = ['name' => $frontendName];
+                }
+            }
+            $attributesCollection->setQueryUrlMapping($queryMapping);
         }
 
         if ($isChildComponent) {
             $fingerprint = $this->fingerprintCalculator->calculateFingerprint(
                 $mounted->getInputProps(),
-                $this->metadataFactory->getMetadata($mounted->getName())
+                $liveMetadata
             );
             if ($fingerprint) {
                 $attributesCollection->setFingerprint($fingerprint);

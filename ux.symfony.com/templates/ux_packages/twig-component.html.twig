@@ -1,13 +1,12 @@
 {% extends 'packageBase.html.twig' %}
 
-{% block component_header %}
+{% block package_header %}
     {% component PackageHeader with {
         package: 'twig-component',
         eyebrowText: 'Object-Oriented Templates'
     } %}
         {% block title_header %}
-            PHP Classes that render:
-            <span class="playfair ps-2">Twig Components</span>
+            PHP Classes that render: <em>Twig Components</em>
         {% endblock %}
 
         {% block sub_content %}
@@ -28,14 +27,12 @@
 
 {% block demo_content %}
     <div class="row align-items-center">
-        <div class="col-8">
+        <div class="col-6">
             {% block alert_success_example %}
-                {{ component('Alert', {
-                    message: 'I am a success alert!',
-                }) }}
+                <twig:Alert message="I am a success alert!" />
             {% endblock %}
         </div>
-        <div class="col-4">
+        <div class="col-6">
             <twig:CodeBlock
                 filename="templates/ux_packages/twig-component.html.twig"
                 :showFilename="false"
@@ -47,15 +44,15 @@
     </div>
 
     <div class="row my-2 align-items-center">
-        <div class="col-8">
+        <div class="col-6">
             {% block alert_danger_example %}
-                {{ component('Alert', {
-                    type: 'danger',
-                    message: 'Oh no! The dinos escaped!',
-                }) }}
+                <twig:Alert
+                    type="danger"
+                    message="Oh no! The dinos escaped!"
+                />
             {% endblock %}
         </div>
-        <div class="col-4">
+        <div class="col-6">
             <twig:CodeBlock
                 filename="templates/ux_packages/twig-component.html.twig"
                 :showFilename="false"

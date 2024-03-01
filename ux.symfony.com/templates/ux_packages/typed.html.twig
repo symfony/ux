@@ -1,13 +1,12 @@
 {% extends 'packageBase.html.twig' %}
 
-{% block component_header %}
+{% block package_header %}
     {% component PackageHeader with {
         package: 'typed',
         eyebrowText: 'A Library that Types'
     } %}
         {% block title_header %}
-            Typed brings text
-            <span class="playfair ps-2">to life</span>
+            Typed brings text <em>to life</em>
         {% endblock %}
 
         {% block sub_content %}
@@ -26,22 +25,21 @@
 
 {% block code_block_right %}
     <div class="p-5" style="font-size: 1.3em;">
+        {% set strings = [
+            'I ❤️ Symfony UX!',
+            'Symfony UX Typed loves to type',
+            'Symfony UX Typed and backspace',
+            'Control the speed',
+            'Control the cursor',
+            'Control your destiny!!!',
+            'Control your destiny... sort of',
+        ] %}
         <span
-            {{ stimulus_controller('symfony/ux-typed', {
-                strings: [
-                    'I ❤️ Symfony UX!',
-                    'Symfony UX Typed loves to type',
-                    'Symfony UX Typed and backspace',
-                    'Control the speed',
-                    'Control the cursor',
-                    'Control your destiny!!!',
-                    'Control your destiny... sort of',
-                ],
-                loop: true,
-                showCursor: true,
-                cursorChar: '✨',
-            }) }}
+            data-controller="symfony--ux-typed"
+            data-symfony--ux-typed-loop-value="true"
+            data-symfony--ux-typed-show-cursor-value="true"
+            data-symfony--ux-typed-cursor-char-value="✨"
+            data-symfony--ux-typed-strings-value="{{ strings|json_encode|e('html_attr') }}"
         ></span>
     </div>
 {% endblock %}
-

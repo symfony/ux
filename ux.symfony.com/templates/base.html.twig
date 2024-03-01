@@ -2,73 +2,59 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Symfony UX: JavaScript tools you'll love{% endblock %}</title>
+        <title>{% block title %}{{ meta.title|default }}{{ meta.title_suffix|default(' - Symfony UX') }}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <meta name="color-scheme" content="light dark">
+        {% block stylesheets %}
+        {% endblock %}
+        {% if meta.canonical|default %}
+            <link rel="canonical" href="{{ meta.canonical }}">
+        {% endif %}
+        <meta name="view-transition" content="same-origin" />
         <link rel="icon" href="/favicon.ico" sizes="48x48">
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml">
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-        <link rel="manifest" href="/site.webmanifest" />
+        <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+        <link rel="manifest" href="/site.webmanifest">
         <link rel="mask-icon" href="https://symfony.com/favicons/safari-pinned-tab.svg" color="#5bbad5">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        {% block stylesheets %}
-            <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:200,400,600|Playfair+Display:400,700i|Space+Mono|Ubuntu:400,700&display=swap">
-            {{ ux_controller_link_tags() }}
-            <link rel="stylesheet" href="{{ asset('styles/app.scss') }}">
-        {% endblock %}
-
+        <meta name="description" content="{% block description %}{{ meta.description|default }}{% endblock %}">
         {% block javascripts %}
-            {{ importmap('app') }}
+            <script>
+              const theme = localStorage.getItem('user-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+              document.documentElement.setAttribute('data-bs-theme', theme === 'dark' ? 'dark' : 'light');
+            </script>
+            {% block importmap %}
+                <script>
+                    if (!(HTMLScriptElement && HTMLScriptElement.supports?.('importmap'))) {
+                        document.head.appendChild(Object.assign(document.createElement("script"),{
+                            src:"https://cdn.jsdelivr.net/npm/es-module-shims@1.8.2/dist/es-module-shims.min.js",
+                            async:true,
+                        }));
+                    }
+                </script>
+                {{ importmap('app') }}
+            {% endblock %}
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% block body %}
+            <div class="App">
+                {% block header %}
+                    {{ include('_header.html.twig') }}
+                {% endblock %}
 
-        <footer>
-            <div class="container-fluid container-xxl py-5 px-lg-5">
-                <div class="row" style="--bs-gutter-x: 0;">
-                    <div class="col-12 col-xl-3 order-xl-3 text-center text-xl-end">
-                        <a href="https://github.com/symfony/ux" rel="external noopener noreferrer"
-                           style="color: #0A0A0A; font-size: 1.5rem;">
-                            <twig:Icon name="github" />
-                        </a>
-                        <a href="https://symfony.com" rel="external noopener noreferrer"
-                           style="color: #0A0A0A; font-size: 1.5rem;">
-                            <twig:Icon name="symfony" />
-                        </a>
-                    </div>
-                    <div class="col-12 col-xl-6 order-xl-2">
-                        <p class="mb-xl-0 mt-3 mt-xl-0 text-center" style="font-size: 12px; text-transform: uppercase;">
-                            <span class="d-block d-md-inline">
-                                crafted by
-                                <a href="https://symfonycasts.com"
-                                   rel="external noopener noreferrer"
-                                   style="font-weight: 700;"
-                                >SymfonyCasts</a>
-                                &amp;
-                                <a href="https://locastic.com"
-                                   rel="external noopener noreferrer"
-                                   style="font-weight: 700;"
-                                >Locastic</a><span class="d-none d-md-inline">,</span>
-                            </span>
-                            <span class="d-block d-md-inline">
-                                hosted with
-                                <span style="font-weight: 700;">
-                                    <a href="https://platform.sh"
-                                       rel="external noopener noreferrer"
-                                       style="font-weight: 700;"
-                                    >Platform.sh</a>
-                                </span>
-                            </span>
-                        </p>
-                    </div>
-                    <div class="col-12 col-xl-3 text-center text-xl-start">
-                        <p class="mb-0" style="font-size: 11px; text-transform: uppercase;">
-                            &copy;
-                            <a href="https://symfony.com" style="font-weight: 700;">Symfony</a>
-                            All rights reserved.
-                        </p>
-                    </div>
-                </div>
+                {% block main %}
+                    <main>
+                        {% block content %}
+                        {% endblock %}
+                    </main>
+                {% endblock %}
+
+                {% block aside %}{% endblock %}
+
+                {% block footer %}
+                    {{ include('_footer.html.twig') }}
+                {% endblock %}
             </div>
-        </footer>
+        {% endblock %}
     </body>
 </html>

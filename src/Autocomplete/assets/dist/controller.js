@@ -29,26 +29,25 @@ class default_1 extends Controller {
         _default_1_instances.add(this);
         this.isObserving = false;
         this.hasLoadedChoicesPreviously = false;
+        this.originalOptions = [];
     }
     initialize() {
-        if (this.requiresLiveIgnore()) {
-            this.element.setAttribute('data-live-ignore', '');
-            if (this.element.id) {
-                const label = document.querySelector(`label[for="${this.element.id}"]`);
-                if (label) {
-                    label.setAttribute('data-live-ignore', '');
-                }
-            }
-        }
-        else {
-            if (!this.mutationObserver) {
-                this.mutationObserver = new MutationObserver((mutations) => {
-                    this.onMutations(mutations);
-                });
-            }
+        if (!this.mutationObserver) {
+            this.mutationObserver = new MutationObserver((mutations) => {
+                this.onMutations(mutations);
+            });
         }
     }
     connect() {
+        if (this.selectElement) {
+            this.originalOptions = this.createOptionsDataStructure(this.selectElement);
+        }
+        this.initializeTomSelect();
+    }
+    initializeTomSelect() {
+        if (this.selectElement) {
+            this.selectElement.setAttribute('data-skip-morph', '');
+        }
         if (this.urlValue) {
             this.tomSelect = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createAutocompleteWithRemoteData).call(this, this.urlValue, this.hasMinCharactersValue ? this.minCharactersValue : null);
             return;
@@ -62,7 +61,28 @@ class default_1 extends Controller {
     }
     disconnect() {
         this.stopMutationObserver();
+        let currentSelectedValues = [];
+        if (this.selectElement) {
+            if (this.selectElement.multiple) {
+                currentSelectedValues = Array.from(this.selectElement.options)
+                    .filter((option) => option.selected)
+                    .map((option) => option.value);
+            }
+            else {
+                currentSelectedValues = [this.selectElement.value];
+            }
+        }
         this.tomSelect.destroy();
+        if (this.selectElement) {
+            if (this.selectElement.multiple) {
+                Array.from(this.selectElement.options).forEach((option) => {
+                    option.selected = currentSelectedValues.includes(option.value);
+                });
+            }
+            else {
+                this.selectElement.value = currentSelectedValues[0];
+            }
+        }
     }
     getMaxOptions() {
         return this.selectElement ? this.selectElement.options.length : 50;
@@ -96,10 +116,14 @@ class default_1 extends Controller {
     }
     resetTomSelect() {
         if (this.tomSelect) {
+            this.dispatchEvent('before-reset', { tomSelect: this.tomSelect });
             this.stopMutationObserver();
-            this.tomSelect.clearOptions();
-            this.tomSelect.settings.maxOptions = this.getMaxOptions();
-            this.tomSelect.sync();
+            const currentHtml = this.element.innerHTML;
+            const currentValue = this.tomSelect.getValue();
+            this.tomSelect.destroy();
+            this.element.innerHTML = currentHtml;
+            this.initializeTomSelect();
+            this.tomSelect.setValue(currentValue);
             this.startMutationObserver();
         }
     }
@@ -113,22 +137,6 @@ class default_1 extends Controller {
         }
         this.startMutationObserver();
     }
-    updateTomSelectPlaceholder() {
-        const input = this.element;
-        let placeholder = input.getAttribute('placeholder') || input.getAttribute('data-placeholder');
-        if (!placeholder && !this.tomSelect.allowEmptyOption) {
-            const option = input.querySelector('option[value=""]');
-            if (option) {
-                placeholder = option.textContent;
-            }
-        }
-        if (placeholder) {
-            this.stopMutationObserver();
-            this.tomSelect.settings.placeholder = placeholder;
-            this.tomSelect.control_input.setAttribute('placeholder', placeholder);
-            this.startMutationObserver();
-        }
-    }
     startMutationObserver() {
         if (!this.isObserving && this.mutationObserver) {
             this.mutationObserver.observe(this.element, {
@@ -136,6 +144,7 @@ class default_1 extends Controller {
                 subtree: true,
                 attributes: true,
                 characterData: true,
+                attributeOldValue: true,
             });
             this.isObserving = true;
         }
@@ -147,73 +156,64 @@ class default_1 extends Controller {
         }
     }
     onMutations(mutations) {
-        const addedOptionElements = [];
-        const removedOptionElements = [];
-        let hasAnOptionChanged = false;
         let changeDisabledState = false;
-        let changePlaceholder = false;
+        let requireReset = false;
         mutations.forEach((mutation) => {
             switch (mutation.type) {
-                case 'childList':
-                    if (mutation.target instanceof HTMLOptionElement) {
-                        if (mutation.target.value === '') {
-                            changePlaceholder = true;
-                            break;
-                        }
-                        hasAnOptionChanged = true;
-                        break;
-                    }
-                    mutation.addedNodes.forEach((node) => {
-                        if (node instanceof HTMLOptionElement) {
-                            if (removedOptionElements.includes(node)) {
-                                removedOptionElements.splice(removedOptionElements.indexOf(node), 1);
-                                return;
-                            }
-                            addedOptionElements.push(node);
-                        }
-                    });
-                    mutation.removedNodes.forEach((node) => {
-                        if (node instanceof HTMLOptionElement) {
-                            if (addedOptionElements.includes(node)) {
-                                addedOptionElements.splice(addedOptionElements.indexOf(node), 1);
-                                return;
-                            }
-                            removedOptionElements.push(node);
-                        }
-                    });
-                    break;
                 case 'attributes':
-                    if (mutation.target instanceof HTMLOptionElement) {
-                        hasAnOptionChanged = true;
-                        break;
-                    }
                     if (mutation.target === this.element && mutation.attributeName === 'disabled') {
                         changeDisabledState = true;
                         break;
                     }
-                    break;
-                case 'characterData':
-                    if (mutation.target instanceof Text && mutation.target.parentElement instanceof HTMLOptionElement) {
-                        if (mutation.target.parentElement.value === '') {
-                            changePlaceholder = true;
-                            break;
+                    if (mutation.target === this.element && mutation.attributeName === 'multiple') {
+                        const isNowMultiple = this.element.hasAttribute('multiple');
+                        const wasMultiple = mutation.oldValue === 'multiple';
+                        if (isNowMultiple !== wasMultiple) {
+                            requireReset = true;
                         }
-                        hasAnOptionChanged = true;
+                        break;
                     }
+                    break;
             }
         });
-        if (hasAnOptionChanged || addedOptionElements.length > 0 || removedOptionElements.length > 0) {
+        const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
+        const areOptionsEquivalent = this.areOptionsEquivalent(newOptions);
+        if (!areOptionsEquivalent || requireReset) {
+            this.originalOptions = newOptions;
             this.resetTomSelect();
         }
         if (changeDisabledState) {
             this.changeTomSelectDisabledState(this.formElement.disabled);
         }
-        if (changePlaceholder) {
-            this.updateTomSelectPlaceholder();
-        }
     }
-    requiresLiveIgnore() {
-        return this.element instanceof HTMLSelectElement && this.element.multiple;
+    createOptionsDataStructure(selectElement) {
+        return Array.from(selectElement.options).map((option) => {
+            const optgroup = option.closest('optgroup');
+            return {
+                value: option.value,
+                text: option.text,
+                group: optgroup ? optgroup.label : null,
+            };
+        });
+    }
+    areOptionsEquivalent(newOptions) {
+        const filteredOriginalOptions = this.originalOptions.filter((option) => option.value !== '');
+        const filteredNewOptions = newOptions.filter((option) => option.value !== '');
+        const originalPlaceholderOption = this.originalOptions.find((option) => option.value === '');
+        const newPlaceholderOption = newOptions.find((option) => option.value === '');
+        if (originalPlaceholderOption &&
+            newPlaceholderOption &&
+            originalPlaceholderOption.text !== newPlaceholderOption.text) {
+            return false;
+        }
+        if (filteredOriginalOptions.length !== filteredNewOptions.length) {
+            return false;
+        }
+        const normalizeOption = (option) => `${option.value}-${option.text}-${option.group}`;
+        const originalOptionsSet = new Set(filteredOriginalOptions.map(normalizeOption));
+        const newOptionsSet = new Set(filteredNewOptions.map(normalizeOption));
+        return (originalOptionsSet.size === newOptionsSet.size &&
+            [...originalOptionsSet].every((option) => newOptionsSet.has(option)));
     }
 }
 _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _default_1_getCommonConfig() {
@@ -233,18 +233,11 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
         },
     };
-    const requiresLiveIgnore = this.requiresLiveIgnore();
     const config = {
         render,
         plugins,
         onItemAdd: () => {
             this.tomSelect.setTextboxValue('');
-        },
-        onInitialize: function () {
-            if (requiresLiveIgnore) {
-                const tomSelect = this;
-                tomSelect.wrapper.setAttribute('data-live-ignore', '');
-            }
         },
         closeAfterSelect: true,
     };
@@ -317,6 +310,9 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             item: function (item) {
                 return `<div>${item.text}</div>`;
             },
+            loading_more: () => {
+                return `<div class="loading-more-results">${this.loadingMoreTextValue}</div>`;
+            },
             no_more_results: () => {
                 return `<div class="no-more-results">${this.noMoreResultsTextValue}</div>`;
             },
@@ -342,6 +338,7 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
 default_1.values = {
     url: String,
     optionsAsHtml: Boolean,
+    loadingMoreText: String,
     noResultsFoundText: String,
     noMoreResultsText: String,
     minCharacters: Number,

@@ -26,17 +26,17 @@ describe('LiveController Emit Tests', () => {
                 Render Count: ${data.renderCount}
                 <button
                     data-action="live#emit"
-                    data-event="fooEvent"
+                    data-live-event-param="fooEvent"
                 >Emit Simple</button>
 
                 <button
                     data-action="live#emit"
-                    data-event="name(simple-component)|fooEvent"
+                    data-live-event-param="name(simple-component)|fooEvent"
                 >Emit Named Matching</button>
 
                 <button
                     data-action="live#emit"
-                    data-event="name(other-component)|fooEvent"
+                    data-live-event-param="name(other-component)|fooEvent"
                 >Emit Named Not Matching</button>
             </div>
         `);
@@ -63,5 +63,40 @@ describe('LiveController Emit Tests', () => {
         getByText(test.element, 'Emit Named Not Matching').click();
         // wait a tiny bit - enough for a request to be sent if it was going to be
         await new Promise((resolve) => setTimeout(resolve, 10));
+    });
+
+    it('emits event sent back after Ajax call', async () => {
+        const test = await createTest({ renderCount: 0 }, (data: any) => `
+            <div ${initComponent(data, {
+                name: 'simple-component',
+                listeners: [{ event: 'fooEvent', action: 'fooAction' }],
+                // emit only on the first re-render
+                eventEmit: data.renderCount === 1 ? [
+                    { event: 'fooEvent', data: { foo: 'bar' } }
+                ] : [],
+            })}>
+                Render Count: ${data.renderCount}
+                <button
+                    data-action="live#emit"
+                    data-event="fooEvent"
+                >Emit Simple</button>
+            </div>
+        `);
+
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data) => {
+                data.renderCount = 1;
+            })
+
+        test.component.render();
+
+        test.expectsAjaxCall()
+            .expectActionCalled('fooAction', { foo: 'bar' })
+            .serverWillChangeProps((data) => {
+                data.renderCount = 2;
+            });
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Render Count: 1'));
+        await waitFor(() => expect(test.element).toHaveTextContent('Render Count: 2'));
     });
 });

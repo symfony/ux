@@ -1,0 +1,54 @@
+.AppNav {
+  color: inherit;
+}
+
+.AppNav_menu {
+  gap: 2rem;
+  justify-content: flex-end;
+  line-height: 2rem;
+
+  @media (max-width: 575px) {
+    display: flex;
+    flex-direction: row;
+    height: 3rem;
+    place-content: center;
+    .Icon--chevron-down {
+      display: none;
+    }
+  }
+}
+
+.AppNav_item {
+  color: inherit;
+  font-family: "Ubuntu";
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0;
+  opacity: .85;
+  transition: opacity 250ms;
+  padding: 0;
+  border: none;
+  background: none;
+  line-height: 2rem;
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.AppNav_item--icon {
+  padding: 0;
+  width: 1.5rem;
+  height: 1.5rem;
+  display: grid;
+  place-content: center;
+
+  > .Icon {
+    font-size: 1.25rem;
+  }
+}
+
+.nav-component-img {
+  height: 22px;
+  width: 22px;
+  border-radius: 4px;
+}

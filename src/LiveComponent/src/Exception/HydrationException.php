@@ -1,4 +1,5 @@
 <?php
+
 /*
  * This file is part of the Symfony package.
  *
@@ -18,8 +19,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
  * When this is thrown, the user will see the error modal.
  *
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  *
  * @internal
  */

@@ -1,0 +1,35 @@
+<div class="result">
+
+    <div style="display: flex;">
+        <div class="trophy {{ not game.completed ? 'gameover' }}">
+            <img src="{{ asset('images/demos/live-memory/trophees/%s.webp'|format(game.theme)) }}"
+                 width="256" height="237"
+                 alt="{{ 'LiveMemory %s Trophee'|format(game.theme) }}"
+            />
+        </div>
+    </div>
+
+    {% if not game.completed %}
+
+        <div class="title">GAME OVER!</div>
+        <div class="text">TIME ELAPSED</div>
+        <button data-action="live#action" data-action-name="play(level={{ game.level }})">INSERT COIN</button>
+
+    {% else %}
+
+        <div class="title">YOU WIN!</div>
+        <div class="text">
+            <twig:LiveMemory:ScoreRow wait="2" label="Score" value="{{ game.score }}"/>
+            <twig:LiveMemory:ScoreRow wait="3" label="Time Bonus" value="+{{ game.timeBonus }}"/>
+            <twig:LiveMemory:ScoreRow wait="4" label="Move Bonus" value="+{{ game.moveBonus }}"/>
+            <twig:LiveMemory:ScoreRow wait="6" label="TOTAL" value="{{ game.totalScore }}" class="total"/>
+        </div>
+        {% if game.level != 4 %}
+            <button data-action="live#action" data-action-name="play(level={{ game.level + 1 }})">NEXT LEVEL</button>
+        {% else %}
+            <button data-action="live#action" data-action-name="play">NEW GAME</button>
+        {% endif %}
+
+    {% endif %}
+
+</div>

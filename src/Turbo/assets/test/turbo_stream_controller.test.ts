@@ -13,6 +13,7 @@ import { Application } from '@hotwired/stimulus';
 import { getByTestId } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import TurboStreamController from '../src/turbo_stream_controller';
+import { vi } from 'vitest';
 
 const startStimulus = () => {
     const application = Application.start();
@@ -24,10 +25,10 @@ describe('TurboStreamController', () => {
     let container;
 
     beforeEach(() => {
-        global.EventSource = jest.fn(() => ({
-            addEventListener: jest.fn(),
-            removeEventListener: jest.fn(),
-            close: jest.fn(),
+        global.EventSource = vi.fn(() => ({
+            addEventListener: vi.fn(),
+            removeEventListener: vi.fn(),
+            close: vi.fn(),
         }));
 
         container = mountDOM(

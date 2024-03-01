@@ -3,8 +3,10 @@
 declare(strict_types=1);
 
 /*
- * This file is part of the Symfony StimulusBundle package.
+ * This file is part of the Symfony package.
+ *
  * (c) Fabien Potencier <fabien@symfony.com>
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -12,7 +14,7 @@ declare(strict_types=1);
 namespace Symfony\UX\StimulusBundle\DependencyInjection;
 
 use Symfony\Component\AssetMapper\AssetMapperInterface;
-use Symfony\Component\AssetMapper\Compiler\AssetCompilerPathResolverTrait;
+use Symfony\Component\AssetMapper\ImportMap\ImportMapConfigReader;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
@@ -32,16 +34,14 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
         $loader = new Loader\PhpFileLoader($container, new FileLocator(__DIR__.'/../../config'));
         $loader->load('services.php');
 
-        $configuration = $this->getConfiguration($configs, $container);
-        $config = $this->processConfiguration($configuration, $configs);
+        $config = $this->processConfiguration($this, $configs);
 
         $container->findDefinition('stimulus.asset_mapper.controllers_map_generator')
             ->replaceArgument(2, $config['controller_paths'])
             ->replaceArgument(3, $config['controllers_json']);
 
-        // on older versions, the presence of this service if the trait doesn't exist causes an error
-        if (!trait_exists(AssetCompilerPathResolverTrait::class)) {
-            $container->removeDefinition('stimulus.asset_mapper.loader_javascript_compiler');
+        if (!class_exists(ImportMapConfigReader::class)) {
+            $container->removeDefinition('stimulus.asset_mapper.auto_import_locator');
         }
     }
 
@@ -62,11 +62,6 @@ final class StimulusExtension extends Extension implements PrependExtensionInter
                 ],
             ],
         ]);
-    }
-
-    public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface
-    {
-        return $this;
     }
 
     public function getConfigTreeBuilder(): TreeBuilder

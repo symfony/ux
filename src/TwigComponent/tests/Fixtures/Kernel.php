@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Fixtures;
 
+use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
@@ -35,22 +36,52 @@ final class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerConfigurator $c): void
     {
-        $c->extension('framework', [
+        $frameworkConfig = [
             'secret' => 'S3CRET',
             'test' => true,
             'router' => ['utf8' => true],
             'secrets' => false,
             'http_method_override' => false,
-        ]);
+            'php_errors' => ['log' => true],
+        ];
+        if (self::VERSION_ID >= 60200) {
+            $frameworkConfig['handle_all_throwables'] = true;
+        }
+        $c->extension('framework', $frameworkConfig);
+
         $c->extension('twig', [
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
         ]);
+
+        $twigComponentConfig = [];
+        if ('legacy_autonaming' != $this->environment) {
+            $acmeDefaults = [
+                'name_prefix' => 'AcmePrefix',
+            ];
+            if ('no_template_directory' !== $this->environment) {
+                $acmeDefaults['template_directory'] = 'acme_components';
+            }
+            $twigComponentConfig['defaults'] = [
+                'Symfony\UX\TwigComponent\Tests\Fixtures\Component\\' => 'components/',
+                'Symfony\UX\TwigComponent\Tests\Fixtures\AcmeComponent\\' => $acmeDefaults,
+            ];
+        }
+
+        if ('legacy_anonymous' != $this->environment) {
+            $twigComponentConfig['anonymous_template_directory'] = 'components';
+            if ('anonymous_directory' == $this->environment) {
+                $twigComponentConfig['anonymous_template_directory'] = 'anonymous';
+            }
+        }
+
+        $c->extension('twig_component', $twigComponentConfig);
 
         $services = $c->services()
             ->defaults()
                 ->autowire()
                 ->autoconfigure()
             ->load(__NAMESPACE__.'\\', __DIR__)
+            ->set('logger', NullLogger::class)
             ->set('component_b', ComponentB::class)->autoconfigure()->autowire()
             ->set('component_d', ComponentB::class)->tag('twig.component', [
                 'key' => 'component_d',

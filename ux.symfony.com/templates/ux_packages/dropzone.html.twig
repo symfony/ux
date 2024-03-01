@@ -1,13 +1,12 @@
 {% extends 'packageBase.html.twig' %}
 
-{% block component_header %}
+{% block package_header %}
     {% component PackageHeader with {
         package: 'dropzone',
         eyebrowText: 'Styled Upload Zone'
     } %}
         {% block title_header %}
-            Native Upload Dropzone
-            <span class="playfair ps-2">with style</span>
+            Native Upload Dropzone <em>with style</em>
         {% endblock %}
 
         {% block sub_content %}

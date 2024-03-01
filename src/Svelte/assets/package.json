@@ -2,7 +2,6 @@
     "name": "@symfony/ux-svelte",
     "description": "Integration of Svelte in Symfony",
     "main": "dist/register_controller.js",
-    "module": "dist/register_controller.js",
     "version": "1.0.0",
     "license": "MIT",
     "symfony": {
@@ -21,12 +20,12 @@
     },
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "svelte": "^3.0"
+        "svelte": "^3.0 || ^4.0"
     },
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
+        "@sveltejs/vite-plugin-svelte": "^2.4.6",
         "@types/webpack-env": "^1.16",
-        "svelte": "^3.0",
-        "svelte-jester": "^2.3"
+        "svelte": "^3.0 || ^4.0"
     }
 }

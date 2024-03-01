@@ -13,6 +13,7 @@ namespace Symfony\UX\TwigComponent\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\TwigComponent\Twig\TwigPreLexer;
+use Twig\Error\SyntaxError;
 
 final class TwigPreLexerTest extends TestCase
 {
@@ -25,7 +26,27 @@ final class TwigPreLexerTest extends TestCase
         $this->assertSame($expectedOutput, $lexer->preLexComponents($input));
     }
 
-    public function getLexTests(): iterable
+    /**
+     * @dataProvider getInvalidSyntaxTests
+     */
+    public function testPreLexThrowsExceptionOnInvalidSyntax(string $input, string $expectedMessage): void
+    {
+        $this->expectException(SyntaxError::class);
+        $this->expectExceptionMessage($expectedMessage);
+
+        $lexer = new TwigPreLexer();
+        $lexer->preLexComponents($input);
+    }
+
+    public static function getInvalidSyntaxTests(): iterable
+    {
+        yield 'component_with_unclosed_block' => [
+            '<twig:foo name="bar">{% block a %}</twig:foo>',
+            'Expected closing tag "</twig:foo>" not found at line 1.',
+        ];
+    }
+
+    public static function getLexTests(): iterable
     {
         yield 'simple_component' => [
             '<twig:foo />',
@@ -60,6 +81,11 @@ final class TwigPreLexerTest extends TestCase
         yield 'traditional_blocks_around_component_do_not_confuse' => [
             'Hello {% block foo_block %}Foo{% endblock %}<twig:foo />{% block bar_block %}Bar{% endblock %}',
             'Hello {% block foo_block %}Foo{% endblock %}{{ component(\'foo\') }}{% block bar_block %}Bar{% endblock %}',
+        ];
+
+        yield 'component_with_commented_block' => [
+            '<twig:foo name="bar">{#  {% block baz %}#}</twig:foo>',
+            '{% component \'foo\' with { name: \'bar\' } %}{#  {% block baz %}#}{% endcomponent %}',
         ];
 
         yield 'component_with_component_inside_block' => [
@@ -155,6 +181,104 @@ final class TwigPreLexerTest extends TestCase
                 {% block content %}{{ component('bar') }}
             {% endblock %}{% endcomponent %}
             EOF
+        ];
+
+        yield 'component_where_entire_default_block_is_twig_embed' => [
+            <<<EOF
+            <twig:Alert>
+                <p>
+                    {% embed "my_embed.html.twig" with { foo: 'bar' } %}{% endembed %}
+                </p>
+            </twig:Alert>
+            EOF,
+            <<<EOF
+            {% component 'Alert' %}
+                {% block content %}<p>
+                    {% embed "my_embed.html.twig" with { foo: 'bar' } %}{% endembed %}
+                </p>
+            {% endblock %}{% endcomponent %}
+            EOF,
+        ];
+        yield 'component_where_entire_default_block_is_twig_embed_with_block_string' => [
+            <<<EOF
+            <twig:Alert>
+                <p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block "foo" %}
+                    {% endembed %}
+                </p>
+            </twig:Alert>
+            EOF,
+            <<<EOF
+            {% component 'Alert' %}
+                {% block content %}<p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block "foo" %}
+                    {% endembed %}
+                </p>
+            {% endblock %}{% endcomponent %}
+            EOF,
+        ];
+        yield 'component_where_entire_default_block_is_twig_embed_with_block_variable' => [
+            <<<EOF
+            <twig:Alert>
+                <p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block fooVar %}
+                    {% endembed %}
+                </p>
+            </twig:Alert>
+            EOF,
+            <<<EOF
+            {% component 'Alert' %}
+                {% block content %}<p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block fooVar %}
+                    {% endembed %}
+                </p>
+            {% endblock %}{% endcomponent %}
+            EOF,
+        ];
+        yield 'component_where_entire_default_block_is_twig_embed_with_block_expanded' => [
+            <<<EOF
+            <twig:Alert>
+                <p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block %}bar{% endblock %}
+                    {% endembed %}
+                </p>
+            </twig:Alert>
+            EOF,
+            <<<EOF
+            {% component 'Alert' %}
+                {% block content %}<p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block %}bar{% endblock %}
+                    {% endembed %}
+                </p>
+            {% endblock %}{% endcomponent %}
+            EOF,
+        ];
+
+        yield 'component_where_entire_default_block_is_twig_embed_with_block_variable_and_manipulations' => [
+            <<<EOF
+            <twig:Alert>
+                <p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block doSomething(fooVar)|u.camel.title.truncate(5) %}
+                    {% endembed %}
+                </p>
+            </twig:Alert>
+            EOF,
+            <<<EOF
+            {% component 'Alert' %}
+                {% block content %}<p>
+                    {% embed "my_embed.html.twig" %}
+                        {% block my_embed_block doSomething(fooVar)|u.camel.title.truncate(5) %}
+                    {% endembed %}
+                </p>
+            {% endblock %}{% endcomponent %}
+            EOF,
         ];
 
         yield 'string_inside_of_twig_code_not_escaped' => [

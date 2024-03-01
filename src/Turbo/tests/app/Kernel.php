@@ -93,10 +93,14 @@ class Kernel extends BaseKernel
             ],
         ];
 
-        // https://github.com/doctrine/DoctrineBundle/pull/1661
-        $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle');
-        if (null !== $doctrineBundleVersion && version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
-            $doctrineConfig['orm']['report_fields_where_declared'] = true;
+        if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
+            if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
+                $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
+            }
+            // https://github.com/doctrine/DoctrineBundle/pull/1661
+            if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
+                $doctrineConfig['orm']['report_fields_where_declared'] = true;
+            }
         }
 
         $container
@@ -291,7 +295,7 @@ class Kernel extends BaseKernel
                 if (!$artist) {
                     throw new NotFoundHttpException();
                 }
-                $artist->name = $artist->name.' after change';
+                $artist->name .= ' after change';
 
                 $doctrine->flush();
             }

@@ -17,8 +17,6 @@ use Twig\Template;
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  *
- * @experimental
- *
  * @internal
  */
 class DeterministicTwigIdCalculator
@@ -41,7 +39,7 @@ class DeterministicTwigIdCalculator
      * @param bool        $increment Whether to increment the counter for this file+line
      * @param string|null $key       An optional key to use instead of the incremented counter
      */
-    public function calculateDeterministicId(bool $increment = true, string $key = null): string
+    public function calculateDeterministicId(bool $increment = true, ?string $key = null): string
     {
         $lineData = $this->guessTemplateInfo();
 

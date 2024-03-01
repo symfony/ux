@@ -11,12 +11,11 @@
 
 namespace Symfony\UX\Turbo\Bridge\Mercure;
 
-use Doctrine\Common\Util\ClassUtils;
 use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
-use Symfony\Component\VarExporter\LazyObjectInterface;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
+use Symfony\UX\Turbo\Doctrine\ClassUtil;
 
 /**
  * Broadcasts updates rendered using Twig with Mercure.
@@ -63,14 +62,7 @@ final class Broadcaster implements BroadcasterInterface
             return;
         }
 
-        if ($entity instanceof LazyObjectInterface) {
-            $entityClass = get_parent_class($entity);
-            if (false === $entityClass) {
-                throw new \LogicException('Parent class missing');
-            }
-        } else {
-            $entityClass = ClassUtils::getClass($entity);
-        }
+        $entityClass = ClassUtil::getEntityClass($entity);
 
         if (!isset($options['rendered_action'])) {
             throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s" as option "rendered_action" is missing.', $entityClass));

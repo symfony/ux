@@ -21,8 +21,6 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
  * @author Gábor Egyed <gabor.egyed@gmail.com>
- *
- * @experimental
  */
 final class LiveCollectionType extends AbstractType
 {
@@ -47,7 +45,8 @@ final class LiveCollectionType extends AbstractType
 
             $attr = $view->vars['button_add']->vars['attr'];
             $attr['data-action'] ??= 'live#action';
-            $attr['data-action-name'] ??= sprintf('addCollectionItem(name=%s)', $view->vars['full_name']);
+            $attr['data-live-action-param'] ??= 'addCollectionItem';
+            $attr['data-live-name-param'] ??= $view->vars['full_name'];
             $view->vars['button_add']->vars['attr'] = $attr;
 
             array_splice($view->vars['button_add']->vars['block_prefixes'], 1, 0, 'live_collection_button_add');
@@ -85,7 +84,9 @@ final class LiveCollectionType extends AbstractType
 
                 $attr = $entryView->vars['button_delete']->vars['attr'];
                 $attr['data-action'] ??= 'live#action';
-                $attr['data-action-name'] ??= sprintf('removeCollectionItem(name=%s, index=%s)', $view->vars['full_name'], $k);
+                $attr['data-live-action-param'] ??= 'removeCollectionItem';
+                $attr['data-live-name-param'] ??= $view->vars['full_name'];
+                $attr['data-live-index-param'] ??= $k;
                 $entryView->vars['button_delete']->vars['attr'] = $attr;
 
                 array_splice($entryView->vars['button_delete']->vars['block_prefixes'], 1, 0, 'live_collection_button_delete');

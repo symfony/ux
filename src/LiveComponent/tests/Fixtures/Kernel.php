@@ -11,10 +11,13 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixtures;
 
+use Composer\InstalledVersions;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
+use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Bundle\SecurityBundle\SecurityBundle;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
@@ -23,6 +26,7 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
+use Symfony\Component\Security\Core\User\InMemoryUser;
 use Symfony\UX\LiveComponent\LiveComponentBundle;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\Entity2Normalizer;
@@ -65,6 +69,7 @@ final class Kernel extends BaseKernel
         yield new FrameworkBundle();
         yield new TwigBundle();
         yield new DoctrineBundle();
+        yield new SecurityBundle();
         yield new TwigComponentBundle();
         yield new LiveComponentBundle();
         yield new ZenstruckFoundryBundle();
@@ -83,25 +88,66 @@ final class Kernel extends BaseKernel
 
     protected function configureContainer(ContainerConfigurator $c): void
     {
-        $c->extension('framework', [
+        $frameworkConfig = [
             'secret' => 'S3CRET',
             'test' => true,
             'router' => ['utf8' => true],
             'secrets' => false,
             'session' => ['storage_factory_id' => 'session.storage.factory.mock_file'],
             'http_method_override' => false,
-        ]);
+            'property_info' => ['enabled' => true],
+            'php_errors' => ['log' => true],
+            'validation' => [
+                'email_validation_mode' => 'html5',
+            ],
+        ];
+
+        if (self::VERSION_ID >= 60400) {
+            $frameworkConfig['handle_all_throwables'] = true;
+            $frameworkConfig['session'] = [
+                'storage_factory_id' => 'session.storage.factory.mock_file',
+                'cookie_secure' => 'auto',
+                'cookie_samesite' => 'lax',
+                'handler_id' => null,
+            ];
+            $frameworkConfig['annotations']['enabled'] = false;
+        }
+
+        $c->extension('framework', $frameworkConfig);
 
         $c->extension('twig', [
             'default_path' => '%kernel.project_dir%/tests/Fixtures/templates',
+        ]);
+
+        $security = [
+            'password_hashers' => [InMemoryUser::class => 'plaintext'],
+            'providers' => ['users' => ['memory' => ['users' => ['kevin' => ['password' => 'pass', 'roles' => ['ROLE_USER']]]]]],
+            'firewalls' => ['main' => [
+                'lazy' => true,
+            ]],
+        ];
+
+        if (!class_exists(Security::class)) {
+            $security['enable_authenticator_manager'] = true;
+        }
+
+        $c->extension('security', $security);
+
+        $c->extension('twig_component', [
+            'defaults' => [
+                'Symfony\UX\LiveComponent\Tests\Fixtures\Component\\' => 'components/',
+            ],
+            'anonymous_template_directory' => 'components/',
         ]);
 
         $c->extension('zenstruck_foundry', [
             'auto_refresh_proxies' => false,
         ]);
 
-        $c->extension('doctrine', [
-            'dbal' => ['url' => '%env(resolve:DATABASE_URL)%'],
+        $doctrineConfig = [
+            'dbal' => [
+                'url' => '%env(resolve:DATABASE_URL)%',
+            ],
             'orm' => [
                 'auto_generate_proxy_classes' => true,
                 'auto_mapping' => true,
@@ -122,7 +168,20 @@ final class Kernel extends BaseKernel
                     ],
                 ],
             ],
-        ]);
+        ];
+        if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
+            if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
+                $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
+            }
+            // https://github.com/doctrine/DoctrineBundle/pull/1661
+            if (version_compare($doctrineBundleVersion, '2.9.0', '>=')) {
+                $doctrineConfig['orm']['report_fields_where_declared'] = true;
+                $doctrineConfig['orm']['validate_xml_mapping'] = true;
+                $doctrineConfig['dbal']['schema_manager_factory'] = 'doctrine.dbal.default_schema_manager_factory';
+            }
+        }
+
+        $c->extension('doctrine', $doctrineConfig);
 
         $c->extension('zenstruck_foundry', [
             'auto_refresh_proxies' => false,

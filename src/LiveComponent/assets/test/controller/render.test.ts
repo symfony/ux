@@ -10,7 +10,7 @@
 'use strict';
 
 import { shutdownTests, createTest, initComponent } from '../tools';
-import { getByText, waitFor } from '@testing-library/dom';
+import { getByTestId, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 import { htmlToElement } from '../../src/dom_utils';
 
@@ -149,6 +149,51 @@ describe('LiveController rendering Tests', () => {
         expect((test.element.querySelector('textarea') as HTMLTextAreaElement).value).toEqual('typing after the request starts');
     });
 
+    it('conserves cursor position of active model element', async () => {
+        const test = await createTest({ name: '' }, (data) => `
+            <div ${initComponent(data)}>
+                <input data-model="name" class="anything">
+            </div>
+        `);
+
+        test.expectsAjaxCall()
+            .expectUpdatedData({ name: 'Hello' });
+
+        const input = test.queryByDataModel('name') as HTMLInputElement;
+        userEvent.type(input, 'Hello');
+        userEvent.keyboard('{ArrowLeft}{ArrowLeft}');
+
+        await test.component.render();
+
+        // the cursor position should be preserved
+        expect(input.selectionStart).toBe(3);
+        userEvent.type(input, '!');
+        expect(input.value).toBe('Hel!lo');
+    });
+
+    it('uses the new value of an unmapped field that was NOT modified even if active', async () => {
+        const test = await createTest({ title: 'greetings' }, (data: any) => `
+            <div ${initComponent(data)}>
+                <!-- An unmapped field -->
+                <input value="${data.title}">
+
+                Title: "${data.title}"
+            </div>
+        `);
+
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
+                // change the data on the server so the template renders differently
+                data.title = 'Hello';
+            });
+
+        const input = test.element.querySelector('input') as HTMLInputElement;
+        // focus the input, but don't change it
+        userEvent.type(input, '');
+        await test.component.render();
+        expect(input.value).toEqual('Hello');
+    });
+
     it('does not render over elements with data-live-ignore', async () => {
         const test = await createTest({ firstName: 'Ryan' }, (data: any) => `
             <div ${initComponent(data)}>
@@ -179,10 +224,10 @@ describe('LiveController rendering Tests', () => {
         expect(test.element.innerHTML).toContain('I should not be removed');
     });
 
-    it('if data-live-id changes, data-live-ignore elements ARE re-rendered', async () => {
+    it('if id changes, data-live-ignore elements ARE re-rendered', async () => {
         const test = await createTest({ firstName: 'Ryan', containerId: 'original' }, (data: any) => `
             <div ${initComponent(data)}>
-                <div data-live-id="${data.containerId}">
+                <div id="${data.containerId}">
                     <div data-live-ignore>Inside Ignore Name: <span>${data.firstName}</span></div>
                 </div>
                 
@@ -206,6 +251,41 @@ describe('LiveController rendering Tests', () => {
         expect(ignoreElement).not.toBeNull();
         // check that even the ignored element re-rendered
         expect(ignoreElement?.outerHTML).toEqual('<div data-live-ignore="">Inside Ignore Name: <span>Kevin</span></div>');
+    });
+
+    it('overwrites HTML instead of morph with data-skip-morph', async () => {
+        const test = await createTest({ firstName: 'Ryan' }, (data: any) => `
+            <div ${initComponent(data)}>
+                <div data-skip-morph data-name="${data.firstName}">Inside Skip Name: <span data-testid="inside-skip-morph">${data.firstName}</span></div>
+
+                Outside Skip Name: ${data.firstName}
+
+                <button data-action="live#$render">Reload</button>
+            </div>
+        `);
+
+        const spanBefore = getByTestId(test.element, 'inside-skip-morph');
+        expect(spanBefore).toHaveTextContent('Ryan');
+
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: any) => {
+                // change the data on the server so the template renders differently
+                data.firstName = 'Kevin';
+            });
+
+        getByText(test.element, 'Reload').click();
+
+        await waitFor(() => expect(test.element).toHaveTextContent('Outside Skip Name: Kevin'));
+        // make sure the outer element is still updated
+        const skipElement = test.element.querySelector('div[data-skip-morph]');
+        if (!(skipElement instanceof HTMLElement)) {
+            throw new Error('skipElement is not an HTMLElement');
+        }
+        expect(skipElement.dataset.name).toEqual('Kevin');
+        const spanAfter = getByTestId(test.element, 'inside-skip-morph');
+        expect(spanAfter).toHaveTextContent('Kevin');
+        // but it is not just a mutation of the original element
+        expect(spanAfter).not.toBe(spanBefore);
     });
 
     it('cancels a re-render if the page is navigating away', async () => {
@@ -329,6 +409,65 @@ describe('LiveController rendering Tests', () => {
         await waitFor(() => expect(test.element).toHaveTextContent('Title: "greetings to you"'));
     });
 
+    it('waits for the rendering process of previous request to finish before starting a new one', async () => {
+        const test = await createTest({
+            title: 'greetings',
+            contents: '',
+        }, (data: any) => `
+           <div ${initComponent(data)}>
+               <input data-model='title' value='${data.title}'>
+
+               Title: "${data.title}"
+
+               <button data-action='live#$render'>Reload</button>
+           </div>
+       `);
+
+        let didSecondRenderStart = false;
+        let secondRenderStartedAt = 0;
+        test.component.on('render:started', () => {
+            if (didSecondRenderStart) {
+                return;
+            }
+            didSecondRenderStart = true;
+
+            test.component.on('loading.state:started', () => {
+                secondRenderStartedAt = Date.now();
+            });
+
+            test.expectsAjaxCall();
+            test.component.render();
+        });
+
+        let firstRenderFinishedAt = 0;
+        test.component.on('render:finished', () => {
+            // set the finish time for the first render only
+            if (firstRenderFinishedAt === 0) {
+                firstRenderFinishedAt = Date.now();
+            }
+
+            // the sleep guarantees that if the 2nd request was correctly
+            // delayed, its start time will be at least 10ms after the first
+            // render finished. Without this, even if the 2nd request is
+            // correctly delayed, the "first render finish" and "second render
+            // start" times could be the same, because no time has passed.
+            const sleep = (milliseconds: number) => {
+                const startTime = new Date().getTime();
+                while (new Date().getTime() < startTime + milliseconds);
+            }
+            sleep(10);
+        });
+
+        test.expectsAjaxCall();
+
+        await test.component.render();
+
+        await waitFor(() => expect(didSecondRenderStart).toBe(true));
+        await waitFor(() => expect(firstRenderFinishedAt).not.toBe(0));
+        await waitFor(() => expect(secondRenderStartedAt).not.toBe(0));
+        expect(secondRenderStartedAt).toBeGreaterThan(firstRenderFinishedAt);
+    });
+
     it('can update svg', async () => {
         const test = await createTest({ text: 'SVG' }, (data: any) => `
             <div ${initComponent(data)}>
@@ -387,5 +526,59 @@ describe('LiveController rendering Tests', () => {
         await test.component.render();
         // verify the component *did* render ok
         expect(test.element).toHaveTextContent('The season is: autumn');
+    });
+
+    it('select the placeholder option tag after render', async () => {
+        const test = await createTest({}, (data: any) => `
+            <div ${initComponent(data)}>
+                <form>
+                    <select id="select_option_1">
+                        <option value="">Choose option 1</option>
+                        <option value="1">One</option>
+                        <option value="2">Two</option>
+                        <option value="3">Three</option>
+                    </select>
+                    
+                    <select id="select_option_2">
+                        <option value="">Choose option 2</option>
+                        <option value="1_1">One - One</option>
+                        <option value="1_2">One - Two</option>
+                        <option value="2_1">Two - One</option>
+                        <option value="2_2">Two - Two</option>
+                        <option value="3_1">Three - One</option>
+                        <option value="3_2">Three - Two</option>
+                    </select>
+                </form>
+            </div>
+        `);
+
+        test.expectsAjaxCall()
+            .willReturn((data) => `
+                <div ${initComponent(data)}>
+                    <form>
+                        <select id="select_option_1">
+                            <option value="">Choose option 1</option>
+                            <option value="1">One</option>
+                            <option value="2" selected>Two</option>
+                            <option value="3">Three</option>
+                        </select>
+                        
+                        <select id="select_option_2">
+                            <option value="">Choose option 2</option>
+                            <option value="2_1">Two - One</option>
+                            <option value="2_2">Two - Two</option>
+                        </select>
+                    </form>
+                </div>
+            `);
+
+        await test.component.render();
+        const selectOption2 = test.element.querySelector('#select_option_2') as HTMLSelectElement;
+
+        // verify the placeholder of the select option 2 is selected
+        expect(selectOption2.children[0].selected).toBe(true);
+
+        // verify the selectedIndex of the select option 2 is 0
+        expect(selectOption2.selectedIndex).toBe(0);
     });
 });

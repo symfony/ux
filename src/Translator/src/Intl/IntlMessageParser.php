@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace Symfony\UX\Translator\Intl;
 
 use function Symfony\Component\String\s;
@@ -155,7 +164,7 @@ class IntlMessageParser
         ];
     }
 
-    private function tryParseLeftAngleBracket(): string|null
+    private function tryParseLeftAngleBracket(): ?string
     {
         if (
             !$this->isEOF()
@@ -177,7 +186,7 @@ class IntlMessageParser
      * a character that requires quoting (that is, "only where needed"), and works the same in
      * nested messages as on the top level of the pattern. The new behavior is otherwise compatible.
      */
-    private function tryParseQuote(string $parentArgType): string|null
+    private function tryParseQuote(string $parentArgType): ?string
     {
         if ($this->isEOF() || 39 !== $this->char() /* `'` */) {
             return null;
@@ -237,8 +246,8 @@ class IntlMessageParser
 
     private function tryParseUnquoted(
         int $nestingLevel,
-        string $parentArgType
-    ): string|null {
+        string $parentArgType,
+    ): ?string {
         if ($this->isEOF()) {
             return null;
         }
@@ -264,7 +273,7 @@ class IntlMessageParser
      */
     private function parseArgument(
         int $nestingLevel,
-        bool $expectingCloseTag
+        bool $expectingCloseTag,
     ): array {
         $openingBracePosition = clone $this->position;
         $this->bump(); // `{`
@@ -372,7 +381,7 @@ class IntlMessageParser
         int $nestingLevel,
         bool $expectingCloseTag,
         string $value,
-        Position $openingBracePosition
+        Position $openingBracePosition,
     ): array {
         // Parse this range:
         // {name, type, style}
@@ -602,7 +611,7 @@ class IntlMessageParser
     }
 
     private function tryParseArgumentClose(
-        Position $openingBracePosition
+        Position $openingBracePosition,
     ): array {
         // Parse: {value, number, ::currency/GBP }
         //
@@ -674,7 +683,7 @@ class IntlMessageParser
 
     private function parseNumberSkeletonFromString(
         string $skeleton,
-        Location $location
+        Location $location,
     ) {
         $tokens = [];
 
@@ -703,7 +712,7 @@ class IntlMessageParser
         int $nestingLevel,
         string $parentArgType,
         bool $expectCloseTag,
-        array $parsedFirstIdentifier
+        array $parsedFirstIdentifier,
     ): array {
         $hasOtherClause = false;
         $options = [];

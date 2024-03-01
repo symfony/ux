@@ -23,7 +23,7 @@ describe('LiveController Action Tests', () => {
             <div ${initComponent(data)}>
                 ${data.isSaved ? 'Comment Saved!' : ''}
 
-                <button data-action="live#action" data-action-name="save">Save</button>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
             </div>
         `);
 
@@ -46,7 +46,7 @@ describe('LiveController Action Tests', () => {
 
                 ${data.isSaved ? 'Comment Saved!' : ''}
 
-                <button data-action="live#action" data-action-name="save">Save</button>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
             </div>
         `);
 
@@ -73,16 +73,22 @@ describe('LiveController Action Tests', () => {
 
     it('Sends action with named args', async () => {
         const test = await createTest({ isSaved: false}, (data: any) => `
-           <div ${initComponent(data)}>
-               ${data.isSaved ? 'Component Saved!' : ''}
+            <div ${initComponent(data)}>
+                ${data.isSaved ? 'Component Saved!' : ''}
 
-               <button data-action="live#action" data-action-name="sendNamedArgs(a=1, b=2, c=3)">Send named args</button>
-           </div>
+                <button
+                    data-action="live#action"
+                    data-live-action-param="sendNamedArgs"
+                    data-live-a-param="1"
+                    data-live-b-param="2"
+                    data-live-c-param="banana"
+                >Send named args</button>
+            </div>
        `);
 
         // ONLY a post is sent, not a re-render GET
         test.expectsAjaxCall()
-            .expectActionCalled('sendNamedArgs', {a: '1', b: '2', c: '3'})
+            .expectActionCalled('sendNamedArgs', {a: 1, b: 2, c: 'banana'})
             .serverWillChangeProps((data: any) => {
                 // server marks component as "saved"
                 data.isSaved = true;
@@ -99,7 +105,7 @@ describe('LiveController Action Tests', () => {
                <select
                    data-model="on(change)|food"
                    data-action="live#action"
-                   data-action-name="changeFood"
+                   data-live-action-param="changeFood"
                >
                    <option value="" ${data.food === '' ? 'selected' : ''}>Choose a food</option>
                    <option value="pizza" ${data.pizza === '' ? 'selected' : ''}>Pizza</option>
@@ -131,7 +137,7 @@ describe('LiveController Action Tests', () => {
 
                 <span>${data.comment}</span>
 
-                <button data-action="live#action" data-action-name="save">Save</button>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
             </div>
         `);
 
@@ -170,8 +176,8 @@ describe('LiveController Action Tests', () => {
         const test = await createTest({ isSaved: false }, (data: any) => `
             <div ${initComponent(data)}>
                 ${data.isSaved ? 'Component Saved!' : ''}
-                <button data-action="live#action" data-action-name="debounce(10)|save">Save</button>
-                <button data-action="live#action" data-action-name="debounce(10)|sync(syncAll=1)">Sync</button>
+                <button data-action="live#action" data-live-action-param="debounce(10)|save">Save</button>
+                <button data-action="live#action" data-live-action-param="debounce(10)|sync" data-live-sync-all-param="1">Sync</button>
             </div>
         `);
 
@@ -179,7 +185,7 @@ describe('LiveController Action Tests', () => {
         test.expectsAjaxCall()
             // 3 actions called
             .expectActionCalled('save')
-            .expectActionCalled('sync', { syncAll: '1' })
+            .expectActionCalled('sync', { syncAll: 1 })
             .expectActionCalled('save')
             .serverWillChangeProps((data: any) => {
                 data.isSaved = true;

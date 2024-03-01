@@ -1,0 +1,26 @@
+@at-root :root {
+
+  // Borders
+  --border-radius-small: .5rem;
+  --border-radius: 1rem;
+  --border-radius-large: 1.5rem;
+  --border-color: #{$n-100};
+
+  // Spaces
+  --space-smaller: .5rem;
+  --space-small: .75rem;
+  --space-regular: 1rem;
+  --space-large: 1.5rem;
+  --space-larger: 2rem;
+
+  // Fonts
+  --font-family-title: "Ubuntu";
+  --font-family-decorative: "Playfair Display";
+  --font-family-text: system-ui, sans-serif;
+  --font-family-code: ui-monospace, "SF Mono", SFMono-Regular, 'Cascadia Code', 'Source Code Pro', Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+
+  // Colors
+  --color-primary: var(--bs-body-color);
+  --color-secondary: var(--bs-secondary-color);
+  --color-tertiary: var(--bs-tertiary-color);
+}

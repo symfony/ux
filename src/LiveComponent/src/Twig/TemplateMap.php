@@ -21,22 +21,24 @@ use Symfony\Component\Cache\Adapter\PhpArrayAdapter;
  */
 final class TemplateMap
 {
+    /**
+     * @var array<string, string> Map of <obscured name> => <template name>
+     */
     private readonly array $map;
 
     public function __construct(string $cacheFile)
     {
-        $this->map = (new PhpArrayAdapter($cacheFile, new NullAdapter()))->getItem('map')->get();
+        $this->map = PhpArrayAdapter::create($cacheFile, new NullAdapter())->getItem('map')->get();
     }
 
-    public function resolve(string $obscuredName)
+    public function resolve(string $obscuredName): string
     {
         return $this->map[$obscuredName] ?? throw new \RuntimeException(sprintf('Cannot find a template matching "%s". Cache may be corrupt.', $obscuredName));
     }
 
     public function obscuredName(string $templateName): string
     {
-        $obscuredName = array_search($templateName, $this->map, true);
-        if (false === $obscuredName) {
+        if (false === $obscuredName = array_search($templateName, $this->map, true)) {
             throw new \RuntimeException(sprintf('Cannot find a match for template "%s". Cache may be corrupt.', $templateName));
         }
 

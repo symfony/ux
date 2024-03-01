@@ -1,8 +1,10 @@
 <?php
 
 /*
- * This file is part of the Symfony StimulusBundle package.
+ * This file is part of the Symfony package.
+ *
  * (c) Fabien Potencier <fabien@symfony.com>
+ *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
@@ -13,6 +15,7 @@ use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Component\AssetMapper\ImportMap\ImportMapConfigReader;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpFoundation\Response;
@@ -52,9 +55,12 @@ class StimulusTestKernel extends Kernel
             'asset_mapper' => [
                 'paths' => [
                     'assets' => '',
+                    'in-asset-mapper' => 'in/asset/mapper',
                     __DIR__.'/vendor/fake-vendor/ux-package1/assets/dist' => 'fake-vendor/ux-package1',
                     __DIR__.'/vendor/fake-vendor/ux-package2/Resources/assets/dist' => 'fake-vendor/ux-package2',
                 ],
+                // @legacy
+                'importmap_path' => '%kernel.project_dir%/'.(class_exists(ImportMapConfigReader::class) ? 'importmap.php' : 'legacy/importmap.php'),
             ],
             'test' => true,
             'handle_all_throwables' => true,

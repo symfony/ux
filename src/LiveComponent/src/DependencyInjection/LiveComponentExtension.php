@@ -25,8 +25,10 @@ use Symfony\UX\LiveComponent\ComponentValidatorInterface;
 use Symfony\UX\LiveComponent\Controller\BatchActionController;
 use Symfony\UX\LiveComponent\EventListener\AddLiveAttributesSubscriber;
 use Symfony\UX\LiveComponent\EventListener\DataModelPropsSubscriber;
+use Symfony\UX\LiveComponent\EventListener\DeferLiveComponentSubscriber;
 use Symfony\UX\LiveComponent\EventListener\InterceptChildComponentRenderSubscriber;
 use Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber;
+use Symfony\UX\LiveComponent\EventListener\QueryStringInitializeSubscriber;
 use Symfony\UX\LiveComponent\EventListener\ResetDeterministicIdSubscriber;
 use Symfony\UX\LiveComponent\Form\Type\LiveCollectionType;
 use Symfony\UX\LiveComponent\Hydration\HydrationExtensionInterface;
@@ -41,7 +43,9 @@ use Symfony\UX\LiveComponent\Twig\TemplateCacheWarmer;
 use Symfony\UX\LiveComponent\Twig\TemplateMap;
 use Symfony\UX\LiveComponent\Util\ChildComponentPartialRenderer;
 use Symfony\UX\LiveComponent\Util\FingerprintCalculator;
+use Symfony\UX\LiveComponent\Util\LiveComponentStack;
 use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
+use Symfony\UX\LiveComponent\Util\QueryStringPropsExtractor;
 use Symfony\UX\LiveComponent\Util\TwigAttributeHelperFactory;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
@@ -50,8 +54,6 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\tagged_it
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
- *
- * @experimental
  *
  * @internal
  */
@@ -85,7 +87,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             AsLiveComponent::class,
             function (ChildDefinition $definition, AsLiveComponent $attribute) {
                 $definition
-                    ->addTag('twig.component', array_filter($attribute->serviceConfig()))
+                    ->addTag('twig.component', array_filter($attribute->serviceConfig(), static fn ($v) => null !== $v && '' !== $v))
                     ->addTag('controller.service_arguments')
                 ;
             }
@@ -98,7 +100,8 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->setArguments([
                 tagged_iterator(LiveComponentBundle::HYDRATION_EXTENSION_TAG),
                 new Reference('property_accessor'),
-                new Reference('serializer'),
+                new Reference('ux.live_component.metadata_factory'),
+                new Reference('serializer', ContainerInterface::NULL_ON_INVALID_REFERENCE),
                 '%kernel.secret%',
             ])
         ;
@@ -113,7 +116,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         $container->register('ux.live_component.event_listener.data_model_props_subscriber', DataModelPropsSubscriber::class)
             ->addTag('kernel.event_subscriber')
             ->setArguments([
-                new Reference('ux.twig_component.component_stack'),
+                new Reference('ux.twig_component.live_component_stack'),
                 new Reference('property_accessor'),
             ])
         ;
@@ -130,9 +133,15 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         $container->register('ux.live_component.live_responder', LiveResponder::class);
         $container->setAlias(LiveResponder::class, 'ux.live_component.live_responder');
 
-        $container->register('ux.live_component.intercept_child_component_render_subscriber', InterceptChildComponentRenderSubscriber::class)
+        $container->register('ux.twig_component.live_component_stack', LiveComponentStack::class)
             ->setArguments([
                 new Reference('ux.twig_component.component_stack'),
+            ])
+        ;
+
+        $container->register('ux.live_component.intercept_child_component_render_subscriber', InterceptChildComponentRenderSubscriber::class)
+            ->setArguments([
+                new Reference('ux.twig_component.live_component_stack'),
             ])
             ->addTag('container.service_subscriber', ['key' => DeterministicTwigIdCalculator::class, 'id' => 'ux.live_component.deterministic_id_calculator'])
             ->addTag('container.service_subscriber', ['key' => ChildComponentPartialRenderer::class, 'id' => 'ux.live_component.child_component_partial_renderer'])
@@ -175,6 +184,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('ux.twig_component.component_factory'),
                 new Reference('property_info'),
             ])
+            ->addTag('kernel.reset', ['method' => 'reset'])
         ;
 
         $container->register(ComponentValidator::class)
@@ -207,6 +217,27 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->addTag('container.service_subscriber', ['key' => LiveControllerAttributesCreator::class, 'id' => 'ux.live_component.live_controller_attributes_creator'])
         ;
 
+        $container->register('ux.live_component.query_string_props_extractor', QueryStringPropsExtractor::class)
+            ->setArguments([
+                new Reference('ux.live_component.component_hydrator'),
+            ]);
+
+        $container->register('ux.live_component.query_string_initializer_subscriber', QueryStringInitializeSubscriber::class)
+            ->setArguments([
+                new Reference('request_stack'),
+                new Reference('ux.live_component.metadata_factory'),
+                new Reference('ux.live_component.query_string_props_extractor'),
+            ])
+            ->addTag('kernel.event_subscriber');
+
+        $container->register('ux.live_component.defer_live_component_subscriber', DeferLiveComponentSubscriber::class)
+            ->setArguments([
+                new Reference('ux.twig_component.component_stack'),
+                new Reference('ux.live_component.live_controller_attributes_creator'),
+            ])
+            ->addTag('kernel.event_subscriber')
+        ;
+
         $container->register('ux.live_component.deterministic_id_calculator', DeterministicTwigIdCalculator::class);
         $container->register('ux.live_component.fingerprint_calculator', FingerprintCalculator::class)
             ->setArguments(['%kernel.secret%']);
@@ -220,10 +251,14 @@ final class LiveComponentExtension extends Extension implements PrependExtension
         ;
 
         $container->register('ux.live_component.twig.template_mapper', TemplateMap::class)
-            ->setArguments(['%kernel.cache_dir%/'.self::TEMPLATES_MAP_FILENAME]);
+            ->setArguments(['%kernel.build_dir%/'.self::TEMPLATES_MAP_FILENAME]);
 
         $container->register('ux.live_component.twig.cache_warmer', TemplateCacheWarmer::class)
-            ->setArguments([new Reference('twig.template_iterator'), self::TEMPLATES_MAP_FILENAME])
+            ->setArguments([
+                new Reference('twig.template_iterator'),
+                self::TEMPLATES_MAP_FILENAME,
+                '%kernel.secret%',
+            ])
             ->addTag('kernel.cache_warmer');
     }
 

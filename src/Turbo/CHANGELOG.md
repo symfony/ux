@@ -1,5 +1,23 @@
 # CHANGELOG
 
+## 2.15.0
+
+-   Add Turbo 8 support #1476
+-   Fix missing `use` statement used during broadcast #1475
+
+## 2.14.2
+
+-   Fix using old `ClassUtils` class that's not used in newer versions of Doctrine
+
+## 2.13.2
+
+-   Revert "Change JavaScript package to `type: module`"
+
+## 2.13.0
+
+-   Add Symfony 7 support.
+-   Change JavaScript package to `type: module`
+
 ## 2.9.0
 
 -   Minimum PHP version is now 8.1

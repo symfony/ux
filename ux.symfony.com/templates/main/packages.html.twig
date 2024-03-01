@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% set meta = {
+    title: "All Packages",
+    description: "Symfony UX: a treasure chest of packages to solve your frontend problems",
+    canonical: url('app_packages'),
+} %}
+
+{% block content %}
+<div class="hero">
+    <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
+        <h1 class="text-center ubuntu mt-5">All Packages</h1>
+        <p class="text-center mt-2 mb-5">A treasure chest of packages to solve your<br>frontend problems.</p>
+    </div>
+</div>
+
+<div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
+    {% block list %}
+        <div style="display: grid; gap: 3rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));">
+            {% for package in packages %}
+                <twig:PackageBox :package="package" titleTag="h2" />
+            {% endfor %}
+        </div>
+    {% endblock %}
+</div>
+{% endblock %}
+
+{% block aside %}
+    <div style="background-color: var(--bs-secondary-bg);" class="mt-5">
+        <div class="container-fluid container-xxl p-5">
+            <div style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 380px), 1fr));">
+                <twig:DocsLink
+                    url="https://symfonycasts.com/screencast/stimulus"
+                    title="Screencasts"
+                    text="Jump right into with the Symfony UX & Stimulus screencast."
+                />
+                <twig:DocsLink
+                    url="https://symfony.com/doc/current/frontend/ux.html"
+                    title="Documentation"
+                    text="Ready to get started? The official symfony.com UX Docs."
+                />
+            </div>
+        </div>
+    </div>
+{% endblock %}

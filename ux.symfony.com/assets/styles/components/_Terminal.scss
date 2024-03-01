@@ -1,0 +1,152 @@
+.Terminal {
+    --border-radius: .75rem;
+
+    background-color: $n-900;
+    border-radius: .75rem;
+    position: relative;
+    font-size: 12px;
+}
+
+.Terminal_header {
+    display: flex;
+    background-color: $n-900;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    align-items: center;
+    justify-content: space-between;
+    padding: .5rem;
+
+    .nav-tabs {
+        border: 0;
+    }
+    .nav-tabs .nav-link,
+    .nav-tabs .nav-item {
+        border: 0;
+    }
+    .nav-link {
+        border-bottom: 0;
+        margin-bottom: 0;
+        color: inherit;
+        color: $n-100;
+    }
+    .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
+        background-color: $n-800;
+        border-color: $n-800;
+        color: $n-100;
+    }
+    .nav-tabs .nav-link:hover, .nav-tabs .nav-link:focus {
+        border-color: $n-800;
+        color: $n-100;
+    }
+}
+
+.Terminal_title {
+    color: #fff;
+    display: inline-block;
+    flex-shrink: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-inline-start: .25rem;
+
+    code {
+        font-size: inherit;
+        opacity: .8;
+    }
+}
+
+.Terminal_controls {
+    align-items: center;
+    gap: 0.5rem;
+    display: flex;
+    padding: .25rem 0.5rem;
+}
+.Terminal_controls span {
+    display: inline-block;
+    width: .65rem;
+    height: .65rem;
+    border-radius: 50%;
+
+    &.red {
+        background: $red;
+    }
+    &.yellow {
+        background: $yellow;
+    }
+    &.green {
+        background: $green;
+    }
+    [data-bs-theme="dark"] & {
+        opacity: .85;
+        filter: grayscale(.4);
+    }
+}
+
+
+.Terminal_body {
+    background-color: $n-800;
+    height: 100%;
+    font-family: var(--font-family-code);
+    font-size: 14px;
+    line-height: 160%;
+    color: #FFF;
+    border-radius: .75rem;
+    border: 1px solid var(--bs-body-color);
+    position: relative;
+
+    [data-bs-theme="dark"] & {
+        border: 1px solid var(--bs-secondary-bg-subtle);
+    }
+}
+
+.Terminal_header + .Terminal_body,
+.Terminal .Terminal .Terminal_body {
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.Terminal_actions {
+    .btn-link {
+        color: $n-200;
+        background: none;
+    }
+    .btn-copy {
+        color: $n-200;
+        background: none;
+        transition: all 250ms ease-in-out;
+        &:hover {
+            color: $n-100;
+            background-color: $n-800;
+        }
+    }
+    .btn-link:hover {
+        color: $n-100;
+    }
+    white-space: nowrap;
+}
+
+/* copy button inside the code block itself */
+.Terminal_body .Terminal_actions {
+    position: absolute;
+    right: .5rem;
+    top: .5rem;
+}
+
+.Terminal_body {
+    overflow-inline: auto;
+}
+.Terminal_body pre {
+    padding: 0;
+    margin: 0;
+}
+.Terminal_content {
+    font-size: .9rem;
+    overflow-x: auto;
+    overflow-y: auto;
+    padding: 1rem;
+
+    pre {
+        overflow: visible;
+    }
+}

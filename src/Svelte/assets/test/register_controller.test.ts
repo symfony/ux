@@ -11,13 +11,24 @@
 
 import {registerSvelteControllerComponents} from '../src/register_controller';
 import MyComponent from './fixtures/MyComponent.svelte';
-import {createRequireContextPolyfill} from './util/require_context_poylfill';
+import RequireContext = __WebpackModuleApi.RequireContext;
 
-require.context = createRequireContextPolyfill(__dirname);
+const createFakeFixturesContext = (): RequireContext => {
+    const files: any = {
+        './MyComponent.svelte': { default: MyComponent },
+    };
+
+    const context = (id: string): any => files[id];
+    context.keys = () => Object.keys(files);
+    context.resolve = (id: string) => id;
+    context.id = './fixtures';
+
+    return context;
+};
 
 describe('registerSvelteControllerComponents', () => {
     it('registers controllers from require context', () => {
-        registerSvelteControllerComponents(require.context('./fixtures', true, /\.svelte$/));
+        registerSvelteControllerComponents(createFakeFixturesContext());
         const resolveComponent = (window as any).resolveSvelteComponent;
 
         expect(resolveComponent).not.toBeUndefined();

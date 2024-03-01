@@ -21,6 +21,7 @@ function highlight({ code, language = 'javascript' }) {
     return hljs.highlight(code, { language }).value;
 }
 
+/* stimulusFetch: 'lazy' */
 export default class extends Controller {
     static targets = [
         'helloCode',

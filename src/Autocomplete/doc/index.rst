@@ -12,9 +12,11 @@ into an Ajax-powered autocomplete smart UI control (leveraging `Tom Select`_):
 Installation
 ------------
 
-Before you start, make sure you have `StimulusBundle configured in your app`_.
+.. caution::
 
-Then install the bundle using Composer and Symfony Flex:
+    Before you start, make sure you have `StimulusBundle configured in your app`_.
+
+Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
 
@@ -101,9 +103,9 @@ Or, create the field by hand::
     // src/Form/FoodAutocompleteField.php
     // ...
 
-    use Symfony\Component\Security\Core\Security;
+    use Symfony\Bundle\SecurityBundle\Security;
     use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
-    use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
+    use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
 
     #[AsEntityAutocompleteField]
     class FoodAutocompleteField extends AbstractType
@@ -128,15 +130,19 @@ Or, create the field by hand::
 
         public function getParent(): string
         {
-            return ParentEntityAutocompleteType::class;
+            return BaseEntityAutocompleteType::class;
         }
     }
+
+.. versionadded:: 2.13
+
+    ``BaseEntityAutocompleteType`` is a new replacement for ``ParentEntityAutocompleteType``.
 
 There are 3 important things:
 
 #. The class needs the ``#[AsEntityAutocompleteField]`` attribute so that
    it's noticed by the autocomplete system.
-#. The ``getParent()`` method must return ``ParentEntityAutocompleteType``.
+#. The ``getParent()`` method must return ``BaseEntityAutocompleteType``.
 #. Inside ``configureOptions()``, you can configure your field using whatever
    normal ``EntityType`` options you need plus a few extra options (see `Form Options Reference`_).
 
@@ -207,6 +213,10 @@ e.g. ``FoodAutocompleteField`` from above):
     an autocomplete-Ajax endpoint (e.g. for a custom ``ChoiceType``), then set this
     to change the field into an AJAX-powered select.
 
+``loading_more_text`` (default: 'Loading more results...')
+    Rendered at the bottom of the list while fetching more results. This message is
+    automatically translated using the ``AutocompleteBundle`` domain.
+
 ``no_results_found_text`` (default: 'No results found')
     Rendered when no matching results are found. This message is automatically translated
     using the ``AutocompleteBundle`` domain.
@@ -216,7 +226,7 @@ e.g. ``FoodAutocompleteField`` from above):
     is automatically translated using the ``AutocompleteBundle`` domain.
 
 For the Ajax-powered autocomplete field classes (i.e. those whose
-``getParent()`` returns ``ParentEntityAutocompleteType``), in addition
+``getParent()`` returns ``BaseEntityAutocompleteType``), in addition
 to the options above, you can also pass:
 
 ``searchable_fields`` (default: ``null``)
@@ -231,7 +241,7 @@ to the options above, you can also pass:
     that should be required to access the endpoint. Or, pass a callback and
     return ``true`` to grant access or ``false`` to deny access::
 
-        use Symfony\Component\Security\Core\Security;
+        use Symfony\Bundle\SecurityBundle\Security;
 
         [
             'security' => function(Security $security): bool {
@@ -347,8 +357,8 @@ events that the core Stimulus controller dispatches:
 
         disconnect() {
             // You should always remove listeners when the controller is disconnected to avoid side-effects
-            this.element.removeEventListener('autocomplete:pre-connect', this._onConnect);
-            this.element.removeEventListener('autocomplete:connect', this._onPreConnect);
+            this.element.removeEventListener('autocomplete:connect', this._onConnect);
+            this.element.removeEventListener('autocomplete:pre-connect', this._onPreConnect);
         }
 
         _onPreConnect(event) {
@@ -418,8 +428,8 @@ and tag this service with ``ux.entity_autocompleter``, including an ``alias`` op
     use App\Entity\Food;
     use Doctrine\ORM\EntityRepository;
     use Doctrine\ORM\QueryBuilder;
+    use Symfony\Bundle\SecurityBundle\Security;
     use Symfony\Component\DependencyInjection\Attribute\AutoconfigureTag;
-    use Symfony\Component\Security\Core\Security;
     use Symfony\UX\Autocomplete\EntityAutocompleterInterface;
 
     #[AutoconfigureTag('ux.entity_autocompleter', ['alias' => 'food'])]
@@ -564,19 +574,6 @@ consider registering the needed type extension ``AutocompleteChoiceTypeExtension
         // ... your tests
     }
 
-Known Issue when using with Live Component
-------------------------------------------
-
-You *can* use autocomplete inside of a `Live Component`_: the autocomplete JavaScript
-widget should work normally and even update if your element changes (e.g. if you
-add or change ``<option>`` elements. Internally, a ``MutationObserver`` inside
-the UX autocomplete controller detects these changes and forwards them to TomSelect.
-
-However, if you use the ``multiple`` option, due to complexities in TomSelect, the
-autocomplete widget *will* work, but it will not update if you change any options.
-For example, if your change the "options" for a ``select`` during re-render, those
-will not update on the frontend.
-
 Backward Compatibility promise
 ------------------------------
 
@@ -589,4 +586,3 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`controller.ts`: https://github.com/symfony/ux/blob/2.x/src/Autocomplete/assets/src/controller.ts
 .. _`Tom Select Render Templates`: https://tom-select.js.org/docs/#render-templates
 .. _`Tom Select Option Group`: https://tom-select.js.org/examples/optgroups/
-.. _`Live Component`: https://symfony.com/bundles/ux-live-component/current/index.html

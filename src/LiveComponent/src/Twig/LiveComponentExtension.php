@@ -17,8 +17,6 @@ use Twig\TwigFunction;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
- * @experimental
- *
  * @internal
  */
 final class LiveComponentExtension extends AbstractExtension

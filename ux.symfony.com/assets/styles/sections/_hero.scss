@@ -1,0 +1,35 @@
+.hero {
+  padding-top: 5rem;
+}
+
+.rainbow-emphasis {
+  background: linear-gradient(113.84deg, #D65831 0%, #D2D631 36.52%, #31D673 71.83%, #315FD6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-style: normal;
+}
+
+.hero-background {
+  padding-block-start: 4rem;
+}
+
+.hero-sub-text {
+  width: 35%;
+}
+
+@media (max-width: 1114px) {
+  .hero-sub-text {
+    width: 60%;
+  }
+}
+
+@media (max-width: 734px) {
+  .hero-sub-text {
+    width: 80%;
+  }
+}
+
+.hero-terminal {
+  transform: translateY(50%);
+}
+

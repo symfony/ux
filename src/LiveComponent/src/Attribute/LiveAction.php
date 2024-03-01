@@ -12,7 +12,9 @@
 namespace Symfony\UX\LiveComponent\Attribute;
 
 /**
- * @experimental
+ * An attribute to register a LiveAction method.
+ *
+ * @see https://symfony.com/bundles/ux-live-component/current/index.html#actions
  */
 #[\Attribute(\Attribute::TARGET_METHOD)]
 class LiveAction

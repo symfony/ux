@@ -21,8 +21,6 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
- *
- * @experimental
  */
 trait ValidatableComponentTrait
 {

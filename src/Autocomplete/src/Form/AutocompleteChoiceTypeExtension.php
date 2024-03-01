@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormView;
 use Symfony\Component\OptionsResolver\Options;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Symfony\UX\Autocomplete\Checksum\ChecksumCalculator;
 
 /**
  * Initializes the autocomplete Stimulus controller for any fields with the "autocomplete" option.
@@ -27,8 +28,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
  */
 final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
 {
-    public function __construct(private ?TranslatorInterface $translator = null)
-    {
+    public const CHECKSUM_KEY = '@checksum';
+
+    public function __construct(
+        private readonly ChecksumCalculator $checksumCalculator,
+        private readonly ?TranslatorInterface $translator = null,
+    ) {
     }
 
     public static function getExtendedTypes(): iterable
@@ -55,6 +60,8 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
         $values = [];
         if ($options['autocomplete_url']) {
             $values['url'] = $options['autocomplete_url'];
+        } elseif ($form->getConfig()->hasAttribute('autocomplete_url')) {
+            $values['url'] = $form->getConfig()->getAttribute('autocomplete_url');
         }
 
         if ($options['options_as_html']) {
@@ -77,6 +84,11 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             $values['min-characters'] = $options['min_characters'];
         }
 
+        if ($options['extra_options']) {
+            $values['url'] = $this->getUrlWithExtraOptions($values['url'], $options['extra_options']);
+        }
+
+        $values['loading-more-text'] = $this->trans($options['loading_more_text']);
         $values['no-results-found-text'] = $this->trans($options['no_results_found_text']);
         $values['no-more-results-text'] = $this->trans($options['no_more_results_text']);
         $values['preload'] = $options['preload'];
@@ -89,6 +101,41 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
         $view->vars['attr'] = $attr;
     }
 
+    private function getUrlWithExtraOptions(string $url, array $extraOptions): string
+    {
+        $this->validateExtraOptions($extraOptions);
+
+        $extraOptions[self::CHECKSUM_KEY] = $this->checksumCalculator->calculateForArray($extraOptions);
+        $extraOptions = base64_encode(json_encode($extraOptions));
+
+        return sprintf(
+            '%s%s%s',
+            $url,
+            $this->hasUrlParameters($url) ? '&' : '?',
+            http_build_query(['extra_options' => $extraOptions]),
+        );
+    }
+
+    private function hasUrlParameters(string $url): bool
+    {
+        $parsedUrl = parse_url($url);
+
+        return isset($parsedUrl['query']);
+    }
+
+    private function validateExtraOptions(array $extraOptions): void
+    {
+        foreach ($extraOptions as $optionKey => $option) {
+            if (!\is_scalar($option) && !\is_array($option) && null !== $option) {
+                throw new \InvalidArgumentException(sprintf('Extra option with key "%s" must be a scalar value, an array or null. Got "%s".', $optionKey, get_debug_type($option)));
+            }
+
+            if (\is_array($option)) {
+                $this->validateExtraOptions($option);
+            }
+        }
+    }
+
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
@@ -97,11 +144,13 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             'tom_select_options' => [],
             'options_as_html' => false,
             'allow_options_create' => false,
+            'loading_more_text' => 'Loading more results...',
             'no_results_found_text' => 'No results found',
             'no_more_results_text' => 'No more results',
             'min_characters' => null,
             'max_results' => 10,
             'preload' => 'focus',
+            'extra_options' => [],
         ]);
 
         // if autocomplete_url is passed, then HTML options are already supported

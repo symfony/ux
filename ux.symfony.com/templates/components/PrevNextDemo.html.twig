@@ -1,0 +1,17 @@
+
+<div class="container-fluid container-xxl p-4 p-md-5">
+    <div style="display: flex; justify-content: space-between;gap: 3rem; flex-wrap: wrap;">
+        {% set previous = this.previous(true) %}
+        {% if previous %}
+            <div style="max-width: 320px;--bs-secondary-bg-subtle: var(--bs-dark-bg-subtle);">
+                <twig:DemoCard demo="{{ previous }}" />
+            </div>
+        {% endif %}
+        {% set next = this.next(true) %}
+        {% if next %}
+            <div style="max-width: 320px;--bs-secondary-bg-subtle: var(--bs-dark-bg-subtle);">
+                <twig:DemoCard demo="{{ next }}" />
+            </div>
+        {% endif %}
+    </div>
+</div>

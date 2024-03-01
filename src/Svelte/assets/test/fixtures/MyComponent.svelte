@@ -3,6 +3,6 @@
     export let name = "without props";
 </script>
 
-<div transition:fade={{ duration: 100 }}>
+<div transition:fade|global={{ duration: 100 }}>
     <div>Hello {name}</div>
 </div>

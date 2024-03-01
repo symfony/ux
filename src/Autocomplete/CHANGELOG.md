@@ -1,5 +1,41 @@
 # CHANGELOG
 
+## 2.16.0
+
+-   Missing translations added for many languages #1527 #1528 #1535
+
+## 2.15.0
+
+-   Add doctrine/orm 3 support #1468
+-   Allow passing extra options to the autocomplete fields #1322
+-   Fix 2 bugs where TomSelect would reset when not necessary #1502
+-   Add one missing German translation #1521
+
+## 2.14.0
+
+-   Fixed behavior of Autocomplete when the underlying `select` or `option`
+    elements were modified to hopefully, more reliably, reset the autocomplete
+    instance. This is particularly important with LiveComponents.
+-   Add support for the `render.loading_more` Tom Select Virtual Scroll option (`loading_more_text`)
+-   Avoid losing the selected options when the Stimulus component is disconnected
+    and reconnected to the DOM.
+-   Added `tom-select/dist/css/tom-select.bootstrap4.css` to `autoimport` - this
+    will cause this to appear in your `controllers.json` file by default, but disabled
+    see.
+-   Allow passing `extra_options` key in an array passed as a `3rd` argument of the `->add()` method.
+    It will be used during the Ajax call to fetch results.
+
+## 2.13.2
+
+-   Revert "Change JavaScript package to `type: module`"
+
+## 2.13.0
+
+-   Add new BaseEntityAutocompleteType
+-   Drop symfony 5.4 support.
+-   Add Symfony 7 support.
+-   Change JavaScript package to `type: module`
+
 ## 2.9.0
 
 -   Add support for symfony/asset-mapper

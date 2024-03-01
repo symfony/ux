@@ -62,7 +62,8 @@ final class ComponentExtensionTest extends KernelTestCase
 
     public function testCanNotRenderComponentWithInvalidExpressions(): void
     {
-        $this->expectException(\TypeError::class);
+        $this->expectException(\Throwable::class);
+
         self::getContainer()->get(Environment::class)->render('invalid_flexible_component.html.twig');
     }
 
@@ -193,6 +194,73 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('Fabien', $output);
         $this->assertStringContainsString('test@test.com', $output);
         $this->assertStringContainsString('class variable defined? no', $output);
+    }
+
+    public function testComponentPropsOverwriteContextValue(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_variable_already_in_context.html.twig');
+
+        $this->assertStringContainsString('<p>foo</p>', $output);
+    }
+
+    public function testComponentPropsWithTrailingComma(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_props_trailing_comma.html.twig');
+
+        $this->assertStringContainsString('Hello foo, bar, and foobar', $output);
+        $this->assertStringContainsString('Hello FOO, 123, and 456', $output);
+    }
+
+    /**
+     * @dataProvider renderingAttributesManuallyProvider
+     */
+    public function testRenderingAttributesManually(array $attributes, string $expected): void
+    {
+        $actual = trim($this->renderComponent('RenderAttributes', $attributes));
+
+        $this->assertSame($expected, trim($actual));
+    }
+
+    public static function renderingAttributesManuallyProvider(): iterable
+    {
+        yield [
+            ['class' => 'block'],
+            <<<HTML
+            <div
+                foo=""
+                bar="default"
+                baz="default "
+                qux=" default"
+                 class="block"
+            />
+            HTML,
+        ];
+
+        yield [
+            [
+                'class' => 'block',
+                'foo' => 'value',
+                'bar' => 'value',
+                'baz' => 'value',
+                'qux' => 'value',
+            ],
+            <<<HTML
+            <div
+                foo="value"
+                bar="value"
+                baz="default value"
+                qux="value default"
+                 class="block"
+            />
+            HTML,
+        ];
+    }
+
+    public function testComponentWithClassMerge(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('class_merge.html.twig');
+
+        $this->assertStringContainsString('class="alert alert-red alert-lg font-semibold rounded-md dark:bg-gray-600 flex p-4"', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string

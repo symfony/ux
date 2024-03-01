@@ -1,14 +1,22 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Twig;
 
 use App\Util\FilenameHelper;
 use App\Util\SourceCleaner;
-use Highlight\Highlighter;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent()]
+#[AsTwigComponent]
 class CodeBlock
 {
     public string $filename;
@@ -31,31 +39,28 @@ class CodeBlock
     public bool $stripExcessHtml = false;
 
     public function __construct(
-        private Highlighter $highlighter,
-        #[Autowire('%kernel.project_dir%')]
-        private string $rootDir
+        #[Autowire('%kernel.project_dir%')] private string $rootDir,
     ) {
     }
 
-    public function highlightSource(): string
+    /**
+     * Returns a list of source code pieces, extracted from the filename
+     * argument, ready to be renderer in the template.
+     *
+     * Every piece is composed as an array {content, highlight} with
+     *      content: the raw source code (after cleaning)
+     *      highlight: whether they must be syntax-highlighted or not
+     *
+     * @return list<array{content: string, highlight: ?bool}>
+     */
+    public function prepareSource(): array
     {
         $content = $this->getRawSource();
         if ('php' === $this->getLanguage()) {
             $content = SourceCleaner::cleanupPhpFile($content);
         }
 
-        $pieces = $this->splitAndProcessSource($content);
-
-        $highlighted = [];
-        foreach ($pieces as $piece) {
-            if ($piece['highlight']) {
-                $highlighted[] = $this->highlighter->highlight($this->getLanguage(), $piece['content'])->value;
-            } else {
-                $highlighted[] = $piece['content'];
-            }
-        }
-
-        return implode('', $highlighted);
+        return $this->splitAndProcessSource($content);
     }
 
     public function getRawSource(): string
@@ -88,15 +93,17 @@ class CodeBlock
         return sprintf('https://github.com/symfony/ux/blob/2.x/ux.symfony.com/%s', $this->filename);
     }
 
-    private function getLanguage(): string
+    public function getLanguage(): string
     {
         if (null !== $this->language) {
             return $this->language;
         }
 
-        $parts = explode('.', $this->filename);
+        if ($ext = strrchr($this->filename, '.')) {
+            return $this->language = substr($ext, 1);
+        }
 
-        return array_pop($parts);
+        throw new \RuntimeException('Unable to detect the code language');
     }
 
     public function getElementId(): ?string
@@ -143,7 +150,8 @@ class CodeBlock
 
             // the use statements + surrounding span
             $parts[] = [
-                'content' => '<span class="hljs-comment" role="button" title="Expand use statements" data-action="click->code-expander#expandUseStatements">// ... use statements hidden - click to show </span>',
+                'content' => '<span class="hljs-comment" role="button" title="Expand use statements" data-action="click->code-expander#expandUseStatements">
+<pre><code class="nohighlight">// ... use statements hidden - click to show</code></pre></span>',
                 'highlight' => false,
             ];
             $parts[] = [
