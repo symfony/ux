@@ -39,9 +39,9 @@ final class CVA
     ) {
     }
 
-    public function apply(array $recipes, string ...$classes): string
+    public function apply(array $recipes, ?string ...$classes): string
     {
-        return trim($this->resolve($recipes).' '.implode(' ', $classes));
+        return trim($this->resolve($recipes).' '.implode(' ', array_filter($classes)));
     }
 
     public function resolve(array $recipes): string
