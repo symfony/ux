@@ -91,14 +91,13 @@ needed if you're using AssetMapper):
     $ yarn install --force
     $ yarn watch
 
-If your project is localized in different languages (either via the `_locale route parameter`_
+If your project is localized in different languages (either via the `locale route parameter`_
 or by `setting the locale in the request`_) add the ``{ _locale}`` attribute to
 the UX Live Components route definition to keep the locale between re-renders:
 
 .. code-block:: diff
 
-      // config/routes/ux_live_component.yaml
-
+      # config/routes/ux_live_component.yaml
       live_component:
           resource: '@LiveComponentBundle/config/routes.php'
     -     prefix: /_components
@@ -3547,6 +3546,6 @@ promise. However, any internal implementation in the JavaScript files
 .. _`PostMount hook`: https://symfony.com/bundles/ux-twig-component/current/index.html#postmount-hook
 .. _`validation groups`: https://symfony.com/doc/current/form/validation_groups.html
 .. _morphing library: https://github.com/bigskysoftware/idiomorph
-.. _`_locale route parameter`: https://symfony.com/doc/current/translation.html#the-locale-and-the-url
+.. _`locale route parameter`: https://symfony.com/doc/current/translation.html#the-locale-and-the-url
 .. _`setting the locale in the request`: https://symfony.com/doc/current/translation.html#translation-locale
 .. _`Stimulus action parameter`: https://stimulus.hotwired.dev/reference/actions#action-parameters
