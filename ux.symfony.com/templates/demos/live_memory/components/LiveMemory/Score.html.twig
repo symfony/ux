@@ -28,7 +28,7 @@
             <twig:LiveMemory:ScoreRow wait="4" label="Move Bonus" value="+{{ game.moveBonus }}"/>
             <twig:LiveMemory:ScoreRow wait="6" label="TOTAL" value="{{ game.totalScore }}" class="total"/>
         </div>
-        {% if game.level != 4 %}
+        {% if game.level != 3 %}
             <button
                 data-action="live#action"
                 data-live-action-param="play"

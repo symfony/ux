@@ -4,15 +4,13 @@
 
 @import "live-memory/app/reset";
 @import "live-memory/app/root";
-@import "live-memory/app/html";
-
-@import "live-memory/base/header";
 
 @import "../components/Icon";
+
 @import "live-memory/components/Board";
 @import "live-memory/components/Card";
-
 @import "live-memory/components/Debug";
+@import "live-memory/components/Header";
 @import "live-memory/components/Logo";
 @import "live-memory/components/Metric";
 @import "live-memory/components/Overlay";
@@ -22,5 +20,3 @@
 
 @import "../utilities/background";
 @import "../utilities/shadow";
-
-@import "live-memory/app/themes";

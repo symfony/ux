@@ -1,4 +1,10 @@
 twig_component:
     defaults:
         App\Twig\: 'components/'
+        App\LiveMemory\Component\:
+            template_directory: 'demos/live_memory/components/LiveMemory/'
+            name_prefix: 'LiveMemory:'
+
+
+    #anonymous_template_directory: 'demos/live_memory/components/'
     anonymous_template_directory: 'components/'

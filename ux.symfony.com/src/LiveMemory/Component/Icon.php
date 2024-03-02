@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig\Components\LiveMemory;
+namespace App\LiveMemory\Component;
 
 use App\Twig\Icon as BaseIcon;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -20,7 +20,10 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-#[AsTwigComponent('LiveMemory:Icon')]
+#[AsTwigComponent(
+    name: 'LiveMemory:Icon',
+    template: 'demos/live_memory/components/LiveMemory/Icon.html.twig',
+)]
 class Icon extends BaseIcon
 {
     public function __construct(

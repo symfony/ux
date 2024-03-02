@@ -2,15 +2,21 @@
 .LiveMemory-Overlay {
   position: absolute;
   inset: 0;
-  height: 105%;
   background: rgb(var(--color-background-rgb) / 50%);
-  backdrop-filter: blur(1rem);
   visibility: hidden;
+}
+.LiveMemory-Overlay:not(.on) {
+  display: none;
 }
 .LiveMemory-Overlay.on {
   visibility: visible;
+  backdrop-filter: blur(1rem);
+  transform: scale(1.1);
 }
 
+.LiveMemory-Overlay:not(.on)::before {
+  display: none;
+}
 .LiveMemory-Overlay:before {
   content: "";
   position: absolute;
@@ -33,13 +39,14 @@
   opacity: 75%;
   animation-delay: 0ms;
   animation-duration: 0ms;
+  animation-iteration-count: 1;
   animation: none;
-
   transition-delay: 0ms;
 }
 
 .LiveMemory-Overlay.on div {
   animation: slide 600ms linear;
+  animation-iteration-count: 1;
   transform: scaleX(1) scaleY(1.01);
   transform-origin: left;
   transition-delay: 750ms;

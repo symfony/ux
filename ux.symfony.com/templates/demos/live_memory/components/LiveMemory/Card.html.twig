@@ -1,0 +1,49 @@
+<div
+    data-live-id="card-{{ key }}"
+    class="{{ html_classes('LiveMemory-Card', {
+        'LiveMemory-Card--flipped': flipped,
+        'LiveMemory-Card--selected': selected,
+        'LiveMemory-Card--paired': paired,
+        'LiveMemory-Card--matched': matched,
+    }, class|default) }}"
+    style="--card-delta:{{ (key* 17) % 10 }};"
+>
+
+    {# We keep the back / button to flip until the card is matched #}
+    <div class="LiveMemory-Card__face LiveMemory-Card__face--back" id="card-{{ key }}-back">
+        <div class="LiveMemory-Card__back">
+            {% if not matched|default %}
+            <button class="LiveMemory-Card__button"
+                    data-action="live#action"
+                    data-live-action-param="flip"
+                    data-live-key-param="{{ key }}"
+            >
+{#                    data-live-item-name-param="CustomItem"#}
+                <img class="LiveMemory-Card__back_img LiveMemory-Card__img"
+                     alt="LiveMemory Card Back - {{ back|upper }}"
+                     src="{{ asset('images/demos/live-memory/back/%s.webp'|format(back)) }}"
+                     width="512" height="512"
+                />
+            </button>
+            {% endif %}
+        </div>
+    </div>
+
+    {# We pre-generate the HTML code of the front image with a fake src #}
+    {# This prevent any possibility to cheat by looking at the HTML code... #}
+    {# and allow us to use fake data until the first card is flipped #}
+    <div class="LiveMemory-Card__face LiveMemory-Card__face--front" id="card-{{ key }}-front">
+        <div class="LiveMemory-Card__front">
+             <img class="LiveMemory-Card__front_img LiveMemory-Card__img" id="card-{{ key }}-front-img"
+                 alt="LiveMemory Card #{{ key }}"
+                {% if flipped or unflipped %}
+                    src="{{ asset('images/demos/live-memory/cards/card-%s.webp'|format(front)) }}"
+                {% else %}
+                     src="{{ asset('images/demos/live-memory/back/%s.webp'|format(back)) }}"
+                {% endif %}
+                 width="256" height="256"
+            />
+        </div>
+    </div>
+
+</div>
