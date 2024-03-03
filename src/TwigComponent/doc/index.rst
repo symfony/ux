@@ -1167,12 +1167,12 @@ when multiple other variant conditions are met.
                 lg: 'text-lg',
             }
         },
-        compoundVariants: {
-            // if colors=red AND size = (md or lg), add the `font-bold` class
-            colors: ['red'],
+        compoundVariants: [{
+            // if color = red AND size = (md or lg), add the `font-bold` class
+            color: ['red'],
             size: ['md', 'lg'],
             class: 'font-bold'
-        }
+        }]
     }) %}
 
     <div class="{{ alert.apply({color, size}) }}">
