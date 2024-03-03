@@ -1031,6 +1031,42 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
+        yield 'Collection: using serializer (de)hydrates correctly' => [function () {
+            return HydrationTest::create(new class() {
+                /** @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Temperature[] */
+                #[LiveProp(useSerializerForHydration: true)]
+                public array $temperatures = [];
+
+                /**
+                 * @var string[]
+                 */
+                #[LiveProp(useSerializerForHydration: true)]
+                public array $tags = [];
+            })
+                ->mountWith([
+                    'temperatures' => [
+                        new Temperature(10, 'C'),
+                        new Temperature(20, 'C'),
+                    ],
+                    'tags' => ['foo', 'bar'],
+                ])
+                ->assertDehydratesTo([
+                    'temperatures' => [
+                        ['degrees' => 10, 'uom' => 'C'],
+                        ['degrees' => 20, 'uom' => 'C'],
+                    ],
+                    'tags' => ['foo', 'bar'],
+                ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertSame(10, $object->temperatures[0]->degrees);
+                    self::assertSame('C', $object->temperatures[0]->uom);
+                    self::assertSame(20, $object->temperatures[1]->degrees);
+                    self::assertSame('C', $object->temperatures[1]->uom);
+                    self::assertSame(['foo', 'bar'], $object->tags);
+                })
+            ;
+        }];
+
         yield 'Updating non-writable path is rejected' => [function () {
             $product = new ProductFixtureEntity();
             $product->name = 'original name';
