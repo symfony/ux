@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig\Components\LiveMemory;
+namespace App\LiveMemory\Component;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -17,6 +17,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Attribute\PostHydrate;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
+use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\PostMount;
 
 /**
@@ -24,7 +25,10 @@ use Symfony\UX\TwigComponent\Attribute\PostMount;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-#[AsLiveComponent('LiveMemory:Timer')]
+#[AsLiveComponent(
+    name: 'LiveMemory:Timer',
+    template: 'demos/live_memory/components/LiveMemory/Timer.html.twig',
+)]
 class Timer
 {
     use ComponentToolsTrait;

@@ -4,6 +4,9 @@ twig:
     globals:
         twigPackageHelper: '@App\Service\TwigPackageHelper'
 
+    paths:
+        '%kernel.project_dir%/templates/demos/live_memory': ~
+
 when@test:
     twig:
         strict_variables: true

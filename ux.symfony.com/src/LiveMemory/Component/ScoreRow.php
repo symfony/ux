@@ -9,8 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig\Components\LiveMemory;
+namespace App\LiveMemory\Component;
 
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
@@ -19,7 +20,10 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-#[AsTwigComponent('LiveMemory:ScoreRow')]
+#[AsTwigComponent(
+    name: 'LiveMemory:ScoreRow',
+    template: 'demos/live_memory/components/LiveMemory/ScoreRow.html.twig',
+)]
 class ScoreRow
 {
     public string $label;

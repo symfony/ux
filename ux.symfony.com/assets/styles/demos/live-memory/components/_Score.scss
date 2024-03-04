@@ -11,11 +11,18 @@
   border-radius: 1vmin;
   overflow: hidden;
   visibility: hidden;
+  opacity: 0%;
+}
+.LiveMemory-Score:not(.on) {
+  display: none;
+  visibility: hidden;
 }
 
 .LiveMemory-Score.on {
   visibility: visible;
   z-index: 1;
+  opacity: 100%;
+  transition: opacity .5s linear;
 }
 
 .LiveMemory-Score.on .result {
@@ -36,11 +43,13 @@
 .LiveMemory-Score .trophy img {
   max-height: 100%;
   max-width: 100%;
-  animation: live-memory-trophy steps(8) 2s infinite alternate-reverse;
   display: block;
   object-fit: cover;
   min-width: 1rem;
   min-height: 1rem;
+}
+.LiveMemory-Score.on .trophy img {
+  animation: live-memory-trophy steps(8) 2s infinite alternate-reverse;
 }
 
 .LiveMemory-Score .trophy.gameover img {
@@ -88,6 +97,7 @@
   animation: live-memory-typing steps(var(--chars)) forwards;
   animation-duration: var(--duration);
   animation-delay: calc(var(--wait) * var(--duration));
+  animation-iteration-count: 1;
   text-overflow: clip;
   display: inline-block;
   white-space: nowrap;
@@ -116,24 +126,11 @@
   background: 0;
   opacity: .75;
   font-size: 1.1rem;
-  animation: steps(3) live-memory-button-blinking infinite alternate-reverse;
+  animation: steps(3) live-memory-button-blinking alternate-reverse;
+  animation-iteration-count: 5;
   cursor: pointer;
   color: #ffffff;
 }
-.LiveMemory-Score button::after {
-    position: absolute;
-    inset: 0;
-    content: " ";
-    display: block;
-    background: none;
-    z-index: 2;
-  }
-
-.LiveMemory-Score button:hover {
-  opacity: 1;
-  animation-play-state: paused;
-}
-
 @keyframes live-memory-button-blinking {
   70% {
     opacity: 1;

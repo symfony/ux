@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig\Components\LiveMemory;
+namespace App\LiveMemory\Component;
 
 use App\LiveMemory\Game;
 use App\LiveMemory\GameEngine;
@@ -32,7 +32,10 @@ use Symfony\UX\TwigComponent\Attribute\PostMount;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-#[AsLiveComponent('LiveMemory:Board')]
+#[AsLiveComponent(
+    name: 'LiveMemory:Board',
+    template: 'demos/live_memory/components/LiveMemory/Board.html.twig',
+)]
 class Board extends AbstractController
 {
     use ComponentToolsTrait;
@@ -170,7 +173,9 @@ class Board extends AbstractController
     {
         $cards = [];
         $matches = $this->game->getMatches();
-        $currentPair = $this->game->getCurrentPair();
+        $selectedPairs = $this->game->getSelectedPairs();
+        $currentPair = array_pop($selectedPairs) ?? [];
+        $previousPair = array_pop($selectedPairs) ?? [];
         foreach ($this->game->getCards() as $key => $card) {
             $cards[$key] = [
                 'image' => $card,
@@ -178,6 +183,7 @@ class Board extends AbstractController
                 'paired' => $selected && 2 === \count($currentPair),
                 'matched' => $matched = \in_array($key, $matches),
                 'flipped' => $selected || $matched,
+                'unflipped' => 1 === \count($currentPair) && !($selected || $matched) && \in_array($key, $previousPair),
             ];
         }
 
