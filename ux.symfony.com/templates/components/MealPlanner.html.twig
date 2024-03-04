@@ -3,10 +3,7 @@
     {{ attributes }}
 >
     {{ form_start(form) }}
-        {{ form_row(form.meal) }}
-        {{ form_row(form.mainFood) }}
-        {% if form.pizzaSize is defined %}
-            {{ form_row(form.pizzaSize) }}
-        {% endif %}
+        {{ form_row(form.folder) }}
+        {{ form_row(form.domain) }}
     {{ form_end(form) }}
 </div>

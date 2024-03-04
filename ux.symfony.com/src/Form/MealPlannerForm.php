@@ -16,7 +16,9 @@ use App\Enum\Meal;
 use App\Enum\PizzaSize;
 use App\Model\MealPlan;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfonycasts\DynamicForms\DependentField;
@@ -34,34 +36,29 @@ class MealPlannerForm extends AbstractType
         $builder = new DynamicFormBuilder($builder);
 
         $builder
-            ->add('meal', EnumType::class, [
-                'class' => Meal::class,
-                'choice_label' => fn (Meal $meal): string => $meal->getReadable(),
-                'placeholder' => 'Which meal is it?',
-                'autocomplete' => true,
+            ->add('folder', ChoiceType::class, [
+                'choices' => [
+                    'Folder 1' => 'folder1',
+                    'Folder 2' => 'folder2',
+                ],
+                'data' => 'folder1'
             ])
             // see: https://github.com/SymfonyCasts/dynamic-forms
-            ->addDependent('mainFood', 'meal', function (DependentField $field, ?Meal $meal) {
-                $field->add(EnumType::class, [
-                    'class' => Food::class,
-                    'placeholder' => null === $meal ? 'Select a meal first' : sprintf('What\'s for %s?', $meal->getReadable()),
-                    'choices' => $meal?->getFoodChoices(),
-                    'choice_label' => fn (Food $food): string => $food->getReadable(),
-                    'disabled' => null === $meal,
-                    'autocomplete' => true,
-                ]);
-            })
-            ->addDependent('pizzaSize', 'mainFood', function (DependentField $field, ?Food $food) {
-                if (Food::Pizza !== $food) {
-                    return;
+            ->addDependent('domain', 'folder', function (DependentField $field, ?string $folder) {
+                if ($folder === 'folder1') {
+                    $host = 'domain1.com';
+                } else {
+                    $host = 'domain2.com';
                 }
 
-                $field->add(EnumType::class, [
-                    'class' => PizzaSize::class,
-                    'placeholder' => 'What size pizza?',
-                    'choice_label' => fn (PizzaSize $pizzaSize): string => $pizzaSize->getReadable(),
-                    'required' => true,
-                    'autocomplete' => true,
+                $field->add(TextType::class, [
+                    'mapped' => false,
+                    'label' => 'Domain',
+                    'required' => false,
+                    'data' => $host, // don't work
+                    'attr' => [
+                        //'placeholder' => $host, // works
+                    ],
                 ]);
             })
         ;
@@ -69,6 +66,6 @@ class MealPlannerForm extends AbstractType
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults(['data_class' => MealPlan::class]);
+        
     }
 }
