@@ -1,0 +1,44 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-18T16:25:32Z
+
+I actually had a need recently to only enable live props that update the URL under certain conditions. I believe this PR would allow that, correct?
+
+---------------------------------------------------------------------------
+
+by squrious at 2024-02-19T08:22:32Z
+
+> I actually had a need recently to only enable live props that update the URL under certain conditions. I believe this PR would allow that, correct?
+
+Yes totally!
+
+> When a method have a modifier attribute, we execute the modifier function, get the modified value, we create a clone of the PropMetada with the new value. All of that happen during the hydratation.
+> What about the dehydratation?
+
+Modifiers are not only used on hydration. Actually this is used a bit like `calculateFieldName`: we need it applied on hydration and dehydration, but also in other places like when processing/rendering URL mappings.
+
+---------------------------------------------------------------------------
+
+by squrious at 2024-02-26T10:10:57Z
+
+Modifiers are now applied each time `getAllLivePropsMetadata` is called. Maybe we could add an internal cache for this, based on `spl_object_id`?
+
+I also had to move the listener for query string initialization to `PostMount` instead of `PreMount`, as it needs the component to be "pre-mounted" to know if some props are bound with modifiers. The test for this was not right in the first place... I set the priority to 256 to ensure it is executed before other custom listeners.
+
+Some tests failed after rebasing, but I don't think this is related to this PR.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-02-29T15:08:30Z
+
+> Modifiers are now applied each time getAllLivePropsMetadata is called. Maybe we could add an internal cache for this, based on spl_object_id?
+
+It sounds nice... but I don't know if it will make enough difference. Most components will not have a modifier, so the extra work will be a `foreach` over all the LiveProps & a call to the `withModifier()` method that exits immediately. That might (?) be something we should cache away... I just don't know.
+
+---------------------------------------------------------------------------
+
+by squrious at 2024-02-29T16:39:27Z
+
+> It sounds nice... but I don't know if it will make enough difference. Most components will not have a modifier, so the extra work will be a `foreach` over all the LiveProps & a call to the `withModifier()` method that exits immediately. That might (?) be something we should cache away... I just don't know.
+
+Yup, that's probably too much for the moment. I was wondering about modifiers that could use services, maybe heavy, to get configuration etc. But that could be cached in the component class directly. In the end, no need to generalize it :smile:
