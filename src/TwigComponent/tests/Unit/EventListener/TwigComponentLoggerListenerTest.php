@@ -46,7 +46,7 @@ class TwigComponentLoggerListenerTest extends TestCase
         $mounted = new MountedComponent('foo', new \stdClass(), new ComponentAttributes([]));
         $eventE = new PreRenderEvent($mounted, new ComponentMetadata(['template' => 'bar']), []);
         $logger->onPreRender($eventE);
-        $eventF = new PostRenderEvent($mounted);
+        $eventF = new PostRenderEvent($mounted, 'fooBar');
         $logger->onPostRender($eventF);
 
         $this->assertSame([$eventA, $eventB, $eventC, $eventD, $eventE, $eventF], array_column($logger->getEvents(), 0));

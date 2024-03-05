@@ -72,7 +72,7 @@ final class ComponentRenderer implements ComponentRendererInterface
         }
 
         try {
-            return $this->twig->loadTemplate(
+            return $content = $this->twig->loadTemplate(
                 $this->twig->getTemplateClass($event->getTemplate()),
                 $event->getTemplate(),
                 $event->getTemplateIndex(),
@@ -80,7 +80,7 @@ final class ComponentRenderer implements ComponentRendererInterface
         } finally {
             $mounted = $this->componentStack->pop();
 
-            $event = new PostRenderEvent($mounted);
+            $event = new PostRenderEvent($mounted, $content ?? null);
             $this->dispatcher->dispatch($event);
         }
     }

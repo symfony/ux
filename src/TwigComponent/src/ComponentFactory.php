@@ -220,10 +220,7 @@ final class ComponentFactory
         return null !== $this->componentTemplateFinder->findAnonymousComponentTemplate($name);
     }
 
-    /**
-     * @return never
-     */
-    private function throwUnknownComponentException(string $name): void
+    private function throwUnknownComponentException(string $name): never
     {
         $message = sprintf('Unknown component "%s".', $name);
         $lowerName = strtolower($name);

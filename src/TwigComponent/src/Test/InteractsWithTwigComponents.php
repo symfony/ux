@@ -12,6 +12,7 @@
 namespace Symfony\UX\TwigComponent\Test;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
+use Twig\Environment;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -39,12 +40,13 @@ trait InteractsWithTwigComponents
         $blocks = array_filter(array_merge($blocks, ['content' => $content]));
 
         if (!$blocks) {
-            return new RenderedComponent(self::getContainer()->get('twig')
-                ->createTemplate('{{ component(name, data) }}')
-                ->render([
-                    'name' => $name,
-                    'data' => $data,
-                ])
+            return new RenderedComponent(
+                self::getContainer()->get('twig')
+                    ->createTemplate('{{ component(name, data) }}')
+                    ->render([
+                        'name' => $name,
+                        'data' => $data,
+                    ])
             );
         }
 
@@ -56,7 +58,8 @@ trait InteractsWithTwigComponents
 
         $template .= '{% endcomponent %}';
 
-        return new RenderedComponent(self::getContainer()->get('twig')
+        return new RenderedComponent(
+            self::getContainer()->get('twig')
             ->createTemplate($template)
             ->render([
                 'data' => $data,

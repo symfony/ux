@@ -50,7 +50,8 @@ class TwigComponentDebugCommand extends Command
             ->setDefinition([
                 new InputArgument('name', InputArgument::OPTIONAL, 'A component name or part of the component name'),
             ])
-            ->setHelp(<<<'EOF'
+            ->setHelp(
+                <<<'EOF'
 The <info>%command.name%</info> display all the Twig components in your application.
 
 To list all components:
