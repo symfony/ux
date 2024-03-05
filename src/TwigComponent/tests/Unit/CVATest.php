@@ -52,6 +52,29 @@ class CVATest extends TestCase
         $this->assertEquals('font-semibold border rounded text-primary text-sm text-red-500', $recipe->apply(['colors' => 'primary', 'sizes' => 'sm']));
     }
 
+    public function testApplyWithNullString(): void
+    {
+        $recipe = new CVA('font-semibold border rounded', [
+            'colors' => [
+                'primary' => 'text-primary',
+                'secondary' => 'text-secondary',
+            ],
+            'sizes' => [
+                'sm' => 'text-sm',
+                'md' => 'text-md',
+                'lg' => 'text-lg',
+            ],
+        ], [
+            [
+                'colors' => ['primary'],
+                'sizes' => ['sm'],
+                'class' => 'text-red-500',
+            ],
+        ]);
+
+        $this->assertEquals('font-semibold border rounded text-primary text-sm text-red-500 flex justify-center', $recipe->apply(['colors' => 'primary', 'sizes' => 'sm'], 'flex', null, 'justify-center'));
+    }
+
     public static function recipeProvider(): iterable
     {
         yield 'base null' => [
