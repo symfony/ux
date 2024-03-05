@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-01T23:24:06Z
+
+Could we implement ArrayAccess to simplify all this ?
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-03-02T10:14:45Z
+
+Solid use case. Trying to think if there's any downsides to @smnandre's suggestion.
+
+---------------------------------------------------------------------------
+
+by barbieswimcrew at 2024-03-02T11:18:39Z
+
+> Solid use case. Trying to think if there's any downsides to @smnandre's suggestion.
+
+Hmm... let's say we would implement ArrayAccess... would the add() and offsetSet() methods become one? And if so... what would someone expect when using offsetSet(), for example? That you can add any attribute from inside? And what happens then with the custom logic from the current add() method?
+
+And remove() would therefore become offsetUnset(), wouldn't it?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-02T11:28:40Z
+
+I'd implement only offsetExists and offsetGet, and throw a runtime exception in the two others..
+
+it would "just" be syntaxic sugar to ease usage in templates :)
