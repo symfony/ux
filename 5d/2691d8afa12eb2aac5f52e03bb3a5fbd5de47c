@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-03-04T08:54:51Z
+
+Thanks Ryan!
+
+I like that the new doc addition is concise ... but as a newcomer, I might need something more detailed to understand the reasoning for this and the special action used to trigger the re-render.
+
+If you agree, I'd add the following section after the existing `Deferring a Re-Render Until Later` section:
+
+```rst
+Forcing a Re-Render Explictly
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In some cases, you might want to force a component re-render explicitly. For
+example, consider a checkout component that provides a coupon input that must
+only be used when clicking on the associated "Apply coupon" button:
+
+.. code-block:: html+twig
+
+    <input data-model="norender|coupon">
+    <button data-action="live#$render">Apply coupon</button>
+
+The ``norender`` option on the input ensures that the component won't re-render
+when this input changes. The ``live#$render`` action is a special built-in action
+that triggers a re-render.
+```
