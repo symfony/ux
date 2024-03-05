@@ -256,11 +256,22 @@ final class LiveComponentHydrator
                 throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the given serializer does not implement DenormalizerInterface.', $propMetadata->getName(), $parentObject::class));
             }
 
-            if (null === $propMetadata->getType()) {
+            if ($propMetadata->collectionValueType()) {
+                $builtInType = $propMetadata->collectionValueType()->getBuiltinType();
+                if (Type::BUILTIN_TYPE_OBJECT === $builtInType) {
+                    $type = $propMetadata->collectionValueType()->getClassName().'[]';
+                } else {
+                    $type = $builtInType.'[]';
+                }
+            } else {
+                $type = $propMetadata->getType();
+            }
+
+            if (null === $type) {
                 throw new \LogicException(sprintf('The "%s::%s" object should be hydrated with the Serializer, but no type could be guessed.', $parentObject::class, $propMetadata->getName()));
             }
 
-            return $this->serializer->denormalize($value, $propMetadata->getType(), 'json', $propMetadata->serializationContext());
+            return $this->serializer->denormalize($value, $type, 'json', $propMetadata->serializationContext());
         }
 
         if ($propMetadata->collectionValueType() && Type::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {

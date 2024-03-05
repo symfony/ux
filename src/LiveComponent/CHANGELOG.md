@@ -3,6 +3,7 @@
 ## 2.17.0
 
 -   Add `modifier` option in `LiveProp` so options can be modified at runtime.
+-   Fix collections hydration with serializer in LiveComponents
 
 ## 2.16.0
 
