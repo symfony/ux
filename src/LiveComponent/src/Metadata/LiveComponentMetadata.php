@@ -25,6 +25,10 @@ class LiveComponentMetadata
         /** @var LivePropMetadata[] */
         private array $livePropsMetadata,
     ) {
+        uasort(
+            $this->livePropsMetadata,
+            static fn (LivePropMetadata $a, LivePropMetadata $b) => $a->hasModifier() <=> $b->hasModifier()
+        );
     }
 
     public function getComponentMetadata(): ComponentMetadata
@@ -35,9 +39,11 @@ class LiveComponentMetadata
     /**
      * @return LivePropMetadata[]
      */
-    public function getAllLivePropsMetadata(): array
+    public function getAllLivePropsMetadata(object $component): iterable
     {
-        return $this->livePropsMetadata;
+        foreach ($this->livePropsMetadata as $livePropMetadata) {
+            yield $livePropMetadata->withModifier($component);
+        }
     }
 
     /**
@@ -60,9 +66,9 @@ class LiveComponentMetadata
         return array_intersect_key($inputProps, array_flip($propNames));
     }
 
-    public function hasQueryStringBindings(): bool
+    public function hasQueryStringBindings($component): bool
     {
-        foreach ($this->getAllLivePropsMetadata() as $livePropMetadata) {
+        foreach ($this->getAllLivePropsMetadata($component) as $livePropMetadata) {
             if ($livePropMetadata->queryStringMapping()) {
                 return true;
             }

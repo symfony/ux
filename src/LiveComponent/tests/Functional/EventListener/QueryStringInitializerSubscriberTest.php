@@ -21,7 +21,8 @@ class QueryStringInitializerSubscriberTest extends KernelTestCase
     public function testQueryStringPropsInitialization()
     {
         $this->browser()
-            ->get('/render-template/render_component_with_url_bound_props?prop1=foo&prop2=42&prop3[]=foo&prop3[]=bar&prop4=unbound&prop5[address]=foo&prop5[city]=bar&field6=foo')
+            ->throwExceptions()
+            ->get('/render-template/render_component_with_url_bound_props?prop1=foo&prop2=42&prop3[]=foo&prop3[]=bar&prop4=unbound&prop5[address]=foo&prop5[city]=bar&field6=foo&field7=foo&prop8=foo')
             ->assertSuccessful()
             ->assertContains('Prop1: foo')
             ->assertContains('Prop2: 42')
@@ -29,6 +30,8 @@ class QueryStringInitializerSubscriberTest extends KernelTestCase
             ->assertContains('Prop4:')
             ->assertContains('Prop5: address: foo city: bar')
             ->assertContains('Prop6: foo')
+            ->assertContains('Prop7: foo')
+            ->assertContains('Prop8: foo')
         ;
     }
 }

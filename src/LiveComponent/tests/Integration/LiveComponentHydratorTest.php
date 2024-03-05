@@ -1163,6 +1163,53 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 })
             ;
         }];
+
+        yield 'Uses LiveProp modifiers on component dehydration' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true, modifier: 'modifySearchProp')]
+                public ?string $search = null;
+
+                #[LiveProp]
+                public ?string $fieldName = null;
+
+                #[LiveProp(writable: true, modifier: 'modifyDateProp')]
+                public ?\DateTimeImmutable $date = null;
+
+                #[LiveProp]
+                public string $dateFormat = 'Y-m-d';
+
+                public function modifySearchProp(LiveProp $prop): LiveProp
+                {
+                    return $prop->withFieldName($this->fieldName);
+                }
+
+                public function modifyDateProp(LiveProp $prop): LiveProp
+                {
+                    return $prop->withFormat($this->dateFormat);
+                }
+            })
+                ->mountWith([
+                    'search' => 'foo',
+                    'fieldName' => 'query',
+                    'date' => null,
+                    'dateFormat' => 'd/m/Y',
+                ])
+                ->assertDehydratesTo([
+                    'query' => 'foo',
+                    'fieldName' => 'query',
+                    'date' => null,
+                    'dateFormat' => 'd/m/Y',
+                ])
+                ->userUpdatesProps([
+                    'query' => 'bar',
+                    'date' => '25/02/2024',
+                ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertEquals('bar', $object->search);
+                    self::assertEquals('2024-02-25', $object->date->format('Y-m-d'));
+                })
+            ;
+        }];
     }
 
     public function testHydrationWithInvalidDate(): void

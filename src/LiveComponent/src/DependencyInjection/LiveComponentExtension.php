@@ -227,6 +227,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('request_stack'),
                 new Reference('ux.live_component.metadata_factory'),
                 new Reference('ux.live_component.query_string_props_extractor'),
+                new Reference('property_accessor'),
             ])
             ->addTag('kernel.event_subscriber');
 

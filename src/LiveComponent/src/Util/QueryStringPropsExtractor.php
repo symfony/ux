@@ -40,7 +40,7 @@ final class QueryStringPropsExtractor
         }
         $data = [];
 
-        foreach ($metadata->getAllLivePropsMetadata() as $livePropMetadata) {
+        foreach ($metadata->getAllLivePropsMetadata($component) as $livePropMetadata) {
             if ($livePropMetadata->queryStringMapping()) {
                 $frontendName = $livePropMetadata->calculateFieldName($component, $livePropMetadata->getName());
                 if (null !== ($value = $query[$frontendName] ?? null)) {

@@ -13,9 +13,11 @@ namespace Symfony\UX\LiveComponent\EventListener;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
+use Symfony\Component\PropertyAccess\Exception\ExceptionInterface as PropertyAccessExceptionInterface;
+use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Util\QueryStringPropsExtractor;
-use Symfony\UX\TwigComponent\Event\PreMountEvent;
+use Symfony\UX\TwigComponent\Event\PostMountEvent;
 
 /**
  * @author Nicolas Rigaud <squrious@protonmail.com>
@@ -28,17 +30,18 @@ class QueryStringInitializeSubscriber implements EventSubscriberInterface
         private readonly RequestStack $requestStack,
         private readonly LiveComponentMetadataFactory $metadataFactory,
         private readonly QueryStringPropsExtractor $queryStringPropsExtractor,
+        private readonly PropertyAccessorInterface $propertyAccessor,
     ) {
     }
 
     public static function getSubscribedEvents(): array
     {
         return [
-            PreMountEvent::class => 'onPreMount',
+            PostMountEvent::class => ['onPostMount', 256],
         ];
     }
 
-    public function onPreMount(PreMountEvent $event): void
+    public function onPostMount(PostMountEvent $event): void
     {
         if (!$event->getMetadata()->get('live', false)) {
             // Not a live component
@@ -53,12 +56,20 @@ class QueryStringInitializeSubscriber implements EventSubscriberInterface
 
         $metadata = $this->metadataFactory->getMetadata($event->getMetadata()->getName());
 
-        if (!$metadata->hasQueryStringBindings()) {
+        if (!$metadata->hasQueryStringBindings($event->getComponent())) {
             return;
         }
 
         $queryStringData = $this->queryStringPropsExtractor->extract($request, $metadata, $event->getComponent());
 
-        $event->setData(array_merge($event->getData(), $queryStringData));
+        $component = $event->getComponent();
+
+        foreach ($queryStringData as $name => $value) {
+            try {
+                $this->propertyAccessor->setValue($component, $name, $value);
+            } catch (PropertyAccessExceptionInterface $exception) {
+                // Ignore errors
+            }
+        }
     }
 }

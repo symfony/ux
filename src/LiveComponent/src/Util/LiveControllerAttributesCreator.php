@@ -103,11 +103,11 @@ class LiveControllerAttributesCreator
             $attributesCollection->setRequestMethod($requestMethod);
         }
 
-        if ($liveMetadata->hasQueryStringBindings()) {
+        if ($liveMetadata->hasQueryStringBindings($mounted->getComponent())) {
             $queryMapping = [];
-            foreach ($liveMetadata->getAllLivePropsMetadata() as $livePropMetadata) {
+            foreach ($liveMetadata->getAllLivePropsMetadata($mounted->getComponent()) as $livePropMetadata) {
                 if ($livePropMetadata->queryStringMapping()) {
-                    $frontendName = $livePropMetadata->calculateFieldName($mounted, $livePropMetadata->getName());
+                    $frontendName = $livePropMetadata->calculateFieldName($mounted->getComponent(), $livePropMetadata->getName());
                     $queryMapping[$frontendName] = ['name' => $frontendName];
                 }
             }
