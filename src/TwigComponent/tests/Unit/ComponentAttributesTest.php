@@ -224,4 +224,11 @@ final class ComponentAttributesTest extends TestCase
 
         $attributes->render('attr1');
     }
+    
+    public function testCanCheckIfAttributeExists(): void
+    {
+        $attributes = new ComponentAttributes(['foo' => 'bar']);
+
+        $this->assertTrue($attributes->has('foo'));
+    }
 }
