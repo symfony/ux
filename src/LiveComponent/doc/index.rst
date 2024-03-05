@@ -370,6 +370,29 @@ it won't, yet, make an Ajax call to re-render the component. Whenever
 the next re-render *does* happen, the updated ``max`` value will be
 used.
 
+This can be useful along with a button that triggers a render on click:
+
+.. code-block:: html+twig
+
+    <input data-model="norender|coupon">
+    <button data-action="live#$render">Apply</button>
+
+Forcing a Re-Render Explicitly
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In some cases, you might want to force a component re-render explicitly. For
+example, consider a checkout component that provides a coupon input that must
+only be used when clicking on the associated "Apply coupon" button:
+
+.. code-block:: html+twig
+
+    <input data-model="norender|coupon">
+    <button data-action="live#$render">Apply coupon</button>
+
+The ``norender`` option on the input ensures that the component won't re-render
+when this input changes. The ``live#$render`` action is a special built-in action
+that triggers a re-render.
+
 .. _name-attribute-model:
 
 Using name="" instead of data-model
