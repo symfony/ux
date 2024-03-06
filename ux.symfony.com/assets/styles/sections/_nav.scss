@@ -1,37 +1,95 @@
 .AppNav {
   color: inherit;
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  justify-content: space-between;
+
+  @media (max-width: 859px) {
+    flex-wrap: wrap;
+  }
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
+  justify-content: space-between;
+  @media (max-width: 859px) {
+    flex-wrap: wrap;
+  }
+}
+
+.AppNav_actions {
+  flex-shrink: 0;
+  flex-wrap: nowrap;
+  display: flex;
+  flex-direction: row-reverse;
+  gap: 1.5rem;
+  align-items: center;
+
+  @media (min-width: 860px) {
+    order: 2;
+  }
 }
 
 .AppNav_menu {
-  gap: 2rem;
   justify-content: flex-end;
-  line-height: 2rem;
+  display: flex;
+  flex-direction: row;
+  gap: 1.5rem;
 
-  @media (max-width: 575px) {
-    display: flex;
-    flex-direction: row;
-    height: 3rem;
-    place-content: center;
-    .Icon--chevron-down {
-      display: none;
-    }
+  @media (min-width: 860px) {
+    margin-inline-start: auto;
+    align-items: center;
+    gap: 2rem;
+  }
+}
+
+@media (max-width: 859px) {
+  .AppNav_menu {
+    transform: translateY(-20%);
+    opacity: 0;
+    z-index: -1;
+    transition: transform 250ms ease-out;
+    width: 100%;
+    flex-direction: column;
+    padding: 1rem;
+    gap: 1rem;
+  }
+  .AppHeader.open .AppNav_menu {
+    transform: translateY(0);
+    opacity: 1;
+    z-index: 1;
+  }
+  .AppNav_menu a {
+    font-size: 1.5rem;
+    padding: .5rem;
+    opacity: 1;
+  }
+}
+
+@media (max-width: 800px) {
+  .AppNav_menu a {
+    font-size: 1.5rem;
+    padding: .5rem;
+    opacity: 1;
   }
 }
 
 .AppNav_item {
   color: inherit;
-  font-family: "Ubuntu";
+  font-family: var(--font-family-title);
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 500;
   letter-spacing: 0;
   opacity: .85;
   transition: opacity 250ms;
   padding: 0;
   border: none;
   background: none;
+  text-align: center;
   line-height: 2rem;
   position: relative;
-
   &:hover {
     opacity: 1;
   }
@@ -44,16 +102,11 @@
   display: grid;
   place-content: center;
 
-  > .Icon {
+  .Icon {
     font-size: 1.25rem;
   }
 }
 
-.nav-component-img {
-  height: 22px;
-  width: 22px;
-  border-radius: 4px;
-}
 
 .AppNav_badge {
   position: absolute;
@@ -69,3 +122,4 @@
   height: 1rem;
   line-height: normal;
 }
+

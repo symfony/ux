@@ -1,24 +1,57 @@
-.AppHeader {
-  position: absolute;
-  top: 1rem; // TODO responsive
-  left: 0;
-  right: 0;
-  z-index: 2;
-
-  @media (min-width: 576px) {
-    top: 2rem;
-  }
-  @media (min-width: 768px) {
-    top: 3rem;
-  }
+:root {
+  --header-breakpoint: 860px;
 }
 
 .AppHeader {
+  --color-background-rgb: 255 255 255;
   --text-color: var(--bs-body-color);
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 2;
+  padding: 1.5rem 0;
   color: var(--text-color);
+  @media (min-width: 860px) {
+    padding-top: 2rem;
+  }
+}
+[data-bs-theme="dark"] {
+  .AppHeader {
+    --color-background-rgb: 0 0 0;
+  }
 }
 .AppHeader--white {
   --text-color: #fff;
+}
+
+.AppHeader::before {
+  position: fixed;
+  inset: 0;
+  content: " ";
+  backdrop-filter: blur(5px);
+  background: rgb(var(--color-background-rgb) / 0.85);
+  opacity: 0;
+  transform: scaleX(0);
+}
+@keyframes header-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+body.locked {
+  overflow-y: hidden;
+}
+.AppHeader.open {
+  background: var(--bs-body-bg-rgb);
+}
+.AppHeader.open::before {
+  transform: scaleX(1);
+  inset: 0;
+  animation: header-fade 200ms;
+  opacity: 1;
 }
 
 .AppHeader_logo {
@@ -27,23 +60,33 @@
   width: calc(161 / 30 * var(--height));
   background: url(../images/sf-ux.svg);
   background-size: 100%;
-
+  display: block;
   transition: filter 250ms ease-in;
-
+  flex-shrink: 0;
   span {
     display: none;
   }
-
   .AppHeader--white &,
   [data-bs-theme="dark"] & {
     filter: invert(1);
   }
 }
 
-.AppHeader_toggler:focus {
-  box-shadow: none;
-}
-
 .AppHeader_toggler {
   color: currentColor;
+  border: none;
+  background: none;
+  box-shadow: none !important;
+}
+.AppHeader_toggler span {
+  display: none;
+}
+.AppHeader_toggler .Icon {
+  font-size: 1.5rem !important;
+}
+
+@media (min-width: 860px) {
+  .AppHeader_toggler {
+    display: none !important;
+  }
 }

@@ -24,6 +24,12 @@
   }
 }
 
+@media screen and (max-width: 800px) {
+  .PackageBox {
+    --space-large: 1rem;
+  }
+}
+
 .PackageBox::before {
   content: "";
   position: absolute;
@@ -65,7 +71,7 @@
   background-color: var(--color);
   width: var(--logo-size);
   height: var(--logo-size);
-  border-radius: var(--border-radius-large);
+  border-radius: 14%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -115,9 +121,8 @@
 
   font-family: var(--font-family-title);
   font-weight: 700;
-  font-size: 28px !important;
-  line-height: 32px !important;
-  letter-spacing: -1px;
+  font-size: 1.5rem;
+  line-height: 1.5;
   color: var(--bs-body-color);
   text-decoration: none;
 }

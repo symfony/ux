@@ -1,20 +1,39 @@
-<header class="AppHeader {{ theme is defined ? ('AppHeader--' ~ theme) }}">
-    <nav class="navbar navbar-expand-sm AppNav--white">
-        <div class="container-xxl px-4 px-md-5">
-            <a href="{{ path('app_homepage') }}" class="AppHeader_logo" aria-label="Homepage">
+<header class="AppHeader {{ theme is defined ? ('AppHeader--' ~ theme) }}" data-controller="ux-header">
+    <div class="container-xxl px-4 px-md-5">
+
+        <nav class="AppNav AppNav--white">
+
+            <a class="AppHeader_logo" href="{{ path('app_homepage') }}"  aria-label="Homepage">
                 <span aria-hidden="false">Symfony UX</span>
             </a>
-            <button class="AppHeader_toggler navbar-toggler collapsed" type="button"
-                data-bs-toggle="collapse" data-bs-target="#AppNav"
-                aria-controls="AppNav" aria-expanded="false" aria-label="Toggle navigation"
-            >
-                <twig:Icon name="menu"/>
-            </button>
-            <div class="AppHeader_nav AppNav_menu navbar-collapse collapse" id="AppNav">
-                {% block nav %}
-                    {{ include('_nav.html.twig') }}
-                {% endblock %}
+
+            <div class="AppNav_actions">
+                <button
+                    class="AppHeader_toggler AppNav_item AppNav_item--icon"
+                    aria-label="Toggle Menu"
+                    data-action="ux-header#toggleMenu"
+                >
+                    <twig:Icon name="menu"/>
+                </button>
+
+                <twig:ThemeSwitcher class="AppNav_item AppNav_item--icon" aria-label="Switch dark/light mode"/>
+                <a
+                    class="AppNav_item AppNav_item--icon"
+                    aria-label="Symfony UX on GitHub"
+                    href="https://github.com/symfony/ux"
+                >
+                    <twig:Icon name="github"/>
+                </a>
             </div>
-        </div>
-    </nav>
+
+            <div class="AppNav_menu">
+                <a href="{{ path('app_turbo') }}" class="AppNav_item">Turbo</a>
+                <a href="{{ path('app_live_component') }}" class="AppNav_item">Live <span>Components</span></a>
+                <a href="{{ path('app_packages') }}" class="AppNav_item">Packages</a>
+                <a href="{{ path('app_demos') }}" class="AppNav_item">Demos</a>
+            </div>
+
+        </nav>
+
+    </div>
 </header>
