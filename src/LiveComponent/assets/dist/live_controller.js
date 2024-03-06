@@ -2914,6 +2914,38 @@ class ChildComponentPlugin {
     }
 }
 
+class LazyPlugin {
+    constructor() {
+        this.intersectionObserver = null;
+    }
+    attachToComponent(component) {
+        var _a;
+        if ('lazy' !== ((_a = component.element.attributes.getNamedItem('loading')) === null || _a === void 0 ? void 0 : _a.value)) {
+            return;
+        }
+        component.on('connect', () => {
+            this.getObserver().observe(component.element);
+        });
+        component.on('disconnect', () => {
+            var _a;
+            (_a = this.intersectionObserver) === null || _a === void 0 ? void 0 : _a.unobserve(component.element);
+        });
+    }
+    getObserver() {
+        if (!this.intersectionObserver) {
+            this.intersectionObserver = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.dispatchEvent(new CustomEvent('live:appear'));
+                        observer.unobserve(entry.target);
+                    }
+                });
+            });
+        }
+        return this.intersectionObserver;
+    }
+}
+
 class LiveControllerDefault extends Controller {
     constructor() {
         super(...arguments);
@@ -3063,6 +3095,7 @@ class LiveControllerDefault extends Controller {
         }
         const plugins = [
             new LoadingPlugin(),
+            new LazyPlugin(),
             new ValidatedFieldsPlugin(),
             new PageUnloadingPlugin(),
             new PollingPlugin(),

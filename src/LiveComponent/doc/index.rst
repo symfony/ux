@@ -2258,37 +2258,88 @@ To validate only on "change", use the ``on(change)`` modifier:
 Deferring / Lazy Loading Components
 -----------------------------------
 
+When a page loads, all components are rendered immediately. If a component is
+heavy to render, you can defer its rendering until after the page has loaded.
+This is done by making an Ajax call to load the component's real content either
+as soon as the page loads (``defer``) or when the component becomes visible
+(``lazy``).
+
+.. note::
+
+    Behind the scenes, your component *is* created & mounted during the initial
+    page load, but its template isn't rendered. So keep your heavy work to
+    methods in your component (e.g. ``getProducts()``) that are only called
+    from the component's template.
+
+Loading "defer" (Ajax on Load)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 .. versionadded:: 2.13.0
 
     The ability to defer loading a component was added in Live Components 2.13.
 
 If a component is heavy to render, you can defer rendering it until after
-the page has loaded. To do this, add the ``defer`` option:
+the page has loaded. To do this, add a ``loading="defer"`` attribute:
 
 .. code-block:: html+twig
 
-    {# With the HTML syntax #}
-    <twig:SomeHeavyComponent defer />
-
     {# With the component function #}
-    {{ component('SomeHeavyComponent', { defer: true }) }}
+    <twig:SomeHeavyComponent loading="defer" />
+
+.. code-block:: twig
+
+    {# With the HTML syntax #}
+    {{ component('SomeHeavyComponent', { loading: 'defer' }) }}
 
 This renders an empty ``<div>`` tag, but triggers an Ajax call to render the
 real component once the page has loaded.
 
-.. note::
+Loading "lazy" (Ajax when Visible)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-    Behind the scenes, your component *is* created & mounted during the initial
-    page load, but it isn't rendered. So keep your heavy work to methods in
-    your component (e.g. ``getProducts()``) that are only called when rendering.
+.. versionadded:: 2.17.0
+
+    The ability to load a component "lazily" was added in Live Components 2.17.
+
+The ``lazy`` option is similar to ``defer``, but it defers the loading of
+the component until it's in the viewport. This is useful for components that
+are far down the page and are not needed until the user scrolls to them.
+
+To use this, set a ``loading="lazy"`` attribute to your component:
+
+.. code-block:: html+twig
+
+    {# With the HTML syntax #}
+    <twig:Acme foo="bar" loading="lazy" />
+
+.. code-block:: twig
+
+    {# With the Twig syntax #}
+    {{ component('SomeHeavyComponent', { loading: 'lazy' }) }}
+
+This renders an empty ``<div>`` tag. The real component is only rendered when
+it appears in the viewport.
+
+Defer or Lazy?
+~~~~~~~~~~~~~~
+
+The ``defer`` and ``lazy`` options may seem similar, but they serve different
+purposes:
+* ``defer`` is useful for components that are heavy to render but are required
+    when the page loads.
+* ``lazy`` is useful for components that are not needed until the user scrolls
+    to them (and may even never be rendered).
+
+Loading content
+~~~~~~~~~~~~~~~
 
 You can define some content to be rendered while the component is loading, either
 inside the component template (the ``placeholder`` macro) or from the calling template
 (the ``loading-template`` attribute and the ``loadingContent`` block).
 
-.. versionadded:: 2.17.0
+.. versionadded:: 2.16.0
 
-    Defining a placeholder macro into the component template was added in Live Components 2.17.0.
+    Defining a placeholder macro into the component template was added in Live Components 2.16.0.
 
 In the component template, define a ``placeholder`` macro, outside of the
 component's main content. This macro will be called when the component is deferred:
@@ -2317,7 +2368,7 @@ number of rows:
 .. code-block:: html+twig
 
     {# In the calling template #}
-    <twig:RecommendedProducts size="3" defer />
+    <twig:RecommendedProducts size="3" loading="defer" />
 
 .. code-block:: html+twig
 
@@ -2336,22 +2387,22 @@ the ``loading-template`` option to point to a template:
 .. code-block:: html+twig
 
     {# With the HTML syntax #}
-    <twig:SomeHeavyComponent defer loading-template="spinning-wheel.html.twig" />
+    <twig:SomeHeavyComponent loading="defer" loading-template="spinning-wheel.html.twig" />
 
     {# With the component function #}
-    {{ component('SomeHeavyComponent', { defer: true, loading-template: 'spinning-wheel.html.twig' }) }}
+    {{ component('SomeHeavyComponent', { loading: 'defer', loading-template: 'spinning-wheel.html.twig' }) }}
 
 Or override the ``loadingContent`` block:
 
 .. code-block:: html+twig
 
     {# With the HTML syntax #}
-    <twig:SomeHeavyComponent defer>
+    <twig:SomeHeavyComponent loading="defer">
         <twig:block name="loadingContent">Custom Loading Content...</twig:block>
     </twig:SomeHeavyComponent>
 
     {# With the component tag #}
-    {% component SomeHeavyComponent with { defer: true } %}
+    {% component SomeHeavyComponent with { loading: 'defer' } %}
         {% block loadingContent %}Loading...{% endblock %}
     {% endcomponent %}
 
@@ -2362,7 +2413,7 @@ To change the initial tag from a ``div`` to something else, use the ``loading-ta
 
 .. code-block:: twig
 
-    {{ component('SomeHeavyComponent', { defer: true, loading-tag: 'span' }) }}
+    {{ component('SomeHeavyComponent', { loading: 'defer', loading-tag: 'span' }) }}
 
 Polling
 -------

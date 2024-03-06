@@ -31,9 +31,27 @@ final class DeferLiveComponentSubscriber implements EventSubscriberInterface
     public function onPostMount(PostMountEvent $event): void
     {
         $data = $event->getData();
+
         if (\array_key_exists('defer', $data)) {
-            $event->addExtraMetadata('defer', true);
+            trigger_deprecation('symfony/ux-live-component', '2.17', 'The "defer" attribute is deprecated and will be removed in 3.0. Use the "loading" attribute instead set to the value "defer".');
+            if ($data['defer']) {
+                $event->addExtraMetadata('loading', 'defer');
+            }
             unset($data['defer']);
+        }
+
+        if (\array_key_exists('loading', $data)) {
+            // Ignored values: false / null / ''
+            if ($loading = $data['loading']) {
+                if (!\is_scalar($loading)) {
+                    throw new \InvalidArgumentException(sprintf('The "loading" attribute value must be scalar, "%s" passed.', get_debug_type($loading)));
+                }
+                if (!\in_array($loading, ['defer', 'lazy'], true)) {
+                    throw new \InvalidArgumentException(sprintf('Invalid "loading" attribute value "%s". Accepted values: "defer" and "lazy".', $loading));
+                }
+                $event->addExtraMetadata('loading', $loading);
+            }
+            unset($data['loading']);
         }
 
         if (\array_key_exists('loading-template', $data)) {
@@ -53,7 +71,10 @@ final class DeferLiveComponentSubscriber implements EventSubscriberInterface
     {
         $mountedComponent = $event->getMountedComponent();
 
-        if (!$mountedComponent->hasExtraMetadata('defer')) {
+        if (!$mountedComponent->hasExtraMetadata('loading')) {
+            return;
+        }
+        if (!\in_array($mountedComponent->getExtraMetadata('loading'), ['defer', 'lazy'], true)) {
             return;
         }
 
@@ -63,6 +84,7 @@ final class DeferLiveComponentSubscriber implements EventSubscriberInterface
         $variables = $event->getVariables();
         $variables['loadingTemplate'] = self::DEFAULT_LOADING_TEMPLATE;
         $variables['loadingTag'] = self::DEFAULT_LOADING_TAG;
+        $variables['loading'] = $mountedComponent->getExtraMetadata('loading');
 
         if ($mountedComponent->hasExtraMetadata('loading-template')) {
             $variables['loadingTemplate'] = $mountedComponent->getExtraMetadata('loading-template');
