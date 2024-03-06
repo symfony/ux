@@ -31,22 +31,15 @@ class LiveComponentMetadataFactoryTest extends KernelTestCase
             $propsMetadataByName[$propMetadata->getName()] = $propMetadata;
         }
 
-        $this->assertNotNull($propsMetadataByName['prop1']->urlMapping());
-
-        $this->assertNotNull($propsMetadataByName['prop2']->urlMapping());
-
-        $this->assertNotNull($propsMetadataByName['prop3']->urlMapping());
-
-        $this->assertNull($propsMetadataByName['prop4']->urlMapping());
-
-        $this->assertNotNull($propsMetadataByName['prop5']->urlMapping());
-
-        $this->assertNotNull($propsMetadataByName['prop6']->urlMapping());
-
-        $this->assertNotNull($propsMetadataByName['prop7']->urlMapping());
-
-        $this->assertNull($propsMetadataByName['prop8']->urlMapping());
-
-        $this->assertEquals(new UrlMapping(as: 'q'), $propsMetadataByName['prop9']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['stringProp']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['intProp']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['arrayProp']->urlMapping());
+        $this->assertNull($propsMetadataByName['unboundProp']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['objectProp']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['propWithField1']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['propWithField2']->urlMapping());
+        $this->assertNull($propsMetadataByName['maybeBoundProp']->urlMapping());
+        $this->assertEquals(new UrlMapping(as: 'q'), $propsMetadataByName['boundPropWithAlias']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['boundPropWithCustomAlias']);
     }
 }
