@@ -363,8 +363,9 @@ export default class Component {
                 throw new Error('A live component template must contain a single root controller element.');
             }
         } catch (error) {
-            console.error('There was a problem with the component HTML returned:');
-
+            console.error(`There was a problem with the '${this.name}' component HTML returned:`, {
+                id: this.id
+            });
             throw error;
         }
 
