@@ -1,0 +1,152 @@
+---------------------------------------------------------------------------
+
+by 94noni at 2024-02-19T13:40:05Z
+
+I use on some projects https://www.stimulus-components.com/docs/stimulus-content-loader/
+and I would love to have this in symfony/ux 👍🏻
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-19T13:55:48Z
+
+To clarify?
+1. defer = on page load
+2. lazy = when in view
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-02-19T16:18:21Z
+
+If I follow the logic:
+for every component with a lazy attribute, we add the element into the IntersectionObserver.
+So now when a component is on the viewport the IntersionObserver executes a callback that finds all the components present in the viewport and dispatches an event 'live:appear' for each of them.
+
+Based on what I understand I have a question:
+Can I trigger this live:appear before it's trigger by IntersionObserver without having the IntersionObjerver to trigger a live:appear a second time?
+Do you see what I mean?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-20T14:04:19Z
+
+> lazy = when in view
+
+Yep i'll edit the description you're right :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-20T14:26:14Z
+
+> So now when a component is on the viewport the IntersionObserver
+
+It's not "when a component is on the viewport" it can be a lot of things (a component is "no more intersecting" for instance)
+
+So let's say "at a given time" for now :)
+
+> executes a callback that finds all the components present in the viewport and dispatches an event 'live:appear' for each of them.
+
+Yes
+
+> Can I trigger this live:appear before it's trigger by IntersionObserver
+
+You can dispatch any event you want :)
+
+> without having the IntersionObjerver to trigger a live:appear a second time?
+
+In that particular scenario, as the intersection observer is still obeserving the component, it would indeed trigger a "live:appear" event when the component start intersecting the viewport, and then unobserve it.
+
+Now my question is: why would you do that ? :)
+
+I mean, if you trigger manually some "disconnect" event to a stimulus component, while not really disconnecting it, that would create some weird side effects... same for all the "`live:*`" events in fact :)
+
+If someone voluntarily call internal/prive code, there is not much we can do to anticipate it / handle it, and there is nothing we can do to prevent it.
+
+Did you have a specific / particular case in mind ?
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-26T19:53:19Z
+
+> Doing loading="lazy" might also help clarify loading vs defer. The explanation would be something like:
+
+Should we then support `loading="defer"` to be consistent (and maybe deprecate the `defer` attribute)?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-26T22:33:05Z
+
+> Should we then support `loading="defer"` to be consistent (and maybe deprecate the `defer` attribute)?
+
+In HTML, `loading="defer"` does not exist.
+* `defer` attribute on scripts (in "opposition" to `async` )
+*` loading="lazy"` on image, iframe ..
+
+As lazy implies defer here, your suggestion makes perfect sense... but it complexifies a bit the DX
+
+```twig
+<twig:MyComponent defer lazy="{{ loop.index > 4 }}" />
+```
+
+```twig
+<twig:MyComponent loading="{{ loop.index > 4 ? 'lazy'  : 'defer' }}" />
+```
+
+Can we keep "defer" and "lazy" as some kind of aliases of "loading=XXX" ? Or is it not worth it ?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-02-27T18:14:47Z
+
+Yea... *just* having a `loading` (set to `defer` or `lazy`), indeed simplifies things.
+
+> Can we keep "defer" and "lazy" as some kind of aliases of "loading=XXX" ? Or is it not worth it ?
+
+The `loading="{{ loop.index > 4 ? 'lazy'  : 'defer' }}"` is indeed longer, but the expression (`loop.index > 4`) is the same, so it feels like both have equal complexity. This longer version also still reads very clear. I'd say we do NOT keep these aliases.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-29T22:13:33Z
+
+Updated for loading="lazy" / loading="defer"
++ deprecate "defer" attribute
++ doc
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-03-01T08:41:51Z
+
+Hey, I just have a question in a previous project we were using lazy loading in a specific way. The user was able to scroll a list of full-page images and we started the lazy load 3 images before the current image. I don't know if this PR can cover such a need. And if we should care about such a need?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-01T08:55:49Z
+
+> Hey, I just have a question in a previous project we were using lazy loading in a specific way. The user was able to scroll a list of full-page images and we started the lazy load 3 images before the current image. I don't know if this PR can cover such a need. And if we should care about such a need?
+
+I dont think this will be necessary. With a placeholder, and knowing your component will load probably in less than 200ms so it will more look like an animation than an ajax request.
+
+An image is often much larger than a live component request.
+
+I’d suggest we release without any customization and lets see if the need presents itself IRL ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-06T15:46:39Z
+
+* Updated the doc following feedback
+* Updated CHANGELOG.md
+* Updated UPGRADE.md
+
+All is ready for me :)
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-03-06T16:45:25Z
+
+One last comment (hopefully) and a phpcs failure :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-06T17:07:42Z
+
+phpcs due to rebase, they are fixed in: https://github.com/symfony/ux/pull/1579
