@@ -195,7 +195,7 @@ final class ComponentAttributes implements \IteratorAggregate, \Countable
 
     public function has(string $attribute): bool
     {
-        return array_key_exists($attribute, $this->attributes);
+        return \array_key_exists($attribute, $this->attributes);
     }
 
     public function count(): int

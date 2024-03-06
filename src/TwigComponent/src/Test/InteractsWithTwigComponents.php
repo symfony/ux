@@ -39,7 +39,8 @@ trait InteractsWithTwigComponents
         $blocks = array_filter(array_merge($blocks, ['content' => $content]));
 
         if (!$blocks) {
-            return new RenderedComponent(self::getContainer()->get('twig')
+            return new RenderedComponent(
+                self::getContainer()->get('twig')
                 ->createTemplate('{{ component(name, data) }}')
                 ->render([
                     'name' => $name,
@@ -56,7 +57,8 @@ trait InteractsWithTwigComponents
 
         $template .= '{% endcomponent %}';
 
-        return new RenderedComponent(self::getContainer()->get('twig')
+        return new RenderedComponent(
+            self::getContainer()->get('twig')
             ->createTemplate($template)
             ->render([
                 'data' => $data,

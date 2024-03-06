@@ -12,22 +12,27 @@
 namespace Symfony\UX\TwigComponent\Twig;
 
 use Symfony\Bundle\TwigBundle\DependencyInjection\Configurator\EnvironmentConfigurator;
+use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Environment;
+use Twig\Extension\EscaperExtension;
 
+/**
+ * @final
+ */
 class TwigEnvironmentConfigurator
 {
-    private EnvironmentConfigurator $decorated;
-
     public function __construct(
-        EnvironmentConfigurator $decorated,
+        private readonly EnvironmentConfigurator $decorated,
     ) {
-        $this->decorated = $decorated;
     }
 
     public function configure(Environment $environment): void
     {
         $this->decorated->configure($environment);
-
         $environment->setLexer(new ComponentLexer($environment));
+
+        if ($environment->hasExtension(EscaperExtension::class)) {
+            $environment->getExtension(EscaperExtension::class)->addSafeClass(ComponentAttributes::class, ['html']);
+        }
     }
 }

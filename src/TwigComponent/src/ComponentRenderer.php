@@ -18,7 +18,6 @@ use Symfony\UX\TwigComponent\Event\PostRenderEvent;
 use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Twig\Environment;
-use Twig\Extension\EscaperExtension;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -27,8 +26,6 @@ use Twig\Extension\EscaperExtension;
  */
 final class ComponentRenderer implements ComponentRendererInterface
 {
-    private bool $safeClassesRegistered = false;
-
     public function __construct(
         private Environment $twig,
         private EventDispatcherInterface $dispatcher,
@@ -108,12 +105,6 @@ final class ComponentRenderer implements ComponentRendererInterface
 
     private function preRender(MountedComponent $mounted, array $context = []): PreRenderEvent
     {
-        if (!$this->safeClassesRegistered) {
-            $this->twig->getExtension(EscaperExtension::class)->addSafeClass(ComponentAttributes::class, ['html']);
-
-            $this->safeClassesRegistered = true;
-        }
-
         $component = $mounted->getComponent();
         $metadata = $this->factory->metadataFor($mounted->getName());
         // expose public properties and properties marked with ExposeInTemplate attribute

@@ -111,7 +111,7 @@ final class LiveProp
          *
          * @var string|null
          */
-        private string|null $modifier = null,
+        private ?string $modifier = null,
     ) {
         self::validateHydrationStrategy($this);
     }
@@ -290,7 +290,7 @@ final class LiveProp
         return $clone;
     }
 
-    public function modifier(): string|null
+    public function modifier(): ?string
     {
         return $this->modifier;
     }
