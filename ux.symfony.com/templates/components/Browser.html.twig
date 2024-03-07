@@ -1,0 +1,45 @@
+{% props url = '/' %}
+
+<div class="Browser {{ attributes.render('class') }}" data-controller="browser tooltips" {{ attributes }}>
+    <div class="Browser__window">
+        <div class="Browser__header">
+            <div class="Browser__dots">
+                <button class="Browser__dot Browser__dot--red">
+                    <span>x</span>
+                </button>
+                <button class="Browser__dot Browser__dot--orange">
+                    <span>-</span>
+                </button>
+                <button class="Browser__dot Browser__dot--green" data-action="browser#reduce">
+                    <span>+</span>
+                </button>
+            </div>
+            <div class="Browser__url">
+                <twig:Icon name="lock" />
+                <span>
+                    <span hidden>https://</span><em>ux.symfony.com</em><span hidden>{{ url }}</span>
+                </span>
+                <button class="Browser__action">
+                    <twig:Icon name="refresh" />
+                </button>
+            </div>
+            <div class="Browser__actions">
+                {% if false %}
+                    <button class="Browser__action" data-bs-toggle="tooltip" title="Feedback">
+                        <twig:Icon name="circle-help" />
+                    </button>
+                {% endif %}
+                {% if githubUrl|default %}
+                    <a class="Browser__action" data-bs-toggle="tooltip" title="View on Github" href="{{ githubUrl }}">
+                        <twig:Icon name="github" />
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+        <div class="Browser__viewport">
+            {% block content %}
+            {% endblock %}
+        </div>
+    </div>
+</div>
+

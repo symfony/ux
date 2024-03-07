@@ -37,6 +37,11 @@ footer {
   flex-shrink: 0;
 }
 
+button {
+  border: none;
+  background: inherit;
+}
+
 a.link {
   --color: #d9438e;
   color: var(--color);

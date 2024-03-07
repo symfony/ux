@@ -1,0 +1,119 @@
+.Browser {
+  place-self: center;
+  margin-inline: auto;
+}
+.Browser__window {
+  border-radius: .5rem;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px #070707;
+  max-width: 1400px;
+  background: radial-gradient(circle at center, #00000021 0.15rem, #00000003 0) repeat;
+  background-size: 1rem 1rem;
+  transition: all 450ms linear;
+}
+
+.Browser--reduced {
+  z-index: 555;
+  transform: scale(.75);
+}
+
+.Browser__header {
+  display: grid;
+  grid-template-areas: "left center right";
+  grid-template-columns: 1fr 3fr 1fr;
+  justify-content: space-between;
+  align-items: center;
+  padding: .6rem;
+  background-color: #191C1F;
+  border-bottom: 1px solid #070707;
+  box-shadow: inset 0 0 1px rgba(255, 255, 255, 0.15);
+}
+
+.Browser__dots {
+  grid-area: left;
+  display: flex;
+  gap: .5rem;
+  padding-inline: .5rem;
+}
+
+.Browser__actions {
+  grid-area: right;
+  display: flex;
+  gap: .5rem;
+  flex-direction: row-reverse;
+}
+
+.Browser__action {
+  color: rgba(219, 219, 220, 0.7);
+}
+
+.Browser__url {
+  grid-area: center;
+  background-color: #0C0F12;
+  color: rgba(219, 219, 220, 0.7);
+  border-radius: .5rem;
+  font-size: .75rem;
+  width: auto;
+  padding: 0.1rem .5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.Browser__url em {
+  color: #DBDBDC;
+  font-style: normal;
+}
+
+.Browser__url .Browser__action {
+  float: right;
+}
+
+.Browser__viewport {
+  width: 100%;
+  aspect-ratio: 16/10;
+  background-color: var(--bs-body-bg);
+  overflow-x: hidden;
+  overflow-y: scroll;
+  scrollbar-width: thin;
+}
+
+.Browser__dot {
+  height: .75rem;
+  width: .75rem;
+  border: none;
+  border-radius: 50%;
+  background-color: var(--dot-color, #000f);
+  box-shadow: 0 0 0 1px #070707;
+  display: grid;
+  place-content: center;
+}
+
+.Browser__dot span {
+  font-size: .8rem;
+  mix-blend-mode: overlay;
+  color: #070707;
+  transition: all 150ms;
+  transform: scale(.75);
+  opacity: .5;
+  display: block;
+  position: relative;
+  top: -.05rem;
+}
+
+.Browser__dot:hover span {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.Browser__dot--red {
+  --dot-color: lch(42.76% 78.42 43);
+}
+
+.Browser__dot--orange {
+  --dot-color: lch(62.6% 72.82 64.92);
+}
+
+.Browser__dot--green {
+  --dot-color: lch(67.05% 83.27 137.66);
+}

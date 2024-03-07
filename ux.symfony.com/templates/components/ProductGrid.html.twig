@@ -1,0 +1,43 @@
+<div class="ProductGrid" {{ attributes.defaults(stimulus_controller('scroll')) }}>
+
+    <div class="p-4">
+        <div id="results" style="display: flex; gap: 1rem; flex-direction: column;">
+
+            {% if this.page > 1 %}
+                {#  🦊 #}
+                {# Adding a fake "previous page" div is enough to trick the system #}
+                {# It must have the same ID than the original page #}
+                <div class="ProductGrid_page" id="page--{{ this.page - 1 }}" data-live-ignore="true"></div>
+            {% endif %}
+
+            {# Current page #}
+            <div class="ProductGrid_page" id="page--{{ this.page }}" data-live-ignore="true">
+                {% for item in this.items %}
+                    <article class="ProductGrid_item" data-num="{{ item.id }}"
+                             style="--color: {{ item.color }};">
+                        <div class="ProductGrid_media">
+                            <svg>
+                                <use href="#svg-tshirt"/>
+                            </svg>
+                            <span>{{ item.emoji }}</span>
+                        </div>
+                        <data value="{{ item.id }}">$ {{ item.id + 1 }}<small>.99</small></data>
+                    </article>
+                {% endfor %}
+            </div>
+
+            {% if this.hasMore %}
+                <div style="display: grid; place-content: center;padding: 4rem;">
+                    <button
+                        data-action="live#action"
+                        data-live-action-param="more"
+                        data-scroll-target="loader"
+                        class="btn btn-primary">Load More (page {{ this.page + 1 }})
+                    </button>
+                </div>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
