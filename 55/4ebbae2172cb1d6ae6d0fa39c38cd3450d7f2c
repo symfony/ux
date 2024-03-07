@@ -1,0 +1,149 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-02T18:49:44Z
+
+I've made the following cache changes:
+1. Always use `cache.system` (no longer configurable)
+2. Always warmup on `cache:warmup`/`cache:clear` (no longer configurable)
+
+As Ryan pointed out, there's likely a better way to handle the cache. I'll dig into this but now, it shouldn't hold up a merge/initial release.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-03T01:57:56Z
+
+I found the problem with Iconify... it removes attributes from the SVG tag, and insert them in a <g> in the innerSVG.
+
+### Lucide icon (downloaded from [website](https://lucide.dev/icons/activity-square))
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-activity-square"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5-2-10-2 5H7"/></svg>
+```
+
+### Lucide icon (from [repo](https://github.com/lucide-icons/lucide/blob/main/icons/activity-square.svg?short_path=3edf692))
+
+```svg
+<svg
+  xmlns="http://www.w3.org/2000/svg"
+  width="24"
+  height="24"
+  viewBox="0 0 24 24"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="2"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+>
+  <rect width="18" height="18" x="3" y="3" rx="2" />
+  <path d="M17 12h-2l-2 5-2-10-2 5H7" />
+</svg>
+```
+
+### Lucide icon (as SVG + CSS)
+
+The idea beeing obviously to not repeat those attributes everywhere and set them globally, leading to small simple SVG files (more or less what Github does on this website)
+
+Doc: https://lucide.dev/guide/packages/lucide-static
+
+```css
+.lucide-icon {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+```
+
+```svg
+<svg  class="lucide-icon">
+<rect width="18" height="18" x="3" y="3" rx="2" /><path d="M17 12h-2l-2 5-2-10-2 5H7"/>
+</svg>
+```
+
+Much cooler, right ?
+
+### Iconify Icon (downloaded from [website](https://icon-sets.iconify.design/lucide/activity-square/))
+
+There is where the problem starts. Iconify added a <g> tag where it moved root attributes to.
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M17 12h-2l-2 5l-2-10l-2 5H7"/></g></svg>
+```
+
+Much harder then to optimise things.
+
+And the result is the same when provided from the API.
+
+## Problems
+
+I see there multiple problems
+
+* it generate twice the code needed
+* it makes harder to set values globally (not every icon will come from Iconify)
+* it hard-codes things in the innerSVG --something that need to be accessible easily via CSS, ideally on the root component
+* it creates a version of the icon that will be different (in content and possibilities) of the original one
+
+I'm pretty sure there are solutions to all those points, i am NOT suggesting we don't use this amazing service.. but we should address those
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-03T02:09:35Z
+
+> * Always use `cache.system` (no longer configurable)
+>
+> * Always warmup on `cache:warmup`/`cache:clear` (no longer configurable)
+
+TwigBundle uses a dedicated directory
+
+```php
+    private function addTwigOptions(ArrayNodeDefinition $rootNode): void
+    {
+        $rootNode
+            ->fixXmlConfig('path')
+            ->children()
+                ->scalarNode('autoescape_service')->defaultNull()->end()
+                ->scalarNode('autoescape_service_method')->defaultNull()->end()
+                ->scalarNode('base_template_class')->example('Twig\Template')->cannotBeEmpty()->end()
+                ->scalarNode('cache')->defaultValue('%kernel.cache_dir%/twig')->end()
+                ->scalarNode('charset')->defaultValue('%kernel.charset%')->end()
+                ->booleanNode('debug')->defaultValue('%kernel.debug%')->end()
+                ->booleanNode('strict_variables')->defaultValue('%kernel.debug%')->end()
+
+```
+
+If the doc is right, the system cache does not seem the ideal place to store 3000 icons, especially if we generate one cache file per icon (two with tags?)
+
+> There are two pools that are always enabled by default. They are cache.app and cache.system. **The system cache is used for things like annotations, serializer, and validation.** The cache.app can be used in your code. You can configure which adapter (template) they use by using the app and system key like:
+
+https://symfony.com/doc/current/cache.html#cache-app-system
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-03T02:20:37Z
+
+> If the doc is right, the system cache does not seem the ideal place to store 3000 icons, especially if we generate one cache file per icon (two with tags?)
+
+Yes, I think this is the conclusion Ryan came to as well. I'm going to dig deeper into this.
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-03T18:52:59Z
+
+~Anyone know what's up with the [CI failure](https://github.com/symfony/ux/actions/runs/7768770773/job/21187083273?pr=1450#step:7:23) on prefer-lowest? I'm seeing the same thing locally but I've never encountered this issue before.~ Fixed, I had to allow phpunit-bridge 6.3
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-10T17:11:59Z
+
+I've added an [`ux:icons:import` command](https://github.com/kbond/ux/blob/feat/ux-icons-draft-2/src/Icons/README.md#import-command). This allows importing individual icons from https://icon-sets.iconify.design/ (which is a huge searchable repository of icons).
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-02-19T03:49:09Z
+
+**NEW FEATURE: Iconify Icons on Demand!**
+
+You can now just use _any icon_ from https://icon-sets.iconify.design/ without importing/downloading or anything!
