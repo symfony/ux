@@ -25,10 +25,12 @@ use Symfony\UX\Icons\Svg\Icon;
  */
 final class Iconify
 {
+    private const API_BASE_URI = 'https://api.iconify.design';
+
     private HttpClientInterface $http;
 
     public function __construct(
-        string $endpoint = 'https://api.iconify.design',
+        string $endpoint = self::API_BASE_URI,
         ?HttpClientInterface $http = null,
     ) {
         if (!class_exists(HttpClient::class)) {
@@ -41,13 +43,19 @@ final class Iconify
     public function metadataFor(string $prefix): array
     {
         $response = $this->http->request('GET', sprintf('/collections?prefix=%s', $prefix));
+        if (200 !== $response->getStatusCode()) {
+            throw new IconNotFoundException(sprintf('The icon prefix "%s" does not exist on iconify.design.', $prefix));
+        }
 
-        return $response->toArray()[$prefix] ?? throw new \RuntimeException(sprintf('The icon prefix "%s" does not exist on iconify.design.', $prefix));
+        return $response->toArray()[$prefix] ?? throw new IconNotFoundException(sprintf('The icon prefix "%s" does not exist on iconify.design.', $prefix));
     }
 
     public function fetchIcon(string $prefix, string $name): Icon
     {
         $response = $this->http->request('GET', sprintf('/%s.json?icons=%s', $prefix, $name));
+        if (200 !== $response->getStatusCode()) {
+            throw new IconNotFoundException(sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
+        }
 
         try {
             $data = $response->toArray();
@@ -66,15 +74,15 @@ final class Iconify
 
     public function fetchSvg(string $prefix, string $name): string
     {
-        $content = $this->http
-            ->request('GET', sprintf('/%s/%s.svg', $prefix, $name))
-            ->getContent()
-        ;
-
-        if (!str_starts_with($content, '<svg')) {
+        $response = $this->http->request('GET', sprintf('/%s/%s.svg', $prefix, $name));
+        if (200 !== $response->getStatusCode()) {
             throw new IconNotFoundException(sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
         }
 
-        return $content;
+        if (!str_starts_with($svg = $response->getContent(), '<svg')) {
+            throw new IconNotFoundException(sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
+        }
+
+        return $svg;
     }
 }

@@ -20,7 +20,7 @@ final class IconTest extends TestCase
     {
         $icon = new Icon('foo', ['foo' => 'bar']);
         $this->assertSame('foo', $icon->getInnerSvg());
-        $this->assertSame('bar', $icon['foo']);
+        $this->assertSame('bar', $icon->getAttributes()['foo']);
     }
 
     /**
