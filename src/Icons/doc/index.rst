@@ -115,6 +115,22 @@ In production, you can pre-warm the cache by running the following command:
 
 This command looks in all your twig templates for ``ux_icon`` calls and caches the icons it finds.
 
+.. caution::
+
+    Icons that have a name built dynamically will not be cached. It's advised to have the icon
+    name as a string literal in your templates.
+
+    .. code-block:: twig
+
+        {# This will be cached #}
+        {{ ux_icon('flag-fr') }}
+
+        {# This will NOT be cached #}
+        {{ ux_icon('flag-' ~ locale) }}
+
+        {% set flags = {fr: 'flag-fr', de: 'flag-de'} %} {# both "flag-fr" and "flag-de" will be cached #}
+        {{ ux_icon(flags[locale]) }}
+
 .. note::
 
     During development, if you modify an icon, you will need to clear the cache (``bin/console cache:clear``)

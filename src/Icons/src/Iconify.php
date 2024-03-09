@@ -14,6 +14,7 @@ namespace Symfony\UX\Icons;
 use Symfony\Component\HttpClient\Exception\JsonException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\ScopingHttpClient;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Svg\Icon;
@@ -26,8 +27,10 @@ use Symfony\UX\Icons\Svg\Icon;
 final class Iconify
 {
     private HttpClientInterface $http;
+    private \ArrayObject $sets;
 
     public function __construct(
+        private CacheInterface $cache,
         string $endpoint = 'https://api.iconify.design',
         ?HttpClientInterface $http = null,
     ) {
@@ -40,13 +43,15 @@ final class Iconify
 
     public function metadataFor(string $prefix): array
     {
-        $response = $this->http->request('GET', sprintf('/collections?prefix=%s', $prefix));
-
-        return $response->toArray()[$prefix] ?? throw new \RuntimeException(sprintf('The icon prefix "%s" does not exist on iconify.design.', $prefix));
+        return $this->sets()[$prefix] ?? throw new \RuntimeException(sprintf('The icon prefix "%s" does not exist on iconify.design.', $prefix));
     }
 
     public function fetchIcon(string $prefix, string $name): Icon
     {
+        if (!isset($this->sets()[$prefix])) {
+            throw new IconNotFoundException(sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
+        }
+
         $response = $this->http->request('GET', sprintf('/%s.json?icons=%s', $prefix, $name));
 
         try {
@@ -66,6 +71,10 @@ final class Iconify
 
     public function fetchSvg(string $prefix, string $name): string
     {
+        if (!isset($this->sets()[$prefix])) {
+            throw new IconNotFoundException(sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
+        }
+
         $content = $this->http
             ->request('GET', sprintf('/%s/%s.svg', $prefix, $name))
             ->getContent()
@@ -76,5 +85,14 @@ final class Iconify
         }
 
         return $content;
+    }
+
+    private function sets(): \ArrayObject
+    {
+        return $this->sets ??= $this->cache->get('ux-iconify-sets', function () {
+            $response = $this->http->request('GET', '/collections');
+
+            return new \ArrayObject($response->toArray());
+        });
     }
 }

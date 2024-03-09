@@ -38,11 +38,7 @@ final class IconFinder
         foreach ($this->files($this->twig->getLoader()) as $file) {
             $contents = file_get_contents($file);
 
-            if (preg_match_all('#ux_icon\(["\']([\w:-]+)["\']#', $contents, $matches)) {
-                $found[] = $matches[1];
-            }
-
-            if (preg_match_all('#name=["\']([\w:-]+)["\']#', $contents, $matches)) {
+            if (preg_match_all('#["\']([\w:-]+)["\']#', $contents, $matches)) {
                 $found[] = $matches[1];
             }
         }
