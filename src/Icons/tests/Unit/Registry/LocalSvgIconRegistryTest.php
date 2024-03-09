@@ -84,6 +84,6 @@ final class LocalSvgIconRegistryTest extends TestCase
 
     private function registry(): LocalSvgIconRegistry
     {
-        return new LocalSvgIconRegistry(__DIR__.'/../../Fixtures/svg');
+        return new LocalSvgIconRegistry([__DIR__.'/../../Fixtures/svg']);
     }
 }

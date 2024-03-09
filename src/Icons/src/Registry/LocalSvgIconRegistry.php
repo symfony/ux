@@ -23,22 +23,32 @@ use Symfony\UX\Icons\Svg\Icon;
  */
 final class LocalSvgIconRegistry implements IconRegistryInterface
 {
-    public function __construct(private string $iconDir)
+    /**
+     * @param string[] $iconDirs
+     */
+    public function __construct(private array $iconDirs)
     {
     }
 
     public function get(string $name): Icon
     {
-        if (!file_exists($filename = sprintf('%s/%s.svg', $this->iconDir, str_replace(':', '/', $name)))) {
-            throw new IconNotFoundException(sprintf('The icon "%s" (%s) does not exist.', $name, $filename));
+        foreach ($this->iconDirs as $key => $dir) {
+            if (!is_numeric($key) && str_starts_with($name, $key.':')) {
+                $name = substr($name, \strlen($key) + 1);
+            }
+
+            if (file_exists($filename = sprintf('%s/%s.svg', $dir, str_replace(':', '/', $name)))) {
+                return Icon::fromFile($filename);
+            }
         }
 
-        return Icon::fromFile($filename);
+        throw new IconNotFoundException(sprintf('The svg file for icon "%s" does not exist.', $name));
     }
 
     public function add(string $name, string $svg): void
     {
-        $filename = sprintf('%s/%s.svg', $this->iconDir, $name);
+        $dir = $this->iconDirs[array_key_first($this->iconDirs)] ?? throw new \LogicException('No local icon directory configured.');
+        $filename = sprintf('%s/%s.svg', $dir, $name);
 
         (new Filesystem())->dumpFile($filename, $svg);
     }
