@@ -49,7 +49,10 @@ final class TestKernel extends Kernel
         ]);
 
         $c->extension('ux_icons', [
-            'icon_dir' => '%kernel.project_dir%/tests/Fixtures/icons',
+            'icon_dir' => [
+                '%kernel.project_dir%/tests/Fixtures/icons',
+                '%kernel.project_dir%/tests/Fixtures/icons2',
+            ],
         ]);
 
         $c->services()->set('logger', NullLogger::class);

@@ -27,9 +27,22 @@ No icons are provided by this package but there are several ways to include and 
 Local SVG Icons
 ~~~~~~~~~~~~~~~
 
-Add your svg icons to the ``assets/icons/`` directory and commit them.
+Add your svg icons to the configured local icon directory (``assets/icons/`` by default) and commit them.
 The name of the file is used as the _name_ of the icon (``name.svg`` will be named ``name``).
 If located in a subdirectory, the _name_ will be ``sub-dir:name``.
+
+Multiple Directories
+^^^^^^^^^^^^^^^^^^^^
+
+You can configure multiple directories to search for icons. The first directory to contain the
+icon will be used.
+
+.. code-block:: yaml
+
+    ux_icons:
+        icon_dir:
+            - %kernel.project_dir%/assets/icons
+            - %kernel.project_dir%/vendor/your-vendor/your-bundle/assets/icons
 
 Icons On-Demand
 ~~~~~~~~~~~~~~~
@@ -130,8 +143,13 @@ Full Default Configuration
 .. code-block:: yaml
 
     ux_icons:
-        # The local directory where icons are stored.
-        icon_dir: '%kernel.project_dir%/assets/icons'
+        # The local directory('s) where icons are stored.
+        # Order matters as the first directory to contain the icon will be used.
+        # The first directory will be used to store imported icons.
+        icon_dir:
+
+            # Default:
+            - %kernel.project_dir%/assets/icons
 
         # Default attributes to add to all icons.
         default_icon_attributes:
