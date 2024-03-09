@@ -14,6 +14,7 @@ namespace Symfony\UX\Icons;
 use Symfony\Component\HttpClient\Exception\JsonException;
 use Symfony\Component\HttpClient\HttpClient;
 use Symfony\Component\HttpClient\ScopingHttpClient;
+use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Svg\Icon;
@@ -27,9 +28,12 @@ final class Iconify
 {
     private HttpClientInterface $http;
 
+    private array $iconSets;
+
     public function __construct(
         string $endpoint = 'https://api.iconify.design',
         ?HttpClientInterface $http = null,
+        private readonly ?CacheInterface $cache = null,
     ) {
         if (!class_exists(HttpClient::class)) {
             throw new \LogicException('You must install "symfony/http-client" to use Iconify. Try running "composer require symfony/http-client".');
@@ -43,6 +47,15 @@ final class Iconify
         $response = $this->http->request('GET', sprintf('/collections?prefix=%s', $prefix));
 
         return $response->toArray()[$prefix] ?? throw new \RuntimeException(sprintf('The icon prefix "%s" does not exist on iconify.design.', $prefix));
+    }
+
+    public function getIconSets(): array
+    {
+        if (!isset($this->iconSets) && $this->cache) {
+            return $this->iconSets = $this->cache->get('iconify.design.icon_sets', $this->fetchCollections(...));
+        }
+
+        return $this->iconSets ??= $this->fetchCollections();
     }
 
     public function fetchIcon(string $prefix, string $name): Icon
@@ -68,13 +81,25 @@ final class Iconify
     {
         $content = $this->http
             ->request('GET', sprintf('/%s/%s.svg', $prefix, $name))
-            ->getContent()
-        ;
+            ->getContent();
 
         if (!str_starts_with($content, '<svg')) {
             throw new IconNotFoundException(sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
         }
 
         return $content;
+    }
+
+    private function fetchCollections(): array
+    {
+        $response = $this->http->request('GET', '/collections');
+        if (200 !== $response->getStatusCode()) {
+            throw new \RuntimeException('Could not fetch icon collections from iconify.design.');
+        }
+        if (null === $collections = $response->toArray()) {
+            throw new \RuntimeException('Could not fetch icon collections from iconify.design.');
+        }
+
+        return $collections;
     }
 }
