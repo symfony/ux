@@ -32,7 +32,11 @@ final class LocalSvgIconRegistry implements IconRegistryInterface
 
     public function get(string $name): Icon
     {
-        foreach ($this->iconDirs as $dir) {
+        foreach ($this->iconDirs as $key => $dir) {
+            if (!is_numeric($key) && str_starts_with($name, $key.':')) {
+                $name = substr($name, \strlen($key) + 1);
+            }
+
             if (file_exists($filename = sprintf('%s/%s.svg', $dir, str_replace(':', '/', $name)))) {
                 return Icon::fromFile($filename);
             }
@@ -43,7 +47,7 @@ final class LocalSvgIconRegistry implements IconRegistryInterface
 
     public function add(string $name, string $svg): void
     {
-        $dir = $this->iconDirs[0] ?? throw new \LogicException('No local icon directory configured.');
+        $dir = $this->iconDirs[array_key_first($this->iconDirs)] ?? throw new \LogicException('No local icon directory configured.');
         $filename = sprintf('%s/%s.svg', $dir, $name);
 
         (new Filesystem())->dumpFile($filename, $svg);

@@ -37,12 +37,30 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                 ->arrayNode('icon_dir')
                     ->beforeNormalization()
                         ->ifString()
-                        ->then(static function ($v) { return [$v]; })
+                        ->then(static fn ($v) => [$v])
+                    ->end()
+                    ->beforeNormalization()
+                        ->always(function (array $values) {
+                            $ret = [];
+
+                            foreach ($values as $value) {
+                                if (2 === \count($parts = explode('@', $value, 2))) {
+                                    $ret[$parts[1]] = $parts[0];
+
+                                    continue;
+                                }
+
+                                $ret[] = $value;
+                            }
+
+                            return $ret;
+                        })
                     ->end()
                     ->info(<<<EOF
                         The local directory('s) where icons are stored.
                         Order matters as the first directory to contain the icon will be used.
                         The first directory will be used to store imported icons.
+                        Suffix with "@<alias>" to use a prefix.
                         EOF)
                     ->scalarPrototype()->end()
                     ->defaultValue(['%kernel.project_dir%/assets/icons'])

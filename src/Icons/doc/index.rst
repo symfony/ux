@@ -44,6 +44,25 @@ icon will be used.
             - %kernel.project_dir%/assets/icons
             - %kernel.project_dir%/vendor/your-vendor/your-bundle/assets/icons
 
+.. tip::
+
+    You can suffix the path with ``@<alias>`` to use a prefix. For example, let's say you
+    have the ``fortawesome/font-awesome`` composer package installed and you want to use
+    the ``fa`` prefix:
+
+    .. code-block:: yaml
+
+        ux_icons:
+            icon_dir:
+                # ...
+                - %kernel.project_dir%/vendor/fortawesome/font-awesome/svgs@fa
+
+    Now, you can use the ``fa:icon-name`` syntax to render icons from the FontAwesome set:
+
+    .. code-block:: html+twig
+
+        {{ ux_icon('fa:solid:adjust', {class: 'w-4 h-4'}) }} <!-- renders "vendor/fortawesome/font-awesome/svgs/solid/adjust.svg" -->
+
 Icons On-Demand
 ~~~~~~~~~~~~~~~
 
@@ -146,6 +165,7 @@ Full Default Configuration
         # The local directory('s) where icons are stored.
         # Order matters as the first directory to contain the icon will be used.
         # The first directory will be used to store imported icons.
+        # Suffix with "@<alias>" to use a prefix.
         icon_dir:
 
             # Default:
