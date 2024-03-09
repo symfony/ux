@@ -142,6 +142,9 @@ Full Default Configuration
         iconify:
            enabled:              true
 
+           # Whether to use the "on demand" icons powered by Iconify.design.
+           on_demand:            true
+
            # The endpoint for the Iconify API.
            endpoint:             'https://api.iconify.design'
 
