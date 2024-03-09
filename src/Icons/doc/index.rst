@@ -1,10 +1,13 @@
 Symfony UX Icons
 ================
 
-This package provides utilities to work with SVG icons. It renders both local
-and remote icons in your Twig templates. It provides direct access to over
-200,000 open source vector icons from popular icon sets such as FontAwesome,
-Bootstrap Icons, Tabler Icons, Google Material Design Icons, etc.
+The ``symfony/ux-icons`` package offers simple and intuitive ways to render
+SVG icons in your Symfony application. It provides a Twig function to include
+any local or remote icons from your templates.
+
+UX Icons gives you a direct access to over 200,000 vector icons from popular
+icon sets such as FontAwesome, Bootstrap Icons, Tabler Icons, Google Material
+Design Icons, etc.
 
 Installation
 ------------
@@ -13,11 +16,40 @@ Installation
 
     $ composer require symfony/ux-icons
 
-Usage
------
 
-This package provides a ``ux_icon()`` Twig function to define the icons that you
-want to include in the templates:
+SVG Icons
+---------
+
+`SVG`_ (Scalable Vector Graphics) is an XML-based vector image format, allowing
+resolution-independent graphics while maintaining a small file size. SVG icons
+can be embedded in the HTML code, styled with CSS, and animated with JavaScript.
+
+UX Icons allows you to use icons from the most popular icon sets, but also gives you
+the flexibility to compose your own collection, mixing icons from different sets with
+your own.
+
+Icon Names
+~~~~~~~~~~
+
+Icons are referenced using an unique identifier that follows one of the following syntaxes:
+
+* ``prefix:name``  (e.g. ``mdi:check``, ``bi:check``, ``editor:align-left``)
+* ``name`` only (e.g. ``check``, ``close``, ``menu``)
+
+The icon ``name`` is the same as the file name without the file extension (e.g. ``check.svg`` -> ``check``).
+
+.. caution::
+
+    The name must match a standard ``slug`` format: ``[a-z0-9-]+(-[0-9a-z])+``.
+
+Depending on your configuration, the ``prefix`` can be the name of an icon set, a directory
+where the icon is located, or a combination of both.
+
+For example, the ``bi`` prefix refers to the Bootstrap Icons set, while the ``header`` prefix
+refers to the icons located in the ``header`` directory.
+
+Loading Icons
+-------------
 
 .. code-block:: twig
 
@@ -42,6 +74,57 @@ define the HTML attributes added to the ``<svg>`` element:
 
     {{ ux_icon('user-profile', {height: '16px', width: '16px', aria-hidden: true}) }}
     {# renders <svg height="16" width="16" aria-hidden="true"> ... </svg> #}
+
+.. code-block:: yaml
+
+    # config/packages/ux_icons.yaml
+    ux_icons:
+        iconify:
+            enabled: true
+            on_demand: true
+            endpoint: 'https://api.iconify.design'
+
+Icon Sets
+~~~~~~~~~
+
+There are many icon sets available, each with their own unique style and set of
+icons, providing a wide range of icons for different purposes, while maintaining
+a consistent look and feel across your application.
+
+With more than 200,000 icons available, you can find the perfect icon for your
+project. Here are some of the most popular icon sets available:
+
+========================= ======= ========== =========== =================
+Icon Set                    Icons License    Prefix      Example
+========================= ======= ========== =========== =================
+`Bootstrap Icons`_           2000 MIT        bi          bi:check
+`Boxicons`_                  1700 MIT        bx          bx:check
+`Flowbite`_                  1000 MIT        flowbite    flowbite:check
+`FontAwesome Icons`_         7000 CC BY 4.0  fa6-regular fa6-regular:check
+`Heroicons`_                  300 MIT        heroicons   heroicons:check
+`Iconoir`_                   1500 MIT        iconoir     iconoir:check
+`Ionicons`_                  1300 MIT        ion         ion:check
+`Lucide Icons`_              1500 MIT        lucide      lucide:check
+`Material Design Icons`_     5000 Apache 2   mdi         mdi:check
+`Octicons`_                   600 MIT        octicon     octicon:check
+`Phosphor Icons`_            7000 MIT        ph          ph:check
+`Tabler Icons`_              5200 MIT        tabler      tabler:check
+========================= ======= ========== =========== =================
+
+- `Bootstrap Icons <https://icons.getbootstrap.com/>`_
+- `Boxicons <https://boxicons.com/>`_
+- `Flowbite <https://github.com/themesberg/flowbite>`_
+- `FontAwesome Icons <https://github.com/FortAwesome/Font-Awesome>`_
+- `Heroicons <https://github.com/tailwindlabs/heroicons>`_
+- `Iconoir <https://github.com/iconoir-icons/iconoir>`_
+- `Ionicons <https://github.com/ionic-team/ionicons>`_
+- `Lucide Icons <https://github.com/lucide-icons/lucide>`_
+- `Material Design Icons <https://github.com/google/material-design-icons>`_
+- `Octicons <https://github.com/primer/octicons/>`_
+- `Phosphor Icons <https://github.com/phosphor-icons/homepage>`_
+- `Tabler Icons <https://github.com/tabler/tabler-icons>`_
+
+To see the full list of available icon sets, visit `ux.symfony.com/icons`_.
 
 HTML Syntax
 ~~~~~~~~~~~
@@ -81,12 +164,36 @@ If you already have the SVG icon files to use in your project, store them in the
 *name* of the icon (``icon_name.svg`` will be named ``icon_name``). If located in
 a subdirectory, the *name* will be ``subdirectory:icon_name``.
 
-On-Demand Open Source Icons
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+.. code-block:: text
+
+    your-project/
+    ├─ assets/
+    │  └─ icons/
+    │     ├─ bi/
+    │     │  └─ pause-circle.svg
+    │     │  └─ play-circle.svg
+    │     ├─ header/
+    │     │  ├─ logo.svg
+    │     │  └─ menu.svg
+    │     ├─ close.svg
+    │     ├─ menu.svg
+    │     └─ ...
+    └─ ...
+
+
+Icons On-Demand
+~~~~~~~~~~~~~~~
+
+`ux.symfony.com/icons`_ has a huge searchable repository of icons
+from many different sets. This package provides a way to include any icon found on this site _on-demand_.
 
 `ux.symfony.com/icons`_ has a huge searchable repository of icons from many
 different sets. This package provides a way to include any icon found on this
 site *on-demand*:
+1. Visit `ux.symfony.com/icons`_ and search for an icon
+   you'd like to use. Once you find one you like, copy one of the code snippets provided.
+2. Paste the snippet into your Twig template and the icon will be automatically fetched (and cached).
+3. That's it!
 
 1. Visit `ux.symfony.com/icons`_ and search for an icon you'd like to use. Once
    you find one you like, copy one of the code snippets provided.
@@ -126,8 +233,158 @@ the ``assets/icons/`` directory. You can think of importing an icon as *locking 
 
     Imported icons must be committed to your repository.
 
+Rendering Icons
+---------------
+
+.. code-block:: twig
+
+    {# includes the contents of the 'assets/icons/user-profile.svg' file in the template #}
+    {{ ux_icon('user-profile') }}
+
+    {# icons stored in subdirectories must use the 'subdirectory_name:file_name' syntax
+       (e.g. this includes 'assets/icons/admin/user-profile.svg') #}
+    {{ ux_icon('admin:user-profile') }}
+
+    {# this downloads the 'user-solid.svg' icon from the 'Flowbite' icon set via ux.symfony.com
+       and embeds the downloaded SVG contents in the template #}
+    {{ ux_icon('flowbite:user-solid') }}
+
+HTML Syntax
+~~~~~~~~~~~
+
+.. code-block:: html+twig
+
+    <twig:UX:Icon name="user-profile" />
+
+    {# Renders "user-profile.svg" #}
+    <twig:UX:Icon name="user-profile" class="w-4 h-4" />
+
+    {# Renders "sub-dir/user-profile.svg" (sub-directory) #}
+    <twig:UX:Icon name="sub-dir:user-profile" class="w-4 h-4" />
+
+    {# Renders "flowbite:user-solid" from ux.symfony.com #}
+    <twig:UX:Icon name="flowbite:user-solid" />
+
+.. note::
+
+    ``symfony/ux-twig-component`` is required to use the HTML syntax.
+
+HTML Attributes
+~~~~~~~~~~~~~~~
+
+The second argument of the ``ux_icon`` function is an array of attributes to add to the icon.
+
+.. code-block:: twig
+
+    {# renders "user-profile.svg" with class="w-4 h-4" #}
+    {{ ux_icon('user-profile', {class: 'w-4 h-4'}) }}
+
+    {# renders "user-profile.svg" with class="w-4 h-4" and aria-hidden="true" #}
+    {{ ux_icon('user-profile', {class: 'w-4 h-4', 'aria-hidden': true}) }}
+
+Default Attributes
+~~~~~~~~~~~~~~~~~~
+
+You can set default attributes for all icons in your configuration. These attributes will be
+added to all icons unless overridden by the second argument of the ``ux_icon`` function.
+
+.. code-block:: yaml
+
+    # config/packages/ux_icons.yaml
+    ux_icons:
+        default_icon_attributes:
+            fill: currentColor
+
+Now, all icons will have the ``fill`` attribute set to ``currentColor`` by default.
+
+.. code-block:: twig
+
+    # renders "user-profile.svg" with fill="currentColor"
+    {{ ux_icon('user-profile') }}
+
+    # renders "user-profile.svg" with fill="red"
+    {{ ux_icon('user-profile', {fill: 'red'}) }}
+
+Accessibility
+-------------
+
+Icons are a used to add visual elements to your website, but they can be a challenge
+for accessibility.
+
+According to the `W3C <https://design-system.w3.org/styles/svg-icons.html>`_, there are
+three methods to improve icons accessibility, depending on the context:
+
+    * **Decorative**: Icons that are purely decorative and do not convey any meaning or function.
+    * **Informative**: Icons that convey information or a function.
+    * **Functional**: Icons that are interactive and perform a function.
+
+Decorative Icons
+~~~~~~~~~~~~~~~~
+
+If the icon is purely decorative and does not convey any meaning or function, it should be
+hidden from screen readers using the ``aria-hidden`` attribute.
+
+.. code-block:: html+twig
+
+    <a href="/profile">
+        {{ ux_icon('user-profile', {class: 'w-4 h-4', 'aria-hidden': true}) }}
+        Back to profile
+    </a>
+
+Informative Icons
+~~~~~~~~~~~~~~~~~
+
+If the icon conveys information or a function, it should be given a text alternative that presents
+the same content or function, so that it can fulfill the same purpose.
+
+.. code-block:: twig
+
+    Today's weather:
+    {{ ux_icon('cloud-rain', {'aria-label': 'Rainy weather'}) }}
+
+Functional Icons
+~~~~~~~~~~~~~~~~
+
+If the icon is interactive and performs a function, it should be given a text alternative that
+presents the same content or function, so that it can fulfill the same purpose.
+
+.. code-block:: twig
+
+    {{ ux_icon('user-profile', {class: 'w-4 h-4', 'aria-label': 'User Profile'}) }}
+
+.. note::
+
+    The ``aria-label`` attribute is used to provide a label for the icon. It is read by
+    screen readers and other assistive technologies.
+
+.. note::
+
+    The ``aria-hidden`` attribute is used to hide the icon from screen readers and other
+    assistive technologies.
+
+
+Performance
+-----------
+
+The UX Icons component is designed to be fast. The following are some of
+the optimizations made to ensure the best performance possible.
+
+
 Caching
 -------
+
+On-Demand VS Import
+^^^^^^^^^^^^^^^^^^^
+
+While *on-demand* icons are great during development, they require HTTP requests to fetch the icon
+and always use the *latest version* of the icon. It's possible the icon could change or be removed
+in the future. Additionally, the cache warming process will take significantly longer if using
+many _on-demand_ icons. You can think of importing the icon as *locking it* (similar to how
+``composer.lock`` _locks_ your dependencies).
+
+
+Icon Caching
+~~~~~~~~~~~~
 
 To avoid having to parse icon files on every request, icons are cached.
 In production, you can pre-warm the cache by running the following command:
@@ -165,8 +422,55 @@ This command looks in all your Twig templates for ``ux_icon()`` calls and
 
     If using `symfony/asset-mapper`_, the cache is warmed automatically when running ``asset-map:compile``.
 
-Full Default Configuration
---------------------------
+TwigComponent
+~~~~~~~~~~~~~
+
+The ``ux_icon`` function is optimized to be as fast as possible. To deliver the same level
+of performance with the TwigComponent (``<twig:UX:Icon name="..." />``), the TwigComponent
+usual overhead is reduced to the bare minimum, immediately calling the IconRenderer and
+returning the HTML output.
+
+.. warning::
+
+    The <twig:UX:Icon> component does not support embedded content.
+
+    .. code-block:: twig+html
+
+        {# The 🧸 will be ignore in the HTML output #}
+        <twig:UX:Icon name="user-profile" class="w-4 h-4">🧸</twig:UX:Icon>
+
+        {# Renders "user-profile.svg" #}
+        <svg viewBox="0 0 24 24" class="w-4 h-4">
+            <path fill="currentColor" d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59z"/>
+        </svg>
+
+
+Configuration
+-------------
+
+The UX Icons integrates seamlessly in Symfony applications. All these options are configured under
+the ``ux_icons`` key in your application configuration.
+
+.. code-block:: yaml
+
+    # config/packages/ux_icons.yaml
+    ux_icons:
+        {# ... #}
+
+
+Debugging Configuration
+~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: terminal
+
+    # Displays the default config values
+    $ php bin/console config:dump-reference ux_icons
+
+    # Displays the actual config values used by your application
+    $ php bin/console debug:config ux_icons
+
+Full Configuration
+~~~~~~~~~~~~~~~~~~
 
 .. code-block:: yaml
 
@@ -190,6 +494,13 @@ Full Default Configuration
            # The endpoint for the Iconify API.
            endpoint: 'https://api.iconify.design'
 
+Learn more
+----------
+
+* :doc:`Creating and Using Templates </templates>`
+* :doc:`How to manage CSS and JavaScript assets in Symfony applications </frontend>`
+
+.. _`SVG`: https://en.wikipedia.org/wiki/SVG
 .. _`ux.symfony.com/icons`: https://ux.symfony.com/icons
 .. _`Iconify`: https://iconify.design
 .. _`symfony/asset-mapper`: https://symfony.com/doc/current/frontend/asset_mapper.html

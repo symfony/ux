@@ -1,20 +1,21 @@
 # UX Icons
 
-Renders local and remote SVG icons in your Twig templates.
+Renders local and remote [SVG icons](https://ux.symfony.com/icons) in your Twig templates.
 
 ```twig
-{{ ux_icon('mdi:symfony', {class: 'w-4 h-4'}) }}
-{# or #}
+{# Twig function.. #}
+{{ ux_icon('mdi:check', {class: 'w-4 h-4'}) }}
+
+{# .. or Twig Component #}
 <twig:UX:Icon name="mdi:check" class="w-4 h-4" />
 
-{# renders as: #}
-<svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path fill="currentColor" d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59z"/></svg>
+{# Render the "check" icon from "mdi" pack with class #}
+<svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
+    <path d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59z"/>
+</svg>
 ```
 
-Want a demo? Check out https://ux.symfony.com/icons.
-
-**This repository is a READ-ONLY sub-tree split**. See
-https://github.com/symfony/ux to create issues or submit pull requests.
+Check out [ux.symfony.com/icons](https://ux.symfony.com/icons) for a demo!
 
 ## Sponsor
 
@@ -27,6 +28,10 @@ create low level stuffs with the Mercure component. We maintain and scale the co
 infrastructure for you!
 
 Help Symfony by [sponsoring][3] its development!
+
+> [!IMPORTANT]  
+> **This repository is a READ-ONLY sub-tree split**.\
+> See https://github.com/symfony/ux to create issues or submit pull requests.
 
 ## Resources
 
