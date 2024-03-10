@@ -64,8 +64,14 @@ final class Iconify
             throw new IconNotFoundException(sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
         }
 
+        $height = $data['icons'][$name]['height'] ?? $this->sets()[$prefix]['height'] ?? null;
+        $width = $data['icons'][$name]['width'] ?? $this->sets()[$prefix]['width'] ?? null;
+        if (null === $width && null === $height) {
+            throw new \RuntimeException(sprintf('The icon "%s:%s" does not have a width or height.', $prefix, $name));
+        }
+
         return new Icon($data['icons'][$name]['body'], [
-            'viewBox' => sprintf('0 0 %s %s', $data['width'], $data['height']),
+            'viewBox' => sprintf('0 0 %s %s', $width ?? $height, $height ?? $width),
         ]);
     }
 
