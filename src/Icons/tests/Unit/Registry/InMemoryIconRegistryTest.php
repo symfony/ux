@@ -13,8 +13,8 @@ namespace Symfony\UX\Icons\Tests\Unit\Registry;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
-use Symfony\UX\Icons\Registry\InMemoryIconRegistry;
 use Symfony\UX\Icons\Svg\Icon;
+use Symfony\UX\Icons\Tests\Util\InMemoryIconRegistry;
 
 /**
  * @author Simon André <smn.andre@gmail.com>

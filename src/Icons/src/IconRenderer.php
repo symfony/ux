@@ -19,12 +19,20 @@ namespace Symfony\UX\Icons;
 final class IconRenderer
 {
     public function __construct(
-        private IconRegistryInterface $registry,
-        private array $defaultIconAttributes = [],
+        private readonly IconRegistryInterface $registry,
+        private readonly array $defaultIconAttributes = [],
     ) {
     }
 
     /**
+     * Renders an icon.
+     *
+     * Provided attributes are merged with the default attributes.
+     * Existing icon attributes are then merged with those new attributes.
+     *
+     * Precedence order:
+     *   Icon file < Renderer configuration < Renderer invocation
+     *
      * @param array<string,string|bool> $attributes
      */
     public function renderIcon(string $name, array $attributes = []): string
