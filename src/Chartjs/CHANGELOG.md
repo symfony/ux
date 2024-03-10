@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.17.0
+
+-   Add `chartjs:view-value-change` event #1605
+
 ## 2.15.0
 
 -   Remove restriction that prevented Chart.js 3.9 #1518

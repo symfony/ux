@@ -46,7 +46,7 @@ const startChartTest = async (canvasHtml: string): Promise<{ canvas: HTMLCanvasE
     });
 
     if (!chart) {
-        throw 'Missing TomSelect instance';
+        throw 'Missing ChartJS instance';
     }
 
     return { canvas: canvasElement, chart };
@@ -102,6 +102,33 @@ describe('ChartjsController', () => {
 
         await waitFor(() => {
             expect(chart.options.showLines).toBe(true);
+        });
+    });
+
+    it('will update when the view data changes without options', async () => {
+        let viewValueChangeCallCount = 0;
+
+        document.body.addEventListener('chartjs:view-value-change', (event: any) => {
+            viewValueChangeCallCount++;
+            event.detail.options.showLines = true;
+        });
+
+        const { chart, canvas } = await startChartTest(`
+           <canvas
+               data-testid='canvas'
+               data-controller='check chartjs'
+               data-chartjs-view-value="&#x7B;&quot;type&quot;&#x3A;&quot;line&quot;,&quot;data&quot;&#x3A;&#x7B;&quot;labels&quot;&#x3A;&#x5B;&quot;January&quot;,&quot;February&quot;,&quot;March&quot;,&quot;April&quot;,&quot;May&quot;,&quot;June&quot;,&quot;July&quot;&#x5D;,&quot;datasets&quot;&#x3A;&#x5B;&#x7B;&quot;label&quot;&#x3A;&quot;My&#x20;First&#x20;dataset&quot;,&quot;backgroundColor&quot;&#x3A;&quot;rgb&#x28;255,&#x20;99,&#x20;132&#x29;&quot;,&quot;borderColor&quot;&#x3A;&quot;rgb&#x28;255,&#x20;99,&#x20;132&#x29;&quot;,&quot;data&quot;&#x3A;&#x5B;0,10,5,2,20,30,45&#x5D;&#x7D;&#x5D;&#x7D;,&quot;options&quot;&#x3A;&#x5B;&#x5D;&#x7D;"
+           ></canvas>
+       `);
+
+        expect(chart.options.showLines).toBeUndefined();
+        // change label: January -> NewDataJanuary
+        const currentViewValue = JSON.parse('{"type":"line","data":{"labels":["NewDataJanuary","February","March","April","May","June","July"],"datasets":[{"label":"My First dataset","backgroundColor":"rgb(255, 99, 132)","borderColor":"rgb(255, 99, 132)","data":[0,10,5,2,20,30,45]}]},"options":[]}');
+        canvas.dataset.chartjsViewValue = JSON.stringify(currentViewValue);
+
+        await waitFor(() => {
+            expect(chart.options.showLines).toBe(true);
+            expect(viewValueChangeCallCount).toBe(1);
         });
     });
 
