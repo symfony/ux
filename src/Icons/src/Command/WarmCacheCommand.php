@@ -45,7 +45,6 @@ final class WarmCacheCommand extends Command
                     $io->writeln(sprintf(' Warmed icon <comment>%s</comment>.', $name));
                 }
             },
-            onFailure: fn (string $name) => $io->warning(sprintf('Icon <comment>%s</comment> not found.', $name))
         );
 
         $io->success('Icon cache warmed.');

@@ -95,7 +95,7 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
             $loader->load('iconify.php');
 
             $container->getDefinition('.ux_icons.iconify')
-                ->setArgument(0, $mergedConfig['iconify']['endpoint'])
+                ->setArgument(1, $mergedConfig['iconify']['endpoint'])
             ;
 
             if (!$mergedConfig['iconify']['on_demand']) {
