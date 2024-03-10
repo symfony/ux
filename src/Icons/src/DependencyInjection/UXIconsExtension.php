@@ -46,6 +46,10 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                     ->info('Configuration for the "on demand" icons powered by Iconify.design.')
                     ->{interface_exists(HttpClientInterface::class) ? 'canBeDisabled' : 'canBeEnabled'}()
                     ->children()
+                        ->booleanNode('on_demand')
+                            ->info('Whether to use the "on demand" icons powered by Iconify.design.')
+                            ->defaultTrue()
+                        ->end()
                         ->scalarNode('endpoint')
                             ->info('The endpoint for the Iconify API.')
                             ->defaultValue('https://api.iconify.design')
@@ -93,6 +97,10 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
             $container->getDefinition('.ux_icons.iconify')
                 ->setArgument(0, $mergedConfig['iconify']['endpoint'])
             ;
+
+            if (!$mergedConfig['iconify']['on_demand']) {
+                $container->removeDefinition('.ux_icons.iconify_on_demand_registry');
+            }
         }
 
         if (!$container->getParameter('kernel.debug')) {
