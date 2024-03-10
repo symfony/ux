@@ -13,6 +13,7 @@ namespace Symfony\UX\Icons\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Cursor;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -64,7 +65,7 @@ final class ImportIconCommand extends Command
 
             [$fullName, $prefix, $name] = $matches;
 
-            $io->comment(sprintf('Importing <info>%s</info>...', $fullName));
+            $io->comment(sprintf('Importing %s...', $fullName));
 
             try {
                 $svg = $this->iconify->fetchSvg($prefix, $name);
@@ -75,13 +76,17 @@ final class ImportIconCommand extends Command
                 continue;
             }
 
+            $cursor = new Cursor($output);
+            $cursor->moveUp(2);
+
             $this->registry->add(sprintf('%s/%s', $prefix, $name), $svg);
 
             $license = $this->iconify->metadataFor($prefix)['license'];
 
             $io->text(sprintf(
-                "Imported <info>%s</info> (License: <href=%s>%s</>), render with <comment>{{ ux_icon('%s') }}</comment>.",
-                $fullName,
+                " <fg=bright-green;options=bold>✓</> Imported <fg=bright-white;bg=black>%s:</><fg=bright-magenta;bg=black;options>%s</> (License: <href=%s>%s</>). Render with: <comment>{{ ux_icon('%s') }}</comment>",
+                $prefix,
+                $name,
                 $license['url'],
                 $license['title'],
                 $fullName,
