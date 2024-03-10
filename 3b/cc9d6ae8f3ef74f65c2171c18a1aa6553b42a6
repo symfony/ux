@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-03-09T04:24:51Z
+
+As discussed in Slack, do we want to make this a configuration option?
+
+Allowing this to be used as the only registry in your test environment could save a ton of http requests for apps that extensively use the _on demand_ system.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-09T06:26:19Z
+
+Yep that was on my mind..  But i rather go step by step there, as i'm sure i need the InMemoryRegistry to add feature + test the Renderer :)
+
+You ok if we add the config/test thing in another PR ?
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-03-10T17:01:55Z
+
+Could you show an example of how you intend this to be used by end users?
