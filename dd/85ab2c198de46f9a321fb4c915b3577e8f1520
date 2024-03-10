@@ -1,0 +1,52 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-03-09T04:17:36Z
+
+@smnandre made some fair points about performance/security.
+
+Regarding security: I want to clarify that only strings that match `'foo:bar'` will be used to make http requests to iconify. `'foo:bar'` will create an http request with this value in the request path but `'something-sensitive'` will not. However, `'something:sensitive'` would create an http request with this value in the request path.
+
+I'd like to find a compromise that we're all ok with, some thoughts:
+- opt-in to this much looser string check
+- configure specific paths/globs (like tailwind does)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-09T06:24:01Z
+
+We can add a failsafe: store locally the list of available icon prefixes.
+
+Then we reverse the logic:
+* collect all the icons as you do now
+* list the prefixes
+* download the list of icons for each prefix
+
+--> finally download the icons.
+
+It can be even faster in the end, because we can group parallelize + group icon downloads (up to 500 per request)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-09T14:08:47Z
+
+I'm reading the doc
+
+> During development, if you modify an icon, you will need to clear the cache (``bin/console cache:clear``) to see the changes.
+
+Could we add a isFresh / mtime check about that ? What do you think ?
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-03-09T23:55:06Z
+
+I believe the security concerns have been alleviated. I now only make the http request if the prefix is valid. `'something:sensitive'` will no longer create a request.
+
+> Could we add a isFresh / mtime check about that ? What do you think ?
+
+I'd prefer to avoid this complexity until this is determined to be a problem. I feel this situation is be rare.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-10T00:26:35Z
+
+I love this!
