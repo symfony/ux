@@ -221,7 +221,7 @@ class CVATest extends TestCase
                 ],
                 'compounds' => [
                     [
-                        'colors' => ['primary'],
+                        'colors' => 'primary',
                         'sizes' => ['sm'],
                         'class' => 'text-red-500',
                     ],
@@ -361,7 +361,7 @@ class CVATest extends TestCase
                 'compounds' => [
                     [
                         'colors' => ['danger', 'secondary'],
-                        'sizes' => ['sm'],
+                        'sizes' => 'sm',
                         'class' => 'text-red-500',
                     ],
                 ],
