@@ -111,6 +111,24 @@ class CVATest extends TestCase
             'text-primary text-sm',
         ];
 
+        yield 'base array' => [
+            [
+                'base' => ['font-semibold', 'border', 'rounded'],
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'sizes' => [
+                        'sm' => 'text-sm',
+                        'md' => 'text-md',
+                        'lg' => 'text-lg',
+                    ],
+                ]],
+            ['colors' => 'primary', 'sizes' => 'sm'],
+            'font-semibold border rounded text-primary text-sm',
+        ];
+
         yield 'no recipes match' => [
             [
                 'base' => 'font-semibold border rounded',
@@ -147,6 +165,25 @@ class CVATest extends TestCase
             ],
             ['colors' => 'primary', 'sizes' => 'sm'],
             'font-semibold border rounded text-primary text-sm',
+        ];
+
+        yield 'simple variants as array' => [
+            [
+                'base' => 'font-semibold border rounded',
+                'variants' => [
+                    'colors' => [
+                        'primary' => ['text-primary', 'uppercase'],
+                        'secondary' => ['text-secondary', 'uppercase'],
+                    ],
+                    'sizes' => [
+                        'sm' => 'text-sm',
+                        'md' => 'text-md',
+                        'lg' => 'text-lg',
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'sizes' => 'sm'],
+            'font-semibold border rounded text-primary uppercase text-sm',
         ];
 
         yield 'simple variants with custom' => [
@@ -192,6 +229,32 @@ class CVATest extends TestCase
             ],
             ['colors' => 'primary', 'sizes' => 'sm'],
             'font-semibold border rounded text-primary text-sm text-red-500',
+        ];
+
+        yield 'compound variants as array' => [
+            [
+                'base' => 'font-semibold border rounded',
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'sizes' => [
+                        'sm' => 'text-sm',
+                        'md' => 'text-md',
+                        'lg' => 'text-lg',
+                    ],
+                ],
+                'compounds' => [
+                    [
+                        'colors' => ['primary'],
+                        'sizes' => ['sm'],
+                        'class' => ['text-red-500', 'bold'],
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'sizes' => 'sm'],
+            'font-semibold border rounded text-primary text-sm text-red-500 bold',
         ];
 
         yield 'multiple compound variants' => [

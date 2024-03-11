@@ -88,9 +88,9 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
 
     /**
      * @param array{
-     *     base: string|string[]|null,
-     *     variants: array<string, array<string, string>>,
-     *     compoundVariants: array<array<string, string>>,
+     *     base: string|list<string|null>|null,
+     *     variants: array<string, array<string, string|array<string>>>,
+     *     compoundVariants: array<array<string, string|array<string>>>,
      *     defaultVariants: array<string, string>
      *  } $cva
      *
