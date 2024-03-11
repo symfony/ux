@@ -77,6 +77,10 @@ final class CVA
                         break;
                     }
 
+                    if (!\is_array($compoundValues)) {
+                        $compoundValues = [$compoundValues];
+                    }
+
                     if (!\in_array($recipes[$compoundName], $compoundValues)) {
                         $isCompound = false;
                         break;
