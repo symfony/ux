@@ -50,15 +50,16 @@ return static function (ContainerConfigurator $container): void {
             ])
             ->tag('twig.runtime')
 
-        ->set('.ux_icons.twig_icon_finder', IconFinder::class)
+        ->set('.ux_icons.icon_finder', IconFinder::class)
             ->args([
                 service('twig'),
+                abstract_arg('icon_dir'),
             ])
 
         ->set('.ux_icons.cache_warmer', IconCacheWarmer::class)
             ->args([
                 service('.ux_icons.cache_icon_registry'),
-                service('.ux_icons.twig_icon_finder'),
+                service('.ux_icons.icon_finder'),
             ])
 
         ->set('.ux_icons.command.warm_cache', WarmCacheCommand::class)
