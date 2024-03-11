@@ -27,7 +27,12 @@ final class ComponentAttributesTest extends TestCase
     {
         $attributes = new ComponentAttributes([
             'class' => 'foo',
-            'style' => 'color:black;',
+            'style' => new class() {
+                public function __toString(): string
+                {
+                    return 'color:black;';
+                }
+            },
             'value' => '',
             'autofocus' => true,
         ]);
@@ -210,7 +215,15 @@ final class ComponentAttributesTest extends TestCase
 
     public function testRenderingSingleAttributeExcludesFromString(): void
     {
-        $attributes = new ComponentAttributes(['attr1' => 'value1', 'attr2' => 'value2']);
+        $attributes = new ComponentAttributes([
+            'attr1' => new class() {
+                public function __toString(): string
+                {
+                    return 'value1';
+                }
+            },
+            'attr2' => 'value2',
+        ]);
 
         $this->assertSame('value1', $attributes->render('attr1'));
         $this->assertSame(' attr2="value2"', (string) $attributes);
