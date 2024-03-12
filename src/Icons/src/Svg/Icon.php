@@ -16,7 +16,7 @@ namespace Symfony\UX\Icons\Svg;
  *
  * @internal
  */
-final class Icon implements \Stringable, \Serializable, \ArrayAccess
+final class Icon implements \Stringable, \Serializable
 {
     /**
      * Transforms a valid icon ID into an icon name.
@@ -188,11 +188,6 @@ final class Icon implements \Stringable, \Serializable, \ArrayAccess
         return new self($this->innerSvg, [...$this->attributes, ...$attributes]);
     }
 
-    public function withInnerSvg(string $innerSvg): self
-    {
-        return new self($innerSvg, $this->attributes);
-    }
-
     public function __toString(): string
     {
         return $this->toHtml();
@@ -216,25 +211,5 @@ final class Icon implements \Stringable, \Serializable, \ArrayAccess
     public function __unserialize(array $data): void
     {
         [$this->innerSvg, $this->attributes] = $data;
-    }
-
-    public function offsetExists(mixed $offset): bool
-    {
-        return isset($this->attributes[$offset]);
-    }
-
-    public function offsetGet(mixed $offset): mixed
-    {
-        return $this->attributes[$offset];
-    }
-
-    public function offsetSet(mixed $offset, mixed $value): void
-    {
-        throw new \LogicException('The Icon object is immutable.');
-    }
-
-    public function offsetUnset(mixed $offset): void
-    {
-        throw new \LogicException('The Icon object is immutable.');
     }
 }

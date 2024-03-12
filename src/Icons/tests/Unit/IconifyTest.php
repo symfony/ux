@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\NullAdapter;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\JsonMockResponse;
+use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Iconify;
 
@@ -51,13 +52,7 @@ class IconifyTest extends TestCase
 
     public function testFetchIconThrowsWhenIconSetDoesNotExists(): void
     {
-        $iconify = new Iconify(
-            cache: new NullAdapter(),
-            endpoint: 'https://example.com',
-            http: new MockHttpClient([
-                new JsonMockResponse([]),
-            ]),
-        );
+        $iconify = new Iconify(new NullAdapter(), 'https://example.com', new MockHttpClient(new JsonMockResponse([])));
 
         $this->expectException(IconNotFoundException::class);
         $this->expectExceptionMessage('The icon "bi:heart" does not exist on iconify.design.');
@@ -116,5 +111,38 @@ class IconifyTest extends TestCase
         $this->expectExceptionMessage('The icon "bi:heart" does not have a width or height.');
 
         $iconify->fetchIcon('bi', 'heart');
+    }
+
+    public function testGetMetadata(): void
+    {
+        $responseFile = __DIR__.'/../Fixtures/Iconify/collections.json';
+        $client = $this->createHttpClient(json_decode(file_get_contents($responseFile)));
+        $iconify = new Iconify(new NullAdapter(), 'https://localhost', $client);
+
+        $metadata = $iconify->metadataFor('fa6-solid');
+        $this->assertSame('Font Awesome Solid', $metadata['name']);
+    }
+
+    public function testFetchSvg(): void
+    {
+        $client = new MockHttpClient([
+            new MockResponse(file_get_contents(__DIR__.'/../Fixtures/Iconify/collections.json'), [
+                'response_headers' => ['content-type' => 'application/json'],
+            ]),
+            new MockResponse(file_get_contents(__DIR__.'/../Fixtures/Iconify/icon.svg')),
+        ]);
+        $iconify = new Iconify(new NullAdapter(), 'https://localhost', $client);
+
+        $svg = $iconify->fetchSvg('fa6-regular', 'bar');
+
+        $this->assertIsString($svg);
+        $this->stringContains('-.224l.235-.468ZM6.013 2.06c-.649-.1', $svg);
+    }
+
+    private function createHttpClient(mixed $data, int $code = 200): MockHttpClient
+    {
+        $mockResponse = new JsonMockResponse($data, ['http_code' => $code]);
+
+        return new MockHttpClient($mockResponse);
     }
 }

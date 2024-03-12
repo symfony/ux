@@ -19,6 +19,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\UX\Icons\Iconify;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -52,7 +53,7 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                         ->end()
                         ->scalarNode('endpoint')
                             ->info('The endpoint for the Iconify API.')
-                            ->defaultValue('https://api.iconify.design')
+                            ->defaultValue(Iconify::API_ENDPOINT)
                             ->cannotBeEmpty()
                         ->end()
                     ->end()

@@ -20,7 +20,7 @@ final class IconTest extends TestCase
     {
         $icon = new Icon('foo', ['foo' => 'bar']);
         $this->assertSame('foo', $icon->getInnerSvg());
-        $this->assertSame('bar', $icon['foo']);
+        $this->assertSame('bar', $icon->getAttributes()['foo']);
     }
 
     /**
@@ -103,6 +103,25 @@ final class IconTest extends TestCase
 
         $this->assertFalse(Icon::isValidId($id));
         Icon::idToName($id);
+    }
+
+    /**
+     * @dataProvider provideRenderAttributesTestCases
+     */
+    public function testRenderAttributes(array $attributes, string $expected): void
+    {
+        $icon = new Icon('', $attributes);
+        $this->assertStringStartsWith($expected, $icon->toHtml());
+    }
+
+    /**
+     * @dataProvider provideWithAttributesTestCases
+     */
+    public function testWithAttributes(array $attributes, array $withAttributes, array $expected): void
+    {
+        $icon = new Icon('foo', $attributes);
+        $icon = $icon->withAttributes($withAttributes);
+        $this->assertSame($expected, $icon->getAttributes());
     }
 
     public static function provideIdToName(): iterable
@@ -201,6 +220,59 @@ final class IconTest extends TestCase
             ['foo '],
             [' foo'],
             ['🙂'],
+        ];
+    }
+
+    public static function provideRenderAttributesTestCases(): iterable
+    {
+        yield 'it_renders_empty_attributes' => [
+            [],
+            '<svg>',
+        ];
+        yield 'it_renders_one_attribute' => [
+            ['foo' => 'bar'],
+            '<svg foo="bar">',
+        ];
+        yield 'it_renders_multiple_attributes' => [
+            ['foo' => 'bar', 'baz' => 'qux'],
+            '<svg foo="bar" baz="qux">',
+        ];
+        yield 'it_renders_true_attribute_with_no_value' => [
+            ['foo' => true],
+            '<svg foo>',
+        ];
+        yield 'it_does_not_render_attribute_with_false_value' => [
+            ['foo' => false],
+            '<svg>',
+        ];
+    }
+
+    public static function provideWithAttributesTestCases(): iterable
+    {
+        yield 'it_does_nothing_with_empty_attributes' => [
+            ['foo' => 'bar'],
+            [],
+            ['foo' => 'bar'],
+        ];
+        yield 'it_does_nothing_with_same_attributes' => [
+            ['foo' => 'bar'],
+            ['foo' => 'bar'],
+            ['foo' => 'bar'],
+        ];
+        yield 'it_does_nothing_with_same_attributes_incomplete' => [
+            ['foo' => 'bar', 'baz' => 'qux'],
+            ['foo' => 'bar'],
+            ['foo' => 'bar', 'baz' => 'qux'],
+        ];
+        yield 'it_replaces_value_with_same_key' => [
+            ['foo' => 'bar'],
+            ['foo' => 'foobar'],
+            ['foo' => 'foobar'],
+        ];
+        yield 'it_replaces_value_with_same_key_and_keep_others' => [
+            ['foo' => 'bar', 'baz' => 'qux'],
+            ['foo' => 'foobar'],
+            ['foo' => 'foobar', 'baz' => 'qux'],
         ];
     }
 }
