@@ -333,7 +333,7 @@ close tag, it's passed to your component template as the block called
 
 .. code-block:: html+twig
 
-    <div {{ attributes.defaults({ class: 'alert alert'~ type }) }}">
+    <div {{ attributes.defaults({ class: 'alert alert-'~ type }) }}">
         {% block content %}{% endblock %}
     </div>
 
@@ -825,7 +825,7 @@ We already have a generic ``Alert`` component, so let's re-use it:
 .. code-block:: html+twig
 
     {# templates/components/Alert.html.twig #}
-    <div {{ attributes.defaults({ class: 'alert alert'~ type }) }}">
+    <div {{ attributes.defaults({ class: 'alert alert-'~ type }) }}">
         {% block content %}{% endblock %}
     </div>
 
