@@ -2595,7 +2595,7 @@ Emitting an Event
 
 There are three ways to emit an event:
 
-.. versionchanged:: 2.16
+.. versionadded:: 2.16
 
     The ``data-live-event-param`` attribute was added in Live Components 2.16.
     Previously, it was called ``data-event``.
