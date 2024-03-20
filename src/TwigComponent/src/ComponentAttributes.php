@@ -41,6 +41,10 @@ final class ComponentAttributes implements \IteratorAggregate, \Countable
             function (string $carry, string $key) {
                 $value = $this->attributes[$key];
 
+                if ($value instanceof \Stringable) {
+                    $value = (string) $value;
+                }
+
                 if (!\is_scalar($value) && null !== $value) {
                     throw new \LogicException(sprintf('A "%s" prop was passed when creating the component. No matching "%s" property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a %s). Did you mean to pass this to your component or is there a typo on its name?', $key, $key, get_debug_type($value)));
                 }
@@ -69,6 +73,10 @@ final class ComponentAttributes implements \IteratorAggregate, \Countable
     {
         if (null === $value = $this->attributes[$attribute] ?? null) {
             return null;
+        }
+
+        if ($value instanceof \Stringable) {
+            $value = (string) $value;
         }
 
         if (!\is_string($value)) {
