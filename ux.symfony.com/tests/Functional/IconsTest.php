@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Tests\Functional;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
@@ -12,18 +21,12 @@ final class IconsTest extends KernelTestCase
 {
     use HasBrowser;
 
-    /**
-     * @test
-     */
-    public function can_view_icon_index(): void
+    public function testCanViewIconIndex(): void
     {
         $this->browser()
-            ->visit('/')
+            ->visit('/icons')
             ->assertSuccessful()
+            ->assertSeeIn('h1', 'Icons')
         ;
-            // ->click('Icons')
-            // ->assertSuccessful()
-            // ->assertOn('/icons')
-            // ->assertSeeIn('h1', 'Icons')
     }
 }
