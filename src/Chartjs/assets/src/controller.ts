@@ -59,8 +59,14 @@ export default class extends Controller {
      */
     viewValueChanged(): void {
         if (this.chart) {
-            this.chart.data = this.viewValue.data;
-            this.chart.options = this.viewValue.options;
+            const viewValue = { data: this.viewValue.data, options: this.viewValue.options };
+            if (Array.isArray(viewValue.options) && 0 === viewValue.options.length) {
+                viewValue.options = {};
+            }
+            this.dispatchEvent('view-value-change', viewValue);
+            this.chart.data = viewValue.data;
+            this.chart.options = viewValue.options;
+
             this.chart.update();
 
             // Updating the chart seems to sometimes result in a chart that is
