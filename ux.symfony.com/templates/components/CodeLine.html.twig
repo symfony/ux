@@ -1,0 +1,21 @@
+{% props highlight = false, code = '', height = null %}
+
+<div
+    class="IconModal__code"
+    data-controller="clipboarder {% if highlight %} code-highlighter{% endif %}"
+>
+    {% set __code -%}
+        {% block content -%}
+            {{ code ? code|trim|raw }}
+        {%- endblock -%}
+    {%- endset %}
+
+    <pre
+        {% if height %} style="--height: {{ height }}" {% endif %}
+        data-clipboarder-target="source"
+    ><code {% if highlight %} data-code-highlighter-target="codeBlock" {% endif %}>{{ __code ? __code|trim|raw : code }}</code></pre>
+
+    <button class="btn btn-sm IconModal__copy" data-action="clipboarder#copy" data-clipboarder-target="button">
+        <twig:Icon name="copy" />
+    </button>
+</div>

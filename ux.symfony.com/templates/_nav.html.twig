@@ -8,7 +8,7 @@
             aria-expanded="false"
         >
             Packages
-            <twig:Icon name="chevron-down"/>
+{#            <twig:Icon name="chevron-down"/>#}
         </button>
         <ul class="dropdown-menu" aria-labelledby="components-dropdown-button">
             {% for package in twigPackageHelper.topNavPackages %}
@@ -34,6 +34,13 @@
             </li>
         </ul>
     </div>
+    <style>
+
+    </style>
+{#    <a href="{{ path('app_icons') }}" class="AppNav_item">#}
+{#        <span class="AppNav_badge">NEW!</span>#}
+{#        Icons#}
+{#    </a>#}
     <a href="{{ path('app_demos') }}" class="AppNav_item">Demos</a>
     <a class="AppNav_item AppNav_item--icon"
        href="https://github.com/symfony/ux"

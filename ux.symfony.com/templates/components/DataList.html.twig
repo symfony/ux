@@ -1,0 +1,18 @@
+{% props items, itemClass = '' %}
+
+<dl class="DataList">
+    {% for label, value in items %}
+        {% if value is not null %}
+            <div class="DataList__item {{ itemClass }}">
+                <dt>{{ label }}</dt>
+                <dd>
+                    {%- if value.href|default %}
+                        <a href="{{ value.href }}">{{ value.title }}</a>
+                    {% else %}
+                        {{ value.title ?? value }}
+                    {% endif -%}
+                </dd>
+            </div>
+        {% endif %}
+    {% endfor %}
+</dl>

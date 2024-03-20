@@ -30,6 +30,8 @@
   border: none;
   background: none;
   line-height: 2rem;
+  position: relative;
+
   &:hover {
     opacity: 1;
   }
@@ -51,4 +53,19 @@
   height: 22px;
   width: 22px;
   border-radius: 4px;
+}
+
+.AppNav_badge {
+  position: absolute;
+  color: lightskyblue;
+  right: -.5rem;
+  top: -.75rem;
+  text-align: right;
+  padding: .2rem .4rem;
+  font-size: .5rem;
+  border: 1px solid var(--color-text);
+  font-stretch: condensed;
+  font-family: var(--font-family-text);
+  height: 1rem;
+  line-height: normal;
 }

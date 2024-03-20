@@ -1,0 +1,63 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <meta name="turbo-prefetch" content="false">
+{% endblock %}
+
+{% set meta = {
+    title: "UX Icons - SVG icons made easy",
+    description: "Search for icons on iconify.design.",
+    canonical: url('app_icons'),
+} %}
+
+{% block content %}
+
+    <div class="hero">
+        <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
+            <p class="eyebrows text-center mt-5">SVG icons made easy</p>
+            <h1 class="text-center ubuntu">
+                <a href="{{ url('app_icons') }}">UX Icons</a>
+            </h1>
+            <div style="font-size: 1rem; line-height: 1.75rem;" class="mt-4 text-center demo-introduction">
+                <p>
+                    Render SVG icons seamlessly from your Twig templates.
+                <br/>
+                    Find the <code>perfect icon</code> among <code>200,000 choices</code> from the most popular <code>icon sets</code>.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <section class="container-fluid container-xxl px-4 px-md-5 py-3">
+        <twig:Icon:IconSearch/>
+    </section>
+
+
+    <section class="container-fluid container-xxl px-4 px-md-5 py-3">
+        <p class="eyebrows" style="margin: 4rem 0 0;">Iconic Packages</p>
+        <div class="d-md-flex justify-content-md-between text-center align-items-center text-md-start">
+            <h2 class="ubuntu pt-2 component-headlines">Popular <em class="rainbow-emphasis">Icon Sets</em></h2>
+        </div>
+        <div class="mt-3 mt-md-5">
+            <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem;">
+                {% for iconSet in iconSets %}
+                    <twig:Icon:IconSetCard
+                        iconSet="{{ iconSet }}"
+                        index="{{ loop.index }}"
+                    />
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block aside %}
+    {{ include('icons/_aside.html.twig') }}
+{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+    <twig:Icon:IconModal/>
+{% endblock %}

@@ -1,0 +1,42 @@
+.Tabs {
+
+}
+
+.TabHead {
+  display: flex;
+  flex-direction: row;
+  gap: 0;
+  justify-content: center;
+  background: var(--bs-secondary-bg-subtle);
+  border-radius: .75rem;
+  padding: .25rem;
+}
+
+.TabBody {
+  padding-block: 2rem;
+}
+
+.TabControl {
+  margin: 0;
+  background: none;
+  border: none;
+  border-radius: .75rem;
+  background: var(--bs-secondary-bg-subtle);
+  font-size: .85rem;
+  color: var(--bs-secondary-color);
+  padding: 0 1rem;
+  line-height: 2;
+  font-stretch: semi-condensed;
+  transition: background-color 150ms ease-in-out;
+}
+.TabControl.active {
+  background: var(--bs-secondary-bg);
+}
+
+.TabPanel {
+
+}
+
+.TabPanel:not(.active) {
+  display: none;
+}

@@ -28,10 +28,11 @@ class TwigPackageHelper
     {
         return [
             $this->packageRepository->find('live-component'),
+            $this->packageRepository->find('twig-component'),
             $this->packageRepository->find('autocomplete'),
+            $this->packageRepository->find('translator'),
             $this->packageRepository->find('react'),
             $this->packageRepository->find('vue'),
-            $this->packageRepository->find('translator'),
         ];
     }
 

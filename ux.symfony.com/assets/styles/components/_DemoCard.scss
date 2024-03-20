@@ -22,28 +22,6 @@
   box-shadow: 0 0.125rem 2rem .25rem var(--bs-secondary-bg-subtle);
 }
 
-.DemoCard__badge {
-  position: absolute;
-  right: .75rem;
-  top: .75rem;
-  color: var(--bs-body-color);
-  padding: .25rem;
-  font-size: .8rem;
-  text-transform: initial;
-  background: linear-gradient(113.84deg, #D65831 0%, #D2D631 36.52%, #31D673 71.83%, #3aa3ff 100%);
-  background: var(--gradient);
-  border-radius: 50%;
-  animation: linear 2000s infinite alternate;
-}
-@keyframes badge--rotation {
-  0% {
-    transform: rotate(0deg)
-  }
-  100% {
-    transform: rotate(180deg)
-  }
-}
-
 .DemoCard__media {
   border-top-left-radius: var(--radius);
   border-top-right-radius: var(--radius);

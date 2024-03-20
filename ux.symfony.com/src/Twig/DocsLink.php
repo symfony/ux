@@ -21,6 +21,8 @@ class DocsLink
     public string $title;
     public string $text;
 
+    public ?string $icon = null;
+
     #[ExposeInTemplate]
     public function isExternal(): bool
     {

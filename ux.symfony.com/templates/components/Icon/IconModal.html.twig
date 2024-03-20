@@ -1,0 +1,125 @@
+<dialog {{ attributes.defaults({
+    class: "IconModal",
+    id: "IconModal",
+    "data-open": this.icon ? "open" : null
+}).defaults(stimulus_controller('icon-modal')) }}>
+
+    <input type="hidden" name="icon" value="{{ this.icon }}" data-model="on(change)|icon"/>
+
+    {% if not this.icon %}
+
+        {# nope #}
+
+    {% else %}
+
+        {% set icon = this.iconMeta() %}
+        {% set iconSet = this.iconSet() %}
+
+        <div class="Tabs" id="IconModal--{{ icon }}">
+            <div class="IconModal__header">
+                <p class="IconModal__title">
+                    <span>{{ icon.prefix }}</span><span>:</span><span>{{ icon.name }}</span>
+                </p>
+                <button type="button" class="btn close" data-action="icon-modal#close">
+                    <twig:Icon name="cross"/>
+                </button>
+            </div>
+
+            <div class="IconModal__body">
+                <div class="IconModal__media">
+                    <div class="IconModal__icon IconModal__icon--grid">
+                        <img src="{{ icon.imageUrl }}" alt="Icon {{ icon.prefix }} {{ icon.name|humanize }}">
+                    </div>
+                    <div class="IconModal__icons">
+                        <div class="IconModal__icon">
+                            <img src="{{ icon.imageUrl }}" alt="Icon {{ icon.prefix }} {{ icon.name|humanize }}">
+                        </div>
+                        <div class="IconModal__icon IconModal__icon--check">
+                            <img src="{{ icon.imageUrl }}" alt="Icon {{ icon.prefix }} {{ icon.name|humanize }}">
+                        </div>
+                        <div class="IconModal__icon">
+                            <img src="{{ icon.imageUrl }}" alt="Icon {{ icon.prefix }} {{ icon.name|humanize }}">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="IconModal__main">
+                    <div class="Tabs"
+                         data-controller="tabs"
+                         data-tabs-tab-value="icon"
+                         data-tabs-active-class="active"
+                    >
+
+                        <nav class="TabHead">
+                            {% for _tab, _label in {
+                                icon: 'Icon',
+                                svg: 'SVG code',
+                                meta: 'Metadata'
+                            } %}
+                                <button
+                                    class="TabControl"
+                                    data-action="tabs#show {% if 'svg' == _tab %} live#action{% endif %}"
+                                    data-live-action-param="loadSvg"
+                                    data-tabs-tab-param="{{ _tab }}"
+                                    data-tabs-target="control"
+                                >{{ _label }}</button>
+                            {% endfor %}
+                        </nav>
+
+                        <div class="TabBody">
+
+                            <div class="TabPanel" data-tab="icon" data-tabs-target="tab">
+                                <h3>Import Icon</h3>
+                                <twig:CodeLine class="IconModal__code">
+                                    symfony console ux:icon:import <span>{{ icon }}</span>
+                                </twig:CodeLine>
+
+                                <h3>Twig Component</h3>
+                                <twig:CodeLine class="IconModal__code">
+                                    {{- '<%s:ux:icon name="'|format('twig') -}} <span>{{ icon }}</span>{{ '" />' -}}
+                                </twig:CodeLine>
+
+                                <h3>Render Icon</h3>
+                                <twig:CodeLine class="IconModal__code">
+                                    {{- '{{ ' -}} ux_icon('<span>{{ icon }}</span>') {{- ' }}' -}}
+                                </twig:CodeLine>
+                            </div>
+
+                            <div class="TabPanel" data-tabs-target="tab" id="IconModal-Tab-Svg" data-tab="svg">
+                                {% set _svg = this.svg() %}
+                                {% if _svg %}
+                                    <div data-live-ignore  id="IconModal-Tab-Svg--{{ icon }}">
+                                        <h3>SVG Icon</h3>
+                                        <twig:CodeLine class="IconModal__code"  highlight height="12rem">
+                                            {{ _svg }}
+                                        </twig:CodeLine>
+                                    </div>
+                                {% endif %}
+                            </div>
+
+                            <div class="TabPanel" data-tabs-target="tab" id="IconModal-Tab-Meta" data-tab="meta">
+                                <div class="grid" style="--cols: 1fr 1fr">
+                                    <twig:DataList items="{{ {
+                                        'Name': icon.name,
+                                        'Author': iconSet.author.name,
+                                        'GitHub': iconSet.github ? {
+                                            title: iconSet.github.name,
+                                            href: iconSet.github.url,
+                                        } :  null,
+                                        'Licence': iconSet.license ? {
+                                            title: iconSet.license.title,
+                                            href: iconSet.license.url|default,
+                                        } : null,
+                                    } }}" itemClass="IconModal__code"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    {% endif %}
+</dialog>

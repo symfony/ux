@@ -1,0 +1,33 @@
+<article class="IconSetCard" data-iconset="{{ this.iconSet.identifier }}" style="--index: {{ index }};">
+
+    <div class="IconSetCard__media" style="aspect-ratio: 5/{{ samples / 5 }};">
+        <div class="IconSetCard__icons">
+            {% set sampleIcons = this.getSampleIcons() %}
+
+            {% for icon in sampleIcons|default([]) %}
+                <div class="IconSetCard__icon">
+                    <img src="https://api.iconify.design/{{ this.iconSet.identifier }}/{{ icon }}.svg"
+                         alt="{{ icon }}"
+                         width="24"
+                         height="24"
+                         loading="lazy"
+                    />
+                </div>
+            {% endfor %}
+
+        </div>
+    </div>
+
+    <div class="IconSetCard__content">
+        <h3 class="IconSetCard__title">
+            <a class="stretched-link" href="{{ url('app_icons', {set: iconSet.prefix}) }}">
+                {{~ iconSet.name ~}}
+            </a>
+        </h3>
+        <span class="IconSetCard__total">
+            <em>{{ this.iconSet.total|number_format }}</em>
+            <span>icons</span>
+        </span>
+    </div>
+
+</article>

@@ -5,3 +5,27 @@
   line-height: 19px;
   letter-spacing: 0px;
 }
+
+.copied button svg {
+  animation: copied 450ms linear alternate-reverse;
+}
+
+.copied button::after {
+  position: absolute;
+  inset: 0;
+  content: " ";
+  animation: copied 450ms linear forwards;
+  border-radius: 50%;
+  border: 2px dotted var(--bs-green);
+}
+
+@keyframes copied {
+  from {
+    transform: scale(.75);
+    opacity: .75;
+  }
+  to {
+    transform: scale(2) rotate(20deg);
+    opacity: 0;
+  }
+}
