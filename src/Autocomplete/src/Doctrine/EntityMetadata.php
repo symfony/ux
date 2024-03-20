@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Autocomplete\Doctrine;
 
+use Doctrine\ORM\Mapping\AssociationMapping;
 use Doctrine\Persistence\Mapping\ClassMetadata;
 
 /**
@@ -75,8 +76,14 @@ class EntityMetadata
     public function getAssociationMetadata(string $propertyName): array
     {
         if (\array_key_exists($propertyName, $this->metadata->associationMappings)) {
-            // Cast to array, because in doctrine/orm:^3.0; $metadata will be an AssociationMapping object
-            return (array) $this->metadata->associationMappings[$propertyName];
+            $associationMapping = $this->metadata->associationMappings[$propertyName];
+
+            // Doctrine ORM 3.0
+            if (class_exists(AssociationMapping::class) && $associationMapping instanceof AssociationMapping) {
+                return $associationMapping->toArray();
+            }
+
+            return $associationMapping;
         }
 
         throw new \InvalidArgumentException(sprintf('The "%s" field does not exist in the "%s" entity.', $propertyName, $this->metadata->getName()));

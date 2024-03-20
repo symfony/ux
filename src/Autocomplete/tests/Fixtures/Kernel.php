@@ -12,6 +12,7 @@
 namespace Symfony\UX\Autocomplete\Tests\Fixtures;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
+use Doctrine\ORM\Mapping\AssociationMapping;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -100,7 +101,7 @@ final class Kernel extends BaseKernel
             'auto_refresh_proxies' => false,
         ]);
 
-        $c->extension('doctrine', [
+        $config = [
             'dbal' => ['url' => '%env(resolve:DATABASE_URL)%'],
             'orm' => [
                 'auto_generate_proxy_classes' => true,
@@ -115,7 +116,14 @@ final class Kernel extends BaseKernel
                     ],
                 ],
             ],
-        ]);
+        ];
+        if (class_exists(AssociationMapping::class)) {
+            // Doctrine ORM >= 3.0
+            $config['orm']['controller_resolver'] = [
+                'auto_mapping' => true,
+            ];
+        }
+        $c->extension('doctrine', $config);
 
         $c->extension('security', [
             'password_hashers' => [
