@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2024-03-11T16:10:47Z
+
+What will this change? :)
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-03-11T16:43:09Z
+
+> What will this change? :)
+
+I've updated the PR description to show what will change.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-12T19:08:33Z
+
+Great ! Thanks you :)
+
+Minor **if you have time**:
+The description _may_ be _a bit_ missleading, as your PR has no impact on how you pass arguments to components, but how attributes are rendered.
+Maybe illustrate with something in the "component view" instead of the "calling template" ?
