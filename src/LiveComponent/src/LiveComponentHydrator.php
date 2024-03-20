@@ -496,6 +496,10 @@ final class LiveComponentHydrator
             }
         }
 
+        if (interface_exists($classType)) {
+            throw new \LogicException(sprintf('Cannot dehydrate value typed as interface "%s" on component "%s". Change this to a concrete type that can be dehydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', get_debug_type($value), $parentObject::class));
+        }
+
         $dehydratedObjectValues = [];
         foreach ((new PropertyInfoExtractor([new ReflectionExtractor()]))->getProperties($classType) as $property) {
             $propertyValue = $this->propertyAccessor->getValue($value, $property);
@@ -538,6 +542,10 @@ final class LiveComponentHydrator
             if ($extension->supports($className)) {
                 return $extension->hydrate($value, $className);
             }
+        }
+
+        if (interface_exists($className)) {
+            throw new \LogicException(sprintf('Cannot hydrate value typed as interface "%s" on component "%s". Change this to a concrete type that can be hydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', $className, $component::class));
         }
 
         if (\is_array($value)) {

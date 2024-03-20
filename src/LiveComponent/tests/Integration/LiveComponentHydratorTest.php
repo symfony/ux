@@ -25,6 +25,8 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\CustomerDetails;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Embeddable2;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Money;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\ParentDTO;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\SimpleDto;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\SimpleDtoInterface;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Temperature;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\CategoryFixtureEntity;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Embeddable1;
@@ -1305,6 +1307,41 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $updatedProps,
             $this->createLiveMetadata($component),
         );
+    }
+
+    public function testInterfaceTypedLivePropCannotBeHydrated(): void
+    {
+        $componentClass = new class() {
+            #[LiveProp(writable: true)]
+            public ?SimpleDtoInterface $prop = null;
+        };
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Unable to hydrate value of type "Symfony\UX\LiveComponent\Tests\Fixtures\Dto\SimpleDto" for property "prop" typed as "Symfony\UX\LiveComponent\Tests\Fixtures\Dto\SimpleDtoInterface" on component/');
+        $this->expectExceptionMessageMatches('/ Change this to a concrete type that can be hydrate/');
+
+        $this->hydrator()->hydrate(
+            component: new $componentClass(),
+            props: $this->hydrator()->addChecksumToData(['prop' => 'foo']),
+            updatedProps: ['prop' => 'bar'],
+            componentMetadata: $this->createLiveMetadata($componentClass),
+        );
+    }
+
+    public function testInterfaceTypedLivePropCannotBeDehydrated(): void
+    {
+        $componentClass = new class() {
+            #[LiveProp(writable: true)]
+            public ?SimpleDtoInterface $prop = null;
+        };
+        $component = new $componentClass();
+        $component->prop = new SimpleDto();
+
+        $this->expectException(\LogicException::class);
+        $this->expectExceptionMessageMatches('/Cannot dehydrate value typed as interface "Symfony\UX\LiveComponent\Tests\Fixtures\Dto\SimpleDtoInterface" on component ');
+        $this->expectExceptionMessageMatches('/ Change this to a concrete type that can be dehydrated/');
+
+        $this->hydrator()->dehydrate($component, new ComponentAttributes([]), $this->createLiveMetadata($component));
     }
 
     /**
