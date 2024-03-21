@@ -12,7 +12,6 @@
 namespace Symfony\UX\Autocomplete\Tests\Integration\Doctrine;
 
 use Doctrine\DBAL\Types\Types;
-use Doctrine\ORM\Mapping\ClassMetadataInfo;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadata;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadataFactory;
@@ -51,13 +50,16 @@ class EntityMetadataTest extends KernelTestCase
     {
         $metadata = $this->getMetadata();
         $this->assertSame(Types::STRING, $metadata->getPropertyDataType('name'));
-        $this->assertEquals(ClassMetadataInfo::MANY_TO_ONE, $metadata->getPropertyDataType('category'));
+        // ORM 2.*  ClassMetadataInfo::MANY_TO_ONE
+        // ORM 3.*  ClassMetadata::MANY_TO_ONE
+        $this->assertEquals(2, $metadata->getPropertyDataType('category'));
     }
 
     public function testGetFieldMetadata(): void
     {
         $metadata = $this->getMetadata();
-        $this->assertSame([
+        $nameMetadata = $metadata->getFieldMetadata('name');
+        $expected = [
             'fieldName' => 'name',
             'type' => 'string',
             'scale' => null,
@@ -66,48 +68,68 @@ class EntityMetadataTest extends KernelTestCase
             'nullable' => false,
             'precision' => null,
             'columnName' => 'name',
-        ], $metadata->getFieldMetadata('name'));
+        ];
+        foreach ($expected as $key => $value) {
+            $this->assertArrayHasKey($key, $nameMetadata);
+            $this->assertSame($value, $nameMetadata[$key]);
+        }
     }
 
     public function testGetAssociationMetadata(): void
     {
         $metadata = $this->getMetadata();
-        $this->assertSame([
+        $expected = [
             'fieldName' => 'category',
-            'joinColumns' => [
-                [
-                    'name' => 'category_id',
-                    'unique' => false,
-                    'nullable' => false,
-                    'onDelete' => null,
-                    'columnDefinition' => null,
-                    'referencedColumnName' => 'id',
-                ],
-            ],
-            'cascade' => [],
             'inversedBy' => 'products',
             'targetEntity' => 'Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Category',
             'fetch' => 2,
-            'type' => 2,
-            'mappedBy' => null,
             'isOwningSide' => true,
             'sourceEntity' => 'Symfony\UX\Autocomplete\Tests\Fixtures\Entity\Product',
-            'isCascadeRemove' => false,
-            'isCascadePersist' => false,
-            'isCascadeRefresh' => false,
-            'isCascadeMerge' => false,
-            'isCascadeDetach' => false,
             'sourceToTargetKeyColumns' => [
                 'category_id' => 'id',
-            ],
-            'joinColumnFieldNames' => [
-                'category_id' => 'category_id',
             ],
             'targetToSourceKeyColumns' => [
                 'id' => 'category_id',
             ],
             'orphanRemoval' => false,
-        ], $metadata->getAssociationMetadata('category'));
+        ];
+
+        $metadata = $metadata->getAssociationMetadata('category');
+
+        foreach ($expected as $key => $val) {
+            $this->assertArrayHasKey($key, $metadata);
+            if (!\is_array($val)) {
+                $this->assertEquals($val, $metadata[$key]);
+                continue;
+            }
+            foreach ($val as $k => $v) {
+                $this->assertArrayHasKey($k, $metadata[$key]);
+                $this->assertEquals($v, $metadata[$key][$k]);
+            }
+        }
+
+        $this->assertArrayHasKey('joinColumns', $metadata);
+        $this->assertCount(1, $metadata['joinColumns']);
+        $expectedJoinColumn = [
+            'name' => 'category_id',
+            'columnDefinition' => null,
+            // Doctrine 3.0 removed
+            // 'fieldName' => 'category_id',
+            'unique' => false,
+            'nullable' => true,
+            'referencedColumnName' => 'id',
+        ];
+        $this->assertArrayHasKey(0, $metadata['joinColumns']);
+        $columnMetadata = $metadata['joinColumns'][0];
+        foreach ($expectedJoinColumn as $key => $val) {
+            $this->assertArrayHasKey($key, $columnMetadata);
+            // Doctrine 3.0 changed the way it determines 'nullable' for join columns
+            if ('nullable' === $key) {
+                $this->assertIsBool($columnMetadata[$key]);
+                continue;
+            }
+            $this->assertSame($val, $columnMetadata[$key]);
+        }
     }
 
     public function testIsEmbeddedClassProperty(): void
