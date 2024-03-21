@@ -1025,13 +1025,13 @@ Extract specific attributes and discard the rest:
 
 .. code-block:: html+twig
 
+    {# render component #}
+    {{ component('MyComponent', { class: 'foo', style: 'color:red' }) }}
+
     {# templates/components/MyComponent.html.twig #}
     <div{{ attributes.only('class') }}>
       My Component!
     </div>
-
-    {# render component #}
-    {{ component('MyComponent', { class: 'foo', style: 'color:red' }) }}
 
     {# renders as: #}
     <div class="foo">
@@ -1045,13 +1045,13 @@ Exclude specific attributes:
 
 .. code-block:: html+twig
 
+    {# render component #}
+    {{ component('MyComponent', { class: 'foo', style: 'color:red' }) }}
+
     {# templates/components/MyComponent.html.twig #}
     <div{{ attributes.without('class') }}>
       My Component!
     </div>
-
-    {# render component #}
-    {{ component('MyComponent', { class: 'foo', style: 'color:red' }) }}
 
     {# renders as: #}
     <div style="color:red">
