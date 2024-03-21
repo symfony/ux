@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2024-03-19T12:45:12Z
+
+How it's possible to use `attributes.without` when using `<twig:UX:Icon />` ?
+I mean - I have css class that sets for all icons width/height, so there is no point to render icons with these attributes, how I could remove them from the output?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-19T12:57:16Z
+
+This is planned, and i understand very well your need, as i have the same :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-19T12:58:06Z
+
+FYI this PR is one of the steps required ;)
