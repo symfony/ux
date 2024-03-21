@@ -50,26 +50,6 @@ class IconSetCard
         ],
     ];
 
-    /**
-     * ['home', 'house'],
-     * ['user', 'person', 'profile'],
-     * ['settings', 'cog', 'gear'],
-     * ['search', 'magnifying-glass'],
-     * ['arrow-down', 'arrow-bottom', 'arrow-to-bottom', 'down-two'],
-     *
-     * ['love', 'heart', 'heart-check'],
-     * ['star', 'star-empty'],
-     * ['sun', 'sun-light'],
-     * ['grid', 'layout-grid', 'view-grid', 'grid-four', 'grid-on'],
-     * ['image', 'photo', 'media-image'],
-     *
-     * ['edit', 'pencil', 'note-pencil'],
-     * ['trash', 'bin', 'delete-bin', 'trash-can', 'trash-bin'],
-     * ['map', 'map-trifold'],
-     * ['cart', 'shopping-cart'],
-     * ['check-circle', 'checkmark-circle', 'circle-check', 'checkbox-circle'],
-     */
-
     public function getSampleIcons(): array
     {
         return self::ICONSET_SAMPLES[$this->iconSet->getIdentifier()] ?? [];

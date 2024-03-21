@@ -63,6 +63,7 @@ class IconSearch
             asort($iconSets);
             $groups[$category] = $iconSets;
         }
+
         return $groups;
     }
 
@@ -83,7 +84,7 @@ class IconSearch
                 return [];
             }
 
-            $icons = array_slice($this->iconify->collectionIcons($this->set), 0, self::PER_PAGE);
+            $icons = \array_slice($this->iconify->collectionIcons($this->set), 0, self::PER_PAGE);
 
             return array_map(fn ($name) => Icon::create($this->set, $name), $icons);
         }

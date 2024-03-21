@@ -52,7 +52,7 @@ class IconSetRepository
             $this->iconSets = $iconSets;
         }
 
-        return array_slice($this->iconSets, $offset ?? 0, $limit);
+        return \array_slice($this->iconSets, $offset ?? 0, $limit);
     }
 
     public function load(string $identifier): IconSet
@@ -94,7 +94,7 @@ class IconSetRepository
             $data['palette'] ?? null,
             $data['suffixes'] ?? null,
             $data['categories'] ?? null,
-            in_array($identifier, self::FAVORITE_SETS, true),
+            \in_array($identifier, self::FAVORITE_SETS, true),
         );
     }
 }

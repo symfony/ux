@@ -611,8 +611,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                     'invoice.lineItems.2' => ['name' => 'item3_updated', 'quantity' => 2, 'price' => 2000],
                 ])
                 ->assertObjectAfterHydration(function (object $object) {
-                    self::assertSame(
-                        [
+                    self::assertSame([
                         'number' => '456',
                         'lineItems' => [
                             ['name' => 'item1', 'quantity' => 5, 'price' => 100],
@@ -1163,14 +1162,14 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 }
             })
                 ->mountWith([
-                   'createdAt' => new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York')),
-               ])
+                    'createdAt' => new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York')),
+                ])
                 ->assertDehydratesTo([
-                   'createdAt' => ['year' => 2023, 'month' => 3, 'day' => 5],
-               ])
+                    'createdAt' => ['year' => 2023, 'month' => 3, 'day' => 5],
+                ])
                 ->userUpdatesProps([
-                   'createdAt' => ['year' => 2024, 'month' => 4, 'day' => 5],
-               ])
+                    'createdAt' => ['year' => 2024, 'month' => 4, 'day' => 5],
+                ])
                 ->assertObjectAfterHydration(function (object $object) {
                     self::assertSame('2024-04-05', $object->createdAt->format('Y-m-d'));
                 })
@@ -1178,54 +1177,56 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Use the format option to control the date format' => [function () {
-            return HydrationTest::create(new class() {
-                #[LiveProp(writable: true, format: 'Y. m. d.')]
-                public \DateTime $createdAt;
+            return HydrationTest::create(
+                new class() {
+                    #[LiveProp(writable: true, format: 'Y. m. d.')]
+                    public \DateTime $createdAt;
 
-                public function __construct()
-                {
-                    $this->createdAt = new \DateTime();
-                }
-            })
-                ->mountWith([
-                   'createdAt' => new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York')),
-               ])
-                ->assertDehydratesTo([
-                   'createdAt' => '2023. 03. 05.',
-               ])
-                ->userUpdatesProps([
-                   'createdAt' => '2024. 04. 06.',
-               ])
-                ->assertObjectAfterHydration(function (object $object) {
-                    self::assertSame('2024. 04. 06.', $object->createdAt->format('Y. m. d.'));
+                    public function __construct()
+                    {
+                        $this->createdAt = new \DateTime();
+                    }
                 })
+                 ->mountWith([
+                     'createdAt' => new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York')),
+                 ])
+                 ->assertDehydratesTo([
+                     'createdAt' => '2023. 03. 05.',
+                 ])
+                 ->userUpdatesProps([
+                     'createdAt' => '2024. 04. 06.',
+                 ])
+                 ->assertObjectAfterHydration(function (object $object) {
+                     self::assertSame('2024. 04. 06.', $object->createdAt->format('Y. m. d.'));
+                 })
             ;
         }];
 
         yield 'Uses LiveProp modifiers on component dehydration' => [function () {
-            return HydrationTest::create(new class() {
-                #[LiveProp(writable: true, modifier: 'modifySearchProp')]
-                public ?string $search = null;
+            return HydrationTest::create(
+                new class() {
+                    #[LiveProp(writable: true, modifier: 'modifySearchProp')]
+                    public ?string $search = null;
 
-                #[LiveProp]
-                public ?string $fieldName = null;
+                    #[LiveProp]
+                    public ?string $fieldName = null;
 
-                #[LiveProp(writable: true, modifier: 'modifyDateProp')]
-                public ?\DateTimeImmutable $date = null;
+                    #[LiveProp(writable: true, modifier: 'modifyDateProp')]
+                    public ?\DateTimeImmutable $date = null;
 
-                #[LiveProp]
-                public string $dateFormat = 'Y-m-d';
+                    #[LiveProp]
+                    public string $dateFormat = 'Y-m-d';
 
-                public function modifySearchProp(LiveProp $prop): LiveProp
-                {
-                    return $prop->withFieldName($this->fieldName);
-                }
+                    public function modifySearchProp(LiveProp $prop): LiveProp
+                    {
+                        return $prop->withFieldName($this->fieldName);
+                    }
 
-                public function modifyDateProp(LiveProp $prop): LiveProp
-                {
-                    return $prop->withFormat($this->dateFormat);
-                }
-            })
+                    public function modifyDateProp(LiveProp $prop): LiveProp
+                    {
+                        return $prop->withFormat($this->dateFormat);
+                    }
+                })
                 ->mountWith([
                     'search' => 'foo',
                     'fieldName' => 'query',

@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Service\Icon;
 
 use Symfony\Contracts\Cache\CacheInterface;
@@ -51,14 +60,17 @@ final class Iconify
     {
         $data = $this->collectionData($prefix);
         $categories = [];
+
         if (isset($data['uncategorized'])) {
-            $categories['uncategorized'] = count($data['uncategorized']);
+            $categories['uncategorized'] = \count($data['uncategorized']);
         }
+
         if (isset($data['categories'])) {
             foreach ($data['categories'] as $category => $categoryIcons) {
-                $categories[$category] = count($categoryIcons);
+                $categories[$category] = \count($categoryIcons);
             }
         }
+
         return $categories;
     }
 
