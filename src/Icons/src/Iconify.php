@@ -26,12 +26,14 @@ use Symfony\UX\Icons\Svg\Icon;
  */
 final class Iconify
 {
+    public const API_ENDPOINT = 'https://api.iconify.design';
+
     private HttpClientInterface $http;
     private \ArrayObject $sets;
 
     public function __construct(
         private CacheInterface $cache,
-        string $endpoint = 'https://api.iconify.design',
+        string $endpoint = self::API_ENDPOINT,
         ?HttpClientInterface $http = null,
     ) {
         if (!class_exists(HttpClient::class)) {
