@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-21T12:51:44Z
+
+I had the intention to open another doc PR next week, with a list of 10/12 big icon sets with their prefix and an example
+
+(something i started to work on as command)
+
+<img width="911" alt="Capture d’écran 2024-03-10 à 23 59 50" src="https://github.com/symfony/ux/assets/1359581/ac03618c-f026-4911-9ece-cc9e333d537d">
+
+<img width="623" alt="Capture d’écran 2024-03-11 à 00 27 58" src="https://github.com/symfony/ux/assets/1359581/c16cb1c5-4569-43a9-809b-7ee670407b9f">
+
+Do you want to make a first pass ? Wait for me ?
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-03-21T13:49:14Z
+
+There's no hurry ... so we could consider this PR "as is" ... and when your command is ready, etc. we can update the docs to add that table with the Top 10 icon sets and their prefixes. Thanks
