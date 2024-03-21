@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-03-20T19:12:46Z
+
+The reason these extra attributes were included was to explicitly show that they are excluded when rendering the component. Am I missing something - does it not work as expected?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-03-20T19:15:19Z
+
+Agree with @kbond here, I think the documentation show the right things here
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-20T19:51:55Z
+
+We may want to reverse the order to make it easier
+
+1/ Calling template
+
+2/ Component template
+
+3/ HTML result
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-03-20T21:21:01Z
+
+TBH, I don't have a good use-case for the only/without methods. If someone has a good use-case, let's update the docs to show.
+
+---------------------------------------------------------------------------
+
+by JeanDavidDaviet at 2024-03-21T07:58:22Z
+
+thx @kbond for your input I understand more the reason.
+I think @smnandre's idea is better as you can better see the initial values and compare it with the final result.
+I've updated the PR.
+I personnaly think it makes more sense this way, what do you think ?
