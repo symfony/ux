@@ -1,8 +1,10 @@
 Symfony UX Icons
 ================
 
-Renders local and remote SVG icons in your Twig templates. It also gives direct
-access to over 200,000 open source vector icons from tens of icon sets.
+This package provides utilities to work with SVG icons. It renders both local
+and remote icons in your Twig templates. It provides direct access to over
+200,000 open source vector icons from popular icon sets such as FontAwesome,
+Bootstrap Icons, Tabler Icons, Google Material Design Icons, etc.
 
 Installation
 ------------
@@ -114,7 +116,7 @@ the ``assets/icons/`` directory. You can think of importing an icon as *locking 
 .. code-block:: terminal
 
     # icon will be saved in `assets/icons/flowbite/user-solid.svg` and you can
-    # use it name with the name: `flowbite:user-solid`
+    # use it with the name: `flowbite:user-solid`
     $ php bin/console ux:icons:import flowbite:user-solid
 
     # it's also possible to import several icons at once
@@ -168,6 +170,7 @@ Full Default Configuration
 
 .. code-block:: yaml
 
+    # config/packages/ux_icons.yaml
     ux_icons:
         # The local directory where icons are stored.
         icon_dir: '%kernel.project_dir%/assets/icons'
