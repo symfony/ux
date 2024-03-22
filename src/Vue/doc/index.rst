@@ -143,9 +143,7 @@ Web History mode with Vue Router
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 To use "web" history mode with Vue Router, a catch-all route will be needed
-which should render the same template and Vue component:
-
-.. code-block::
+which should render the same template and Vue component::
 
     #Route('/survey/{path<.+>}')
     public function survey($path = ''): Response
