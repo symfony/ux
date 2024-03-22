@@ -2943,6 +2943,7 @@ component:
     model: when the child model changes, the parent model will also change.
 
 .. _data-model:
+.. _update-parent-model:
 
 Updating a Parent Model from a Child
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
