@@ -684,6 +684,12 @@ To work with a collection of DTOs, specify the collection type inside PHPDoc::
         public array $addressDtoCollection;
     }
 
+Collection type extraction from the docblock requires the ``phpdocumentor/reflection-docblock`` library. Make sure it is installed in you application:
+
+.. code-block:: terminal
+
+    $ composer require phpdocumentor/reflection-docblock
+
 Here is how the (de)hydration of DTO objects works:
 
 - All "properties" (public properties or fake properties via
