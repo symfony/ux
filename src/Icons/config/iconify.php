@@ -12,6 +12,7 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Icons\Command\ImportIconCommand;
+use Symfony\UX\Icons\Command\LockIconsCommand;
 use Symfony\UX\Icons\Iconify;
 use Symfony\UX\Icons\Registry\IconifyOnDemandRegistry;
 
@@ -36,5 +37,13 @@ return static function (ContainerConfigurator $container): void {
                 service('.ux_icons.local_svg_icon_registry'),
             ])
             ->tag('console.command')
+
+        ->set('.ux_icons.command.lock', LockIconsCommand::class)
+        ->args([
+            service('.ux_icons.iconify'),
+            service('.ux_icons.local_svg_icon_registry'),
+            service('.ux_icons.icon_finder'),
+        ])
+        ->tag('console.command')
     ;
 };
