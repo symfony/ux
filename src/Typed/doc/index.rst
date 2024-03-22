@@ -54,7 +54,7 @@ The main usage of Symfony UX Typed is to use its Stimulus controller to initiali
     </div>
 
 
-That's it! Typed now shows the messages defined in the `strings` argument.
+That's it! Typed now shows the messages defined in the ``strings`` argument.
 You can customize the way those messages are typed.
 Parameters are exactly the same as for the `typed library`_
 
@@ -73,8 +73,6 @@ Parameters are exactly the same as for the `typed library`_
             cursorChar: '✨'
         }) }}></span>
     </div>
-
-.. note::
 
 Extend the JavaScript Controller
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
