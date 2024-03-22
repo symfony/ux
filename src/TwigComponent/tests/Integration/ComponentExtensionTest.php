@@ -261,6 +261,7 @@ final class ComponentExtensionTest extends KernelTestCase
         $output = self::getContainer()->get(Environment::class)->render('class_merge.html.twig');
 
         $this->assertStringContainsString('class="alert alert-red alert-lg font-semibold rounded-md dark:bg-gray-600 flex p-4"', $output);
+        $this->assertStringContainsString('class="alert alert-red alert-lg disable font-semibold rounded-md dark:bg-gray-600 flex p-4"', $output);
     }
 
     private function renderComponent(string $name, array $data = []): string

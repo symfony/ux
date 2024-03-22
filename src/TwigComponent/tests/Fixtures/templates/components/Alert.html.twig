@@ -1,4 +1,4 @@
-{% props color = 'blue', size = 'md' %}
+{% props color = 'blue', size = 'md', disabled = false %}
 
 {% set alert = cva({
         base: ['alert'],
@@ -18,7 +18,8 @@
                 sm: 'rounded-sm',
                 md: 'rounded-md',
                 lg: 'rounded-lg',
-            }
+            },
+            disabled: 'disable',
         },
         compoundVariants: [{
             color: ['red'],
@@ -30,6 +31,6 @@
         }
 }) %}
 
-<div class="{{ alert.apply({color, size}, attributes.render('class'), 'flex p-4') }}">
+<div class="{{ alert.apply({color, size, disabled}, attributes.render('class'), 'flex p-4') }}">
     ...
 </div>

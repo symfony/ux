@@ -26,8 +26,8 @@ final class CVA
 {
     /**
      * @var string|list<string|null>|null
-     * @var array<string, array<string, string|list<string|null>>|null the array should have the following format [variantCategory => [variantName => classes]]
-     *                                                ex: ['colors' => ['primary' => 'bleu-8000', 'danger' => 'red-800 text-bold'], 'size' => [...]]
+     * @var array<string, string|list<string>|array<string, string|list<string|null>>|null the array should have the following format [variantCategory => [variantName => classes]]
+     *                                                                                     ex: ['colors' => ['primary' => 'bleu-8000', 'danger' => 'red-800 text-bold'], 'size' => [...]]
      * @var array<array<string, string|array<string>>> the array should have the following format ['variantsCategory' => ['variantName', 'variantName'], 'class' => 'text-red-500']
      * @var array<string, string>|null
      */
@@ -53,6 +53,14 @@ final class CVA
         }
 
         foreach ($recipes as $recipeName => $recipeValue) {
+            if (isset($this->variants[$recipeName]) && (\is_string($this->variants[$recipeName]) || (\is_array($this->variants[$recipeName]) && array_is_list($this->variants[$recipeName])))) {
+                if (true === $recipeValue) {
+                    $classes .= ' '.implode(' ', (array) $this->variants[$recipeName]);
+                }
+
+                continue;
+            }
+
             if (!isset($this->variants[$recipeName][$recipeValue])) {
                 continue;
             }
