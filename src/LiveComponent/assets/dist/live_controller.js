@@ -2104,7 +2104,9 @@ class Component {
             }
         }
         catch (error) {
-            console.error('There was a problem with the component HTML returned:');
+            console.error(`There was a problem with the '${this.name}' component HTML returned:`, {
+                id: this.id
+            });
             throw error;
         }
         this.externalMutationTracker.handlePendingChanges();
