@@ -1,0 +1,288 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-18T21:36:31Z
+
+I'm still thinking about how we could pass nested attributes down to nested components:
+
+Something like:
+
+```twig
+{# Form #}
+<form{{ attributes }}>
+    <twig:Input :_attributes="attributes.nested('input')" />
+
+    <!-- or -->
+
+    <twig:Input ...attributes.nested('input') />
+</form>
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-18T21:56:49Z
+
+Oh that's a really nice feature ! 👏
+
+Does it work with live components ? (please say no hahaha)
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-18T22:00:56Z
+
+> Does it work with live components ?
+
+I think it would actually, only the rendering of the attributes takes the "nested" syntax into account.
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-18T22:35:29Z
+
+> I'm still thinking about how we could pass nested attributes down to nested components:
+
+Solved!
+
+```twig
+<twig:Input {{ ...attributes.nested('input') }} />
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-18T22:59:39Z
+
+Little question just to be curious, nothing about "right now" ;)
+
+Would this be a lot of work to handle (same thing but in "json" notation instead of "html") ?
+
+```
+<twig:Form
+    :form="form"
+    class="ui-form"
+    :row:="{class: "ui-form-row", label: .., widget: .{class: ......}"
+/>
+```
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-18T23:11:52Z
+
+> Little question just to be curious, nothing about "right now" ;)
+
+I think the current syntax looks _cleaner_ (just standard html attributes).
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-18T23:17:02Z
+
+Regarding the CI failure, it's because I'm using the twig spread operator in a test. I either need to bump the min twig version or skip this test if not supported. Thoughts?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-18T23:24:35Z
+
+Skip for now ? We will probably drop Twig < 3.something when Twig 4.0 is released right ?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-19T21:29:00Z
+
+I've wondered about how to do this a bunch of times 😅. I had imagined it working via blocks someday:
+
+```twig
+<twig:MyDialog class="foo">
+    <twig:block name="footer" class="baz">Footer</twig:block>
+</twig:MyDialog>
+```
+
+That's a bit inspired by Blade, because our blocks == Blade slots, and they have slot attributes - https://laravel.com/docs/10.x/blade#slot-attributes
+
+However, 3 issues I see are:
+
+A) What if I wanted to define a `class` on the footer but not override the content? `<twig:block name="footer" class="baz" />`? And is that enough to differentiate between "I do not want to override this block content" vs other cases where "I want to override this block content to an empty string?"'.
+
+B) Do we want to require a block in order to render an element with "nested" attributes?
+
+C) The more obvious issue is: blocks are a core concept... so this may not even be possible unless we modify Twig itself. Though, I had imagined that we might cheat by doing a translation:
+
+```twig
+<twig:MyDialog class="foo">
+    <twig:block name="footer" class="baz">Footer</twig:block>
+</twig:MyDialog>
+
+becomes (line breaks added for clarity)
+
+{% component 'MyDialog' with { class: 'foo' } %}
+    {% block footer %}
+        {% do attributes.nested('footer', { class: 'baz' }) %}
+        Footer
+    {% endblock %}
+{% endblock %}
+```
+
+The usage would be:
+
+```twig
+{# Modal.html.twig #}
+<div{{ attributes }}>
+    {% block footer %}
+    <div{{ attributes.nested('footer') }}>
+        {% block footer %}Default Footer{% endblock %}
+    </div>
+</div>
+```
+
+Not sure this is better, tbh. But I wanted to throw out this alternate universe before we decide on a syntax.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-19T21:41:55Z
+
+We could totally use a intermediary tag like "slot"
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-19T21:48:13Z
+
+> We could totally use a intermediary tag like "slot"
+
+Wasn't the issue with this: we won't have the benefits of blocks? I think this was the reason we ended up abandoning a new slot type.
+
+> But I wanted to throw out this alternate universe before we decide on a syntax.
+
+The block attributes system is interesting but it wouldn't solve the initial reason for me creating this PR: [passing nested attributes to subcomponents](https://github.com/symfony/ux/pull/1405#issuecomment-1899328396).
+
+What I like about this implementation is it doesn't require any new twig fanciness.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-19T22:04:01Z
+
+> Wasn't the issue with this: we won't have the benefits of blocks? I think this was the reason we ended up abandoning a new slot type.
+
+Was'nt this before the HTML syntax ? I feel we have learned a lot about "hacking" things into Twig since, maybe there is more things "possible" than before ?
+
+Did you remember what specifically in the "benefits of blocks" was laking ? Or list some of those you count more on ?
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-19T22:10:22Z
+
+> Was'nt this before the HTML syntax ?
+
+Possibly, I can't quite remember.
+
+> Did you remember what specifically in the "benefits of blocks" was laking ? Or list some of those you count more on ?
+
+I just remember Ryan and I realizing how powerful the out of the box block system was and all the benefits we'd be missing by doing our own thing.
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-29T15:46:44Z
+
+> I just remember Ryan and I realizing how powerful the out of the box block system was and all the benefits we'd be missing by doing our own thing.
+
+Yup, the block system is massively powerful and we should keep using it.
+
+I'm leaning towards "let's merge this & we could always deprecate it later). But `<twig:Foo body:class="bar"` isn't valid HTML... and so it sucks to land on a solution that's going to look wrong to editors (my editor also yells about `<twig:Foo`, but that is just because it's unaware of this `twig` namespace: it IS valid HTML).
+
+> The block attributes system is interesting but it wouldn't solve the initial reason for me creating this PR: https://github.com/symfony/ux/pull/1405#issuecomment-1899328396.
+
+```twig
+<twig:Input {{ ...attributes.nested('input') }} />
+```
+
+That problem occurred to me also:
+
+> A) What if I wanted to define a class on the footer but not override the content? <twig:block name="footer" class="baz" />? And is that enough to differentiate between "I do not want to override this block content" vs other cases where "I want to override this block content to an empty string?"'.
+
+It could *possibly* work via:
+
+```twig
+<twig:Form>
+    <twig:block name="widget" class="ui-form-widget" />
+</twig:Form>
+```
+
+It would require defining a self-closing `block` tag as meaning "Do not actually override this block" vs "Override with null". The above would result in:
+
+```twig
+{% component 'Form' %}
+    {% do attributes.nested('widget', { class: 'ui-form-widget' }) %}
+{% endcomponent %}
+```
+
+Inside `Form.html.twig`, you'd have:
+
+```
+{% block widget %}<twig:Input {{ ...attributes.nested('widget') }} />{% endblock %}
+```
+
+On the one hand, this feels much crazier than your solution. On the other hand, this is a hard problem because it's not solved in Twig. And that's what we're trying to do here - ideally with the best API possible.
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-29T16:14:51Z
+
+> But <twig:Foo body:class="bar" isn't valid HTML...
+
+Do you mean `body:class="bar"` here? Isn't `:class="bar"` just as invalid?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-30T13:40:48Z
+
+> Do you mean `body:class="bar"` here? Isn't `:class="bar"` just as invalid?
+
+Fair point, but at least in the eyes of PhpStorm, `:class` is ok. This may be the Symfony plugin at work (I have it disabled on this project, but still possible), but `:class` is at least a known syntax from other languages.
+
+<img width="230" alt="Screenshot 2024-01-30 at 8 39 51 AM" src="https://github.com/symfony/ux/assets/121003/a03a7807-ad04-4cb0-930d-bc182617a23c">
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-30T13:47:08Z
+
+:class="bar" may be invalid.... But on custom elements, class:="bar" is not ;)
+
+```html
+<!DOCTYPE html>
+<html>
+<head>
+<title>Hello</title>
+</head>
+<body>
+<twig-bar class:="foo"></twig-bar>
+</body>
+</html>
+```
+
+This is perfectly valid HTML code ;)
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-01-30T14:20:10Z
+
+For me, it looks like PhpStorm marks attributes with `:` in their name as invalid for standard html elements but not "custom components"
+
+![image](https://github.com/symfony/ux/assets/127811/a361f38e-4fe0-46d4-abec-0895b8be7809)
+
+`class` autocompletion only appears to work for `class` (not `:class` or `widget:class`) which is a bit of a bummer.
+
+Edit:
+
+The official tailwindcss plugin allows adding custom class names (I can add "widget:class" to the "classAttributes" config and it works). There is an experimental regex option that I think we could make work for `*:class` but I haven't figured that out.
+
+![image](https://github.com/symfony/ux/assets/127811/a3daa113-fb36-46de-ad4e-623b6c5ae9a9)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-30T14:45:39Z
+
+I think all this can be handled with IDE, syntax rules, Symfony plugin... and i personnaly prefer a syntax non final (different from the HTML produced)
+
+The only question should be: what is at risk if something not intended to is displayed in HTML.
+And for that we could also "just" add some Listener  (or a ux:component:lint) to check final output.
+
+--
+
+In a (not-so) distant future, i'm more and more convinced by using "custom web components" syntax instead of our current "grammar-free custom XML namespace") ....
+
+That would allow us reserved attribute, custom syntax rules, templates,... and would offer incredible possibilities in term of lazy load too ....  while beeing entirely supported in HTML/Twig editors
