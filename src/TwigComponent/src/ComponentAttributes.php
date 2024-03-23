@@ -19,8 +19,10 @@ use Symfony\WebpackEncoreBundle\Dto\AbstractStimulusDto;
  *
  * @immutable
  */
-final class ComponentAttributes implements \IteratorAggregate, \Countable
+final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Countable
 {
+    private const NESTED_REGEX = '#^([\w-]+):(.+)$#';
+
     /** @var array<string,true> */
     private array $rendered = [];
 
@@ -39,6 +41,10 @@ final class ComponentAttributes implements \IteratorAggregate, \Countable
                 fn (string $key) => !isset($this->rendered[$key])
             ),
             function (string $carry, string $key) {
+                if (preg_match(self::NESTED_REGEX, $key)) {
+                    return $carry;
+                }
+
                 $value = $this->attributes[$key];
 
                 if ($value instanceof \Stringable) {
@@ -192,6 +198,19 @@ final class ComponentAttributes implements \IteratorAggregate, \Countable
         $attributes = $this->attributes;
 
         unset($attributes[$key]);
+
+        return new self($attributes);
+    }
+
+    public function nested(string $namespace): self
+    {
+        $attributes = [];
+
+        foreach ($this->attributes as $key => $value) {
+            if (preg_match(self::NESTED_REGEX, $key, $matches) && $namespace === $matches[1]) {
+                $attributes[$matches[2]] = $value;
+            }
+        }
 
         return new self($attributes);
     }

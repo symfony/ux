@@ -244,4 +244,18 @@ final class ComponentAttributesTest extends TestCase
 
         $this->assertTrue($attributes->has('foo'));
     }
+
+    public function testNestedAttributes(): void
+    {
+        $attributes = new ComponentAttributes([
+            'class' => 'foo',
+            'title:class' => 'bar',
+            'title:span:class' => 'baz',
+        ]);
+
+        $this->assertSame(' class="foo"', (string) $attributes);
+        $this->assertSame(' class="bar"', (string) $attributes->nested('title'));
+        $this->assertSame(' class="baz"', (string) $attributes->nested('title')->nested('span'));
+        $this->assertSame('', (string) $attributes->nested('invalid'));
+    }
 }

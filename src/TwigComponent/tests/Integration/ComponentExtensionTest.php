@@ -263,6 +263,84 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('class="alert alert-red alert-lg font-semibold rounded-md dark:bg-gray-600 flex p-4"', $output);
     }
 
+    public function testRenderingComponentWithNestedAttributes(): void
+    {
+        $output = $this->renderComponent('NestedAttributes');
+
+        $this->assertSame(<<<HTML
+            <main>
+                <div>
+                    <span>
+                        <div/>
+
+                    </span>
+                </div>
+            </main>
+            HTML,
+            trim($output)
+        );
+
+        $output = $this->renderComponent('NestedAttributes', [
+            'class' => 'foo',
+            'title:class' => 'bar',
+            'title:span:class' => 'baz',
+        ]);
+
+        $this->assertSame(<<<HTML
+            <main class="foo">
+                <div class="bar">
+                    <span class="baz">
+                        <div/>
+
+                    </span>
+                </div>
+            </main>
+            HTML,
+            trim($output)
+        );
+    }
+
+    public function testRenderingHtmlSyntaxComponentWithNestedAttributes(): void
+    {
+        $output = self::getContainer()
+            ->get(Environment::class)
+            ->createTemplate('<twig:NestedAttributes />')
+            ->render()
+        ;
+
+        $this->assertSame(<<<HTML
+            <main>
+                <div>
+                    <span>
+                        <div/>
+
+                    </span>
+                </div>
+            </main>
+            HTML,
+            trim($output)
+        );
+
+        $output = self::getContainer()
+            ->get(Environment::class)
+            ->createTemplate('<twig:NestedAttributes class="foo" title:class="bar" title:span:class="baz" inner:class="foo" />')
+            ->render()
+        ;
+
+        $this->assertSame(<<<HTML
+            <main class="foo">
+                <div class="bar">
+                    <span class="baz">
+                        <div class="foo"/>
+
+                    </span>
+                </div>
+            </main>
+            HTML,
+            trim($output)
+        );
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [

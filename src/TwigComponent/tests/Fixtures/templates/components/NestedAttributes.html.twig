@@ -1,0 +1,7 @@
+<main{{ attributes }}>
+    <div{{ attributes.nested('title') }}>
+        <span{{ attributes.nested('title').nested('span') }}>
+            {{ component('JustAttributes', [...attributes.nested('inner')]) }}
+        </span>
+    </div>
+</main>

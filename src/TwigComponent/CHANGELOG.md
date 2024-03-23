@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.17.0
+
+-   Add nested attribute support #1405
+
 ## 2.16.0
 
 -   Introduce CVA to style TwigComponent #1416
