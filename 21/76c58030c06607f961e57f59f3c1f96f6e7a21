@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-06T18:08:49Z
+
+I'm wondering if this should not be down "upper", catching any error, adding context and rethrowing ?
+
+---------------------------------------------------------------------------
+
+by kachnitel at 2024-03-06T21:38:00Z
+
+> I'm wondering if this should not be down "upper", catching any error, adding context and rethrowing ?
+
+Sounds like a better approach, I was wondering how to get more details in a cleaner way. I'll see if I can do better!
