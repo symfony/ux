@@ -35,9 +35,20 @@ class PropsNode extends Node
 
         foreach ($this->getAttribute('names') as $name) {
             $compiler
+                ->write('if (isset($context[\'__props\'][\''.$name.'\'])) {')
+                ->raw("\n")
+                ->write('$componentClass = isset($context[\'this\']) ? get_debug_type($context[\'this\']) : "";')
+                ->raw("\n")
+                ->write('throw new \Twig\Error\RuntimeError(\'Cannot define prop "'.$name.'" in template "'.$this->getTemplateName().'". Property already defined in component class "\'.$componentClass.\'".\');')
+                ->raw("\n")
+                ->write('}')
+                ->raw("\n")
+            ;
+
+            $compiler
                 ->write('$propsNames[] = \''.$name.'\';')
                 ->write('$context[\'attributes\'] = $context[\'attributes\']->remove(\''.$name.'\');')
-                ->write('if (!isset($context[\'__props\'][\''.$name.'\'])) {');
+                ->write('if (!isset($context[\''.$name.'\'])) {');
 
             if (!$this->hasNode($name)) {
                 $compiler
@@ -66,5 +77,25 @@ class PropsNode extends Node
             ->write('}')
             ->write('}')
         ;
+
+        // overwrite the context value if a props with a similar name and a default value exist
+        if ($this->hasNode($name)) {
+            $compiler
+                ->write('if (isset($context[\'__context\'][\''.$name.'\'])) {')
+                ->raw("\n")
+                ->write('$contextValue = $context[\'__context\'][\''.$name.'\'];')
+                ->raw("\n")
+                ->write('$propsValue = $context[\''.$name.'\'];')
+                ->raw("\n")
+                ->write('if ($contextValue === $propsValue) {')
+                ->raw("\n")
+                ->write('$context[\''.$name.'\'] = ')
+                ->subcompile($this->getNode($name))
+                ->raw(";\n")
+                ->write('}')
+                ->raw("\n")
+                ->write('}')
+            ;
+        }
     }
 }

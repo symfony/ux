@@ -14,6 +14,7 @@ namespace Symfony\UX\TwigComponent\Tests\Integration;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\Tests\Fixtures\User;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -339,6 +340,23 @@ final class ComponentExtensionTest extends KernelTestCase
             HTML,
             trim($output)
         );
+    }
+
+    public function testComponentWithPropsFromTemplateAndClass(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('component_with_props_from_template_and_class.html.twig');
+
+        $this->assertStringContainsString('data-color=\'success\'', $output);
+        $this->assertStringContainsString('data-size=\'lg\'', $output);
+        $this->assertStringContainsString('Congrats !', $output);
+    }
+
+    public function testComponentWithConflictBetweenPropsFromTemplateAndClass(): void
+    {
+        $this->expectException(RuntimeError::class);
+        $this->expectExceptionMessage('Cannot define prop "name" in template "components/Conflict.html.twig". Property already defined in component class "Symfony\UX\TwigComponent\Tests\Fixtures\Component\Conflict".');
+
+        self::getContainer()->get(Environment::class)->render('component_with_conflict_between_props_from_template_and_class.html.twig');
     }
 
     private function renderComponent(string $name, array $data = []): string
