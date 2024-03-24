@@ -121,7 +121,7 @@ EOF)
             AbstractType::class,
             OptionsResolver::class,
             AsEntityAutocompleteField::class,
-            ParentEntityAutocompleteType::class,
+            BaseEntityAutocompleteType::class,
         ]);
 
         $variables = new MakerAutocompleteVariables(
