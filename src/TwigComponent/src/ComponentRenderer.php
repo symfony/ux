@@ -117,7 +117,7 @@ final class ComponentRenderer implements ComponentRendererInterface
         $component = $mounted->getComponent();
         $metadata = $this->factory->metadataFor($mounted->getName());
         // expose public properties and properties marked with ExposeInTemplate attribute
-        $props = iterator_to_array($this->exposedVariables($component, $metadata->isPublicPropsExposed()));
+        $props = array_merge($mounted->getInputProps(), iterator_to_array($this->exposedVariables($component, $metadata->isPublicPropsExposed())));
         $variables = array_merge(
             // first so values can be overridden
             $context,
@@ -130,11 +130,10 @@ final class ComponentRenderer implements ComponentRendererInterface
 
             // add computed properties proxy
             ['computed' => new ComputedPropertiesProxy($component)],
-
+            $props,
             // add attributes
             [$metadata->getAttributesVar() => $mounted->getAttributes()],
-            $props,
-            ['__props' => $props]
+            ['__props' => array_merge($mounted->getInputProps(), $props)]
         );
         $event = new PreRenderEvent($mounted, $metadata, $variables);
 
