@@ -50,7 +50,7 @@
         "symfony/twig-bundle": "^5.4|^6.0|^7.0",
         "symfony/validator": "^5.4|^6.0|^7.0",
         "zenstruck/browser": "^1.2.0",
-        "zenstruck/foundry": "^1.33"
+        "zenstruck/foundry": "1.37.*"
     },
     "conflict": {
         "symfony/config": "<5.4.0"
