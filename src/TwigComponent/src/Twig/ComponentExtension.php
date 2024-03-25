@@ -87,6 +87,8 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
     }
 
     /**
+     * Create a CVA instance.
+     *
      * base some base class you want to have in every matching recipes
      * variants your recipes class
      * compoundVariants compounds allow you to add extra class when multiple variation are matching in the same time
