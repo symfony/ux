@@ -28,7 +28,7 @@ final class UXIconComponentListener
 
     public function onPreCreateForRender(PreCreateForRenderEvent $event): void
     {
-        if ('UX:Icon' !== $event->getName()) {
+        if ('ux:icon' !== strtolower($event->getName())) {
             return;
         }
 
