@@ -106,7 +106,7 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
     public function cva(array $cva): CVA
     {
         return new CVA(
-            $cva['base'] ?? [],
+            $cva['base'] ?? '',
             $cva['variants'] ?? [],
             $cva['compoundVariants'] ?? [],
             $cva['defaultVariants'] ?? [],
