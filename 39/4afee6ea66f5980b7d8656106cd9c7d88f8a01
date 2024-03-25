@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-21T12:47:51Z
+
+Thank you very much @javiereguiluz ! I'll look in depth tonight :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-21T23:02:44Z
+
+> Fantastic contribution Simon!
+>
+> I left some comments while reviewing it. You don't have to do ALL requested changes. Let's discuss about them if you disagree. Thanks!
+
+Thank you for the kind words! I have a big rebase to do first, and we'll see then :)) But if i miss one it's not volontary :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-23T05:33:58Z
+
+@javiereguiluz @kbond i let you fix / merge change if you want, i won't have time next days/week :(
+
+I'va added a list of main packages with prefix and links too
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-23T05:38:00Z
+
+I probably made some mistake, the rebase has been an epic fight (that i lost 😓 )
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-03-23T09:03:29Z
+
+> the rebase has been an epic fight (that i lost 😓 )
+
+from my experience it's way easier to rebase when you have a single commit only :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-24T21:47:26Z
+
+> from my experience it's way easier to rebase when you have a single commit only :)
+
+The challenge here was to manage a file that had been deeply modified by two separate pull requests (PRs).
+
+In reality, this shouldn't have been a problem, and it was a mistake on my part to work on this file at the same time as @kbond 😄
