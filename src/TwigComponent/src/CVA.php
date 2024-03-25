@@ -88,16 +88,6 @@ final class CVA
         $this->base = (array) $base;
     }
 
-    /**
-     * @deprecated since Symfony 2.17. Use {@see apply()} instead.
-     */
-    public function resolve(array $recipes): string
-    {
-        trigger_deprecation('symfony/ux-twig-component', '2.17', 'The method "%s()" is deprecated and will be remove in 3.0. Use "apply()" instead.', __METHOD__);
-
-        return $this->apply($recipes);
-    }
-
     public function apply(array $recipes, ?string ...$additionalClasses): string
     {
         $classes = [...$this->base];
