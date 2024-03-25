@@ -179,7 +179,7 @@ EOF
                 ]),
                 $iconSet['license']['title'] ?? '',
                 $iconSet['prefix'],
-                $this->formatIcon( $io, $prefix.':'.$iconSet['samples'][0]),
+                $this->formatIcon($io, $prefix.':'.$iconSet['samples'][0]),
             ];
         }
         $io->table(['Icon set', 'Icons', 'Licence', 'Prefix', 'Example'], $results);
