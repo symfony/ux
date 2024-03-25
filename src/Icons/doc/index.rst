@@ -109,7 +109,7 @@ to fetch the icon and always use the *latest version* of the icon. It's possible
 that the icon could change or be removed in the future. Additionally, the cache
 warming process will take significantly longer if using many *on-demand* icons.
 
-That's why this package provices a command to download the open source icons into
+That's why this package provides a command to download the open source icons into
 the ``assets/icons/`` directory. You can think of importing an icon as *locking it*
 (similar to how ``composer.lock`` *locks* your dependencies):
 
@@ -125,6 +125,23 @@ the ``assets/icons/`` directory. You can think of importing an icon as *locking 
 .. note::
 
     Imported icons must be committed to your repository.
+
+Locking On-Demand Icons
+~~~~~~~~~~~~~~~~~~~~~~~
+
+You can *lock* (import) all the *on-demand* icons you're using in your project by
+running the following command:
+
+.. code-block:: terminal
+
+    $ php bin/console ux:icons:lock
+
+This command only imports icons that do not already exist locally. You can force
+the report to overwrite existing icons by using the ``--force`` option:
+
+.. code-block:: terminal
+
+    $ php bin/console ux:icons:lock --force
 
 Caching
 -------
