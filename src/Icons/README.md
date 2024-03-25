@@ -11,7 +11,7 @@ Renders local and remote SVG icons in your Twig templates.
 <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4"><path fill="currentColor" d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59z"/></svg>
 ```
 
-Want a demo? Check out https://ux.symfony.com/ux-icons.
+Want a demo? Check out https://ux.symfony.com/icons.
 
 **This repository is a READ-ONLY sub-tree split**. See
 https://github.com/symfony/ux to create issues or submit pull requests.
