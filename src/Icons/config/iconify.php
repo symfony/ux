@@ -12,6 +12,7 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Icons\Command\ImportIconCommand;
+use Symfony\UX\Icons\Command\SearchIconCommand;
 use Symfony\UX\Icons\Iconify;
 use Symfony\UX\Icons\Registry\IconifyOnDemandRegistry;
 
@@ -34,6 +35,12 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 service('.ux_icons.iconify'),
                 service('.ux_icons.local_svg_icon_registry'),
+            ])
+            ->tag('console.command')
+
+        ->set('.ux_icons.command.search', SearchIconCommand::class)
+            ->args([
+                service('.ux_icons.iconify'),
             ])
             ->tag('console.command')
     ;

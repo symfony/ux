@@ -95,6 +95,29 @@ final class Iconify
         return $content;
     }
 
+    /**
+     * @internal
+     */
+    public function getIconSets(): array
+    {
+        return $this->sets()->getArrayCopy();
+    }
+
+    /**
+     * @internal
+     */
+    public function searchIcons(string $prefix, string $query)
+    {
+        $response = $this->http->request('GET', '/search', [
+            'query' => [
+                'query' => $query,
+                'prefix' => $prefix,
+            ],
+        ]);
+
+        return new \ArrayObject($response->toArray());
+    }
+
     private function sets(): \ArrayObject
     {
         return $this->sets ??= $this->cache->get('ux-iconify-sets', function () {
