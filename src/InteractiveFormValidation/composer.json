@@ -1,0 +1,48 @@
+{
+  "name": "symfony/ux-interactive-form-validation",
+  "type": "symfony-bundle",
+  "description": "Interactive validation for Symfony Forms. Automatic scroll into and alert.",
+  "keywords": [
+    "symfony-ux"
+  ],
+  "homepage": "https://symfony.com",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Mateusz Anders",
+      "email": "anders_mateusz@outlook.com"
+    },
+    {
+      "name": "Symfony Community",
+      "homepage": "https://symfony.com/contributors"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Symfony\\UX\\InteractiveFormValidation\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=8.1",
+    "symfony/config": "^5.4|^6.0",
+    "symfony/dependency-injection": "^5.4|^6.0",
+    "symfony/form": "^5.4|^6.0",
+    "symfony/http-kernel": "^5.4|^6.0",
+    "symfony/options-resolver": "^5.4|^6.0"
+  },
+  "require-dev": {
+    "intervention/image": "^2.5",
+    "kornrunner/blurhash": "^1.1",
+    "symfony/framework-bundle": "^5.4|^6.0",
+    "symfony/phpunit-bridge": "^5.2|^6.0",
+    "symfony/twig-bundle": "^5.4|^6.0",
+    "symfony/var-dumper": "^5.4|^6.0"
+  },
+  "extra": {
+    "thanks": {
+      "name": "symfony/ux",
+      "url": "https://github.com/symfony/ux"
+    }
+  },
+  "minimum-stability": "dev"
+}

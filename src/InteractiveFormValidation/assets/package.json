@@ -1,0 +1,27 @@
+{
+    "name": "@symfony/ux-interactive-form-validation",
+    "description": "Interactive validation for Symfony Forms. Automatic scroll into and alert.",
+    "license": "MIT",
+    "version": "1.0.0",
+    "main": "dist/controller.js",
+    "types": "dist/controller.d.ts",
+    "symfony": {
+        "controllers": {
+            "interactive-form-validation": {
+                "main": "dist/controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    }
+}
