@@ -28,7 +28,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
-use Symfony\UX\Autocomplete\Form\ParentEntityAutocompleteType;
+use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
@@ -121,7 +121,7 @@ EOF)
             AbstractType::class,
             OptionsResolver::class,
             AsEntityAutocompleteField::class,
-            ParentEntityAutocompleteType::class,
+            BaseEntityAutocompleteType::class,
         ]);
 
         $variables = new MakerAutocompleteVariables(

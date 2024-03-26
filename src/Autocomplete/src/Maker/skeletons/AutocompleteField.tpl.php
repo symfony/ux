@@ -34,6 +34,6 @@ class <?php echo $class_name; ?> extends AbstractType
 
     public function getParent(): string
     {
-        return ParentEntityAutocompleteType::class;
+        return BaseEntityAutocompleteType::class;
     }
 }
