@@ -167,6 +167,90 @@ class CVATest extends TestCase
             'font-semibold border rounded text-primary text-sm',
         ];
 
+        yield 'boolean string variants true' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => 'disable',
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => true],
+            'text-primary disable',
+        ];
+
+        yield 'boolean string variants false' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => 'disable',
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => false],
+            'text-primary',
+        ];
+
+        yield 'boolean string variants missing' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => 'disable',
+                ],
+            ],
+            ['colors' => 'primary'],
+            'text-primary',
+        ];
+
+        yield 'boolean list variants true' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => ['disable', 'opacity-50'],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => true],
+            'text-primary disable opacity-50',
+        ];
+
+        yield 'boolean list variants false' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => ['disable', 'opacity-50'],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => false],
+            'text-primary',
+        ];
+
+        yield 'boolean list variants missing' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => ['disable', 'opacity-50'],
+                ],
+            ],
+            ['colors' => 'primary'],
+            'text-primary',
+        ];
+
         yield 'simple variants as array' => [
             [
                 'base' => 'font-semibold border rounded',
