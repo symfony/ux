@@ -1,0 +1,32 @@
+{
+    "name": "symfony/ux-password-strength",
+    "type": "symfony-bundle",
+    "description": "PasswordStrength Estimation for Symfony",
+    "keywords": [
+        "symfony-ux",
+        "Password strength"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\PasswordStrength\\": "src/"
+        }
+    },
+    "conflict": {
+        "symfony/flex": "<1.13"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}
