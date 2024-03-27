@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Icons\Svg;
+namespace Symfony\UX\Icons;
 
 /**
  * @author Simon André <smn.andre@gmail.com>

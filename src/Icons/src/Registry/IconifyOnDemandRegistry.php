@@ -12,9 +12,9 @@
 namespace Symfony\UX\Icons\Registry;
 
 use Symfony\UX\Icons\Exception\IconNotFoundException;
+use Symfony\UX\Icons\Icon;
 use Symfony\UX\Icons\Iconify;
 use Symfony\UX\Icons\IconRegistryInterface;
-use Symfony\UX\Icons\Svg\Icon;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>

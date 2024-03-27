@@ -12,8 +12,8 @@
 namespace Symfony\UX\Icons\Tests\Util;
 
 use Symfony\UX\Icons\Exception\IconNotFoundException;
+use Symfony\UX\Icons\Icon;
 use Symfony\UX\Icons\IconRegistryInterface;
-use Symfony\UX\Icons\Svg\Icon;
 
 /**
  * @author Simon André <smn.andre@gmail.com>

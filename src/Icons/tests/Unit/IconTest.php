@@ -9,10 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Icons\Tests\Unit\Svg;
+namespace Symfony\UX\Icons\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use Symfony\UX\Icons\Svg\Icon;
+use Symfony\UX\Icons\Icon;
 
 final class IconTest extends TestCase
 {
