@@ -84,6 +84,9 @@ class default_1 extends Controller {
             }
         }
     }
+    urlValueChanged() {
+        this.resetTomSelect();
+    }
     getMaxOptions() {
         return this.selectElement ? this.selectElement.options.length : 50;
     }
@@ -124,7 +127,6 @@ class default_1 extends Controller {
             this.element.innerHTML = currentHtml;
             this.initializeTomSelect();
             this.tomSelect.setValue(currentValue);
-            this.startMutationObserver();
         }
     }
     changeTomSelectDisabledState(isDisabled) {
