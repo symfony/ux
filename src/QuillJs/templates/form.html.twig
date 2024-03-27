@@ -1,0 +1,32 @@
+{%- block quill_widget -%}
+    {%- set controllerName = "symfony--ux-quill--quill" -%}
+    {% set dataSet = "data-symfony--ux-quill--quill" %}
+    {% set html_sanitizer = attr['sanitizer'] %}
+
+    <div class="quill-container"
+        {{ stimulus_controller('@symfony/ux-quill/quill') }}
+        data-controller="{{ controllerName }}"
+        {{ dataSet }}-toolbar-options-value="{{ attr['quill_options'] }}"
+        {{ dataSet }}-extra-options-value="{{ attr['quill_extra_options'] }}"
+    >
+        <div>
+            <input type="hidden"
+                   value="{{ value }}"
+                    {{ block('widget_attributes') }}
+                   {{ dataSet }}-target="input"
+            >
+        </div>
+
+        <div>
+            <div class="quill-editor-container"
+                {{ dataSet }}-target="editorContainer"
+            >
+                {% if html_sanitizer is not null %}
+                    {{ value|raw|sanitize_html(html_sanitizer) }}
+                {% else %}
+                    {{ value|raw }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{%- endblock -%}
