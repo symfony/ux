@@ -42,28 +42,27 @@ final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
 
         // Legacy auto-naming rules < 2.13
         if (null === $this->directory) {
-            if ($loader->exists('components/'.$componentPath.'.html.twig')) {
-                return 'components/'.$componentPath.'.html.twig';
-            }
-
-            if ($loader->exists($componentPath.'.html.twig')) {
-                return $componentPath.'.html.twig';
-            }
-
-            if ($loader->exists('components/'.$componentPath)) {
-                return 'components/'.$componentPath;
-            }
-
-            if ($loader->exists($componentPath)) {
-                return $componentPath;
+            foreach ([
+                'components/'.$componentPath.'.html.twig',
+                'components/'.$componentPath.'.twig',
+                $componentPath.'.html.twig',
+                $componentPath.'.twig',
+                'components/'.$componentPath,
+                $componentPath,
+            ] as $path) {
+                if ($loader->exists($path)) {
+                    return $path;
+                }
             }
 
             return null;
         }
 
-        $template = rtrim($this->directory, '/').'/'.$componentPath.'.html.twig';
-        if ($loader->exists($template)) {
-            return $template;
+        foreach (['.html.twig', '.twig'] as $extension) {
+            $template = rtrim($this->directory, '/').'/'.$componentPath.$extension;
+            if ($loader->exists($template)) {
+                return $template;
+            }
         }
 
         return null;
