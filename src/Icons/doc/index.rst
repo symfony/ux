@@ -16,7 +16,6 @@ Installation
 
     $ composer require symfony/ux-icons
 
-
 SVG Icons
 ---------
 
@@ -89,40 +88,25 @@ Icon Sets
 
 There are many icon sets available, each with their own unique style and set of
 icons, providing a wide range of icons for different purposes, while maintaining
-a consistent look and feel across your application.
+a consistent look and feel across your application. Here are some of the most
+popular icon sets available:
 
-With more than 200,000 icons available, you can find the perfect icon for your
-project. Here are some of the most popular icon sets available:
-
-========================= ======= ========== =========== =================
-Icon Set                    Icons License    Prefix      Example
-========================= ======= ========== =========== =================
-`Bootstrap Icons`_           2000 MIT        bi          bi:check
-`Boxicons`_                  1700 MIT        bx          bx:check
-`Flowbite`_                  1000 MIT        flowbite    flowbite:check
-`FontAwesome Icons`_         7000 CC BY 4.0  fa6-regular fa6-regular:check
-`Heroicons`_                  300 MIT        heroicons   heroicons:check
-`Iconoir`_                   1500 MIT        iconoir     iconoir:check
-`Ionicons`_                  1300 MIT        ion         ion:check
-`Lucide Icons`_              1500 MIT        lucide      lucide:check
-`Material Design Icons`_     5000 Apache 2   mdi         mdi:check
-`Octicons`_                   600 MIT        octicon     octicon:check
-`Phosphor Icons`_            7000 MIT        ph          ph:check
-`Tabler Icons`_              5200 MIT        tabler      tabler:check
-========================= ======= ========== =========== =================
-
-- `Bootstrap Icons <https://icons.getbootstrap.com/>`_
-- `Boxicons <https://boxicons.com/>`_
-- `Flowbite <https://github.com/themesberg/flowbite>`_
-- `FontAwesome Icons <https://github.com/FortAwesome/Font-Awesome>`_
-- `Heroicons <https://github.com/tailwindlabs/heroicons>`_
-- `Iconoir <https://github.com/iconoir-icons/iconoir>`_
-- `Ionicons <https://github.com/ionic-team/ionicons>`_
-- `Lucide Icons <https://github.com/lucide-icons/lucide>`_
-- `Material Design Icons <https://github.com/google/material-design-icons>`_
-- `Octicons <https://github.com/primer/octicons/>`_
-- `Phosphor Icons <https://github.com/phosphor-icons/homepage>`_
-- `Tabler Icons <https://github.com/tabler/tabler-icons>`_
+========================  =======  ==========  ===============  =====================
+Icon Set                    Icons  License     Prefix           Example
+========================  =======  ==========  ===============  =====================
+`Bootstrap Icons`_           2000  MIT         ``bi``           ``bi:check``
+`Boxicons`_                  1700  MIT         ``bx``           ``bx:check``
+`Flowbite`_                  1000  MIT         ``flowbite``     ``flowbite:check``
+`FontAwesome Icons`_         7000  CC BY 4.0   ``fa6-regular``  ``fa6-regular:check``
+`Heroicons`_                  300  MIT         ``heroicons``    ``heroicons:check``
+`Iconoir`_                   1500  MIT         ``iconoir``      ``iconoir:check``
+`Ionicons`_                  1300  MIT         ``ion``          ``ion:check``
+`Lucide Icons`_              1500  MIT         ``lucide``       ``lucide:check``
+`Material Design Icons`_     5000  Apache 2    ``mdi``          ``mdi:check``
+`Octicons`_                   600  MIT         ``octicon``      ``octicon:check``
+`Phosphor Icons`_            7000  MIT         ``ph``           ``ph:check``
+`Tabler Icons`_              5200  MIT         ``tabler``       ``tabler:check``
+========================  =======  ==========  ===============  =====================
 
 To see the full list of available icon sets, visit `ux.symfony.com/icons`_.
 
@@ -180,7 +164,6 @@ a subdirectory, the *name* will be ``subdirectory:icon_name``.
     │     └─ ...
     └─ ...
 
-
 Icons On-Demand
 ~~~~~~~~~~~~~~~
 
@@ -190,10 +173,6 @@ from many different sets. This package provides a way to include any icon found 
 `ux.symfony.com/icons`_ has a huge searchable repository of icons from many
 different sets. This package provides a way to include any icon found on this
 site *on-demand*:
-1. Visit `ux.symfony.com/icons`_ and search for an icon
-   you'd like to use. Once you find one you like, copy one of the code snippets provided.
-2. Paste the snippet into your Twig template and the icon will be automatically fetched (and cached).
-3. That's it!
 
 1. Visit `ux.symfony.com/icons`_ and search for an icon you'd like to use. Once
    you find one you like, copy one of the code snippets provided.
@@ -269,19 +248,6 @@ HTML Syntax
 
     ``symfony/ux-twig-component`` is required to use the HTML syntax.
 
-HTML Attributes
-~~~~~~~~~~~~~~~
-
-The second argument of the ``ux_icon`` function is an array of attributes to add to the icon.
-
-.. code-block:: twig
-
-    {# renders "user-profile.svg" with class="w-4 h-4" #}
-    {{ ux_icon('user-profile', {class: 'w-4 h-4'}) }}
-
-    {# renders "user-profile.svg" with class="w-4 h-4" and aria-hidden="true" #}
-    {{ ux_icon('user-profile', {class: 'w-4 h-4', 'aria-hidden': true}) }}
-
 Default Attributes
 ~~~~~~~~~~~~~~~~~~
 
@@ -308,60 +274,39 @@ Now, all icons will have the ``fill`` attribute set to ``currentColor`` by defau
 Accessibility
 -------------
 
-Icons are a used to add visual elements to your website, but they can be a challenge
-for accessibility.
+Icons add visual elements to your website and they can be a challenge for accessibility.
+According to the `W3C guide about SVG icon accessibility`_, there are
+three methods to improve icons accessibility, depending on the context.
 
-According to the `W3C <https://design-system.w3.org/styles/svg-icons.html>`_, there are
-three methods to improve icons accessibility, depending on the context:
+**Decorative icons**
+    They are purely decorative and do not convey any meaning or function. They
+    should be hidden from screen readers using the ``aria-hidden`` attribute:
 
-    * **Decorative**: Icons that are purely decorative and do not convey any meaning or function.
-    * **Informative**: Icons that convey information or a function.
-    * **Functional**: Icons that are interactive and perform a function.
+    .. code-block:: html+twig
 
-Decorative Icons
-~~~~~~~~~~~~~~~~
+        <a href="/profile">
+            {{ ux_icon('user-profile', {class: 'w-4 h-4', 'aria-hidden': true}) }}
+            Back to profile
+        </a>
 
-If the icon is purely decorative and does not convey any meaning or function, it should be
-hidden from screen readers using the ``aria-hidden`` attribute.
+**Informative icons**
+    They convey information or a function. They should define a text alternative
+    that presents the same content or function via the ``aria-label`` attribute
+    used by screen readers and other assistive technologies:
 
-.. code-block:: html+twig
+    .. code-block:: twig
 
-    <a href="/profile">
-        {{ ux_icon('user-profile', {class: 'w-4 h-4', 'aria-hidden': true}) }}
-        Back to profile
-    </a>
+        Today's weather:
+        {{ ux_icon('cloud-rain', {'aria-label': 'Rainy weather'}) }}
 
-Informative Icons
-~~~~~~~~~~~~~~~~~
+**Functional icons**
+    They are interactive and perform a function. They should define a text alternative
+    that presents the same content or function via the ``aria-label`` attribute
+    used by screen readers and other assistive technologies:
 
-If the icon conveys information or a function, it should be given a text alternative that presents
-the same content or function, so that it can fulfill the same purpose.
+    .. code-block:: twig
 
-.. code-block:: twig
-
-    Today's weather:
-    {{ ux_icon('cloud-rain', {'aria-label': 'Rainy weather'}) }}
-
-Functional Icons
-~~~~~~~~~~~~~~~~
-
-If the icon is interactive and performs a function, it should be given a text alternative that
-presents the same content or function, so that it can fulfill the same purpose.
-
-.. code-block:: twig
-
-    {{ ux_icon('user-profile', {class: 'w-4 h-4', 'aria-label': 'User Profile'}) }}
-
-.. note::
-
-    The ``aria-label`` attribute is used to provide a label for the icon. It is read by
-    screen readers and other assistive technologies.
-
-.. note::
-
-    The ``aria-hidden`` attribute is used to hide the icon from screen readers and other
-    assistive technologies.
-
+        {{ ux_icon('user-profile', {class: 'w-4 h-4', 'aria-label': 'User Profile'}) }}
 
 Performance
 -----------
@@ -381,7 +326,6 @@ and always use the *latest version* of the icon. It's possible the icon could ch
 in the future. Additionally, the cache warming process will take significantly longer if using
 many _on-demand_ icons. You can think of importing the icon as *locking it* (similar to how
 ``composer.lock`` _locks_ your dependencies).
-
 
 Icon Caching
 ~~~~~~~~~~~~
@@ -425,9 +369,9 @@ This command looks in all your Twig templates for ``ux_icon()`` calls and
 TwigComponent
 ~~~~~~~~~~~~~
 
-The ``ux_icon`` function is optimized to be as fast as possible. To deliver the same level
-of performance with the TwigComponent (``<twig:UX:Icon name="..." />``), the TwigComponent
-usual overhead is reduced to the bare minimum, immediately calling the IconRenderer and
+The ``ux_icon()`` function is optimized to be as fast as possible. To deliver the
+same level of performance when using the HTML syntax (``<twig:UX:Icon name="..." />``),
+the TwigComponent overhead is reduced by calling the IconRenderer immediately and
 returning the HTML output.
 
 .. warning::
@@ -444,7 +388,6 @@ returning the HTML output.
             <path fill="currentColor" d="M21 7L9 19l-5.5-5.5l1.41-1.41L9 16.17L19.59 5.59z"/>
         </svg>
 
-
 Configuration
 -------------
 
@@ -456,7 +399,6 @@ the ``ux_icons`` key in your application configuration.
     # config/packages/ux_icons.yaml
     ux_icons:
         {# ... #}
-
 
 Debugging Configuration
 ~~~~~~~~~~~~~~~~~~~~~~~
@@ -504,3 +446,16 @@ Learn more
 .. _`ux.symfony.com/icons`: https://ux.symfony.com/icons
 .. _`Iconify`: https://iconify.design
 .. _`symfony/asset-mapper`: https://symfony.com/doc/current/frontend/asset_mapper.html
+.. _`W3C guide about SVG icon accessibility`: https://design-system.w3.org/styles/svg-icons.html#svg-accessibility
+.. _`Bootstrap Icons`: https://icons.getbootstrap.com/
+.. _`Boxicons`: https://boxicons.com/
+.. _`Flowbite`: https://github.com/themesberg/flowbite
+.. _`FontAwesome Icons`: https://github.com/FortAwesome/Font-Awesome
+.. _`Heroicons`: https://github.com/tailwindlabs/heroicons
+.. _`Iconoir`: https://github.com/iconoir-icons/iconoir
+.. _`Ionicons`: https://github.com/ionic-team/ionicons
+.. _`Lucide Icons`: https://github.com/lucide-icons/lucide
+.. _`Material Design Icons`: https://github.com/google/material-design-icons
+.. _`Octicons`: https://github.com/primer/octicons/
+.. _`Phosphor Icons`: https://github.com/phosphor-icons/homepage
+.. _`Tabler Icons`: https://github.com/tabler/tabler-icons
