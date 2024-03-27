@@ -13,9 +13,9 @@ namespace Symfony\UX\Icons\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
+use Symfony\UX\Icons\Icon;
 use Symfony\UX\Icons\IconRegistryInterface;
 use Symfony\UX\Icons\IconRenderer;
-use Symfony\UX\Icons\Svg\Icon;
 use Symfony\UX\Icons\Tests\Util\InMemoryIconRegistry;
 
 /**

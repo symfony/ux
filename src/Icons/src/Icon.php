@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Icons\Svg;
+namespace Symfony\UX\Icons;
 
 /**
  * @author Simon André <smn.andre@gmail.com>
  *
  * @internal
  */
-final class Icon implements \Stringable, \Serializable
+final class Icon implements \Stringable
 {
     /**
      * Transforms a valid icon ID into an icon name.
@@ -191,16 +191,6 @@ final class Icon implements \Stringable, \Serializable
     public function __toString(): string
     {
         return $this->toHtml();
-    }
-
-    public function serialize(): string
-    {
-        return serialize([$this->innerSvg, $this->attributes]);
-    }
-
-    public function unserialize(string $data): void
-    {
-        [$this->innerSvg, $this->attributes] = unserialize($data);
     }
 
     public function __serialize(): array

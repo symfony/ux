@@ -12,7 +12,6 @@
 namespace Symfony\UX\Icons;
 
 use Symfony\UX\Icons\Exception\IconNotFoundException;
-use Symfony\UX\Icons\Svg\Icon;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
