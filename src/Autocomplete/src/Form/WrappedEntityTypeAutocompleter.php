@@ -14,7 +14,7 @@ namespace Symfony\UX\Autocomplete\Form;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bundle\SecurityBundle\Security;
-use Symfony\Component\Form\ChoiceList\Factory\Cache\ChoiceLabel;
+use Symfony\Component\Form\ChoiceList\Factory\Cache;
 use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
@@ -90,7 +90,7 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
             return $this->propertyAccessor->getValue($entity, $choiceLabel);
         }
 
-        if ($choiceLabel instanceof ChoiceLabel) {
+        if ($choiceLabel instanceof Cache\ChoiceLabel) {
             $choiceLabel = $choiceLabel->getOption();
         }
 
@@ -100,7 +100,17 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
 
     public function getValue(object $entity): string
     {
-        return $this->getEntityMetadata()->getIdValue($entity);
+        $choiceValue = $this->getFormOption('choice_value');
+
+        if (\is_string($choiceValue) || $choiceValue instanceof PropertyPathInterface) {
+            return $this->propertyAccessor->getValue($entity, $choiceValue);
+        }
+
+        if ($choiceValue instanceof Cache\ChoiceValue) {
+            $choiceValue = $choiceValue->getOption();
+        }
+
+        return $choiceValue($entity);
     }
 
     public function isGranted(Security $security): bool
