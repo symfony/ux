@@ -31,7 +31,7 @@
 
 {% block demo_content %}
     {# The frame is used just to keep the form submit all in one place: it feels nice #}
-    <turbo-frame id="autocomplete-demo-form">
+    <div id="autocomplete-demo-form">
         {% for message in app.flashes('autocomplete_success') %}
             <div class="alert alert-success" data-turbo-cache="false">{{ message }}</div>
         {% endfor %}
@@ -41,7 +41,7 @@
 
             {{ form_row(form.name) }}
 
-            <button type="submit" class="btn btn-primary">Let's Nom!</button>
+            <button type="submit" class="btn btn-primary" formnovalidate>Let's Nom!</button>
         {{ form_end(form) }}
-    </turbo-frame>
+    </div>
 {% endblock %}

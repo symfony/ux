@@ -34,6 +34,7 @@ export default class extends Controller {
     private isObserving;
     private hasLoadedChoicesPreviously;
     private originalOptions;
+    private parentElement;
     initialize(): void;
     connect(): void;
     initializeTomSelect(): void;
@@ -50,4 +51,6 @@ export default class extends Controller {
     private onMutations;
     private createOptionsDataStructure;
     private areOptionsEquivalent;
+    private beforeMorphElement;
+    private beforeMorphAttribute;
 }
