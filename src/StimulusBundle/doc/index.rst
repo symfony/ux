@@ -7,10 +7,9 @@ StimulusBundle: Symfony integration with Stimulus
 
 This bundle adds integration between Symfony, `Stimulus`_ and the Symfony UX packages:
 
-A) Twig ``stimulus_`` functions & filters to add Stimulus controllers,
+* Twig ``stimulus_`` functions & filters to add Stimulus controllers,
    actions & targets in your templates;
-
-B) Integration to load :ref:`UX Packages <ux-packages>` (extra Stimulus controllers)
+* Integration to load :ref:`UX Packages <ux-packages>` (extra Stimulus controllers)
 
 Installation
 ------------
@@ -18,11 +17,11 @@ Installation
 First, if you don't have one yet, choose and install an asset handling system;
 both work great with StimulusBundle:
 
-* A) `Webpack Encore`_ Node-based packaging system:
+* `AssetMapper`_: PHP-based system for handling assets
 
 or
 
-* B) `AssetMapper`_: PHP-based system for handling assets:
+* `Webpack Encore`_ Node-based packaging system
 
 See `Encore vs AssetMapper`_ to learn which is best for your project.
 
@@ -88,7 +87,7 @@ TypeScript Controllers
 
 If you want to use `TypeScript`_ to define your controllers, you can! Install and set up the
 `sensiolabs/typescript-bundle`_. Then be sure to add the ``assets/controllers`` path to the
-`sensiolabs_typescript.source_dir` configuration. Finally, create your controller in that
+``sensiolabs_typescript.source_dir`` configuration. Finally, create your controller in that
 directory and you're good to go.
 
 .. _ux-packages:
@@ -137,7 +136,7 @@ controllers in ``assets/controllers.json``) will be downloaded and loaded on
 every page.
 
 Sometimes you may have a controller that's only used on some pages. In that case,
-you can make the controller "lazy". In this case, will *not be downloaded on
+you can make the controller "lazy". In this case, will *not* be downloaded on
 initial page load. Instead, as soon as an element appears on the page matching
 the controller (e.g. ``<div data-controller="hello">``), the controller - and anything
 else it imports - will be lazily-loaded via Ajax.
@@ -176,8 +175,8 @@ exist beyond the UX packages:
 Stimulus Twig Helpers
 ---------------------
 
-This bundle adds 3 Twig functions/filters to help add Stimulus controllers,
-actions & targets in your templates.
+This bundle adds some Twig functions/filters to help add Stimulus controllers,
+actions and targets in your templates.
 
 .. note::
 
@@ -186,8 +185,7 @@ actions & targets in your templates.
 
 .. tip::
 
-    If you use PhpStorm IDE - you may want to install
-    [Stimulus plugin](https://plugins.jetbrains.com/plugin/18940-stimulus)
+    If you use PhpStorm IDE - you may want to install `Stimulus plugin`_
     to get nice auto-completion for the attributes.
 
 stimulus_controller
@@ -407,34 +405,6 @@ the `StimulusBundle Flex recipe`_. Here's a summary of what's inside:
 
 A few other changes depend on which asset system you're using:
 
-With WebpackEncoreBundle
-~~~~~~~~~~~~~~~~~~~~~~~~
-
-If you're using Webpack Encore, the recipe will also update your ``webpack.config.js``
-file to include this line:
-
-.. code-block:: javascript
-
-    // webpack.config.js
-    .enableStimulusBridge('./assets/controllers.json')
-
-The ``assets/bootstrap.js`` file will be updated to look like this:
-
-.. code-block:: javascript
-
-    // assets/bootstrap.js
-    import { startStimulusApp } from '@symfony/stimulus-bridge';
-
-    // Registers Stimulus controllers from controllers.json and in the controllers/ directory
-    export const app = startStimulusApp(require.context(
-        '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',
-        true,
-        /\.[jt]sx?$/
-    ));
-
-And 2 new packages - ``@hotwired/stimulus`` and ``@symfony/stimulus-bridge`` - will
-be added to your ``package.json`` file.
-
 With AssetMapper
 ~~~~~~~~~~~~~~~~
 
@@ -472,6 +442,34 @@ is running in debug mode.
 
     For AssetMapper 6.3 only, you also need a ``{{ ux_controller_link_tags() }``
     in ``base.html.twig``. This is not needed in AssetMapper 6.4+.
+
+With WebpackEncoreBundle
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you're using Webpack Encore, the recipe will also update your ``webpack.config.js``
+file to include this line:
+
+.. code-block:: javascript
+
+    // webpack.config.js
+    .enableStimulusBridge('./assets/controllers.json')
+
+The ``assets/bootstrap.js`` file will be updated to look like this:
+
+.. code-block:: javascript
+
+    // assets/bootstrap.js
+    import { startStimulusApp } from '@symfony/stimulus-bridge';
+
+    // Registers Stimulus controllers from controllers.json and in the controllers/ directory
+    export const app = startStimulusApp(require.context(
+        '@symfony/stimulus-bridge/lazy-controller-loader!./controllers',
+        true,
+        /\.[jt]sx?$/
+    ));
+
+And 2 new packages - ``@hotwired/stimulus`` and ``@symfony/stimulus-bridge`` - will
+be added to your ``package.json`` file.
 
 How are the Stimulus Controllers Loaded?
 ----------------------------------------
@@ -578,3 +576,4 @@ it will normalize it:
 .. _`stimulus-components`: https://stimulus-components.netlify.app/
 .. _`TypeScript`: https://www.typescriptlang.org/
 .. _`sensiolabs/typescript-bundle`: https://github.com/sensiolabs/AssetMapperTypeScriptBundle
+.. _`Stimulus plugin`: https://plugins.jetbrains.com/plugin/18940-stimulus
