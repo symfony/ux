@@ -275,4 +275,11 @@ final class IconTest extends TestCase
             ['foo' => 'foobar', 'baz' => 'qux'],
         ];
     }
+
+    public function testSerialize(): void
+    {
+        $icon = new Icon('foo', ['bar' => 'baz']);
+
+        $this->assertEquals($icon, unserialize(serialize($icon)));
+    }
 }

@@ -16,7 +16,7 @@ namespace Symfony\UX\Icons\Svg;
  *
  * @internal
  */
-final class Icon implements \Stringable, \Serializable
+final class Icon implements \Stringable
 {
     /**
      * Transforms a valid icon ID into an icon name.
@@ -191,16 +191,6 @@ final class Icon implements \Stringable, \Serializable
     public function __toString(): string
     {
         return $this->toHtml();
-    }
-
-    public function serialize(): string
-    {
-        return serialize([$this->innerSvg, $this->attributes]);
-    }
-
-    public function unserialize(string $data): void
-    {
-        [$this->innerSvg, $this->attributes] = unserialize($data);
     }
 
     public function __serialize(): array
