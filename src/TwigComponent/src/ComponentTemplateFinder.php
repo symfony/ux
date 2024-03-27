@@ -58,10 +58,31 @@ final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
                 return $componentPath;
             }
 
+            if ($loader->exists('components/'.$componentPath.'/Index.html.twig')) {
+                return 'components/'.$componentPath.'/Index.html.twig';
+            }
+
+            if ($loader->exists($componentPath.'/Index.html.twig')) {
+                return $componentPath.'/Index.html.twig';
+            }
+
+            if ($loader->exists('components/'.$componentPath.'/Index')) {
+                return 'components/'.$componentPath.'/Index';
+            }
+
+            if ($loader->exists($componentPath.'/Index')) {
+                return $componentPath.'/Index';
+            }
+
             return null;
         }
 
         $template = rtrim($this->directory, '/').'/'.$componentPath.'.html.twig';
+        if ($loader->exists($template)) {
+            return $template;
+        }
+
+        $template = rtrim($this->directory, '/').'/'.$componentPath.'/Index.html.twig';
         if ($loader->exists($template)) {
             return $template;
         }
