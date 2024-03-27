@@ -144,7 +144,6 @@ describe('LiveController query string binding', () => {
         expectCurrentSearch().toEqual('?prop=');
     });
 
-
     it('updates the URL with props changed by the server', async () => {
         const test = await createTest({ prop: ''}, (data: any) => `
             <div ${initComponent(data, {queryMapping: {prop: {name: 'prop'}}})}>
@@ -164,5 +163,27 @@ describe('LiveController query string binding', () => {
         await waitFor(() => expect(test.element).toHaveTextContent('Prop: foo'));
 
         expectCurrentSearch().toEqual('?prop=foo');
+    });
+
+    it('uses custom name instead of prop name in the URL', async () => {
+        const test = await createTest({ prop1: ''}, (data: any) => `
+            <div ${initComponent(data, { queryMapping: {prop1: {name: 'alias1'} }})}></div>
+        `)
+
+        // Set value
+        test.expectsAjaxCall()
+            .expectUpdatedData({prop1: 'foo'});
+
+        await test.component.set('prop1', 'foo', true);
+
+        expectCurrentSearch().toEqual('?alias1=foo');
+
+        // Remove value
+        test.expectsAjaxCall()
+            .expectUpdatedData({prop1: ''});
+
+        await test.component.set('prop1', '', true);
+
+        expectCurrentSearch().toEqual('?alias1=');
     });
 })

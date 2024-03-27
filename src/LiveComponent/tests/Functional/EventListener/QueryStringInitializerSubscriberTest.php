@@ -20,18 +20,31 @@ class QueryStringInitializerSubscriberTest extends KernelTestCase
 
     public function testQueryStringPropsInitialization()
     {
+        $queryString = '?'
+            .'stringProp=foo'
+            .'&intProp=42'
+            .'&arrayProp[]=foo&arrayProp[]=bar'
+            .'&unboundProp=unbound'
+            .'&objectProp[address]=foo&objectProp[city]=bar'
+            .'&field1=foo'
+            .'&field2=foo'
+            .'&maybeBoundProp=foo'
+            .'&q=foo'
+            .'&customAlias=foo'
+        ;
         $this->browser()
-            ->throwExceptions()
-            ->get('/render-template/render_component_with_url_bound_props?prop1=foo&prop2=42&prop3[]=foo&prop3[]=bar&prop4=unbound&prop5[address]=foo&prop5[city]=bar&field6=foo&field7=foo&prop8=foo')
+            ->get('/render-template/render_component_with_url_bound_props'.$queryString)
             ->assertSuccessful()
-            ->assertContains('Prop1: foo')
-            ->assertContains('Prop2: 42')
-            ->assertContains('Prop3: foo,bar')
-            ->assertContains('Prop4:')
-            ->assertContains('Prop5: address: foo city: bar')
-            ->assertContains('Prop6: foo')
-            ->assertContains('Prop7: foo')
-            ->assertContains('Prop8: foo')
+            ->assertContains('StringProp: foo')
+            ->assertContains('IntProp: 42')
+            ->assertContains('ArrayProp: foo,bar')
+            ->assertContains('UnboundProp:')
+            ->assertContains('ObjectProp: address: foo city: bar')
+            ->assertContains('PropWithField1: foo')
+            ->assertContains('PropWithField2: foo')
+            ->assertContains('MaybeBoundProp: foo')
+            ->assertContains('BoundPropWithAlias: foo')
+            ->assertContains('BoundPropWithCustomAlias: foo')
         ;
     }
 }

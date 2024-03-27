@@ -51,9 +51,9 @@ final class LivePropMetadata
         return $this->allowsNull;
     }
 
-    public function queryStringMapping(): bool
+    public function urlMapping(): ?UrlMapping
     {
-        return $this->liveProp->url();
+        return $this->liveProp->url() ?: null;
     }
 
     public function calculateFieldName(object $component, string $fallback): string

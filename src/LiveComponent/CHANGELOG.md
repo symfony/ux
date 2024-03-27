@@ -8,6 +8,7 @@
     page is rendered, either when the page loads (`loading="defer"`) or when
     the component becomes visible in the viewport (`loading="lazy"`).
 -   Deprecate the `defer` attribute.
+-   Add `UrlMapping` configuration object for URL bindings in LiveComponents
 
 ## 2.16.0
 
