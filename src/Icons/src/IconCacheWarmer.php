@@ -13,7 +13,6 @@ namespace Symfony\UX\Icons;
 
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Registry\CacheIconRegistry;
-use Symfony\UX\Icons\Svg\Icon;
 use Symfony\UX\Icons\Twig\IconFinder;
 
 /**
