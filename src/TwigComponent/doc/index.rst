@@ -274,10 +274,6 @@ namespace. See :ref:`Configuration <configuration>`.
 Component HTML Syntax
 ~~~~~~~~~~~~~~~~~~~~~
 
-.. versionadded:: 2.8
-
-    This syntax was been introduced in 2.8 and is still experimental.
-
 So far so good! To make it *really* nice to work with Twig Components, it
 comes with an HTML-like syntax where props are passed as attributes:
 
