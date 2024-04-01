@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-27T19:52:08Z
+
+> 2. I moved `Icon` up a level (this is a personal preference). @smnandre did you have plans for more classes in the `Svg` namespace?
+
+Yes, but we will see when it happens. 100% support on this move right now.
