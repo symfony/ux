@@ -36,6 +36,17 @@ final class LocalSvgIconRegistry implements IconRegistryInterface
         return Icon::fromFile($filename);
     }
 
+    public function has(string $name): bool
+    {
+        try {
+            $this->get($name);
+
+            return true;
+        } catch (IconNotFoundException) {
+            return false;
+        }
+    }
+
     public function add(string $name, string $svg): void
     {
         $filename = sprintf('%s/%s.svg', $this->iconDir, $name);
