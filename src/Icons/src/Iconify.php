@@ -17,7 +17,6 @@ use Symfony\Component\HttpClient\ScopingHttpClient;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
-use Symfony\UX\Icons\Svg\Icon;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
