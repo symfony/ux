@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-25T20:57:14Z
+
+So if i understand:
+* during dev, you use ux_icon(foo), foo is magically downloaded from iconify and stored in cache
+* if you call the lock method, it's saved in assets/icons (and can be committed)
+* if you call another time lock with --force you can override the local one
+
+This seem really sensible!
+
+(+1 for the lint command idea)
