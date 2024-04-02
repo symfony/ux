@@ -21,6 +21,19 @@ final class IconsTest extends KernelTestCase
 {
     use HasBrowser;
 
+    public function testCanViewIconFromHomepage(): void
+    {
+        $this->browser()
+            ->visit('/')
+            ->assertSuccessful()
+            ->assertSeeIn('.AppNav_menu', 'Icons')
+            ->click('Icons')
+            ->assertSuccessful()
+            ->assertSeeIn('title', 'Icons')
+            ->assertSeeIn('h1', 'Icons')
+        ;
+    }
+
     public function testCanViewIconIndex(): void
     {
         $this->browser()
