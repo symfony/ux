@@ -92,7 +92,7 @@ needed if you're using AssetMapper):
     $ yarn watch
 
 If your project is localized in different languages (either via the `locale route parameter`_
-or by `setting the locale in the request`_) add the ``{ _locale}`` attribute to
+or by `setting the locale in the request`_) add the ``{_locale}`` attribute to
 the UX Live Components route definition to keep the locale between re-renders:
 
 .. code-block:: diff
