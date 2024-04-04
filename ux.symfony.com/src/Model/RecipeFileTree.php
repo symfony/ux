@@ -26,8 +26,8 @@ class RecipeFileTree
             ->addFile('assets/controllers/hello_controller.js', 'An example controller. Add it to any element with <code class="text-nowrap">data-controller="hello"</code>')
             ->addDirectory('assets/styles')
             ->addFile('assets/styles/app.css', 'Your main CSS file')
-            ->addFile('package.json', 'Holds your node dependencies, most importantly Stimulus & Webpack Encore.')
-            ->addFile('webpack.config.js', 'Configuration file for Webpack Encore: the tool that processes and combines all of your CSS and JS files.')
+            ->addFile('package.json', 'Holds your node dependencies, most importantly Stimulus (when using Webpack Encore).')
+            ->addFile('webpack.config.js', 'Configuration file for Webpack Encore: the tool that processes and combines all of your CSS and JS files (not needed with AssetMapper).')
         ;
     }
 
