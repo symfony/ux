@@ -1,13 +1,13 @@
 export default class {
     private hooks: Map<string, Array<(...args: any[]) => void>> = new Map();
 
-    register(hookName: string, callback: () => void): void {
+    register(hookName: string, callback: (...args: any[]) => void): void {
         const hooks = this.hooks.get(hookName) || [];
         hooks.push(callback);
         this.hooks.set(hookName, hooks);
     }
 
-    unregister(hookName: string, callback: () => void): void {
+    unregister(hookName: string, callback: (...args: any[]) => void): void {
         const hooks = this.hooks.get(hookName) || [];
         const index = hooks.indexOf(callback);
         if (index === -1) {

@@ -1,8 +1,24 @@
 import { BackendInterface } from '../Backend/Backend';
 import ValueStore from './ValueStore';
+import BackendRequest from '../Backend/BackendRequest';
 import { ElementDriver } from './ElementDriver';
 import { PluginInterface } from './plugins/PluginInterface';
 import BackendResponse from '../Backend/BackendResponse';
+type MaybePromise<T = void> = T | Promise<T>;
+export type ComponentHooks = {
+    'connect': (component: Component) => MaybePromise;
+    'disconnect': (component: Component) => MaybePromise;
+    'request:started': (requestConfig: any) => MaybePromise;
+    'render:finished': (component: Component) => MaybePromise;
+    'response:error': (backendResponse: BackendResponse, controls: {
+        displayError: boolean;
+    }) => MaybePromise;
+    'loading.state.started': (element: HTMLElement, request: BackendRequest) => MaybePromise;
+    'loading.state.finished': (element: HTMLElement) => MaybePromise;
+    'model:set': (model: string, value: any, component: Component) => MaybePromise;
+};
+export type ComponentHookName = keyof ComponentHooks;
+export type ComponentHookCallback<T extends string = ComponentHookName> = T extends ComponentHookName ? ComponentHooks[T] : (...args: any[]) => MaybePromise;
 export default class Component {
     readonly element: HTMLElement;
     readonly name: string;
@@ -30,8 +46,8 @@ export default class Component {
     addPlugin(plugin: PluginInterface): void;
     connect(): void;
     disconnect(): void;
-    on(hookName: string, callback: (...args: any[]) => void): void;
-    off(hookName: string, callback: (...args: any[]) => void): void;
+    on<T extends string | ComponentHookName = ComponentHookName>(hookName: T, callback: ComponentHookCallback<T>): void;
+    off<T extends string | ComponentHookName = ComponentHookName>(hookName: T, callback: ComponentHookCallback<T>): void;
     set(model: string, value: any, reRender?: boolean, debounce?: number | boolean): Promise<BackendResponse>;
     getData(model: string): any;
     action(name: string, args?: any, debounce?: number | boolean): Promise<BackendResponse>;
@@ -55,3 +71,4 @@ export default class Component {
     _updateFromParentProps(props: any): void;
 }
 export declare function proxifyComponent(component: Component): Component;
+export {};
