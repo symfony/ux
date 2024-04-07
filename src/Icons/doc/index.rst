@@ -167,9 +167,6 @@ a subdirectory, the *name* will be ``subdirectory:icon_name``.
 Icons On-Demand
 ~~~~~~~~~~~~~~~
 
-`ux.symfony.com/icons`_ has a huge searchable repository of icons
-from many different sets. This package provides a way to include any icon found on this site _on-demand_.
-
 `ux.symfony.com/icons`_ has a huge searchable repository of icons from many
 different sets. This package provides a way to include any icon found on this
 site *on-demand*:
