@@ -128,6 +128,8 @@ jobs:
                 dependency-versions: ${{ matrix.dependency-version }}
 
             - name: ${{ matrix.component }} Tests
+              env:
+                  SYMFONY_DEPRECATIONS_HELPER: 'max[total]=999999'
               working-directory: "src/${{ matrix.component }}"
               run: vendor/bin/simple-phpunit
 
