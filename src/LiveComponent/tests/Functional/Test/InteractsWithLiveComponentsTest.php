@@ -61,18 +61,32 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertStringContainsString('Arg1: not provided', $testComponent->render());
         $this->assertStringContainsString('Arg2: not provided', $testComponent->render());
         $this->assertStringContainsString('Arg3: not provided', $testComponent->render());
+        $this->assertStringContainsString('Arg4: not provided', $testComponent->render());
+        $this->assertStringContainsString('Arg5: not provided', $testComponent->render());
         $this->assertNull($testComponent->component()->arg1);
         $this->assertNull($testComponent->component()->arg2);
         $this->assertNull($testComponent->component()->arg3);
+        $this->assertNull($testComponent->component()->arg4);
+        $this->assertNull($testComponent->component()->arg5);
 
-        $testComponent->call('inject', ['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3']);
+        $testComponent->call('inject', [
+            'arg1' => 'hello',
+            'arg2' => 666,
+            'custom' => '33.3',
+            'arg4' => '',
+            'arg5' => '',
+        ]);
 
         $this->assertStringContainsString('Arg1: hello', $testComponent->render());
         $this->assertStringContainsString('Arg2: 666', $testComponent->render());
         $this->assertStringContainsString('Arg3: 33.3', $testComponent->render());
+        $this->assertStringContainsString('Arg4: null', $testComponent->render());
+        $this->assertStringContainsString('Arg5: empty-string', $testComponent->render());
         $this->assertSame('hello', $testComponent->component()->arg1);
         $this->assertSame(666, $testComponent->component()->arg2);
         $this->assertSame(33.3, $testComponent->component()->arg3);
+        $this->assertNull($testComponent->component()->arg4);
+        $this->assertSame('', $testComponent->component()->arg5);
     }
 
     public function testCanEmitEvent(): void

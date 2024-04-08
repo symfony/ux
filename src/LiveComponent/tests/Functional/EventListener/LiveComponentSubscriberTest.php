@@ -449,7 +449,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         $dehydrated = $this->dehydrateComponent($this->mountComponent('component6'));
         $token = null;
 
-        $arguments = ['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3'];
+        $arguments = [
+            'arg1' => 'hello',
+            'arg2' => 666,
+            'custom' => '33.3',
+            'arg4' => '',
+            'arg5' => '',
+        ];
         $this->browser()
             ->throwExceptions()
             ->post('/_components/component6', [
@@ -464,6 +470,8 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertContains('Arg1: not provided')
             ->assertContains('Arg2: not provided')
             ->assertContains('Arg3: not provided')
+            ->assertContains('Arg4: not provided')
+            ->assertContains('Arg5: not provided')
             ->use(function (Crawler $crawler) use (&$token) {
                 // get a valid token to use for actions
                 $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
@@ -482,6 +490,8 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertContains('Arg1: hello')
             ->assertContains('Arg2: 666')
             ->assertContains('Arg3: 33.3')
+            ->assertContains('Arg4: null')
+            ->assertContains('Arg5: empty-string')
         ;
     }
 
