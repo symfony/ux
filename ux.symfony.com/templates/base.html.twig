@@ -36,6 +36,10 @@
         {% endblock %}
     </head>
     <body>
+        {% block banner %}
+            {{ include('_banner.html.twig') }}
+        {% endblock %}
+
         {% block body %}
             <div class="App">
                 {% block header %}
