@@ -37,6 +37,7 @@
         "doctrine/doctrine-bundle": "^2.4.3",
         "doctrine/orm": "^2.9.4",
         "doctrine/persistence": "^2.5.2|^3.0",
+        "matthiasnoback/symfony-dependency-injection-test": "^5.1",
         "phpdocumentor/reflection-docblock": "5.x-dev",
         "symfony/dependency-injection": "^5.4|^6.0|^7.0",
         "symfony/expression-language": "^5.4|^6.0|^7.0",
