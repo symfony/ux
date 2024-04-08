@@ -3561,6 +3561,59 @@ Debugging Components
 Need to list or debug some component issues.
 The `Twig Component debug command`_ can help you.
 
+
+Registering Live Components manually
+------------------------------------
+
+.. versionadded:: 2.17
+
+    The ``live.component`` tag has been introduced in LiveComponents 2.17.
+
+Sometimes you might need to register your Live Components manually. This can be useful if you want to provide a live component
+along with a bundle. To do this, you can use the ``live.component`` tag:
+
+.. configuration-block::
+
+    .. code-block:: yaml
+
+        services:
+            # ...
+            app.component.product_search:
+                class: App\Components\ProductSearch
+                # ...
+                tags:
+                    - { name: 'live.component', key: 'ProductSearch', template: 'product_search.html.twig' }
+
+    .. code-block:: xml
+
+        <?xml version="1.0" encoding="UTF-8" ?>
+        <container xmlns="http://symfony.com/schema/dic/services"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:framework="http://symfony.com/schema/dic/symfony"
+            xsi:schemaLocation="http://symfony.com/schema/dic/services
+                https://symfony.com/schema/dic/services/services-1.0.xsd
+                http://symfony.com/schema/dic/symfony https://symfony.com/schema/dic/symfony/symfony-1.0.xsd">
+
+            <service id="app.component.product_search" class="App\Components\ProductSearch">
+                <!-- ... -->
+                <tag name="live.component" key="ProductSearch" template="product_search.html.twig" />
+            </service>
+        </container>
+
+    .. code-block:: php
+
+        use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+
+        return static function (ContainerConfigurator $container): void {
+            $services = $container->services();
+            $services
+                ->set('app.component.product_search', App\Component\ProductSearch::class)
+                // ...
+                ->tag('live.component', ['key' => 'product_search', 'template' => '@App/product_search.html.twig'])
+            ;
+        };
+
+
 Test Helper
 -----------
 
