@@ -449,6 +449,134 @@ class CVATest extends TestCase
             [],
             'font-semibold border rounded text-primary text-sm rounded-md',
         ];
+
+        yield 'boolean string variants true / true' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'true' => 'disable',
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => true],
+            'text-primary disable',
+        ];
+
+        yield 'boolean string variants true / false' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'true' => 'disable',
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => false],
+            'text-primary',
+        ];
+
+        yield 'boolean string variants false / true' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'false' => 'disable',
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => true],
+            'text-primary',
+        ];
+
+        yield 'boolean string variants false / false' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'false' => 'disable',
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => false],
+            'text-primary disable',
+        ];
+
+        yield 'boolean string variants missing' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'true' => 'disable',
+                    ],
+                ],
+            ],
+            ['colors' => 'primary'],
+            'text-primary',
+        ];
+
+        yield 'boolean list variants true' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'true' => ['disable', 'opacity-50'],
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => true],
+            'text-primary disable opacity-50',
+        ];
+
+        yield 'boolean list variants false' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'true' => ['disable', 'opacity-50'],
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => false],
+            'text-primary',
+        ];
+
+        yield 'boolean list variants missing' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'true' => ['disable', 'opacity-50'],
+                    ],
+                ],
+            ],
+            ['colors' => 'primary'],
+            'text-primary',
+        ];
     }
 
     /**
