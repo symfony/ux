@@ -1,9 +1,9 @@
 <ul class="svg">
     <li id="first">{{ ux_icon('user', {class: 'h-8 w-8'}) }}</li>
-    <li id="second">{{ ux_icon('user') }}</li>
+    <li id="second">{{ ux_icon('user', {"aria-label": "AriaLabel"}) }}</li>
     <li id="third">{{ ux_icon('sub:check', {'data-action': 'string "with" quotes'}) }}</li>
     <li id="fifth"><twig:UX:Icon name="user" class="h-8 w-8" /></li>
-    <li id="sixth"><twig:ux:icon name="sub:check" /></li>
+    <li id="sixth"><twig:ux:icon name="sub:check" aria-labelledby="foo" /></li>
     <li id="seventh"><twig:Ux:Icon :name="'sub:'~'check'" /></li>
     <li id="eighth">{{ ux_icon('iconamoon:3d-duotone') }}</li>
 </ul>
