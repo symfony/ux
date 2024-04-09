@@ -1579,10 +1579,10 @@ controls how components are named and where their templates live:
             #    - templates will live in "components/"
             #        Alert => templates/components/Alert.html.twig
             #        Button:Primary => templates/components/Button/Primary.html.twig
-            App\Twig\Components: components/
+            App\Twig\Components\: components/
 
             # long form
-            App\Pizza\Components:
+            App\Pizza\Components\:
                 template_directory: components/pizza
                 # component names will have an extra "Pizza:" prefix
                 #    App\Pizza\Components\Alert => Pizza:Alert
