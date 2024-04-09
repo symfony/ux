@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by kasperh90 at 2024-04-08T06:25:45Z
+
+@WebMamba I think we need to consider one more thing:
+
+When I create a new Symfony app, install the UX Svelte bundle, install all the necessary NPM dependencies and type ``npm run watch`` in the terminal, I get the following warning:
+
+![image](https://github.com/symfony/ux/assets/36596298/87655a57-d57d-464e-95db-e85b99c4ce90)
+
+That's how it came to my attentien that when you use Svelte 4, you will have to do a bit more configuration where you will have to add ``svelte`` and ``browser`` to ``conditionNames`` array. The warning in the terminal provides the following link: https://github.com/sveltejs/svelte-loader#resolveconditionnames
+
+Should I add this too?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-04-08T07:31:58Z
+
+Hummm I think it's fine, the error message is really good. Just specify in the doc that this config is needed for svelte 4
