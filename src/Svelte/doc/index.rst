@@ -51,6 +51,22 @@ Next, install a package to help Svelte:
 That's it! Any files inside ``assets/svelte/controllers/`` can now be rendered as
 Svelte components.
 
+If you are using Svelte 4, you will have to add ``browser``, ``import`` and ``svelte``
+to the ``conditionNames`` array. This is necessary as per `the Svelte 4 migration guide`_
+for bundlers such as webpack, to ensure that lifecycle callbacks are internally invoked.
+
+To modify the ``conditionNames`` array, append the following changes to the bottom
+of your ``webpack.config.js`` file:
+
+.. code-block:: javascript
+
+    // webpack.config.js
+
+    // module.exports = Encore.getWebpackConfig();
+    const config = Encore.getWebpackConfig();
+    config.resolve.conditionNames = ['browser', 'import', 'svelte'];
+    module.exports = config;
+
 Usage
 -----
 
@@ -146,3 +162,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Svelte`: https://svelte.dev/
 .. _`the Symfony UX initiative`: https://symfony.com/ux
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
+.. _the Svelte 4 migration guide: https://svelte.dev/docs/v4-migration-guide#browser-conditions-for-bundlers
