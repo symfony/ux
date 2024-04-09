@@ -12,107 +12,124 @@
 namespace Symfony\UX\TwigComponent;
 
 /**
- * @author Mathéo Daninos <matheo.daninos@gmail.com>
+ * Class Variant Authority (CVA) resolver.
  *
- * CVA (class variant authority), is a concept from the js world.
- * https://cva.style/docs
- * The UI library shadcn is build on top of this principle
- * https://ui.shadcn.com
- * The concept behind CVA is to let you build component with a lot of different variations called recipes.
+ * The CVA concept is used to render multiple variations of components, applying
+ * a set of conditions and recipes to dynamically compose CSS class strings.
+ *
+ * @see https://cva.style/docs
+ *
+ * @doc https://symfony.com/bundles/ux-twig-component/current/index.html
+ *
+ * @author Mathéo Daninos <matheo.daninos@gmail.com>
  *
  * @experimental
  */
 final class CVA
 {
     /**
-     * @var string|list<string|null>|null
-     * @var array<string, array<string, string|list<string|null>>|null the array should have the following format [variantCategory => [variantName => classes]]
-     *                                                ex: ['colors' => ['primary' => 'bleu-8000', 'danger' => 'red-800 text-bold'], 'size' => [...]]
-     * @var array<array<string, string|array<string>>> the array should have the following format ['variantsCategory' => ['variantName', 'variantName'], 'class' => 'text-red-500']
-     * @var array<string, string>|null
+     * @var list<string|null>
+     */
+    private readonly array $base;
+
+    /**
+     * @param string|list<string|null> $base The base classes to apply to the component
      */
     public function __construct(
-        private string|array|null $base = null,
-        private ?array $variants = null,
-        private ?array $compoundVariants = null,
-        private ?array $defaultVariants = null,
+        string|array $base = [],
+        /**
+         * The variants to apply based on recipes.
+         *
+         * Format: [variantCategory => [variantName => classes]]
+         *
+         * Example:
+         *      'colors' => [
+         *          'primary' => 'bleu-8000',
+         *          'danger' => 'red-800 text-bold',
+         *       ],
+         *      'size' => [...],
+         *
+         * @var array<string, array<string, string|list<string>>>
+         */
+        private readonly array $variants = [],
+
+        /**
+         * The compound variants to apply based on recipes.
+         *
+         * Format: [variantsCategory => ['variantName', 'variantName'], class: classes]
+         *
+         * Example:
+         *   [
+         *      'colors' => ['primary'],
+         *      'size' => ['small'],
+         *      'class' => 'text-red-500',
+         *   ],
+         *   [
+         *      'size' => ['large'],
+         *      'class' => 'font-weight-500',
+         *   ]
+         *
+         * @var array<array<string, string|array<string>>>
+         */
+        private readonly array $compoundVariants = [],
+
+        /**
+         * The default variants to apply if specific recipes aren't provided.
+         *
+         * Format: [variantCategory => variantName]
+         *
+         * Example:
+         *     'colors' => 'primary',
+         *
+         * @var array<string, string>
+         */
+        private readonly array $defaultVariants = [],
     ) {
+        $this->base = (array) $base;
     }
 
-    public function apply(array $recipes, ?string ...$classes): string
+    public function apply(array $recipes, ?string ...$additionalClasses): string
     {
-        return trim($this->resolve($recipes).' '.implode(' ', array_filter($classes)));
-    }
+        $classes = [...$this->base];
 
-    public function resolve(array $recipes): string
-    {
-        if (\is_array($this->base)) {
-            $classes = implode(' ', $this->base);
-        } else {
-            $classes = $this->base ?? '';
+        // Resolve recipes against variants
+        foreach ($recipes as $recipeName => $recipeValue) {
+            $recipeClasses = $this->variants[$recipeName][$recipeValue] ?? [];
+            $classes = [...$classes, ...(array) $recipeClasses];
         }
 
-        foreach ($recipes as $recipeName => $recipeValue) {
-            if (!isset($this->variants[$recipeName][$recipeValue])) {
+        // Resolve compound variants
+        foreach ($this->compoundVariants as $compound) {
+            $compoundClasses = $this->resolveCompoundVariant($compound, $recipes) ?? [];
+            $classes = [...$classes, ...$compoundClasses];
+        }
+
+        // Apply default variants if specific recipes aren't provided
+        foreach ($this->defaultVariants as $defaultVariantName => $defaultVariantValue) {
+            if (!isset($recipes[$defaultVariantName])) {
+                $variantClasses = $this->variants[$defaultVariantName][$defaultVariantValue] ?? [];
+                $classes = [...$classes, ...(array) $variantClasses];
+            }
+        }
+        $classes = [...$classes, ...array_values($additionalClasses)];
+
+        $classes = implode(' ', array_filter($classes, is_string(...)));
+        $classes = preg_split('#\s+#', $classes, -1, \PREG_SPLIT_NO_EMPTY) ?: [];
+
+        return implode(' ', array_unique($classes));
+    }
+
+    private function resolveCompoundVariant(array $compound, array $recipes): array
+    {
+        foreach ($compound as $compoundName => $compoundValues) {
+            if ('class' === $compoundName) {
                 continue;
             }
-
-            if (\is_string($this->variants[$recipeName][$recipeValue])) {
-                $classes .= ' '.$this->variants[$recipeName][$recipeValue];
-            } else {
-                $classes .= ' '.implode(' ', $this->variants[$recipeName][$recipeValue]);
+            if (!isset($recipes[$compoundName]) || !\in_array($recipes[$compoundName], (array) $compoundValues)) {
+                return [];
             }
         }
 
-        if (null !== $this->compoundVariants) {
-            foreach ($this->compoundVariants as $compound) {
-                $isCompound = true;
-                foreach ($compound as $compoundName => $compoundValues) {
-                    if ('class' === $compoundName) {
-                        continue;
-                    }
-
-                    if (!isset($recipes[$compoundName])) {
-                        $isCompound = false;
-                        break;
-                    }
-
-                    if (!\is_array($compoundValues)) {
-                        $compoundValues = [$compoundValues];
-                    }
-
-                    if (!\in_array($recipes[$compoundName], $compoundValues)) {
-                        $isCompound = false;
-                        break;
-                    }
-                }
-
-                if ($isCompound) {
-                    if (!isset($compound['class'])) {
-                        throw new \LogicException('A compound recipe matched but no classes are registered for this match');
-                    }
-
-                    if (!\is_string($compound['class']) && !\is_array($compound['class'])) {
-                        throw new \LogicException('The class of a compound recipe should be a string or an array of string');
-                    }
-
-                    if (\is_string($compound['class'])) {
-                        $classes .= ' '.$compound['class'];
-                    } else {
-                        $classes .= ' '.implode(' ', $compound['class']);
-                    }
-                }
-            }
-        }
-
-        if (null !== $this->defaultVariants) {
-            foreach ($this->defaultVariants as $defaultVariantName => $defaultVariantValue) {
-                if (!isset($recipes[$defaultVariantName])) {
-                    $classes .= ' '.$this->variants[$defaultVariantName][$defaultVariantValue];
-                }
-            }
-        }
-
-        return trim($classes);
+        return (array) ($compound['class'] ?? []);
     }
 }
