@@ -1,0 +1,65 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-07T21:41:06Z
+
+> Why instead of an aria-hidden attribute not fill the aria-label with the name from the metadata ?
+
+I don't remember precisely where, but i posted some links about it in the original issue discussion...
+
+aria-hidden is really the best thing to do when an icon is used with a label (like the green "open" badge on top of this screen)
+
+But your solution could absolutely be something to consider
+
+(that's why i'm inclined to keep the configuration, there are so many use cases i'd rather no "force" things for users that don't want some attributes.... or have very good reasons to not want them)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-08T22:51:12Z
+
+> > Why instead of an aria-hidden attribute not fill the aria-label with the name from the metadata ?
+>
+> I don't remember precisely where, but i posted some links about it in the original issue discussion...
+>
+> aria-hidden is really the best thing to do when an icon is used with a label (like the green "open" badge on top of this screen)
+>
+> But your solution could absolutely be something to consider
+>
+> (that's why i'm inclined to keep the configuration, there are so many use cases i'd rather no "force" things for users that don't want some attributes.... or have very good reasons to not want them)
+
+Ok for you @WebMamba  ?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-04-09T07:49:36Z
+
+Hum no 😁 I don't think it should be a configuration, it should be a behavior that can be overwrite directly when you use the component. And we should document it
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-09T15:01:32Z
+
+> Hum no 😁 I don't think it should be a configuration, it should be a behavior that can be overwrite directly when you use the component. And we should document it
+
+So people would need to add "aria-hidden: false" for all their icons ?
+
+That's a niche use case, so why not yes
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-04-09T17:17:32Z
+
+> so in the end no special label attribute accepted?
+
+Is `label` a valid html attribute? If not, I'd prefer keeping as is to keep the complexity to a minimum.
+
+> I don't think it should be a configuration, it should be a behavior that can be overwrite directly when you use the component.
+
+I think this should be the default behaviour for the reasons discussed in #1629 but I want to hear your hesitation @WebMamba. Is there an alternate way we can achieve? My thought for this was adding to the `default_icon_attributes` configuration option but because some logic is required, this seems better.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-09T17:39:34Z
+
+> Is `label` a valid html attribute? If not, I'd prefer keeping as is to keep the complexity to a minimum.
+
+Yep that was my reasoning to not implement this in the end. I don't want to confuse users with non-existing svg attributes.
