@@ -58,14 +58,13 @@ for bundlers such as webpack, to ensure that lifecycle callbacks are internally 
 To modify the ``conditionNames`` array, append the following changes to the bottom
 of your ``webpack.config.js`` file:
 
-.. code-block:: javascript
+.. code-block:: diff
 
-    // webpack.config.js
-
-    // module.exports = Encore.getWebpackConfig();
-    const config = Encore.getWebpackConfig();
-    config.resolve.conditionNames = ['browser', 'import', 'svelte'];
-    module.exports = config;
+      // webpack.config.js
+    - module.exports = Encore.getWebpackConfig();
+    + const config = Encore.getWebpackConfig();
+    + config.resolve.conditionNames = ['browser', 'import', 'svelte'];
+    + module.exports = config;
 
 Usage
 -----
