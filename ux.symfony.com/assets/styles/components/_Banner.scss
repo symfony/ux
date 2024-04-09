@@ -5,6 +5,9 @@
 .Banner {
   background: #0A0A0A;
 }
+.Banner + .App {
+  position: relative;
+}
 
 .BannerInner {
   display: flex;
@@ -14,18 +17,14 @@
   position: relative;
 }
 
-.Banner + .App {
-  position: relative;
-}
-
 .BannerMedia {
   align-self: center;
   justify-self: center;
 }
-
-.BannerMedia img {
-  height: 92px;
-  width: auto;
+.BannerImage {
+  width: 92px;
+  height: auto;
+  filter: drop-shadow(1px 1px 8px #000) drop-shadow(2px 2px 32px #970404);
 }
 
 .BannerContent {
@@ -42,11 +41,14 @@
   font-size: 1.5rem;
   font-family: var(--font-family-title);
 }
+.BannerTitle a {
+  text-shadow: 0 0 1px 4px red;
+  font-size: 1.05em;
+}
 
 .BannerText {
   margin-block-end: 0.5rem;
 }
-
 .BannerText em {
   text-decoration: underline;
   text-underline-offset: .25rem;
@@ -60,7 +62,6 @@
 }
 
 .BannerButton {
-  position: relative;
   display: flex;
   align-items: center;
   padding: .75rem 1.5rem;
@@ -79,6 +80,11 @@
 
 .BannerButton:hover {
   color: #fff;
+}
+.BannerButton:after {
+  content: "";
+  position: absolute;
+  inset: 0;
 }
 
 .BannerButton svg {
@@ -99,7 +105,7 @@
   .BannerInner {
     flex-direction: row;
     padding: 4rem 2rem;
-    gap: 2rem;
+    gap: 4rem;
   }
   .BannerTitle {
     text-align: left;
