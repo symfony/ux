@@ -1,0 +1,48 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-25T20:20:43Z
+
+(Failures unrelated)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-02T16:38:02Z
+
+Thanks @javiereguiluz for this review, i'll fix it tonight or tomorrow !
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-02T16:38:51Z
+
+> Can you add a bit of docs?
+
+You mean in the command, or mention the command in the component docs ? I guess the later but just want to be sure :)
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-04-02T21:04:30Z
+
+> You mean in the command, or mention the command in the component docs ? I guess the later but just want to be sure :)
+
+I meant in `index.rst`
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-04-02T21:06:03Z
+
+> from iconify.design-> from ux.symfony.com?
+
+Agreed. I don't want to actively hide the fact that iconify.design is used under the hood but also, don't want to cause confusion.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-02T21:20:51Z
+
+> > from iconify.design-> from ux.symfony.com?
+>
+> Agreed. I don't want to actively hide the fact that iconify.design is used under the hood but also, don't want to cause confusion.
+
+Ok will update.
+
+@kbond
+I just commited some doc .. inspired by the TwigComponent doc. But tell me if you expected something else :)
