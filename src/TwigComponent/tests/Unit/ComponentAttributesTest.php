@@ -258,4 +258,30 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame(' class="baz"', (string) $attributes->nested('title')->nested('span'));
         $this->assertSame('', (string) $attributes->nested('invalid'));
     }
+
+    public function testConvertBooleanAriaAttributeValues(): void
+    {
+        $attributes = new ComponentAttributes([
+            'aria-foo' => true,
+            'aria-bar' => false,
+            'aria-true' => 'true',
+            'aria-false' => 'false',
+            'aria-foobar' => 'foobar',
+            'aria-number' => '1',
+        ]);
+
+        $this->assertStringContainsString('aria-foo="true"', (string) $attributes);
+        $this->assertStringContainsString('aria-bar="false"', (string) $attributes);
+        $this->assertStringContainsString('aria-true="true"', (string) $attributes);
+        $this->assertStringContainsString('aria-false="false"', (string) $attributes);
+        $this->assertStringContainsString('aria-foobar="foobar"', (string) $attributes);
+        $this->assertStringContainsString('aria-number="1"', (string) $attributes);
+
+        $this->assertSame('true', $attributes->render('aria-foo'));
+        $this->assertSame('false', $attributes->render('aria-bar'));
+        $this->assertSame('true', $attributes->render('aria-true'));
+        $this->assertSame('false', $attributes->render('aria-false'));
+        $this->assertSame('foobar', $attributes->render('aria-foobar'));
+        $this->assertSame('1', $attributes->render('aria-number'));
+    }
 }
