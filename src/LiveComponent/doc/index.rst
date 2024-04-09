@@ -728,7 +728,7 @@ and ``dehydrateWith`` options on ``LiveProp``::
 
     class ComponentWithAddressDto
     {
-        #[LiveProp(dehydrateWith: 'dehydrateAddress', hydrateWith: 'hydrateAddress')]
+        #[LiveProp(hydrateWith: 'hydrateAddress', dehydrateWith: 'dehydrateAddress')]
         public AddressDto $addressDto;
 
         public function dehydrateAddress(AddressDto $address)
