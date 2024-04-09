@@ -110,6 +110,56 @@ Icon Set                    Icons  License     Prefix           Example
 
 To see the full list of available icon sets, visit `ux.symfony.com/icons`_.
 
+Search Icon sets
+~~~~~~~~~~~~~~~~
+
+You can use the ``ux:icons:search`` command to search for icon sets, or to find
+the prefix of a specific icon set:
+
+.. code-block:: terminal
+
+    $ php bin/console ux:icons:search tabler
+
+     -------------- ------- --------- -------- --------------
+      Icon set       Icons   License   Prefix   Example
+     -------------- ------- --------- -------- --------------
+      Tabler Icons    5219   MIT       tabler   tabler:alien
+     -------------- ------- --------- -------- --------------
+
+    Search "arrow" in Tabler Icons icons:
+
+     php bin/console ux:icons:search tabler arrow
+
+Search Icons
+~~~~~~~~~~~~
+
+You can also search for icons within a specific icon set. To search for "arrow"
+icons in the "Tabler Icons" set, use the following command:
+
+.. code-block:: terminal
+
+    $ php bin/console ux:icons:search tabler arrow
+
+    Searching Tabler Icons icons "arrow"...
+    Found 64 icons.
+     ------------------------------------------ ------------------------------------------
+      tabler:archery-arrow                       tabler:arrow-autofit-up
+      tabler:arrow-back                          tabler:arrow-back-up
+      tabler:arrow-badge-down                    tabler:arrow-badge-up
+      tabler:arrow-badge-up-filled               tabler:arrow-bar-both
+      tabler:arrow-bar-down                      tabler:arrow-bar-left
+      tabler:arrow-bar-right                     tabler:arrow-bar-to-up
+      tabler:arrow-bar-up                        tabler:arrow-bear-left
+      tabler:arrow-big-down                      tabler:arrow-big-down-filled
+      tabler:arrow-big-down-line                 tabler:arrow-big-left
+      tabler:arrow-big-left-filled               tabler:arrow-big-left-line
+      tabler:arrow-big-right                     tabler:arrow-big-right-filled
+      tabler:arrow-big-right-line                tabler:arrow-big-up
+     ------------------------------------------ ------------------------------------------
+
+     Page 1/3. Continue? (yes/no) [yes]:
+     >
+
 HTML Syntax
 ~~~~~~~~~~~
 
