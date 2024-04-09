@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-02T16:39:27Z
+
+Oops.. some override https://github.com/symfony/ux/pull/1672 sorry :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-02T21:33:27Z
+
+I inserted changes from #1672
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-04-05T21:45:26Z
+
+Hey @smnandre this is detail, but I think the new at the top of the icon nav item should be more visible. Maybe we can make it bigger? Or add a background around? In mobile, the new is far from the world Icon so we don't get that the new is for icon. See some screenshots here:
+<img width="411" alt="Capture d’écran 2024-04-05 à 23 40 39" src="https://github.com/symfony/ux/assets/32077734/d80d6201-9ad9-4c47-83b4-7d7e9e54a141">
+<img width="528" alt="Capture d’écran 2024-04-05 à 23 40 13" src="https://github.com/symfony/ux/assets/32077734/b334fde1-4bc5-4ec3-b9c0-0ba23e97b45b">
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-05T22:02:59Z
+
+> Hey @smnandre this is detail, but I think the new at the top of the icon na [...]
+
+Fixed by ... removing it as it has not the same goal on desktop where we want from the homepage to show it.. In the menu were someone already look at this different pages it has less use i think.
