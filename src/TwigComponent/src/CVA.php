@@ -94,6 +94,9 @@ final class CVA
 
         // Resolve recipes against variants
         foreach ($recipes as $recipeName => $recipeValue) {
+            if (\is_bool($recipeValue)) {
+                $recipeValue = $recipeValue ? 'true' : 'false';
+            }
             $recipeClasses = $this->variants[$recipeName][$recipeValue] ?? [];
             $classes = [...$classes, ...(array) $recipeClasses];
         }
