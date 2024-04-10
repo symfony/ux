@@ -6,6 +6,10 @@
 
 }
 
+.AppHeader.open + main .IconSearchBox {
+  position: unset;
+}
+
 .IconSearchBox {
   position: sticky;
   top: 0;
