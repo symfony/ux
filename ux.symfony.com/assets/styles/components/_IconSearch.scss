@@ -3,9 +3,7 @@
 // -----------------------------------------------------------------
 
 .IconSearch {
-
 }
-
 .AppHeader.open + main .IconSearchBox {
   position: unset;
 }
@@ -25,10 +23,41 @@
 
 .IconSearch__Input {
   border: var(--bs-border-width) solid var(--bs-border-color);
-
+  border-radius: 0 var(--bs-border-radius) var(--bs-border-radius) 0 !important;
   &:focus {
     border-color: var(--bs-primary);
     box-shadow: none;
     outline: revert;
+  }
+}
+
+.IconSearch__Iconify {
+  position: absolute;
+  right: .75rem;
+  font-size: .7rem;
+  font-stretch: semi-condensed;
+  opacity: .5;
+  margin: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@media screen and (max-width: 768px) {
+  .IconSearchBox fieldset {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .IconSearchBox .input-group {
+    max-width: none !important;
+  }
+  .IconSearch__Display {
+    display: none !important;
+  }
+  .IconSearch__Query {
+    order: 2;
+  }
+  .IconSearch__Iconify {
+    top: 125%;
+    font-size: xx-small;
   }
 }
