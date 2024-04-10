@@ -9,6 +9,10 @@
   position: relative;
 }
 
+.Banner:has(+ .App .AppHeader.open) {
+  display: none;
+}
+
 .BannerInner {
   display: flex;
   flex-direction: column;
