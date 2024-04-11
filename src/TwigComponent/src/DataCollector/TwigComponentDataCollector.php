@@ -25,6 +25,8 @@ use Twig\Error\LoaderError;
 
 /**
  * @author Simon André <smn.andre@gmail.com>
+ *
+ * @internal
  */
 class TwigComponentDataCollector extends AbstractDataCollector implements LateDataCollectorInterface
 {

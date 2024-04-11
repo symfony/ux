@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\TwigComponent\Command;
 
-use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Completion\CompletionInput;
 use Symfony\Component\Console\Completion\CompletionSuggestions;
@@ -28,7 +27,6 @@ use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\Twig\PropsNode;
 use Twig\Environment;
 
-#[AsCommand(name: 'debug:twig-component', description: 'Display components and them usages for an application')]
 class TwigComponentDebugCommand extends Command
 {
     private readonly string $anonymousDirectory;
@@ -42,6 +40,16 @@ class TwigComponentDebugCommand extends Command
     ) {
         parent::__construct();
         $this->anonymousDirectory = $anonymousDirectory ?? 'components';
+    }
+
+    public static function getDefaultName(): ?string
+    {
+        return 'debug:twig-component';
+    }
+
+    public static function getDefaultDescription(): ?string
+    {
+        return 'Display components and their usages for an application';
     }
 
     protected function configure(): void

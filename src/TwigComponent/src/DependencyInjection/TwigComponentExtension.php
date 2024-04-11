@@ -22,10 +22,8 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
-use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
-use Symfony\UX\TwigComponent\Command\TwigComponentDebugCommand;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
@@ -111,22 +109,13 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
             ->setDecoratedService(new Reference('twig.configurator.environment'))
             ->setArguments([new Reference('ux.twig_component.twig.environment_configurator.inner')]);
 
-        $container->register('ux.twig_component.command.debug', TwigComponentDebugCommand::class)
-            ->setArguments([
-                new Parameter('twig.default_path'),
-                new Reference('ux.twig_component.component_factory'),
-                new Reference('twig'),
-                class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : [],
-                $config['anonymous_template_directory'],
-            ])
-            ->addTag('console.command')
-        ;
-
         $container->setAlias('console.command.stimulus_component_debug', 'ux.twig_component.command.debug')
             ->setDeprecated('symfony/ux-twig-component', '2.13', '%alias_id%');
 
         if ($container->getParameter('kernel.debug')) {
             $loader->load('debug.php');
+
+            $container->setParameter('ux.twig_component.anonymous_template_directory', $config['anonymous_template_directory']);
         }
     }
 
