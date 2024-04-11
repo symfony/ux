@@ -234,6 +234,9 @@
                         {% else %}
                             <span class=text-muted">{{ component.template }}</span>
                         {% endif %}
+                        {% if component.listening is not empty %}
+                            <pre class="sf-dump"><span class="text-muted">Listening to {{ component.listening|join(', ') }}</span></pre>
+                        {% endif %}
                     </td>
                     <td class="cell-right">{{ component.render_count }}</td>
                     <td class="cell-right">
@@ -285,18 +288,18 @@
                     </tr>
                 </thead>
                 <tbody id="render-{{ loop.index }}--details">
-                    <tr class="{{ not render.input_props|default ? 'opacity-50' }}">
-                        <th scope="row">Input props</th>
-                        <td colspan="3">{{ profiler_dump(render.input_props) }}</td>
-                    </tr>
-                    <tr class="{{ not render.attributes|default ? 'opacity-50' }}">
-                        <th scope="row">Attributes</th>
-                        <td colspan="3">{{ profiler_dump(render.attributes) }}</td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Component</th>
-                        <td colspan="3">{{ profiler_dump(render.component) }}</td>
-                    </tr>
+                <tr class="{{ not render.input_props|default ? 'opacity-50' }}">
+                    <th scope="row">Input props</th>
+                    <td colspan="3">{{ profiler_dump(render.input_props) }}</td>
+                </tr>
+                <tr class="{{ not render.attributes|default ? 'opacity-50' }}">
+                    <th scope="row">Attributes</th>
+                    <td colspan="3">{{ profiler_dump(render.attributes) }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Component</th>
+                    <td colspan="3">{{ profiler_dump(render.component) }}</td>
+                </tr>
                 </tbody>
             </table>
         {% endfor %}
