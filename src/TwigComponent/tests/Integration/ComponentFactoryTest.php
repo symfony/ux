@@ -223,7 +223,7 @@ final class ComponentFactoryTest extends KernelTestCase
      * @testWith ["tabl", "Unknown component \"tabl\". Did you mean this: \"table\"?"]
      *           ["Basic", "Unknown component \"Basic\". Did you mean this: \"BasicComponent\"?"]
      *           ["basic", "Unknown component \"basic\". Did you mean this: \"BasicComponent\"?"]
-     *           ["with", "Unknown component \"with\". Did you mean one of these: \"with_attributes\", \"with_exposed_variables\", \"WithSlots\"?"]
+     *           ["with", "Unknown component \"with\". Did you mean one of these: \"with_attributes\", \"with_exposed_variables\", \"with_options_resolver\", \"WithSlots\"?"]
      *           ["anonAnon", "Unknown component \"anonAnon\". And no matching anonymous component template was found."]
      */
     public function testCannotGetInvalidComponent(string $name, string $expectedExceptionMessage): void

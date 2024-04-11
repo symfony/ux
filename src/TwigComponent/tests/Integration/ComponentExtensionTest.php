@@ -105,6 +105,34 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('<button class="foo baz" type="submit" style="color:red;">', $output);
     }
 
+    public function testCanRenderComponentWithOptionsResolver(): void
+    {
+        $output = $this->renderComponent('with_options_resolver', [
+            'prop1' => 'allowed 1',
+            'extraProp1' => 'extra prop value 1',
+        ]);
+
+        $this->assertStringContainsString('prop1: allowed 1', $output);
+        $this->assertStringContainsString('prop2: prop2 default value', $output);
+        $this->assertStringContainsString('prop3: prop3 mount value false', $output);
+        $this->assertStringContainsString('prop4: prop4 optionsResolver default value', $output);
+        $this->assertStringContainsString('extraProp1="extra prop value 1"', $output);
+
+        $output = $this->renderComponent('with_options_resolver', [
+            'arg1' => true,
+            'prop1' => 'allowed 2',
+            'prop2' => 'value 1',
+            'prop4' => 'value 1',
+            'extraProp1' => 'extra prop value 2',
+        ]);
+
+        $this->assertStringContainsString('prop1: allowed 2', $output);
+        $this->assertStringContainsString('prop2: pre-mount value 1', $output);
+        $this->assertStringContainsString('prop3: prop3 mount value true', $output);
+        $this->assertStringContainsString('prop4: value 1', $output);
+        $this->assertStringContainsString('extraProp1="extra prop value 2"', $output);
+    }
+
     public function testCanSetCustomAttributesVariable(): void
     {
         $output = $this->renderComponent('custom_attributes', ['class' => 'from-custom']);

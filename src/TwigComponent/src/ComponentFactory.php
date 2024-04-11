@@ -184,7 +184,8 @@ final class ComponentFactory
             $newData = $component->{$method->name}($data);
 
             if (null !== $newData) {
-                $data = $newData;
+                // merge data/options so that extra data is not lost between hooks
+                $data = $newData + $data;
             }
         }
 
