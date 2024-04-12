@@ -54,7 +54,7 @@ class ProductGrid
             $items[] = [
                 'id' => $id = ($this->page - 1) * self::PER_PAGE + $i,
                 'emoji' => $emoji,
-                'color' => $colors[$id % count($colors)],
+                'color' => $colors[$id % \count($colors)],
             ];
         }
 
