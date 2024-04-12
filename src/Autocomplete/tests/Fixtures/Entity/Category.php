@@ -26,6 +26,9 @@ class Category
     #[ORM\Column()]
     private ?string $name = null;
 
+    #[ORM\Column()]
+    private ?string $code = null;
+
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Product::class)]
     private Collection $products;
 
@@ -49,6 +52,18 @@ class Category
         $this->name = $name;
 
         return $this;
+    }
+
+    public function setCode(string $code): self
+    {
+        $this->code = $code;
+
+        return $this;
+    }
+
+    public function getCode(): ?string
+    {
+        return $this->code;
     }
 
     /**

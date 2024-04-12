@@ -101,4 +101,30 @@ class FieldAutocompleterTest extends KernelTestCase
             ->assertJsonMatches('length(results)', 5)
         ;
     }
+
+    public function testItUsesTheCustomStringValue(): void
+    {
+        $category = CategoryFactory::createOne(['code' => 'foo']);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_with_property_name_as_custom_value?query=foo')
+            ->assertSuccessful()
+            ->assertJsonMatches('results[0].value', 'foo')
+            ->assertJsonMatches('results[0].text', $category->getName())
+        ;
+    }
+
+    public function testItUsesTheCustomCallbackValue(): void
+    {
+        $category = CategoryFactory::createOne(['code' => 'foo']);
+
+        $this->browser()
+            ->throwExceptions()
+            ->get('/test/autocomplete/category_with_callback_as_custom_value?query=foo')
+            ->assertSuccessful()
+            ->assertJsonMatches('results[0].value', 'foo')
+            ->assertJsonMatches('results[0].text', $category->getName())
+        ;
+    }
 }

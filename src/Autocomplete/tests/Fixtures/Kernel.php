@@ -13,6 +13,8 @@ namespace Symfony\UX\Autocomplete\Tests\Fixtures;
 
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
 use Doctrine\ORM\Mapping\AssociationMapping;
+use Fixtures\Form\CategoryWithCallbackAsCustomValue;
+use Fixtures\Form\CategoryWithPropertyNameAsCustomValue;
 use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
@@ -179,6 +181,16 @@ final class Kernel extends BaseKernel
 
         $services->alias('public.ux.autocomplete.make_autocomplete_field', 'ux.autocomplete.make_autocomplete_field')
             ->public();
+
+        $services->set(CategoryWithPropertyNameAsCustomValue::class)
+            ->tag('ux.entity_autocomplete_field')
+            ->public()
+        ;
+
+        $services->set(CategoryWithCallbackAsCustomValue::class)
+            ->tag('ux.entity_autocomplete_field')
+            ->public()
+        ;
     }
 
     protected function configureRoutes(RoutingConfigurator $routes): void
