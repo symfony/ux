@@ -38,4 +38,17 @@ final class RenderIconsInTwigTest extends KernelTestCase
             trim($output)
         );
     }
+
+    public function testRenderAliasIcons(): void
+    {
+        $templateIcon = '<twig:ux:icon name="flowbite:close-outline" />';
+        $outputIcon = self::getContainer()->get(Environment::class)->createTemplate($templateIcon)->render();
+
+        $templateAlias = '<twig:ux:icon name="flowbite:x-outline" />';
+        $outputAlias = self::getContainer()->get(Environment::class)->createTemplate($templateAlias)->render();
+
+        $expected = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L17.94 6M18 18L6.06 6"/></svg>';
+        $this->assertSame($outputIcon, $expected);
+        $this->assertSame($outputIcon, $outputAlias);
+    }
 }
