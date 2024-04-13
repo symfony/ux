@@ -32,7 +32,8 @@ form validates in real time!
 <br>
 This renders a normal Symfony form but with extras added on top,
 all generated from Symfony & Twig.
-EOF
+EOF,
+                tags: ['form', 'validation', 'inline'],
             ),
             new LiveDemo(
                 'infinite-scroll',
@@ -43,6 +44,7 @@ EOF
 Infinite scroll allows users to continuously load content as they scroll down the page.
 <br><code>Part One</code> of this demo shows how to <code>append new items</code> to the page with a <a href="/live-component"><code>LiveComponent</code></a>.  
 EOF,
+                tags: ['pattern', 'pagination', 'navigation'],
             ),
             new LiveDemo(
                 'live-memory',
@@ -54,6 +56,7 @@ A Memorable Game UX with Live Components! Discover how to use Live Components to
  rich interactions and real-time updates. This journey will take you through many features of Live Components, and you'll
   learn how to use them to create a fun and engaging game.
 EOF,
+                tags: ['game', 'time', 'events','LiveAction'],
             ),
             new LiveDemo(
                 'form-collection-type',
@@ -65,7 +68,8 @@ Unlock the potential of Symfony's <a href="https://symfony.com/doc/current/refer
 writing zero JavaScript.
 <br>
 This demo shows off adding and removing items entirely in PHP & Twig.
-EOF
+EOF,
+                tags: ['form', 'collection'],
             ),
             new LiveDemo(
                 'dependent-form-fields',
@@ -75,7 +79,8 @@ EOF
                 longDescription: <<<EOF
 Unleash the power of form events, thanks to <a href="/live-component"><code>LiveComponent</code></a>
 and <a href="https://github.com/SymfonyCasts/dynamic-forms"><code>DynamicForms</code></a>.
-EOF
+EOF,
+                tags: ['form', 'field', 'events'],
             ),
             new LiveDemo(
                 'voting',
@@ -86,7 +91,8 @@ EOF
 With each row as its own component, it's easy to add up & down voting + keep track of which items have been voted on.
 <br>
 This uses a <a href="https://symfony.com/bundles/ux-live-component/current/index.html#actions">LiveAction</a> to save everything with Ajax.
-EOF
+EOF,
+                tags: ['form', 'LiveAction'],
             ),
             new LiveDemo(
                 'inline-edit',
@@ -96,7 +102,8 @@ EOF
                 longDescription: <<<EOF
 Inline editing? Simple. Use LiveComponents to track if you're in "edit" mode, let
 the user update any fields on your entity, and save through a <code>LiveAction</code>.
-EOF
+EOF,
+                tags: ['form', 'inline', 'LiveAction'],
             ),
             new LiveDemo(
                 'chartjs',
@@ -107,7 +114,8 @@ EOF
 What do you get with Live Components + UX Chart.js + UX Autocomplete?
 <br>
 An auto-updating chart that you will ❤️.
-EOF
+EOF,
+                tags: ['chart', 'data', 'LiveAction', 'stimulus'],
             ),
             new LiveDemo(
                 'invoice',
@@ -118,7 +126,8 @@ EOF
 Create or edit an `Invoice` entity along with child components for each related `InvoiceItem` entity.
 <br>
 Children components emit events to communicate to the parent and everything is saved in a `saveInvoice` LiveAction method.
-EOF
+EOF,
+                tags: ['form', 'entity', 'events', 'LiveAction'],
             ),
             new LiveDemo(
                 'product-form',
@@ -127,7 +136,8 @@ EOF
                 route: 'app_demo_live_component_product_form',
                 longDescription: <<<EOF
 Open a child modal component to create a new Category.
-EOF
+EOF,
+                tags: ['form', 'entity', 'events', 'modal'],
             ),
             new LiveDemo(
                 'upload',
@@ -136,7 +146,8 @@ EOF
                 route: 'app_demo_live_component_upload',
                 longDescription: <<<EOF
 File uploads are tricky. Submit them to a `#[LiveAction]` with the `files` modifier on `data-live-action` then process them.
-EOF
+EOF,
+                tags: ['form', 'file', 'upload', 'LiveAction'],
             ),
         ];
     }
