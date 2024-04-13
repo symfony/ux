@@ -13,6 +13,11 @@
   display: none;
 }
 
+.Banner .container-xxl {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
 .BannerInner {
   display: flex;
   flex-direction: column;
