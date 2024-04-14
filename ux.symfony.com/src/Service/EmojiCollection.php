@@ -2,17 +2,14 @@
 
 namespace App\Service;
 
-use IteratorAggregate;
-use Traversable;
-
 /**
  * Collection of emojis used in demos.
  *
- * @implements IteratorAggregate<string>
+ * @implements \IteratorAggregate<string>
  *
  * @internal
  */
-final class EmojiCollection implements IteratorAggregate, \Countable
+final class EmojiCollection implements \IteratorAggregate, \Countable
 {
     private array $emojis;
 
@@ -23,17 +20,17 @@ final class EmojiCollection implements IteratorAggregate, \Countable
 
     public function paginate(int $page, int $perPage): self
     {
-        return new self(array_slice($this->emojis, ($page - 1) * $perPage, $perPage));
+        return new self(\array_slice($this->emojis, ($page - 1) * $perPage, $perPage));
     }
 
-    public function getIterator(): Traversable
+    public function getIterator(): \Traversable
     {
         return new \ArrayIterator($this->emojis);
     }
 
     public function count(): int
     {
-        return count($this->emojis);
+        return \count($this->emojis);
     }
 
     private function loadEmojis(): array

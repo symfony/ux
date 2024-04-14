@@ -42,7 +42,7 @@ EOF,
                 route: 'app_demo_live_component_infinite_scroll',
                 longDescription: <<<EOF
 Infinite scroll allows users to continuously load content as they scroll down the page.
-<br><code>Part One</code> of this demo shows how to <code>append new items</code> to the page with a <a href="/live-component"><code>LiveComponent</code></a>.  
+<br><code>Part One</code> of this demo shows how to <code>append new items</code> to the page with a <a href="/live-component"><code>LiveComponent</code></a>.
 EOF,
                 tags: ['pattern', 'pagination', 'navigation'],
             ),
