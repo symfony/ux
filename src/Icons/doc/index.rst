@@ -74,15 +74,6 @@ define the HTML attributes added to the ``<svg>`` element:
     {{ ux_icon('user-profile', {height: '16px', width: '16px', aria-hidden: true}) }}
     {# renders <svg height="16" width="16" aria-hidden="true"> ... </svg> #}
 
-.. code-block:: yaml
-
-    # config/packages/ux_icons.yaml
-    ux_icons:
-        iconify:
-            enabled: true
-            on_demand: true
-            endpoint: 'https://api.iconify.design'
-
 Icon Sets
 ~~~~~~~~~
 
