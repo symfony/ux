@@ -236,6 +236,30 @@ class CVATest extends TestCase
             'font-semibold border rounded text-primary text-sm text-red-100',
         ];
 
+        yield 'compound variants with true' => [
+            [
+                'base' => 'button',
+                'variants' => [
+                    'colors' => [
+                        'blue' => 'btn-blue',
+                        'red' => 'btn-red',
+                    ],
+                    'disabled' => [
+                        'true' => 'disabled',
+                    ],
+                ],
+                'compounds' => [
+                    [
+                        'colors' => 'blue',
+                        'disabled' => ['true'],
+                        'class' => 'font-bold',
+                    ],
+                ],
+            ],
+            ['colors' => 'blue', 'disabled' => 'true'],
+            'button btn-blue disabled font-bold',
+        ];
+
         yield 'compound variants as array' => [
             [
                 'base' => 'font-semibold border rounded',
@@ -448,6 +472,28 @@ class CVATest extends TestCase
             ],
             [],
             'font-semibold border rounded text-primary text-sm rounded-md',
+        ];
+
+        yield 'default variables with boolean' => [
+            [
+                'base' => 'button',
+                'variants' => [
+                    'colors' => [
+                        'blue' => 'btn-blue',
+                        'red' => 'btn-red',
+                    ],
+                    'disabled' => [
+                        'true' => 'disabled',
+                        'false' => 'opacity-100',
+                    ],
+                ],
+                'defaultVariants' => [
+                    'colors' => 'blue',
+                    'disabled' => 'false',
+                ],
+            ],
+            [],
+            'button btn-blue opacity-100',
         ];
 
         yield 'boolean string variants true / true' => [
