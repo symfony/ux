@@ -1,0 +1,62 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-15T19:11:50Z
+
+> * We're repeating what's on GH. So I want to be clear: what's our motivation / the advantage to having this up on the site?
+
+- SEO (in a good "giving people what they do look for" kind of meaning)
+- github search is not reserved to logged users i think
+- showing activity on the site
+- it's fun
+
+>
+> * Where should we link to it? Or should we want for the new design to link?
+- footer at first, we'll see after ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-16T00:59:31Z
+
+WIP
+
+<img width="800" alt="Capture d’écran 2024-02-16 à 01 58 16" src="https://github.com/symfony/ux/assets/1359581/c506b3ce-0c6d-4398-96ea-7e817f931fcc">
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-16T19:41:02Z
+
+<img width="400" alt="Capture d’écran 2024-02-16 à 20 38 21" src="https://github.com/symfony/ux/assets/1359581/658834f9-30ba-4f25-9b9f-048c2014a9f6">
+
+<img width="400" alt="Capture d’écran 2024-02-16 à 20 38 30" src="https://github.com/symfony/ux/assets/1359581/6e715c12-df2c-49c5-8305-ee4697d7a60b">
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-18T22:57:03Z
+
+> Looks super cool thanks @smnandre 🧡
+
+And you have not yet seen the icons 🙊
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-02-20T13:59:51Z
+
+Thanks a lot @pierredup for all the feedback / checks.. i think i've adress them all but as i moved things a bit, if you want to have a second look, feel free :)
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-04-13T11:21:40Z
+
+@smnandre when I try this PR locally I have
+<img width="1440" alt="Capture d’écran 2024-04-13 à 13 17 26" src="https://github.com/symfony/ux/assets/32077734/cb6e8289-32f7-4d8a-8343-d9f2747cd643">
+I have this error because to get the changelog you do a request to the github api, the thing is this github api have rate limiter that look really low. One of the solutions could be to increase the cache even more, one full day, or one week, or change the cache strategy having something that invalidate the cache in release days. WDYT?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-13T14:31:57Z
+
+> @smnandre when I try this PR locally I [...]
+
+Yep 100%, thank you!
+
+I've updated the cache conservation to one week, i prefer avoid any custom code to invalidate the items for now, as i think the next step will be to store the data :)
