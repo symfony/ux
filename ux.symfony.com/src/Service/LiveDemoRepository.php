@@ -56,7 +56,7 @@ A Memorable Game UX with Live Components! Discover how to use Live Components to
  rich interactions and real-time updates. This journey will take you through many features of Live Components, and you'll
   learn how to use them to create a fun and engaging game.
 EOF,
-                tags: ['game', 'time', 'events','LiveAction'],
+                tags: ['game', 'time', 'events', 'LiveAction'],
             ),
             new LiveDemo(
                 'form-collection-type',
