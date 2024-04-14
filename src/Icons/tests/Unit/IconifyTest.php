@@ -50,6 +50,37 @@ class IconifyTest extends TestCase
         $this->assertEquals($icon->getAttributes(), ['viewBox' => '0 0 24 24']);
     }
 
+    public function testFetchIconByAlias(): void
+    {
+        $iconify = new Iconify(
+            cache: new NullAdapter(),
+            endpoint: 'https://example.com',
+            http: new MockHttpClient([
+                new JsonMockResponse([
+                    'bi' => [],
+                ]),
+                new JsonMockResponse([
+                    'aliases' => [
+                        'foo' => [
+                            'parent' => 'bar',
+                        ],
+                    ],
+                    'icons' => [
+                        'bar' => [
+                            'body' => '<path d="M0 0h24v24H0z" fill="none"/>',
+                            'height' => 24,
+                        ],
+                    ],
+                ]),
+            ]),
+        );
+
+        $icon = $iconify->fetchIcon('bi', 'foo');
+
+        $this->assertEquals($icon->getInnerSvg(), '<path d="M0 0h24v24H0z" fill="none"/>');
+        $this->assertEquals($icon->getAttributes(), ['viewBox' => '0 0 24 24']);
+    }
+
     public function testFetchIconThrowsWhenIconSetDoesNotExists(): void
     {
         $iconify = new Iconify(new NullAdapter(), 'https://example.com', new MockHttpClient(new JsonMockResponse([])));
