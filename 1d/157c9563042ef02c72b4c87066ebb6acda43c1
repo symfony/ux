@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by jakubtobiasz at 2024-04-12T17:17:54Z
+
+Hi @kbond,
+considering the definition from the Wikipedia
+
+> A software bug is an error, flaw or [fault](https://en.wikipedia.org/wiki/Fault_(technology)) in the design, development, or operation of [computer software](https://en.wikipedia.org/wiki/Computer_software) that causes it to produce an incorrect or unexpected result, or to behave in unintended ways.
+
+The
+> that causes it to produce an (...) unexpected result
+
+part convinces me that might be categorized as a bugfix. We were pretty surprised it doesn't work that way :D.
+
+---
+
+I've updated the description, the question is whether there should be a `2.16.1` version or we should expect `2.17` as a next version.
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-04-12T18:05:40Z
+
+> We were pretty surprised it doesn't work that way :D.
+
+Me too!
+
+Anyway, it's just semantics and I really just wanted to clarify that this "felt like the intended use" which you have done.
+
+The next version will be 2.17.0 so no worries about the changelog.
