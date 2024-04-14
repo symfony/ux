@@ -100,6 +100,16 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
 
     public function getValue(object $entity): string
     {
+        $choiceValue = $this->getFormOption('choice_value');
+
+        if (\is_string($choiceValue) || $choiceValue instanceof PropertyPathInterface) {
+            return $this->propertyAccessor->getValue($entity, $choiceValue);
+        }
+
+        if ($choiceValue instanceof \Closure) {
+            return $choiceValue($entity);
+        }
+
         return $this->getEntityMetadata()->getIdValue($entity);
     }
 

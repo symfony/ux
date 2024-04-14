@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.17.0
+
+-   Allow `choice_value` option in entity autocomplete fields #1723
+
 ## 2.16.0
 
 -   Missing translations added for many languages #1527 #1528 #1535
