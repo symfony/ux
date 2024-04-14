@@ -6,6 +6,15 @@
   --item-ratio: 1;
   --grid-columns: 5;
 }
+@media screen and (max-width: 768px) {
+  .ProductGrid {
+    --grid-columns: 2;
+  }
+}
+
+.ProductGrid__inner {
+  padding: min(4%, 1.5rem);
+}
 
 .ProductGrid_page {
   display: grid;
