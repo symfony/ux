@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
 namespace App\Tests\Twig\Components;
 
 use App\Twig\Components\ChangelogItem;
@@ -35,13 +44,13 @@ class ChangelogItemTest extends TestCase
             '# Title 1',
             '# Title 1',
         ];
-        yield "transform_h2_to_h3" => [
+        yield 'transform_h2_to_h3' => [
             '## Title',
-            '### Title'
+            '### Title',
         ];
         yield 'keep_existing_h3' => [
-            "### Title 3",
-            "### Title 3",
+            '### Title 3',
+            '### Title 3',
         ];
         yield 'inject_#issue_link' => [
             'Fixes #1234',
