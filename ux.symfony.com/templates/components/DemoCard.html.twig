@@ -18,6 +18,11 @@
         <p class="DemoCard__description">
             {{ demo.description }}
         </p>
+        <p class="DemoCard__tags">
+            {% for tag in demo.tags %}
+                <span class="Tag">{{ tag }}</span>
+            {% endfor %}
+        </p>
     </div>
 
 </article>
