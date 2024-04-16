@@ -146,13 +146,15 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
         $queryMapping = json_decode($div->attr('data-live-query-mapping-value'), true);
         $expected = [
-            'prop1' => ['name' => 'prop1'],
-            'prop2' => ['name' => 'prop2'],
-            'prop3' => ['name' => 'prop3'],
-            'prop5' => ['name' => 'prop5'],
-            'field6' => ['name' => 'field6'],
-            'field7' => ['name' => 'field7'],
-            'prop8' => ['name' => 'prop8'],
+            'stringProp' => ['name' => 'stringProp'],
+            'intProp' => ['name' => 'intProp'],
+            'arrayProp' => ['name' => 'arrayProp'],
+            'objectProp' => ['name' => 'objectProp'],
+            'field1' => ['name' => 'field1'],
+            'field2' => ['name' => 'field2'],
+            'maybeBoundProp' => ['name' => 'maybeBoundProp'],
+            'boundPropWithAlias' => ['name' => 'q'],
+            'boundPropWithCustomAlias' => ['name' => 'customAlias'],
         ];
 
         $this->assertEquals($expected, $queryMapping);

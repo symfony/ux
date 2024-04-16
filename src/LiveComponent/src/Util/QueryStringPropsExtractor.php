@@ -41,9 +41,9 @@ final class QueryStringPropsExtractor
         $data = [];
 
         foreach ($metadata->getAllLivePropsMetadata($component) as $livePropMetadata) {
-            if ($livePropMetadata->queryStringMapping()) {
+            if ($queryMapping = $livePropMetadata->urlMapping()) {
                 $frontendName = $livePropMetadata->calculateFieldName($component, $livePropMetadata->getName());
-                if (null !== ($value = $query[$frontendName] ?? null)) {
+                if (null !== ($value = $query[$queryMapping->as ?? $frontendName] ?? null)) {
                     if ('' === $value && null !== $livePropMetadata->getType() && (!$livePropMetadata->isBuiltIn() || 'array' === $livePropMetadata->getType())) {
                         // Cast empty string to empty array for objects and arrays
                         $value = [];

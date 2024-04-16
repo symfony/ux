@@ -69,7 +69,7 @@ class LiveComponentMetadata
     public function hasQueryStringBindings($component): bool
     {
         foreach ($this->getAllLivePropsMetadata($component) as $livePropMetadata) {
-            if ($livePropMetadata->queryStringMapping()) {
+            if ($livePropMetadata->urlMapping()) {
                 return true;
             }
         }

@@ -2495,11 +2495,6 @@ If you load this URL in your browser, the ``LiveProp`` value will be initialized
 
     The URL is changed via ``history.replaceState()``. So no new entry is added.
 
-.. warning::
-
-    You can use multiple components with URL bindings in the same page, as long as bound field names don't collide.
-    Otherwise, you will observe unexpected behaviors.
-
 Supported Data Types
 ~~~~~~~~~~~~~~~~~~~~
 
@@ -2543,6 +2538,65 @@ For example, if you declare the following bindings::
 And you only set the ``query`` value, then your URL will be updated to
 ``https://my.domain/search?query=my+query+string&mode=fulltext``.
 
+Controlling the Query Parameter Name
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.17
+
+    The ``as`` option was added in LiveComponents 2.17.
+
+
+Instead of using the prop's field name as the query parameter name, you can use the ``as`` option in your ``LiveProp``
+definition::
+
+    // ...
+    use Symfony\UX\LiveComponent\Metadata\UrlMapping;
+
+    #[AsLiveComponent]
+    class SearchModule
+    {
+        #[LiveProp(writable: true, url: new UrlMapping(as: 'q')]
+        public string $query = '';
+
+        // ...
+    }
+
+Then the ``query`` value will appear in the URL like ``https://my.domain/search?q=my+query+string``.
+
+If you need to change the parameter name on a specific page, you can leverage the :ref:`modifier <modifier>` option::
+
+    // ...
+    use Symfony\UX\LiveComponent\Metadata\UrlMapping;
+
+    #[AsLiveComponent]
+    class SearchModule
+    {
+        #[LiveProp(writable: true, url: true, modifier: 'modifyQueryProp')]
+        public string $query = '';
+
+        #[LiveProp]
+        public ?string $alias = null;
+
+        public function modifyQueryProp(LiveProp $liveProp): LiveProp
+        {
+            if ($this->alias) {
+                $liveProp = $liveProp->withUrl(new UrlMapping(as: $this->alias));
+            }
+            return $liveProp;
+        }
+    }
+
+.. code-block:: html+twig
+
+    <twig:SearchModule alias="q" />
+
+This way you can also use the component multiple times in the same page and avoid collisions in parameter names:
+
+.. code-block:: html+twig
+
+    <twig:SearchModule alias="q1" />
+    <twig:SearchModule alias="q2" />
+
 Validating the Query Parameter Values
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -2570,8 +2624,8 @@ validated. To validate it, you have to set up a `PostMount hook`_::
         #[PostMount]
         public function postMount(): void
         {
-            // Validate 'mode' field without throwing an exception, so the component can be mounted anyway and a
-            // validation error can be shown to the user
+            // Validate 'mode' field without throwing an exception, so the component can
+            // be mounted anyway and a validation error can be shown to the user
             if (!$this->validateField('mode', false)) {
                 // Do something when validation fails
             }
@@ -3507,6 +3561,8 @@ the change of one specific key::
             // ...
         }
     }
+
+.. _modifier:
 
 Set LiveProp Options Dynamically
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
