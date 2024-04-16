@@ -24,7 +24,8 @@ services:
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
 
-    Highlight\Highlighter: ~
+    App\Service\CommonMark\CodeExtension:
+        tags: ['twig.markdown.league_extension']
 
     League\CommonMark\Extension\ExternalLink\ExternalLinkExtension:
         tags: ['twig.markdown.league_extension']
