@@ -55,6 +55,7 @@
         "symfony/yaml": "6.4.*",
         "symfonycasts/dynamic-forms": "^0.1.0",
         "symfonycasts/sass-bundle": "^0.2.0",
+        "tempest/highlight": "^2.0",
         "twbs/bootstrap": "^5.3",
         "twig/extra-bundle": "^2.12|^3.6.1",
         "twig/html-extra": "^3.8",

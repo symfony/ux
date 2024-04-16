@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "63672427aa7fe4d557346c2c86b7216b",
+    "content-hash": "ee38e7313281847631ede94b062bb12a",
     "packages": [
         {
             "name": "babdev/pagerfanta-bundle",
@@ -9319,6 +9319,59 @@
                 "source": "https://github.com/SymfonyCasts/sass-bundle/tree/v0.2.5"
             },
             "time": "2023-11-17T10:32:54+00:00"
+        },
+        {
+            "name": "tempest/highlight",
+            "version": "2.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tempestphp/highlight.git",
+                "reference": "93d40fad805b320fb5f3a77599911388400ce20e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tempestphp/highlight/zipball/93d40fad805b320fb5f3a77599911388400ce20e",
+                "reference": "93d40fad805b320fb5f3a77599911388400ce20e",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.21",
+                "larapack/dd": "^1.1",
+                "league/commonmark": "^2.4",
+                "phpstan/phpstan": "^1.10.0",
+                "phpunit/phpunit": "^10.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tempest\\Highlight\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brent Roose",
+                    "email": "brendt@stitcher.io"
+                }
+            ],
+            "description": "Fast, extensible, server-side code highlighting",
+            "support": {
+                "issues": "https://github.com/tempestphp/highlight/issues",
+                "source": "https://github.com/tempestphp/highlight/tree/2.0.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/brendt",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-04-16T07:35:42+00:00"
         },
         {
             "name": "twbs/bootstrap",
