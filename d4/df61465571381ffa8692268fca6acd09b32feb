@@ -1,0 +1,114 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-16T17:39:40Z
+
+Is it accessible in PHP easily ?
+
+---------------------------------------------------------------------------
+
+by squrious at 2024-01-17T11:39:26Z
+
+> Is it accessible in PHP easily ?
+
+It's in the `LiveProp` metadata, so yes
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2024-01-17T17:26:19Z
+
+Thanks for this!
+
+What's the use-case for needing to do:
+
+> data-live-url-mapping-search-alias="q"
+
+This doesn't look like something that Livewire has (I check there as a quick way to validate the value of features).
+
+Also: `QueryMapping(alias: 'q')` or `QueryMapping(as: 'q')`? `as` stolen from Livewire :p
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-17T19:43:36Z
+
+> > Is it accessible in PHP easily ?
+>
+> It's in the `LiveProp` metadata, so yes
+
+But... it's on a call per call basis... so a call to metadataFactory would not bring this data right ? So it's not usable in events, cache, etc ?
+
+(just want to clarify when/where this data will be exposed, accessible, etc)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-18T07:55:08Z
+
+I'm not sure to understand how the live prop mapping is "kept" during live action / event.. but it's probably just me needing coffee..
+
+---------------------------------------------------------------------------
+
+by squrious at 2024-01-18T08:38:02Z
+
+@weaverryan
+> What's the use-case for needing to do:
+>
+> >   data-live-url-mapping-search-alias="q"
+
+If the users just want to override this mapping property they can do it with this shortened syntax instead of passing an object. It may also be useful in the future when the mapping object contain other options: it will be easier to conditionally render specific attributes in this way, than setting up an object, IMO.
+
+> This doesn't look like something that Livewire has (I check there as a quick way to validate the value of features).
+
+That's true, but I tried the Livewire feature, and honestly I missed it. As far I know, you can't avoid parameter name collision in Livewire, but I find it pretty useful.
+
+> Also: QueryMapping(alias: 'q') or QueryMapping(as: 'q')? as stolen from Livewire :p
+
+I'm totally open for any renaming :) `as` looks good to me!
+
+@smandre
+
+> But... it's on a call per call basis... so a call to metadataFactory would not bring this data right ? So it's not usable in events, cache, etc ?
+
+The metadata defined in your PHP component is available through the metadata factory. If you override the mapping in a template, the overridden values will not be available from metadata. Though there is a [utility class](https://github.com/symfony/ux/blob/977df51e379021ab4ca4aac1fc0e87e240673d5b/src/LiveComponent/src/Util/QueryMappingAttributeUtils.php) that helps in getting those values from mounted attributes.
+
+> I'm not sure to understand how the live prop mapping is "kept" during live action / event.. but it's probably just me needing coffee..
+
+The mapping is render as a Stimulus value [here](https://github.com/symfony/ux/blob/977df51e379021ab4ca4aac1fc0e87e240673d5b/src/LiveComponent/src/Util/LiveControllerAttributesCreator.php#L116).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-01-18T22:14:20Z
+
+I'm still not sure if i'm paranoiac ... but if you're telling me that the "mapping configuration" is read and used from request data ...
+
+I'm 90% sure i still miss something so i stop here :)
+
+---------------------------------------------------------------------------
+
+by squrious at 2024-01-24T11:54:26Z
+
+I renamed QueryMapping to UrlMapping, alias to as,  and rebased to add some doc on this feature :)
+
+---------------------------------------------------------------------------
+
+by squrious at 2024-03-06T11:26:33Z
+
+Hi there!
+
+Just rebased to get the LiveProp modifier feature.
+
+I also rewrote the test component for url bindings. We often add use cases and I found it becomes hard to understand things like "prop1", "prop2", etc in assertions. This is in a separate commit, so if it's not the best place do do this it can be removed easily ;)
+
+Doc section is also updated!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-08T23:23:52Z
+
+@squrious where are we here ? Do you need something / is it "ready" for you ?
+
+---------------------------------------------------------------------------
+
+by squrious at 2024-04-09T07:14:31Z
+
+> @squrious where are we here ? Do you need something / is it "ready" for you ?
+
+Hi @smnandre! It's ready for me
