@@ -255,9 +255,14 @@ EOF
             $propertyName = $property->getName();
 
             if ($metadata->isPublicPropsExposed() && $property->isPublic()) {
-                $visibility = $property->getType()?->getName();
+                $type = $property->getType();
+                if ($type instanceof \ReflectionNamedType) {
+                    $typeName = $type->getName();
+                } else {
+                    $typeName = (string) $type;
+                }
                 $value = $property->getDefaultValue();
-                $propertyDisplay = $visibility.' $'.$propertyName.(null !== $value ? ' = '.json_encode($value) : '');
+                $propertyDisplay = $typeName.' $'.$propertyName.(null !== $value ? ' = '.json_encode($value) : '');
                 $properties[$property->name] = $propertyDisplay;
             }
 
