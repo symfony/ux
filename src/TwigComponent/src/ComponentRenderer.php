@@ -107,25 +107,29 @@ final class ComponentRenderer implements ComponentRendererInterface
     {
         $component = $mounted->getComponent();
         $metadata = $this->factory->metadataFor($mounted->getName());
+        $isAnonymous = $mounted->getComponent() instanceof AnonymousComponent;
+
+        $classProps = $isAnonymous ? [] : iterator_to_array($this->exposedVariables($component, $metadata->isPublicPropsExposed()));
+
         // expose public properties and properties marked with ExposeInTemplate attribute
-        $props = iterator_to_array($this->exposedVariables($component, $metadata->isPublicPropsExposed()));
+        $props = array_merge($mounted->getInputProps(), $classProps);
         $variables = array_merge(
             // first so values can be overridden
             $context,
-
+            // add the context in a separate variable to keep track
+            // of what is coming from outside the component
+            ['__context' => $context],
             // keep reference to old context
             ['outerScope' => $context],
-
             // add the component as "this"
             ['this' => $component],
-
             // add computed properties proxy
             ['computed' => new ComputedPropertiesProxy($component)],
-
+            $props,
+            // keep this line for BC break reasons
+            ['__props' => $classProps],
             // add attributes
             [$metadata->getAttributesVar() => $mounted->getAttributes()],
-            $props,
-            ['__props' => $props]
         );
         $event = new PreRenderEvent($mounted, $metadata, $variables);
 
