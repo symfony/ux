@@ -1,0 +1,6 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-04-18T20:14:09Z
+
+Nice :) You should also borrow the script + CI I added to the root repo.
+PR welcome on symfony/polyfill and on twig if you're up to ;)
