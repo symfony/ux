@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-04-18T15:48:29Z
+
+> In one of the translator exemple the progress bar does not appear correctly
+
+I'm not entirely sure how to fix but it's broken in the live site currently too. Let's save for a followup PR? FYI - it looks correct in FireFox.
