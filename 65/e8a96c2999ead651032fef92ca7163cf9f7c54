@@ -1,0 +1,228 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-24T21:38:00Z
+
+You did not answer my comment: https://github.com/symfony/ux/issues/1387#issuecomment-1888028137
+
+On my test it worked well ... could you update your message to show a concrete example of something that did not work before and will with your PR ?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-03-24T22:22:39Z
+
+Hey @smnandre your example works because you set a default value to your props, remove the default value and you should have an error
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-24T22:50:11Z
+
+> Hey @smnandre your example works because you set a default value to your props, remove the default value and you should have an error
+
+Ok thanks, indeed it triggers an error.
+
+For me to better understand, could you also explain me the code changes then ? I don't understand what's in stake in the merge array.. you're changing the order right ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-24T22:53:41Z
+
+It's only for props not defined in the php class, right ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-25T03:10:51Z
+
+I made some tries, and there is a little case that make me 🤔
+
+If your component class contains properties without default values, props from the container seems to override them.
+
+```php
+// in your component class
+
+    public string|null $nullableStringWithoutDefault;
+
+    public string|null $nullableStringDefaultNull = null;
+
+    public string $uninitializedString;
+
+    public $untypedPropDefaultNull;
+
+    public $untypedPropWithoutDefault;
+```
+
+```twig
+# in your component template
+{% props
+
+    nullableStringWithoutDefault=123,
+    nullableStringDefaultNull=123,
+    uninitializedString=123,
+    untypedPropDefaultNull=123,
+    untypedPropWithoutDefault=123,
+%}
+
+<div ...>
+    <li>nullableStringDefaultNull: {{ nullableStringDefaultNull }}
+    <li>nullableStringDefaultFalse: {{ nullableStringDefaultFalse }}
+    <li>nullableStringWithoutDefault: {{ nullableStringWithoutDefault }}
+    <li>uninitializedString: {{ uninitializedString }}
+    <li>untypedPropDefaultNull: {{ untypedPropDefaultNull }}
+    <li>untypedPropWithoutDefault: {{ untypedPropWithoutDefault }}
+</div>
+```
+
+Renders
+
+```html
+    <li>nullableStringWithoutDefault: 123
+    <li>nullableStringDefaultNull: 123
+    <li>uninitializedString: 123
+    <li>untypedPropDefaultNull: 123
+    <li>untypedPropWithoutDefault: 123
+</div>
+```
+
+We need to find a way to forbid this kind of override (like you did it seems for props with values).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-25T03:19:39Z
+
+Last question, the DX could be improved i think in case of ignored props...
+
+Maybe we could throw an exception/error, as the developper may not understand why its props "does not work" ?
+
+WDYT ?
+
+Finally, did you test (even on a minimal case) if more complex situations are impacted ?
+* LiveComponent on re-render
+* Child component calling parent props
+* Event changing the user data
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-03-30T13:24:16Z
+
+> It's only for props not defined in the php class, right ?
+
+Yes, totally right
+
+> We need to find a way to forbid this kind of override (like you did it seems for props with values).
+
+Hummmm, I am not sure about that I like the current behavior it sounds more obvious to me. But maybe we should trigger an error if props with the same name are defined in the class and in the template, WDYT ?
+
+> I know tests are green, but that seems to me really strange and not needed
+
+I gonna double check, but I am not sure if we can know if props come from the template or the class.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-03-30T19:13:03Z
+
+> Hummmm, I am not sure about that I like the current behavior it sounds more obvious to me. But maybe we should trigger an error if props with the same name are defined in the class and in the template, WDYT ?
+
+Yes that's exactly what i want (and missexpressed apparently haha)... we cannot accept the template to change the strong type of a props :|
+
+> I gonna double check, but I am not sure if we can know if props come from the template or the class.
+
+I'd really would like any change to be explicited and justified... because there is a big side effect there, and we should not accept things because we did not find "better" .. while creating major technical debt for the future 😅
+
+How could i help you on this ? Distinct initial props and runtime args ? That's what you miss ?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-04-01T20:44:43Z
+
+Hey @smnandre, I rework this PR. To avoid side effects I keep the __props variable with the same data. So props from the template are directly merged into the context of the component. To make it work I added __context variable that allows me to know what is the initial context of the component.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-04-01T20:49:01Z
+
+> Yes that's exactly what i want (and missexpressed apparently haha)... we cannot accept the template to change the strong type of a props :|
+
+After some thinking, I am not sure about that... I thing props from the template should be able to overwrite class props. I think the template should become the source of truth for the component. WDYT?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-02T22:11:26Z
+
+I'm wondering if we're not creating some confusion between "props" (things that can be passed from the calling template) and their default values (when they are not passed from the calling template).
+
+Overriding a default value is one thing, and i have no strong opinion on this.
+
+But if you change the type of a props in the template (let say from bool to string)... the PHP class will try to mount a string.. when it's expecting a bool for example).
+
+So i suggest we write down what situation/use case we want to improve (and i'm 100% on the general "concept" here), while beeing attentive at the special cases we want to be very strict about.
+
+Lastly, i wonder if we should not extract those earlier (handle them in Factory/Renderer/etc...)  to avoid any "conflict" situation
+
+--
+
+A few (new) questions i'm thinking there:
+- do we want LiveProps to be overridden ? (does this even work for hydration, etc?)
+- do we want the PHP class to "access" those props (defined only in the template) ?
+- is there a simple rule we can enforce in a easy-to-explain, easy-to-use way (you suggest template > class)
+- if template > class, is there something we can do to "lock" some props ?
+
+(not all must be answered now... but i'd like if possible we have a vision on how this is gonna work in edge cases so all is clear for us, in the code, when we will be asked about it on slack, etc... 👼 )
+
+WDYT ?
+
+(not sure if i'm being clear enough, please tell me if not ;) )
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-04-14T17:01:04Z
+
+@smnandre the solution I choose here, is to throw an error where there are conflicts between the class props and the template props. This is a radical solution, but I think this is reducing the complexity a lot. Tell me what you think
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-14T17:04:19Z
+
+Really like this choice, allowing us to move this forward while not closing the door at future improvments.
+
+Do you want a last "proofread" on this PR ?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-04-14T17:06:42Z
+
+Yes, please!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-14T21:18:07Z
+
+Minor thing, i'd suggest a change for the exception message, as
+* i think it's better if we can explicitely identify template and class
+* i kinda imagine either it'smore  a "front-end dev" using the template and i rather say "you cannot", either it's more a "back-end developer" and no need to say "remove one of both"
+
+So instead of
+
+<img width="800" alt="Capture d’écran 2024-04-14 à 23 16 47" src="https://github.com/symfony/ux/assets/1359581/b9fa6815-a42a-4063-943f-d4963e710fc4">
+
+> The prop: title is defined both in the template and in the class. You need to remove it from the class or the template
+
+I suggest the following:
+
+<img width="800" alt="Capture d’écran 2024-04-14 à 23 16 57" src="https://github.com/symfony/ux/assets/1359581/b7d102d8-1171-422c-9a02-cdd3951b3876">
+
+> Cannot define prop "title" in template "components/Foo.html.twig". Property already defined in component class "App\Twig\Foo".
+
+Code i made to test this :
+
+```php
+// PropsNode.php  ligne ~ 40
+
+$compiler
+    ->write('if (isset($context[\'__props\'][\''.$name.'\'])) {')
+    ->raw("\n")
+    ->write('$componentClass = isset($context[\'this\']) ? get_debug_type($context[\'this\']) : "";')
+    ->raw("\n")
+    ->write('throw new \Twig\Error\RuntimeError(\'Cannot define prop "'.$name.'" in template "'.$this->getTemplateName().'". Property already defined in component class "\'.$componentClass.\'".\');')
+    // ->write('throw new \Twig\Error\RuntimeError(\'The prop: '.$name.' is defined both in the template and in the class. You need to remove it from the class or the template\');')
+    ->raw("\n")
+
+```
