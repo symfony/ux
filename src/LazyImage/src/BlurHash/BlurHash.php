@@ -21,11 +21,9 @@ use kornrunner\Blurhash\Blurhash as BlurhashEncoder;
  */
 class BlurHash implements BlurHashInterface
 {
-    private $imageManager;
-
-    public function __construct(?ImageManager $imageManager = null)
-    {
-        $this->imageManager = $imageManager;
+    public function __construct(
+        private ?ImageManager $imageManager = null,
+    ) {
     }
 
     public function createDataUriThumbnail(string $filename, int $width, int $height, int $encodingWidth = 75, int $encodingHeight = 75): string
