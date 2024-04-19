@@ -21,6 +21,7 @@ use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\UX\LazyImage\BlurHash\BlurHash;
 use Symfony\UX\LazyImage\BlurHash\BlurHashInterface;
+use Symfony\UX\LazyImage\BlurHash\CachedBlurHash;
 use Symfony\UX\LazyImage\Twig\BlurHashExtension;
 
 /**
@@ -32,6 +33,9 @@ class LazyImageExtension extends Extension implements PrependExtensionInterface
 {
     public function load(array $configs, ContainerBuilder $container)
     {
+        $configuration = new Configuration();
+        $config = $this->processConfiguration($configuration, $configs);
+
         if (class_exists(ImageManager::class)) {
             $container
                 ->setDefinition('lazy_image.image_manager', new Definition(ImageManager::class))
@@ -46,6 +50,17 @@ class LazyImageExtension extends Extension implements PrependExtensionInterface
         ;
 
         $container->setAlias(BlurHashInterface::class, 'lazy_image.blur_hash')->setPublic(false);
+
+        if (isset($config['cache'])) {
+            $container
+                ->setDefinition('lazy_image.cached_blur_hash', new Definition(CachedBlurHash::class))
+                ->setDecoratedService('lazy_image.blur_hash')
+                ->addArgument(new Reference('lazy_image.cached_blur_hash.inner'))
+                ->addArgument(new Reference($config['cache']))
+            ;
+
+            $container->setAlias(BlurHashInterface::class, 'lazy_image.blur_hash')->setPublic(false);
+        }
 
         $container
             ->setDefinition('twig.extension.blur_hash', new Definition(BlurHashExtension::class))

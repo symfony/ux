@@ -103,10 +103,27 @@ The ``data_uri_thumbnail`` function receives 3 arguments:
 -  the width of the BlurHash to generate
 -  the height of the BlurHash to generate
 
+Performance considerations
+~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 You should try to generate small BlurHash images as generating the image
 can be CPU-intensive. Instead, you can rely on the browser scaling
 abilities by generating a small image and using the ``width`` and
 ``height`` HTML attributes to scale up the image.
+
+You can also configure a cache pool to store the generated BlurHash,
+this way you can avoid generating the same BlurHash multiple times:
+
+.. code-block:: yaml
+
+    # config/packages/lazy_image.yaml
+    framework:
+        cache:
+            pools:
+                cache.lazy_image: cache.adapter.redis # or any other cache adapter depending on your needs
+
+    lazy_image:
+        cache: cache.lazy_image # the cache pool to use
 
 Extend the default behavior
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
