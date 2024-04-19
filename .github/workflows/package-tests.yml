@@ -16,9 +16,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Fetch branch from where the PR started
-        run: git fetch --no-tags --prune --depth=1 origin +refs/heads/*:refs/remotes/origin/*
-
       - name: Verify subtree-splits are auto-closed
         run: |
           php .github/sync-packages.php
