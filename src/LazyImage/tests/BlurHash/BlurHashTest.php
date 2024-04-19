@@ -12,7 +12,11 @@
 namespace Symfony\UX\LazyImage\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Component\Cache\Adapter\ArrayAdapter;
+use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\UX\LazyImage\BlurHash\BlurHashInterface;
+use Symfony\UX\LazyImage\BlurHash\CachedBlurHash;
 use Symfony\UX\LazyImage\Tests\Kernel\TwigAppKernel;
 
 /**
@@ -34,6 +38,76 @@ class BlurHashTest extends TestCase
         $this->assertSame(
             'L54ec*~q_3?bofoffQWB9F9FD%IU',
             $blurHash->encode(__DIR__.'/../Fixtures/logo.png')
+        );
+    }
+
+    public function testEnsureCacheIsNotUsedWhenNotConfigured()
+    {
+        $kernel = new TwigAppKernel('test', true);
+        $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
+
+        /** @var BlurHashInterface $blurHash */
+        $blurHash = $container->get('test.lazy_image.blur_hash');
+
+        static::assertNotInstanceOf(CachedBlurHash::class, $blurHash);
+    }
+
+    public function testEnsureCacheIsUsedWhenConfigured()
+    {
+        $kernel = new class('test', true) extends TwigAppKernel {
+            public function registerContainerConfiguration(LoaderInterface $loader)
+            {
+                parent::registerContainerConfiguration($loader);
+
+                $loader->load(static function (ContainerBuilder $container) {
+                    $container->loadFromExtension('framework', [
+                        'cache' => [
+                            'pools' => [
+                                'cache.lazy_image' => [
+                                    'adapter' => 'cache.adapter.array',
+                                ],
+                            ],
+                        ],
+                    ]);
+
+                    $container->loadFromExtension('lazy_image', [
+                        'cache' => 'cache.lazy_image',
+                    ]);
+
+                    $container->setAlias('test.cache.lazy_image', 'cache.lazy_image')->setPublic(true);
+                });
+            }
+        };
+
+        $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
+
+        /** @var BlurHashInterface $blurHash */
+        $blurHash = $container->get('test.lazy_image.blur_hash');
+
+        static::assertInstanceOf(CachedBlurHash::class, $blurHash);
+    }
+
+    public function testEncodeShouldBeCalledOnceWhenCached()
+    {
+        $blurHash = $this->createMock(BlurHashInterface::class);
+        $blurHash->expects($this->once())->method('encode')->with(__DIR__.'/../Fixtures/logo.png')->willReturn('L54ec*~q_3?bofoffQWB9F9FD%IU');
+        $cache = new ArrayAdapter();
+        $cachedBlurHash = new CachedBlurHash($blurHash, $cache);
+
+        $this->assertEmpty($cache->getValues());
+
+        $this->assertSame(
+            'L54ec*~q_3?bofoffQWB9F9FD%IU',
+            $cachedBlurHash->encode(__DIR__.'/../Fixtures/logo.png')
+        );
+
+        $this->assertNotEmpty($cache->getValues());
+
+        $this->assertSame(
+            'L54ec*~q_3?bofoffQWB9F9FD%IU',
+            $cachedBlurHash->encode(__DIR__.'/../Fixtures/logo.png')
         );
     }
 

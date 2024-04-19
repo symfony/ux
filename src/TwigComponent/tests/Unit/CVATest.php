@@ -24,9 +24,14 @@ class CVATest extends TestCase
      */
     public function testRecipes(array $recipe, array $recipes, string $expected): void
     {
-        $recipeClass = new CVA($recipe['base'] ?? '', $recipe['variants'] ?? [], $recipe['compounds'] ?? [], $recipe['defaultVariants'] ?? []);
+        $recipeClass = new CVA(
+            base: $recipe['base'] ?? '',
+            variants: (array) ($recipe['variants'] ?? []),
+            compoundVariants: (array) ($recipe['compounds'] ?? []),
+            defaultVariants: (array) ($recipe['defaultVariants'] ?? []),
+        );
 
-        $this->assertEquals($expected, $recipeClass->resolve($recipes));
+        $this->assertEquals($expected, $recipeClass->apply($recipes));
     }
 
     public function testApply(): void
@@ -223,12 +228,36 @@ class CVATest extends TestCase
                     [
                         'colors' => 'primary',
                         'sizes' => ['sm'],
-                        'class' => 'text-red-500',
+                        'class' => 'text-red-100',
                     ],
                 ],
             ],
             ['colors' => 'primary', 'sizes' => 'sm'],
-            'font-semibold border rounded text-primary text-sm text-red-500',
+            'font-semibold border rounded text-primary text-sm text-red-100',
+        ];
+
+        yield 'compound variants with true' => [
+            [
+                'base' => 'button',
+                'variants' => [
+                    'colors' => [
+                        'blue' => 'btn-blue',
+                        'red' => 'btn-red',
+                    ],
+                    'disabled' => [
+                        'true' => 'disabled',
+                    ],
+                ],
+                'compounds' => [
+                    [
+                        'colors' => 'blue',
+                        'disabled' => ['true'],
+                        'class' => 'font-bold',
+                    ],
+                ],
+            ],
+            ['colors' => 'blue', 'disabled' => 'true'],
+            'button btn-blue disabled font-bold',
         ];
 
         yield 'compound variants as array' => [
@@ -249,12 +278,12 @@ class CVATest extends TestCase
                     [
                         'colors' => ['primary'],
                         'sizes' => ['sm'],
-                        'class' => ['text-red-500', 'bold'],
+                        'class' => ['text-red-900', 'bold'],
                     ],
                 ],
             ],
             ['colors' => 'primary', 'sizes' => 'sm'],
-            'font-semibold border rounded text-primary text-sm text-red-500 bold',
+            'font-semibold border rounded text-primary text-sm text-red-900 bold',
         ];
 
         yield 'multiple compound variants' => [
@@ -275,17 +304,17 @@ class CVATest extends TestCase
                     [
                         'colors' => ['primary'],
                         'sizes' => ['sm'],
-                        'class' => 'text-red-500',
+                        'class' => 'text-red-300',
                     ],
                     [
                         'colors' => ['primary'],
                         'sizes' => ['md'],
-                        'class' => 'text-blue-500',
+                        'class' => 'text-blue-300',
                     ],
                 ],
             ],
             ['colors' => 'primary', 'sizes' => 'sm'],
-            'font-semibold border rounded text-primary text-sm text-red-500',
+            'font-semibold border rounded text-primary text-sm text-red-300',
         ];
 
         yield 'compound with multiple variants' => [
@@ -306,12 +335,12 @@ class CVATest extends TestCase
                     [
                         'colors' => ['primary', 'secondary'],
                         'sizes' => ['sm'],
-                        'class' => 'text-red-500',
+                        'class' => 'text-red-800',
                     ],
                 ],
             ],
             ['colors' => 'primary', 'sizes' => 'sm'],
-            'font-semibold border rounded text-primary text-sm text-red-500',
+            'font-semibold border rounded text-primary text-sm text-red-800',
         ];
 
         yield 'compound doesn\'t match' => [
@@ -443,6 +472,198 @@ class CVATest extends TestCase
             ],
             [],
             'font-semibold border rounded text-primary text-sm rounded-md',
+        ];
+
+        yield 'default variables with boolean' => [
+            [
+                'base' => 'button',
+                'variants' => [
+                    'colors' => [
+                        'blue' => 'btn-blue',
+                        'red' => 'btn-red',
+                    ],
+                    'disabled' => [
+                        'true' => 'disabled',
+                        'false' => 'opacity-100',
+                    ],
+                ],
+                'defaultVariants' => [
+                    'colors' => 'blue',
+                    'disabled' => 'false',
+                ],
+            ],
+            [],
+            'button btn-blue opacity-100',
+        ];
+
+        yield 'boolean string variants true / true' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'true' => 'disable',
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => true],
+            'text-primary disable',
+        ];
+
+        yield 'boolean string variants true / false' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'true' => 'disable',
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => false],
+            'text-primary',
+        ];
+
+        yield 'boolean string variants false / true' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'false' => 'disable',
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => true],
+            'text-primary',
+        ];
+
+        yield 'boolean string variants false / false' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'false' => 'disable',
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => false],
+            'text-primary disable',
+        ];
+
+        yield 'boolean string variants missing' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'true' => 'disable',
+                    ],
+                ],
+            ],
+            ['colors' => 'primary'],
+            'text-primary',
+        ];
+
+        yield 'boolean list variants true' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'true' => ['disable', 'opacity-50'],
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => true],
+            'text-primary disable opacity-50',
+        ];
+
+        yield 'boolean list variants false' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'true' => ['disable', 'opacity-50'],
+                    ],
+                ],
+            ],
+            ['colors' => 'primary', 'disabled' => false],
+            'text-primary',
+        ];
+
+        yield 'boolean list variants missing' => [
+            [
+                'variants' => [
+                    'colors' => [
+                        'primary' => 'text-primary',
+                        'secondary' => 'text-secondary',
+                    ],
+                    'disabled' => [
+                        'true' => ['disable', 'opacity-50'],
+                    ],
+                ],
+            ],
+            ['colors' => 'primary'],
+            'text-primary',
+        ];
+    }
+
+    /**
+     * @dataProvider provideAdditionalClassesCases
+     */
+    public function testAdditionalClasses(string|array $base, array|string $additionals, string $expected): void
+    {
+        $cva = new CVA($base);
+        if ([] === $additionals || '' === $additionals) {
+            $this->assertEquals($expected, $cva->apply([]));
+        } else {
+            $this->assertEquals($expected, $cva->apply([], ...(array) $additionals));
+        }
+    }
+
+    public static function provideAdditionalClassesCases(): iterable
+    {
+        yield 'additionals_are_optional' => [
+            '',
+            'foo',
+            'foo',
+        ];
+        yield 'additional_are_used' => [
+            '',
+            'foo',
+            'foo',
+        ];
+        yield 'additionals_are_used' => [
+            '',
+            ['foo', 'bar'],
+            'foo bar',
+        ];
+        yield 'additionals_preserve_order' => [
+            ['foo'],
+            ['bar', 'foo'],
+            'foo bar',
+        ];
+        yield 'additional_are_deduplicated' => [
+            '',
+            ['bar', 'bar'],
+            'bar',
         ];
     }
 }

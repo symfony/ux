@@ -1,0 +1,22 @@
+
+.Tag {
+  --background: #E2EAF2;
+  --color: #191E27;
+
+  font-stretch: semi-condensed;
+  font-weight: 400;
+  display: inline-flex;
+  font-size: .65rem;
+  padding-inline: .4rem;
+  line-height: 1.4rem;
+  border-radius: .35rem;
+  text-transform: uppercase;
+  vertical-align: middle;
+  color: var(--color);
+  background: var(--background);
+}
+
+[data-bs-theme="dark"] .Tag {
+  --background: #191E27;
+  --color: #A5C4E2;
+}

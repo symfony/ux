@@ -17,6 +17,12 @@
         <link rel="manifest" href="/site.webmanifest">
         <link rel="mask-icon" href="https://symfony.com/favicons/safari-pinned-tab.svg" color="#5bbad5">
         <meta name="description" content="{% block description %}{{ meta.description|default }}{% endblock %}">
+        <meta property="og:site_name" content="Symfony UX" />
+        <meta property="og:image" content="{{ absolute_url(asset('images/symfony-ux.png')) }}">
+        <meta property="og:image:width" content="1024">
+        <meta property="og:image:height" content="576">
+        <meta property="og:image:alt" content="Symfony UX">
+        <meta property="og:image:type" content="image/png">
         {% block javascripts %}
             <script>
               const theme = localStorage.getItem('user-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
@@ -36,6 +42,10 @@
         {% endblock %}
     </head>
     <body>
+        {% block banner %}
+            {{ include('_banner.html.twig') }}
+        {% endblock %}
+
         {% block body %}
             <div class="App">
                 {% block header %}

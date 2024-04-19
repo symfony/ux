@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Tests\Functional\Metadata;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
+use Symfony\UX\LiveComponent\Metadata\UrlMapping;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\ComponentWithUrlBoundProps;
 
 class LiveComponentMetadataFactoryTest extends KernelTestCase
@@ -30,20 +31,15 @@ class LiveComponentMetadataFactoryTest extends KernelTestCase
             $propsMetadataByName[$propMetadata->getName()] = $propMetadata;
         }
 
-        $this->assertTrue($propsMetadataByName['prop1']->queryStringMapping());
-
-        $this->assertTrue($propsMetadataByName['prop2']->queryStringMapping());
-
-        $this->assertTrue($propsMetadataByName['prop3']->queryStringMapping());
-
-        $this->assertFalse($propsMetadataByName['prop4']->queryStringMapping());
-
-        $this->assertTrue($propsMetadataByName['prop5']->queryStringMapping());
-
-        $this->assertTrue($propsMetadataByName['prop6']->queryStringMapping());
-
-        $this->assertTrue($propsMetadataByName['prop7']->queryStringMapping());
-
-        $this->assertFalse($propsMetadataByName['prop8']->queryStringMapping());
+        $this->assertNotNull($propsMetadataByName['stringProp']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['intProp']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['arrayProp']->urlMapping());
+        $this->assertNull($propsMetadataByName['unboundProp']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['objectProp']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['propWithField1']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['propWithField2']->urlMapping());
+        $this->assertNull($propsMetadataByName['maybeBoundProp']->urlMapping());
+        $this->assertEquals(new UrlMapping(as: 'q'), $propsMetadataByName['boundPropWithAlias']->urlMapping());
+        $this->assertNotNull($propsMetadataByName['boundPropWithCustomAlias']);
     }
 }

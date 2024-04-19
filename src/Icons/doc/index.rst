@@ -74,15 +74,6 @@ define the HTML attributes added to the ``<svg>`` element:
     {{ ux_icon('user-profile', {height: '16px', width: '16px', aria-hidden: true}) }}
     {# renders <svg height="16" width="16" aria-hidden="true"> ... </svg> #}
 
-.. code-block:: yaml
-
-    # config/packages/ux_icons.yaml
-    ux_icons:
-        iconify:
-            enabled: true
-            on_demand: true
-            endpoint: 'https://api.iconify.design'
-
 Icon Sets
 ~~~~~~~~~
 
@@ -109,6 +100,56 @@ Icon Set                    Icons  License     Prefix           Example
 ========================  =======  ==========  ===============  =====================
 
 To see the full list of available icon sets, visit `ux.symfony.com/icons`_.
+
+Search Icon sets
+~~~~~~~~~~~~~~~~
+
+You can use the ``ux:icons:search`` command to search for icon sets, or to find
+the prefix of a specific icon set:
+
+.. code-block:: terminal
+
+    $ php bin/console ux:icons:search tabler
+
+     -------------- ------- --------- -------- --------------
+      Icon set       Icons   License   Prefix   Example
+     -------------- ------- --------- -------- --------------
+      Tabler Icons    5219   MIT       tabler   tabler:alien
+     -------------- ------- --------- -------- --------------
+
+    Search "arrow" in Tabler Icons icons:
+
+     php bin/console ux:icons:search tabler arrow
+
+Search Icons
+~~~~~~~~~~~~
+
+You can also search for icons within a specific icon set. To search for "arrow"
+icons in the "Tabler Icons" set, use the following command:
+
+.. code-block:: terminal
+
+    $ php bin/console ux:icons:search tabler arrow
+
+    Searching Tabler Icons icons "arrow"...
+    Found 64 icons.
+     ------------------------------------------ ------------------------------------------
+      tabler:archery-arrow                       tabler:arrow-autofit-up
+      tabler:arrow-back                          tabler:arrow-back-up
+      tabler:arrow-badge-down                    tabler:arrow-badge-up
+      tabler:arrow-badge-up-filled               tabler:arrow-bar-both
+      tabler:arrow-bar-down                      tabler:arrow-bar-left
+      tabler:arrow-bar-right                     tabler:arrow-bar-to-up
+      tabler:arrow-bar-up                        tabler:arrow-bear-left
+      tabler:arrow-big-down                      tabler:arrow-big-down-filled
+      tabler:arrow-big-down-line                 tabler:arrow-big-left
+      tabler:arrow-big-left-filled               tabler:arrow-big-left-line
+      tabler:arrow-big-right                     tabler:arrow-big-right-filled
+      tabler:arrow-big-right-line                tabler:arrow-big-up
+     ------------------------------------------ ------------------------------------------
+
+     Page 1/3. Continue? (yes/no) [yes]:
+     >
 
 HTML Syntax
 ~~~~~~~~~~~
@@ -166,9 +207,6 @@ a subdirectory, the *name* will be ``subdirectory:icon_name``.
 
 Icons On-Demand
 ~~~~~~~~~~~~~~~
-
-`ux.symfony.com/icons`_ has a huge searchable repository of icons
-from many different sets. This package provides a way to include any icon found on this site _on-demand_.
 
 `ux.symfony.com/icons`_ has a huge searchable repository of icons from many
 different sets. This package provides a way to include any icon found on this
@@ -295,17 +333,6 @@ Icons add visual elements to your website and they can be a challenge for access
 According to the `W3C guide about SVG icon accessibility`_, there are
 three methods to improve icons accessibility, depending on the context.
 
-**Decorative icons**
-    They are purely decorative and do not convey any meaning or function. They
-    should be hidden from screen readers using the ``aria-hidden`` attribute:
-
-    .. code-block:: html+twig
-
-        <a href="/profile">
-            {{ ux_icon('user-profile', {class: 'w-4 h-4', 'aria-hidden': true}) }}
-            Back to profile
-        </a>
-
 **Informative icons**
     They convey information or a function. They should define a text alternative
     that presents the same content or function via the ``aria-label`` attribute
@@ -324,6 +351,33 @@ three methods to improve icons accessibility, depending on the context.
     .. code-block:: twig
 
         {{ ux_icon('user-profile', {class: 'w-4 h-4', 'aria-label': 'User Profile'}) }}
+
+**Decorative icons**
+    They are purely decorative and do not convey any meaning or function. They
+    should be hidden from screen readers using the ``aria-hidden`` attribute.
+
+    .. code-block:: html
+
+        <a href="/profile">
+            <svg viewBox="0 0 24 24" class="w-4 h-4" aria-hidden="true">
+                <!-- ... -->
+            </svg>
+            Back to profile
+        </a>
+
+That is why the ``ux_icon()`` function and the ``<twig:ux:icon>`` component add
+``aria-hidden="true"`` attribute **automatically** to icons not having at least one
+of the following attributes: ``aria-label``, ``aria-labelledby`` or ``title``.
+
+.. note::
+
+    If you don't want to set ``aria-hidden="true"`` for a specific icon, you can
+    explicitly set the ``aria-hidden`` attribute to ``false``:
+
+    .. code-block:: twig+html
+
+        <twig:UX:Icon name="user-profile" aria-hidden="false" />
+
 
 Performance
 -----------

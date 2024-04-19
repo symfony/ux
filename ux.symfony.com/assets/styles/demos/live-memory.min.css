@@ -1,10 +1,15 @@
 /** -----------------------------------------------------------------
  * LiveMemory demo
+ *
+ * This file is suffixed with `.min.css` to prevent it from being
+ * processed by the CDN compression system, which would break the
+ * most recent CSS syntax (as layers) used in this file.
  * --------------------------------------------------------------- */
 
 @import "live-memory/app/reset";
 @import "live-memory/app/root";
 
+@import "../components/Banner";
 @import "../components/Icon";
 
 @import "live-memory/components/Board";

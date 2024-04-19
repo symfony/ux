@@ -19,6 +19,10 @@ class LiveDemo
         private string $description,
         private string $route,
         private string $longDescription,
+        /**
+         * @var string[]
+         */
+        private array $tags = [],
     ) {
     }
 
@@ -45,6 +49,11 @@ class LiveDemo
     public function getRoute(): string
     {
         return $this->route;
+    }
+
+    public function getTags(): array
+    {
+        return $this->tags;
     }
 
     public function getScreenshotFilename(): string

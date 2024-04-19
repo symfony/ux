@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Twig;
 
+use Twig\Attribute\YieldReady;
 use Twig\Compiler;
 use Twig\Node\Node;
 
@@ -19,6 +20,7 @@ use Twig\Node\Node;
  *
  * @internal
  */
+#[YieldReady]
 class PropsNode extends Node
 {
     public function __construct(array $propsNames, array $values, $lineno = 0, ?string $tag = null)
@@ -35,23 +37,43 @@ class PropsNode extends Node
 
         foreach ($this->getAttribute('names') as $name) {
             $compiler
+                ->write('if (isset($context[\'__props\'][\''.$name.'\'])) {')
+                ->raw("\n")
+                ->write('$componentClass = isset($context[\'this\']) ? get_debug_type($context[\'this\']) : "";')
+                ->raw("\n")
+                ->write('throw new \Twig\Error\RuntimeError(\'Cannot define prop "'.$name.'" in template "'.$this->getTemplateName().'". Property already defined in component class "\'.$componentClass.\'".\');')
+                ->raw("\n")
+                ->write('}')
+                ->raw("\n")
+            ;
+
+            $compiler
                 ->write('$propsNames[] = \''.$name.'\';')
+                ->write("\n")
                 ->write('$context[\'attributes\'] = $context[\'attributes\']->remove(\''.$name.'\');')
-                ->write('if (!isset($context[\'__props\'][\''.$name.'\'])) {');
+                ->write("\n")
+                ->write('if (!isset($context[\''.$name.'\'])) {');
 
             if (!$this->hasNode($name)) {
                 $compiler
+                    ->indent()
                     ->write('throw new \Twig\Error\RuntimeError("'.$name.' should be defined for component '.$this->getTemplateName().'");')
-                    ->write('}');
+                    ->write("\n")
+                    ->outdent()
+                    ->write('}')
+                    ->write("\n");
 
                 continue;
             }
 
             $compiler
+                ->indent()
                 ->write('$context[\''.$name.'\'] = ')
                 ->subcompile($this->getNode($name))
                 ->raw(";\n")
-                ->write('}');
+                ->outdent()
+                ->write('}')
+                ->write("\n");
         }
 
         $compiler
@@ -59,12 +81,38 @@ class PropsNode extends Node
             ->raw("\n")
             ->write('foreach ($context as $key => $value) {')
             ->raw("\n")
+            ->indent()
             ->write('if (in_array($key, $attributesKeys) && !in_array($key, $propsNames)) {')
             ->raw("\n")
+            ->indent()
             ->raw('unset($context[$key]);')
             ->raw("\n")
+            ->outdent()
             ->write('}')
+            ->raw("\n")
+            ->outdent()
             ->write('}')
+            ->raw("\n")
         ;
+
+        // overwrite the context value if a props with a similar name and a default value exist
+        if ($this->hasNode($name)) {
+            $compiler
+                ->write('if (isset($context[\'__context\'][\''.$name.'\'])) {')
+                ->raw("\n")
+                ->write('$contextValue = $context[\'__context\'][\''.$name.'\'];')
+                ->raw("\n")
+                ->write('$propsValue = $context[\''.$name.'\'];')
+                ->raw("\n")
+                ->write('if ($contextValue === $propsValue) {')
+                ->raw("\n")
+                ->write('$context[\''.$name.'\'] = ')
+                ->subcompile($this->getNode($name))
+                ->raw(";\n")
+                ->write('}')
+                ->raw("\n")
+                ->write('}')
+            ;
+        }
     }
 }

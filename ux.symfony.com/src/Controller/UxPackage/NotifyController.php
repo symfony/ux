@@ -19,7 +19,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Notifier\Bridge\Mercure\MercureOptions;
 use Symfony\Component\Notifier\ChatterInterface;
 use Symfony\Component\Notifier\Message\ChatMessage;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 class NotifyController extends AbstractController
 {

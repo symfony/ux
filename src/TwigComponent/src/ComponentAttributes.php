@@ -51,6 +51,10 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
                     $value = (string) $value;
                 }
 
+                if (\is_bool($value) && str_starts_with($key, 'aria-')) {
+                    $value = $value ? 'true' : 'false';
+                }
+
                 if (!\is_scalar($value) && null !== $value) {
                     throw new \LogicException(sprintf('A "%s" prop was passed when creating the component. No matching "%s" property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a %s). Did you mean to pass this to your component or is there a typo on its name?', $key, $key, get_debug_type($value)));
                 }
@@ -83,6 +87,10 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
 
         if ($value instanceof \Stringable) {
             $value = (string) $value;
+        }
+
+        if (\is_bool($value) && str_starts_with($attribute, 'aria-')) {
+            $value = $value ? 'true' : 'false';
         }
 
         if (!\is_string($value)) {

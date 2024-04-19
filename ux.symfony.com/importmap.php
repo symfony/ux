@@ -207,4 +207,10 @@ return [
     '@kurkle/color' => [
         'version' => '0.3.2',
     ],
+    'highlight.js/lib/languages/yaml' => [
+        'version' => '11.9.0',
+    ],
+    'highlight.js/lib/languages/diff' => [
+        'version' => '11.9.0',
+    ],
 ];

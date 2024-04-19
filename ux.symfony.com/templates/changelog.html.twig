@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% set meta = {
+    title: 'Changelog',
+    title_suffix: " - Symfony UX",
+    description: 'Symfony UX changelog - New features, bug fixes, performances and security improvements about Symfony Live Components, Twig Components, Autocomplete, Icons...',
+    canonical: url('app_changelog'),
+} %}
+
+{% block content %}
+
+    <div class="hero">
+        <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
+            <h1 class="text-center ubuntu mt-5"><a href="{{ url('app_changelog') }}">Changelog</a></h1>
+            <p class="text-center mt-2 mb-5">New features, bug fixes, performances and security improvements.</p>
+        </div>
+    </div>
+
+    <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
+        <div class="Changelog">
+            {% for entry in changelog %}
+                <twig:ChangelogItem item="{{ entry }}" isOpen="{{ loop.index < 6 }}" />
+            {% endfor %}
+        </div>
+    </div>
+
+{% endblock %}

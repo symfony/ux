@@ -141,7 +141,7 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('primary = true', $display);
     }
 
-    public function testWithoutPublicPros(): void
+    public function testWithoutPublicProps(): void
     {
         $commandTester = $this->createCommandTester();
         $commandTester->execute(['name' => 'no_public_props']);
@@ -171,6 +171,20 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringNotContainsString('prop2', $display);
         $this->assertStringContainsString('customProp3', $display);
         $this->assertStringNotContainsString('prop3', $display);
+    }
+
+    public function testWithUnionTypeProps(): void
+    {
+        $commandTester = $this->createCommandTester();
+        $commandTester->execute(['name' => 'union_type_props']);
+
+        $commandTester->assertCommandIsSuccessful();
+
+        $display = $commandTester->getDisplay();
+
+        $this->tableDisplayCheck($display);
+        $this->assertStringContainsString('string|bool', $display);
+        $this->assertStringContainsString('prop1', $display);
     }
 
     private function createCommandTester(): CommandTester

@@ -1,10 +1,12 @@
 <div {{ attributes }}>
-    Prop1: {{ prop1 }}
-    Prop2: {{ prop2 }}
-    Prop3: {{ prop3|join(',') }}
-    Prop4: {{ prop4 }}
-    Prop5: address: {{ prop5.address ?? '' }} city: {{ prop5.city ?? '' }}
-    Prop6: {{ prop6 }}
-    Prop7: {{ prop7 }}
-    Prop8: {{ prop8 }}
+    StringProp: {{ stringProp }}
+    IntProp: {{ intProp }}
+    ArrayProp: {{ arrayProp|join(',') }}
+    UnboundProp: {{ unboundProp }}
+    ObjectProp: address: {{ objectProp.address ?? '' }} city: {{ objectProp.city ?? '' }}
+    PropWithField1: {{ propWithField1 }}
+    PropWithField2: {{ propWithField2 }}
+    MaybeBoundProp: {{ maybeBoundProp }}
+    BoundPropWithAlias: {{ boundPropWithAlias }}
+    BoundPropWithCustomAlias: {{ boundPropWithCustomAlias }}
 </div>

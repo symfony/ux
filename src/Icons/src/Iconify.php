@@ -61,14 +61,19 @@ final class Iconify
             throw new IconNotFoundException(sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
         }
 
-        if (!isset($data['icons'][$name]['body'])) {
-            throw new IconNotFoundException(sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
+        $nameArg = $name;
+        if (isset($data['aliases'][$name])) {
+            $name = $data['aliases'][$name]['parent'];
         }
 
-        $height = $data['icons'][$name]['height'] ?? $this->sets()[$prefix]['height'] ?? null;
-        $width = $data['icons'][$name]['width'] ?? $this->sets()[$prefix]['width'] ?? null;
+        if (!isset($data['icons'][$name]['body'])) {
+            throw new IconNotFoundException(sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $nameArg));
+        }
+
+        $height = $data['icons'][$name]['height'] ?? $data['height'] ?? $this->sets()[$prefix]['height'] ?? null;
+        $width = $data['icons'][$name]['width'] ?? $data['width'] ?? $this->sets()[$prefix]['width'] ?? null;
         if (null === $width && null === $height) {
-            throw new \RuntimeException(sprintf('The icon "%s:%s" does not have a width or height.', $prefix, $name));
+            throw new \RuntimeException(sprintf('The icon "%s:%s" does not have a width or height.', $prefix, $nameArg));
         }
 
         return new Icon($data['icons'][$name]['body'], [
@@ -92,6 +97,23 @@ final class Iconify
         }
 
         return $content;
+    }
+
+    public function getIconSets(): array
+    {
+        return $this->sets()->getArrayCopy();
+    }
+
+    public function searchIcons(string $prefix, string $query)
+    {
+        $response = $this->http->request('GET', '/search', [
+            'query' => [
+                'query' => $query,
+                'prefix' => $prefix,
+            ],
+        ]);
+
+        return new \ArrayObject($response->toArray());
     }
 
     private function sets(): \ArrayObject

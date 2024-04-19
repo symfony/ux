@@ -1,0 +1,25 @@
+<article {{ attributes.defaults({class: "ChangelogItem"}) }} id="{{ item.version }}">
+
+    <div class="ChangelogItem__Anchor">
+        <a class="ChangelogItem__Version" href="https://github.com/symfony/ux/releases/tag/{{ item.version }}"
+            target="_blank" rel="external noreferer">
+            <code>{{ item.version|u.trim('v') }}</code>
+        </a>
+        <div class="ChangelogItem__Date">
+            <span>{{ item.date|date('Y-m-d') }}</span>
+        </div>
+    </div>
+
+    <div class="ChangelogItem__Content">
+        <details {{ isOpen|default ? 'open' }}>
+            <summary class="ChangelogItem__Head">
+                <h2 class="ChangelogItem__Title">{{ item.name|default(item.version) }}</h2>
+                <twig:Icon name="arrow-down" class="ChangelogItem__Toggle" />
+            </summary>
+            <div class="ChangelogItem__Text">
+                {{ this.getContent()|markdown_to_html }}
+            </div>
+        </details>
+    </div>
+
+</article>

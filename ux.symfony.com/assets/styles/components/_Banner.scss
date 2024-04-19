@@ -1,0 +1,122 @@
+// -----------------------------------------------------------------
+// Banner
+// -----------------------------------------------------------------
+
+.Banner {
+  background: #0A0A0A;
+}
+.Banner + .App {
+  position: relative;
+}
+
+.Banner:has(+ .App .AppHeader.open) {
+  display: none;
+}
+
+.Banner .container-xxl {
+  max-width: 1320px;
+  margin: 0 auto;
+}
+
+.BannerInner {
+  display: flex;
+  flex-direction: column;
+  padding: 2rem 1rem;
+  gap: 1rem;
+  position: relative;
+}
+
+.BannerMedia {
+  align-self: center;
+  justify-self: center;
+}
+.BannerImage {
+  width: 92px;
+  height: auto;
+  filter: drop-shadow(1px 1px 8px #000) drop-shadow(2px 2px 32px #970404);
+}
+
+.BannerContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  place-content: center;
+  color: #fff;
+  font-family: var(--font-family-text);
+}
+
+.BannerTitle {
+  text-align: center;
+  font-size: 1.5rem;
+  font-family: var(--font-family-title);
+}
+.BannerTitle a {
+  text-shadow: 0 0 1px 4px red;
+  font-size: 1.05em;
+}
+
+.BannerText {
+  margin-block-end: 0.5rem;
+}
+.BannerText em {
+  text-decoration: underline;
+  text-underline-offset: .25rem;
+  text-underline-style: double;
+}
+
+.BannerAction {
+  display: grid;
+  place-content: center;
+  justify-content: center;
+}
+
+.BannerButton {
+  display: flex;
+  align-items: center;
+  padding: .75rem 1.5rem;
+  align-self: center;
+  color: #fffc;
+  font-size: 1.5rem;
+  font-family: var(--font-family-title);
+  gap: .5rem;
+  justify-content: center;
+  background: linear-gradient(#000e, #000d) padding-box,
+  linear-gradient(90deg, #D65831 0%, #D2D631 36.52%, #31D673 71.83%, #3aa3ff 100%) border-box;
+  border-radius: 2rem;
+  border: 4px solid transparent;
+  transition: all 250ms linear;
+}
+
+.BannerButton:hover {
+  color: #fff;
+}
+.BannerButton:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.BannerButton svg {
+  width: 1em;
+  height: 1em;
+  color: currentColor;
+  transition: all 250ms linear;
+}
+
+.BannerButton:hover svg {
+  transform: scale(1.1);
+}
+
+@media screen and (min-width: 768px) {
+  .BannerImage {
+    width: 128px;
+  }
+  .BannerInner {
+    flex-direction: row;
+    padding: 4rem 2rem;
+    gap: 4rem;
+  }
+  .BannerTitle {
+    text-align: left;
+  }
+}
