@@ -25,6 +25,9 @@ final class HeaderField implements QuillBlockFieldInterface
         $this->options = $options;
     }
 
+    /**
+     * @return int[]
+     */
     public function getOption(): array
     {
         $array = [];

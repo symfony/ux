@@ -13,25 +13,29 @@ namespace Symfony\UX\QuillJs\DTO\Fields\BlockField;
 
 use Symfony\UX\QuillJs\DTO\Fields\Interfaces\QuillBlockFieldInterface;
 
-final class ScriptField implements QuillBlockFieldInterface
+final class FontField implements QuillBlockFieldInterface
 {
-    public const SCRIPT_FIELD_OPTION_SUB = 'sub';
-    public const SCRIPT_FIELD_OPTION_SUPER = 'super';
+    public const FONT_OPTION_SANS_SERIF = '';
+    public const FONT_OPTION_SERIF = 'serif';
+    public const FONT_OPTION_MONOSPACE = 'monospace';
 
-    private string $option;
+    /**
+     * @var string[]
+     */
+    private array $options = [];
 
-    public function __construct(string $option = self::SCRIPT_FIELD_OPTION_SUB)
+    public function __construct(string ...$options)
     {
-        $this->option = $option;
+        $this->options = $options;
     }
 
     /**
-     * @return array|mixed[]
+     * @return array<string, array<string>>
      */
     public function getOption(): array
     {
         $array = [];
-        $array['script'] = $this->option;
+        $array['font'] = $this->options;
 
         return $array;
     }

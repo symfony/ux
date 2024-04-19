@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Symfony\UX\QuillJs\Form;
 
 use Symfony\Component\Form\AbstractType;
@@ -21,14 +12,14 @@ use Symfony\UX\QuillJs\DTO\Options\ThemeOption;
 
 class QuillType extends AbstractType
 {
-    public function buildView(FormView $view, FormInterface $form, array $options)
+    public function buildView(FormView $view, FormInterface $form, array $options): void
     {
         $view->vars['attr']['quill_options'] = json_encode($options['quill_options']);
         $view->vars['attr']['quill_extra_options'] = json_encode($options['quill_extra_options']);
         $view->vars['attr']['sanitizer'] = $options['quill_extra_options']['sanitizer'];
     }
 
-    public function configureOptions(OptionsResolver $resolver)
+    public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'sanitize_html' => false,

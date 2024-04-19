@@ -24,6 +24,9 @@ final class DirectionField implements QuillBlockFieldInterface
         $this->options = $option;
     }
 
+    /**
+     * @return string[]
+     */
     public function getOption(): array
     {
         $array = [];

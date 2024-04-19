@@ -13,10 +13,10 @@ namespace Symfony\UX\QuillJs\DTO\Fields\InlineField;
 
 use Symfony\UX\QuillJs\DTO\Fields\Interfaces\QuillInlineFieldInterface;
 
-class StrikeInlineField implements QuillInlineFieldInterface
+final class ItalicField implements QuillInlineFieldInterface
 {
     public function getOption(): string
     {
-        return 'strike';
+        return 'italic';
     }
 }

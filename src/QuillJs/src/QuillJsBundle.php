@@ -13,13 +13,7 @@ namespace Symfony\UX\QuillJs;
 
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
-/**
- * @final
- */
+// More details on https://symfony.com/doc/current/bundles/configuration.html#using-the-abstractbundle-class
 class QuillJsBundle extends Bundle
 {
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
-    }
 }

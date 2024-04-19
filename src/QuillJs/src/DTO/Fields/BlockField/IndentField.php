@@ -25,6 +25,9 @@ final class IndentField implements QuillBlockFieldInterface
         $this->option = $option;
     }
 
+    /**
+     * @return string[]
+     */
     public function getOption(): array
     {
         $array = [];

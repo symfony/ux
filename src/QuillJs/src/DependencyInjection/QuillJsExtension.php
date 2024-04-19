@@ -21,7 +21,7 @@ use Symfony\UX\QuillJs\Form\QuillType;
 
 class QuillJsExtension extends Extension implements PrependExtensionInterface
 {
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         // Register the QuillJS form theme if TwigBundle is available
         $bundles = $container->getParameter('kernel.bundles');
@@ -41,10 +41,10 @@ class QuillJsExtension extends Extension implements PrependExtensionInterface
         }
     }
 
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $container
-            ->setDefinition('form.ux-quill', new Definition(QuillType::class))
+            ->setDefinition('form.ux-quill-js', new Definition(QuillType::class))
             ->addTag('form.type')
             ->setPublic(false)
         ;
@@ -53,7 +53,7 @@ class QuillJsExtension extends Extension implements PrependExtensionInterface
 
         if (isset($bundles['EasyAdminBundle'])) {
             $container
-                ->setDefinition('form.ux-quill', new Definition(QuillAdminField::class))
+                ->setDefinition('form.ux-quill-js', new Definition(QuillAdminField::class))
                 ->addTag('form.type_admin')
                 ->setPublic(false)
             ;

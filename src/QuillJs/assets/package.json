@@ -1,7 +1,7 @@
 {
     "name": "@symfony/ux-quill",
     "description": "Symfony bundle to use Quill JS text editor",
-    "version": "0.0.5",
+    "version": "2.0.0",
     "license": "MIT",
     "main": "dist/controller.js",
     "symfony": {
@@ -16,6 +16,17 @@
                     "quill/dist/quill.bubble.css": false
                 }
             }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "file-loader": "^6.2.0",
+            "quill": "2.0.0",
+            "quill/dist/quill.snow.css": "2.0.0",
+            "quill/dist/quill.bubble.css": "2.0.0",
+            "axios": "^1.4.0",
+            "quill2-emoji": "^0.1.2",
+            "quill2-emoji/dist/style.css": "^0.1.2",
+            "quill-resize-image": "^1.0.4"
         }
     },
     "scripts": {
@@ -23,22 +34,28 @@
         "dev": "encore dev",
         "watch": "babel src --out-dir dist --source-maps --watch --extensions '.ts,.js'",
         "build": "babel src --extensions .ts -d dist",
-        "lint": "yarn run eslint src"
+        "lint": "yarn run eslint src",
+        "lint-fix": "yarn run eslint src --fix",
+        "build:types": "tsc --emitDeclarationOnly"
     },
     "devDependencies": {
         "@babel/cli": "^7.20.7",
         "@babel/core": "^7.20.12",
         "@babel/plugin-proposal-class-properties": "^7.18.6",
+        "@babel/plugin-transform-modules-commonjs": "^7.23.3",
         "@babel/preset-env": "^7.20.2",
         "@babel/preset-typescript": "^7.18.6",
         "@hotwired/stimulus": "^3.2.1",
         "@symfony/webpack-encore": "^4.0.0",
+        "@testing-library/dom": "^9.3.0",
+        "@types/jest": "^29.5.2",
         "@typescript-eslint/eslint-plugin": "^5.2.0",
         "@typescript-eslint/parser": "^5.2.0",
         "core-js": "^3.30.2",
         "eslint": "^8.1.0",
         "eslint-config-prettier": "^8.0.0",
         "eslint-plugin-jest": "^25.2.2",
+        "quill2-emoji": "^0.1.2",
         "ts-loader": "^9.0.0",
         "typescript": "^4.9.5",
         "webpack": "^5.74.0",
@@ -47,17 +64,19 @@
     },
     "peerDependencies": {
         "@hotwired/stimulus": "^3.0.0",
-        "slugify": "^1.6.5"
-    },
-    "dependencies": {
-        "@testing-library/dom": "^9.3.0",
-        "@types/jest": "^29.5.2",
         "axios": "^1.4.0",
         "file-loader": "^6.2.0",
-        "quill": "^1.3.7",
-        "quill-blot-formatter": "^1.0.5",
-        "quill-emoji": "^0.2.0",
-        "quill-image-uploader": "^1.3.0"
+        "quill": "2.0.0"
+    },
+    "dependencies": {
+        "axios": "^1.4.0",
+        "eventemitter3": "^5.0.1",
+        "file-loader": "^6.2.0",
+        "lodash-es": "^4.17.21",
+        "quill": "2.0.0",
+        "quill-delta": "^5.1.0",
+        "quill-resize-image": "^1.0.4",
+        "quill2-emoji": "^0.1.2"
     },
     "eslintConfig": {
         "root": true,

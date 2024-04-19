@@ -13,10 +13,10 @@ namespace Symfony\UX\QuillJs\DTO\Fields\InlineField;
 
 use Symfony\UX\QuillJs\DTO\Fields\Interfaces\QuillInlineFieldInterface;
 
-class ImageInlineField implements QuillInlineFieldInterface
+class CleanField implements QuillInlineFieldInterface
 {
     public function getOption(): string
     {
-        return 'image';
+        return 'clean';
     }
 }
