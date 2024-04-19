@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-04-19T08:14:36Z
+
+TBH I really don't like the actual colors, the track's gray is hardly visible due to the grey background, I will change it later this day to make it more visible:
+![image](https://github.com/symfony/ux/assets/2103975/f7dd3098-5877-44be-b83f-c3cb963d7702)
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-04-19T13:32:42Z
+
+Can you share a screenshot of dark mode?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-04-19T15:01:12Z
+
+I've changed the track background to `var(--bs-body-bg)`, the same that other inputs, which render:
+<img width="1437" alt="image" src="https://github.com/symfony/ux/assets/2103975/3e065934-7ceb-45cb-9061-4a1e0b4bfb12">
+<img width="1465" alt="image" src="https://github.com/symfony/ux/assets/2103975/7fcf7b96-3d37-4f19-a3d7-f277ab4db516">
