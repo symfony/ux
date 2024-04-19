@@ -18,3 +18,6 @@ $primary: #222 !default;
 $size-unit: calc(8px + 1.5625vw);
 
 $font-family-monospace: var(--font-family-code);
+
+$form-range-track-bg: var(--bs-body-bg);
+$form-range-thumb-bg: var(--bs-secondary-color);
