@@ -78,7 +78,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
             ->raw("\n")
             ->indent();
         if (method_exists(Environment::class, 'useYield')) {
-            $compiler->write('yield from $preRendered; ');
+            $compiler->write('yield $preRendered; ');
         } else {
             $compiler->write('echo $preRendered; ');
         }
