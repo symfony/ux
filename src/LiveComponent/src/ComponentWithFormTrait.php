@@ -137,16 +137,16 @@ trait ComponentWithFormTrait
     private function resetForm(): void
     {
         // prevent the system from trying to submit this reset form
-        $this->formValues = $this->extractFormValues($this->getFormView());
         $this->shouldAutoSubmitForm = false;
         $this->form = null;
         $this->formView = null;
+        $this->formValues = $this->extractFormValues($this->getFormView());
     }
 
     private function submitForm(bool $validateAll = true): void
     {
         if (null !== $this->formView) {
-            throw new \LogicException('The submitForm() method is being called, but the FormView has already been built. Are you calling $this->getForm() - which creates the FormView - before submitting the form? Or did you forget to call $this->resetForm() to reset the form state to support bulk requests?');
+            throw new \LogicException('The submitForm() method is being called, but the FormView has already been built. Are you calling $this->getForm() - which creates the FormView - before submitting the form?');
         }
 
         $form = $this->getForm();
