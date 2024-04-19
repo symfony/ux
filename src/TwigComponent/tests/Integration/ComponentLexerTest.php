@@ -32,7 +32,6 @@ class ComponentLexerTest extends KernelTestCase
     public function testComponentSyntaxSelfCloseTags(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('tags/self_close_tag.html.twig');
-
         $this->assertStringContainsString('propA: 1', $output);
         $this->assertStringContainsString('propB: hello', $output);
     }
