@@ -2127,7 +2127,7 @@
   resolved "https://registry.npmjs.org/@hotwired/stimulus/-/stimulus-3.2.1.tgz"
   integrity sha512-HGlzDcf9vv/EQrMJ5ZG6VWNs8Z/xMN+1o2OhV1gKiSG6CqZt5MCBB1gRg5ILiN3U0jEAxuDTNPRfBcnZBDmupQ==
 
-"@hotwired/turbo@^7.1.0 || ^8.0":
+"@hotwired/turbo@^8.0":
   version "8.0.4"
   resolved "https://registry.yarnpkg.com/@hotwired/turbo/-/turbo-8.0.4.tgz#5c5361c06a37cdf10dcba4223f1afd0ca1c75091"
   integrity sha512-mlZEFUZrJnpfj+g/XeCWWuokvQyN68WvM78JM+0jfSFc98wegm259vCbC1zSllcspRwbgXK31ibehCy5PA78/Q==
@@ -8613,7 +8613,7 @@ svelte-hmr@^0.15.3:
   resolved "https://registry.npmjs.org/svelte-hmr/-/svelte-hmr-0.15.3.tgz"
   integrity sha512-41snaPswvSf8TJUhlkoJBekRrABDXDMdpNpT2tfHIv4JuhgvHqLMhEPGtaQn0BmbNSTkuz2Ed20DF2eHw0SmBQ==
 
-svelte@^4.0:
+"svelte@^3.0 || ^4.0":
   version "4.2.15"
   resolved "https://registry.yarnpkg.com/svelte/-/svelte-4.2.15.tgz#69f5ab9730c1d80109db2ee09427063dcf6b3512"
   integrity sha512-j9KJSccHgLeRERPlhMKrCXpk2TqL2m5Z+k+OBTQhZOhIdCCd3WfqV+ylPWeipEwq17P/ekiSFWwrVQv93i3bsg==
