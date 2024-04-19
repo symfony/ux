@@ -1972,15 +1972,10 @@ class Component {
     }
     action(name, args = {}, debounce = false) {
         const promise = this.nextRequestPromise;
-        const existingActionIndex = this.pendingActions.findIndex(action => action.name === name);
-        if (existingActionIndex !== -1) {
-            this.pendingActions[existingActionIndex].args = args;
-        } else {
-            this.pendingActions.push({
-                name,
-                args
-            });
-        }
+        this.pendingActions.push({
+            name,
+            args
+        });
         this.debouncedStartRequest(debounce);
         return promise;
     }
