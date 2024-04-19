@@ -20,10 +20,13 @@ foreach ($packages as $package) {
     file_put_contents($package.'/.github/PULL_REQUEST_TEMPLATE.md', <<<EOTXT
         Please do not submit any Pull Requests here. They will be closed.
         ---
+
         Please submit your PR here instead:
         {$mainRepo}
+
         This repository is what we call a "subtree split": a read-only subset of that main repository.
         We're looking forward to your PR there!
+
         EOTXT
     );
 
@@ -47,8 +50,10 @@ foreach ($packages as $package) {
                       issue_number: context.issue.number,
                       body: `
                   Thanks for your Pull Request! We love contributions.
+
                   However, you should instead open your PR on the main repository:
                   {$mainRepo}
+
                   This repository is what we call a "subtree split": a read-only subset of that main repository.
                   We're looking forward to your PR there!
                   `
@@ -60,6 +65,7 @@ foreach ($packages as $package) {
                       state: "closed"
                     });
                   }
+
         EOTXT
     );
 }

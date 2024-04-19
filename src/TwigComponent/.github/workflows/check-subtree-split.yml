@@ -16,8 +16,10 @@ jobs:
               issue_number: context.issue.number,
               body: `
           Thanks for your Pull Request! We love contributions.
+
           However, you should instead open your PR on the main repository:
           https://github.com/symfony/ux
+
           This repository is what we call a "subtree split": a read-only subset of that main repository.
           We're looking forward to your PR there!
           `
