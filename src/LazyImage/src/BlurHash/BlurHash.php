@@ -13,6 +13,7 @@ namespace Symfony\UX\LazyImage\BlurHash;
 
 use Intervention\Image\ImageManager;
 use kornrunner\Blurhash\Blurhash as BlurhashEncoder;
+use Symfony\Contracts\Cache\CacheInterface;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -23,6 +24,7 @@ class BlurHash implements BlurHashInterface
 {
     public function __construct(
         private ?ImageManager $imageManager = null,
+        private ?CacheInterface $cache = null,
     ) {
     }
 
@@ -60,6 +62,18 @@ class BlurHash implements BlurHashInterface
             throw new \LogicException('To use the Blurhash feature, install kornrunner/blurhash.');
         }
 
+        if ($this->cache) {
+            return $this->cache->get(
+                'blurhash.'.hash('xxh3', $filename.$encodingWidth.$encodingHeight),
+                fn () => $this->doEncode($filename, $encodingWidth, $encodingHeight)
+            );
+        }
+
+        return $this->doEncode($filename, $encodingWidth, $encodingHeight);
+    }
+
+    private function doEncode(string $filename, int $encodingWidth = 75, int $encodingHeight = 75): string
+    {
         // Resize image to increase encoding performance
         $image = $this->imageManager->make(file_get_contents($filename));
         $image->resize($encodingWidth, $encodingHeight, static function ($constraint) {
