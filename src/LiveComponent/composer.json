@@ -43,7 +43,7 @@
         "symfony/form": "^5.4|^6.0|^7.0",
         "symfony/framework-bundle": "^5.4|^6.0|^7.0",
         "symfony/options-resolver": "^5.4|^6.0|^7.0",
-        "symfony/phpunit-bridge": "^6.0|^7.0",
+        "symfony/phpunit-bridge": "^6.1|^7.0",
         "symfony/property-info": "^5.4|^6.0|^7.0",
         "symfony/security-bundle": "^5.4|^6.0|^7.0",
         "symfony/serializer": "^5.4|^6.0|^7.0",
