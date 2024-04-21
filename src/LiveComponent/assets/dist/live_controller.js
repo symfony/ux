@@ -1975,7 +1975,8 @@ class Component {
         const existingActionIndex = this.pendingActions.findIndex(action => action.name === name);
         if (existingActionIndex !== -1) {
             this.pendingActions[existingActionIndex].args = args;
-        } else {
+        }
+        else {
             this.pendingActions.push({
                 name,
                 args

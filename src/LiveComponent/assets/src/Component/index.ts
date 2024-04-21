@@ -163,10 +163,15 @@ export default class Component {
 
     action(name: string, args: any = {}, debounce: number|boolean = false): Promise<BackendResponse> {
         const promise = this.nextRequestPromise;
-        this.pendingActions.push({
-            name,
-            args
-        });
+        const existingActionIndex = this.pendingActions.findIndex(action => action.name === name);
+        if (existingActionIndex !== -1) {
+            this.pendingActions[existingActionIndex].args = args;
+        } else {
+            this.pendingActions.push({
+                name,
+                args
+            });
+        }
 
         this.debouncedStartRequest(debounce);
 
