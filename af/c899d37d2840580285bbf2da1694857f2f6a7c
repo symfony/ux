@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-22T09:20:07Z
+
+> Not sure how to fix the failing test.
+
+Related to the deprecation / session, no ?
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-04-22T14:03:05Z
+
+> Related to the deprecation / session, no ?
+
+I don't think so, it's a timeout error in `Symfony\UX\Turbo\Tests\BroadcastTest::testBroadcastWithProxy`
