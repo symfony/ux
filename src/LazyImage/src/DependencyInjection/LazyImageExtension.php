@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\LazyImage\DependencyInjection;
 
+use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
 use Symfony\Component\AssetMapper\AssetMapperInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
@@ -38,6 +39,7 @@ class LazyImageExtension extends Extension implements PrependExtensionInterface
         if (class_exists(ImageManager::class)) {
             $container
                 ->setDefinition('lazy_image.image_manager', new Definition(ImageManager::class))
+                ->addArgument(BlurHash::intervention3() ? Driver::class : [])
                 ->setPublic(false)
             ;
         }
@@ -45,7 +47,6 @@ class LazyImageExtension extends Extension implements PrependExtensionInterface
         $container
             ->setDefinition('lazy_image.blur_hash', new Definition(BlurHash::class))
             ->setArgument(0, new Reference('lazy_image.image_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE))
-            ->setPublic(false)
         ;
 
         if (isset($config['cache'])) {

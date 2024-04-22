@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.17.0
+
+-   Add support for `intervention/image` 3.0+
+
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"
