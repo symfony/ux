@@ -19,6 +19,9 @@ use Symfony\Component\VarExporter\LazyObjectInterface;
  */
 final class ClassUtil
 {
+    /**
+     * @return class-string
+     */
     public static function getEntityClass(object $entity): string
     {
         if ($entity instanceof LazyObjectInterface) {

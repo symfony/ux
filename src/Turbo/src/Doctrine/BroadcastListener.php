@@ -130,13 +130,13 @@ final class BroadcastListener implements ResetInterface
 
         if (!isset($this->broadcastedClasses[$class])) {
             $this->broadcastedClasses[$class] = [];
-            $r = null;
+            $r = new \ReflectionClass($class);
 
-            if ($options = ($r = new \ReflectionClass($class))->getAttributes(Broadcast::class)) {
+            if ($options = $r->getAttributes(Broadcast::class)) {
                 foreach ($options as $option) {
                     $this->broadcastedClasses[$class][] = $option->newInstance()->options;
                 }
-            } elseif ($this->annotationReader && $options = $this->annotationReader->getClassAnnotations($r ?? new \ReflectionClass($class))) {
+            } elseif ($this->annotationReader && $options = $this->annotationReader->getClassAnnotations($r)) {
                 foreach ($options as $option) {
                     if ($option instanceof Broadcast) {
                         $this->broadcastedClasses[$class][] = $option->options;
