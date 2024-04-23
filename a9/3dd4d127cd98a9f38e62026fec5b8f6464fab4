@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-04-22T14:09:55Z
+
+Admittedly, this was mostly fixed via trial and error as I'm not too familiar with the new component. The tests pass!
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-04-22T18:55:51Z
+
+I've opted to ignore these deprecations until a time I better understand the `symfony/type-info` component.
