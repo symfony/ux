@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\LazyImage\Twig;
 
-use Symfony\UX\LazyImage\BlurHash\BlurHashInterface;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -22,28 +21,9 @@ use Twig\TwigFunction;
  */
 class BlurHashExtension extends AbstractExtension
 {
-    private $blurHash;
-
-    public function __construct(BlurHashInterface $blurHash)
+    public function getFunctions(): iterable
     {
-        $this->blurHash = $blurHash;
-    }
-
-    public function getFunctions(): array
-    {
-        return [
-            new TwigFunction('data_uri_thumbnail', [$this, 'createDataUriThumbnail']),
-            new TwigFunction('blur_hash', [$this, 'blurHash']),
-        ];
-    }
-
-    public function createDataUriThumbnail(string $filename, int $width, int $height, int $encodingWidth = 75, int $encodingHeight = 75): string
-    {
-        return $this->blurHash->createDataUriThumbnail($filename, $width, $height, $encodingWidth, $encodingHeight);
-    }
-
-    public function blurHash(string $filename, int $encodingWidth = 75, int $encodingHeight = 75): string
-    {
-        return $this->blurHash->encode($filename, $encodingWidth, $encodingHeight);
+        yield new TwigFunction('data_uri_thumbnail', [BlurHashRuntime::class, 'createDataUriThumbnail']);
+        yield new TwigFunction('blur_hash', [BlurHashRuntime::class, 'blurHash']);
     }
 }

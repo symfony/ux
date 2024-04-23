@@ -23,6 +23,7 @@ use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\UX\LazyImage\BlurHash\BlurHash;
 use Symfony\UX\LazyImage\BlurHash\BlurHashInterface;
 use Symfony\UX\LazyImage\Twig\BlurHashExtension;
+use Symfony\UX\LazyImage\Twig\BlurHashRuntime;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -40,7 +41,6 @@ class LazyImageExtension extends Extension implements PrependExtensionInterface
             $container
                 ->setDefinition('lazy_image.image_manager', new Definition(ImageManager::class))
                 ->addArgument(BlurHash::intervention3() ? Driver::class : [])
-                ->setPublic(false)
             ;
         }
 
@@ -60,9 +60,13 @@ class LazyImageExtension extends Extension implements PrependExtensionInterface
 
         $container
             ->setDefinition('twig.extension.blur_hash', new Definition(BlurHashExtension::class))
-            ->addArgument(new Reference('lazy_image.blur_hash'))
             ->addTag('twig.extension')
-            ->setPublic(false)
+        ;
+
+        $container
+            ->setDefinition('twig.runtime.blur_hash', new Definition(BlurHashRuntime::class))
+            ->addArgument(new Reference('lazy_image.blur_hash'))
+            ->addTag('twig.runtime')
         ;
     }
 
