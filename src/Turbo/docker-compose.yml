@@ -1,0 +1,14 @@
+services:
+###> symfony/mercure-bundle ###
+  mercure:
+    image: dunglas/mercure
+    ports:
+      - 3000:3000
+    environment:
+      SERVER_NAME: ':3000'
+      MERCURE_PUBLISHER_JWT_KEY: '!ChangeMe!'
+      MERCURE_SUBSCRIBER_JWT_KEY: '!ChangeMe!'
+      MERCURE_EXTRA_DIRECTIVES: |
+        anonymous
+        cors_origins *
+###< symfony/mercure-bundle ###

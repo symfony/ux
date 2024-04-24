@@ -55,7 +55,8 @@
         "symfony/twig-bundle": "^5.4|^6.0|^7.0",
         "symfony/web-profiler-bundle": "^5.4|^6.0|^7.0",
         "symfony/webpack-encore-bundle": "^2.1.1",
-        "symfony/expression-language": "^5.4|^6.0|^7.0"
+        "symfony/expression-language": "^5.4|^6.0|^7.0",
+        "dbrekelmans/bdi": "dev-main"
     },
     "conflict": {
         "symfony/flex": "<1.13"
