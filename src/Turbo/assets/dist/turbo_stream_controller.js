@@ -16,7 +16,7 @@ class default_1 extends Controller {
     }
     connect() {
         if (this.url) {
-            this.es = new EventSource(this.url);
+            this.es = new EventSource(this.url, this.eventSourceOptionsValue);
             connectStreamSource(this.es);
         }
     }
@@ -30,6 +30,7 @@ class default_1 extends Controller {
 default_1.values = {
     topic: String,
     hub: String,
+    eventSourceOptions: Object,
 };
 
 export { default_1 as default };

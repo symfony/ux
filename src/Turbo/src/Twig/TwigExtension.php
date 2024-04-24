@@ -38,7 +38,7 @@ final class TwigExtension extends AbstractExtension
     /**
      * @param object|string $topic
      */
-    public function turboStreamListen(Environment $env, $topic, ?string $transport = null): string
+    public function turboStreamListen(Environment $env, $topic, ?string $transport = null, array $eventSourceOptions = []): string
     {
         $transport = $transport ?? $this->default;
 
@@ -46,6 +46,6 @@ final class TwigExtension extends AbstractExtension
             throw new \InvalidArgumentException(sprintf('The Turbo stream transport "%s" doesn\'t exist.', $transport));
         }
 
-        return $this->turboStreamListenRenderers->get($transport)->renderTurboStreamListen($env, $topic);
+        return $this->turboStreamListenRenderers->get($transport)->renderTurboStreamListen($env, $topic, $eventSourceOptions);
     }
 }
