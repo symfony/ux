@@ -38,6 +38,10 @@ final class BaseEntityAutocompleteType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $choiceLoader = static function (Options $options, $loader) {
+            if (null === $loader) {
+                return null;
+            }
+            
             return new ExtraLazyChoiceLoader($loader);
         };
 
