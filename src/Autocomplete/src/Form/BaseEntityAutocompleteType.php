@@ -41,7 +41,7 @@ final class BaseEntityAutocompleteType extends AbstractType
             if (null === $loader) {
                 return null;
             }
-            
+
             return new ExtraLazyChoiceLoader($loader);
         };
 
