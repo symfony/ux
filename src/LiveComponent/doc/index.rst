@@ -905,6 +905,11 @@ component system from Stimulus:
         }
     }
 
+.. note::
+
+    The ``render:started`` and ``render:finished`` events are only dispatched
+    when the component is **re**-rendered (via an action or a model change).
+
 The following hooks are available (along with the arguments that are passed):
 
 * ``connect`` args ``(component: Component)``
