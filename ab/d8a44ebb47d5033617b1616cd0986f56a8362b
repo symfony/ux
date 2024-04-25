@@ -1,0 +1,281 @@
+---------------------------------------------------------------------------
+
+by jannes-io at 2024-04-08T12:26:49Z
+
+I'll fix code style if given green light by maintainers.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-08T17:56:28Z
+
+I need to look in depth but this implementation seems  at first a bit overkill to me...  and it changes information in the request (not sure if we want that).
+
+I'll be back to you in a day or two :)
+
+---------------------------------------------------------------------------
+
+by jannes-io at 2024-04-08T18:45:39Z
+
+> I need to look in depth but this implementation seems at first a bit overkill to me...
+
+Absolutely 100% agree, like I also said on the issue:
+
+> Imho it's a bit convoluted since we need to keep actual empty strings into account and can't just blindly convert.
+
+> it changes information in the request
+
+yeah I looked at a couple of options but if we want to stay within LiveComponent and not modify Symfony’s parameter converter or the way twig inserts null into the dom this was the only way afaik :/ if you know any other places we could hook into to change the values that’d be great.
+
+Thanks for looking into it and lmk if you got any suggestions
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-08T20:15:42Z
+
+Pure curiosity, in your original case, how does it behave in the following cases:
+
+1) you explicitely set null as default value
+
+```php
+    #[LiveAction]
+    public function action(#[LiveArg] ?int $id = null): void
+```
+
+2) You dont send the argument
+
+```twig
+    {% if parentId %}
+    data-live-parent-id-param="{{ parentId }}"
+    {% endif %}
+```
+
+3) Bonus (even if i'm 99% sure this wont change a thing) - You echo nothing when parentId is null
+
+```twig
+    data-live-parent-id-param="{{ parentId ? parentId }}"
+```
+
+I have no hope it changes radically things, but some may be leads to temporary solutions :)
+
+(parenthesis: you can write `{{ parentId ?? 'null' }}` instead of your ternary expression)
+
+---------------------------------------------------------------------------
+
+by jannes-io at 2024-04-08T22:38:52Z
+
+> Pure curiosity, in your original case, how does it behave in the following cases:
+>
+> 1. you explicitely set null as default value
+>
+> ```
+>     #[LiveAction]
+>     public function action(#[LiveArg] ?int $id = null): void
+> ```
+>
+> 2. You dont send the argument
+>
+> ```
+>     {% if parentId %}
+>     data-live-parent-id-param="{{ parentId }}"
+>     {% endif %}
+> ```
+
+This works, even without setting a default argument I think? Although it doesn’t look very elegant :/
+
+> 3. Bonus (even if i'm 99% sure this wont change a thing) - You echo nothing when parentId is null
+>
+> ```
+>     data-live-parent-id-param="{{ parentId ? parentId }}"
+> ```
+>
+> I have no hope it changes radically things, but some may be leads to temporary solutions :)
+
+I’m not sure this is valid twig syntax? 😅
+
+> (parenthesis: you can write `{{ parentId ?? 'null' }}` instead of your ternary expression)
+
+this is actually what I’ve settled at for now.
+
+I suppose the larger issue at hand is the fact that we lose **all** type information due to the way parameters are done now using data attributes. We have no way of figuring out what went into the param and thus need complex logic to “guess” 1. what the original type was and 2. what the LiveAction expects it to be.
+
+Symfony’s controller arguments don’t have that issue because the way routing works, you can’t really have a url param with empty string, that’s the same as leaving it out altogether. In which case the router won’t match unless a default value is provided (either route default or PHP default). But here in LiveComponent it is possible to have an empty string as a value to a parameter that may not expect strings.
+
+We also need to keep in mind that Twig may not be the only source for LiveComponent, they can also be created from JS or just plain html.
+
+Side question; how did the old LiveArgs handle this? I can’t remember it being an issue in the pre-stable “parsed” solution..
+
+So to tl;dr, controller arguments takes care of most type coercions, except for empty string when string is not in the type, because this is a case they don’t need to deal with in routing.
+
+I suppose the question Is if this is something we want to tackle here?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-08T22:53:55Z
+
+> I’m not sure this is valid twig syntax? 😅
+
+I'm pretty sure it is ;)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-08T22:57:56Z
+
+> you can’t really have a url param with empty string, that’s the same as leaving it out altogether.
+
+That is an interesting point. So (imagine no BC here for simplicity) what you say is: we could purely filter arguments for empty values (null / empty string) ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-08T23:00:59Z
+
+> you can’t really have a url param with empty string
+
+No, but the same problem applies to query string parameters in controller (that is pretty much the same thing here, as there is no path parameters in LiveActions
+
+---------------------------------------------------------------------------
+
+by jannes-io at 2024-04-08T23:36:25Z
+
+> > you can’t really have a url param with empty string, that’s the same as leaving it out altogether.
+>
+> That is an interesting point. So (imagine no BC here for simplicity) what you say is: we could purely filter arguments for empty values (null / empty string) ?
+
+Yes, then if the LiveArg expects a string, the LiveArg can have a default empty string value (string $val = “”), if it’s nullable, regardless of the type, it can have a default null. That could work.
+
+> No, but the same problem applies to query string parameters in controller
+
+That is correct, but query parameters are accessed through the request object, with a second param to set a default value. And I think their value is always string unless a different default value is given or they’re modified by an event subscriber along the way (like in this PR). So it’s always up to the user to cast/parse/… it into the type they need and do error handling accordingly.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-08T23:42:50Z
+
+> Yes, then if the LiveArg expects a string, the LiveArg can have a default empty string value (string $val = “”), if it’s nullable, regardless of the type, it can have a default null. That could work.
+
+So (always in this "if" scenario) the only difficulty would be to handle BC with empty strings for arguments with no default values, right ?
+
+```php
+#[LiveAction]
+public function foo(#[LiveArg] string $bar)
+```
+
+Let's sleep on it (at least, i'm going to 😅 ) and see tomorrow how this can be done :)
+
+>  That is correct [...]
+
+Yep, you're right !
+
+---------------------------------------------------------------------------
+
+by jannes-io at 2024-04-08T23:57:17Z
+
+> Let's sleep on it
+
+yep same 😅. I got some ideas I’ll try out tomorrow to simplify the implementation. I really like the result that this PR brings, but I’m quite unhappy with the implementation itself. As you stated, it’s overkill and perhaps just with simplifying everything we can find something that works without a BC break.
+
+---------------------------------------------------------------------------
+
+by jannes-io at 2024-04-09T08:14:05Z
+
+Alright, was able to simplify a few things, and I don't think I dislike it as much anymore.
+
+I've cleaned up the loop in the subscriber, and now LiveArg actually does what it advertises it does, gathering the live arguments. instead of only returning the argument names.
+
+Lmk what you think.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-09T20:14:28Z
+
+I'll look tomorrow (too many things right now) but this seems really clean!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-10T17:03:16Z
+
+Just realizing...  there may be a simpler solution.
+
+As LiveActions are controller methods, would an ArgumentResolver/ValueResolver be a better place to handle this conversion ?
+
+Type would be available in metadata, avoiding the reflection things in LiveArg class...
+
+We would just have to check the nullable from LiveAction arguments (without even looking at LiveArgs)..
+
+WDYT ?
+
+I can look this week-end if you have no time until then (or are fed up with this PR haha)
+
+---------------------------------------------------------------------------
+
+by jannes-io at 2024-04-11T15:49:13Z
+
+@smnandre
+> As LiveActions are controller methods, would an ArgumentResolver/ValueResolver be a better place to handle this conversion ?
+
+@WebMamba
+> LiveComponent are Symfony controller, so you should easily get the value and the type of your argument. Then if you don't have a value and the type is nullable you set it to null. Tell me if that helps.
+
+Yeah this is actually what I thought LiveArgs was already using under the hood for the custom name conversion before I started investigating this issue. But since the `liveArgs` function on `LiveArg` already existed, and it already used Reflection and loops over all arguments, there'd be little overhead to add this typecheck.
+
+I'd have to play around a bit with the value/argument resolvers on scalar types, and what metadata is provided to see if this could help us in this case, and make sure they're only active on live actions, and not globally (it could interfere with userland controllers too?)
+
+> I can look this week-end if you have no time until then (or are fed up with this PR haha)
+
+I'd love to continue working on it, but if you beat me to it then it's fair game 😄
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-04-11T21:22:12Z
+
+> I'd love to continue working on it
+
+So keep working on it, there is no hurry. This is good to meet new people bringing new ideas 😁
+
+---------------------------------------------------------------------------
+
+by jannes-io at 2024-04-12T09:23:40Z
+
+@WebMamba , @smnandre ,
+
+Moved the argument resolving to an `ArgumentResolver` instead the kernel events subscriber.
+
+I personally liked the use of Reflection more since it's more exact. In the value resolvers the argument type is just a string, the entire type annotation, so we can't check each type individually.
+Which means that there can be false positives now if the type is something like `null|int|Mystring`. It's a pretty specific edge-case, and it shouldn't be a BC issue since this doesn't work anyway today.
+A solution could be to explode on `|` and `&` and add more loops and complexity for an extremely rare edge-case, it's a trade-off I could implement, but don't see the need for it.
+
+lmk what you guys think.
+
+Not sure how to handle the deprecation. In Symfony < 6.2 we require `ArgumentValueResolverInterface`, >= 6.2 we need `ValueResolverInterface`. So currently a lot of tests fail on PHP 8.1 with Symfony < 6.2. Would like to have some pointers on how that's handled in other places.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-13T18:05:18Z
+
+Why not take inspiration from MapEntity, and make LiveArg extends ValueResolver ?
+
+---------------------------------------------------------------------------
+
+by jannes-io at 2024-04-15T07:50:40Z
+
+@smnandre Updated but it's not immediately obvious to me what the added benefit is except for the disabled option and it's still got the issue with different Symfony versions.
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-04-15T12:37:54Z
+
+> and it's still got the issue with different Symfony versions.
+
+Here's an option to support all versions of Symfony:
+
+- https://github.com/zenstruck/filesystem/blob/b344aa80c4af020aa3901edb49a40ebb64f348a8/src/Filesystem/Symfony/HttpKernel/PendingFileValueResolver.php
+- https://github.com/zenstruck/filesystem/blob/b344aa80c4af020aa3901edb49a40ebb64f348a8/src/Filesystem/Symfony/HttpKernel/PendingFileValueResolverTrait.php
+
+---------------------------------------------------------------------------
+
+by jannes-io at 2024-04-15T15:29:28Z
+
+@smnandre , @WebMamba ,
+
+Alright, added the `ValueResolver` like in `MapEntity` and added BC for Symfony < 6.2. CS passes and all tests pass. Since this resolver is used in like 90% of tests I didn't write an explicit test for it, but I did add the "empty string passed to nullable non string" case to existing tests.
+
+It's been a pleasure and I learnt some new things, if there's some minor changes you guys want let me know, but I'm not going to keep on re-implementing the same fix in different ways, I suggest we go with this and do a refactor/improvements later down the line when Symfony 6.2 isn't supported anymore and we can get rid of the `<class/property/interface>_exists` checks.
