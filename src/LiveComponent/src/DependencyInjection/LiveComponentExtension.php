@@ -47,6 +47,7 @@ use Symfony\UX\LiveComponent\Util\LiveComponentStack;
 use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
 use Symfony\UX\LiveComponent\Util\QueryStringPropsExtractor;
 use Symfony\UX\LiveComponent\Util\TwigAttributeHelperFactory;
+use Symfony\UX\LiveComponent\ValueResolver\LiveArgValueResolver;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 
@@ -261,6 +262,9 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 '%kernel.secret%',
             ])
             ->addTag('kernel.cache_warmer');
+
+        $container->register(LiveArgValueResolver::class, LiveArgValueResolver::class)
+            ->addTag('controller.argument_value_resolver', ['priority' => 0]);
     }
 
     private function isAssetMapperAvailable(ContainerBuilder $container): bool
