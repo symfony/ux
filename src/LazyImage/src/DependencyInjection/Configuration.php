@@ -28,6 +28,7 @@ final class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('cache')->end()
+                ->scalarNode('fetch_image_content')->defaultNull()->end()
             ->end()
         ;
 

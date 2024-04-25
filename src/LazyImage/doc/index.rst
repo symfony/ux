@@ -99,9 +99,37 @@ blurred, data-uri thumbnail of the image:
 
 The ``data_uri_thumbnail`` function receives 3 arguments:
 
--  the server path to the image to generate the data-uri thumbnail for ;
+-  the path to the image to generate the data-uri thumbnail for ;
 -  the width of the BlurHash to generate
 -  the height of the BlurHash to generate
+
+Customizing images fetching
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, ``data_uri_thumbnail`` fetches images using the `file_get_contents`_ function.
+It works well for local files, but you may want to customize it to fetch images from a remote server, `Flysystem`_, etc.
+
+To do so you can create a invokable class, the first argument is the filename to fetch:
+
+.. ::
+
+    namespace App\BlurHash;
+
+    class FetchImageContent
+    {
+        public function __invoke(string $filename): string
+        {
+            // Your custom implementation here to fetch the image content
+        }
+    }
+
+Then you must configure the service in your Symfony configuration:
+
+.. code-block:: yaml
+
+    # config/packages/lazy_image.yaml
+    lazy_image:
+        fetch_image_content: 'App\BlurHash\FetchImageContent'
 
 Performance considerations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -190,3 +218,5 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`BlurHash implementation`: https://blurha.sh
 .. _`StimulusBundle`: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
+.. _`file_get_contents`: https://www.php.net/manual/en/function.file-get-contents.php
+.. _`Flysystem`: https://flysystem.thephpleague.com

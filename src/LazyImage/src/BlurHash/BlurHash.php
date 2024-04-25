@@ -25,10 +25,17 @@ use Symfony\Contracts\Cache\CacheInterface;
  */
 class BlurHash implements BlurHashInterface
 {
+    private \Closure $fetchImageContent;
+
+    /**
+     * @param (callable(string): string)|null $fetchImageContent
+     */
     public function __construct(
         private ?ImageManager $imageManager = null,
         private ?CacheInterface $cache = null,
+        ?callable $fetchImageContent = null,
     ) {
+        $this->fetchImageContent = $fetchImageContent ? $fetchImageContent(...) : file_get_contents(...);
     }
 
     public static function intervention3(): bool
@@ -74,8 +81,10 @@ class BlurHash implements BlurHashInterface
 
     private function generatePixels(string $filename, int $encodingWidth, int $encodingHeight): array
     {
+        $imageContent = ($this->fetchImageContent)($filename);
+
         if (self::intervention3()) {
-            $image = $this->imageManager->read($filename)->scale($encodingWidth, $encodingHeight);
+            $image = $this->imageManager->read($imageContent)->scale($encodingWidth, $encodingHeight);
             $width = $image->width();
             $height = $image->height();
             $pixels = [];
@@ -93,7 +102,7 @@ class BlurHash implements BlurHashInterface
         }
 
         // Resize image to increase encoding performance
-        $image = $this->imageManager->make(file_get_contents($filename));
+        $image = $this->imageManager->make($imageContent);
         $image->resize($encodingWidth, $encodingHeight, static function ($constraint) {
             $constraint->aspectRatio();
             $constraint->upsize();

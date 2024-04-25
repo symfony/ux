@@ -15,9 +15,11 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Cache\Adapter\ArrayAdapter;
 use Symfony\Component\Config\Loader\LoaderInterface;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\UX\LazyImage\BlurHash\BlurHash;
 use Symfony\UX\LazyImage\BlurHash\BlurHashInterface;
+use Symfony\UX\LazyImage\Tests\Fixtures\BlurHash\LoggedFetchImageContent;
 use Symfony\UX\LazyImage\Tests\Kernel\TwigAppKernel;
 
 /**
@@ -40,6 +42,45 @@ class BlurHashTest extends TestCase
             BlurHash::intervention3() ? 'LnMtaO9FD%IU%MRjayRj~qIUM{of' : 'L54ec*~q_3?bofoffQWB9F9FD%IU',
             $blurHash->encode(__DIR__.'/../Fixtures/logo.png')
         );
+    }
+
+    public function testWithCustomGetImageContent(): void
+    {
+        $kernel = new class('test', true) extends TwigAppKernel {
+            public function registerContainerConfiguration(LoaderInterface $loader)
+            {
+                parent::registerContainerConfiguration($loader);
+
+                $loader->load(static function (ContainerBuilder $container) {
+                    $container->loadFromExtension('lazy_image', [
+                        'fetch_image_content' => 'logged_get_image_content',
+                    ]);
+
+                    $container
+                        ->setDefinition('logged_get_image_content', new Definition(LoggedFetchImageContent::class))
+                        ->setPublic('true')
+                    ;
+                });
+            }
+        };
+
+        $kernel->boot();
+        $container = $kernel->getContainer()->get('test.service_container');
+
+        /** @var BlurHashInterface $blurHash */
+        $blurHash = $container->get('test.lazy_image.blur_hash');
+
+        $loggedGetImageContent = $container->get('logged_get_image_content');
+        $this->assertInstanceOf(LoggedFetchImageContent::class, $loggedGetImageContent);
+        $this->assertEmpty($loggedGetImageContent->logs);
+
+        $this->assertSame(
+            BlurHash::intervention3() ? 'LnMtaO9FD%IU%MRjayRj~qIUM{of' : 'L54ec*~q_3?bofoffQWB9F9FD%IU',
+            $blurHash->encode(__DIR__.'/../Fixtures/logo.png')
+        );
+
+        $this->assertCount(1, $loggedGetImageContent->logs);
+        $this->assertSame(__DIR__.'/../Fixtures/logo.png', $loggedGetImageContent->logs[0]);
     }
 
     public function testEnsureCacheIsNotUsedWhenNotConfigured()
