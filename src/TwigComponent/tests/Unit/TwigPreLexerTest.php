@@ -366,5 +366,14 @@ final class TwigPreLexerTest extends TestCase
             '<twig:foobar bar="baz" {{ ...attr }}>content</twig:foobar>',
             '{% component \'foobar\' with { bar: \'baz\', ...attr } %}{% block content %}content{% endblock %}{% endcomponent %}',
         ];
+        yield 'ignore_printed_component' => [
+            '{{ "<twig:Alert/>" }} <twig:Alert/>',
+            '<twig:Alert/> {{ component(\'Alert\') }}',
+        ];
+
+        yield 'file_ended_with_printed_component' => [
+            '{{ "<twig:Alert/>" }}',
+            '<twig:Alert/>',
+        ];
     }
 }

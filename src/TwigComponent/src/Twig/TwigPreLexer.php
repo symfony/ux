@@ -70,6 +70,16 @@ class TwigPreLexer
                 }
             }
 
+            // ignore content when printed as string, see #1021
+            if ($this->consume('{{ "')) {
+                $output .= $this->consumeUntil('" }}');
+                $this->consume('" }}');
+
+                if ($this->position === $this->length) {
+                    break;
+                }
+            }
+
             if ($this->consume('{% embed')) {
                 $inTwigEmbed = true;
                 $output .= '{% embed';
