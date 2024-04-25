@@ -11,21 +11,24 @@
 
 namespace Symfony\UX\TwigComponent\Twig;
 
+/**
+ * @internal
+ */
 final class TemplateNameParser
 {
     /**
-     * Copied from Twig\Loader\FilesystemLoader, and adjusted to needs for this class (no namespace returned).
+     * Copied from Twig\Loader\FilesystemLoader, and adjusted to needs for this class.
      *
      * @see \Twig\Loader\FilesystemLoader::parseName
      */
-    public static function parse(string $name): mixed
+    public static function parse(string $name): string
     {
-        if (isset($name[0]) && '@' == $name[0]) {
-            if (false === $pos = strpos($name, '/')) {
+        if (str_starts_with($name, '@')) {
+            if (!str_contains($name, '/')) {
                 throw new \LogicException(sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
             }
 
-            return substr($name, $pos + 1);
+            return $name;
         }
 
         return $name;
