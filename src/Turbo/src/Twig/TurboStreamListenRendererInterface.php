@@ -21,7 +21,7 @@ use Twig\Environment;
 interface TurboStreamListenRendererInterface
 {
     /**
-     * @param string|object $topic
+     * @param string|object       $topic
      * @param array<string,mixed> $eventSourceOptions
      */
     public function renderTurboStreamListen(Environment $env, $topic, array $eventSourceOptions = []): string;
