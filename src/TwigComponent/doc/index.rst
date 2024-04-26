@@ -255,7 +255,7 @@ Component Name       Template Path
 ``Button:Primary``   ``templates/components/Button/Primary.html.twig``
 ===================  ==================================================
 
-Any `:` in the name are changed to subdirectories.s
+Any ``:`` in the name are changed to subdirectories.
 
 You can control the template used via the ``AsTwigComponent`` attribute:
 
@@ -836,7 +836,7 @@ that's passed to it via the ``outerBlocks`` variable and forward it into ``Alert
         {{ block(outerBlocks.content) }}
     </twig:Alert>
 
-By passing the original ``content`` block into the `content` block of ``Alert``,
+By passing the original ``content`` block into the ``content`` block of ``Alert``,
 this will work perfectly.
 
 .. _attributes:
@@ -1175,7 +1175,7 @@ CVA and Tailwind CSS
 
 CVA work perfectly with Tailwind CSS. The only drawback is that you can have class conflicts.
 To "merge" conflicting classes together and keep only the ones you need, use the
-``tailwind_merge()` method from `tales-from-a-dev/twig-tailwind-extra`_
+``tailwind_merge()`` method from `tales-from-a-dev/twig-tailwind-extra`_
 with the ``cva()`` function:
 
 .. code-block:: terminal
@@ -1293,7 +1293,6 @@ If no variants match, you can define a default set of classes to apply:
         <div>My content</div>
     </twig:Alert>
     // class="alert bg-red text-lg font-bold rounded-md"
-
 
 Test Helpers
 ------------
