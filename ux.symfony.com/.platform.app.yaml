@@ -57,4 +57,4 @@ hooks:
         php bin/console app:load-data
         # needed because StimulusBundle / asset mapper will currently
         # expect this asset mapper directory to exist at runtime
-        mkdir var/translations
+        mkdir -p var/translations

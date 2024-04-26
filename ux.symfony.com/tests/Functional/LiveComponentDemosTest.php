@@ -50,7 +50,7 @@ class LiveComponentDemosTest extends KernelTestCase
         ;
     }
 
-    public function getSmokeTests(): \Generator
+    public static function getSmokeTests(): \Generator
     {
         $demoRepository = new LiveDemoRepository();
         foreach ($demoRepository->findAll() as $demo) {

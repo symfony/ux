@@ -32,18 +32,25 @@
     {% block swup_specific_demo_content %}
         <div data-controller="symfony--ux-swup--swup" id="swup" data-turbo="false">
             <div class="row">
-                {% for package in pager %}
-                    {{ include('main/_package_in_list.html.twig') }}
+                {% for package in results %}
+                    {{ include('main/_package_in_list.html.twig', {package}) }}
                 {% endfor %}
             </div>
 
             <div class="mt-3">
-                {{ pagerfanta(pager, 'twitter_bootstrap5') }}
+                <nav class="Pagination">
+                    {% for num in 1..pages %}
+                        <a href="{{ path('app_swup', num > 1 ? {page: num} : {}) }}"
+                           aria-current="{{ page == num ? 'true' : 'false' }}">
+                            {{ num }}
+                        </a>
+                    {% endfor %}
+                </nav>
             </div>
         </div>
     {% endblock %}
 
-    <div class="d-flex eyebrows pt-3 align-items-center">
+    <div class="d-flex eyebrows pt-3 align-items-center justify-content-center flex-wrap">
         <div>Ajax-powered page navigation</div>
         <twig:Icon name="circle-fill" style="font-size: .25rem" class="mx-2" />
         <div>URL in address bar changes</div>
