@@ -118,7 +118,7 @@ and any other components by running:
 
 .. code-block:: terminal
 
-    $ php bin/console debug:twig-component --dir=bar
+    $ php bin/console debug:twig-component
 
 Take a moment to fist pump - then come back!
 
@@ -1598,7 +1598,7 @@ Debugging Components
 As your application grows, you'll eventually have a lot of components.
 This command will help you to debug some components issues.
 First, the debug:twig-component command lists all your application components
-who live in ``templates/components``:
+that live in ``templates/components/``:
 
 .. code-block:: terminal
 
@@ -1614,15 +1614,7 @@ who live in ``templates/components``:
     | foo:Anonymous | Anonymous component         | components/foo/Anonymous.html.twig |      |
     +---------------+-----------------------------+------------------------------------+------+
 
-If you have some components that don't live in ``templates/components/``,
-but in ``templates/bar`` for example, you can pass an option:
-
-.. code-block:: terminal
-
-    $ php bin/console debug:twig-component --dir=bar
-
-And the name of some component to this argument to print the
-component details:
+Pass the name of some component as an argument to print its details:
 
 .. code-block:: terminal
 
