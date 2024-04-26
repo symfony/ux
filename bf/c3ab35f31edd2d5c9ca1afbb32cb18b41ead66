@@ -1,0 +1,14 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-25T18:54:20Z
+
+```diff
+- $this->fetchImageContent ??= fn (string $filename) => file_get_contents($filename);
++ $this->fetchImageContent ??= file_get_contents(...);
+```
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-04-25T22:47:46Z
+
+Reviews have been applied, thanks :)
