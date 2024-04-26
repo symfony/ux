@@ -38,6 +38,9 @@ final class ConverterFactory
                     'generator' => 'https://github.com/symfony/ux/issues/%d',
                 ],
             ],
+            'external_link' => [
+                'internal_hosts' => ['/(^|\.)symfony\.com$/'],
+            ],
         ]);
 
         $converter->getEnvironment()
