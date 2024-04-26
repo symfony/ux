@@ -88,7 +88,7 @@ final class LockIconsCommand extends Command
                 " <fg=bright-green;options=bold>✓</> Imported <fg=bright-white;bg=black>%s:</><fg=bright-magenta;bg=black;options>%s</> (License: <href=%s>%s</>). Render with: <comment>{{ ux_icon('%s') }}</comment>",
                 $prefix,
                 $name,
-                $license['url'],
+                $license['url'] ?? '#',
                 $license['title'],
                 $icon,
             ));
