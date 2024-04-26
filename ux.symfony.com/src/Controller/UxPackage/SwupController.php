@@ -26,11 +26,11 @@ class SwupController extends AbstractController
         $package = $packageRepository->find('swup');
 
         $packages = $packageRepository->findAll();
-        $pages = ceil(count($packages) / self::PER_PAGE);
+        $pages = ceil(\count($packages) / self::PER_PAGE);
         if ($page < 1 || $page > $pages) {
             throw $this->createNotFoundException('Page not found');
         }
-        $results = array_slice($packages, ($page - 1) * self::PER_PAGE, self::PER_PAGE);
+        $results = \array_slice($packages, ($page - 1) * self::PER_PAGE, self::PER_PAGE);
 
         return $this->render('ux_packages/swup.html.twig', [
             'package' => $package,

@@ -28,14 +28,17 @@ return (new PhpCsFixer\Config())
         '@Symfony' => true,
         '@Symfony:risky' => true,
         'header_comment' => ['header' => $fileHeaderComment],
+        'nullable_type_declaration' => true,
         'trailing_comma_in_multiline' => ['elements' => ['arrays', 'match', 'parameters']],
     ])
     ->setRiskyAllowed(true)
     ->setFinder(
         PhpCsFixer\Finder::create()
-            ->in([__DIR__.'/src'])
+            ->in([
+                __DIR__.'/src',
+                __DIR__.'/tests',
+            ])
             ->append([__FILE__])
-            ->notPath('#/Fixtures/#')
-            ->notPath('#/var/#')
     )
+    ->setCacheFile('.php-cs-fixer.cache')
 ;

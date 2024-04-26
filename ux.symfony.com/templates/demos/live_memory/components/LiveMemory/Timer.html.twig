@@ -27,7 +27,7 @@
                 '--duration': digit.steps * digit.unit,
                 '--steps': digit.steps,
                 '--iterations': digit.iterations,
-             }|map((v, k) => '%s: %s;'|format(k,v)) %}
+             }|map((v, k) => '%s: %s;'|format(k, v)) %}
 
             <div class="LiveMemory-Timer-Digit" style="{{ style|join(' ') }}" data-unit="{{ digit.unit }}">
                 <ul>

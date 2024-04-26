@@ -657,6 +657,15 @@
     "twig/twig": {
         "version": "v3.3.10"
     },
+    "vincentlanglet/twig-cs-fixer": {
+        "version": "2.8",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "main",
+            "version": "0.6",
+            "ref": "e4da12a48e8138479bd24a675321bcfd84950266"
+        }
+    },
     "zenstruck/assert": {
         "version": "v1.0.1"
     },

@@ -127,6 +127,7 @@
         "symfony/phpunit-bridge": "7.0.*",
         "symfony/stopwatch": "7.0.*",
         "symfony/web-profiler-bundle": "7.0.*",
+        "vincentlanglet/twig-cs-fixer": "^2.8",
         "zenstruck/browser": "^1.4",
         "zenstruck/foundry": "^1.33"
     }

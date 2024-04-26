@@ -17,7 +17,7 @@
             </twig:LiveMemory:Metric>
         {% else %}
             {% set value = game.timeLimit - (game.isEnded ? min(game.timeLimit, game.time) : 0) %}
-            {% set value = (value > 99 ? '%03d' : '%02d')|format(value)  %}
+            {% set value = (value > 99 ? '%03d' : '%02d')|format(value) %}
             <twig:LiveMemory:Metric icon="time" label="Timer" value="{{ value }}" />
         {% endif %}
 

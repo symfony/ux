@@ -1,7 +1,7 @@
 <dialog {{ attributes.defaults({
-    class: "IconModal",
-    id: "IconModal",
-    "data-open": this.icon ? "open" : false,
+    class: 'IconModal',
+    id: 'IconModal',
+    'data-open': this.icon ? 'open' : false,
 }).defaults(stimulus_controller('icon-modal')) }}>
 
     <input type="hidden" name="icon" value="{{ this.icon }}" data-model="on(change)|icon"/>
@@ -105,7 +105,7 @@
                                         'GitHub': iconSet.github ? {
                                             title: iconSet.github.name,
                                             href: iconSet.github.url,
-                                        } :  null,
+                                        } : null,
                                         'Licence': iconSet.license ? {
                                             title: iconSet.license.title,
                                             href: iconSet.license.url|default,
