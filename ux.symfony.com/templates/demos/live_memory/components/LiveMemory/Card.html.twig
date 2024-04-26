@@ -6,7 +6,7 @@
         'LiveMemory-Card--paired': paired,
         'LiveMemory-Card--matched': matched,
     }, class|default) }}"
-    style="--card-delta:{{ (key* 17) % 10 }};"
+    style="--card-delta:{{ (key * 17) % 10 }};"
 >
 
     {# We keep the back / button to flip until the card is matched #}
@@ -18,7 +18,7 @@
                     data-live-action-param="flip"
                     data-live-key-param="{{ key }}"
             >
-{#                    data-live-item-name-param="CustomItem"#}
+{# data-live-item-name-param="CustomItem" #}
                 <img class="LiveMemory-Card__back_img LiveMemory-Card__img"
                      alt="LiveMemory Card Back - {{ back|upper }}"
                      src="{{ asset('images/demos/live-memory/back/%s.webp'|format(back)) }}"
