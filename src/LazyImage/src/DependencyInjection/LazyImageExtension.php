@@ -46,13 +46,24 @@ class LazyImageExtension extends Extension implements PrependExtensionInterface
 
         $container
             ->setDefinition('lazy_image.blur_hash', new Definition(BlurHash::class))
-            ->setArgument(0, new Reference('lazy_image.image_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE))
+            ->setArguments([
+                new Reference('lazy_image.image_manager', ContainerInterface::NULL_ON_INVALID_REFERENCE),
+                null, // $cache
+                null, // $fetchImageContent
+            ])
         ;
 
         if (isset($config['cache'])) {
             $container
                 ->getDefinition('lazy_image.blur_hash')
                 ->setArgument(1, new Reference($config['cache']))
+            ;
+        }
+
+        if (isset($config['fetch_image_content'])) {
+            $container
+                ->getDefinition('lazy_image.blur_hash')
+                ->setArgument(2, new Reference($config['fetch_image_content']))
             ;
         }
 
