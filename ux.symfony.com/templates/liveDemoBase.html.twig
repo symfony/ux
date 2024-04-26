@@ -7,32 +7,20 @@
     canonical: url(demo.route),
 } %}
 
-{% block header %}
-    <header style="">
-        <div class="container-fluid container-xxl px-5 py-4" >
-            <div class="d-md-flex justify-content-md-between text-center text-md-start align-items-center">
-                <a href="{{ path('app_demos') }}#demos" style="height:100%;" class="btn btn-outline-primary align-self-center">
-                    <twig:Icon name="arrow-left" />
-                    Back to all demos
-                </a>
-                <twig:ThemeSwitcher />
-            </div>
-        </div>
-    </header>
-{% endblock %}
-
 {% block content %}
 
     {% block demo_header %}
-        <div class="container-fluid container-xxl px-4 px-md-5 mb-5">
-            <div class="text-center mt-md-0">
-                <p class="eyebrows">
-                    <a href="{{ url('app_demos') }}">DEMO</a> /
-                    <a href="{{ url('app_demos') }}">LiveComponent</a>
-                </p>
-                <h1 class="ubuntu text-center">{{ demo.name }}</h1>
-                <div style="font-size: 1rem; line-height: 1.75rem;" class="mt-4 demo-introduction">
-                    {{ demo.longDescription|markdown_to_html }}
+        <div class="hero">
+            <div class="container-fluid container-xxl px-4 px-md-5 my-5">
+                <div class="text-center mt-md-0">
+                    <p class="eyebrows">
+                        <a href="{{ url('app_demos') }}">DEMOS</a> /
+                        <a href="{{ url('app_demos') }}">LiveComponent</a>
+                    </p>
+                    <h1 class="ubuntu text-center">{{ demo.name }}</h1>
+                    <div style="font-size: 1rem; line-height: 1.75rem;" class="mt-4 demo-introduction">
+                        {{ demo.longDescription|markdown_to_html }}
+                    </div>
                 </div>
             </div>
         </div>

@@ -43,7 +43,7 @@ class UxPackagesTest extends KernelTestCase
         ;
     }
 
-    public function getSmokeTests(): \Generator
+    public static function getSmokeTests(): \Generator
     {
         $repository = new UxPackageRepository();
         foreach ($repository->findAll() as $package) {

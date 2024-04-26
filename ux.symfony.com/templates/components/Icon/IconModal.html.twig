@@ -1,7 +1,7 @@
 <dialog {{ attributes.defaults({
     class: "IconModal",
     id: "IconModal",
-    "data-open": this.icon ? "open" : null
+    "data-open": this.icon ? "open" : false,
 }).defaults(stimulus_controller('icon-modal')) }}>
 
     <input type="hidden" name="icon" value="{{ this.icon }}" data-model="on(change)|icon"/>

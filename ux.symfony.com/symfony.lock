@@ -1,7 +1,4 @@
 {
-    "babdev/pagerfanta-bundle": {
-        "version": "v3.7.0"
-    },
     "behat/mink": {
         "version": "v1.10.0"
     },
@@ -109,12 +106,6 @@
     },
     "nikic/php-parser": {
         "version": "v4.14.0"
-    },
-    "pagerfanta/core": {
-        "version": "v3.6.1"
-    },
-    "pagerfanta/twig": {
-        "version": "v3.6.1"
     },
     "phar-io/manifest": {
         "version": "2.0.3"
