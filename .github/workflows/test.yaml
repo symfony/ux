@@ -11,17 +11,6 @@ on:
             - 'ux.symfony.com/**'
 
 jobs:
-    coding-style-php:
-        runs-on: ubuntu-latest
-        steps:
-            - uses: actions/checkout@v4
-            - uses: shivammathur/setup-php@v2
-              with:
-                  php-version: '8.1'
-            - uses: ramsey/composer-install@v3
-            - name: php-cs-fixer
-              run: ./vendor/bin/php-cs-fixer fix --dry-run --diff
-
     coding-style-js:
         name: JavaScript Coding Style
         runs-on: ubuntu-latest
