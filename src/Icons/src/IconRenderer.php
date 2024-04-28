@@ -37,21 +37,34 @@ final class IconRenderer
      */
     public function renderIcon(string $name, array $attributes = []): string
     {
-        return $this->registry->get($name)
-            ->withAttributes($this->getIconAttributes($name, $attributes))
-            ->toHtml()
-        ;
-    }
+        $icon = $this->registry->get($name)
+            ->withAttributes($this->defaultIconAttributes)
+            ->withAttributes($attributes);
 
-    private function getIconAttributes(string $name, array $attributes): array
-    {
-        $iconAttributes = $this->defaultIconAttributes;
-
-        // Add aria-hidden attribute
-        if ([] === array_intersect(['aria-hidden',  'aria-label', 'aria-labelledby', 'title'], array_keys($attributes))) {
-            $iconAttributes['aria-hidden'] = 'true';
+        foreach ($this->getPreRenderers() as $preRenderer) {
+            $icon = $preRenderer($icon);
         }
 
-        return [...$iconAttributes, ...$attributes];
+        return $icon->toHtml();
+    }
+
+    /**
+     * @return iterable<callable(Icon): Icon>
+     */
+    private function getPreRenderers(): iterable
+    {
+        yield self::setAriaHidden(...);
+    }
+
+    /**
+     * Set `aria-hidden=true` if not defined & no textual alternative provided.
+     */
+    private static function setAriaHidden(Icon $icon): Icon
+    {
+        if ([] === array_intersect(['aria-hidden', 'aria-label', 'aria-labelledby', 'title'], array_keys($icon->getAttributes()))) {
+            return $icon->withAttributes(['aria-hidden' => 'true']);
+        }
+
+        return $icon;
     }
 }
