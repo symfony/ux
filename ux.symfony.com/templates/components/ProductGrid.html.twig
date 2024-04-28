@@ -1,43 +1,39 @@
-<div class="ProductGrid" {{ attributes.defaults(stimulus_controller('scroll')) }}>
+<div class="ProductGrid" {{ attributes }}>
 
-    <div class="p-4">
-        <div id="results" style="display: flex; gap: 1rem; flex-direction: column;">
+    <div id="results" style="display: flex; gap: 1rem; flex-direction: column;" class="p-4">
 
-            {% if page > 1 %}
-                {# 🦊 #}
-                {# Adding a fake "previous page" div is enough to trick the system #}
-                {# It must have the same ID than the original page #}
-                <div class="ProductGrid_page" id="page--{{ page - 1 }}" data-live-ignore="true"></div>
-            {% endif %}
+        {% if page > 1 %}
+            {# 🦊 #}
+            {# Adding a fake "previous page" div is enough to trick the system #}
+            {# It must have the same ID than the original page #}
+            <div class="ProductGrid_page" id="page--{{ page - 1 }}" data-live-ignore="true"></div>
+        {% endif %}
 
-            {# Current page #}
-            <div class="ProductGrid_page" id="page--{{ page }}" data-live-ignore="true">
-                {% for item in this.items %}
-                    <article class="ProductGrid_item" data-num="{{ item.id }}"
-                             style="--color: {{ item.color }};">
-                        <div class="ProductGrid_media">
-                            <svg>
-                                <use href="#svg-tshirt"/>
-                            </svg>
-                            <span>{{ item.emoji }}</span>
-                        </div>
-                        <data value="{{ item.id }}">$ {{ item.id + 1 }}<small>.99</small></data>
-                    </article>
-                {% endfor %}
-            </div>
-
-            {% if this.hasMore %}
-                <div style="display: grid; place-content: center;padding: 4rem;">
-                    <button
-                        data-action="live#action"
-                        data-live-action-param="more"
-                        data-scroll-target="loader"
-                        class="btn btn-primary">Load More (page {{ page + 1 }})
-                    </button>
-                </div>
-            {% endif %}
-
+        {# Current page #}
+        <div class="ProductGrid_page" id="page--{{ page }}" data-live-ignore="true">
+            {% for item in this.items %}
+                <article class="ProductGrid_item" style="--color: {{ item.color }};">
+                    <div class="ProductGrid_media">
+                        <svg><use href="#svg-tshirt"/></svg>
+                        <span>{{ item.emoji }}</span>
+                    </div>
+                    <data class="ProductGrid_price" value="{{ item.id }}" data-currency="$">
+                        {{ item.id + 1 }}<small>.99</small>
+                    </data>
+                </article>
+            {% endfor %}
         </div>
+
+        <div style="display: grid; place-content: center;padding-block: 2rem;">
+            {% if this.hasMore %}
+                <button data-action="live#action" data-live-action-param="more" class="ProductGrid_more">
+                    Load More
+                </button>
+            {% else %}
+                <span class="code">The End</span>
+            {% endif %}
+        </div>
+
     </div>
 
 </div>

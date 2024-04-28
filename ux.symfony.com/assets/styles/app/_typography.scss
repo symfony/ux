@@ -20,8 +20,8 @@ h3, a.component-title {
   font-size: 28px;
   line-height: 32px;
   letter-spacing: -1px;
-  color: #0A0A0A;
   text-decoration: none;
+  color: var(--bs-body-color);
 }
 
 h4.ubuntu {
@@ -46,6 +46,26 @@ h4.ubuntu {
     width: 100%
   }
 }
+
+.code-description :is(h2, h3) {
+  font-family: var(--font-family-title);
+}
+.code-description h2 {
+  font-size: 2.5em;
+  margin-block-end: 1.5rem;
+}
+.code-description h3 {
+  font-size: 1.65em;
+  font-weight: 500;
+  margin-block-end: 1.125rem;
+  margin-top: 2.25rem;
+}
+
+.code-description:hover strong {
+  background: var(--bs-body-color);
+    color: var(--bs-body-bg);
+}
+
 
 .ubuntu-header {
   font-family: var(--font-family-title);

@@ -22,16 +22,16 @@ class LiveDemoRepository
     {
         return [
             new LiveDemo(
-                'live-memory',
-                name: 'LiveMemory Card Game',
-                description: 'A Memorable Game UX with Live Components!',
-                route: 'app_demo_live_memory',
+                'infinite-scroll-2',
+                name: 'Infinite Scroll - 2/2',
+                description: 'Loading on-scroll, flexible layout grid, colorfull loading animations and... more T-Shirts!',
+                route: 'app_demo_live_component_infinite_scroll_2',
                 longDescription: <<<EOF
-A Memorable Game UX with Live Components! Discover how to use Live Components to create a game with a vibrant interface,
- rich interactions and real-time updates. This journey will take you through many features of Live Components, and you'll
-  learn how to use them to create a fun and engaging game.
+The second and final part of the <strong>Infinite Scroll Serie</strong>, with a new range of (lovely) T-Shirts!
+<br>
+Now with <code>automatic loading on scroll</code>, a new trick and amazing <code>loading animations</code>!
 EOF,
-                tags: ['game', 'time', 'events', 'LiveAction'],
+                tags: ['grid', 'pagination', 'loading', 'scroll'],
             ),
             new LiveDemo(
                 'infinite-scroll',
@@ -42,20 +42,19 @@ EOF,
 Infinite scroll allows users to continuously load content as they scroll down the page.
 <br><code>Part One</code> of this demo shows how to <code>append new items</code> to the page with a <a href="/live-component"><code>LiveComponent</code></a>.
 EOF,
-                tags: ['pattern', 'pagination', 'navigation'],
+                tags: ['grid', 'pagination', 'navigation'],
             ),
             new LiveDemo(
-                'form-collection-type',
-                name: 'Embedded CollectionType Form',
-                description: 'Create embedded forms with functional "add" and "remove" buttons all in Twig.',
-                route: 'app_demo_live_component_form_collection_type',
+                'live-memory',
+                name: 'LiveMemory Card Game',
+                description: 'A Memorable Game UX with Live Components!',
+                route: 'app_demo_live_memory',
                 longDescription: <<<EOF
-Unlock the potential of Symfony's <a href="https://symfony.com/doc/current/reference/forms/types/collection.html"><code>CollectionType</code></a> while
-writing zero JavaScript.
-<br>
-This demo shows off adding and removing items entirely in PHP & Twig.
+A Memorable Game UX with Live Components! Discover how to use Live Components to create a game with a vibrant interface,
+ rich interactions and real-time updates. This journey will take you through many features of Live Components, and you'll
+  learn how to use them to create a fun and engaging game.
 EOF,
-                tags: ['form', 'collection'],
+                tags: ['game', 'time', 'events', 'LiveAction'],
             ),
             new LiveDemo(
                 'auto-validating-form',
@@ -70,6 +69,19 @@ This renders a normal Symfony form but with extras added on top,
 all generated from Symfony & Twig.
 EOF,
                 tags: ['form', 'validation', 'inline'],
+            ),
+            new LiveDemo(
+                'form-collection-type',
+                name: 'Embedded CollectionType Form',
+                description: 'Create embedded forms with functional "add" and "remove" buttons all in Twig.',
+                route: 'app_demo_live_component_form_collection_type',
+                longDescription: <<<EOF
+Unlock the potential of Symfony's <a href="https://symfony.com/doc/current/reference/forms/types/collection.html"><code>CollectionType</code></a> while
+writing zero JavaScript.
+<br>
+This demo shows off adding and removing items entirely in PHP & Twig.
+EOF,
+                tags: ['form', 'collection'],
             ),
             new LiveDemo(
                 'dependent-form-fields',
@@ -152,7 +164,7 @@ EOF,
         ];
     }
 
-    public function getPrevious(string $identifier, bool $loop = false): ?LiveDemo
+    public function getNext(string $identifier, bool $loop = false): ?LiveDemo
     {
         $demos = $this->findAll();
         while ($demo = current($demos)) {
@@ -165,7 +177,7 @@ EOF,
         return null;
     }
 
-    public function getNext(string $identifier, bool $loop = false): ?LiveDemo
+    public function getPrevious(string $identifier, bool $loop = false): ?LiveDemo
     {
         $demos = $this->findAll();
         while ($demo = current($demos)) {
@@ -176,6 +188,13 @@ EOF,
         }
 
         return null;
+    }
+
+    public function getMostRecent(): LiveDemo
+    {
+        $demos = $this->findAll();
+
+        return current($demos);
     }
 
     public function find(string $identifier): LiveDemo

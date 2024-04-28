@@ -18,5 +18,21 @@ class CodeWithExplanationRow
 {
     public string $filename;
 
+    public ?int $lineStart = null;
+
+    public ?int $lineEnd = null;
+
     public bool $reversed = false;
+
+    public bool $sticky = false;
+
+    public ?string $targetTwigBlock = null;
+
+    public bool $stripExcessHtml = false;
+
+    public bool $showFilename = true;
+
+    public bool $copyButton = true;
+
+    public int $codeCols = 6;
 }

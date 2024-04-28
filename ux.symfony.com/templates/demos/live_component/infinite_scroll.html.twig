@@ -26,7 +26,7 @@
 
     <section class="py-5" style="padding-top: 6rem;">
         <div class="container container-xxl">
-            <twig:Code:CodeWithExplanationRow filename="src/Twig/ProductGrid.php" reversed style="--bs-gutter-x: 4rem;">
+            <twig:Code:CodeWithExplanationRow filename="src/Twig/ProductGrid.php" reversed sticky style="--bs-gutter-x: 4rem;">
 This component is quite standard: the page number as a `LiveProp`, a `LiveAction`
 to load the next page, and a `getItems` method to retrieve the page results.
 
@@ -40,7 +40,7 @@ But... how can we `keep` the previous results instead of `replacing` them?
 
     <section class="py-5">
         <div class="container container-xxl" style="--bs-gutter-x: 4rem;">
-            <twig:Code:CodeWithExplanationRow filename="templates/components/ProductGrid.html.twig" style="--bs-gutter-x: 4rem;">
+            <twig:Code:CodeWithExplanationRow filename="templates/components/ProductGrid.html.twig" sticky style="--bs-gutter-x: 4rem;">
 The solution involves the use of `data-live-ignore` attributes, and just a little
 bit of trickery in the `ProductGrid` component.
 

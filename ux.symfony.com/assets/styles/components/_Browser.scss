@@ -77,6 +77,11 @@
   overflow-y: scroll;
   scrollbar-width: thin;
 }
+@media screen and (max-width: 768px) {
+  .Browser__viewport {
+    aspect-ratio: 1/2;
+  }
+}
 
 .Browser__dot {
   height: .75rem;

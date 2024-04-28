@@ -4,11 +4,12 @@
 
     {% if showFilename %}
         <div class="Terminal_header py-2 px-3 mb-0 d-flex justify-content-between align-items-center">
-            <a id="{{ this.elementId }}" href="#{{ this.elementId }}" class="Terminal_title">
-                <code>{{ filename }}{% if this.lineStart %}<em>{{ '#%s'|format(this.lineAnchor) }}</em>{% endif %}</code>
+            <a id="{{ this.elementId }}" href="{{ this.githubLink ~ '#%s'|format(this.lineAnchor) }}" class="Terminal_title">
+                <code>{{ filename }}{% if this.lineStart %}<em>{{ '#%s'|format(this.lineAnchor) }}</em>{% endif %}
+                </code>
             </a>
             <div class="Terminal_actions">
-                <twig:Code:CodeBlockButtons source="{{ this.rawSource }}" link="{{ this.githubLink }}"/>
+                <twig:Code:CodeBlockButtons copyButton="{{ this.copyButton }}" source="{{ this.rawSource }}" link="{{ this.githubLink }}"/>
             </div>
         </div>
     {% endif %}
@@ -16,7 +17,7 @@
     <div class="Terminal_body" data-controller="code-expander">
         {% if not showFilename %}
             <div class="Terminal_actions">
-                <twig:Code:CodeBlockButtons source="{{ this.rawSource }}" link="{{ this.githubLink }}"/>
+                <twig:Code:CodeBlockButtons copyButton="{{ this.copyButton }}" source="{{ this.rawSource }}" link="{{ this.githubLink }}"/>
             </div>
         {% endif %}
         <div class="Terminal_content" style="height: {{ height }};"
@@ -25,10 +26,15 @@
             {% for piece in this.prepareSource %}
                 {% if piece.highlight ?? true %}
                     <pre><code class="language-{{ this.language }}">
-                        {{- piece.content|highlight(this.language, this.lineStart) -}}
+                        {%- if this.lineStart -%}
+                            {%- set content = piece.content|u.prepend(this.lineStart > 1 ? '⇥|') -%}
+                            {{- content|highlight(this.language, this.lineStart)|u.replace('⇥|', '')|raw -}}
+                        {%- else -%}
+                            {{- piece.content|highlight(this.language) -}}
+                        {%- endif -%}
                     </code></pre>
                 {% else %}
-                    {{- piece.content|raw -}}
+                    {{ piece.content|raw }}
                 {% endif %}
             {% endfor %}
         </div>

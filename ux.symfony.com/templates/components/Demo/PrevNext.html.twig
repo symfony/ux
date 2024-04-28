@@ -1,15 +1,15 @@
 
 <div class="container-fluid container-xxl p-4 p-md-5">
-    <div style="display: flex; gap: 3rem; flex-wrap: wrap;" class="justify-content-center justify-content-lg-between">
+    <div style="display: flex; gap: 3rem; flex-wrap: wrap;" class="justify-content-center justify-content-lg-between align-stretch">
         {% set previous = this.previous(true) %}
         {% if previous %}
-            <div style="max-width: 380px;--bs-secondary-bg-subtle: var(--bs-dark-bg-subtle);">
+            <div style="max-width: 380px;--bs-secondary-bg-subtle: var(--bs-dark-bg-subtle); display: flex;">
                 <twig:Demo:DemoCard demo="{{ previous }}" />
             </div>
         {% endif %}
         {% set next = this.next(true) %}
         {% if next %}
-            <div style="max-width: 380px;--bs-secondary-bg-subtle: var(--bs-dark-bg-subtle);">
+            <div style="max-width: 380px;--bs-secondary-bg-subtle: var(--bs-dark-bg-subtle); display: flex;">
                 <twig:Demo:DemoCard demo="{{ next }}" />
             </div>
         {% endif %}

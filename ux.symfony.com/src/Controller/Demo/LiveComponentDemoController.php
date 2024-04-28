@@ -124,6 +124,14 @@ class LiveComponentDemoController extends AbstractController
         ]);
     }
 
+    #[Route('/infinite-scroll-2', name: 'app_demo_live_component_infinite_scroll_2')]
+    public function infiniteScroll2(LiveDemoRepository $liveDemoRepository): Response
+    {
+        return $this->render('demos/live_component/infinite_scroll_2.html.twig', parameters: [
+            'demo' => $liveDemoRepository->find('infinite-scroll-2'),
+        ]);
+    }
+
     #[Route('/product-form', name: 'app_demo_live_component_product_form')]
     public function productForm(LiveDemoRepository $liveDemoRepository): Response
     {

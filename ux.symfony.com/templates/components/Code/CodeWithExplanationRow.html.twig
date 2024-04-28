@@ -1,16 +1,29 @@
 <div {{ attributes.defaults({
-    class: 'row mb-5 py-4 align-items-center position-relative',
+    class: 'row mb-5 py-4 position-relative ' ~ (this.sticky|default ? 'align-items-start' : 'align-items-center'),
     style: '--bs-gutter-x: 4rem'
 }) }}>
-    <div class="col-12 col-md-6 code-description {{ not reversed ? 'order-md-2' }}">
-        {% apply markdown_to_html %}
-            {% block content %}{% endblock %}
-        {% endapply %}
+    <div class="col-12 col-md-{{ 12 - this.codeCols }} code-description {{ not reversed ? 'order-md-2' }}"
+         style="{% if reversed %}padding-inline-end: 0;{% endif %} {{ this.sticky|default ? 'position: sticky; top: 4rem;' }}">
+        {% block explanation %}
+            {% apply markdown_to_html %}
+                {% block content %}{% endblock %}
+            {% endapply %}
+        {% endblock %}
     </div>
-    <div class="col-12 col-md-6 {{ not reversed|default ? 'order-md-1' }}"  style="padding-inline: 0;">
-        <twig:CodeBlock
-            :filename="filename"
-            style="--bg-header: rgba(13, 13, 13, 0.729); --header-opacity: .5;"
-        />
+    <div class="col-12 col-md-{{ this.codeCols }} {{ not reversed|default ? 'order-md-1' }}"  {% if reversed %}style="padding-inline-end: 0;"{% endif %}>
+        {% block code %}
+            <twig:CodeBlock
+                :filename="filename"
+                :targetTwigBlock="targetTwigBlock"
+                :showTwigExtends="false"
+                :showFilename="showFilename"
+                :lineStart="lineStart"
+                :lineEnd="lineEnd"
+                :copyButton="copyButton"
+                :stripExcessHtml="stripExcessHtml"
+                height="{{ height|default('auto') }}"
+                style="--bg-header: rgba(13, 13, 13, 0.729); --header-opacity: .5;"
+            />
+        {% endblock %}
     </div>
 </div>
