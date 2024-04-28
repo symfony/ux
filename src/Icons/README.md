@@ -7,7 +7,7 @@ Renders local and remote [SVG icons](https://ux.symfony.com/icons) in your Twig 
 {{ ux_icon('mdi:check', {class: 'w-4 h-4'}) }}
 
 {# .. or Twig Component #}
-<twig:UX:Icon name="mdi:check" class="w-4 h-4" />
+<twig:ux:icon name="mdi:check" class="w-4 h-4" />
 
 {# Render the "check" icon from "mdi" pack with class #}
 <svg viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
