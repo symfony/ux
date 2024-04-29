@@ -2,24 +2,39 @@
     <div class="container-fluid container-xxl p-4 p-md-5">
         <div style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));">
             <twig:DocsLink
+                title="Documentation"
+                text="Symfony UX {{ package.humanName }} Docs"
                 url="{{ package.officialDocsUrl }}"
-                title="Symfony UX {{ package.humanName }} Docs"
-                text="Get going with the official documentation."
+                icon="symfony"
             />
             {% if package.screencastLink %}
                 <twig:DocsLink
                     title="Screencasts"
                     text="{{ package.screencastLinkText }}"
                     url="{{ package.screencastLink }}"
+                    icon="symfonycast"
+                />
+            {% else %}
+                <twig:DocsLink
+                    title="Screencasts"
+                    text="Watch UX screencasts on SymfonyCasts."
+                    url="https://symfonycasts.com/screencast/stimulus"
+                    icon="symfonycast"
                 />
             {% endif %}
             {% if package.docsLink %}
-                <twig:DocsLink
-                    url="{{ package.docsLink }}"
-                    title="Related Docs"
-                    text="{{ package.docsLinkText }}"
-                />
+{# <twig:DocsLink #}
+{# url="{{ package.docsLink }}" #}
+{# title="Related Docs" #}
+{# text="{{ package.docsLinkText }}" #}
+{# /> #}
             {% endif %}
+             <twig:DocsLink
+                title="Community"
+                text="Feedback · support · contributions."
+                url="https://github.com/symfony/ux"
+                icon="github"
+            />
         </div>
     </div>
 </aside>

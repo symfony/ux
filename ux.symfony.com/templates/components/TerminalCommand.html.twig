@@ -1,6 +1,6 @@
 <div {{ attributes.defaults({class: 'TerminalCommand'}) }}
-    data-controller="ux-clipboard"
-    data-ux-clipboard-source-value="{{ command }}"
+    data-controller="clipboarder"
+    data-clipboarder-source-value="{{ command }}"
 >
     <pre
         class="TerminalCommand_input"
@@ -10,7 +10,7 @@
         type="button"
         class="TerminalCommand_action btn btn-copy"
         aria-label="Copy command"
-        data-action="ux-clipboard#copy"
+        data-action="clipboarder#copy"
     >
         <twig:Icon name="copy"/>
     </button>

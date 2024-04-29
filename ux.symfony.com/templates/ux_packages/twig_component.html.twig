@@ -1,4 +1,4 @@
-{% extends 'packageBase.html.twig' %}
+{% extends 'ux_packages/package.html.twig' %}
 
 {% block package_header %}
     {% component PackageHeader with {
@@ -34,7 +34,7 @@
         </div>
         <div class="col-6">
             <twig:CodeBlock
-                filename="templates/ux_packages/twig-component.html.twig"
+                filename="templates/ux_packages/twig_component.html.twig"
                 :showFilename="false"
                 targetTwigBlock="alert_success_example"
                 :showTwigExtends="false"
@@ -54,7 +54,7 @@
         </div>
         <div class="col-6">
             <twig:CodeBlock
-                filename="templates/ux_packages/twig-component.html.twig"
+                filename="templates/ux_packages/twig_component.html.twig"
                 :showFilename="false"
                 targetTwigBlock="alert_danger_example"
                 :showTwigExtends="false"

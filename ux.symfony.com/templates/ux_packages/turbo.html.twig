@@ -1,4 +1,4 @@
-{% extends 'packageBase.html.twig' %}
+{% extends 'ux_packages/package.html.twig' %}
 
 {% block package_header %}
     {% component PackageHeader with {
@@ -13,7 +13,7 @@
             The speed of a single-page web app without writing any JavaScript,
             courtesy of <a class="font-white text-underline" href="https://turbo.hotwired.dev/" rel="external noopener noreferrer">Turbo</a>
 
-            <div style="position: absolute;  bottom: 4rem;  left: 50%;  transform: translateX(-50%);">
+            <div style="position: absolute;  bottom: 4rem;  left: 50%;  transform: translateX(-50%);color: white;">
                 {{ include('ux_packages/turbo/_chatMessageCount.html.twig', {messageCount: this.messageCount}) }}
             </div>
         {% endblock %}
@@ -22,7 +22,7 @@
 {% endblock %}
 
 {% block package_content %}
-    <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
+    <div class="container-fluid container-xxl px-4 pt-4 px-md-5">
 
         <section class="row mb-5">
             <div class="col-12 col-md-6 order-md-2">

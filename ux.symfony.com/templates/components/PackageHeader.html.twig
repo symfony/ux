@@ -1,12 +1,12 @@
 <div class="PackageHeader mb-5" style="background: {{ package.gradient }}, {{ package.color }};">
     <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5 position-relative">
 
-        <p class="eyebrows text-center font-white mt-5" style="opacity: 0.6;">{{ eyebrowText|raw }}</p>
+        <p class="eyebrows text-center font-white mt-5" style="opacity: 0.8;">{{ eyebrowText|raw }}</p>
 
         <h1 class="ubuntu text-center font-white">{% block title_header %}{% endblock %}</h1>
 
         <div class="d-flex justify-content-center">
-            <p class="text-center font-white mt-3 pb-5 hero-sub-text">
+            <p class="text-center font-white mt-3 pb-3 hero-sub-text">
                 {% block sub_content %}{% endblock %}
             </p>
         </div>

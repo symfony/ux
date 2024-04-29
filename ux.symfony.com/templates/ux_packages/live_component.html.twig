@@ -1,4 +1,4 @@
-{% extends 'packageBase.html.twig' %}
+{% extends 'ux_packages/package.html.twig' %}
 
 {% block package_header %}
     {% component PackageHeader with {
@@ -61,4 +61,7 @@
         </div>
     </div>
 </section>
+
+    {{ parent() }}
+
 {% endblock %}

@@ -49,7 +49,7 @@
         </div>
     </div>
 
-    <p class="eyebrows" style="margin-top: 70px;">Stimulus Controllers</p>
+    <p class="eyebrows" style="margin: 70px 0 0;">Stimulus Controllers</p>
     <div class="d-md-flex justify-content-md-between align-items-center text-center text-md-start">
         <h2 class="ubuntu pt-2 component-headlines">Write custom JavaScript inside <em class="rainbow-emphasis">Stimulus Controllers</em></h2>
         <a style="height: 100%;" class="btn btn-md btn-outline-primary my-3 my-md-0" href="https://symfony.com/doc/current/frontend/ux.html">
@@ -96,7 +96,7 @@
         </div>
     {% endblock %}
 
-    <p class="eyebrows" style="margin-top: 111px;">Packages</p>
+    <p class="eyebrows" style="margin: 111px 0 0;">Packages</p>
     <div class="d-md-flex justify-content-md-between text-center align-items-center text-md-start">
         <h2 class="ubuntu pt-2 component-headlines">Install extra <em class="rainbow-emphasis">Packages</em></h2>
         <a style="height: 100%;" class="btn btn-md btn-outline-primary mt-3 mt-md-0"  href="{{ path('app_packages') }}">
@@ -112,4 +112,30 @@
         </div>
     </div>
 </div>
+
+<aside style="background-color: var(--bs-secondary-bg-subtle);" class="mt-5">
+    <div class="container-fluid container-xxl p-4 p-md-5">
+        <div style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 340px), 1fr));">
+            <twig:DocsLink
+                title="Documentation"
+                text="Get going with the official Symfony UX doc."
+                url="https://symfony.com/bundles/StimulusBundle/current/index.html"
+                icon="symfony"
+            />
+            <twig:DocsLink
+                title="Screencasts"
+                text="Watch UX screencasts on SymfonyCasts."
+                url="https://symfonycasts.com/screencast/stimulus"
+                icon="symfonycast"
+            />
+            <twig:DocsLink
+                title="Community"
+                text="Feedback · support · contributions."
+                url="https://github.com/symfony/ux"
+                icon="github"
+            />
+        </div>
+    </div>
+</aside>
+
 {% endblock %}

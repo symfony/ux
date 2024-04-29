@@ -35,5 +35,16 @@
     --bs-btn-disabled-bg: transparent;
     --bs-btn-disabled-border-color: var(--color);
   }
+}
 
+.btn-sm {
+  --bs-border-width: 0;
+}
+.btn-sm:hover {
+  border-color: transparent !important;
+  border-width: 0 !important;
+}
+
+.btn-copy {
+  position: relative;
 }
