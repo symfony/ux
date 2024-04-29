@@ -11,8 +11,8 @@ to familiarize yourself in the `TwigComponent documentation`_.
 
 A real-time product search component might look like this::
 
-    // src/Components/ProductSearch.php
-    namespace App\Components;
+    // src/Twig/Components/ProductSearch.php
+    namespace App\Twig\Components;
 
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -113,8 +113,8 @@ documentation to get the basics of Twig components.
 
 Suppose you've already built a basic Twig component::
 
-    // src/Components/RandomNumber.php
-    namespace App\Components;
+    // src/Twig/Components/RandomNumber.php
+    namespace App\Twig\Components;
 
     use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
@@ -141,7 +141,7 @@ re-rendered live on the frontend), replace the component's
 
 .. code-block:: diff
 
-      // src/Components/RandomNumber.php
+      // src/Twig/Components/RandomNumber.php
     - use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
     + use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     + use Symfony\UX\LiveComponent\DefaultActionTrait;
@@ -194,8 +194,8 @@ LiveProps: Stateful Component Properties
 
 Let's make our component more flexible by adding a ``$max`` property::
 
-    // src/Components/RandomNumber.php
-    namespace App\Components;
+    // src/Twig/Components/RandomNumber.php
+    namespace App\Twig\Components;
 
     // ...
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -294,7 +294,7 @@ Well, actually, we're missing one step. By default, a ``LiveProp`` is
 
 .. code-block:: diff
 
-      // src/Components/RandomNumber.php
+      // src/Twig/Components/RandomNumber.php
       // ...
 
       class RandomNumber
@@ -1051,8 +1051,8 @@ that, when clicked, sets the min/max numbers back to a default value.
 First, add a method with a ``LiveAction`` attribute above it that does
 the work::
 
-    // src/Components/RandomNumber.php
-    namespace App\Components;
+    // src/Twig/Components/RandomNumber.php
+    namespace App\Twig\Components;
 
     // ...
     use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -1115,8 +1115,8 @@ normal controller method that you would create with a route.
 
 This means that, for example, you can use action autowiring::
 
-    // src/Components/RandomNumber.php
-    namespace App\Components;
+    // src/Twig/Components/RandomNumber.php
+    namespace App\Twig\Components;
 
     // ...
     use Psr\Log\LoggerInterface;
@@ -1162,8 +1162,8 @@ You can also pass arguments to your action by adding each as a
 In your component, to allow each argument to be passed, add
 the ``#[LiveArg()]`` attribute::
 
-    // src/Components/ItemList.php
-    namespace App\Components;
+    // src/Twig/Components/ItemList.php
+    namespace App\Twig\Components;
 
     // ...
     use Psr\Log\LoggerInterface;
@@ -1215,8 +1215,8 @@ Sometimes, you may want to redirect after an action is executed
 page). You can do that by returning a ``RedirectResponse`` from your
 action::
 
-    // src/Components/RandomNumber.php
-    namespace App\Components;
+    // src/Twig/Components/RandomNumber.php
+    namespace App\Twig\Components;
 
     // ...
     use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -1284,8 +1284,8 @@ You can also specify a modifier parameter to choose which files should be upload
 
 The files will be available in a regular ``$request->files`` files bag::
 
-    // src/Components/FileUpload.php
-    namespace App\Components;
+    // src/Twig/Components/FileUpload.php
+    namespace App\Twig\Components;
 
     use Symfony\Component\HttpFoundation\Request;
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -2474,8 +2474,8 @@ Changing the URL when a LiveProp changes
 
 If you want the URL to update when a ``LiveProp`` changes, you can do that with the ``url`` option::
 
-    // src/Components/SearchModule.php
-    namespace App\Components;
+    // src/Twig/Components/SearchModule.php
+    namespace App\Twig\Components;
 
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -3488,7 +3488,7 @@ Then specify this new route on your component:
 
 .. code-block:: diff
 
-    // src/Components/RandomNumber.php
+    // src/Twig/Components/RandomNumber.php
     use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
     use Symfony\UX\LiveComponent\DefaultActionTrait;
 
@@ -3507,7 +3507,7 @@ You can also control the type of the generated URL:
 
 .. code-block:: diff
 
-      // src/Components/RandomNumber.php
+      // src/Twig/Components/RandomNumber.php
     + use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
       use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
       use Symfony\UX\LiveComponent\DefaultActionTrait;
