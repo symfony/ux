@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-04-25T14:09:06Z
+
+@cavasinf, does this sufficiently fix the two above issues for you?
+
+---------------------------------------------------------------------------
+
+by cavasinf at 2024-04-26T09:07:35Z
+
+Doesn't resolve #1704 because it's more "doc" related.
+But certainly #1686 👍
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-29T20:12:30Z
+
+Ok to merge this PR while continuing the discussion about the remaining problems @cavasinf  ?
+
+---------------------------------------------------------------------------
+
+by cavasinf at 2024-04-30T06:41:20Z
+
+Yes 👍
+Remove the #1704 dependency as it will be closed with this PR 😉
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-30T07:26:46Z
+
+(fabbot resolved in another PR)
