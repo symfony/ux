@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-05T19:49:49Z
+
+Thank you for that @YummYume !
+
+Could you rebuild the dist file ? It feels you updated those files "manually" (i may be wrong on this, TS is not my strongest force 😅 )
+
+From the root of the monorepo, this should be enough i think
+
+npm run build
+
+(This is why the CI is red `Symfony UX / Check for UnBuilt JS Dist Files (pull_request) Failing after 1m`)
+
+---------------------------------------------------------------------------
+
+by YummYume at 2024-04-05T22:44:49Z
+
+This is weird :thinking: I didn't touch the `dist` files I simply ran the `yarn build` command. And somehow the Autocomplete controller needed to be rebuilt. Now it's fine.
+
+No idea why the LiveComponent tests aren't passing, though, they're all green.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-05T23:23:41Z
+
+Related to dependencies / Symfony 7.1.. and don't bother with Autocomplete if you're not working on it ... or you won't ever end this PR haha
