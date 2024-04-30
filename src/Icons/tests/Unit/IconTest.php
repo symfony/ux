@@ -241,9 +241,17 @@ final class IconTest extends TestCase
             ['foo' => true],
             '<svg foo>',
         ];
-        yield 'it_does_not_render_attribute_with_false_value' => [
-            ['foo' => false],
+        yield 'it_does_not_render_attributes_with_false_value' => [
+            ['foo' => false, 'aria-foo' => false],
             '<svg>',
+        ];
+        yield 'it_converts_aria_attribute_with_true_value' => [
+            ['aria-bar' => true],
+            '<svg aria-bar="true">',
+        ];
+        yield 'it_does_not_convert_aria_attribute_with_string_value' => [
+            ['aria-foo' => '0', 'aria-bar' => 'true', 'aria-baz' => 'false'],
+            '<svg aria-foo="0" aria-bar="true" aria-baz="false">',
         ];
     }
 

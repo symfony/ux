@@ -143,11 +143,20 @@ final class Icon implements \Stringable
             if (false === $value) {
                 continue;
             }
-            $htmlAttributes .= ' '.$name;
-            if (true !== $value) {
-                $value = htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
-                $htmlAttributes .= '="'.$value.'"';
+
+            // Special case for aria-* attributes
+            // https://www.w3.org/TR/wai-aria-1.1/#state_prop_def
+            if (true === $value && str_starts_with($name, 'aria-')) {
+                $value = 'true';
             }
+
+            $htmlAttributes .= ' '.$name;
+            if (true === $value) {
+                continue;
+            }
+
+            $value = htmlspecialchars($value, \ENT_QUOTES | \ENT_SUBSTITUTE, 'UTF-8');
+            $htmlAttributes .= '="'.$value.'"';
         }
 
         return '<svg'.$htmlAttributes.'>'.$this->innerSvg.'</svg>';

@@ -66,7 +66,7 @@ class IconRendererTest extends TestCase
 
         $svg = $iconRenderer->renderIcon('foo', $attributes);
 
-        $this->assertSame('<svg aria-hidden="true" viewBox="0 0 24 24" class="icon" id="FooBar"><path d="M0 0L12 12"/></svg>', $svg);
+        $this->assertSame('<svg viewBox="0 0 24 24" class="icon" id="FooBar" aria-hidden="true"><path d="M0 0L12 12"/></svg>', $svg);
     }
 
     public function testRenderIconWithDefaultAttributes(): void
@@ -163,12 +163,14 @@ class IconRendererTest extends TestCase
     /**
      * @dataProvider provideAriaHiddenCases
      *
-     * @param array<string, string> $attributes
+     * @param string|array{string, array<string, string|bool>} $icon
+     * @param array<string, string|bool>                       $attributes
      */
-    public function testRenderIconWithAutoAriaHidden(array $attributes, string $expectedSvg): void
+    public function testRenderIconWithAutoAriaHidden(string|array $icon, array $attributes, string $expectedSvg): void
     {
+        $icon = (array) $icon;
         $registry = $this->createRegistry([
-            'foo' => '<path d="M0 0L12 12"/>',
+            'foo' => $icon,
         ]);
         $iconRenderer = new IconRenderer($registry);
 
@@ -177,31 +179,52 @@ class IconRendererTest extends TestCase
     }
 
     /**
-     * @return iterable<array{array<string, string>, string}>
+     * @return iterable<array{string|array{string, array<string, string|bool>}, array<string, string|bool>, string}>
      */
     public static function provideAriaHiddenCases(): iterable
     {
         yield 'no attributes' => [
+            '<path d="M0 0L12 12"/>',
             [],
             '<svg aria-hidden="true"><path d="M0 0L12 12"/></svg>',
         ];
+        yield 'no attributes and icon attribute' => [
+            ['<path d="M0 0L12 12"/>', ['aria-hidden' => 'false']],
+            [],
+            '<svg aria-hidden="false"><path d="M0 0L12 12"/></svg>',
+        ];
+        yield 'no attributes and icon label' => [
+            ['<path d="M0 0L12 12"/>', ['aria-label' => 'foo']],
+            [],
+            '<svg aria-label="foo"><path d="M0 0L12 12"/></svg>',
+        ];
         yield 'aria-hidden attribute' => [
+            '<path d="M0 0L12 12"/>',
+            ['aria-hidden' => 'true'],
+            '<svg aria-hidden="true"><path d="M0 0L12 12"/></svg>',
+        ];
+        yield 'aria-hidden attribute and icon attribute' => [
+            ['<path d="M0 0L12 12"/>', ['aria-hidden' => 'false']],
             ['aria-hidden' => 'true'],
             '<svg aria-hidden="true"><path d="M0 0L12 12"/></svg>',
         ];
         yield 'aria-hidden false + aria-label' => [
+            '<path d="M0 0L12 12"/>',
             ['aria-hidden' => 'false', 'aria-label' => 'foo'],
             '<svg aria-hidden="false" aria-label="foo"><path d="M0 0L12 12"/></svg>',
         ];
         yield 'title attribute' => [
+            '<path d="M0 0L12 12"/>',
             ['title' => 'foo'],
             '<svg title="foo"><path d="M0 0L12 12"/></svg>',
         ];
         yield 'aria-labelledby attribute' => [
+            '<path d="M0 0L12 12"/>',
             ['aria-labelledby' => 'foo'],
             '<svg aria-labelledby="foo"><path d="M0 0L12 12"/></svg>',
         ];
         yield 'aria-label attribute' => [
+            '<path d="M0 0L12 12"/>',
             ['aria-label' => 'foo'],
             '<svg aria-label="foo"><path d="M0 0L12 12"/></svg>',
         ];
