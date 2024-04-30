@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-27T23:32:09Z
+
+Does he uses our phpcsfixer config ?
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-04-30T14:15:07Z
+
+> Does he uses our phpcsfixer config ?
+
+This is my understanding, yes.
+
+---
+
+This PR has been stuck on pending and I see a few others like this. Some seem to pass ok though...
