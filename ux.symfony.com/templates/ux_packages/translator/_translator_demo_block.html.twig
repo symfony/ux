@@ -8,12 +8,12 @@
         <div class="Terminal_body">
             <div class="Terminal_content">
                 <pre data-translator-demo-block-target="code">
-<small><span class="hljs-keyword">import</span> { trans, <span class="hljs-variable constant_">{{ message }}</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">'../translator'</span>;</small>
+<small><span class="hl-keyword">import</span> { trans, <span class="hl-variable constant_">{{ message }}</span> } <span class="hl-keyword">from</span> '<span class="hl-value">../translator</span>';</small>
 
-<span class="hljs-title function_">trans</span>(<span class="hljs-variable constant_">{{ message }}</span>{% if parameters %}, {
+<span class="hl-property function_">trans</span>(<span class="hl-variable constant_">{{ message }}</span>{% if parameters %}, {
 {% for name, value in parameters %} {% set isString = not (value matches '/^[\\d\\.]+$/') %}
-    <span class="hljs-attr">{{ name }}</span>:&nbsp;
-{{- name ends with 'date' ? '<span class="hljs-keyword">new</span> <span class="hljs-title class_">Date</span>(' }}{{- isString ? "'" }}<span class="hljs-string" data-code-parameter="{{ name }}">{{ value }}</span>{{ isString ? "'" }}{{ name ends with 'date' ? ')' }},
+    <span class="hl-property">{{ name }}</span>:&nbsp;
+{{- name ends with 'date' ? '<span class="hl-keyword">new</span> <span class="hl-property class_">Date</span>(' }}{{- isString ? "'" }}<span class="hl-value" data-code-parameter="{{ name }}">{{ value }}</span>{{ isString ? "'" }}{{ name ends with 'date' ? ')' }},
 {% endfor %}
 }}{% endif %})</pre>
             </div>

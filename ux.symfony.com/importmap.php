@@ -126,21 +126,6 @@ return [
     'svelte/internal' => [
         'version' => '3.59.2',
     ],
-    'highlight.js/lib/core' => [
-        'version' => '11.9.0',
-    ],
-    'highlight.js/lib/languages/javascript' => [
-        'version' => '11.9.0',
-    ],
-    'highlight.js/lib/languages/php' => [
-        'version' => '11.9.0',
-    ],
-    'highlight.js/lib/languages/twig' => [
-        'version' => '11.9.0',
-    ],
-    'highlight.js/lib/languages/xml' => [
-        'version' => '11.9.0',
-    ],
     'intl-messageformat' => [
         'version' => '10.5.11',
     ],
@@ -204,11 +189,5 @@ return [
     ],
     '@kurkle/color' => [
         'version' => '0.3.2',
-    ],
-    'highlight.js/lib/languages/yaml' => [
-        'version' => '11.9.0',
-    ],
-    'highlight.js/lib/languages/diff' => [
-        'version' => '11.9.0',
     ],
 ];

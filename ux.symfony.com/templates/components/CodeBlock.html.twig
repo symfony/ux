@@ -19,12 +19,11 @@
         {% endif %}
         <div class="Terminal_content" style="height: {{ height }};"
              data-code-expander-target="codeContent"
-             data-controller="code-highlighter"
         >
             {% for piece in this.prepareSource %}
                 {% if piece.highlight ?? true %}
-                    <pre><code class="language-{{ this.language }}" data-code-highlighter-target="codeBlock">
-                        {{- piece.content -}}
+                    <pre><code class="language-{{ this.language }}">
+                        {{- piece.content|highlight(this.language) -}}
                     </code></pre>
                 {% else %}
                     {{- piece.content|raw -}}

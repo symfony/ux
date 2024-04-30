@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "4d99693ebbe6bef767a820491dc32ccf",
+    "content-hash": "ce93314ac13280e8477e9cd3435cf0a5",
     "packages": [
         {
             "name": "composer/semver",
@@ -8833,6 +8833,59 @@
                 "source": "https://github.com/SymfonyCasts/sass-bundle/tree/v0.6.0"
             },
             "time": "2024-02-26T10:09:48+00:00"
+        },
+        {
+            "name": "tempest/highlight",
+            "version": "2.3.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tempestphp/highlight.git",
+                "reference": "abab8b516d76727402459cc73755f5568fddfce2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tempestphp/highlight/zipball/abab8b516d76727402459cc73755f5568fddfce2",
+                "reference": "abab8b516d76727402459cc73755f5568fddfce2",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^8.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.21",
+                "larapack/dd": "^1.1",
+                "league/commonmark": "^2.4",
+                "phpstan/phpstan": "^1.10.0",
+                "phpunit/phpunit": "^10.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Tempest\\Highlight\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Brent Roose",
+                    "email": "brendt@stitcher.io"
+                }
+            ],
+            "description": "Fast, extensible, server-side code highlighting",
+            "support": {
+                "issues": "https://github.com/tempestphp/highlight/issues",
+                "source": "https://github.com/tempestphp/highlight/tree/2.3.1"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/brendt",
+                    "type": "github"
+                }
+            ],
+            "time": "2024-04-25T11:41:26+00:00"
         },
         {
             "name": "twbs/bootstrap",

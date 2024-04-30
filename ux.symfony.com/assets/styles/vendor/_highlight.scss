@@ -1,57 +1,74 @@
-.hljs-comment, .hljs-prompt {
-    color: #8b949e;
+/** tempest/highlight theme (https://github.com/tempestphp/highlight/blob/main/src/Themes/Css/dracula.css) */
+.hl-keyword {
+    color: #FF79C6;
+}
+
+.hl-property {
+    color: #50FA7B;
+}
+
+.hl-attribute {
+    font-style: italic;
+}
+
+.hl-type {
+    color: #8BE9FD;
+}
+
+.hl-generic {
+    color: #9d3af6;
+}
+
+.hl-value {
+    color: #F1FA8C;
+}
+
+.hl-variable {
+    color: #F8F8F2;
+}
+
+.hl-comment {
+    color: #6272A4;
+}
+
+.hl-blur {
+    filter: blur(2px);
+}
+
+.hl-strong {
+    font-weight: bold;
+}
+
+.hl-em {
+    font-style: italic;
+}
+
+.hl-addition {
+    display: inline-block;
+    min-width: 100%;
+    background-color: #00FF0022;
+}
+
+.hl-deletion {
+    display: inline-block;
+    min-width: 100%;
+    background-color: #FF000011;
+}
+
+.hl-gutter {
+    display: inline-block;
+    font-size: 0.9em;
+    color: #555;
+    padding: 0 1ch;
     user-select: none;
-    -webkit-user-select: none
 }
 
-.codeblock-terminal .hljs-keyword {
-    color: #6a737d;
+.hl-gutter-addition {
+    background-color: #34A853;
+    color: #fff;
 }
 
-.codeblock-terminal .hljs-prompt {
-    color: #8b949e;
-    user-select: none;
-    -webkit-user-select: none
-}
-
-.codeblock-terminal .hljs-string {
-    color: #a5d6ff
-}
-
-.hljs-keyword {
-    color: #ff7b72
-}
-
-.hljs-title {
-    color: #ffa657
-}
-
-.hljs-variable-other-marker {
-    color: #79c0ff
-}
-
-.hljs-function .hljs-title {
-    color: #d2a8ff
-}
-
-.hljs-string {
-    color: #a5d6ff
-}
-
-.hljs-attr, .hljs-tag .hljs-name {
-    color: #7ee787
-}
-
-.hljs-tag .hljs-attr {
-    color: #d2a8ff
-}
-
-.hljs-addition {
-    background: rgba(46, 160, 67, .3);
-    outline: 3px solid rgba(46, 160, 67, .3)
-}
-
-.hljs-deletion {
-    background: rgba(218, 54, 51, .3);
-    outline: 3px solid rgba(218, 54, 51, .3)
+.hl-gutter-deletion {
+    background-color: #EA4334;
+    color: #fff;
 }
