@@ -1,0 +1,108 @@
+---------------------------------------------------------------------------
+
+by norkunas at 2024-04-29T05:08:12Z
+
+Can we do this only for these attributes?: `aria-atomic, aria-busy, aria-checked, aria-disabled, aria-expanded, aria-grabbed, aria-haspopup, aria-hidden, aria-invalid, aria-multiline, aria-multiselectable, aria-pressed, aria-readonly, aria-required, aria-selected`
+
+ref https://github.com/symfony/ux/pull/1709#issuecomment-2081888895
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-29T10:30:15Z
+
+First of all, sorry for the BC @norkunas
+
+I'm very not found of having distinct behaviour for specific attributes (one per one i mean), that will be something hard to maintain.
+
+I'd suggest another option: just hande "true" (boolean) for aria-attribute
+
+That would work like this
+
+| Attribute \ Value | true | false | "true" | "false" |
+| - | - | - | - | - |
+| required | required |  | required="true" |  required=false" |
+| aria-required | aria-required="true" |  | aria-required="true" |  aria-required="false" |
+
+So just something to ease the DX but that let the developer responsible of setting a correct value.
+
+WDYT ?
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-04-29T10:32:08Z
+
+It's **NOT** a very big list to maintain, so imho to restore previous behavior it's easy to check for those attributes, and I have a WIP code for twig components
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-29T10:33:24Z
+
+My suggestion would not work for you ?
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-04-29T10:34:51Z
+
+If you mean that real boolean `false` will omit the attribute from being rendered, then probably yes, okay for me :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-29T12:03:24Z
+
+As it's already the case for all attributes.
+
+The only aria specific behaiour would be transforming `bool true` into `string "true" `.
+
+I think this could be the easiest to maintain/document
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-04-29T12:33:36Z
+
+I think `'Passing "null" as an attribute value is deprecated and will throw an exception in 3.0.'` was wrong, and it could easily solve this problem for me - I'd use null for omitting attributes, and then `false` or `true` could be casted to strings without a problem for me. When this deprecation was added I needed to switch from `null` to `false`
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-29T16:38:30Z
+
+> I think 'Passing "null" as an attribute value is deprecated and will throw an exception in 3.0.' was wrong, and it could easily solve this problem for me
+
+Well we cannot change this now 🤷‍♂️
+
+Users do want to use booleans in their code (that was a recurrent demand, same thing for icon, CVA, live attributes ...)
+
+So i think my proposition works, but let's see what others think
+
+@kbond  @WebMamba (and everyone else :) )?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-04-29T21:43:04Z
+
+I feel like aria is a topic more complex than that and we tried to be too opinioned about that. If we look at the doc here: https://w3.org/WAI/WCAG21/Techniques/aria/ARIA24 they don't recommend setting the aria-label to true. WDYT ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-29T23:45:31Z
+
+No one wants or recommands to set the aria-label to true :) Where did you read that ?
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-04-30T03:31:15Z
+
+> > I think 'Passing "null" as an attribute value is deprecated and will throw an exception in 3.0.' was wrong, and it could easily solve this problem for me
+>
+> Well we cannot change this now 🤷‍♂️
+
+And why not? :slightly_smiling_face: undeprecating is easy, isn't it? :slightly_smiling_face:
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-30T06:35:40Z
+
+> And why not? 🙂 undeprecating is easy, isn't it? 🙂
+
+I should have quoted more text :)
+
+A choice has been made to use the boolean "false" to remove an attribute, as many persons asked, i don't see myself asking people to switch again and lose this feature (that would be a BC break).
