@@ -14,6 +14,25 @@ import { findComponents, registerComponent, unregisterComponent } from '../Compo
 
 declare const Turbo: any;
 
+type MaybePromise<T = void> = T | Promise<T>;
+
+export type ComponentHooks = {
+    'connect': (component: Component) => MaybePromise,
+    'disconnect': (component: Component) => MaybePromise,
+    'request:started': (requestConfig: any) => MaybePromise,
+    'render:finished': (component: Component) => MaybePromise,
+    'response:error': (backendResponse: BackendResponse, controls: { displayError: boolean }) => MaybePromise,
+    'loading.state.started': (element: HTMLElement, request: BackendRequest) => MaybePromise,
+    'loading.state.finished': (element: HTMLElement) => MaybePromise,
+    'model:set': (model: string, value: any, component: Component) => MaybePromise,
+};
+
+export type ComponentHookName = keyof ComponentHooks;
+
+export type ComponentHookCallback<T extends string = ComponentHookName> = T extends ComponentHookName
+    ? ComponentHooks[T]
+    : (...args: any[]) => MaybePromise;
+
 export default class Component {
     readonly element: HTMLElement;
     readonly name: string;
@@ -109,24 +128,11 @@ export default class Component {
         this.externalMutationTracker.stop();
     }
 
-    /**
-     * Add a named hook to the component. Available hooks are:
-     *
-     *     * connect (component: Component) => {}
-     *     * disconnect (component: Component) => {}
-     *     * request:started (requestConfig: any) => {}
-     *     * render:started (html: string, response: BackendResponse, controls: { shouldRender: boolean }) => {}
-     *     * render:finished (component: Component) => {}
-     *     * response:error (backendResponse: BackendResponse, controls: { displayError: boolean }) => {}
-     *     * loading.state:started (element: HTMLElement, request: BackendRequest) => {}
-     *     * loading.state:finished (element: HTMLElement) => {}
-     *     * model:set (model: string, value: any, component: Component) => {}
-     */
-    on(hookName: string, callback: (...args: any[]) => void): void {
+    on<T extends string | ComponentHookName = ComponentHookName>(hookName: T, callback: ComponentHookCallback<T>): void {
         this.hooks.register(hookName, callback);
     }
 
-    off(hookName: string, callback: (...args: any[]) => void): void {
+    off<T extends string | ComponentHookName = ComponentHookName>(hookName: T, callback: ComponentHookCallback<T>): void {
         this.hooks.unregister(hookName, callback);
     }
 

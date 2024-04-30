@@ -2625,7 +2625,7 @@ class PollingDirector {
                 this.component.action(actionName, {}, 0);
             };
         }
-        const timer = setInterval(() => {
+        const timer = window.setInterval(() => {
             callback();
         }, duration);
         this.pollingIntervals.push(timer);
