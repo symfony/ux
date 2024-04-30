@@ -51,17 +51,17 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
                     $value = (string) $value;
                 }
 
-                if (\is_bool($value) && str_starts_with($key, 'aria-')) {
-                    $value = $value ? 'true' : 'false';
-                }
-
                 if (!\is_scalar($value) && null !== $value) {
-                    throw new \LogicException(sprintf('A "%s" prop was passed when creating the component. No matching "%s" property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a %s). Did you mean to pass this to your component or is there a typo on its name?', $key, $key, get_debug_type($value)));
+                    throw new \LogicException(sprintf('A "%s" prop was passed when creating the component. No matching "%s" property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a "%s"). Did you mean to pass this to your component or is there a typo on its name?', $key, $key, get_debug_type($value)));
                 }
 
                 if (null === $value) {
                     trigger_deprecation('symfony/ux-twig-component', '2.8.0', 'Passing "null" as an attribute value is deprecated and will throw an exception in 3.0.');
                     $value = true;
+                }
+
+                if (true === $value && str_starts_with($key, 'aria-')) {
+                    $value = 'true';
                 }
 
                 return match ($value) {
@@ -89,12 +89,12 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
             $value = (string) $value;
         }
 
-        if (\is_bool($value) && str_starts_with($attribute, 'aria-')) {
-            $value = $value ? 'true' : 'false';
+        if (true === $value && str_starts_with($attribute, 'aria-')) {
+            $value = 'true';
         }
 
         if (!\is_string($value)) {
-            throw new \LogicException(sprintf('Can only get string attributes (%s is a %s).', $attribute, get_debug_type($value)));
+            throw new \LogicException(sprintf('Can only get string attributes (%s is a "%s").', $attribute, get_debug_type($value)));
         }
 
         $this->rendered[$attribute] = true;
