@@ -9,13 +9,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\TwigComponent\DependencyInjection\Loader\Configurator;
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
-use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
+use Symfony\UX\TwigComponent\Command\TwigComponentDebugCommand;
 use Symfony\UX\TwigComponent\DataCollector\TwigComponentDataCollector;
 use Symfony\UX\TwigComponent\EventListener\TwigComponentLoggerListener;
-
-use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
 
 return static function (ContainerConfigurator $container) {
     $container->services()
@@ -35,5 +33,16 @@ return static function (ContainerConfigurator $container) {
             'template' => '@TwigComponent/Collector/twig_component.html.twig',
             'id' => 'twig_component',
             'priority' => 256,
-        ]);
+        ])
+
+        ->set('ux.twig_component.command.debug', TwigComponentDebugCommand::class)
+        ->args([
+            param('twig.default_path'),
+            service('ux.twig_component.component_factory'),
+            service('twig'),
+            param('ux.twig_component.class_component_map'),
+            param('ux.twig_component.anonymous_template_directory'),
+        ])
+        ->tag('console.command')
+    ;
 };

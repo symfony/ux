@@ -28,20 +28,20 @@ use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\Twig\PropsNode;
 use Twig\Environment;
 
-#[AsCommand(name: 'debug:twig-component', description: 'Display components and them usages for an application')]
+#[AsCommand(name: 'debug:twig-component', description: 'Display Twig components and their usages')]
 class TwigComponentDebugCommand extends Command
 {
-    private readonly string $anonymousDirectory;
+    /** @var array<string, ComponentMetadata> */
+    private array $components;
 
     public function __construct(
         private string $twigTemplatesPath,
         private ComponentFactory $componentFactory,
         private Environment $twig,
         private readonly array $componentClassMap,
-        ?string $anonymousDirectory = null,
+        private string $anonymousDirectory = 'components',
     ) {
         parent::__construct();
-        $this->anonymousDirectory = $anonymousDirectory ?? 'components';
     }
 
     protected function configure(): void
@@ -51,28 +51,26 @@ class TwigComponentDebugCommand extends Command
                 new InputArgument('name', InputArgument::OPTIONAL, 'A component name or part of the component name'),
             ])
             ->setHelp(
-                <<<'EOF'
-The <info>%command.name%</info> display all the Twig components in your application.
+                <<<EOF
+                The <info>%command.name%</info> display all the Twig components in your application.
 
-To list all components:
+                To list all components:
 
-    <info>php %command.full_name%</info>
+                    <info>php %command.full_name%</info>
 
-To get specific information about a component, specify its name (or a part of it):
+                To get specific information about a component, specify its name (or a part of it):
 
-    <info>php %command.full_name% Alert</info>
-EOF
+                    <info>php %command.full_name% Alert</info>
+                EOF
             );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $name = $input->getArgument('name');
 
-        if (\is_string($name)) {
-            $component = $this->findComponentName($io, $name, $input->isInteractive());
-            if (null === $component) {
+        if ($name = $input->getArgument('name')) {
+            if (!$component = $this->findComponentName($io, $name, $input->isInteractive())) {
                 $io->error(sprintf('Unknown component "%s".', $name));
 
                 return Command::FAILURE;
@@ -99,25 +97,31 @@ EOF
     private function findComponentName(SymfonyStyle $io, string $name, bool $interactive): ?string
     {
         $components = [];
-        foreach ($this->componentClassMap as $componentName) {
+
+        foreach ($this->findComponents() as $componentName => $metadata) {
             if ($name === $componentName) {
                 return $name;
             }
+
             if (str_contains($componentName, $name)) {
                 $components[$componentName] = $componentName;
             }
         }
+
         foreach ($this->findAnonymousComponents() as $componentName) {
             if (isset($components[$componentName])) {
                 continue;
             }
+
             if ($name === $componentName) {
                 return $name;
             }
+
             if (str_contains($componentName, $name)) {
                 $components[$componentName] = $componentName;
             }
         }
+
         if ($interactive && \count($components)) {
             return $io->choice('Select one of the following component to display its information', array_values($components), 0);
         }
@@ -130,15 +134,21 @@ EOF
      */
     private function findComponents(): array
     {
-        $components = [];
-        foreach ($this->componentClassMap as $class => $name) {
-            $components[$name] ??= $this->componentFactory->metadataFor($name);
-        }
-        foreach ($this->findAnonymousComponents() as $name => $template) {
-            $components[$name] ??= $this->componentFactory->metadataFor($name);
+        if (isset($this->components)) {
+            return $this->components;
         }
 
-        return $components;
+        $this->components = [];
+
+        foreach ($this->componentClassMap as $name) {
+            $this->components[$name] ??= $this->componentFactory->metadataFor($name);
+        }
+
+        foreach ($this->findAnonymousComponents() as $name => $template) {
+            $this->components[$name] ??= $this->componentFactory->metadataFor($name);
+        }
+
+        return $this->components;
     }
 
     /**
@@ -152,11 +162,14 @@ EOF
         $anonymousPath = $this->twigTemplatesPath.'/'.$this->anonymousDirectory;
         $finderTemplates = new Finder();
         $finderTemplates->files()->in($anonymousPath)->notPath('/_');
+
         foreach ($finderTemplates as $template) {
             $component = str_replace('/', ':', $template->getRelativePathname());
+
             if (str_ends_with($component, '.html.twig')) {
                 $component = substr($component, 0, -10);
             }
+
             $components[$component] = $component;
         }
 
@@ -204,16 +217,21 @@ EOF
 
             return sprintf('%s(%s)', $m->getName(), implode(', ', $params));
         };
+
         $hooks = [];
+
         if ($method = AsTwigComponent::mountMethod($metadata->getClass())) {
             $hooks[] = ['Mount', $logMethod($method)];
         }
+
         foreach (AsTwigComponent::preMountMethods($metadata->getClass()) as $method) {
             $hooks[] = ['PreMount', $logMethod($method)];
         }
+
         foreach (AsTwigComponent::postMountMethods($metadata->getClass()) as $method) {
             $hooks[] = ['PostMount', $logMethod($method)];
         }
+
         if ($hooks) {
             $table->addRows([
                 new TableSeparator(),
@@ -233,12 +251,17 @@ EOF
         $table->setStyle('default');
         $table->setHeaderTitle('Components');
         $table->setHeaders(['Name', 'Class', 'Template', 'Type']);
+
         foreach ($components as $metadata) {
             $table->addRow([
                 $metadata->getName(),
                 $metadata->get('class') ? $metadata->getClass() : '',
                 $metadata->getTemplate(),
-                $metadata->get('live') ? '<info>Live</info>' : ($metadata->get('class') ? '' : '<comment>Anon</comment>'),
+                match (true) {
+                    null === $metadata->get('class') => '<comment>Anon</comment>',
+                    $metadata->get('live') => '<info>Live</info>',
+                    default => '',
+                },
             ]);
         }
         $table->render();
@@ -251,16 +274,13 @@ EOF
     {
         $properties = [];
         $reflectionClass = new \ReflectionClass($metadata->getClass());
+
         foreach ($reflectionClass->getProperties() as $property) {
             $propertyName = $property->getName();
 
             if ($metadata->isPublicPropsExposed() && $property->isPublic()) {
                 $type = $property->getType();
-                if ($type instanceof \ReflectionNamedType) {
-                    $typeName = $type->getName();
-                } else {
-                    $typeName = (string) $type;
-                }
+                $typeName = $type instanceof \ReflectionNamedType ? $type->getName() : (string) $type;
                 $value = $property->getDefaultValue();
                 $propertyDisplay = $typeName.' $'.$propertyName.(null !== $value ? ' = '.json_encode($value) : '');
                 $properties[$property->name] = $propertyDisplay;
@@ -286,33 +306,32 @@ EOF
         $source = $this->twig->load($metadata->getTemplate())->getSourceContext();
         $tokenStream = $this->twig->tokenize($source);
         $moduleNode = $this->twig->parse($tokenStream);
-
         $propsNode = null;
+
         foreach ($moduleNode->getNode('body') as $bodyNode) {
             foreach ($bodyNode as $node) {
                 if (PropsNode::class === $node::class) {
                     $propsNode = $node;
+
                     break 2;
                 }
             }
         }
+
         if (!$propsNode instanceof PropsNode) {
             return [];
         }
 
         $propertyNames = $propsNode->getAttribute('names');
         $properties = array_combine($propertyNames, $propertyNames);
+
         foreach ($propertyNames as $propName) {
             if ($propsNode->hasNode($propName)
                 && ($valueNode = $propsNode->getNode($propName))
                 && $valueNode->hasAttribute('value')
             ) {
                 $value = $valueNode->getAttribute('value');
-                if (\is_bool($value)) {
-                    $value = $value ? 'true' : 'false';
-                } else {
-                    $value = json_encode($value);
-                }
+                $value = \is_bool($value) ? ($value ? 'true' : 'false') : json_encode($value);
                 $properties[$propName] = $propName.' = '.$value;
             }
         }
