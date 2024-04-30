@@ -139,28 +139,34 @@ final class ComponentFactoryTest extends KernelTestCase
     {
         self::bootKernel(['environment' => 'legacy_anonymous']);
 
-        $this->expectException(\InvalidArgumentException::class);
-        $this->factory()->metadataFor('anonymous:AButton');
+        // Named templates should be found
+        $metadata = $this->factory()->metadataFor('foo:bar:baz');
+        $this->assertSame('components/foo/bar/baz.html.twig', $metadata->getTemplate());
 
+        // Prefixed nonymous templates should be found
+        $metadata = $this->factory()->metadataFor('anonymous:AButton');
+        $this->assertSame('anonymous/AButton.html.twig', $metadata->getTemplate());
+
+        // Unprefixed anonymous templates should not be found
         $this->expectException(\InvalidArgumentException::class);
         $this->factory()->metadataFor('AButton');
-
-        $metadata = $this->factory()->metadataFor('foo:bar:baz');
-        $this->assertSame('components/components/foo:bar:baz.html.twig', $metadata->getTemplate());
     }
 
     public function testAnonymous(): void
     {
         self::bootKernel(['environment' => 'anonymous_directory']);
 
+        // Named templates should be found
+        $metadata = $this->factory()->metadataFor('foo:bar:baz');
+        $this->assertSame('components/foo/bar/baz.html.twig', $metadata->getTemplate());
+
+        // Unprefix anonymous templates should be found
+        $metadata = $this->factory()->metadataFor('AButton');
+        $this->assertSame('anonymous/AButton.html.twig', $metadata->getTemplate());
+
+        // Prefixed anonymous templates should not be found
         $this->expectException(\InvalidArgumentException::class);
         $this->factory()->metadataFor('anonymous:AButton');
-
-        $metadata = $this->factory()->metadataFor('AButton');
-        $this->assertSame('components/anonymous/AButton.html.twig', $metadata->getTemplate());
-
-        $this->expectException(\InvalidArgumentException::class);
-        $this->factory()->metadataFor('foo:bar:baz');
     }
 
     public function testAutoNamingInSubDirectory(): void
