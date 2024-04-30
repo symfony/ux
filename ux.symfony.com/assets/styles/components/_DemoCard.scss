@@ -38,10 +38,7 @@
   max-height: 100%;
   width: 100%;
   display: block;
-  transition: transform 500ms linear;
-  transform: scale(1) translateY(0);
   border-radius: .25rem;
-  transform-style: preserve-3d;
   opacity: .80;
 }
 .DemoCard:hover .DemoCard__image {
@@ -53,7 +50,7 @@
   flex: 1;
   border-bottom-left-radius: var(--radius);
   border-bottom-right-radius: var(--radius);
-  gap: .5rem;
+  gap: .15rem;
   display: flex;
   flex-direction: column;
 }
@@ -81,5 +78,6 @@
 }
 
 .DemoCard__tags {
+  margin-top: auto;
   margin-bottom: 0;
 }

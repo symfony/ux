@@ -10,12 +10,18 @@
 
 .Terminal_header {
     display: flex;
-    background-color: #0D0D0DBA;
+    background-color: var(--bg-header, #0D0D0DBA);
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
     align-items: center;
     justify-content: space-between;
     padding: .5rem;
+    opacity: var(--header-opacity, 1);
+    transition: all 250ms ease-in-out;
+
+    .Terminal:hover & {
+        opacity: 1;
+    }
 
     .nav-tabs {
         border: 0;

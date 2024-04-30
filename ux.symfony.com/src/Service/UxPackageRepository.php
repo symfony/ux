@@ -190,8 +190,6 @@ class UxPackageRepository
                 'I need to translate strings in JavaScript',
                 'translator.svg'
             ),
-
-            // new UxPackage('form-collection', 'Form Collection', 'app_form_collection', 'linear-gradient(95.22deg, #5920A0 -4.7%, #844EC9 105.43%), #5920A0', 'Handle CollectionType embedded forms with zero custom JavaScript'),
         ];
 
         if (!$query) {
@@ -212,7 +210,7 @@ class UxPackageRepository
             }
         }
 
-        throw new \InvalidArgumentException(sprintf('Unknown package "%s"', $name));
+        throw new \InvalidArgumentException(sprintf('Unknown package "%s".', $name));
     }
 
     public function count(): int
@@ -229,6 +227,6 @@ class UxPackageRepository
             }
         }
 
-        throw new \InvalidArgumentException(sprintf('Could not find a package for the current route "%s"', $route));
+        throw new \InvalidArgumentException(sprintf('Could not find a package for the current route "%s".', $route));
     }
 }
