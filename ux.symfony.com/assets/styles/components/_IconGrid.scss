@@ -21,6 +21,8 @@
   aspect-ratio: 1;
   position: relative;
   transition: 150ms linear;
+  place-content: stretch;
+  align-content: center;
 }
 
 .IconCard:hover {
@@ -34,6 +36,8 @@
   place-items: center;
   align-content: center;
   position: relative;
+  aspect-ratio: 1;
+  width: 100%;
 }
 
 .IconCard__icon {
@@ -54,6 +58,7 @@
   line-height: 1.1;
   display: none;
   transition: opacity 125ms linear;
+  color: var(--bs-body-color);
 }
 
 .IconCard__name {

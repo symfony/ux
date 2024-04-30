@@ -110,19 +110,7 @@
 @import "./container";
 @import "./images";
 
-// TODO move Terminal/CodeBlock
-.btn-expand-code {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    color: rgb(156 163 175);
-    background-color: rgb(9, 10, 11);
-}
-.btn-expand-code:hover, .btn-expand-code:active {
-    background-color: rgb(9, 10, 11) !important;
-    color: #fff !important;
-}
 .code-description a {
     text-decoration: underline;
 }
+

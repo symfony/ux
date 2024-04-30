@@ -41,6 +41,9 @@ button {
   border: none;
   background: inherit;
 }
+button:active {
+  border: inherit;
+}
 
 a.link {
   --color: #d9438e;

@@ -1,9 +1,8 @@
 {% props source, link %}
 
 <div
-    data-controller="ux-clipboard tooltips"
-    data-ux-clipboard-source-value="{{ source }}"
-    data-ux-clipboard-success-content="Copied!"
+    data-controller="tooltips clipboarder"
+    data-clipboarder-source-value="{{ source }}"
     class="code-buttons"
 >
     <a
@@ -15,12 +14,18 @@
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
         title="View on GitHub"
-    ><twig:Icon name="github" /></a>
+    >
+        <twig:Icon name="github"/>
+    </a>
     <button
         type="button"
-        class="btn btn-copy btn-sm"
-        data-action="ux-clipboard#copy"
-    ><twig:Icon name="copy"/>
-        <span data-ux-clipboard-target="button"> Copy</span>
+        class="btn btn-link btn-sm btn-copy"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        title="Copy code"
+        data-action="clipboarder#copy"
+        data-clipboarder-target="button"
+    >
+        <twig:Icon name="copy"/>
     </button>
 </div>

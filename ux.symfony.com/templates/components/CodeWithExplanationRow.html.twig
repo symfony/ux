@@ -1,5 +1,6 @@
 <div {{ attributes.defaults({
-    class: 'row mb-5 align-items-center position-relative'
+    class: 'row mb-5 py-4 align-items-center position-relative',
+    style: '--bs-gutter-x: 4rem'
 }) }}>
     <div class="col-12 col-md-6 code-description {{ not reversed ? 'order-md-2' }}">
         {% apply markdown_to_html %}

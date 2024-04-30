@@ -58,17 +58,18 @@ body.locked {
   --height: 2rem;
   height: var(--height);
   width: calc(161 / 30 * var(--height));
-  background: url(../images/sf-ux.svg);
-  background-size: 100%;
   display: block;
   transition: filter 250ms ease-in;
   flex-shrink: 0;
-  span {
-    display: none;
-  }
   .AppHeader--white &,
   [data-bs-theme="dark"] & {
     filter: invert(1);
+  }
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
   }
 }
 
@@ -86,6 +87,9 @@ body.locked {
 }
 
 @media (min-width: 860px) {
+  .AppHeader_logo {
+    --height: 2.5rem;
+  }
   .AppHeader_toggler {
     display: none !important;
   }

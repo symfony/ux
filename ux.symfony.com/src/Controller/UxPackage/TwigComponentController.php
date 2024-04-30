@@ -23,7 +23,7 @@ class TwigComponentController extends AbstractController
     {
         $package = $packageRepository->find('twig-component');
 
-        return $this->render('ux_packages/twig-component.html.twig', [
+        return $this->render('ux_packages/twig_component.html.twig', [
             'package' => $package,
         ]);
     }

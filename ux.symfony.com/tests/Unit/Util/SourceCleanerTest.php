@@ -68,7 +68,7 @@ class SourceCleanerTest extends TestCase
     public function testItExtractsTwigBlock(): void
     {
         $source = <<<EOF
-            {% extends 'packageBase.html.twig' %}
+            {% extends 'ux_packages/package.html.twig' %}
 
             {% block component_header %}
                 {% component PackageHeader with {

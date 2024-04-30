@@ -1,4 +1,4 @@
-{% extends 'packageBase.html.twig' %}
+{% extends 'ux_packages/package.html.twig' %}
 
 {% block package_header %}
     {% component PackageHeader with {
@@ -18,7 +18,7 @@
 
 {% block code_block_left %}
     <twig:CodeBlock
-        filename="templates/ux_packages/lazy-image.html.twig"
+        filename="templates/ux_packages/lazy_image.html.twig"
         height="230px"
         targetTwigBlock="code_block_right"
         :showTwigExtends="false"

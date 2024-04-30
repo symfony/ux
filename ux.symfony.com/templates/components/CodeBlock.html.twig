@@ -3,7 +3,7 @@
 }) }}>
 
     {% if showFilename %}
-        <div class="Terminal_header py-2 ps-4 pe-2 mb-0 d-flex justify-content-between align-items-center">
+        <div class="Terminal_header py-2 px-3 mb-0 d-flex justify-content-between align-items-center">
             <a id="{{ this.elementId }}" href="#{{ this.elementId }}" class="Terminal_title"><code>{{ filename }}</code></a>
             <div class="Terminal_actions">
                 <twig:CodeBlockButtons source="{{ this.rawSource }}" link="{{ this.githubLink }}"/>
@@ -35,14 +35,12 @@
         {% block code_content_bottom %}
             <button
                 type="button"
-                class="btn btn-expand-code pt-2 text-center"
+                class="Terminal_expand"
                 data-code-expander-target="expandCodeButton"
                 data-action="code-expander#expandCode"
-                style="display: none;"
             >
                 <twig:Icon name="arrow-down"/>
-                Expand code
-                <twig:Icon name="arrow-down"/>
+                <span>Expand code</span>
             </button>
         {% endblock %}
     </div>
