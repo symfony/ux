@@ -1,7 +1,8 @@
 .Terminal {
     --border-radius: .75rem;
+    --bg-color: #1b1e21;
 
-    background-color: $n-900;
+    background-color: var(--bg-color);
     border-radius: .75rem;
     position: relative;
     font-size: 12px;
@@ -9,7 +10,7 @@
 
 .Terminal_header {
     display: flex;
-    background-color: $n-900;
+    background-color: #0D0D0DBA;
     border-top-left-radius: var(--border-radius);
     border-top-right-radius: var(--border-radius);
     align-items: center;
@@ -26,11 +27,10 @@
     .nav-link {
         border-bottom: 0;
         margin-bottom: 0;
-        color: inherit;
         color: $n-100;
     }
     .nav-tabs .nav-link.active, .nav-tabs .nav-item.show .nav-link {
-        background-color: $n-800;
+        background-color: var(--bg-color);
         border-color: $n-800;
         color: $n-100;
     }
@@ -84,7 +84,6 @@
 
 
 .Terminal_body {
-    background-color: $n-800;
     height: 100%;
     font-family: var(--font-family-code);
     font-size: 14px;
@@ -140,14 +139,19 @@
     margin: 0;
 }
 .Terminal_content {
-    font-size: .9rem;
     overflow-x: auto;
     overflow-y: auto;
-    padding: 1rem;
+    padding: 1em;
     pre {
         overflow: visible;
     }
     scrollbar-width: thin;
+    pre {
+        background: none;
+    }
+    code {
+        background: none;
+    }
 }
 
 @media screen and (min-width: 768px) {
