@@ -12,10 +12,10 @@
 namespace App\Service\CommonMark;
 
 use League\CommonMark\CommonMarkConverter;
-use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 use League\CommonMark\Extension\Mention\MentionExtension;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
+use Tempest\Highlight\CommonMark\HighlightExtension;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -44,9 +44,9 @@ final class ConverterFactory
         ]);
 
         $converter->getEnvironment()
-            ->addRenderer(FencedCode::class, new CodeRenderer(), 10)
             ->addExtension(new ExternalLinkExtension())
             ->addExtension(new MentionExtension())
+            ->addExtension(new HighlightExtension())
         ;
 
         return $converter;
