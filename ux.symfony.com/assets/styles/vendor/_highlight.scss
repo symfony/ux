@@ -1,34 +1,39 @@
-/** tempest/highlight theme (https://github.com/tempestphp/highlight/blob/main/src/Themes/Css/dracula.css) */
+.Terminal_content {
+    pre, code {
+        color: #cad3f5;
+    }
+}
+
 .hl-keyword {
-    color: #FF79C6;
+    color: #c6a0f6;
 }
 
 .hl-property {
-    color: #50FA7B;
+    color: #8aadf4;
 }
 
 .hl-attribute {
-    font-style: italic;
+//    font-style: italic;
 }
 
 .hl-type {
-    color: #8BE9FD;
+    color: #eed49f;
 }
 
 .hl-generic {
-    color: #9d3af6;
+    color: #ed8796;
 }
 
 .hl-value {
-    color: #F1FA8C;
+    color: #a6da95;
 }
 
 .hl-variable {
-    color: #F8F8F2;
+    color: #CFCFCF;
 }
 
 .hl-comment {
-    color: #6272A4;
+    color: #6e738d;
 }
 
 .hl-blur {

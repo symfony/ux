@@ -27,14 +27,6 @@
 
 {% block demo_content %}
 
-        {% apply highlight('js') %}
-            import { trans, SAY_HELLO } from '../translator';
-
-            trans(SAY_HELLO, {
-                name: 'Fabien',
-            }})
-        {% endapply %}
-
         {% embed 'ux_packages/translator/_translator_demo_block.html.twig' with {
             message: 'HELLO',
         } %}
