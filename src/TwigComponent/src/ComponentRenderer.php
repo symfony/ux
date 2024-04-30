@@ -141,7 +141,11 @@ final class ComponentRenderer implements ComponentRendererInterface
     private function exposedVariables(object $component, bool $exposePublicProps): \Iterator
     {
         if ($exposePublicProps) {
-            yield from get_object_vars($component);
+            $publicProps = get_object_vars($component);
+            if ($uninitializedProps = array_diff_key(get_class_vars($component::class), $publicProps)) {
+                throw new \LogicException(sprintf('Cannot expose uninitialized property "$%s" from "%s".', array_keys($uninitializedProps)[0], $component::class));
+            }
+            yield from $publicProps;
         }
 
         $class = new \ReflectionClass($component);
