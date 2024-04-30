@@ -155,20 +155,20 @@ HTML Syntax
 ~~~~~~~~~~~
 
 In addition to the ``ux_icon()`` function explained in the previous sections,
-this package also supports an alternative HTML syntax based on the ``<twig:UX:Icon>``
+this package also supports an alternative HTML syntax based on the ``<twig:ux:icon>``
 tag:
 
 .. code-block:: html
 
     <!-- renders "user-profile.svg" -->
-    <twig:UX:Icon name="user-profile" class="w-4 h-4" />
+    <twig:ux:icon name="user-profile" class="w-4 h-4" />
     <!-- renders "admin/user-profile.svg" -->
-    <twig:UX:Icon name="admin:user-profile" class="w-4 h-4" />
+    <twig:ux:icon name="admin:user-profile" class="w-4 h-4" />
     <!-- renders 'user-solid.svg' icon from 'Flowbite' icon set via ux.symfony.com -->
-    <twig:UX:Icon name="flowbite:user-solid" />
+    <twig:ux:icon name="flowbite:user-solid" />
 
     <!-- you can also add any HTML attributes -->
-    <twig:UX:Icon name="user-profile" height="16" width="16" aria-hidden="true" />
+    <twig:ux:icon name="user-profile" height="16" width="16" aria-hidden="true" />
 
 .. note::
 
@@ -288,16 +288,16 @@ HTML Syntax
 
 .. code-block:: html+twig
 
-    <twig:UX:Icon name="user-profile" />
+    <twig:ux:icon name="user-profile" />
 
     {# Renders "user-profile.svg" #}
-    <twig:UX:Icon name="user-profile" class="w-4 h-4" />
+    <twig:ux:icon name="user-profile" class="w-4 h-4" />
 
     {# Renders "sub-dir/user-profile.svg" (sub-directory) #}
-    <twig:UX:Icon name="sub-dir:user-profile" class="w-4 h-4" />
+    <twig:ux:icon name="sub-dir:user-profile" class="w-4 h-4" />
 
     {# Renders "flowbite:user-solid" from ux.symfony.com #}
-    <twig:UX:Icon name="flowbite:user-solid" />
+    <twig:ux:icon name="flowbite:user-solid" />
 
 .. note::
 
@@ -376,7 +376,7 @@ of the following attributes: ``aria-label``, ``aria-labelledby`` or ``title``.
 
     .. code-block:: twig+html
 
-        <twig:UX:Icon name="user-profile" aria-hidden="false" />
+        <twig:ux:icon name="user-profile" aria-hidden="false" />
 
 
 Performance
@@ -408,7 +408,7 @@ In production, you can pre-warm the cache by running the following command:
     $ php bin/console ux:icons:warm-cache
 
 This command looks in all your Twig templates for ``ux_icon()`` calls and
-``<twig:UX:Icon>`` tags and caches the icons it finds.
+``<twig:ux:icon>`` tags and caches the icons it finds.
 
 .. caution::
 
@@ -440,18 +440,18 @@ TwigComponent
 ~~~~~~~~~~~~~
 
 The ``ux_icon()`` function is optimized to be as fast as possible. To deliver the
-same level of performance when using the HTML syntax (``<twig:UX:Icon name="..." />``),
+same level of performance when using the HTML syntax (``<twig:ux:icon name="..." />``),
 the TwigComponent overhead is reduced by calling the IconRenderer immediately and
 returning the HTML output.
 
 .. warning::
 
-    The <twig:UX:Icon> component does not support embedded content.
+    The <twig:ux:icon> component does not support embedded content.
 
     .. code-block:: twig+html
 
         {# The 🧸 will be ignore in the HTML output #}
-        <twig:UX:Icon name="user-profile" class="w-4 h-4">🧸</twig:UX:Icon>
+        <twig:ux:icon name="user-profile" class="w-4 h-4">🧸</twig:ux:icon>
 
         {# Renders "user-profile.svg" #}
         <svg viewBox="0 0 24 24" class="w-4 h-4">
