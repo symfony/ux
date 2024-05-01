@@ -2,11 +2,9 @@
 h1 {
   font-size: 52px;
   font-weight: 700;
-  letter-spacing: -0.035em;
-}
-
-h1.ubuntu {
   line-height: 60px;
+  letter-spacing: -0.035em;
+  font-family: var(--font-family-title);
 }
 
 h2.ubuntu {
@@ -77,7 +75,7 @@ h4.ubuntu {
 
 
 @media (max-width: 576px) {
-  h1.ubuntu {
+  h1 {
     font-size: 36px;
     line-height: 41px;
     letter-spacing: -1px;

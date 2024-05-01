@@ -1,8 +1,6 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
     form_themes: ['bootstrap_5_layout.html.twig']
-    globals:
-        twigPackageHelper: '@App\Service\TwigPackageHelper'
 
     paths:
         '%kernel.project_dir%/templates/demos/live_memory': ~
