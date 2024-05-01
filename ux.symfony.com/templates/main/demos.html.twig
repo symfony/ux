@@ -11,6 +11,14 @@
     <div class="hero">
         <div class="container-fluid container-xxl px-4 pt-4 px-md-5">
             <h1 class="text-center mt-5">All Demos</h1>
+            <div style="font-size: 1rem; line-height: 1.75rem;" class="mt-4 text-center demo-introduction">
+                <p>
+                    Discover all that <code>Symfony UX</code> offers through our collection of demos!<br/>
+                    Source code is provided for each demo: PHP, Twig, JS, and CSS.
+                </p>
+            </div>
+            <p class="text-center mt-2 mb-5">
+            </p>
         </div>
     </div>
 
@@ -22,4 +30,8 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block aside %}
+    {{ include('_aside.html.twig') }}
 {% endblock %}

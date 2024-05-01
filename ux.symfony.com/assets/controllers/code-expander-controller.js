@@ -4,6 +4,12 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['useStatements', 'expandCodeButton', 'codeContent'];
 
+    connect() {
+        if (this.hasExpandCodeButtonTarget && !this.#isOverflowing(this.codeContentTarget)) {
+            this.expandCodeButtonTarget.remove();
+        }
+    }
+
     expandUseStatements(event) {
         this.useStatementsTarget.style.display = 'block';
         event.currentTarget.remove();
