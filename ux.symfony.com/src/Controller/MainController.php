@@ -14,6 +14,7 @@ namespace App\Controller;
 use App\Model\RecipeFileTree;
 use App\Service\UxPackageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -28,5 +29,14 @@ class MainController extends AbstractController
             'packages' => $packages,
             'recipeFileTree' => new RecipeFileTree(),
         ]);
+    }
+
+    #[Route(path: '/robots.txt', name: 'app_robots')]
+    public function __invoke(Request $request): Response
+    {
+        $response = $this->render('robots.txt.twig');
+        $response->headers->set('Content-Type', 'text/plain');
+
+        return $response;
     }
 }
