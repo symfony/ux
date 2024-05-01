@@ -166,7 +166,7 @@ TS
 
         $prefix = 0;
         do {
-            $constantName = s($translationId)->ascii()->snake()->upper()->toString().($prefix > 0 ? '_'.$prefix : '');
+            $constantName = s($translationId)->ascii()->snake()->upper()->replaceMatches('/^(\d)/', '_$1')->toString().($prefix > 0 ? '_'.$prefix : '');
             ++$prefix;
         } while (\in_array($constantName, $alreadyGenerated, true));
 

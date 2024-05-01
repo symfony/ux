@@ -67,6 +67,7 @@ class TranslationsDumperTest extends TestCase
                     'what.count.4' => 'one: There is one %what%|more: There are more than one %what%',
                     'animal.dog-cat' => 'Dog and cat',
                     'animal.dog_cat' => 'Dog and cat (should not conflict with the previous one)',
+                    '0starts.with.numeric' => 'Key starts with numeric char',
                 ],
                 'foobar' => [
                     'post.num_comments' => 'There is 1 comment|There are %count% comments',
@@ -95,6 +96,7 @@ class TranslationsDumperTest extends TestCase
                     'what.count.4' => 'one: Il y a une %what%|more: Il y a more than one %what%',
                     'animal.dog-cat' => 'Chien et chat',
                     'animal.dog_cat' => 'Chien et chat (ne doit pas rentrer en conflit avec la traduction précédente)',
+                    '0starts.with.numeric' => 'La touche commence par un caractère numérique',
                 ],
                 'foobar' => [
                     'post.num_comments' => 'Il y a 1 comment|Il y a %count% comments',
@@ -125,6 +127,7 @@ export const WHAT_COUNT3 = {"id":"what.count.3","translations":{"messages":{"en"
 export const WHAT_COUNT4 = {"id":"what.count.4","translations":{"messages":{"en":"one: There is one %what%|more: There are more than one %what%","fr":"one: Il y a une %what%|more: Il y a more than one %what%"}}};
 export const ANIMAL_DOG_CAT = {"id":"animal.dog-cat","translations":{"messages":{"en":"Dog and cat","fr":"Chien et chat"}}};
 export const ANIMAL_DOG_CAT_1 = {"id":"animal.dog_cat","translations":{"messages":{"en":"Dog and cat (should not conflict with the previous one)","fr":"Chien et chat (ne doit pas rentrer en conflit avec la traduction pr\u00e9c\u00e9dente)"}}};
+export const _0STARTS_WITH_NUMERIC = {"id":"0starts.with.numeric","translations":{"messages":{"en":"Key starts with numeric char","fr":"La touche commence par un caract\u00e8re num\u00e9rique"}}};
 
 JAVASCRIPT);
 
@@ -150,6 +153,7 @@ export declare const WHAT_COUNT3: Message<{ 'messages': { parameters: { '%what%'
 export declare const WHAT_COUNT4: Message<{ 'messages': { parameters: { '%what%': string } } }, 'en'|'fr'>;
 export declare const ANIMAL_DOG_CAT: Message<{ 'messages': { parameters: NoParametersType } }, 'en'|'fr'>;
 export declare const ANIMAL_DOG_CAT_1: Message<{ 'messages': { parameters: NoParametersType } }, 'en'|'fr'>;
+export declare const _0STARTS_WITH_NUMERIC: Message<{ 'messages': { parameters: NoParametersType } }, 'en'|'fr'>;
 
 TYPESCRIPT);
     }
