@@ -6,20 +6,20 @@
 
 {% for fileInfo in files %}
     {% if fileInfo.isDirectory %}
-        <li class="file-tree-main file-tree-dir">
+        <li class="FileTree-main FileTree-dir">
             <span {{- _self.summaryAttributes(fileInfo.description) -}}>
                 <twig:Icon name="folder-open" class="d-inline-block m-0 mr-2"/>
                 {{ fileInfo.filename }}
             </span>
 
             <ul class="list-unstyled">
-                {{ include('main/_fileTreeLevel.html.twig', {
+                {{ include('main/_file_tree.html.twig', {
                     files: fileInfo.files
                 }) }}
             </ul>
         </li>
     {% else %}
-        <li class="file-tree-main file-tree-file">
+        <li class="FileTree-main FileTree-file">
             <span {{- _self.summaryAttributes(fileInfo.description) -}}>
                 <twig:Icon name="folder" class="d-inline-block m-0 mr-2" />
                 {{ fileInfo.filename }}

@@ -14,7 +14,7 @@
         <div class="row justify-content-center g-5 pt-3 mt-2">
           <div class="col-12 text-center text-lg-start col-lg-6">
             <span class="eyebrows">curated by symfony</span>
-            <h1 class="ubuntu my-3">JavaScript <em class="rainbow-emphasis">tools</em> you can't live without.</h1>
+            <h1 class="my-3">JavaScript <em class="rainbow-emphasis">tools</em> you can't live without.</h1>
             <p>A set of PHP &amp; JavaScript packages to solve every day frontend problems featuring Stimulus and Turbo.</p>
           </div>
           <div class="col-12 col-sm-10 col-md-8 col-lg-6">
@@ -37,10 +37,10 @@
         </div>
 
         <div class="col-12 col-md-6 mt-3 mt-md-0">
-            <div data-controller="tooltips" class="ux-container file-tree flex-grow-1 ms-2 py-3">
+            <div data-controller="tooltips" class="ux-container FileTree flex-grow-1 ms-2 py-3">
                 <div style="height: 185px; overflow: auto;">
-                    <ul class="list-unstyled file-tree-main">
-                        {{ include('main/_fileTreeLevel.html.twig', {
+                    <ul class="list-unstyled FileTree-main">
+                        {{ include('main/_file_tree.html.twig', {
                             files: recipeFileTree.files
                         }) }}
                     </ul>

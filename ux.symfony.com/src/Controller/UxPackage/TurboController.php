@@ -15,7 +15,6 @@ use App\Entity\Chat;
 use App\Form\AddTodoItemForm;
 use App\Form\AnimalCreationForm;
 use App\Repository\ChatRepository;
-use App\Service\PackageContext;
 use App\Service\UxPackageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,11 +29,9 @@ class TurboController extends AbstractController
 {
     #[Route('/turbo', name: 'app_turbo')]
     #[Route('/turbo/{name}/the/{animal}', name: 'app_turbo_with_animal')]
-    public function __invoke(UxPackageRepository $packageRepository, ChatRepository $chatRepository, Request $request, PackageContext $packageContext, ?string $name = null, ?string $animal = null): Response
+    public function __invoke(UxPackageRepository $packageRepository, ChatRepository $chatRepository, Request $request, ?string $name = null, ?string $animal = null): Response
     {
         $package = $packageRepository->find('turbo');
-
-        $packageContext->setCurrentPackage('turbo');
 
         $form = $this->createForm(AnimalCreationForm::class);
         $form->handleRequest($request);
