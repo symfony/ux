@@ -57,7 +57,7 @@ class PropsNode extends Node
             if (!$this->hasNode($name)) {
                 $compiler
                     ->indent()
-                    ->write('throw new \Twig\Error\RuntimeError("'.$name.' should be defined for component '.$this->getTemplateName().'");')
+                    ->write('throw new \Twig\Error\RuntimeError("'.$name.' should be defined for component '.$this->getTemplateName().'.");')
                     ->write("\n")
                     ->outdent()
                     ->write('}')
@@ -100,18 +100,13 @@ class PropsNode extends Node
             $compiler
                 ->write('if (isset($context[\'__context\'][\''.$name.'\'])) {')
                 ->raw("\n")
-                ->write('$contextValue = $context[\'__context\'][\''.$name.'\'];')
-                ->raw("\n")
-                ->write('$propsValue = $context[\''.$name.'\'];')
-                ->raw("\n")
-                ->write('if ($contextValue === $propsValue) {')
-                ->raw("\n")
+                ->indent()
                 ->write('$context[\''.$name.'\'] = ')
                 ->subcompile($this->getNode($name))
                 ->raw(";\n")
+                ->outdent()
                 ->write('}')
                 ->raw("\n")
-                ->write('}')
             ;
         }
     }

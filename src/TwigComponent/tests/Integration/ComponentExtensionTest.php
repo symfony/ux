@@ -204,6 +204,13 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('<p>foo</p>', $output);
     }
 
+    public function testComponentPropsOverwriteContextValueWithInputProp(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_input_prop_with_same_name_in_context.html.twig');
+
+        $this->assertStringContainsString('<p>bar</p>', $output);
+    }
+
     public function testComponentPropsWithTrailingComma(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_props_trailing_comma.html.twig');
