@@ -20,7 +20,6 @@
 @import "live-memory/components/Metric";
 @import "live-memory/components/Overlay";
 @import "live-memory/components/Score";
-@import "live-memory/components/ThemeSwitch";
 @import "live-memory/components/Timer";
 
 @import "../utilities/background";

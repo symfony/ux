@@ -32,7 +32,7 @@
   border-radius: 4px;
 }
 
-[data-bs-theme="dark"] .ProductGrid_item {
+.ProductGrid_item {
   background: var(--bs-secondary-bg-subtle);
   background-blend-mode: color-burn;
 }

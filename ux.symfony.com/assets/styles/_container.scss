@@ -1,6 +1,6 @@
 .components-container {
   background: var(--bs-body-bg);
-  border-radius: 15px;
+  border-radius: 1rem;
   border: 0.66px solid var(--bs-secondary-bg-subtle);
 
   h4 {
@@ -10,12 +10,14 @@
 
 .ux-container {
   border: 1px solid var(--bs-secondary-bg-subtle);
-  border-radius: 12px;
+  border-radius: 1rem;
 }
+
+
 
 .markdown-container {
   border: 1px solid var(--bs-secondary-bg-subtle);
-  border-radius: 5px;
+  border-radius: .75rem;
   height: 100%;
   width: 100%;
   position: relative;

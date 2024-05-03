@@ -3,7 +3,7 @@
 }
 
 .AppHeader {
-  --color-background-rgb: 255 255 255;
+  --color-background-rgb: 0 0 0;
   --text-color: var(--bs-body-color);
   position: absolute;
   inset: 0 0 auto;
@@ -12,11 +12,6 @@
   color: var(--text-color);
   @media (min-width: 860px) {
     padding-top: 2rem;
-  }
-}
-[data-bs-theme="dark"] {
-  .AppHeader {
-    --color-background-rgb: 0 0 0;
   }
 }
 .AppHeader--white {
@@ -59,17 +54,10 @@ body.locked {
   height: var(--height);
   width: calc(161 / 30 * var(--height));
   display: block;
-  transition: filter 250ms ease-in;
   flex-shrink: 0;
-  .AppHeader--white &,
-  [data-bs-theme="dark"] & {
-    filter: invert(1);
-  }
   img {
-    display: block;
     width: 100%;
-    height: 100%;
-    object-fit: fill;
+    height: auto;
   }
 }
 

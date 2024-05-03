@@ -26,18 +26,7 @@
   --live-memory-pink-rgb: 189, 58, 225;
 }
 
-:root,
-[data-theme=light],
-[data-bs-theme=light] {
-  --color-text: #212529;
-  --color-text-rgb: 33 37 41;
-  --color-background: #fff;
-  --color-background-rgb: 255 255 255;
-  --color-border: #DEE2E6;
-}
-
-[data-theme=dark],
-[data-bs-theme=dark] {
+:root {
   --color-text: #DEE2E6;
   --color-text-rgb: 222 226 230;
   --color-background: #212529;

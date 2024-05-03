@@ -99,7 +99,7 @@
   height: auto;
   filter: invert(var(--invert));
 }
-[data-bs-theme="dark"] .IconModal__icon img {
+.IconModal__icon img {
   --invert: 1;
 }
 

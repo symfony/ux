@@ -15,7 +15,9 @@
 @import "../../vendor/twbs/bootstrap/scss/maps";
 @import "../../vendor/twbs/bootstrap/scss/mixins";
 @import "../../vendor/twbs/bootstrap/scss/utilities";
-@import "../../vendor/twbs/bootstrap/scss/root";
+
+// @import "../../vendor/twbs/bootstrap/scss/root";
+@import "vendor/bootstrap/root";
 
 // Layout & components
 @import "../../vendor/twbs/bootstrap/scss/reboot";
@@ -86,7 +88,6 @@
 @import "components/Tag";
 @import "components/Terminal";
 @import "components/TerminalCommand";
-@import "components/ThemeSwitcher";
 
 // Utilities
 @import "utilities/arrow";

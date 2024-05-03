@@ -11,8 +11,6 @@
 }
 
 .img-dark-negative {
-    [data-bs-theme="dark"] & {
-        filter: invert(100%) hue-rotate(180deg);
-    }
+    filter: invert(100%) hue-rotate(180deg);
 }
 
