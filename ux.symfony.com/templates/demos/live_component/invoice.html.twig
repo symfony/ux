@@ -1,7 +1,7 @@
 {% extends 'demos/live_demo.html.twig' %}
 
 {% block code_block_full %}
-    <twig:CodeWithExplanationRow filename="src/Twig/InvoiceCreator.php">
+    <twig:Code:CodeWithExplanationRow filename="src/Twig/InvoiceCreator.php">
 This main component keeps track of the `Invoice` (which may be new) and
 a list of the "invoice items" - stored on a `LiveProp` called `$lineItems`.
 
@@ -14,9 +14,9 @@ This components listens to several events that the child
 `removeLineItem` when the user clicks the "x" button on a line item.
 This triggers the `removeLineItem()` method on this component, which
 removes the line item from the `$lineItems` array.
-    </twig:CodeWithExplanationRow>
+    </twig:Code:CodeWithExplanationRow>
 
-    <twig:CodeWithExplanationRow filename="templates/components/InvoiceCreator.html.twig" reversed>
+    <twig:Code:CodeWithExplanationRow filename="templates/components/InvoiceCreator.html.twig" reversed>
 The template is fairly simple: rendering form fields with `data-model` to
 bind to writable `LiveProp`'s along with their validation errors.
 
@@ -24,9 +24,9 @@ Most importantly, this loops over `$lineItems` and renders the
 `InvoiceCreatorLineItem` child component for each one passing the
 data: `productId`, `quantity`, and `isEditing`. It also passes a `key`,
 which is needed so LiveComponents can track which row is which.
-    </twig:CodeWithExplanationRow>
+    </twig:Code:CodeWithExplanationRow>
 
-    <twig:CodeWithExplanationRow filename="src/Twig/InvoiceCreatorLineItem.php">
+    <twig:Code:CodeWithExplanationRow filename="src/Twig/InvoiceCreatorLineItem.php">
 The child component for each "line item". This handles validating, saving,
 and changing the "edit" state of the line item.
 
@@ -39,9 +39,9 @@ by emitting events - e.g. `line_item:save`.
 > component, instead of passing it to the parent. It was done this way so that
 > the parent component can know how many of its children are currently in
 > "edit" mode.
-    </twig:CodeWithExplanationRow>
+    </twig:Code:CodeWithExplanationRow>
 
-    <twig:CodeWithExplanationRow filename="templates/components/InvoiceCreatorLineItem.html.twig" reversed>
+    <twig:Code:CodeWithExplanationRow filename="templates/components/InvoiceCreatorLineItem.html.twig" reversed>
 Nothing too fancy here: some `data-model` elements and `data-action="live#action"`
 buttons.
 
@@ -49,7 +49,7 @@ The most interesting part is the "X" button to remove a line item: this uses
 `data-action="live#emitUp"` to emit the `removeLineItem` event to the parent component.
 In this case, instead of triggering a `LiveAction` that *then* emits the event,
 we emit the event directly.
-    </twig:CodeWithExplanationRow>
+    </twig:Code:CodeWithExplanationRow>
 {% endblock %}
 
 {% block demo_content %}

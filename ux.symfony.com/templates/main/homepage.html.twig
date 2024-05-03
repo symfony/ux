@@ -76,25 +76,32 @@
         </div>
     </div>
 
-    {% block markdown_example %}
-        <div class="p-4 markdown-container background-glass shadow-blur shadow-blur--rainbow  mt-5 row" data-controller="markdown">
-            <div class="col-12 col-md-5">
-                <textarea rows="3" class="form-control" aria-label="Type markdown into this box"
-                          data-markdown-target="input"
-                >Writing JavaScript is a **dream** with Stimulus 🤩</textarea>
-            </div>
-            <div class="col-12 col-md-2 d-flex justify-content-center align-items-center py-3">
-                <button class="btn btn-dark" data-action="markdown#render">
-                    Convert <twig:Icon name="arrow-right"/>
-                </button>
-            </div>
-            <div class="col-12 col-md-5">
-                <div style="min-height: 86px;" class="markdown-form-render-container p-2" data-markdown-target="preview">
-                    <small class="fw-light">(click "Convert")</small>
-                </div>
-            </div>
+    <div class="shadow-blur shadow-blur--rainbow mt-5" style="--shadow-bottom: 2rem;">
+        <div class="DemoContainer py-2 px-4 d-flex justify-content-center">
+            <small style="opacity: 80%;">And you have a Markdown live convertor!</small>
         </div>
-    {% endblock %}
+        <div class="DemoContainer-inner p-4">
+            {% block markdown_example %}
+                <div class="d-flex align-items-stretch row" data-controller="markdown">
+                    <div class="col d-flex">
+                        <textarea
+                            rows="2" class="form-control p-3"
+                            aria-label="Type markdown into this box"
+                            autocomplete="off"
+                            data-markdown-target="input"
+                            data-action="markdown#render"
+                        >Writing _JavaScript_ is... a **dream** with Stimulus 🤩</textarea>
+                    </div>
+                    <div class="col d-flex">
+                        <div class="markdown-form-render-container p-3" data-markdown-target="preview">
+                            <small>&lt;- Write something in the textarea!</small>
+                        </div>
+                    </div>
+                </div>
+            {% endblock %}
+        </div>
+            <div class="arrow" style="transform:scaleY(-1) translateY(20%);margin-bottom: -1rem;"></div>
+    </div>
 
     <p class="eyebrows" style="margin: 111px 0 0;">Packages</p>
     <div class="d-md-flex justify-content-md-between text-center align-items-center text-md-start">
@@ -107,7 +114,7 @@
     <div class="row mt-3 mt-md-5">
         <div style="display: grid; gap: 3rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));">
             {% for package in packages %}
-                <twig:PackageBox :package="package" titleTag="h3" />
+                <twig:Package:PackageBox package="{{ package }}" titleTag="h3" />
             {% endfor %}
         </div>
     </div>

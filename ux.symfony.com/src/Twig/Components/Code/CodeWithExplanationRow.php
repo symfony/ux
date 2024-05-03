@@ -9,13 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig;
+namespace App\Twig\Components\Code;
 
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent]
-class SideBySideCodeRow
+#[AsTwigComponent('Code:CodeWithExplanationRow')]
+class CodeWithExplanationRow
 {
-    public string $file1;
-    public string $file2;
+    public string $filename;
+
+    public bool $reversed = false;
 }

@@ -7,12 +7,12 @@
                 class="form-control {{ _errors.has('product') ? 'is-invalid' }}"
             >
                 <option value="" {{ not product ? 'selected' }}>Choose a Product</option>
-                {% for productOption in products %}
+                {% for product_option in products %}
                     <option
-                        value="{{ productOption.id }}"
-                        {% if productOption == product %}selected{% endif %}
+                        value="{{ product_option.id }}"
+                        {% if product_option == product %}selected{% endif %}
                     >
-                        {{ productOption.name }} ({{ productOption.priceInCents|format_currency('USD') }})
+                        {{ product_option.name }} ({{ product_option.priceInCents|format_currency('USD') }})
                     </option>
                 {% endfor %}
             </select>

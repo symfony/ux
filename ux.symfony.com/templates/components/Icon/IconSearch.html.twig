@@ -11,8 +11,8 @@
                     </label>
                     <select class="form-control" data-model="set" id="IconSearch-Set">
                         <option value="">All sets</option>
-                        {% for groupName, options in this.getIconSetOptionGroups() %}
-                            <optgroup label="{{ groupName }}">
+                        {% for group_name, options in this.getIconSetOptionGroups() %}
+                            <optgroup label="{{ group_name }}">
                                 {% for value, label in options %}
                                     <option value="{{ value }}">{{ label }}</option>
                                 {% endfor %}

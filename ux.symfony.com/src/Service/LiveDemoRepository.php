@@ -22,18 +22,16 @@ class LiveDemoRepository
     {
         return [
             new LiveDemo(
-                'auto-validating-form',
-                name: 'Auto-Validating Form',
-                description: 'Create a form that validates each field in-real-time as the user enters data!',
-                route: 'app_demo_live_component_auto_validating_form',
+                'live-memory',
+                name: 'LiveMemory Card Game',
+                description: 'A Memorable Game UX with Live Components!',
+                route: 'app_demo_live_memory',
                 longDescription: <<<EOF
-Enter a bad email or leave the password empty, and see how the
-form validates in real time!
-<br>
-This renders a normal Symfony form but with extras added on top,
-all generated from Symfony & Twig.
+A Memorable Game UX with Live Components! Discover how to use Live Components to create a game with a vibrant interface,
+ rich interactions and real-time updates. This journey will take you through many features of Live Components, and you'll
+  learn how to use them to create a fun and engaging game.
 EOF,
-                tags: ['form', 'validation', 'inline'],
+                tags: ['game', 'time', 'events', 'LiveAction'],
             ),
             new LiveDemo(
                 'infinite-scroll',
@@ -47,18 +45,6 @@ EOF,
                 tags: ['pattern', 'pagination', 'navigation'],
             ),
             new LiveDemo(
-                'live-memory',
-                name: 'LiveMemory Card Game',
-                description: 'A Memorable Game UX with Live Components!',
-                route: 'app_demo_live_memory',
-                longDescription: <<<EOF
-A Memorable Game UX with Live Components! Discover how to use Live Components to create a game with a vibrant interface,
- rich interactions and real-time updates. This journey will take you through many features of Live Components, and you'll
-  learn how to use them to create a fun and engaging game.
-EOF,
-                tags: ['game', 'time', 'events', 'LiveAction'],
-            ),
-            new LiveDemo(
                 'form-collection-type',
                 name: 'Embedded CollectionType Form',
                 description: 'Create embedded forms with functional "add" and "remove" buttons all in Twig.',
@@ -70,6 +56,20 @@ writing zero JavaScript.
 This demo shows off adding and removing items entirely in PHP & Twig.
 EOF,
                 tags: ['form', 'collection'],
+            ),
+            new LiveDemo(
+                'auto-validating-form',
+                name: 'Auto-Validating Form',
+                description: 'Create a form that validates each field in-real-time as the user enters data!',
+                route: 'app_demo_live_component_auto_validating_form',
+                longDescription: <<<EOF
+Enter a bad email or leave the password empty, and see how the
+form validates in real time!
+<br>
+This renders a normal Symfony form but with extras added on top,
+all generated from Symfony & Twig.
+EOF,
+                tags: ['form', 'validation', 'inline'],
             ),
             new LiveDemo(
                 'dependent-form-fields',

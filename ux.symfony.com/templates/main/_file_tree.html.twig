@@ -4,25 +4,25 @@
     {% endif %}
 {% endmacro %}
 
-{% for fileInfo in files %}
-    {% if fileInfo.isDirectory %}
+{% for file_info in files %}
+    {% if file_info.isDirectory %}
         <li class="FileTree-main FileTree-dir">
-            <span {{- _self.summaryAttributes(fileInfo.description) -}}>
+            <span {{- _self.summaryAttributes(file_info.description) -}}>
                 <twig:Icon name="folder-open" class="d-inline-block m-0 mr-2"/>
-                {{ fileInfo.filename }}
+                {{ file_info.filename }}
             </span>
 
             <ul class="list-unstyled">
                 {{ include('main/_file_tree.html.twig', {
-                    files: fileInfo.files
+                    files: file_info.files
                 }) }}
             </ul>
         </li>
     {% else %}
         <li class="FileTree-main FileTree-file">
-            <span {{- _self.summaryAttributes(fileInfo.description) -}}>
+            <span {{- _self.summaryAttributes(file_info.description) -}}>
                 <twig:Icon name="folder" class="d-inline-block m-0 mr-2" />
-                {{ fileInfo.filename }}
+                {{ file_info.filename }}
             </span>
         </li>
     {% endif %}

@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig\Components;
+namespace App\Twig\Components\Demo;
 
 use App\Model\LiveDemo;
 use App\Service\LiveDemoRepository;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent('PrevNextDemo')]
+#[AsTwigComponent('Demo:PrevNext')]
 class PrevNextDemo
 {
     public function __construct(

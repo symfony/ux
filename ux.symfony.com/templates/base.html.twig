@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <title>{% block title %}{{ meta.title|default }}{{ meta.title_suffix|default(' - Symfony UX') }}{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="color-scheme" content="light dark">
+        <meta name="color-scheme" content="dark">
         {% block stylesheets %}
         {% endblock %}
         {% if meta.canonical|default %}
@@ -24,10 +24,6 @@
         <meta property="og:image:alt" content="Symfony UX">
         <meta property="og:image:type" content="image/png">
         {% block javascripts %}
-            <script>
-              const theme = localStorage.getItem('user-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-              document.documentElement.setAttribute('data-bs-theme', theme === 'dark' ? 'dark' : 'light');
-            </script>
             {% block importmap %}
                 <script>
                     if (!(HTMLScriptElement && HTMLScriptElement.supports?.('importmap'))) {

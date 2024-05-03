@@ -9,12 +9,12 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig;
+namespace App\Twig\Components\Code;
 
 use App\Util\FilenameHelper;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent]
+#[AsTwigComponent('Code:TabbedCodeBlocks')]
 class TabbedCodeBlocks
 {
     public array $files = [];

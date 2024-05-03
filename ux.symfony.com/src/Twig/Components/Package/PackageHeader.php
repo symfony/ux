@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig;
+namespace App\Twig\Components\Package;
 
 use App\Model\UxPackage;
 use App\Repository\ChatRepository;
 use App\Service\UxPackageRepository;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent]
+#[AsTwigComponent('PackageHeader', template: 'components/Package/PackageHeader.html.twig')]
 class PackageHeader
 {
     public UxPackage $package;

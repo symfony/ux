@@ -13,7 +13,7 @@
     {% else %}
 
         {% set icon = this.iconMeta() %}
-        {% set iconSet = this.iconSet() %}
+        {% set icon_set = this.iconSet() %}
 
         <div class="Tabs" id="IconModal--{{ icon }}">
             <div class="IconModal__header">
@@ -70,19 +70,19 @@
 
                             <div class="TabPanel" data-tab="icon" data-tabs-target="tab">
                                 <h3>Import Icon</h3>
-                                <twig:CodeLine class="IconModal__code">
+                                <twig:Code:CodeLine class="IconModal__code">
                                     symfony console ux:icon:import <span>{{ icon }}</span>
-                                </twig:CodeLine>
+                                </twig:Code:CodeLine>
 
                                 <h3>Twig Component</h3>
-                                <twig:CodeLine class="IconModal__code">
+                                <twig:Code:CodeLine class="IconModal__code">
                                     {{- '<%s:ux:icon name="'|format('twig') -}} <span>{{ icon }}</span>{{ '" />' -}}
-                                </twig:CodeLine>
+                                </twig:Code:CodeLine>
 
                                 <h3>Render Icon</h3>
-                                <twig:CodeLine class="IconModal__code">
+                                <twig:Code:CodeLine class="IconModal__code">
                                     {{- '{{ ' -}} ux_icon('<span>{{ icon }}</span>') {{- ' }}' -}}
-                                </twig:CodeLine>
+                                </twig:Code:CodeLine>
                             </div>
 
                             <div class="TabPanel" data-tabs-target="tab" id="IconModal-Tab-Svg" data-tab="svg">
@@ -90,9 +90,9 @@
                                 {% if _svg %}
                                     <div data-live-ignore  id="IconModal-Tab-Svg--{{ icon }}">
                                         <h3>SVG Icon</h3>
-                                        <twig:CodeLine class="IconModal__code" height="12rem">
+                                        <twig:Code:CodeLine class="IconModal__code" height="12rem">
                                             {{ _svg }}
-                                        </twig:CodeLine>
+                                        </twig:Code:CodeLine>
                                     </div>
                                 {% endif %}
                             </div>
@@ -101,14 +101,14 @@
                                 <div class="grid" style="--cols: 1fr 1fr">
                                     <twig:DataList items="{{ {
                                         'Name': icon.name,
-                                        'Author': iconSet.author.name,
-                                        'GitHub': iconSet.github ? {
-                                            title: iconSet.github.name,
-                                            href: iconSet.github.url,
+                                        'Author': icon_set.author.name,
+                                        'GitHub': icon_set.github ? {
+                                            title: icon_set.github.name,
+                                            href: icon_set.github.url,
                                         } : null,
-                                        'Licence': iconSet.license ? {
-                                            title: iconSet.license.title,
-                                            href: iconSet.license.url|default,
+                                        'Licence': icon_set.license ? {
+                                            title: icon_set.license.title,
+                                            href: icon_set.license.url|default,
                                         } : null,
                                     } }}" itemClass="IconModal__code"/>
                                 </div>

@@ -6,22 +6,21 @@
         eyebrowText: 'Reactive Twig Templates'
     } %}
         {% block title_header %}
-            An Interactive UI <em>entirely built in Twig</em>
+            An Interactive UI <br><em>in</em> PHP <em>&</em> Twig
         {% endblock %}
 
         {% block sub_content %}
-            Your frontend Swiss Army Knife: build a highly-interactive
-            UI from the comfort of Twig. No JS needed.
+           Develop your interface.. from the comfort of Symfony.<br> No Javascript needed.
         {% endblock %}
     {% endcomponent %}
 {% endblock %}
 
 {% block code_block_left %}
-    <twig:CodeBlock filename="src/Twig/SearchPackages.php" />
+    <twig:CodeBlock filename="src/Twig/Components/Package/SearchPackages.php" />
 {% endblock %}
 
 {% block code_block_right %}
-    <twig:CodeBlock filename="templates/components/SearchPackages.html.twig" />
+    <twig:CodeBlock filename="templates/components/Package/SearchPackages.html.twig" />
 {% endblock %}
 
 {% block demo_title %}
@@ -56,7 +55,7 @@
     <div class="row mt-5 pb-5">
         <div style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));">
             {% for demo in demos %}
-                <twig:DemoCard demo="{{ demo }}" />
+                <twig:Demo:DemoCard demo="{{ demo }}" />
             {% endfor %}
         </div>
     </div>

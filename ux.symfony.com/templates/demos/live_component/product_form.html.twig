@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block code_block_full %}
-    <twig:CodeWithExplanationRow filename="src/Twig/NewProductForm.php">
+    <twig:Code:CodeWithExplanationRow filename="src/Twig/NewProductForm.php">
 Live component with a form, `ValidatableComponentTrait` and a
 `saveProduct()` LiveAction for instant validation & an AJAX submit.
 
@@ -17,16 +17,16 @@ Note: the `category:created` event emits `category` as an *integer*.
 Then, thanks to the `Category` type-hint + Symfony's standard
 [controller argument behavior](https://symfony.com/doc/current/doctrine.html#automatically-fetching-objects-entityvalueresolver),
 Symfony uses that id to query for the `Category` object.
-    </twig:CodeWithExplanationRow>
+    </twig:Code:CodeWithExplanationRow>
 
-    <twig:CodeWithExplanationRow filename="templates/components/NewProductForm.html.twig" reversed>
+    <twig:Code:CodeWithExplanationRow filename="templates/components/NewProductForm.html.twig" reversed>
 Near the bottom, this renders the `BootstrapModal` component with another
 component - `NewCategoryForm` - inside of it. Opening the modal is done entirely
 with normal Bootstrap logic: an `a` tag with `data-bs-toggle="modal"`
 and `data-bs-target="#new-category-modal"`.
-    </twig:CodeWithExplanationRow>
+    </twig:Code:CodeWithExplanationRow>
 
-    <twig:CodeWithExplanationRow filename="src/Twig/NewCategoryForm.php">
+    <twig:Code:CodeWithExplanationRow filename="src/Twig/NewCategoryForm.php">
 This component opens up in the modal! It has a `#[LiveAction]` that saves
 the new `Category` to the database and then does two important things:
 
@@ -34,9 +34,9 @@ the new `Category` to the database and then does two important things:
    `NewProductForm.php`).
 1. Dispatches a browser event called `modal:closed` to close the modal
    (see `bootstrap-modal-controller.js`).
-    </twig:CodeWithExplanationRow>
+    </twig:Code:CodeWithExplanationRow>
 
-    <twig:TabbedCodeBlocks :files="[
+    <twig:Code:TabbedCodeBlocks :files="[
         'src/Twig/BootstrapModal.php',
         'templates/components/BootstrapModal.html.twig',
         'assets/controllers/bootstrap-modal-controller.js',

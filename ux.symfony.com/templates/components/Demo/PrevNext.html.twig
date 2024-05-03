@@ -4,13 +4,13 @@
         {% set previous = this.previous(true) %}
         {% if previous %}
             <div style="max-width: 360px;--bs-secondary-bg-subtle: var(--bs-dark-bg-subtle);">
-                <twig:DemoCard demo="{{ previous }}" />
+                <twig:Demo:DemoCard demo="{{ previous }}" />
             </div>
         {% endif %}
         {% set next = this.next(true) %}
         {% if next %}
             <div style="max-width: 360px;--bs-secondary-bg-subtle: var(--bs-dark-bg-subtle);">
-                <twig:DemoCard demo="{{ next }}" />
+                <twig:Demo:DemoCard demo="{{ next }}" />
             </div>
         {% endif %}
     </div>

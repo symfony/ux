@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig;
+namespace App\Twig\Components\Package;
 
 use App\Service\UxPackageRepository;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent]
+#[AsLiveComponent('SearchPackages', template: 'components/Package/SearchPackages.html.twig')]
 class SearchPackages
 {
     use DefaultActionTrait;

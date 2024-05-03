@@ -30,13 +30,13 @@
             </div>
             {% block package_demo %}
                 {% if block('demo_title') is defined %}
-                    {% set demoTitle = block('demo_title') %}
-                    {% set demoContent = block('demo_content') %}
+                    {% set demo_title = block('demo_title') %}
+                    {% set demo_content = block('demo_content') %}
                     <div id="demo" style="position: relative;">
                         <div class="arrow-2 mb-3 d-sm-block" style="position:absolute; top:-55px; right: -25px;"></div>
                         {% embed 'ux_packages/_package_demo.html.twig' %}
-                            {% block title %}{{ demoTitle|raw }}{% endblock %}
-                            {% block content %}{{ demoContent|raw }}{% endblock %}
+                            {% block title %}{{ demo_title|raw }}{% endblock %}
+                            {% block content %}{{ demo_content|raw }}{% endblock %}
                         {% endembed %}
                     </div>
                 {% endif %}

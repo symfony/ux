@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig;
+namespace App\Twig\Extension;
 
 use Tempest\Highlight\Highlighter;
 use Twig\Extension\AbstractExtension;

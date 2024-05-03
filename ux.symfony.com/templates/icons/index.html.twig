@@ -40,9 +40,9 @@
         </div>
         <div class="mt-3 mt-md-5">
             <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(340px, 1fr)); gap: 2rem;">
-                {% for iconSet in iconSets %}
+                {% for icon_set in iconSets %}
                     <twig:Icon:IconSetCard
-                        iconSet="{{ iconSet }}"
+                        iconSet="{{ icon_set }}"
                         index="{{ loop.index0 }}"
                     />
                 {% endfor %}
