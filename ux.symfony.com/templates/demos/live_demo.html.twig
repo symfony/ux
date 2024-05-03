@@ -11,7 +11,7 @@
 
     {% block demo_header %}
         <div class="hero">
-            <div class="container-fluid container-xxl px-4 px-md-5 my-5">
+            <div class="container-fluid container-xxl pt-4 px-4 px-md-5 my-5">
                 <div class="text-center mt-md-0">
                     <p class="eyebrows">
                         <a href="{{ url('app_demos') }}">DEMOS</a> /
@@ -62,6 +62,6 @@
 
 {% block aside %}
     <aside style="background-color: var(--bs-secondary-bg-subtle);" class="mt-5">
-        <twig:PrevNextDemo demo="{{ demo }}" />
+        <twig:Demo:PrevNext demo="{{ demo }}" />
     </aside>
 {% endblock %}

@@ -46,7 +46,7 @@ button:active {
 }
 
 a.link {
-  --color: #d9438e;
+  --color: var(--bs-code-color);
   color: var(--color);
   position: relative;
   &:after {

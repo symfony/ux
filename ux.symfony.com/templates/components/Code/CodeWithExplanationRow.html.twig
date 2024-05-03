@@ -7,7 +7,7 @@
             {% block content %}{% endblock %}
         {% endapply %}
     </div>
-    <div class="col-12 col-md-6 {{ not reversed ? 'order-md-1' }}"  style="padding-inline: 0;">
+    <div class="col-12 col-md-6 {{ not reversed|default ? 'order-md-1' }}"  style="padding-inline: 0;">
         <twig:CodeBlock
             :filename="filename"
             style="--bg-header: rgba(13, 13, 13, 0.729); --header-opacity: .5;"

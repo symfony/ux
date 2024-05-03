@@ -1,5 +1,5 @@
 
-<select aria-label="Choose a message" name="chat_message" class="p-2" style="width: 100%;">
+<select aria-label="Choose a message" name="chat_message" class="p-2 form-select" style="width: 100%;">
     <option value="">Choose a message</option>
     {% for key, message in messageChoices %}
         <option value="{{ key }}">{{ message }}</option>

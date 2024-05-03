@@ -22,7 +22,7 @@
             {% if card.matched and card.selected %}
                 <div class="LiveMemory-CardDots" style="--card-dots-delta: {{ key }};">
                     {% for i in 0..9 %}
-                        <span style="--i: {{ (i + (-x * -y)) }};"></span>
+                        <span style="--i: {{ (i + (x * y)) }};"></span>
                     {% endfor %}
                 </div>
             {% endif %}
