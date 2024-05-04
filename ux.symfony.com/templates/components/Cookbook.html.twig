@@ -1,0 +1,17 @@
+{% props cookbook %}
+
+<div class="Cookbook">
+    <h1>{{ cookbook.title }}</h1>
+    <ul class="tags">
+        {% for tag in cookbook.tags %}
+            <li>{{ tag }}</li>
+        {% endfor %}
+    </ul>
+    <h2 class="description">{{ cookbook.description }}</h2>
+    <div class="image-title">
+        <img src="{{ asset(cookbook.image) }}" alt="Stimulus and Symfony" />
+    </div>
+    <div class="content">
+        {{ cookbook.content|markdown_to_html }}
+    </div>
+</div>
