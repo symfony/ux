@@ -189,16 +189,8 @@ export default class {
     private handleClassAttributeMutation(mutation: MutationRecord, elementChanges: ElementChanges) {
         const element = mutation.target as Element;
 
-        const previousValue = mutation.oldValue;
-        const previousValues = previousValue ? previousValue.split(' ') : [];
-        previousValues.forEach((value, index) => {
-            const trimmedValue = value.trim();
-            if (trimmedValue !== '') {
-                previousValues[index] = trimmedValue;
-            } else {
-                previousValues.splice(index, 1);
-            }
-        });
+        const previousValue = mutation.oldValue || '';
+        const previousValues: string[] = previousValue.match(/(\S+)/gu) || [];
 
         const newValues: string[] = [].slice.call(element.classList);
         const addedValues = newValues.filter((value) => !previousValues.includes(value));

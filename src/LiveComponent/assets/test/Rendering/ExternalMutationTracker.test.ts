@@ -114,7 +114,7 @@ describe('ExternalMutationTracker', () => {
         element.classList.remove('second-class');
         element.classList.add('second-class');
         // add new (with some whitespace to be sneaky)
-        element.setAttribute('class', ` ${element.getAttribute('class')} new-class `)
+        element.setAttribute('class', ` ${element.getAttribute('class')} \n    new-class `)
         // remove
         element.classList.remove('first-class');
         // add then remove
@@ -133,6 +133,34 @@ describe('ExternalMutationTracker', () => {
 
         expect(changes.getAddedClasses()).toEqual(['new-class']);
         expect(changes.getRemovedClasses()).toEqual(['first-class']);
+    });
+
+    it('can track class changes with whitespaces', async () => {
+        const { element, tracker } = createTracker(`
+            <div 
+                class="
+                    first-class
+                    second-class
+                    third-class
+                "
+            >Text inside!</div>
+        `)
+
+        element.classList.remove('second-class');
+        element.classList.add('new-class');
+        await shortTimeout();
+
+        const changes = tracker.getChangedElement(element);
+        if (!changes) {
+            throw new Error('Expected changes to be present');
+        }
+        expect(changes.getChangedStyles()).toHaveLength(0);
+        expect(changes.getRemovedStyles()).toHaveLength(0);
+        expect(changes.getChangedAttributes()).toHaveLength(0);
+        expect(changes.getRemovedAttributes()).toHaveLength(0);
+
+        expect(changes.getAddedClasses()).toEqual(['new-class']);
+        expect(changes.getRemovedClasses()).toEqual(['second-class']);
     });
 
     it('can track added element', async () => {
