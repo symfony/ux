@@ -2728,7 +2728,7 @@ You can also pass extra (scalar) data to the listeners::
         // ...
 
         $this->emit('productAdded', [
-            'product' => $product->getId(),
+            'productId' => $product->getId(),
         ]);
     }
 
@@ -2736,10 +2736,10 @@ In your listeners, you can access this by adding a matching argument
 name with ``#[LiveArg]`` in front::
 
     #[LiveListener('productAdded')]
-    public function incrementProductCount(#[LiveArg] int $product)
+    public function incrementProductCount(#[LiveArg] int $productId)
     {
         $this->productCount++;
-        $this->lastProduct = $data['product'];
+        $this->lastProductId = $productId;
     }
 
 And because event listeners are also actions, you can type-hint an argument
