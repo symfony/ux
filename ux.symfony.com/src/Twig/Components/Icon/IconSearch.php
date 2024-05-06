@@ -77,6 +77,11 @@ class IconSearch
         return $this->icons ??= $this->searchIcons();
     }
 
+    public function getIconSet(): ?IconSet
+    {
+        return $this->set ? $this->iconSetRepository->get($this->set) : null;
+    }
+
     private function searchIcons(): array
     {
         if (!$this->query) {

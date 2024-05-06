@@ -64,7 +64,7 @@
 
     <div id="IconSearchResults" class="mt-5">
         {% if this.icons|length > 0 %}
-            <twig:Icon:IconGrid icons="{{ this.icons }}" id="IconGrid-{{ this.hash }}"  />
+            <twig:Icon:IconGrid icons="{{ this.icons }}" id="IconGrid-{{ this.hash }}" iconSet="{{ this.iconSet ?? null }}" />
         {% elseif this.query %}
             <p class="pt-3 text-center">No icons found matching "{{ query }}".</p>
         {% endif %}

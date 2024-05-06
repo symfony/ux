@@ -121,6 +121,10 @@
   --invert: 0%;
 }
 
+.IconModal__color > img {
+  --invert: 0 !important;
+}
+
 @keyframes icon-loading {
   0% {
     transform: scale(.95);
