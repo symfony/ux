@@ -3657,6 +3657,10 @@ uses Symfony's test client to render and make requests to your components::
 
             $this->assertStringContainsString('Count: 3', $testComponent->render());
 
+            // call live action with file uploads
+            $testComponent
+                ->save('processUpload', files: ['file' => new UploadedFile(...)]);
+
             // emit live events
             $testComponent
                 ->emit('increaseEvent')

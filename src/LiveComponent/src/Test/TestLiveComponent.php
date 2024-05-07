@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent\Test;
 
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -76,11 +77,12 @@ final class TestLiveComponent
     }
 
     /**
-     * @param array<string,mixed> $arguments
+     * @param array<string,mixed>         $arguments
+     * @param array<string, UploadedFile> $files
      */
-    public function call(string $action, array $arguments = []): self
+    public function call(string $action, array $arguments = [], array $files = []): self
     {
-        return $this->request(['args' => $arguments], $action);
+        return $this->request(['args' => $arguments], $action, $files);
     }
 
     /**
@@ -123,7 +125,7 @@ final class TestLiveComponent
         return $this->client()->getResponse();
     }
 
-    private function request(array $content = [], ?string $action = null): self
+    private function request(array $content = [], ?string $action = null, array $files = []): self
     {
         $csrfToken = $this->csrfToken();
 
@@ -137,6 +139,7 @@ final class TestLiveComponent
                 ])
             ),
             parameters: ['data' => json_encode(array_merge($content, ['props' => $this->props()]))],
+            files: $files,
             server: $csrfToken ? ['HTTP_X_CSRF_TOKEN' => $csrfToken] : [],
         );
 
