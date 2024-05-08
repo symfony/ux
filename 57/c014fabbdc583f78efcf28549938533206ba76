@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-02T20:28:26Z
+
+Maybe add a test case when name is passed with "null" ?
+
+---------------------------------------------------------------------------
+
+by squrious at 2024-05-03T07:14:46Z
+
+Thanks for the review @smnandre!
+
+> Maybe add a test case when name is passed with "null" ?
+
+I wasn't sure about that. If you pass null, the prop is considered unset, so yes we can't pass a null value explicitly.
+
+But there is a systematic use of `isset` in the PropsNode class, so I thought it was intended for some reason. Would you prefer to replace them with  `array_key_exists`?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-03T07:44:08Z
+
+Oh we lost some hair with @WebMamba last time, i will trust you on this ^^
