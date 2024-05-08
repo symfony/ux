@@ -4,6 +4,7 @@
 
 .Banner {
   background: #0A0A0A;
+  color: #fff;
 }
 .Banner + .App {
   position: relative;
@@ -13,17 +14,13 @@
   display: none;
 }
 
-.Banner .container-xxl {
-  max-width: 1320px;
-  margin: 0 auto;
-}
-
 .BannerInner {
   display: flex;
   flex-direction: column;
-  padding: 2rem 1rem;
+  padding: 1rem 0;
   gap: 1rem;
   position: relative;
+  margin: 0 auto;
 }
 
 .BannerMedia {
@@ -31,9 +28,9 @@
   justify-self: center;
 }
 .BannerImage {
-  width: 92px;
+  width: max(10vw, 40px);
   height: auto;
-  filter: drop-shadow(1px 1px 8px #000) drop-shadow(2px 2px 32px #970404);
+  filter: drop-shadow(1px 1px .5rem #000) drop-shadow(2px 2px 2rem #970404);
 }
 
 .BannerContent {
@@ -41,27 +38,29 @@
   display: flex;
   flex-direction: column;
   place-content: center;
-  color: #fff;
-  font-family: var(--font-family-text);
+  gap: 0.25rem;
+  text-wrap: balance;
 }
 
 .BannerTitle {
   text-align: center;
-  font-size: 1.5rem;
+  font-size: 1.2em;
   font-family: var(--font-family-title);
-}
-.BannerTitle a {
-  text-shadow: 0 0 1px 4px red;
-  font-size: 1.05em;
+  margin: 0;
+  color: #fff;
 }
 
 .BannerText {
-  margin-block-end: 0.5rem;
+  text-align: center;
+  margin: 0;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  font-weight: 300;
+  color: #fff;
 }
 .BannerText em {
   text-decoration: underline;
   text-underline-offset: .25rem;
-  text-underline-style: double;
 }
 
 .BannerAction {
@@ -73,20 +72,19 @@
 .BannerButton {
   display: flex;
   align-items: center;
-  padding: .75rem 1.5rem;
+  padding: .35em .75em;
   align-self: center;
   color: #fffc;
-  font-size: 1.5rem;
+  font-size: 1.1em;
   font-family: var(--font-family-title);
-  gap: .5rem;
+  gap: .5em;
   justify-content: center;
   background: linear-gradient(#000e, #000d) padding-box,
   linear-gradient(90deg, #D65831 0%, #D2D631 36.52%, #31D673 71.83%, #3aa3ff 100%) border-box;
-  border-radius: 2rem;
-  border: 4px solid transparent;
+  border-radius: 2em;
+  border: 3px solid transparent;
   transition: all 250ms linear;
 }
-
 .BannerButton:hover {
   color: #fff;
 }
@@ -102,21 +100,16 @@
   color: currentColor;
   transition: all 250ms linear;
 }
-
 .BannerButton:hover svg {
   transform: scale(1.1);
 }
 
 @media screen and (min-width: 768px) {
   .BannerImage {
-    width: 128px;
+    width: 64px;
   }
   .BannerInner {
     flex-direction: row;
-    padding: 2rem;
-    gap: 4rem;
-  }
-  .BannerTitle {
-    text-align: left;
+    padding: 1rem 2rem;
   }
 }

@@ -52,8 +52,8 @@
                     class="form-control {{ _errors.has('category') ? 'is-invalid' }}"
                 >
                     <option value="">Choose a category</option>
-                    {% for categoryOption in categories %}
-                        <option value="{{ categoryOption.id }}" {{ this.isCurrentCategory(categoryOption) ? 'selected' }}>{{ categoryOption.name }}</option>
+                    {% for category_option in categories %}
+                        <option value="{{ category_option.id }}" {{ this.isCurrentCategory(category_option) ? 'selected' }}>{{ category_option.name }}</option>
                     {% endfor %}
                 </select>
                 {% if _errors.has('category') %}

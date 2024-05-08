@@ -19,7 +19,7 @@
     <div class="container-fluid container-xxl px-4 pt-4 px-md-5">
         <div class="Changelog">
             {% for entry in changelog %}
-                <twig:ChangelogItem item="{{ entry }}" isOpen="{{ loop.index < 6 }}" />
+                <twig:ChangelogItem item="{{ entry }}" isOpen="{{ loop.index < 4 }}" />
             {% endfor %}
         </div>
     </div>

@@ -9,7 +9,7 @@
     {% if computed.packages|length > 0 %}
         <div data-loading="addClass(opacity-50)" class="mt-3 row">
             {% for package in computed.packages %}
-                {{ include('main/_package_in_list.html.twig') }}
+                {{ include('main/_package_in_list.html.twig', {package}) }}
             {% endfor %}
         </div>
     {% else %}

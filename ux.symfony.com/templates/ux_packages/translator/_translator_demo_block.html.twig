@@ -11,9 +11,9 @@
 <small><span class="hl-keyword">import</span> { trans, <span class="hl-variable constant_">{{ message }}</span> } <span class="hl-keyword">from</span> '<span class="hl-value">../translator</span>';</small>
 
 <span class="hl-property function_">trans</span>(<span class="hl-variable constant_">{{ message }}</span>{% if parameters %}, {
-{% for name, value in parameters %} {% set isString = not (value matches '/^[\\d\\.]+$/') %}
+{% for name, value in parameters %} {% set is_string = not (value matches '/^[\\d\\.]+$/') %}
     <span class="hl-property">{{ name }}</span>:&nbsp;
-{{- name ends with 'date' ? '<span class="hl-keyword">new</span> <span class="hl-property class_">Date</span>(' }}{{- isString ? "'" }}<span class="hl-value" data-code-parameter="{{ name }}">{{ value }}</span>{{ isString ? "'" }}{{ name ends with 'date' ? ')' }},
+{{- name ends with 'date' ? '<span class="hl-keyword">new</span> <span class="hl-property class_">Date</span>(' }}{{- is_string ? "'" }}<span class="hl-value" data-code-parameter="{{ name }}">{{ value }}</span>{{ is_string ? "'" }}{{ name ends with 'date' ? ')' }},
 {% endfor %}
 }}{% endif %})</pre>
             </div>

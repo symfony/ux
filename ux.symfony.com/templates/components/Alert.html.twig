@@ -1,10 +1,4 @@
 <div class="alert alert-{{ type }} alert-dismissible" role="alert">
     <twig:Icon name="{{ this.icon }}" class="me-2" />
     {{ message }}
-
-    {% if type == 'success' %}
-        <a href="{{ path('app_packages') }}" class="alert-right-message">
-            (browse all {{ this.packageCount }} packages)
-        </a>
-    {% endif %}
 </div>

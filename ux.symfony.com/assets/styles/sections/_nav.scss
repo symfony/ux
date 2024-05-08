@@ -82,7 +82,7 @@
   font-size: 1rem;
   font-weight: 500;
   letter-spacing: 0;
-  opacity: .85;
+  opacity: .9;
   transition: opacity 250ms;
   padding: 0;
   border: none;
@@ -109,26 +109,25 @@
 
 .AppNav_badge {
   position: absolute;
-  color: lightskyblue;
   right: -1rem;
   top: -.75rem;
   text-align: right;
   padding: .2rem .4rem;
-  font-size: .75rem;
-  border: 1px solid var(--color-text);
-  font-stretch: condensed;
+  font-size: .5rem;
   font-family: var(--font-family-text);
-  height: 1rem;
-  line-height: normal;
+  text-transform: uppercase;
+  line-height: 1;
+  background: rgba(0,0,0,0.1);
+  border-radius: .25rem;
+  opacity: 0.75;
+  display: flex;
+}
+.AppNav_badge:after {
+  content: attr(data-content);
+  color: inherit;
 }
 @media (max-width: 859px) {
   .AppNav_badge {
-    display: none;
-  }
-}
-
-@media (max-width: 360px) {
-  .ThemeSwitcher + .AppNav_item {
     display: none;
   }
 }

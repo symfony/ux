@@ -13,6 +13,15 @@
   border-bottom-right-radius: 12px;
 }
 
-.demo-chat > .DemoContainer-inner {
-  border-radius: 0;
+.demo-introduction {
+  max-inline-size: 800px;
+  margin-inline: auto;
+}
+
+.demo-introduction a {
+  color: var(--bs-code-color);
+  font-weight: 500;
+}
+.demo-introduction code {
+  font-size: 0.95em;
 }

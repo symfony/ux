@@ -2,9 +2,9 @@
 
     <div class="IconSetCard__media" style="aspect-ratio: 5/{{ samples / 5 }};">
         <div class="IconSetCard__icons">
-            {% set sampleIcons = this.getSampleIcons() %}
+            {% set sample_icons = this.getSampleIcons() %}
 
-            {% for icon in sampleIcons|default([]) %}
+            {% for icon in sample_icons|default([]) %}
                 <div class="IconSetCard__icon">
                     <img src="https://api.iconify.design/{{ this.iconSet.identifier }}/{{ icon }}.svg"
                          alt="{{ icon }}"

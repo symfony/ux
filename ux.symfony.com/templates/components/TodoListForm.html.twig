@@ -21,10 +21,10 @@
                 </tr>
             </thead>
             <tbody>
-                {% for key, itemForm in form.todoItems %}
+                {% for item_form in form.todoItems %}
                     <tr>
                         <td>
-                            {{ form_row(itemForm.description, {
+                            {{ form_row(item_form.description, {
                                 label: false,
                                 row_attr: {class: 'mb-1'},
                                 attr: {
@@ -33,13 +33,13 @@
                             }) }}
                         </td>
                         <td>
-                            {{ form_row(itemForm.priority, {
+                            {{ form_row(item_form.priority, {
                                 row_attr: {class: ''},
                                 label: false,
                             }) }}
                         </td>
                         <td>
-                            {{ form_row(itemForm.vars.button_delete, {label: 'X', attr: {class: 'btn btn-outline-danger'}}) }}
+                            {{ form_row(item_form.vars.button_delete, {label: 'X', attr: {class: 'btn btn-outline-danger'}}) }}
                         </td>
                     </tr>
                 {% endfor %}

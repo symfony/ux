@@ -9,14 +9,14 @@
  * file that was distributed with this source code.
  */
 
-namespace App\Twig;
+namespace App\Twig\Components\Code;
 
 use App\Util\FilenameHelper;
 use App\Util\SourceCleaner;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
-#[AsTwigComponent]
+#[AsTwigComponent('CodeBlock', template: 'components/Code/CodeBlock.html.twig')]
 class CodeBlock
 {
     public string $filename;
