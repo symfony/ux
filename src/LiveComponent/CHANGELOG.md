@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.18.0
+
+-   Add parameter to `TestLiveComponent::call()` to add files to the request
+
 ## 2.17.0
 
 -   Add `modifier` option in `LiveProp` so options can be modified at runtime.
