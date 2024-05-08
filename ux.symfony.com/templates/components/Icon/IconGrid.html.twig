@@ -1,4 +1,4 @@
-{% props icons = [] %}
+{% props icons = [], iconSet = null %}
 
 <div {{ attributes }} class="IconGrid" data-controller="icon-grid">
 
@@ -9,7 +9,7 @@
                 {% if iconSet is not defined %}
                     <span class="IconCard__prefix">{{ icon.prefix }}</span>
                 {% endif %}
-                <img class="IconCard__icon" width="32" height="32" src="{{ icon.imageUrl }}" alt="Icon {{ icon.prefix }} {{ icon.name|humanize }}">
+                <img class="IconCard__icon {{ iconSet.palette|default ? 'Icon__color' }}" width="32" height="32" src="{{ icon.imageUrl }}" alt="Icon {{ icon.prefix }} {{ icon.name|humanize }}">
                 <span class="IconCard__name">{{ icon.name }}</span>
             </button>
         </div>

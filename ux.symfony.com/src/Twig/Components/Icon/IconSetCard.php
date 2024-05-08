@@ -48,6 +48,18 @@ class IconSetCard
             'home', 'user', 'settings', 'search', 'arrow-down',
             'heart', 'star', 'sun-light', 'view-grid', 'media-image',
         ],
+        'octicon' => [
+            'home', 'person', 'gear', 'search', 'arrow-down',
+            'heart', 'star', 'sun-16', 'apps-24', 'image-16',
+        ],
+        'ph' => [
+            'house', 'user', 'gear', 'magnifying-glass', 'arrow-down',
+            'heart', 'star', 'sun', 'squares-four', 'image',
+        ],
+        'heroicons' => [
+            'home', 'user', 'cog', 'magnifying-glass', 'arrow-down',
+            'heart', 'star', 'sun', 'squares-2x2', 'photo',
+        ],
     ];
 
     public function getSampleIcons(): array

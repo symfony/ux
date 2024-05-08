@@ -153,7 +153,7 @@
     background: rgb(0 0 0 / 50%);
   }
 
-  .IconCard__icon {
+  .IconCard__icon:not(.Icon__color) {
     filter: invert(1) hue-rotate(180deg);
   }
 }

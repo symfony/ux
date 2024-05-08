@@ -33,6 +33,9 @@ final class IconsController extends AbstractController
             'iconoir',
             'lucide',
             'tabler',
+            'octicon',
+            'ph',
+            'heroicons',
         ];
         $iconSets = array_map(fn ($iconSet) => $iconSetRepository->find($iconSet), $iconSets);
 

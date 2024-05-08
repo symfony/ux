@@ -27,17 +27,17 @@
 
             <div class="IconModal__body">
                 <div class="IconModal__media">
-                    <div class="IconModal__icon IconModal__icon--grid">
+                    <div class="IconModal__icon IconModal__icon--grid {{ icon_set.palette ? 'IconModal__color' }}">
                         <img src="{{ icon.imageUrl }}" alt="Icon {{ icon.prefix }} {{ icon.name|humanize }}">
                     </div>
                     <div class="IconModal__icons">
-                        <div class="IconModal__icon">
+                        <div class="IconModal__icon {{ icon_set.palette ? 'IconModal__color' }}">
                             <img src="{{ icon.imageUrl }}" alt="Icon {{ icon.prefix }} {{ icon.name|humanize }}">
                         </div>
-                        <div class="IconModal__icon IconModal__icon--check">
+                        <div class="IconModal__icon IconModal__icon--check {{ icon_set.palette ? 'IconModal__color' }}">
                             <img src="{{ icon.imageUrl }}" alt="Icon {{ icon.prefix }} {{ icon.name|humanize }}">
                         </div>
-                        <div class="IconModal__icon">
+                        <div class="IconModal__icon {{ icon_set.palette ? 'IconModal__color' }}">
                             <img src="{{ icon.imageUrl }}" alt="Icon {{ icon.prefix }} {{ icon.name|humanize }}">
                         </div>
                     </div>
@@ -88,10 +88,10 @@
                             <div class="TabPanel" data-tabs-target="tab" id="IconModal-Tab-Svg" data-tab="svg">
                                 {% set _svg = this.svg() %}
                                 {% if _svg %}
-                                    <div data-live-ignore  id="IconModal-Tab-Svg--{{ icon }}">
+                                    <div data-live-ignore id="IconModal-Tab-Svg--{{ icon }}">
                                         <h3>SVG Icon</h3>
                                         <twig:Code:CodeLine class="IconModal__code" height="12rem">
-                                            {{ _svg }}
+                                            {{ _svg|highlight('xml') }}
                                         </twig:Code:CodeLine>
                                     </div>
                                 {% endif %}
