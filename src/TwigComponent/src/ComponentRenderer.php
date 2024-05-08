@@ -117,8 +117,9 @@ final class ComponentRenderer implements ComponentRendererInterface
             // first so values can be overridden
             $context,
             // add the context in a separate variable to keep track
-            // of what is coming from outside the component
-            ['__context' => $context],
+            // of what is coming from outside the component, excluding props
+            // as they override initial context values
+            ['__context' => array_diff_key($context, $props)],
             // keep reference to old context
             ['outerScope' => $context],
             // add the component as "this"
@@ -180,7 +181,7 @@ final class ComponentRenderer implements ComponentRendererInterface
             $name = $attribute->name ?? (str_starts_with($method->name, 'get') ? lcfirst(substr($method->name, 3)) : $method->name);
 
             if ($method->getNumberOfRequiredParameters()) {
-                throw new \LogicException(sprintf('Cannot use %s on methods with required parameters (%s::%s).', ExposeInTemplate::class, $component::class, $method->name));
+                throw new \LogicException(sprintf('Cannot use "%s" on methods with required parameters (%s::%s).', ExposeInTemplate::class, $component::class, $method->name));
             }
 
             if ($attribute->destruct) {
