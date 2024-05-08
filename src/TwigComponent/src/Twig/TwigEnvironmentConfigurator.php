@@ -15,6 +15,7 @@ use Symfony\Bundle\TwigBundle\DependencyInjection\Configurator\EnvironmentConfig
 use Symfony\UX\TwigComponent\ComponentAttributes;
 use Twig\Environment;
 use Twig\Extension\EscaperExtension;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * @final
@@ -31,7 +32,9 @@ class TwigEnvironmentConfigurator
         $this->decorated->configure($environment);
         $environment->setLexer(new ComponentLexer($environment));
 
-        if ($environment->hasExtension(EscaperExtension::class)) {
+        if (class_exists(EscaperRuntime::class)) {
+            $environment->getRuntime(EscaperRuntime::class)->addSafeClass(ComponentAttributes::class, ['html']);
+        } elseif ($environment->hasExtension(EscaperExtension::class)) {
             $environment->getExtension(EscaperExtension::class)->addSafeClass(ComponentAttributes::class, ['html']);
         }
     }
