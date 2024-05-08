@@ -155,7 +155,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                         ->always(function ($v) {
                             foreach ($v as $namespace => $defaults) {
                                 if (!str_ends_with($namespace, '\\')) {
-                                    throw new InvalidConfigurationException(sprintf('The twig_component.defaults namespace "%s" is invalid: it must end in a "\"', $namespace));
+                                    throw new InvalidConfigurationException(sprintf('The twig_component.defaults namespace "%s" is invalid: it must end in a "\".', $namespace));
                                 }
                             }
 
@@ -181,9 +181,6 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                 ->end()
                 ->scalarNode('anonymous_template_directory')
                     ->info('Defaults to `components`')
-                ->end()
-                ->scalarNode('controllers_json')
-                    ->defaultValue('%kernel.project_dir%/assets/controllers.json')
                 ->end()
             ->end();
 
