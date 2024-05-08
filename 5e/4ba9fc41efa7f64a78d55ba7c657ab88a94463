@@ -1,0 +1,7 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-05T20:14:05Z
+
+This fixes the deprecation in the Stimulus bundle .. the remaining must be fixed within the remaining component.
+
+And i try to avoid PR acting on multiple components at once
