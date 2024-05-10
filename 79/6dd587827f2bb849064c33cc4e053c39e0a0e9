@@ -1,0 +1,133 @@
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-09T14:10:50Z
+
+Background info: Chart.js changed some things starting in 3.9, which is why we previously restricted that version (they were arguably BC breaks).
+
+In chart.js 2.13.0, we changed the JS package shipped to `type: module`. That had an unexpected side effect of no longer loading the `chart.js/auto` import (even though it loads fine in our test). Tbh, the reasons are a bit of a mystery to me.
+
+Anyway, here is the breakdown of the fix:
+
+A) For Encore users, you will need to upgrade `chart.js` to `^3.9`. You may currently have, for example, 3.8.0, so upgrading to 3.9.* is fine - just a minor update.
+B) For AssetMapper users, you will need to `importmap:require 'chart.js'` (and you no longer need `chart.js/auto`). Flex may actually do this automatically - I think it will, but we'll need to try it :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-09T14:13:03Z
+
+About the typescript error :
+<img width="877" alt="Capture d’écran 2023-11-09 à 15 11 08" src="https://github.com/symfony/ux/assets/1359581/f18bb0dc-8a49-4c19-8cc1-d5403110803d">
+
+> I think 4.0 was release the other day and since Chart.js v3 it's been rewritten with Typescript, so you don't need these typedefinitions anymore.
+
+https://github.com/DefinitelyTyped/DefinitelyTyped/discussions/63641#discussioncomment-4419010
+
+Just removed the file... let's see
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-09T14:24:03Z
+
+I'm checking into this failure. What's being imported in the tests is different than what's imported in Encore... which is why our original tests didn't catch the bug.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-09T15:25:03Z
+
+So we could release this fix, and check all this module/ES/node/2015/6/beta/tango/charlie later ? Or is there a risk ?
+
+---------------------------------------------------------------------------
+
+by weaverryan at 2023-11-09T15:30:30Z
+
+Fixed in #1264. However, we can make this PR the proper PR for the NEXT version, which would include:
+
+* Re-adding `type: module`
+* Upgrading chart.js to v4
+
+---------------------------------------------------------------------------
+
+by smnandre at 2023-11-09T18:45:00Z
+
+I did not realize Chart.js 4.0 was released 12 months ago.
+
+That could itself be a good argument to push gently users towards an upgrade :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-14T22:28:26Z
+
+I rebased and tried to clean this PR i opened a long time ago, but i always end with test failures somewhere...
+
+Could you guys @evertharmeling @simondaigre  maybe help me there ?
+
+(cc issue #1695 )
+
+---------------------------------------------------------------------------
+
+by simondaigre at 2024-05-08T18:38:10Z
+
+@smnandre Do you need some help to finish the PR ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-08T18:45:44Z
+
+> @smnandre Do you need some help to finish the PR ?
+
+That'd be really nice, yes :)
+
+---------------------------------------------------------------------------
+
+by simondaigre at 2024-05-08T22:33:57Z
+
+I also checked and :
+- chart.js file (non-ESM) for 3.x versions doesn't export `registerables` : https://cdn.jsdelivr.net/npm/chart.js@3.9.0/dist/chart.js
+- Vitest doesn't select the correct version (see https://github.com/valor-software/ng2-charts/issues/1421 + https://github.com/vitest-dev/vitest/discussions/4233 for more explanations)
+- I tried to use `resolve.alias` in `vitest.config.js` but filenames are not the same between chart.js 3.x and 4.x.
+
+So there is two solutions:
+
+1. We stick chart.js to 3.x OR 4.x (BC break ?)
+2. Solution provided by @evertharmeling works and as the issue is only related to our Vitest test suite, I think we can use it
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-08T23:31:55Z
+
+@simondaigre thank you so much for taking this time, really 🙇
+
+Let's say we take the solution 2, is there any way to still check 3.x on the CI with no "false failures" ?
+
+---------------------------------------------------------------------------
+
+by simondaigre at 2024-05-08T23:36:35Z
+
+I have no failures on CI with 2/ (for both 3.x and 4.x).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-09T00:35:43Z
+
+> I have no failures on CI with 2/ (for both 3.x and 4.x).
+
+So you'd merge the PR ?
+
+(i updated to take the @evertharmeling suggestion)
+
+---------------------------------------------------------------------------
+
+by simondaigre at 2024-05-09T09:54:30Z
+
+I checked on a real project with both chart.js 3.x and 4.x, it's OK for me: no breaks and it fixes my issue.
+(changes to lockfiles seems unrelated to this PR I think).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-10T20:08:42Z
+
+Well let's merge it and test one last time on the dev branch before the next release ! :)
+
+(@kbond if you can ?)
+
+A massive thank to you guys @simondaigre @evertharmeling !!  🙇
