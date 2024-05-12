@@ -37,8 +37,6 @@ use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\LiveResponder;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator;
-use Symfony\UX\LiveComponent\Twig\LiveComponentExtension as LiveComponentTwigExtension;
-use Symfony\UX\LiveComponent\Twig\LiveComponentRuntime;
 use Symfony\UX\LiveComponent\Twig\TemplateCacheWarmer;
 use Symfony\UX\LiveComponent\Twig\TemplateMap;
 use Symfony\UX\LiveComponent\Util\ChildComponentPartialRenderer;
@@ -62,7 +60,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
 {
     public const TEMPLATES_MAP_FILENAME = 'live_components_twig_templates.map';
 
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         // Register the form theme if TwigBundle is available
         $bundles = $container->getParameter('kernel.bundles');
@@ -165,20 +163,6 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('ux.twig_component.component_stack'),
             ])
             ->addTag('kernel.event_subscriber');
-
-        $container->register('ux.live_component.twig.component_extension', LiveComponentTwigExtension::class)
-            ->addTag('twig.extension')
-        ;
-
-        $container->register('ux.live_component.twig.component_runtime', LiveComponentRuntime::class)
-            ->setArguments([
-                new Reference('ux.live_component.component_hydrator'),
-                new Reference('ux.twig_component.component_factory'),
-                new Reference('router'),
-                new Reference('ux.live_component.metadata_factory'),
-            ])
-            ->addTag('twig.runtime')
-        ;
 
         $container->register('ux.live_component.metadata_factory', LiveComponentMetadataFactory::class)
             ->setArguments([
