@@ -468,16 +468,32 @@ component use a ``PreMount`` hook::
         {
             // validate data
             $resolver = new OptionsResolver();
+            $resolver->setIgnoreUndefined(true);
+
             $resolver->setDefaults(['type' => 'success']);
             $resolver->setAllowedValues('type', ['success', 'danger']);
             $resolver->setRequired('message');
             $resolver->setAllowedTypes('message', 'string');
 
-            return $resolver->resolve($data);
+            return $resolver->resolve($data) + $data;
         }
 
         // ...
     }
+
+.. note::
+
+   In its default configuration, the OptionsResolver treats all props.
+   However, if more props are passed than the options defined in the OptionsResolver, an error will be prompted, indicating that one or more options do not exist.
+   To avoid this, use the `ignoreUndefined()` method with `true`. See `ignore not defined options`_ for more info.
+   
+      $resolver->setIgnoreUndefined(true);
+   
+   The major drawback of this configuration is that the OptionsResolver will remove every non-defined option when resolving data. 
+   To maintain props that have not been defined within the OptionsResolver, combine the data from the hook with the resolved data.
+   
+      return $resolver->resolve($data) + $data;
+
 
 The data returned from ``preMount()`` will be used as the props for mounting.
 
@@ -1654,3 +1670,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`CVA (Class Variant Authority)`: https://cva.style/docs/getting-started/variants
 .. _`shadcn/ui`: https://ui.shadcn.com
 .. _`tales-from-a-dev/twig-tailwind-extra`: https://github.com/tales-from-a-dev/twig-tailwind-extra
+.. _`ignore not defined options`: https://symfony.com/doc/current/components/options_resolver.html#ignore-not-defined-options
