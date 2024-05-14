@@ -7,11 +7,9 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { createTest, initComponent, shutdownTests } from '../tools';
 import { getByText, waitFor } from '@testing-library/dom';
-import BackendResponse from '../../src/Backend/BackendResponse';
+import type BackendResponse from '../../src/Backend/BackendResponse';
 
 const getErrorElement = (): Element|null => {
     return document.getElementById('live-component-error');

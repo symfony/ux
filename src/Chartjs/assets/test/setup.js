@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import 'vitest-canvas-mock';
 // eslint-disable-next-line
 global.ResizeObserver = require('resize-observer-polyfill');

@@ -1,5 +1,5 @@
-import {PluginInterface} from './PluginInterface';
-import Component from '../index';
+import type {PluginInterface} from './PluginInterface';
+import type Component from '../index';
 
 export default class implements PluginInterface {
     private intersectionObserver:  IntersectionObserver | null = null;

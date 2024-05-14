@@ -1,6 +1,6 @@
-import Component from '../index';
-import ValueStore from '../ValueStore';
-import { PluginInterface } from './PluginInterface';
+import type Component from '../index';
+import type ValueStore from '../ValueStore';
+import type { PluginInterface } from './PluginInterface';
 
 export default class implements PluginInterface {
     attachToComponent(component: Component): void {

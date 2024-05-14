@@ -1,7 +1,7 @@
-import Component from '../../Component';
-import { PluginInterface } from './PluginInterface';
-import { ChildrenFingerprints } from '../../Backend/Backend';
-import getModelBinding, { ModelBinding } from '../../Directive/get_model_binding';
+import type Component from '../../Component';
+import type { PluginInterface } from './PluginInterface';
+import type { ChildrenFingerprints } from '../../Backend/Backend';
+import getModelBinding, { type ModelBinding } from '../../Directive/get_model_binding';
 import { getAllModelDirectiveFromElements } from '../../dom_utils';
 import { findChildren, findParent } from '../../ComponentRegistry';
 

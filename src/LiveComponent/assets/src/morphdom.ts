@@ -2,9 +2,9 @@ import { cloneHTMLElement, getModelDirectiveFromElement, setValueOnElement } fro
 // @ts-ignore
 import { Idiomorph } from 'idiomorph/dist/idiomorph.esm.js';
 import { normalizeAttributesForComparison } from './normalize_attributes_for_comparison';
-import ExternalMutationTracker from './Rendering/ExternalMutationTracker';
+import type ExternalMutationTracker from './Rendering/ExternalMutationTracker';
 
-const syncAttributes = function (fromEl: Element, toEl: Element): void {
+const syncAttributes = (fromEl: Element, toEl: Element): void => {
     for (let i = 0; i < fromEl.attributes.length; i++) {
         const attr = fromEl.attributes[i];
         toEl.setAttribute(attr.name, attr.value);
@@ -206,7 +206,7 @@ export function executeMorphdom(
                     return true;
                 }
                 // if parent's innerHTML was replaced, skip morphing on child
-                if (fromEl.parentElement && fromEl.parentElement.hasAttribute('data-skip-morph')) {
+                if (fromEl.parentElement?.hasAttribute('data-skip-morph')) {
                     return false;
                 }
 

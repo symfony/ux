@@ -1,1 +1,1 @@
-export declare function format(id: string, parameters: Record<string, string | number> | undefined, locale: string): string;
+export declare function format(id: string, parameters: Record<string, string | number>, locale: string): string;

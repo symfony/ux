@@ -1,6 +1,6 @@
-import {ElementDriver} from './ElementDriver';
+import type {ElementDriver} from './ElementDriver';
 import {elementBelongsToThisComponent} from '../dom_utils';
-import Component from './index';
+import type Component from './index';
 
 export default class {
     private readonly component: Component;

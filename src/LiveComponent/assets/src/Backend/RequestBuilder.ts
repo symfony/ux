@@ -1,4 +1,4 @@
-import { BackendAction, ChildrenFingerprints } from './Backend';
+import type { BackendAction, ChildrenFingerprints } from './Backend';
 
 export default class {
     private url: string;

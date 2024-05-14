@@ -2,7 +2,7 @@
 // which does not actually exist in the source code
 import { loadControllers } from '../dist/loader';
 import { Application, Controller } from '@hotwired/stimulus';
-import {
+import type {
     EagerControllersCollection,
     LazyControllersCollection,
 } from '../src/controllers';
@@ -37,11 +37,11 @@ describe('loader', () => {
 
         const application = Application.start();
         const eagerControllers: EagerControllersCollection = {
-            'controller1': controller1,
-            'controller2': controller2,
+            controller1,
+            controller2,
         };
         const lazyControllers: LazyControllersCollection = {
-            'controller3': () => Promise.resolve({ default: controller3 }),
+            controller3: () => Promise.resolve({ default: controller3 }),
         };
 
         loadControllers(application, eagerControllers, lazyControllers);

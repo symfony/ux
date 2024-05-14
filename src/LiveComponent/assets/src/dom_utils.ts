@@ -1,7 +1,7 @@
-import ValueStore from './Component/ValueStore';
-import { Directive, parseDirectives } from './Directive/directives_parser';
+import type ValueStore from './Component/ValueStore';
+import { type Directive, parseDirectives } from './Directive/directives_parser';
 import { normalizeModelName } from './string_utils';
-import Component from './Component';
+import type Component from './Component';
 import { findChildren } from './ComponentRegistry';
 import getElementAsTagText from './Util/getElementAsTagText';
 
@@ -22,7 +22,8 @@ export function getValueFromElement(element: HTMLElement, valueStore: ValueStore
                 const modelValue = valueStore.get(modelNameData.action);
                 if (Array.isArray(modelValue)) {
                     return getMultipleCheckboxValue(element, modelValue);
-                } else if (Object(modelValue) === modelValue) {
+                }
+                if (Object(modelValue) === modelValue) {
                     // we might get objects of values from forms, like {'1': 'foo', '2': 'bar'}
                     // this occurs in symfony forms with expanded ChoiceType when first checked options get unchecked
                     return getMultipleCheckboxValue(element, Object.values(modelValue));
@@ -78,7 +79,7 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
         }
 
         if (element.type === 'radio') {
-            element.checked = element.value == value;
+            element.checked = element.value === value;
 
             return;
         }
@@ -90,7 +91,7 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
                 // want the "includes" to be "fuzzy".
                 let valueFound = false;
                 value.forEach((val) => {
-                    if (val == element.value) {
+                    if (val === element.value) {
                         valueFound = true;
                     }
                 });
@@ -99,7 +100,7 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
             } else {
                 if (element.hasAttribute('value')) {
                     // if the checkbox has a value="", then check if it matches
-                    element.checked = element.value == value;
+                    element.checked = element.value === value;
                 } else {
                     // no value, treat it like a boolean
                     element.checked = value;
@@ -112,7 +113,7 @@ export function setValueOnElement(element: HTMLElement, value: any): void {
 
     if (element instanceof HTMLSelectElement) {
         const arrayWrappedValue = [].concat(value).map((value) => {
-            return value + '';
+            return `${value}`;
         });
 
         Array.from(element.options).forEach((option) => {
@@ -256,7 +257,7 @@ export function htmlToElement(html: string): HTMLElement {
     return child;
 }
 
-const getMultipleCheckboxValue = function (element: HTMLInputElement, currentValues: Array<string>): Array<string> {
+const getMultipleCheckboxValue = (element: HTMLInputElement, currentValues: Array<string>): Array<string> => {
     const finalValues = [...currentValues];
     const value = inputValue(element);
     const index = currentValues.indexOf(value);
@@ -278,6 +279,5 @@ const getMultipleCheckboxValue = function (element: HTMLInputElement, currentVal
     return finalValues;
 };
 
-const inputValue = function (element: HTMLInputElement): string {
-    return element.dataset.value ? element.dataset.value : element.value;
-};
+const inputValue = (element: HTMLInputElement): string =>
+    element.dataset.value ? element.dataset.value : element.value;

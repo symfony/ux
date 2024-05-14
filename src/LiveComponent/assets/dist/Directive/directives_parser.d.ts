@@ -6,8 +6,6 @@ export interface Directive {
     action: string;
     args: string[];
     modifiers: DirectiveModifier[];
-    getString: {
-        (): string;
-    };
+    getString: () => string;
 }
 export declare function parseDirectives(content: string | null): Directive[];

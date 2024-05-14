@@ -1,13 +1,13 @@
-import { BackendAction, BackendInterface } from '../Backend/Backend';
+import type { BackendAction, BackendInterface } from '../Backend/Backend';
 import ValueStore from './ValueStore';
 import { normalizeModelName } from '../string_utils';
-import BackendRequest from '../Backend/BackendRequest';
+import type BackendRequest from '../Backend/BackendRequest';
 import { elementBelongsToThisComponent, getValueFromElement, htmlToElement } from '../dom_utils';
 import { executeMorphdom } from '../morphdom';
 import UnsyncedInputsTracker from './UnsyncedInputsTracker';
-import { ElementDriver } from './ElementDriver';
+import type { ElementDriver } from './ElementDriver';
 import HookManager from '../HookManager';
-import { PluginInterface } from './plugins/PluginInterface';
+import type { PluginInterface } from './plugins/PluginInterface';
 import BackendResponse from '../Backend/BackendResponse';
 import ExternalMutationTracker from '../Rendering/ExternalMutationTracker';
 import { findComponents, registerComponent, unregisterComponent } from '../ComponentRegistry';
@@ -17,8 +17,8 @@ declare const Turbo: any;
 type MaybePromise<T = void> = T | Promise<T>;
 
 export type ComponentHooks = {
-    'connect': (component: Component) => MaybePromise,
-    'disconnect': (component: Component) => MaybePromise,
+    connect: (component: Component) => MaybePromise,
+    disconnect: (component: Component) => MaybePromise,
     'request:started': (requestConfig: any) => MaybePromise,
     'render:finished': (component: Component) => MaybePromise,
     'response:error': (backendResponse: BackendResponse, controls: { displayError: boolean }) => MaybePromise,
@@ -199,15 +199,15 @@ export default class Component {
     }
 
     emit(name: string, data: any, onlyMatchingComponentsNamed: string|null = null): void {
-        return this.performEmit(name, data, false, onlyMatchingComponentsNamed);
+        this.performEmit(name, data, false, onlyMatchingComponentsNamed);
     }
 
     emitUp(name: string, data: any, onlyMatchingComponentsNamed: string|null = null): void {
-        return this.performEmit(name, data, true, onlyMatchingComponentsNamed);
+        this.performEmit(name, data, true, onlyMatchingComponentsNamed);
     }
 
     emitSelf(name: string, data: any): void {
-        return this.doEmit(name, data);
+        this.doEmit(name, data);
     }
 
     private performEmit(name: string, data: any, emitUp: boolean, matchingName: string|null): void {

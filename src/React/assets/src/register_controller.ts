@@ -7,9 +7,7 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-import { ComponentClass, FunctionComponent } from 'react';
+import type { ComponentClass, FunctionComponent } from 'react';
 
 type Component = string | FunctionComponent<object> | ComponentClass<object, any>;
 
@@ -25,7 +23,9 @@ export function registerReactControllerComponents(context: __WebpackModuleApi.Re
     const reactControllers: { [key: string]: Component } = {};
 
     const importAllReactComponents = (r: __WebpackModuleApi.RequireContext) => {
-        r.keys().forEach((key) => (reactControllers[key] = r(key).default));
+        r.keys().forEach((key) => {
+            reactControllers[key] = r(key).default;
+        });
     };
 
     importAllReactComponents(context);

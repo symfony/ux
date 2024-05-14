@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { createTest, initComponent, shutdownTests } from '../tools';
 import { getByLabelText, getByTestId, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
@@ -375,7 +373,7 @@ describe('LiveController data-model Tests', () => {
 
         // only 1 Ajax call will be made thanks to debouncing
         test.expectsAjaxCall()
-            .expectUpdatedData({ 'check': ['foo', 'bar'] });
+            .expectUpdatedData({ check: ['foo', 'bar'] });
 
         await userEvent.click(check1Element);
         await userEvent.click(check2Element);
@@ -437,7 +435,7 @@ describe('LiveController data-model Tests', () => {
 
         // only 1 Ajax call will be made thanks to debouncing
         test.expectsAjaxCall()
-            .expectUpdatedData({ 'check': ['bar'] });
+            .expectUpdatedData({ check: ['bar'] });
 
         await userEvent.click(check1Element);
         await userEvent.click(check2Element);
@@ -776,7 +774,7 @@ describe('LiveController data-model Tests', () => {
             throw new Error('wrong type');
         }
         // mimic changing the field, but without (yet) triggering the change event
-        commentField.value = commentField.value + ' ftw!';
+        commentField.value = `${commentField.value} ftw!`;
         commentField.dispatchEvent(new Event('input', { bubbles: true }));
 
         // also type into the unmapped field - but no worry about the model sync'ing this time

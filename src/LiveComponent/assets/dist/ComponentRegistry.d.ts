@@ -1,4 +1,4 @@
-import Component from './Component';
+import type Component from './Component';
 export declare const resetRegistry: () => void;
 export declare const registerComponent: (component: Component) => void;
 export declare const unregisterComponent: (component: Component) => void;

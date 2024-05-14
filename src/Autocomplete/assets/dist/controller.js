@@ -106,10 +106,10 @@ class default_1 extends Controller {
         if (!this.hasPreloadValue) {
             return 'focus';
         }
-        if (this.preloadValue == 'false') {
+        if (this.preloadValue === 'false') {
             return false;
         }
-        if (this.preloadValue == 'true') {
+        if (this.preloadValue === 'true') {
             return true;
         }
         return this.preloadValue;
@@ -260,12 +260,8 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             };
         },
         render: {
-            item: function (item) {
-                return `<div>${item.text}</div>`;
-            },
-            option: function (item) {
-                return `<div>${item.text}</div>`;
-            },
+            item: (item) => `<div>${item.text}</div>`,
+            option: (item) => `<div>${item.text}</div>`,
         },
     });
     return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createTomSelect).call(this, config);
@@ -298,18 +294,10 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             return query.length >= 3;
         },
         optgroupField: 'group_by',
-        score: function (search) {
-            return function (item) {
-                return 1;
-            };
-        },
+        score: (search) => (item) => 1,
         render: {
-            option: function (item) {
-                return `<div>${item.text}</div>`;
-            },
-            item: function (item) {
-                return `<div>${item.text}</div>`;
-            },
+            option: (item) => `<div>${item.text}</div>`,
+            item: (item) => `<div>${item.text}</div>`,
             loading_more: () => {
                 return `<div class="loading-more-results">${this.loadingMoreTextValue}</div>`;
             },

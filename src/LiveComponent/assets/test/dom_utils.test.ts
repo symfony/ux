@@ -11,9 +11,7 @@ import Component from '../src/Component';
 import Backend from '../src/Backend/Backend';
 import { noopElementDriver } from './tools';
 
-const createStore = function(props: any = {}): ValueStore {
-    return new ValueStore(props);
-}
+const createStore = (props: any = {}): ValueStore => new ValueStore(props)
 
 describe('getValueFromElement', () => {
     it('Correctly adds data from valued checked checkbox', () => {

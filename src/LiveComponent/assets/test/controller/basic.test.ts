@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import {createTest, initComponent, shutdownTests, startStimulus} from '../tools';
 import { htmlToElement } from '../../src/dom_utils';
 import Component from '../../src/Component';

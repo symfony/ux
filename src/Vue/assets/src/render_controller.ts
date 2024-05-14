@@ -7,10 +7,8 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Controller } from '@hotwired/stimulus';
-import { App, createApp } from 'vue';
+import { type App, createApp } from 'vue';
 
 export default class extends Controller<Element & { __vue_app__?: App<Element> }> {
     private props: Record<string, unknown> | null;

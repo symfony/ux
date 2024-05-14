@@ -7,15 +7,13 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import {format} from '../../src/formatters/formatter';
 
-describe('Formatter', function () {
+describe('Formatter', () => {
     test.concurrent.each<[string, string, Record<string, string | number>]>([
         ['Symfony is great!', 'Symfony is great!', {}],
         ['Symfony is awesome!', 'Symfony is %what%!', {'%what%': 'awesome'}],
-    ])('#%# format should returns %p', function (expected, message, parameters) {
+    ])('#%# format should returns %p', (expected, message, parameters) => {
         expect(format(message, parameters, 'en')).toEqual(expected);
     });
 
@@ -28,7 +26,7 @@ describe('Formatter', function () {
         ['There are 10 apples', 'There is 1 apple|There are %count% apples', 10],
         // custom validation messages may be coded with a fixed value
         ['There are 2 apples', 'There are 2 apples', 2],
-    ])('#%# format with choice should returns %p', function (expected, message, number) {
+    ])('#%# format with choice should returns %p', (expected, message, number) => {
         expect(format(message, {'%count%': number}, 'en')).toEqual(expected);
     });
 
@@ -42,8 +40,8 @@ describe('Formatter', function () {
         ['bar', 2, ']1,2['],
         ['foo', Math.log(0), '[-Inf,2['],
         ['foo', -Math.log(0), '[-2,+Inf]'],
-    ])('#%# format interval should returns %p', function (expected, number, interval) {
-        expect(format(interval + ' foo|[1,Inf[ bar', {'%count%': number}, 'en')).toEqual(expected);
+    ])('#%# format interval should returns %p', (expected, number, interval) => {
+        expect(format(`${interval} foo|[1,Inf[ bar`, {'%count%': number}, 'en')).toEqual(expected);
     });
 
     test.concurrent.each<[string, number]>([
@@ -51,7 +49,7 @@ describe('Formatter', function () {
         ['{1} There is one apple|]1,Inf] There are %count% apples', 0],
         ['{1} There is one apple|]2,Inf] There are %count% apples', 2],
         ['{0} There are no apples|There is one apple', 2],
-    ])('#%# test non matching message', function (message, number) {
+    ])('#%# test non matching message', (message, number) => {
         expect(() => format(message, {'%count%': number}, 'en')).toThrow(`Unable to choose a translation for "${message}" with locale "en" for value "${number}". Double check that this translation has the correct plural options (e.g. "There is one apple|There are %count% apples").`);
     })
 

@@ -7,16 +7,15 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
 
 import { Application } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import AutocompleteController, {
-    AutocompleteConnectOptions,
-    AutocompletePreConnectOptions,
+    type AutocompleteConnectOptions,
+    type AutocompletePreConnectOptions,
 } from '../src/controller';
 import userEvent from '@testing-library/user-event';
-import TomSelect from 'tom-select';
+import type TomSelect from 'tom-select';
 import createFetchMock from 'vitest-fetch-mock';
 import { vi } from 'vitest';
 

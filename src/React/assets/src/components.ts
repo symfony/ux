@@ -8,7 +8,7 @@
  */
 
 // This file is dynamically rewritten by ux-react + AssetMapper.
-import { ComponentClass, FunctionComponent } from 'react';
+import type { ComponentClass, FunctionComponent } from 'react';
 
 type Component = string | FunctionComponent<object> | ComponentClass<object, any>;
 

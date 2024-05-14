@@ -7,10 +7,8 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-import { ComponentCollection, components } from './components.js';
-import { ComponentClass, FunctionComponent } from 'react';
+import { type ComponentCollection, components } from './components.js';
+import type { ComponentClass, FunctionComponent } from 'react';
 
 type Component = string | FunctionComponent<object> | ComponentClass<object, any>;
 

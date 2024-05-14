@@ -10,7 +10,7 @@ function parseDirectives(content) {
     let currentArguments = [];
     let currentModifiers = [];
     let state = 'action';
-    const getLastActionName = function () {
+    const getLastActionName = () => {
         if (currentActionName) {
             return currentActionName;
         }
@@ -19,7 +19,7 @@ function parseDirectives(content) {
         }
         return directives[directives.length - 1].action;
     };
-    const pushInstruction = function () {
+    const pushInstruction = () => {
         directives.push({
             action: currentActionName,
             args: currentArguments,
@@ -34,11 +34,11 @@ function parseDirectives(content) {
         currentModifiers = [];
         state = 'action';
     };
-    const pushArgument = function () {
+    const pushArgument = () => {
         currentArguments.push(currentArgumentValue.trim());
         currentArgumentValue = '';
     };
-    const pushModifier = function () {
+    const pushModifier = () => {
         if (currentArguments.length > 1) {
             throw new Error(`The modifier "${currentActionName}()" does not support multiple arguments.`);
         }
@@ -121,9 +121,7 @@ function normalizeModelName(model) {
     return (model
         .replace(/\[]$/, '')
         .split('[')
-        .map(function (s) {
-        return s.replace(']', '');
-    })
+        .map((s) => s.replace(']', ''))
         .join('.'));
 }
 
@@ -135,33 +133,31 @@ function getElementAsTagText(element) {
 
 let componentMapByElement = new WeakMap();
 let componentMapByComponent = new Map();
-const registerComponent = function (component) {
+const registerComponent = (component) => {
     componentMapByElement.set(component.element, component);
     componentMapByComponent.set(component, component.name);
 };
-const unregisterComponent = function (component) {
+const unregisterComponent = (component) => {
     componentMapByElement.delete(component.element);
     componentMapByComponent.delete(component);
 };
-const getComponent = function (element) {
-    return new Promise((resolve, reject) => {
-        let count = 0;
-        const maxCount = 10;
-        const interval = setInterval(() => {
-            const component = componentMapByElement.get(element);
-            if (component) {
-                clearInterval(interval);
-                resolve(component);
-            }
-            count++;
-            if (count > maxCount) {
-                clearInterval(interval);
-                reject(new Error(`Component not found for element ${getElementAsTagText(element)}`));
-            }
-        }, 5);
-    });
-};
-const findComponents = function (currentComponent, onlyParents, onlyMatchName) {
+const getComponent = (element) => new Promise((resolve, reject) => {
+    let count = 0;
+    const maxCount = 10;
+    const interval = setInterval(() => {
+        const component = componentMapByElement.get(element);
+        if (component) {
+            clearInterval(interval);
+            resolve(component);
+        }
+        count++;
+        if (count > maxCount) {
+            clearInterval(interval);
+            reject(new Error(`Component not found for element ${getElementAsTagText(element)}`));
+        }
+    }, 5);
+});
+const findComponents = (currentComponent, onlyParents, onlyMatchName) => {
     const components = [];
     componentMapByComponent.forEach((componentName, component) => {
         if (onlyParents && (currentComponent === component || !component.element.contains(currentComponent.element))) {
@@ -174,7 +170,7 @@ const findComponents = function (currentComponent, onlyParents, onlyMatchName) {
     });
     return components;
 };
-const findChildren = function (currentComponent) {
+const findChildren = (currentComponent) => {
     const children = [];
     componentMapByComponent.forEach((componentName, component) => {
         if (currentComponent === component) {
@@ -199,7 +195,7 @@ const findChildren = function (currentComponent) {
     });
     return children;
 };
-const findParent = function (currentComponent) {
+const findParent = (currentComponent) => {
     let parentElement = currentComponent.element.parentElement;
     while (parentElement) {
         const component = componentMapByElement.get(parentElement);
@@ -220,7 +216,7 @@ function getValueFromElement(element, valueStore) {
                 if (Array.isArray(modelValue)) {
                     return getMultipleCheckboxValue(element, modelValue);
                 }
-                else if (Object(modelValue) === modelValue) {
+                if (Object(modelValue) === modelValue) {
                     return getMultipleCheckboxValue(element, Object.values(modelValue));
                 }
             }
@@ -254,14 +250,14 @@ function setValueOnElement(element, value) {
             return;
         }
         if (element.type === 'radio') {
-            element.checked = element.value == value;
+            element.checked = element.value === value;
             return;
         }
         if (element.type === 'checkbox') {
             if (Array.isArray(value)) {
                 let valueFound = false;
                 value.forEach((val) => {
-                    if (val == element.value) {
+                    if (val === element.value) {
                         valueFound = true;
                     }
                 });
@@ -269,7 +265,7 @@ function setValueOnElement(element, value) {
             }
             else {
                 if (element.hasAttribute('value')) {
-                    element.checked = element.value == value;
+                    element.checked = element.value === value;
                 }
                 else {
                     element.checked = value;
@@ -280,7 +276,7 @@ function setValueOnElement(element, value) {
     }
     if (element instanceof HTMLSelectElement) {
         const arrayWrappedValue = [].concat(value).map((value) => {
-            return value + '';
+            return `${value}`;
         });
         Array.from(element.options).forEach((option) => {
             option.selected = arrayWrappedValue.includes(option.value);
@@ -366,7 +362,7 @@ function htmlToElement(html) {
     }
     return child;
 }
-const getMultipleCheckboxValue = function (element, currentValues) {
+const getMultipleCheckboxValue = (element, currentValues) => {
     const finalValues = [...currentValues];
     const value = inputValue(element);
     const index = currentValues.indexOf(value);
@@ -381,9 +377,7 @@ const getMultipleCheckboxValue = function (element, currentValues) {
     }
     return finalValues;
 };
-const inputValue = function (element) {
-    return element.dataset.value ? element.dataset.value : element.value;
-};
+const inputValue = (element) => element.dataset.value ? element.dataset.value : element.value;
 
 function getDeepData(data, propertyPath) {
     const { currentLevelData, finalKey } = parseDeepData(data, propertyPath);
@@ -392,7 +386,7 @@ function getDeepData(data, propertyPath) {
     }
     return currentLevelData[finalKey];
 }
-const parseDeepData = function (data, propertyPath) {
+const parseDeepData = (data, propertyPath) => {
     const finalData = JSON.parse(JSON.stringify(data));
     let currentLevelData = finalData;
     const parts = propertyPath.split('.');
@@ -1325,7 +1319,7 @@ function normalizeAttributesForComparison(element) {
     });
 }
 
-const syncAttributes = function (fromEl, toEl) {
+const syncAttributes = (fromEl, toEl) => {
     for (let i = 0; i < fromEl.attributes.length; i++) {
         const attr = fromEl.attributes[i];
         toEl.setAttribute(attr.name, attr.value);
@@ -1420,7 +1414,7 @@ function executeMorphdom(rootFromElement, rootToElement, modifiedFieldElements, 
                     fromEl.innerHTML = toEl.innerHTML;
                     return true;
                 }
-                if (fromEl.parentElement && fromEl.parentElement.hasAttribute('data-skip-morph')) {
+                if (fromEl.parentElement?.hasAttribute('data-skip-morph')) {
                     return false;
                 }
                 return !fromEl.hasAttribute('data-live-ignore');
@@ -1981,13 +1975,13 @@ class Component {
         return this.unsyncedInputsTracker.getUnsyncedModels();
     }
     emit(name, data, onlyMatchingComponentsNamed = null) {
-        return this.performEmit(name, data, false, onlyMatchingComponentsNamed);
+        this.performEmit(name, data, false, onlyMatchingComponentsNamed);
     }
     emitUp(name, data, onlyMatchingComponentsNamed = null) {
-        return this.performEmit(name, data, true, onlyMatchingComponentsNamed);
+        this.performEmit(name, data, true, onlyMatchingComponentsNamed);
     }
     emitSelf(name, data) {
-        return this.doEmit(name, data);
+        this.doEmit(name, data);
     }
     performEmit(name, data, emitUp, matchingName) {
         const components = findComponents(this, emitUp, matchingName);
@@ -2410,7 +2404,7 @@ class LoadingPlugin {
             if (!isLoading) {
                 return;
             }
-            delay = modifier.value ? parseInt(modifier.value) : 200;
+            delay = modifier.value ? Number.parseInt(modifier.value) : 200;
         });
         validModifiers.set('action', (modifier) => {
             if (!modifier.value) {
@@ -2516,7 +2510,7 @@ class LoadingPlugin {
         });
     }
 }
-const parseLoadingAction = function (action, isLoading) {
+const parseLoadingAction = (action, isLoading) => {
     switch (action) {
         case 'show':
             return isLoading ? 'show' : 'hide';
@@ -2655,7 +2649,7 @@ class PollingPlugin {
                 switch (modifier.name) {
                     case 'delay':
                         if (modifier.value) {
-                            duration = parseInt(modifier.value);
+                            duration = Number.parseInt(modifier.value);
                         }
                         break;
                     default:
@@ -2722,7 +2716,7 @@ function getModelBinding (modelDirective) {
                 shouldRender = false;
                 break;
             case 'debounce':
-                debounce = modifier.value ? parseInt(modifier.value) : true;
+                debounce = modifier.value ? Number.parseInt(modifier.value) : true;
                 break;
             default:
                 throw new Error(`Unknown modifier "${modifier.name}" in data-model="${modelDirective.getString()}".`);
@@ -2783,8 +2777,10 @@ function fromQueryString(search) {
         return {};
     const insertDotNotatedValueIntoData = (key, value, data) => {
         const [first, second, ...rest] = key.split('.');
-        if (!second)
-            return (data[key] = value);
+        if (!second) {
+            data[key] = value;
+            return value;
+        }
         if (data[first] === undefined) {
             data[first] = Number.isNaN(Number.parseInt(second)) ? {} : [];
         }
@@ -2987,7 +2983,7 @@ class LiveControllerDefault extends Controller {
                 }
             });
             validModifiers.set('debounce', (modifier) => {
-                debounce = modifier.value ? parseInt(modifier.value) : true;
+                debounce = modifier.value ? Number.parseInt(modifier.value) : true;
             });
             validModifiers.set('files', (modifier) => {
                 if (!modifier.value) {

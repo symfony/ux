@@ -1,4 +1,4 @@
-import {Directive} from './directives_parser';
+import type {Directive} from './directives_parser';
 
 export interface ModelBinding {
     modelName: string,
@@ -32,7 +32,7 @@ export default function(modelDirective: Directive): ModelBinding {
                 break;
 
             case 'debounce':
-                debounce = modifier.value ? parseInt(modifier.value) : true;
+                debounce = modifier.value ? Number.parseInt(modifier.value) : true;
 
                 break;
             default:

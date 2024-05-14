@@ -1,4 +1,4 @@
-import Component from './Component';
+import type Component from './Component';
 import getElementAsTagText from './Util/getElementAsTagText';
 
 let componentMapByElement = new WeakMap<HTMLElement, Component>();
@@ -7,23 +7,23 @@ let componentMapByElement = new WeakMap<HTMLElement, Component>();
  */
 let componentMapByComponent = new Map<Component, string>();
 
-export const resetRegistry = function () {
+export const resetRegistry = () => {
     componentMapByElement = new WeakMap<HTMLElement, Component>();
     componentMapByComponent = new Map<Component, string>();
 };
 
-export const registerComponent = function (component: Component) {
+export const registerComponent = (component: Component) => {
     componentMapByElement.set(component.element, component);
     componentMapByComponent.set(component, component.name);
 };
 
-export const unregisterComponent = function (component: Component) {
+export const unregisterComponent = (component: Component) => {
     componentMapByElement.delete(component.element);
     componentMapByComponent.delete(component);
 };
 
-export const getComponent = function (element: HTMLElement): Promise<Component> {
-    return new Promise((resolve, reject) => {
+export const getComponent = (element: HTMLElement): Promise<Component> =>
+    new Promise((resolve, reject) => {
         let count = 0;
         const maxCount = 10;
         const interval = setInterval(() => {
@@ -40,16 +40,15 @@ export const getComponent = function (element: HTMLElement): Promise<Component> 
             }
         }, 5);
     });
-};
 
 /**
  * Returns a filtered list of all the currently-registered components
  */
-export const findComponents = function (
+export const findComponents = (
     currentComponent: Component,
     onlyParents: boolean,
     onlyMatchName: string | null
-): Component[] {
+): Component[] => {
     const components: Component[] = [];
     componentMapByComponent.forEach((componentName: string, component: Component) => {
         if (onlyParents && (currentComponent === component || !component.element.contains(currentComponent.element))) {
@@ -69,7 +68,7 @@ export const findComponents = function (
 /**
  * Returns an array of components that are direct children of the given component.
  */
-export const findChildren = function (currentComponent: Component): Component[] {
+export const findChildren = (currentComponent: Component): Component[] => {
     const children: Component[] = [];
     componentMapByComponent.forEach((componentName: string, component: Component) => {
         if (currentComponent === component) {
@@ -103,7 +102,7 @@ export const findChildren = function (currentComponent: Component): Component[] 
     return children;
 };
 
-export const findParent = function (currentComponent: Component): Component | null {
+export const findParent = (currentComponent: Component): Component | null => {
     // recursively traverse the node tree up to find a parent
     let parentElement = currentComponent.element.parentElement;
     while (parentElement) {
