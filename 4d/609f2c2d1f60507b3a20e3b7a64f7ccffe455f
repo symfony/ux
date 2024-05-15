@@ -1,0 +1,154 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-09T22:28:35Z
+
+Does this work when no configuration has been set previously ?
+
+---------------------------------------------------------------------------
+
+by hellomedia at 2024-05-10T02:06:59Z
+
+Yes, it works. It "works" all the time, just overrides your `scales` config.
+
+In my case, I lost `stacked: true` from my scales config. Makes sense when you realize you are overriding the config, but it's not super obvious if you don't pay attention, and the code comment `// For instance you can format Y axis` feels misleading to me.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-10T03:13:24Z
+
+> Yes, it works. It "works" all the time, just overrides your `scales` config.
+
+So i checked.. and it "does not".
+
+As expected, if config.options.scales is not previously defined, trying to write `event.detail.config.options.scales.y` throws an error.
+
+<img width="522" alt="as-expected" src="https://github.com/symfony/ux/assets/1359581/5eff872e-0bf4-4939-b6b6-6715169bad25">
+
+So i think the current doc is simpler and safer.
+
+---------------------------------------------------------------------------
+
+by hellomedia at 2024-05-10T05:00:50Z
+
+You are right! Sorry about that, I overlooked this.
+
+So maybe would modifying the comment be justified ?
+
+I just tested the code below which achieves the desired behaviour - adds the config option without overriding things - but I am not sure if it's within the scope of the doc.
+
+```js
+
+import { Controller } from '@hotwired/stimulus';
+
+export default class extends Controller {
+    connect() {
+        // Using bind(this) to preserve context
+        this.element.addEventListener('chartjs:pre-connect', this._onPreConnect.bind(this));
+    }
+
+   ...
+
+    _onPreConnect(event) {
+
+        // For instance you can format Y axis
+        // event.detail.config.options.scales = {} overrides existing config
+        // and event.detail.config.options.scales.y.ticks = {} does not work is there is no existing scales config
+
+        this.setDeepProperty(event.detail.config.options, ["scales", "y", "ticks"], {
+            callback: function (value, index, values) {
+                /* ... */
+            }
+        });
+    }
+
+    // Safely add deep JS property
+    setDeepProperty(obj, path, value) {
+        if (!Array.isArray(path) || path.length === 0) {
+            throw new Error("Path must be a non-empty array of keys");
+        }
+
+        let current = obj;
+
+        // Navigate through the path, creating objects as needed
+        for (let i = 0; i < path.length - 1; i++) {
+            const key = path[i];
+
+            if (!current[key] || typeof current[key] !== 'object') {
+                current[key] = {};
+            }
+
+            current = current[key];
+        }
+
+        // Set the final value at the end of the path
+        const lastKey = path[path.length - 1];
+        current[lastKey] = value;
+    }
+}
+
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-10T20:09:31Z
+
+Yep that'd be cool !
+
+---------------------------------------------------------------------------
+
+by hellomedia at 2024-05-11T09:45:53Z
+
+Would you like me to add the `setDeepPropery` code sample above to the doc, or to just modify the original one-line comment to warn about overriding config ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-11T11:38:43Z
+
+Oh sorry,
+
+I think we should update the doc to avoid any bad experience like you had.. but let's be more direct.
+
+I'd rather not use the deep property there to focus on the event more than the "structure" thing.
+
+So maybe just a comment, or a second commented line with a comment like "if you already defined ..foo.bar.scales." ?
+
+---------------------------------------------------------------------------
+
+by hellomedia at 2024-05-11T14:24:56Z
+
+I have tweaked the doc to try to make things clear while keeping it focused.
+
+Can you check if that looks ok ?
+
+---------------------------------------------------------------------------
+
+by hellomedia at 2024-05-12T06:45:41Z
+
+To be complete, the wording _"... or update an existing Y axis config"_ still feels a tiny bit misleading. It seems to imply there are only these 2 use cases. There is a third use case: adding a new Y axis config to an existing scales config.
+
+The correct syntax for that use case would be:
+```js
+event.detail.config.options.scales.y = {
+    ticks: {
+        callback: function (value, index, values) {
+            /* ... */
+        },
+    },
+};
+```
+
+---------------------------------------------------------------------------
+
+by hellomedia at 2024-05-14T06:15:02Z
+
+I have just updated the PR to include the 3 use cases.
+
+It's a bit lengthier, but not too bad.
+
+What do you think ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-15T01:06:58Z
+
+Well let’s go with this one ! Thank you very much for the time spent :)
