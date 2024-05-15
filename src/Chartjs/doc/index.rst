@@ -185,6 +185,8 @@ custom Stimulus controller:
             console.log(event.detail.config);
 
             // For instance you can format Y axis
+            // To avoid overriding existing config, you should distinguish 3 cases:
+            // # 1. No existing scales config => add a new scales config
             event.detail.config.options.scales = {
                 y: {
                     ticks: {
@@ -192,6 +194,20 @@ custom Stimulus controller:
                             /* ... */
                         },
                     },
+                },
+            };
+            // # 2. Existing scales config without Y axis config => add new Y axis config
+            event.detail.config.options.scales.y = {
+                ticks: {
+                    callback: function (value, index, values) {
+                        /* ... */
+                    },
+                },
+            };
+            // # 3. Existing Y axis config => update it
+            event.detail.config.options.scales.y.ticks = {
+                callback: function (value, index, values) {
+                    /* ... */
                 },
             };
         }
