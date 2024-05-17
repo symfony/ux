@@ -89,6 +89,8 @@ export default class extends Controller {
     ) {
         if (!content) return;
         if (!tag) tag = '';
+        if (!icon) icon = '';
+        if (!body) body = '';
 
         if ('granted' === Notification.permission) {
             new Notification(content, { tag: tag, body: body, icon: icon, renotify: renotify });
