@@ -51,7 +51,8 @@ export default class extends Controller {
         }
 
         this.eventSources.forEach((eventSource) => {
-            const listener = (event: MessageEvent) => this._notify(JSON.parse(event.data).summary);
+            const listener = (event: MessageEvent) => this._notify(JSON.parse(event.data).summary, JSON.parse(event.data).tag,JSON.parse(event.data).body, JSON.parse(event.data).icon, JSON.parse(event.data).renotify);
+
             eventSource.addEventListener('message', listener);
             this.listeners.set(eventSource, listener);
         });
@@ -72,11 +73,12 @@ export default class extends Controller {
         this.eventSources = [];
     }
 
-    _notify(content: string | undefined) {
+    _notify(content: string | undefined, tag: string | undefined, body: string | undefined, icon: string | undefined, renotify: boolean | undefined) {
         if (!content) return;
+        if (!tag) tag = '';
 
         if ('granted' === Notification.permission) {
-            new Notification(content);
+            new Notification(content, {tag: tag, body: body, icon: icon, renotify: renotify});
 
             return;
         }
@@ -84,7 +86,7 @@ export default class extends Controller {
         if ('denied' !== Notification.permission) {
             Notification.requestPermission().then((permission) => {
                 if ('granted' === permission) {
-                    new Notification(content);
+                    new Notification(content, {tag: tag, body: body, icon: icon, renotify: renotify});
                 }
             });
         }
