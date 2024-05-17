@@ -49,7 +49,12 @@ export default class extends Controller {
         }
 
         this.eventSources.forEach((eventSource) => {
-            const listener = (event: MessageEvent) => this._notify(JSON.parse(event.data).summary);
+            const listener = (event: MessageEvent) => {
+                const { summary, content } = JSON.parse(event.data);
+
+                this._notify(summary, content);
+            };
+
             eventSource.addEventListener('message', listener);
             this.listeners.set(eventSource, listener);
         });
@@ -70,11 +75,11 @@ export default class extends Controller {
         this.eventSources = [];
     }
 
-    _notify(content: string | undefined) {
-        if (!content) return;
+    _notify(title: string | undefined, options: NotificationOptions | undefined) {
+        if (!title) return;
 
         if ('granted' === Notification.permission) {
-            new Notification(content);
+            new Notification(title, options);
 
             return;
         }
@@ -82,7 +87,7 @@ export default class extends Controller {
         if ('denied' !== Notification.permission) {
             Notification.requestPermission().then((permission) => {
                 if ('granted' === permission) {
-                    new Notification(content);
+                    new Notification(title, options);
                 }
             });
         }

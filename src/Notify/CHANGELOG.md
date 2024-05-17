@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.24.0
+
+-   Added `options` to Notification
+
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"
