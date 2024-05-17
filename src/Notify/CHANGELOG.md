@@ -1,5 +1,7 @@
 # CHANGELOG
 
+- Added body, icon, tag ,renotify to controller.js for mercure-notifier
+
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"
