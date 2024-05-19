@@ -12,6 +12,7 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
+use Symfony\UX\Turbo\Broadcaster\DoctrineIdAccessor;
 use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 use Symfony\UX\Turbo\Broadcaster\ImuxBroadcaster;
 use Symfony\UX\Turbo\Broadcaster\TwigBroadcaster;
@@ -29,10 +30,17 @@ return static function (ContainerConfigurator $container): void {
 
         ->alias(BroadcasterInterface::class, 'turbo.broadcaster.imux')
 
+        ->set('turbo.id_formatter', IdAccessor::class)
+
+        ->set('turbo.doctrine_id_accessor', DoctrineIdAccessor::class)
+            ->args([
+                service('doctrine')->nullOnInvalid(),
+            ])
+
         ->set('turbo.id_accessor', IdAccessor::class)
             ->args([
                 service('property_accessor')->nullOnInvalid(),
-                service('doctrine')->nullOnInvalid(),
+                service('turbo.doctrine_id_accessor'),
             ])
 
         ->set('turbo.broadcaster.action_renderer', TwigBroadcaster::class)
@@ -52,6 +60,7 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 service('turbo.broadcaster.imux'),
                 service('annotation_reader')->nullOnInvalid(),
+                service('turbo.doctrine_id_accessor'),
             ])
             ->tag('doctrine.event_listener', ['event' => 'onFlush'])
             ->tag('doctrine.event_listener', ['event' => 'postFlush'])

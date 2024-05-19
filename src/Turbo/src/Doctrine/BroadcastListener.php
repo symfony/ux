@@ -19,6 +19,8 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
+use Symfony\UX\Turbo\Broadcaster\DoctrineIdAccessor;
+use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 
 /**
  * Detects changes made from Doctrine entities and broadcasts updates to the broadcasters.
@@ -29,6 +31,7 @@ final class BroadcastListener implements ResetInterface
 {
     private $broadcaster;
     private $annotationReader;
+    private $doctrineIdAccessor;
 
     /**
      * @var array<class-string, array<mixed>>
@@ -48,12 +51,13 @@ final class BroadcastListener implements ResetInterface
      */
     private $removedEntities;
 
-    public function __construct(BroadcasterInterface $broadcaster, ?Reader $annotationReader = null)
+    public function __construct(BroadcasterInterface $broadcaster, ?Reader $annotationReader = null, ?DoctrineIdAccessor $doctrineIdAccessor = null)
     {
         $this->reset();
 
         $this->broadcaster = $broadcaster;
         $this->annotationReader = $annotationReader;
+        $this->doctrineIdAccessor = $doctrineIdAccessor ?? new DoctrineIdAccessor();
     }
 
     /**
@@ -94,10 +98,9 @@ final class BroadcastListener implements ResetInterface
         try {
             foreach ($this->createdEntities as $entity) {
                 $options = $this->createdEntities[$entity];
-                $id = $this->getIdentifierValues($em, $entity);
+                $id = $this->doctrineIdAccessor->getEntityId($entity);
                 foreach ($options as $option) {
                     $option['id'] = $id;
-                    $options['id_formatted'] = $this->formatId($id);
                     $this->broadcaster->broadcast($entity, Broadcast::ACTION_CREATE, $option);
                 }
             }
@@ -148,37 +151,13 @@ final class BroadcastListener implements ResetInterface
 
         if ($options = $this->broadcastedClasses[$class]) {
             if ('createdEntities' !== $property) {
-                $id = $this->getIdentifierValues($em, $entity);
+                $id = $this->doctrineIdAccessor->getEntityId($entity);
                 foreach ($options as $k => $option) {
                     $options[$k]['id'] = $id;
-                    $options[$k]['id_formatted'] = $this->formatId($id);
                 }
             }
 
             $this->{$property}->attach($entity, $options);
         }
-    }
-
-    private function getIdentifierValues(EntityManagerInterface $em, object $entity): array
-    {
-        $class = ClassUtil::getEntityClass($entity);
-
-        $values = $em->getClassMetadata($class)->getIdentifierValues($entity);
-
-        foreach ($values as $key => $value) {
-            if (\is_object($value)) {
-                $values[$key] = $this->getIdentifierValues($em, $value);
-            }
-        }
-
-        return $values;
-    }
-
-    private function formatId(array $id): string
-    {
-        $flatten = [];
-        array_walk_recursive($id, static function ($item) use (&$flatten) { $flatten[] = $item; });
-
-        return implode('-', $flatten);
     }
 }

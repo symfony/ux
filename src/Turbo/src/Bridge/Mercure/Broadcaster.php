@@ -15,6 +15,8 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
+use Symfony\UX\Turbo\Broadcaster\IdAccessor;
+use Symfony\UX\Turbo\Broadcaster\IdFormatter;
 use Symfony\UX\Turbo\Doctrine\ClassUtil;
 
 /**
@@ -42,14 +44,16 @@ final class Broadcaster implements BroadcasterInterface
 
     private $name;
     private $hub;
+    private $idFormatter;
 
     /** @var ExpressionLanguage|null */
     private $expressionLanguage;
 
-    public function __construct(string $name, HubInterface $hub)
+    public function __construct(string $name, HubInterface $hub, ?IdFormatter $idFormatter = null)
     {
         $this->name = $name;
         $this->hub = $hub;
+        $this->idFormatter = $idFormatter ?? new IdFormatter();
 
         if (class_exists(ExpressionLanguage::class)) {
             $this->expressionLanguage = new ExpressionLanguage();
@@ -99,7 +103,7 @@ final class Broadcaster implements BroadcasterInterface
                 throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s": the option "topics" is empty and "id" is missing.', $entityClass));
             }
 
-            $id = $options['id_formatted'] ?? implode('-', (array) $options['id']);
+            $id = $this->idFormatter->format($options['id']);
 
             $options['topics'] = (array) sprintf(self::TOPIC_PATTERN, rawurlencode($entityClass), rawurlencode($id));
         }

@@ -25,23 +25,24 @@ final class TwigBroadcaster implements BroadcasterInterface
     private $twig;
     private $templatePrefixes;
     private $idAccessor;
+    private $idFormatter;
 
     /**
      * @param array<string, string> $templatePrefixes
      */
-    public function __construct(BroadcasterInterface $broadcaster, Environment $twig, array $templatePrefixes = [], ?IdAccessor $idAccessor = null)
+    public function __construct(BroadcasterInterface $broadcaster, Environment $twig, array $templatePrefixes = [], ?IdAccessor $idAccessor = null, ?IdFormatter $idFormatter = null)
     {
         $this->broadcaster = $broadcaster;
         $this->twig = $twig;
         $this->templatePrefixes = $templatePrefixes;
         $this->idAccessor = $idAccessor ?? new IdAccessor();
+        $this->idFormatter = $idFormatter ?? new IdFormatter();
     }
 
     public function broadcast(object $entity, string $action, array $options): void
     {
         if (!isset($options['id']) && null !== $id = $this->idAccessor->getEntityId($entity)) {
             $options['id'] = $id;
-            $options['id_formatted'] = $id;
         }
 
         $class = ClassUtil::getEntityClass($entity);
@@ -64,7 +65,7 @@ final class TwigBroadcaster implements BroadcasterInterface
             ->renderBlock($action, [
                 'entity' => $entity,
                 'action' => $action,
-                'id' => $options['id_formatted'],
+                'id' => $this->idFormatter->format($options['id'] ?? []),
             ] + $options);
 
         $this->broadcaster->broadcast($entity, $action, $options);

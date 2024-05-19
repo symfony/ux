@@ -11,19 +11,18 @@
 
 namespace Symfony\UX\Turbo\Broadcaster;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class IdAccessor
 {
     private $propertyAccessor;
-    private $doctrine;
+    private $doctrineIdAccessor;
 
-    public function __construct(?PropertyAccessorInterface $propertyAccessor = null, ?ManagerRegistry $doctrine = null)
+    public function __construct(?PropertyAccessorInterface $propertyAccessor = null, ?DoctrineIdAccessor $doctrineIdAccessor = null)
     {
         $this->propertyAccessor = $propertyAccessor ?? (class_exists(PropertyAccess::class) ? PropertyAccess::createPropertyAccessor() : null);
-        $this->doctrine = $doctrine;
+        $this->doctrineIdAccessor = $doctrineIdAccessor ?? new DoctrineIdAccessor();
     }
 
     /**
@@ -33,9 +32,8 @@ class IdAccessor
     {
         $entityClass = $entity::class;
 
-        if ($this->doctrine && $em = $this->doctrine->getManagerForClass($entityClass)) {
-            // @todo: Not sure how to use the same method like in the BroadcastListener without duplicating the code.
-            return $em->getClassMetadata($entityClass)->getIdentifierValues($entity);
+        if (null !== ($id = $this->doctrineIdAccessor->getEntityId($entity))) {
+            return $id;
         }
 
         if ($this->propertyAccessor) {

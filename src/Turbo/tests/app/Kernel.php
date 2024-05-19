@@ -319,7 +319,6 @@ class Kernel extends BaseKernel
 
             if (!$cartId || !$productId) {
                 $cart = new Cart();
-
                 $product = new Product();
 
                 if ($title = $request->get('title')) {
