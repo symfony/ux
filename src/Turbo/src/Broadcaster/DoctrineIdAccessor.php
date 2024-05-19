@@ -27,6 +27,9 @@ class DoctrineIdAccessor
         $this->doctrine = $doctrine;
     }
 
+    /**
+     * @return array<string, array<string, string>>|array<string, string>|null
+     */
     public function getEntityId(object $entity): ?array
     {
         $entityClass = $entity::class;
@@ -38,6 +41,9 @@ class DoctrineIdAccessor
         return null;
     }
 
+    /**
+     * @return array<string, string>|array<string, array<string, string>>
+     */
     private function getIdentifierValues(ObjectManager $em, object $entity): array
     {
         $class = ClassUtil::getEntityClass($entity);

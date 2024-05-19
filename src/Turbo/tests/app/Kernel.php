@@ -345,8 +345,12 @@ class Kernel extends BaseKernel
 
                 if ($remove = $request->get('remove')) {
                     $doctrine->remove($cartProduct);
-                    $doctrine->remove($cartProduct->product); // for cleanup
-                    $doctrine->remove($cartProduct->cart); // for cleanup
+                    if ($cartProduct->product) {
+                        $doctrine->remove($cartProduct->product); // for cleanup
+                    }
+                    if ($cartProduct->cart) {
+                        $doctrine->remove($cartProduct->cart); // for cleanup
+                    }
                 } else {
                     $doctrine->persist($cartProduct);
                 }

@@ -26,7 +26,7 @@ class IdAccessor
     }
 
     /**
-     * @return string[]
+     * @return array<string, array<string, string>>|array<string, string>|null
      */
     public function getEntityId(object $entity): ?array
     {

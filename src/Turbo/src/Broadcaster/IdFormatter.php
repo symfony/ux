@@ -23,8 +23,15 @@ namespace Symfony\UX\Turbo\Broadcaster;
  */
 class IdFormatter
 {
-    public function format(array $id): string
+    /**
+     * @param array<string, array<string, string>>|array<string, string>|string $id
+     */
+    public function format(array|string $id): string
     {
+        if (is_string($id)) {
+            return $id;
+        }
+
         $flatten = [];
 
         array_walk_recursive($id, static function ($item) use (&$flatten) { $flatten[] = $item; });
