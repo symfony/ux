@@ -28,7 +28,7 @@ class IdFormatter
      */
     public function format(array|string $id): string
     {
-        if (is_string($id)) {
+        if (\is_string($id)) {
             return $id;
         }
 
