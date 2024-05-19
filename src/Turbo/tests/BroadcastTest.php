@@ -27,7 +27,7 @@ class BroadcastTest extends PantherTestCase
     protected function setUp(): void
     {
         if (!file_exists(__DIR__.'/app/public/build')) {
-            throw new \Exception(sprintf('Move into %s and execute Encore before running this test.', realpath(__DIR__.'/app')));
+            throw new \Exception(sprintf('Move into "%s" and execute Encore before running this test.', realpath(__DIR__.'/app')));
         }
 
         parent::setUp();
