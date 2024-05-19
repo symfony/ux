@@ -12,12 +12,13 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
-use Symfony\UX\Turbo\Broadcaster\DoctrineIdAccessor;
 use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 use Symfony\UX\Turbo\Broadcaster\IdFormatter;
 use Symfony\UX\Turbo\Broadcaster\ImuxBroadcaster;
 use Symfony\UX\Turbo\Broadcaster\TwigBroadcaster;
 use Symfony\UX\Turbo\Doctrine\BroadcastListener;
+use Symfony\UX\Turbo\Doctrine\DoctrineClassResolver;
+use Symfony\UX\Turbo\Doctrine\DoctrineIdAccessor;
 use Symfony\UX\Turbo\Twig\TwigExtension;
 
 /*
@@ -30,6 +31,11 @@ return static function (ContainerConfigurator $container): void {
             ->args([tagged_iterator('turbo.broadcaster')])
 
         ->alias(BroadcasterInterface::class, 'turbo.broadcaster.imux')
+
+        ->set('turbo.doctrine_class_resolver', DoctrineClassResolver::class)
+            ->args([
+                service('doctrine')->nullOnInvalid(),
+            ])
 
         ->set('turbo.id_formatter', IdFormatter::class)
 
@@ -51,6 +57,7 @@ return static function (ContainerConfigurator $container): void {
                 abstract_arg('entity template prefixes'),
                 service('turbo.id_accessor'),
                 service('turbo.id_formatter'),
+                service('turbo.doctrine_class_resolver'),
             ])
             ->decorate('turbo.broadcaster.imux')
 
@@ -63,6 +70,7 @@ return static function (ContainerConfigurator $container): void {
                 service('turbo.broadcaster.imux'),
                 service('annotation_reader')->nullOnInvalid(),
                 service('turbo.doctrine_id_accessor'),
+                service('turbo.doctrine_class_resolver'),
             ])
             ->tag('doctrine.event_listener', ['event' => 'onFlush'])
             ->tag('doctrine.event_listener', ['event' => 'postFlush'])

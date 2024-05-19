@@ -9,11 +9,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Turbo\Broadcaster;
+namespace Symfony\UX\Turbo\Doctrine;
 
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\Persistence\ObjectManager;
-use Symfony\UX\Turbo\Doctrine\ClassUtil;
 
 /**
  * @author Jason Schilling <jason@sourecode.dev>
@@ -30,11 +29,11 @@ class DoctrineIdAccessor
     /**
      * @return array<string, array<string, string>>|array<string, string>|null
      */
-    public function getEntityId(object $entity): ?array
+    public function getEntityId(object $entity, ?ObjectManager $em = null): ?array
     {
-        $entityClass = ClassUtil::getEntityClass($entity);
+        $em = $em ?? $this->doctrine?->getManagerForClass($entity::class);
 
-        if ($this->doctrine && $em = $this->doctrine->getManagerForClass($entityClass)) {
+        if ($em) {
             return $this->getIdentifierValues($em, $entity);
         }
 
@@ -46,9 +45,7 @@ class DoctrineIdAccessor
      */
     private function getIdentifierValues(ObjectManager $em, object $entity): array
     {
-        $class = ClassUtil::getEntityClass($entity);
-
-        $values = $em->getClassMetadata($class)->getIdentifierValues($entity);
+        $values = $em->getClassMetadata($entity::class)->getIdentifierValues($entity);
 
         foreach ($values as $key => $value) {
             if (\is_object($value)) {

@@ -17,6 +17,7 @@ use Symfony\Component\Mercure\Update;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 use Symfony\UX\Turbo\Broadcaster\IdFormatter;
 use Symfony\UX\Turbo\Doctrine\ClassUtil;
+use Symfony\UX\Turbo\Doctrine\DoctrineClassResolver;
 
 /**
  * Broadcasts updates rendered using Twig with Mercure.
@@ -44,15 +45,17 @@ final class Broadcaster implements BroadcasterInterface
     private $name;
     private $hub;
     private $idFormatter;
+    private $doctrineClassResolver;
 
     /** @var ExpressionLanguage|null */
     private $expressionLanguage;
 
-    public function __construct(string $name, HubInterface $hub, ?IdFormatter $idFormatter = null)
+    public function __construct(string $name, HubInterface $hub, ?IdFormatter $idFormatter = null, ?DoctrineClassResolver $doctrineClassResolver = null)
     {
         $this->name = $name;
         $this->hub = $hub;
         $this->idFormatter = $idFormatter ?? new IdFormatter();
+        $this->doctrineClassResolver = $doctrineClassResolver ?? new DoctrineClassResolver();
 
         if (class_exists(ExpressionLanguage::class)) {
             $this->expressionLanguage = new ExpressionLanguage();
@@ -65,7 +68,7 @@ final class Broadcaster implements BroadcasterInterface
             return;
         }
 
-        $entityClass = ClassUtil::getEntityClass($entity);
+        $entityClass = $this->doctrineClassResolver->resolve($entity);
 
         if (!isset($options['rendered_action'])) {
             throw new \InvalidArgumentException(sprintf('Cannot broadcast entity of class "%s" as option "rendered_action" is missing.', $entityClass));

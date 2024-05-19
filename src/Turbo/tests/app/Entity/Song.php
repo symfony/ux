@@ -24,7 +24,7 @@ class Song
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
     #[ORM\Column(type: 'integer')]
-    public ?string $id = null;
+    public ?int $id = null;
 
     #[ORM\Column]
     public string $title = '';

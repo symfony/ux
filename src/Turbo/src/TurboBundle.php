@@ -14,6 +14,7 @@ namespace Symfony\UX\Turbo;
 use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
 
@@ -34,7 +35,7 @@ final class TurboBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new class() implements CompilerPassInterface {
+        $container->addCompilerPass(new class () implements CompilerPassInterface {
             public function process(ContainerBuilder $container): void
             {
                 if (!$container->hasDefinition('turbo.broadcaster.imux')) {
@@ -45,6 +46,24 @@ final class TurboBundle extends Bundle
                 }
             }
         }, PassConfig::TYPE_BEFORE_REMOVING);
+
+        $container->addCompilerPass(new class () implements CompilerPassInterface {
+            public function process(ContainerBuilder $container): void
+            {
+                $serviceIds = [
+                    ...$container->findTaggedServiceIds('turbo.broadcaster'),
+                    ...$container->findTaggedServiceIds('turbo.renderer.stream_listen'),
+                ];
+
+                foreach ($serviceIds as $serviceId => $tags) {
+                    $definition = $container->getDefinition($serviceId);
+
+                    $definition
+                        ->addArgument(new Reference('turbo.id_formatter'))
+                        ->addArgument(new Reference('turbo.doctrine_class_resolver'));
+                }
+            }
+        });
     }
 
     public function getPath(): string

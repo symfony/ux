@@ -19,7 +19,6 @@ use Doctrine\ORM\Event\PostFlushEventArgs;
 use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
-use Symfony\UX\Turbo\Broadcaster\DoctrineIdAccessor;
 
 /**
  * Detects changes made from Doctrine entities and broadcasts updates to the broadcasters.
@@ -31,6 +30,7 @@ final class BroadcastListener implements ResetInterface
     private $broadcaster;
     private $annotationReader;
     private $doctrineIdAccessor;
+    private $doctrineClassResolver;
 
     /**
      * @var array<class-string, array<mixed>>
@@ -50,13 +50,14 @@ final class BroadcastListener implements ResetInterface
      */
     private $removedEntities;
 
-    public function __construct(BroadcasterInterface $broadcaster, ?Reader $annotationReader = null, ?DoctrineIdAccessor $doctrineIdAccessor = null)
+    public function __construct(BroadcasterInterface $broadcaster, ?Reader $annotationReader = null, ?DoctrineIdAccessor $doctrineIdAccessor = null, ?DoctrineClassResolver $doctrineClassResolver = null)
     {
         $this->reset();
 
         $this->broadcaster = $broadcaster;
         $this->annotationReader = $annotationReader;
         $this->doctrineIdAccessor = $doctrineIdAccessor ?? new DoctrineIdAccessor();
+        $this->doctrineClassResolver = $doctrineClassResolver ?? new DoctrineClassResolver();
     }
 
     /**
@@ -97,7 +98,7 @@ final class BroadcastListener implements ResetInterface
         try {
             foreach ($this->createdEntities as $entity) {
                 $options = $this->createdEntities[$entity];
-                $id = $this->doctrineIdAccessor->getEntityId($entity);
+                $id = $this->doctrineIdAccessor->getEntityId($entity, $em);
                 foreach ($options as $option) {
                     $option['id'] = $id;
                     $this->broadcaster->broadcast($entity, Broadcast::ACTION_CREATE, $option);
@@ -129,28 +130,28 @@ final class BroadcastListener implements ResetInterface
 
     private function storeEntitiesToPublish(EntityManagerInterface $em, object $entity, string $property): void
     {
-        $class = ClassUtil::getEntityClass($entity);
+        $entityClass = $this->doctrineClassResolver->resolve($entity, $em);
 
-        if (!isset($this->broadcastedClasses[$class])) {
-            $this->broadcastedClasses[$class] = [];
-            $r = new \ReflectionClass($class);
+        if (!isset($this->broadcastedClasses[$entityClass])) {
+            $this->broadcastedClasses[$entityClass] = [];
+            $r = new \ReflectionClass($entityClass);
 
             if ($options = $r->getAttributes(Broadcast::class)) {
                 foreach ($options as $option) {
-                    $this->broadcastedClasses[$class][] = $option->newInstance()->options;
+                    $this->broadcastedClasses[$entityClass][] = $option->newInstance()->options;
                 }
             } elseif ($this->annotationReader && $options = $this->annotationReader->getClassAnnotations($r)) {
                 foreach ($options as $option) {
                     if ($option instanceof Broadcast) {
-                        $this->broadcastedClasses[$class][] = $option->options;
+                        $this->broadcastedClasses[$entityClass][] = $option->options;
                     }
                 }
             }
         }
 
-        if ($options = $this->broadcastedClasses[$class]) {
+        if ($options = $this->broadcastedClasses[$entityClass]) {
             if ('createdEntities' !== $property) {
-                $id = $this->doctrineIdAccessor->getEntityId($entity);
+                $id = $this->doctrineIdAccessor->getEntityId($entity, $em);
                 foreach ($options as $k => $option) {
                     $options[$k]['id'] = $id;
                 }

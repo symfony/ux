@@ -13,6 +13,7 @@ namespace Symfony\UX\Turbo\Broadcaster;
 
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\UX\Turbo\Doctrine\DoctrineIdAccessor;
 
 class IdAccessor
 {
