@@ -30,8 +30,6 @@ class IdAccessor
      */
     public function getEntityId(object $entity): ?array
     {
-        $entityClass = $entity::class;
-
         if (null !== ($id = $this->doctrineIdAccessor->getEntityId($entity))) {
             return $id;
         }

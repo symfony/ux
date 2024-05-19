@@ -14,6 +14,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 use Symfony\UX\Turbo\Broadcaster\DoctrineIdAccessor;
 use Symfony\UX\Turbo\Broadcaster\IdAccessor;
+use Symfony\UX\Turbo\Broadcaster\IdFormatter;
 use Symfony\UX\Turbo\Broadcaster\ImuxBroadcaster;
 use Symfony\UX\Turbo\Broadcaster\TwigBroadcaster;
 use Symfony\UX\Turbo\Doctrine\BroadcastListener;
@@ -30,7 +31,7 @@ return static function (ContainerConfigurator $container): void {
 
         ->alias(BroadcasterInterface::class, 'turbo.broadcaster.imux')
 
-        ->set('turbo.id_formatter', IdAccessor::class)
+        ->set('turbo.id_formatter', IdFormatter::class)
 
         ->set('turbo.doctrine_id_accessor', DoctrineIdAccessor::class)
             ->args([
