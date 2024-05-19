@@ -104,4 +104,19 @@ class BroadcastTest extends PantherTestCase
         // this part is from the stream template
         $this->assertSelectorWillContain('#artists', ', updated)');
     }
+
+    public function testBroadcastWithCompositePrimaryKey(): void
+    {
+        ($client = self::createPantherClient())->request('GET', '/cartProducts');
+
+        // submit first to create the entities
+        $client->submitForm('Submit', ['title' => 'product 1']);
+        $this->assertSelectorWillContain('#cartProducts', 'product 1');
+
+        // submit again to update the quantity
+        $client->submitForm('Submit');
+        $this->assertSelectorWillContain('#cartProducts', '2x product 1');
+        // this part is from the stream template
+        $this->assertSelectorWillContain('#cartProducts', ', updated)');
+    }
 }

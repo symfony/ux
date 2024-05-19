@@ -7,7 +7,7 @@ Start a Mercure Hub:
         -e MERCURE_PUBLISHER_JWT_KEY='!ChangeMe!' \
         -e MERCURE_SUBSCRIBER_JWT_KEY='!ChangeMe!' \
         -p 3000:3000 \
-        dunglas/mercure caddy run -config /etc/caddy/Caddyfile.dev
+        dunglas/mercure caddy run --config /etc/caddy/Caddyfile.dev
 
 Install the test app:
 
@@ -29,6 +29,7 @@ Start the test app:
 -   `http://localhost:8000/authors`: broadcast
 -   `http://localhost:8000/artists`: broadcast
 -   `http://localhost:8000/songs`: broadcast
+-   `http://localhost:8000/cart_products`: broadcast
 
 ## Run tests
 
