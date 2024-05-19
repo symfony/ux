@@ -34,6 +34,7 @@ class IdAccessor
         $entityClass = $entity::class;
 
         if ($this->doctrine && $em = $this->doctrine->getManagerForClass($entityClass)) {
+            // @todo: Not sure how to use the same method like in the BroadcastListener without duplicating the code.
             return $em->getClassMetadata($entityClass)->getIdentifierValues($entity);
         }
 

@@ -41,6 +41,7 @@ final class TwigBroadcaster implements BroadcasterInterface
     {
         if (!isset($options['id']) && null !== $id = $this->idAccessor->getEntityId($entity)) {
             $options['id'] = $id;
+            $options['id_formatted'] = $id;
         }
 
         $class = ClassUtil::getEntityClass($entity);
@@ -63,7 +64,7 @@ final class TwigBroadcaster implements BroadcasterInterface
             ->renderBlock($action, [
                 'entity' => $entity,
                 'action' => $action,
-                'id' => implode('-', (array) ($options['id'] ?? [])),
+                'id' => $options['id_formatted'],
             ] + $options);
 
         $this->broadcaster->broadcast($entity, $action, $options);

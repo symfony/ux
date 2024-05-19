@@ -94,9 +94,10 @@ final class BroadcastListener implements ResetInterface
         try {
             foreach ($this->createdEntities as $entity) {
                 $options = $this->createdEntities[$entity];
-                $id = $em->getClassMetadata($entity::class)->getIdentifierValues($entity);
+                $id = $this->getIdentifierValues($em, $entity);
                 foreach ($options as $option) {
                     $option['id'] = $id;
+                    $options['id_formatted'] = $this->formatId($id);
                     $this->broadcaster->broadcast($entity, Broadcast::ACTION_CREATE, $option);
                 }
             }
@@ -147,13 +148,37 @@ final class BroadcastListener implements ResetInterface
 
         if ($options = $this->broadcastedClasses[$class]) {
             if ('createdEntities' !== $property) {
-                $id = $em->getClassMetadata($class)->getIdentifierValues($entity);
+                $id = $this->getIdentifierValues($em, $entity);
                 foreach ($options as $k => $option) {
                     $options[$k]['id'] = $id;
+                    $options[$k]['id_formatted'] = $this->formatId($id);
                 }
             }
 
             $this->{$property}->attach($entity, $options);
         }
+    }
+
+    private function getIdentifierValues(EntityManagerInterface $em, object $entity): array
+    {
+        $class = ClassUtil::getEntityClass($entity);
+
+        $values = $em->getClassMetadata($class)->getIdentifierValues($entity);
+
+        foreach ($values as $key => $value) {
+            if (\is_object($value)) {
+                $values[$key] = $this->getIdentifierValues($em, $value);
+            }
+        }
+
+        return $values;
+    }
+
+    private function formatId(array $id): string
+    {
+        $flatten = [];
+        array_walk_recursive($id, static function ($item) use (&$flatten) { $flatten[] = $item; });
+
+        return implode('-', $flatten);
     }
 }

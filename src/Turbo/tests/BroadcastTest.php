@@ -111,12 +111,12 @@ class BroadcastTest extends PantherTestCase
 
         // submit first to create the entities
         $client->submitForm('Submit', ['title' => 'product 1']);
-        $this->assertSelectorWillContain('#cartProducts', 'product 1');
+        $this->assertSelectorWillContain('#cart_products', 'product 1');
 
         // submit again to update the quantity
         $client->submitForm('Submit');
-        $this->assertSelectorWillContain('#cartProducts', '2x product 1');
+        $this->assertSelectorWillContain('#cart_products', '2x product 1');
         // this part is from the stream template
-        $this->assertSelectorWillContain('#cartProducts', ', updated)');
+        $this->assertSelectorWillContain('#cart_products', ', updated)');
     }
 }

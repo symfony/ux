@@ -336,7 +336,7 @@ class Kernel extends BaseKernel
                 $doctrine->persist($cartProduct);
                 $doctrine->flush();
             } else {
-                $cartProduct = $doctrine->find(CartProduct::class, [$cartId, $productId]);
+                $cartProduct = $doctrine->find(CartProduct::class, ['cart' => $cartId, 'product' => $productId]);
 
                 if (!$cartProduct) {
                     throw new NotFoundHttpException();

@@ -3,7 +3,7 @@
 {% block body %}
     <h1>Create Cart, Product and CartProduct, increase quantity on update</h1>
 
-    <div id="cart_products" {{ turbo_stream_listen('App\\Entity\\CartProducts') }}></div>
+    <div id="cart_products" {{ turbo_stream_listen('App\\Entity\\CartProduct') }}></div>
 
     <turbo-frame id="api">
         <form method="post" enctype="application/x-www-form-urlencoded">
