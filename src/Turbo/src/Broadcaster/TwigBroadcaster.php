@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\Turbo\Broadcaster;
 
-use Symfony\UX\Turbo\Doctrine\ClassUtil;
 use Symfony\UX\Turbo\Doctrine\DoctrineClassResolver;
 use Twig\Environment;
 

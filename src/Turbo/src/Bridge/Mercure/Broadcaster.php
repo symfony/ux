@@ -16,7 +16,6 @@ use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 use Symfony\UX\Turbo\Broadcaster\IdFormatter;
-use Symfony\UX\Turbo\Doctrine\ClassUtil;
 use Symfony\UX\Turbo\Doctrine\DoctrineClassResolver;
 
 /**

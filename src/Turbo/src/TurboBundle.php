@@ -35,7 +35,7 @@ final class TurboBundle extends Bundle
     {
         parent::build($container);
 
-        $container->addCompilerPass(new class () implements CompilerPassInterface {
+        $container->addCompilerPass(new class() implements CompilerPassInterface {
             public function process(ContainerBuilder $container): void
             {
                 if (!$container->hasDefinition('turbo.broadcaster.imux')) {
@@ -47,7 +47,7 @@ final class TurboBundle extends Bundle
             }
         }, PassConfig::TYPE_BEFORE_REMOVING);
 
-        $container->addCompilerPass(new class () implements CompilerPassInterface {
+        $container->addCompilerPass(new class() implements CompilerPassInterface {
             public function process(ContainerBuilder $container): void
             {
                 $serviceIds = [
