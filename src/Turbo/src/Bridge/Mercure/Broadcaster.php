@@ -15,7 +15,6 @@ use Symfony\Component\ExpressionLanguage\ExpressionLanguage;
 use Symfony\Component\Mercure\HubInterface;
 use Symfony\Component\Mercure\Update;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
-use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 use Symfony\UX\Turbo\Broadcaster\IdFormatter;
 use Symfony\UX\Turbo\Doctrine\ClassUtil;
 

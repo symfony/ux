@@ -32,7 +32,7 @@ class DoctrineIdAccessor
         $entityClass = $entity::class;
 
         if ($this->doctrine && $em = $this->doctrine->getManagerForClass($entityClass)) {
-            return $this->getIdentifierValues($em,$entity);
+            return $this->getIdentifierValues($em, $entity);
         }
 
         return null;

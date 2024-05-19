@@ -20,7 +20,6 @@ use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Turbo\Attribute\Broadcast;
 use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
 use Symfony\UX\Turbo\Broadcaster\DoctrineIdAccessor;
-use Symfony\UX\Turbo\Broadcaster\IdAccessor;
 
 /**
  * Detects changes made from Doctrine entities and broadcasts updates to the broadcasters.

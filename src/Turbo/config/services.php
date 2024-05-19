@@ -49,6 +49,7 @@ return static function (ContainerConfigurator $container): void {
                 service('twig'),
                 abstract_arg('entity template prefixes'),
                 service('turbo.id_accessor'),
+                service('turbo.id_formatter'),
             ])
             ->decorate('turbo.broadcaster.imux')
 
