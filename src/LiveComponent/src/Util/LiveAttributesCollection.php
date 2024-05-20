@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\Util;
 
 use Twig\Environment;
 use Twig\Extension\EscaperExtension;
+use Twig\Runtime\EscaperRuntime;
 
 /**
  * An array of attributes that can eventually be returned as an escaped array.
@@ -114,6 +115,10 @@ final class LiveAttributesCollection
 
     private function escapeAttribute(string $value): string
     {
+        if (class_exists(EscaperRuntime::class)) {
+            return $this->twig->getRuntime(EscaperRuntime::class)->escape($value, 'html_attr');
+        }
+
         if (method_exists(EscaperExtension::class, 'escape')) {
             return EscaperExtension::escape($this->twig, $value, 'html_attr');
         }
