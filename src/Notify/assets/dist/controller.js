@@ -1,5 +1,5 @@
-'use strict';
 import { Controller } from '@hotwired/stimulus';
+
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
@@ -71,4 +71,5 @@ default_1.values = {
     hub: String,
     topics: Array,
 };
+
 export { default_1 as default };
