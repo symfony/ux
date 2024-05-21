@@ -83,14 +83,14 @@ class InvoiceCreator extends AbstractController
     }
 
     #[LiveListener('line_item:save')]
-    public function saveLineItem(#[LiveArg] int $key, #[LiveArg] Product $product, #[LiveArg] int $quantity): void
+    public function saveLineItem(#[LiveArg] int $key, #[LiveArg] int $product, #[LiveArg] int $quantity): void
     {
         if (!isset($this->lineItems[$key])) {
             // shouldn't happen
             return;
         }
 
-        $this->lineItems[$key]['productId'] = $product->getId();
+        $this->lineItems[$key]['productId'] = $product;
         $this->lineItems[$key]['quantity'] = $quantity;
     }
 
