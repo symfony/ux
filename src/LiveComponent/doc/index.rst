@@ -2560,7 +2560,7 @@ definition::
     #[AsLiveComponent]
     class SearchModule
     {
-        #[LiveProp(writable: true, url: new UrlMapping(as: 'q')]
+        #[LiveProp(writable: true, url: new UrlMapping(as: 'q'))]
         public string $query = '';
 
         // ...
