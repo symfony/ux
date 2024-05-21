@@ -71,4 +71,4 @@ default_1.values = {
     hub: String,
     topics: Array,
 };
-export default default_1;
+export { default_1 as default };
