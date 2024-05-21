@@ -18,10 +18,12 @@ use Symfony\Component\PropertyAccess\Exception\UninitializedPropertyException;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyInfo\Extractor\ReflectionExtractor;
 use Symfony\Component\PropertyInfo\PropertyInfoExtractor;
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\PropertyInfo\Type as LegacyType;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\TypeInfo\Type\BuiltinType;
+use Symfony\Component\TypeInfo\Type\ObjectType;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Exception\HydrationException;
@@ -245,6 +247,7 @@ final class LiveComponentHydrator
             return $parentObject->{$propMetadata->hydrateMethod()}($value);
         }
 
+        $collectionValueType = $propMetadata->collectionValueType();
         if ($propMetadata->useSerializerForHydration()) {
             if (!interface_exists(DenormalizerInterface::class)) {
                 throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the Serializer component is not installed. Try running "composer require symfony/serializer".', $propMetadata->getName(), $parentObject::class));
@@ -256,10 +259,12 @@ final class LiveComponentHydrator
                 throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the given serializer does not implement DenormalizerInterface.', $propMetadata->getName(), $parentObject::class));
             }
 
-            if ($propMetadata->collectionValueType()) {
-                $builtInType = $propMetadata->collectionValueType()->getBuiltinType();
-                if (Type::BUILTIN_TYPE_OBJECT === $builtInType) {
-                    $type = $propMetadata->collectionValueType()->getClassName().'[]';
+            if ($collectionValueType instanceof BuiltinType || $collectionValueType instanceof ObjectType) {
+                $type = $collectionValueType->asNonNullable().'[]';
+            } elseif ($collectionValueType instanceof LegacyType) {
+                $builtInType = $collectionValueType->getBuiltinType();
+                if (LegacyType::BUILTIN_TYPE_OBJECT === $builtInType) {
+                    $type = $collectionValueType->getClassName().'[]';
                 } else {
                     $type = $builtInType.'[]';
                 }
@@ -274,8 +279,10 @@ final class LiveComponentHydrator
             return $this->serializer->denormalize($value, $type, 'json', $propMetadata->serializationContext());
         }
 
-        if ($propMetadata->collectionValueType() && Type::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {
-            $collectionClass = $propMetadata->collectionValueType()->getClassName();
+        if ($collectionValueType instanceof ObjectType
+            || $collectionValueType instanceof LegacyType && LegacyType::BUILTIN_TYPE_OBJECT === $collectionValueType->getBuiltinType()
+        ) {
+            $collectionClass = $collectionValueType->getClassName();
             foreach ($value as $key => $objectItem) {
                 $value[$key] = $this->hydrateObjectValue($objectItem, $collectionClass, true, $propMetadata->getFormat(), $parentObject::class, sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
             }
@@ -448,8 +455,11 @@ final class LiveComponentHydrator
         }
 
         if (\is_array($value)) {
-            if ($propMetadata->collectionValueType() && Type::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {
-                $collectionClass = $propMetadata->collectionValueType()->getClassName();
+            $collectionValueType = $propMetadata->collectionValueType();
+            if ($collectionValueType instanceof ObjectType
+                || $collectionValueType instanceof LegacyType && LegacyType::BUILTIN_TYPE_OBJECT === $collectionValueType->getBuiltinType()
+            ) {
+                $collectionClass = $collectionValueType->getClassName();
                 foreach ($value as $key => $objectItem) {
                     if (!$objectItem instanceof $collectionClass) {
                         throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of %s objects, but at least on key had a different value of %s', $propMetadata->getName(), $parentObject::class, $collectionClass, get_debug_type($objectItem)));

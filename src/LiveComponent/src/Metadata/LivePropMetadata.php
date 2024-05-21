@@ -11,7 +11,8 @@
 
 namespace Symfony\UX\LiveComponent\Metadata;
 
-use Symfony\Component\PropertyInfo\Type;
+use Symfony\Component\PropertyInfo\Type as LegacyType;
+use Symfony\Component\TypeInfo\Type;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 
 /**
@@ -27,7 +28,7 @@ final class LivePropMetadata
         private ?string $typeName,
         private bool $isBuiltIn,
         private bool $allowsNull,
-        private ?Type $collectionValueType,
+        private Type|LegacyType|null $collectionValueType,
     ) {
     }
 
@@ -99,7 +100,7 @@ final class LivePropMetadata
         return $this->liveProp->serializationContext();
     }
 
-    public function collectionValueType(): ?Type
+    public function collectionValueType(): Type|LegacyType|null
     {
         return $this->collectionValueType;
     }
