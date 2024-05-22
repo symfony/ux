@@ -1,6 +1,7 @@
 # CHANGELOG
 
--   Added body, icon, tag ,renotify to controller.js for mercure-notifier
+-   Added options to Notification
+-   Rename content from _notify to title
 
 ## 2.13.2
 

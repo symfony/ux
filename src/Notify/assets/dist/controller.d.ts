@@ -13,6 +13,6 @@ export default class extends Controller {
     initialize(): void;
     connect(): void;
     disconnect(): void;
-    _notify(content: string | undefined, tag: string | undefined, body: string | undefined, icon: string | undefined, renotify: boolean | undefined): void;
+    _notify(title: string | undefined, options: NotificationOptions | undefined): void;
     private dispatchEvent;
 }
