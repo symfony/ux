@@ -20,10 +20,24 @@ use Twig\TwigFilter;
  */
 final class HighlightExtension extends AbstractExtension
 {
+    public function __construct(
+        private readonly Highlighter $highlighter,
+    ) {
+    }
+
     public function getFilters(): array
     {
         return [
-            new TwigFilter('highlight', [Highlighter::class, 'parse'], ['is_safe' => ['html']]),
+            new TwigFilter('highlight', $this->highlight(...), ['is_safe' => ['html']]),
         ];
+    }
+
+    public function highlight(string $code, string $language, ?int $startAt = null): string
+    {
+        if (null !== $startAt) {
+            return $this->highlighter->withGutter($startAt)->parse($code, $language);
+        }
+
+        return $this->highlighter->parse($code, $language);
     }
 }
