@@ -114,7 +114,7 @@ final class TurboExtension extends Extension implements PrependExtensionInterfac
 
         // check that FrameworkBundle 6.3 or higher is installed
         $bundlesMetadata = $container->getParameter('kernel.bundles_metadata');
-        if (!isset($bundlesMetadata['FrameworkBundle'])) {
+        if (!\is_array($bundlesMetadata) || !isset($bundlesMetadata['FrameworkBundle'])) {
             return false;
         }
 
