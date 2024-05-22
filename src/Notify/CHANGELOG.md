@@ -1,7 +1,7 @@
 # CHANGELOG
 
 -   Added options to Notification
--   Rename content from _notify to title
+-   Rename content from \_notify to title
 
 ## 2.13.2
 
