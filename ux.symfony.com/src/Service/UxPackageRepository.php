@@ -53,6 +53,17 @@ class UxPackageRepository
                 'I need an Ajax-autocomplete select field'
             ),
 
+            new UxPackage(
+                'icons',
+                'UX Icons',
+                'app_icons',
+                '#3737FF',
+                'linear-gradient(to bottom right, cyan, purple)',
+                'Render SVG icons seamlessly from your Twig templates.',
+                'I need to render SVG icons.',
+                'icons.svg',
+            ),
+
             (new UxPackage(
                 'chartjs',
                 'Chart.js',

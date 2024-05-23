@@ -548,6 +548,18 @@
     "symfony/ux-dropzone": {
         "version": "v2.1.1"
     },
+    "symfony/ux-icons": {
+        "version": "2.17",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.17",
+            "ref": "803a3bbd5893f9584969ab8670290cdfb6a0a5b5"
+        },
+        "files": [
+            "assets/icons/symfony.svg"
+        ]
+    },
     "symfony/ux-lazy-image": {
         "version": "v2.1.1"
     },
