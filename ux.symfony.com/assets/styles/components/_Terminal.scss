@@ -8,6 +8,10 @@
     font-size: 12px;
 }
 
+.Terminal_light {
+    --header-opacity: .25;
+}
+
 .Terminal_header {
     display: flex;
     background-color: var(--bg-header, #0D0D0DBA);
@@ -21,6 +25,7 @@
 
     .Terminal:hover & {
         opacity: 1;
+         transition: all 350ms ease-out;
     }
 
     .nav-tabs {
@@ -58,6 +63,11 @@
     code {
         font-size: inherit;
         opacity: .8;
+
+        em {
+            font-style: normal;
+            color: #77d1e0 !important;
+        }
     }
 }
 
@@ -195,5 +205,19 @@
 }
 .Terminal_expand:hover, .Terminal_expand:active {
     color: #fff !important;
+    opacity: 1;
+}
+
+.Terminal .hl-gutter  {
+    display: inline-flex;
+  font-size: 0.8em;
+  color: #474747;
+  padding: 0 1ch 0 0;
+  user-select: none;
+  margin-inline-start: -1ch;
+    opacity: 0;
+    transition: all 250ms;
+}
+.Terminal:hover .hl-gutter  {
     opacity: 1;
 }

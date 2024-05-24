@@ -38,9 +38,37 @@ class CodeBlock
      */
     public bool $stripExcessHtml = false;
 
+    public ?int $lineStart = null;
+    public ?int $lineEnd = null;
+
     public function __construct(
         #[Autowire('%kernel.project_dir%')] private string $rootDir,
     ) {
+    }
+
+    public function mount(string $filename): void
+    {
+        if (str_contains($filename, '#')) {
+            [$filename, $lines] = explode('#', $filename, 2);
+            if (str_contains($lines, '#')) {
+                throw new \InvalidArgumentException(sprintf('Invalid filename "%s": only one "#" is allowed.', $filename));
+            }
+
+            if (!preg_match('/^L(\d+)(?:-L(\d+))?$/', $lines, $matches)) {
+                throw new \InvalidArgumentException(sprintf('Invalid filename "%s": the line range is not valid.', $filename));
+            }
+
+            $lineStart = (int) $matches[1];
+            $lineEnd = (int) ($matches[2] ?? $matches[1]);
+            if ($lineStart > $lineEnd) {
+                throw new \InvalidArgumentException(sprintf('Invalid filename "%s": the line range is not valid.', $filename));
+            }
+
+            $this->lineStart = $lineStart;
+            $this->lineEnd = $lineEnd;
+        }
+
+        $this->filename = $filename;
     }
 
     /**
@@ -74,6 +102,8 @@ class CodeBlock
 
         if ($this->targetTwigBlock) {
             $content = SourceCleaner::extractTwigBlock($content, $this->targetTwigBlock, $this->showTwigExtends);
+        } elseif (null !== $this->getLineAnchor()) {
+            $content = $this->extractLines($content, $this->lineStart, $this->lineEnd);
         }
 
         if ($this->stripExcessHtml) {
@@ -83,9 +113,35 @@ class CodeBlock
         return $content;
     }
 
+    private function extractLines(string $content, int $lineStart, int $lineEnd): string
+    {
+        $lines = explode("\n", $content);
+        $lines = \array_slice($lines, $lineStart - 1, $lineEnd - $lineStart + 1);
+
+        return implode("\n", $lines);
+    }
+
+    public function getLineAnchor(): ?string
+    {
+        if (null === $this->lineStart) {
+            return null;
+        }
+
+        $anchor = sprintf('L%d', $this->lineStart);
+        if (null === $this->lineEnd) {
+            return $anchor;
+        }
+
+        if ($this->lineStart !== $this->lineEnd) {
+            $anchor .= sprintf('-L%d', $this->lineEnd);
+        }
+
+        return $anchor;
+    }
+
     public function getClassString(): string
     {
-        return 'terminal-code'.($this->showFilename ? '' : ' terminal-code-no-filename');
+        return 'terminal-code';
     }
 
     public function getGithubLink(): string
