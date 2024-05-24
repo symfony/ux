@@ -38,6 +38,7 @@
         "symfony/ux-chartjs": "2.x-dev",
         "symfony/ux-cropperjs": "2.x-dev",
         "symfony/ux-dropzone": "2.x-dev",
+        "symfony/ux-icons": "^2.17",
         "symfony/ux-lazy-image": "2.x-dev",
         "symfony/ux-live-component": "2.x-dev",
         "symfony/ux-notify": "2.x-dev",

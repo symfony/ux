@@ -52,8 +52,13 @@ class UxPackagesTest extends KernelTestCase
                 yield $package->getName() => [$package, 'Read full Documentation'];
                 continue;
             }
+            if ('icons' === $package->getName()) {
+                // Icons has a different bottom section
+                yield $package->getName() => [$package, 'Documentation'];
+                continue;
+            }
 
-            yield $package->getName() => [$package, sprintf('Symfony UX %s Docs', $package->getHumanName())];
+            yield $package->getName() => [$package, sprintf('%s Docs', $package->getHumanName())];
         }
     }
 }
