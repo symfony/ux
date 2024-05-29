@@ -729,8 +729,8 @@ Example::
 
     use Symfony\UX\Turbo\Attribute\Broadcast;
 
-    #[Broadcast(topics: ['@="book_detail" ~ entity.id', 'books'], template: 'book_detail.stream.html.twig', private: true)]
-    #[Broadcast(topics: ['@="book_list" ~ entity.id', 'books'], template: 'book_list.stream.html.twig', private: true)]
+    #[Broadcast(topics: ['@="book_detail" ~ entity.getId()', 'books'], template: 'book_detail.stream.html.twig', private: true)]
+    #[Broadcast(topics: ['@="book_list" ~ entity.getId()', 'books'], template: 'book_list.stream.html.twig', private: true)]
     class Book
     {
         // ...
