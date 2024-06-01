@@ -1,0 +1,32 @@
+---------------------------------------------------------------------------
+
+by mttsch at 2024-05-30T07:23:56Z
+
+Currently renders incorrectly on website (https://symfony.com/bundles/ux-lazy-image/current/index.html#customizing-images-fetching):
+
+![Screenshot 2024-05-30 at 09 21 13](https://github.com/symfony/ux/assets/98848360/4751e41e-bd2e-4558-bd84-ba0b71688e68)
+
+I did not check how it will render after this change!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-05-30T09:32:19Z
+
+Hi, I've used `::` because the linter was not happy about it:
+> Please do not use ".. code-block:: php", use "::" instead.
+
+And so you have the same issue https://github.com/symfony/ux/actions/runs/9298650239/job/25590944633?pr=1876
+
+IDK how to fix it properly tho
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-05-30T09:32:49Z
+
+Hum, maybe removing the newline between `.. ::` and `namespace App\BlurHash;`?
+
+---------------------------------------------------------------------------
+
+by mttsch at 2024-05-30T10:23:09Z
+
+When checking for existing examples, I mistakenly used examples from the vendor folder. Now I searched for existing examples that are not in vendor, though I still have not checked the built result.
