@@ -109,9 +109,7 @@ Customizing images fetching
 By default, ``data_uri_thumbnail`` fetches images using the `file_get_contents`_ function.
 It works well for local files, but you may want to customize it to fetch images from a remote server, `Flysystem`_, etc.
 
-To do so you can create a invokable class, the first argument is the filename to fetch:
-
-.. ::
+To do so you can create a invokable class, the first argument is the filename to fetch::
 
     namespace App\BlurHash;
 
