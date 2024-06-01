@@ -419,7 +419,7 @@ file::
             'path' => '@symfony/stimulus-bundle/loader.js',
         ],
         '@hotwired/stimulus' => [
-            'url' => 'https://ga.jspm.io/npm:@hotwired/stimulus@3.2.1/dist/stimulus.js',
+            'version' => '3.2.2',
         ],
     ];
 
