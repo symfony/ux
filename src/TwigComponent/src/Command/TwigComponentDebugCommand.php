@@ -151,12 +151,10 @@ EOF
         $components = [];
         $anonymousPath = $this->twigTemplatesPath.'/'.$this->anonymousDirectory;
         $finderTemplates = new Finder();
-        $finderTemplates->files()->in($anonymousPath)->notPath('/_');
+        $finderTemplates->files()->in($anonymousPath)->notPath('/_')->name('*.html.twig');
         foreach ($finderTemplates as $template) {
             $component = str_replace('/', ':', $template->getRelativePathname());
-            if (str_ends_with($component, '.html.twig')) {
-                $component = substr($component, 0, -10);
-            }
+            $component = substr($component, 0, -10);
             $components[$component] = $component;
         }
 
