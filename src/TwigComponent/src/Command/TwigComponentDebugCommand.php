@@ -27,6 +27,7 @@ use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\Twig\PropsNode;
 use Twig\Environment;
+use Twig\Error\LoaderError;
 
 #[AsCommand(name: 'debug:twig-component', description: 'Display components and them usages for an application')]
 class TwigComponentDebugCommand extends Command
@@ -131,20 +132,47 @@ EOF
     private function findComponents(): array
     {
         $components = [];
-        foreach ($this->componentClassMap as $class => $name) {
-            $components[$name] ??= $this->componentFactory->metadataFor($name);
+        $usedResolvedTemplatePaths = [];
+        $loader = $this->twig->getLoader();
+
+        foreach ($this->componentClassMap as $name) {
+            $metadata = $this->componentFactory->metadataFor($name);
+            $components[$name] ??= $metadata;
+            $template = $metadata->getTemplate();
+
+            try {
+                $resolvedPath = $loader->getSourceContext($template)->getPath();
+                $usedResolvedTemplatePaths[$resolvedPath] = true;
+            } catch (LoaderError) {
+                // Ignore unresolvable paths.
+            }
         }
-        foreach ($this->findAnonymousComponents() as $name => $template) {
-            $components[$name] ??= $this->componentFactory->metadataFor($name);
+
+        foreach ($this->findAnonymousComponents() as $name) {
+            // Ignore if anonymous component name is same as a class based component.
+            if (isset($components[$name])) {
+                continue;
+            }
+
+            $metadata = $this->componentFactory->metadataFor($name);
+            $template = $metadata->getTemplate();
+            $resolvedPath = $loader->getSourceContext($template)->getPath();
+
+            // Ignore if this template is used by a class based component.
+            if (isset($usedResolvedTemplatePaths[$resolvedPath])) {
+                continue;
+            }
+
+            $components[$name] = $metadata;
         }
 
         return $components;
     }
 
     /**
-     * Return a map of component name => template.
+     * Returns a component names inside anonymous component directory.
      *
-     * @return array<string, string>
+     * @return list<string>
      */
     private function findAnonymousComponents(): array
     {
@@ -152,12 +180,11 @@ EOF
         $anonymousPath = $this->twigTemplatesPath.'/'.$this->anonymousDirectory;
         $finderTemplates = new Finder();
         $finderTemplates->files()->in($anonymousPath)->notPath('/_');
+
         foreach ($finderTemplates as $template) {
             $component = str_replace('/', ':', $template->getRelativePathname());
-            if (str_ends_with($component, '.html.twig')) {
-                $component = substr($component, 0, -10);
-            }
-            $components[$component] = $component;
+            $component = preg_replace('/(\.html)?\.twig$/', '', $component);
+            $components[] = $component;
         }
 
         return $components;
