@@ -50,6 +50,8 @@ return static function (ContainerConfigurator $container): void {
             ])
             ->tag('twig.runtime')
 
+        ->alias('Symfony\UX\Icons\IconRendererInterface', '.ux_icons.icon_renderer')
+
         ->set('.ux_icons.icon_finder', IconFinder::class)
             ->args([
                 service('twig'),

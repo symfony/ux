@@ -16,7 +16,7 @@ namespace Symfony\UX\Icons;
  *
  * @internal
  */
-final class IconRenderer
+final class IconRenderer implements IconRendererInterface
 {
     public function __construct(
         private readonly IconRegistryInterface $registry,
@@ -32,8 +32,6 @@ final class IconRenderer
      *
      * Precedence order:
      *   Icon file < Renderer configuration < Renderer invocation
-     *
-     * @param array<string,string|bool> $attributes
      */
     public function renderIcon(string $name, array $attributes = []): string
     {
