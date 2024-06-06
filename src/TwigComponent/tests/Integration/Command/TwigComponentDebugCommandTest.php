@@ -41,6 +41,15 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Unknown component "NoMatchComponent".', $commandTester->getDisplay());
     }
 
+    public function testNotComponentsIsNotListed(): void
+    {
+        $commandTester = $this->createCommandTester();
+        $result = $commandTester->execute(['name' => 'NotAComponent']);
+
+        $this->assertEquals(1, $result);
+        $this->assertStringContainsString('Unknown component "NotAComponent".', $commandTester->getDisplay());
+    }
+
     public function testWithOnePartialMatchComponent(): void
     {
         $commandTester = $this->createCommandTester();
