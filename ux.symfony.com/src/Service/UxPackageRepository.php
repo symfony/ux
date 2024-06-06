@@ -57,7 +57,7 @@ class UxPackageRepository
                 'icons',
                 'UX Icons',
                 'app_icons',
-                '#3737FF',
+                '#fff',
                 'linear-gradient(to bottom right, cyan, purple)',
                 'Render SVG icons seamlessly from your Twig templates.',
                 'I need to render SVG icons.',
