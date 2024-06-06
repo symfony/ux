@@ -1,12 +1,15 @@
 .container {
   margin-inline: auto;
-  max-width: 1200px;
+  max-width: 1240px;
 }
 .container--fluid {
   max-width: 100%;
 }
 .container--large {
 
+}
+.container-xxl {
+  max-width: 1400px;
 }
 .container--xlarge {
 

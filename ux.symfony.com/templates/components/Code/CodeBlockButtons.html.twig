@@ -1,10 +1,6 @@
-{% props source, link %}
+{% props source, link, copyButton = true %}
 
-<div
-    data-controller="tooltips clipboarder"
-    data-clipboarder-source-value="{{ source }}"
-    class="code-buttons"
->
+{% set github_button %}
     <a
         href="{{ link }}"
         type="button"
@@ -17,15 +13,33 @@
     >
         <twig:Icon name="github"/>
     </a>
-    <button
-        type="button"
-        class="btn btn-link btn-sm btn-copy"
-        data-bs-toggle="tooltip"
-        data-bs-placement="bottom"
-        title="Copy code"
-        data-action="clipboarder#copy"
-        data-clipboarder-target="button"
+{% endset %}
+
+{% if copyButton %}
+
+    <div
+        data-controller="tooltips clipboarder"
+        data-clipboarder-source-value="{{ source }}"
+        class="code-buttons"
     >
-        <twig:Icon name="copy"/>
-    </button>
-</div>
+        {{ github_button }}
+        <button
+            type="button"
+            class="btn btn-link btn-sm btn-copy"
+            data-bs-toggle="tooltip"
+            data-bs-placement="bottom"
+            title="Copy code"
+            data-action="clipboarder#copy"
+            data-clipboarder-target="button"
+        >
+            <twig:Icon name="copy"/>
+        </button>
+    </div>
+
+{% else %}
+
+    <div class="code-buttons">
+        {{ github_button }}
+    </div>
+
+{% endif %}

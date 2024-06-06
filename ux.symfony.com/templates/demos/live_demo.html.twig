@@ -19,7 +19,9 @@
                     </p>
                     <h1 class="text-center">{{ demo.name }}</h1>
                     <div style="font-size: 1rem; line-height: 1.75rem;" class="mt-4 demo-introduction">
-                        {{ demo.longDescription|markdown_to_html }}
+                        {% block demo_description %}
+                            {{ demo.longDescription|markdown_to_html }}
+                        {% endblock %}
                     </div>
                 </div>
             </div>

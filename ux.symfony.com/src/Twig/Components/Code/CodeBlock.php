@@ -41,6 +41,8 @@ class CodeBlock
     public ?int $lineStart = null;
     public ?int $lineEnd = null;
 
+    public bool $copyButton = true;
+
     public function __construct(
         #[Autowire('%kernel.project_dir%')] private string $rootDir,
     ) {
@@ -156,10 +158,22 @@ class CodeBlock
         }
 
         if ($ext = strrchr($this->filename, '.')) {
-            return $this->language = substr($ext, 1);
+            return $this->language = $this->matchLanguage(substr($ext, 1));
         }
 
         throw new \RuntimeException('Unable to detect the code language');
+    }
+
+    private function matchLanguage(string $extension): ?string
+    {
+        return match ($extension) {
+            'twig', 'html.twig' => 'twig',
+            'php' => 'php',
+            'css', 'scss' => 'css',
+            'js', 'jsx', 'ts' => 'javascript',
+            'yaml', 'yml' => 'yaml',
+            default => null,
+        };
     }
 
     public function getElementId(): ?string
