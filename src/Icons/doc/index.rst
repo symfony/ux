@@ -63,6 +63,15 @@ Loading Icons
        and embeds the downloaded SVG contents in the template #}
     {{ ux_icon('flowbite:user-solid') }}
 
+.. note::
+
+    To search and download icons via `ux.symfony.com/icons`_, the ``symfony/http-client``
+    package must be installed in your application:
+
+    .. code-block:: terminal
+
+        $ composer require symfony/http-client
+
 The ``ux_icon()`` function defines a second optional argument where you can
 define the HTML attributes added to the ``<svg>`` element:
 
@@ -73,6 +82,7 @@ define the HTML attributes added to the ``<svg>`` element:
 
     {{ ux_icon('user-profile', {height: '16px', width: '16px', aria-hidden: true}) }}
     {# renders <svg height="16" width="16" aria-hidden="true"> ... </svg> #}
+
 
 Icon Sets
 ~~~~~~~~~
