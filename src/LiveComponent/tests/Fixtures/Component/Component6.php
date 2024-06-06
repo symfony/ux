@@ -37,25 +37,15 @@ class Component6
     #[LiveProp]
     public $arg3;
 
-    #[LiveProp]
-    public $arg4;
-
-    #[LiveProp]
-    public $arg5;
-
     #[LiveAction]
     public function inject(
         #[LiveArg] string $arg1,
         #[LiveArg] int $arg2,
         #[LiveArg('custom')] float $arg3,
-        #[LiveArg] ?int $arg4,
-        #[LiveArg] string $arg5,
     ) {
         $this->called = true;
         $this->arg1 = $arg1;
         $this->arg2 = $arg2;
         $this->arg3 = $arg3;
-        $this->arg4 = $arg4;
-        $this->arg5 = $arg5;
     }
 }

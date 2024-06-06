@@ -13,6 +13,7 @@ namespace Symfony\UX\LiveComponent\EventListener;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use Symfony\Component\HttpFoundation\Exception\JsonException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
@@ -28,10 +29,10 @@ use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
-use Symfony\UX\LiveComponent\Util\LiveRequestDataParser;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\ComponentRenderer;
@@ -115,7 +116,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         if ('_batch' === $action) {
             // use batch controller
-            $data = LiveRequestDataParser::parseDataFor($request);
+            $data = $this->parseDataFor($request);
 
             $request->attributes->set('_controller', 'ux.live_component.batch_action_controller');
             $request->attributes->set('serviceId', $metadata->getServiceId());
@@ -194,6 +195,61 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
                 $action,
             ]);
         }
+
+        // read the action arguments from the request, unless they're already set (batch sub-requests)
+        $actionArguments = $request->attributes->get('_component_action_args', $this->parseDataFor($request)['args']);
+        // extra variables to be made available to the controller
+        // (for "actions" only)
+        foreach (LiveArg::liveArgs($component, $action) as $parameter => $arg) {
+            if (isset($actionArguments[$arg])) {
+                $request->attributes->set($parameter, $actionArguments[$arg]);
+            }
+        }
+    }
+
+    /**
+     * @return array{
+     *     data: array,
+     *     args: array,
+     *     actions: array
+     *     // has "fingerprint" and "tag" string key, keyed by component id
+     *     children: array
+     *     propsFromParent: array
+     * }
+     */
+    private static function parseDataFor(Request $request): array
+    {
+        if (!$request->attributes->has('_live_request_data')) {
+            if ($request->query->has('props')) {
+                $liveRequestData = [
+                    'props' => self::parseJsonFromQuery($request, 'props'),
+                    'updated' => self::parseJsonFromQuery($request, 'updated'),
+                    'args' => [],
+                    'actions' => [],
+                    'children' => self::parseJsonFromQuery($request, 'children'),
+                    'propsFromParent' => self::parseJsonFromQuery($request, 'propsFromParent'),
+                ];
+            } else {
+                try {
+                    $requestData = json_decode($request->request->get('data'), true, 512, \JSON_BIGINT_AS_STRING | \JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new JsonException('Could not decode request body.', $e->getCode(), $e);
+                }
+
+                $liveRequestData = [
+                    'props' => $requestData['props'] ?? [],
+                    'updated' => $requestData['updated'] ?? [],
+                    'args' => $requestData['args'] ?? [],
+                    'actions' => $requestData['actions'] ?? [],
+                    'children' => $requestData['children'] ?? [],
+                    'propsFromParent' => $requestData['propsFromParent'] ?? [],
+                ];
+            }
+
+            $request->attributes->set('_live_request_data', $liveRequestData);
+        }
+
+        return $request->attributes->get('_live_request_data');
     }
 
     public function onKernelView(ViewEvent $event): void
@@ -298,22 +354,34 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         $metadataFactory = $this->container->get(LiveComponentMetadataFactory::class);
         \assert($metadataFactory instanceof LiveComponentMetadataFactory);
 
-        $liveRequestData = LiveRequestDataParser::parseDataFor($request);
         $componentAttributes = $hydrator->hydrate(
             $component,
-            $liveRequestData['props'],
-            $liveRequestData['updated'],
+            $this->parseDataFor($request)['props'],
+            $this->parseDataFor($request)['updated'],
             $metadataFactory->getMetadata($componentName),
-            $liveRequestData['propsFromParent']
+            $this->parseDataFor($request)['propsFromParent']
         );
 
         $mountedComponent = new MountedComponent($componentName, $component, $componentAttributes);
 
         $mountedComponent->addExtraMetadata(
             InterceptChildComponentRenderSubscriber::CHILDREN_FINGERPRINTS_METADATA_KEY,
-            $liveRequestData['children']
+            $this->parseDataFor($request)['children']
         );
 
         return $mountedComponent;
+    }
+
+    private static function parseJsonFromQuery(Request $request, string $key): array
+    {
+        if (!$request->query->has($key)) {
+            return [];
+        }
+
+        try {
+            return json_decode($request->query->get($key), true, 512, \JSON_THROW_ON_ERROR);
+        } catch (\JsonException $exception) {
+            throw new JsonException(sprintf('Invalid JSON on query string "%s".', $key), 0, $exception);
+        }
     }
 }
