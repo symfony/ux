@@ -16,7 +16,7 @@ Installation
 .. note::
 
     This package works best with WebpackEncore. To use it with AssetMapper, see
-    :ref:`Using with AssetMapper <using-with-asset-mapper>`.
+    :ref:`Using with AssetMapper <using-with-asset-mapper>`. Please note, that if your Symfony Application was created with the ``--webapp`` flag, that AssetMapper is used in your project as standard.
 
 .. caution::
 
