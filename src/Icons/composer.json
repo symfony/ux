@@ -12,6 +12,14 @@
     "license": "MIT",
     "authors": [
         {
+            "name": "Kevin Bond",
+            "email": "kevinbond@gmail.com"
+        },
+        {
+            "name": "Simon André",
+            "email": "smn.andre@gmail.com"
+        },
+        {
             "name": "Symfony Community",
             "homepage": "https://symfony.com/contributors"
         }
