@@ -337,6 +337,19 @@ You can even give the block default content. See
 :ref:`Passing HTML to Components via Block <embedded-components>`
 for more info.
 
+Composition
+~~~~~~~~~~~
+
+One of the most interesting things to do when working with components is composition.
+
+.. code-block:: html+twig
+
+    <twig:Alert>
+        <twig:Icon name="success"/> Nice work!
+    </twig:Alert>
+
+You can have components inside your components! This is great! However, be aware that every component lives in its own context. This means that your child component does not know that it is inside a parent component; you cannot use any method like parent() inside the child component to access the parent. You should keep your components independent of the context. This rule is really important to respect, as it will guarantee that your components will always work the same way regardless of where you use them. If you need to access some parent data, you should pass properties down to your child or use events.
+
 Fetching Services
 -----------------
 
