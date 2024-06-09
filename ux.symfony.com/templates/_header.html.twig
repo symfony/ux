@@ -3,26 +3,34 @@
 
         <nav class="AppNav AppNav--white">
 
-            <a class="AppHeader_logo" href="{{ path('app_homepage') }}"  aria-label="Homepage">
+            <a class="AppHeader_logo" href="{{ path('app_homepage') }}"  aria-label="Symfony UX">
                 <img src="{{ asset('images/sf-ux.svg') }}" alt="Symfony UX" width="161" height="30" />
             </a>
 
             <div class="AppNav_actions">
                 <button
                     class="AppHeader_toggler AppNav_item AppNav_item--icon"
-                    aria-label="Toggle Menu"
                     data-action="ux-header#toggleMenu"
+                    aria-label="Toggle menu"
                 >
                     <twig:Icon name="menu"/>
                 </button>
-
                 <twig:ThemeSwitcher class="AppNav_item AppNav_item--icon" aria-label="Switch dark/light mode"/>
                 <a
                     class="AppNav_item AppNav_item--icon"
-                    aria-label="Symfony UX on GitHub"
-                    href="https://github.com/symfony/ux"
+                    href="https://x.com/symfonyux"
+                    rel="external me"
+                    title="Symfony UX on X (Twitter)"
                 >
-                    <twig:Icon name="github"/>
+                    <twig:Icon name="x-twitter"/>
+                </a>
+                <a
+                    class="AppNav_item AppNav_item--icon"
+                    href="https://github.com/symfony/ux"
+                    rel="external me"
+                    title="Symfony UX on GitHub"
+                >
+                    <twig:Icon name="github" />
                 </a>
             </div>
 
