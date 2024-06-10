@@ -2044,6 +2044,7 @@ class Component {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
                 this.hooks.triggerHook('response:error', backendResponse, controls);
+                this.hooks.triggerHook('loading.state:finished', this.element);
                 if (controls.displayError) {
                     this.renderError(html);
                 }
@@ -2946,6 +2947,139 @@ class LazyPlugin {
     }
 }
 
+class ErrorPlugin {
+    attachToComponent(component) {
+        component.on('response:error', () => {
+            this.showErrors(component);
+        });
+        component.on('request:started', () => {
+            this.hideErrors(component);
+        });
+        this.hideErrors(component);
+    }
+    showErrors(component) {
+        this.handleErrorToggle(component, true, component.element);
+    }
+    hideErrors(component) {
+        this.handleErrorToggle(component, false, component.element);
+    }
+    handleErrorToggle(component, isError, targetElement) {
+        this.getErrorDirectives(component, targetElement).forEach(({ element, directives }) => {
+            if (isError) {
+                this.addAttributes(element, [ErrorPlugin.isErrorAttribute]);
+            }
+            else {
+                this.removeAttributes(element, [ErrorPlugin.isErrorAttribute]);
+            }
+            directives.forEach((directive) => {
+                this.handleErrorDirective(element, isError, directive);
+            });
+        });
+    }
+    handleErrorDirective(element, isError, directive) {
+        const finalAction = this.parseErrorAction(directive.action, isError);
+        switch (finalAction) {
+            case ErrorPlugin.supportedActions.show:
+                this.showElement(element);
+                break;
+            case ErrorPlugin.supportedActions.hide:
+                this.hideElement(element);
+                break;
+            case ErrorPlugin.supportedActions.addClass:
+                this.addClass(element, directive.args);
+                break;
+            case ErrorPlugin.supportedActions.removeClass:
+                this.removeClass(element, directive.args);
+                break;
+            case ErrorPlugin.supportedActions.addAttribute:
+                this.addAttributes(element, directive.args);
+                break;
+            case ErrorPlugin.supportedActions.removeAttribute:
+                this.removeAttributes(element, directive.args);
+                break;
+            default:
+                throw new Error(`Unknown ${ErrorPlugin.errorAttribute} action "${finalAction}". Supported actions are: ${Object.values(`"${ErrorPlugin.supportedActions}"`).join(', ')}.`);
+        }
+    }
+    getErrorDirectives(component, element) {
+        const errorDirectives = [];
+        let matchingElements = [...Array.from(element.querySelectorAll(`[${ErrorPlugin.errorAttribute}]`))];
+        matchingElements = matchingElements.filter((elt) => elementBelongsToThisComponent(elt, component));
+        if (element.hasAttribute(ErrorPlugin.errorAttribute)) {
+            matchingElements = [element, ...matchingElements];
+        }
+        matchingElements.forEach((element => {
+            if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
+                throw new Error(`Element "${element.nodeName}" is not supported for ${ErrorPlugin.errorAttribute} directives. Only HTMLElement and SVGElement are supported.`);
+            }
+            const directives = parseDirectives(element.getAttribute(ErrorPlugin.errorAttribute) || 'show');
+            directives.forEach((directive) => {
+                if (directive.modifiers.length > 0) {
+                    throw new Error(`Modifiers are not supported for ${ErrorPlugin.errorAttribute} directives, but the following were found: "{${directive.modifiers.map((modifier) => `${modifier.name}: ${modifier.value}}`).join(', ')}" for element with tag "${element.nodeName}".`);
+                }
+            });
+            errorDirectives.push({
+                element,
+                directives,
+            });
+        }));
+        return errorDirectives;
+    }
+    parseErrorAction(action, isError) {
+        switch (action) {
+            case ErrorPlugin.supportedActions.show:
+                return isError ? 'show' : 'hide';
+            case ErrorPlugin.supportedActions.hide:
+                return isError ? 'hide' : 'show';
+            case ErrorPlugin.supportedActions.addClass:
+                return isError ? 'addClass' : 'removeClass';
+            case ErrorPlugin.supportedActions.removeClass:
+                return isError ? 'removeClass' : 'addClass';
+            case ErrorPlugin.supportedActions.addAttribute:
+                return isError ? 'addAttribute' : 'removeAttribute';
+            case ErrorPlugin.supportedActions.removeAttribute:
+                return isError ? 'removeAttribute' : 'addAttribute';
+            default:
+                throw new Error(`Unknown ${ErrorPlugin.errorAttribute} action "${action}". Supported actions are: ${Object.values(`"${ErrorPlugin.supportedActions}"`).join(', ')}.`);
+        }
+    }
+    showElement(element) {
+        element.style.display = 'revert';
+    }
+    hideElement(element) {
+        element.style.display = 'none';
+    }
+    addClass(element, classes) {
+        element.classList.add(...combineSpacedArray(classes));
+    }
+    removeClass(element, classes) {
+        element.classList.remove(...combineSpacedArray(classes));
+        if (element.classList.length === 0) {
+            element.removeAttribute('class');
+        }
+    }
+    addAttributes(element, attributes) {
+        attributes.forEach((attribute) => {
+            element.setAttribute(attribute, '');
+        });
+    }
+    removeAttributes(element, attributes) {
+        attributes.forEach((attribute) => {
+            element.removeAttribute(attribute);
+        });
+    }
+}
+ErrorPlugin.errorAttribute = 'data-error';
+ErrorPlugin.isErrorAttribute = 'data-live-is-error';
+ErrorPlugin.supportedActions = {
+    show: 'show',
+    hide: 'hide',
+    addClass: 'addClass',
+    removeClass: 'removeClass',
+    addAttribute: 'addAttribute',
+    removeAttribute: 'removeAttribute',
+};
+
 class LiveControllerDefault extends Controller {
     constructor() {
         super(...arguments);
@@ -3094,6 +3228,7 @@ class LiveControllerDefault extends Controller {
         }
         const plugins = [
             new LoadingPlugin(),
+            new ErrorPlugin(),
             new LazyPlugin(),
             new ValidatedFieldsPlugin(),
             new PageUnloadingPlugin(),

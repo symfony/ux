@@ -1,14 +1,14 @@
-import { type Directive, type DirectiveModifier, parseDirectives } from '../../Directive/directives_parser';
+import {
+    Directive,
+    DirectiveModifier,
+    ElementDirectives,
+    parseDirectives
+} from '../../Directive/directives_parser';
 import { elementBelongsToThisComponent } from '../../dom_utils';
 import { combineSpacedArray } from '../../string_utils';
 import type BackendRequest from '../../Backend/BackendRequest';
 import type Component from '../../Component';
 import type { PluginInterface } from './PluginInterface';
-
-interface ElementLoadingDirectives {
-    element: HTMLElement | SVGElement;
-    directives: Directive[];
-}
 
 export default class implements PluginInterface {
     attachToComponent(component: Component): void {
@@ -172,7 +172,7 @@ export default class implements PluginInterface {
     }
 
     getLoadingDirectives(component: Component, element: HTMLElement | SVGElement) {
-        const loadingDirectives: ElementLoadingDirectives[] = [];
+        const loadingDirectives: ElementDirectives[] = [];
         let matchingElements = [...Array.from(element.querySelectorAll('[data-loading]'))];
 
         // ignore elements which are inside a nested "live" component
