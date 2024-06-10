@@ -1,0 +1,39 @@
+{
+    "name": "@symfony/ux-map-google",
+    "description": "GoogleMaps bridge for Symfony UX Map, integrate interactive maps in your Symfony applications",
+    "license": "MIT",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "dist/map_controller.js",
+    "types": "dist/map_controller.d.ts",
+    "symfony": {
+        "controllers": {
+            "map": {
+                "main": "dist/map_controller.js",
+                "webpackMode": "lazy",
+                "fetch": "lazy",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "@googlemaps/js-api-loader": "^1.16.6",
+            "@symfony/ux-map-google/map-controller": "path:%PACKAGE%/dist/map_controller.js"
+        }
+    },
+    "peerDependencies": {
+        "@googlemaps/js-api-loader": "^1.16.6",
+        "@hotwired/stimulus": "^3.0.0"
+    },
+    "peerDependenciesMeta": {
+        "@googlemaps/js-api-loader": {
+            "optional": false
+        }
+    },
+    "devDependencies": {
+        "@googlemaps/js-api-loader": "^1.16.6",
+        "@hotwired/stimulus": "^3.0.0",
+        "@types/google.maps": "^3.55.9",
+        "happy-dom": "^14.12.3"
+    }
+}

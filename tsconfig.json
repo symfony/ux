@@ -17,6 +17,11 @@
         "allowSyntheticDefaultImports": true,
         "jsx": "react"
     },
-    "exclude": ["src/*/assets/dist"],
-    "include": ["src/*/assets/src", "src/*/assets/test"]
+    "exclude": ["src/*/assets/dist", "src/*/src/Bridge/*/assets/dist"],
+    "include": [
+        "src/*/assets/src",
+        "src/*/assets/test",
+        "src/*/src/Bridge/*/assets/src",
+        "src/*/src/Bridge/*/assets/test"
+    ]
 }

@@ -1,0 +1,65 @@
+<?php
+
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Symfony\UX\Map\Renderer;
+
+use Symfony\UX\Map\Map;
+use Symfony\UX\Map\MapOptionsInterface;
+use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
+
+/**
+ * @author Hugo Alliaume <hugo@alliau.me>
+ */
+abstract readonly class AbstractRenderer implements RendererInterface
+{
+    public function __construct(
+        private StimulusHelper $stimulus,
+    ) {
+    }
+
+    abstract protected function getName(): string;
+
+    abstract protected function getProviderOptions(): array;
+
+    abstract protected function getDefaultMapOptions(): MapOptionsInterface;
+
+    final public function renderMap(Map $map, array $attributes = []): string
+    {
+        if (!$map->hasOptions()) {
+            $map->options($this->getDefaultMapOptions());
+        } elseif (!$map->getOptions() instanceof ($defaultMapOptions = $this->getDefaultMapOptions())) {
+            $map->options($defaultMapOptions);
+        }
+
+        $stimulusAttributes = $this->stimulus->createStimulusAttributes();
+        foreach ($attributes as $name => $value) {
+            if ('data-controller' === $name) {
+                continue;
+            }
+
+            if (true === $value) {
+                $stimulusAttributes->addAttribute($name, $name);
+            } elseif (false !== $value) {
+                $stimulusAttributes->addAttribute($name, $value);
+            }
+        }
+
+        $stimulusAttributes->addController(
+            '@symfony/ux-map-'.$this->getName().'/map',
+            [
+                'provider-options' => (object) $this->getProviderOptions(),
+                'view' => $map->toArray(),
+            ]
+        );
+
+        return \sprintf('<div %s></div>', $stimulusAttributes);
+    }
+}

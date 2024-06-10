@@ -1,6 +1,6 @@
 {
     "private": true,
-    "workspaces": ["src/*/assets"],
+    "workspaces": ["src/*/assets", "src/*/src/Bridge/*/assets"],
     "scripts": {
         "build": "node bin/build_javascript.js && node bin/build_styles.js",
         "test": "bin/run-vitest-all.sh",

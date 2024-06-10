@@ -1,0 +1,51 @@
+{
+    "name": "symfony/ux-map",
+    "type": "symfony-bundle",
+    "description": "Easily embed interactive maps in your Symfony application",
+    "keywords": [
+        "symfony-ux",
+        "map",
+        "markers",
+        "maps"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Hugo Alliaume",
+            "email": "hugo@alliau.me"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Map\\": "src/"
+        },
+        "exclude-from-classmap": []
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Symfony\\UX\\Map\\Tests\\": "tests/"
+        }
+    },
+    "require": {
+        "php": ">=8.3",
+        "symfony/stimulus-bundle": "^2.18.1"
+    },
+    "require-dev": {
+        "symfony/asset-mapper": "^6.4|^7.0",
+        "symfony/framework-bundle": "^6.4|^7.0",
+        "symfony/phpunit-bridge": "^6.4|^7.0",
+        "symfony/twig-bundle": "^6.4|^7.0"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev"
+}

@@ -1,0 +1,21 @@
+{
+    "name": "@symfony/ux-map",
+    "description": "Integrates interactive maps in your Symfony applications",
+    "license": "MIT",
+    "version": "1.0.0",
+    "type": "module",
+    "main": "dist/abstract_map_controller.js",
+    "types": "dist/abstract_map_controller.d.ts",
+    "symfony": {
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "@symfony/ux-map/abstract-map-controller": "path:%PACKAGE%/dist/abstract_map_controller.js"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    }
+}
