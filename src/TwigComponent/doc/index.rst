@@ -337,18 +337,32 @@ You can even give the block default content. See
 :ref:`Passing HTML to Components via Block <embedded-components>`
 for more info.
 
-Composition
-~~~~~~~~~~~
+Composition vs Inheritance
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-One of the most interesting things to do when working with components is composition.
+Symfony tend to follow the best pratice of the component architecture, so it's highly recommended to use Composition instead of Inheritance to reuse code betwen component (see: https://legacy.reactjs.org/docs/composition-vs-inheritance.html).
+
+Let's take an exemple. Some component don't know their children ahead of time. This is common for components like Alert or Dialog that represent generic “boxes”. We recommend you
+to use the block content to pass children directly into their output :
+
+.. code-block:: html+twig
+
+    <div class="alert">
+       {% block content %}
+       {% endblock %}
+    </div>
+
+This lets other components pass arbitrary children to them by nesting the elements :
 
 .. code-block:: html+twig
 
     <twig:Alert>
-        <twig:Icon name="success"/> Nice work!
+        <twig:Icon name="success"/> 
+        <p>Nice work!</p>
     </twig:Alert>
 
-You can have components inside your components! This is great! However, be aware that every component lives in its own context. This means that your child component does not know that it is inside a parent component; you cannot use any method like parent() inside the child component to access the parent. You should keep your components independent of the context. This rule is really important to respect, as it will guarantee that your components will always work the same way regardless of where you use them. If you need to access some parent data, you should pass properties down to your child or use events.
+Anything inside the <twig:Alert>  tag gets passed into the Alert component as a content block. Since Alert renders {% block content %} inside a <div>, the passed elements appear in the final output.
+You can go deeper on the usage of block, on this part of the :ref:`documentation <embedded-components>`
 
 Fetching Services
 -----------------
@@ -682,6 +696,10 @@ You can also add more, named blocks:
             <button class="btn btn-primary">Claim your prize</button>
         </twig:block>
     </twig:Alert>
+
+.. note::
+
+    Because your TwigComponent live inside his own specific context, you can't use the parent function inside the block of your component template.
 
 Render these in the normal way.
 
