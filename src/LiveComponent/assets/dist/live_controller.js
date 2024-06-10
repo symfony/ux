@@ -2049,13 +2049,14 @@ class Component {
         this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = false;
         this.backendRequest.promise.then(async (response) => {
+            var _a;
             const backendResponse = new BackendResponse(response);
             const html = await backendResponse.getBody();
             for (const input of Object.values(this.pendingFiles)) {
                 input.value = '';
             }
             const headers = backendResponse.response.headers;
-            if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
+            if (!((_a = headers.get('Content-Type')) === null || _a === void 0 ? void 0 : _a.includes('application/vnd.live-component+html')) && !headers.get('X-Live-Redirect')) {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
                 this.hooks.triggerHook('response:error', backendResponse, controls);
