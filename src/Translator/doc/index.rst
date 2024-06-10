@@ -138,6 +138,12 @@ file. 2 of the new items are::
         'path' => 'var/translations/configuration.js',
     ],
 
+.. caution::
+
+    If you change the ``dump_directory`` in your configuration file, you will need to
+    replace the default ``var/translations/***`` with your new path in the
+    ``importmap.php`` file.
+
 These are then imported in your ``assets/translator.js`` file. This setup is
 very similar to working with WebpackEncore. However, the ``var/translations/index.js``
 file contains *every* translation in your app, which is not ideal for production
