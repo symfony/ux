@@ -296,7 +296,7 @@ export default class Component {
 
             // if the response does not contain a component, render as an error
             const headers = backendResponse.response.headers;
-            if (headers.get('Content-Type') !== 'application/vnd.live-component+html' && !headers.get('X-Live-Redirect')) {
+            if (!headers.get('Content-Type')?.includes('application/vnd.live-component+html') && !headers.get('X-Live-Redirect')) {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
                 this.hooks.triggerHook('response:error', backendResponse, controls);
