@@ -337,24 +337,24 @@ For example:
 
 .. code-block:: html+twig
 
-    <div {{ stimulus_target('controller', 'a-target') }}>Hello</div>
-    <div {{ stimulus_target('controller', 'a-target second-target') }}>Hello</div>
+    <div {{ stimulus_target('controller', 'myTarget') }}>Hello</div>
+    <div {{ stimulus_target('controller', 'myTarget secondTarget') }}>Hello</div>
 
     <!-- would render -->
-    <div data-controller-target="a-target">Hello</div>
-    <div data-controller-target="a-target second-target">Hello</div>
+    <div data-controller-target="myTarget">Hello</div>
+    <div data-controller-target="myTarget secondTarget">Hello</div>
 
 If you have multiple targets on the same element, you can chain them as there's
 also a ``stimulus_target`` filter:
 
 .. code-block:: html+twig
 
-    <div {{ stimulus_target('controller', 'a-target')|stimulus_target('other-controller', 'another-target') }}>
+    <div {{ stimulus_target('controller', 'myTarget')|stimulus_target('other-controller', 'anotherTarget') }}>
         Hello
     </div>
 
     <!-- would render -->
-    <div data-controller-target="a-target" data-other-controller-target="another-target">
+    <div data-controller-target="myTarget" data-other-controller-target="anotherTarget">
         Hello
     </div>
 
@@ -362,7 +362,7 @@ You can also retrieve the generated attributes as an array, which can be helpful
 
 .. code-block:: twig
 
-    {{ form_row(form.password, { attr: stimulus_target('hello-controller', 'a-target').toArray() }) }}
+    {{ form_row(form.password, { attr: stimulus_target('hello-controller', 'myTarget').toArray() }) }}
 
 .. _configuration:
 
