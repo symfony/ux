@@ -12,6 +12,7 @@
 namespace Symfony\UX\TwigComponent\Test\DependencyInjection;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
 use Symfony\UX\TwigComponent\DependencyInjection\TwigComponentExtension;
@@ -22,6 +23,8 @@ use Symfony\UX\TwigComponent\TwigComponentBundle;
  */
 class TwigComponentExtensionTest extends TestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testDataCollectorWithDebugMode()
     {
         $container = $this->createContainer();
@@ -64,6 +67,26 @@ class TwigComponentExtensionTest extends TestCase
         $this->compileContainer($container);
 
         $this->assertFalse($container->hasDefinition('ux.twig_component.data_collector'));
+    }
+
+    /**
+     * @group legacy
+     */
+    public function testSettingControllerJsonKeyTriggerDeprecation()
+    {
+        $container = $this->createContainer();
+        $container->setParameter('kernel.debug', true);
+        $container->registerExtension(new TwigComponentExtension());
+        $container->loadFromExtension('twig_component', [
+            'defaults' => [],
+            'anonymous_template_directory' => 'components/',
+            'profiler' => false,
+            'controllers_json' => null,
+        ]);
+
+        $this->expectDeprecation('Since symfony/ux-twig-component 2.18: The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0.');
+
+        $this->compileContainer($container);
     }
 
     private function createContainer()
