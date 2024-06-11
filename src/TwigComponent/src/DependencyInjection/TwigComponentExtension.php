@@ -186,6 +186,10 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                     ->info('Enables the profiler for Twig Component (in debug mode)')
                     ->defaultValue('%kernel.debug%')
                 ->end()
+                ->scalarNode('controllers_json')
+                    ->setDeprecated('symfony/ux-twig-component', '2.18', 'The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0.')
+                    ->defaultNull()
+                ->end()
             ->end();
 
         return $treeBuilder;
