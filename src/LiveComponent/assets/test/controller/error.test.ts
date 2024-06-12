@@ -8,12 +8,27 @@
  */
 
 import { createTest, initComponent, shutdownTests } from '../tools';
-import { getByText, waitFor } from '@testing-library/dom';
-import type BackendResponse from '../../src/Backend/BackendResponse';
+import { getAllByTestId, getByTestId, getByText, waitFor } from '@testing-library/dom';
+import BackendResponse from '../../src/Backend/BackendResponse';
+import userEvent from '@testing-library/user-event';
 
 const getErrorElement = (): Element | null => {
     return document.getElementById('live-component-error');
 };
+
+const removeErrorModal = async () => {
+    let errorElement: Element | null = null;
+
+    await waitFor(() => {
+        errorElement = getErrorElement();
+
+        return expect(errorElement).not.toBeNull();
+    });
+
+    if (errorElement) {
+        userEvent.click(errorElement);
+    }
+}
 
 describe('LiveController Error Handling', () => {
     afterEach(() => {
@@ -118,5 +133,133 @@ describe('LiveController Error Handling', () => {
         await waitFor(() => expect(isHookCalled).toBe(true));
         const errorContainer = getErrorElement();
         expect(errorContainer).toBeNull();
+    });
+
+    it('handles data-loading elements even if the component is in an error state', async () => {
+        const test = await createTest({}, (data: any) => `
+            <div ${initComponent(data)}>
+                <button data-action="live#action" data-live-action-param="save" data-loading="addAttribute(disabled)">Save</button>
+            </div>
+        `);
+
+        getByText(test.element, 'Save').click();
+
+
+        test.expectsAjaxCall()
+            .serverWillReturnCustomResponse(500, `
+                <html><head><title>Error!</title></head><body><h1>An error occurred</h1></body></html>
+            `)
+            .expectActionCalled('save')
+            // delay so we can check loading
+            .delayResponse(50);
+
+        // The data-loading attribute should be set
+        await waitFor(() => expect(getByText(test.element, 'Save')).toHaveAttribute('disabled'));
+
+        // The data-loading attribute should be cleared once the request is done, even if it failed
+        await waitFor(() => expect(getByText(test.element, 'Save')).not.toHaveAttribute('disabled'));
+    });
+
+    it('handles basic data-error elements correctly and the component still works', async () => {
+        const test = await createTest({ counter: 0 }, (data: { counter: number }) => `
+            <div ${initComponent(data)}>
+                <p data-testid="visible-element">Current count: ${data.counter}</p>
+                <p data-error data-testid="error-element">This element should only be visible on error</p>
+                <p data-error="show" data-testid="error-element">This element should also only be visible on error</p>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
+                <button data-action="live#$render">Render</button>
+            </div>
+        `);
+
+        // non-error elements should be visible by default
+        await waitFor(() => expect(getByTestId(test.element, 'visible-element')).toBeVisible());
+        // data-error elements should be hidden by default
+        getAllByTestId(test.element, 'error-element').forEach((element) => {
+            expect(element).not.toBeVisible();
+        });
+
+        test.expectsAjaxCall()
+            .serverWillReturnCustomResponse(500, `
+                <html><head><title>Error!</title></head><body><h1>An error occurred</h1></body></html>
+            `)
+            .expectActionCalled('save');
+
+        getByText(test.element, 'Save').click();
+
+        // wait for the error modal and remove it
+        await removeErrorModal();
+
+        // non-error elements should still be visible
+        await waitFor(() => expect(getByTestId(test.element, 'visible-element')).toBeVisible());
+        // data-error elements should now be visible
+        getAllByTestId(test.element, 'error-element').forEach((element) => {
+            expect(element).toBeVisible();
+        });
+
+        // make sure future requests can still be sent
+        test.expectsAjaxCall()
+            .serverWillChangeProps((data: { counter: number }) => {
+                data.counter = 10;
+            });
+
+        getByText(test.element, 'Render').click();
+
+        // error elements should be instantly hidden
+        getAllByTestId(test.element, 'error-element').forEach((element) => {
+            expect(element).not.toBeVisible();
+        });
+        // counter should have been updated
+        await waitFor(() => expect(getByTestId(test.element, 'visible-element')).toHaveTextContent('Current count: 10'));
+    });
+
+    it('handles all actions', async () => {
+        const test = await createTest({}, (data: any) => `
+            <div ${initComponent(data)}>
+                <p data-error="hide" data-testid="hide">This component is fine</p>
+                <p data-error="addClass(error)" data-testid="add-class">This text will gain the error class on error</p>
+                <p class="success" data-error="removeClass(success)" data-testid="remove-class">This text will lose the success class on error</p>
+                <button data-error="addAttribute(disabled)" type="button" data-testid="add-attribute">Important action that requires a success state</button>
+                <button disabled data-error="removeAttribute(disabled)" type="button" data-testid="remove-attribute">Send a "this is not working !" email</button>
+                <button data-action="live#action" data-live-action-param="save">Save</button>
+                <button data-action="live#$render">Render</button>
+            </div>
+        `);
+
+        // Elements should be in their initial state
+        expect(getByTestId(test.element, 'hide')).toBeVisible();
+        expect(getByTestId(test.element, 'add-class')).not.toHaveClass('error');
+        expect(getByTestId(test.element, 'remove-class')).toHaveClass('success');
+        expect(getByTestId(test.element, 'add-attribute')).not.toHaveAttribute('disabled');
+        expect(getByTestId(test.element, 'remove-attribute')).toHaveAttribute('disabled');
+
+        test.expectsAjaxCall()
+            .serverWillReturnCustomResponse(500, `
+                <html><head><title>Error!</title></head><body><h1>An error occurred</h1></body></html>
+            `)
+            .expectActionCalled('save');
+
+        getByText(test.element, 'Save').click();
+
+        // wait for the error modal and remove it
+        await removeErrorModal();
+
+        // Elements should have been updated
+        expect(getByTestId(test.element, 'hide')).not.toBeVisible();
+        expect(getByTestId(test.element, 'add-class')).toHaveClass('error');
+        expect(getByTestId(test.element, 'remove-class')).not.toHaveClass('success');
+        expect(getByTestId(test.element, 'add-attribute')).toHaveAttribute('disabled');
+        expect(getByTestId(test.element, 'remove-attribute')).not.toHaveAttribute('disabled');
+
+        // make sure future requests can still be sent
+        test.expectsAjaxCall();
+
+        getByText(test.element, 'Render').click();
+
+        // Elements should have been updated
+        expect(getByTestId(test.element, 'hide')).toBeVisible();
+        expect(getByTestId(test.element, 'add-class')).not.toHaveClass('error');
+        expect(getByTestId(test.element, 'remove-class')).toHaveClass('success');
+        expect(getByTestId(test.element, 'add-attribute')).not.toHaveAttribute('disabled');
+        expect(getByTestId(test.element, 'remove-attribute')).toHaveAttribute('disabled');
     });
 });

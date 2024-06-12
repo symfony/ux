@@ -928,6 +928,8 @@ The following hooks are available (along with the arguments that are passed):
 * ``loading.state:finished`` args ``(element: HTMLElement)``
 * ``model:set`` args ``(model: string, value: any, component: Component)``
 
+.. _loading:
+
 Loading States
 --------------
 
@@ -1038,6 +1040,60 @@ was just changed using the ``model()`` modifier:
 
     <!-- multiple modifiers & child properties -->
     <span data-loading="model(user.email)|delay|addClass(opacity-50)">...</span>
+
+Error Handling
+--------------
+
+When an unexpected error occurs during the rendering of a component, you
+might want to show an error message to the user. You can do this by
+adding a ``data-error`` attribute to an element:
+
+.. code-block:: html+twig
+
+    <!-- show only when the component is in an error state -->
+    <span data-error>An error occured ! Please try again.</span>
+
+    <!-- equivalent, longer syntax -->
+    <span data-error="show">An error occured ! Please try again.</span>
+
+This attribute works exactly like :ref:`data-loading <loading>`, with
+a few differences:
+
+* It doesn't accept any modifiers.
+* It cannot target specific actions or models.
+
+You could, for example, change the class of a text if an error occurs:
+
+.. code-block:: html+twig
+
+    <!-- this title will turn red if an error occurs -->
+    <h2 data-error="addClass(text-red-500)">My awesome component</h2>
+
+Under the hood, ``data-error`` attributes are triggered by the ``response:error``
+hook, and cleared by the ``render:started`` hook.
+
+Understanding The Error State
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When an error occurs, a few things happen:
+
+* The component is **not** re-rendered and restores its "dirty" (pre-error) state.
+* The ``response:error`` hook is dispatched, which in turn triggers the
+  ``data-error`` attribute.
+* :ref:`Loading behaviors <loading>` are cleared.
+* If another request is already pending (e.g. user triggered another action while
+  the first request was still pending), then it will proceed as normal, instantly
+  clearing the error state.
+* A debug modal will be shown (unless disabled through the ``response:error``
+  hook, using the ``controls.displayError`` argument).
+
+.. caution::
+
+    The term "Error State" only refers to **server side errors**. Errors
+    that occur on the client side (e.g. an uncaught JavaScript exception on a
+    live component) will not trigger the error state. If an unexpected exception happens
+    in the component, then will most likely stop working. If that's the case, you should
+    probably open `an issue https://github.com/symfony/ux/issues/new`_ to report the problem.
 
 .. _actions:
 
