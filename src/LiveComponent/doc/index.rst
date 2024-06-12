@@ -1072,6 +1072,14 @@ You could, for example, change the class of a text if an error occurs:
 Under the hood, ``data-error`` attributes are triggered by the ``response:error``
 hook, and cleared by the ``render:started`` hook.
 
+.. note::
+
+    The ``data-error`` attribute automatically adds a ``display: none`` style on the
+    element (unless "show" is used) when ``live.autoimport.@symfony/ux-live-component/dist/live.min.css``
+    is set to ``true`` in your ``controllers.json`` file, and as soon as the live controller is connected.
+    However, it's always a good idea to add your own hidden class on the element to ensure the element
+    is hidden from the start.
+
 Understanding The Error State
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
