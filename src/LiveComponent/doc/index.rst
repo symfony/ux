@@ -1051,10 +1051,10 @@ adding a ``data-error`` attribute to an element:
 .. code-block:: html+twig
 
     <!-- show only when the component is in an error state -->
-    <span data-error>An error occured ! Please try again.</span>
+    <span data-error>An error occurred ! Please try again.</span>
 
     <!-- equivalent, longer syntax -->
-    <span data-error="show">An error occured ! Please try again.</span>
+    <span data-error="show">An error occurred ! Please try again.</span>
 
 This attribute works exactly like :ref:`data-loading <loading>`, with
 a few differences:
