@@ -1081,7 +1081,7 @@ hook, and cleared by the ``render:started`` hook.
     is hidden from the start.
 
 Understanding The Error State
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When an error occurs, a few things happen:
 
