@@ -1,20 +1,4 @@
-{% extends 'base.html.twig' %}
-
-{% set meta = {
-    title: demo.name,
-    title_suffix: ' - Symfony UX Demo',
-    description: demo.description,
-    canonical: url(demo.route),
-    image: {
-        url: absolute_url(asset(demo.screenshotFilename('1280x720'))),
-        width: 1080,
-        height: 720,
-    },
-    og: {
-        title: demo.name ~ ' - Symfony UX Demo',
-        description: demo.longDescription|striptags|u.truncate(200, '...')
-    }
-} %}
+{% extends 'demos/live_demo.html.twig' %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('styles/demos/live-memory.min.css') }}"/>

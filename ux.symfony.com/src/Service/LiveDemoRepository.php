@@ -46,7 +46,7 @@ EOF,
             ),
             new LiveDemo(
                 'live-memory',
-                name: 'LiveMemory Card Game',
+                name: 'Live Memory Card Game',
                 description: 'A Memorable Game UX with Live Components!',
                 route: 'app_demo_live_memory',
                 longDescription: <<<EOF
