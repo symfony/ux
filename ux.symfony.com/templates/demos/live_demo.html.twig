@@ -4,7 +4,19 @@
     title: demo.name,
     title_suffix: ' - Symfony UX Demo',
     description: demo.description,
+    og: {
+        title: demo.name ~ ' - Symfony UX Demo',
+        description: demo.longDescription|striptags|u.truncate(200, '...')
+    },
+    image: {
+        url: absolute_url(asset(demo.screenshotFilename('1280x720'))),
+        width: 1280,
+        height: 720,
+    },
     canonical: url(demo.route),
+    twitter: {
+        card: 'summary_large_image',
+    }
 } %}
 
 {% block content %}

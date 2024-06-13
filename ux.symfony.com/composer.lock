@@ -7348,16 +7348,16 @@
         },
         {
             "name": "symfony/ux-icons",
-            "version": "v2.17.0",
+            "version": "v2.18.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ux-icons.git",
-                "reference": "46a1180d4a55e1768f9f8ab5dd376828cb247de0"
+                "reference": "baebc0841615007048fc4a7cd419c74de6b4edb0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ux-icons/zipball/46a1180d4a55e1768f9f8ab5dd376828cb247de0",
-                "reference": "46a1180d4a55e1768f9f8ab5dd376828cb247de0",
+                "url": "https://api.github.com/repos/symfony/ux-icons/zipball/baebc0841615007048fc4a7cd419c74de6b4edb0",
+                "reference": "baebc0841615007048fc4a7cd419c74de6b4edb0",
                 "shasum": ""
             },
             "require": {
@@ -7407,7 +7407,7 @@
                 "twig"
             ],
             "support": {
-                "source": "https://github.com/symfony/ux-icons/tree/v2.17.0"
+                "source": "https://github.com/symfony/ux-icons/tree/v2.18.0"
             },
             "funding": [
                 {
@@ -7423,7 +7423,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-04-19T06:36:45+00:00"
+            "time": "2024-06-04T03:54:01+00:00"
         },
         {
             "name": "symfony/ux-lazy-image",

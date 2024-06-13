@@ -5,24 +5,20 @@
         <title>{% block title %}{{ meta.title|default }}{{ meta.title_suffix|default(' - Symfony UX') }}{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="color-scheme" content="dark light">
-        {% block stylesheets %}
-        {% endblock %}
-        {% if meta.canonical|default %}
-            <link rel="canonical" href="{{ meta.canonical }}">
-        {% endif %}
         <meta name="view-transition" content="same-origin" />
         <link rel="icon" href="/favicon.ico" sizes="48x48">
         <link rel="icon" href="/favicon.svg" sizes="any" type="image/svg+xml">
         <link rel="apple-touch-icon" href="/apple-touch-icon.png">
         <link rel="manifest" href="/site.webmanifest">
         <link rel="mask-icon" href="https://symfony.com/favicons/safari-pinned-tab.svg" color="#5bbad5">
-        <meta name="description" content="{% block description %}{{ meta.description|default }}{% endblock %}">
-        <meta property="og:site_name" content="Symfony UX" />
-        <meta property="og:image" content="{{ absolute_url(asset('images/symfony-ux.png')) }}">
-        <meta property="og:image:width" content="1024">
-        <meta property="og:image:height" content="576">
-        <meta property="og:image:alt" content="Symfony UX">
-        <meta property="og:image:type" content="image/png">
+
+        {% block stylesheets %}
+        {% endblock %}
+
+        {% block meta %}
+            {{ include('_meta.html.twig', {meta: meta|default}) }}
+        {% endblock %}
+
         {% block javascripts %}
             <script>
               const theme = localStorage.getItem('user-theme') || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
@@ -42,6 +38,7 @@
         {% endblock %}
     </head>
     <body>
+
         {% block banner %}
             {{ include('_banner.html.twig') }}
         {% endblock %}

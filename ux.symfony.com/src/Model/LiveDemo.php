@@ -56,8 +56,8 @@ class LiveDemo
         return $this->tags;
     }
 
-    public function getScreenshotFilename(): string
+    public function getScreenshotFilename(?string $format = null): string
     {
-        return 'images/live_demo/'.$this->identifier.'.png';
+        return 'images/live_demo/'.$this->identifier.($format ? ('-'.$format) : '').'.png';
     }
 }
