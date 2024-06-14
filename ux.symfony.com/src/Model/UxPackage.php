@@ -24,6 +24,7 @@ class UxPackage
         private string $route,
         private string $color,
         private string $gradient,
+        private string $tagLine,
         private string $description,
         private string $createString,
         private ?string $imageFileName = null,
@@ -55,9 +56,14 @@ class UxPackage
         return $this->gradient;
     }
 
-    public function getImageFilename(): string
+    public function getImageFilename(?string $format = null): string
     {
-        return $this->imageFileName ?? ltrim($this->name, 'ux-').'.png';
+        return $this->imageFileName ?? ltrim($this->name, 'ux-').($format ? ('-'.$format) : '').'.png';
+    }
+
+    public function getTagLine(): string
+    {
+        return $this->tagLine;
     }
 
     public function getDescription(): string
@@ -119,5 +125,10 @@ class UxPackage
     public function getCreateString(): string
     {
         return $this->createString;
+    }
+
+    public function getImage(?string $format = null): string
+    {
+        return 'images/ux_packages/'.$this->getImageFilename($format);
     }
 }

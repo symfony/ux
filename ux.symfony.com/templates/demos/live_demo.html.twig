@@ -2,21 +2,20 @@
 
 {% set meta = {
     title: demo.name,
-    title_suffix: ' - Symfony UX Demo',
-    description: demo.description,
-    og: {
-        title: demo.name ~ ' - Symfony UX Demo',
-        description: demo.longDescription|striptags|u.truncate(200, '...')
-    },
-    image: {
-        url: absolute_url(asset(demo.screenshotFilename('1280x720'))),
-        width: 1280,
-        height: 720,
-    },
+    title_suffix: ' -  Live Component - Symfony UX',
+    description: demo.description|striptags,
     canonical: url(demo.route),
-    twitter: {
-        card: 'summary_large_image',
-    }
+    social: {
+        title: demo.name ~ ' - Symfony UX',
+        description: demo.longDescription|striptags,
+        image: {
+            url: absolute_url(asset(demo.screenshotFilename('1280x720'))),
+            type: 'image/png',
+            width: 1280,
+            height: 720,
+            alt: demo.name ~ ' - Demo Screenshot',
+        },
+    },
 } %}
 
 {% block content %}
@@ -27,7 +26,7 @@
                 <div class="text-center mt-md-0">
                     <p class="eyebrows">
                         <a href="{{ url('app_demos') }}">DEMOS</a> /
-                        <a href="{{ url('app_demos') }}">LiveComponent</a>
+                        <a href="{{ url('app_live_component') }}">Live Component</a>
                     </p>
                     <h1 class="text-center">{{ demo.name }}</h1>
                     <div style="font-size: 1rem; line-height: 1.75rem;" class="mt-4 demo-introduction">

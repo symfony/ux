@@ -1,9 +1,20 @@
 {% extends 'base.html.twig' %}
 
 {% set meta = {
-    title: package.humanName,
+    title: package.humanName ~ ' - ' ~ package.tagline,
     description: package.description,
     canonical: url(package.route),
+    social: {
+        title: package.tagline ~ ' - Symfony UX ' ~ package.humanName,
+        description: package.description|striptags,
+        image: {
+            url: absolute_url(asset(package.imageFileName('1200x675'))),
+            type: 'image/png',
+            width: 1200,
+            height: 675,
+            alt: package.name ~ ' - Component Icon',
+        },
+    }
 } %}
 
 {% block header %}
