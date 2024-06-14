@@ -35,6 +35,29 @@ class UxPackageRepository
                 ->setScreencastLink('https://symfonycasts.com/screencast/turbo', 'Go deep into all 3 parts of Turbo.'),
 
             new UxPackage(
+                'icons',
+                'UX Icons',
+                'app_icons',
+                '#fff',
+                'linear-gradient(to bottom right, cyan, purple)',
+                'SVG icons made easy',
+                'Render SVG icons seamlessly from your Twig templates.',
+                'I need to render SVG icons.',
+                'icons.svg',
+            ),
+
+            new UxPackage(
+                'twig-component',
+                'Twig Components',
+                'app_twig_component',
+                '#7FA020',
+                'linear-gradient(95deg, #7FA020 -5%, #A1C94E 105%)',
+                'Render Reusable UI Elements',
+                'Create PHP classes that can render themselves',
+                'I need to create PHP classes that render'
+            ),
+
+            new UxPackage(
                 'live-component',
                 'Live Components',
                 'app_live_component',
@@ -57,15 +80,15 @@ class UxPackageRepository
             ),
 
             new UxPackage(
-                'icons',
-                'UX Icons',
-                'app_icons',
-                '#fff',
-                'linear-gradient(to bottom right, cyan, purple)',
-                'SVG icons made easy',
-                'Render SVG icons seamlessly from your Twig templates.',
-                'I need to render SVG icons.',
-                'icons.svg',
+                'translator',
+                'Translator',
+                'app_translator',
+                '#2248D0',
+                'linear-gradient(139deg, #2248D0 -20%, #00FFB2 113%)',
+                'Symfony Translations in JavaScript',
+                "Use Symfony's translations in JavaScript",
+                'I need to translate strings in JavaScript',
+                'translator.svg'
             ),
 
             (new UxPackage(
@@ -141,17 +164,6 @@ class UxPackageRepository
             ),
 
             new UxPackage(
-                'twig-component',
-                'Twig Components',
-                'app_twig_component',
-                '#7FA020',
-                'linear-gradient(95deg, #7FA020 -5%, #A1C94E 105%)',
-                'Render Reusable UI Elements',
-                'Create PHP classes that can render themselves',
-                'I need to create PHP classes that render'
-            ),
-
-            new UxPackage(
                 'dropzone',
                 'Stylized Dropzone',
                 'app_dropzone',
@@ -207,18 +219,6 @@ class UxPackageRepository
                 'I need to type onto the screen... like this'
             ))
                 ->setDocsLink('https://github.com/mattboldt/typed.js/', 'Typed.js documentation'),
-
-            new UxPackage(
-                'translator',
-                'Translator',
-                'app_translator',
-                '#2248D0',
-                'linear-gradient(139deg, #2248D0 -20%, #00FFB2 113%)',
-                'Symfony Translations in JavaScript',
-                "Use Symfony's translations in JavaScript",
-                'I need to translate strings in JavaScript',
-                'translator.svg'
-            ),
         ];
 
         if (!$query) {
