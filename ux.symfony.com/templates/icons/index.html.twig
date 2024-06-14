@@ -9,6 +9,17 @@
     title: 'UX Icons - SVG icons made easy',
     description: 'Render SVG icons seamlessly from your Twig templates. Find the perfect icon among 200,000 choices from the most popular icon sets.',
     canonical: url('app_icons'),
+    social: {
+        title: 'Symfony UX Icons - SVG icons made easy',
+        description: 'Render SVG icons seamlessly from your Twig templates. Find the perfect icon among 200,000 choices from the most popular icon sets.',
+        image: {
+            url: absolute_url(asset(package.getSocialImage('1200x675'))),
+            type: 'image/png',
+            width: 1200,
+            height: 675,
+            alt: package.humanName ~ ' - Component Icon',
+        },
+    }
 } %}
 
 {% block content %}

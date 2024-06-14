@@ -58,7 +58,7 @@ class UxPackage
 
     public function getImageFilename(?string $format = null): string
     {
-        return $this->imageFileName ?? ltrim($this->name, 'ux-').($format ? ('-'.$format) : '').'.png';
+        return $this->imageFileName ?? $this->name.($format ? '-'.$format : '').'.png';
     }
 
     public function getTagLine(): string
@@ -125,6 +125,11 @@ class UxPackage
     public function getCreateString(): string
     {
         return $this->createString;
+    }
+
+    public function getSocialImage(?string $format = null): string
+    {
+        return 'images/ux_packages/'.$this->name.($format ? ('-'.$format) : '').'.png';
     }
 
     public function getImage(?string $format = null): string
