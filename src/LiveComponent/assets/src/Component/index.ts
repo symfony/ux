@@ -22,8 +22,8 @@ export type ComponentHooks = {
     'request:started': (requestConfig: any) => MaybePromise,
     'render:finished': (component: Component) => MaybePromise,
     'response:error': (backendResponse: BackendResponse, controls: { displayError: boolean }) => MaybePromise,
-    'loading.state.started': (element: HTMLElement, request: BackendRequest) => MaybePromise,
-    'loading.state.finished': (element: HTMLElement) => MaybePromise,
+    'loading.state:started': (element: HTMLElement, request: BackendRequest) => MaybePromise,
+    'loading.state:finished': (element: HTMLElement) => MaybePromise,
     'model:set': (model: string, value: any, component: Component) => MaybePromise,
 };
 
