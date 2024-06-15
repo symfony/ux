@@ -3073,7 +3073,7 @@ class ErrorPlugin {
         });
     }
 }
-ErrorPlugin.errorAttribute = 'data-error';
+ErrorPlugin.errorAttribute = 'data-live-error';
 ErrorPlugin.isErrorAttribute = 'data-live-is-error';
 ErrorPlugin.supportedActions = {
     show: 'show',

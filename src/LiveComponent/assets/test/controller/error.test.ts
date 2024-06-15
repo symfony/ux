@@ -160,12 +160,12 @@ describe('LiveController Error Handling', () => {
         await waitFor(() => expect(getByText(test.element, 'Save')).not.toHaveAttribute('disabled'));
     });
 
-    it('handles basic data-error elements correctly and the component still works', async () => {
+    it('handles basic data-live-error elements correctly and the component still works', async () => {
         const test = await createTest({ counter: 0 }, (data: { counter: number }) => `
             <div ${initComponent(data)}>
                 <p data-testid="visible-element">Current count: ${data.counter}</p>
-                <p data-error data-testid="error-element">This element should only be visible on error</p>
-                <p data-error="show" data-testid="error-element">This element should also only be visible on error</p>
+                <p data-live-error data-testid="error-element">This element should only be visible on error</p>
+                <p data-live-error="show" data-testid="error-element">This element should also only be visible on error</p>
                 <button data-action="live#action" data-live-action-param="save">Save</button>
                 <button data-action="live#$render">Render</button>
             </div>
@@ -173,7 +173,7 @@ describe('LiveController Error Handling', () => {
 
         // non-error elements should be visible by default
         await waitFor(() => expect(getByTestId(test.element, 'visible-element')).toBeVisible());
-        // data-error elements should be hidden by default
+        // data-live-error elements should be hidden by default
         getAllByTestId(test.element, 'error-element').forEach((element) => {
             expect(element).not.toBeVisible();
         });
@@ -191,7 +191,7 @@ describe('LiveController Error Handling', () => {
 
         // non-error elements should still be visible
         await waitFor(() => expect(getByTestId(test.element, 'visible-element')).toBeVisible());
-        // data-error elements should now be visible
+        // data-live-error elements should now be visible
         getAllByTestId(test.element, 'error-element').forEach((element) => {
             expect(element).toBeVisible();
         });
@@ -215,11 +215,11 @@ describe('LiveController Error Handling', () => {
     it('handles all actions', async () => {
         const test = await createTest({}, (data: any) => `
             <div ${initComponent(data)}>
-                <p data-error="hide" data-testid="hide">This component is fine</p>
-                <p data-error="addClass(error)" data-testid="add-class">This text will gain the error class on error</p>
-                <p class="success" data-error="removeClass(success)" data-testid="remove-class">This text will lose the success class on error</p>
-                <button data-error="addAttribute(disabled)" type="button" data-testid="add-attribute">Important action that requires a success state</button>
-                <button disabled data-error="removeAttribute(disabled)" type="button" data-testid="remove-attribute">Send a "this is not working !" email</button>
+                <p data-live-error="hide" data-testid="hide">This component is fine</p>
+                <p data-live-error="addClass(error)" data-testid="add-class">This text will gain the error class on error</p>
+                <p class="success" data-live-error="removeClass(success)" data-testid="remove-class">This text will lose the success class on error</p>
+                <button data-live-error="addAttribute(disabled)" type="button" data-testid="add-attribute">Important action that requires a success state</button>
+                <button disabled data-live-error="removeAttribute(disabled)" type="button" data-testid="remove-attribute">Send a "this is not working !" email</button>
                 <button data-action="live#action" data-live-action-param="save">Save</button>
                 <button data-action="live#$render">Render</button>
             </div>

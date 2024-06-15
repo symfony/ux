@@ -8,7 +8,7 @@ export default class ErrorPlugin implements PluginInterface {
     /**
      * The attribute name used to define the error directives.
      */
-    static errorAttribute = 'data-error';
+    static errorAttribute = 'data-live-error';
 
     /**
      * The attribute name used to define the error state of a component (used on the root element of the component).
