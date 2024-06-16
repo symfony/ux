@@ -61,6 +61,7 @@ Let's get this thing installed! Run:
 You can now use the `MakerBundle`_ to get the skeleton of the Twig component made:
 
 .. code-block:: terminal
+
     $ php bin/console make:twig-component
      The name of your twig component (ie Notification):
      > Notification
