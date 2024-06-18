@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <h1>Create Cart, Product and CartProduct, increase quantity on update</h1>
+
+    <div id="cart_products" {{ turbo_stream_listen('App\\Entity\\CartProduct') }}></div>
+
+    <turbo-frame id="api">
+        <form method="post" enctype="application/x-www-form-urlencoded">
+            <input placeholder="Title" name="title">
+            <input placeholder="Cart ID" name="cartId" value="{{ cartProduct ? cartProduct.cart.id }}">
+            <input placeholder="Product ID" name="productId" value="{{ cartProduct ? cartProduct.product.id }}">
+            <label><input type="checkbox" name="remove" value="remove"> Remove</label>
+            <button>Submit</button>
+        </form>
+    </turbo-frame>
+{% endblock %}

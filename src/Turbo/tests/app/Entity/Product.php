@@ -11,24 +11,20 @@
 
 namespace App\Entity;
 
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\UX\Turbo\Attribute\Broadcast;
 
 /**
- * @author Rick Kuipers <rick@levelup-it.com>
+ * @author Jason Schilling <jason@sourecode.dev>
  */
-#[Broadcast(topics: ['@="songs_by_artist_" ~ (entity.artist ? entity.artist.id : null)', 'songs'])]
 #[ORM\Entity]
-class Song
+class Product
 {
     #[ORM\Id]
     #[ORM\GeneratedValue(strategy: 'AUTO')]
-    #[ORM\Column(type: 'integer')]
+    #[ORM\Column(type: Types::INTEGER)]
     public ?int $id = null;
 
     #[ORM\Column]
     public string $title = '';
-
-    #[ORM\ManyToOne(targetEntity: Artist::class, inversedBy: 'songs')]
-    public ?Artist $artist = null;
 }

@@ -11,30 +11,28 @@
 
 namespace Symfony\UX\Turbo\Broadcaster;
 
-use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\PropertyAccess\PropertyAccess;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
+use Symfony\UX\Turbo\Doctrine\DoctrineIdAccessor;
 
 class IdAccessor
 {
     private $propertyAccessor;
-    private $doctrine;
+    private $doctrineIdAccessor;
 
-    public function __construct(?PropertyAccessorInterface $propertyAccessor = null, ?ManagerRegistry $doctrine = null)
+    public function __construct(?PropertyAccessorInterface $propertyAccessor = null, ?DoctrineIdAccessor $doctrineIdAccessor = null)
     {
         $this->propertyAccessor = $propertyAccessor ?? (class_exists(PropertyAccess::class) ? PropertyAccess::createPropertyAccessor() : null);
-        $this->doctrine = $doctrine;
+        $this->doctrineIdAccessor = $doctrineIdAccessor ?? new DoctrineIdAccessor();
     }
 
     /**
-     * @return string[]
+     * @return array<string, array<string, string>>|array<string, string>|null
      */
     public function getEntityId(object $entity): ?array
     {
-        $entityClass = $entity::class;
-
-        if ($this->doctrine && $em = $this->doctrine->getManagerForClass($entityClass)) {
-            return $em->getClassMetadata($entityClass)->getIdentifierValues($entity);
+        if (null !== ($id = $this->doctrineIdAccessor->getEntityId($entity))) {
+            return $id;
         }
 
         if ($this->propertyAccessor) {

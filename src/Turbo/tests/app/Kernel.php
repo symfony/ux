@@ -13,6 +13,9 @@ namespace App;
 
 use App\Entity\Artist;
 use App\Entity\Book;
+use App\Entity\Cart;
+use App\Entity\CartProduct;
+use App\Entity\Product;
 use App\Entity\Song;
 use Composer\InstalledVersions;
 use Doctrine\Bundle\DoctrineBundle\DoctrineBundle;
@@ -137,6 +140,7 @@ class Kernel extends BaseKernel
         $routes->add('artists', '/artists')->controller('kernel::artists');
         $routes->add('artist', '/artists/{id}')->controller('kernel::artist');
         $routes->add('artist_from_song', '/artistFromSong')->controller('kernel::artistFromSong');
+        $routes->add('cart_products', '/cartProducts')->controller('kernel::cartProducts');
     }
 
     public function getProjectDir(): string
@@ -303,6 +307,60 @@ class Kernel extends BaseKernel
 
         return new Response($twig->render('artist_from_song.html.twig', [
             'song' => $song,
+        ]));
+    }
+
+    public function cartProducts(Request $request, EntityManagerInterface $doctrine, Environment $twig): Response
+    {
+        $cartProduct = null;
+        if ($request->isMethod('POST')) {
+            $cartId = $request->get('cartId');
+            $productId = $request->get('productId');
+
+            if (!$cartId || !$productId) {
+                $cart = new Cart();
+                $product = new Product();
+
+                if ($title = $request->get('title')) {
+                    $product->title = $title;
+                }
+
+                $cartProduct = new CartProduct();
+                $cartProduct->cart = $cart;
+                $cartProduct->product = $product;
+                $cartProduct->quantity = 1;
+
+                $doctrine->persist($cart);
+                $doctrine->persist($product);
+                $doctrine->persist($cartProduct);
+                $doctrine->flush();
+            } else {
+                $cartProduct = $doctrine->find(CartProduct::class, ['cart' => $cartId, 'product' => $productId]);
+
+                if (!$cartProduct) {
+                    throw new NotFoundHttpException();
+                }
+
+                ++$cartProduct->quantity;
+
+                if ($remove = $request->get('remove')) {
+                    $doctrine->remove($cartProduct);
+                    if ($cartProduct->product) {
+                        $doctrine->remove($cartProduct->product); // for cleanup
+                    }
+                    if ($cartProduct->cart) {
+                        $doctrine->remove($cartProduct->cart); // for cleanup
+                    }
+                } else {
+                    $doctrine->persist($cartProduct);
+                }
+
+                $doctrine->flush();
+            }
+        }
+
+        return new Response($twig->render('cart_products.html.twig', [
+            'cartProduct' => $cartProduct,
         ]));
     }
 }

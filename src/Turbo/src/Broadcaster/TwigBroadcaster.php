@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Turbo\Broadcaster;
 
-use Symfony\UX\Turbo\Doctrine\ClassUtil;
+use Symfony\UX\Turbo\Doctrine\DoctrineClassResolver;
 use Twig\Environment;
 
 /**
@@ -25,16 +25,20 @@ final class TwigBroadcaster implements BroadcasterInterface
     private $twig;
     private $templatePrefixes;
     private $idAccessor;
+    private $idFormatter;
+    private $doctrineClassResolver;
 
     /**
      * @param array<string, string> $templatePrefixes
      */
-    public function __construct(BroadcasterInterface $broadcaster, Environment $twig, array $templatePrefixes = [], ?IdAccessor $idAccessor = null)
+    public function __construct(BroadcasterInterface $broadcaster, Environment $twig, array $templatePrefixes = [], ?IdAccessor $idAccessor = null, ?IdFormatter $idFormatter = null, ?DoctrineClassResolver $doctrineClassResolver = null)
     {
         $this->broadcaster = $broadcaster;
         $this->twig = $twig;
         $this->templatePrefixes = $templatePrefixes;
         $this->idAccessor = $idAccessor ?? new IdAccessor();
+        $this->idFormatter = $idFormatter ?? new IdFormatter();
+        $this->doctrineClassResolver = $doctrineClassResolver ?? new DoctrineClassResolver();
     }
 
     public function broadcast(object $entity, string $action, array $options): void
@@ -43,10 +47,9 @@ final class TwigBroadcaster implements BroadcasterInterface
             $options['id'] = $id;
         }
 
-        $class = ClassUtil::getEntityClass($entity);
-
         if (null === $template = $options['template'] ?? null) {
-            $template = $class;
+            $template = $this->doctrineClassResolver->resolve($entity);
+
             foreach ($this->templatePrefixes as $namespace => $prefix) {
                 if (str_starts_with($template, $namespace)) {
                     $template = substr_replace($template, $prefix, 0, \strlen($namespace));
@@ -63,7 +66,7 @@ final class TwigBroadcaster implements BroadcasterInterface
             ->renderBlock($action, [
                 'entity' => $entity,
                 'action' => $action,
-                'id' => implode('-', (array) ($options['id'] ?? [])),
+                'id' => $this->idFormatter->format($options['id'] ?? []),
             ] + $options);
 
         $this->broadcaster->broadcast($entity, $action, $options);

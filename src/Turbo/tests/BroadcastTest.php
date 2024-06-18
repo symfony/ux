@@ -27,7 +27,7 @@ class BroadcastTest extends PantherTestCase
     protected function setUp(): void
     {
         if (!file_exists(__DIR__.'/app/public/build')) {
-            throw new \Exception(sprintf('Move into %s and execute Encore before running this test.', realpath(__DIR__.'/app')));
+            throw new \Exception(sprintf('Move into "%s" and execute Encore before running this test.', realpath(__DIR__.'/app')));
         }
 
         parent::setUp();
@@ -103,5 +103,20 @@ class BroadcastTest extends PantherTestCase
         $this->assertSelectorWillContain('#artists', 'testing artist after change');
         // this part is from the stream template
         $this->assertSelectorWillContain('#artists', ', updated)');
+    }
+
+    public function testBroadcastWithCompositePrimaryKey(): void
+    {
+        ($client = self::createPantherClient())->request('GET', '/cartProducts');
+
+        // submit first to create the entities
+        $client->submitForm('Submit', ['title' => 'product 1']);
+        $this->assertSelectorWillContain('#cart_products', 'product 1');
+
+        // submit again to update the quantity
+        $client->submitForm('Submit');
+        $this->assertSelectorWillContain('#cart_products', '2x product 1');
+        // this part is from the stream template
+        $this->assertSelectorWillContain('#cart_products', ', updated)');
     }
 }
