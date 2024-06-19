@@ -7,7 +7,7 @@ Start a Mercure Hub:
         -e MERCURE_PUBLISHER_JWT_KEY='!ChangeMe!' \
         -e MERCURE_SUBSCRIBER_JWT_KEY='!ChangeMe!' \
         -p 3000:3000 \
-        dunglas/mercure caddy run -config /etc/caddy/Caddyfile.dev
+        dunglas/mercure caddy run -config /etc/caddy/dev.Caddyfile
 
 Install the test app:
 
