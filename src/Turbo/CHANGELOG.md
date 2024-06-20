@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.19.0
+
+-   Fix Doctrine proxies are not Broadcasted #3139
+
 ## 2.15.0
 
 -   Add Turbo 8 support #1476

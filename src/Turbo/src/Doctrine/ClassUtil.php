@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\Turbo\Doctrine;
 
-use Doctrine\Common\Util\ClassUtils as LegacyClassUtils;
 use Symfony\Component\VarExporter\LazyObjectInterface;
 
 /**
@@ -24,13 +23,13 @@ final class ClassUtil
      */
     public static function getEntityClass(object $entity): string
     {
-        if ($entity instanceof LazyObjectInterface) {
+        // Doctrine proxies (old versions)
+        if (str_contains($entity::class, 'Proxies\\__CG__')) {
             return get_parent_class($entity) ?: $entity::class;
         }
 
-        // @legacy for old versions of Doctrine
-        if (class_exists(LegacyClassUtils::class)) {
-            return LegacyClassUtils::getClass($entity);
+        if ($entity instanceof LazyObjectInterface) {
+            return get_parent_class($entity) ?: $entity::class;
         }
 
         return $entity::class;
