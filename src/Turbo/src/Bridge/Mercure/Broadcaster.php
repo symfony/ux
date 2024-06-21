@@ -40,20 +40,13 @@ final class Broadcaster implements BroadcasterInterface
      */
     public const TOPIC_PATTERN = 'https://symfony.com/ux-turbo/%s/%s';
 
-    private $name;
-    private $hub;
+    private ?ExpressionLanguage $expressionLanguage;
 
-    /** @var ExpressionLanguage|null */
-    private $expressionLanguage;
-
-    public function __construct(string $name, HubInterface $hub)
-    {
-        $this->name = $name;
-        $this->hub = $hub;
-
-        if (class_exists(ExpressionLanguage::class)) {
-            $this->expressionLanguage = new ExpressionLanguage();
-        }
+    public function __construct(
+        private string $name,
+        private HubInterface $hub,
+    ) {
+        $this->expressionLanguage = class_exists(ExpressionLanguage::class) ? new ExpressionLanguage() : null;
     }
 
     public function broadcast(object $entity, string $action, array $options): void

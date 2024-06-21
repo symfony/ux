@@ -17,17 +17,17 @@ use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 
 class IdAccessor
 {
-    private $propertyAccessor;
-    private $doctrine;
+    private ?PropertyAccessorInterface $propertyAccessor;
 
-    public function __construct(?PropertyAccessorInterface $propertyAccessor = null, ?ManagerRegistry $doctrine = null)
-    {
+    public function __construct(
+        ?PropertyAccessorInterface $propertyAccessor = null,
+        private ?ManagerRegistry $doctrine = null,
+    ) {
         $this->propertyAccessor = $propertyAccessor ?? (class_exists(PropertyAccess::class) ? PropertyAccess::createPropertyAccessor() : null);
-        $this->doctrine = $doctrine;
     }
 
     /**
-     * @return string[]
+     * @return string[]|null
      */
     public function getEntityId(object $entity): ?array
     {

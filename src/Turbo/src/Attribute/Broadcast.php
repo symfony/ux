@@ -29,9 +29,9 @@ final class Broadcast
     public const ACTION_REMOVE = 'remove';
 
     /**
-     * @var mixed[]
+     * @var array<mixed>
      */
-    public $options;
+    public array $options;
 
     /**
      * Options can be any option supported by the broadcaster.

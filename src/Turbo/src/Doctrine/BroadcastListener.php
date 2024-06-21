@@ -27,9 +27,6 @@ use Symfony\UX\Turbo\Broadcaster\BroadcasterInterface;
  */
 final class BroadcastListener implements ResetInterface
 {
-    private $broadcaster;
-    private $annotationReader;
-
     /**
      * @var array<class-string, array<mixed>>
      */
@@ -48,12 +45,11 @@ final class BroadcastListener implements ResetInterface
      */
     private $removedEntities;
 
-    public function __construct(BroadcasterInterface $broadcaster, ?Reader $annotationReader = null)
-    {
+    public function __construct(
+        private BroadcasterInterface $broadcaster,
+        private ?Reader $annotationReader = null,
+    ) {
         $this->reset();
-
-        $this->broadcaster = $broadcaster;
-        $this->annotationReader = $annotationReader;
     }
 
     /**
