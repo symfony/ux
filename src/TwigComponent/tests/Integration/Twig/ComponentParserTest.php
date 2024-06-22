@@ -42,7 +42,7 @@ final class ComponentParserTest extends KernelTestCase
     public function testAcceptHtmlComponentTagWithValidComponentName(string $name): void
     {
         $environment = self::createEnvironment();
-        $source = sprintf('<twig:%s></twig:%s>', $name, $name);
+        $source = \sprintf('<twig:%s></twig:%s>', $name, $name);
 
         $template = $environment->createTemplate($source);
 
@@ -55,7 +55,7 @@ final class ComponentParserTest extends KernelTestCase
     public function testAcceptHtmlSelfClosingComponentTagWithValidComponentName(string $name): void
     {
         $environment = self::createEnvironment();
-        $source = sprintf('<twig:%s />', $name);
+        $source = \sprintf('<twig:%s />', $name);
 
         $template = $environment->createTemplate($source);
 

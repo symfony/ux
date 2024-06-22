@@ -51,7 +51,7 @@ class Icon
     public function mount(string $name): void
     {
         if (!preg_match('/[A-Za-z0-9-]+/', $name)) {
-            throw new \InvalidArgumentException(sprintf('Icon name can only contain letters, digits or dashes, "%s" provided.', $this->name));
+            throw new \InvalidArgumentException(\sprintf('Icon name can only contain letters, digits or dashes, "%s" provided.', $this->name));
         }
 
         $this->name = $name;
@@ -62,7 +62,7 @@ class Icon
     {
         $path = $this->iconDirectory.'/'.$this->name.'.svg';
         if (!file_exists($path)) {
-            throw new \InvalidArgumentException(sprintf('File "%s" does not exist.', $path));
+            throw new \InvalidArgumentException(\sprintf('File "%s" does not exist.', $path));
         }
         $svg = file_get_contents($path);
 

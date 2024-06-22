@@ -23,7 +23,7 @@ use Symfony\Component\Form\FormEvents;
  *
  * @internal
  *
- * @deprecated since 2.13
+ * @deprecated since UX 2.13
  */
 final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
 {
@@ -77,7 +77,7 @@ final class AutocompleteEntityTypeSubscriber implements EventSubscriberInterface
 
                 if ($params) {
                     $queryBuilder
-                        ->andWhere(sprintf("$rootAlias.$idField IN (%s)", implode(', ', array_keys($params))))
+                        ->andWhere(\sprintf("$rootAlias.$idField IN (%s)", implode(', ', array_keys($params))))
                     ;
                     foreach ($params as $key => $param) {
                         $queryBuilder->setParameter($key, $param[0], $param[1]);

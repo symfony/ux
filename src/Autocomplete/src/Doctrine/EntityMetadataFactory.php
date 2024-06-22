@@ -37,7 +37,7 @@ class EntityMetadataFactory
         $entityMetadata = $entityManager->getClassMetadata($entityFqcn);
 
         if (1 !== \count($entityMetadata->getIdentifierFieldNames())) {
-            throw new \RuntimeException(sprintf('Autocomplete does not support Doctrine entities with composite primary keys (such as the ones used in the "%s" entity).', $entityFqcn));
+            throw new \RuntimeException(\sprintf('Autocomplete does not support Doctrine entities with composite primary keys (such as the ones used in the "%s" entity).', $entityFqcn));
         }
 
         return $entityMetadata;
@@ -46,7 +46,7 @@ class EntityMetadataFactory
     private function getEntityManager(string $entityFqcn): ObjectManager
     {
         if (null === $entityManager = $this->doctrine->getManagerForClass($entityFqcn)) {
-            throw new \RuntimeException(sprintf('There is no Doctrine Entity Manager defined for the "%s" class', $entityFqcn));
+            throw new \RuntimeException(\sprintf('There is no Doctrine Entity Manager defined for the "%s" class', $entityFqcn));
         }
 
         return $entityManager;

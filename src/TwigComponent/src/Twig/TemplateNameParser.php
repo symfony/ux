@@ -25,7 +25,7 @@ final class TemplateNameParser
     {
         if (str_starts_with($name, '@')) {
             if (!str_contains($name, '/')) {
-                throw new \LogicException(sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
+                throw new \LogicException(\sprintf('Malformed namespaced template name "%s" (expecting "@namespace/template_name").', $name));
             }
 
             return $name;

@@ -68,10 +68,10 @@ final class LiveComponentHydrator
             $frontendName = $propMetadata->calculateFieldName($component, $propertyName);
 
             if (isset($takenFrontendPropertyNames[$frontendName])) {
-                $message = sprintf('The field name "%s" cannot be used by multiple LiveProp properties in a component. Currently, both "%s" and "%s" are trying to use it in "%s".', $frontendName, $takenFrontendPropertyNames[$frontendName], $propertyName, $component::class);
+                $message = \sprintf('The field name "%s" cannot be used by multiple LiveProp properties in a component. Currently, both "%s" and "%s" are trying to use it in "%s".', $frontendName, $takenFrontendPropertyNames[$frontendName], $propertyName, $component::class);
 
                 if ($frontendName === $takenFrontendPropertyNames[$frontendName] || $frontendName === $propertyName) {
-                    $message .= sprintf(' Try adding LiveProp(fieldName="somethingElse") for the "%s" property to avoid this.', $frontendName);
+                    $message .= \sprintf(' Try adding LiveProp(fieldName="somethingElse") for the "%s" property to avoid this.', $frontendName);
                 }
 
                 throw new \LogicException($message);
@@ -83,7 +83,7 @@ final class LiveComponentHydrator
             try {
                 $rawPropertyValue = $this->propertyAccessor->getValue($component, $propertyName);
             } catch (UninitializedPropertyException $exception) {
-                throw new \LogicException(sprintf('The "%s" property on the "%s" component is uninitialized. Did you forget to pass this into the component?', $propertyName, $component::class), 0, $exception);
+                throw new \LogicException(\sprintf('The "%s" property on the "%s" component is uninitialized. Did you forget to pass this into the component?', $propertyName, $component::class), 0, $exception);
             }
 
             $dehydratedValue = $this->dehydrateValue($rawPropertyValue, $propMetadata, $component);
@@ -99,14 +99,14 @@ final class LiveComponentHydrator
                             $this->adjustPropertyPathForData($rawPropertyValue, $path)
                         );
                     } catch (NoSuchPropertyException $e) {
-                        throw new \LogicException(sprintf('The writable path "%s" does not exist on the "%s" property of the "%s" component.', $path, $propertyName, $component::class), 0, $e);
+                        throw new \LogicException(\sprintf('The writable path "%s" does not exist on the "%s" property of the "%s" component.', $path, $propertyName, $component::class), 0, $e);
                     } catch (PropertyAccessExceptionInterface $e) {
-                        throw new \LogicException(sprintf('The writable path "%s" on the "%s" property of the "%s" component could not be read: %s', $path, $propertyName, $component::class, $e->getMessage()), 0, $e);
+                        throw new \LogicException(\sprintf('The writable path "%s" on the "%s" property of the "%s" component could not be read: %s', $path, $propertyName, $component::class, $e->getMessage()), 0, $e);
                     }
 
                     // TODO: maybe we allow support the same types as LiveProps later
                     if (!$this->isValueValidDehydratedValue($pathValue)) {
-                        throw new \LogicException(sprintf('The writable path "%s" on the "%s" property of the "%s" component must be a scalar or array of scalars.', $path, $propertyName, $component::class));
+                        throw new \LogicException(\sprintf('The writable path "%s" on the "%s" property of the "%s" component must be a scalar or array of scalars.', $path, $propertyName, $component::class));
                     }
 
                     $dehydratedProps->addNestedProp($frontendName, $path, $pathValue);
@@ -182,7 +182,7 @@ final class LiveComponentHydrator
              */
             if ($dehydratedUpdatedProps->hasPropValue($frontendName)) {
                 if (!$propMetadata->isIdentityWritable()) {
-                    throw new HydrationException(sprintf('The model "%s" was sent for update, but it is not writable. Try adding "writable: true" to the $%s property in %s.', $frontendName, $propMetadata->getName(), $component::class));
+                    throw new HydrationException(\sprintf('The model "%s" was sent for update, but it is not writable. Try adding "writable: true" to the $%s property in %s.', $frontendName, $propMetadata->getName(), $component::class));
                 }
                 try {
                     $propertyValue = $this->hydrateValue(
@@ -239,7 +239,7 @@ final class LiveComponentHydrator
     {
         if ($propMetadata->hydrateMethod()) {
             if (!method_exists($parentObject, $propMetadata->hydrateMethod())) {
-                throw new \LogicException(sprintf('The "%s" object has a hydrateMethod of "%s" but the method does not exist.', $parentObject::class, $propMetadata->hydrateMethod()));
+                throw new \LogicException(\sprintf('The "%s" object has a hydrateMethod of "%s" but the method does not exist.', $parentObject::class, $propMetadata->hydrateMethod()));
             }
 
             return $parentObject->{$propMetadata->hydrateMethod()}($value);
@@ -247,13 +247,13 @@ final class LiveComponentHydrator
 
         if ($propMetadata->useSerializerForHydration()) {
             if (!interface_exists(DenormalizerInterface::class)) {
-                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the Serializer component is not installed. Try running "composer require symfony/serializer".', $propMetadata->getName(), $parentObject::class));
+                throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the Serializer component is not installed. Try running "composer require symfony/serializer".', $propMetadata->getName(), $parentObject::class));
             }
             if (null === $this->serializer) {
-                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but no serializer has been set.', $propMetadata->getName(), $parentObject::class));
+                throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but no serializer has been set.', $propMetadata->getName(), $parentObject::class));
             }
             if (!$this->serializer instanceof DenormalizerInterface) {
-                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the given serializer does not implement DenormalizerInterface.', $propMetadata->getName(), $parentObject::class));
+                throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the given serializer does not implement DenormalizerInterface.', $propMetadata->getName(), $parentObject::class));
             }
 
             if ($propMetadata->collectionValueType()) {
@@ -268,7 +268,7 @@ final class LiveComponentHydrator
             }
 
             if (null === $type) {
-                throw new \LogicException(sprintf('The "%s::%s" object should be hydrated with the Serializer, but no type could be guessed.', $parentObject::class, $propMetadata->getName()));
+                throw new \LogicException(\sprintf('The "%s::%s" object should be hydrated with the Serializer, but no type could be guessed.', $parentObject::class, $propMetadata->getName()));
             }
 
             return $this->serializer->denormalize($value, $type, 'json', $propMetadata->serializationContext());
@@ -277,7 +277,7 @@ final class LiveComponentHydrator
         if ($propMetadata->collectionValueType() && Type::BUILTIN_TYPE_OBJECT === $propMetadata->collectionValueType()->getBuiltinType()) {
             $collectionClass = $propMetadata->collectionValueType()->getClassName();
             foreach ($value as $key => $objectItem) {
-                $value[$key] = $this->hydrateObjectValue($objectItem, $collectionClass, true, $propMetadata->getFormat(), $parentObject::class, sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
+                $value[$key] = $this->hydrateObjectValue($objectItem, $collectionClass, true, $propMetadata->getFormat(), $parentObject::class, \sprintf('%s.%s', $propMetadata->getName(), $key), $parentObject);
             }
         }
 
@@ -321,7 +321,7 @@ final class LiveComponentHydrator
             'int' => (int) $value,
             'float' => (float) $value,
             'bool' => self::coerceStringToBoolean($value),
-            default => throw new \LogicException(sprintf('Cannot coerce value "%s" to type "%s"', $value, $type)),
+            default => throw new \LogicException(\sprintf('Cannot coerce value "%s" to type "%s"', $value, $type)),
         };
     }
 
@@ -348,7 +348,7 @@ final class LiveComponentHydrator
     private function verifyChecksum(array $identifierPops, string $error = 'Invalid checksum sent when updating the live component.'): void
     {
         if (!\array_key_exists(self::CHECKSUM_KEY, $identifierPops)) {
-            throw new HydrationException(sprintf('Missing %s. key', self::CHECKSUM_KEY));
+            throw new HydrationException(\sprintf('Missing %s. key', self::CHECKSUM_KEY));
         }
         $sentChecksum = $identifierPops[self::CHECKSUM_KEY];
         unset($identifierPops[self::CHECKSUM_KEY]);
@@ -369,7 +369,7 @@ final class LiveComponentHydrator
         $finalPropertyPath = '';
         foreach ($parts as $part) {
             if (\is_array($currentValue)) {
-                $finalPropertyPath .= sprintf('[%s]', $part);
+                $finalPropertyPath .= \sprintf('[%s]', $part);
 
                 continue;
             }
@@ -423,7 +423,7 @@ final class LiveComponentHydrator
     {
         if ($method = $propMetadata->dehydrateMethod()) {
             if (!method_exists($parentObject, $method)) {
-                throw new \LogicException(sprintf('The dehydration failed for class "%s" because the "%s" method does not exist.', $parentObject::class, $method));
+                throw new \LogicException(\sprintf('The dehydration failed for class "%s" because the "%s" method does not exist.', $parentObject::class, $method));
             }
 
             return $parentObject->$method($value);
@@ -431,13 +431,13 @@ final class LiveComponentHydrator
 
         if ($propMetadata->useSerializerForHydration()) {
             if (!interface_exists(NormalizerInterface::class)) {
-                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the Serializer component is not installed. Try running "composer require symfony/serializer".', $propMetadata->getName(), $parentObject::class));
+                throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the Serializer component is not installed. Try running "composer require symfony/serializer".', $propMetadata->getName(), $parentObject::class));
             }
             if (null === $this->serializer) {
-                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but no serializer has been set.', $propMetadata->getName(), $parentObject::class));
+                throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but no serializer has been set.', $propMetadata->getName(), $parentObject::class));
             }
             if (!$this->serializer instanceof NormalizerInterface) {
-                throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the given serializer does not implement NormalizerInterface.', $propMetadata->getName(), $parentObject::class));
+                throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" has "useSerializerForHydration: true", but the given serializer does not implement NormalizerInterface.', $propMetadata->getName(), $parentObject::class));
             }
 
             return $this->serializer->normalize($value, 'json', $propMetadata->serializationContext());
@@ -452,7 +452,7 @@ final class LiveComponentHydrator
                 $collectionClass = $propMetadata->collectionValueType()->getClassName();
                 foreach ($value as $key => $objectItem) {
                     if (!$objectItem instanceof $collectionClass) {
-                        throw new \LogicException(sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of %s objects, but at least on key had a different value of %s', $propMetadata->getName(), $parentObject::class, $collectionClass, get_debug_type($objectItem)));
+                        throw new \LogicException(\sprintf('The LiveProp "%s" on component "%s" is an array. We determined the array is full of %s objects, but at least on key had a different value of %s', $propMetadata->getName(), $parentObject::class, $collectionClass, get_debug_type($objectItem)));
                     }
 
                     $value[$key] = $this->dehydrateObjectValue($objectItem, $collectionClass, $propMetadata->getFormat(), $parentObject);
@@ -460,18 +460,18 @@ final class LiveComponentHydrator
             }
 
             if (!$this->isValueValidDehydratedValue($value)) {
-                throw new \LogicException(throw new \LogicException(sprintf('Unable to dehydrate value of type "%s" for property "%s" on component "%s". Change this to a simpler type of an object that can be dehydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', get_debug_type($value), $propMetadata->getName(), $parentObject::class)));
+                throw new \LogicException(throw new \LogicException(\sprintf('Unable to dehydrate value of type "%s" for property "%s" on component "%s". Change this to a simpler type of an object that can be dehydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', get_debug_type($value), $propMetadata->getName(), $parentObject::class)));
             }
 
             return $value;
         }
 
         if (!\is_object($value)) {
-            throw new \LogicException(sprintf('Unable to dehydrate value of type "%s" for property "%s" on component "%s". Change this to a simpler type of an object that can be dehydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', get_debug_type($value), $propMetadata->getName(), $parentObject::class));
+            throw new \LogicException(\sprintf('Unable to dehydrate value of type "%s" for property "%s" on component "%s". Change this to a simpler type of an object that can be dehydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', get_debug_type($value), $propMetadata->getName(), $parentObject::class));
         }
 
         if (!$propMetadata->getType() || $propMetadata->isBuiltIn()) {
-            throw new \LogicException(sprintf('The "%s" property on component "%s" is missing its property-type. Add the "%s" type so the object can be hydrated later.', $propMetadata->getName(), $parentObject::class, $value::class));
+            throw new \LogicException(\sprintf('The "%s" property on component "%s" is missing its property-type. Add the "%s" type so the object can be hydrated later.', $propMetadata->getName(), $parentObject::class, $value::class));
         }
 
         // at this point, we have an object and can assume $propMetadata->getType()
@@ -497,7 +497,7 @@ final class LiveComponentHydrator
         }
 
         if (interface_exists($classType)) {
-            throw new \LogicException(sprintf('Cannot dehydrate value typed as interface "%s" on component "%s". Change this to a concrete type that can be dehydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', get_debug_type($value), $parentObject::class));
+            throw new \LogicException(\sprintf('Cannot dehydrate value typed as interface "%s" on component "%s". Change this to a concrete type that can be dehydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', get_debug_type($value), $parentObject::class));
         }
 
         $dehydratedObjectValues = [];
@@ -528,11 +528,11 @@ final class LiveComponentHydrator
             }
 
             if (!\is_string($value)) {
-                throw new BadRequestHttpException(sprintf('The model path "%s" was sent an invalid data type "%s" for a date.', $propertyPathForError, get_debug_type($value)));
+                throw new BadRequestHttpException(\sprintf('The model path "%s" was sent an invalid data type "%s" for a date.', $propertyPathForError, get_debug_type($value)));
             }
 
             if (null !== $dateFormat) {
-                return $className::createFromFormat($dateFormat, $value) ?: throw new BadRequestHttpException(sprintf('The model path "%s" was sent invalid date data "%s" or in an invalid format. Make sure it\'s a valid date and it matches the expected format "%s".', $propertyPathForError, $value, $dateFormat));
+                return $className::createFromFormat($dateFormat, $value) ?: throw new BadRequestHttpException(\sprintf('The model path "%s" was sent invalid date data "%s" or in an invalid format. Make sure it\'s a valid date and it matches the expected format "%s".', $propertyPathForError, $value, $dateFormat));
             }
 
             return new $className($value);
@@ -545,7 +545,7 @@ final class LiveComponentHydrator
         }
 
         if (interface_exists($className)) {
-            throw new \LogicException(sprintf('Cannot hydrate value typed as interface "%s" on component "%s". Change this to a concrete type that can be hydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', $className, $component::class));
+            throw new \LogicException(\sprintf('Cannot hydrate value typed as interface "%s" on component "%s". Change this to a concrete type that can be hydrated. Or set the hydrateWith/dehydrateWith options in LiveProp or set "useSerializerForHydration: true" on the LiveProp to use the serializer.', $className, $component::class));
         }
 
         if (\is_array($value)) {
@@ -560,7 +560,7 @@ final class LiveComponentHydrator
             return $object;
         }
 
-        throw new HydrationException(sprintf('Unable to hydrate value of type "%s" for property "%s" on component "%s". it looks like something went wrong by trying to guess your property types.', $className, $propertyPathForError, $componentClassForError));
+        throw new HydrationException(\sprintf('Unable to hydrate value of type "%s" for property "%s" on component "%s". it looks like something went wrong by trying to guess your property types.', $className, $propertyPathForError, $componentClassForError));
     }
 
     private function isValueValidDehydratedValue(mixed $value): bool
@@ -601,7 +601,7 @@ final class LiveComponentHydrator
 
         if (\count($extraSentWritablePaths) > 0) {
             // we could show multiple fields here in the message
-            throw new HydrationException(sprintf('The model "%s.%s" was sent for update, but it is not writable. Try adding "writable: [\'%s\']" to the $%s property in %s.', $frontendPropName, $extraSentWritablePaths[0], $extraSentWritablePaths[0], $propMetadata->getName(), $componentClass));
+            throw new HydrationException(\sprintf('The model "%s.%s" was sent for update, but it is not writable. Try adding "writable: [\'%s\']" to the $%s property in %s.', $frontendPropName, $extraSentWritablePaths[0], $extraSentWritablePaths[0], $propMetadata->getName(), $componentClass));
         }
 
         return $writablePaths;
@@ -642,7 +642,7 @@ final class LiveComponentHydrator
             return;
         }
 
-        throw new \Exception(sprintf('Method "%s:%s()" specified as LiveProp "onUpdated" hook does not exist.', $component::class, $methodName));
+        throw new \Exception(\sprintf('Method "%s:%s()" specified as LiveProp "onUpdated" hook does not exist.', $component::class, $methodName));
     }
 
     /**
@@ -673,7 +673,7 @@ final class LiveComponentHydrator
                 continue;
             }
 
-            $key = sprintf('%s.%s', $frontendName, $propName);
+            $key = \sprintf('%s.%s', $frontendName, $propName);
             if (!$dehydratedUpdatedProps->hasPropValue($key)) {
                 continue;
             }

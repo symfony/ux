@@ -124,7 +124,7 @@ class Game
     public function addFlip(int $key): void
     {
         if (!isset($this->cards[$key])) {
-            throw new \InvalidArgumentException(sprintf('Invalid card key "%s".', $key));
+            throw new \InvalidArgumentException(\sprintf('Invalid card key "%s".', $key));
         }
         $this->flips[] = $key;
     }
@@ -142,10 +142,10 @@ class Game
     public function addMatch(int $key): void
     {
         if (!isset($this->cards[$key])) {
-            throw new \InvalidArgumentException(sprintf('Invalid card key "%s".', $key));
+            throw new \InvalidArgumentException(\sprintf('Invalid card key "%s".', $key));
         }
         if (\in_array($key, $this->matches)) {
-            throw new \InvalidArgumentException(sprintf('Card "%s" is already matched.', $key));
+            throw new \InvalidArgumentException(\sprintf('Card "%s" is already matched.', $key));
         }
         $this->matches[] = $key;
     }
@@ -165,7 +165,7 @@ class Game
     public function getCard(int $key): string
     {
         if (!isset($this->cards[$key])) {
-            throw new \InvalidArgumentException(sprintf('Invalid card key "%s".', $key));
+            throw new \InvalidArgumentException(\sprintf('Invalid card key "%s".', $key));
         }
 
         return $this->cards[$key];
@@ -254,7 +254,7 @@ class Game
 
     public function getExpiredAt(): ?\DateTimeImmutable
     {
-        return $this->startedAt?->modify(sprintf('+%d seconds', $this->timeLimit));
+        return $this->startedAt?->modify(\sprintf('+%d seconds', $this->timeLimit));
     }
 
     public function getEndedAt(): ?\DateTimeImmutable

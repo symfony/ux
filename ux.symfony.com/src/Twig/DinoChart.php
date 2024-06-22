@@ -54,7 +54,7 @@ class DinoChart
             'plugins' => [
                 'title' => [
                     'display' => true,
-                    'text' => sprintf(
+                    'text' => \sprintf(
                         'Dinos species count from %dmya to %dmya',
                         abs($this->fromYear),
                         abs($this->toYear)

@@ -138,16 +138,16 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
         $attributes = [];
 
         if ($controllers) {
-            $attributes[] = sprintf('data-controller="%s"', implode(' ', $controllers));
+            $attributes[] = \sprintf('data-controller="%s"', implode(' ', $controllers));
         }
 
         if ($actions) {
-            $attributes[] = sprintf('data-action="%s"', implode(' ', $actions));
+            $attributes[] = \sprintf('data-action="%s"', implode(' ', $actions));
         }
 
         if ($targets) {
             $attributes[] = implode(' ', array_map(function (string $key, string $value): string {
-                return sprintf('%s="%s"', $key, $value);
+                return \sprintf('%s="%s"', $key, $value);
             }, array_keys($targets), $targets));
         }
 

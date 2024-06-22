@@ -56,7 +56,7 @@ class EntitySearchUtil
                 $numAssociatedProperties = \count($associatedProperties);
 
                 if (1 === $numAssociatedProperties) {
-                    throw new \InvalidArgumentException(sprintf('The "%s" property included in the setSearchFields() method is not a valid search field. When using associated properties in search, you must also define the exact field used in the search (e.g. \'%s.id\', \'%s.name\', etc.)', $propertyName, $propertyName, $propertyName));
+                    throw new \InvalidArgumentException(\sprintf('The "%s" property included in the setSearchFields() method is not a valid search field. When using associated properties in search, you must also define the exact field used in the search (e.g. \'%s.id\', \'%s.name\', etc.)', $propertyName, $propertyName, $propertyName));
                 }
 
                 $originalPropertyName = $associatedProperties[0];
@@ -102,19 +102,19 @@ class EntitySearchUtil
                 || ($isIntegerProperty && $isIntegerQuery)
                 || ($isNumericProperty && $isNumericQuery)
             ) {
-                $expressions[] = $queryBuilder->expr()->eq(sprintf('%s.%s', $entityName, $propertyName), ':query_for_numbers');
+                $expressions[] = $queryBuilder->expr()->eq(\sprintf('%s.%s', $entityName, $propertyName), ':query_for_numbers');
                 $queryBuilder->setParameter('query_for_numbers', $dqlParameters['numeric_query']);
             } elseif ($isGuidProperty && $isUuidQuery) {
-                $expressions[] = $queryBuilder->expr()->eq(sprintf('%s.%s', $entityName, $propertyName), ':query_for_uuids');
+                $expressions[] = $queryBuilder->expr()->eq(\sprintf('%s.%s', $entityName, $propertyName), ':query_for_uuids');
                 $queryBuilder->setParameter('query_for_uuids', $dqlParameters['uuid_query'], 'uuid' === $propertyDataType ? 'uuid' : null);
             } elseif ($isUlidProperty && $isUlidQuery) {
-                $expressions[] = $queryBuilder->expr()->eq(sprintf('%s.%s', $entityName, $propertyName), ':query_for_uuids');
+                $expressions[] = $queryBuilder->expr()->eq(\sprintf('%s.%s', $entityName, $propertyName), ':query_for_uuids');
                 $queryBuilder->setParameter('query_for_uuids', $dqlParameters['uuid_query'], 'ulid');
             } elseif ($isTextProperty) {
-                $expressions[] = $queryBuilder->expr()->like(sprintf('LOWER(%s.%s)', $entityName, $propertyName), ':query_for_text');
+                $expressions[] = $queryBuilder->expr()->like(\sprintf('LOWER(%s.%s)', $entityName, $propertyName), ':query_for_text');
                 $queryBuilder->setParameter('query_for_text', $dqlParameters['text_query']);
 
-                $expressions[] = $queryBuilder->expr()->in(sprintf('LOWER(%s.%s)', $entityName, $propertyName), ':query_as_words');
+                $expressions[] = $queryBuilder->expr()->in(\sprintf('LOWER(%s.%s)', $entityName, $propertyName), ':query_as_words');
                 $queryBuilder->setParameter('query_as_words', $dqlParameters['words_query']);
             }
         }

@@ -191,7 +191,7 @@ class TwigPreLexer
 
         if (!empty($this->currentComponents)) {
             $lastComponent = array_pop($this->currentComponents)['name'];
-            throw new SyntaxError(sprintf('Expected closing tag "</twig:%s>" not found.', $lastComponent), $this->line);
+            throw new SyntaxError(\sprintf('Expected closing tag "</twig:%s>" not found.', $lastComponent), $this->line);
         }
 
         return $output;
@@ -219,7 +219,7 @@ class TwigPreLexer
 
     private function consumeAttributeName(string $componentName): string
     {
-        $message = sprintf('Expected attribute name when parsing the "<twig:%s" syntax.', $componentName);
+        $message = \sprintf('Expected attribute name when parsing the "<twig:%s" syntax.', $componentName);
 
         return $this->consumeComponentName($message);
     }
@@ -257,10 +257,10 @@ class TwigPreLexer
             if (!$this->check('=')) {
                 // don't allow "<twig:component :someProp>"
                 if ($isAttributeDynamic) {
-                    throw new SyntaxError(sprintf('Expected "=" after ":%s" when parsing the "<twig:%s" syntax.', $key, $componentName), $this->line);
+                    throw new SyntaxError(\sprintf('Expected "=" after ":%s" when parsing the "<twig:%s" syntax.', $key, $componentName), $this->line);
                 }
 
-                $attributes[] = sprintf('%s: true', preg_match('/[-:]/', $key) ? "'$key'" : $key);
+                $attributes[] = \sprintf('%s: true', preg_match('/[-:]/', $key) ? "'$key'" : $key);
                 $this->consumeWhitespace();
                 continue;
             }
@@ -275,7 +275,7 @@ class TwigPreLexer
                 $attributeValue = $this->consumeAttributeValue($quote);
             }
 
-            $attributes[] = sprintf('%s: %s', preg_match('/[-:]/', $key) ? "'$key'" : $key, '' === $attributeValue ? "''" : $attributeValue);
+            $attributes[] = \sprintf('%s: %s', preg_match('/[-:]/', $key) ? "'$key'" : $key, '' === $attributeValue ? "''" : $attributeValue);
 
             $this->expectAndConsumeChar($quote);
             $this->consumeWhitespace();
@@ -488,14 +488,14 @@ class TwigPreLexer
             if ($this->check('{{')) {
                 // mark any previous static text as complete: push into parts
                 if ('' !== $currentPart) {
-                    $parts[] = sprintf("'%s'", str_replace("'", "\'", $currentPart));
+                    $parts[] = \sprintf("'%s'", str_replace("'", "\'", $currentPart));
                     $currentPart = '';
                 }
 
                 // consume the entire {{ }} block
                 $this->consume('{{');
                 $this->consumeWhitespace();
-                $parts[] = sprintf('(%s)', rtrim($this->consumeUntil('}}')));
+                $parts[] = \sprintf('(%s)', rtrim($this->consumeUntil('}}')));
                 $this->expectAndConsumeChar('}');
                 $this->expectAndConsumeChar('}');
 
@@ -507,7 +507,7 @@ class TwigPreLexer
         }
 
         if ('' !== $currentPart) {
-            $parts[] = sprintf("'%s'", str_replace("'", "\'", $currentPart));
+            $parts[] = \sprintf("'%s'", str_replace("'", "\'", $currentPart));
         }
 
         return implode('~', $parts);

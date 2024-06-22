@@ -206,6 +206,6 @@ EOF,
             }
         }
 
-        throw new \InvalidArgumentException(sprintf('Unknown demo "%s"', $identifier));
+        throw new \InvalidArgumentException(\sprintf('Unknown demo "%s"', $identifier));
     }
 }

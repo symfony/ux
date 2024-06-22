@@ -129,7 +129,7 @@ class Board extends AbstractController
             // An old game should have stopped, so this should never happen
             // Even if the player clicked "too late" on a card, the game would not
             // be completed... meaning the card would still exist in the new game.
-            throw new \RuntimeException(sprintf('Game "%s" has no card "%s".', $this->game->getId(), $key));
+            throw new \RuntimeException(\sprintf('Game "%s" has no card "%s".', $this->game->getId(), $key));
         }
 
         // As we show "unsaved games" as initial content in the template view,

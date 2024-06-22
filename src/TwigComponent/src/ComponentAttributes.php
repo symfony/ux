@@ -52,7 +52,7 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
                 }
 
                 if (!\is_scalar($value) && null !== $value) {
-                    throw new \LogicException(sprintf('A "%s" prop was passed when creating the component. No matching "%s" property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a "%s"). Did you mean to pass this to your component or is there a typo on its name?', $key, $key, get_debug_type($value)));
+                    throw new \LogicException(\sprintf('A "%s" prop was passed when creating the component. No matching "%s" property or mount() argument was found, so we attempted to use this as an HTML attribute. But, the value is not a scalar (it\'s a "%s"). Did you mean to pass this to your component or is there a typo on its name?', $key, $key, get_debug_type($value)));
                 }
 
                 if (null === $value) {
@@ -67,7 +67,7 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
                 return match ($value) {
                     true => "{$carry} {$key}",
                     false => $carry,
-                    default => sprintf('%s %s="%s"', $carry, $key, $value),
+                    default => \sprintf('%s %s="%s"', $carry, $key, $value),
                 };
             },
             ''
@@ -94,7 +94,7 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
         }
 
         if (!\is_string($value)) {
-            throw new \LogicException(sprintf('Can only get string attributes (%s is a "%s").', $attribute, get_debug_type($value)));
+            throw new \LogicException(\sprintf('Can only get string attributes (%s is a "%s").', $attribute, get_debug_type($value)));
         }
 
         $this->rendered[$attribute] = true;
@@ -183,7 +183,7 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
 
             return $this->defaults($stimulusDto);
         } else {
-            throw new \InvalidArgumentException(sprintf('Argument 1 passed to "%s()" must be an instance of "%s" or "%s", "%s" given.', __METHOD__, AbstractStimulusDto::class, StimulusAttributes::class, get_debug_type($stimulusDto)));
+            throw new \InvalidArgumentException(\sprintf('Argument 1 passed to "%s()" must be an instance of "%s" or "%s", "%s" given.', __METHOD__, AbstractStimulusDto::class, StimulusAttributes::class, get_debug_type($stimulusDto)));
         }
 
         $controllersAttributes = $stimulusDto->toArray();

@@ -29,6 +29,8 @@ return (new PhpCsFixer\Config())
         '@Symfony:risky' => true,
         'header_comment' => ['header' => $fileHeaderComment],
         'nullable_type_declaration' => true,
+        // TODO: Remove once the "compiler_optimized" set includes "sprintf"
+        'native_function_invocation' => ['include' => ['@compiler_optimized', 'sprintf'], 'scope' => 'namespaced', 'strict' => true],
         'trailing_comma_in_multiline' => ['elements' => ['arrays', 'match', 'parameters']],
     ])
     ->setRiskyAllowed(true)

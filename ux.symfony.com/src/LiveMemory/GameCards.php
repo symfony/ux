@@ -23,7 +23,7 @@ final class GameCards
      */
     public static function getCards(): array
     {
-        return array_map(fn ($i) => sprintf('%02d', $i), range(1, 16));
+        return array_map(fn ($i) => \sprintf('%02d', $i), range(1, 16));
     }
 
     /**

@@ -91,35 +91,35 @@ class StimulusLoaderJavaScriptCompiler implements AssetCompilerInterface
 
             if ($mappedControllerAsset->isLazy) {
                 if (!$mappedControllerAsset->autoImports) {
-                    $lazyControllers[] = sprintf('%s: () => import(%s)', json_encode($name), $relativeImportPath);
+                    $lazyControllers[] = \sprintf('%s: () => import(%s)', json_encode($name), $relativeImportPath);
                 } else {
                     // import $relativeImportPath and also the auto-imports
                     // and use a Promise.all() to wait for all of them
-                    $lazyControllers[] = sprintf('%s: () => Promise.all([import(%s), %s]).then((ret) => ret[0])', json_encode($name), $relativeImportPath, implode(', ', array_map(fn ($path) => "import($path)", $autoImportPaths)));
+                    $lazyControllers[] = \sprintf('%s: () => Promise.all([import(%s), %s]).then((ret) => ret[0])', json_encode($name), $relativeImportPath, implode(', ', array_map(fn ($path) => "import($path)", $autoImportPaths)));
                 }
 
                 continue;
             }
 
-            $controllerNameForVariable = sprintf('controller_%s', \count($eagerControllerParts));
+            $controllerNameForVariable = \sprintf('controller_%s', \count($eagerControllerParts));
 
-            $importLines[] = sprintf(
+            $importLines[] = \sprintf(
                 'import %s from %s;',
                 $controllerNameForVariable,
                 $relativeImportPath
             );
             foreach ($autoImportPaths as $autoImportRelativePath) {
-                $importLines[] = sprintf(
+                $importLines[] = \sprintf(
                     'import %s;',
                     $autoImportRelativePath
                 );
             }
-            $eagerControllerParts[] = sprintf('"%s": %s', $name, $controllerNameForVariable);
+            $eagerControllerParts[] = \sprintf('"%s": %s', $name, $controllerNameForVariable);
         }
 
         $importCode = implode("\n", $importLines);
-        $eagerControllersJson = sprintf('{%s}', implode(', ', $eagerControllerParts));
-        $lazyControllersExpression = sprintf('{%s}', implode(', ', $lazyControllers));
+        $eagerControllersJson = \sprintf('{%s}', implode(', ', $eagerControllerParts));
+        $lazyControllersExpression = \sprintf('{%s}', implode(', ', $lazyControllers));
 
         $isDebugString = $this->isDebug ? 'true' : 'false';
 

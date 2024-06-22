@@ -29,8 +29,8 @@ final class LocalSvgIconRegistry implements IconRegistryInterface
 
     public function get(string $name): Icon
     {
-        if (!file_exists($filename = sprintf('%s/%s.svg', $this->iconDir, str_replace(':', '/', $name)))) {
-            throw new IconNotFoundException(sprintf('The icon "%s" (%s) does not exist.', $name, $filename));
+        if (!file_exists($filename = \sprintf('%s/%s.svg', $this->iconDir, str_replace(':', '/', $name)))) {
+            throw new IconNotFoundException(\sprintf('The icon "%s" (%s) does not exist.', $name, $filename));
         }
 
         return Icon::fromFile($filename);
@@ -49,7 +49,7 @@ final class LocalSvgIconRegistry implements IconRegistryInterface
 
     public function add(string $name, string $svg): void
     {
-        $filename = sprintf('%s/%s.svg', $this->iconDir, $name);
+        $filename = \sprintf('%s/%s.svg', $this->iconDir, $name);
 
         (new Filesystem())->dumpFile($filename, $svg);
     }

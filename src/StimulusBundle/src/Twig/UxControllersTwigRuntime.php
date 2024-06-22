@@ -64,7 +64,7 @@ final class UxControllersTwigRuntime implements RuntimeExtensionInterface
 
                 foreach ($controllerData['autoimport'] ?? [] as $autoImport => $enabled) {
                     if ($enabled) {
-                        $links[] = sprintf('<link rel="stylesheet" href="%s">', $this->getLinkHref($autoImport, $uxPackageName));
+                        $links[] = \sprintf('<link rel="stylesheet" href="%s">', $this->getLinkHref($autoImport, $uxPackageName));
                     }
                 }
             }
@@ -84,7 +84,7 @@ final class UxControllersTwigRuntime implements RuntimeExtensionInterface
 
         $slashPosition = strpos($autoImport, '/');
         if (false === $slashPosition) {
-            throw new \LogicException(sprintf('The autoimport "%s" is not valid.', $autoImport));
+            throw new \LogicException(\sprintf('The autoimport "%s" is not valid.', $autoImport));
         }
 
         // if the first character is @, then the package name is @symfony/ux-cropperjs
@@ -102,12 +102,12 @@ final class UxControllersTwigRuntime implements RuntimeExtensionInterface
             $uxPackageMetadata = $this->uxPackageReader->readPackageMetadata($uxPackageName);
             $filePath = $uxPackageMetadata->packageDirectory.'/'.$file;
             if (!is_file($filePath)) {
-                throw new \LogicException(sprintf('An "autoimport" in "%s" refers to "%s". This path could not be found in the asset mapper and the file "%s" does not exist in the package path "%s". And so, the file cannot be loaded.', $this->shortControllersPath(), $autoImport, $file, $uxPackageMetadata->packageDirectory));
+                throw new \LogicException(\sprintf('An "autoimport" in "%s" refers to "%s". This path could not be found in the asset mapper and the file "%s" does not exist in the package path "%s". And so, the file cannot be loaded.', $this->shortControllersPath(), $autoImport, $file, $uxPackageMetadata->packageDirectory));
             }
 
             $asset = $this->assetMapper->getAssetFromSourcePath($filePath);
             if (!$asset) {
-                throw new \LogicException(sprintf('An "autoimport" in "%s" refers to "%s". This file was found, but the path is not in the asset mapper. And so, the file cannot be loaded.', $this->shortControllersPath(), $autoImport));
+                throw new \LogicException(\sprintf('An "autoimport" in "%s" refers to "%s". This file was found, but the path is not in the asset mapper. And so, the file cannot be loaded.', $this->shortControllersPath(), $autoImport));
             }
 
             return $asset->publicPath;
@@ -115,12 +115,12 @@ final class UxControllersTwigRuntime implements RuntimeExtensionInterface
 
         $importMap = $this->readImportMap();
         if (!isset($importMap[$package])) {
-            throw new \LogicException(sprintf('An "autoimport" in "%s" refers to "%s". This path could not be found in the asset mapper and no "%s" entry was found in importmap.php. And so, the file cannot be loaded.', $this->shortControllersPath(), $autoImport, $package));
+            throw new \LogicException(\sprintf('An "autoimport" in "%s" refers to "%s". This path could not be found in the asset mapper and no "%s" entry was found in importmap.php. And so, the file cannot be loaded.', $this->shortControllersPath(), $autoImport, $package));
         }
 
         $importMapEntry = $importMap[$package];
         if (!isset($importMapEntry['url'])) {
-            throw new \LogicException(sprintf('An "autoimport" in "%s" refers to "%s". This path could not be found in the asset mapper and no "url" key was found in importmap.php for the package "%s". And so, the file cannot be loaded.', $this->shortControllersPath(), $autoImport, $package));
+            throw new \LogicException(\sprintf('An "autoimport" in "%s" refers to "%s". This path could not be found in the asset mapper and no "url" key was found in importmap.php for the package "%s". And so, the file cannot be loaded.', $this->shortControllersPath(), $autoImport, $package));
         }
 
         $version = $this->parseVersionFromUrl($importMapEntry['url']);
@@ -154,7 +154,7 @@ final class UxControllersTwigRuntime implements RuntimeExtensionInterface
         $version = $version ?? 'latest';
         $package = str_replace('@', '', $package);
 
-        return sprintf('https://cdn.jsdelivr.net/npm/%s@%s/%s', $package, $version, $file);
+        return \sprintf('https://cdn.jsdelivr.net/npm/%s@%s/%s', $package, $version, $file);
     }
 
     private function shortControllersPath(): string

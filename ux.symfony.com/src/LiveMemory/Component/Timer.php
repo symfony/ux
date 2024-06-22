@@ -85,7 +85,7 @@ class Timer
      */
     public function getRemainingTime(): int
     {
-        $expiresAt = $this->startedAt->modify(sprintf('+%d seconds', $this->duration));
+        $expiresAt = $this->startedAt->modify(\sprintf('+%d seconds', $this->duration));
         $difference = max(0, $expiresAt->getTimestamp() - microtime(true));
 
         // Number of milliseconds until the timer expires

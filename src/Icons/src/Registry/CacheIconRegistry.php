@@ -30,11 +30,11 @@ final class CacheIconRegistry implements IconRegistryInterface
     public function get(string $name, bool $refresh = false): Icon
     {
         if (!Icon::isValidName($name)) {
-            throw new IconNotFoundException(sprintf('The icon name "%s" is not valid.', $name));
+            throw new IconNotFoundException(\sprintf('The icon name "%s" is not valid.', $name));
         }
 
         return $this->cache->get(
-            sprintf('ux-icon-%s', Icon::nameToId($name)),
+            \sprintf('ux-icon-%s', Icon::nameToId($name)),
             fn () => $this->inner->get($name),
             beta: $refresh ? \INF : null,
         );

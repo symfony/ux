@@ -87,9 +87,9 @@ EOF)
 
         $this->entityClass = $io->askQuestion($question);
 
-        $defaultClass = Str::asClassName(sprintf('%s AutocompleteField', $this->entityClass));
+        $defaultClass = Str::asClassName(\sprintf('%s AutocompleteField', $this->entityClass));
         $this->className = $io->ask(
-            sprintf('Choose a name for your entity field class (e.g. <fg=yellow>%s</>)', $defaultClass),
+            \sprintf('Choose a name for your entity field class (e.g. <fg=yellow>%s</>)', $defaultClass),
             $defaultClass
         );
     }
@@ -146,7 +146,7 @@ EOF)
             '',
             '    <comment>$builder</comment>',
             '        <comment>// ...</comment>',
-            sprintf('        <comment>->add(\'%s\', %s::class)</comment>', Str::asLowerCamelCase($entityClassDetails->getShortName()), $classDetails->getShortName()),
+            \sprintf('        <comment>->add(\'%s\', %s::class)</comment>', Str::asLowerCamelCase($entityClassDetails->getShortName()), $classDetails->getShortName()),
             '    <comment>;</>',
         ]);
     }

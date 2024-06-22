@@ -119,7 +119,7 @@ class UxPackage
 
     public function getOfficialDocsUrl(): string
     {
-        return sprintf('https://symfony.com/bundles/ux-%s/current/index.html', $this->name);
+        return \sprintf('https://symfony.com/bundles/ux-%s/current/index.html', $this->name);
     }
 
     public function getCreateString(): string

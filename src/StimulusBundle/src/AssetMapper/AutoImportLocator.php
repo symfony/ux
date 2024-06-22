@@ -37,12 +37,12 @@ class AutoImportLocator
 
         $slashPosition = strpos($path, '/');
         if (false === $slashPosition) {
-            throw new \LogicException(sprintf('The autoimport "%s" is not valid.', $path));
+            throw new \LogicException(\sprintf('The autoimport "%s" is not valid.', $path));
         }
 
         $parts = explode('/', ltrim($path, '@'));
         if (2 > \count($parts)) {
-            throw new \LogicException(sprintf('The autoimport "%s" is not valid.', $path));
+            throw new \LogicException(\sprintf('The autoimport "%s" is not valid.', $path));
         }
         $package = implode('/', \array_slice($parts, 0, 2));
         $file = implode('/', \array_slice($parts, 2));
@@ -51,12 +51,12 @@ class AutoImportLocator
             // this is a file local to the ux package
             $filePath = $packageMetadata->packageDirectory.'/'.$file;
             if (!is_file($filePath)) {
-                throw new \LogicException(sprintf('An "autoimport" in "controllers.json" refers to "%s". This path could not be found in the asset mapper and the file "%s" does not exist in the package path "%s". And so, the file cannot be loaded.', $path, $filePath, $packageMetadata->packageDirectory));
+                throw new \LogicException(\sprintf('An "autoimport" in "controllers.json" refers to "%s". This path could not be found in the asset mapper and the file "%s" does not exist in the package path "%s". And so, the file cannot be loaded.', $path, $filePath, $packageMetadata->packageDirectory));
             }
 
             $asset = $this->assetMapper->getAssetFromSourcePath($filePath);
             if (!$asset) {
-                throw new \LogicException(sprintf('An "autoimport" in "controllers.json" refers to "%s". This file was found, but the path is not in the asset mapper. And so, the file cannot be loaded. This is a misconfiguration with the bundle providing this.', $path));
+                throw new \LogicException(\sprintf('An "autoimport" in "controllers.json" refers to "%s". This file was found, but the path is not in the asset mapper. And so, the file cannot be loaded. This is a misconfiguration with the bundle providing this.', $path));
             }
 
             return new MappedControllerAutoImport($asset->sourcePath, false);
@@ -64,7 +64,7 @@ class AutoImportLocator
 
         $entry = $this->importMapConfigReader->findRootImportMapEntry($path);
         if (!$entry) {
-            throw new \LogicException(sprintf('The autoimport "%s" could not be found in importmap.php. Try running "php bin/console importmap:require %s".', $path, $path));
+            throw new \LogicException(\sprintf('The autoimport "%s" could not be found in importmap.php. Try running "php bin/console importmap:require %s".', $path, $path));
         }
 
         return new MappedControllerAutoImport($path, true);

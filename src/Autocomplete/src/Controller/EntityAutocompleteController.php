@@ -42,7 +42,7 @@ final class EntityAutocompleteController
     {
         $autocompleter = $this->autocompleteFieldRegistry->getAutocompleter($alias);
         if (!$autocompleter) {
-            throw new NotFoundHttpException(sprintf('No autocompleter found for "%s". Available autocompleters are: (%s)', $alias, implode(', ', $this->autocompleteFieldRegistry->getAutocompleterNames())));
+            throw new NotFoundHttpException(\sprintf('No autocompleter found for "%s". Available autocompleters are: (%s)', $alias, implode(', ', $this->autocompleteFieldRegistry->getAutocompleterNames())));
         }
 
         if ($autocompleter instanceof OptionsAwareEntityAutocompleterInterface) {

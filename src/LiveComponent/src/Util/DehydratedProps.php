@@ -93,7 +93,7 @@ class DehydratedProps
     public function getNestedPathValue(string $propName, string $nestedPath): mixed
     {
         if (!$this->hasNestedPathValue($propName, $nestedPath)) {
-            throw new \InvalidArgumentException(sprintf('The nested path "%s.%s" does not exist.', $propName, $nestedPath));
+            throw new \InvalidArgumentException(\sprintf('The nested path "%s.%s" does not exist.', $propName, $nestedPath));
         }
 
         $fullPath = $propName.'.'.$nestedPath;

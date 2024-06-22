@@ -40,7 +40,7 @@ class CssCompiler implements AssetCompilerInterface
 
             $filePath = Path::makeAbsolute($file, \dirname($asset->sourcePath));
             if (!file_exists($filePath)) {
-                throw new \RuntimeException(sprintf('The file "%s" does not exist.', $filePath));
+                throw new \RuntimeException(\sprintf('The file "%s" does not exist.', $filePath));
             }
             $content = file_get_contents($filePath);
 

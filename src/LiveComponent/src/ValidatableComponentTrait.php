@@ -79,7 +79,7 @@ trait ValidatableComponentTrait
         $this->getValidationErrors()->set($propertyName, $errors);
 
         if ($throw && \count($errors) > 0) {
-            throw new UnprocessableEntityHttpException(sprintf('The "%s" field of the component failed validation.', $propertyName));
+            throw new UnprocessableEntityHttpException(\sprintf('The "%s" field of the component failed validation.', $propertyName));
         }
     }
 
@@ -160,7 +160,7 @@ trait ValidatableComponentTrait
     private function getValidator(): ComponentValidatorInterface
     {
         if (!$this->componentValidator) {
-            throw new \InvalidArgumentException(sprintf('The ComponentValidator service was not injected into %s. Did you forget to autowire this service or configure the setComponentValidator() call?', static::class));
+            throw new \InvalidArgumentException(\sprintf('The ComponentValidator service was not injected into %s. Did you forget to autowire this service or configure the setComponentValidator() call?', static::class));
         }
 
         return $this->componentValidator;

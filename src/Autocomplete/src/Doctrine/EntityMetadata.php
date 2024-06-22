@@ -65,7 +65,7 @@ class EntityMetadata
             return (array) $this->metadata->fieldMappings[$propertyName];
         }
 
-        throw new \InvalidArgumentException(sprintf('The "%s" field does not exist in the "%s" entity.', $propertyName, $this->metadata->getName()));
+        throw new \InvalidArgumentException(\sprintf('The "%s" field does not exist in the "%s" entity.', $propertyName, $this->metadata->getName()));
     }
 
     /**
@@ -86,7 +86,7 @@ class EntityMetadata
             return $associationMapping;
         }
 
-        throw new \InvalidArgumentException(sprintf('The "%s" field does not exist in the "%s" entity.', $propertyName, $this->metadata->getName()));
+        throw new \InvalidArgumentException(\sprintf('The "%s" field does not exist in the "%s" entity.', $propertyName, $this->metadata->getName()));
     }
 
     public function getPropertyDataType(string $propertyName): string

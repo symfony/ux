@@ -79,12 +79,12 @@ final class LockIconsCommand extends Command
                 continue;
             }
 
-            $this->registry->add(sprintf('%s/%s', $prefix, $name), $svg);
+            $this->registry->add(\sprintf('%s/%s', $prefix, $name), $svg);
 
             $license = $this->iconify->metadataFor($prefix)['license'];
             ++$count;
 
-            $io->text(sprintf(
+            $io->text(\sprintf(
                 " <fg=bright-green;options=bold>✓</> Imported <fg=bright-white;bg=black>%s:</><fg=bright-magenta;bg=black;options>%s</> (License: <href=%s>%s</>). Render with: <comment>{{ ux_icon('%s') }}</comment>",
                 $prefix,
                 $name,
@@ -94,7 +94,7 @@ final class LockIconsCommand extends Command
             ));
         }
 
-        $io->success(sprintf('Imported %d icons.', $count));
+        $io->success(\sprintf('Imported %d icons.', $count));
 
         return Command::SUCCESS;
     }

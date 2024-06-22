@@ -30,7 +30,7 @@ final class IconifyOnDemandRegistry implements IconRegistryInterface
     public function get(string $name): Icon
     {
         if (2 !== \count($parts = explode(':', $name))) {
-            throw new IconNotFoundException(sprintf('The icon name "%s" is not valid.', $name));
+            throw new IconNotFoundException(\sprintf('The icon name "%s" is not valid.', $name));
         }
 
         return $this->iconify->fetchIcon(...$parts);

@@ -239,7 +239,7 @@ class UxPackageRepository
             }
         }
 
-        throw new \InvalidArgumentException(sprintf('Unknown package "%s".', $name));
+        throw new \InvalidArgumentException(\sprintf('Unknown package "%s".', $name));
     }
 
     public function count(): int
@@ -256,6 +256,6 @@ class UxPackageRepository
             }
         }
 
-        throw new \InvalidArgumentException(sprintf('Could not find a package for the current route "%s".', $route));
+        throw new \InvalidArgumentException(\sprintf('Could not find a package for the current route "%s".', $route));
     }
 }

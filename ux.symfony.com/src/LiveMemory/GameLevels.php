@@ -46,7 +46,7 @@ final class GameLevels
     public static function getLevelMetadata(int $level = 1): array
     {
         if (!isset(self::LEVEL_METADATA[$level])) {
-            throw new \InvalidArgumentException(sprintf('Level "%s" does not exist.', $level));
+            throw new \InvalidArgumentException(\sprintf('Level "%s" does not exist.', $level));
         }
 
         return array_combine(['nbCards', 'theme', 'timeLimit', 'grid'], self::LEVEL_METADATA[$level]);

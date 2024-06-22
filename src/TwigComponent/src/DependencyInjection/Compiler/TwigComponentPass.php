@@ -50,16 +50,16 @@ final class TwigComponentPass implements CompilerPassInterface
                         $name = substr($fqcn, strrpos($fqcn, '\\') + 1);
                     } else {
                         if (null === $defaults) {
-                            throw new LogicException(sprintf('Could not generate a component name for class "%s": no matching namespace found under the "twig_component.defaults" to use as a root. Check the config or give your component an explicit name.', $fqcn));
+                            throw new LogicException(\sprintf('Could not generate a component name for class "%s": no matching namespace found under the "twig_component.defaults" to use as a root. Check the config or give your component an explicit name.', $fqcn));
                         }
 
                         $name = str_replace('\\', ':', substr($fqcn, \strlen($defaults['namespace'])));
                         if ($defaults['name_prefix']) {
-                            $name = sprintf('%s:%s', $defaults['name_prefix'], $name);
+                            $name = \sprintf('%s:%s', $defaults['name_prefix'], $name);
                         }
                     }
                     if (\in_array($name, $componentNames, true)) {
-                        throw new LogicException(sprintf('Failed creating the "%s" component with the automatic name "%s": another component already has this name. To fix this, give the component an explicit name (hint: using "%s" will override the existing component).', $fqcn, $name, $name));
+                        throw new LogicException(\sprintf('Failed creating the "%s" component with the automatic name "%s": another component already has this name. To fix this, give the component an explicit name (hint: using "%s" will override the existing component).', $fqcn, $name, $name));
                     }
 
                     $tag['key'] = $name;
@@ -104,6 +104,6 @@ final class TwigComponentPass implements CompilerPassInterface
             $componentName = substr($componentName, \strlen($defaults['name_prefix']) + 1);
         }
 
-        return sprintf('%s/%s.html.twig', rtrim($directory, '/'), str_replace(':', '/', $componentName));
+        return \sprintf('%s/%s.html.twig', rtrim($directory, '/'), str_replace(':', '/', $componentName));
     }
 }

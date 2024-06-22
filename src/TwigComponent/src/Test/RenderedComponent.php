@@ -28,7 +28,7 @@ final class RenderedComponent implements \Stringable
     public function crawler(): Crawler
     {
         if (!class_exists(Crawler::class)) {
-            throw new \LogicException(sprintf('"symfony/dom-crawler" is required to use "%s()" (install with "composer require symfony/dom-crawler").', __METHOD__));
+            throw new \LogicException(\sprintf('"symfony/dom-crawler" is required to use "%s()" (install with "composer require symfony/dom-crawler").', __METHOD__));
         }
 
         return new Crawler($this->html);

@@ -28,7 +28,7 @@ final class Icon implements \Stringable
     public static function idToName(string $id): string
     {
         if (!self::isValidId($id)) {
-            throw new \InvalidArgumentException(sprintf('The id "%s" is not a valid id.', $id));
+            throw new \InvalidArgumentException(\sprintf('The id "%s" is not a valid id.', $id));
         }
 
         return str_replace('--', ':', $id);
@@ -44,7 +44,7 @@ final class Icon implements \Stringable
     public static function nameToId(string $name): string
     {
         if (!self::isValidName($name)) {
-            throw new \InvalidArgumentException(sprintf('The name "%s" is not a valid name.', $name));
+            throw new \InvalidArgumentException(\sprintf('The name "%s" is not a valid name.', $name));
         }
 
         return str_replace(':', '--', $name);
@@ -82,7 +82,7 @@ final class Icon implements \Stringable
             throw new \LogicException('The "DOM" PHP extension is required to create icons from files.');
         }
 
-        $svg = file_get_contents($filename) ?: throw new \RuntimeException(sprintf('The icon file "%s" could not be read.', $filename));
+        $svg = file_get_contents($filename) ?: throw new \RuntimeException(\sprintf('The icon file "%s" could not be read.', $filename));
 
         $svgDoc = new \DOMDocument();
         $svgDoc->preserveWhiteSpace = false;
@@ -90,20 +90,20 @@ final class Icon implements \Stringable
         try {
             $svgDoc->loadXML($svg);
         } catch (\Throwable $e) {
-            throw new \RuntimeException(sprintf('The icon file "%s" does not contain a valid SVG.', $filename), previous: $e);
+            throw new \RuntimeException(\sprintf('The icon file "%s" does not contain a valid SVG.', $filename), previous: $e);
         }
 
         $svgElements = $svgDoc->getElementsByTagName('svg');
 
         if (0 === $svgElements->length) {
-            throw new \RuntimeException(sprintf('The icon file "%s" does not contain a valid SVG.', $filename));
+            throw new \RuntimeException(\sprintf('The icon file "%s" does not contain a valid SVG.', $filename));
         }
 
         if (1 !== $svgElements->length) {
-            throw new \RuntimeException(sprintf('The icon file "%s" contains more than one SVG.', $filename));
+            throw new \RuntimeException(\sprintf('The icon file "%s" contains more than one SVG.', $filename));
         }
 
-        $svgElement = $svgElements->item(0) ?? throw new \RuntimeException(sprintf('The icon file "%s" does not contain a valid SVG.', $filename));
+        $svgElement = $svgElements->item(0) ?? throw new \RuntimeException(\sprintf('The icon file "%s" does not contain a valid SVG.', $filename));
 
         $innerSvg = '';
 
@@ -122,7 +122,7 @@ final class Icon implements \Stringable
         }
 
         if (!$innerSvg) {
-            throw new \RuntimeException(sprintf('The icon file "%s" contains an empty SVG.', $filename));
+            throw new \RuntimeException(\sprintf('The icon file "%s" contains an empty SVG.', $filename));
         }
 
         $attributes = array_map(static fn (\DOMAttr $a) => $a->value, [...$svgElement->attributes]);
@@ -182,15 +182,15 @@ final class Icon implements \Stringable
     {
         foreach ($attributes as $name => $value) {
             if (!\is_string($name)) {
-                throw new \InvalidArgumentException(sprintf('Attribute names must be string, "%s" given.', get_debug_type($name)));
+                throw new \InvalidArgumentException(\sprintf('Attribute names must be string, "%s" given.', get_debug_type($name)));
             }
 
             if (!ctype_alnum($name) && !str_contains($name, '-')) {
-                throw new \InvalidArgumentException(sprintf('Invalid attribute name "%s".', $name));
+                throw new \InvalidArgumentException(\sprintf('Invalid attribute name "%s".', $name));
             }
 
             if (!\is_string($value) && !\is_bool($value)) {
-                throw new \InvalidArgumentException(sprintf('Invalid value type for attribute "%s". Boolean or string allowed, "%s" provided. ', $name, get_debug_type($value)));
+                throw new \InvalidArgumentException(\sprintf('Invalid value type for attribute "%s". Boolean or string allowed, "%s" provided. ', $name, get_debug_type($value)));
             }
         }
 

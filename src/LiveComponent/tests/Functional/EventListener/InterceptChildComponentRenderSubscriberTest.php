@@ -88,16 +88,16 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
 
                 // 1st renders empty
                 // fingerprint changed in 2nd & 3rd, so it renders new fingerprint + props
-                $this->assertStringContainsString(sprintf(
+                $this->assertStringContainsString(\sprintf(
                     '<li id="%s0" data-live-preserve="true"></li>',
                     AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX
                 ), $content);
                 // new props are JUST the "textLength" + a checksum for it specifically
-                $this->assertStringContainsString(sprintf(
+                $this->assertStringContainsString(\sprintf(
                     '<li data-live-name-value="todo_item" id="%s0" data-live-fingerprint-value="sMvvf7q68tz&#x2F;Cuk&#x2B;vDeisDiq&#x2B;7YPWzT&#x2B;WZFzI37dGHY&#x3D;" data-live-props-updated-from-parent-value="&#x7B;&quot;textLength&quot;&#x3A;18,&quot;&#x40;checksum&quot;&#x3A;&quot;LGxXa9fMKrJ6PelkUPfqmdwnfkk&#x2B;LORgoJHXyPpS3Pw&#x3D;&quot;&#x7D;" data-live-preserve="true"></li>',
                     AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX_EMBEDDED
                 ), $content);
-                $this->assertStringContainsString(sprintf(
+                $this->assertStringContainsString(\sprintf(
                     '<li data-live-name-value="todo_item" id="%s1" data-live-fingerprint-value="8AooEz36WYQyxj54BCaDm&#x2F;jKbcdDdPDLaNO4&#x2F;49bcQk&#x3D;" data-live-props-updated-from-parent-value="&#x7B;&quot;textLength&quot;&#x3A;10,&quot;&#x40;checksum&quot;&#x3A;&quot;BXUk7q6LI&#x5C;&#x2F;6Qx3c62Xiui6287YndmoK3QmVq6e5mcGk&#x3D;&quot;&#x7D;" data-live-preserve="true"></li>',
                     AddLiveAttributesSubscriberTest::TODO_ITEM_DETERMINISTIC_PREFIX
                 ), $content);
@@ -172,6 +172,6 @@ final class InterceptChildComponentRenderSubscriberTest extends KernelTestCase
             $queryData['children'] = json_encode($children);
         }
 
-        return sprintf('/_components/%s?%s', $componentName, http_build_query($queryData));
+        return \sprintf('/_components/%s?%s', $componentName, http_build_query($queryData));
     }
 }

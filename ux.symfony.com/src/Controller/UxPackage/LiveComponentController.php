@@ -42,6 +42,6 @@ class LiveComponentController extends AbstractController
             return $this->redirectToRoute($liveDemo->getRoute(), [], 301);
         }
 
-        throw $this->createNotFoundException(sprintf('Live Component demo "%s" not found.', $demo));
+        throw $this->createNotFoundException(\sprintf('Live Component demo "%s" not found.', $demo));
     }
 }

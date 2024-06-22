@@ -164,11 +164,11 @@ class AutocompleteFormRenderingTest extends KernelTestCase
         $extraOptionsWithValidChecksum = $this->encodeData(['foo' => 'bar', '@checksum' => 'O2nYjcGr/l8GmUuYUSfE52hoyEL0NtDhBzUbn17KVHQ=']);
 
         $this->browser()
-            ->post(sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $extraOptionsWithoutChecksum))
+            ->post(\sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $extraOptionsWithoutChecksum))
             ->assertStatus(400)
-            ->post(sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $extraOptionsWithInvalidChecksum))
+            ->post(\sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $extraOptionsWithInvalidChecksum))
             ->assertStatus(400)
-            ->post(sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $extraOptionsWithValidChecksum))
+            ->post(\sprintf('/test/autocomplete/category_autocomplete_type?extra_options=%s', $extraOptionsWithValidChecksum))
             ->assertStatus(200)
         ;
     }

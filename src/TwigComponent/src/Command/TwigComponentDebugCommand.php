@@ -73,7 +73,7 @@ EOF
         if (\is_string($name)) {
             $component = $this->findComponentName($io, $name, $input->isInteractive());
             if (null === $component) {
-                $io->error(sprintf('Unknown component "%s".', $name));
+                $io->error(\sprintf('Unknown component "%s".', $name));
 
                 return Command::FAILURE;
             }
@@ -200,7 +200,7 @@ EOF
                 $m->getParameters(),
             );
 
-            return sprintf('%s(%s)', $m->getName(), implode(', ', $params));
+            return \sprintf('%s(%s)', $m->getName(), implode(', ', $params));
         };
         $hooks = [];
         if ($method = AsTwigComponent::mountMethod($metadata->getClass())) {

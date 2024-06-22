@@ -44,7 +44,7 @@ class MealPlannerForm extends AbstractType
             ->addDependent('mainFood', 'meal', function (DependentField $field, ?Meal $meal) {
                 $field->add(EnumType::class, [
                     'class' => Food::class,
-                    'placeholder' => null === $meal ? 'Select a meal first' : sprintf('What\'s for %s?', $meal->getReadable()),
+                    'placeholder' => null === $meal ? 'Select a meal first' : \sprintf('What\'s for %s?', $meal->getReadable()),
                     'choices' => $meal?->getFoodChoices(),
                     'choice_label' => fn (Food $food): string => $food->getReadable(),
                     'disabled' => null === $meal,

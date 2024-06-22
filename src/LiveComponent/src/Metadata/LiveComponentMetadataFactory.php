@@ -76,7 +76,7 @@ class LiveComponentMetadataFactory implements ResetInterface
     {
         $type = $property->getType();
         if ($type instanceof \ReflectionUnionType || $type instanceof \ReflectionIntersectionType) {
-            throw new \LogicException(sprintf('Union or intersection types are not supported for LiveProps. You may want to change the type of property %s in %s.', $property->getName(), $property->getDeclaringClass()->getName()));
+            throw new \LogicException(\sprintf('Union or intersection types are not supported for LiveProps. You may want to change the type of property %s in %s.', $property->getName(), $property->getDeclaringClass()->getName()));
         }
 
         $infoTypes = $this->propertyTypeExtractor->getTypes($className, $propertyName) ?? [];

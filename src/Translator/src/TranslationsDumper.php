@@ -55,7 +55,7 @@ class TranslationsDumper
         foreach ($this->getTranslations(...$catalogues) as $translationId => $translationsByDomainAndLocale) {
             $constantName = $this->generateConstantName($translationId);
 
-            $translationsJs .= sprintf(
+            $translationsJs .= \sprintf(
                 "export const %s = %s;\n",
                 $constantName,
                 json_encode([
@@ -63,7 +63,7 @@ class TranslationsDumper
                     'translations' => $translationsByDomainAndLocale,
                 ], \JSON_THROW_ON_ERROR),
             );
-            $translationsTs .= sprintf(
+            $translationsTs .= \sprintf(
                 "export declare const %s: %s;\n",
                 $constantName,
                 $this->getTranslationsTypeScriptTypeDefinition($translationsByDomainAndLocale)
@@ -72,7 +72,7 @@ class TranslationsDumper
 
         $this->filesystem->dumpFile($this->dumpDir.'/index.js', $translationsJs);
         $this->filesystem->dumpFile($this->dumpDir.'/index.d.ts', $translationsTs);
-        $this->filesystem->dumpFile($this->dumpDir.'/configuration.js', sprintf(
+        $this->filesystem->dumpFile($this->dumpDir.'/configuration.js', \sprintf(
             "export const localeFallbacks = %s;\n",
             json_encode($this->getLocaleFallbacks(...$catalogues), \JSON_THROW_ON_ERROR)
         ));
@@ -126,7 +126,7 @@ TS
                         ? $this->intlMessageParametersExtractor->extract($translation)
                         : $this->messageParametersExtractor->extract($translation);
                 } catch (\Throwable $e) {
-                    throw new \Exception(sprintf('Error while extracting parameters from message "%s" in domain "%s" and locale "%s".', $translation, $domain, $locale), previous: $e);
+                    throw new \Exception(\sprintf('Error while extracting parameters from message "%s" in domain "%s" and locale "%s".', $translation, $domain, $locale), previous: $e);
                 }
 
                 $parametersTypes[$domain] = $this->typeScriptMessageParametersPrinter->print($parameters);
@@ -135,13 +135,13 @@ TS
             }
         }
 
-        return sprintf(
+        return \sprintf(
             'Message<{ %s }, %s>',
             implode(', ', array_reduce(
                 array_keys($parametersTypes),
                 fn (array $carry, string $domain) => [
                     ...$carry,
-                    sprintf("'%s': { parameters: %s }", $domain, $parametersTypes[$domain]),
+                    \sprintf("'%s': { parameters: %s }", $domain, $parametersTypes[$domain]),
                 ],
                 [],
             )),

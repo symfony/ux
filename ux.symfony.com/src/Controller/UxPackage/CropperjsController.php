@@ -55,8 +55,8 @@ class CropperjsController extends AbstractController
         if ($form->isSubmitted()) {
             // faking an error to let the page re-render with the cropped images
             $form->addError(new FormError('🤩'));
-            $croppedImage = sprintf('data:image/jpeg;base64,%s', base64_encode($crop->getCroppedImage()));
-            $croppedThumbnail = sprintf('data:image/jpeg;base64,%s', base64_encode($crop->getCroppedThumbnail(200, 150)));
+            $croppedImage = \sprintf('data:image/jpeg;base64,%s', base64_encode($crop->getCroppedImage()));
+            $croppedThumbnail = \sprintf('data:image/jpeg;base64,%s', base64_encode($crop->getCroppedThumbnail(200, 150)));
         }
 
         return $this->render('ux_packages/cropperjs.html.twig', [

@@ -28,7 +28,7 @@ final class IntlMessageParametersExtractor implements ExtractorInterface
         $intlMessageParser = new IntlMessageParser($message);
         $ast = $intlMessageParser->parse();
         if ($ast['err']) {
-            throw new \InvalidArgumentException(sprintf('The message "%s" is not a valid Intl message.', $message));
+            throw new \InvalidArgumentException(\sprintf('The message "%s" is not a valid Intl message.', $message));
         }
 
         $nodes = $ast['val'];

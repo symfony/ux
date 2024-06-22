@@ -113,7 +113,7 @@ final class ComponentTokenParser extends AbstractTokenParser
 
     private function generateEmbeddedTemplateIndex(string $file, int $line): int
     {
-        $fileAndLine = sprintf('%s-%d', $file, $line);
+        $fileAndLine = \sprintf('%s-%d', $file, $line);
         if (!isset($this->lineAndFileCounts[$fileAndLine])) {
             $this->lineAndFileCounts[$fileAndLine] = 0;
         }
