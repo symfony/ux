@@ -100,13 +100,13 @@
                             <div class="TabPanel" data-tabs-target="tab" id="IconModal-Tab-Meta" data-tab="meta">
                                 <div class="grid" style="--cols: 1fr 1fr">
                                     <twig:DataList items="{{ {
-                                        'Name': icon.name,
-                                        'Author': icon_set.author.name,
-                                        'GitHub': icon_set.github ? {
+                                        Name: icon.name,
+                                        Author: icon_set.author.name,
+                                        GitHub: icon_set.github ? {
                                             title: icon_set.github.name,
                                             href: icon_set.github.url,
                                         } : null,
-                                        'Licence': icon_set.license ? {
+                                        Licence: icon_set.license ? {
                                             title: icon_set.license.title,
                                             href: icon_set.license.url|default,
                                         } : null,
