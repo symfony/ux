@@ -94,18 +94,19 @@ class TurboController extends AbstractController
     }
 
     #[Route('/turbo/todos', name: 'app_turbo_todo_list')]
-    public function turboTodoList(Request $request): Response
+    public function turboTodoList(UxPackageRepository $packageRepository, Request $request): Response
     {
         $session = $request->getSession();
         $this->initializeTodos($session);
 
         return $this->render('ux_packages/turbo/todos.html.twig', [
+            'package' => $packageRepository->find('turbo'),
             'todos' => $session->get('todos'),
         ]);
     }
 
     #[Route('/turbo/todos/add', name: 'app_turbo_add_todo_item')]
-    public function turboAddTodoItem(Request $request): Response
+    public function turboAddTodoItem(UxPackageRepository $packageRepository, Request $request): Response
     {
         $session = $request->getSession();
         $this->initializeTodos($session);
@@ -121,6 +122,7 @@ class TurboController extends AbstractController
         }
 
         return $this->render('ux_packages/turbo/add_todo.html.twig', [
+            'package' => $packageRepository->find('turbo'),
             'form' => $form,
         ]);
     }
