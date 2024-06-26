@@ -98,7 +98,8 @@ Using with AssetMapper
 Because the JSX format isn't pure JavaScript, using this library with AssetMapper
 requires some extra steps.
 
-.. note:: Compile your ``.jsx`` files to pure JavaScript files. This can be done by
+.. note:: 
+    Compile your ``.jsx`` files to pure JavaScript files. This can be done by
    installing Babel and the ``@babel/preset-react`` preset. Example:
    https://github.com/symfony/ux/blob/2.x/ux.symfony.com/package.json
 
@@ -154,7 +155,8 @@ Also, inside of your ``.jsx`` files, when importing another component, use the
 
     registerReactControllerComponents();
 
-.. note:: Do not use **require.context** parameter. Not working with AssetMapper
+.. note:: 
+Do not use **require.context** parameter. Not working with AssetMapper
 
 5- Finally, run the 'build' command below so that we can use the React components you wrote or installed.
 
