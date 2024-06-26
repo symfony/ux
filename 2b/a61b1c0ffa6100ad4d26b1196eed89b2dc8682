@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-25T20:49:57Z
+
+> I removed the declare(strict_types=1); only for the components and not for the website, in this PR for now.
+
+Are there any strict_types in the website ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-25T20:51:10Z
+
+Is there a real need for a new release of TogglePassword, if it's just for this ?
+
+(i mean, ok to change them, but should we release a version for this?)
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-06-26T07:13:31Z
+
+> Is there a real need for a new release of TogglePassword, if it's just for this?
+
+I think this is fine, to not do a release for it
