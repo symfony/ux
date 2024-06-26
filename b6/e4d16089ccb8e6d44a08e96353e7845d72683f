@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-22T10:50:06Z
+
+Let's ignore the cs-twig for now... that will require some work to fix the Twig CS Fixer "UX parser" i suppose
+
+(poke @VincentLanglet if you have an idea to where i should start)
+
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2024-06-22T14:52:39Z
+
+> Let's ignore the cs-twig for now... that will require some work to fix the Twig CS Fixer "UX parser" i suppose
+>
+> (poke @VincentLanglet if you have an idea to where i should start)
+
+This is supposed to be fixed in 2.10.0 version https://github.com/VincentLanglet/Twig-CS-Fixer/releases/tag/2.10.0
+I assume you need to bump the version
+https://github.com/symfony/ux/blob/2.x/ux.symfony.com/composer.lock#L11840-L11841
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-22T15:22:13Z
+
+Oh that's a great news :) Thank you !
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-22T15:28:46Z
+
+Remaining cs-twig failures are fixed in https://github.com/symfony/ux/pull/1935
