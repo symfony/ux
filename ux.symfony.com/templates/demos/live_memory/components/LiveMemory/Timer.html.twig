@@ -1,5 +1,5 @@
 <div {{ attributes.defaults({
-    'class': 'LiveMemory-Timer' ~ (this.blinking ? ' LiveMemory-Timer--blinking' : '')
+    class: 'LiveMemory-Timer' ~ (this.blinking ? ' LiveMemory-Timer--blinking' : '')
 }) }}
     {% if this.remainingTime > (this.warningThreshold * 1000) %}
         data-poll="delay({{ this.remainingTime - (this.warningThreshold * 1000) }})|tick"
