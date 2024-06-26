@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
