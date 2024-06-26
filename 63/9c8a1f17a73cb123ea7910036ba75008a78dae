@@ -1,0 +1,121 @@
+---------------------------------------------------------------------------
+
+by aleho at 2024-05-06T09:20:23Z
+
+I don't understand why `.splice()` was used instead of a new array. Can't be for performance reasons, or can it?
+
+---------------------------------------------------------------------------
+
+by aleho at 2024-05-06T12:36:16Z
+
+Also, forgot to mention: I'd consider a regex to tokenize the string a more elegant solution.
+
+Any objections against that?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-08T13:40:27Z
+
+Could you rebuild the packages ? (that's the origin of the CI failures)
+
+(yarn run build from the repository root i think)
+
+---------------------------------------------------------------------------
+
+by aleho at 2024-05-08T18:32:24Z
+
+Of course! Didn't find anything in the docs and wasn't sure whether that's something that actually has to be done in the PR or will be done on release.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-08T18:46:56Z
+
+Yep this would need some CONTRIB file.. i'll open an issue :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-08T18:49:21Z
+
+https://github.com/symfony/ux/issues/1836 :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-08T18:51:12Z
+
+Do you think you could add a quick test, to prevent any future regression ? 😊
+
+---------------------------------------------------------------------------
+
+by aleho at 2024-05-13T09:14:13Z
+
+I would like to but I didn't see any browser tests in LiveComponents.
+
+Could you point me in the right direction where actual browser integration is tested for `live_controller.js`?
+
+---------------------------------------------------------------------------
+
+by aleho at 2024-05-13T13:05:21Z
+
+Never mind. I figured LiveComponent doesn't have any browser tests yet and tried to add them.
+
+This PR got bigger than expected, please let me know if anything's missing.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-14T21:50:24Z
+
+wow indeed :) I'll look in the week as soon as i can ! Thank you for the efforts :)
+
+---------------------------------------------------------------------------
+
+by aleho at 2024-05-29T07:50:55Z
+
+@smnandre Any news? Did you have time to have a quick look at it?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-04T04:28:25Z
+
+Hello @aleho ! Sorry i've been crazy busy those last weeks...
+
+Thank you **very much** for this!
+
+I'm not sure we need right now a full panther stack with panther :| (really not sure there, but could this test be done like the others ?)
+
+I'll let @kbond (that is his domain much more than mine to be honest) and @WebMamba check and give their opinion :))
+
+My _personal_ impresion: we should maybe try to make the suggested changes in a smaller PR, and address the "panther tests" in a distinct one ? 🤷
+
+---------------------------------------------------------------------------
+
+by aleho at 2024-06-04T07:41:03Z
+
+> Hello @aleho ! Sorry i've been crazy busy those last weeks...
+
+No worries, we all know how it is.
+
+> I'm not sure we need right now a full panther stack with panther :| (really not sure there, but could this test be done like the others ?)
+
+There are already Panther tests for Turbo, which this PR is somewhat based on. The reason I think there's no other way to "reliably" test this is that it has to be run in a JS engine in a browser to break. Being the author of this PR I might be biased though. ;)
+
+> My _personal_ impresion: we should maybe try to make the suggested changes in a smaller PR, and address the "panther tests" in a distinct one ? 🤷
+
+I can do that. On the other hand, the bigger part of this PR will only affect the tests / GitHub actions, so it's not going to have a lot of impact even if it breaks (and, as I said, Panther is already used anyway). Moreover this bug fix would not have a valid test case if it is split until the other part is merged as well.
+
+---------------------------------------------------------------------------
+
+by aleho at 2024-06-11T09:34:48Z
+
+This could have been a nice fix for 2.18, just saying 😉.
+
+I'm still fine with either solution! Please just tell me how you'd like to move forward, but, please, don't let this sit for another month and then another for a release. 😭
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-11T17:05:41Z
+
+We've all been crazy busy around here these last weeks... it's an open source project you know, and we have limited time after work, family and stuff..
+
+And believe me when i say we would all love to have more time 😄
+
+I just poked other regulars to come review this / give you feedback ... so that will be soon i think :)
