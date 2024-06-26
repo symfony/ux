@@ -23,11 +23,14 @@ file that was distributed with this source code.
 EOF;
 
 return (new PhpCsFixer\Config())
+    ->setParallelConfig(PhpCsFixer\Runner\Parallel\ParallelConfigFactory::detect())
     ->setRules([
         '@PHPUnit75Migration:risky' => true,
         '@Symfony' => true,
         '@Symfony:risky' => true,
         'header_comment' => ['header' => $fileHeaderComment],
+        // TODO: Remove once the "compiler_optimized" set includes "sprintf"
+        'native_function_invocation' => ['include' => ['@compiler_optimized', 'sprintf'], 'scope' => 'namespaced', 'strict' => true],
         'trailing_comma_in_multiline' => ['elements' => ['arrays', 'match', 'parameters']],
     ])
     ->setRiskyAllowed(true)

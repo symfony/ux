@@ -79,7 +79,7 @@ final class TogglePasswordTypeExtension extends AbstractTypeExtension
         }
 
         $controllerName = 'symfony--ux-toggle-password--toggle-password';
-        $view->vars['attr']['data-controller'] = trim(sprintf('%s %s', $view->vars['attr']['data-controller'] ?? '', $controllerName));
+        $view->vars['attr']['data-controller'] = trim(\sprintf('%s %s', $view->vars['attr']['data-controller'] ?? '', $controllerName));
 
         if (false !== $options['toggle_translation_domain']) {
             $controllerValues['hidden-label'] = $this->translateLabel($options['hidden_label'], $options['toggle_translation_domain']);
@@ -94,7 +94,7 @@ final class TogglePasswordTypeExtension extends AbstractTypeExtension
         $controllerValues['button-classes'] = json_encode($options['button_classes'], \JSON_THROW_ON_ERROR);
 
         foreach ($controllerValues as $name => $value) {
-            $view->vars['attr'][sprintf('data-%s-%s-value', $controllerName, $name)] = $value;
+            $view->vars['attr'][\sprintf('data-%s-%s-value', $controllerName, $name)] = $value;
         }
 
         $view->vars['toggle_container_classes'] = $options['toggle_container_classes'];

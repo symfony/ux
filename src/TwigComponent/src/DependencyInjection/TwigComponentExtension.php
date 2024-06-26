@@ -81,10 +81,10 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
         $container->register('ux.twig_component.component_factory', ComponentFactory::class)
             ->setArguments([
                 new Reference('ux.twig_component.component_template_finder'),
-                class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : null,
+                class_exists(AbstractArgument::class) ? new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)) : null,
                 new Reference('property_accessor'),
                 new Reference('event_dispatcher'),
-                class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : [],
+                class_exists(AbstractArgument::class) ? new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)) : [],
             ])
         ;
 
@@ -116,7 +116,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                 new Parameter('twig.default_path'),
                 new Reference('ux.twig_component.component_factory'),
                 new Reference('twig'),
-                class_exists(AbstractArgument::class) ? new AbstractArgument(sprintf('Added in %s.', TwigComponentPass::class)) : [],
+                class_exists(AbstractArgument::class) ? new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)) : [],
                 $config['anonymous_template_directory'],
             ])
             ->addTag('console.command')
@@ -155,7 +155,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                         ->always(function ($v) {
                             foreach ($v as $namespace => $defaults) {
                                 if (!str_ends_with($namespace, '\\')) {
-                                    throw new InvalidConfigurationException(sprintf('The twig_component.defaults namespace "%s" is invalid: it must end in a "\".', $namespace));
+                                    throw new InvalidConfigurationException(\sprintf('The twig_component.defaults namespace "%s" is invalid: it must end in a "\".', $namespace));
                                 }
                             }
 

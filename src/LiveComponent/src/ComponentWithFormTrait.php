@@ -176,7 +176,7 @@ trait ComponentWithFormTrait
         );
 
         if (!$form->isValid()) {
-            throw new UnprocessableEntityHttpException('Form validation failed in component');
+            throw new UnprocessableEntityHttpException('Form validation failed in component.');
         }
     }
 
@@ -273,7 +273,7 @@ trait ComponentWithFormTrait
         }
 
         foreach ($form as $name => $child) {
-            $this->clearErrorsForNonValidatedFields($child, sprintf('%s.%s', $currentPath, $name));
+            $this->clearErrorsForNonValidatedFields($child, \sprintf('%s.%s', $currentPath, $name));
         }
     }
 }

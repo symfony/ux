@@ -53,7 +53,7 @@ class DoctrineEntityHydrationExtension implements HydrationExtensionInterface
             return $this->objectManagerFor($className)->find($className, $value);
         }
 
-        throw new \InvalidArgumentException(sprintf('Cannot hydrate Doctrine entity "%s". Value of type "%s" is not supported.', $className, get_debug_type($value)));
+        throw new \InvalidArgumentException(\sprintf('Cannot hydrate Doctrine entity "%s". Value of type "%s" is not supported.', $className, get_debug_type($value)));
     }
 
     public function dehydrate(object $object): mixed

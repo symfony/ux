@@ -52,13 +52,13 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
             $class = $topic::class;
 
             if (!$id = $this->idAccessor->getEntityId($topic)) {
-                throw new \LogicException(sprintf('Cannot listen to entity of class "%s" as the PropertyAccess component is not installed. Try running "composer require symfony/property-access".', $class));
+                throw new \LogicException(\sprintf('Cannot listen to entity of class "%s" as the PropertyAccess component is not installed. Try running "composer require symfony/property-access".', $class));
             }
 
-            $topic = sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($class), rawurlencode(implode('-', $id)));
+            $topic = \sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($class), rawurlencode(implode('-', $id)));
         } elseif (!preg_match('/[^a-zA-Z0-9_\x7f-\xff\\\\]/', $topic) && class_exists($topic)) {
             // Generate a URI template to subscribe to updates for all objects of this class
-            $topic = sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($topic), '{id}');
+            $topic = \sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($topic), '{id}');
         }
 
         $stimulusAttributes = $this->stimulusHelper->createStimulusAttributes();

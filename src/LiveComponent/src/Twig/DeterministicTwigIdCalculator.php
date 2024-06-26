@@ -43,12 +43,12 @@ class DeterministicTwigIdCalculator
     {
         $lineData = $this->guessTemplateInfo();
 
-        $fileAndLine = sprintf('%s-%d', $lineData['name'], $lineData['line']);
+        $fileAndLine = \sprintf('%s-%d', $lineData['name'], $lineData['line']);
         if (!isset($this->lineAndFileCounts[$fileAndLine])) {
             $this->lineAndFileCounts[$fileAndLine] = 0;
         }
 
-        $id = sprintf(
+        $id = \sprintf(
             'live-%s-%s',
             crc32($fileAndLine),
             null !== $key ? $key : $this->lineAndFileCounts[$fileAndLine]
@@ -172,6 +172,6 @@ class DeterministicTwigIdCalculator
             }
         }
 
-        throw new \LogicException(sprintf('Could not find line number in template "%s" while generating deterministic id.', $name));
+        throw new \LogicException(\sprintf('Could not find line number in template "%s" while generating deterministic id.', $name));
     }
 }

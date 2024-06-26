@@ -58,7 +58,7 @@ class UxPackagesTest extends KernelTestCase
                 continue;
             }
 
-            yield $package->getName() => [$package, sprintf('%s Docs', $package->getHumanName())];
+            yield $package->getName() => [$package, \sprintf('%s Docs', $package->getHumanName())];
         }
     }
 }

@@ -43,7 +43,7 @@ final class TwigExtension extends AbstractExtension
         $transport = $transport ?? $this->default;
 
         if (!$this->turboStreamListenRenderers->has($transport)) {
-            throw new \InvalidArgumentException(sprintf('The Turbo stream transport "%s" doesn\'t exist.', $transport));
+            throw new \InvalidArgumentException(\sprintf('The Turbo stream transport "%s" doesn\'t exist.', $transport));
         }
 
         return $this->turboStreamListenRenderers->get($transport)->renderTurboStreamListen($env, $topic);

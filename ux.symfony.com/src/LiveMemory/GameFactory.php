@@ -21,7 +21,7 @@ final class GameFactory
     public static function createGame(int $level = 1): Game
     {
         if (!\in_array($level, GameLevels::getLevels())) {
-            throw new \InvalidArgumentException(sprintf('Level "%s" does not exist.', $level));
+            throw new \InvalidArgumentException(\sprintf('Level "%s" does not exist.', $level));
         }
 
         [$nbCards, $theme, $timeLimit] = array_values(GameLevels::getLevelMetadata($level));

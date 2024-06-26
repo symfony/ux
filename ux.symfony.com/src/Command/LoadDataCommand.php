@@ -124,7 +124,7 @@ class LoadDataCommand extends Command
 
     private function clearEntity(string $className, SymfonyStyle $io): void
     {
-        $io->writeln(sprintf('Clearing <comment>%s</comment>', $className));
+        $io->writeln(\sprintf('Clearing <comment>%s</comment>', $className));
         $this->entityManager
             ->createQuery('DELETE FROM '.$className)
             ->execute();

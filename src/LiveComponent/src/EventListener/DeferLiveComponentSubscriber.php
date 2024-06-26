@@ -44,10 +44,10 @@ final class DeferLiveComponentSubscriber implements EventSubscriberInterface
             // Ignored values: false / null / ''
             if ($loading = $data['loading']) {
                 if (!\is_scalar($loading)) {
-                    throw new \InvalidArgumentException(sprintf('The "loading" attribute value must be scalar, "%s" passed.', get_debug_type($loading)));
+                    throw new \InvalidArgumentException(\sprintf('The "loading" attribute value must be scalar, "%s" passed.', get_debug_type($loading)));
                 }
                 if (!\in_array($loading, ['defer', 'lazy'], true)) {
-                    throw new \InvalidArgumentException(sprintf('Invalid "loading" attribute value "%s". Accepted values: "defer" and "lazy".', $loading));
+                    throw new \InvalidArgumentException(\sprintf('Invalid "loading" attribute value "%s". Accepted values: "defer" and "lazy".', $loading));
                 }
                 $event->addExtraMetadata('loading', $loading);
             }

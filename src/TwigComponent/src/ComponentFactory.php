@@ -152,7 +152,7 @@ final class ComponentFactory
             } elseif ($refParameter->isDefaultValueAvailable()) {
                 $parameters[] = $refParameter->getDefaultValue();
             } else {
-                throw new \LogicException(sprintf('%s::mount() has a required $%s parameter. Make sure this is passed or make give a default value.', $component::class, $refParameter->getName()));
+                throw new \LogicException(\sprintf('%s::mount() has a required $%s parameter. Make sure this is passed or make give a default value.', $component::class, $refParameter->getName()));
             }
         }
 
@@ -225,7 +225,7 @@ final class ComponentFactory
      */
     private function throwUnknownComponentException(string $name): void
     {
-        $message = sprintf('Unknown component "%s".', $name);
+        $message = \sprintf('Unknown component "%s".', $name);
         $lowerName = strtolower($name);
         $nameLength = \strlen($lowerName);
         $alternatives = [];

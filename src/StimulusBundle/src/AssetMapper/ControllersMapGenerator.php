@@ -108,7 +108,7 @@ class ControllersMapGenerator
                 $packageControllerConfig = $packageMetadata->symfonyConfig['controllers'][$controllerName] ?? null;
 
                 if (null === $packageControllerConfig) {
-                    throw new \RuntimeException(sprintf('Controller "%s" does not exist in the "%s" package.', $controllerReference, $packageMetadata->packageName));
+                    throw new \RuntimeException(\sprintf('Controller "%s" does not exist in the "%s" package.', $controllerReference, $packageMetadata->packageName));
                 }
 
                 if (!$localControllerConfig['enabled']) {
@@ -132,7 +132,7 @@ class ControllersMapGenerator
 
                 $asset = $this->assetMapper->getAssetFromSourcePath($controllerMainPath);
                 if (!$asset) {
-                    throw new \RuntimeException(sprintf('Could not find an asset mapper path that points to the "%s" controller in package "%s", defined in controllers.json.', $controllerName, $packageMetadata->packageName));
+                    throw new \RuntimeException(\sprintf('Could not find an asset mapper path that points to the "%s" controller in package "%s", defined in controllers.json.', $controllerName, $packageMetadata->packageName));
                 }
 
                 $autoImports = $this->collectAutoImports($localControllerConfig['autoimport'] ?? [], $packageMetadata);
@@ -154,7 +154,7 @@ class ControllersMapGenerator
             return [];
         }
         if (null === $this->autoImportLocator) {
-            throw new \InvalidArgumentException(sprintf('The "autoImportLocator" argument to "%s" is required when using AssetMapper 6.4', self::class));
+            throw new \InvalidArgumentException(\sprintf('The "autoImportLocator" argument to "%s" is required when using AssetMapper 6.4', self::class));
         }
 
         $autoImportItems = [];

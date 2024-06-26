@@ -53,7 +53,7 @@ final class ChangelogProvider
      */
     private function fetchReleases(string $owner, string $repo, int $page = 1, int $perPage = 20): array
     {
-        $response = $this->httpClient->request('GET', sprintf('https://api.github.com/repos/%s/%s/releases', $owner, $repo), [
+        $response = $this->httpClient->request('GET', \sprintf('https://api.github.com/repos/%s/%s/releases', $owner, $repo), [
             'query' => [
                 'page' => $page,
                 'per_page' => $perPage,

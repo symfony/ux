@@ -98,7 +98,7 @@ final class BaseEntityAutocompleteType extends AbstractType
         $attribute = AsEntityAutocompleteField::getInstance($formType::class);
 
         if (!$attribute) {
-            throw new \LogicException(sprintf('You must either provide your own autocomplete_url, or add #[AsEntityAutocompleteField] attribute to %s.', $formType::class));
+            throw new \LogicException(\sprintf('You must either provide your own autocomplete_url, or add #[AsEntityAutocompleteField] attribute to "%s".', $formType::class));
         }
 
         return $this->urlGenerator->generate($attribute->getRoute(), [

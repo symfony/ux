@@ -38,6 +38,6 @@ final class ChainIconRegistry implements IconRegistryInterface
             }
         }
 
-        throw new IconNotFoundException(sprintf('Icon "%s" not found.', $name));
+        throw new IconNotFoundException(\sprintf('Icon "%s" not found.', $name));
     }
 }

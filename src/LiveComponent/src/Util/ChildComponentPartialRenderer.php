@@ -85,11 +85,11 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
     {
         // transform attributes into an array of key="value" strings
         $attributes = array_map(function ($key, $value) {
-            return sprintf('%s="%s"', $key, $value);
+            return \sprintf('%s="%s"', $key, $value);
         }, array_keys($attributes), $attributes);
         $attributes[] = 'data-live-preserve="true"';
 
-        return sprintf('<%s %s></%s>', $childTag, implode(' ', $attributes), $childTag);
+        return \sprintf('<%s %s></%s>', $childTag, implode(' ', $attributes), $childTag);
     }
 
     public static function getSubscribedServices(): array

@@ -144,7 +144,7 @@ class IconSet
                 return [
                     'owner' => $owner = $matches['owner'],
                     'repo' => $repo = $matches['repo'],
-                    'name' => $name = sprintf('%s/%s', $owner, $repo),
+                    'name' => $name = \sprintf('%s/%s', $owner, $repo),
                     'url' => 'https://github.com/'.$name,
                 ];
             }

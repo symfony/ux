@@ -89,9 +89,9 @@ EOF
             if (1 === \count($iconSets)) {
                 $iconSet = reset($iconSets);
                 $searchTerm = 'arrow';
-                $io->writeln(sprintf('Search <comment>"%s"</comment> in <comment>%s</comment> icons:', $searchTerm, $iconSet['name']));
+                $io->writeln(\sprintf('Search <comment>"%s"</comment> in <comment>%s</comment> icons:', $searchTerm, $iconSet['name']));
                 $io->newLine();
-                $io->writeln(' '.sprintf('php bin/console <comment>ux:icons:search %s %s</comment>', $iconSet['prefix'], $searchTerm));
+                $io->writeln(' '.\sprintf('php bin/console <comment>ux:icons:search %s %s</comment>', $iconSet['prefix'], $searchTerm));
                 $io->newLine();
             }
 
@@ -99,7 +99,7 @@ EOF
         }
 
         if (false === $iconSet = reset($iconSets)) {
-            $io->error(sprintf('No icon sets found for prefix "%s".', $prefix));
+            $io->error(\sprintf('No icon sets found for prefix "%s".', $prefix));
 
             return Command::INVALID;
         }
@@ -115,7 +115,7 @@ EOF
             $iconSet = $iconSets[$prefix];
         }
 
-        $io->write(sprintf('Searching <comment>%s</comment> icons "<comment>%s</comment>"...', $iconSet['name'], $name));
+        $io->write(\sprintf('Searching <comment>%s</comment> icons "<comment>%s</comment>"...', $iconSet['name'], $name));
         try {
             $results = $this->iconify->searchIcons($prefix, $name);
         } catch (\Throwable $e) {
@@ -138,19 +138,19 @@ EOF
         $nbPages = \count($iconPages);
 
         $cursor = new Cursor($output);
-        $io->writeln(sprintf('Found <info>%d</info> icons.', \count($icons)));
+        $io->writeln(\sprintf('Found <info>%d</info> icons.', \count($icons)));
         foreach ($iconPages as $page => $iconPage) {
             $this->renderIconTable($io, $prefix, $name, $iconPage);
             if ($page + 1 === $nbPages) {
                 break;
             }
-            if (!$io->confirm(sprintf('Page <comment>%d</comment>/<comment>%d</comment>. Continue?', $page + 1, $nbPages))) {
+            if (!$io->confirm(\sprintf('Page <comment>%d</comment>/<comment>%d</comment>. Continue?', $page + 1, $nbPages))) {
                 break;
             }
             $cursor->moveUp(5)->clearLineAfter();
         }
         $io->newLine();
-        $io->writeln(sprintf('See all the <comment>%s</comment> icons on: https://ux.symfony.com/icons?set=%s', $prefix, $prefix));
+        $io->writeln(\sprintf('See all the <comment>%s</comment> icons on: https://ux.symfony.com/icons?set=%s', $prefix, $prefix));
         $io->newLine();
 
         return Command::SUCCESS;
@@ -225,6 +225,6 @@ EOF
         [$prefix, $name] = explode(':', $icon.':');
         $padding = $padding ? ' ' : '';
 
-        return sprintf('<icon-prefix>%s%s:</><icon-name>%s%s</>', $padding, $prefix, $name, $padding);
+        return \sprintf('<icon-prefix>%s%s:</><icon-name>%s%s</>', $padding, $prefix, $name, $padding);
     }
 }

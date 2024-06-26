@@ -86,18 +86,18 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             /** @var ComponentMetadata $metadata */
             $metadata = $this->container->get(ComponentFactory::class)->metadataFor($componentName);
         } catch (\InvalidArgumentException $e) {
-            throw new NotFoundHttpException(sprintf('Component "%s" not found.', $componentName), $e);
+            throw new NotFoundHttpException(\sprintf('Component "%s" not found.', $componentName), $e);
         }
 
         if (!$metadata->get('live', false)) {
-            throw new NotFoundHttpException(sprintf('"%s" (%s) is not a Live Component.', $metadata->getClass(), $componentName));
+            throw new NotFoundHttpException(\sprintf('"%s" (%s) is not a Live Component.', $metadata->getClass(), $componentName));
         }
 
         if ('get' === $action) {
             $defaultAction = trim($metadata->get('default_action', '__invoke'), '()');
 
             // set default controller for "default" action
-            $request->attributes->set('_controller', sprintf('%s::%s', $metadata->getServiceId(), $defaultAction));
+            $request->attributes->set('_controller', \sprintf('%s::%s', $metadata->getServiceId(), $defaultAction));
             $request->attributes->set('_component_default_action', true);
 
             return;
@@ -131,7 +131,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $request->attributes->set('_controller', sprintf('%s::%s', $metadata->getServiceId(), $action));
+        $request->attributes->set('_controller', \sprintf('%s::%s', $metadata->getServiceId(), $action));
     }
 
     public function onKernelController(ControllerEvent $event): void
@@ -159,7 +159,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         }
 
         if (!$request->attributes->get('_component_default_action', false) && !AsLiveComponent::isActionAllowed($component, $action)) {
-            throw new NotFoundHttpException(sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveAction attribute above it.', $action, $component::class));
+            throw new NotFoundHttpException(\sprintf('The action "%s" either doesn\'t exist or is not allowed in "%s". Make sure it exist and has the LiveAction attribute above it.', $action, $component::class));
         }
 
         $componentName = $request->attributes->get('_component_name') ?? $request->attributes->get('_mounted_component')->getName();
@@ -381,7 +381,7 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
         try {
             return json_decode($request->query->get($key), true, 512, \JSON_THROW_ON_ERROR);
         } catch (\JsonException $exception) {
-            throw new JsonException(sprintf('Invalid JSON on query string "%s".', $key), 0, $exception);
+            throw new JsonException(\sprintf('Invalid JSON on query string "%s".', $key), 0, $exception);
         }
     }
 }

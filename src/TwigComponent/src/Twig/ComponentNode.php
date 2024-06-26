@@ -135,7 +135,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
         $compiler->write('if (!isset($embeddedContext["outerBlocks"])) {')
             ->raw("\n")
             ->indent()
-            ->write(sprintf('$embeddedContext["outerBlocks"] = new \%s();', BlockStack::class))
+            ->write(\sprintf('$embeddedContext["outerBlocks"] = new \%s();', BlockStack::class))
             ->raw("\n")
             ->outdent()
             ->write('}')

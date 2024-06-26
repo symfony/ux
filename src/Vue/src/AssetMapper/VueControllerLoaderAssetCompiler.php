@@ -50,18 +50,18 @@ class VueControllerLoaderAssetCompiler implements AssetCompilerInterface
                 $relativeImportPath = Path::makeRelative($mappedAsset->sourcePath, \dirname($asset->sourcePath));
             }
 
-            $controllerNameForVariable = sprintf('component_%s', \count($componentParts));
+            $controllerNameForVariable = \sprintf('component_%s', \count($componentParts));
 
-            $importLines[] = sprintf(
+            $importLines[] = \sprintf(
                 "import %s from '%s';",
                 $controllerNameForVariable,
                 $relativeImportPath
             );
-            $componentParts[] = sprintf('"%s": %s', $name, $controllerNameForVariable);
+            $componentParts[] = \sprintf('"%s": %s', $name, $controllerNameForVariable);
         }
 
         $importCode = implode("\n", $importLines);
-        $componentsJson = sprintf('{%s}', implode(', ', $componentParts));
+        $componentsJson = \sprintf('{%s}', implode(', ', $componentParts));
 
         return <<<EOF
         $importCode
@@ -92,7 +92,7 @@ class VueControllerLoaderAssetCompiler implements AssetCompilerInterface
             $asset = $assetMapper->getAssetFromSourcePath($file->getRealPath());
 
             if (null === $asset) {
-                throw new \LogicException(sprintf('Could not find an asset mapper path for the Vue controller file "%s".', $file->getRealPath()));
+                throw new \LogicException(\sprintf('Could not find an asset mapper path for the Vue controller file "%s".', $file->getRealPath()));
             }
 
             $name = $file->getRelativePathname();

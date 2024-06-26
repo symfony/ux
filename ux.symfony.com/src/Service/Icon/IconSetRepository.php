@@ -62,7 +62,7 @@ class IconSetRepository
 
     public function get(string $identifier): IconSet
     {
-        return $this->find($identifier) ?? throw new \InvalidArgumentException(sprintf('Unknown icon set "%s"', $identifier));
+        return $this->find($identifier) ?? throw new \InvalidArgumentException(\sprintf('Unknown icon set "%s"', $identifier));
     }
 
     public function find(string $identifier): ?IconSet

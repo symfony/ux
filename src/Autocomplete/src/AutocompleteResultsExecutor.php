@@ -98,7 +98,7 @@ final class AutocompleteResultsExecutor
         }
 
         if (!\is_callable($groupBy)) {
-            throw new \InvalidArgumentException(sprintf('Option "group_by" must be callable, "%s" given.', get_debug_type($groupBy)));
+            throw new \InvalidArgumentException(\sprintf('Option "group_by" must be callable, "%s" given.', get_debug_type($groupBy)));
         }
 
         $optgroupLabels = [];

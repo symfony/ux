@@ -24,7 +24,7 @@ use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 /**
  * All form types that want to expose autocomplete functionality should use this for its getParent().
  *
- * @deprecated since 2.13, use "Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType" instead
+ * @deprecated since UX 2.13, use "Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType" instead
  */
 final class ParentEntityAutocompleteType extends AbstractType implements DataMapperInterface
 {
@@ -39,7 +39,7 @@ final class ParentEntityAutocompleteType extends AbstractType implements DataMap
         $attribute = AsEntityAutocompleteField::getInstance($formType::class);
 
         if (!$attribute && empty($options['autocomplete_url'])) {
-            throw new \LogicException(sprintf('You must either provide your own autocomplete_url, or add #[AsEntityAutocompleteField] attribute to %s.', $formType::class));
+            throw new \LogicException(\sprintf('You must either provide your own autocomplete_url, or add #[AsEntityAutocompleteField] attribute to "%s".', $formType::class));
         }
 
         // Use the provided URL, or auto-generate from the provided alias

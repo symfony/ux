@@ -23,7 +23,7 @@ trait InteractsWithLiveComponents
     protected function createLiveComponent(string $name, array $data = [], ?KernelBrowser $client = null): TestLiveComponent
     {
         if (!$this instanceof KernelTestCase) {
-            throw new \LogicException(sprintf('The "%s" trait can only be used on "%s" classes.', __TRAIT__, KernelTestCase::class));
+            throw new \LogicException(\sprintf('The "%s" trait can only be used on "%s" classes.', __TRAIT__, KernelTestCase::class));
         }
 
         /** @var ComponentFactory $factory */
@@ -31,7 +31,7 @@ trait InteractsWithLiveComponents
         $metadata = $factory->metadataFor($name);
 
         if (!$metadata->get('live')) {
-            throw new \LogicException(sprintf('The "%s" component is not a live component.', $name));
+            throw new \LogicException(\sprintf('The "%s" component is not a live component.', $name));
         }
 
         return new TestLiveComponent(

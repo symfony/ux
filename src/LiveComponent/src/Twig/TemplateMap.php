@@ -33,13 +33,13 @@ final class TemplateMap
 
     public function resolve(string $obscuredName): string
     {
-        return $this->map[$obscuredName] ?? throw new \RuntimeException(sprintf('Cannot find a template matching "%s". Cache may be corrupt.', $obscuredName));
+        return $this->map[$obscuredName] ?? throw new \RuntimeException(\sprintf('Cannot find a template matching "%s". Cache may be corrupt.', $obscuredName));
     }
 
     public function obscuredName(string $templateName): string
     {
         if (false === $obscuredName = array_search($templateName, $this->map, true)) {
-            throw new \RuntimeException(sprintf('Cannot find a match for template "%s". Cache may be corrupt.', $templateName));
+            throw new \RuntimeException(\sprintf('Cannot find a match for template "%s". Cache may be corrupt.', $templateName));
         }
 
         return $obscuredName;

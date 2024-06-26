@@ -980,7 +980,7 @@ class IntlMessageParser
     private function bumpTo(int $targetOffset)
     {
         if ($this->offset() > $targetOffset) {
-            throw new \Exception(sprintf('targetOffset %s must be greater than or equal to the current offset %d', $targetOffset, $this->offset()));
+            throw new \Exception(\sprintf('targetOffset %s must be greater than or equal to the current offset %d', $targetOffset, $this->offset()));
         }
 
         $targetOffset = min($targetOffset, s($this->message)->length());

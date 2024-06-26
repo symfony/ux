@@ -35,14 +35,14 @@ class UxPackageReader
         }
 
         if (!is_dir($phpPackagePath)) {
-            throw new \RuntimeException(sprintf('Could not find package "%s" referred to from controllers.json.', $phpPackageName));
+            throw new \RuntimeException(\sprintf('Could not find package "%s" referred to from controllers.json.', $phpPackageName));
         }
         $packageConfigJsonPath = $phpPackagePath.'/assets/package.json';
         if (!file_exists($packageConfigJsonPath)) {
             $packageConfigJsonPath = $phpPackagePath.'/Resources/assets/package.json';
         }
         if (!file_exists($packageConfigJsonPath)) {
-            throw new \RuntimeException(sprintf('Could not find package.json in the "%s" package.', $phpPackagePath));
+            throw new \RuntimeException(\sprintf('Could not find package.json in the "%s" package.', $phpPackagePath));
         }
 
         $packageConfigJson = file_get_contents($packageConfigJsonPath);

@@ -108,7 +108,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
         $extraOptions[self::CHECKSUM_KEY] = $this->checksumCalculator->calculateForArray($extraOptions);
         $extraOptions = base64_encode(json_encode($extraOptions));
 
-        return sprintf(
+        return \sprintf(
             '%s%s%s',
             $url,
             $this->hasUrlParameters($url) ? '&' : '?',
@@ -127,7 +127,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
     {
         foreach ($extraOptions as $optionKey => $option) {
             if (!\is_scalar($option) && !\is_array($option) && null !== $option) {
-                throw new \InvalidArgumentException(sprintf('Extra option with key "%s" must be a scalar value, an array or null. Got "%s".', $optionKey, get_debug_type($option)));
+                throw new \InvalidArgumentException(\sprintf('Extra option with key "%s" must be a scalar value, an array or null. Got "%s".', $optionKey, get_debug_type($option)));
             }
 
             if (\is_array($option)) {

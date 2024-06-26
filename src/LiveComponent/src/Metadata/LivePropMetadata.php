@@ -132,12 +132,12 @@ final class LivePropMetadata
         }
 
         if (!method_exists($component, $modifier)) {
-            throw new \LogicException(sprintf('Method "%s::%s()" given in LiveProp "modifier" does not exist.', $component::class, $modifier));
+            throw new \LogicException(\sprintf('Method "%s::%s()" given in LiveProp "modifier" does not exist.', $component::class, $modifier));
         }
 
         $modifiedLiveProp = $component->{$modifier}($this->liveProp);
         if (!$modifiedLiveProp instanceof LiveProp) {
-            throw new \LogicException(sprintf('Method "%s::%s()" should return an instance of "%s" (given: "%s").', $component::class, $modifier, LiveProp::class, get_debug_type($modifiedLiveProp)));
+            throw new \LogicException(\sprintf('Method "%s::%s()" should return an instance of "%s" (given: "%s").', $component::class, $modifier, LiveProp::class, get_debug_type($modifiedLiveProp)));
         }
 
         $clone = clone $this;

@@ -40,7 +40,7 @@ class AutocompleteFormTypePass implements CompilerPassInterface
         foreach ($container->findTaggedServiceIds(self::ENTITY_AUTOCOMPLETE_FIELD_TAG, true) as $serviceId => $tag) {
             $serviceDefinition = $container->getDefinition($serviceId);
             if (!$serviceDefinition->hasTag('form.type')) {
-                throw new \LogicException(sprintf('Service "%s" has the "%s" tag, but is not tagged with "form.type". Did you add the "%s" attribute to a class that is not a form type?', $serviceId, self::ENTITY_AUTOCOMPLETE_FIELD_TAG, AsEntityAutocompleteField::class));
+                throw new \LogicException(\sprintf('Service "%s" has the "%s" tag, but is not tagged with "form.type". Did you add the "%s" attribute to a class that is not a form type?', $serviceId, self::ENTITY_AUTOCOMPLETE_FIELD_TAG, AsEntityAutocompleteField::class));
             }
             $alias = $this->getAlias($serviceId, $serviceDefinition, $tag);
 
@@ -61,7 +61,7 @@ class AutocompleteFormTypePass implements CompilerPassInterface
         $class = $serviceDefinition->getClass();
         $attribute = AsEntityAutocompleteField::getInstance($class);
         if (null === $attribute) {
-            throw new \LogicException(sprintf('The service "%s" either needs to have the #[%s] attribute above its class or its "%s" tag needs an "alias" key.', $serviceId, self::ENTITY_AUTOCOMPLETE_FIELD_TAG, AsEntityAutocompleteField::class));
+            throw new \LogicException(\sprintf('The service "%s" either needs to have the #[%s] attribute above its class or its "%s" tag needs an "alias" key.', $serviceId, self::ENTITY_AUTOCOMPLETE_FIELD_TAG, AsEntityAutocompleteField::class));
         }
 
         return $attribute->getAlias() ?: AsEntityAutocompleteField::shortName($class);
@@ -72,7 +72,7 @@ class AutocompleteFormTypePass implements CompilerPassInterface
         $servicesMap = [];
         foreach ($container->findTaggedServiceIds(self::ENTITY_AUTOCOMPLETER_TAG, true) as $serviceId => $tag) {
             if (!isset($tag[0]['alias'])) {
-                throw new \LogicException(sprintf('The "%s" tag of the "%s" service needs "alias" key.', self::ENTITY_AUTOCOMPLETER_TAG, $serviceId));
+                throw new \LogicException(\sprintf('The "%s" tag of the "%s" service needs "alias" key.', self::ENTITY_AUTOCOMPLETER_TAG, $serviceId));
             }
 
             $servicesMap[$tag[0]['alias']] = new Reference($serviceId);

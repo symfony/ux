@@ -71,7 +71,7 @@ class AutocompleteController extends AbstractController
             return $str;
         });
 
-        return sprintf(
+        return \sprintf(
             'Time for %s! Enjoy %s %s %s!',
             $name,
             \count($foodStrings) > 1 ? 'some' : 'a',

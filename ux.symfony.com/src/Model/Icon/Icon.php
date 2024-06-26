@@ -25,10 +25,10 @@ class Icon implements \Stringable
         private readonly string $name,
     ) {
         if (!preg_match('/[a-z-]+/', $this->prefix)) {
-            throw new \InvalidArgumentException(sprintf('Invalid icon prefix "%s".', $this->prefix));
+            throw new \InvalidArgumentException(\sprintf('Invalid icon prefix "%s".', $this->prefix));
         }
         if (!preg_match('/[a-z-0-9]+/', $this->name)) {
-            throw new \InvalidArgumentException(sprintf('Invalid icon name "%s".', $this->name));
+            throw new \InvalidArgumentException(\sprintf('Invalid icon name "%s".', $this->name));
         }
     }
 
@@ -61,7 +61,7 @@ class Icon implements \Stringable
 
     public function getImageUrl(): string
     {
-        return sprintf('https://api.iconify.design/%s/%s.svg', $this->prefix, $this->name);
+        return \sprintf('https://api.iconify.design/%s/%s.svg', $this->prefix, $this->name);
     }
 
     public function __toString(): string

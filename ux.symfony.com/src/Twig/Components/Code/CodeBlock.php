@@ -53,17 +53,17 @@ class CodeBlock
         if (str_contains($filename, '#')) {
             [$filename, $lines] = explode('#', $filename, 2);
             if (str_contains($lines, '#')) {
-                throw new \InvalidArgumentException(sprintf('Invalid filename "%s": only one "#" is allowed.', $filename));
+                throw new \InvalidArgumentException(\sprintf('Invalid filename "%s": only one "#" is allowed.', $filename));
             }
 
             if (!preg_match('/^L(\d+)(?:-L(\d+))?$/', $lines, $matches)) {
-                throw new \InvalidArgumentException(sprintf('Invalid filename "%s": the line range is not valid.', $filename));
+                throw new \InvalidArgumentException(\sprintf('Invalid filename "%s": the line range is not valid.', $filename));
             }
 
             $lineStart = (int) $matches[1];
             $lineEnd = (int) ($matches[2] ?? $matches[1]);
             if ($lineStart > $lineEnd) {
-                throw new \InvalidArgumentException(sprintf('Invalid filename "%s": the line range is not valid.', $filename));
+                throw new \InvalidArgumentException(\sprintf('Invalid filename "%s": the line range is not valid.', $filename));
             }
 
             $this->lineStart = $lineStart;
@@ -97,7 +97,7 @@ class CodeBlock
     {
         $path = $this->rootDir.'/'.$this->filename;
         if (!file_exists($path)) {
-            throw new \InvalidArgumentException(sprintf('File "%s" does not exist.', $path));
+            throw new \InvalidArgumentException(\sprintf('File "%s" does not exist.', $path));
         }
 
         $content = file_get_contents($path);
@@ -129,13 +129,13 @@ class CodeBlock
             return null;
         }
 
-        $anchor = sprintf('L%d', $this->lineStart);
+        $anchor = \sprintf('L%d', $this->lineStart);
         if (null === $this->lineEnd) {
             return $anchor;
         }
 
         if ($this->lineStart !== $this->lineEnd) {
-            $anchor .= sprintf('-L%d', $this->lineEnd);
+            $anchor .= \sprintf('-L%d', $this->lineEnd);
         }
 
         return $anchor;
@@ -148,7 +148,7 @@ class CodeBlock
 
     public function getGithubLink(): string
     {
-        return sprintf('https://github.com/symfony/ux/blob/2.x/ux.symfony.com/%s', $this->filename);
+        return \sprintf('https://github.com/symfony/ux/blob/2.x/ux.symfony.com/%s', $this->filename);
     }
 
     public function getLanguage(): string

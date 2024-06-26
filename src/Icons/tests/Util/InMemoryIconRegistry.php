@@ -35,6 +35,6 @@ final class InMemoryIconRegistry implements IconRegistryInterface
 
     public function get(string $name): Icon
     {
-        return $this->icons[$name] ?? throw new IconNotFoundException(sprintf('Icon "%s" not found.', $name));
+        return $this->icons[$name] ?? throw new IconNotFoundException(\sprintf('Icon "%s" not found.', $name));
     }
 }

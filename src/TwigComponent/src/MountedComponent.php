@@ -69,7 +69,7 @@ final class MountedComponent
     public function getExtraMetadata(string $key): mixed
     {
         if (!$this->hasExtraMetadata($key)) {
-            throw new \InvalidArgumentException(sprintf('No extra metadata for key "%s" found.', $key));
+            throw new \InvalidArgumentException(\sprintf('No extra metadata for key "%s" found.', $key));
         }
 
         return $this->extraMetadata[$key];

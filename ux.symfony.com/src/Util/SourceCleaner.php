@@ -59,7 +59,7 @@ class SourceCleaner
 
             // comment lines
             if (str_starts_with($line, '//')) {
-                return sprintf('<span class="hljs-comment">%s</span>', $line);
+                return \sprintf('<span class="hljs-comment">%s</span>', $line);
             }
 
             return '<span class="hljs-prompt">$ </span>'.$line;
@@ -71,7 +71,7 @@ class SourceCleaner
     public static function extractTwigBlock(string $content, string $targetTwigBlock, bool $showTwigExtends = true): string
     {
         $lines = explode("\n", $content);
-        $startBlock = sprintf('{%% block %s %%}', $targetTwigBlock);
+        $startBlock = \sprintf('{%% block %s %%}', $targetTwigBlock);
         $insideTargetBlock = false;
         $nestedBlockCount = 0;
         $blockLines = [];

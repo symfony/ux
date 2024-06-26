@@ -57,7 +57,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     private function executeHydrationTestCase(callable $testFactory, ?int $minPhpVersion = null): void
     {
         if (null !== $minPhpVersion && $minPhpVersion > \PHP_VERSION_ID) {
-            $this->markTestSkipped(sprintf('Test requires PHP version %s or higher.', $minPhpVersion));
+            $this->markTestSkipped(\sprintf('Test requires PHP version %s or higher.', $minPhpVersion));
         }
 
         // lazily create the test case so each case can prep its data with an isolated container
@@ -1157,7 +1157,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 {
                     return \DateTime::createFromFormat(
                         'Y-m-d',
-                        sprintf('%s-%s-%s', $data['year'], $data['month'], $data['day'])
+                        \sprintf('%s-%s-%s', $data['year'], $data['month'], $data['day'])
                     );
                 }
             })

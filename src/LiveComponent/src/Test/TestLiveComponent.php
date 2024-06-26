@@ -100,7 +100,7 @@ final class TestLiveComponent
         }
 
         if (!$actions) {
-            throw new \InvalidArgumentException(sprintf('Event "%s" does not exist on component "%s".', $event, $this->metadata->getName()));
+            throw new \InvalidArgumentException(\sprintf('Event "%s" does not exist on component "%s".', $event, $this->metadata->getName()));
         }
 
         if (1 === \count($listeners)) {
