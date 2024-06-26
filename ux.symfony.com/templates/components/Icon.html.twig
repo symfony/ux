@@ -2,8 +2,6 @@
     class: 'Icon Icon--' ~ name,
     role: 'img',
     'aria-hidden': 'true',
-    'aria-label': label,
+    'aria-label': label ?? name|humanize,
 } %}
-<i {{ attributes.defaults(default_attributes) }}>
-    {{- rawSvg|raw -}}
-</i>
+<twig:ux:icon name="{{ name }}" {{ ...attributes.defaults(default_attributes) }} />
