@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2024-06-22T16:07:10Z
+
+If you want to have less failing build when bumping the Twig-cs-fixer library version, you may prefer to use the `Symfony` standard (which use only rules explicitly described in the Twig/Symfony doc) and manually add the rules you want to use.
+
+The `Twig-CS-Fixer` standard (similar to the PHP-cs-fixer standard) is kinda opinionated and may add new rules in minor version (I'll try to always respect semantic versioning and never use new rule in a patch version). But since you're having a composer.lock (https://github.com/symfony/ux/blob/2.x/ux.symfony.com/composer.lock) you can also keep the current strategy of using the Twig-CS-Fixer.
+
+Be aware that if someday you don't like a rule you will be able to remove it with
+```
+->removeRule(TheRuleIDontLike::class);
+```
+in your config. Have fun with this tool, and I'm always looking for feedback/bug report/feature request :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-22T16:09:32Z
+
+> ->removeRule(TheRuleIDontLike::class);
+
+I used it yesterday because i was not sure about the HashQuote 😅
+
+But you're right, the safest option would probably be to use the Symfony standard as a base !
