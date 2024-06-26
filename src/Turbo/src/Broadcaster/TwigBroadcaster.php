@@ -21,19 +21,17 @@ use Twig\Environment;
  */
 final class TwigBroadcaster implements BroadcasterInterface
 {
-    private $broadcaster;
-    private $twig;
-    private $templatePrefixes;
-    private $idAccessor;
+    private IdAccessor $idAccessor;
 
     /**
      * @param array<string, string> $templatePrefixes
      */
-    public function __construct(BroadcasterInterface $broadcaster, Environment $twig, array $templatePrefixes = [], ?IdAccessor $idAccessor = null)
-    {
-        $this->broadcaster = $broadcaster;
-        $this->twig = $twig;
-        $this->templatePrefixes = $templatePrefixes;
+    public function __construct(
+        private BroadcasterInterface $broadcaster,
+        private Environment $twig,
+        private array $templatePrefixes = [],
+        ?IdAccessor $idAccessor = null,
+    ) {
         $this->idAccessor = $idAccessor ?? new IdAccessor();
     }
 

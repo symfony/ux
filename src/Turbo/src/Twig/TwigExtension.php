@@ -21,18 +21,15 @@ use Twig\TwigFunction;
  */
 final class TwigExtension extends AbstractExtension
 {
-    private $turboStreamListenRenderers;
-    private $default;
-
-    public function __construct(ContainerInterface $turboStreamListenRenderers, string $default)
-    {
-        $this->turboStreamListenRenderers = $turboStreamListenRenderers;
-        $this->default = $default;
+    public function __construct(
+        private ContainerInterface $turboStreamListenRenderers,
+        private string $default,
+    ) {
     }
 
     public function getFunctions(): iterable
     {
-        yield new TwigFunction('turbo_stream_listen', [$this, 'turboStreamListen'], ['needs_environment' => true, 'is_safe' => ['html']]);
+        yield new TwigFunction('turbo_stream_listen', $this->turboStreamListen(...), ['needs_environment' => true, 'is_safe' => ['html']]);
     }
 
     /**
@@ -40,10 +37,10 @@ final class TwigExtension extends AbstractExtension
      */
     public function turboStreamListen(Environment $env, $topic, ?string $transport = null): string
     {
-        $transport = $transport ?? $this->default;
+        $transport ??= $this->default;
 
         if (!$this->turboStreamListenRenderers->has($transport)) {
-            throw new \InvalidArgumentException(\sprintf('The Turbo stream transport "%s" doesn\'t exist.', $transport));
+            throw new \InvalidArgumentException(\sprintf('The Turbo stream transport "%s" does not exist.', $transport));
         }
 
         return $this->turboStreamListenRenderers->get($transport)->renderTurboStreamListen($env, $topic);
