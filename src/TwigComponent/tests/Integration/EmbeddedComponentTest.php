@@ -160,7 +160,9 @@ final class EmbeddedComponentTest extends KernelTestCase
 
     public function testAccessingTheHierarchyTooHighThrowsAnException(): void
     {
-        $this->expectExceptionMessage('Key "this" for array with keys "app, __embedded" does not exist.');
+        // Twig renamed "array" into "sequence" in 3.11
+        $this->expectExceptionMessage('Key "$this" for ');
+        $this->expectExceptionMessage('with keys "app, __embedded" does not exist.');
         self::render('embedded_component_hierarchy_exception.html.twig');
     }
 
