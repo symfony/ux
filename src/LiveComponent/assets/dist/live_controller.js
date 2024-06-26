@@ -1822,17 +1822,8 @@ class ExternalMutationTracker {
     }
     handleClassAttributeMutation(mutation, elementChanges) {
         const element = mutation.target;
-        const previousValue = mutation.oldValue;
-        const previousValues = previousValue ? previousValue.split(' ') : [];
-        previousValues.forEach((value, index) => {
-            const trimmedValue = value.trim();
-            if (trimmedValue !== '') {
-                previousValues[index] = trimmedValue;
-            }
-            else {
-                previousValues.splice(index, 1);
-            }
-        });
+        const previousValue = mutation.oldValue || '';
+        const previousValues = previousValue.match(/(\S+)/gu) || [];
         const newValues = [].slice.call(element.classList);
         const addedValues = newValues.filter((value) => !previousValues.includes(value));
         const removedValues = previousValues.filter((value) => !newValues.includes(value));
