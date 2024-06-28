@@ -128,22 +128,37 @@ Using with AssetMapper
 Using this library with AssetMapper is possible, but is currently experimental
 and may not be ready yet for production.
 
-When installing with AssetMapper, Flex will add a few new items to your ``importmap.php``
-file. 2 of the new items are::
+First, you need to define that you want to use the translator with AssetMapper in
+``config/packages/ux_translator.yaml``:
 
-    '@app/translations' => [
-        'path' => 'var/translations/index.js',
-    ],
-    '@app/translations/configuration' => [
-        'path' => 'var/translations/configuration.js',
-    ],
+.. code-block:: yaml
 
-These are then imported in your ``assets/translator.js`` file. This setup is
-very similar to working with WebpackEncore. However, the ``var/translations/index.js``
-file contains *every* translation in your app, which is not ideal for production
-and may even leak translations only meant for admin areas. Encore solves this via
-tree-shaking, but the AssetMapper component does not. There is not, yet, a way to
-solve this properly with the AssetMapper component.
+    symfony_ux_translator:
+        asset_mapper_mode: true
+
+This will instruct the bundle to dump the translations by domain as JavaScript modules. In your JavaScript files,
+register the domains that you need using the ``registerDomain`` function. To translate your messages, use the ``trans``
+function just like you would with the WebpackEncore version, but by passing the message key as the first argument.
+
+.. code-block:: javascript
+
+    // assets/my_file.js
+
+    import { registerDomain, trans } from './translator.js';
+    import MESSAGES from '../var/translations/domains/messages.js';
+    import OTHER_DOMAIN from '../var/translations/domains/other_domain.js';
+
+    // Register the domains that you need
+    registerDomain(MESSAGES);
+    registerDomain(OTHER_DOMAIN);
+
+    // Use the trans function to translate your messages
+    trans('custom_message_key');
+    trans('other_message_key', { count: 123, foo: 'bar' }, 'other_domain', 'fr');
+
+.. note::
+
+    If some domains are common to all pages, you can register them in ``assets/translator.js`` to prevent duplication.
 
 Backward Compatibility promise
 ------------------------------

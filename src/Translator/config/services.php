@@ -12,6 +12,9 @@
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
 use Symfony\UX\Translator\CacheWarmer\TranslationsCacheWarmer;
+use Symfony\UX\Translator\Dumper\Front\DomainModuleDumper;
+use Symfony\UX\Translator\Dumper\Front\TranslationConfigDumper;
+use Symfony\UX\Translator\Dumper\Front\MessageConstantDumper;
 use Symfony\UX\Translator\MessageParameters\Extractor\IntlMessageParametersExtractor;
 use Symfony\UX\Translator\MessageParameters\Extractor\MessageParametersExtractor;
 use Symfony\UX\Translator\MessageParameters\Printer\TypeScriptMessageParametersPrinter;
@@ -31,12 +34,26 @@ return static function (ContainerConfigurator $container): void {
 
         ->set('ux.translator.translations_dumper', TranslationsDumper::class)
             ->args([
-                null, // Dump directory
+                abstract_arg('Dump directory'),
+            ])
+        ->set('ux.translator.translations_dumper.message_constant', MessageConstantDumper::class)
+            ->args([
                 service('ux.translator.message_parameters.extractor.message_parameters_extractor'),
                 service('ux.translator.message_parameters.extractor.intl_message_parameters_extractor'),
                 service('ux.translator.message_parameters.printer.typescript_message_parameters_printer'),
                 service('filesystem'),
             ])
+            ->tag('ux.translator.front_translations_dumper')
+        ->set('ux.translator.translations_dumper.domain_module', DomainModuleDumper::class)
+            ->args([
+                service('filesystem'),
+            ])
+            ->tag('ux.translator.front_translations_dumper')
+        ->set('ux.translator.translations_dumper.configuration', TranslationConfigDumper::class)
+            ->args([
+                service('filesystem'),
+            ])
+            ->tag('ux.translator.front_translations_dumper')
 
         ->set('ux.translator.message_parameters.extractor.message_parameters_extractor', MessageParametersExtractor::class)
 

@@ -13,11 +13,11 @@ namespace Symfony\UX\Translator;
 
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\MessageCatalogueInterface;
+use Symfony\UX\Translator\Dumper\Front\AbstractFrontFileDumper;
+use Symfony\UX\Translator\Dumper\Front\FrontFileDumperInterface;
 use Symfony\UX\Translator\MessageParameters\Extractor\IntlMessageParametersExtractor;
 use Symfony\UX\Translator\MessageParameters\Extractor\MessageParametersExtractor;
 use Symfony\UX\Translator\MessageParameters\Printer\TypeScriptMessageParametersPrinter;
-
-use function Symfony\Component\String\s;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -30,148 +30,32 @@ use function Symfony\Component\String\s;
  * @phpstan-type Locale string
  * @phpstan-type MessageId string
  */
-class TranslationsDumper
+class TranslationsDumper extends AbstractFrontFileDumper
 {
+    private array $dumpers = [];
+
     public function __construct(
-        private string $dumpDir,
-        private MessageParametersExtractor $messageParametersExtractor,
-        private IntlMessageParametersExtractor $intlMessageParametersExtractor,
-        private TypeScriptMessageParametersPrinter $typeScriptMessageParametersPrinter,
-        private Filesystem $filesystem,
+        string $dumpDir,
+        private ?MessageParametersExtractor $messageParametersExtractor = null,
+        private ?IntlMessageParametersExtractor $intlMessageParametersExtractor = null,
+        private ?TypeScriptMessageParametersPrinter $typeScriptMessageParametersPrinter = null,
+        private ?Filesystem $filesystem = null,
     ) {
+        $this->setDumpDir($dumpDir);
+        if (isset($messageParametersExtractor, $intlMessageParametersExtractor, $typeScriptMessageParametersPrinter, $filesystem)) {
+            trigger_deprecation('symfony/ux-translator', '2.19', 'The "%s" class will not require the "%s", "%s", "%s" and "%s" arguments in version 3.0.', __CLASS__, MessageParametersExtractor::class, IntlMessageParametersExtractor::class, TypeScriptMessageParametersPrinter::class, Filesystem::class);
+        }
+    }
+
+    public function addDumper(FrontFileDumperInterface $dumper): void
+    {
+        $this->dumpers[] = $dumper;
     }
 
     public function dump(MessageCatalogueInterface ...$catalogues): void
     {
-        $this->filesystem->mkdir($this->dumpDir);
-        $this->filesystem->remove($this->dumpDir.'/index.js');
-        $this->filesystem->remove($this->dumpDir.'/index.d.ts');
-        $this->filesystem->remove($this->dumpDir.'/configuration.js');
-        $this->filesystem->remove($this->dumpDir.'/configuration.d.ts');
-
-        $translationsJs = '';
-        $translationsTs = "import { Message, NoParametersType } from '@symfony/ux-translator';\n\n";
-
-        foreach ($this->getTranslations(...$catalogues) as $translationId => $translationsByDomainAndLocale) {
-            $constantName = $this->generateConstantName($translationId);
-
-            $translationsJs .= \sprintf(
-                "export const %s = %s;\n",
-                $constantName,
-                json_encode([
-                    'id' => $translationId,
-                    'translations' => $translationsByDomainAndLocale,
-                ], \JSON_THROW_ON_ERROR),
-            );
-            $translationsTs .= \sprintf(
-                "export declare const %s: %s;\n",
-                $constantName,
-                $this->getTranslationsTypeScriptTypeDefinition($translationsByDomainAndLocale)
-            );
+        foreach ($this->dumpers as $dumper) {
+            $dumper->dump(...$catalogues);
         }
-
-        $this->filesystem->dumpFile($this->dumpDir.'/index.js', $translationsJs);
-        $this->filesystem->dumpFile($this->dumpDir.'/index.d.ts', $translationsTs);
-        $this->filesystem->dumpFile($this->dumpDir.'/configuration.js', \sprintf(
-            "export const localeFallbacks = %s;\n",
-            json_encode($this->getLocaleFallbacks(...$catalogues), \JSON_THROW_ON_ERROR)
-        ));
-        $this->filesystem->dumpFile($this->dumpDir.'/configuration.d.ts', <<<'TS'
-import { LocaleType } from '@symfony/ux-translator';
-
-export declare const localeFallbacks: Record<LocaleType, LocaleType>;
-TS
-        );
-    }
-
-    /**
-     * @return array<MessageId, array<Domain, array<Locale, string>>>
-     */
-    private function getTranslations(MessageCatalogueInterface ...$catalogues): array
-    {
-        $translations = [];
-
-        foreach ($catalogues as $catalogue) {
-            $locale = $catalogue->getLocale();
-            foreach ($catalogue->getDomains() as $domain) {
-                foreach ($catalogue->all($domain) as $id => $message) {
-                    $realDomain = $catalogue->has($id, $domain.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX)
-                        ? $domain.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX
-                        : $domain;
-
-                    $translations[$id] ??= [];
-                    $translations[$id][$realDomain] ??= [];
-                    $translations[$id][$realDomain][$locale] = $message;
-                }
-            }
-        }
-
-        return $translations;
-    }
-
-    /**
-     * @param array<Domain, array<Locale, string>> $translationsByDomainAndLocale
-     *
-     * @throws \Exception
-     */
-    private function getTranslationsTypeScriptTypeDefinition(array $translationsByDomainAndLocale): string
-    {
-        $parametersTypes = [];
-        $locales = [];
-
-        foreach ($translationsByDomainAndLocale as $domain => $translationsByLocale) {
-            foreach ($translationsByLocale as $locale => $translation) {
-                try {
-                    $parameters = str_ends_with($domain, MessageCatalogueInterface::INTL_DOMAIN_SUFFIX)
-                        ? $this->intlMessageParametersExtractor->extract($translation)
-                        : $this->messageParametersExtractor->extract($translation);
-                } catch (\Throwable $e) {
-                    throw new \Exception(\sprintf('Error while extracting parameters from message "%s" in domain "%s" and locale "%s".', $translation, $domain, $locale), previous: $e);
-                }
-
-                $parametersTypes[$domain] = $this->typeScriptMessageParametersPrinter->print($parameters);
-
-                $locales[] = $locale;
-            }
-        }
-
-        return \sprintf(
-            'Message<{ %s }, %s>',
-            implode(', ', array_reduce(
-                array_keys($parametersTypes),
-                fn (array $carry, string $domain) => [
-                    ...$carry,
-                    \sprintf("'%s': { parameters: %s }", $domain, $parametersTypes[$domain]),
-                ],
-                [],
-            )),
-            implode('|', array_map(fn (string $locale) => "'$locale'", array_unique($locales))),
-        );
-    }
-
-    private function getLocaleFallbacks(MessageCatalogueInterface ...$catalogues): array
-    {
-        $localesFallbacks = [];
-
-        foreach ($catalogues as $catalogue) {
-            $localesFallbacks[$catalogue->getLocale()] = $catalogue->getFallbackCatalogue()?->getLocale();
-        }
-
-        return $localesFallbacks;
-    }
-
-    private function generateConstantName(string $translationId): string
-    {
-        static $alreadyGenerated = [];
-
-        $prefix = 0;
-        do {
-            $constantName = s($translationId)->ascii()->snake()->upper()->replaceMatches('/^(\d)/', '_$1')->toString().($prefix > 0 ? '_'.$prefix : '');
-            ++$prefix;
-        } while (\in_array($constantName, $alreadyGenerated, true));
-
-        $alreadyGenerated[] = $constantName;
-
-        return $constantName;
     }
 }

@@ -28,6 +28,13 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->scalarNode('dump_directory')->defaultValue('%kernel.project_dir%/var/translations')->end()
+                ->booleanNode('asset_mapper_mode')
+                    ->info(<<<'EOF'
+                        If set to 'true', translations will be dumped as separated modules for each domain.
+                        This allows loading only the desired domains when using AssetMapper.
+                        EOF)
+                    ->defaultValue(false)
+                    ->end()
             ->end()
         ;
 

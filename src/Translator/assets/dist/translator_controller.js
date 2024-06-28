@@ -190,6 +190,7 @@ function getPluralizationRule(number, locale) {
 
 let _locale = null;
 let _localeFallbacks = {};
+let _registeredTranslations = {};
 function setLocale(locale) {
     _locale = locale;
 }
@@ -211,6 +212,9 @@ function trans(message, parameters = {}, domain = 'messages', locale = null) {
     }
     if (typeof locale === 'undefined' || null === locale) {
         locale = getLocale();
+    }
+    if (typeof message === 'string') {
+        message = getRegisteredMessage(message, domain);
     }
     if (typeof message.translations === 'undefined') {
         return message.id;
@@ -242,5 +246,27 @@ function trans(message, parameters = {}, domain = 'messages', locale = null) {
     }
     return message.id;
 }
+function registerDomain(domainTranslations) {
+    for (const [domainName, translationsByLocale] of Object.entries(domainTranslations)) {
+        _registeredTranslations[domainName] = translationsByLocale;
+    }
+}
+function getRegisteredMessage(key, domain) {
+    var _a;
+    var _b;
+    let message = { id: key, translations: {} };
+    for (const domainName of [domain, domain + '+intl-icu']) {
+        if (typeof _registeredTranslations[domainName] === 'undefined') {
+            continue;
+        }
+        for (const [locale, translations] of Object.entries(_registeredTranslations[domainName])) {
+            if (typeof translations[key] !== 'undefined') {
+                (_a = (_b = message.translations)[domainName]) !== null && _a !== void 0 ? _a : (_b[domainName] = {});
+                message.translations[domainName][locale] = translations[key];
+            }
+        }
+    }
+    return message;
+}
 
-export { getLocale, getLocaleFallbacks, setLocale, setLocaleFallbacks, trans };
+export { getLocale, getLocaleFallbacks, registerDomain, setLocale, setLocaleFallbacks, trans };
