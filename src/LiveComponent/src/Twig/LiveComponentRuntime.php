@@ -14,6 +14,7 @@ namespace Symfony\UX\LiveComponent\Twig;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
+use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Symfony\UX\TwigComponent\ComponentFactory;
 
 /**
@@ -28,6 +29,7 @@ final class LiveComponentRuntime
         private ComponentFactory $factory,
         private UrlGeneratorInterface $urlGenerator,
         private LiveComponentMetadataFactory $metadataFactory,
+        private StimulusHelper $stimulusHelper,
     ) {
     }
 
@@ -44,5 +46,30 @@ final class LiveComponentRuntime
         $metadata = $this->factory->metadataFor($mounted->getName());
 
         return $this->urlGenerator->generate($metadata->get('route'), $params, $metadata->get('url_reference_type'));
+    }
+
+    public function liveAction(string $actionName, array $parameters = [], array $modifiers = [], ?string $event = null): string
+    {
+        $attributes = $this->stimulusHelper->createStimulusAttributes();
+
+        $modifiers = array_map(static function (string $key, mixed $value) {
+            return $value ? \sprintf('%s(%s)', $key, $value) : $key;
+        }, array_keys($modifiers), array_values($modifiers));
+
+        $parts = explode(':', $actionName);
+
+        $parameters['action'] = $modifiers ? \sprintf('%s|%s', implode('|', $modifiers), $parts[0]) : $parts[0];
+
+        array_shift($parts);
+
+        $name = 'action';
+
+        if (\count($parts) > 0) {
+            $name .= ':'.implode(':', $parts);
+        }
+
+        $attributes->addAction('live', $name, $event, $parameters);
+
+        return (string) $attributes;
     }
 }

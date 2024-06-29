@@ -1106,6 +1106,17 @@ You can also add several "modifiers" to the action:
 The ``debounce(300)`` adds 300ms of "debouncing" before the action is executed.
 In other words, if you click really fast 5 times, only one Ajax request will be made!
 
+You can also use the ``live_action`` twig helper function to render the attributes:
+
+.. code-block:: html+twig
+
+    <button {{ live_action('resetMax') }}>Reset Min/Max</button>
+
+    {# with modifiers #}
+
+    <button {{ live_action('save', {}, {'debounce': 300}) }}>Save</button>
+
+
 Actions & Services
 ~~~~~~~~~~~~~~~~~~
 
@@ -1157,6 +1168,12 @@ You can also pass arguments to your action by adding each as a
             data-live-id-param="{{ item.id }}"
             data-live-item-name-param="CustomItem"
         >Add Item</button>
+    </form>
+
+    {# or #}
+
+    <form>
+        <button {{ live_action('addItem', {'id': item.id, 'itemName': 'CustomItem' })>Add Item</button>
     </form>
 
 In your component, to allow each argument to be passed, add

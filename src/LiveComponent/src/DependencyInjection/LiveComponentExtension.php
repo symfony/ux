@@ -175,6 +175,7 @@ final class LiveComponentExtension extends Extension implements PrependExtension
                 new Reference('ux.twig_component.component_factory'),
                 new Reference('router'),
                 new Reference('ux.live_component.metadata_factory'),
+                new Reference('stimulus.helper'),
             ])
             ->addTag('twig.runtime')
         ;
