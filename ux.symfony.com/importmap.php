@@ -72,20 +72,20 @@ return [
         'version' => '2.3.1',
     ],
     'react' => [
-        'version' => '18.2.0',
+        'version' => '18.3.1',
     ],
     'react-dom' => [
-        'version' => '18.2.0',
+        'version' => '18.3.1',
     ],
     'vue' => [
-        'version' => '3.4.21',
+        'version' => '3.4.31',
         'package_specifier' => 'vue/dist/vue.esm-bundler.js',
     ],
     'swup' => [
         'version' => '3.1.1',
     ],
     'delegate-it' => [
-        'version' => '6.0.1',
+        'version' => '6.1.0',
     ],
     '@swup/debug-plugin' => [
         'version' => '3.0.0',
@@ -103,7 +103,7 @@ return [
         'version' => '2.0.3',
     ],
     '@hotwired/turbo' => [
-        'version' => '8.0.3',
+        'version' => '8.0.4',
     ],
     'typed.js' => [
         'version' => '2.1.0',
@@ -112,49 +112,49 @@ return [
         'version' => '2.0.0',
     ],
     'chart.js/auto' => [
-        'version' => '4.4.2',
+        'version' => '4.4.3',
     ],
     'cropperjs' => [
-        'version' => '1.6.1',
+        'version' => '1.6.2',
     ],
     'svelte/transition' => [
-        'version' => '4.2.12',
+        'version' => '4.2.18',
     ],
     'svelte/animate' => [
-        'version' => '4.2.12',
+        'version' => '4.2.18',
     ],
     'svelte/internal' => [
-        'version' => '3.59.2',
+        'version' => '4.2.18',
     ],
     'intl-messageformat' => [
-        'version' => '10.5.11',
+        'version' => '10.5.14',
     ],
     '@vue/runtime-dom' => [
-        'version' => '3.4.21',
+        'version' => '3.4.31',
     ],
     '@vue/runtime-core' => [
-        'version' => '3.4.21',
+        'version' => '3.4.31',
     ],
     '@vue/shared' => [
-        'version' => '3.4.21',
+        'version' => '3.4.31',
     ],
     '@vue/reactivity' => [
-        'version' => '3.4.21',
+        'version' => '3.4.31',
     ],
     '@vue/compiler-dom' => [
-        'version' => '3.4.21',
+        'version' => '3.4.31',
     ],
     '@vue/compiler-core' => [
-        'version' => '3.4.21',
+        'version' => '3.4.31',
     ],
     'tslib' => [
-        'version' => '2.6.2',
+        'version' => '2.6.3',
     ],
     '@formatjs/icu-messageformat-parser' => [
-        'version' => '2.7.6',
+        'version' => '2.7.8',
     ],
     '@formatjs/icu-skeleton-parser' => [
-        'version' => '1.8.0',
+        'version' => '1.8.2',
     ],
     '@formatjs/fast-memoize' => [
         'version' => '2.2.0',
@@ -164,11 +164,11 @@ return [
         'type' => 'css',
     ],
     'cropperjs/dist/cropper.min.css' => [
-        'version' => '1.6.1',
+        'version' => '1.6.2',
         'type' => 'css',
     ],
     'scheduler' => [
-        'version' => '0.23.0',
+        'version' => '0.23.2',
     ],
     'tippy.js' => [
         'version' => '6.3.7',
