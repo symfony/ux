@@ -23,6 +23,8 @@ final readonly class Cookbook
         public string $description,
         public string $content,
         public array $tags,
+        public Person|string $author,
+        public \DateTimeImmutable|string $publishedAt,
     ) {
     }
 }

@@ -57,6 +57,8 @@ final class CookbookFactory
             description: $frontMatter['description'],
             content: $content,
             tags: $frontMatter['tags'],
+            author: $frontMatter['author'],
+            publishedAt: $frontMatter['published_at'],
         );
     }
 }
