@@ -21,17 +21,27 @@ export default class extends Controller {
 
     static targets = ['input', 'placeholder', 'preview', 'previewClearButton', 'previewFilename', 'previewImage'];
 
+    initialize() {
+        this.clear = this.clear.bind(this);
+        this.onInputChange = this.onInputChange.bind(this);
+    }
+
     connect() {
         // Reset when connecting to work with Turbolinks
         this.clear();
 
         // Clear on click on clear button
-        this.previewClearButtonTarget.addEventListener('click', () => this.clear());
+        this.previewClearButtonTarget.addEventListener('click', this.clear);
 
         // Listen on input change and display preview
-        this.inputTarget.addEventListener('change', (event) => this.onInputChange(event));
+        this.inputTarget.addEventListener('change', this.onInputChange);
 
         this.dispatchEvent('connect');
+    }
+
+    disconnect() {
+        this.previewClearButtonTarget.removeEventListener('click', this.clear);
+        this.inputTarget.removeEventListener('change', this.onInputChange);
     }
 
     clear() {
