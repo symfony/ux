@@ -11,6 +11,10 @@ class default_1 extends Controller {
         this.chart = null;
     }
     connect() {
+        if(Chart.getChart(this.element)) {
+            // Chart is already connected
+            return;
+        }
         if (!isChartInitialized) {
             isChartInitialized = true;
             this.dispatchEvent('init', {
@@ -19,10 +23,6 @@ class default_1 extends Controller {
         }
         if (!(this.element instanceof HTMLCanvasElement)) {
             throw new Error('Invalid element');
-        }
-        if(Chart.getChart(this.element)) {
-            // Chart is already connected
-            return;
         }
         const payload = this.viewValue;
         if (Array.isArray(payload.options) && 0 === payload.options.length) {
