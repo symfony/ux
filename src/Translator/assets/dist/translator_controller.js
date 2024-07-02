@@ -190,7 +190,7 @@ function getPluralizationRule(number, locale) {
 
 let _locale = null;
 let _localeFallbacks = {};
-let _registeredTranslations = {};
+const _registeredTranslations = {};
 function setLocale(locale) {
     _locale = locale;
 }
@@ -254,7 +254,7 @@ function registerDomain(domainTranslations) {
 function getRegisteredMessage(key, domain) {
     var _a;
     var _b;
-    let message = { id: key, translations: {} };
+    const message = { id: key, translations: {} };
     for (const domainName of [domain, domain + '+intl-icu']) {
         if (typeof _registeredTranslations[domainName] === 'undefined') {
             continue;
