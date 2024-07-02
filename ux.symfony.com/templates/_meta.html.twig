@@ -41,7 +41,7 @@
 
 {# META < META.SOCIAL < META.TWITTER #}
 {% set twitter = social|merge(meta.twitter ?? {}) %}
-{% set twitter_card = twitter.image.width|default(0) > 1200 ? 'summary_large_image' : 'summary' %}
+{% set twitter_card = twitter.image.width|default(0) >= 1200 ? 'summary_large_image' : 'summary' %}
 <meta name="twitter:title" content="{{ twitter.title|u.truncate(55, '...', false) }}">
 <meta name="twitter:card" content="{{ twitter.card ?? twitter_card }}">
 <meta name="twitter:description" content="{{ twitter.description|u.truncate(120, '...', false) }}">

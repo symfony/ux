@@ -14,6 +14,7 @@ namespace App\Controller\UxPackage;
 use App\Service\UxPackageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Asset\Packages;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,7 +26,7 @@ class CropperjsController extends AbstractController
 {
     public function __construct(
         private Packages $assets,
-        private string $projectDir,
+        #[Autowire('%kernel.project_dir%')] private string $projectDir,
     ) {
     }
 
