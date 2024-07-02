@@ -103,15 +103,15 @@ JAVASCRIPT;
             [,$fullDomain,$locale] = $matches;
 
             $variableName = s($fullDomain)->ascii()->snake()->append('_'.$locale)->toString();
-            $importString .= sprintf("import %s from '%s';\n", $variableName, $file);
+            $importString .= \sprintf("import %s from '%s';\n", $variableName, $file);
 
             $translationsByDomain[$fullDomain] ??= '';
-            $translationsByDomain[$fullDomain] .= sprintf("         '%s': %s,\n", $locale, $variableName);
+            $translationsByDomain[$fullDomain] .= \sprintf("         '%s': %s,\n", $locale, $variableName);
         }
 
         $dataString = '';
         foreach ($translationsByDomain as $fullDomain => $line) {
-            $dataString .= sprintf("    '%s': {\n%s    },\n", $fullDomain, $line);
+            $dataString .= \sprintf("    '%s': {\n%s    },\n", $fullDomain, $line);
         }
 
         $importString = rtrim($importString, "\n");
@@ -119,7 +119,7 @@ JAVASCRIPT;
 
         $this->filesystem->dumpFile(
             $this->dumpDir.'/domains/'.$domain.'.js',
-            sprintf($this->getModuleTemplate(), $importString, $dataString)
+            \sprintf($this->getModuleTemplate(), $importString, $dataString)
         );
     }
 
