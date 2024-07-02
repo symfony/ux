@@ -29,7 +29,7 @@ export default class extends Controller {
     private chart: Chart | null = null;
 
     connect() {
-        if(Chart.getChart(this.element)) {
+        if (this.element instanceof HTMLCanvasElement && Chart.getChart(this.element)) {
             // Chart is already connected
             return;
         }

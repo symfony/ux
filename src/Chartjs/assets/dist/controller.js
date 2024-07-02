@@ -11,8 +11,7 @@ class default_1 extends Controller {
         this.chart = null;
     }
     connect() {
-        if(Chart.getChart(this.element)) {
-            // Chart is already connected
+        if (this.element instanceof HTMLCanvasElement && Chart.getChart(this.element)) {
             return;
         }
         if (!isChartInitialized) {
