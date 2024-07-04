@@ -249,14 +249,18 @@ final class ComponentAttributesTest extends TestCase
     {
         $attributes = new ComponentAttributes([
             'class' => 'foo',
+            'data-class' => 'qux',
             'title:class' => 'bar',
             'title:span:class' => 'baz',
+            'data-title:class' => 'flo',
+            'data-title:data-class' => 'shi',
         ]);
 
-        $this->assertSame(' class="foo"', (string) $attributes);
+        $this->assertSame(' class="foo" data-class="qux"', (string) $attributes);
         $this->assertSame(' class="bar"', (string) $attributes->nested('title'));
         $this->assertSame(' class="baz"', (string) $attributes->nested('title')->nested('span'));
         $this->assertSame('', (string) $attributes->nested('invalid'));
+        $this->assertSame(' class="flo" data-class="shi"', (string) $attributes->nested('data-title'));
     }
 
     public function testConvertTrueAriaAttributeValue(): void
