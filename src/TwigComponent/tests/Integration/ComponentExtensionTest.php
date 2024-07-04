@@ -331,15 +331,15 @@ final class ComponentExtensionTest extends KernelTestCase
 
         $output = self::getContainer()
             ->get(Environment::class)
-            ->createTemplate('<twig:NestedAttributes class="foo" title:class="bar" title:span:class="baz" inner:class="foo" />')
+            ->createTemplate('<twig:NestedAttributes class="foo" title:class="bar" title:span:class="baz" inner:class="foo" inner:@class="qux" @class="vex" />')
             ->render()
         ;
 
         $this->assertSame(<<<HTML
-            <main class="foo">
+            <main class="foo" @class="vex">
                 <div class="bar">
                     <span class="baz">
-                        <div class="foo"/>
+                        <div class="foo" @class="qux"/>
 
                     </span>
                 </div>
