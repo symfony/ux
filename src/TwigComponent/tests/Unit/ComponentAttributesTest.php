@@ -251,15 +251,18 @@ final class ComponentAttributesTest extends TestCase
             'class' => 'foo',
             'data-class' => 'qux',
             'title:class' => 'bar',
+            'title:x-on::click' => '!close',
             'title:span:class' => 'baz',
             'data-title:class' => 'flo',
             'data-title:data-class' => 'shi',
+            'x-on::click' => '!open',
         ]);
 
-        $this->assertSame(' class="foo" data-class="qux"', (string) $attributes);
-        $this->assertSame(' class="bar"', (string) $attributes->nested('title'));
+        $this->assertSame(' class="foo" data-class="qux" x-on:click="!open"', (string) $attributes);
+        $this->assertSame(' class="bar" x-on:click="!close"', (string) $attributes->nested('title'));
         $this->assertSame(' class="baz"', (string) $attributes->nested('title')->nested('span'));
         $this->assertSame('', (string) $attributes->nested('invalid'));
+        $this->assertSame('', (string) $attributes->nested('x-on'));
         $this->assertSame(' class="flo" data-class="shi"', (string) $attributes->nested('data-title'));
     }
 

@@ -486,12 +486,12 @@ component use a ``PreMount`` hook::
    In its default configuration, the OptionsResolver treats all props.
    However, if more props are passed than the options defined in the OptionsResolver, an error will be prompted, indicating that one or more options do not exist.
    To avoid this, use the `ignoreUndefined()` method with `true`. See `ignore not defined options`_ for more info.
-   
+
       $resolver->setIgnoreUndefined(true);
-   
-   The major drawback of this configuration is that the OptionsResolver will remove every non-defined option when resolving data. 
+
+   The major drawback of this configuration is that the OptionsResolver will remove every non-defined option when resolving data.
    To maintain props that have not been defined within the OptionsResolver, combine the data from the hook with the resolved data.
-   
+
       return $resolver->resolve($data) + $data;
 
 
@@ -1126,6 +1126,15 @@ The nesting is recursive so you could potentially do something like this:
         row:label:class="ui-form-label"
         row:widget:class="ui-form-widget"
     />
+
+.. note::
+
+    If you require an attribute that actually includes a ``:`` (like ``x-on:click``),
+    you can escape the nested attribute separator by using a double colon (``x-on::click``).
+
+.. versionadded:: 2.19
+
+    The ability to escape the nested attribute separator was added in TwigComponents 2.19.
 
 Component with Complex Variants (CVA)
 -------------------------------------

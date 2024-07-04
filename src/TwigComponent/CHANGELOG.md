@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.19.0
+
+-   Allow escape nesting separator with `::` #1959
+
 ## 2.17.0
 
 -   Add nested attribute support #1405

@@ -21,7 +21,7 @@ use Symfony\WebpackEncoreBundle\Dto\AbstractStimulusDto;
  */
 final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Countable
 {
-    private const NESTED_REGEX = '#^([\w-]+):(.+)$#';
+    private const NESTED_REGEX = '#^([\w-]+):(?!:)(.+)$#';
 
     /** @var array<string,true> */
     private array $rendered = [];
@@ -63,6 +63,8 @@ final class ComponentAttributes implements \Stringable, \IteratorAggregate, \Cou
                 if (true === $value && str_starts_with($key, 'aria-')) {
                     $value = 'true';
                 }
+
+                $key = str_replace('::', ':', $key);
 
                 return match ($value) {
                     true => "{$carry} {$key}",
