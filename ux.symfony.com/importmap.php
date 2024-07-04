@@ -111,9 +111,6 @@ return [
     'snarkdown' => [
         'version' => '2.0.0',
     ],
-    'chart.js/auto' => [
-        'version' => '4.4.3',
-    ],
     'cropperjs' => [
         'version' => '1.6.2',
     ],
@@ -124,7 +121,7 @@ return [
         'version' => '4.2.18',
     ],
     'svelte/internal' => [
-        'version' => '4.2.18',
+        'version' => '3.59.2',
     ],
     'intl-messageformat' => [
         'version' => '10.5.14',
@@ -189,5 +186,8 @@ return [
     ],
     '@kurkle/color' => [
         'version' => '0.3.2',
+    ],
+    'chart.js' => [
+        'version' => '4.4.3',
     ],
 ];
