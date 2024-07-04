@@ -2,6 +2,10 @@
 
 {% block title %}Error {{ status_code }} - Symfony UX{% endblock %}
 
+{% block meta %}{% endblock %}
+
+{% block banner %}{% endblock %}
+
 {% block main %}
     <main style="display: grid; place-content: center;text-align: center;" >
         <div class="d-flex flex-column align-items-center position-relative" style="gap:.5rem;">
@@ -12,5 +16,3 @@
         </div>
     </main>
 {% endblock %}
-
-{% block footer %}{% endblock %}
