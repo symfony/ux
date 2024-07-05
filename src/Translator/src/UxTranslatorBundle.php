@@ -11,7 +11,9 @@
 
 namespace Symfony\UX\Translator;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\UX\Translator\DependencyInjection\TranslatorCompilerPass;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -25,5 +27,10 @@ class UxTranslatorBundle extends Bundle
     public function getPath(): string
     {
         return \dirname(__DIR__);
+    }
+
+    public function build(ContainerBuilder $container): void
+    {
+        $container->addCompilerPass(new TranslatorCompilerPass());
     }
 }
