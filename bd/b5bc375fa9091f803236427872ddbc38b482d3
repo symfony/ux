@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-07-04T17:51:52Z
+
+Currently, this PR only adds a failing test demonstrating the problem reported in #1839. I could use some help to fix!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-04T22:53:26Z
+
+In [TwigPreLexer](https://github.com/symfony/ux/blob/2.x/src/TwigComponent/src/Twig/TwigPreLexer.php) , i guess `consumeAttributeName` should use another regexp than the one in `consumeComponentName`
+
+But we need a lot of tests for this, as they cannot be class props !
