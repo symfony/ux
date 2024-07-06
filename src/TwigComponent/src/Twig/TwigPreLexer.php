@@ -157,7 +157,7 @@ class TwigPreLexer
                 $lastComponentName = $lastComponent['name'];
 
                 if ($closingComponentName !== $lastComponentName) {
-                    throw new SyntaxError("Expected closing tag '</twig:{$lastComponentName}>' but found '</twig:{$closingComponentName}>'", $this->line);
+                    throw new SyntaxError("Expected closing tag '</twig:{$lastComponentName}>' but found '</twig:{$closingComponentName}>'.", $this->line);
                 }
 
                 // we've reached the end of this component. If we're inside the
@@ -260,7 +260,7 @@ class TwigPreLexer
                     throw new SyntaxError(\sprintf('Expected "=" after ":%s" when parsing the "<twig:%s" syntax.', $key, $componentName), $this->line);
                 }
 
-                $attributes[] = \sprintf('%s: true', preg_match('/[-:]/', $key) ? "'$key'" : $key);
+                $attributes[] = \sprintf('%s: true', preg_match('/[-:@]/', $key) ? "'$key'" : $key);
                 $this->consumeWhitespace();
                 continue;
             }
@@ -275,7 +275,7 @@ class TwigPreLexer
                 $attributeValue = $this->consumeAttributeValue($quote);
             }
 
-            $attributes[] = \sprintf('%s: %s', preg_match('/[-:]/', $key) ? "'$key'" : $key, '' === $attributeValue ? "''" : $attributeValue);
+            $attributes[] = \sprintf('%s: %s', preg_match('/[-:@]/', $key) ? "'$key'" : $key, '' === $attributeValue ? "''" : $attributeValue);
 
             $this->expectAndConsumeChar($quote);
             $this->consumeWhitespace();
@@ -303,13 +303,13 @@ class TwigPreLexer
     private function consumeChar($validChars = null): string
     {
         if ($this->position >= $this->length) {
-            throw new SyntaxError('Unexpected end of input', $this->line);
+            throw new SyntaxError('Unexpected end of input.', $this->line);
         }
 
         $char = $this->input[$this->position];
 
         if (null !== $validChars && !\in_array($char, (array) $validChars, true)) {
-            throw new SyntaxError('Expected one of ['.implode('', (array) $validChars)."] but found '{$char}'.", $this->line);
+            throw new SyntaxError('Expected one of [.'.implode('', (array) $validChars)."] but found '{$char}'.", $this->line);
         }
 
         ++$this->position;
@@ -358,7 +358,7 @@ class TwigPreLexer
     private function expectAndConsumeChar(string $char): void
     {
         if (1 !== \strlen($char)) {
-            throw new \InvalidArgumentException('Expected a single character');
+            throw new \InvalidArgumentException('Expected a single character.');
         }
 
         if ($this->position >= $this->length) {

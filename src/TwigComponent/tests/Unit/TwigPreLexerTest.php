@@ -311,6 +311,16 @@ final class TwigPreLexerTest extends TestCase
             '{% component \'foobar\' with { \'my:attribute\': \'yo\' } %}{% endcomponent %}',
         ];
 
+        yield 'component_with_@_attribute' => [
+            '<twig:foobar @attribute="yo"></twig:foobar>',
+            '{% component \'foobar\' with { \'@attribute\': \'yo\' } %}{% endcomponent %}',
+        ];
+
+        yield 'component_with_nested_@_attribute' => [
+            '<twig:foobar foo:@attribute="yo"></twig:foobar>',
+            '{% component \'foobar\' with { \'foo:@attribute\': \'yo\' } %}{% endcomponent %}',
+        ];
+
         yield 'component_with_truthy_attribute' => [
             '<twig:foobar data-turbo-stream></twig:foobar>',
             '{% component \'foobar\' with { \'data-turbo-stream\': true } %}{% endcomponent %}',
