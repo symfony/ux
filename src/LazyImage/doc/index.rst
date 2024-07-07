@@ -205,6 +205,41 @@ Then in your template, add your controller to the HTML attribute:
     controller so that it is executed before and can listen on the
     ``lazy-image:connect`` event properly.
 
+Largest Contentful Paint (LCP) and Web performance considerations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+The `Largest Contentful Paint (LCP)`_ is a key metric for web performance, it measures the time
+it takes for the largest image or text block to be rendered on the page, and should be less 
+than 2.5 seconds.
+It's part of the `Core Web Vitals`_ and is used by Google to evaluate the user experience 
+of a website, and impacts the Search ranking.
+
+Using the Symfony UX LazyImage for your LCP image can be a good idea at first, 
+but in the reality it will lower your LCP score because:
+- `The progressive loading (through blurhash) is not taken into account in the LCP calculation`_
+- event if you eagerly load the LazyImage Stimulus controller, a small delay will be added to the 
+  LCP calculation
+- if you `didn't preload the image`_, the browser will waits for the Stimulus controller to 
+  load the image, which add another delay to the LCP calculation
+
+A solution is to not use the Stimulus controller for the LCP image, but use ``src`` and ``style`` 
+attributes instead, and preload the image as well: 
+
+.. code-block:: html+twig
+
+    <img
+        src="{{ preload(asset('image/large.png'), { as: 'image', fetchpriority: 'high' }) }}"
+        style="background-image: url('{{ data_uri_thumbnail('public/image/large.png', 20, 15) }}')"
+        fetchpriority="high"
+
+        {# Using BlurHash, the size is required #}
+        width="200"
+        height="150"
+    />
+    
+This way, the browser will display the BlurHash image as soon as possible, and will load the HD 
+image at the same time, without waiting for the Stimulus controller to be loaded.
+
 Backward Compatibility promise
 ------------------------------
 
@@ -218,3 +253,7 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`file_get_contents`: https://www.php.net/manual/en/function.file-get-contents.php
 .. _`Flysystem`: https://flysystem.thephpleague.com
+.. _`Largest Contentful Paint (LCP)`: https://web.dev/lcp/
+.. _`Core Web Vitals`: https://web.dev/vitals/
+.. _`The progressive loading (through blurhash) is not taken into account in the LCP calculation`: https://github.com/w3c/largest-contentful-paint/issues/71_
+.. _`didn't preload the image`: https://symfony.com/doc/current/web_link.html
