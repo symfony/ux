@@ -1,11 +1,19 @@
 import { Controller } from '@hotwired/stimulus';
 
 class default_1 extends Controller {
+    initialize() {
+        this.clear = this.clear.bind(this);
+        this.onInputChange = this.onInputChange.bind(this);
+    }
     connect() {
         this.clear();
-        this.previewClearButtonTarget.addEventListener('click', () => this.clear());
-        this.inputTarget.addEventListener('change', (event) => this.onInputChange(event));
+        this.previewClearButtonTarget.addEventListener('click', this.clear);
+        this.inputTarget.addEventListener('change', this.onInputChange);
         this.dispatchEvent('connect');
+    }
+    disconnect() {
+        this.previewClearButtonTarget.removeEventListener('click', this.clear);
+        this.inputTarget.removeEventListener('change', this.onInputChange);
     }
     clear() {
         this.inputTarget.value = '';

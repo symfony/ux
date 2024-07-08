@@ -7,7 +7,9 @@ export default class extends Controller {
     readonly previewFilenameTarget: HTMLDivElement;
     readonly previewImageTarget: HTMLDivElement;
     static targets: string[];
+    initialize(): void;
     connect(): void;
+    disconnect(): void;
     clear(): void;
     onInputChange(event: any): void;
     _populateImagePreview(file: Blob): void;
