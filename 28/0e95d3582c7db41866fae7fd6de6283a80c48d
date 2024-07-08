@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-06T06:26:39Z
+
+Thank you @SanderVerkuil !
+
+Could you maybe add a line or two in the documentation ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-06T06:28:13Z
+
+@maelanleborgne @Kocal  if you can just confirm, as you know more than me this package :) ?
+
+---------------------------------------------------------------------------
+
+by SanderVerkuil at 2024-07-06T07:25:26Z
+
+> Thank you @SanderVerkuil !
+>
+> Could you maybe add a line or two in the documentation ?
+
+Done! Added a small note next to the cache warmup, feel free to modify it as you see fit, or if it's unclear I'd be happy to hear!
