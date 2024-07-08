@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-07-06T16:50:41Z
+
+@aleho, is the failing translator test related to this change?
+
+---------------------------------------------------------------------------
+
+by aleho at 2024-07-06T20:07:28Z
+
+@kbond Afaik that's related to the bug introduced by a change to the string component (breaking various parts of Symfony and the UX demos too).
+
+(symfony/ux#1950 and symfony/symfony#57612)
