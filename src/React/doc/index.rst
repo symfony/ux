@@ -82,7 +82,7 @@ For example:
     {% extends 'base.html.twig' %}
 
     {% block body %}
-        <div {{ react_component('Hello', { 'fullName': number }) }}>
+        <div {{ react_component('Hello', { fullName: 'Fabien' }) }}>
             Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
         </div>
 
