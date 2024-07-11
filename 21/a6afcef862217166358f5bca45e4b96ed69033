@@ -1,0 +1,49 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-05T22:30:34Z
+
+> Why do you think we need an interface?
+
+I prefer exposing an interface than a Twig Extension + TwigComponent to be fair ... it's more future-proof. And the contract is already ensured so that would not change a thing i guess.
+
+> We don't have any plant for other IconRenderer?
+
+No, same for the Router, Serializer, FormBuilder, etc.. it makes testing and autowiring easier for users :)
+
+> And why user would need to create their own Renderer?
+
+Not create their own... but decorate :) I personnaly would like to do it easily (as i prefer to wrap my icons in span for instance)
+
+> I think this a bit to early for this abstraction
+
+Again, as we offer a form of contract with the TwigExtension, i think we should make this official (i mean, only one method is not much ^^)
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-06-14T15:12:15Z
+
+In my packages, I'd make `IconRenderer` autowireable but in Symfony core, I believe interfaces are preferred, even if there's only 1 implementation. It's easier for someone to decorate.
+
+@smnandre, is an implementation that handles aliases in config (like requested in #1767) what we'd add? I'd like to implement #1800 at some point, does this interface prevent this?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-14T15:20:36Z
+
+Nope it does not !
+
+Alias/config handling is on the way (started on one of my branches) and the interface is perfect to abstract this implementation i guess
+
+Regardind SVG symbol / sprites / reuses / etc... It can be either coded via this interface or a new explicit method call but nothing blocking here
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-06-26T14:42:07Z
+
+@WebMamba, have we adequately addressed your concerns?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-05T09:53:47Z
+
+@WebMamba  ?
