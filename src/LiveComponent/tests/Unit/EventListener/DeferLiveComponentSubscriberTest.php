@@ -36,6 +36,19 @@ class DeferLiveComponentSubscriberTest extends TestCase
         $this->assertArrayNotHasKey('loading', $event->getData());
     }
 
+    public function testLoadingAttributeIsNotExtractedWhenComponentIsNotLive()
+    {
+        $data = ['loading' => 'lazy'];
+        $event = new PostMountEvent(new \stdClass(), $data, new ComponentMetadata([]));
+        $event->setData($data);
+
+        $subscriber = new DeferLiveComponentSubscriber();
+        $subscriber->onPostMount($event);
+
+        $this->assertArrayNotHasKey('loading', $event->getExtraMetadata());
+        $this->assertArrayHasKey('loading', $event->getData());
+    }
+
     /**
      * @group legacy
      */
@@ -110,7 +123,7 @@ class DeferLiveComponentSubscriberTest extends TestCase
 
     private function createPostMountEvent(array $data): PostMountEvent
     {
-        $componentMetadata = new ComponentMetadata([]);
+        $componentMetadata = new ComponentMetadata(['live' => true]);
         $event = new PostMountEvent(new \stdClass(), $data, $componentMetadata);
         $event->setData($data);
 
