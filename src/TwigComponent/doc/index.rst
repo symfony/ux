@@ -483,17 +483,20 @@ component use a ``PreMount`` hook::
 
 .. note::
 
-   In its default configuration, the OptionsResolver treats all props.
-   However, if more props are passed than the options defined in the OptionsResolver, an error will be prompted, indicating that one or more options do not exist.
-   To avoid this, use the `ignoreUndefined()` method with `true`. See `ignore not defined options`_ for more info.
+    In its default configuration, the OptionsResolver treats all props.
+    However, if more props are passed than the options defined in the OptionsResolver,
+    an error will be prompted, indicating that one or more options do not exist.
+    To avoid this, use the ``ignoreUndefined()`` method with ``true``.
+    See `ignore not defined options`_ for more info::
    
-      $resolver->setIgnoreUndefined(true);
+        $resolver->setIgnoreUndefined(true);
    
-   The major drawback of this configuration is that the OptionsResolver will remove every non-defined option when resolving data. 
-   To maintain props that have not been defined within the OptionsResolver, combine the data from the hook with the resolved data.
+    The major drawback of this configuration is that the OptionsResolver will
+    remove every non-defined option when resolving data. To maintain props that
+    have not been defined within the OptionsResolver, combine the data from the
+    hook with the resolved data::
    
-      return $resolver->resolve($data) + $data;
-
+        return $resolver->resolve($data) + $data;
 
 The data returned from ``preMount()`` will be used as the props for mounting.
 
