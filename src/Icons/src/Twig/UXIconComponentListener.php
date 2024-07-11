@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Icons\Twig;
 
-use Symfony\UX\Icons\IconRenderer;
+use Symfony\UX\Icons\IconRendererInterface;
 use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
 
 /**
@@ -22,7 +22,7 @@ use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
 final class UXIconComponentListener
 {
     public function __construct(
-        private IconRenderer $iconRenderer,
+        private IconRendererInterface $iconRenderer,
     ) {
     }
 
