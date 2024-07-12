@@ -170,4 +170,17 @@ final class DeferLiveComponentSubscriberTest extends KernelTestCase
         $browser->assertElementCount('#count', 1);
         $browser->assertElementAttributeContains('#count', 'value', '7');
     }
+
+    public function testSubscriberDoesNotHandleTwigComponent(): void
+    {
+        $browser = $this->browser()
+            ->visit('/render-template/render_lazy_twig_component')
+            ->assertSuccessful();
+
+        $browser->assertElementCount('[loading="lazy"]', 1);
+        $browser->assertElementCount('[data-controller]', 0);
+
+        $componentDiv = $browser->crawler()->filter('div');
+        $this->assertSame('<div loading="lazy">FooBar</div>', trim($componentDiv->outerHtml()));
+    }
 }

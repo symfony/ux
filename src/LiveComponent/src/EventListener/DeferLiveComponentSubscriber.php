@@ -29,6 +29,10 @@ final class DeferLiveComponentSubscriber implements EventSubscriberInterface
     public function onPostMount(PostMountEvent $event): void
     {
         $data = $event->getData();
+        if (!$event->getMetadata()->get('live', false)) {
+            // Not a live component
+            return;
+        }
 
         if (\array_key_exists('defer', $data)) {
             trigger_deprecation('symfony/ux-live-component', '2.17', 'The "defer" attribute is deprecated and will be removed in 3.0. Use the "loading" attribute instead set to the value "defer".');
