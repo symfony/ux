@@ -109,7 +109,7 @@ EOF
         if (1 < \count($iconSets) && $prefix !== $iconSet['prefix']) {
             $choices = array_combine(array_keys($iconSets), array_column($iconSets, 'name'));
             $choice = $io->choice('Select an icon set', array_values($choices));
-            if (!$choice || false === $prefix = array_search($choice, $choices, true) || !is_string($prefix)) {
+            if (!$choice || !is_string($prefix = array_search($choice, $choices, true))) {
                 $io->error('No icon set selected.');
 
                 return Command::INVALID;
