@@ -293,7 +293,7 @@ prefix the attribute with ``:`` or use the normal ``{{ }}`` syntax:
     <twig:Alert message="hello!" user="{{ user.id }}" />
 
     // pass object, array, or anything you imagine
-    <twig:Alert :foo="['col' => ['foo', 'oof']]" />
+    <twig:Alert :foo="{col: ['foo', 'oof']}" />
 
 Don't forget that you can mix and match props with attributes that you
 want to render on the root element:
