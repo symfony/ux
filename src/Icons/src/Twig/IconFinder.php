@@ -43,7 +43,7 @@ final class IconFinder
 
         // Extract icon names from strings in app templates
         foreach ($this->templateFiles($this->twig->getLoader()) as $file) {
-            $contents = file_get_contents($file);
+            $contents = file_get_contents($file) ?: throw new \RuntimeException(sprintf('Unable to read file "%s".', $file));
             if (preg_match_all($pattern, $contents, $matches)) {
                 $found[] = array_map(fn ($res) => trim($res, '"\''), $matches[0]);
             }

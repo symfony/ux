@@ -16,8 +16,6 @@ use Symfony\UX\Icons\Exception\IconNotFoundException;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  *
- * @extends \IteratorAggregate<string>
- *
  * @internal
  */
 interface IconRegistryInterface

@@ -52,7 +52,8 @@ final class ImportIconCommand extends Command
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
-        $names = $input->getArgument('names');
+        /** @var list<string> $names */
+        $names = (array) $input->getArgument('names');
         $result = Command::SUCCESS;
 
         foreach ($names as $name) {
@@ -81,6 +82,7 @@ final class ImportIconCommand extends Command
 
             $this->registry->add(\sprintf('%s/%s', $prefix, $name), $svg);
 
+            /** @var array<string, string> $license */
             $license = $this->iconify->metadataFor($prefix)['license'];
 
             $io->text(\sprintf(

@@ -28,6 +28,9 @@ final class Iconify
     public const API_ENDPOINT = 'https://api.iconify.design';
 
     private HttpClientInterface $http;
+    /**
+     * @var \ArrayObject<string, array<string, mixed>>
+     */
     private \ArrayObject $sets;
 
     public function __construct(
@@ -42,6 +45,9 @@ final class Iconify
         $this->http = ScopingHttpClient::forBaseUri($http ?? HttpClient::create(), $endpoint);
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     public function metadataFor(string $prefix): array
     {
         return $this->sets()[$prefix] ?? throw new \RuntimeException(\sprintf('The icon prefix "%s" does not exist on iconify.design.', $prefix));
@@ -99,11 +105,17 @@ final class Iconify
         return $content;
     }
 
+    /**
+     * @return array<string, array<string, mixed>>
+     */
     public function getIconSets(): array
     {
         return $this->sets()->getArrayCopy();
     }
 
+    /**
+     * @return \ArrayObject<string, array<string, mixed>>
+     */
     public function searchIcons(string $prefix, string $query)
     {
         $response = $this->http->request('GET', '/search', [
@@ -116,6 +128,9 @@ final class Iconify
         return new \ArrayObject($response->toArray());
     }
 
+    /**
+     * @return \ArrayObject<string, array<string, mixed>>
+     */
     private function sets(): \ArrayObject
     {
         return $this->sets ??= $this->cache->get('ux-iconify-sets', function () {

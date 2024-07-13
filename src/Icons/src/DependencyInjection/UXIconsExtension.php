@@ -12,6 +12,8 @@
 namespace Symfony\UX\Icons\DependencyInjection;
 
 use Symfony\Component\AssetMapper\Event\PreAssetsCompileEvent;
+use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Builder\NodeBuilder;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\FileLocator;
@@ -64,17 +66,23 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
         return $builder;
     }
 
+    /**
+     * @param array<string, mixed> $config
+     */
     public function getConfiguration(array $config, ContainerBuilder $container): ConfigurationInterface
     {
         return $this;
     }
 
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void // @phpstan-ignore-line
+    /**
+     * @param array<string, mixed> $mergedConfig
+     */
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../../config'));
         $loader->load('services.php');
 
-        if (isset($container->getParameter('kernel.bundles')['TwigComponentBundle'])) {
+        if (is_array($kernelBundles = $container->getParameter('kernel.bundles')) && isset($kernelBundles['TwigComponentBundle'])) {
             $loader->load('twig_component.php');
         }
 
@@ -96,14 +104,16 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
             ->setArgument(1, $mergedConfig['default_icon_attributes'])
         ;
 
-        if ($mergedConfig['iconify']['enabled']) {
+        /** @var array<string, mixed> $iconifyConfig */
+        $iconifyConfig = $mergedConfig['iconify'];
+        if ($iconifyConfig['enabled']) {
             $loader->load('iconify.php');
 
             $container->getDefinition('.ux_icons.iconify')
-                ->setArgument(1, $mergedConfig['iconify']['endpoint'])
+                ->setArgument(1, $iconifyConfig['endpoint'])
             ;
 
-            if (!$mergedConfig['iconify']['on_demand']) {
+            if (!$iconifyConfig['on_demand']) {
                 $container->removeDefinition('.ux_icons.iconify_on_demand_registry');
             }
         }

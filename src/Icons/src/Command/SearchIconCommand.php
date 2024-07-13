@@ -79,7 +79,9 @@ EOF
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $io = new SymfonyStyle($input, $output);
+        /** @var string $prefix */
         $prefix = $input->getArgument('prefix');
+        /** @var string|null $name */
         $name = $input->getArgument('name');
 
         $iconSets = $this->findIconSets($prefix);
@@ -107,12 +109,18 @@ EOF
         if (1 < \count($iconSets) && $prefix !== $iconSet['prefix']) {
             $choices = array_combine(array_keys($iconSets), array_column($iconSets, 'name'));
             $choice = $io->choice('Select an icon set', array_values($choices));
-            if (!$choice || false === $prefix = array_search($choice, $choices, true)) {
+            if (!$choice || false === $prefix = array_search($choice, $choices, true) || !is_string($prefix)) {
                 $io->error('No icon set selected.');
 
                 return Command::INVALID;
             }
             $iconSet = $iconSets[$prefix];
+        }
+
+        if (!is_string($prefix) || !is_string($name)) {
+            $io->error('Invalid icon set or icon name.');
+
+            return Command::INVALID;
         }
 
         $io->write(\sprintf('Searching <comment>%s</comment> icons "<comment>%s</comment>"...', $iconSet['name'], $name));
@@ -168,6 +176,9 @@ EOF
         $table->render();
     }
 
+    /**
+     * @param array<string, array<string, mixed>> $iconSets
+     */
     private function renderIconSetTable(SymfonyStyle $io, array $iconSets): void
     {
         $results = [];
@@ -177,7 +188,7 @@ EOF
                 new TableCell($iconSet['total'], [
                     'style' => new TableCellStyle(['align' => 'right']),
                 ]),
-                $iconSet['license']['title'] ?? '',
+                (isset($iconSet['license']) && isset($iconSet['license']['title'])) ? $iconSet['license']['title'] : '',
                 $iconSet['prefix'],
                 $this->formatIcon($io, $prefix.':'.$iconSet['samples'][0], false),
             ];
@@ -190,7 +201,9 @@ EOF
         $iconSets = [];
         $query = mb_strtolower($query);
         foreach ($this->iconify->getIconSets() as $prefix => $iconSet) {
-            if (!str_contains($prefix, $query) && !str_contains(mb_strtolower($iconSet['name']), $query)) {
+            /** @var string $name */
+            $name = $iconSet['name'];
+            if (!str_contains($prefix, $query) && !str_contains(mb_strtolower($name), $query)) {
                 continue;
             }
             $iconSets[$prefix] = [...$iconSet, 'prefix' => $prefix];
@@ -205,8 +218,11 @@ EOF
             return;
         }
 
+        /**
+         * @var list<string> $prefixes
+         */
         $prefixes = array_keys($this->iconify->getIconSets());
-        if ($input->getArgument('prefix')) {
+        if (is_string($input->getArgument('prefix'))) {
             $prefixes = array_filter($prefixes, fn ($prefix) => str_contains($prefix, $input->getArgument('prefix')));
         }
 

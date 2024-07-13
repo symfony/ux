@@ -18,6 +18,9 @@ namespace Symfony\UX\Icons;
  */
 final class IconRenderer
 {
+    /**
+     * @param array<string, bool|string> $defaultIconAttributes
+     */
     public function __construct(
         private readonly IconRegistryInterface $registry,
         private readonly array $defaultIconAttributes = [],

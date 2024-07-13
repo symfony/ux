@@ -125,11 +125,20 @@ final class Icon implements \Stringable
             throw new \RuntimeException(\sprintf('The icon file "%s" contains an empty SVG.', $filename));
         }
 
-        $attributes = array_map(static fn (\DOMAttr $a) => $a->value, [...$svgElement->attributes]);
+        /**
+         * @var \DOMAttr[] $svgAttributes
+         */
+        $svgAttributes = $svgElement->attributes;
+
+        $attributes = array_map(static fn (\DOMAttr $a) => $a->value, [...$svgAttributes]);
 
         return new self($innerSvg, $attributes);
     }
 
+    /**
+     * @param string $innerSvg
+     * @param array<string, bool|string> $attributes
+     */
     public function __construct(
         private readonly string $innerSvg,
         private readonly array $attributes = [],
@@ -207,6 +216,10 @@ final class Icon implements \Stringable
         return [$this->innerSvg, $this->attributes];
     }
 
+    /**
+     * @param array{0: string, 1: array<string, bool|string>} $data
+
+     */
     public function __unserialize(array $data): void
     {
         [$this->innerSvg, $this->attributes] = $data;

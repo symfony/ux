@@ -81,6 +81,7 @@ final class LockIconsCommand extends Command
 
             $this->registry->add(\sprintf('%s/%s', $prefix, $name), $svg);
 
+            /** @var array<string, string> $license */
             $license = $this->iconify->metadataFor($prefix)['license'];
             ++$count;
 
