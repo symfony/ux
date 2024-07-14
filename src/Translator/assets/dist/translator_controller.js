@@ -5,7 +5,7 @@ function formatIntl(id, parameters = {}, locale) {
         return '';
     }
     const intlMessage = new IntlMessageFormat(id, [locale.replace('_', '-')], undefined, { ignoreTag: true });
-    parameters = Object.assign({}, parameters);
+    parameters = { ...parameters };
     Object.entries(parameters).forEach(([key, value]) => {
         if (key.includes('%') || key.includes('{')) {
             delete parameters[key];

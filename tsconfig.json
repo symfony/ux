@@ -7,7 +7,7 @@
         "rootDir": "src",
         "strict": true,
         "strictPropertyInitialization": false,
-        "target": "es2017",
+        "target": "es2021",
         "removeComments": true,
         "outDir": "types",
         "baseUrl": ".",

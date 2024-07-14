@@ -441,16 +441,16 @@ class ValueStore {
         return true;
     }
     getOriginalProps() {
-        return Object.assign({}, this.props);
+        return { ...this.props };
     }
     getDirtyProps() {
-        return Object.assign({}, this.dirtyProps);
+        return { ...this.dirtyProps };
     }
     getUpdatedPropsFromParent() {
-        return Object.assign({}, this.updatedPropsFromParent);
+        return { ...this.updatedPropsFromParent };
     }
     flushDirtyPropsToPending() {
-        this.pendingProps = Object.assign({}, this.dirtyProps);
+        this.pendingProps = { ...this.dirtyProps };
         this.dirtyProps = {};
     }
     reinitializeAllProps(props) {
@@ -459,7 +459,7 @@ class ValueStore {
         this.pendingProps = {};
     }
     pushPendingPropsBackToDirty() {
-        this.dirtyProps = Object.assign(Object.assign({}, this.pendingProps), this.dirtyProps);
+        this.dirtyProps = { ...this.pendingProps, ...this.dirtyProps };
         this.pendingProps = {};
     }
     storeNewPropsFromParent(props) {
@@ -1905,11 +1905,10 @@ class Component {
         this.id = id;
         this.listeners = new Map();
         listeners.forEach((listener) => {
-            var _a;
             if (!this.listeners.has(listener.event)) {
                 this.listeners.set(listener.event, []);
             }
-            (_a = this.listeners.get(listener.event)) === null || _a === void 0 ? void 0 : _a.push(listener.action);
+            this.listeners.get(listener.event)?.push(listener.action);
         });
         this.valueStore = new ValueStore(props);
         this.unsyncedInputsTracker = new UnsyncedInputsTracker(this, elementDriver);
@@ -2040,14 +2039,13 @@ class Component {
         this.valueStore.flushDirtyPropsToPending();
         this.isRequestPending = false;
         this.backendRequest.promise.then(async (response) => {
-            var _a;
             const backendResponse = new BackendResponse(response);
             const html = await backendResponse.getBody();
             for (const input of Object.values(this.pendingFiles)) {
                 input.value = '';
             }
             const headers = backendResponse.response.headers;
-            if (!((_a = headers.get('Content-Type')) === null || _a === void 0 ? void 0 : _a.includes('application/vnd.live-component+html')) && !headers.get('X-Live-Redirect')) {
+            if (!headers.get('Content-Type')?.includes('application/vnd.live-component+html') && !headers.get('X-Live-Redirect')) {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
                 this.hooks.triggerHook('response:error', backendResponse, controls);
@@ -2427,9 +2425,8 @@ class LoadingPlugin {
             targetedModels.push(modifier.value);
         });
         directive.modifiers.forEach((modifier) => {
-            var _a;
             if (validModifiers.has(modifier.name)) {
-                const callable = (_a = validModifiers.get(modifier.name)) !== null && _a !== void 0 ? _a : (() => { });
+                const callable = validModifiers.get(modifier.name) ?? (() => { });
                 callable(modifier);
                 return;
             }
@@ -2764,7 +2761,7 @@ function toQueryString(data) {
             }
             else if (null !== iValue) {
                 if (typeof iValue === 'object') {
-                    entries = Object.assign(Object.assign({}, entries), buildQueryStringEntries(iValue, entries, key));
+                    entries = { ...entries, ...buildQueryStringEntries(iValue, entries, key) };
                 }
                 else {
                     entries[key] = encodeURIComponent(iValue)
@@ -2913,16 +2910,14 @@ class LazyPlugin {
         this.intersectionObserver = null;
     }
     attachToComponent(component) {
-        var _a;
-        if ('lazy' !== ((_a = component.element.attributes.getNamedItem('loading')) === null || _a === void 0 ? void 0 : _a.value)) {
+        if ('lazy' !== component.element.attributes.getNamedItem('loading')?.value) {
             return;
         }
         component.on('connect', () => {
             this.getObserver().observe(component.element);
         });
         component.on('disconnect', () => {
-            var _a;
-            (_a = this.intersectionObserver) === null || _a === void 0 ? void 0 : _a.unobserve(component.element);
+            this.intersectionObserver?.unobserve(component.element);
         });
     }
     getObserver() {
@@ -2976,7 +2971,7 @@ class LiveControllerDefault extends Controller {
             throw new Error(`No action name provided on element: ${getElementAsTagText(event.currentTarget)}. Did you forget to add the "data-live-action-param" attribute?`);
         }
         const rawAction = params.action;
-        const actionArgs = Object.assign({}, params);
+        const actionArgs = { ...params };
         delete actionArgs.action;
         const directives = parseDirectives(rawAction);
         let debounce = false;
@@ -3003,9 +2998,8 @@ class LiveControllerDefault extends Controller {
                 }
             });
             directive.modifiers.forEach((modifier) => {
-                var _a;
                 if (validModifiers.has(modifier.name)) {
-                    const callable = (_a = validModifiers.get(modifier.name)) !== null && _a !== void 0 ? _a : (() => { });
+                    const callable = validModifiers.get(modifier.name) ?? (() => { });
                     callable(modifier);
                     return;
                 }
@@ -3056,7 +3050,7 @@ class LiveControllerDefault extends Controller {
             throw new Error(`No event name provided on element: ${getElementAsTagText(event.currentTarget)}. Did you forget to add the "data-live-event-param" attribute?`);
         }
         const eventInfo = params.event;
-        const eventArgs = Object.assign({}, params);
+        const eventArgs = { ...params };
         delete eventArgs.event;
         const directives = parseDirectives(eventInfo);
         const emits = [];
@@ -3133,7 +3127,6 @@ class LiveControllerDefault extends Controller {
         this.updateModelFromElementEvent(target, 'change');
     }
     updateModelFromElementEvent(element, eventName) {
-        var _a;
         if (!elementBelongsToThisComponent(element, this.component)) {
             return;
         }
@@ -3142,7 +3135,7 @@ class LiveControllerDefault extends Controller {
         }
         if (element instanceof HTMLInputElement && element.type === 'file') {
             const key = element.name;
-            if ((_a = element.files) === null || _a === void 0 ? void 0 : _a.length) {
+            if (element.files?.length) {
                 this.pendingFiles[key] = element;
             }
             else if (this.pendingFiles[key]) {
