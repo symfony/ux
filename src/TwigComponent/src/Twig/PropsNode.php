@@ -73,7 +73,23 @@ class PropsNode extends Node
                 ->raw(";\n")
                 ->outdent()
                 ->write('}')
-                ->write("\n");
+                ->write("\n")
+            ;
+
+            // overwrite the context value if a props with a similar name and a default value exist
+            if ($this->hasNode($name)) {
+                $compiler
+                    ->write('if (isset($context[\'__context\'][\''.$name.'\'])) {')
+                    ->raw("\n")
+                    ->indent()
+                    ->write('$context[\''.$name.'\'] = ')
+                    ->subcompile($this->getNode($name))
+                    ->raw(";\n")
+                    ->outdent()
+                    ->write('}')
+                    ->raw("\n")
+                ;
+            }
         }
 
         $compiler
@@ -94,20 +110,5 @@ class PropsNode extends Node
             ->write('}')
             ->raw("\n")
         ;
-
-        // overwrite the context value if a props with a similar name and a default value exist
-        if ($this->hasNode($name)) {
-            $compiler
-                ->write('if (isset($context[\'__context\'][\''.$name.'\'])) {')
-                ->raw("\n")
-                ->indent()
-                ->write('$context[\''.$name.'\'] = ')
-                ->subcompile($this->getNode($name))
-                ->raw(";\n")
-                ->outdent()
-                ->write('}')
-                ->raw("\n")
-            ;
-        }
     }
 }
