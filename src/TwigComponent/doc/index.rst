@@ -295,6 +295,18 @@ prefix the attribute with ``:`` or use the normal ``{{ }}`` syntax:
     // pass object, array, or anything you imagine
     <twig:Alert :foo="['col' => ['foo', 'oof']]" />
 
+Boolean props require using the dynamic syntax:
+
+.. code-block:: html+twig
+
+    {# in this example, the 'false' value is passed as a string
+       (so it's converted automatically to the true boolean value) #}
+    <twig:Alert message="..." withCloseButton="false" />
+
+    {# in the following examples, the 'false' value is passed as a boolean property #}
+    <twig:Alert message="..." :withCloseButton="false" />
+    <twig:Alert message="..." withCloseButton="{{ false }}" />
+
 Don't forget that you can mix and match props with attributes that you
 want to render on the root element:
 
