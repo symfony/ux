@@ -25,6 +25,8 @@ export type ParametersOf<M, D extends DomainType> = M extends Message<infer Tran
         : never
     : never;
 
+export type RegisteredTranslationsType = Record<DomainType, Record<LocaleType, Record<string, string>>>;
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export interface Message<Translations extends TranslationsType, Locale extends LocaleType> {
     id: string;
@@ -40,6 +42,8 @@ import { format } from './formatters/formatter';
 
 let _locale: LocaleType | null = null;
 let _localeFallbacks: Record<LocaleType, LocaleType> = {};
+
+const _registeredTranslations: RegisteredTranslationsType = {};
 
 export function setLocale(locale: LocaleType | null) {
     _locale = locale;
@@ -113,7 +117,7 @@ export function trans<
         : [message: M, parameters: P, domain?: RemoveIntlIcuSuffix<D>, locale?: LocaleOf<M>]
 ): string;
 export function trans<
-    M extends Message<TranslationsType, LocaleType>,
+    M extends Message<TranslationsType, LocaleType> | string,
     D extends DomainsOf<M>,
     P extends ParametersOf<M, D>
 >(
@@ -128,6 +132,10 @@ export function trans<
 
     if (typeof locale === 'undefined' || null === locale) {
         locale = getLocale() as LocaleOf<M>;
+    }
+
+    if (typeof message === 'string') {
+        message = getRegisteredMessage(message, domain);
     }
 
     if (typeof message.translations === 'undefined') {
@@ -165,4 +173,29 @@ export function trans<
     }
 
     return message.id;
+}
+
+export function registerDomain(domainTranslations: RegisteredTranslationsType) {
+    for (const [domainName, translationsByLocale] of Object.entries(domainTranslations)) {
+        _registeredTranslations[domainName] = translationsByLocale;
+    }
+}
+
+function getRegisteredMessage(key: string, domain: string): Message<TranslationsType, LocaleType> {
+    const message: Message<TranslationsType, LocaleType> = { id: key, translations: {} };
+
+    for (const domainName of [domain, domain + '+intl-icu']) {
+        if (typeof _registeredTranslations[domainName] === 'undefined') {
+            continue;
+        }
+
+        for (const [locale, translations] of Object.entries(_registeredTranslations[domainName])) {
+            if (typeof translations[key] !== 'undefined') {
+                message.translations[domainName] ??= {};
+                message.translations[domainName][locale] = translations[key];
+            }
+        }
+    }
+
+    return message;
 }

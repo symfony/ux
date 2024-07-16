@@ -9,19 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Translator\Tests;
+namespace Symfony\UX\Translator\Tests\Dumper\Front;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\UX\Translator\Dumper\Front\MessageConstantDumper;
 use Symfony\UX\Translator\MessageParameters\Extractor\IntlMessageParametersExtractor;
 use Symfony\UX\Translator\MessageParameters\Extractor\MessageParametersExtractor;
 use Symfony\UX\Translator\MessageParameters\Printer\TypeScriptMessageParametersPrinter;
-use Symfony\UX\Translator\TranslationsDumper;
 
-class TranslationsDumperTest extends TestCase
+class MessageConstantDumperTest extends TestCase
 {
     protected static $translationsDumpDir;
+    protected static $fixturesDir = __DIR__.'/../../fixtures';
 
     public static function setUpBeforeClass(): void
     {
@@ -35,73 +36,17 @@ class TranslationsDumperTest extends TestCase
 
     public function testDump(): void
     {
-        $translationsDumper = new TranslationsDumper(
-            self::$translationsDumpDir,
+        $translationsDumper = new MessageConstantDumper(
             new MessageParametersExtractor(),
             new IntlMessageParametersExtractor(),
             new TypeScriptMessageParametersPrinter(),
             new Filesystem(),
         );
+        $translationsDumper->setDumpDir(self::$translationsDumpDir);
 
         $translationsDumper->dump(
-            new MessageCatalogue('en', [
-                'messages+intl-icu' => [
-                    'notification.comment_created' => 'Your post received a comment!',
-                    'notification.comment_created.description' => 'Your post "{title}" has received a new comment. You can read the comment by following <a href="{link}">this link</a>',
-                    'post.num_comments' => '{count, plural, one {# comment} other {# comments}}',
-                    'post.num_comments.' => '{count, plural, one {# comment} other {# comments}} (should not conflict with the previous one.)',
-                ],
-                'messages' => [
-                    'symfony.great' => 'Symfony is awesome!',
-                    'symfony.what' => 'Symfony is %what%!',
-                    'symfony.what!' => 'Symfony is %what%! (should not conflict with the previous one.)',
-                    'symfony.what.' => 'Symfony is %what%. (should also not conflict with the previous one.)',
-                    'apples.count.0' => 'There is 1 apple|There are %count% apples',
-                    'apples.count.1' => '{1} There is one apple|]1,Inf] There are %count% apples',
-                    'apples.count.2' => '{0} There are no apples|{1} There is one apple|]1,Inf] There are %count% apples',
-                    'apples.count.3' => 'one: There is one apple|more: There are %count% apples',
-                    'apples.count.4' => 'one: There is one apple|more: There are more than one apple',
-                    'what.count.1' => '{1} There is one %what%|]1,Inf] There are %count% %what%',
-                    'what.count.2' => '{0} There are no %what%|{1} There is one %what%|]1,Inf] There are %count% %what%',
-                    'what.count.3' => 'one: There is one %what%|more: There are %count% %what%',
-                    'what.count.4' => 'one: There is one %what%|more: There are more than one %what%',
-                    'animal.dog-cat' => 'Dog and cat',
-                    'animal.dog_cat' => 'Dog and cat (should not conflict with the previous one)',
-                    '0starts.with.numeric' => 'Key starts with numeric char',
-                ],
-                'foobar' => [
-                    'post.num_comments' => 'There is 1 comment|There are %count% comments',
-                ],
-            ]),
-            new MessageCatalogue('fr', [
-                'messages+intl-icu' => [
-                    'notification.comment_created' => 'Votre article a reçu un commentaire !',
-                    'notification.comment_created.description' => 'Votre article "{title}" a reçu un nouveau commentaire. Vous pouvez lire le commentaire en suivant <a href="{link}">ce lien</a>',
-                    'post.num_comments' => '{count, plural, one {# commentaire} other {# commentaires}}',
-                    'post.num_comments.' => '{count, plural, one {# commentaire} other {# commentaires}} (ne doit pas rentrer en conflit avec la traduction précédente)',
-                ],
-                'messages' => [
-                    'symfony.great' => 'Symfony est génial !',
-                    'symfony.what' => 'Symfony est %what%!',
-                    'symfony.what!' => 'Symfony est %what%! (ne doit pas rentrer en conflit avec la traduction précédente)',
-                    'symfony.what.' => 'Symfony est %what%. (ne doit pas non plus rentrer en conflit avec la traduction précédente)',
-                    'apples.count.0' => 'Il y a 1 pomme|Il y a %count% pommes',
-                    'apples.count.1' => '{1} Il y a une pomme|]1,Inf] Il y a %count% pommes',
-                    'apples.count.2' => '{0} Il n\'y a pas de pommes|{1} Il y a une pomme|]1,Inf] Il y a %count% pommes',
-                    'apples.count.3' => 'one: Il y a une pomme|more: Il y a %count% pommes',
-                    'apples.count.4' => 'one: Il y a une pomme|more: Il y a plus d\'une pomme',
-                    'what.count.1' => '{1} Il y a une %what%|]1,Inf] Il y a %count% %what%',
-                    'what.count.2' => '{0} Il n\'y a pas de %what%|{1} Il y a une %what%|]1,Inf] Il y a %count% %what%',
-                    'what.count.3' => 'one: Il y a une %what%|more: Il y a %count% %what%',
-                    'what.count.4' => 'one: Il y a une %what%|more: Il y a more than one %what%',
-                    'animal.dog-cat' => 'Chien et chat',
-                    'animal.dog_cat' => 'Chien et chat (ne doit pas rentrer en conflit avec la traduction précédente)',
-                    '0starts.with.numeric' => 'La touche commence par un caractère numérique',
-                ],
-                'foobar' => [
-                    'post.num_comments' => 'Il y a 1 comment|Il y a %count% comments',
-                ],
-            ])
+            new MessageCatalogue('en', include self::$fixturesDir.'/catalogue_en.php'),
+            new MessageCatalogue('fr', include self::$fixturesDir.'/catalogue_fr.php')
         );
 
         $this->assertFileExists(self::$translationsDumpDir.'/index.js');

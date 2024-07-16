@@ -11,6 +11,7 @@ export type LocaleOf<M> = M extends Message<TranslationsType, infer Locale> ? Lo
 export type ParametersOf<M, D extends DomainType> = M extends Message<infer Translations, LocaleType> ? Translations[D] extends {
     parameters: infer Parameters;
 } ? Parameters : never : never;
+export type RegisteredTranslationsType = Record<DomainType, Record<LocaleType, Record<string, string>>>;
 export interface Message<Translations extends TranslationsType, Locale extends LocaleType> {
     id: string;
     translations: {
@@ -24,3 +25,4 @@ export declare function getLocale(): LocaleType;
 export declare function setLocaleFallbacks(localeFallbacks: Record<LocaleType, LocaleType>): void;
 export declare function getLocaleFallbacks(): Record<LocaleType, LocaleType>;
 export declare function trans<M extends Message<TranslationsType, LocaleType>, D extends DomainsOf<M>, P extends ParametersOf<M, D>>(...args: P extends NoParametersType ? [message: M, parameters?: P, domain?: RemoveIntlIcuSuffix<D>, locale?: LocaleOf<M>] : [message: M, parameters: P, domain?: RemoveIntlIcuSuffix<D>, locale?: LocaleOf<M>]): string;
+export declare function registerDomain(domainTranslations: RegisteredTranslationsType): void;

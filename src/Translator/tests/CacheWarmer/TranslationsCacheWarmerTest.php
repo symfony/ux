@@ -15,6 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\TranslatorBag;
 use Symfony\UX\Translator\CacheWarmer\TranslationsCacheWarmer;
+use Symfony\UX\Translator\Dumper\Front\FrontFileDumperInterface;
 use Symfony\UX\Translator\TranslationsDumper;
 
 final class TranslationsCacheWarmerTest extends TestCase
@@ -41,16 +42,17 @@ final class TranslationsCacheWarmerTest extends TestCase
                 ],
             ])
         );
-
-        $translationsDumperMock = $this->createMock(TranslationsDumper::class);
-        $translationsDumperMock
-            ->expects($this->once())
+        $wrappedTranslationsDumper = $this->createMock(FrontFileDumperInterface::class);
+        $wrappedTranslationsDumper->expects($this->once())
             ->method('dump')
             ->with(...$translatorBag->getCatalogues());
 
+        $translationsDumper = new TranslationsDumper('dumpDir');
+        $translationsDumper->addDumper($wrappedTranslationsDumper);
+
         $translationsCacheWarmer = new TranslationsCacheWarmer(
             $translatorBag,
-            $translationsDumperMock
+            $translationsDumper,
         );
 
         $translationsCacheWarmer->warmUp(self::$cacheDir);

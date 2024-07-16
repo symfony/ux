@@ -17,6 +17,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\UX\Translator\Dumper\Front\FrontFileDumperInterface;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -35,7 +36,21 @@ class UxTranslatorExtension extends Extension implements PrependExtensionInterfa
         $loader = (new PhpFileLoader($container, new FileLocator(\dirname(__DIR__).'/../config')));
         $loader->load('services.php');
 
-        $container->getDefinition('ux.translator.translations_dumper')->setArgument(0, $config['dump_directory']);
+        $dumpDir = $config['dump_directory'];
+        $assetMapperMode = $config['asset_mapper_mode'];
+
+        $translationDumper = $container->getDefinition('ux.translator.translations_dumper');
+        $translationDumper->setArgument(0, $dumpDir);
+        if ($assetMapperMode) {
+            $translationDumper->addMethodCall('addDumper', [$container->getDefinition('ux.translator.translations_dumper.domain_module')]);
+        }
+
+        $translationDumper->addMethodCall('addDumper', [$container->getDefinition('ux.translator.translations_dumper.message_constant')]);
+        $translationDumper->addMethodCall('addDumper', [$container->getDefinition('ux.translator.translations_dumper.configuration')]);
+
+        foreach ($container->findTaggedServiceIds('ux.translator.front_translations_dumper') as $id => $attributes) {
+            $container->getDefinition($id)->addMethodCall('setDumpDir', [$dumpDir]);
+        }
     }
 
     public function prepend(ContainerBuilder $container)
@@ -44,11 +59,13 @@ class UxTranslatorExtension extends Extension implements PrependExtensionInterfa
             return;
         }
 
+        $config = $this->processConfiguration(new Configuration(), $container->getExtensionConfig($this->getAlias()));
+
         $container->prependExtensionConfig('framework', [
             'asset_mapper' => [
                 'paths' => [
                     __DIR__.'/../../assets/dist' => '@symfony/ux-translator',
-                    '%kernel.project_dir%/var/translations' => 'var/translations',
+                    $config['dump_directory'] => 'var/translations',
                 ],
             ],
         ]);
