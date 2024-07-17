@@ -28,7 +28,7 @@ export default class extends Controller {
 
     private chart: Chart | null = null;
 
-    initialize() {
+    connect() {
         if (!isChartInitialized) {
             isChartInitialized = true;
             this.dispatchEvent('init', {
@@ -57,6 +57,15 @@ export default class extends Controller {
         this.chart = new Chart(canvasContext, payload);
 
         this.dispatchEvent('connect', { chart: this.chart });
+    }
+
+    disconnect() {
+        if (this.chart) {
+            this.chart.destroy();
+            this.chart = null;
+        }
+
+        this.dispatchEvent('disconnect', { chart: this.chart });
     }
 
     /**

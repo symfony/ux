@@ -5,7 +5,8 @@ export default class extends Controller {
         view: ObjectConstructor;
     };
     private chart;
-    initialize(): void;
+    connect(): void;
+    disconnect(): void;
     viewValueChanged(): void;
     private dispatchEvent;
 }

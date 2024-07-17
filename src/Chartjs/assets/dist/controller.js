@@ -10,7 +10,7 @@ class default_1 extends Controller {
         super(...arguments);
         this.chart = null;
     }
-    initialize() {
+    connect() {
         if (!isChartInitialized) {
             isChartInitialized = true;
             this.dispatchEvent('init', {
@@ -34,6 +34,13 @@ class default_1 extends Controller {
         }
         this.chart = new Chart(canvasContext, payload);
         this.dispatchEvent('connect', { chart: this.chart });
+    }
+    disconnect() {
+        if (this.chart) {
+            this.chart.destroy();
+            this.chart = null;
+        }
+        this.dispatchEvent('disconnect', { chart: this.chart });
     }
     viewValueChanged() {
         if (this.chart) {
