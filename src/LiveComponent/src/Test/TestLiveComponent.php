@@ -125,6 +125,13 @@ final class TestLiveComponent
         return $this->client()->getResponse();
     }
 
+    public function submitForm(array $formValues, ?string $action = null): self
+    {
+        $flattenValues = $this->flattenFormValues($formValues);
+
+        return $this->request(['updated' => $flattenValues, 'validatedFields' => array_keys($flattenValues)], $action);
+    }
+
     private function request(array $content = [], ?string $action = null, array $files = []): self
     {
         $csrfToken = $this->csrfToken();
@@ -204,5 +211,20 @@ final class TestLiveComponent
         $this->performedInitialRequest = true;
 
         return $this->client;
+    }
+
+    private function flattenFormValues(array $values, string $prefix = ''): array
+    {
+        $result = [];
+
+        foreach ($values as $key => $value) {
+            if (\is_array($value)) {
+                $result += $this->flattenFormValues($value, $prefix.$key.'.');
+            } else {
+                $result[$prefix.$key] = $value;
+            }
+        }
+
+        return $result;
     }
 }
