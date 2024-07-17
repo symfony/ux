@@ -10,10 +10,7 @@ class default_1 extends Controller {
         super(...arguments);
         this.chart = null;
     }
-    connect() {
-        if (this.element instanceof HTMLCanvasElement && Chart.getChart(this.element)) {
-            return;
-        }
+    initialize() {
         if (!isChartInitialized) {
             isChartInitialized = true;
             this.dispatchEvent('init', {

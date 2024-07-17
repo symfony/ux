@@ -28,12 +28,7 @@ export default class extends Controller {
 
     private chart: Chart | null = null;
 
-    connect() {
-        if (this.element instanceof HTMLCanvasElement && Chart.getChart(this.element)) {
-            // Chart is already connected
-            return;
-        }
-
+    initialize() {
         if (!isChartInitialized) {
             isChartInitialized = true;
             this.dispatchEvent('init', {
