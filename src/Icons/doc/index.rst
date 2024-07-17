@@ -180,7 +180,7 @@ tag:
     <!-- you can also add any HTML attributes -->
     <twig:ux:icon name="user-profile" height="16" width="16" aria-hidden="true" />
 
-.. note::
+.. tip::
 
     To use the HTML syntax, the ``symfony/ux-twig-component`` package must be
     installed in your project.
