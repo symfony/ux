@@ -23,6 +23,7 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\BlogPostWithSerializationContext;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\CustomerDetails;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Embeddable2;
+use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsArrayOfDtos;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Money;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\ParentDTO;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\SimpleDto;
@@ -965,6 +966,127 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->assertObjectAfterHydration(function (object $object) {
                     self::assertSame($object->customerDetailsCollection[0]->address->address, '3 rue du Bac');
                     self::assertSame($object->customerDetailsCollection[0]->address->city, 'Paris');
+                });
+        }];
+
+        yield 'Array with DTOs: fully writable allows anything to change' => [function () {
+            $address1 = create(Address::class, ['address' => '17 Arcadia Road', 'city' => 'London'])->object();
+            $address2 = create(Address::class, ['address' => '4 Privet Drive', 'city' => 'Little Whinging'])->object();
+            $address3 = create(Address::class, ['address' => '124 Conch St.', 'city' => 'Bikini Bottom'])->object();
+            $address4 = create(Address::class, ['address' => '32 Windsor Gardens', 'city' => 'London'])->object();
+
+            return HydrationTest::create(new class() {
+                /**
+                 * @var Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
+                 */
+                #[LiveProp(writable: true, useSerializerForHydration: true)]
+                public array $addresses = [];
+            })
+                ->mountWith(['addresses' => [$address1, $address2]])
+                ->assertDehydratesTo(['addresses' => [
+                    [
+                        'address' => '17 Arcadia Road',
+                        'city' => 'London',
+                    ],
+                    [
+                        'address' => '4 Privet Drive',
+                        'city' => 'Little Whinging',
+                    ],
+                ]])
+                ->userUpdatesProps(['addresses' => [$address3, $address4]])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertEquals([
+                        create(Address::class, ['address' => '124 Conch St.', 'city' => 'Bikini Bottom'])->object(),
+                        create(Address::class, ['address' => '32 Windsor Gardens', 'city' => 'London'])->object(),
+                    ], $object->addresses);
+                });
+        }];
+
+        yield 'Array with DTOs: fully writable allows partial changes' => [function () {
+            $address1 = create(Address::class, ['address' => '1600 Pennsylvania Avenue', 'city' => 'Washington DC'])->object();
+            $address2 = create(Address::class, ['address' => '221 B Baker St', 'city' => 'Birmingham'])->object();
+
+            return HydrationTest::create(new class() {
+                /**
+                 * @var Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
+                 */
+                #[LiveProp(writable: true, useSerializerForHydration: true)]
+                public array $addresses = [];
+            })
+                ->mountWith(['addresses' => [$address1, $address2]])
+                ->assertDehydratesTo(['addresses' => [
+                    [
+                        'address' => '1600 Pennsylvania Avenue',
+                        'city' => 'Washington DC',
+                    ],
+                    [
+                        'address' => '221 B Baker St',
+                        'city' => 'Birmingham',
+                    ],
+                ]])
+                ->userUpdatesProps(['addresses.1.city' => 'London'])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertEquals([
+                        create(Address::class, ['address' => '1600 Pennsylvania Avenue', 'city' => 'Washington DC'])->object(),
+                        create(Address::class, ['address' => '221 B Baker St', 'city' => 'London'])->object(),
+                    ], $object->addresses);
+                });
+        }];
+
+        yield 'Array with DTOs: fully writable allows deep partial changes' => [function () {
+            return HydrationTest::create(new class() {
+                /**
+                 * @var Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsArrayOfDtos[]
+                 */
+                #[LiveProp(writable: true, useSerializerForHydration: true)]
+                public array $dtos = [];
+            })
+                ->mountWith(['dtos' => [
+                    create(HoldsArrayOfDtos::class, ['addresses' => [
+                        create(Address::class, ['address' => '742 Evergreen Terrace', 'city' => 'Boston'])->object(),
+                        create(Address::class, ['address' => 'Apartment 5A, 129 West 81st Street', 'city' => 'New York'])->object(),
+                        create(Address::class, ['address' => '52 Festive Road', 'city' => 'London'])->object(),
+                    ]])->object(),
+                    create(HoldsArrayOfDtos::class, ['addresses' => [
+                        create(Address::class, ['address' => '698 Sycamore Road', 'city' => 'San Pueblo'])->object(),
+                        create(Address::class, ['address' => 'Madison Square Garden', 'city' => 'Chicago'])->object(),
+                    ]])->object(),
+                ]])
+                ->assertDehydratesTo(['dtos' => [
+                    [
+                        'addresses' => [
+                            ['address' => '742 Evergreen Terrace', 'city' => 'Boston'],
+                            ['address' => 'Apartment 5A, 129 West 81st Street', 'city' => 'New York'],
+                            ['address' => '52 Festive Road', 'city' => 'London'],
+                        ],
+                    ],
+                    [
+                        'addresses' => [
+                            ['address' => '698 Sycamore Road', 'city' => 'San Pueblo'],
+                            ['address' => 'Madison Square Garden', 'city' => 'Chicago'],
+                        ],
+                    ],
+                ]])
+                ->userUpdatesProps([
+                    'dtos.0.addresses.0.city' => 'Springfield',
+                    'dtos.1.addresses.1.address' => '1060 West Addison Street',
+                    'dtos.1.addresses.1' => create(Address::class, ['address' => '10 Downing Street', 'city' => 'London'])->object(),
+                ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertEquals(
+                        [
+                            create(HoldsArrayOfDtos::class, ['addresses' => [
+                                create(Address::class, ['address' => '742 Evergreen Terrace', 'city' => 'Springfield'])->object(),
+                                create(Address::class, ['address' => 'Apartment 5A, 129 West 81st Street', 'city' => 'New York'])->object(),
+                                create(Address::class, ['address' => '52 Festive Road', 'city' => 'London'])->object(),
+                            ]])->object(),
+                            create(HoldsArrayOfDtos::class, ['addresses' => [
+                                create(Address::class, ['address' => '698 Sycamore Road', 'city' => 'San Pueblo'])->object(),
+                                create(Address::class, ['address' => '10 Downing Street', 'city' => 'London'])->object(),
+                            ]])->object(),
+                        ],
+                        $object->dtos
+                    );
                 });
         }];
 

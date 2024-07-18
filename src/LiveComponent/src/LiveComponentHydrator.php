@@ -370,6 +370,7 @@ final class LiveComponentHydrator
         foreach ($parts as $part) {
             if (\is_array($currentValue)) {
                 $finalPropertyPath .= \sprintf('[%s]', $part);
+                $currentValue = $this->propertyAccessor->getValue($rawPropertyValue, $finalPropertyPath);
 
                 continue;
             }
@@ -379,6 +380,10 @@ final class LiveComponentHydrator
             }
 
             $finalPropertyPath .= $part;
+
+            if (null !== $currentValue) {
+                $currentValue = $this->propertyAccessor->getValue($rawPropertyValue, $finalPropertyPath);
+            }
         }
 
         return $finalPropertyPath;
