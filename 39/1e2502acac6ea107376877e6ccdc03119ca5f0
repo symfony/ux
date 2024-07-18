@@ -1,0 +1,14 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-15T18:02:51Z
+
+That's remind this ESLint rule for Vue.js: https://eslint.vuejs.org/rules/no-boolean-default
+
+Ideally when you conceive your component, you don't want to use boolean props with a default value to `true`,  to enforce HTML standard.
+
+Depending on whether or not you want your close button to be displayed by default, you will need to have a property `withCloseButton` or `withoutCloseButton` default to `false`, meaning that you can simply use a prop with the static syntax like this:
+```twig
+<twig:Alert message="..." withCloseButton/>
+
+<twig:Alert message="..." withoutCloseButton />
+```
