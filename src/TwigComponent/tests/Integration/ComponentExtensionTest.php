@@ -366,6 +366,13 @@ final class ComponentExtensionTest extends KernelTestCase
         self::getContainer()->get(Environment::class)->render('component_with_conflict_between_props_from_template_and_class.html.twig');
     }
 
+    public function testComponentWithEmptyProps(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_empty_props.html.twig');
+
+        $this->assertStringContainsString('I have an empty props tag', $output);
+    }
+
     public function testAnonymousComponentWithPropsOverwriteParentsProps(): void
     {
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_props_overwrite_parents_props.html.twig');

@@ -35,6 +35,10 @@ class PropsNode extends Node
             ->write('$propsNames = [];')
         ;
 
+        if (!$this->getAttribute('names')) {
+            return;
+        }
+
         foreach ($this->getAttribute('names') as $name) {
             $compiler
                 ->write('if (isset($context[\'__props\'][\''.$name.'\'])) {')
