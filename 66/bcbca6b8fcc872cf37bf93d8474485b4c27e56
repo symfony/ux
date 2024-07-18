@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-07-15T09:56:00Z
+
+Thanks a lot for this PR @cgrabenstein! I was pretty sure most of the code was already one! Nice work! 🧡
+
+---------------------------------------------------------------------------
+
+by cgrabenstein at 2024-07-15T13:25:19Z
+
+Thank you for checking it. What about the fabbot.io errors? I did not change the exception messages, so I'm not sure if I should apply the suggested patch.
