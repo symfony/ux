@@ -366,6 +366,14 @@ final class ComponentExtensionTest extends KernelTestCase
         self::getContainer()->get(Environment::class)->render('component_with_conflict_between_props_from_template_and_class.html.twig');
     }
 
+    public function testAnonymousComponentWithPropsOverwriteParentsProps(): void
+    {
+        $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_props_overwrite_parents_props.html.twig');
+
+        $this->assertStringContainsString('I am an icon', $output);
+        $this->assertStringNotContainsString('I am md', $output);
+    }
+
     private function renderComponent(string $name, array $data = []): string
     {
         return self::getContainer()->get(Environment::class)->render('render_component.html.twig', [

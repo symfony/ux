@@ -31,5 +31,6 @@
 }) %}
 
 <div class="{{ alert.apply({color, size}, attributes.render('class'), 'flex p-4') }}">
-    ...
+    {% block content %}
+    {% endblock %}
 </div>
