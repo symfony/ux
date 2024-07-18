@@ -32,6 +32,9 @@ use function Symfony\Component\String\s;
  */
 class TranslationsDumper
 {
+    private array $excludedDomains = [];
+    private array $includedDomains = [];
+
     public function __construct(
         private string $dumpDir,
         private MessageParametersExtractor $messageParametersExtractor,
@@ -84,6 +87,22 @@ TS
         );
     }
 
+    public function addExcludedDomain(string $domain): void
+    {
+        if ($this->includedDomains) {
+            throw new \LogicException('You cannot set both "excluded_domains" and "included_domains" at the same time.');
+        }
+        $this->excludedDomains[] = $domain;
+    }
+
+    public function addIncludedDomain(string $domain): void
+    {
+        if ($this->excludedDomains) {
+            throw new \LogicException('You cannot set both "excluded_domains" and "included_domains" at the same time.');
+        }
+        $this->includedDomains[] = $domain;
+    }
+
     /**
      * @return array<MessageId, array<Domain, array<Locale, string>>>
      */
@@ -94,6 +113,12 @@ TS
         foreach ($catalogues as $catalogue) {
             $locale = $catalogue->getLocale();
             foreach ($catalogue->getDomains() as $domain) {
+                if (\in_array($domain, $this->excludedDomains, true)) {
+                    continue;
+                }
+                if ($this->includedDomains && !\in_array($domain, $this->includedDomains, true)) {
+                    continue;
+                }
                 foreach ($catalogue->all($domain) as $id => $message) {
                     $realDomain = $catalogue->has($id, $domain.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX)
                         ? $domain.MessageCatalogueInterface::INTL_DOMAIN_SUFFIX

@@ -65,7 +65,7 @@ After installing the bundle, the following file should be created, thanks to the
 Usage
 -----
 
-When warming up the Symfony cache, all of your translations will be dumped as JavaScript into the ``var/translations/`` directory.
+When warming up the Symfony cache, your translations will be dumped as JavaScript into the ``var/translations/`` directory.
 For a better developer experience, TypeScript types definitions are also generated aside those JavaScript files.
 
 Then, you will be able to import those JavaScript translations in your assets.
@@ -74,6 +74,24 @@ Don't worry about your final bundle size, only the translations you use will be 
 .. note::
 
     This package requires the `translator` to be enabled in your Symfony application. If you don't use the `translator` service, the warmup command will not generate any translations.
+
+Configuring the dumped translations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, all your translations will be exported. You can restrict the dumped messages by either
+including or excluding translation domains in your ``config/packages/ux_translator.yaml`` file:
+
+.. code-block:: yaml
+
+    ux_translator:
+            domains: ~    # Include all the domains
+
+            domains: foo  # Include only domain 'foo'
+            domains: '!foo' # Include all domains, except 'foo'
+
+            domains: [foo, bar]   # Include only domains 'foo' and 'bar'
+            domains: ['!foo', '!bar'] # Include all domains, except 'foo' and 'bar'
+
 
 Configuring the default locale
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
