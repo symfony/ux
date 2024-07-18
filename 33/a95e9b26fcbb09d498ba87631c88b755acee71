@@ -1,0 +1,33 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-25T20:47:36Z
+
+So were are we there ? :) Do you need help for something ? Is the doc ready ?
+
+---------------------------------------------------------------------------
+
+by maelanleborgne at 2024-06-26T07:06:20Z
+
+> So were are we there ? :) Do you need help for something ? Is the doc ready ?
+
+@smnandre Yes that should be it, the doc as well. I'm just not sure what version I should use in the changelog entry.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-26T07:56:20Z
+
+2.19 no ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-27T05:48:59Z
+
+The failing test surprises me a bit ... @WebMamba any idea ? I feel we may have exposed more than we wanted
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-06-27T07:33:16Z
+
+Looks like this is related to the PR: https://github.com/symfony/ux/pull/1940.
+
+Hummm the test looks flaky. I don't think this is related to this PR though
