@@ -13,14 +13,14 @@ namespace Symfony\UX\LiveComponent;
 
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\LiveComponent\DependencyInjection\Compiler\ComponentDefaultActionPass;
 use Symfony\UX\LiveComponent\DependencyInjection\Compiler\OptionalDependencyPass;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class LiveComponentBundle extends Bundle
+final class LiveComponentBundle extends AbstractBundle
 {
     public const HYDRATION_EXTENSION_TAG = 'live_component.hydration_extension';
 
@@ -29,10 +29,5 @@ final class LiveComponentBundle extends Bundle
         // must run before Symfony\Component\Serializer\DependencyInjection\SerializerPass
         $container->addCompilerPass(new OptionalDependencyPass(), PassConfig::TYPE_BEFORE_OPTIMIZATION, 100);
         $container->addCompilerPass(new ComponentDefaultActionPass());
-    }
-
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
     }
 }

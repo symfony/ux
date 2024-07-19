@@ -12,21 +12,16 @@
 namespace Symfony\UX\TwigComponent;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class TwigComponentBundle extends Bundle
+final class TwigComponentBundle extends AbstractBundle
 {
     public function build(ContainerBuilder $container): void
     {
         $container->addCompilerPass(new TwigComponentPass());
-    }
-
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
     }
 }

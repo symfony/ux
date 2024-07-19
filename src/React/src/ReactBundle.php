@@ -11,17 +11,13 @@
 
 namespace Symfony\UX\React;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *
  * @final
  */
-class ReactBundle extends Bundle
+class ReactBundle extends AbstractBundle
 {
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
-    }
 }

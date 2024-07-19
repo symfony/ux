@@ -12,19 +12,14 @@
 namespace Symfony\UX\StimulusBundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\StimulusBundle\DependencyInjection\Compiler\RemoveAssetMapperServicesCompiler;
 
 /**
  * @author Ryan Weaver <ryan@symfonycasts.com>
  */
-final class StimulusBundle extends Bundle
+final class StimulusBundle extends AbstractBundle
 {
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
-    }
-
     public function build(ContainerBuilder $container)
     {
         $container->addCompilerPass(new RemoveAssetMapperServicesCompiler());

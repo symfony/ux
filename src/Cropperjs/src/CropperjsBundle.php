@@ -11,17 +11,13 @@
 
 namespace Symfony\UX\Cropperjs;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
  *
  * @final
  */
-class CropperjsBundle extends Bundle
+class CropperjsBundle extends AbstractBundle
 {
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
-    }
 }

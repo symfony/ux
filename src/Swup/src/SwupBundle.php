@@ -11,15 +11,11 @@
 
 namespace Symfony\UX\Swup;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
  * @final
  */
-class SwupBundle extends Bundle
+class SwupBundle extends AbstractBundle
 {
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
-    }
 }

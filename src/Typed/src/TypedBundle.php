@@ -11,15 +11,11 @@
 
 namespace Symfony\UX\Typed;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
  * @final
  */
-class TypedBundle extends Bundle
+class TypedBundle extends AbstractBundle
 {
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
-    }
 }

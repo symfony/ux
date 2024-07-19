@@ -11,15 +11,11 @@
 
 namespace Symfony\UX\Icons;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class UXIconsBundle extends Bundle
+final class UXIconsBundle extends AbstractBundle
 {
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
-    }
 }

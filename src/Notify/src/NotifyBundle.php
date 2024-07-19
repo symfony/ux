@@ -11,17 +11,13 @@
 
 namespace Symfony\UX\Notify;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
  * @author Mathias Arlaud <mathias.arlaud@gmail.com>
  *
  * @final
  */
-class NotifyBundle extends Bundle
+class NotifyBundle extends AbstractBundle
 {
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
-    }
 }

@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Vue;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -19,10 +19,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  *
  * @final
  */
-class VueBundle extends Bundle
+class VueBundle extends AbstractBundle
 {
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
-    }
 }

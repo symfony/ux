@@ -11,7 +11,7 @@
 
 namespace Symfony\UX\Svelte;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
  * @author Titouan Galopin <galopintitouan@gmail.com>
@@ -19,6 +19,6 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
  *
  * @final
  */
-class SvelteBundle extends Bundle
+class SvelteBundle extends AbstractBundle
 {
 }

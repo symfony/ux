@@ -15,12 +15,12 @@ use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
 use Symfony\Component\DependencyInjection\Compiler\PassConfig;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
  * @author Kévin Dunglas <kevin@dunglas.fr>
  */
-final class TurboBundle extends Bundle
+final class TurboBundle extends AbstractBundle
 {
     public const STREAM_FORMAT = 'turbo_stream';
     public const STREAM_MEDIA_TYPE = 'text/vnd.turbo-stream.html';
@@ -45,10 +45,5 @@ final class TurboBundle extends Bundle
                 }
             }
         }, PassConfig::TYPE_BEFORE_REMOVING);
-    }
-
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
     }
 }

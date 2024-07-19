@@ -11,15 +11,11 @@
 
 namespace Symfony\UX\TogglePassword;
 
-use Symfony\Component\HttpKernel\Bundle\Bundle;
+use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 
 /**
  * @author Félix Eymonot <felix.eymonot@alximy.io>
  */
-final class TogglePasswordBundle extends Bundle
+final class TogglePasswordBundle extends AbstractBundle
 {
-    public function getPath(): string
-    {
-        return \dirname(__DIR__);
-    }
 }
