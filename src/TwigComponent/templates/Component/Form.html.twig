@@ -1,0 +1,4 @@
+{%- set render_rest = block('content') is not defined -%}
+{{- form_start(form) -}}
+{{- render_rest ? form_widget(form) :  block('content') -}}
+{{- form_end(form, { render_rest }) -}}

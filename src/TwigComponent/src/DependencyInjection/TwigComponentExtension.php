@@ -24,6 +24,7 @@ use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
+use Symfony\Component\Form\Form;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Command\TwigComponentDebugCommand;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -127,6 +128,10 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
 
         if ($container->getParameter('kernel.debug') && $config['profiler']) {
             $loader->load('debug.php');
+        }
+
+        if ($container::willBeAvailable('symfony/form', Form::class, ['symfony/twig-bundle'])) {
+            $loader->load('form_components.php');
         }
     }
 

@@ -15,6 +15,8 @@ use Psr\Log\NullLogger;
 use Symfony\Bundle\FrameworkBundle\FrameworkBundle;
 use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
+use Symfony\Component\DependencyInjection\Compiler\CompilerPassInterface;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
@@ -23,7 +25,7 @@ use Symfony\UX\TwigComponent\TwigComponentBundle;
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
  */
-final class Kernel extends BaseKernel
+final class Kernel extends BaseKernel implements CompilerPassInterface
 {
     use MicroKernelTrait;
 
@@ -106,5 +108,10 @@ final class Kernel extends BaseKernel
                 ->tag('twig.component')
             ;
         }
+    }
+
+    public function process(ContainerBuilder $container): void
+    {
+        $container->findDefinition('form.factory')->setPublic(true);
     }
 }
