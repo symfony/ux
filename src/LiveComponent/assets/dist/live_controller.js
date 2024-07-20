@@ -1670,7 +1670,9 @@ class ElementChanges {
     }
     applyToElement(element) {
         element.classList.add(...this.addedClasses);
-        element.classList.remove(...this.removedClasses);
+        if (this.removedClasses.size > 0) {
+            element.classList.remove(...this.removedClasses);
+        }
         this.styleChanges.getChangedItems().forEach((change) => {
             element.style.setProperty(change.name, change.value);
             return;
