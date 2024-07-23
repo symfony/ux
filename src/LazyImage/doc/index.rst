@@ -208,22 +208,23 @@ Then in your template, add your controller to the HTML attribute:
 Largest Contentful Paint (LCP) and Web performance considerations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-The `Largest Contentful Paint (LCP)`_ is a key metric for web performance, it measures the time
-it takes for the largest image or text block to be rendered on the page, and should be less 
-than 2.5 seconds.
-It's part of the `Core Web Vitals`_ and is used by Google to evaluate the user experience 
-of a website, and impacts the Search ranking.
+The `Largest Contentful Paint (LCP)`_ is a key metric for web performance.
+It measures the time it takes for the largest image or text block to be rendered
+on the page and should be less than 2.5 seconds. It's part of the `Core Web Vitals`_
+and is used by Google to evaluate the user experience of a website, impacting
+the Search ranking.
 
 Using the Symfony UX LazyImage for your LCP image can be a good idea at first, 
-but in the reality it will lower your LCP score because:
-- `The progressive loading (through blurhash) is not taken into account in the LCP calculation`_
-- event if you eagerly load the LazyImage Stimulus controller, a small delay will be added to the 
-  LCP calculation
-- if you `didn't preload the image`_, the browser will waits for the Stimulus controller to 
-  load the image, which add another delay to the LCP calculation
+but in reality, it will lower the LCP score because:
 
-A solution is to not use the Stimulus controller for the LCP image, but use ``src`` and ``style`` 
-attributes instead, and preload the image as well: 
+- `The progressive loading (through blurhash) is not taken into account in the LCP calculation`_;
+- Even if you eagerly load the LazyImage Stimulus controller, a small delay will
+  be added to the LCP calculation;
+- If you `didn't preload the image`_, the browser will wait for the Stimulus
+  controller to load the image, which adds another delay to the LCP calculation.
+
+A solution is to not use the Stimulus controller for the LCP image but to use
+``src`` and ``style`` attributes instead, and preload the image as well:
 
 .. code-block:: html+twig
 
@@ -237,8 +238,9 @@ attributes instead, and preload the image as well:
         height="150"
     />
     
-This way, the browser will display the BlurHash image as soon as possible, and will load the HD 
-image at the same time, without waiting for the Stimulus controller to be loaded.
+This way, the browser will display the BlurHash image as soon as possible, and
+will load the high-definition image at the same time, without waiting for the
+Stimulus controller to be loaded.
 
 Backward Compatibility promise
 ------------------------------
