@@ -1,0 +1,119 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2024-07-07T11:57:12Z
+
+Good idea!
+Will it also change with the `srcset` attribute? Is it a good idea to use the `srcset` attribute?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-07T12:32:31Z
+
+The attribute `srcset` won't be changed. With the new code added in the documentation, there is no `<img>` attribute manipulation during execution, the browser simply _reads and executes_ `src` and `style` attributes.
+
+But if you want to use `srcset` attributes, with preloading, I believe you can use something like this:
+
+```twig
+<img
+    src="{{ preload(asset('image/large.png'), {
+        as: 'image',
+        fetchpriority: 'high',
+        imagesrcset: asset('image/large.png') ~ ' 1x, ' ~ asset('image/large2x.png') ~ ' 2x',
+        imagesizes: '100vw'
+    }) }}"
+    srcset="{{ asset('image/large.png') }} 1x, {{ asset('image/large2x.png') }} 2x"
+    sizes="100vw"
+
+    style="background-image: url('{{ data_uri_thumbnail('public/image/large.png', 20, 15) }}')"
+    fetchpriority="high"
+
+    {# Using BlurHash, the size is required #}
+    width="200"
+    height="150"
+/>
+```
+
+> Is it a good idea to use the `srcset` attribute?
+
+In the context of LazyImage and Blurhash image generation, nope, you can generate the Blurhash image with very very low dimensions:
+- here I've used 20x15 pixels for an original image of 200x150 pixels
+- on our app, I've used 10x5 pixels for original images of ~665x370 pixels, and it's really fine!
+
+But more generally, yes, you don't want to load a 1200px wide image on a smartphone (~400/500px). You will prefer to load an image adapted to the device in order to reduce bandwidth consumption and increase download/display speed (especially true on mobiles with _slow_ connections).
+
+You can achieve that by using `srcset` attributes, or in a more naughty way, render an `<img src="...">` depending on the user's device, [and put your page in cache (by device type)](https://developers.cloudflare.com/automatic-platform-optimization/reference/cache-device-type/).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-07T15:26:52Z
+
+⚠️  very opiniated... opinion.
+
+The follow message only concerns _today_ and the future (a lot have changed since this package release).
+
+---
+
+I personally think this package/method in general should not be recommanded today.
+
+First thing: the browsers are doing a much better job that any JS script will allow, so i'd recommand to use their optimisations.
+
+`loading=lazy` with size/height attributes  is de facto the most recommanded method to load images today.. and offer the best results in term of performances, accessibility, HTML weight, SEO..
+
+If you have to wait more than 100ms for an image to load, you probably have other problems (an image over-sized, not in the best format, not compressed ...). First use srcset / picture sources attributes and you'll have done 99% of the job.
+
+And if you absolutely (why?) need to display _something_ in this tiny moment before the image is loaded, you can set some background svg, a gradient, a color..
+
+To be complete, even the blurhash feels generally to me overkill (bringing itself some avoidable JS execution)
+
+---
+
+I'm very open to debate all this and ear your opinions :)
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2024-07-08T14:05:29Z
+
+So for you, the following code is not recommended?
+
+```twig
+<img
+    src="{{ asset('image/small.png') }}"
+    srcset="{{ asset('image/small.png') }} 1x, {{ asset('image/small2x.png') }} 2x"
+
+    {{ stimulus_controller('symfony/ux-lazy-image/lazy-image', {
+        src: asset('image/large.png'),
+        srcset: {
+            '1x': asset('image/large.png'),
+            '2x': asset('image/large2x.png')
+        }
+    }) }}
+/>
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-08T17:43:15Z
+
+I _**personnaly**_ won't recommand it, _today_.
+
+Main reason: why use a stimulus controller instead of loading lazy ?
+
+Using native HTML provides better results in term of performance, accessibility, SEO...
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-07-11T13:21:04Z
+
+I agree with @smnandre. I think that the LazyImage UX package should be deprecated in favor of using the native HTML/browser features to lazy-load images.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-13T08:00:22Z
+
+Hi everyone, I think everyone here is right here, but also I think we don't speak about the same thing 😅
+
+I didn't speak about image lazy-loading, which **yes**, should be done natively by the browser, without any JavaScript layer.
+
+I'm speaking about the LCP image which **should not be lazy-loaded**, it should be loaded and displayed as soon as possible.
+In this PR, I explain how we can hijack the initial Symfony UX BlurHash usage, to create a small placeholder image that is displayed when the real image is loaded, without any webperf costs.
+The goal here is, thanks to this small placeholder image inlined in the HTML, to give the user a visual result instead of nothing.
