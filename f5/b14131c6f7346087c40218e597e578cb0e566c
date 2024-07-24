@@ -1,0 +1,144 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-14T08:52:33Z
+
+Do we need to change it for all packages at once ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-14T09:03:02Z
+
+Why not? What advantages and disadvantages do we have if we change it for all packages or specific packages?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-14T09:05:48Z
+
+If the generated JS is different (even for a tiny bit), we would need to release a new version, and i’m not fan of new versions without features
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-14T09:09:00Z
+
+There is no problem with releasing minor versions 🤔
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-14T18:44:27Z
+
+But still .... can we or is it annoying ? it's a genuine question ^^
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-07-14T18:45:46Z
+
+Humm I am not sure if we can do that. I am think about people using a UX component, in a custom webpack configuration, I think this could break for them.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-14T19:07:40Z
+
+They still can run Babel/core-js on node_modules/<pkg>, but yeah that should be told explicitly.
+
+PS: To me, in an ideal world, JavaScript packages should only contains source files and the user is responsible for building them.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-14T19:13:16Z
+
+> PS: To me, in an ideal world, JavaScript packages should only contains source files and the user is responsible for building them.
+
+I think (as of today, no hard stance) the opposite. Well, i think like you and also the opposite 😅
+We could provide 3 different things in fact
+- small compiled JS files that anyone can copy-paste if needed, with no external install/tool in the public folder
+- packed module file in dist (as today)
+- source files build / compile / pack / whatever the dev want
+
+That a very intersting debate, probably deserve a new issue for it :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-14T19:22:49Z
+
+> Humm I am not sure if we can do that. I am think about people using a UX component, in a custom webpack configuration, I think this could break for them.
+
+@Kocal can you post here a small objective list of what the impacts are / can be.
+
+Regarding ES2022 i checked on [caniuse.com](https://caniuse.com/?search=es2022) and i'm 100% for, but...
+
+We _**need**_ prepare this with:
+- small documentation/FAQ file "how to ..." for the babel solution
+- announce it widely (GIT / tweets / message on the website) the first day after the previous release
+- give people a month to check (we merge and people can test the dev version) .... not during the summer where people are not around
+
+I'm not sure if this could be considered BC break ... in a pragmatic sense.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-14T19:22:54Z
+
+That allow me to reintroduce an idea that stayed in my head for too long: we need an "official" / public / clear browser compatibility list.
+
+And i don't think this can be the same as the Symfony php (no one can honestly garantee total browser support for 5 years, and we don't have multiple versions at once for the moment).
+
+That aslo would require an entire debate/issue.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-14T19:29:43Z
+
+Update: i'd like to avoid "static class initialization" as they are not compatible with 2 or 3 years old iPhones :|
+
+Can we pick a subset of features ?
+
+-> https://caniuse.com/mdn-javascript_classes_static_initialization_blocks
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-14T23:25:32Z
+
+> Can we pick a subset of features ?
+
+I don't really think... :/ Maybe with `lib` compiler option?
+
+Anyway, if we wan't to keep classes definition as-if in `main`, we can use `es2018` which only keeps `{ a, ...b } = ` in a native way.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-15T00:05:29Z
+
+Would ES2020 / ES2021 be good for you ? It seems to match your needs and has a much better support table for now.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-15T05:27:51Z
+
+Good for me, but you will still have the Microsoft license in Autocomplete dist code 😛
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-15T05:38:00Z
+
+I've downgraded to ES2020 to keep tslib's helpers for class private members, and finally upgraded to ES2021 (it has no effect on the code yet).
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-07-15T13:14:12Z
+
+I am not 100% about it! Can we create separate branch for people that wan't to use more recent ES version? And just keep the main branch as it is now, and merge during a major version ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-15T14:30:43Z
+
+> I am not 100% about it!
+
+I mean, for the code actually present in the code base, if I use `es2020` or `es2021` as `target`, the same exact dist code is generated
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-19T06:29:58Z
+
+This PR is now using `es2021` instead of `es2017`, and only updates the code to use native rest operator, and is [supported by ~95%+ of the browsers](https://caniuse.com/mdn-javascript_operators_destructuring_rest_in_objects).
+
+I believe we can merge this safely :)
