@@ -256,7 +256,7 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
         score: (search) => {
             const scoringFunction = this.tomSelect.getScoreFunction(search);
             return (item) => {
-                return scoringFunction(Object.assign(Object.assign({}, item), { text: __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_stripTags).call(this, item.text) }));
+                return scoringFunction({ ...item, text: __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_stripTags).call(this, item.text) });
             };
         },
         render: {
@@ -326,7 +326,7 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
 }, _default_1_stripTags = function _default_1_stripTags(string) {
     return string.replace(/(<([^>]+)>)/gi, '');
 }, _default_1_mergeObjects = function _default_1_mergeObjects(object1, object2) {
-    return Object.assign(Object.assign({}, object1), object2);
+    return { ...object1, ...object2 };
 }, _default_1_createTomSelect = function _default_1_createTomSelect(options) {
     const preConnectPayload = { options };
     this.dispatchEvent('pre-connect', preConnectPayload);
