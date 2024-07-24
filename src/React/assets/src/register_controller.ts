@@ -37,6 +37,11 @@ export function registerReactControllerComponents(context: __WebpackModuleApi.Re
             const possibleValues = Object.keys(reactControllers).map((key) =>
                 key.replace('./', '').replace('.jsx', '').replace('.tsx', '')
             );
+
+            if (possibleValues.includes(name)) {
+                throw new Error(`React controller "${name}" could not be resolved. Ensure the module exports the controller as default.`);
+            }
+
             throw new Error(`React controller "${name}" does not exist. Possible values: ${possibleValues.join(', ')}`);
         }
 
