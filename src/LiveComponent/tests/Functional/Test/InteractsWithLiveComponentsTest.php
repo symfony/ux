@@ -169,4 +169,14 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
 
         $this->assertStringContainsString('Username: kevin', $testComponent->render());
     }
+
+    public function testCanSubmitForm(): void
+    {
+        $testComponent = $this->createLiveComponent('form_with_many_different_fields_type');
+
+        $response = $testComponent->submitForm(['form' => ['text' => 'foobar']])->response();
+
+        $this->assertSame(200, $response->getStatusCode());
+        $this->assertStringContainsString('foobar', $testComponent->render());
+    }
 }

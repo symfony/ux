@@ -1,5 +1,7 @@
 # CHANGELOG
 
+-   Add `submitForm()` to `TestLiveComponent`.
+
 ## 2.18.0
 
 -   Add parameter to `TestLiveComponent::call()` to add files to the request
