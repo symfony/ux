@@ -45,8 +45,8 @@ export default class {
         }
     }
 
-    getChangedElement(element: Element): ElementChanges|null {
-        return this.changedElements.has(element) ? this.changedElements.get(element) as ElementChanges : null;
+    getChangedElement(element: Element): ElementChanges | null {
+        return this.changedElements.has(element) ? (this.changedElements.get(element) as ElementChanges) : null;
     }
 
     getAddedElements(): Element[] {
@@ -103,16 +103,16 @@ export default class {
 
                     // only process the first attribute mutation: it will have the
                     // true original value, and we'll look at the true new value
-                    if (!(handledAttributeMutations.get(element) as string[]).includes(mutation.attributeName as string)) {
+                    if (
+                        !(handledAttributeMutations.get(element) as string[]).includes(mutation.attributeName as string)
+                    ) {
                         this.handleAttributeMutation(mutation);
 
                         // add this attribute to the list of handled attributes
-                        handledAttributeMutations.set(
-                            element, [
-                                ...handledAttributeMutations.get(element) as string[],
-                                mutation.attributeName as string
-                            ])
-                        ;
+                        handledAttributeMutations.set(element, [
+                            ...(handledAttributeMutations.get(element) as string[]),
+                            mutation.attributeName as string,
+                        ]);
                     }
                     break;
             }
@@ -160,7 +160,7 @@ export default class {
         });
     }
 
-    private handleAttributeMutation(mutation: MutationRecord):void {
+    private handleAttributeMutation(mutation: MutationRecord): void {
         const element = mutation.target as Element;
 
         if (!this.changedElements.has(element)) {
@@ -213,7 +213,9 @@ export default class {
         const newValue = element.getAttribute('style') || '';
         const newStyles = this.extractStyles(newValue);
 
-        const addedOrChangedStyles = Object.keys(newStyles).filter((key) => previousStyles[key] === undefined || previousStyles[key] !== newStyles[key]);
+        const addedOrChangedStyles = Object.keys(newStyles).filter(
+            (key) => previousStyles[key] === undefined || previousStyles[key] !== newStyles[key]
+        );
         const removedStyles = Object.keys(previousStyles).filter((key) => !newStyles[key]);
 
         addedOrChangedStyles.forEach((style) => {
@@ -225,10 +227,7 @@ export default class {
         });
 
         removedStyles.forEach((style) => {
-            elementChanges.removeStyle(
-                style,
-                previousStyles[style]
-            );
+            elementChanges.removeStyle(style, previousStyles[style]);
         });
     }
 
@@ -255,10 +254,7 @@ export default class {
                 return;
             }
 
-            elementChanges.removeAttribute(
-                attributeName,
-                mutation.oldValue as string
-            );
+            elementChanges.removeAttribute(attributeName, mutation.oldValue as string);
 
             return;
         }
@@ -270,11 +266,7 @@ export default class {
             return;
         }
 
-        elementChanges.addAttribute(
-            attributeName,
-            element.getAttribute(attributeName) as string,
-            mutation.oldValue
-        );
+        elementChanges.addAttribute(attributeName, element.getAttribute(attributeName) as string, mutation.oldValue);
     }
 
     private extractStyles(styles: string): { [key: string]: string } {
@@ -303,6 +295,6 @@ export default class {
      * re-renders, causing duplicate text.
      */
     private isElementAddedByTranslation(element: Element): boolean {
-        return element.tagName === 'FONT' && element.getAttribute('style') === 'vertical-align: inherit;'
+        return element.tagName === 'FONT' && element.getAttribute('style') === 'vertical-align: inherit;';
     }
 }

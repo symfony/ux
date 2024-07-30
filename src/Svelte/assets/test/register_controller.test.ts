@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import {registerSvelteControllerComponents} from '../src/register_controller';
+import { registerSvelteControllerComponents } from '../src/register_controller';
 import MyComponent from './fixtures/MyComponent.svelte';
 import RequireContext = __WebpackModuleApi.RequireContext;
 

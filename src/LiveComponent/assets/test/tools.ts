@@ -32,11 +32,11 @@ export function shutdownTests() {
 }
 
 const shutdownTest = (test: FunctionalTest) => {
-    test.pendingAjaxCallsThatAreStillExpected().forEach((mock => {
+    test.pendingAjaxCallsThatAreStillExpected().forEach((mock) => {
         const requestInfo = mock.getVisualSummary();
         throw new Error(`EXPECTED request was never made matching the following info: \n${requestInfo.join('\n')}`);
-    }));
-}
+    });
+};
 
 class FunctionalTest {
     component: Component;
@@ -44,7 +44,12 @@ class FunctionalTest {
     template: (props: any) => string;
     mockedBackend: MockedBackend;
 
-    constructor(component: Component, element: HTMLElement, mockedBackend: MockedBackend, template: (props: any) => string) {
+    constructor(
+        component: Component,
+        element: HTMLElement,
+        mockedBackend: MockedBackend,
+        template: (props: any) => string
+    ) {
         this.component = component;
         this.element = element;
         this.mockedBackend = mockedBackend;
@@ -56,11 +61,11 @@ class FunctionalTest {
         this.mockedBackend.addMockedAjaxCall(mock);
 
         return mock;
-    }
+    };
 
     queryByDataModel(modelName: string): HTMLElement {
         const elements = this.element.querySelectorAll(`[data-model$="${modelName}"]`);
-        let matchedElement: null|Element = null;
+        let matchedElement: null | Element = null;
 
         // skip any elements that are actually controllers
         // these are child component bindings, not real fields
@@ -97,7 +102,13 @@ class MockedBackend implements BackendInterface {
         this.expectedMockedAjaxCalls.push(mock);
     }
 
-    makeRequest(props: any, actions: BackendAction[], updated: { [key: string]: any }, children: ChildrenFingerprints, updatedPropsFromParent: {[key: string]: any}): BackendRequest {
+    makeRequest(
+        props: any,
+        actions: BackendAction[],
+        updated: { [key: string]: any },
+        children: ChildrenFingerprints,
+        updatedPropsFromParent: { [key: string]: any }
+    ): BackendRequest {
         const matchedMock = this.findMatchingMock(props, actions, updated, children, updatedPropsFromParent);
 
         if (!matchedMock) {
@@ -114,7 +125,7 @@ class MockedBackend implements BackendInterface {
                 requestInfo.push('No mocked Ajax calls were expected.');
             } else {
                 this.expectedMockedAjaxCalls.forEach((mock) => {
-                    requestInfo.push(`EXPECTED REQUEST #${this.expectedMockedAjaxCalls.indexOf(mock) + 1}:`)
+                    requestInfo.push(`EXPECTED REQUEST #${this.expectedMockedAjaxCalls.indexOf(mock) + 1}:`);
                     requestInfo.push(...mock.getVisualSummary());
                 });
             }
@@ -132,8 +143,14 @@ class MockedBackend implements BackendInterface {
         return this.expectedMockedAjaxCalls;
     }
 
-    private findMatchingMock(props: any, actions: BackendAction[], updated: { [key: string]: any }, children: ChildrenFingerprints, updatedPropsFromParent: {[key: string]: any}): MockedAjaxCall|null {
-        for(let i = 0; i < this.expectedMockedAjaxCalls.length; i++) {
+    private findMatchingMock(
+        props: any,
+        actions: BackendAction[],
+        updated: { [key: string]: any },
+        children: ChildrenFingerprints,
+        updatedPropsFromParent: { [key: string]: any }
+    ): MockedAjaxCall | null {
+        for (let i = 0; i < this.expectedMockedAjaxCalls.length; i++) {
             const mock = this.expectedMockedAjaxCalls[i];
             if (mock.matches(props, actions, updated, children, updatedPropsFromParent)) {
                 return mock;
@@ -148,14 +165,14 @@ class MockedAjaxCall {
     private test: FunctionalTest;
 
     /* Matcher properties */
-    private expectedActions: Array<{ name: string, args: any }> = [];
+    private expectedActions: Array<{ name: string; args: any }> = [];
     private expectedSentUpdatedData: { [key: string]: any } = {};
-    private expectedChildFingerprints: ChildrenFingerprints|null = null;
-    private expectedUpdatedPropsFromParent: {[key: string]: any}|null = null;
+    private expectedChildFingerprints: ChildrenFingerprints | null = null;
+    private expectedUpdatedPropsFromParent: { [key: string]: any } | null = null;
 
     /* Response properties */
     private changePropsCallback?: (props: any) => void;
-    private template?: (props: any) => string
+    private template?: (props: any) => string;
     private delayResponseTime?: number = 0;
     private customResponseStatusCode?: number;
     private customResponseHTML?: string;
@@ -175,7 +192,13 @@ class MockedAjaxCall {
         return requestInfo;
     }
 
-    matches(props: any, actions: BackendAction[], updated: { [key: string]: any }, children: ChildrenFingerprints, updatedPropsFromParent: {[key: string]: any}): boolean {
+    matches(
+        props: any,
+        actions: BackendAction[],
+        updated: { [key: string]: any },
+        children: ChildrenFingerprints,
+        updatedPropsFromParent: { [key: string]: any }
+    ): boolean {
         if (!this.isEqual(this.test.component.valueStore.getOriginalProps(), props)) {
             return false;
         }
@@ -184,7 +207,7 @@ class MockedAjaxCall {
             return {
                 name: action.name,
                 args: action.args,
-            }
+            };
         });
 
         if (!this.isEqual(normalizedBackendActions, this.expectedActions)) {
@@ -195,15 +218,14 @@ class MockedAjaxCall {
             return false;
         }
 
-        if (
-            null !== this.expectedChildFingerprints && !this.isEqual(children, this.expectedChildFingerprints)
-        ) {
+        if (null !== this.expectedChildFingerprints && !this.isEqual(children, this.expectedChildFingerprints)) {
             return false;
         }
 
         if (
-            (null !== this.expectedUpdatedPropsFromParent || Object.keys(updatedPropsFromParent).length > 0)
-            && !this.isEqual(updatedPropsFromParent, this.expectedUpdatedPropsFromParent)) {
+            (null !== this.expectedUpdatedPropsFromParent || Object.keys(updatedPropsFromParent).length > 0) &&
+            !this.isEqual(updatedPropsFromParent, this.expectedUpdatedPropsFromParent)
+        ) {
             return false;
         }
 
@@ -254,7 +276,7 @@ class MockedAjaxCall {
 
                 const response = new Response(html, {
                     status: this.customResponseStatusCode || 200,
-                    headers
+                    headers,
                 });
 
                 resolve(response);
@@ -265,7 +287,7 @@ class MockedAjaxCall {
             // @ts-ignore Response doesn't quite match the underlying interface
             promise,
             this.expectedActions.map((action) => action.name),
-            Object.keys(this.expectedSentUpdatedData),
+            Object.keys(this.expectedSentUpdatedData)
         );
     }
 
@@ -276,19 +298,19 @@ class MockedAjaxCall {
         this.expectedSentUpdatedData = updated;
 
         return this;
-    }
+    };
 
     expectChildFingerprints = (fingerprints: any): MockedAjaxCall => {
         this.expectedChildFingerprints = fingerprints;
 
         return this;
-    }
+    };
 
     expectUpdatedPropsFromParent = (updatedProps: any): MockedAjaxCall => {
         this.expectedUpdatedPropsFromParent = updatedProps;
 
         return this;
-    }
+    };
 
     /**
      * Call if the "server" will change the props before it re-renders.
@@ -297,19 +319,19 @@ class MockedAjaxCall {
         this.changePropsCallback = callback;
 
         return this;
-    }
+    };
 
     delayResponse = (milliseconds: number): MockedAjaxCall => {
         this.delayResponseTime = milliseconds;
 
         return this;
-    }
+    };
 
     expectActionCalled(actionName: string, args: any = {}): MockedAjaxCall {
         this.expectedActions.push({
             name: actionName,
-            args: args
-        })
+            args: args,
+        });
 
         return this;
     }
@@ -336,15 +358,19 @@ class MockedAjaxCall {
             return a === b;
         }
 
-        const sortedA = Object.keys(a).sort().reduce((obj: any, key) => {
-            obj[key] = a[key];
-            return obj;
-        }, {});
+        const sortedA = Object.keys(a)
+            .sort()
+            .reduce((obj: any, key) => {
+                obj[key] = a[key];
+                return obj;
+            }, {});
 
-        const sortedB = Object.keys(b).sort().reduce((obj: any, key) => {
-            obj[key] = b[key];
-            return obj;
-        }, {});
+        const sortedB = Object.keys(b)
+            .sort()
+            .reduce((obj: any, key) => {
+                obj[key] = b[key];
+                return obj;
+            }, {});
 
         return JSON.stringify(sortedA) === JSON.stringify(sortedB);
     }
@@ -372,7 +398,7 @@ export function createTestForExistingComponent(component: Component): Functional
     return test;
 }
 
-export async function startStimulus(element: string|HTMLElement) {
+export async function startStimulus(element: string | HTMLElement) {
     // start the Stimulus app just once per test suite
     if (application) {
         await application.start();
@@ -395,12 +421,12 @@ export async function startStimulus(element: string|HTMLElement) {
     return {
         controller,
         element: controllerElement,
-    }
+    };
 }
 
 export const getStimulusApplication = (): Application => {
     return application;
-}
+};
 
 const getControllerElement = (container: HTMLElement): HTMLElement => {
     if (container.dataset.controller === 'live') {
@@ -427,8 +453,8 @@ export const dataToJsonAttribute = (data: any): string => {
     }
 
     // returns the now-escaped string, ready to be used in an HTML attribute
-    return matches[1]
-}
+    return matches[1];
+};
 
 export function initComponent(props: any = {}, controllerValues: any = {}) {
     return `
@@ -447,7 +473,7 @@ export function initComponent(props: any = {}, controllerValues: any = {}) {
     `;
 }
 
-export function getComponent(element: HTMLElement|null) {
+export function getComponent(element: HTMLElement | null) {
     if (!element) {
         throw new Error('could not find element');
     }
@@ -461,11 +487,11 @@ export function getComponent(element: HTMLElement|null) {
     return component;
 }
 
-export function setCurrentSearch(search: string){
+export function setCurrentSearch(search: string) {
     history.replaceState(history.state, '', window.location.origin + window.location.pathname + search);
 }
 
-export function expectCurrentSearch (){
+export function expectCurrentSearch() {
     return expect(decodeURIComponent(window.location.search));
 }
 
@@ -482,7 +508,7 @@ export class noopElementDriver implements ElementDriver {
         event: string;
         data: any;
         target: string | null;
-        componentName: string | null
+        componentName: string | null;
     }> {
         throw new Error('Method not implemented.');
     }

@@ -7,12 +7,14 @@ describe('buildRequest', () => {
             { firstName: 'Ryan' },
             [],
             { firstName: 'Kevin' },
-            { 'child-component': {fingerprint: '123', tag: 'div' } },
+            { 'child-component': { fingerprint: '123', tag: 'div' } },
             {},
             {}
         );
 
-        expect(url).toEqual('/_components?existing_param=1&props=%7B%22firstName%22%3A%22Ryan%22%7D&updated=%7B%22firstName%22%3A%22Kevin%22%7D&children=%7B%22child-component%22%3A%7B%22fingerprint%22%3A%22123%22%2C%22tag%22%3A%22div%22%7D%7D');
+        expect(url).toEqual(
+            '/_components?existing_param=1&props=%7B%22firstName%22%3A%22Ryan%22%7D&updated=%7B%22firstName%22%3A%22Kevin%22%7D&children=%7B%22child-component%22%3A%7B%22fingerprint%22%3A%22123%22%2C%22tag%22%3A%22div%22%7D%7D'
+        );
         expect(fetchOptions.method).toEqual('GET');
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
@@ -24,12 +26,14 @@ describe('buildRequest', () => {
         const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },
-            [{
-                name: 'saveData',
-                args: { sendNotification: '1' },
-            }],
+            [
+                {
+                    name: 'saveData',
+                    args: { sendNotification: '1' },
+                },
+            ],
             { firstName: 'Kevin' },
-            { 'child-component': {fingerprint: '123', tag: 'div' } },
+            { 'child-component': { fingerprint: '123', tag: 'div' } },
             {},
             {}
         );
@@ -43,25 +47,30 @@ describe('buildRequest', () => {
         });
         const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
-        expect(body.get('data')).toEqual(JSON.stringify({
-            props: { firstName: 'Ryan' },
-            updated: { firstName: 'Kevin' },
-            children: { 'child-component': { fingerprint: '123', tag: 'div' } },
-            args: { sendNotification: '1' },
-        }));
+        expect(body.get('data')).toEqual(
+            JSON.stringify({
+                props: { firstName: 'Ryan' },
+                updated: { firstName: 'Kevin' },
+                children: { 'child-component': { fingerprint: '123', tag: 'div' } },
+                args: { sendNotification: '1' },
+            })
+        );
     });
 
     it('sets basic data on POST request with batch actions', () => {
         const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },
-            [{
-                name: 'saveData',
-                args: { sendNotification: '1' },
-            }, {
-                name: 'saveData',
-                args: { sendNotification: '0' },
-            }],
+            [
+                {
+                    name: 'saveData',
+                    args: { sendNotification: '1' },
+                },
+                {
+                    name: 'saveData',
+                    args: { sendNotification: '0' },
+                },
+            ],
             { firstName: 'Kevin' },
             {},
             {},
@@ -72,17 +81,22 @@ describe('buildRequest', () => {
         expect(fetchOptions.method).toEqual('POST');
         const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
-        expect(body.get('data')).toEqual(JSON.stringify({
-            props: { firstName: 'Ryan' },
-            updated: { firstName: 'Kevin' },
-            actions: [{
-                name: 'saveData',
-                args: { sendNotification: '1' },
-            }, {
-                name: 'saveData',
-                args: { sendNotification: '0' },
-            }],
-        }));
+        expect(body.get('data')).toEqual(
+            JSON.stringify({
+                props: { firstName: 'Ryan' },
+                updated: { firstName: 'Kevin' },
+                actions: [
+                    {
+                        name: 'saveData',
+                        args: { sendNotification: '1' },
+                    },
+                    {
+                        name: 'saveData',
+                        args: { sendNotification: '0' },
+                    },
+                ],
+            })
+        );
     });
 
     // when data is too long it makes a post request
@@ -106,17 +120,19 @@ describe('buildRequest', () => {
         });
         const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
-        expect(body.get('data')).toEqual(JSON.stringify({
-            props: { firstName: 'Ryan'.repeat(1000) },
-            updated: { firstName: 'Kevin'.repeat(1000) },
-        }));
+        expect(body.get('data')).toEqual(
+            JSON.stringify({
+                props: { firstName: 'Ryan'.repeat(1000) },
+                updated: { firstName: 'Kevin'.repeat(1000) },
+            })
+        );
     });
 
     it('makes a POST request when method is post', () => {
         const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
         const { url, fetchOptions } = builder.buildRequest(
             {
-                firstName: 'Ryan'
+                firstName: 'Ryan',
             },
             [],
             { firstName: 'Kevin' },
@@ -134,34 +150,33 @@ describe('buildRequest', () => {
         });
         const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
-        expect(body.get('data')).toEqual(JSON.stringify({
-            props: {
-                firstName: 'Ryan'
-            },
-            updated: { firstName: 'Kevin' },
-        }));
+        expect(body.get('data')).toEqual(
+            JSON.stringify({
+                props: {
+                    firstName: 'Ryan',
+                },
+                updated: { firstName: 'Kevin' },
+            })
+        );
     });
 
     it('sends propsFromParent when specified', () => {
         const builder = new RequestBuilder('/_components?existing_param=1', 'get', '_the_csrf_token');
-        const { url } = builder.buildRequest(
-            { firstName: 'Ryan' },
-            [],
-            { firstName: 'Kevin' },
-            { },
-            { count: 5 },
-            {}
-        );
+        const { url } = builder.buildRequest({ firstName: 'Ryan' }, [], { firstName: 'Kevin' }, {}, { count: 5 }, {});
 
-        expect(url).toEqual('/_components?existing_param=1&props=%7B%22firstName%22%3A%22Ryan%22%7D&updated=%7B%22firstName%22%3A%22Kevin%22%7D&propsFromParent=%7B%22count%22%3A5%7D');
+        expect(url).toEqual(
+            '/_components?existing_param=1&props=%7B%22firstName%22%3A%22Ryan%22%7D&updated=%7B%22firstName%22%3A%22Kevin%22%7D&propsFromParent=%7B%22count%22%3A5%7D'
+        );
 
         // do a POST
         const { fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },
-            [{
-                name: 'saveData',
-                args: { sendNotification: '1' },
-            }],
+            [
+                {
+                    name: 'saveData',
+                    args: { sendNotification: '1' },
+                },
+            ],
             { firstName: 'Kevin' },
             {},
             { count: 5 },
@@ -170,12 +185,14 @@ describe('buildRequest', () => {
 
         const body = <FormData>fetchOptions.body;
         expect(body).toBeInstanceOf(FormData);
-        expect(body.get('data')).toEqual(JSON.stringify({
-            props: { firstName: 'Ryan' },
-            updated: { firstName: 'Kevin' },
-            propsFromParent: { count: 5 },
-            args: { sendNotification: '1' },
-        }));
+        expect(body.get('data')).toEqual(
+            JSON.stringify({
+                props: { firstName: 'Ryan' },
+                updated: { firstName: 'Kevin' },
+                propsFromParent: { count: 5 },
+                args: { sendNotification: '1' },
+            })
+        );
     });
 
     // Helper method for FileList mocking
@@ -190,9 +207,9 @@ describe('buildRequest', () => {
         const file = <File>blob;
         const fileList: FileList = {
             length: length,
-            item: () => file
+            item: () => file,
         };
-        for (let i= 0; i < length; ++i) {
+        for (let i = 0; i < length; ++i) {
             fileList[i] = file;
         }
         return fileList;
@@ -207,7 +224,7 @@ describe('buildRequest', () => {
             {},
             {},
             {},
-            { file: getFileList()}
+            { file: getFileList() }
         );
 
         expect(url).toEqual('/_components');
@@ -232,7 +249,7 @@ describe('buildRequest', () => {
             {},
             {},
             {},
-            { 'file[]': getFileList(3), otherFile: getFileList()}
+            { 'file[]': getFileList(3), otherFile: getFileList() }
         );
 
         expect(url).toEqual('/_components');

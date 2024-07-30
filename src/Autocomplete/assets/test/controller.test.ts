@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-
 import { Application } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import AutocompleteController, {
@@ -21,7 +20,7 @@ import { vi } from 'vitest';
 
 const shortDelay = (ms: number): Promise<void> => new Promise((resolve) => setTimeout(resolve, ms));
 
-const startAutocompleteTest = async (html: string): Promise<{ container: HTMLElement, tomSelect: TomSelect }> => {
+const startAutocompleteTest = async (html: string): Promise<{ container: HTMLElement; tomSelect: TomSelect }> => {
     const container = document.createElement('div');
     container.innerHTML = html;
 
@@ -48,7 +47,7 @@ const startAutocompleteTest = async (html: string): Promise<{ container: HTMLEle
     }
 
     return { container, tomSelect };
-}
+};
 
 const fetchMocker = createFetchMock(vi);
 describe('AutocompleteController', () => {
@@ -80,7 +79,7 @@ describe('AutocompleteController', () => {
     });
 
     it('connect with ajax URL on a select element', async () => {
-        const { container, tomSelect} = await startAutocompleteTest(`
+        const { container, tomSelect } = await startAutocompleteTest(`
             <label for="the-select">Items</label>
             <select
                 id="the-select"
@@ -96,10 +95,10 @@ describe('AutocompleteController', () => {
                 results: [
                     {
                         value: 3,
-                        text: 'salad'
+                        text: 'salad',
                     },
-                ]
-            }),
+                ],
+            })
         );
 
         fetchMock.mockResponseOnce(
@@ -107,14 +106,14 @@ describe('AutocompleteController', () => {
                 results: [
                     {
                         value: 1,
-                        text: 'pizza'
+                        text: 'pizza',
                     },
                     {
                         value: 2,
-                        text: 'popcorn'
-                    }
-                ]
-            }),
+                        text: 'popcorn',
+                    },
+                ],
+            })
         );
 
         const controlInput = tomSelect.control_input;
@@ -140,7 +139,7 @@ describe('AutocompleteController', () => {
     });
 
     it('connect with ajax URL on an input element', async () => {
-        const { container, tomSelect} = await startAutocompleteTest(`
+        const { container, tomSelect } = await startAutocompleteTest(`
             <label for="the-input">Items</label>
             <input
                 id="the-input"
@@ -156,10 +155,10 @@ describe('AutocompleteController', () => {
                 results: [
                     {
                         value: 3,
-                        text: 'salad'
+                        text: 'salad',
                     },
                 ],
-            }),
+            })
         );
 
         fetchMock.mockResponseOnce(
@@ -167,14 +166,14 @@ describe('AutocompleteController', () => {
                 results: [
                     {
                         value: 1,
-                        text: 'pizza'
+                        text: 'pizza',
                     },
                     {
                         value: 2,
-                        text: 'popcorn'
+                        text: 'popcorn',
                     },
                 ],
-            }),
+            })
         );
 
         const controlInput = tomSelect.control_input;
@@ -233,8 +232,8 @@ describe('AutocompleteController', () => {
             ></select>
         `);
 
-        expect(tomSelect.settings.shouldLoad('')).toBeTruthy()
-    })
+        expect(tomSelect.settings.shouldLoad('')).toBeTruthy();
+    });
 
     it('default min-characters will always load after first load', async () => {
         const { container, tomSelect } = await startAutocompleteTest(`
@@ -255,10 +254,10 @@ describe('AutocompleteController', () => {
                 results: [
                     {
                         value: 1,
-                        text: 'pizza'
+                        text: 'pizza',
                     },
                 ],
-            }),
+            })
         );
         // wait for the initial Ajax request to finish
         userEvent.click(controlInput);
@@ -280,14 +279,14 @@ describe('AutocompleteController', () => {
                 results: [
                     {
                         value: 1,
-                        text: 'pizza'
+                        text: 'pizza',
                     },
                     {
                         value: 2,
-                        text: 'popcorn'
+                        text: 'popcorn',
                     },
                 ],
-            }),
+            })
         );
         controlInput.value = 'foo';
         controlInput.dispatchEvent(new Event('input'));
@@ -302,18 +301,18 @@ describe('AutocompleteController', () => {
                 results: [
                     {
                         value: 1,
-                        text: 'pizza'
+                        text: 'pizza',
                     },
                     {
                         value: 2,
-                        text: 'popcorn'
+                        text: 'popcorn',
                     },
                     {
                         value: 3,
-                        text: 'apples'
+                        text: 'apples',
                     },
                 ],
-            }),
+            })
         );
         controlInput.value = 'fo';
         controlInput.dispatchEvent(new Event('input'));
@@ -350,19 +349,19 @@ describe('AutocompleteController', () => {
         fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: [
-                    {value: 1, text: 'dog1'},
-                    {value: 2, text: 'dog2'},
-                    {value: 3, text: 'dog3'},
-                    {value: 4, text: 'dog4'},
-                    {value: 5, text: 'dog5'},
-                    {value: 6, text: 'dog6'},
-                    {value: 7, text: 'dog7'},
-                    {value: 8, text: 'dog8'},
-                    {value: 9, text: 'dog9'},
-                    {value: 10, text: 'dog10'},
+                    { value: 1, text: 'dog1' },
+                    { value: 2, text: 'dog2' },
+                    { value: 3, text: 'dog3' },
+                    { value: 4, text: 'dog4' },
+                    { value: 5, text: 'dog5' },
+                    { value: 6, text: 'dog6' },
+                    { value: 7, text: 'dog7' },
+                    { value: 8, text: 'dog8' },
+                    { value: 9, text: 'dog9' },
+                    { value: 10, text: 'dog10' },
                 ],
-                next_page: '/path/to/autocomplete?query=&page=2'
-            }),
+                next_page: '/path/to/autocomplete?query=&page=2',
+            })
         );
 
         const controlInput = tomSelect.control_input;
@@ -380,11 +379,11 @@ describe('AutocompleteController', () => {
         fetchMock.mockResponseOnce(
             JSON.stringify({
                 results: [
-                    {value: 11, text: 'dog11'},
-                    {value: 12, text: 'dog12'},
+                    { value: 11, text: 'dog11' },
+                    { value: 12, text: 'dog12' },
                 ],
                 next_page: null,
-            }),
+            })
         );
 
         // trigger a scroll, this will cause TomSelect to check "shouldLoadMore"
@@ -514,7 +513,7 @@ describe('AutocompleteController', () => {
             <option value="8">dog8</option>
         `;
 
-        let newTomSelect: TomSelect|null = null;
+        let newTomSelect: TomSelect | null = null;
         container.addEventListener('autocomplete:connect', (event: any) => {
             newTomSelect = (event.detail as AutocompleteConnectOptions).tomSelect;
         });
@@ -570,8 +569,10 @@ describe('AutocompleteController', () => {
         tomSelect.addItem('3');
         tomSelect.addItem('2');
         const getSelectedValues = () => {
-            return Array.from(selectElement.selectedOptions).map((option) => option.value).sort();
-        }
+            return Array.from(selectElement.selectedOptions)
+                .map((option) => option.value)
+                .sort();
+        };
         const selectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
         expect(getSelectedValues()).toEqual(['2', '3']);
 
@@ -645,7 +646,7 @@ describe('AutocompleteController', () => {
         const selectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
         expect(tomSelect.control_input.placeholder).toBe('Select a dog');
 
-        let newTomSelect: TomSelect|null = null;
+        let newTomSelect: TomSelect | null = null;
         container.addEventListener('autocomplete:connect', (event: any) => {
             newTomSelect = (event.detail as AutocompleteConnectOptions).tomSelect;
         });
@@ -685,36 +686,36 @@ describe('AutocompleteController', () => {
                         {
                             group_by: ['Meat'],
                             value: 1,
-                            text: 'Beef'
+                            text: 'Beef',
                         },
                         {
                             group_by: ['Meat'],
                             value: 2,
-                            text: 'Mutton'
+                            text: 'Mutton',
                         },
                         {
                             group_by: ['starchy'],
                             value: 3,
-                            text: 'Potatoes'
+                            text: 'Potatoes',
                         },
                         {
                             group_by: ['starchy', 'Meat'],
                             value: 4,
-                            text: 'chili con carne'
+                            text: 'chili con carne',
                         },
                     ],
                     optgroups: [
                         {
                             value: 'Meat',
-                            label: 'Meat'
+                            label: 'Meat',
                         },
                         {
                             value: 'starchy',
-                            label: 'starchy'
+                            label: 'starchy',
                         },
-                    ]
+                    ],
                 },
-            }),
+            })
         );
 
         fetchMock.mockResponseOnce(
@@ -724,22 +725,22 @@ describe('AutocompleteController', () => {
                         {
                             group_by: ['Meat'],
                             value: 1,
-                            text: 'Beef'
+                            text: 'Beef',
                         },
                         {
                             group_by: ['Meat'],
                             value: 2,
-                            text: 'Mutton'
+                            text: 'Mutton',
                         },
                     ],
                     optgroups: [
                         {
                             value: 'Meat',
-                            label: 'Meat'
+                            label: 'Meat',
                         },
-                    ]
-                }
-            }),
+                    ],
+                },
+            })
         );
 
         const controlInput = tomSelect.control_input;
@@ -801,8 +802,10 @@ describe('AutocompleteController', () => {
         tomSelect.addItem('3');
 
         const getSelectedValues = () => {
-            return Array.from(selectElement.selectedOptions).map((option) => option.value).sort();
-        }
+            return Array.from(selectElement.selectedOptions)
+                .map((option) => option.value)
+                .sort();
+        };
 
         const selectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
         expect(getSelectedValues()).toEqual(['2', '3']);

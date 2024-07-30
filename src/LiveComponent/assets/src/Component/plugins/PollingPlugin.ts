@@ -52,7 +52,7 @@ export default class implements PluginInterface {
                             duration = Number.parseInt(modifier.value);
                         }
 
-                         break;
+                        break;
                     default:
                         console.warn(`Unknown modifier "${modifier.name}" in data-poll "${rawPollConfig}".`);
                 }
@@ -62,4 +62,3 @@ export default class implements PluginInterface {
         });
     }
 }
-

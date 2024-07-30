@@ -3,7 +3,7 @@ import {
     elementBelongsToThisComponent,
     getModelDirectiveFromElement,
     getValueFromElement,
-    setValueOnElement
+    setValueOnElement,
 } from '../../dom_utils';
 import type { PluginInterface } from './PluginInterface';
 
@@ -56,7 +56,7 @@ export default class implements PluginInterface {
             }
 
             if (component.valueStore.has(modelName)) {
-                setValueOnElement(element, component.valueStore.get(modelName))
+                setValueOnElement(element, component.valueStore.get(modelName));
             }
 
             // for select elements without a blank value, one might be selected automatically
@@ -64,6 +64,6 @@ export default class implements PluginInterface {
             if (element instanceof HTMLSelectElement && !element.multiple) {
                 component.valueStore.set(modelName, getValueFromElement(element, component.valueStore));
             }
-        })
+        });
     }
 }

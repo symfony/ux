@@ -1,4 +1,4 @@
-import {type Directive, parseDirectives} from '../../src/Directive/directives_parser';
+import { type Directive, parseDirectives } from '../../src/Directive/directives_parser';
 
 const assertDirectiveEquals = (actual: Directive, expected: any) => {
     // normalize this so that it doesn't trip up the comparison
@@ -7,7 +7,7 @@ const assertDirectiveEquals = (actual: Directive, expected: any) => {
     expected.getString = getString;
 
     expect(actual).toEqual(expected);
-}
+};
 
 describe('directives parser', () => {
     it('parses no attribute value', () => {
@@ -30,7 +30,7 @@ describe('directives parser', () => {
             action: 'hide',
             args: [],
             modifiers: [],
-        })
+        });
     });
 
     it('parses an action with a simple argument', () => {
@@ -40,7 +40,7 @@ describe('directives parser', () => {
             action: 'addClass',
             args: ['opacity-50'],
             modifiers: [],
-        })
+        });
     });
 
     it('parses an action with one argument with a space', () => {
@@ -50,7 +50,7 @@ describe('directives parser', () => {
             action: 'addClass',
             args: ['opacity-50 disabled'],
             modifiers: [],
-        })
+        });
     });
 
     it('parses an action with multiple, unnamed arguments', () => {
@@ -61,7 +61,7 @@ describe('directives parser', () => {
             // space between arguments is trimmed
             args: ['opacity-50', 'disabled'],
             modifiers: [],
-        })
+        });
     });
 
     it('parses multiple actions simple', () => {
@@ -71,12 +71,12 @@ describe('directives parser', () => {
             action: 'addClass',
             args: ['opacity-50'],
             modifiers: [],
-        })
+        });
         assertDirectiveEquals(directives[1], {
             action: 'addAttribute',
             args: ['disabled'],
             modifiers: [],
-        })
+        });
     });
 
     it('parses multiple actions with multiple arguments', () => {
@@ -86,17 +86,17 @@ describe('directives parser', () => {
             action: 'hide',
             args: [],
             modifiers: [],
-        })
+        });
         assertDirectiveEquals(directives[1], {
             action: 'addClass',
             args: ['opacity-50 disabled'],
             modifiers: [],
-        })
+        });
         assertDirectiveEquals(directives[2], {
             action: 'addAttribute',
             args: ['disabled'],
             modifiers: [],
-        })
+        });
     });
 
     it('parses simple modifiers', () => {
@@ -105,10 +105,8 @@ describe('directives parser', () => {
         assertDirectiveEquals(directives[0], {
             action: 'addClass',
             args: ['disabled'],
-            modifiers: [
-                { name: 'delay', value: null }
-            ],
-        })
+            modifiers: [{ name: 'delay', value: null }],
+        });
     });
 
     it('parses modifiers with argument', () => {
@@ -117,10 +115,8 @@ describe('directives parser', () => {
         assertDirectiveEquals(directives[0], {
             action: 'addClass',
             args: ['disabled'],
-            modifiers: [
-                { name: 'delay', value: '400' },
-            ],
-        })
+            modifiers: [{ name: 'delay', value: '400' }],
+        });
     });
 
     it('parses multiple modifiers', () => {
@@ -133,32 +129,32 @@ describe('directives parser', () => {
                 { name: 'prevent', value: null },
                 { name: 'debounce', value: '400' },
             ],
-        })
+        });
     });
 
     describe('errors on syntax errors', () => {
         it('missing ending )', () => {
             expect(() => {
                 parseDirectives('addClass(opacity-50');
-            }).toThrow('Did you forget to add a closing ")" after "addClass"?')
+            }).toThrow('Did you forget to add a closing ")" after "addClass"?');
         });
 
         it('missing ending before next action', () => {
             expect(() => {
                 parseDirectives('addClass(opacity-50 hide');
-            }).toThrow('Did you forget to add a closing ")" after "addClass"?')
+            }).toThrow('Did you forget to add a closing ")" after "addClass"?');
         });
 
         it('no space between actions', () => {
             expect(() => {
                 parseDirectives('addClass(opacity-50)hide');
-            }).toThrow('Missing space after addClass()')
+            }).toThrow('Missing space after addClass()');
         });
 
         it('modifier cannot have multiple arguments', () => {
             expect(() => {
                 parseDirectives('debounce(10, 20)|save');
-            }).toThrow('The modifier "debounce()" does not support multiple arguments.')
+            }).toThrow('The modifier "debounce()" does not support multiple arguments.');
         });
     });
 });

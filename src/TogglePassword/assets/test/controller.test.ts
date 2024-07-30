@@ -26,7 +26,7 @@ const startStimulus = () => {
     const application = Application.start();
     application.register('check', CheckController);
     application.register('toggle-password', TogglePasswordController);
-}
+};
 
 describe('TogglePasswordController', () => {
     let container: HTMLElement;

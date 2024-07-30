@@ -17,14 +17,14 @@ declare const Turbo: any;
 type MaybePromise<T = void> = T | Promise<T>;
 
 export type ComponentHooks = {
-    connect: (component: Component) => MaybePromise,
-    disconnect: (component: Component) => MaybePromise,
-    'request:started': (requestConfig: any) => MaybePromise,
-    'render:finished': (component: Component) => MaybePromise,
-    'response:error': (backendResponse: BackendResponse, controls: { displayError: boolean }) => MaybePromise,
-    'loading.state:started': (element: HTMLElement, request: BackendRequest) => MaybePromise,
-    'loading.state:finished': (element: HTMLElement) => MaybePromise,
-    'model:set': (model: string, value: any, component: Component) => MaybePromise,
+    connect: (component: Component) => MaybePromise;
+    disconnect: (component: Component) => MaybePromise;
+    'request:started': (requestConfig: any) => MaybePromise;
+    'render:finished': (component: Component) => MaybePromise;
+    'response:error': (backendResponse: BackendResponse, controls: { displayError: boolean }) => MaybePromise;
+    'loading.state:started': (element: HTMLElement, request: BackendRequest) => MaybePromise;
+    'loading.state:finished': (element: HTMLElement) => MaybePromise;
+    'model:set': (model: string, value: any, component: Component) => MaybePromise;
 };
 
 export type ComponentHookName = keyof ComponentHooks;
@@ -40,7 +40,7 @@ export default class Component {
     readonly listeners: Map<string, string[]>;
     private backend: BackendInterface;
     readonly elementDriver: ElementDriver;
-    id: string|null;
+    id: string | null;
 
     /**
      * A fingerprint that identifies the props/input that was used on
@@ -57,11 +57,11 @@ export default class Component {
 
     defaultDebounce = 150;
 
-    private backendRequest: BackendRequest|null = null;
+    private backendRequest: BackendRequest | null = null;
     /** Actions that are waiting to be executed */
     private pendingActions: BackendAction[] = [];
     /** Files that are waiting to be sent */
-    private pendingFiles: {[key: string]: HTMLInputElement} = {};
+    private pendingFiles: { [key: string]: HTMLInputElement } = {};
     /** Is a request waiting to be made? */
     private isRequestPending = false;
     /** Current "timeout" before the pending request should be sent. */
@@ -80,7 +80,15 @@ export default class Component {
      * @param backend Backend instance for updating
      * @param elementDriver Class to get "model" name from any element.
      */
-    constructor(element: HTMLElement, name: string, props: any, listeners: Array<{ event: string; action: string }>, id: string|null, backend: BackendInterface, elementDriver: ElementDriver) {
+    constructor(
+        element: HTMLElement,
+        name: string,
+        props: any,
+        listeners: Array<{ event: string; action: string }>,
+        id: string | null,
+        backend: BackendInterface,
+        elementDriver: ElementDriver
+    ) {
         this.element = element;
         this.name = name;
         this.backend = backend;
@@ -100,9 +108,8 @@ export default class Component {
         this.hooks = new HookManager();
         this.resetPromise();
 
-        this.externalMutationTracker = new ExternalMutationTracker(
-            this.element,
-            (element: Element) => elementBelongsToThisComponent(element, this)
+        this.externalMutationTracker = new ExternalMutationTracker(this.element, (element: Element) =>
+            elementBelongsToThisComponent(element, this)
         );
         // start early to catch any mutations that happen before the component is connected
         // for example, the LoadingPlugin, which sets initial non-loading state
@@ -128,15 +135,21 @@ export default class Component {
         this.externalMutationTracker.stop();
     }
 
-    on<T extends string | ComponentHookName = ComponentHookName>(hookName: T, callback: ComponentHookCallback<T>): void {
+    on<T extends string | ComponentHookName = ComponentHookName>(
+        hookName: T,
+        callback: ComponentHookCallback<T>
+    ): void {
         this.hooks.register(hookName, callback);
     }
 
-    off<T extends string | ComponentHookName = ComponentHookName>(hookName: T, callback: ComponentHookCallback<T>): void {
+    off<T extends string | ComponentHookName = ComponentHookName>(
+        hookName: T,
+        callback: ComponentHookCallback<T>
+    ): void {
         this.hooks.unregister(hookName, callback);
     }
 
-    set(model: string, value: any, reRender = false, debounce: number|boolean = false): Promise<BackendResponse> {
+    set(model: string, value: any, reRender = false, debounce: number | boolean = false): Promise<BackendResponse> {
         const promise = this.nextRequestPromise;
         const modelName = normalizeModelName(model);
 
@@ -167,11 +180,11 @@ export default class Component {
         return this.valueStore.get(modelName);
     }
 
-    action(name: string, args: any = {}, debounce: number|boolean = false): Promise<BackendResponse> {
+    action(name: string, args: any = {}, debounce: number | boolean = false): Promise<BackendResponse> {
         const promise = this.nextRequestPromise;
         this.pendingActions.push({
             name,
-            args
+            args,
         });
 
         this.debouncedStartRequest(debounce);
@@ -198,11 +211,11 @@ export default class Component {
         return this.unsyncedInputsTracker.getUnsyncedModels();
     }
 
-    emit(name: string, data: any, onlyMatchingComponentsNamed: string|null = null): void {
+    emit(name: string, data: any, onlyMatchingComponentsNamed: string | null = null): void {
         this.performEmit(name, data, false, onlyMatchingComponentsNamed);
     }
 
-    emitUp(name: string, data: any, onlyMatchingComponentsNamed: string|null = null): void {
+    emitUp(name: string, data: any, onlyMatchingComponentsNamed: string | null = null): void {
         this.performEmit(name, data, true, onlyMatchingComponentsNamed);
     }
 
@@ -210,7 +223,7 @@ export default class Component {
         this.doEmit(name, data);
     }
 
-    private performEmit(name: string, data: any, emitUp: boolean, matchingName: string|null): void {
+    private performEmit(name: string, data: any, emitUp: boolean, matchingName: string | null): void {
         const components: Component[] = findComponents(this, emitUp, matchingName);
         components.forEach((component) => {
             component.doEmit(name, data);
@@ -219,7 +232,7 @@ export default class Component {
 
     private doEmit(name: string, data: any): void {
         if (!this.listeners.has(name)) {
-            return ;
+            return;
         }
 
         // set actions but tell TypeScript it is an array of strings
@@ -236,7 +249,7 @@ export default class Component {
 
     private tryStartingRequest(): void {
         if (!this.backendRequest) {
-            this.performRequest()
+            this.performRequest();
 
             return;
         }
@@ -255,8 +268,8 @@ export default class Component {
         // they are now "in sync" (with some exceptions noted inside)
         this.unsyncedInputsTracker.resetUnsyncedFields();
 
-        const filesToSend: {[key: string]: FileList} = {};
-        for(const [key, value] of Object.entries(this.pendingFiles)) {
+        const filesToSend: { [key: string]: FileList } = {};
+        for (const [key, value] of Object.entries(this.pendingFiles)) {
             if (value.files) {
                 filesToSend[key] = value.files;
             }
@@ -290,13 +303,16 @@ export default class Component {
             const html = await backendResponse.getBody();
 
             // clear sent files inputs
-            for(const input of Object.values(this.pendingFiles)) {
+            for (const input of Object.values(this.pendingFiles)) {
                 input.value = '';
             }
 
             // if the response does not contain a component, render as an error
             const headers = backendResponse.response.headers;
-            if (!headers.get('Content-Type')?.includes('application/vnd.live-component+html') && !headers.get('X-Live-Redirect')) {
+            if (
+                !headers.get('Content-Type')?.includes('application/vnd.live-component+html') &&
+                !headers.get('X-Live-Redirect')
+            ) {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
                 this.hooks.triggerHook('response:error', backendResponse, controls);
@@ -370,7 +386,7 @@ export default class Component {
             }
         } catch (error) {
             console.error(`There was a problem with the '${this.name}' component HTML returned:`, {
-                id: this.id
+                id: this.id,
             });
             throw error;
         }
@@ -408,23 +424,25 @@ export default class Component {
             if (target === 'self') {
                 this.emitSelf(event, data);
 
-                return
+                return;
             }
 
             this.emit(event, data, componentName);
         });
 
         browserEventsToDispatch.forEach(({ event, payload }) => {
-            this.element.dispatchEvent(new CustomEvent(event, {
-                detail: payload,
-                bubbles: true,
-            }));
+            this.element.dispatchEvent(
+                new CustomEvent(event, {
+                    detail: payload,
+                    bubbles: true,
+                })
+            );
         });
 
         this.hooks.triggerHook('render:finished', this);
     }
 
-    private calculateDebounce(debounce: number|boolean): number {
+    private calculateDebounce(debounce: number | boolean): number {
         if (debounce === true) {
             return this.defaultDebounce;
         }
@@ -443,7 +461,7 @@ export default class Component {
         }
     }
 
-    private debouncedStartRequest(debounce: number|boolean) {
+    private debouncedStartRequest(debounce: number | boolean) {
         this.clearRequestDebounceTimeout();
         this.requestDebounceTimeout = window.setTimeout(() => {
             this.render();
@@ -483,19 +501,19 @@ export default class Component {
             iframe.contentWindow.document.close();
         }
 
-        const closeModal = (modal: HTMLElement|null) => {
+        const closeModal = (modal: HTMLElement | null) => {
             if (modal) {
-                modal.outerHTML = ''
+                modal.outerHTML = '';
             }
-            document.body.style.overflow = 'visible'
-        }
+            document.body.style.overflow = 'visible';
+        };
 
         // close on click
         modal.addEventListener('click', () => closeModal(modal));
 
         // close on escape
         modal.setAttribute('tabindex', '0');
-        modal.addEventListener('keydown', e => {
+        modal.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal(modal);
             }
@@ -534,14 +552,14 @@ export default class Component {
  */
 export function proxifyComponent(component: Component): Component {
     return new Proxy(component, {
-        get(component: Component, prop: string|symbol): any {
+        get(component: Component, prop: string | symbol): any {
             // string check is to handle symbols
             if (prop in component || typeof prop !== 'string') {
                 if (typeof component[prop as keyof typeof component] === 'function') {
                     const callable = component[prop as keyof typeof component] as (...args: any) => any;
                     return (...args: any) => {
                         return callable.apply(component, args);
-                    }
+                    };
                 }
 
                 // forward to public properties
@@ -550,18 +568,17 @@ export function proxifyComponent(component: Component): Component {
 
             // return model
             if (component.valueStore.has(prop)) {
-                return component.getData(prop)
+                return component.getData(prop);
             }
 
             // try to call an action
             return (args: string[]) => {
                 return component.action.apply(component, [prop, args]);
-            }
+            };
         },
 
         set(target: Component, property: string, value: any): boolean {
             if (property in target) {
-
                 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
                 // @ts-ignore Ignoring potentially setting private properties
                 target[property as keyof typeof target] = value;

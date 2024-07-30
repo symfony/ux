@@ -14,7 +14,7 @@ import {
     shutdownTests,
     getComponent,
     dataToJsonAttribute,
-    getStimulusApplication
+    getStimulusApplication,
 } from '../tools';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
@@ -24,79 +24,87 @@ import { Controller } from '@hotwired/stimulus';
 describe('Component parent -> child initialization and rendering tests', () => {
     afterEach(() => {
         shutdownTests();
-    })
+    });
 
     it('sends a map of child fingerprints on re-render', async () => {
-        const test = await createTest({}, (data: any) => `
+        const test = await createTest(
+            {},
+            (data: any) => `
             <div ${initComponent(data)}>
-                <div ${initComponent({}, {id: 'the-child-id1', fingerprint: 'child-fingerprint1'})}>Child1</div>
-                <div ${initComponent({}, {id: 'the-child-id2', fingerprint: 'child-fingerprint2'})}>Child2</div>
+                <div ${initComponent({}, { id: 'the-child-id1', fingerprint: 'child-fingerprint1' })}>Child1</div>
+                <div ${initComponent({}, { id: 'the-child-id2', fingerprint: 'child-fingerprint2' })}>Child2</div>
             </div>
-        `);
+        `
+        );
 
-        test.expectsAjaxCall()
-            .expectChildFingerprints({
-                'the-child-id1': { fingerprint: 'child-fingerprint1', tag: 'div' },
-                'the-child-id2': { fingerprint: 'child-fingerprint2', tag: 'div' },
-            });
+        test.expectsAjaxCall().expectChildFingerprints({
+            'the-child-id1': { fingerprint: 'child-fingerprint1', tag: 'div' },
+            'the-child-id2': { fingerprint: 'child-fingerprint2', tag: 'div' },
+        });
 
         test.component.render();
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
     });
 
     it('removes missing child component on re-render', async () => {
-        const test = await createTest({renderChild: true}, (data: any) => `
+        const test = await createTest(
+            { renderChild: true },
+            (data: any) => `
             <div ${initComponent(data)}>
-                ${data.renderChild
-                    ? `<div ${initComponent({}, {id: 'the-child-id'})} data-testid="child">Child Component</div>`
-                    : ''
+                ${
+                    data.renderChild
+                        ? `<div ${initComponent({}, { id: 'the-child-id' })} data-testid="child">Child Component</div>`
+                        : ''
                 }
             </div>
-        `);
+        `
+        );
 
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                data.renderChild = false;
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.renderChild = false;
+        });
 
-        expect(test.element).toHaveTextContent('Child Component')
+        expect(test.element).toHaveTextContent('Child Component');
         expect(findChildren(test.component).length).toEqual(1);
         test.component.render();
         // wait for child to disappear
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
-        expect(test.element).not.toHaveTextContent('Child Component')
+        expect(test.element).not.toHaveTextContent('Child Component');
         expect(findChildren(test.component).length).toEqual(0);
     });
 
     it('adds new child component on re-render', async () => {
-        const test = await createTest({renderChild: false}, (data: any) => `
+        const test = await createTest(
+            { renderChild: false },
+            (data: any) => `
            <div ${initComponent(data)}>
-               ${data.renderChild
-            ? `<div ${initComponent({}, {id: 'the-child-id'})} data-testid="child">Child Component</div>`
-            : ''
-        }
+               ${
+                   data.renderChild
+                       ? `<div ${initComponent({}, { id: 'the-child-id' })} data-testid="child">Child Component</div>`
+                       : ''
+               }
            </div>
-       `);
+       `
+        );
 
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                data.renderChild = true;
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.renderChild = true;
+        });
 
-        expect(test.element).not.toHaveTextContent('Child Component')
+        expect(test.element).not.toHaveTextContent('Child Component');
         expect(findChildren(test.component).length).toEqual(0);
         test.component.render();
         // wait for child to disappear
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
-        expect(test.element).toHaveTextContent('Child Component')
+        expect(test.element).toHaveTextContent('Child Component');
         expect(findChildren(test.component).length).toEqual(1);
     });
 
     it('new child marked as data-live-preserve is ignored except for new attributes', async () => {
         const originalChild = `
-            <div ${initComponent({}, {id: 'the-child-id'})}>
+            <div ${initComponent({}, { id: 'the-child-id' })}>
                 Original Child Component
             </div>
         `;
@@ -106,31 +114,33 @@ describe('Component parent -> child initialization and rendering tests', () => {
             </div>
         `;
 
-        const test = await createTest({useOriginalChild: true}, (data: any) => `
+        const test = await createTest(
+            { useOriginalChild: true },
+            (data: any) => `
            <div ${initComponent(data)}>
                ${data.useOriginalChild ? originalChild : updatedChild}
            </div>
-       `);
+       `
+        );
 
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                data.useOriginalChild = false;
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.useOriginalChild = false;
+        });
 
-        expect(test.element).toHaveTextContent('Original Child Component')
+        expect(test.element).toHaveTextContent('Original Child Component');
         test.component.render();
         // wait for Ajax call
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
         // child component is STILL here: the new rendering was ignored
-        expect(test.element).toHaveTextContent('Original Child Component')
+        expect(test.element).toHaveTextContent('Original Child Component');
         expect(test.element).toContainHTML('data-new="bar"');
         expect(test.element).not.toContainHTML('data-live-preserve');
     });
 
     it('data-live-preserve child in same location is not removed/re-added to the DOM', async () => {
         const originalChild = `
-            <div ${initComponent({}, {id: 'the-child-id'})}>
+            <div ${initComponent({}, { id: 'the-child-id' })}>
                 <div data-controller="track-connect"></div>
                 Original Child Component
             </div>
@@ -139,22 +149,27 @@ describe('Component parent -> child initialization and rendering tests', () => {
             <div id="the-child-id" data-live-preserve></div>
         `;
 
-        const test = await createTest({useOriginalChild: true}, (data: any) => `
+        const test = await createTest(
+            { useOriginalChild: true },
+            (data: any) => `
            <div ${initComponent(data)}>
                ${data.useOriginalChild ? originalChild : updatedChild}
            </div>
-       `);
+       `
+        );
 
-        getStimulusApplication().register('track-connect', class extends Controller {
-            disconnect() {
-                this.element.setAttribute('disconnected', '');
+        getStimulusApplication().register(
+            'track-connect',
+            class extends Controller {
+                disconnect() {
+                    this.element.setAttribute('disconnected', '');
+                }
             }
-        });
+        );
 
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                data.useOriginalChild = false;
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.useOriginalChild = false;
+        });
 
         await test.component.render();
         // sanity check that the child is there
@@ -165,7 +180,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
 
     it('data-live-preserve element moved correctly when position changes and old element morphed into different element', async () => {
         const originalChild = `
-            <div ${initComponent({}, {id: 'the-child-id'})} data-testid="child-component">
+            <div ${initComponent({}, { id: 'the-child-id' })} data-testid="child-component">
                 <div data-controller="track-connect"></div>
                 Original Child Component
             </div>
@@ -176,17 +191,19 @@ describe('Component parent -> child initialization and rendering tests', () => {
 
         // when morphing original -> updated, the outer div (which was the child)
         // will be morphed into a normal div
-        const test = await createTest({useOriginalChild: true}, (data: any) => `
+        const test = await createTest(
+            { useOriginalChild: true },
+            (data: any) => `
            <div ${initComponent(data)}>
                ${data.useOriginalChild ? originalChild : ''}
                ${data.useOriginalChild ? '' : `<div class="wrapper">${updatedChild}</div>`}
            </div>
-       `)
+       `
+        );
 
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                data.useOriginalChild = false;
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.useOriginalChild = false;
+        });
 
         const childElement = getByTestId(test.element, 'child-component');
         await test.component.render();
@@ -200,7 +217,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
         const childTemplate = (data: any) => `
             <div ${initComponent(
                 { toUppercase: data.toUppercase, fullName: data.fullName },
-                { id: 'the-child-id', fingerprint: 'original fingerprint'}
+                { id: 'the-child-id', fingerprint: 'original fingerprint' }
             )} data-testid="child-component">
                 <input data-model="norender|fullName">
                 Full Name: ${data.toUppercase ? data.fullName.toUpperCase() : data.fullName}
@@ -213,19 +230,23 @@ describe('Component parent -> child initialization and rendering tests', () => {
                 id="the-child-id"
                 data-live-fingerprint-value="updated fingerprint"
                 data-live-preserve
-                data-live-props-updated-from-parent-value="${dataToJsonAttribute({toUppercase: true})}"
+                data-live-props-updated-from-parent-value="${dataToJsonAttribute({ toUppercase: true })}"
             ><!-- no body needed --></div>
         `;
 
-        const test = await createTest({useOriginalChild: true}, (data: any) => `
+        const test = await createTest(
+            { useOriginalChild: true },
+            (data: any) => `
            <div ${initComponent(data)}>
                Using Original child: ${data.useOriginalChild ? 'yes' : 'no'}
-               ${data.useOriginalChild
-                    ? childTemplate({ fullName: 'Ryan', toUppercase: false })
-                    : childReturnedFromParentCall
-                }
+               ${
+                   data.useOriginalChild
+                       ? childTemplate({ fullName: 'Ryan', toUppercase: false })
+                       : childReturnedFromParentCall
+               }
            </div>
-       `);
+       `
+        );
 
         const childComponent = getComponent(getByTestId(test.element, 'child-component'));
         // just used to mock the Ajax call
@@ -253,10 +274,9 @@ describe('Component parent -> child initialization and rendering tests', () => {
         userEvent.type(childTest.queryByDataModel('fullName'), ' Weaver');
 
         // C) Re-render the parent
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                data.useOriginalChild = false;
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.useOriginalChild = false;
+        });
         test.component.render();
         // wait for parent Ajax call to start
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
@@ -264,7 +284,8 @@ describe('Component parent -> child initialization and rendering tests', () => {
         // E) Expect the child to re-render
         // after the parent Ajax call has finished, but shortly before it's
         // done processing, the child component should start its own Ajax call
-        childTest.expectsAjaxCall()
+        childTest
+            .expectsAjaxCall()
             // expect the modified firstName data
             // expect the new prop
             .expectUpdatedData({ fullName: 'Ryan Weaver' })
@@ -274,7 +295,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
         // wait for parent Ajax call to finish
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
         // sanity check
-        expect(test.element).toHaveTextContent('Using Original child: no')
+        expect(test.element).toHaveTextContent('Using Original child: no');
 
         // after the parent re-renders, the child should already have received its new fingerprint
         expect(childComponent.fingerprint).toEqual('updated fingerprint');
@@ -286,7 +307,7 @@ describe('Component parent -> child initialization and rendering tests', () => {
         // child component re-rendered and there are a few important things here
         // 1) the toUppercase prop was changed by the parent and that change remains
         // 2) The " Weaver" change to the "firstName" data was kept, not "run over"
-        expect(childComponent.element).toHaveTextContent('Full Name: RYAN WEAVER')
+        expect(childComponent.element).toHaveTextContent('Full Name: RYAN WEAVER');
     });
 
     it('child controller changes its component if child id changes', async () => {
@@ -304,29 +325,31 @@ describe('Component parent -> child initialization and rendering tests', () => {
             </span>
         `;
 
-        const test = await createTest({useOriginalChild: true}, (data: any) => `
+        const test = await createTest(
+            { useOriginalChild: true },
+            (data: any) => `
            <div ${initComponent(data)}>
                Parent Component
-               ${data.useOriginalChild ? originalChildTemplate({name: 'original'}) : reRenderedChildTemplate({name: 'new'})}
+               ${data.useOriginalChild ? originalChildTemplate({ name: 'original' }) : reRenderedChildTemplate({ name: 'new' })}
            </div>
-       `);
+       `
+        );
 
         const originalChildElement = getByTestId(test.element, 'child-component');
 
         // Re-render the parent
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                // trigger the re-rendered child to be used
-                data.useOriginalChild = false;
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            // trigger the re-rendered child to be used
+            data.useOriginalChild = false;
+        });
         test.component.render();
         // wait for parent Ajax call to start/finish
         await waitFor(() => expect(test.element).toHaveAttribute('busy'));
         await waitFor(() => expect(test.element).not.toHaveAttribute('busy'));
 
         // no child Ajax call made: we simply use the new child's content
-        expect(test.element).toHaveTextContent('New Child')
-        expect(test.element).not.toHaveTextContent('Original Child')
+        expect(test.element).toHaveTextContent('New Child');
+        expect(test.element).not.toHaveTextContent('Original Child');
 
         expect(findChildren(test.component).length).toEqual(1);
         const newChildElement = getByTestId(test.element, 'child-component');
@@ -351,19 +374,23 @@ describe('Component parent -> child initialization and rendering tests', () => {
             ></span>
         `;
 
-        const test = await createTest({}, (data: any) => `
+        const test = await createTest(
+            {},
+            (data: any) => `
            <div ${initComponent(data)}>
                ${childTemplate({ number: 1, value: 'Original value for child 1' })}
                <div>Parent Component</div>
                ${childTemplate({ number: 2, value: 'Original value for child 2' })}
            </div>
-       `);
+       `
+        );
 
         // Re-render the parent
         test.expectsAjaxCall()
             // return the template in a different order
             // and render children with an updated value prop
-            .willReturn((data: any) => `
+            .willReturn(
+                (data: any) => `
                 <div ${initComponent(data)}>
                     <div id="foo">
                         ${emptyChildTemplate({ number: 2, value: 'New value for child 2' })}
@@ -375,7 +402,8 @@ describe('Component parent -> child initialization and rendering tests', () => {
                         </li>
                     </ul>
                 </div>
-            `);
+            `
+            );
 
         const childComponent1 = getComponent(getByTestId(test.element, 'child-component-1'));
         const childTest1 = createTestForExistingComponent(childComponent1);
@@ -383,20 +411,21 @@ describe('Component parent -> child initialization and rendering tests', () => {
         const childTest2 = createTestForExistingComponent(childComponent2);
 
         // Expect both children to re-render
-        childTest1.expectsAjaxCall()
+        childTest1
+            .expectsAjaxCall()
             // new props are sent, but that doesn't count as updated data
             // we verify the new props are used below by checking the HTML
-            .expectUpdatedData({ })
+            .expectUpdatedData({})
             .expectUpdatedPropsFromParent({ number: 1, value: 'New value for child 1' })
             .willReturn(childTemplate);
-        childTest2.expectsAjaxCall()
-            .expectUpdatedData({ })
+        childTest2
+            .expectsAjaxCall()
+            .expectUpdatedData({})
             .expectUpdatedPropsFromParent({ number: 2, value: 'New value for child 2' })
             .willReturn(childTemplate);
 
         // trigger the parent render, which will trigger the children to re-render
         await test.component.render();
-
 
         // wait for child to start and stop loading
         await waitFor(() => expect(getByTestId(test.element, 'child-component-1')).not.toHaveAttribute('busy'));

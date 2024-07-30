@@ -7,22 +7,25 @@
  * file that was distributed with this source code.
  */
 
-import {createTest, initComponent, shutdownTests} from '../tools';
-import {getByTestId, getByText, waitFor} from '@testing-library/dom';
+import { createTest, initComponent, shutdownTests } from '../tools';
+import { getByTestId, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
 describe('LiveController data-loading Tests', () => {
     afterEach(() => {
         shutdownTests();
-    })
+    });
 
     it('executes basic loading functionality on an element', async () => {
-        const test = await createTest({food: 'pizza'}, (data: any) => `
+        const test = await createTest(
+            { food: 'pizza' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <span>I like: ${data.food}</span> 
                 <span data-loading="show" data-testid="loading-element">Loading...</span>
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             .serverWillChangeProps((data: any) => {
@@ -46,12 +49,15 @@ describe('LiveController data-loading Tests', () => {
     });
 
     it('executes basic loading functionality on root element', async () => {
-        const test = await createTest({food: 'pizza'}, (data: any) => `
+        const test = await createTest(
+            { food: 'pizza' },
+            (data: any) => `
             <div ${initComponent(data)} data-loading="addClass(opacity-20)">
                 <span>I like: ${data.food}</span> 
                 <button data-action="live#$render">Re-Render</button>
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             .serverWillChangeProps((data: any) => {
@@ -75,7 +81,9 @@ describe('LiveController data-loading Tests', () => {
     });
 
     it('takes into account the "action" modifier', async () => {
-        const test = await createTest({}, (data: any) => `
+        const test = await createTest(
+            {},
+            (data: any) => `
             <div ${initComponent(data)}> 
                 <span data-loading="action(save)|show" data-testid="loading-element">Loading...</span>
 
@@ -83,7 +91,8 @@ describe('LiveController data-loading Tests', () => {
                 <button data-action="live#action" data-live-action-param="otherAction">Other Action</button>
                 <button data-action="live#$render">Re-Render</button>
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             // delay so we can check loading
@@ -119,7 +128,9 @@ describe('LiveController data-loading Tests', () => {
     });
 
     it('takes into account the "model" modifier', async () => {
-        const test = await createTest({ comments: '', user: { email: '' }}, (data: any) => `
+        const test = await createTest(
+            { comments: '', user: { email: '' } },
+            (data: any) => `
             <div ${initComponent(data)}> 
                 <textarea data-model="comments"></textarea>
                 <span data-loading="model(comments)|show" data-testid="comments-loading">Comments change loading...</span>
@@ -127,14 +138,15 @@ describe('LiveController data-loading Tests', () => {
                 <textarea data-model="user.email"></textarea>
                 <span data-loading="model(user.email)|show" data-testid="email-loading">Checking if email is taken...</span>
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             .expectUpdatedData({ comments: 'Changing the comments!' })
             // delay so we can check loading
             .delayResponse(50);
 
-        userEvent.type(test.queryByDataModel('comments'), 'Changing the comments!')
+        userEvent.type(test.queryByDataModel('comments'), 'Changing the comments!');
         // it should not be loading yet due to debouncing
         expect(getByTestId(test.element, 'comments-loading')).not.toBeVisible();
         // wait for ajax call to start
@@ -170,14 +182,17 @@ describe('LiveController data-loading Tests', () => {
     });
 
     it('can handle multiple actions on the same request', async () => {
-        const test = await createTest({}, (data: any) => `
+        const test = await createTest(
+            {},
+            (data: any) => `
             <div ${initComponent(data)}> 
                 <span data-loading="action(otherAction)|show" data-testid="loading-element">Loading...</span>
 
                 <button data-action="live#action" data-live-action-param="debounce(50)|save">Save</button>
                 <button data-action="live#action" data-live-action-param="otherAction">Other Action</button>
             </div>
-        `);
+        `
+        );
 
         // 1 ajax request with both actions
         test.expectsAjaxCall()
@@ -197,13 +212,16 @@ describe('LiveController data-loading Tests', () => {
     });
 
     it('does not trigger loading if request finishes first', async () => {
-        const test = await createTest({}, (data: any) => `
+        const test = await createTest(
+            {},
+            (data: any) => `
            <div ${initComponent(data)}> 
                <span data-loading="action(save)|delay(50)|show" data-testid="loading-element">Loading...</span>
 
                <button data-action="live#action" data-live-action-param="save">Save</button>
            </div>
-       `);
+       `
+        );
 
         test.expectsAjaxCall()
             .expectActionCalled('save')
@@ -217,12 +235,12 @@ describe('LiveController data-loading Tests', () => {
 
         // request took 30ms, action loading is delayed for 50
         // wait 30 more (30+30=60) and verify the element did not switch into loading
-        await (new Promise(resolve => setTimeout(resolve, 30)));
+        await new Promise((resolve) => setTimeout(resolve, 30));
         expect(getByTestId(test.element, 'loading-element')).not.toBeVisible();
     });
 
     it('does not trigger loading inside component children', async () => {
-       const childTemplate = (data: any) => `
+        const childTemplate = (data: any) => `
             <div
                 ${initComponent(data)}
                 id="child-id"
@@ -234,14 +252,17 @@ describe('LiveController data-loading Tests', () => {
             </div>
         `;
 
-        const test = await createTest({renderChild: true} , (data: any) => `
-            <div ${initComponent(data, {id: 'parent-id'})} data-testid="parent">
+        const test = await createTest(
+            { renderChild: true },
+            (data: any) => `
+            <div ${initComponent(data, { id: 'parent-id' })} data-testid="parent">
                 <span data-loading="show" data-testid="parent-loading-element-showing">Loading...</span>
                 <span data-loading="hide" data-testid="parent-loading-element-hiding">Loading...</span>
-                ${childTemplate({renderChild: data.renderChild})}
+                ${childTemplate({ renderChild: data.renderChild })}
                 <button data-action="live#$render">Render</button>
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             // delay so we can check loading
@@ -266,7 +287,7 @@ describe('LiveController data-loading Tests', () => {
         expect(getByTestId(test.element, 'child-loading-element-hiding')).toBeVisible();
 
         // wait for loading to finish
-        await (new Promise(resolve => setTimeout(resolve, 30)));
+        await new Promise((resolve) => setTimeout(resolve, 30));
 
         // Parent: back to original state
         expect(getByTestId(test.element, 'parent-loading-element-showing')).not.toBeVisible();

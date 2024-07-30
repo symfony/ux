@@ -6,11 +6,11 @@ interface QueryMapping {
     /**
      * URL parameter name
      */
-    name: string,
+    name: string;
 }
 
 export default class implements PluginInterface {
-    constructor(private readonly mapping: {[p: string]: QueryMapping}) {}
+    constructor(private readonly mapping: { [p: string]: QueryMapping }) {}
 
     attachToComponent(component: Component): void {
         component.on('render:finished', (component: Component) => {

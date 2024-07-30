@@ -7,19 +7,21 @@
  * file that was distributed with this source code.
  */
 
-import {createTest, initComponent, shutdownTests} from '../tools';
+import { createTest, initComponent, shutdownTests } from '../tools';
 import { getByText, waitFor } from '@testing-library/dom';
 
 describe('LiveController Emit Tests', () => {
     afterEach(() => {
-        shutdownTests()
+        shutdownTests();
     });
 
     it('emits event using emit()', async () => {
-        const test = await createTest({ renderCount: 0 }, (data: any) => `
+        const test = await createTest(
+            { renderCount: 0 },
+            (data: any) => `
             <div ${initComponent(data, {
                 name: 'simple-component',
-                listeners: [{ event: 'fooEvent', action: 'fooAction' }]
+                listeners: [{ event: 'fooEvent', action: 'fooAction' }],
             })}>
                 Render Count: ${data.renderCount}
                 <button
@@ -37,13 +39,14 @@ describe('LiveController Emit Tests', () => {
                     data-live-event-param="name(other-component)|fooEvent"
                 >Emit Named Not Matching</button>
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             .expectActionCalled('fooAction')
             .serverWillChangeProps((data) => {
                 data.renderCount = 1;
-            })
+            });
 
         getByText(test.element, 'Emit Simple').click();
         await waitFor(() => expect(test.element).toHaveTextContent('Render Count: 1'));
@@ -52,7 +55,7 @@ describe('LiveController Emit Tests', () => {
             .expectActionCalled('fooAction')
             .serverWillChangeProps((data) => {
                 data.renderCount = 2;
-            })
+            });
 
         getByText(test.element, 'Emit Named Matching').click();
         await waitFor(() => expect(test.element).toHaveTextContent('Render Count: 2'));
@@ -64,14 +67,14 @@ describe('LiveController Emit Tests', () => {
     });
 
     it('emits event sent back after Ajax call', async () => {
-        const test = await createTest({ renderCount: 0 }, (data: any) => `
+        const test = await createTest(
+            { renderCount: 0 },
+            (data: any) => `
             <div ${initComponent(data, {
                 name: 'simple-component',
                 listeners: [{ event: 'fooEvent', action: 'fooAction' }],
                 // emit only on the first re-render
-                eventEmit: data.renderCount === 1 ? [
-                    { event: 'fooEvent', data: { foo: 'bar' } }
-                ] : [],
+                eventEmit: data.renderCount === 1 ? [{ event: 'fooEvent', data: { foo: 'bar' } }] : [],
             })}>
                 Render Count: ${data.renderCount}
                 <button
@@ -79,12 +82,12 @@ describe('LiveController Emit Tests', () => {
                     data-event="fooEvent"
                 >Emit Simple</button>
             </div>
-        `);
+        `
+        );
 
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data) => {
-                data.renderCount = 1;
-            })
+        test.expectsAjaxCall().serverWillChangeProps((data) => {
+            data.renderCount = 1;
+        });
 
         test.component.render();
 
