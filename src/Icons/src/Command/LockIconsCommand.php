@@ -1,14 +1,5 @@
 <?php
 
-/*
- * This file is part of the Symfony package.
- *
- * (c) Fabien Potencier <fabien@symfony.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 namespace Symfony\UX\Icons\Command;
 
 use Symfony\Component\Console\Attribute\AsCommand;
@@ -44,6 +35,8 @@ final class LockIconsCommand extends Command
     protected function configure(): void
     {
         $this
+
+        
             ->addOption(
                 name: 'force',
                 mode: InputOption::VALUE_NONE,
@@ -73,7 +66,7 @@ final class LockIconsCommand extends Command
             [$prefix, $name] = $parts;
 
             try {
-                $svg = $this->iconify->fetchSvg($prefix, $name);
+                $svg = $this->  iconify->fetchSvg($prefix, $name);
             } catch (IconNotFoundException) {
                 // icon not found on iconify
                 continue;
