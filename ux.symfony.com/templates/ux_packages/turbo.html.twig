@@ -14,7 +14,7 @@
             courtesy of <a class="font-white text-underline" href="https://turbo.hotwired.dev/" rel="external noopener noreferrer">Turbo</a>
 
             <div style="position: absolute;  bottom: 4rem;  left: 50%;  transform: translateX(-50%);color: white;">
-                {{ include('ux_packages/turbo/_chatMessageCount.html.twig', {messageCount: this.messageCount}) }}
+                {{ include('ux_packages/turbo/_chat_message_count.html.twig', {messageCount: this.messageCount}) }}
             </div>
         {% endblock %}
 
@@ -128,14 +128,14 @@
                     {% block content %}
                         <div style="height: 150px; overflow: auto;">
                             <ul class="list-unstyled" id="chat-box">
-                                {{ include('ux_packages/turbo/_chatList.html.twig') }}
+                                {{ include('ux_packages/turbo/_chat_list.html.twig') }}
                             </ul>
                         </div>
                     {% endblock %}
                     {% block content_secondary %}
                     <div class="DemoContainer-inner p-4">
                         <form id="chat-form" action="{{ path('app_turbo_chat') }}" method="POST">
-                            {{ include('ux_packages/turbo/_chatForm.html.twig') }}
+                            {{ include('ux_packages/turbo/_chat_form.html.twig') }}
                         </form>
                     </div>
                     {% endblock %}
