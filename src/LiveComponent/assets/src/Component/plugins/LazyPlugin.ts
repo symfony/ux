@@ -1,8 +1,8 @@
-import type {PluginInterface} from './PluginInterface';
+import type { PluginInterface } from './PluginInterface';
 import type Component from '../index';
 
 export default class implements PluginInterface {
-    private intersectionObserver:  IntersectionObserver | null = null;
+    private intersectionObserver: IntersectionObserver | null = null;
 
     attachToComponent(component: Component): void {
         if ('lazy' !== component.element.attributes.getNamedItem('loading')?.value) {
@@ -19,7 +19,7 @@ export default class implements PluginInterface {
     private getObserver(): IntersectionObserver {
         if (!this.intersectionObserver) {
             this.intersectionObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
+                entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.dispatchEvent(new CustomEvent('live:appear'));
                         observer.unobserve(entry.target);

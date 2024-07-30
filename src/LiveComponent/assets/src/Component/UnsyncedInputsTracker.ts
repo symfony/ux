@@ -1,5 +1,5 @@
-import type {ElementDriver} from './ElementDriver';
-import {elementBelongsToThisComponent} from '../dom_utils';
+import type { ElementDriver } from './ElementDriver';
+import { elementBelongsToThisComponent } from '../dom_utils';
 import type Component from './index';
 
 export default class {
@@ -8,7 +8,7 @@ export default class {
     /** Fields that have changed, but whose value is not set back onto the value store */
     private readonly unsyncedInputs: UnsyncedInputContainer;
 
-    private elementEventListeners: Array<{ event: string, callback: (event: any) => void }> = [
+    private elementEventListeners: Array<{ event: string; callback: (event: any) => void }> = [
         { event: 'input', callback: (event) => this.handleInputEvent(event) },
     ];
 
@@ -19,13 +19,13 @@ export default class {
     }
 
     activate(): void {
-        this.elementEventListeners.forEach(({event, callback}) => {
+        this.elementEventListeners.forEach(({ event, callback }) => {
             this.component.element.addEventListener(event, callback);
         });
     }
 
     deactivate(): void {
-        this.elementEventListeners.forEach(({event, callback}) => {
+        this.elementEventListeners.forEach(({ event, callback }) => {
             this.component.element.removeEventListener(event, callback);
         });
     }
@@ -40,7 +40,7 @@ export default class {
             return;
         }
 
-        this.updateModelFromElement(target)
+        this.updateModelFromElement(target);
     }
 
     private updateModelFromElement(element: Element) {
@@ -97,7 +97,7 @@ export class UnsyncedInputContainer {
         this.unsyncedModelFields = new Map();
     }
 
-    add(element: HTMLElement, modelName: string|null = null) {
+    add(element: HTMLElement, modelName: string | null = null) {
         if (modelName) {
             this.unsyncedModelFields.set(modelName, element);
             if (!this.unsyncedModelNames.includes(modelName)) {
@@ -124,7 +124,7 @@ export class UnsyncedInputContainer {
     }
 
     allUnsyncedInputs(): HTMLElement[] {
-        return [...this.unsyncedNonModelFields, ...this.unsyncedModelFields.values()]
+        return [...this.unsyncedNonModelFields, ...this.unsyncedModelFields.values()];
     }
 
     markModelAsSynced(modelName: string): void {

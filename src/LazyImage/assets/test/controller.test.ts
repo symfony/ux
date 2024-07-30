@@ -57,6 +57,9 @@ describe('LazyImageController', () => {
         startStimulus();
         await waitFor(() => expect(img).toHaveClass('connected'));
         expect(img).toHaveAttribute('src', 'https://symfony.com/logos/symfony_black_03.png');
-        expect(img).toHaveAttribute('srcset', 'https://symfony.com/logos/symfony_black_03.png 1x, https://symfony.com/logos/symfony_black_03_2x.png 2x');
+        expect(img).toHaveAttribute(
+            'srcset',
+            'https://symfony.com/logos/symfony_black_03.png 1x, https://symfony.com/logos/symfony_black_03_2x.png 2x'
+        );
     });
 });

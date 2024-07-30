@@ -66,7 +66,6 @@ describe('SvelteController', () => {
     });
 
     it('connect without props', async () => {
-
         const container = mountDOM(`
           <div data-testid="component" id="container"
               data-controller="check svelte"

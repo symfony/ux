@@ -11,28 +11,34 @@ import { createTest, initComponent, shutdownTests } from '../tools';
 import { getByText, waitFor } from '@testing-library/dom';
 import type BackendResponse from '../../src/Backend/BackendResponse';
 
-const getErrorElement = (): Element|null => {
+const getErrorElement = (): Element | null => {
     return document.getElementById('live-component-error');
 };
 
 describe('LiveController Error Handling', () => {
     afterEach(() => {
         shutdownTests();
-    })
+    });
 
     it('displays an error modal on 500 errors', async () => {
-        const test = await createTest({ counter: 4 }, (data: any) => `
+        const test = await createTest(
+            { counter: 4 },
+            (data: any) => `
             <div ${initComponent(data)}>
                 Current count: ${data.counter}
                 <button data-action="live#action" data-live-action-param="save">Save</button>
                 <button data-action="live#$render">Render</button>
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
-            .serverWillReturnCustomResponse(500, `
+            .serverWillReturnCustomResponse(
+                500,
+                `
                 <html><head><title>Error!</title></head><body><h1>An error occurred</h1></body></html>
-            `)
+            `
+            )
             .expectActionCalled('save');
 
         getByText(test.element, 'Save').click();
@@ -47,27 +53,32 @@ describe('LiveController Error Handling', () => {
         expect(errorContainer.querySelector('iframe')).not.toBeNull();
 
         // make sure future requests can still be sent
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                data.counter = 10;
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.counter = 10;
+        });
 
         getByText(test.element, 'Render').click();
         await waitFor(() => expect(test.element).toHaveTextContent('Current count: 10'));
     });
 
     it('displays a modal on any non-component response', async () => {
-        const test = await createTest({ }, (data: any) => `
+        const test = await createTest(
+            {},
+            (data: any) => `
             <div ${initComponent(data)}>
                 Original component text
                 <button data-action="live#action" data-live-action-param="save">Save</button>
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
-            .serverWillReturnCustomResponse(200, `
+            .serverWillReturnCustomResponse(
+                200,
+                `
                 <html><head><title>Hi!</title></head><body><h1>I'm a whole page, not a component!</h1></body></html>
-            `)
+            `
+            )
             .expectActionCalled('save');
 
         getByText(test.element, 'Save').click();
@@ -78,16 +89,22 @@ describe('LiveController Error Handling', () => {
     });
 
     it('triggers response:error hook', async () => {
-        const test = await createTest({ }, (data: any) => `
+        const test = await createTest(
+            {},
+            (data: any) => `
             <div ${initComponent(data)}>
                 component text
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
-            .serverWillReturnCustomResponse(200, `
+            .serverWillReturnCustomResponse(
+                200,
+                `
                 <html><head><title>Hi!</title></head><body><h1>I'm a whole page, not a component!</h1></body></html>
-            `)
+            `
+            )
             .expectActionCalled('save');
 
         let isHookCalled = false;

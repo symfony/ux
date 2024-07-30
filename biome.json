@@ -1,6 +1,8 @@
 {
+    "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
     "files": {
-        "ignore": ["**/composer.json"]
+        "include": ["src/*/assets/src/**", "src/*/assets/test/**", "src/*/*.json", "src/*/*/md", "*.json", "*.md"],
+        "ignore": ["**/composer.json", "**/vendor", "**/node_modules"]
     },
     "linter": {
         "rules": {
@@ -27,7 +29,7 @@
     },
     "javascript": {
         "formatter": {
-            "trailingComma": "es5",
+            "trailingCommas": "es5",
             "bracketSameLine": true,
             "quoteStyle": "single"
         }

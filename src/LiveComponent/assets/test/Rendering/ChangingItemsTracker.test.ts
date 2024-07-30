@@ -7,7 +7,7 @@ describe('ChangingItemsTracker', () => {
         items.setItem('color', 'blue', 'red');
         items.setItem('color', 'green', 'blue');
         expect(items.getChangedItems()).toHaveLength(1);
-        expect(items.getChangedItems()[0]).toEqual({ name: 'color', value: 'green'});
+        expect(items.getChangedItems()[0]).toEqual({ name: 'color', value: 'green' });
         expect(items.getRemovedItems()).toHaveLength(0);
     });
 
@@ -16,7 +16,7 @@ describe('ChangingItemsTracker', () => {
         items.setItem('color', 'blue', null);
         items.setItem('color', 'green', 'blue');
         expect(items.getChangedItems()).toHaveLength(1);
-        expect(items.getChangedItems()[0]).toEqual({ name: 'color', value: 'green'});
+        expect(items.getChangedItems()[0]).toEqual({ name: 'color', value: 'green' });
         expect(items.getRemovedItems()).toHaveLength(0);
     });
 

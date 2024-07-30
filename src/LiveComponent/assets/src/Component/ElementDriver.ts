@@ -1,20 +1,20 @@
-import {getModelDirectiveFromElement} from '../dom_utils';
+import { getModelDirectiveFromElement } from '../dom_utils';
 import type LiveControllerDefault from '../live_controller';
 
 export interface ElementDriver {
-    getModelName(element: HTMLElement): string|null;
+    getModelName(element: HTMLElement): string | null;
 
     getComponentProps(): any;
 
     /**
      * Given an element from a response, find all the events that should be emitted.
      */
-    getEventsToEmit(): Array<{event: string, data: any, target: string|null, componentName: string|null }>;
+    getEventsToEmit(): Array<{ event: string; data: any; target: string | null; componentName: string | null }>;
 
     /**
      * Given an element from a response, find all the events that should be dispatched.
      */
-    getBrowserEventsToDispatch(): Array<{event: string, payload: any }>;
+    getBrowserEventsToDispatch(): Array<{ event: string; payload: any }>;
 }
 
 export class StimulusElementDriver implements ElementDriver {
@@ -24,7 +24,7 @@ export class StimulusElementDriver implements ElementDriver {
         this.controller = controller;
     }
 
-    getModelName(element: HTMLElement): string|null {
+    getModelName(element: HTMLElement): string | null {
         const modelDirective = getModelDirectiveFromElement(element, false);
 
         if (!modelDirective) {
@@ -38,11 +38,11 @@ export class StimulusElementDriver implements ElementDriver {
         return this.controller.propsValue;
     }
 
-    getEventsToEmit(): Array<{event: string, data: any, target: string|null, componentName: string|null }> {
+    getEventsToEmit(): Array<{ event: string; data: any; target: string | null; componentName: string | null }> {
         return this.controller.eventsToEmitValue;
     }
 
-    getBrowserEventsToDispatch(): Array<{event: string, payload: any }> {
+    getBrowserEventsToDispatch(): Array<{ event: string; payload: any }> {
         return this.controller.eventsToDispatchValue;
     }
 }

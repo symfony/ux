@@ -7,9 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import {registerVueControllerComponents} from '../src/register_controller';
-import Hello from './fixtures/Hello.vue'
-import Goodbye from './fixtures-lazy/Goodbye.vue'
+import { registerVueControllerComponents } from '../src/register_controller';
+import Hello from './fixtures/Hello.vue';
+import Goodbye from './fixtures-lazy/Goodbye.vue';
 import RequireContext = __WebpackModuleApi.RequireContext;
 
 const createFakeFixturesContext = (lazyDir: boolean): RequireContext => {
@@ -28,7 +28,6 @@ const createFakeFixturesContext = (lazyDir: boolean): RequireContext => {
 
     return context;
 };
-
 
 describe('registerVueControllerComponents', () => {
     it('should resolve components synchronously', () => {
@@ -51,6 +50,8 @@ describe('registerVueControllerComponents', () => {
         registerVueControllerComponents(createFakeFixturesContext(false));
         const resolveComponent = window.resolveVueComponent;
 
-        expect(() => resolveComponent('Helloooo')).toThrow('Vue controller "Helloooo" does not exist. Possible values: Hello');
+        expect(() => resolveComponent('Helloooo')).toThrow(
+            'Vue controller "Helloooo" does not exist. Possible values: Hello'
+        );
     });
 });

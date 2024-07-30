@@ -4,17 +4,17 @@
     "scripts": {
         "build": "node bin/build_javascript.js && node bin/build_styles.js",
         "test": "bin/run-vitest-all.sh",
-        "lint": "yarn workspaces run biome lint src test --apply",
-        "format": "biome format src/*/assets/src/*.ts src/*/assets/test/*.js {,src/*/}*.{json,md} --write",
-        "check-lint": "yarn workspaces run biome lint src test",
-        "check-format": "biome format src/*/assets/src/*.ts src/*/assets/test/*.js {,src/*/}*.{json,md}"
+        "lint": "biome lint --write",
+        "format": "biome format --write",
+        "check-lint": "biome lint",
+        "check-format": "biome format"
     },
     "devDependencies": {
         "@babel/core": "^7.15.8",
         "@babel/preset-env": "^7.15.8",
         "@babel/preset-react": "^7.15.8",
         "@babel/preset-typescript": "^7.15.8",
-        "@biomejs/biome": "^1.7.3",
+        "@biomejs/biome": "^1.8.3",
         "@rollup/plugin-commonjs": "^23.0.0",
         "@rollup/plugin-node-resolve": "^15.0.0",
         "@rollup/plugin-typescript": "^10.0.0",

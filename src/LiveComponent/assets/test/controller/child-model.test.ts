@@ -8,42 +8,47 @@
  */
 
 import { createTest, initComponent, shutdownTests } from '../tools';
-import {getByTestId, waitFor} from '@testing-library/dom';
+import { getByTestId, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
 
 describe('Component parent -> child data-model binding tests', () => {
     afterEach(() => {
         shutdownTests();
-    })
+    });
 
     // updating stops when child is removed, restarts after
     // more complex foo:bar model binding works
     // multiple model bindings work
 
     it('updates parent model in simple setup', async () => {
-        const test = await createTest({ foodName: ''}, (data: any) => `
+        const test = await createTest(
+            { foodName: '' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 Food Name ${data.foodName}
                 <div
-                    ${initComponent({ value: '' }, {id: 'the-child-id'})}
+                    ${initComponent({ value: '' }, { id: 'the-child-id' })}
                     data-model="foodName:value"
                     data-testid="child"
                 >
                     <input data-model="norender|value">
                 </div>
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             .expectUpdatedData({ foodName: 'ice cream' })
             // mimic that the data on the child props have not changed, so we
             // render a simple placeholder
-            .willReturn((data: any) => `
+            .willReturn(
+                (data: any) => `
                 <div ${initComponent(data)}>
                     Food Name ${data.foodName}
                     <div id="the-child-id">
                 </div>
-            `);
+            `
+            );
 
         // type into the child component
         await userEvent.type(test.queryByDataModel('value'), 'ice cream');
@@ -54,29 +59,34 @@ describe('Component parent -> child data-model binding tests', () => {
     });
 
     it('will default to "value" for the model name', async () => {
-        const test = await createTest({ foodName: ''}, (data: any) => `
+        const test = await createTest(
+            { foodName: '' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 Food Name ${data.foodName}
                 <div
-                    ${initComponent({ value: '' }, {id: 'the-child-id'})}
+                    ${initComponent({ value: '' }, { id: 'the-child-id' })}
                     data-model="foodName"
                     data-testid="child"
                 >
                     <input data-model="norender|value">
                 </div>
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             .expectUpdatedData({ foodName: 'ice cream' })
             // mimic that the data on the child props have not changed, so we
             // render a simple placeholder
-            .willReturn((data: any) => `
+            .willReturn(
+                (data: any) => `
                 <div ${initComponent(data)}>
                     Food Name ${data.foodName}
                     <div id="the-child-id">
                 </div>
-            `);
+            `
+            );
 
         // type into the child component
         await userEvent.type(test.queryByDataModel('value'), 'ice cream');
@@ -87,18 +97,21 @@ describe('Component parent -> child data-model binding tests', () => {
     });
 
     it('considers modifiers when updating parent model', async () => {
-        const test = await createTest({ foodName: ''}, (data: any) => `
+        const test = await createTest(
+            { foodName: '' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 Food Name ${data.foodName}
                 <div
-                    ${initComponent({ value: '' }, {id: 'the-child-id'})}
+                    ${initComponent({ value: '' }, { id: 'the-child-id' })}
                     data-model="norender|foodName"
                     data-testid="child"
                 >
                     <input data-model="norender|value">
                 </div>
             </div>
-        `);
+        `
+        );
 
         // type into the child component
         await userEvent.type(test.queryByDataModel('value'), 'ice cream');
@@ -108,34 +121,39 @@ describe('Component parent -> child data-model binding tests', () => {
         // but it never triggers an Ajax call, because the norender modifier
         expect(test.element).not.toHaveAttribute('busy');
         // wait for a potential Ajax call to start
-        await (new Promise(resolve => setTimeout(resolve, 50)));
+        await new Promise((resolve) => setTimeout(resolve, 50));
         expect(test.element).not.toHaveAttribute('busy');
     });
 
     it('start and stops model binding as child is added/removed', async () => {
-        const test = await createTest({ foodName: ''}, (data: any) => `
+        const test = await createTest(
+            { foodName: '' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 Food Name ${data.foodName}
                 <div
-                    ${initComponent({ value: '' }, {id: 'the-child-id'})}
+                    ${initComponent({ value: '' }, { id: 'the-child-id' })}
                     data-model="foodName:value"
                     data-testid="child"
                 >
                     <input data-model="norender|value">
                 </div>
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             .expectUpdatedData({ foodName: 'ice cream' })
             // mimic that the data on the child props have not changed, so we
             // render a simple placeholder
-            .willReturn((data: any) => `
+            .willReturn(
+                (data: any) => `
                 <div ${initComponent(data)}>
                     Food Name ${data.foodName}
                     <div id="the-child-id" data-live-preserve></div>
                 </div>
-            `);
+            `
+            );
 
         // type into the child component
         const inputElement = test.queryByDataModel('value');
@@ -152,7 +170,7 @@ describe('Component parent -> child data-model binding tests', () => {
         // type into the child component
         await userEvent.type(inputElement, ' sandwich');
         // wait for a potential Ajax call to start
-        await (new Promise(resolve => setTimeout(resolve, 50)));
+        await new Promise((resolve) => setTimeout(resolve, 50));
         expect(test.element).not.toHaveAttribute('busy');
     });
 });

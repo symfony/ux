@@ -1,5 +1,5 @@
 import Component, { proxifyComponent } from '../../src/Component';
-import type {BackendAction, BackendInterface} from '../../src/Backend/Backend';
+import type { BackendAction, BackendInterface } from '../../src/Backend/Backend';
 import BackendRequest from '../../src/Backend/BackendRequest';
 import { Response } from 'node-fetch';
 import { waitFor } from '@testing-library/dom';
@@ -7,10 +7,10 @@ import type BackendResponse from '../../src/Backend/BackendResponse';
 import { noopElementDriver } from '../tools';
 
 interface MockBackend extends BackendInterface {
-    actions: BackendAction[],
+    actions: BackendAction[];
 }
 
-const makeTestComponent = (): { component: Component, backend: MockBackend } => {
+const makeTestComponent = (): { component: Component; backend: MockBackend } => {
     const backend: MockBackend = {
         actions: [],
         makeRequest(data: any, actions: BackendAction[]): BackendRequest {
@@ -21,9 +21,9 @@ const makeTestComponent = (): { component: Component, backend: MockBackend } => 
                 new Promise((resolve) => resolve(new Response('<div data-live-props-value="{}"></div>'))),
                 [],
                 []
-            )
-        }
-    }
+            );
+        },
+    };
 
     const component = new Component(
         document.createElement('div'),
@@ -32,26 +32,28 @@ const makeTestComponent = (): { component: Component, backend: MockBackend } => 
         [],
         null,
         backend,
-        new noopElementDriver(),
+        new noopElementDriver()
     );
 
     return {
         component,
-        backend
-    }
-}
+        backend,
+    };
+};
 
 describe('Component class', () => {
     describe('set() method', () => {
         it('returns a Promise that eventually resolves', async () => {
             const { component } = makeTestComponent();
 
-            let backendResponse: BackendResponse|null = null;
+            let backendResponse: BackendResponse | null = null;
 
             // set model but no re-render
             const promise = component.set('firstName', 'Ryan', false);
             // when this promise IS finally resolved, set the flag to true
-            promise.then((response) => { backendResponse = response });
+            promise.then((response) => {
+                backendResponse = response;
+            });
             // it should not have happened yet
             expect(backendResponse).toBeNull();
 
@@ -69,18 +71,20 @@ describe('Component class', () => {
 
             // setting nested - totally ok
             component.set('product.name', 'Ryan', false);
-            expect(() => { component.set('notARealModel', 'Ryan', false) }).toThrow('Invalid model name "notARealModel"');
+            expect(() => {
+                component.set('notARealModel', 'Ryan', false);
+            }).toThrow('Invalid model name "notARealModel"');
         });
     });
 
     describe('Proxy wrapper', () => {
-        const makeDummyComponent = (): { proxy: Component, backend: MockBackend } => {
-            const { backend, component} = makeTestComponent();
+        const makeDummyComponent = (): { proxy: Component; backend: MockBackend } => {
+            const { backend, component } = makeTestComponent();
             return {
                 proxy: proxifyComponent(component),
-                backend
-            }
-        }
+                backend,
+            };
+        };
 
         it('forwards real property gets', () => {
             const { proxy } = makeDummyComponent();
@@ -120,7 +124,7 @@ describe('Component class', () => {
 
             // ugly: the action delays for 0ms, so we just need a TINy
             // delay here before we start asserting
-            await (new Promise(resolve => setTimeout(resolve, 5)));
+            await new Promise((resolve) => setTimeout(resolve, 5));
             expect(backend.actions).toHaveLength(1);
             expect(backend.actions[0].name).toBe('save');
             expect(backend.actions[0].args).toEqual({ foo: 'bar', secondArg: 'secondValue' });

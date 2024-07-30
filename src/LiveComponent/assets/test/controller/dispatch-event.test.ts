@@ -7,19 +7,22 @@
  * file that was distributed with this source code.
  */
 
-import {createTest, initComponent, shutdownTests} from '../tools';
+import { createTest, initComponent, shutdownTests } from '../tools';
 
 describe('LiveController Event Dispatching Tests', () => {
     afterEach(() => {
-        shutdownTests()
+        shutdownTests();
     });
 
     it('dispatches events sent from an AJAX request', async () => {
-        const test = await createTest({ }, (data: any) => `
+        const test = await createTest(
+            {},
+            (data: any) => `
             <div ${initComponent(data, {
                 name: 'simple-component',
             })}>Simple Component!</div>
-        `);
+        `
+        );
 
         let eventCalled = false;
         test.element.addEventListener('fooEvent', (event: any) => {
@@ -27,13 +30,11 @@ describe('LiveController Event Dispatching Tests', () => {
             expect(event.detail).toEqual({ foo: 'bar' });
         });
 
-        test.expectsAjaxCall()
-            .willReturn(() => `
-                <div ${initComponent({}, { browserDispatch: [
-                        { event: 'fooEvent', payload: { foo: 'bar' } }
-                    ]}
-                )}>Simple Component!</div>
-            `);
+        test.expectsAjaxCall().willReturn(
+            () => `
+                <div ${initComponent({}, { browserDispatch: [{ event: 'fooEvent', payload: { foo: 'bar' } }] })}>Simple Component!</div>
+            `
+        );
 
         await test.component.render();
         expect(eventCalled).toBe(true);

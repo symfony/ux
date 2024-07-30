@@ -7,7 +7,7 @@
  * file that was distributed with this source code.
  */
 
-import {registerReactControllerComponents} from '../src/register_controller';
+import { registerReactControllerComponents } from '../src/register_controller';
 import MyTsxComponent from './fixtures/MyTsxComponent';
 // @ts-ignore
 import MyJsxComponent from './fixtures/MyJsxComponent';
@@ -41,6 +41,8 @@ describe('registerReactControllerComponents', () => {
         registerReactControllerComponents(createFakeFixturesContext());
         const resolveComponent = (window as any).resolveReactComponent;
 
-        expect(() => resolveComponent('MyABCComponent')).toThrow('React controller "MyABCComponent" does not exist. Possible values: MyJsxComponent, MyTsxComponent');
+        expect(() => resolveComponent('MyABCComponent')).toThrow(
+            'React controller "MyABCComponent" does not exist. Possible values: MyJsxComponent, MyTsxComponent'
+        );
     });
 });

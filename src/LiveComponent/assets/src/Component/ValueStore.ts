@@ -12,20 +12,20 @@ export default class {
     /**
      * A list of props that have been "dirty" (changed) since the last request to the server.
      */
-    private dirtyProps: {[key: string]: any} = {};
+    private dirtyProps: { [key: string]: any } = {};
 
     /**
      * A list of dirty props that were sent to the server, but the response has
      * not yet been received.
      */
-    private pendingProps: {[key: string]: any} = {};
+    private pendingProps: { [key: string]: any } = {};
 
     /**
      * A list of props that the parent wants us to update.
      *
      * These will be sent on the next request to the server.
      */
-    private updatedPropsFromParent: {[key: string]: any} = {};
+    private updatedPropsFromParent: { [key: string]: any } = {};
 
     constructor(props: any) {
         this.props = props;

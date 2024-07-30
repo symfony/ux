@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-
 import { Application } from '@hotwired/stimulus';
 import { waitFor } from '@testing-library/dom';
 import ChartjsController from '../src/controller';
@@ -17,7 +16,7 @@ import ChartjsController from '../src/controller';
 // chartjs:init event has already been dispatched. So, we capture it out here.
 let initCallCount = 0;
 
-const startChartTest = async (canvasHtml: string): Promise<{ canvas: HTMLCanvasElement, chart: Chart }> => {
+const startChartTest = async (canvasHtml: string): Promise<{ canvas: HTMLCanvasElement; chart: Chart }> => {
     let chart: Chart | null = null;
 
     document.body.addEventListener('chartjs:init', () => {
@@ -29,7 +28,7 @@ const startChartTest = async (canvasHtml: string): Promise<{ canvas: HTMLCanvasE
     });
 
     document.body.addEventListener('chartjs:connect', (event: any) => {
-        chart = (event.detail).chart;
+        chart = event.detail.chart;
         document.body.classList.add('connected');
     });
 
@@ -49,7 +48,7 @@ const startChartTest = async (canvasHtml: string): Promise<{ canvas: HTMLCanvasE
     }
 
     return { canvas: canvasElement, chart };
-}
+};
 
 describe('ChartjsController', () => {
     beforeAll(() => {
@@ -95,7 +94,7 @@ describe('ChartjsController', () => {
        `);
 
         expect(chart.options.showLines).toBe(false);
-        const currentViewValue = JSON.parse((canvas.dataset.chartjsViewValue as string));
+        const currentViewValue = JSON.parse(canvas.dataset.chartjsViewValue as string);
         currentViewValue.options.showLines = true;
         canvas.dataset.chartjsViewValue = JSON.stringify(currentViewValue);
 
@@ -122,7 +121,9 @@ describe('ChartjsController', () => {
 
         expect(chart.options.showLines).toBeUndefined();
         // change label: January -> NewDataJanuary
-        const currentViewValue = JSON.parse('{"type":"line","data":{"labels":["NewDataJanuary","February","March","April","May","June","July"],"datasets":[{"label":"My First dataset","backgroundColor":"rgb(255, 99, 132)","borderColor":"rgb(255, 99, 132)","data":[0,10,5,2,20,30,45]}]},"options":[]}');
+        const currentViewValue = JSON.parse(
+            '{"type":"line","data":{"labels":["NewDataJanuary","February","March","April","May","June","July"],"datasets":[{"label":"My First dataset","backgroundColor":"rgb(255, 99, 132)","borderColor":"rgb(255, 99, 132)","data":[0,10,5,2,20,30,45]}]},"options":[]}'
+        );
         canvas.dataset.chartjsViewValue = JSON.stringify(currentViewValue);
 
         await waitFor(() => {
@@ -160,12 +161,14 @@ describe('ChartjsController', () => {
             type: 'line',
             data: {
                 labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-                datasets: [{
-                    label: 'My First dataset',
-                    backgroundColor: 'rgb(255, 99, 132)',
-                    borderColor: 'rgb(255, 99, 132)',
-                    data: [0, 10, 5, 2, 20, 30, 45],
-                }],
+                datasets: [
+                    {
+                        label: 'My First dataset',
+                        backgroundColor: 'rgb(255, 99, 132)',
+                        borderColor: 'rgb(255, 99, 132)',
+                        data: [0, 10, 5, 2, 20, 30, 45],
+                    },
+                ],
             },
             options: {
                 showLines: false,

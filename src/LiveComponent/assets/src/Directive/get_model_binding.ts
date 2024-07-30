@@ -1,26 +1,30 @@
-import type {Directive} from './directives_parser';
+import type { Directive } from './directives_parser';
 
 export interface ModelBinding {
-    modelName: string,
-    innerModelName: string|null,
-    shouldRender: boolean,
-    debounce: number|boolean,
-    targetEventName: string|null
+    modelName: string;
+    innerModelName: string | null;
+    shouldRender: boolean;
+    debounce: number | boolean;
+    targetEventName: string | null;
 }
 
-export default function(modelDirective: Directive): ModelBinding {
+export default function (modelDirective: Directive): ModelBinding {
     let shouldRender = true;
     let targetEventName = null;
-    let debounce: number|boolean = false;
+    let debounce: number | boolean = false;
 
     modelDirective.modifiers.forEach((modifier) => {
         switch (modifier.name) {
             case 'on':
                 if (!modifier.value) {
-                    throw new Error(`The "on" modifier in ${modelDirective.getString()} requires a value - e.g. on(change).`);
+                    throw new Error(
+                        `The "on" modifier in ${modelDirective.getString()} requires a value - e.g. on(change).`
+                    );
                 }
                 if (!['input', 'change'].includes(modifier.value)) {
-                    throw new Error(`The "on" modifier in ${modelDirective.getString()} only accepts the arguments "input" or "change".`);
+                    throw new Error(
+                        `The "on" modifier in ${modelDirective.getString()} only accepts the arguments "input" or "change".`
+                    );
                 }
 
                 targetEventName = modifier.value;
@@ -40,13 +44,13 @@ export default function(modelDirective: Directive): ModelBinding {
         }
     });
 
-    const [ modelName, innerModelName ] = modelDirective.action.split(':');
+    const [modelName, innerModelName] = modelDirective.action.split(':');
 
     return {
         modelName,
         innerModelName: innerModelName || null,
         shouldRender,
         debounce,
-        targetEventName
-    }
+        targetEventName,
+    };
 }

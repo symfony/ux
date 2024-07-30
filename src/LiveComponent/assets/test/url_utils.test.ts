@@ -16,7 +16,7 @@ describe('url_utils', () => {
 
             beforeEach(() => {
                 // Reset search before each test
-               urlUtils.search = '';
+                urlUtils.search = '';
             });
 
             it('set the param if it does not exist', () => {
@@ -92,7 +92,7 @@ describe('url_utils', () => {
             });
 
             it('keep other params unchanged', () => {
-                urlUtils.search ='?param=foo&otherParam=bar';
+                urlUtils.search = '?param=foo&otherParam=bar';
 
                 urlUtils.remove('param');
 
@@ -107,8 +107,8 @@ describe('url_utils', () => {
                 expect(urlUtils.search).toEqual('');
             });
 
-            it ('remove all occurrences of an object param', () => {
-                urlUtils.search ='?param[foo]=1&param[bar]=baz';
+            it('remove all occurrences of an object param', () => {
+                urlUtils.search = '?param[foo]=1&param[bar]=baz';
 
                 urlUtils.remove('param');
 
@@ -122,13 +122,13 @@ describe('url_utils', () => {
         beforeAll(() => {
             initialUrl = new URL(window.location.href);
         });
-        afterEach(()=> {
+        afterEach(() => {
             history.replaceState(history.state, '', initialUrl);
         });
         it('replace URL', () => {
-           const newUrl = new URL(`${window.location.href}/foo/bar`);
-           HistoryStrategy.replace(newUrl);
-           expect(window.location.href).toEqual(newUrl.toString());
+            const newUrl = new URL(`${window.location.href}/foo/bar`);
+            HistoryStrategy.replace(newUrl);
+            expect(window.location.href).toEqual(newUrl.toString());
         });
-    })
+    });
 });

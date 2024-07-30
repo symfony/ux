@@ -14,10 +14,12 @@ import { htmlToElement } from '../../src/dom_utils';
 describe('LiveController rendering with external changes tests', () => {
     afterEach(() => {
         shutdownTests();
-    })
+    });
 
     it('will respect attribute changes to a tracked element', async () => {
-        const test = await createTest({ id: 'element-id', isDisabled: false, bonusClass: '', margin: '10px' }, (data: any) => `
+        const test = await createTest(
+            { id: 'element-id', isDisabled: false, bonusClass: '', margin: '10px' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <button
                     data-testid="the-button"
@@ -28,7 +30,8 @@ describe('LiveController rendering with external changes tests', () => {
                     id="${data.id}"
                 >I'm a button!</button>
             </div>
-        `);
+        `
+        );
 
         // mess with the elements
         const button = getByTestId(test.element, 'the-button') as HTMLButtonElement;
@@ -49,14 +52,13 @@ describe('LiveController rendering with external changes tests', () => {
         // remove a style
         button.style.removeProperty('border-radius');
 
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                // change the data on the server so the template renders differently
-                data.isDisabled = true;
-                data.bonusClass = 'class-added-by-server';
-                data.margin = '20px';
-                data.id = 'will-be-ignored'
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            // change the data on the server so the template renders differently
+            data.isDisabled = true;
+            data.bonusClass = 'class-added-by-server';
+            data.margin = '20px';
+            data.id = 'will-be-ignored';
+        });
 
         await test.component.render();
 
@@ -74,27 +76,31 @@ describe('LiveController rendering with external changes tests', () => {
     });
 
     it('will not remove an added element', async () => {
-        const test = await createTest({ withBonusElement: false }, (data: any) => `
+        const test = await createTest(
+            { withBonusElement: false },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <div data-testid="inner-div">
                     Text inside the div
                     ${data.withBonusElement ? '<div class="bonus-element">Bonus element</div>' : ''}
                 </div>
             </div>
-        `);
+        `
+        );
 
         // add a new element directly inside the root element
         test.element.appendChild(htmlToElement('<div class="added-outside-element">Added outside element</div>'));
         const innerDiv = getByTestId(test.element, 'inner-div');
         // append a new element inside the inner div
-        innerDiv.appendChild(htmlToElement('<div class="added-inside-element-append">Added inside element append</div>'));
+        innerDiv.appendChild(
+            htmlToElement('<div class="added-inside-element-append">Added inside element append</div>')
+        );
         // prepend a new element inside the inner div
         innerDiv.prepend(htmlToElement('<div class="added-inside-element-prepend">Added inside element prepend</div>'));
 
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                data.withBonusElement = true;
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.withBonusElement = true;
+        });
 
         await test.component.render();
 
@@ -126,7 +132,9 @@ describe('LiveController rendering with external changes tests', () => {
     });
 
     it('keeps external changes across multiple renders', async () => {
-        const test = await createTest({ isDisabled: false, bonusClass: '', withBonusElement: false }, (data: any) => `
+        const test = await createTest(
+            { isDisabled: false, bonusClass: '', withBonusElement: false },
+            (data: any) => `
            <div ${initComponent(data)}>
                <button
                    data-testid='the-button'
@@ -135,7 +143,8 @@ describe('LiveController rendering with external changes tests', () => {
                >I'm a button!</button>
                ${data.withBonusElement ? '<div class="bonus-element">Bonus element</div>' : ''}
            </div>
-       `);
+       `
+        );
 
         // mess with the button
         const button = getByTestId(test.element, 'the-button') as HTMLButtonElement;
@@ -143,11 +152,10 @@ describe('LiveController rendering with external changes tests', () => {
         const addedOutsideElement = htmlToElement('<div class="added-outside-element">Added outside element</div>');
         test.element.appendChild(addedOutsideElement);
 
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                data.isDisabled = true;
-                data.withBonusElement = true;
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.isDisabled = true;
+            data.withBonusElement = true;
+        });
 
         await test.component.render();
 
@@ -159,15 +167,16 @@ describe('LiveController rendering with external changes tests', () => {
         // make some more changes
         button.classList.add('externally-added-class');
         button.classList.remove('originalclass2');
-        const secondAddedOutsideElement = htmlToElement('<div class="added-outside-element-2">Added outside element 2</div>');
+        const secondAddedOutsideElement = htmlToElement(
+            '<div class="added-outside-element-2">Added outside element 2</div>'
+        );
         test.element.appendChild(secondAddedOutsideElement);
         addedOutsideElement.classList.add('class-added-later');
 
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: any) => {
-                data.bonusClass = 'class-added-by-server';
-                data.withBonusElement = false;
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
+            data.bonusClass = 'class-added-by-server';
+            data.withBonusElement = false;
+        });
 
         await test.component.render();
 
@@ -186,4 +195,3 @@ describe('LiveController rendering with external changes tests', () => {
         expect(test.element.innerHTML).not.toContain('Bonus element');
     });
 });
-

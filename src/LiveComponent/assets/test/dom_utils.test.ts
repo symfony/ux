@@ -4,14 +4,14 @@ import {
     htmlToElement,
     getModelDirectiveFromElement,
     elementBelongsToThisComponent,
-    setValueOnElement
+    setValueOnElement,
 } from '../src/dom_utils';
 import ValueStore from '../src/Component/ValueStore';
 import Component from '../src/Component';
 import Backend from '../src/Backend/Backend';
 import { noopElementDriver } from './tools';
 
-const createStore = (props: any = {}): ValueStore => new ValueStore(props)
+const createStore = (props: any = {}): ValueStore => new ValueStore(props);
 
 describe('getValueFromElement', () => {
     it('Correctly adds data from valued checked checkbox', () => {
@@ -21,17 +21,13 @@ describe('getValueFromElement', () => {
         input.dataset.model = 'foo';
         input.value = 'the_checkbox_value';
 
-        expect(getValueFromElement(input, createStore()))
-            .toEqual('the_checkbox_value');
+        expect(getValueFromElement(input, createStore())).toEqual('the_checkbox_value');
 
-        expect(getValueFromElement(input, createStore({ foo: [] })))
-            .toEqual(['the_checkbox_value']);
+        expect(getValueFromElement(input, createStore({ foo: [] }))).toEqual(['the_checkbox_value']);
 
-        expect(getValueFromElement(input, createStore({ foo: ['bar'] })))
-            .toEqual(['bar', 'the_checkbox_value']);
+        expect(getValueFromElement(input, createStore({ foo: ['bar'] }))).toEqual(['bar', 'the_checkbox_value']);
 
-        expect(getValueFromElement(input, createStore({ foo: {'1': 'bar'} })))
-            .toEqual(['bar', 'the_checkbox_value']);
+        expect(getValueFromElement(input, createStore({ foo: { '1': 'bar' } }))).toEqual(['bar', 'the_checkbox_value']);
     });
 
     it('Correctly removes data from valued unchecked checkbox', () => {
@@ -41,17 +37,14 @@ describe('getValueFromElement', () => {
         input.dataset.model = 'foo';
         input.value = 'the_checkbox_value';
 
-        expect(getValueFromElement(input, createStore()))
-            .toEqual(null);
-        expect(getValueFromElement(input, createStore({ foo: ['the_checkbox_value'] })))
-            .toEqual([]);
+        expect(getValueFromElement(input, createStore())).toEqual(null);
+        expect(getValueFromElement(input, createStore({ foo: ['the_checkbox_value'] }))).toEqual([]);
         // unchecked value already was not in store
-        expect(getValueFromElement(input, createStore({ foo: ['bar'] })))
-            .toEqual(['bar']);
-        expect(getValueFromElement(input, createStore({ foo: ['bar', 'the_checkbox_value'] })))
-            .toEqual(['bar']);
-        expect(getValueFromElement(input, createStore({ foo: {'1': 'bar', '2': 'the_checkbox_value'} })))
-            .toEqual(['bar']);
+        expect(getValueFromElement(input, createStore({ foo: ['bar'] }))).toEqual(['bar']);
+        expect(getValueFromElement(input, createStore({ foo: ['bar', 'the_checkbox_value'] }))).toEqual(['bar']);
+        expect(getValueFromElement(input, createStore({ foo: { '1': 'bar', '2': 'the_checkbox_value' } }))).toEqual([
+            'bar',
+        ]);
     });
 
     it('Correctly handles boolean checkbox', () => {
@@ -60,13 +53,11 @@ describe('getValueFromElement', () => {
         input.checked = true;
         input.dataset.model = 'foo';
 
-        expect(getValueFromElement(input, createStore()))
-            .toEqual(true);
+        expect(getValueFromElement(input, createStore())).toEqual(true);
 
         input.checked = false;
 
-        expect(getValueFromElement(input, createStore()))
-            .toEqual(false);
+        expect(getValueFromElement(input, createStore())).toEqual(false);
     });
 
     it('Correctly returns for non-model checkboxes', () => {
@@ -75,12 +66,10 @@ describe('getValueFromElement', () => {
         input.checked = true;
         input.value = 'the_checkbox_value';
 
-        expect(getValueFromElement(input, createStore()))
-            .toEqual('the_checkbox_value');
+        expect(getValueFromElement(input, createStore())).toEqual('the_checkbox_value');
 
         input.checked = false;
-        expect(getValueFromElement(input, createStore()))
-            .toEqual(null);
+        expect(getValueFromElement(input, createStore())).toEqual(null);
     });
 
     it('Correctly sets data from select multiple', () => {
@@ -95,32 +84,27 @@ describe('getValueFromElement', () => {
         select.add(barOption);
 
         // nothing selected
-        expect(getValueFromElement(select, createStore()))
-            .toEqual([]);
+        expect(getValueFromElement(select, createStore())).toEqual([]);
 
         fooOption.selected = true;
-        expect(getValueFromElement(select, createStore()))
-            .toEqual(['foo']);
+        expect(getValueFromElement(select, createStore())).toEqual(['foo']);
 
         barOption.selected = true;
-        expect(getValueFromElement(select, createStore()))
-            .toEqual(['foo', 'bar']);
-    })
+        expect(getValueFromElement(select, createStore())).toEqual(['foo', 'bar']);
+    });
 
     it('Grabs data-value attribute for other elements', () => {
         const div = document.createElement('div');
         div.dataset.value = 'the_value';
 
-        expect(getValueFromElement(div, createStore()))
-            .toEqual('the_value');
+        expect(getValueFromElement(div, createStore())).toEqual('the_value');
     });
 
     it('Grabs value attribute for other elements', () => {
         const div = document.createElement('div');
         div.setAttribute('value', 'the_value_from_attribute');
 
-        expect(getValueFromElement(div, createStore()))
-            .toEqual('the_value_from_attribute');
+        expect(getValueFromElement(div, createStore())).toEqual('the_value_from_attribute');
     });
 });
 
@@ -207,7 +191,7 @@ describe('setValueOnElement', () => {
         setValueOnElement(select, ['foo']);
         expect(fooOption.selected).toBeTruthy();
         expect(barOption.selected).toBeFalsy();
-    })
+    });
 
     it('Sets value on other elements', () => {
         const input = document.createElement('input');
@@ -258,7 +242,9 @@ describe('getModelDirectiveFromInput', () => {
     it('throws error if no data-model found', () => {
         const element = htmlToElement('<input>');
 
-        expect(() => { getModelDirectiveFromElement(element) }).toThrow('Cannot determine the model name');
+        expect(() => {
+            getModelDirectiveFromElement(element);
+        }).toThrow('Cannot determine the model name');
     });
 });
 
@@ -271,7 +257,7 @@ describe('elementBelongsToThisComponent', () => {
             [],
             null,
             new Backend(''),
-            new noopElementDriver(),
+            new noopElementDriver()
         );
         component.connect();
 

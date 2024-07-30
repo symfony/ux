@@ -19,7 +19,7 @@ export default class implements PluginInterface {
     private parentModelBindings: ModelBinding[] = [];
 
     constructor(component: Component) {
-        this.component  = component;
+        this.component = component;
 
         const modelDirectives = getAllModelDirectiveFromElements(this.component.element);
         this.parentModelBindings = modelDirectives.map(getModelBinding);
@@ -73,12 +73,7 @@ export default class implements PluginInterface {
                 return;
             }
 
-            parentComponent.set(
-                modelBinding.modelName,
-                value,
-                modelBinding.shouldRender,
-                modelBinding.debounce
-            );
+            parentComponent.set(modelBinding.modelName, value, modelBinding.shouldRender, modelBinding.debounce);
         });
     }
 

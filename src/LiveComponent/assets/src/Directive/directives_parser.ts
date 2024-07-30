@@ -43,7 +43,7 @@ export interface Directive {
  *
  * @param {string} content The value of the attribute
  */
-export function parseDirectives(content: string|null): Directive[] {
+export function parseDirectives(content: string | null): Directive[] {
     const directives: Directive[] = [];
 
     if (!content) {
@@ -53,7 +53,7 @@ export function parseDirectives(content: string|null): Directive[] {
     let currentActionName = '';
     let currentArgumentValue = '';
     let currentArguments: string[] = [];
-    let currentModifiers: { name: string, value: string | null }[] = [];
+    let currentModifiers: { name: string; value: string | null }[] = [];
     let state = 'action';
 
     const getLastActionName = () => {
@@ -66,7 +66,7 @@ export function parseDirectives(content: string|null): Directive[] {
         }
 
         return directives[directives.length - 1].action;
-    }
+    };
     const pushInstruction = () => {
         directives.push({
             action: currentActionName,
@@ -76,24 +76,24 @@ export function parseDirectives(content: string|null): Directive[] {
                 // TODO - make a string representation of JUST this directive
 
                 return content;
-            }
+            },
         });
         currentActionName = '';
         currentArgumentValue = '';
         currentArguments = [];
         currentModifiers = [];
         state = 'action';
-    }
+    };
     const pushArgument = () => {
         // value is trimmed to avoid space after ","
         // "foo, bar"
         currentArguments.push(currentArgumentValue.trim());
         currentArgumentValue = '';
-    }
+    };
 
     const pushModifier = () => {
         if (currentArguments.length > 1) {
-            throw new Error(`The modifier "${currentActionName}()" does not support multiple arguments.`)
+            throw new Error(`The modifier "${currentActionName}()" does not support multiple arguments.`);
         }
 
         currentModifiers.push({
@@ -103,11 +103,11 @@ export function parseDirectives(content: string|null): Directive[] {
         currentActionName = '';
         currentArguments = [];
         state = 'action';
-    }
+    };
 
     for (let i = 0; i < content.length; i++) {
         const char = content[i];
-        switch(state) {
+        switch (state) {
             case 'action':
                 if (char === '(') {
                     state = 'arguments';
@@ -171,7 +171,7 @@ export function parseDirectives(content: string|null): Directive[] {
 
                 // we just finished an action(), and now we need a space
                 if (char !== ' ') {
-                    throw new Error(`Missing space after ${getLastActionName()}()`)
+                    throw new Error(`Missing space after ${getLastActionName()}()`);
                 }
 
                 pushInstruction();
@@ -189,7 +189,7 @@ export function parseDirectives(content: string|null): Directive[] {
 
             break;
         default:
-            throw new Error(`Did you forget to add a closing ")" after "${currentActionName}"?`)
+            throw new Error(`Did you forget to add a closing ")" after "${currentActionName}"?`);
     }
 
     return directives;

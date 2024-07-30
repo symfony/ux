@@ -26,7 +26,7 @@ function parseDirectives(content) {
             modifiers: currentModifiers,
             getString: () => {
                 return content;
-            }
+            },
         });
         currentActionName = '';
         currentArgumentValue = '';
@@ -1760,7 +1760,7 @@ class ExternalMutationTracker {
                         this.handleAttributeMutation(mutation);
                         handledAttributeMutations.set(element, [
                             ...handledAttributeMutations.get(element),
-                            mutation.attributeName
+                            mutation.attributeName,
                         ]);
                     }
                     break;
@@ -1958,7 +1958,7 @@ class Component {
         const promise = this.nextRequestPromise;
         this.pendingActions.push({
             name,
-            args
+            args,
         });
         this.debouncedStartRequest(debounce);
         return promise;
@@ -2039,7 +2039,8 @@ class Component {
                 input.value = '';
             }
             const headers = backendResponse.response.headers;
-            if (!headers.get('Content-Type')?.includes('application/vnd.live-component+html') && !headers.get('X-Live-Redirect')) {
+            if (!headers.get('Content-Type')?.includes('application/vnd.live-component+html') &&
+                !headers.get('X-Live-Redirect')) {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
                 this.hooks.triggerHook('response:error', backendResponse, controls);
@@ -2089,7 +2090,7 @@ class Component {
         }
         catch (error) {
             console.error(`There was a problem with the '${this.name}' component HTML returned:`, {
-                id: this.id
+                id: this.id,
             });
             throw error;
         }
@@ -2182,7 +2183,7 @@ class Component {
         };
         modal.addEventListener('click', () => closeModal(modal));
         modal.setAttribute('tabindex', '0');
-        modal.addEventListener('keydown', e => {
+        modal.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 closeModal(modal);
             }
@@ -2291,8 +2292,7 @@ class RequestBuilder {
             if (hasFingerprints) {
                 requestData.children = children;
             }
-            if (this.csrfToken &&
-                (actions.length || totalFiles)) {
+            if (this.csrfToken && (actions.length || totalFiles)) {
                 fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
             }
             if (actions.length > 0) {
@@ -2426,10 +2426,16 @@ class LoadingPlugin {
             }
             throw new Error(`Unknown modifier "${modifier.name}" used in data-loading="${directive.getString()}". Available modifiers are: ${Array.from(validModifiers.keys()).join(', ')}.`);
         });
-        if (isLoading && targetedActions.length > 0 && backendRequest && !backendRequest.containsOneOfActions(targetedActions)) {
+        if (isLoading &&
+            targetedActions.length > 0 &&
+            backendRequest &&
+            !backendRequest.containsOneOfActions(targetedActions)) {
             return;
         }
-        if (isLoading && targetedModels.length > 0 && backendRequest && !backendRequest.areAnyModelsUpdated(targetedModels)) {
+        if (isLoading &&
+            targetedModels.length > 0 &&
+            backendRequest &&
+            !backendRequest.areAnyModelsUpdated(targetedModels)) {
             return;
         }
         let loadingDirective;
@@ -2472,7 +2478,7 @@ class LoadingPlugin {
         if (element.hasAttribute('data-loading')) {
             matchingElements = [element, ...matchingElements];
         }
-        matchingElements.forEach((element => {
+        matchingElements.forEach((element) => {
             if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
                 throw new Error('Invalid Element Type');
             }
@@ -2481,7 +2487,7 @@ class LoadingPlugin {
                 element,
                 directives,
             });
-        }));
+        });
         return loadingDirectives;
     }
     showElement(element) {
@@ -2728,7 +2734,7 @@ function getModelBinding (modelDirective) {
         innerModelName: innerModelName || null,
         shouldRender,
         debounce,
-        targetEventName
+        targetEventName,
     };
 }
 
@@ -2919,7 +2925,7 @@ class LazyPlugin {
     getObserver() {
         if (!this.intersectionObserver) {
             this.intersectionObserver = new IntersectionObserver((entries, observer) => {
-                entries.forEach(entry => {
+                entries.forEach((entry) => {
                     if (entry.isIntersecting) {
                         entry.target.dispatchEvent(new CustomEvent('live:appear'));
                         observer.unobserve(entry.target);
