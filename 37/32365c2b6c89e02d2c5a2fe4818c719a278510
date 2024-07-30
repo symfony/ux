@@ -1,0 +1,67 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-05-15T07:10:34Z
+
+Failures are unrelated
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-15T07:55:44Z
+
+I cannot resist to answer with: https://dayssincelastjavascriptframework.com/
+
+(and now more seriously i'll look at your post 😅 )
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-15T07:58:16Z
+
+(first read: you know how to speak to me :) )
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-05-15T08:14:16Z
+
+Yeah I know about the 0 day since the last JS framework/tools meme... and trust me it's not for nothing my TN is "JS hate account" :trollface:
+
+Biome is a community-fork from [Rome](https://github.com/rome/tools) (started 3 years ago), it's a tool I was really looking forward to because of the over-fragmentation of JavaScript tools and the unnecessarily complex configurations to make them work together.
+I love having a tool that does a lot, but mostly **well**. ... &lt;troll>Next PR, Bun to replace Yarn/Vitest/Rollup? :eyes: &lt;/troll>)
+
+I consider Biome enough "production-ready", to nicely and quickly lint and format our JS(X)/TS(X) files.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-05-15T09:28:19Z
+
+What about editor integration? Did you tried the PHPstorm extension? Do you think it's mature enough?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-05-15T10:48:30Z
+
+I didn't know an extension existed, and so I didn't try it. But I'm not a big fan of ESLint/Prettier integration in IDEs, I prefer relying on CLI / CI / pre-commit hook :D
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-17T03:18:46Z
+
+I'll try it next week (late in the week) !
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-07-30T11:07:28Z
+
+This looks like a nice addition. Do you think this is ready for merge or would you like to wait for more feedback and/or changes? Thanks!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-30T11:13:57Z
+
+Hey, I think this PR would need a last rebase on `main` before merging.
+I will do it this afternoon
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-30T12:52:06Z
+
+The PR has been rebased and CI checks are passing, feel free to merge it if you like it :eyes:
