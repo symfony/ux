@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-27T20:16:14Z
+
+Hi @kempha !
+
+Could you rebase / check the conflicts ?
+
+---------------------------------------------------------------------------
+
+by kempha at 2024-07-28T14:27:03Z
+
+Hi, @smnandre!
+
+Fabbot complains about the style of messages in exceptions. I didn't write this code, but I can fix it. Do it?)
+
+---------------------------------------------------------------------------
+
+by kempha at 2024-07-29T09:05:04Z
+
+@smnandre, conflicts fixed 👌
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-29T23:49:42Z
+
+Seems good to me ! Thanks!
