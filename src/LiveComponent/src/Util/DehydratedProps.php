@@ -113,6 +113,17 @@ class DehydratedProps
         return $nestedPaths;
     }
 
+    public function hasNestedPathsForProperty(string $prop): bool
+    {
+        foreach ($this->propValues as $fullPath => $value) {
+            if (str_starts_with($fullPath, $prop.'.')) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     public function calculateUnexpectedNestedPathsForProperty(string $prop, array $expectedNestedPaths): array
     {
         $clone = clone $this;
