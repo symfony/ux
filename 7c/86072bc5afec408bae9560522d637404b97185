@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by VincentLanglet at 2024-06-30T09:48:48Z
+
+> should we create a Standard
+
+I'm not sure about a `SymfonyUX` standard. I tried recently to make the Symfony standard compatible with the `ux` components with those changes https://github.com/VincentLanglet/Twig-CS-Fixer/commit/35a824ec5c93189d983f5e95b85ab9b4f2ee59c8.
+
+So I would say:
+- Demo folder seems specific here and should be in your config like you did
+- If some "custom" rules like `BlockNameSpacingRule`, `IncludeFunctionRule`, etc are wanted by the symfony team we can add it to the Symfony standard. Currently my main issue was that I could only add to the Twig & Symfony standard what I could find on the docs, like
+  - https://twig.symfony.com/doc/3.x/coding_standards.html
+  - https://symfony.com/doc/current/templates.html#template-naming
+  - https://symfony.com/doc/current/best_practices.html#templates
+  - https://symfony.com/bundles/ux-twig-component/current/index.html
+
+But the goal would be to have Symfony members adding rules directly in the Symfony standard :)
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-07-30T09:43:59Z
+
+This looks like a nice contribution. @smnandre do you need any help form us to make this mergeable ... or is it just a matter of rebasing and then it's ready for merge? Thanks!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-30T19:48:56Z
+
+Hi @javiereguiluz
+
+I rebased, all seems good to me
