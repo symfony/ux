@@ -179,4 +179,19 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
         $this->assertSame(200, $response->getStatusCode());
         $this->assertStringContainsString('foobar', $testComponent->render());
     }
+
+    public function testAccessAllLivePropsInsideOnUpdatedHook(): void
+    {
+        $testComponent = $this->createLiveComponent('with_on_updated', [
+            'number1' => 1,
+            'number2' => 2,
+            'number3' => 3,
+        ]);
+
+        $this->assertStringContainsString('Total: 6', $testComponent->render());
+
+        $testComponent->set('number1', 4);
+
+        $this->assertStringContainsString('Total: 9', $testComponent->render());
+    }
 }
