@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-30T18:26:52Z
+
+Any effect on CI test Times ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-30T18:31:20Z
+
+Oops, before/after were present before editing the PR description, but yes!
+
+For linting check:
+- Before: ~4.46s https://github.com/symfony/ux/actions/runs/10165755504/job/28114324828?pr=1848#step:6:71
+- After: ~0.19s https://github.com/symfony/ux/actions/runs/10167615535/job/28120403528?pr=2015#step:6:8
+
+And for formatting check, well [it was broken](https://github.com/symfony/ux/actions/runs/10165755504/job/28114324828?pr=1848#step:6:71)... 😅:
+- Before: ~2.07s with Prettier https://github.com/symfony/ux/actions/runs/10162279123/job/28102614777?pr=2013#step:7:10
+- After: ~0.17s https://github.com/symfony/ux/actions/runs/10167615535/job/28120403528?pr=2015#step:7:8
