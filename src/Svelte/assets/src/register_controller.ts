@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import type { SvelteComponent } from 'svelte';
 
 declare global {
@@ -23,7 +21,9 @@ export function registerSvelteControllerComponents(context: __WebpackModuleApi.R
     const svelteControllers: { [key: string]: object } = {};
 
     const importAllSvelteComponents = (r: __WebpackModuleApi.RequireContext) => {
-        r.keys().forEach((key) => (svelteControllers[key] = r(key).default));
+        r.keys().forEach((key) => {
+            svelteControllers[key] = r(key).default;
+        });
     };
 
     importAllSvelteComponents(context);

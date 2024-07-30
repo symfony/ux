@@ -1,7 +1,7 @@
-import Component from '../index';
+import type Component from '../index';
 import { parseDirectives } from '../../Directive/directives_parser';
 import PollingDirector from '../../PollingDirector';
-import { PluginInterface } from './PluginInterface';
+import type { PluginInterface } from './PluginInterface';
 
 export default class implements PluginInterface {
     private element: Element;
@@ -49,7 +49,7 @@ export default class implements PluginInterface {
                 switch (modifier.name) {
                     case 'delay':
                         if (modifier.value) {
-                            duration = parseInt(modifier.value);
+                            duration = Number.parseInt(modifier.value);
                         }
 
                          break;

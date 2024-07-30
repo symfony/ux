@@ -6,7 +6,7 @@ import {
     findComponents,
 } from '../src/ComponentRegistry';
 import BackendRequest from '../src/Backend/BackendRequest';
-import { BackendInterface } from '../src/Backend/Backend';
+import type { BackendInterface } from '../src/Backend/Backend';
 import { Response } from 'node-fetch';
 import { noopElementDriver } from './tools';
 

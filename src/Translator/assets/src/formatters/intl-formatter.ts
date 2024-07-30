@@ -7,7 +7,7 @@ import { IntlMessageFormat } from 'intl-messageformat';
  * @param parameters An array of parameters for the message
  * @param locale     The locale
  */
-export function formatIntl(id: string, parameters: Record<string, string | number> = {}, locale: string): string {
+export function formatIntl(id: string, parameters: Record<string, string | number>, locale: string): string {
     if (id === '') {
         return '';
     }

@@ -3,12 +3,12 @@ import LiveController from '../src/live_controller';
 import { waitFor } from '@testing-library/dom';
 import { htmlToElement } from '../src/dom_utils';
 import Component from '../src/Component';
-import { BackendAction, BackendInterface, ChildrenFingerprints } from '../src/Backend/Backend';
+import type { BackendAction, BackendInterface, ChildrenFingerprints } from '../src/Backend/Backend';
 import BackendRequest from '../src/Backend/BackendRequest';
 import { Response } from 'node-fetch';
 import { setDeepData } from '../src/data_manipulation_utils';
 import LiveControllerDefault from '../src/live_controller';
-import { ElementDriver } from '../src/Component/ElementDriver';
+import type { ElementDriver } from '../src/Component/ElementDriver';
 
 let activeTests: FunctionalTest[] = [];
 
@@ -31,7 +31,7 @@ export function shutdownTests() {
     });
 }
 
-const shutdownTest = function(test: FunctionalTest) {
+const shutdownTest = (test: FunctionalTest) => {
     test.pendingAjaxCallsThatAreStillExpected().forEach((mock => {
         const requestInfo = mock.getVisualSummary();
         throw new Error(`EXPECTED request was never made matching the following info: \n${requestInfo.join('\n')}`);

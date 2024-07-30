@@ -1,13 +1,13 @@
-import { BackendInterface } from '../Backend/Backend';
+import type { BackendInterface } from '../Backend/Backend';
 import ValueStore from './ValueStore';
-import BackendRequest from '../Backend/BackendRequest';
-import { ElementDriver } from './ElementDriver';
-import { PluginInterface } from './plugins/PluginInterface';
+import type BackendRequest from '../Backend/BackendRequest';
+import type { ElementDriver } from './ElementDriver';
+import type { PluginInterface } from './plugins/PluginInterface';
 import BackendResponse from '../Backend/BackendResponse';
 type MaybePromise<T = void> = T | Promise<T>;
 export type ComponentHooks = {
-    'connect': (component: Component) => MaybePromise;
-    'disconnect': (component: Component) => MaybePromise;
+    connect: (component: Component) => MaybePromise;
+    disconnect: (component: Component) => MaybePromise;
     'request:started': (requestConfig: any) => MaybePromise;
     'render:finished': (component: Component) => MaybePromise;
     'response:error': (backendResponse: BackendResponse, controls: {

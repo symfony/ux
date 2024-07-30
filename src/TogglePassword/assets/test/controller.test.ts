@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor, getByText } from '@testing-library/dom';
 import user from '@testing-library/user-event';
@@ -31,7 +29,7 @@ const startStimulus = () => {
 }
 
 describe('TogglePasswordController', () => {
-    let container;
+    let container: HTMLElement;
 
     beforeEach(() => {
         container = mountDOM(`

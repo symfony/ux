@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
 
 import { Application } from '@hotwired/stimulus';
 import { waitFor } from '@testing-library/dom';

@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { shutdownTests, createTest, initComponent } from '../tools';
 import { getByTestId } from '@testing-library/dom';
 import { htmlToElement } from '../../src/dom_utils';

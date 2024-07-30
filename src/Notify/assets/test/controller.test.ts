@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
@@ -37,7 +35,7 @@ const startStimulus = (): Application => {
 };
 
 describe('NotifyController', () => {
-    let application;
+    let application: Application;
 
     afterEach(() => {
         clearDOM();

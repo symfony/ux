@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { HistoryStrategy, UrlUtils } from '../src/url_utils';
 
 describe('url_utils', () => {
@@ -128,7 +126,7 @@ describe('url_utils', () => {
             history.replaceState(history.state, '', initialUrl);
         });
         it('replace URL', () => {
-           const newUrl = new URL(window.location.href + '/foo/bar');
+           const newUrl = new URL(`${window.location.href}/foo/bar`);
            HistoryStrategy.replace(newUrl);
            expect(window.location.href).toEqual(newUrl.toString());
         });

@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Application } from '@hotwired/stimulus';
 import { getByTestId } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
@@ -21,7 +19,7 @@ const startStimulus = () => {
 
 /* eslint-disable no-undef */
 describe('TurboStreamController', () => {
-    let container;
+    let container: HTMLElement;
 
     beforeEach(() => {
         container = mountDOM('<div data-testid="turbo-core" data-controller="symfony--ux-turbo--turbo"></div>');

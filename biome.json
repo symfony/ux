@@ -1,0 +1,47 @@
+{
+    "files": {
+        "ignore": ["**/composer.json"]
+    },
+    "linter": {
+        "rules": {
+            "suspicious": {
+                "noExplicitAny": "off",
+                "noEmptyBlockStatements": "off"
+            },
+            "complexity": {
+                "noStaticOnlyClass": "off",
+                "noForEach": "off"
+            },
+            "style": {
+                "noParameterAssign": "off"
+            },
+            "performance": {
+                "noDelete": "off"
+            }
+        }
+    },
+    "formatter": {
+        "lineWidth": 120,
+        "indentStyle": "space",
+        "indentWidth": 4
+    },
+    "javascript": {
+        "formatter": {
+            "trailingComma": "es5",
+            "bracketSameLine": true,
+            "quoteStyle": "single"
+        }
+    },
+    "overrides": [
+        {
+            "include": ["*.svelte"],
+            "linter": {
+                "rules": {
+                    "style": {
+                        "useConst": "off"
+                    }
+                }
+            }
+        }
+    ]
+}

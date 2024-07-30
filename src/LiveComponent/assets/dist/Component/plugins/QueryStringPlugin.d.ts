@@ -1,5 +1,5 @@
-import Component from '../index';
-import { PluginInterface } from './PluginInterface';
+import type Component from '../index';
+import type { PluginInterface } from './PluginInterface';
 interface QueryMapping {
     name: string;
 }

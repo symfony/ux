@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import {registerReactControllerComponents} from '../src/register_controller';
 import MyTsxComponent from './fixtures/MyTsxComponent';
 // @ts-ignore

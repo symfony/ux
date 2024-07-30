@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Controller } from '@hotwired/stimulus';
 import Swup from 'swup';
 import SwupDebugPlugin from '@swup/debug-plugin';

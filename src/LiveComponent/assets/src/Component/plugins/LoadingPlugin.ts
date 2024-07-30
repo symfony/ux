@@ -1,13 +1,13 @@
 import {
-    Directive,
-    DirectiveModifier,
+    type Directive,
+    type DirectiveModifier,
     parseDirectives
 } from '../../Directive/directives_parser';
 import { elementBelongsToThisComponent } from '../../dom_utils';
 import { combineSpacedArray } from '../../string_utils';
-import BackendRequest from '../../Backend/BackendRequest';
-import Component from '../../Component';
-import { PluginInterface } from './PluginInterface';
+import type BackendRequest from '../../Backend/BackendRequest';
+import type Component from '../../Component';
+import type { PluginInterface } from './PluginInterface';
 
 interface ElementLoadingDirectives {
     element: HTMLElement|SVGElement,
@@ -68,7 +68,7 @@ export default class implements PluginInterface {
             if (!isLoading) {
                 return;
             }
-            delay = modifier.value ? parseInt(modifier.value) : 200;
+            delay = modifier.value ? Number.parseInt(modifier.value) : 200;
         });
         validModifiers.set('action', (modifier: DirectiveModifier) => {
             if (!modifier.value) {
@@ -211,7 +211,7 @@ export default class implements PluginInterface {
     }
 }
 
-const parseLoadingAction = function (action: string, isLoading: boolean) {
+const parseLoadingAction = (action: string, isLoading: boolean) => {
     switch (action) {
         case 'show':
             return isLoading ? 'show' : 'hide';

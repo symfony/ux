@@ -1,7 +1,9 @@
 function registerReactControllerComponents(context) {
     const reactControllers = {};
     const importAllReactComponents = (r) => {
-        r.keys().forEach((key) => (reactControllers[key] = r(key).default));
+        r.keys().forEach((key) => {
+            reactControllers[key] = r(key).default;
+        });
     };
     importAllReactComponents(context);
     window.resolveReactComponent = (name) => {

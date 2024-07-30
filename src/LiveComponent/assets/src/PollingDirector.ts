@@ -1,4 +1,4 @@
-import Component from './Component';
+import type Component from './Component';
 
 export default class {
     component: Component;

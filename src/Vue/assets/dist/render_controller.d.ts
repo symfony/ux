@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import { App } from 'vue';
+import { type App } from 'vue';
 export default class extends Controller<Element & {
     __vue_app__?: App<Element>;
 }> {

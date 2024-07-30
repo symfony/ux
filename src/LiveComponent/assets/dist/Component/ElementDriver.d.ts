@@ -1,4 +1,4 @@
-import LiveControllerDefault from '../live_controller';
+import type LiveControllerDefault from '../live_controller';
 export interface ElementDriver {
     getModelName(element: HTMLElement): string | null;
     getComponentProps(): any;

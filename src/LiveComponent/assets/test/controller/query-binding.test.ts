@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import {createTest, initComponent, shutdownTests, setCurrentSearch, expectCurrentSearch} from '../tools';
 import { getByText, waitFor } from '@testing-library/dom';
 
@@ -107,7 +105,7 @@ describe('LiveController query string binding', () => {
     });
 
     it('updates objects in the URL', async () => {
-        const test = await createTest({ prop: { 'foo': null, 'bar': null, 'baz': null}}, (data: any) => `
+        const test = await createTest({ prop: { foo: null, bar: null, baz: null}}, (data: any) => `
             <div ${initComponent(data, { queryMapping: {prop: {name: 'prop'}}})}></div>
         `)
 
@@ -121,25 +119,25 @@ describe('LiveController query string binding', () => {
 
         // Set multiple values
         test.expectsAjaxCall()
-            .expectUpdatedData({'prop': { 'foo': 'other', 'bar': 42 } });
+            .expectUpdatedData({prop: { foo: 'other', bar: 42 } });
 
-        await test.component.set('prop', { 'foo': 'other', 'bar': 42 }, true);
+        await test.component.set('prop', { foo: 'other', bar: 42 }, true);
 
         expectCurrentSearch().toEqual('?prop[foo]=other&prop[bar]=42');
 
         // Remove one value
         test.expectsAjaxCall()
-            .expectUpdatedData({'prop': { 'foo': 'other', 'bar': null } });
+            .expectUpdatedData({prop: { foo: 'other', bar: null } });
 
-        await test.component.set('prop', { 'foo': 'other', 'bar': null }, true);
+        await test.component.set('prop', { foo: 'other', bar: null }, true);
 
         expectCurrentSearch().toEqual('?prop[foo]=other');
 
         // Remove all values
         test.expectsAjaxCall()
-            .expectUpdatedData({'prop': { 'foo': null, 'bar': null } });
+            .expectUpdatedData({prop: { foo: null, bar: null } });
 
-        await test.component.set('prop', { 'foo': null, 'bar': null }, true);
+        await test.component.set('prop', { foo: null, bar: null }, true);
 
         expectCurrentSearch().toEqual('?prop=');
     });

@@ -1,6 +1,6 @@
-import ValueStore from './Component/ValueStore';
-import { Directive } from './Directive/directives_parser';
-import Component from './Component';
+import type ValueStore from './Component/ValueStore';
+import { type Directive } from './Directive/directives_parser';
+import type Component from './Component';
 export declare function getValueFromElement(element: HTMLElement, valueStore: ValueStore): string | string[] | null | boolean;
 export declare function setValueOnElement(element: HTMLElement, value: any): void;
 export declare function getAllModelDirectiveFromElements(element: HTMLElement): Directive[];

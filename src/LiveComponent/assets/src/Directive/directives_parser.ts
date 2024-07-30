@@ -29,7 +29,7 @@ export interface Directive {
      * Any modifiers applied to the action
      */
     modifiers: DirectiveModifier[];
-    getString: { (): string };
+    getString: () => string;
 }
 
 /**
@@ -56,7 +56,7 @@ export function parseDirectives(content: string|null): Directive[] {
     let currentModifiers: { name: string, value: string | null }[] = [];
     let state = 'action';
 
-    const getLastActionName = function() {
+    const getLastActionName = () => {
         if (currentActionName) {
             return currentActionName;
         }
@@ -67,7 +67,7 @@ export function parseDirectives(content: string|null): Directive[] {
 
         return directives[directives.length - 1].action;
     }
-    const pushInstruction = function() {
+    const pushInstruction = () => {
         directives.push({
             action: currentActionName,
             args: currentArguments,
@@ -84,14 +84,14 @@ export function parseDirectives(content: string|null): Directive[] {
         currentModifiers = [];
         state = 'action';
     }
-    const pushArgument = function() {
+    const pushArgument = () => {
         // value is trimmed to avoid space after ","
         // "foo, bar"
         currentArguments.push(currentArgumentValue.trim());
         currentArgumentValue = '';
     }
 
-    const pushModifier = function() {
+    const pushModifier = () => {
         if (currentArguments.length > 1) {
             throw new Error(`The modifier "${currentActionName}()" does not support multiple arguments.`)
         }

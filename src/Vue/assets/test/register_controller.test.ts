@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import {registerVueControllerComponents} from '../src/register_controller';
 import Hello from './fixtures/Hello.vue'
 import Goodbye from './fixtures-lazy/Goodbye.vue'

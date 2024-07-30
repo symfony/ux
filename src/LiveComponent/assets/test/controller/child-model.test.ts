@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { createTest, initComponent, shutdownTests } from '../tools';
 import {getByTestId, waitFor} from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';

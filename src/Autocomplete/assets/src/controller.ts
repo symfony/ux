@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import TomSelect from 'tom-select';
-import { TPluginHash } from 'tom-select/dist/types/contrib/microplugin';
-import { RecursivePartial, TomSettings, TomTemplates, TomLoadCallback } from 'tom-select/dist/types/types';
+import type { TPluginHash } from 'tom-select/dist/types/contrib/microplugin';
+import type { RecursivePartial, TomSettings, TomTemplates, TomLoadCallback } from 'tom-select/dist/types/types';
 
 export interface AutocompletePreConnectOptions {
     options: any;
@@ -175,12 +175,8 @@ export default class extends Controller {
                 };
             },
             render: {
-                item: function (item: any) {
-                    return `<div>${item.text}</div>`;
-                },
-                option: function (item: any) {
-                    return `<div>${item.text}</div>`;
-                },
+                item: (item: any) => `<div>${item.text}</div>`,
+                option: (item: any) => `<div>${item.text}</div>`,
             },
         });
 
@@ -231,18 +227,10 @@ export default class extends Controller {
             },
             optgroupField: 'group_by',
             // avoid extra filtering after results are returned
-            score: function (search: string) {
-                return function (item: any) {
-                    return 1;
-                };
-            },
+            score: (search: string) => (item: any) => 1,
             render: {
-                option: function (item: any) {
-                    return `<div>${item.text}</div>`;
-                },
-                item: function (item: any) {
-                    return `<div>${item.text}</div>`;
-                },
+                option: (item: any) => `<div>${item.text}</div>`,
+                item: (item: any) => `<div>${item.text}</div>`,
                 loading_more: (): string => {
                     return `<div class="loading-more-results">${this.loadingMoreTextValue}</div>`;
                 },
@@ -312,11 +300,11 @@ export default class extends Controller {
             return 'focus';
         }
 
-        if (this.preloadValue == 'false') {
+        if (this.preloadValue === 'false') {
             return false;
         }
 
-        if (this.preloadValue == 'true') {
+        if (this.preloadValue === 'true') {
             return true;
         }
 

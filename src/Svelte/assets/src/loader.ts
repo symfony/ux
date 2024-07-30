@@ -7,10 +7,8 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import type { SvelteComponent } from 'svelte';
-import { ComponentCollection, components } from './components.js';
+import { type ComponentCollection, components } from './components.js';
 
 declare global {
     function resolveSvelteComponent(name: string): typeof SvelteComponent<any>;

@@ -1,15 +1,15 @@
-import {getLocale, Message, NoParametersType, setLocale, setLocaleFallbacks, trans} from '../src/translator';
+import {getLocale, type Message, type NoParametersType, setLocale, setLocaleFallbacks, trans} from '../src/translator';
 
-describe('Translator', function () {
-    beforeEach(function() {
+describe('Translator', () => {
+    beforeEach(() => {
         setLocale(null);
         setLocaleFallbacks({})
         document.documentElement.lang = '';
         document.documentElement.removeAttribute('data-symfony-ux-translator-locale');
     })
 
-    describe('getLocale', function () {
-        test('default locale', function () {
+    describe('getLocale', () => {
+        test('default locale', () => {
             // 'en' is the default locale
             expect(getLocale()).toEqual('en');
 
@@ -26,16 +26,16 @@ describe('Translator', function () {
         });
     });
 
-    describe('setLocale', function () {
-        test('custom locale', function () {
+    describe('setLocale', () => {
+        test('custom locale', () => {
             setLocale('fr');
 
             expect(getLocale()).toEqual('fr');
         });
     });
 
-    describe('trans', function () {
-        test('basic message', function () {
+    describe('trans', () => {
+        test('basic message', () => {
             const MESSAGE_BASIC: Message<{ messages: { parameters: NoParametersType } }, 'en'> = {
                 id: 'message.basic',
                 translations: {
@@ -60,7 +60,7 @@ describe('Translator', function () {
             expect(trans(MESSAGE_BASIC, {}, 'messages', 'fr')).toEqual('message.basic');
         });
 
-        test('basic message with parameters', function () {
+        test('basic message with parameters', () => {
             const MESSAGE_BASIC_WITH_PARAMETERS: Message<{ messages: { parameters: { '%parameter1%': string, '%parameter2%': string } } }, 'en'> = {
                 id: 'message.basic.with.parameters',
                 translations: {
@@ -104,7 +104,7 @@ describe('Translator', function () {
             }, 'messages', 'fr')).toEqual('message.basic.with.parameters');
         });
 
-        test('intl message', function () {
+        test('intl message', () => {
             const MESSAGE_INTL: Message<{ 'messages+intl-icu': { parameters: NoParametersType } }, 'en'> = {
                 id: 'message.intl',
                 translations: {
@@ -129,7 +129,7 @@ describe('Translator', function () {
             expect(trans(MESSAGE_INTL, {}, 'messages', 'fr')).toEqual('message.intl');
         });
 
-        test('intl message with parameters', function () {
+        test('intl message with parameters', () => {
             const INTL_MESSAGE_WITH_PARAMETERS: Message<{
                 'messages+intl-icu': {
                     parameters: {
@@ -186,19 +186,19 @@ describe('Translator', function () {
                 guest: 'Hugo',
             }, 'messages', 'en')).toEqual('Lola invites Hugo to her party.');
 
-            expect(function () {
+            expect(() => {
                 // @ts-expect-error Parameters "gender_of_host", "num_guests", "host", and "guest" are missing
                 trans(INTL_MESSAGE_WITH_PARAMETERS, {});
             }).toThrow(/^The intl string context variable "gender_of_host" was not provided/);
 
-            expect(function () {
+            expect(() => {
                 // @ts-expect-error Parameters "num_guests", "host", and "guest" are missing
                 trans(INTL_MESSAGE_WITH_PARAMETERS, {
                     gender_of_host: 'male',
                 });
             }).toThrow(/^The intl string context variable "num_guests" was not provided/);
 
-            expect(function () {
+            expect(() => {
                 // @ts-expect-error Parameters "host", and "guest" are missing
                 trans(INTL_MESSAGE_WITH_PARAMETERS, {
                     gender_of_host: 'male',
@@ -206,7 +206,7 @@ describe('Translator', function () {
                 })
             }).toThrow(/^The intl string context variable "host" was not provided/);
 
-            expect(function () {
+            expect(() => {
                 // @ts-expect-error Parameter "guest" is missing
                 trans(INTL_MESSAGE_WITH_PARAMETERS, {
                     gender_of_host: 'male',
@@ -239,7 +239,7 @@ describe('Translator', function () {
                 )).toEqual('message.intl.with.parameters');
         });
 
-        test('same message id for multiple domains', function () {
+        test('same message id for multiple domains', () => {
             const MESSAGE_MULTI_DOMAINS: Message<{ foobar: { parameters: NoParametersType }, messages: { parameters: NoParametersType } }, 'en'> = {
                 id: 'message.multi_domains',
                 translations: {
@@ -270,7 +270,7 @@ describe('Translator', function () {
             expect(trans(MESSAGE_MULTI_DOMAINS, {}, 'foobar', 'fr')).toEqual('message.multi_domains');
         });
 
-        test('same message id for multiple domains, and different parameters', function () {
+        test('same message id for multiple domains, and different parameters', () => {
             const MESSAGE_MULTI_DOMAINS_WITH_PARAMETERS: Message<{ foobar: { parameters: { '%parameter2%': string } }, messages: { parameters: { '%parameter1%': string } } }, 'en'> = {
                 id: 'message.multi_domains.different_parameters',
                 translations: {
@@ -299,7 +299,7 @@ describe('Translator', function () {
             expect(trans(MESSAGE_MULTI_DOMAINS_WITH_PARAMETERS, {'%parameter1%': 'foo'}, 'messages', 'fr')).toEqual('message.multi_domains.different_parameters');
         });
 
-        test('message from intl domain should be prioritized over its non-intl equivalent', function () {
+        test('message from intl domain should be prioritized over its non-intl equivalent', () => {
             const MESSAGE: Message<{ 'messages+intl-icu': { parameters: NoParametersType }, messages: { parameters: NoParametersType } }, 'en'> = {
                 id: 'message',
                 translations: {
@@ -318,8 +318,8 @@ describe('Translator', function () {
             expect(trans(MESSAGE, {}, 'messages', 'en')).toEqual('A intl message');
         });
 
-        test('fallback behavior', function() {
-            setLocaleFallbacks({'fr_FR':'fr','fr':'en','en_US':'en','en_GB':'en','de_DE':'de','de':'en'});
+        test('fallback behavior', () => {
+            setLocaleFallbacks({fr_FR:'fr',fr:'en',en_US:'en',en_GB:'en',de_DE:'de',de:'en'});
 
             const MESSAGE: Message<{ messages: { parameters: NoParametersType } }, 'en'|'en_US'|'fr'> = {
                 id: 'message',

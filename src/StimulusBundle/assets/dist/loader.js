@@ -59,9 +59,7 @@ class StimulusLazyControllerHandler {
         });
     }
     queryControllerNamesWithin(element) {
-        return Array.from(element.querySelectorAll(`[${controllerAttribute}]`))
-            .map(extractControllerNamesFrom)
-            .flat();
+        return Array.from(element.querySelectorAll(`[${controllerAttribute}]`)).flatMap(extractControllerNamesFrom);
     }
 }
 function registerController(name, controller, application) {

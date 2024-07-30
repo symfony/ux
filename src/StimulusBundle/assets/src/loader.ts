@@ -12,13 +12,13 @@
  *
  * Inspired by stimulus-loading.js from stimulus-rails.
  */
-import { Application, ControllerConstructor } from '@hotwired/stimulus';
+import { Application, type ControllerConstructor } from '@hotwired/stimulus';
 import {
     eagerControllers,
     lazyControllers,
     isApplicationDebug,
-    EagerControllersCollection,
-    LazyControllersCollection,
+    type EagerControllersCollection,
+    type LazyControllersCollection,
 } from './controllers.js';
 
 const controllerAttribute = 'data-controller';
@@ -109,9 +109,7 @@ class StimulusLazyControllerHandler {
     }
 
     private queryControllerNamesWithin(element: Element): string[] {
-        return Array.from(element.querySelectorAll(`[${controllerAttribute}]`))
-            .map(extractControllerNamesFrom)
-            .flat();
+        return Array.from(element.querySelectorAll(`[${controllerAttribute}]`)).flatMap(extractControllerNamesFrom);
     }
 }
 

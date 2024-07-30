@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import type { Component } from 'vue';
 import { defineAsyncComponent } from 'vue';
 
@@ -21,10 +19,13 @@ declare global {
 }
 
 export function registerVueControllerComponents(context: __WebpackModuleApi.RequireContext) {
-    const vueControllers = context.keys().reduce((acc, key) => {
-        acc[key] = undefined;
-        return acc;
-    }, {} as Record<string, object | undefined>);
+    const vueControllers = context.keys().reduce(
+        (acc, key) => {
+            acc[key] = undefined;
+            return acc;
+        },
+        {} as Record<string, object | undefined>
+    );
 
     function loadComponent(name: string): object | never {
         const componentPath = `./${name}.vue`;

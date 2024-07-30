@@ -1,11 +1,11 @@
-import Component from '../index';
+import type Component from '../index';
 import {
     elementBelongsToThisComponent,
     getModelDirectiveFromElement,
     getValueFromElement,
     setValueOnElement
 } from '../../dom_utils';
-import { PluginInterface } from './PluginInterface';
+import type { PluginInterface } from './PluginInterface';
 
 /**
  * Handles setting the "value" onto data-model fields automatically from the data store.

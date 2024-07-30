@@ -85,7 +85,10 @@ function fromQueryString(search: string) {
         const [first, second, ...rest] = key.split('.');
 
         // We're at a leaf node, let's make the assigment...
-        if (!second) return (data[key] = value);
+        if (!second) {
+            data[key] = value;
+            return value;
+        }
 
         // This is where we fill in empty arrays/objects along the way to the assigment...
         if (data[first] === undefined) {

@@ -1,9 +1,9 @@
 import Component, { proxifyComponent } from '../../src/Component';
-import {BackendAction, BackendInterface} from '../../src/Backend/Backend';
+import type {BackendAction, BackendInterface} from '../../src/Backend/Backend';
 import BackendRequest from '../../src/Backend/BackendRequest';
 import { Response } from 'node-fetch';
 import { waitFor } from '@testing-library/dom';
-import BackendResponse from '../../src/Backend/BackendResponse';
+import type BackendResponse from '../../src/Backend/BackendResponse';
 import { noopElementDriver } from '../tools';
 
 interface MockBackend extends BackendInterface {
@@ -51,7 +51,7 @@ describe('Component class', () => {
             // set model but no re-render
             const promise = component.set('firstName', 'Ryan', false);
             // when this promise IS finally resolved, set the flag to true
-            promise.then((response) => backendResponse = response);
+            promise.then((response) => { backendResponse = response });
             // it should not have happened yet
             expect(backendResponse).toBeNull();
 

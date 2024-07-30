@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import {createTest, initComponent, shutdownTests} from '../tools';
 
 describe('LiveController Event Dispatching Tests', () => {
