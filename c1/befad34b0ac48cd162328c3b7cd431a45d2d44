@@ -1,0 +1,90 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-09T12:09:19Z
+
+Thanks @jakubtobiasz ! I'll make some minor comments / suggestions tonight, but this is very welcome !
+
+---------------------------------------------------------------------------
+
+by jakubtobiasz at 2024-04-09T13:17:51Z
+
+@smnandre I believe there're might be some places to be improved, as I'm not the best to write docs, especially if most of them have some kind of standarization :D. So I'm open for any comments 🙌🏻.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-04-09T17:26:47Z
+
+A more sensible point here: i'd really like to warn users those values will be "readable" from front... or are they encoded i don't remember what choice was made in the end ?
+
+---------------------------------------------------------------------------
+
+by Chris53897 at 2024-04-24T12:57:00Z
+
+@jakubtobiasz Thanks for this PR.
+
+In my use case, we need to overwrite the `label`.
+I solved it with this Code, and i think this is useful for others as well.
+Maybe you can add this to the PR? Otherwise i can add a PR after this is merged.
+
+```
+#[AsEntityAutocompleteField]
+class FooAutocompleteField extends AbstractType
+{
+    public function buildView(FormView $view, FormInterface $form, array $options): void
+    {
+        if(isset($options['extra_options']['label'])) {
+            $view->vars['label'] = $options['extra_options']['label'];
+        }
+    }
+```
+
+```
+class FooFormType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+      $builder->add('bar', FooAutocompleteField::class, ['extra_options' => ['label' => 'Overwritten Label']]);
+   }
+  ...
+}
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-05T18:11:04Z
+
+@jakubtobiasz do you need some help here ?
+
+---------------------------------------------------------------------------
+
+by jakubtobiasz at 2024-06-07T19:29:10Z
+
+@smnandre being honest, this PR just fell out of my head 😅; I'll try to finalize it this ASAP.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-07T19:49:57Z
+
+No hurry, and if i can help in any way please ask ;)
+
+---------------------------------------------------------------------------
+
+by jakubtobiasz at 2024-07-29T11:15:21Z
+
+@smnandre Finally I've got some time (thanks to Commerce Weavers) to finish this PR. I've left comments unresolved, so feel free to resolve them once you decide a given issue is resolved.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-29T22:08:58Z
+
+I'll check later this week, but already a big thank you !
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-30T21:49:41Z
+
+> I've left comments unresolved, so feel free to resolve them once you decide a given issue is resolved.
+
+I have no button for this (or i don't know where to find them) 😅
+
+But all good for me, a big big thank you :)
