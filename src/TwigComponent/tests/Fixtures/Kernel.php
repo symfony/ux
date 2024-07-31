@@ -17,6 +17,7 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
+use Symfony\UX\TwigComponent\Tests\Fixtures\Bundle\AcmeBundle\AcmeBundle;
 use Symfony\UX\TwigComponent\Tests\Fixtures\Component\ComponentB;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 
@@ -32,6 +33,7 @@ final class Kernel extends BaseKernel
         yield new FrameworkBundle();
         yield new TwigBundle();
         yield new TwigComponentBundle();
+        yield new AcmeBundle();
     }
 
     protected function configureContainer(ContainerConfigurator $c): void

@@ -169,6 +169,15 @@ final class ComponentFactoryTest extends KernelTestCase
         $this->factory()->metadataFor('anonymous:AButton');
     }
 
+    public function testLoadingAnonymousComponentFromBundle(): void
+    {
+        $metadata = $this->factory()->metadataFor('Acme:Button');
+
+        $this->assertSame('@Acme/components/Button.html.twig', $metadata->getTemplate());
+        $this->assertSame('Acme:Button', $metadata->getName());
+        $this->assertNull($metadata->get('class'));
+    }
+
     public function testAutoNamingInSubDirectory(): void
     {
         $metadata = $this->factory()->metadataFor('SubDirectory:ComponentInSubDirectory');
