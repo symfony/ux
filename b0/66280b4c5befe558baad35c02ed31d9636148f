@@ -1,0 +1,55 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-05T18:43:53Z
+
+I'll review tomorrow or tuesday in depth..  but the overall mood: i love it !
+
+---------------------------------------------------------------------------
+
+by ludovik-dev at 2024-05-07T12:44:56Z
+
+It's a bit related to the PR https://github.com/symfony/ux/pull/1347?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-07T20:07:38Z
+
+> It's a bit related to the PR #1347?
+
+A bit .. but the "recipe" term refer to a "cookbook recipe" more than a "component recipe" :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-08T18:52:04Z
+
+How do you want to proceed @WebMamba here ? Do we review both content / feature here ? Or you prefer just the "code" part for now maybe ?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-05-12T16:15:18Z
+
+@smnandre lets focus on the code at first, and then on the content. Even if we do that in two times, I can keep the content of the recipe on this PR, I think it's better if we launch the cookbook with a first article.
+
+@kbond  thanks, I use the front matter extension now, this is pretty cool!
+
+@codisart  thanks for your review I applied your fix!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-05-14T22:07:36Z
+
+As soon as i find 15mn i'll review it i swear 😮‍💨
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-07-17T12:40:01Z
+
+I am back on this @smnandre I addressed most of your comment, I think I may need some help with the css to make think a bit more prettier
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-17T19:56:31Z
+
+> I am back on this @smnandre I addressed most of your comment, I think I may need some help with the css to make think a bit more prettier
+
+With pleasure (and it's time we move forward this project -- sorry last weeks have been really busy). This week-end i'll have time to work on this 😽
