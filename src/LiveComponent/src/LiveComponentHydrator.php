@@ -663,8 +663,8 @@ final class LiveComponentHydrator
 
         foreach ($onUpdated as $propName => $funcName) {
             if (LiveProp::IDENTITY === $propName) {
-                if (!$dehydratedUpdatedProps->hasPropValue($frontendName) &&
-                    !$dehydratedUpdatedProps->hasNestedPathsForProperty($frontendName)) {
+                if (!$dehydratedUpdatedProps->hasPropValue($frontendName)
+                    && !$dehydratedUpdatedProps->hasNestedPathsForProperty($frontendName)) {
                     continue;
                 }
 
