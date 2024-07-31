@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-29T22:34:13Z
+
+Hi @pierredup !
+
+I like the idea very much (in term of DX), but internally i think we should leverage the StimulusAttribute already present in the Stimulus-Bundle  ...  https://symfony.com/bundles/StimulusBundle/current/index.html#stimulus-action
+
+... what do you thinkl ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-29T23:17:00Z
+
+Depending on your answer on the previous question, this comment could be useless ;)
+
+We'd need to specify the trigger, as even if an action is often trigger by the "default event" on the DOM element it's registerered on, but this can be more specific / diverse
+
+Examples here: https://stimulus.hotwired.dev/reference/actions#keyboardevent-filter
+
+---------------------------------------------------------------------------
+
+by pierredup at 2024-06-30T08:36:30Z
+
+> internally i think we should leverage the StimulusAttribute already present in the Stimulus-Bundle
+
+I did initially start to go down this route, but then noticed the StimulusBundle is not a direct dependency of the LiveComponent, so didn't want to use classes that's not guaranteed to be available. Will then just add the StimulusBundle as a dependency to LiveComponent
+
+> We'd need to specify the trigger, as even if an action is often trigger by the "default event" on the DOM element it's registerered on, but this can be more specific / diverse
+
+Cool, yeah that makes sense, will add it to the function
