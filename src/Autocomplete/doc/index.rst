@@ -167,7 +167,8 @@ After creating this class, use it in your form:
 
     Avoid passing any options to the 3rd argument of the ``->add()`` method as
     these won't be used during the Ajax call to fetch results. Instead, include
-    all options inside the custom class (``FoodAutocompleteField``).
+    all options inside the custom class (``FoodAutocompleteField``) or pass them as
+    :ref:`extra options <passing-extra-options-to-the-ajax-powered-autocomplete>`.
 
 Congratulations! Your ``EntityType`` is now Ajax-powered!
 
@@ -273,6 +274,114 @@ to the options above, you can also pass:
 ``preload`` (default: ``focus``)
     Set to ``focus`` to call the ``load`` function when control receives focus.
     Set to ``true`` to call the ``load`` upon control initialization (with an empty search).
+
+``extra_options`` (default ``[]``)
+    Allow you to pass extra options for Ajax-based autocomplete fields.
+
+.. _passing-extra-options-to-the-ajax-powered-autocomplete:
+
+Passing Extra Options to the Ajax-powered Autocomplete
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.14
+
+    The ability to pass extra options was added in Autocomplete 2.14.
+
+Autocomplete field options are not preserved when the field is rendered on an Ajax call. So, features like exclude some options
+based on the current form data are not possible by default. To partially avoid this limitation, the `extra_options` option was added.
+
+::warning
+
+    Only scalar values (`string`, `integer`, `float`, `boolean`), `null` and `arrays` (consisted from the same types as mentioned before) can be passed as extra options.
+
+Considering the following example, when the form type is rendered for the first time, it will use the `query_builder` defined
+while adding a `food` field to the `FoodForm`. However, when the Ajax is used to fetch the results, on the consequent renders,
+the default `query_builder` will be used::
+
+    // src/Form/FoodForm.php
+    // ...
+
+    class FoodForm extends AbstractType
+    {
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+        {
+            $currentFoodId = $builder->getData()->getId();
+
+            $builder
+                ->add('food', FoodAutocompleteField::class, [
+                    'query_builder' => function (EntityRepository $er) {
+                            $qb = $er->createQueryBuilder('o');
+
+                            $qb->andWhere($qb->expr()->notIn('o.id', [$currentFoodId]));
+
+                            return $qb;
+                        };
+                    }
+                ])
+            ;
+        }
+    }
+
+If some food can be consisted of other foods, we might want to exclude the "root" food from the list of available foods.
+To achieve this, we can remove the `query_builder` option from the above example and pass the `excluded_foods` extra option
+to the `FoodAutocompleteField`::
+
+    // src/Form/FoodForm.php
+    // ...
+
+    class FoodForm extends AbstractType
+    {
+        public function buildForm(FormBuilderInterface $builder, array $options): void
+        {
+            $currentFoodId = $builder->getData()->getId();
+
+            $builder
+                ->add('food', FoodAutocompleteField::class, [
+                    'extra_options' => [
+                        'excluded_foods' => [$currentFoodId],
+                    ],
+                )
+            ;
+        }
+    }
+
+The magic of the `extra_options` is that it will be passed to the `FoodAutocompleteField` every time an Ajax call is made.
+So now, we can just use the `excluded_foods` extra option in the default `query_builder` of the `FoodAutocompleteField`::
+
+    // src/Form/FoodAutocompleteField.php
+    // ...
+
+    use Symfony\Bundle\SecurityBundle\Security;
+    use Symfony\UX\Autocomplete\Form\AsEntityAutocompleteField;
+    use Symfony\UX\Autocomplete\Form\BaseEntityAutocompleteType;
+
+    #[AsEntityAutocompleteField]
+    class FoodAutocompleteField extends AbstractType
+    {
+        public function configureOptions(OptionsResolver $resolver): void
+        {
+            $resolver->setDefaults([
+                // ...
+                'query_builder' => function (Options $options) {
+                    return function (EntityRepository $er) use ($options) {
+                        $qb = $er->createQueryBuilder('o');
+
+                        $excludedFoods = $options['extra_options']['excluded_foods'] ?? [];
+                        if ([] !== $excludedFoods) {
+                            $qb->andWhere($qb->expr()->notIn('o.id', $excludedFoods));
+                        }
+
+                        return $qb;
+                    };
+                }
+            ]);
+        }
+
+        public function getParent(): string
+        {
+            return BaseEntityAutocompleteType::class;
+        }
+    }
 
 Using with a TextType Field
 ---------------------------
@@ -480,6 +589,62 @@ the ``ux_entity_autocomplete`` route and ``alias`` route wildcard:
 
 Usually, you'll pass this URL to the Stimulus controller, which is
 discussed in the next section.
+
+Passing Extra Options to the Autocompleter
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.14
+
+    The ability to pass extra options was added in Autocomplete 2.14.
+
+If you need to pass extra options to the autocompleter, you can do so by implementing the
+``\Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface`` interface.
+
+.. tip::
+
+    If you want to know **why** you might need to use the `extra options` feature, see :ref:`passing-extra-options-to-the-ajax-powered-autocomplete`.
+
+.. code-block:: diff
+
+    use Doctrine\ORM\EntityRepository;
+    use Doctrine\ORM\QueryBuilder;
+    use Sylius\Component\Product\Model\ProductAttributeInterface;
+    use Symfony\Bundle\SecurityBundle\Security;
+    use Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface;
+
+    #[AutoconfigureTag('ux.entity_autocompleter', ['alias' => 'food'])]
+    class FoodAutocompleter implements OptionsAwareEntityAutocompleterInterface
+    {
+    +   /**
+    +    * @var array<string, mixed>
+    +    */
+    +   private array $options = [];
+
+    // ...
+
+    +   public function createFilteredQueryBuilder(EntityRepository $repository, string $query): QueryBuilder
+    +   {
+    +       $excludedFoods = $this->options['extra_options']['excluded_foods'] ?? [];
+    +
+    +       $qb = $repository->createQueryBuilder('o');
+    +
+    +       if ($productAttributesToBeExcluded !== []) {
+    +           $qb
+    +               ->andWhere($qb->expr()->notIn('o.id', $excludedFoods));
+    +               ->setParameter('excludedFoods', $excludedFoods)
+    +           ;
+    +       }
+    +
+    +       return $qb;
+    +   }
+
+    +/**
+    + * @param array<string, mixed> $options
+    + */
+    +public function setOptions(array $options): void
+    +{
+    +    $this->options = $options;
+    +}
 
 .. _manual-stimulus-controller:
 
