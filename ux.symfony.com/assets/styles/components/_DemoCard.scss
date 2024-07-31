@@ -17,6 +17,7 @@
   box-shadow: 0 0 0 transparent;
   background: var(--bs-body-bg);
 }
+
 .DemoCard:hover {
   transition: color 250ms ease-in-out, transform 250ms ease-in-out, box-shadow 250ms ease-in-out;
   transform: translateY(-.25rem);
@@ -36,11 +37,12 @@
 }
 
 .DemoCard__image {
-  max-height: 100%;
-  width: 100%;
+  max-width: 100%;
   display: block;
+  object-fit: cover;
   opacity: .90;
 }
+
 .DemoCard:hover .DemoCard__image {
   opacity: .93;
 }
@@ -71,6 +73,7 @@
   line-height: 1.4;
   margin: 0;
 }
+
 .DemoCard:hover .DemoCard__description {
   opacity: .85;
 }
@@ -80,5 +83,5 @@
   margin-bottom: 0;
   display: flex;
   flex-wrap: wrap;
-    gap: .5rem;
+  gap: .5rem;
 }

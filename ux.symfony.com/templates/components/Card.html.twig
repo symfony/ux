@@ -1,24 +1,27 @@
-{% props name, image, url, description, tags %}
+{% props name, image, url, description, tags, lazyload = true %}
 
 <article class="DemoCard">
 
     <div class="DemoCard__media">
         <img class="DemoCard__image"
-             src="{{ asset(image) }}"
+             src="{{ image }}"
              width="640"
-             alt="{{ name }} demo preview"
-             loading="lazy"
+             height="360"
+             alt="{{ name }}"
+             {% if lazyload %}
+                 loading="lazy"
+             {% endif %}
         >
     </div>
 
     <div class="DemoCard__content">
         <h4 class="DemoCard__title">
             <a href="{{ url }}" class="stretched-link">
-                {{ name }}
+                {{- name -}}
             </a>
         </h4>
         <p class="DemoCard__description">
-            {{ description }}
+            {{- description -}}
         </p>
         <p class="DemoCard__tags">
             {% for tag in tags %}

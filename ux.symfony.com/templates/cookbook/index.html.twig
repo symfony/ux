@@ -4,28 +4,38 @@
     title: 'Cookbook',
     title_suffix: ' - Symfony UX',
     description: 'Symfony UX cookbook - Concrete exeample to understantd all the concepts and components of Symfony UX',
-    canonical: url('app_cookbook_index'),
+    canonical: url('app_cookbook'),
 } %}
 
 {% block content %}
+
     <div class="hero">
-        <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
-            <h1 class="text-center ubuntu mt-5"><a href="{{ url('app_cookbook_index') }}">Cookbook</a></h1>
-            <p class="text-center mt-2 mb-5">some recipes to show how to use the component and concept of SymfonyUx</p>
+        <div class="container-fluid container-xxl px-4 pt-4 px-md-5">
+            <h1 class="text-center mt-5"><a href="{{ url('app_cookbook') }}">Cookbook</a></h1>
+            <div style="font-size: 1rem; line-height: 1.75rem;" class="mt-4 text-center demo-introduction">
+                <p>
+                    some recipes to show how to use the component and concept of SymfonyUx
+                </p>
+            </div>
         </div>
     </div>
 
     <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
-        <div style="display: grid; gap: 3rem; grid-template-columns: 1fr 1fr 1fr;);">
+        <div style="display: grid; gap: 3rem; grid-template-columns: 1fr 1fr 1fr;">
             {% for cookbook in cookbooks %}
                 <twig:Card
-                        name='{{ cookbook.title }}'
-                        description='{{ cookbook.description }}'
-                        image='{{ asset(cookbook.image) }}'
-                        url='{{ cookbook.route }}'
-                        tags='{{ cookbook.tags }}'
+                    name="{{ cookbook.title }}"
+                    description="{{ cookbook.description }}"
+                    image="{{ asset('images/cookbook/%s-1280x720.png'|format(cookbook.slug)) }}"
+                    url="{{ path('app_cookbook_show', {slug: cookbook.slug}) }}"
+                    tags="{{ cookbook.tags }}"
+                    lazyload="{{ loop.index > 3 }}"
                 />
             {% endfor %}
         </div>
     </div>
+{% endblock %}
+
+{% block aside %}
+    {{ include('_aside.html.twig') }}
 {% endblock %}

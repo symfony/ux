@@ -1,51 +1,15 @@
 .Cookbook {
-  h1 {
-    margin-top: 3rem;
-    margin-bottom: 1rem;
-    text-align: center;
-    font-size: 52px;
-    font-weight: 700;
-    line-height: 60px;
-  }
-
-  .description {
-    text-align: center;
-    font-size: 24px;
-    font-weight: 600;
-    margin-top: 1.5rem;
-  }
-
-  .tags {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    gap: 1rem;
-    text-decoration: none;
-    list-style: none;
-    margin-bottom: 3rem;
-
-    li {
-      background-color: rgb(74 29 150);
-      color: rgb(202 191 253);
-      font-weight: 500;
-      font-size: 0.75rem;
-      line-height: 1rem;
-      padding: .125rem .625rem;
-      border-radius: 0.25rem;
-    }
-  }
 
   .image-title {
-    width: 100%;
-    max-height: 40vh;
     overflow: hidden;
-    border-radius: 4px;
-    margin-bottom: 3rem;
+    width: auto;
+    border-radius: .75rem;
+    aspect-ratio: 16 / 9;
+    max-width: 1280px;
 
     img {
       display: block;
-      object-fit: contain;
+      object-fit: cover;
       width: 100%;
     }
   }
@@ -65,15 +29,22 @@
       font-size: 24px;
       font-weight: 700;
       line-height: 32px;
-      color: #FFFFFF;
+      color: var(--color-text);
+    }
+
+    h4 {
+      margin-top: 3rem;
+      margin-bottom: 1rem;
     }
   }
 
   pre {
-    margin-top: 4rem;
-    margin-bottom: 2rem;
-    border-radius: 4px;
+    margin-block: 2rem;
+    border-radius: .75rem;
     background-color: #0A0A0A;
-    padding: 2rem;
+    padding: 1rem 1.5rem;
+    color: #d7e2e3;
+    font-size: 1rem;
+    line-height: 1.5;
   }
 }

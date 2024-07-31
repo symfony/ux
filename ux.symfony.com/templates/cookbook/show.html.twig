@@ -2,13 +2,63 @@
 
 {% set meta = {
     title: cookbook.title,
-    title_suffix: ' - Symfony UX',
+    title_suffix: ' - Cookbook - Symfony UX',
     description: cookbook.description,
-    canonical: cookbook.route,
+    canonical: url('app_cookbook_show', {slug: cookbook.slug}),
+    social: {
+        title: cookbook.title ~ ' - Symfony UX',
+        description: cookbook.description,
+        image: {
+            url: absolute_url(asset('images/cookbook/%s-1280x720.png'|format(cookbook.slug))),
+            type: 'image/png',
+            width: 1280,
+            height: 720,
+            alt: cookbook.title ~ ' - Cookbook Illustration',
+        },
+    },
 } %}
 
 {% block content %}
-    <div class='container-fluid container-lg px-4 pt-4 px-md-5 pt-md-5 mt-5'>
-        <twig:Cookbook cookbook='{{ cookbook }}'/>
-    </div>
+
+    <article class="Cookbook">
+        <div class="hero">
+            <div class="container-fluid container-xxl pt-4 px-4 px-md-5 my-5">
+                <div class="text-center mt-md-0">
+                    <p class="eyebrows">
+                        <a href="{{ url('app_cookbook') }}">Cookbook</a>
+                    </p>
+                    <h1 class="text-center mt-0">{{ cookbook.title }}</h1>
+                    <p style="font-size: 1rem; line-height: 1.75rem;" class="mt-4 demo-introduction">
+                        {{- cookbook.description -}}
+                    </p>
+                    {% if false and cookbook.tags %}
+                        <ul class="tags">
+                            {% for tag in cookbook.tags %}
+                                <li class="Tag">{{ tag }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                </div>
+                <div class="pt-4">
+                    <div class="image-title">
+                        <img src="{{ asset('images/cookbook/%s-1280x720.png'|format(cookbook.slug)) }}"
+                             alt="{{ cookbook.title }} Illustration"
+                             width="1280" height="720"
+                        />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container container-xl x-4 pt-4 px-md-5 pt-md-5">
+            <div class="content"  style="max-width: 75ch;margin-inline: auto;font-size: 1.25rem;line-height: 1.75;font-weight: 300;">
+                {{ cookbook.content|raw|markdown_to_html }}
+            </div>
+        </div>
+
+    </article>
+{% endblock %}
+
+{% block aside %}
+    {{ include('_aside.html.twig') }}
 {% endblock %}

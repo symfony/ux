@@ -11,18 +11,18 @@
 
 namespace App\Model;
 
-class Cookbook
+final readonly class Cookbook
 {
+    /**
+     * @param list<string> $tags
+     */
     public function __construct(
         public string $title,
-        public string $description,
-        public string $route,
+        public string $slug,
         public string $image,
+        public string $description,
         public string $content,
-        /**
-         * @var string[]
-         */
-        public array $tags = [],
+        public array $tags,
     ) {
     }
 }

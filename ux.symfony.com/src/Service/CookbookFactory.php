@@ -12,27 +12,51 @@
 namespace App\Service;
 
 use App\Model\Cookbook;
-use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
+use League\CommonMark\Extension\FrontMatter\Data\SymfonyYamlFrontMatterParser;
+use League\CommonMark\Extension\FrontMatter\FrontMatterParser;
+use League\CommonMark\Extension\FrontMatter\FrontMatterParserInterface;
 
-class CookbookFactory
+final class CookbookFactory
 {
-    public function __construct(
-        private readonly CookbookParser $cookbookParser,
-        private readonly UrlGeneratorInterface $urlGenerator,
-    ) {
+    private FrontMatterParserInterface $frontMatterParser;
+
+    public function __construct()
+    {
+        $this->frontMatterParser = new FrontMatterParser(new SymfonyYamlFrontMatterParser());
     }
 
-    public function buildFromFile(\SplFileInfo $file): Cookbook
+    public function createFromFile(string $file): Cookbook
     {
-        $content = $file->getContents();
+        if (!file_exists($file)) {
+            throw new \InvalidArgumentException(\sprintf('File "%s" not found.', $file));
+        }
+
+        $content = file_get_contents($file);
+
+        if (!\is_array($frontMatter = $this->frontMatterParser->parse($content)->getFrontMatter())) {
+            throw new \RuntimeException(\sprintf('Cookbook file "%s" does not contains Front Matter data.', $file));
+        }
+
+        if (!isset($frontMatter['title']) || !\is_string($frontMatter['title'])) {
+            throw new \RuntimeException('Missing title in Front Matter.');
+        }
+        if (!isset($frontMatter['description']) || !\is_string($frontMatter['description'])) {
+            throw new \RuntimeException('Missing description in Front Matter.');
+        }
+        if (!isset($frontMatter['image']) || !\is_string($frontMatter['image'])) {
+            throw new \RuntimeException('Missing image in Front Matter.');
+        }
+        if (!isset($frontMatter['tags']) || !\is_array($frontMatter['tags'])) {
+            throw new \RuntimeException('Missing tags in Front Matter.');
+        }
 
         return new Cookbook(
-            title: $this->cookbookParser->getTitle($content),
-            description: $this->cookbookParser->getDescriptions($content),
-            route: $this->urlGenerator->generate('app_cookbook_show', ['slug' => $file->getBasename('.md')]),
-            image: $this->cookbookParser->getImage($content),
+            title: $frontMatter['title'],
+            slug: str_replace('_', '-', basename($file, '.md')),
+            image: $frontMatter['image'],
+            description: $frontMatter['description'],
             content: $content,
-            tags: $this->cookbookParser->getTags($content),
+            tags: $frontMatter['tags'],
         );
     }
 }

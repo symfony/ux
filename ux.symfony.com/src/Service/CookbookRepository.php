@@ -12,50 +12,50 @@
 namespace App\Service;
 
 use App\Model\Cookbook;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\Finder\Finder;
 
 readonly class CookbookRepository
 {
     public function __construct(
         private CookbookFactory $cookbookFactory,
-        private string $cookbookPath,
+        #[Autowire('%kernel.project_dir%/cookbook')] private string $cookbookDirectory,
     ) {
     }
 
-    public function findOneByName(string $name): Cookbook
+    public function findOneBySlug(string $slug): ?Cookbook
     {
-        if (!file_exists($this->cookbookPath.'/'.$name.'.md')) {
-            throw new \RuntimeException('No cookbook found');
+        if (!preg_match('/^[a-z]+(-[a-z0-9]+)*$/', $slug)) {
+            throw new \InvalidArgumentException(\sprintf('Invalid slug provided: "%s".', $slug));
         }
 
-        $finder = new Finder();
-        $finder->files()->in($this->cookbookPath)->name($name.'.md');
-
-        $file = null;
-        foreach ($finder as $fileL) {
-            $file = $fileL;
+        if (!file_exists($filename = $this->getCookbookFilename($slug))) {
+            return null;
         }
 
-        return $this->cookbookFactory->buildFromFile($file);
+        return $this->cookbookFactory->createFromFile($filename);
     }
 
     /**
-     * @return Cookbook[]
+     * @return list<Cookbook>
      */
     public function findAll(): array
     {
-        $finder = new Finder();
-        $finder->files()->in($this->cookbookPath)->name('*.md');
-
-        if (!$finder->hasResults()) {
-            throw new \RuntimeException('No cookbook found');
-        }
+        $files = (new Finder())
+            ->files()
+            ->in($this->cookbookDirectory)
+            ->name('*.md');
 
         $cookbooks = [];
-        foreach ($finder as $file) {
-            $cookbooks[] = $this->cookbookFactory->buildFromFile($file);
+        foreach ($files as $file) {
+            $cookbooks[] = $this->cookbookFactory->createFromFile($file);
         }
 
         return $cookbooks;
+    }
+
+    private function getCookbookFilename(string $slug): string
+    {
+        return $this->cookbookDirectory.'/'.str_replace('-', '_', $slug).'.md';
     }
 }
