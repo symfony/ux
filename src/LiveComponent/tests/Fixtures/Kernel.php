@@ -31,6 +31,7 @@ use Symfony\UX\LiveComponent\LiveComponentBundle;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Component\Component1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\Entity2Normalizer;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Serializer\MoneyNormalizer;
+use Symfony\UX\StimulusBundle\StimulusBundle;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
@@ -72,6 +73,7 @@ final class Kernel extends BaseKernel
         yield new SecurityBundle();
         yield new TwigComponentBundle();
         yield new LiveComponentBundle();
+        yield new StimulusBundle();
         yield new ZenstruckFoundryBundle();
     }
 
