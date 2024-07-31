@@ -1,0 +1,25 @@
+{
+    "name": "@symfony/ux-password-strength",
+    "description": "Password Strength Estimation for Symfony",
+    "license": "MIT",
+    "version": "1.0.0",
+    "main": "dist/controller.js",
+    "types": "dist/controller.d.ts",
+    "symfony": {
+        "controllers": {
+            "password-strength": {
+                "main": "dist/controller.js",
+                "name": "symfony/ux-password-strength",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    }
+}
