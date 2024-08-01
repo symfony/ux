@@ -1,7 +1,7 @@
 ---
-title: Architecture component
+title: Component architecture
 description: Rules and pattern to work with components
-image: images/cookbook/component_architecture.png
+image: images/cookbook/component-architecture.png
 tags: 
     - javascript
     - symfony
@@ -174,5 +174,5 @@ class Button
 ## Conclusion
 
 Even in Symfony, you can use the component architecture.
-Follow those rules help your front developpers working on codebase
-their are familiar with since those rules are already used in the js world.
+Follow those rules help your front developers working on codebase
+they are familiar with since those rules are already used in the JS world.

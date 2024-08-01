@@ -11,21 +11,20 @@
 
 namespace App\Controller;
 
-use App\Service\CookbookFactory;
 use App\Service\CookbookRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Requirement\Requirement;
 
 class CookbookController extends AbstractController
 {
     public function __construct(
-        private CookbookRepository $cookbookRepository,
-        private CookbookFactory $cookbookFactory,
+        private readonly CookbookRepository $cookbookRepository,
     ) {
     }
 
-    #[Route('/cookbook', name: 'app_cookbook_index')]
+    #[Route('/cookbook', name: 'app_cookbook')]
     public function index(): Response
     {
         $cookbooks = $this->cookbookRepository->findAll();
@@ -35,13 +34,15 @@ class CookbookController extends AbstractController
         ]);
     }
 
-    #[Route('/cookbook/{slug}', name: 'app_cookbook_show')]
+    #[Route('/cookbook/{slug}', name: 'app_cookbook_show', requirements: ['slug' => Requirement::ASCII_SLUG])]
     public function show(string $slug): Response
     {
-        $cookbook = $this->cookbookRepository->findOneByName($slug);
+        $cookbook = $this->cookbookRepository->findOneBySlug($slug);
+        if (!$cookbook) {
+            throw $this->createNotFoundException(\sprintf('Cookbook "%s" not found', $slug));
+        }
 
         return $this->render('cookbook/show.html.twig', [
-            'slug' => $slug,
             'cookbook' => $cookbook,
         ]);
     }
