@@ -1,7 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import { registerables, Chart } from 'chart.js';
 
-if (registerables != undefined) {
+if (registerables) {
     Chart.register(...registerables);
 }
 let isChartInitialized = false;
@@ -48,7 +48,7 @@ class default_1 extends Controller {
             const parentElement = this.element.parentElement;
             if (parentElement && this.chart.options.responsive) {
                 const originalWidth = parentElement.style.width;
-                parentElement.style.width = parentElement.offsetWidth + 1 + 'px';
+                parentElement.style.width = `${parentElement.offsetWidth + 1}px`;
                 setTimeout(() => {
                     parentElement.style.width = originalWidth;
                 }, 0);

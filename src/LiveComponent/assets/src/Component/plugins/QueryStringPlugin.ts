@@ -1,16 +1,16 @@
-import Component from '../index';
-import { PluginInterface } from './PluginInterface';
+import type Component from '../index';
+import type { PluginInterface } from './PluginInterface';
 import { UrlUtils, HistoryStrategy } from '../../url_utils';
 
 interface QueryMapping {
     /**
      * URL parameter name
      */
-    name: string,
+    name: string;
 }
 
 export default class implements PluginInterface {
-    constructor(private readonly mapping: {[p: string]: QueryMapping}) {}
+    constructor(private readonly mapping: { [p: string]: QueryMapping }) {}
 
     attachToComponent(component: Component): void {
         component.on('render:finished', (component: Component) => {

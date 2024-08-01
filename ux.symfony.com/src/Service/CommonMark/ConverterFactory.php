@@ -13,6 +13,7 @@ namespace App\Service\CommonMark;
 
 use League\CommonMark\CommonMarkConverter;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
+use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
 use League\CommonMark\Extension\Mention\MentionExtension;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
 use Tempest\Highlight\CommonMark\HighlightExtension;
@@ -47,6 +48,7 @@ final class ConverterFactory
             ->addExtension(new ExternalLinkExtension())
             ->addExtension(new MentionExtension())
             ->addExtension(new HighlightExtension())
+            ->addExtension(new FrontMatterExtension())
         ;
 
         return $converter;

@@ -1,5 +1,5 @@
 import type { SvelteComponent } from 'svelte';
-import { ComponentCollection } from './components.js';
+import { type ComponentCollection } from './components.js';
 declare global {
     function resolveSvelteComponent(name: string): typeof SvelteComponent<any>;
     interface Window {

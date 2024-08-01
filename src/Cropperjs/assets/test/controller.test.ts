@@ -7,14 +7,12 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import CropperjsController from '../src/controller';
 
-let cropper: Cropper|null = null;
+let cropper: Cropper | null = null;
 
 // Controller used to check the actual controller was properly booted
 class CheckController extends Controller {
@@ -37,11 +35,11 @@ const dataToJsonAttribute = (data: any) => {
     container.dataset.foo = JSON.stringify(data);
 
     // returns the now-escaped string, ready to be used in an HTML attribute
-    return container.outerHTML.match(/data-foo="(.+)"/)[1]
-}
+    return container.outerHTML.match(/data-foo="(.+)"/)[1];
+};
 
 describe('CropperjsController', () => {
-    let container: any;
+    let container: HTMLElement;
 
     beforeEach(() => {
         container = mountDOM(`
@@ -52,7 +50,7 @@ describe('CropperjsController', () => {
                     data-cropperjs-public-url-value="https://symfony.com/logos/symfony_black_02.png"
                     data-cropperjs-options-value="${dataToJsonAttribute({
                         viewMode: 1,
-                        dragMode: 'move'
+                        dragMode: 'move',
                     })}"
                 >
             </div>

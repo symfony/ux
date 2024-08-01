@@ -1,4 +1,4 @@
-import {strtr} from '../utils';
+import { strtr } from '../utils';
 
 /**
  * This code is adapted from the Symfony Translator Trait (6.2)
@@ -47,7 +47,7 @@ import {strtr} from '../utils';
  * @param parameters An array of parameters for the message
  * @param locale     The locale
  */
-export function format(id: string, parameters: Record<string, string | number> = {}, locale: string): string {
+export function format(id: string, parameters: Record<string, string | number>, locale: string): string {
     if (null === id || '' === id) {
         return '';
     }
@@ -65,7 +65,8 @@ export function format(id: string, parameters: Record<string, string | number> =
         parts = id.match(/(?:\|\||[^|])+/g) || [];
     }
 
-    const intervalRegex = /^(?<interval>({\s*(-?\d+(\.\d+)?[\s*,\s*\-?\d+(.\d+)?]*)\s*})|(?<left_delimiter>[[\]])\s*(?<left>-Inf|-?\d+(\.\d+)?)\s*,\s*(?<right>\+?Inf|-?\d+(\.\d+)?)\s*(?<right_delimiter>[[\]]))\s*(?<message>.*?)$/s;
+    const intervalRegex =
+        /^(?<interval>({\s*(-?\d+(\.\d+)?[\s*,\s*\-?\d+(.\d+)?]*)\s*})|(?<left_delimiter>[[\]])\s*(?<left>-Inf|-?\d+(\.\d+)?)\s*,\s*(?<right>\+?Inf|-?\d+(\.\d+)?)\s*(?<right_delimiter>[[\]]))\s*(?<message>.*?)$/s;
 
     const standardRules: Array<string> = [];
     for (let part of parts) {
@@ -85,10 +86,13 @@ export function format(id: string, parameters: Record<string, string | number> =
                 }
             } else {
                 const leftNumber = '-Inf' === matchGroups.left ? Number.NEGATIVE_INFINITY : Number(matchGroups.left);
-                const rightNumber = ['Inf', '+Inf'].includes(matchGroups.right) ? Number.POSITIVE_INFINITY : Number(matchGroups.right);
+                const rightNumber = ['Inf', '+Inf'].includes(matchGroups.right)
+                    ? Number.POSITIVE_INFINITY
+                    : Number(matchGroups.right);
 
-                if (('[' === matchGroups.left_delimiter ? number >= leftNumber : number > leftNumber)
-                    && (']' === matchGroups.right_delimiter ? number <= rightNumber : number < rightNumber)
+                if (
+                    ('[' === matchGroups.left_delimiter ? number >= leftNumber : number > leftNumber) &&
+                    (']' === matchGroups.right_delimiter ? number <= rightNumber : number < rightNumber)
                 ) {
                     return strtr(matchGroups.message, parameters);
                 }
@@ -107,7 +111,9 @@ export function format(id: string, parameters: Record<string, string | number> =
             return strtr(standardRules[0], parameters);
         }
 
-        throw new Error(`Unable to choose a translation for "${id}" with locale "${locale}" for value "${number}". Double check that this translation has the correct plural options (e.g. "There is one apple|There are %count% apples").`)
+        throw new Error(
+            `Unable to choose a translation for "${id}" with locale "${locale}" for value "${number}". Double check that this translation has the correct plural options (e.g. "There is one apple|There are %count% apples").`
+        );
     }
 
     return strtr(standardRules[position], parameters);
@@ -183,7 +189,7 @@ function getPluralizationRule(number: number, locale: string): number {
         case 'tk':
         case 'ur':
         case 'zu':
-            return (1 == number) ? 0 : 1;
+            return 1 === number ? 0 : 1;
         case 'am':
         case 'bh':
         case 'fil':
@@ -197,7 +203,7 @@ function getPluralizationRule(number: number, locale: string): number {
         case 'pt_BR':
         case 'ti':
         case 'wa':
-            return (number < 2) ? 0 : 1;
+            return number < 2 ? 0 : 1;
         case 'be':
         case 'bs':
         case 'hr':
@@ -205,31 +211,59 @@ function getPluralizationRule(number: number, locale: string): number {
         case 'sh':
         case 'sr':
         case 'uk':
-            return ((1 == number % 10) && (11 != number % 100)) ? 0 : (((number % 10 >= 2) && (number % 10 <= 4) && ((number % 100 < 10) || (number % 100 >= 20))) ? 1 : 2);
+            return 1 === number % 10 && 11 !== number % 100
+                ? 0
+                : number % 10 >= 2 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20)
+                  ? 1
+                  : 2;
         case 'cs':
         case 'sk':
-            return (1 == number) ? 0 : (((number >= 2) && (number <= 4)) ? 1 : 2);
+            return 1 === number ? 0 : number >= 2 && number <= 4 ? 1 : 2;
         case 'ga':
-            return (1 == number) ? 0 : ((2 == number) ? 1 : 2);
+            return 1 === number ? 0 : 2 === number ? 1 : 2;
         case 'lt':
-            return ((1 == number % 10) && (11 != number % 100)) ? 0 : (((number % 10 >= 2) && ((number % 100 < 10) || (number % 100 >= 20))) ? 1 : 2);
+            return 1 === number % 10 && 11 !== number % 100
+                ? 0
+                : number % 10 >= 2 && (number % 100 < 10 || number % 100 >= 20)
+                  ? 1
+                  : 2;
         case 'sl':
-            return (1 == number % 100) ? 0 : ((2 == number % 100) ? 1 : (((3 == number % 100) || (4 == number % 100)) ? 2 : 3));
+            return 1 === number % 100 ? 0 : 2 === number % 100 ? 1 : 3 === number % 100 || 4 === number % 100 ? 2 : 3;
         case 'mk':
-            return (1 == number % 10) ? 0 : 1;
+            return 1 === number % 10 ? 0 : 1;
         case 'mt':
-            return (1 == number) ? 0 : (((0 == number) || ((number % 100 > 1) && (number % 100 < 11))) ? 1 : (((number % 100 > 10) && (number % 100 < 20)) ? 2 : 3));
+            return 1 === number
+                ? 0
+                : 0 === number || (number % 100 > 1 && number % 100 < 11)
+                  ? 1
+                  : number % 100 > 10 && number % 100 < 20
+                    ? 2
+                    : 3;
         case 'lv':
-            return (0 == number) ? 0 : (((1 == number % 10) && (11 != number % 100)) ? 1 : 2);
+            return 0 === number ? 0 : 1 === number % 10 && 11 !== number % 100 ? 1 : 2;
         case 'pl':
-            return (1 == number) ? 0 : (((number % 10 >= 2) && (number % 10 <= 4) && ((number % 100 < 12) || (number % 100 > 14))) ? 1 : 2);
+            return 1 === number
+                ? 0
+                : number % 10 >= 2 && number % 10 <= 4 && (number % 100 < 12 || number % 100 > 14)
+                  ? 1
+                  : 2;
         case 'cy':
-            return (1 == number) ? 0 : ((2 == number) ? 1 : (((8 == number) || (11 == number)) ? 2 : 3));
+            return 1 === number ? 0 : 2 === number ? 1 : 8 === number || 11 === number ? 2 : 3;
         case 'ro':
-            return (1 == number) ? 0 : (((0 == number) || ((number % 100 > 0) && (number % 100 < 20))) ? 1 : 2);
+            return 1 === number ? 0 : 0 === number || (number % 100 > 0 && number % 100 < 20) ? 1 : 2;
         case 'ar':
-            return (0 == number) ? 0 : ((1 == number) ? 1 : ((2 == number) ? 2 : (((number % 100 >= 3) && (number % 100 <= 10)) ? 3 : (((number % 100 >= 11) && (number % 100 <= 99)) ? 4 : 5))));
+            return 0 === number
+                ? 0
+                : 1 === number
+                  ? 1
+                  : 2 === number
+                    ? 2
+                    : number % 100 >= 3 && number % 100 <= 10
+                      ? 3
+                      : number % 100 >= 11 && number % 100 <= 99
+                        ? 4
+                        : 5;
         default:
-            return 0
+            return 0;
     }
 }

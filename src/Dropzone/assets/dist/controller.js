@@ -47,7 +47,7 @@ class default_1 extends Controller {
         const reader = new FileReader();
         reader.addEventListener('load', (event) => {
             this.previewImageTarget.style.display = 'block';
-            this.previewImageTarget.style.backgroundImage = 'url("' + event.target.result + '")';
+            this.previewImageTarget.style.backgroundImage = `url("${event.target.result}")`;
         });
         reader.readAsDataURL(file);
     }

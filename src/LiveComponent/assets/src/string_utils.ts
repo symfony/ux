@@ -39,9 +39,7 @@ export function normalizeModelName(model: string): string {
             .replace(/\[]$/, '')
             .split('[')
             // ['object', 'foo', 'bar', 'ya']
-            .map(function (s) {
-                return s.replace(']', '');
-            })
+            .map((s) => s.replace(']', ''))
             .join('.')
     );
 }

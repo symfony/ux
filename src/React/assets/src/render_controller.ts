@@ -7,9 +7,7 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
-import React, { ReactElement } from 'react';
+import React, { type ReactElement } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Controller } from '@hotwired/stimulus';
 

@@ -22,7 +22,7 @@ export default class ElementChanges {
         }
     }
 
-    addStyle(styleName: string, newValue: string, originalValue: string|null) {
+    addStyle(styleName: string, newValue: string, originalValue: string | null) {
         this.styleChanges.setItem(styleName, newValue, originalValue);
     }
 
@@ -30,11 +30,11 @@ export default class ElementChanges {
         this.styleChanges.removeItem(styleName, originalValue);
     }
 
-    addAttribute(attributeName: string, newValue: string, originalValue: string|null) {
+    addAttribute(attributeName: string, newValue: string, originalValue: string | null) {
         this.attributeChanges.setItem(attributeName, newValue, originalValue);
     }
 
-    removeAttribute(attributeName: string, originalValue: string|null) {
+    removeAttribute(attributeName: string, originalValue: string | null) {
         this.attributeChanges.removeItem(attributeName, originalValue);
     }
 
@@ -46,7 +46,7 @@ export default class ElementChanges {
         return [...this.removedClasses];
     }
 
-    getChangedStyles(): { name: string, value: string }[] {
+    getChangedStyles(): { name: string; value: string }[] {
         return this.styleChanges.getChangedItems();
     }
 
@@ -54,7 +54,7 @@ export default class ElementChanges {
         return this.styleChanges.getRemovedItems();
     }
 
-    getChangedAttributes(): { name: string, value: string }[] {
+    getChangedAttributes(): { name: string; value: string }[] {
         return this.attributeChanges.getChangedItems();
     }
 

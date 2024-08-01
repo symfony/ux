@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
@@ -89,7 +87,7 @@ export default class extends Controller {
 
         reader.addEventListener('load', (event: any) => {
             this.previewImageTarget.style.display = 'block';
-            this.previewImageTarget.style.backgroundImage = 'url("' + event.target.result + '")';
+            this.previewImageTarget.style.backgroundImage = `url("${event.target.result}")`;
         });
 
         reader.readAsDataURL(file);

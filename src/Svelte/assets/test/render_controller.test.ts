@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
@@ -68,7 +66,6 @@ describe('SvelteController', () => {
     });
 
     it('connect without props', async () => {
-
         const container = mountDOM(`
           <div data-testid="component" id="container"
               data-controller="check svelte"

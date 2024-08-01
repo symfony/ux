@@ -1,7 +1,7 @@
-import Component from '../../Component';
-import { PluginInterface } from './PluginInterface';
-import { ChildrenFingerprints } from '../../Backend/Backend';
-import getModelBinding, { ModelBinding } from '../../Directive/get_model_binding';
+import type Component from '../../Component';
+import type { PluginInterface } from './PluginInterface';
+import type { ChildrenFingerprints } from '../../Backend/Backend';
+import getModelBinding, { type ModelBinding } from '../../Directive/get_model_binding';
 import { getAllModelDirectiveFromElements } from '../../dom_utils';
 import { findChildren, findParent } from '../../ComponentRegistry';
 
@@ -19,7 +19,7 @@ export default class implements PluginInterface {
     private parentModelBindings: ModelBinding[] = [];
 
     constructor(component: Component) {
-        this.component  = component;
+        this.component = component;
 
         const modelDirectives = getAllModelDirectiveFromElements(this.component.element);
         this.parentModelBindings = modelDirectives.map(getModelBinding);
@@ -73,12 +73,7 @@ export default class implements PluginInterface {
                 return;
             }
 
-            parentComponent.set(
-                modelBinding.modelName,
-                value,
-                modelBinding.shouldRender,
-                modelBinding.debounce
-            );
+            parentComponent.set(modelBinding.modelName, value, modelBinding.shouldRender, modelBinding.debounce);
         });
     }
 

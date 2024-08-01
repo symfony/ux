@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% set meta = {
+    title: cookbook.title,
+    title_suffix: ' - Symfony UX',
+    description: cookbook.description,
+    canonical: cookbook.route,
+} %}
+
+{% block content %}
+    <div class='container-fluid container-lg px-4 pt-4 px-md-5 pt-md-5 mt-5'>
+        <twig:Cookbook cookbook='{{ cookbook }}'/>
+    </div>
+{% endblock %}

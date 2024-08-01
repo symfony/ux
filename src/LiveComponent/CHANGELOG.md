@@ -1,6 +1,7 @@
 # CHANGELOG
 
 -   Add `submitForm()` to `TestLiveComponent`.
+-   Add `live_action` Twig function
 
 ## 2.18.0
 

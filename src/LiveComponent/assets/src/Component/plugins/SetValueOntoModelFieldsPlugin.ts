@@ -1,11 +1,11 @@
-import Component from '../index';
+import type Component from '../index';
 import {
     elementBelongsToThisComponent,
     getModelDirectiveFromElement,
     getValueFromElement,
-    setValueOnElement
+    setValueOnElement,
 } from '../../dom_utils';
-import { PluginInterface } from './PluginInterface';
+import type { PluginInterface } from './PluginInterface';
 
 /**
  * Handles setting the "value" onto data-model fields automatically from the data store.
@@ -56,7 +56,7 @@ export default class implements PluginInterface {
             }
 
             if (component.valueStore.has(modelName)) {
-                setValueOnElement(element, component.valueStore.get(modelName))
+                setValueOnElement(element, component.valueStore.get(modelName));
             }
 
             // for select elements without a blank value, one might be selected automatically
@@ -64,6 +64,6 @@ export default class implements PluginInterface {
             if (element instanceof HTMLSelectElement && !element.multiple) {
                 component.valueStore.set(modelName, getValueFromElement(element, component.valueStore));
             }
-        })
+        });
     }
 }

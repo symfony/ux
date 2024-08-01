@@ -1,15 +1,15 @@
 import { Controller } from '@hotwired/stimulus';
-import { parseDirectives, DirectiveModifier } from './Directive/directives_parser';
+import { parseDirectives, type DirectiveModifier } from './Directive/directives_parser';
 import { getModelDirectiveFromElement, getValueFromElement, elementBelongsToThisComponent } from './dom_utils';
 import Component, { proxifyComponent } from './Component';
-import Backend, { BackendInterface } from './Backend/Backend';
+import Backend, { type BackendInterface } from './Backend/Backend';
 import { StimulusElementDriver } from './Component/ElementDriver';
 import LoadingPlugin from './Component/plugins/LoadingPlugin';
 import ValidatedFieldsPlugin from './Component/plugins/ValidatedFieldsPlugin';
 import PageUnloadingPlugin from './Component/plugins/PageUnloadingPlugin';
 import PollingPlugin from './Component/plugins/PollingPlugin';
 import SetValueOntoModelFieldsPlugin from './Component/plugins/SetValueOntoModelFieldsPlugin';
-import { PluginInterface } from './Component/plugins/PluginInterface';
+import type { PluginInterface } from './Component/plugins/PluginInterface';
 import getModelBinding from './Directive/get_model_binding';
 import QueryStringPlugin from './Component/plugins/QueryStringPlugin';
 import ChildComponentPlugin from './Component/plugins/ChildComponentPlugin';
@@ -148,7 +148,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
                 }
             });
             validModifiers.set('debounce', (modifier: DirectiveModifier) => {
-                debounce = modifier.value ? parseInt(modifier.value) : true;
+                debounce = modifier.value ? Number.parseInt(modifier.value) : true;
             });
             validModifiers.set('files', (modifier: DirectiveModifier) => {
                 if (!modifier.value) {

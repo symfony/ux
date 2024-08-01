@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { createTest, initComponent, shutdownTests } from '../tools';
 import { getByLabelText, getByTestId, getByText, waitFor } from '@testing-library/dom';
 import userEvent from '@testing-library/user-event';
@@ -16,10 +14,12 @@ import userEvent from '@testing-library/user-event';
 describe('LiveController data-model Tests', () => {
     afterEach(() => {
         shutdownTests();
-    })
+    });
 
     it('sends data and re-renders correctly when data-model element is changed', async () => {
-        const test = await createTest({ name: 'Ryan' }, (data: any) => `
+        const test = await createTest(
+            { name: 'Ryan' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <input
                     data-model="name"
@@ -28,19 +28,19 @@ describe('LiveController data-model Tests', () => {
                 
                 Name is: ${data.name}
             </div>
-        `);
+        `
+        );
 
-        test.expectsAjaxCall()
-            .expectUpdatedData({ name: 'Ryan Weaver' });
+        test.expectsAjaxCall().expectUpdatedData({ name: 'Ryan Weaver' });
 
         await userEvent.type(test.queryByDataModel('name'), ' Weaver', {
             // this tests the debounce: characters have a 10ms delay
             // in between, but the debouncing prevents multiple calls
-            delay: 10
+            delay: 10,
         });
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name is: Ryan Weaver'));
-        expect(test.component.valueStore.getOriginalProps()).toEqual({name: 'Ryan Weaver'});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ name: 'Ryan Weaver' });
 
         // assert the input is still focused after rendering
         expect(document.activeElement).toBeInstanceOf(HTMLElement);
@@ -48,7 +48,9 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('updates the data without re-rendering if "norender" is used', async () => {
-        const test = await createTest({ name: 'Ryan' }, (data: any) => `
+        const test = await createTest(
+            { name: 'Ryan' },
+            (data: any) => `
             <div ${initComponent(data, { debounce: 1 })}>
                 <input
                     data-model="norender|name"
@@ -57,12 +59,13 @@ describe('LiveController data-model Tests', () => {
                 
                 Name is: ${data.name}
             </div>
-        `);
+        `
+        );
 
         await userEvent.type(test.queryByDataModel('name'), ' Weaver', {
             // debounce is only 1, so this "would" send MANY Ajax requests
             // if "norender" were NOT used
-            delay: 10
+            delay: 10,
         });
 
         // component never re-rendered
@@ -72,7 +75,9 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('waits to update data and rerender until change event with on(change)', async () => {
-        const test = await createTest({ name: 'Ryan' }, (data: any) => `
+        const test = await createTest(
+            { name: 'Ryan' },
+            (data: any) => `
             <div ${initComponent(data, { debounce: 1 })}>
                 <input
                     data-model="on(change)|name"
@@ -82,32 +87,34 @@ describe('LiveController data-model Tests', () => {
                 Name is: ${data.name}
                 <button>Do nothing</button>
             </div>
-        `);
+        `
+        );
 
         await userEvent.type(test.queryByDataModel('name'), ' Weaver', {
             // debounce is only 1, so this "would" send MANY Ajax requests
             // if on(change) were NOT used (each character only triggers an "input" event)
-            delay: 10
+            delay: 10,
         });
 
         // component has not *yet* re-rendered
         expect(test.element).toHaveTextContent('Name is: Ryan');
         // the read-only props have not *yet* been updated
-        expect(test.component.valueStore.getOriginalProps()).toEqual({name: 'Ryan'});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ name: 'Ryan' });
 
         // NOW we expect the render
-        test.expectsAjaxCall()
-            .expectUpdatedData({ name: 'Ryan Weaver' });
+        test.expectsAjaxCall().expectUpdatedData({ name: 'Ryan Weaver' });
 
         // this will cause the input to "blur" and trigger the change event
         userEvent.click(getByText(test.element, 'Do nothing'));
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name is: Ryan Weaver'));
-        expect(test.component.valueStore.getOriginalProps()).toEqual({name: 'Ryan Weaver'});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ name: 'Ryan Weaver' });
     });
 
     it('renders correctly with data-value and live#update on a non-input', async () => {
-        const test = await createTest({ name: 'Ryan' }, (data: any) => `
+        const test = await createTest(
+            { name: 'Ryan' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <a
                     data-action="live#update"
@@ -123,27 +130,28 @@ describe('LiveController data-model Tests', () => {
                 
                 Name is: ${data.name}
             </div>
-        `);
+        `
+        );
 
-        test.expectsAjaxCall()
-            .expectUpdatedData({ name: 'Jan' });
+        test.expectsAjaxCall().expectUpdatedData({ name: 'Jan' });
 
         userEvent.click(getByText(test.element, 'Change name to Jan'));
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name is: Jan'));
-        expect(test.component.valueStore.getOriginalProps()).toEqual({name: 'Jan'});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ name: 'Jan' });
 
-        test.expectsAjaxCall()
-            .expectUpdatedData({ name: 'Dan' });
+        test.expectsAjaxCall().expectUpdatedData({ name: 'Dan' });
 
         userEvent.click(getByText(test.element, 'Change name to Dan'));
 
         await waitFor(() => expect(test.element).toHaveTextContent('Name is: Dan'));
-        expect(test.component.valueStore.getOriginalProps()).toEqual({name: 'Dan'});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ name: 'Dan' });
     });
 
     it('falls back to using the name attribute when no data-model is present and <form data-model> is ancestor', async () => {
-        const test = await createTest({ color: '' }, (data: any) => `
+        const test = await createTest(
+            { color: '' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <form data-model>
                     <input
@@ -154,10 +162,10 @@ describe('LiveController data-model Tests', () => {
                 
                 Favorite color: ${data.color}
             </div>
-        `);
+        `
+        );
 
-        test.expectsAjaxCall()
-            .expectUpdatedData({ color: 'orange' });
+        test.expectsAjaxCall().expectUpdatedData({ color: 'orange' });
 
         await userEvent.type(test.queryByNameAttribute('color'), 'orange');
 
@@ -166,7 +174,9 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('uses data-model when both name and data-model is present', async () => {
-        const test = await createTest({ name: '', firstName: '' }, (data: any) => `
+        const test = await createTest(
+            { name: '', firstName: '' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <form data-model="*">
                     <input
@@ -177,7 +187,8 @@ describe('LiveController data-model Tests', () => {
                 
                 First name: ${data.firstName}
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             // firstName is the model that is matched and updated
@@ -190,7 +201,9 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('uses data-value when both value and data-value is present', async () => {
-        const test = await createTest({ sport: '' }, (data: any) => `
+        const test = await createTest(
+            { sport: '' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <input
                     data-model="sport"
@@ -199,7 +212,8 @@ describe('LiveController data-model Tests', () => {
                 
                 Sport: ${data.sport}
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             // "cross country" takes precedence over real value
@@ -211,7 +225,9 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('standardizes user[name] style models into user.name', async () => {
-        const test = await createTest({ user: { name: 'Ryan' } }, (data: any) => `
+        const test = await createTest(
+            { user: { name: 'Ryan' } },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <input
                     data-model="user[name]"
@@ -219,10 +235,10 @@ describe('LiveController data-model Tests', () => {
                 
                 Name: ${data.user.name}
             </div>
-        `);
+        `
+        );
 
-        test.expectsAjaxCall()
-            .expectUpdatedData({ 'user.name': 'Ryan Weaver' });
+        test.expectsAjaxCall().expectUpdatedData({ 'user.name': 'Ryan Weaver' });
 
         await userEvent.type(test.queryByDataModel('user[name]'), ' Weaver');
 
@@ -241,10 +257,10 @@ describe('LiveController data-model Tests', () => {
 
                     Name: ${props['user.name']}
                 </div>
-        `);
+        `
+        );
 
-        test.expectsAjaxCall()
-            .expectUpdatedData({ 'user.name': 'Ryan Weaver' });
+        test.expectsAjaxCall().expectUpdatedData({ 'user.name': 'Ryan Weaver' });
 
         await userEvent.type(test.queryByDataModel('user.name'), ' Weaver');
 
@@ -253,10 +269,14 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('sends correct data for checkbox fields', async () => {
-        const test = await createTest({ form: {
-            check1: false,
-            check2: false
-        } }, (data: any) => `
+        const test = await createTest(
+            {
+                form: {
+                    check1: false,
+                    check2: false,
+                },
+            },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <form data-model="*">
                     <label>
@@ -268,30 +288,34 @@ describe('LiveController data-model Tests', () => {
                     </label>
                 </form>
                 
-                Checkbox 2 is ${data.form.check2 ? 'checked' : 'unchecked' }
+                Checkbox 2 is ${data.form.check2 ? 'checked' : 'unchecked'}
             </div>
-        `);
+        `
+        );
 
         const check1Element = getByLabelText(test.element, 'Checkbox 1:');
         const check2Element = getByLabelText(test.element, 'Checkbox 2:');
 
         // only 1 Ajax call will be made thanks to debouncing
-        test.expectsAjaxCall()
-            .expectUpdatedData({ 'form.check1': '1', 'form.check2': '1' });
+        test.expectsAjaxCall().expectUpdatedData({ 'form.check1': '1', 'form.check2': '1' });
 
         await userEvent.click(check2Element);
         await userEvent.click(check1Element);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 2 is checked'));
 
-        expect(test.component.valueStore.getOriginalProps()).toEqual({form: {check1: '1', check2: '1'}});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ form: { check1: '1', check2: '1' } });
     });
 
     it('sends correct data for initially checked checkbox fields', async () => {
-        const test = await createTest({ form: {
-            check1: '1',
-            check2: false
-        } }, (data: any) => `
+        const test = await createTest(
+            {
+                form: {
+                    check1: '1',
+                    check2: false,
+                },
+            },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <form data-model="*">
                     <label>
@@ -303,26 +327,28 @@ describe('LiveController data-model Tests', () => {
                     </label>
                 </form>
                 
-                Checkbox 1 is ${data.form.check1 ? 'checked' : 'unchecked' }
+                Checkbox 1 is ${data.form.check1 ? 'checked' : 'unchecked'}
             </div>
-        `);
+        `
+        );
 
         const check1Element = getByLabelText(test.element, 'Checkbox 1:');
         const check2Element = getByLabelText(test.element, 'Checkbox 2:');
 
         // only 1 Ajax call will be made thanks to debouncing
-        test.expectsAjaxCall()
-            .expectUpdatedData({ 'form.check1': null, 'form.check2': '1' });
+        test.expectsAjaxCall().expectUpdatedData({ 'form.check1': null, 'form.check2': '1' });
 
         await userEvent.click(check2Element);
         await userEvent.click(check1Element);
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 1 is unchecked'));
 
-        expect(test.component.valueStore.getOriginalProps()).toEqual({form: {check1: null, check2: '1'}});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ form: { check1: null, check2: '1' } });
     });
 
     it('sends correct data for array valued checkbox fields', async () => {
-        const test = await createTest({ form: { check: [] } }, (data: any) => `
+        const test = await createTest(
+            { form: { check: [] } },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <form data-model="*">
                     <label>
@@ -334,27 +360,29 @@ describe('LiveController data-model Tests', () => {
                     </label>
                 </form>
                 
-                Checkbox 2 is ${data.form.check.indexOf('bar') > -1 ? 'checked' : 'unchecked' }
+                Checkbox 2 is ${data.form.check.indexOf('bar') > -1 ? 'checked' : 'unchecked'}
             </div>
-        `);
+        `
+        );
 
         const check1Element = getByLabelText(test.element, 'Checkbox 1:');
         const check2Element = getByLabelText(test.element, 'Checkbox 2:');
 
         // only 1 Ajax call will be made thanks to debouncing
-        test.expectsAjaxCall()
-            .expectUpdatedData({ 'form.check': ['foo', 'bar'] });
+        test.expectsAjaxCall().expectUpdatedData({ 'form.check': ['foo', 'bar'] });
 
         await userEvent.click(check1Element);
         await userEvent.click(check2Element);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 2 is checked'));
 
-        expect(test.component.valueStore.getOriginalProps()).toEqual({form: {check: ['foo', 'bar']}});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ form: { check: ['foo', 'bar'] } });
     });
 
     it('sends correct data for array valued checkbox fields with non-form object', async () => {
-        const test = await createTest({ check: [] }, (data: any) => `
+        const test = await createTest(
+            { check: [] },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <form data-model="*">
                     <label>
@@ -366,27 +394,29 @@ describe('LiveController data-model Tests', () => {
                     </label>
                 </form>
                 
-                Checkbox 2 is ${data.check.indexOf('bar') > -1 ? 'checked' : 'unchecked' }
+                Checkbox 2 is ${data.check.indexOf('bar') > -1 ? 'checked' : 'unchecked'}
             </div>
-        `);
+        `
+        );
 
         const check1Element = getByLabelText(test.element, 'Checkbox 1:');
         const check2Element = getByLabelText(test.element, 'Checkbox 2:');
 
         // only 1 Ajax call will be made thanks to debouncing
-        test.expectsAjaxCall()
-            .expectUpdatedData({ 'check': ['foo', 'bar'] });
+        test.expectsAjaxCall().expectUpdatedData({ check: ['foo', 'bar'] });
 
         await userEvent.click(check1Element);
         await userEvent.click(check2Element);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 2 is checked'));
 
-        expect(test.component.valueStore.getOriginalProps()).toEqual({check: ['foo', 'bar']});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ check: ['foo', 'bar'] });
     });
 
     it('sends correct data for array valued checkbox fields with initial data', async () => {
-        const test = await createTest({ form: { check: ['foo']} }, (data: any) => `
+        const test = await createTest(
+            { form: { check: ['foo'] } },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <form data-model="*">
                     <label>
@@ -398,27 +428,29 @@ describe('LiveController data-model Tests', () => {
                     </label>
                 </form>
                 
-                Checkbox 1 is ${data.form.check.indexOf('foo') > -1 ? 'checked' : 'unchecked' }
+                Checkbox 1 is ${data.form.check.indexOf('foo') > -1 ? 'checked' : 'unchecked'}
             </div>
-        `);
+        `
+        );
 
         const check1Element = getByLabelText(test.element, 'Checkbox 1:');
         const check2Element = getByLabelText(test.element, 'Checkbox 2:');
 
         // only 1 Ajax call will be made thanks to debouncing
-        test.expectsAjaxCall()
-            .expectUpdatedData({ 'form.check': ['bar'] });
+        test.expectsAjaxCall().expectUpdatedData({ 'form.check': ['bar'] });
 
         await userEvent.click(check2Element);
         await userEvent.click(check1Element);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 1 is unchecked'));
 
-        expect(test.component.valueStore.getOriginalProps()).toEqual({form: {check: ['bar']}});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ form: { check: ['bar'] } });
     });
 
     it('sends correct data for array valued checkbox fields with non-form object and with initial data', async () => {
-        const test = await createTest({ check: ['foo'] }, (data: any) => `
+        const test = await createTest(
+            { check: ['foo'] },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <label>
                     Checkbox 1: <input type="checkbox" data-model="check[]" value="foo" ${data.check.indexOf('foo') > -1 ? 'checked' : ''} />
@@ -428,27 +460,29 @@ describe('LiveController data-model Tests', () => {
                     Checkbox 2: <input type="checkbox" data-model="check[]" value="bar" ${data.check.indexOf('bar') > -1 ? 'checked' : ''} />
                 </label>
                 
-                Checkbox 1 is ${data.check.indexOf('foo') > -1 ? 'checked' : 'unchecked' }
+                Checkbox 1 is ${data.check.indexOf('foo') > -1 ? 'checked' : 'unchecked'}
             </div>
-        `);
+        `
+        );
 
         const check1Element = getByLabelText(test.element, 'Checkbox 1:');
         const check2Element = getByLabelText(test.element, 'Checkbox 2:');
 
         // only 1 Ajax call will be made thanks to debouncing
-        test.expectsAjaxCall()
-            .expectUpdatedData({ 'check': ['bar'] });
+        test.expectsAjaxCall().expectUpdatedData({ check: ['bar'] });
 
         await userEvent.click(check1Element);
         await userEvent.click(check2Element);
 
         await waitFor(() => expect(test.element).toHaveTextContent('Checkbox 1 is unchecked'));
 
-        expect(test.component.valueStore.getOriginalProps()).toEqual({check: ['bar']});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ check: ['bar'] });
     });
 
     it('sends correct data for select multiple field', async () => {
-        const test = await createTest({ form: { select: []} }, (data: any) => `
+        const test = await createTest(
+            { form: { select: [] } },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <form data-model="*">
                     <label>
@@ -460,13 +494,13 @@ describe('LiveController data-model Tests', () => {
                     </label>
                 </form>
                 
-                Option 2 is ${data.form.select?.indexOf('bar') > -1 ? 'selected' : 'unselected' }
+                Option 2 is ${data.form.select?.indexOf('bar') > -1 ? 'selected' : 'unselected'}
             </div>
-        `);
+        `
+        );
 
         // only 1 Ajax call will be made thanks to debouncing
-        test.expectsAjaxCall()
-            .expectUpdatedData({ 'form.select': ['foo', 'bar'] });
+        test.expectsAjaxCall().expectUpdatedData({ 'form.select': ['foo', 'bar'] });
 
         const selectElement = getByLabelText(test.element, 'Select:');
         await userEvent.selectOptions(selectElement, 'foo');
@@ -474,11 +508,13 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(test.element).toHaveTextContent('Select: foo bar Option 2 is selected'));
 
-        expect(test.component.valueStore.getOriginalProps()).toEqual({form: {select: ['foo', 'bar']}});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ form: { select: ['foo', 'bar'] } });
     });
 
     it('sends correct data for select multiple field with initial data', async () => {
-        const test = await createTest({ form: { select: ['foo']} }, (data: any) => `
+        const test = await createTest(
+            { form: { select: ['foo'] } },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <form data-model="*">
                     <label>
@@ -490,13 +526,13 @@ describe('LiveController data-model Tests', () => {
                     </label>
                 </form>
                 
-                Option 2 is ${data.form.select?.indexOf('bar') > -1 ? 'selected' : 'unselected' }
+                Option 2 is ${data.form.select?.indexOf('bar') > -1 ? 'selected' : 'unselected'}
             </div>
-        `);
+        `
+        );
 
         // only 1 Ajax call will be made thanks to debouncing
-        test.expectsAjaxCall()
-            .expectUpdatedData({ 'form.select': ['bar'] });
+        test.expectsAjaxCall().expectUpdatedData({ 'form.select': ['bar'] });
 
         const selectElement = getByLabelText(test.element, 'Select:');
         await userEvent.selectOptions(selectElement, 'bar');
@@ -504,17 +540,18 @@ describe('LiveController data-model Tests', () => {
 
         await waitFor(() => expect(test.element).toHaveTextContent('Select: foo bar Option 2 is selected'));
 
-        test.expectsAjaxCall()
-            .expectUpdatedData({ 'form.select': [] });
+        test.expectsAjaxCall().expectUpdatedData({ 'form.select': [] });
         await userEvent.deselectOptions(selectElement, 'bar');
 
         await waitFor(() => expect(test.element).toHaveTextContent('Select: foo bar Option 2 is unselected'));
-        expect(test.component.valueStore.getOriginalProps()).toEqual({form: {select: []}});
+        expect(test.component.valueStore.getOriginalProps()).toEqual({ form: { select: [] } });
     });
 
     it('tracks which fields should be validated and sends, without forgetting previous fields', async () => {
         // start with one field in validatedFields
-        const test = await createTest({ treat: '', validatedFields: ['otherField'] }, (data: any) => `
+        const test = await createTest(
+            { treat: '', validatedFields: ['otherField'] },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <input
                     data-model="treat"
@@ -522,13 +559,13 @@ describe('LiveController data-model Tests', () => {
 
                 Treat: ${data.treat}
             </div>
-        `);
+        `
+        );
 
-        test.expectsAjaxCall()
-            .expectUpdatedData({
-                treat: 'ice cream',
-                validatedFields: ['otherField', 'treat']
-            });
+        test.expectsAjaxCall().expectUpdatedData({
+            treat: 'ice cream',
+            validatedFields: ['otherField', 'treat'],
+        });
 
         await userEvent.type(test.queryByDataModel('treat'), 'ice cream');
 
@@ -536,7 +573,9 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('data changed on server should be noticed by controller and used in dataValue', async () => {
-        const test = await createTest({ pizzaTopping: '' }, (data: any) => `
+        const test = await createTest(
+            { pizzaTopping: '' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <input
                     data-model="pizzaTopping"
@@ -544,7 +583,8 @@ describe('LiveController data-model Tests', () => {
 
                 Mmmm ${data.pizzaTopping} pizza
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             .expectUpdatedData({ pizzaTopping: 'mushroom' })
@@ -561,7 +601,9 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('sends a render request without debounce for change events', async () => {
-        const test = await createTest({ firstName: '', lastName: '' }, (data: any) => `
+        const test = await createTest(
+            { firstName: '', lastName: '' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <input data-model="on(change)|firstName">
                 <input data-model="on(change)|lastName">
@@ -571,13 +613,12 @@ describe('LiveController data-model Tests', () => {
                 First Name: ${data.firstName}
                 Last Name: ${data.lastName}
             </div>
-        `);
+        `
+        );
 
         // TWO requests because debouncing doesn't prevent the 2nd
-        test.expectsAjaxCall()
-            .expectUpdatedData({ firstName: 'Ryan' });
-        test.expectsAjaxCall()
-            .expectUpdatedData({ lastName: 'Weaver' });
+        test.expectsAjaxCall().expectUpdatedData({ firstName: 'Ryan' });
+        test.expectsAjaxCall().expectUpdatedData({ lastName: 'Weaver' });
 
         await userEvent.type(test.queryByDataModel('firstName'), 'Ryan');
         await userEvent.type(test.queryByDataModel('lastName'), 'Weaver', {
@@ -595,7 +636,9 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('notices the "real" value of a select without an empty value', async () => {
-        const test = await createTest({ food: '' }, (data: any) => `
+        const test = await createTest(
+            { food: '' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <select data-model="food">
                     <option value="carrot">🥕</option>
@@ -606,18 +649,20 @@ describe('LiveController data-model Tests', () => {
 
                 <button data-action="live#$render">Reload</button>
             </div>
-        `);
+        `
+        );
 
         // "carrot" is sent because, in practice, that's what's selected
-        test.expectsAjaxCall()
-            .expectUpdatedData({ food: 'carrot' });
+        test.expectsAjaxCall().expectUpdatedData({ food: 'carrot' });
 
         getByText(test.element, 'Reload').click();
         await waitFor(() => expect(test.element).toHaveTextContent('Food: carrot'));
     });
 
     it('allows model fields to be set manually and rolled into a single request', async () => {
-        const test = await createTest({ food: '', dessert: '' }, (data: any) => `
+        const test = await createTest(
+            { food: '', dessert: '' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <!-- using "change" because it has 0 debounce, which is the more -->
                 <!-- complex case for trying to get both model updates into 1 request -->
@@ -635,11 +680,11 @@ describe('LiveController data-model Tests', () => {
                 Food: ${data.food}
                 Dessert: ${data.dessert}
             </div>
-        `);
+        `
+        );
 
         // just 1 request with both model changes
-        test.expectsAjaxCall()
-            .expectUpdatedData({ food: 'carrot', dessert: 'carrot_cake' });
+        test.expectsAjaxCall().expectUpdatedData({ food: 'carrot', dessert: 'carrot_cake' });
 
         const foodSelect = getByTestId(test.element, 'food-select');
 
@@ -660,7 +705,9 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('sets the value of data-model elements initially and after render', async () => {
-        const test = await createTest({ food: 'carrot', comment: 'mmmm' }, (data: any) => `
+        const test = await createTest(
+            { food: 'carrot', comment: 'mmmm' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <select data-model="food">
                     <option value="">choose a food</option>
@@ -672,7 +719,8 @@ describe('LiveController data-model Tests', () => {
 
                 Comment: ${data.comment}
             </div>
-        `);
+        `
+        );
 
         const foodSelect = test.queryByDataModel('food');
         if (!(foodSelect instanceof HTMLSelectElement)) {
@@ -705,7 +753,9 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('does not try to set the value of inputs inside a child component', async () => {
-        const test = await createTest({ comment: 'cookie', childComment: 'mmmm', skipChild: false }, (data: any) => `
+        const test = await createTest(
+            { comment: 'cookie', childComment: 'mmmm', skipChild: false },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <textarea data-model="comment" id="parent-comment"></textarea>
 
@@ -717,7 +767,8 @@ describe('LiveController data-model Tests', () => {
                     <textarea data-model="comment" id="child-comment"></textarea>
                 </div>
             </div>
-        `);
+        `
+        );
 
         const commentField = test.element.querySelector('#parent-comment');
         if (!(commentField instanceof HTMLTextAreaElement)) {
@@ -747,11 +798,13 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('keeps the unsynced value of an input on re-render, but accepts other changes to the field', async () => {
-        const test = await createTest({
-            comment: 'Live components',
-            unmappedTextareaValue: 'no data-model',
-            fieldClass: 'initial-class'
-        }, (data: any) => `
+        const test = await createTest(
+            {
+                comment: 'Live components',
+                unmappedTextareaValue: 'no data-model',
+                fieldClass: 'initial-class',
+            },
+            (data: any) => `
            <div ${initComponent(data)}>
                <textarea data-model="on(change)|comment" class="${data.fieldClass}"></textarea>
 
@@ -761,7 +814,8 @@ describe('LiveController data-model Tests', () => {
 
               <button data-action="live#$render">Reload</button>
            </div>
-       `);
+       `
+        );
 
         test.expectsAjaxCall()
             .serverWillChangeProps((data) => {
@@ -776,11 +830,11 @@ describe('LiveController data-model Tests', () => {
             throw new Error('wrong type');
         }
         // mimic changing the field, but without (yet) triggering the change event
-        commentField.value = commentField.value + ' ftw!';
+        commentField.value = `${commentField.value} ftw!`;
         commentField.dispatchEvent(new Event('input', { bubbles: true }));
 
         // also type into the unmapped field - but no worry about the model sync'ing this time
-        userEvent.type(getByTestId(test.element, 'unmappedTextarea'), ' here!')
+        userEvent.type(getByTestId(test.element, 'unmappedTextarea'), ' here!');
 
         await waitFor(() => expect(test.element).toHaveTextContent('FieldClass: changed-class'));
         // re-find in case the element itself has changed by morphdom
@@ -804,9 +858,11 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('keeps the unsynced value of a model field mapped via a form', async () => {
-        const test = await createTest({
-            comment: 'Live components',
-        }, (data: any) => `
+        const test = await createTest(
+            {
+                comment: 'Live components',
+            },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <form data-model>
                     <textarea name="comment" data-testid="comment">${data.comment}</textarea>
@@ -814,7 +870,8 @@ describe('LiveController data-model Tests', () => {
 
                 <input data-testid="other-input">
            </div>
-       `);
+       `
+        );
 
         test.expectsAjaxCall()
             .serverWillChangeProps((data) => {
@@ -852,7 +909,9 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('allows model fields to be manually set as long as change event is dispatched', async () => {
-        const test = await createTest({ food: '' }, (data: any) => `
+        const test = await createTest(
+            { food: '' },
+            (data: any) => `
             <div ${initComponent(data)}>
                 <!-- specifically using on(input) then we will trigger a "change" event -->
                 <select data-model="on(input)|food" data-testid="food-select">
@@ -863,10 +922,10 @@ describe('LiveController data-model Tests', () => {
 
                 Food: ${data.food}
             </div>
-        `);
+        `
+        );
 
-        test.expectsAjaxCall()
-            .expectUpdatedData({ food: 'carrot' });
+        test.expectsAjaxCall().expectUpdatedData({ food: 'carrot' });
 
         const foodSelect = getByTestId(test.element, 'food-select');
         if (!(foodSelect instanceof HTMLSelectElement)) {
@@ -880,25 +939,30 @@ describe('LiveController data-model Tests', () => {
     });
 
     it('keeps dirty data if an initial request fails', async () => {
-        const test = await createTest({ food: '', rating: 0 }, (data: any) => `
+        const test = await createTest(
+            { food: '', rating: 0 },
+            (data: any) => `
             <div ${initComponent(data)}>
                 Food is: ${data.food}
                 Rating is: ${data.rating}
             </div>
-        `);
+        `
+        );
 
         test.expectsAjaxCall()
             .expectUpdatedData({ food: 'Popcorn' })
             // delay so we can set another prop
             .delayResponse(10)
-            .serverWillReturnCustomResponse(500, `
+            .serverWillReturnCustomResponse(
+                500,
+                `
                 <html><head><title>Error!</title></head><body><h1>Now is a good time to panic!</h1></body></html>
-            `)
-        ;
+            `
+            );
 
         test.component.set('food', 'Popcorn');
         // start the failed request
-        const promise =  test.component.render();
+        const promise = test.component.render();
         test.component.set('rating', 5);
         // while the request is happening, set another model
         await promise;
@@ -907,9 +971,7 @@ describe('LiveController data-model Tests', () => {
         expect(test.component.getData('food')).toEqual('Popcorn');
         expect(test.component.valueStore.getDirtyProps()).toEqual({ food: 'Popcorn', rating: 5 });
 
-        test.expectsAjaxCall()
-            .expectUpdatedData({ food: 'Popcorn', rating: 5 })
-        ;
+        test.expectsAjaxCall().expectUpdatedData({ food: 'Popcorn', rating: 5 });
         await test.component.render();
         expect(test.element).toHaveTextContent('Food is: Popcorn');
         expect(test.element).toHaveTextContent('Rating is: 5');

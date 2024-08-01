@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 export type DomainType = string;
 export type LocaleType = string;
 
@@ -106,7 +104,7 @@ export function getLocaleFallbacks(): Record<LocaleType, LocaleType> {
 export function trans<
     M extends Message<TranslationsType, LocaleType>,
     D extends DomainsOf<M>,
-    P extends ParametersOf<M, D>
+    P extends ParametersOf<M, D>,
 >(
     ...args: P extends NoParametersType
         ? [message: M, parameters?: P, domain?: RemoveIntlIcuSuffix<D>, locale?: LocaleOf<M>]
@@ -115,7 +113,7 @@ export function trans<
 export function trans<
     M extends Message<TranslationsType, LocaleType>,
     D extends DomainsOf<M>,
-    P extends ParametersOf<M, D>
+    P extends ParametersOf<M, D>,
 >(
     message: M,
     parameters: P = {} as P,

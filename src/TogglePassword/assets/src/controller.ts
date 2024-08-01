@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller<HTMLInputElement> {
@@ -57,7 +55,7 @@ export default class extends Controller<HTMLInputElement> {
         button.classList.add(...this.buttonClassesValue);
         button.setAttribute('tabindex', '-1');
         button.addEventListener('click', this.toggle.bind(this));
-        button.innerHTML = this.visibleIcon + ' ' + this.visibleLabelValue;
+        button.innerHTML = `${this.visibleIcon} ${this.visibleLabelValue}`;
 
         return button;
     }
@@ -69,8 +67,8 @@ export default class extends Controller<HTMLInputElement> {
         this.isDisplayed = !this.isDisplayed;
         const toggleButtonElement: HTMLButtonElement = event.currentTarget;
         toggleButtonElement.innerHTML = this.isDisplayed
-            ? this.hiddenIcon + ' ' + this.hiddenLabelValue
-            : this.visibleIcon + ' ' + this.visibleLabelValue;
+            ? `${this.hiddenIcon} ${this.hiddenLabelValue}`
+            : `${this.visibleIcon} ${this.visibleLabelValue}`;
         this.element.setAttribute('type', this.isDisplayed ? 'text' : 'password');
         this.dispatchEvent(this.isDisplayed ? 'show' : 'hide', { element: this.element, button: toggleButtonElement });
     }

@@ -143,6 +143,8 @@ final class LiveComponentHydrator
         $attributes = new ComponentAttributes($dehydratedOriginalProps->getPropValue(self::ATTRIBUTES_KEY, []));
         $dehydratedOriginalProps->removePropValue(self::ATTRIBUTES_KEY);
 
+        $needProcessOnUpdatedHooks = [];
+
         foreach ($componentMetadata->getAllLivePropsMetadata($component) as $propMetadata) {
             $frontendName = $propMetadata->calculateFieldName($component, $propMetadata->getName());
 
@@ -215,8 +217,13 @@ final class LiveComponentHydrator
             }
 
             if ($propMetadata->onUpdated()) {
-                $this->processOnUpdatedHook($component, $frontendName, $propMetadata, $dehydratedUpdatedProps, $dehydratedOriginalProps);
+                $needProcessOnUpdatedHooks[$frontendName] = $propMetadata;
             }
+        }
+
+        // Run 'onUpdated' hooks after all props have been initialized.
+        foreach ($needProcessOnUpdatedHooks as $frontendName => $propMetadata) {
+            $this->processOnUpdatedHook($component, $frontendName, $propMetadata, $dehydratedUpdatedProps, $dehydratedOriginalProps);
         }
 
         foreach (AsLiveComponent::postHydrateMethods($component) as $method) {

@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
@@ -34,8 +32,8 @@ const startStimulus = () => {
 };
 
 const Hello = {
-    template: '<h1>Hello {{ name ?? \'world\' }}</h1>',
-    props: ['name']
+    template: "<h1>Hello {{ name ?? 'world' }}</h1>",
+    props: ['name'],
 };
 
 window.resolveVueComponent = () => {

@@ -2,10 +2,7 @@
 // which does not actually exist in the source code
 import { loadControllers } from '../dist/loader';
 import { Application, Controller } from '@hotwired/stimulus';
-import {
-    EagerControllersCollection,
-    LazyControllersCollection,
-} from '../src/controllers';
+import type { EagerControllersCollection, LazyControllersCollection } from '../src/controllers';
 import { waitFor } from '@testing-library/dom';
 
 let isController1Initialized = false;
@@ -37,11 +34,11 @@ describe('loader', () => {
 
         const application = Application.start();
         const eagerControllers: EagerControllersCollection = {
-            'controller1': controller1,
-            'controller2': controller2,
+            controller1,
+            controller2,
         };
         const lazyControllers: LazyControllersCollection = {
-            'controller3': () => Promise.resolve({ default: controller3 }),
+            controller3: () => Promise.resolve({ default: controller3 }),
         };
 
         loadControllers(application, eagerControllers, lazyControllers);
@@ -52,7 +49,7 @@ describe('loader', () => {
 
         document.body.innerHTML = '<div data-controller="controller3"></div>';
         // wait a moment for the MutationObserver to fire
-        await new Promise(resolve => setTimeout(resolve, 10));
+        await new Promise((resolve) => setTimeout(resolve, 10));
         expect(isController3Initialized).toBe(true);
 
         application.stop();

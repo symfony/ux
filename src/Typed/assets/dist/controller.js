@@ -43,7 +43,7 @@ default_1.values = {
     fadeOutClass: { type: String, default: 'typed-fade-out' },
     fadeOutDelay: { type: Number, default: 500 },
     loop: Boolean,
-    loopCount: { type: Number, default: Infinity },
+    loopCount: { type: Number, default: Number.POSITIVE_INFINITY },
     showCursor: { type: Boolean, default: true },
     cursorChar: { type: String, default: '.' },
     autoInsertCss: { type: Boolean, default: true },

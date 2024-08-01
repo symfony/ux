@@ -25,6 +25,7 @@ final class LiveComponentExtension extends AbstractExtension
     {
         return [
             new TwigFunction('component_url', [LiveComponentRuntime::class, 'getComponentUrl']),
+            new TwigFunction('live_action', [LiveComponentRuntime::class, 'liveAction'], ['is_safe' => ['html_attr']]),
         ];
     }
 }

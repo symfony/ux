@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-'use strict';
-
 import { Application, Controller } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import user from '@testing-library/user-event';
@@ -31,7 +29,7 @@ const startStimulus = () => {
 };
 
 describe('DropzoneController', () => {
-    let container;
+    let container: HTMLElement;
 
     beforeEach(() => {
         container = mountDOM(`
@@ -87,7 +85,9 @@ describe('DropzoneController', () => {
 
         // Attach a listener to ensure the event is dispatched
         let dispatched = false;
-        getByTestId(container, 'container').addEventListener('dropzone:clear', () => (dispatched = true));
+        getByTestId(container, 'container').addEventListener('dropzone:clear', () => {
+            dispatched = true;
+        });
 
         // Manually show preview
         getByTestId(container, 'input').style.display = 'none';
@@ -111,7 +111,9 @@ describe('DropzoneController', () => {
 
         // Attach a listener to ensure the event is dispatched
         let dispatched = null;
-        getByTestId(container, 'container').addEventListener('dropzone:change', (event) => (dispatched = event));
+        getByTestId(container, 'container').addEventListener('dropzone:change', (event) => {
+            dispatched = event;
+        });
 
         // Select the file
         const input = getByTestId(container, 'input');

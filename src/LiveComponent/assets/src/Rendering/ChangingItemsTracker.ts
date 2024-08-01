@@ -3,13 +3,13 @@
  */
 export default class {
     // e.g. a Map with key "color" & value { original: 'previousValue', new: 'newValue' },
-    private changedItems: Map<string, { original: string|null, new: string }> = new Map();
-    private removedItems: Map<string, { original: string|null }> = new Map();
+    private changedItems: Map<string, { original: string | null; new: string }> = new Map();
+    private removedItems: Map<string, { original: string | null }> = new Map();
 
     /**
      * A "null" previousValue means the item was NOT previously present.
      */
-    setItem(itemName: string, newValue: string, previousValue: string|null): void {
+    setItem(itemName: string, newValue: string, previousValue: string | null): void {
         if (this.removedItems.has(itemName)) {
             // this was previously removed
 
@@ -24,7 +24,7 @@ export default class {
 
         if (this.changedItems.has(itemName)) {
             // this was previously changed
-            const originalRecord = this.changedItems.get(itemName) as { original: string, new: string };
+            const originalRecord = this.changedItems.get(itemName) as { original: string; new: string };
             if (originalRecord.original === newValue) {
                 // it just reverted to its original value!
                 this.changedItems.delete(itemName);
@@ -41,11 +41,11 @@ export default class {
         this.changedItems.set(itemName, { original: previousValue, new: newValue });
     }
 
-    removeItem(itemName: string, currentValue: string|null): void {
+    removeItem(itemName: string, currentValue: string | null): void {
         let trueOriginalValue = currentValue;
         if (this.changedItems.has(itemName)) {
             // this was previously changed, so we're just undoing that
-            const originalRecord = this.changedItems.get(itemName) as { original: string, new: string };
+            const originalRecord = this.changedItems.get(itemName) as { original: string; new: string };
             trueOriginalValue = originalRecord.original;
 
             this.changedItems.delete(itemName);
@@ -61,7 +61,7 @@ export default class {
         }
     }
 
-    getChangedItems(): { name: string, value: string }[] {
+    getChangedItems(): { name: string; value: string }[] {
         return Array.from(this.changedItems, ([name, { new: value }]) => ({ name, value }));
     }
 

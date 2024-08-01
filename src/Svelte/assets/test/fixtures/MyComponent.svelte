@@ -1,6 +1,6 @@
 <script>
-    import { fade } from "svelte/transition"
-    export let name = "without props";
+import { fade } from 'svelte/transition';
+export let name = 'without props';
 </script>
 
 <div transition:fade|global={{ duration: 100 }}>

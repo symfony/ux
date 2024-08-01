@@ -1,6 +1,6 @@
 import { IntlMessageFormat } from 'intl-messageformat';
 
-function formatIntl(id, parameters = {}, locale) {
+function formatIntl(id, parameters, locale) {
     if (id === '') {
         return '';
     }
@@ -25,7 +25,7 @@ function strtr(string, replacePairs) {
     return string.replace(new RegExp(regex.join('|'), 'g'), (matched) => replacePairs[matched].toString());
 }
 
-function format(id, parameters = {}, locale) {
+function format(id, parameters, locale) {
     if (null === id || '' === id) {
         return '';
     }
@@ -56,9 +56,11 @@ function format(id, parameters = {}, locale) {
             }
             else {
                 const leftNumber = '-Inf' === matchGroups.left ? Number.NEGATIVE_INFINITY : Number(matchGroups.left);
-                const rightNumber = ['Inf', '+Inf'].includes(matchGroups.right) ? Number.POSITIVE_INFINITY : Number(matchGroups.right);
-                if (('[' === matchGroups.left_delimiter ? number >= leftNumber : number > leftNumber)
-                    && (']' === matchGroups.right_delimiter ? number <= rightNumber : number < rightNumber)) {
+                const rightNumber = ['Inf', '+Inf'].includes(matchGroups.right)
+                    ? Number.POSITIVE_INFINITY
+                    : Number(matchGroups.right);
+                if (('[' === matchGroups.left_delimiter ? number >= leftNumber : number > leftNumber) &&
+                    (']' === matchGroups.right_delimiter ? number <= rightNumber : number < rightNumber)) {
                     return strtr(matchGroups.message, parameters);
                 }
             }
@@ -137,7 +139,7 @@ function getPluralizationRule(number, locale) {
         case 'tk':
         case 'ur':
         case 'zu':
-            return (1 == number) ? 0 : 1;
+            return 1 === number ? 0 : 1;
         case 'am':
         case 'bh':
         case 'fil':
@@ -151,7 +153,7 @@ function getPluralizationRule(number, locale) {
         case 'pt_BR':
         case 'ti':
         case 'wa':
-            return (number < 2) ? 0 : 1;
+            return number < 2 ? 0 : 1;
         case 'be':
         case 'bs':
         case 'hr':
@@ -159,30 +161,58 @@ function getPluralizationRule(number, locale) {
         case 'sh':
         case 'sr':
         case 'uk':
-            return ((1 == number % 10) && (11 != number % 100)) ? 0 : (((number % 10 >= 2) && (number % 10 <= 4) && ((number % 100 < 10) || (number % 100 >= 20))) ? 1 : 2);
+            return 1 === number % 10 && 11 !== number % 100
+                ? 0
+                : number % 10 >= 2 && number % 10 <= 4 && (number % 100 < 10 || number % 100 >= 20)
+                    ? 1
+                    : 2;
         case 'cs':
         case 'sk':
-            return (1 == number) ? 0 : (((number >= 2) && (number <= 4)) ? 1 : 2);
+            return 1 === number ? 0 : number >= 2 && number <= 4 ? 1 : 2;
         case 'ga':
-            return (1 == number) ? 0 : ((2 == number) ? 1 : 2);
+            return 1 === number ? 0 : 2 === number ? 1 : 2;
         case 'lt':
-            return ((1 == number % 10) && (11 != number % 100)) ? 0 : (((number % 10 >= 2) && ((number % 100 < 10) || (number % 100 >= 20))) ? 1 : 2);
+            return 1 === number % 10 && 11 !== number % 100
+                ? 0
+                : number % 10 >= 2 && (number % 100 < 10 || number % 100 >= 20)
+                    ? 1
+                    : 2;
         case 'sl':
-            return (1 == number % 100) ? 0 : ((2 == number % 100) ? 1 : (((3 == number % 100) || (4 == number % 100)) ? 2 : 3));
+            return 1 === number % 100 ? 0 : 2 === number % 100 ? 1 : 3 === number % 100 || 4 === number % 100 ? 2 : 3;
         case 'mk':
-            return (1 == number % 10) ? 0 : 1;
+            return 1 === number % 10 ? 0 : 1;
         case 'mt':
-            return (1 == number) ? 0 : (((0 == number) || ((number % 100 > 1) && (number % 100 < 11))) ? 1 : (((number % 100 > 10) && (number % 100 < 20)) ? 2 : 3));
+            return 1 === number
+                ? 0
+                : 0 === number || (number % 100 > 1 && number % 100 < 11)
+                    ? 1
+                    : number % 100 > 10 && number % 100 < 20
+                        ? 2
+                        : 3;
         case 'lv':
-            return (0 == number) ? 0 : (((1 == number % 10) && (11 != number % 100)) ? 1 : 2);
+            return 0 === number ? 0 : 1 === number % 10 && 11 !== number % 100 ? 1 : 2;
         case 'pl':
-            return (1 == number) ? 0 : (((number % 10 >= 2) && (number % 10 <= 4) && ((number % 100 < 12) || (number % 100 > 14))) ? 1 : 2);
+            return 1 === number
+                ? 0
+                : number % 10 >= 2 && number % 10 <= 4 && (number % 100 < 12 || number % 100 > 14)
+                    ? 1
+                    : 2;
         case 'cy':
-            return (1 == number) ? 0 : ((2 == number) ? 1 : (((8 == number) || (11 == number)) ? 2 : 3));
+            return 1 === number ? 0 : 2 === number ? 1 : 8 === number || 11 === number ? 2 : 3;
         case 'ro':
-            return (1 == number) ? 0 : (((0 == number) || ((number % 100 > 0) && (number % 100 < 20))) ? 1 : 2);
+            return 1 === number ? 0 : 0 === number || (number % 100 > 0 && number % 100 < 20) ? 1 : 2;
         case 'ar':
-            return (0 == number) ? 0 : ((1 == number) ? 1 : ((2 == number) ? 2 : (((number % 100 >= 3) && (number % 100 <= 10)) ? 3 : (((number % 100 >= 11) && (number % 100 <= 99)) ? 4 : 5))));
+            return 0 === number
+                ? 0
+                : 1 === number
+                    ? 1
+                    : 2 === number
+                        ? 2
+                        : number % 100 >= 3 && number % 100 <= 10
+                            ? 3
+                            : number % 100 >= 11 && number % 100 <= 99
+                                ? 4
+                                : 5;
         default:
             return 0;
     }

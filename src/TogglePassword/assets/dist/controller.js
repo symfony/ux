@@ -30,15 +30,15 @@ class default_1 extends Controller {
         button.classList.add(...this.buttonClassesValue);
         button.setAttribute('tabindex', '-1');
         button.addEventListener('click', this.toggle.bind(this));
-        button.innerHTML = this.visibleIcon + ' ' + this.visibleLabelValue;
+        button.innerHTML = `${this.visibleIcon} ${this.visibleLabelValue}`;
         return button;
     }
     toggle(event) {
         this.isDisplayed = !this.isDisplayed;
         const toggleButtonElement = event.currentTarget;
         toggleButtonElement.innerHTML = this.isDisplayed
-            ? this.hiddenIcon + ' ' + this.hiddenLabelValue
-            : this.visibleIcon + ' ' + this.visibleLabelValue;
+            ? `${this.hiddenIcon} ${this.hiddenLabelValue}`
+            : `${this.visibleIcon} ${this.visibleLabelValue}`;
         this.element.setAttribute('type', this.isDisplayed ? 'text' : 'password');
         this.dispatchEvent(this.isDisplayed ? 'show' : 'hide', { element: this.element, button: toggleButtonElement });
     }
