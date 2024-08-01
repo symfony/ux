@@ -15,6 +15,7 @@ export interface BackendInterface {
         updatedPropsFromParent: { [key: string]: any },
         files: { [key: string]: FileList }
     ): BackendRequest;
+    updateCsrfToken(csrfToken: string): void;
 }
 
 export interface BackendAction {
@@ -51,5 +52,9 @@ export default class implements BackendInterface {
             actions.map((backendAction) => backendAction.name),
             Object.keys(updated)
         );
+    }
+
+    updateCsrfToken(csrfToken: string) {
+        this.requestBuilder.updateCsrfToken(csrfToken);
     }
 }

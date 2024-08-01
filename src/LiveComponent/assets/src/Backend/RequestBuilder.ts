@@ -3,7 +3,7 @@ import type { BackendAction, ChildrenFingerprints } from './Backend';
 export default class {
     private url: string;
     private method: 'get' | 'post';
-    private readonly csrfToken: string | null;
+    private csrfToken: string | null;
 
     constructor(url: string, method: 'get' | 'post' = 'post', csrfToken: string | null = null) {
         this.url = url;
@@ -116,5 +116,9 @@ export default class {
 
         // if the URL gets remotely close to 2000 chars, it may not fit
         return (urlEncodedJsonData + params.toString()).length < 1500;
+    }
+
+    updateCsrfToken(csrfToken: string) {
+        this.csrfToken = csrfToken;
     }
 }

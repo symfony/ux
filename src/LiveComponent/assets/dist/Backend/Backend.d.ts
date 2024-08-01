@@ -13,6 +13,7 @@ export interface BackendInterface {
     }, files: {
         [key: string]: FileList;
     }): BackendRequest;
+    updateCsrfToken(csrfToken: string): void;
 }
 export interface BackendAction {
     name: string;
@@ -28,4 +29,5 @@ export default class implements BackendInterface {
     }, files: {
         [key: string]: FileList;
     }): BackendRequest;
+    updateCsrfToken(csrfToken: string): void;
 }

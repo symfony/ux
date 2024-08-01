@@ -98,6 +98,8 @@ class FunctionalTest {
 class MockedBackend implements BackendInterface {
     private expectedMockedAjaxCalls: Array<MockedAjaxCall> = [];
 
+    public csrfToken: string | null = null;
+
     addMockedAjaxCall(mock: MockedAjaxCall) {
         this.expectedMockedAjaxCalls.push(mock);
     }
@@ -137,6 +139,10 @@ class MockedBackend implements BackendInterface {
         this.expectedMockedAjaxCalls.splice(this.expectedMockedAjaxCalls.indexOf(matchedMock), 1);
 
         return matchedMock.createBackendRequest();
+    }
+
+    updateCsrfToken(csrfToken: string) {
+        this.csrfToken = csrfToken;
     }
 
     getExpectedMockedAjaxCalls(): Array<MockedAjaxCall> {
