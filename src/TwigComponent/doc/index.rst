@@ -1004,46 +1004,46 @@ You can take full control over the attributes that are rendered by using the
 
     There are a few important things to know about using ``render()``:
 
-    1. You need to be sure to call your ``render()`` methods before calling ``{{ attributes }}`` or some
+    #. You need to be sure to call your ``render()`` methods before calling ``{{ attributes }}`` or some
        attributes could be rendered twice. For instance:
 
-            .. code-block:: html+twig
+       .. code-block:: html+twig
 
-                {# templates/components/MyComponent.html.twig #}
-                <div
-                    {{ attributes }} {# called before style is rendered #}
-                    style="{{ attributes.render('style') }} display:block;"
-                >
-                    My Component!
-                </div>
+           {# templates/components/MyComponent.html.twig #}
+           <div
+               {{ attributes }} {# called before style is rendered #}
+               style="{{ attributes.render('style') }} display:block;"
+           >
+               My Component!
+           </div>
 
-                {# render component #}
-                {{ component('MyComponent', { style: 'color:red;' }) }}
+           {# render component #}
+           {{ component('MyComponent', { style: 'color:red;' }) }}
 
-                {# renders as: #}
-                <div style="color:red;" style="color:red; display:block;"> {# style is rendered twice! #}
-                    My Component!
-                </div>
+           {# renders as: #}
+           <div style="color:red;" style="color:red; display:block;"> {# style is rendered twice! #}
+               My Component!
+           </div>
 
-    2. If you add an attribute without calling ``render()``, it will be rendered twice. For instance:
+    #. If you add an attribute without calling ``render()``, it will be rendered twice. For instance:
 
-         .. code-block:: html+twig
+       .. code-block:: html+twig
 
-              {# templates/components/MyComponent.html.twig #}
-              <div
-                 style="display:block;" {# not calling attributes.render('style') #}
-                 {{ attributes }}
-              >
-                 My Component!
-              </div>
+           {# templates/components/MyComponent.html.twig #}
+           <div
+               style="display:block;" {# not calling attributes.render('style') #}
+               {{ attributes }}
+           >
+               My Component!
+           </div>
 
-              {# render component #}
-              {{ component('MyComponent', { style: 'color:red;' }) }}
+           {# render component #}
+           {{ component('MyComponent', { style: 'color:red;' }) }}
 
-              {# renders as: #}
-              <div style="display:block;" style="color:red;"> {# style is rendered twice! #}
-                 My Component!
-              </div>
+           {# renders as: #}
+           <div style="display:block;" style="color:red;"> {# style is rendered twice! #}
+               My Component!
+           </div>
 
 Only
 ~~~~
