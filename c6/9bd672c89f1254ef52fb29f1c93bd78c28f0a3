@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-08-01T13:18:33Z
+
+I ran the PR locally and it looks like the code is not highlighted anymore:
+
+<img width="1133" alt="Capture d’écran 2024-08-01 à 14 22 07" src="https://github.com/user-attachments/assets/e5347077-b9ec-4f40-a818-42d45374226d">
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-01T15:50:17Z
+
+It was ? I'll look at it
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-01T15:56:38Z
+
+Did you check when you rebased last time ?
+
+What I suppose here is that when you coded it, we used highlight js (hence the "`<code language-php>`".
+
+Since we switched to tempest php. And it requires some tags around in Twig.
+
+I'll look at it
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-01T16:37:49Z
+
+Well i've done it for you @WebMamba  ❤️
+
+It's even simpler in the end, i removed all the markdown parsing/formatting from the Factory (except the FrontMatter but this will be cached soon).
+
+The content is rendered like a template with the current Twig environment + extensions.
+
+(and that allow us to _not_ parse the markdown content when we don't display it, like on the cookbook index page)
+
+Also fixed the CSS (code was not readable on light mode)
