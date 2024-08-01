@@ -234,12 +234,12 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 });
         }];
 
-        yield 'onUpdated: with array' => [function () {
+        yield 'onUpdated: with wildcard' => [function () {
             return HydrationTest::create(new class() {
-                #[LiveProp(writable: true, onUpdated: 'onNestedArrayUpdated')]
+                #[LiveProp(writable: true, onUpdated: ['*' => 'onArrayUpdated'])]
                 public array $array = [];
 
-                public function onNestedArrayUpdated($oldValue)
+                public function onArrayUpdated($oldValue)
                 {
                     if ('Kevin' === $this->array['name']) {
                         $this->array['name'] = 'Simon';
@@ -247,7 +247,9 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 }
             })
                 ->mountWith(['array' => ['name' => 'Ryan']])
-                ->userUpdatesProps(['array.name' => 'Kevin'])
+                ->userUpdatesProps([
+                    'array.name' => 'Kevin',
+                ])
                 ->assertObjectAfterHydration(function (object $object) {
                     self::assertSame('Simon', $object->array['name']);
                 });
