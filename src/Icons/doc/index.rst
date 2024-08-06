@@ -384,10 +384,9 @@ of the following attributes: ``aria-label``, ``aria-labelledby`` or ``title``.
     If you don't want to set ``aria-hidden="true"`` for a specific icon, you can
     explicitly set the ``aria-hidden`` attribute to ``false``:
 
-    .. code-block:: twig+html
+    .. code-block:: html+twig
 
         <twig:ux:icon name="user-profile" aria-hidden="false" />
-
 
 Performance
 -----------
@@ -458,7 +457,7 @@ returning the HTML output.
 
     The <twig:ux:icon> component does not support embedded content.
 
-    .. code-block:: twig+html
+    .. code-block:: html+twig
 
         {# The 🧸 will be ignore in the HTML output #}
         <twig:ux:icon name="user-profile" class="w-4 h-4">🧸</twig:ux:icon>
@@ -519,8 +518,8 @@ Full Configuration
 Learn more
 ----------
 
-* :doc:`Creating and Using Templates </templates>`
-* :doc:`How to manage CSS and JavaScript assets in Symfony applications </frontend>`
+* `Creating and Using Templates`_
+* `How to manage CSS and JavaScript assets in Symfony applications`_
 
 .. _`SVG`: https://en.wikipedia.org/wiki/SVG
 .. _`ux.symfony.com/icons`: https://ux.symfony.com/icons
@@ -539,3 +538,5 @@ Learn more
 .. _`Octicons`: https://github.com/primer/octicons/
 .. _`Phosphor Icons`: https://github.com/phosphor-icons/homepage
 .. _`Tabler Icons`: https://github.com/tabler/tabler-icons
+.. _`Creating and Using Templates`: https://symfony.com/doc/current/templates.html
+.. _`How to manage CSS and JavaScript assets in Symfony applications`: https://symfony.com/doc/current/frontend.html
