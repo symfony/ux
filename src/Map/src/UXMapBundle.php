@@ -58,7 +58,7 @@ final class UXMapBundle extends AbstractBundle
         if (str_starts_with($config['renderer'], 'null://')) {
             $container->services()
                 ->set('ux_map.renderer_factory.null', NullRendererFactory::class)
-                ->arg(0, array_map(fn ($name) => 'symfony/ux-map-'.$name, array_keys(self::$bridges)))
+                ->arg(0, array_map(fn ($name) => 'symfony/ux-'.$name.'-map', array_keys(self::$bridges)))
                 ->tag('ux_map.renderer_factory');
         }
 
@@ -68,7 +68,7 @@ final class UXMapBundle extends AbstractBundle
             ->arg(0, $renderers);
 
         foreach (self::$bridges as $name => $bridge) {
-            if (ContainerBuilder::willBeAvailable('symfony/ux-map-'.$name, $bridge['renderer_factory'], ['symfony/ux-map'])) {
+            if (ContainerBuilder::willBeAvailable('symfony/ux-'.$name.'-map', $bridge['renderer_factory'], ['symfony/ux-map'])) {
                 $container->services()
                     ->set('ux_map.renderer_factory.'.$name, $bridge['renderer_factory'])
                     ->parent('ux_map.renderer_factory.abstract')
@@ -88,10 +88,10 @@ final class UXMapBundle extends AbstractBundle
         ];
 
         foreach (self::$bridges as $name => $bridge) {
-            if (ContainerBuilder::willBeAvailable('symfony/ux-map-'.$name, $bridge['renderer_factory'], ['symfony/ux-map'])) {
+            if (ContainerBuilder::willBeAvailable('symfony/ux-'.$name.'-map', $bridge['renderer_factory'], ['symfony/ux-map'])) {
                 $rendererFactoryReflection = new \ReflectionClass($bridge['renderer_factory']);
                 $bridgePath = \dirname($rendererFactoryReflection->getFileName(), 3);
-                $paths[$bridgePath.'/assets/dist'] = '@symfony/ux-map-'.$name;
+                $paths[$bridgePath.'/assets/dist'] = '@symfony/ux-'.$name.'-map';
             }
         }
 

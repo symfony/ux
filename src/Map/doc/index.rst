@@ -47,9 +47,9 @@ Available renderers
 ==========  ===============================================================
 Renderer
 ==========  ===============================================================
-`Google`_   **Install**: ``composer require symfony/ux-map-google`` \
+`Google`_   **Install**: ``composer require symfony/ux-google-map`` \
             **DSN**: ``UX_MAP_DSN=google://GOOGLE_MAPS_API_KEY@default`` \
-`Leaflet`_  **Install**: ``composer require symfony/ux-map-leaflet`` \
+`Leaflet`_  **Install**: ``composer require symfony/ux-leaflet-map`` \
             **DSN**: ``UX_MAP_DSN=leaflet://default`` \
 ==========  ===============================================================
 

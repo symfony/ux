@@ -50,7 +50,7 @@ class UXMapBundleTest extends TestCase
      */
     public function testNullRendererAsDefault(string $kernelClass): void
     {
-        $expectedRenderer = new NullRenderer(['symfony/ux-map-google', 'symfony/ux-map-leaflet']);
+        $expectedRenderer = new NullRenderer(['symfony/ux-google-map', 'symfony/ux-leaflet-map']);
 
         $kernel = new $kernelClass('test', true);
         $kernel->boot();

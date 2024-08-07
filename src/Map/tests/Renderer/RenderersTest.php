@@ -32,11 +32,11 @@ class RenderersTest extends TestCase
     public function testRenderMapWithDefaultRenderer(): void
     {
         $defaultRenderer = $this->createMock(RendererInterface::class);
-        $defaultRenderer->expects(self::once())->method('renderMap')->willReturn('<div data-controller="@symfony/ux-map-default"></div>');
+        $defaultRenderer->expects(self::once())->method('renderMap')->willReturn('<div data-controller="@symfony/ux-default-map"></div>');
 
         $renderers = new Renderers(['default' => $defaultRenderer]);
 
-        self::assertSame('<div data-controller="@symfony/ux-map-default"></div>', $renderers->renderMap(new Map()));
+        self::assertSame('<div data-controller="@symfony/ux-default-map"></div>', $renderers->renderMap(new Map()));
     }
 
     public function testRenderMapWithCustomRenderer(): void
@@ -45,13 +45,13 @@ class RenderersTest extends TestCase
         $defaultRenderer->expects(self::never())->method('renderMap');
 
         $customRenderer = $this->createMock(RendererInterface::class);
-        $customRenderer->expects(self::once())->method('renderMap')->willReturn('<div data-controller="@symfony/ux-map-custom"></div>');
+        $customRenderer->expects(self::once())->method('renderMap')->willReturn('<div data-controller="@symfony/ux-custom-map"></div>');
 
         $renderers = new Renderers(['default' => $defaultRenderer, 'custom' => $customRenderer]);
 
         $map = new Map(rendererName: 'custom');
 
-        self::assertSame('<div data-controller="@symfony/ux-map-custom"></div>', $renderers->renderMap($map));
+        self::assertSame('<div data-controller="@symfony/ux-custom-map"></div>', $renderers->renderMap($map));
     }
 
     public function testRenderMapWithUnknownRenderer(): void
