@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-02T21:50:37Z
+
+Update: add a logger / log a warning when icon is not found
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-02T22:15:01Z
+
+@kbond @yceruto
+
+--
+
+I've been -more than once- told we cannot do this or that for way, way smaller BC breaks.
+
+But if you guys say it's ok, that's ok for me.
+
+--
+
+`ignore_missing` exist in Twig (include, source) too. It was my inspiration here for the name ... and felt very similar
+
+Every other filter / function i know of throw in Twig when an error occurs
+
+The only silent thing is for getAttribute.
+
+To me an icon (which should be in cache) is nothing like an attribute on an (existing) object.
+
+The asset function throw when an asset does not exist (example: a svg icon)
+
+--
+
+If we use strict_variables here, I _cannot_ have exception in prod for missing icons anymore.
+
+(i would need to set strict_variables to true -- something i don't desire for obvious reasons)
+
+--
+
+Not in the mood for the subtext of this discussion.. so just tell me your decision and i'll update the PR.
