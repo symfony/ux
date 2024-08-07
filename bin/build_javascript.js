@@ -21,6 +21,8 @@ const files = [
     // custom handling for StimulusBundle
     'src/StimulusBundle/assets/src/loader.ts',
     'src/StimulusBundle/assets/src/controllers.ts',
+    // custom handling for Bridge
+    ...glob.sync('src/*/src/Bridge/*/assets/src/*controller.ts'),
     ...glob.sync('src/*/assets/src/*controller.ts'),
 ];
 

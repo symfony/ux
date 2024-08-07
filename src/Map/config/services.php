@@ -1,0 +1,45 @@
+<?php
+
+/*
+ * This file is part of the Symfony package.
+ *
+ * (c) Fabien Potencier <fabien@symfony.com>
+ *
+ * For the full copyright and license information, please view the LICENSE
+ * file that was distributed with this source code.
+ */
+
+namespace Symfony\Component\DependencyInjection\Loader\Configurator;
+
+use Symfony\UX\Map\Renderer\AbstractRendererFactory;
+use Symfony\UX\Map\Renderer\Renderer;
+use Symfony\UX\Map\Renderer\Renderers;
+use Symfony\UX\Map\Twig\MapExtension;
+
+/*
+ * @author Hugo Alliaume <hugo@alliau.me>
+ */
+return static function (ContainerConfigurator $container): void {
+    $container->services()
+        ->set('ux_map.renderers', Renderers::class)
+            ->factory([service('ux_map.renderer_factory'), 'fromStrings'])
+            ->args([
+                abstract_arg('renderers configuration'),
+            ])
+            ->tag('twig.runtime')
+
+        ->set('ux_map.renderer_factory.abstract', AbstractRendererFactory::class)
+            ->abstract()
+            ->args([
+                service('stimulus.helper'),
+            ])
+
+        ->set('ux_map.renderer_factory', Renderer::class)
+            ->args([
+                tagged_iterator('ux_map.renderer_factory'),
+            ])
+
+        ->set('ux_map.twig_extension', MapExtension::class)
+            ->tag('twig.extension')
+    ;
+};

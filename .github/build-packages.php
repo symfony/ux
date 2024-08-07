@@ -9,7 +9,7 @@ require __DIR__.'/../vendor/autoload.php';
 use Symfony\Component\Finder\Finder;
 
 $finder = (new Finder())
-    ->in(__DIR__.'/../src/*/')
+    ->in([__DIR__.'/../src/*/', __DIR__.'/../src/*/src/Bridge/*/'])
     ->depth(0)
     ->name('composer.json')
 ;
@@ -44,6 +44,18 @@ foreach ($finder as $composerFile) {
         $key = isset($packageData['require']['symfony/stimulus-bundle']) ? 'require' : 'require-dev';
         $packageData[$key]['symfony/stimulus-bundle'] = '@dev';
     }
+    
+    if (isset($packageData['require']['symfony/ux-map'])
+        || isset($packageData['require-dev']['symfony/ux-map'])
+    ) {
+        $repositories[] = [
+            'type' => 'path',
+            'url' => '../../../',
+        ];
+        $key = isset($packageData['require']['symfony/ux-map']) ? 'require' : 'require-dev';
+        $packageData[$key]['symfony/ux-map'] = '@dev';
+    }
+    
     if ($repositories) {
         $packageData['repositories'] = $repositories;
     }

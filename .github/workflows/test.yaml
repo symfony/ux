@@ -71,7 +71,7 @@ jobs:
 
             - id: components
               run: |
-                components=$(tree src -J -d -L 1 | jq -c '.[0].contents | map(.name)')
+                components=$(find src/ -mindepth 2 -type f -name composer.json -not -path "*/vendor/*" -printf '%h\n' | jq -R -s -c 'split("\n")[:-1] | map(. | sub("^src/";"")) | sort')
                 echo "$components"
                 echo "components=$components" >> $GITHUB_OUTPUT
 
@@ -89,6 +89,12 @@ jobs:
                     dependency-version: 'highest'
                 component: ${{ fromJson(needs.tests-php-components.outputs.components )}}
                 exclude:
+                  - component: Map # does not support PHP 8.1
+                    php-version: '8.1'
+                  - component: Map/src/Bridge/Google # does not support PHP 8.1
+                    php-version: '8.1'
+                  - component: Map/src/Bridge/Leaflet # does not support PHP 8.1
+                    php-version: '8.1'
                   - component: Swup  # has no tests
                   - component: Turbo # has its own workflow (test-turbo.yml)
                   - component: Typed  # has no tests

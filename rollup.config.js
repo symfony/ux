@@ -46,11 +46,15 @@ const wildcardExternalsPlugin = (peerDependencies) => ({
 const moveTypescriptDeclarationsPlugin = (packagePath) => ({
     name: 'move-ts-declarations',
     writeBundle: async () => {
-        const files = glob.sync(path.join(packagePath, 'dist', '*', 'assets', 'src', '**/*.d.ts'));
+        const isBridge = packagePath.includes('src/Bridge');
+        const globPattern = isBridge
+            ? path.join(packagePath, 'dist', packagePath.replace(/^src\//, ''), '**/*.d.ts')
+            : path.join(packagePath, 'dist', '*', 'assets', 'src', '**/*.d.ts')
+        const files = glob.sync(globPattern);
         files.forEach((file) => {
-            // a bit odd, but remove first 7 directories, which will leave
+            // a bit odd, but remove first 7 or 13 directories, which will leave
             // only the relative path to the file
-            const relativePath = file.split('/').slice(7).join('/');
+            const relativePath = file.split('/').slice(isBridge ? 13 : 7).join('/');
 
             const targetFile = path.join(packagePath, 'dist', relativePath);
             if (!fs.existsSync(path.dirname(targetFile))) {
