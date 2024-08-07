@@ -1,0 +1,293 @@
+---------------------------------------------------------------------------
+
+by seb-jean at 2024-06-24T10:45:21Z
+
+Very useful component :)
+
+---------------------------------------------------------------------------
+
+by simondaigre at 2024-06-24T12:42:20Z
+
+That's awesome ! Thank you for this PR ! I checked my projects with Google Maps integration, there is some features missing here :
+- allow to set a custom icon on Marker
+- allow to customize map styles (styles parameter as array ?)
+- on some projects I also use `@googlemaps/markerclusterer`. Not sure if you should include it in ux/maps but I'll do a doc PR with explanations if you want
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-06-24T13:00:52Z
+
+Hi @simondaigre, and thank you! :)
+
+> allow to set a custom icon on Marker
+
+It's already on my list! I will need this feature aswell for my website where I use custom marker icons:
+![image](https://github.com/symfony/ux/assets/2103975/0b339c08-417b-4181-8a1b-e2410a60cd1e)
+
+But I don't wanted to do too much things in a single PR. Implementing `PinElement` PHP-side is a small challenge which I think can already be done user-side with event listeners.
+
+> allow to customize map styles (styles parameter as array ?)
+
+I've started to implement the API/configuration for map styles (with some classes and enums), but I've finally removed it when I knew about [Cloud-based maps styling](https://developers.google.com/maps/documentation/cloud-customization).
+You can pass the `mapId` or call `->setMapId('...')` to customize your map styles.
+
+> on some projects I also use `@googlemaps/markerclusterer`. Not sure if you should include it in ux/maps but I'll do a doc PR with explanations if you want
+
+I think we would not include it in Symfony UX Map by default, a documentation would be enough IMO :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-26T15:42:06Z
+
+(i will make a big review this week-end ;) )
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-06-27T04:31:43Z
+
+A first comment before touching the real work :)
+
+It is not possible to use Google Map without explicit consent of the user in Europe, California i think, Japan maybe, Australia too
+
+You are of course not responsible of this, but i think some use case or implementation consequences should be discussed now
+- can we expose some hook to load scripts & maps on trigger (can be the CMP or GMT for instance) ?
+- can we ease the privacy compliance in any way (because as we discussed a few times with @WebMamba this is probably where some good DX can make a big difference) ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-06-27T06:45:17Z
+
+... 😮‍💨 , but yeah you're right, thanks for pointing it out.
+
+I think the easiest way to do that is to:
+- never load Google Maps maps implicitly, or at least makes it configurable server-side
+    - when calling `render_map(...)`, we won't render `data-controller` attribute but something else (e.g.: `data-controller-wait-for-consent` or something more related to Symfony UX Map), so the GoogleMaps Stimulus controller & Google Maps API won't be loaded
+- provide a global function like `loadSymfonyUxGoogleMaps()`:
+    - which can be easily created on-the-fly by `{{ ux_map_script_tags() }}`
+    - calling it will rename `data-controller-wait-for-consent` to `data-controller`, which will load the Stimulus controller & Google Maps API
+- and let the developper execute `loadSymfonyUxGoogleMaps()` when needed
+
+For example with the Didomi CMP:
+```html
+<script>
+    window.didomiOnReady = window.didomiOnReady || [];
+    window.didomiOnReady.push(() => {
+        function loadGoogleMapsIfConsentGiven() {
+            const googleMapsPurposeId = '...';
+            const googleMapsVendorId = '...';
+
+            const userStatus = Didomi.getUserStatus();
+            const enabledPurposeConsent = userStatus.purposes.consent.enabled;
+            const enabledVendorConsent = userStatus.vendors.consent.enabled;
+
+            if (enabledPurposeConsent.includes(googleMapsPurposeId) && enabledVendorConsent.includes(googleMapsVendorId)) {
+                window.loadSymfonyUxGoogleMaps();
+            }
+        }
+
+        if (Didomi.shouldConsentBeCollected()) {
+            window.didomiEventListeners = window.didomiEventListeners || [];
+            window.didomiEventListeners.push({
+                event: 'consent.changed',
+                listener: function (event) {
+                    loadGoogleMapsIfConsentGiven();
+                }
+            });
+        } else {
+            loadGoogleMapsIfConsentGiven();
+        }
+    });
+</script>
+```
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-06T23:12:37Z
+
+Hey @smnandre and @kbond, here is my 2nd iteration to simplify the package a lot, thanks to your reviews :)
+
+You can find an example in the PR description, but to resume:
+- One default provider is configured through `ux_map.provider`, it can either be Leaflet or Google Maps
+- Multiple provider**s** or maps can not be configured anymore in the yaml file
+- You can easily create your own `ProviderInterface` in your application, and pass its instance to `$mapFactory->create()`
+- A tons of tests have been added (especially the ones for AssetMapper and ImportMap support)
+- The documentation has been updated
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-07T19:00:22Z
+
+Thanks for the review, I've applied your minor suggestions, I will look into the other ones later :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-10T23:49:03Z
+
+❤️
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-18T23:10:15Z
+
+Hey everyone! Here is the 3rd iteration of Symfony UX Map :)
+
+To resume:
+- Bridges have been introduced, they will be available under `symfony/ux-map-google` and `symfony/ux-map-leaflet`. They ship their own renderer, map options, and Stimulus controller to create the map, markers, and infoWindows
+- Yarn workspaces have been re-configured, some Yarn commands have been adapted, and the CI has been adapted
+- For the Leaflet bridge, there is no more AssetMapper/ImportMap hackings 🎉 , now we simply configure on-the-fly the Marker icon by using an inlined SVG
+- The documentations have been rewritten
+- The `MapFactory` have been deleted (use `new Map()` instead), and the rendering system have been completely rewritten, the `Map` does not contain renderer reference (previously "provider") nor HTML attributes
+
+The PR description have been updated aswell.
+
+Happy reviews :eyes:
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-07-30T10:41:50Z
+
+@Kocal excellent work! I hope this is merged very soon.
+
+Not sure if this was discussed before, but about the proposed `LatLng` class name, I searched a bit about this and:
+
+* Google Maps uses `lat` and `lng` in all its SDKs (e.g. [developers.google.com/.../android-sdk](https://developers.google.com/maps/documentation/android-sdk/map-with-marker) and [developers.google.com/.../javascript](https://developers.google.com/maps/documentation/javascript/add-google-map#web-components))
+* OpenStreetMap uses `lat` and `lon` ([wiki.openstreetmap.org/.../API_v0.6](https://wiki.openstreetmap.org/wiki/API_v0.6))
+* Apple Maps use `latitude` and `longitude` ([developer.apple.com/.../coordinate](https://developer.apple.com/documentation/mapkitjs/mapkit/coordinate))
+
+Google Maps is arguably the most popular, so `lat` and `lng` are very common for developers and the proposed `LatLng` is fine.
+
+But, what would you think of using `LatLon` instead? I find it easier to understand, what about you?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-30T18:23:33Z
+
+Thanks @javiereguiluz :)
+
+The `LatLng` class name was not discussed before, but during my first implementation I've thought about `Position` instead. Something usable like `Position::latLng(5, 40)` or `new Position(latitude: 5, longitude: 40)`. But it's too abstract IMO, to me a position can be defined by an address, a city, a country etc...
+
+I think aswell `LatLng` is the most common/popular naming, thanks to Google Maps. `lon` feels weird for me, and I really don't like the _possible_ `LatitudeLongitude` class name.
+
+I really like `LatLng`, but if this really needs to be changed, I can suggest `Point`.
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-30T18:23:53Z
+
+(Waiting for #2015 to be merged before rebasing this one)
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-07-30T19:21:38Z
+
+> but during my first implementation I've thought about Position instead.
+
+What about `Point`?
+
+> to me a position can be defined by an address, a city, a country etc...
+
+Is this type of position out of scope of this package/bridges?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-30T20:03:10Z
+
+> > but during my first implementation I've thought about Position instead.
+>
+> What about `Point`?
+
+If we really need to change `LatLng`, we can go for `Point` yes.
+
+> > to me a position can be defined by an address, a city, a country etc...
+>
+> Is this type of position out of scope of this package/bridges?
+
+Yes totally, Google Maps and Leaflet (and maybe a tons of other providers) use lat/lng combo
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-30T20:06:49Z
+
+What about Coordinates ? Would be a bit longer, but probably more precise ?
+
+(Point is a good choice too for me)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-30T20:07:49Z
+
+Location can be a good choice too, but feel a bit "wider"
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-30T20:17:51Z
+
+Coordinates is nice too
+
+PS: Biome found really interesting issues 😍
+<img width="1214" alt="image" src="https://github.com/user-attachments/assets/82d07d4d-f487-4a4a-80bf-527b78798d3a">
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-07-30T20:20:14Z
+
+> Yes totally, Google Maps and Leaflet (and maybe a tons of other providers) use lat/lng combo
+
+Sorry, I meant, can the google/leaflet api use an address for a marker instead of lat/lang?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-30T20:25:29Z
+
+> > Yes totally, Google Maps and Leaflet (and maybe a tons of other providers) use lat/lng combo
+>
+> Sorry, I meant, can the google/leaflet api use an address for a marker instead of lat/lang?
+
+I wasn't clear enough but don't worry I understood :)
+
+So, Google Maps/Leaflet **only** use lat/lng combo for positioning a marker.
+If you want to use an address for a marker, first you need to geocode this address to get lat/lng!
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-07-30T20:33:13Z
+
+> If you want to use an address for a marker, first you need to geocode this address to get lat/lng!
+
+Got it!
+
+`Point` is a term used by most databases for this so feels like the right choice. `Coordinates` is a bit more descriptive but longer. I'd prefer Point but I don't have a strong opinion.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-30T20:42:24Z
+
+We can go for `Point` if many people here wants to :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-31T14:15:07Z
+
+I've just changed `LatLng` for `Point` :)
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-08-06T13:40:25Z
+
+Do we have a list of things left to do here before making this mergeable?
+
+Or is this fully finished and just needs a final review?
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-08-06T14:32:33Z
+
+Hi, I don't have more things to do, I've already processed the ~250+ comments :D
+
+Final reviews are welcome of course, but I think we planned to merge this PR soonly so we can iterate on it (especially the documentation), cc @kbond @smnandre
