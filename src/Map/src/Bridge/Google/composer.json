@@ -1,5 +1,5 @@
 {
-    "name": "symfony/ux-map-google",
+    "name": "symfony/ux-google-map",
     "type": "symfony-ux-map-bridge",
     "description": "Symfony UX Map GoogleMaps Bridge",
     "keywords": ["google-maps", "map", "symfony", "ux"],

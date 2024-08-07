@@ -35,7 +35,7 @@ final class TwigTest extends KernelTestCase
             ->expects(self::once())
             ->method('renderMap')
             ->with($map, $attributes)
-            ->willReturn('<div data-controller="@symfony/ux-map-foobar"></div>')
+            ->willReturn('<div data-controller="@symfony/ux-foobar-map"></div>')
         ;
 
         self::getContainer()->set('test.ux_map.renderers', $renderer);
@@ -50,7 +50,7 @@ final class TwigTest extends KernelTestCase
         ]));
 
         self::assertSame(
-            '<div data-controller="@symfony/ux-map-foobar"></div>',
+            '<div data-controller="@symfony/ux-foobar-map"></div>',
             $twig->render('test', ['map' => $map, 'attributes' => $attributes])
         );
     }

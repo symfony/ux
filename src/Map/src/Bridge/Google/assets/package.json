@@ -1,5 +1,5 @@
 {
-    "name": "@symfony/ux-map-google",
+    "name": "@symfony/ux-google-map",
     "description": "GoogleMaps bridge for Symfony UX Map, integrate interactive maps in your Symfony applications",
     "license": "MIT",
     "version": "1.0.0",
@@ -18,7 +18,7 @@
         "importmap": {
             "@hotwired/stimulus": "^3.0.0",
             "@googlemaps/js-api-loader": "^1.16.6",
-            "@symfony/ux-map-google/map-controller": "path:%PACKAGE%/dist/map_controller.js"
+            "@symfony/ux-google-map/map-controller": "path:%PACKAGE%/dist/map_controller.js"
         }
     },
     "peerDependencies": {

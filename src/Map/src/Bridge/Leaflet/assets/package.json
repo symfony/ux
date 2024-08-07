@@ -1,5 +1,5 @@
 {
-    "name": "@symfony/ux-map-leaflet",
+    "name": "@symfony/ux-leaflet-map",
     "description": "Leaflet bridge for Symfony UX Map, integrate interactive maps in your Symfony applications",
     "license": "MIT",
     "version": "1.0.0",
@@ -18,7 +18,7 @@
         "importmap": {
             "@hotwired/stimulus": "^3.0.0",
             "leaflet": "^1.9.4",
-            "@symfony/ux-map-leaflet/map-controller": "path:%PACKAGE%/dist/map_controller.js"
+            "@symfony/ux-leaflet-map/map-controller": "path:%PACKAGE%/dist/map_controller.js"
         }
     },
     "peerDependencies": {

@@ -1,5 +1,5 @@
 {
-    "name": "symfony/ux-map-leaflet",
+    "name": "symfony/ux-leaflet-map",
     "type": "symfony-ux-map-bridge",
     "description": "Symfony UX Map Leaflet Bridge",
     "keywords": ["leaflet", "map", "symfony", "ux"],

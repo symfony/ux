@@ -53,7 +53,7 @@ abstract readonly class AbstractRenderer implements RendererInterface
         }
 
         $stimulusAttributes->addController(
-            '@symfony/ux-map-'.$this->getName().'/map',
+            '@symfony/ux-'.$this->getName().'-map/map',
             [
                 'provider-options' => (object) $this->getProviderOptions(),
                 'view' => $map->toArray(),

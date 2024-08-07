@@ -30,14 +30,14 @@ final class NullRendererTest extends TestCase
 
         yield 'one bridge' => [
             'expected_exception_message' => 'You must install at least one bridge package to use the Symfony UX Map component.'
-                .\PHP_EOL.'Try running "composer require symfony/ux-map-leaflet".',
-            'renderer' => new NullRenderer(['symfony/ux-map-leaflet']),
+                .\PHP_EOL.'Try running "composer require symfony/ux-leaflet-map".',
+            'renderer' => new NullRenderer(['symfony/ux-leaflet-map']),
         ];
 
         yield 'two bridges' => [
             'expected_exception_message' => 'You must install at least one bridge package to use the Symfony UX Map component.'
-                .\PHP_EOL.'Try running "composer require symfony/ux-map-leaflet" or "composer require symfony/ux-map-google".',
-            'renderer' => new NullRenderer(['symfony/ux-map-leaflet', 'symfony/ux-map-google']),
+                .\PHP_EOL.'Try running "composer require symfony/ux-leaflet-map" or "composer require symfony/ux-google-map".',
+            'renderer' => new NullRenderer(['symfony/ux-leaflet-map', 'symfony/ux-google-map']),
         ];
     }
 

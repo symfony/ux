@@ -24,7 +24,7 @@ class UnsupportedSchemeException extends InvalidArgumentException
         $provider = $dsn->getScheme();
         $bridge = UXMapBundle::$bridges[$provider] ?? null;
         if ($bridge && !class_exists($bridge['renderer_factory'])) {
-            parent::__construct(\sprintf('Unable to render maps via "%s" as the bridge is not installed. Try running "composer require symfony/ux-map-%s".', $provider, $provider));
+            parent::__construct(\sprintf('Unable to render maps via "%s" as the bridge is not installed. Try running "composer require symfony/ux-%s-map".', $provider, $provider));
 
             return;
         }
