@@ -45,7 +45,8 @@
         "symfony/http-client": "6.4|^7.0",
         "symfony/phpunit-bridge": "^6.3|^7.0",
         "symfony/ux-twig-component": "^2.14",
-        "zenstruck/console-test": "^1.5"
+        "zenstruck/console-test": "^1.5",
+        "psr/log": "^2|^3"
     },
     "config": {
         "sort-packages": true

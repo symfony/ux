@@ -58,6 +58,10 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                         ->end()
                     ->end()
                 ->end()
+                ->booleanNode('ignore_not_found')
+                    ->info('Ignore error when an icon is not found.')
+                    ->defaultFalse()
+                ->end()
             ->end()
         ;
 
@@ -69,7 +73,7 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
         return $this;
     }
 
-    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void // @phpstan-ignore-line
+    protected function loadInternal(array $mergedConfig, ContainerBuilder $container): void
     {
         $loader = new PhpFileLoader($container, new FileLocator(__DIR__.'/../../config'));
         $loader->load('services.php');
@@ -94,6 +98,10 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
 
         $container->getDefinition('.ux_icons.icon_renderer')
             ->setArgument(1, $mergedConfig['default_icon_attributes'])
+        ;
+
+        $container->getDefinition('.ux_icons.twig_icon_runtime')
+            ->setArgument(1, $mergedConfig['ignore_not_found'])
         ;
 
         if ($mergedConfig['iconify']['enabled']) {

@@ -19,6 +19,7 @@ use Symfony\UX\Icons\Registry\ChainIconRegistry;
 use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
 use Symfony\UX\Icons\Twig\IconFinder;
 use Symfony\UX\Icons\Twig\UXIconExtension;
+use Symfony\UX\Icons\Twig\UXIconRuntime;
 
 return static function (ContainerConfigurator $container): void {
     $container->services()
@@ -44,11 +45,18 @@ return static function (ContainerConfigurator $container): void {
         ->set('.ux_icons.twig_icon_extension', UXIconExtension::class)
             ->tag('twig.extension')
 
+        ->set('.ux_icons.twig_icon_runtime', UXIconRuntime::class)
+            ->args([
+                service('.ux_icons.icon_renderer'),
+                abstract_arg('ignore_not_found'),
+                service('logger')->ignoreOnInvalid(),
+            ])
+            ->tag('twig.runtime')
+
         ->set('.ux_icons.icon_renderer', IconRenderer::class)
             ->args([
                 service('.ux_icons.icon_registry'),
             ])
-            ->tag('twig.runtime')
 
         ->alias('Symfony\UX\Icons\IconRendererInterface', '.ux_icons.icon_renderer')
 

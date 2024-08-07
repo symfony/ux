@@ -336,6 +336,19 @@ Now, all icons will have the ``fill`` attribute set to ``currentColor`` by defau
     # renders "user-profile.svg" with fill="red"
     {{ ux_icon('user-profile', {fill: 'red'}) }}
 
+Errors
+------
+
+If an icon is not found, an exception is thrown. This is useful during development,
+but in production, you may want to render an error message instead. You can do this
+by setting the ``ignore_not_found`` configuration option to ``true``:
+
+.. code-block:: yaml
+
+    # config/packages/ux_icons.yaml
+    ux_icons:
+        ignore_not_found: true
+
 Accessibility
 -------------
 
@@ -514,6 +527,9 @@ Full Configuration
 
            # The endpoint for the Iconify API.
            endpoint: 'https://api.iconify.design'
+           
+        # Whether to ignore errors when an icon is not found.
+        ignore_not_found: false
 
 Learn more
 ----------
