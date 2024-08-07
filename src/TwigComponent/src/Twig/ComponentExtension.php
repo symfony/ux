@@ -120,10 +120,6 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
             throw $e;
         }
 
-        if (!($e instanceof \Exception)) {
-            $e = new \Exception($e->getMessage(), $e->getCode(), $e->getPrevious());
-        }
-
-        throw new RuntimeError(\sprintf('Error rendering "%s" component: %s', $name, $e->getMessage()), previous: $e);
+        throw new RuntimeError(\sprintf('Error rendering "%s" component: "%s"', $name, $e->getMessage()), previous: $e);
     }
 }
