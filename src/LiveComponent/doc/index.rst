@@ -1173,7 +1173,7 @@ You can also pass arguments to your action by adding each as a
     {# or #}
 
     <form>
-        <button {{ live_action('addItem', {'id': item.id, 'itemName': 'CustomItem' })>Add Item</button>
+        <button {{ live_action('addItem', {'id': item.id, 'itemName': 'CustomItem' }) }}>Add Item</button>
     </form>
 
 In your component, to allow each argument to be passed, add
