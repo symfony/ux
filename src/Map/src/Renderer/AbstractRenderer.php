@@ -39,7 +39,20 @@ abstract readonly class AbstractRenderer implements RendererInterface
             $map->options($defaultMapOptions);
         }
 
+        $controllers = [];
+        if ($attributes['data-controller'] ?? null) {
+            $controllers[$attributes['data-controller']] = [];
+        }
+        $controllers['@symfony/ux-'.$this->getName().'-map/map'] = [
+            'provider-options' => (object) $this->getProviderOptions(),
+            'view' => $map->toArray(),
+        ];
+
         $stimulusAttributes = $this->stimulus->createStimulusAttributes();
+        foreach ($controllers as $name => $controllerValues) {
+            $stimulusAttributes->addController($name, $controllerValues);
+        }
+
         foreach ($attributes as $name => $value) {
             if ('data-controller' === $name) {
                 continue;
@@ -51,14 +64,6 @@ abstract readonly class AbstractRenderer implements RendererInterface
                 $stimulusAttributes->addAttribute($name, $value);
             }
         }
-
-        $stimulusAttributes->addController(
-            '@symfony/ux-'.$this->getName().'-map/map',
-            [
-                'provider-options' => (object) $this->getProviderOptions(),
-                'view' => $map->toArray(),
-            ]
-        );
 
         return \sprintf('<div %s></div>', $stimulusAttributes);
     }
