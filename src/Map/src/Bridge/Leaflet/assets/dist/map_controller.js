@@ -35,7 +35,7 @@ class map_controller extends AbstractMapController {
     }
     doCreateInfoWindow({ definition, marker, }) {
         const { headerContent, content, rawOptions = {}, ...otherOptions } = definition;
-        marker.bindPopup(`${headerContent}<br>${content}`, { ...otherOptions, ...rawOptions });
+        marker.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...otherOptions, ...rawOptions });
         if (definition.opened) {
             marker.openPopup();
         }
