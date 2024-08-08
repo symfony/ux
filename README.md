@@ -15,9 +15,9 @@ to build the chart in PHP. The JavaScript is handled for you automatically.
 **That's Symfony UX.**
 
 Symfony UX leverages [Stimulus](https://stimulus.hotwired.dev/) for JavaScript
-and can integrate with [Webpack Encore](https://github.com/symfony/webpack-encore)
+and can integrate with [AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html)
+or with [Webpack Encore](https://github.com/symfony/webpack-encore)
 (with the help of [Stimulus Bridge](https://github.com/symfony/stimulus-bridge))
-or with [AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html)
 
 ## Resources
 
@@ -31,12 +31,10 @@ or with [AssetMapper](https://symfony.com/doc/current/frontend/asset_mapper.html
 Symfony UX is an **initiative**: its aim is to build an ecosystem. To achieve this,
 we need your help: what other packages could we create in Symfony UX? What about a
 library that automatically adds an [input mask](https://imask.js.org/) to the text
-fields of your Symfony forms? Or the ability to make the `EntityType` render with
-[AJAX auto-completion](https://tarekraafat.github.io/autoComplete.js)? Anything you
-do in JavaScript could be done streamlined as a UX package.
+fields of your Symfony forms? Anything you do in JavaScript could be done
+streamlined as a UX package.
 
-We have some ideas, and we will release more packages in the coming days. The rest
-is on you: let's create an amazing ecosystem together!
+Let's create an amazing ecosystem together!
 
 ## Sponsor
 
