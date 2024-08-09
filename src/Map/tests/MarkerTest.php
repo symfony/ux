@@ -24,11 +24,14 @@ class MarkerTest extends TestCase
             position: new Point(48.8566, 2.3522),
         );
 
+        $array = $marker->toArray();
+
         self::assertSame([
             'position' => ['lat' => 48.8566, 'lng' => 2.3522],
             'title' => null,
             'infoWindow' => null,
-        ], $marker->toArray());
+            'extra' => $array['extra'],
+        ], $array);
 
         $marker = new Marker(
             position: new Point(48.8566, 2.3522),
@@ -40,6 +43,8 @@ class MarkerTest extends TestCase
             ),
         );
 
+        $array = $marker->toArray();
+
         self::assertSame([
             'position' => ['lat' => 48.8566, 'lng' => 2.3522],
             'title' => 'Paris',
@@ -49,7 +54,9 @@ class MarkerTest extends TestCase
                 'position' => null,
                 'opened' => true,
                 'autoClose' => true,
+                'extra' => $array['infoWindow']['extra'],
             ],
-        ], $marker->toArray());
+            'extra' => $array['extra'],
+        ], $array);
     }
 }

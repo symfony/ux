@@ -37,7 +37,7 @@ Configuration is done in your ``config/packages/ux_map.yaml`` file:
     
     # config/packages/ux_map.yaml
     ux_map:
-      renderer: '%env(UX_MAP_DSN)%'
+        renderer: '%env(resolve:default::UX_MAP_DSN)%'
 
 The ``UX_MAP_DSN`` environment variable configure which renderer to use.
 
@@ -82,21 +82,33 @@ A map is created by calling ``new Map()``. You can configure the center, zoom, a
                 ->zoom(6)
             ;
     
-            // 2. You can add markers, with an optional info window
+            // 2. You can add markers
             $myMap
                 ->addMarker(new Marker(
                     position: new Point(48.8566, 2.3522), 
                     title: 'Paris'
                 ))
+
+                // With an info window associated to the marker:
                 ->addMarker(new Marker(
                     position: new Point(45.7640, 4.8357), 
                     title: 'Lyon',
-                    // With an info window
                     infoWindow: new InfoWindow(
                         headerContent: '<b>Lyon</b>',
                         content: 'The French town in the historic Rhône-Alpes region, located at the junction of the Rhône and Saône rivers.'
                     )
-                ));
+                ))
+
+                // You can also pass extra data, that you can later use in your custom Stimulus controller 
+                // when listening to "ux:map:marker:before-create" event:
+                ->addMarker(new Marker(
+                    position: new Point(46.5074666, 6.633729),
+                    title: 'Olympic Parc',
+                    extra: [
+                        'icon_mask_url' => 'https://maps.gstatic.com/mapfiles/place_api/icons/v2/tree_pinlet.svg',
+                    ]
+                )
+            ;
     
             // 3. And inject the map in your template to render it
             return $this->render('contact/index.html.twig', [

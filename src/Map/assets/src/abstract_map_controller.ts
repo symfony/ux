@@ -14,7 +14,17 @@ export type MarkerDefinition<MarkerOptions, InfoWindowOptions> = {
     position: Point;
     title: string | null;
     infoWindow?: Omit<InfoWindowDefinition<InfoWindowOptions>, 'position'>;
+    /**
+     * Raw options passed to the marker constructor, specific to the map provider (e.g.: `L.marker()` for Leaflet).
+     */
     rawOptions?: MarkerOptions;
+    /**
+     * Extra data defined by the developer.
+     * They are not directly used by the Stimulus controller, but they can be used by the developer with event listeners:
+     *    - `ux:map:marker:before-create`
+     *    - `ux:map:marker:after-create`
+     */
+    extra: Record<string, unknown>;
 };
 
 export type InfoWindowDefinition<InfoWindowOptions> = {
@@ -23,7 +33,18 @@ export type InfoWindowDefinition<InfoWindowOptions> = {
     position: Point;
     opened: boolean;
     autoClose: boolean;
+    /**
+     * Raw options passed to the info window constructor,
+     * specific to the map provider (e.g.: `google.maps.InfoWindow()` for Google Maps).
+     */
     rawOptions?: InfoWindowOptions;
+    /**
+     * Extra data defined by the developer.
+     * They are not directly used by the Stimulus controller, but they can be used by the developer with event listeners:
+     *    - `ux:map:info-window:before-create`
+     *    - `ux:map:info-window:after-create`
+     */
+    extra: Record<string, unknown>;
 };
 
 export default abstract class<

@@ -51,7 +51,7 @@ export default class extends AbstractMapController<
     }
 
     protected doCreateMarker(definition: MarkerDefinition): Marker {
-        const { position, title, infoWindow, rawOptions = {}, ...otherOptions } = definition;
+        const { position, title, infoWindow, extra, rawOptions = {}, ...otherOptions } = definition;
 
         const marker = createMarker(position, { title, ...otherOptions, ...rawOptions }).addTo(this.map);
 
@@ -69,7 +69,7 @@ export default class extends AbstractMapController<
         definition: MarkerDefinition['infoWindow'];
         marker: Marker;
     }): Popup {
-        const { headerContent, content, rawOptions = {}, ...otherOptions } = definition;
+        const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
 
         marker.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...otherOptions, ...rawOptions });
         if (definition.opened) {
