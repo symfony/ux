@@ -129,9 +129,9 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
         connect() {
             this.element.addEventListener('ux:map:pre-connect', this._onPreConnect);
             this.element.addEventListener('ux:map:connect', this._onConnect);
-            this.element.addEventListener('ux:map:marker:before-create', this._onMarkerBeforeConnect);
+            this.element.addEventListener('ux:map:marker:before-create', this._onMarkerBeforeCreate);
             this.element.addEventListener('ux:map:marker:after-create', this._onMarkerAfterCreate);
-            this.element.addEventListener('ux:map:info-window:before-create', this._onInfoWindowBeforeConnect);
+            this.element.addEventListener('ux:map:info-window:before-create', this._onInfoWindowBeforeCreate);
             this.element.addEventListener('ux:map:info-window:after-create', this._onInfoWindowAfterCreate);
         }
     
@@ -139,9 +139,9 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
             // You should always remove listeners when the controller is disconnected to avoid side effects
             this.element.removeEventListener('ux:map:pre-connect', this._onPreConnect);
             this.element.removeEventListener('ux:map:connect', this._onConnect);
-            this.element.removeEventListener('ux:map:marker:before-create', this._onMarkerBeforeConnect);
+            this.element.removeEventListener('ux:map:marker:before-create', this._onMarkerBeforeCreate);
             this.element.removeEventListener('ux:map:marker:after-create', this._onMarkerAfterCreate);
-            this.element.removeEventListener('ux:map:info-window:before-create', this._onInfoWindowBeforeConnect);
+            this.element.removeEventListener('ux:map:info-window:before-create', this._onInfoWindowBeforeCreate);
             this.element.removeEventListener('ux:map:info-window:after-create', this._onInfoWindowAfterCreate);
         }
     
@@ -159,7 +159,7 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
             console.log(event.detail.infoWindows);
         }
         
-        _onMarkerBeforeConnect(event) {
+        _onMarkerBeforeCreate(event) {
             // The marker is not created yet
             // You can use this event to configure the marker before it is created
             console.log(event.detail.definition);
@@ -171,7 +171,7 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
             console.log(event.detail.marker);
         }
         
-        _onInfoWindowBeforeConnect(event) {
+        _onInfoWindowBeforeCreate(event) {
             // The infoWindow is not created yet
             // You can use this event to configure the infoWindow before it is created
             console.log(event.detail.definition);
