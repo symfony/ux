@@ -25,7 +25,7 @@ class default_1 extends AbstractMapController {
         });
     }
     doCreateMarker(definition) {
-        const { position, title, infoWindow, rawOptions = {}, ...otherOptions } = definition;
+        const { position, title, infoWindow, extra, rawOptions = {}, ...otherOptions } = definition;
         const marker = new library.AdvancedMarkerElement({
             position,
             title,
@@ -39,7 +39,7 @@ class default_1 extends AbstractMapController {
         return marker;
     }
     doCreateInfoWindow({ definition, marker, }) {
-        const { headerContent, content, rawOptions = {}, ...otherOptions } = definition;
+        const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
         const infoWindow = new library.InfoWindow({
             headerContent: this.createTextOrElement(headerContent),
             content: this.createTextOrElement(content),

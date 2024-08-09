@@ -87,7 +87,7 @@ export default class extends AbstractMapController<
     protected doCreateMarker(
         definition: MarkerDefinition<google.maps.marker.AdvancedMarkerElementOptions, google.maps.InfoWindowOptions>
     ): google.maps.marker.AdvancedMarkerElement {
-        const { position, title, infoWindow, rawOptions = {}, ...otherOptions } = definition;
+        const { position, title, infoWindow, extra, rawOptions = {}, ...otherOptions } = definition;
 
         const marker = new library.AdvancedMarkerElement({
             position,
@@ -114,7 +114,7 @@ export default class extends AbstractMapController<
         >['infoWindow'];
         marker: google.maps.marker.AdvancedMarkerElement;
     }): google.maps.InfoWindow {
-        const { headerContent, content, rawOptions = {}, ...otherOptions } = definition;
+        const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
 
         const infoWindow = new library.InfoWindow({
             headerContent: this.createTextOrElement(headerContent),

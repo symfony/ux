@@ -15,6 +15,7 @@ export type MarkerDefinition<MarkerOptions, InfoWindowOptions> = {
     title: string | null;
     infoWindow?: Omit<InfoWindowDefinition<InfoWindowOptions>, 'position'>;
     rawOptions?: MarkerOptions;
+    extra: Record<string, unknown>;
 };
 export type InfoWindowDefinition<InfoWindowOptions> = {
     headerContent: string | null;
@@ -23,6 +24,7 @@ export type InfoWindowDefinition<InfoWindowOptions> = {
     opened: boolean;
     autoClose: boolean;
     rawOptions?: InfoWindowOptions;
+    extra: Record<string, unknown>;
 };
 export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindowOptions, InfoWindow> extends Controller<HTMLElement> {
     static values: {

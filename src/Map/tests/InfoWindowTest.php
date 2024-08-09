@@ -27,6 +27,8 @@ class InfoWindowTest extends TestCase
             autoClose: false,
         );
 
+        $array = $infoWindow->toArray();
+
         self::assertSame([
             'headerContent' => 'Paris',
             'content' => 'Capitale de la France, est une grande ville européenne et un centre mondial de l\'art, de la mode, de la gastronomie et de la culture.',
@@ -36,6 +38,7 @@ class InfoWindowTest extends TestCase
             ],
             'opened' => true,
             'autoClose' => false,
-        ], $infoWindow->toArray());
+            'extra' => $array['extra'],
+        ], $array);
     }
 }

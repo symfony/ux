@@ -26,7 +26,7 @@ class map_controller extends AbstractMapController {
         return map$1;
     }
     doCreateMarker(definition) {
-        const { position, title, infoWindow, rawOptions = {}, ...otherOptions } = definition;
+        const { position, title, infoWindow, extra, rawOptions = {}, ...otherOptions } = definition;
         const marker$1 = marker(position, { title, ...otherOptions, ...rawOptions }).addTo(this.map);
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, marker: marker$1 });
@@ -34,7 +34,7 @@ class map_controller extends AbstractMapController {
         return marker$1;
     }
     doCreateInfoWindow({ definition, marker, }) {
-        const { headerContent, content, rawOptions = {}, ...otherOptions } = definition;
+        const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
         marker.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...otherOptions, ...rawOptions });
         if (definition.opened) {
             marker.openPopup();
