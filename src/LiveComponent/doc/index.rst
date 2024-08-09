@@ -2311,12 +2311,12 @@ the page has loaded. To do this, add a ``loading="defer"`` attribute:
 
 .. code-block:: html+twig
 
-    {# With the component function #}
+    {# With the HTML syntax #}
     <twig:SomeHeavyComponent loading="defer" />
 
 .. code-block:: twig
 
-    {# With the HTML syntax #}
+    {# With the component function #}
     {{ component('SomeHeavyComponent', { loading: 'defer' }) }}
 
 This renders an empty ``<div>`` tag, but triggers an Ajax call to render the
