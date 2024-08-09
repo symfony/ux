@@ -28,12 +28,7 @@ type MapOptions = Pick<
     | 'fullscreenControlOptions'
 >;
 
-let loader: Loader;
-let library: {
-    _Map: typeof google.maps.Map;
-    AdvancedMarkerElement: typeof google.maps.marker.AdvancedMarkerElement;
-    InfoWindow: typeof google.maps.InfoWindow;
-};
+let _google: typeof google;
 
 export default class extends AbstractMapController<
     MapOptions,
@@ -47,19 +42,47 @@ export default class extends AbstractMapController<
 
     declare providerOptionsValue: Pick<
         LoaderOptions,
-        'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version'
+        'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version' | 'libraries'
     >;
 
     async connect() {
-        if (!loader) {
-            loader = new Loader(this.providerOptionsValue);
+        if (!_google) {
+            _google = { maps: {} };
+
+            let { libraries = [], ...loaderOptions } = this.providerOptionsValue;
+
+            const loader = new Loader(loaderOptions);
+
+            // We could have used `loader.load()` to correctly load libraries, but this method is deprecated in favor of `loader.importLibrary()`.
+            // But `loader.importLibrary()` is not a 1-1 replacement for `loader.load()`, we need to re-build the `google.maps` object ourselves,
+            // see https://github.com/googlemaps/js-api-loader/issues/837 for more information.
+            libraries = ['core', ...libraries.filter((library) => library !== 'core')]; // Ensure 'core' is loaded first
+            const librariesImplementations = await Promise.all(
+                libraries.map((library) => loader.importLibrary(library))
+            );
+            librariesImplementations.map((libraryImplementation, index) => {
+                const library = libraries[index];
+
+                // The following libraries are in a sub-namespace
+                if (['marker', 'places', 'geometry', 'journeySharing', 'drawing', 'visualization'].includes(library)) {
+                    _google.maps[library] = libraryImplementation;
+                } else {
+                    _google.maps = { ..._google.maps, ...libraryImplementation };
+                }
+            });
         }
 
-        const { Map: _Map, InfoWindow } = await loader.importLibrary('maps');
-        const { AdvancedMarkerElement } = await loader.importLibrary('marker');
-        library = { _Map, AdvancedMarkerElement, InfoWindow };
-
         super.connect();
+    }
+
+    protected dispatchEvent(name: string, payload: Record<string, unknown> = {}): void {
+        this.dispatch(name, {
+            prefix: 'ux:map',
+            detail: {
+                ...payload,
+                google: _google,
+            },
+        });
     }
 
     protected doCreateMap({
@@ -77,7 +100,7 @@ export default class extends AbstractMapController<
         options.streetViewControl = typeof options.streetViewControlOptions !== 'undefined';
         options.fullscreenControl = typeof options.fullscreenControlOptions !== 'undefined';
 
-        return new library._Map(this.element, {
+        return new _google.maps.Map(this.element, {
             ...options,
             center,
             zoom,
@@ -89,7 +112,7 @@ export default class extends AbstractMapController<
     ): google.maps.marker.AdvancedMarkerElement {
         const { position, title, infoWindow, extra, rawOptions = {}, ...otherOptions } = definition;
 
-        const marker = new library.AdvancedMarkerElement({
+        const marker = new _google.maps.marker.AdvancedMarkerElement({
             position,
             title,
             ...otherOptions,
@@ -116,7 +139,7 @@ export default class extends AbstractMapController<
     }): google.maps.InfoWindow {
         const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
 
-        const infoWindow = new library.InfoWindow({
+        const infoWindow = new _google.maps.InfoWindow({
             headerContent: this.createTextOrElement(headerContent),
             content: this.createTextOrElement(content),
             ...otherOptions,

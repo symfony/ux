@@ -35,7 +35,6 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
     protected map: Map;
     protected markers: Array<Marker>;
     protected infoWindows: Array<InfoWindow>;
-    initialize(): void;
     connect(): void;
     protected abstract doCreateMap({ center, zoom, options, }: {
         center: Point | null;
@@ -53,5 +52,5 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
         marker: Marker;
     }): InfoWindow;
     protected abstract doFitBoundsToMarkers(): void;
-    private dispatchEvent;
+    protected abstract dispatchEvent(name: string, payload: Record<string, unknown>): void;
 }

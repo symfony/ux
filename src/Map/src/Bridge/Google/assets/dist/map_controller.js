@@ -1,24 +1,42 @@
 import AbstractMapController from '@symfony/ux-map/abstract-map-controller';
 import { Loader } from '@googlemaps/js-api-loader';
 
-let loader;
-let library;
+let _google;
 class default_1 extends AbstractMapController {
     async connect() {
-        if (!loader) {
-            loader = new Loader(this.providerOptionsValue);
+        if (!_google) {
+            _google = { maps: {} };
+            let { libraries = [], ...loaderOptions } = this.providerOptionsValue;
+            const loader = new Loader(loaderOptions);
+            libraries = ['core', ...libraries.filter((library) => library !== 'core')];
+            const librariesImplementations = await Promise.all(libraries.map((library) => loader.importLibrary(library)));
+            librariesImplementations.map((libraryImplementation, index) => {
+                const library = libraries[index];
+                if (['marker', 'places', 'geometry', 'journeySharing', 'drawing', 'visualization'].includes(library)) {
+                    _google.maps[library] = libraryImplementation;
+                }
+                else {
+                    _google.maps = { ..._google.maps, ...libraryImplementation };
+                }
+            });
         }
-        const { Map: _Map, InfoWindow } = await loader.importLibrary('maps');
-        const { AdvancedMarkerElement } = await loader.importLibrary('marker');
-        library = { _Map, AdvancedMarkerElement, InfoWindow };
         super.connect();
+    }
+    dispatchEvent(name, payload = {}) {
+        this.dispatch(name, {
+            prefix: 'ux:map',
+            detail: {
+                ...payload,
+                google: _google,
+            },
+        });
     }
     doCreateMap({ center, zoom, options, }) {
         options.zoomControl = typeof options.zoomControlOptions !== 'undefined';
         options.mapTypeControl = typeof options.mapTypeControlOptions !== 'undefined';
         options.streetViewControl = typeof options.streetViewControlOptions !== 'undefined';
         options.fullscreenControl = typeof options.fullscreenControlOptions !== 'undefined';
-        return new library._Map(this.element, {
+        return new _google.maps.Map(this.element, {
             ...options,
             center,
             zoom,
@@ -26,7 +44,7 @@ class default_1 extends AbstractMapController {
     }
     doCreateMarker(definition) {
         const { position, title, infoWindow, extra, rawOptions = {}, ...otherOptions } = definition;
-        const marker = new library.AdvancedMarkerElement({
+        const marker = new _google.maps.marker.AdvancedMarkerElement({
             position,
             title,
             ...otherOptions,
@@ -40,7 +58,7 @@ class default_1 extends AbstractMapController {
     }
     doCreateInfoWindow({ definition, marker, }) {
         const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
-        const infoWindow = new library.InfoWindow({
+        const infoWindow = new _google.maps.InfoWindow({
             headerContent: this.createTextOrElement(headerContent),
             content: this.createTextOrElement(content),
             ...otherOptions,
