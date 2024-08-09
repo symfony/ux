@@ -37,6 +37,10 @@ final readonly class GoogleRenderer extends AbstractRenderer
         private ?int $retries = null,
         private ?string $url = null,
         private ?string $version = null,
+        /**
+         * @var array<'core'|'maps'|'places'|'geocoding'|'routes'|'marker'|'geometry'|'elevation'|'streetView'|'journeySharing'|'drawing'|'visualization'>
+         */
+        private array $libraries = [],
     ) {
         parent::__construct($stimulusHelper);
     }
@@ -56,6 +60,7 @@ final readonly class GoogleRenderer extends AbstractRenderer
             'retries' => $this->retries,
             'url' => $this->url,
             'version' => $this->version,
+            'libraries' => $this->libraries,
         ]) + ['apiKey' => $this->apiKey];
     }
 
@@ -77,6 +82,7 @@ final readonly class GoogleRenderer extends AbstractRenderer
                 'retries' => $this->retries,
                 'url' => $this->url,
                 'version' => $this->version,
+                'libraries' => $this->libraries,
             ]))
         );
     }

@@ -66,8 +66,6 @@ export default abstract class<
     protected markers: Array<Marker> = [];
     protected infoWindows: Array<InfoWindow> = [];
 
-    initialize() {}
-
     connect() {
         const { center, zoom, options, markers, fitBoundsToMarkers } = this.viewValue;
 
@@ -136,7 +134,5 @@ export default abstract class<
 
     protected abstract doFitBoundsToMarkers(): void;
 
-    private dispatchEvent(name: string, payload: Record<string, unknown> = {}): void {
-        this.dispatch(name, { prefix: 'ux:map', detail: payload });
-    }
+    protected abstract dispatchEvent(name: string, payload: Record<string, unknown>): void;
 }

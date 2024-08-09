@@ -2,8 +2,16 @@ import { Application } from '@hotwired/stimulus';
 import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import AbstractMapController from '../src/abstract_map_controller.ts';
+import * as L from 'leaflet';
 
 class MyMapController extends AbstractMapController {
+    protected dispatchEvent(name: string, payload: Record<string, unknown> = {}): void {
+        this.dispatch(name, {
+            prefix: 'ux:map',
+            detail: payload,
+        });
+    }
+
     doCreateMap({ center, zoom, options }) {
         return { map: 'map', center, zoom, options };
     }

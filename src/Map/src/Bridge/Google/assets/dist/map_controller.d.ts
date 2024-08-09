@@ -7,8 +7,9 @@ export default class extends AbstractMapController<MapOptions, google.maps.Map, 
     static values: {
         providerOptions: ObjectConstructor;
     };
-    providerOptionsValue: Pick<LoaderOptions, 'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version'>;
+    providerOptionsValue: Pick<LoaderOptions, 'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version' | 'libraries'>;
     connect(): Promise<void>;
+    protected dispatchEvent(name: string, payload?: Record<string, unknown>): void;
     protected doCreateMap({ center, zoom, options, }: {
         center: Point | null;
         zoom: number | null;
