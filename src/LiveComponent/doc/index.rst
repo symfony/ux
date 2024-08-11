@@ -880,7 +880,7 @@ To add a custom Stimulus controller to your root component element:
 
 .. code-block:: html+twig
 
-    <div {{ attributes.defaults(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
+    <div {{ attributes.defaults(stimulus_controller('some-custom', { someValue: 'foo' })) }}>
 
 JavaScript Component Hooks
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
