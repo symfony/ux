@@ -10,8 +10,8 @@ export default class extends AbstractMapController<MapOptions, google.maps.Map, 
     providerOptionsValue: Pick<LoaderOptions, 'apiKey' | 'id' | 'language' | 'region' | 'nonce' | 'retries' | 'url' | 'version'>;
     connect(): Promise<void>;
     protected doCreateMap({ center, zoom, options, }: {
-        center: Point;
-        zoom: number;
+        center: Point | null;
+        zoom: number | null;
         options: MapOptions;
     }): google.maps.Map;
     protected doCreateMarker(definition: MarkerDefinition<google.maps.marker.AdvancedMarkerElementOptions, google.maps.InfoWindowOptions>): google.maps.marker.AdvancedMarkerElement;

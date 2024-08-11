@@ -3,8 +3,8 @@ import { Controller } from '@hotwired/stimulus';
 export type Point = { lat: number; lng: number };
 
 export type MapView<Options, MarkerOptions, InfoWindowOptions> = {
-    center: Point;
-    zoom: number;
+    center: Point | null;
+    zoom: number | null;
     fitBoundsToMarkers: boolean;
     markers: Array<MarkerDefinition<MarkerOptions, InfoWindowOptions>>;
     options: Options;
@@ -93,8 +93,8 @@ export default abstract class<
         zoom,
         options,
     }: {
-        center: Point;
-        zoom: number;
+        center: Point | null;
+        zoom: number | null;
         options: MapOptions;
     }): Map;
 

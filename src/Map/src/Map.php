@@ -85,16 +85,18 @@ final class Map
 
     public function toArray(): array
     {
-        if (null === $this->center) {
-            throw new InvalidArgumentException('The center of the map must be set.');
-        }
+        if (!$this->fitBoundsToMarkers) {
+            if (null === $this->center) {
+                throw new InvalidArgumentException('The map "center" must be explicitly set when not enabling "fitBoundsToMarkers" feature.');
+            }
 
-        if (null === $this->zoom) {
-            throw new InvalidArgumentException('The zoom of the map must be set.');
+            if (null === $this->zoom) {
+                throw new InvalidArgumentException('The map "zoom" must be explicitly set when not enabling "fitBoundsToMarkers" feature.');
+            }
         }
 
         return [
-            'center' => $this->center->toArray(),
+            'center' => $this->center?->toArray(),
             'zoom' => $this->zoom,
             'fitBoundsToMarkers' => $this->fitBoundsToMarkers,
             'options' => (object) ($this->options?->toArray() ?? []),

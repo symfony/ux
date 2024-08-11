@@ -35,11 +35,15 @@ export default class extends AbstractMapController<
         super.connect();
     }
 
-    protected doCreateMap({ center, zoom, options }: { center: Point; zoom: number; options: MapOptions }): LeafletMap {
+    protected doCreateMap({
+        center,
+        zoom,
+        options,
+    }: { center: Point | null; zoom: number | null; options: MapOptions }): LeafletMap {
         const map = createMap(this.element, {
             ...options,
-            center,
-            zoom,
+            center: center === null ? undefined : center,
+            zoom: zoom === null ? undefined : zoom,
         });
 
         createTileLayer(options.tileLayer.url, {

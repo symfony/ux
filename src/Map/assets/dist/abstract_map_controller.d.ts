@@ -4,8 +4,8 @@ export type Point = {
     lng: number;
 };
 export type MapView<Options, MarkerOptions, InfoWindowOptions> = {
-    center: Point;
-    zoom: number;
+    center: Point | null;
+    zoom: number | null;
     fitBoundsToMarkers: boolean;
     markers: Array<MarkerDefinition<MarkerOptions, InfoWindowOptions>>;
     options: Options;
@@ -38,8 +38,8 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
     initialize(): void;
     connect(): void;
     protected abstract doCreateMap({ center, zoom, options, }: {
-        center: Point;
-        zoom: number;
+        center: Point | null;
+        zoom: number | null;
         options: MapOptions;
     }): Map;
     createMarker(definition: MarkerDefinition<MarkerOptions, InfoWindowOptions>): Marker;

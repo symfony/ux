@@ -12,9 +12,9 @@ type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom'> & {
 };
 export default class extends AbstractMapController<MapOptions, typeof LeafletMap, MarkerOptions, Marker, Popup, PopupOptions> {
     connect(): void;
-    protected doCreateMap({ center, zoom, options }: {
-        center: Point;
-        zoom: number;
+    protected doCreateMap({ center, zoom, options, }: {
+        center: Point | null;
+        zoom: number | null;
         options: MapOptions;
     }): LeafletMap;
     protected doCreateMarker(definition: MarkerDefinition): Marker;

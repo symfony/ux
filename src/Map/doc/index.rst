@@ -78,8 +78,11 @@ A map is created by calling ``new Map()``. You can configure the center, zoom, a
         {
             // 1. Create a new map instance
             $myMap = (new Map());
+                // Explicitly set the center and zoom
                 ->center(new Point(46.903354, 1.888334))
                 ->zoom(6)
+                // Or automatically fit the bounds to the markers
+                ->fitBoundsToMarkers()
             ;
     
             // 2. You can add markers

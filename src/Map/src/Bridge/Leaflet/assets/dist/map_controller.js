@@ -13,11 +13,11 @@ class map_controller extends AbstractMapController {
         });
         super.connect();
     }
-    doCreateMap({ center, zoom, options }) {
+    doCreateMap({ center, zoom, options, }) {
         const map$1 = map(this.element, {
             ...options,
-            center,
-            zoom,
+            center: center === null ? undefined : center,
+            zoom: zoom === null ? undefined : zoom,
         });
         tileLayer(options.tileLayer.url, {
             attribution: options.tileLayer.attribution,

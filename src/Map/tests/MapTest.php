@@ -24,7 +24,7 @@ class MapTest extends TestCase
     public function testCenterValidation(): void
     {
         self::expectException(InvalidArgumentException::class);
-        self::expectExceptionMessage('The center of the map must be set.');
+        self::expectExceptionMessage('The map "center" must be explicitly set when not enabling "fitBoundsToMarkers" feature.');
 
         $map = new Map();
         $map->toArray();
@@ -33,12 +33,29 @@ class MapTest extends TestCase
     public function testZoomValidation(): void
     {
         self::expectException(InvalidArgumentException::class);
-        self::expectExceptionMessage('The zoom of the map must be set.');
+        self::expectExceptionMessage('The map "zoom" must be explicitly set when not enabling "fitBoundsToMarkers" feature.');
 
         $map = new Map(
             center: new Point(48.8566, 2.3522)
         );
         $map->toArray();
+    }
+
+    public function testZoomAndCenterCanBeOmittedIfFitBoundsToMarkers(): void
+    {
+        $map = new Map(
+            fitBoundsToMarkers: true
+        );
+
+        $array = $map->toArray();
+
+        self::assertSame([
+            'center' => null,
+            'zoom' => null,
+            'fitBoundsToMarkers' => true,
+            'options' => $array['options'],
+            'markers' => [],
+        ], $array);
     }
 
     public function testWithMinimumConfiguration(): void
