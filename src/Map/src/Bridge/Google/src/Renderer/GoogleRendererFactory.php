@@ -41,6 +41,7 @@ final class GoogleRendererFactory extends AbstractRendererFactory implements Ren
             retries: $dsn->getOption('retries'),
             url: $dsn->getOption('url'),
             version: $dsn->getOption('version', 'weekly'),
+            libraries: ['maps', 'marker', ...$dsn->getOption('libraries', [])],
         );
     }
 

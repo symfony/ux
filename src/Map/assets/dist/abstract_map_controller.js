@@ -6,7 +6,6 @@ class default_1 extends Controller {
         this.markers = [];
         this.infoWindows = [];
     }
-    initialize() { }
     connect() {
         const { center, zoom, options, markers, fitBoundsToMarkers } = this.viewValue;
         this.dispatchEvent('pre-connect', { options });
@@ -34,9 +33,6 @@ class default_1 extends Controller {
         this.dispatchEvent('info-window:after-create', { infoWindow, marker });
         this.infoWindows.push(infoWindow);
         return infoWindow;
-    }
-    dispatchEvent(name, payload = {}) {
-        this.dispatch(name, { prefix: 'ux:map', detail: payload });
     }
 }
 default_1.values = {
