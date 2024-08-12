@@ -290,13 +290,13 @@ Passing Extra Options to the Ajax-powered Autocomplete
 Autocomplete field options are not preserved when the field is rendered on an Ajax call. So, features like exclude some options
 based on the current form data are not possible by default. To partially avoid this limitation, the `extra_options` option was added.
 
-::warning
+.. warning::
 
-    Only scalar values (`string`, `integer`, `float`, `boolean`), `null` and `arrays` (consisted from the same types as mentioned before) can be passed as extra options.
+    Only scalar values (``string``, ``integer``, ``float``, ``boolean``), ``null`` and ``array`` (consisted from the same types as mentioned before) can be passed as extra options.
 
-Considering the following example, when the form type is rendered for the first time, it will use the `query_builder` defined
-while adding a `food` field to the `FoodForm`. However, when the Ajax is used to fetch the results, on the consequent renders,
-the default `query_builder` will be used::
+Considering the following example, when the form type is rendered for the first time, it will use the ``query_builder`` defined
+while adding a ``food`` field to the ``FoodForm``. However, when the Ajax is used to fetch the results, on the consequent renders,
+the default ``query_builder`` will be used::
 
     // src/Form/FoodForm.php
     // ...
@@ -323,8 +323,8 @@ the default `query_builder` will be used::
     }
 
 If some food can be consisted of other foods, we might want to exclude the "root" food from the list of available foods.
-To achieve this, we can remove the `query_builder` option from the above example and pass the `excluded_foods` extra option
-to the `FoodAutocompleteField`::
+To achieve this, we can remove the ``query_builder`` option from the above example and pass the ``excluded_foods`` extra option
+to the ``FoodAutocompleteField``::
 
     // src/Form/FoodForm.php
     // ...
@@ -345,8 +345,8 @@ to the `FoodAutocompleteField`::
         }
     }
 
-The magic of the `extra_options` is that it will be passed to the `FoodAutocompleteField` every time an Ajax call is made.
-So now, we can just use the `excluded_foods` extra option in the default `query_builder` of the `FoodAutocompleteField`::
+The magic of the ``extra_options`` is that it will be passed to the ``FoodAutocompleteField`` every time an Ajax call is made.
+So now, we can just use the ``excluded_foods`` extra option in the default ``query_builder`` of the ``FoodAutocompleteField``::
 
     // src/Form/FoodAutocompleteField.php
     // ...
@@ -602,7 +602,7 @@ If you need to pass extra options to the autocompleter, you can do so by impleme
 
 .. tip::
 
-    If you want to know **why** you might need to use the `extra options` feature, see :ref:`passing-extra-options-to-the-ajax-powered-autocomplete`.
+    If you want to know **why** you might need to use the ``extra_options`` feature, see :ref:`passing-extra-options-to-the-ajax-powered-autocomplete`.
 
 .. code-block:: diff
 
