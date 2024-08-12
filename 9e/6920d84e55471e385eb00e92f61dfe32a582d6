@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-08-09T21:25:18Z
+
+@simondaigre I didn't forget about you https://github.com/symfony/ux/pull/1937#issuecomment-2186490637 ;)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-08-10T05:46:59Z
+
+I've updated the PR to:
+1. not use the deprecated function `loader.load()`, instead I've used `loader.importLibrary()` but it requires to re-built the `google.maps` object structure ourselves (e.g.: you expect [`PinElement`](https://developers.google.com/maps/documentation/javascript/reference/advanced-markers#PinElement.element) to be accessed from `google.maps.marker.PinElement`, not from `google.maps.PinElement`)
+2. to reduce the number of function calls (`this.augmentEventPayload()`) when events are dispatched `N` times (`N = preconnect + connect + 2 * markers + 2 * infoWindows`). Using a protected property looks much more efficient.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-11T20:53:59Z
+
+Could you add some shared alias for `google` and `L` ?    Any better idea than `provider` or `service` ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-11T21:12:10Z
+
+I know this is some "last minute before release" PR, but let's try to not mix features (extra info, librairies configuration) and documentation (custom marker) for the next ones ;)
+
+That beeing said: thanks for the job again @Kocal !! Amazing
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-08-12T05:33:35Z
+
+> but let's try to not mix features (extra info, librairies configuration) and documentation (custom marker) for the next ones ;)
+
+I'm curious, how would you have done it? Dedicated PRs for:
+- Google Maps `librairies` configuration
+- `loader.load()` rework
+- abstracting `dispatchEvent`
+- `L` and `google` injection
+
+:eyes:
