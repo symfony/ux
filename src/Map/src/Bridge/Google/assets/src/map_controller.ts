@@ -67,8 +67,8 @@ export default class extends AbstractMapController<
         zoom,
         options,
     }: {
-        center: Point;
-        zoom: number;
+        center: Point | null;
+        zoom: number | null;
         options: MapOptions;
     }): google.maps.Map {
         // We assume the following control options are enabled if their options are set
