@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.20.0
+
+-  Add Anonymous Component support for 3rd-party bundles #2019
+
 ## 2.17.0
 
 -   Add nested attribute support #1405

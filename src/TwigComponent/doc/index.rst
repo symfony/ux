@@ -1622,6 +1622,42 @@ controls how components are named and where their templates live:
 If a component class matches multiple namespaces, the first matched will
 be used.
 
+3rd-Party Bundle
+~~~~~~~~~~~~~~~~
+
+The flexibility of Twig Components is extended even further when integrated
+with third-party bundles, allowing developers to seamlessly include pre-built
+components into their projects.
+
+Anonymous Components
+--------------------
+
+.. versionadded:: 2.20
+
+    The bundle convention for Anonymous components was added in TwigComponents 2.18.
+
+Using a component from a third-party bundle is just as straightforward as using
+one from your own application. Once the bundle is installed and configured, you
+can reference its components directly within your Twig templates:
+
+.. code-block:: html+twig
+
+    <twig:Shadcn:Button type="primary">
+        Click me
+    </twig:Shadcn:Button>
+
+Here, the component name is composed of the bundle's Twig namespace ``Shadcn``, followed
+by a colon, and then the component path Button.
+
+.. note::
+
+    You can discover the Twig namespace of every registered bundle by inspecting the
+    ``bin/console debug:twig`` command.
+
+The component must be located in the bundle's ``templates/components/`` directory. For
+example, the component referenced as ``<twig:Shadcn:Button>`` should have its template
+file at ``templates/components/Button.html.twig`` within the Shadcn bundle.
+
 Debugging Components
 --------------------
 
@@ -1635,13 +1671,14 @@ that live in ``templates/components/``:
     $ php bin/console debug:twig-component
 
     +---------------+-----------------------------+------------------------------------+------+
-    | Component     | Class                       | Template                           | Live |
+    | Component     | Class                       | Template                           | Type |
     +---------------+-----------------------------+------------------------------------+------+
     | Coucou        | App\Components\Alert        | components/Coucou.html.twig        |      |
-    | RandomNumber  | App\Components\RandomNumber | components/RandomNumber.html.twig  | X    |
+    | RandomNumber  | App\Components\RandomNumber | components/RandomNumber.html.twig  | Live |
     | Test          | App\Components\foo\Test     | components/foo/Test.html.twig      |      |
-    | Button        | Anonymous component         | components/Button.html.twig        |      |
-    | foo:Anonymous | Anonymous component         | components/foo/Anonymous.html.twig |      |
+    | Button        |                             | components/Button.html.twig        | Anon |
+    | foo:Anonymous |                             | components/foo/Anonymous.html.twig | Anon |
+    | Acme:Button   |                             | @Acme/components/Button.html.twig  | Anon |
     +---------------+-----------------------------+------------------------------------+------+
 
 Pass the name of some component as an argument to print its details:
@@ -1654,9 +1691,10 @@ Pass the name of some component as an argument to print its details:
     | Property                                          | Value                             |
     +---------------------------------------------------+-----------------------------------+
     | Component                                         | RandomNumber                      |
-    | Live                                              | X                                 |
     | Class                                             | App\Components\RandomNumber       |
     | Template                                          | components/RandomNumber.html.twig |
+    | Type                                              | Live                              |
+    +---------------------------------------------------+-----------------------------------+
     | Properties (type / name / default value if exist) | string $name = toto               |
     |                                                   | string $type = test               |
     | Live Properties                                   | int $max = 1000                   |
