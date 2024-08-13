@@ -21,19 +21,6 @@ class UxPackageRepository
     public function findAll(?string $query = null): array
     {
         $packages = [
-            (new UxPackage(
-                'turbo',
-                'Turbo',
-                'app_turbo',
-                '#5920A0',
-                'linear-gradient(95deg, #5920A0 -5%, #844EC9 105%)',
-                'Single-page Symfony app',
-                'Integration with Turbo for single-page-app and real-time experience',
-                'I need to transform my app into an SPA!'
-            ))
-                ->setDocsLink('https://turbo.hotwired.dev/handbook/introduction', 'Documentation specifically for the Turbo JavaScript library.')
-                ->setScreencastLink('https://symfonycasts.com/screencast/turbo', 'Go deep into all 3 parts of Turbo.'),
-
             new UxPackage(
                 'icons',
                 'UX Icons',
@@ -44,6 +31,19 @@ class UxPackageRepository
                 'Render SVG icons seamlessly from your Twig templates.',
                 'I need to render SVG icons.',
                 'icons.svg',
+            ),
+
+            new UxPackage(
+                'map',
+                'UX Map',
+                'app_map',
+                '#fff',
+                // 'linear-gradient(to bottom right, #58D984EB, #0083A2D1), #3386dfd4',
+                'linear-gradient(to bottom right, #1BA980, #209127 75%, #C0CB2A)',
+                'Interactive Maps',
+                'Render interactive Maps in PHP with Leaflet or Google Maps.',
+                'I need to display markers on a Map.',
+                'map.svg',
             ),
 
             new UxPackage(
@@ -67,6 +67,19 @@ class UxPackageRepository
                 'Build dynamic interfaces with zero JavaScript',
                 'I need Twig templates that update in real-time!'
             ),
+
+            (new UxPackage(
+                'turbo',
+                'Turbo',
+                'app_turbo',
+                '#5920A0',
+                'linear-gradient(95deg, #5920A0 -5%, #844EC9 105%)',
+                'Single-page Symfony app',
+                'Integration with Turbo for single-page-app and real-time experience',
+                'I need to transform my app into an SPA!'
+            ))
+                ->setDocsLink('https://turbo.hotwired.dev/handbook/introduction', 'Documentation specifically for the Turbo JavaScript library.')
+                ->setScreencastLink('https://symfonycasts.com/screencast/turbo', 'Go deep into all 3 parts of Turbo.'),
 
             new UxPackage(
                 'autocomplete',

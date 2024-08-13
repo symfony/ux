@@ -1,0 +1,44 @@
+{% extends 'ux_packages/package.html.twig' %}
+
+{% set package = 'map'|ux_package %}
+
+{% block package_header %}
+    <twig:Hero
+        eyebrows="Assert('Mapper')"
+        title="UX Map"
+        url="{{ url('app_map') }}"
+    >
+        Embed <code>interactive maps</code> in your Symfony application in a breeze!
+        <br />
+        Decouple your code from your map provider: <code>Google Maps</code>, <code>LeaftLet</code>.
+    </twig:Hero>
+{% endblock %}
+
+{% block code_block_left %}
+    <twig:CodeBlock filename="src/Controller/UxPackage/MapController.php" height="250px"/>
+{% endblock %}
+
+{% block code_block_right %}
+    <twig:CodeBlock
+        filename="templates/ux_packages/map.html.twig"
+        targetTwigBlock="demo_content"
+        height="250px"
+    />
+{% endblock %}
+
+{% block demo_title %}UX Map{% endblock %}
+
+{% block demo_content %}
+    <div>
+        {# The map must have a defined height #}
+        {{ render_map(map, {style: 'height: 600px;'}) }}
+    </div>
+{% endblock %}
+
+{% block package_install '' %}
+
+{% block package_links %}
+    {{ include('ux_packages/map/_aside.html.twig', {
+        package: 'map'|ux_package,
+    }) }}
+{% endblock %}

@@ -563,6 +563,15 @@
     "symfony/ux-lazy-image": {
         "version": "v2.1.1"
     },
+    "symfony/ux-leaflet-map": {
+        "version": "2.19",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.19",
+            "ref": "e696e4124071004125072f3b582a2b7e43ad58c1"
+        }
+    },
     "symfony/ux-live-component": {
         "version": "2.9999999",
         "recipe": {
@@ -573,6 +582,18 @@
         },
         "files": [
             "config/routes/ux_live_component.yaml"
+        ]
+    },
+    "symfony/ux-map": {
+        "version": "2.19",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "2.19",
+            "ref": "04de870967555f00bd82f542e9e2d29683c3d39e"
+        },
+        "files": [
+            "config/packages/ux_map.yaml"
         ]
     },
     "symfony/ux-notify": {

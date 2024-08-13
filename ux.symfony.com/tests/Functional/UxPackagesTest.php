@@ -36,6 +36,7 @@ class UxPackagesTest extends KernelTestCase
     public function testPackagePagesAllLoad(UxPackage $package, string $expectedText): void
     {
         $this->browser()
+            ->throwExceptions()
             ->visit('/'.$package->getName())
             ->assertSuccessful()
             ->assertSeeIn('title', $package->getHumanName())
@@ -58,7 +59,7 @@ class UxPackagesTest extends KernelTestCase
                 continue;
             }
 
-            yield $package->getName() => [$package, \sprintf('%s Docs', $package->getHumanName())];
+            yield $package->getName() => [$package, \sprintf('%s Doc', $package->getHumanName())];
         }
     }
 }
