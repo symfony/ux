@@ -1,0 +1,184 @@
+---------------------------------------------------------------------------
+
+by kbond at 2024-07-31T13:45:44Z
+
+Thanks @yceruto!
+
+Am I correct in that there are now two ways to override bundle component templates:
+1. `templates/components/Acme/Button.html.twig` ~(not possible to extend from the bundle's version)~
+2. `templates/bundles/AcmeBundle/components/Button.html.twig` (possible to extend bundle version with `@!` as normal)
+
+This does make me a little hesitant but what does everyone else think? I _think_, when we document, we only show (2) as the proper way to override a bundle's template as it's familiar.
+
+---------------------------------------------------------------------------
+
+by yceruto at 2024-07-31T13:50:19Z
+
+You are correct Kevin! This adds another way to override the bundle components, with the possibility to extend from the original one with `@Acme/` or `@!Acme/` directly (both will work in this case).
+
+I agree with you that we should not document it and keep the standard one for consistency.
+
+---------------------------------------------------------------------------
+
+by yceruto at 2024-07-31T13:55:46Z
+
+We could change the priority to avoid that, but I’m afraid it might break some apps already using a directory that matches a bundle namespace + template path.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-31T16:04:26Z
+
+First thing first: thank you @yceruto 🙇
+
+--
+
+Concerning the "extends", we need to tests a lot of differents scenario, because we use the "logical name" during embedding i think and not the full path.
+
+So i'm not entirely sure "bundles/AcmeBundle/components/Button.html.twig" and "@Acme/components/Button.html.twig" are considered the same template.
+
+Also, i'm not sure parent() will refer to the bundle original template ... because of the fake one we inject.
+
+--
+
+Currently, symfony use "Collector" or "Form" as directory names... should we use "Component" instead of "components" in the bundle structure ?
+
+Singular / plural ?
+
+Once we will open this it will be very very hard to change :)
+
+--
+
+Security point
+
+I also think we need _some_ BC break from now, because we allow any string as bundle name, and this can pose security risks (at least weird DX)..
+
+Not sure which but i remember at least one of these is problematic
+
+```twig
+<twig:Foo:: />
+
+<twig:..Foo:: />
+
+<twig:../Foo:: />
+```
+
+I suggest we allow only something that looks like a class name (the check may be done earlier in the renderer)
+
+If that's ok for you, i'll open another PR to discuss this and not pollute this one :)
+
+--
+
+After everything, thank you @yceruto ;)
+
+---------------------------------------------------------------------------
+
+by yceruto at 2024-07-31T17:18:42Z
+
+>Concerning the "extends", we need to tests a lot of differents scenario, because we use the "logical name" during embedding i think and not the full path.
+>
+>So i'm not entirely sure "bundles/AcmeBundle/components/Button.html.twig" and "@Acme/components/Button.html.twig" are considered the same template.
+>
+>Also, i'm not sure parent() will refer to the bundle original template ... because of the fake one we inject.
+
+As long as the template loading is done using the Twig template naming convention, everything should work. Once `Acme:Foo` is converted into `@Acme/components/foo.html.twig` and dumped into the cache, Twig does the rest. Do you have a case where this doesn't happen?
+
+>Currently, symfony use "Collector" or "Form" as directory names... should we use "Component" instead of "components" in the bundle structure ?
+>
+>Singular / plural ?
+>
+>Once we will open this it will be very very hard to change :)
+
+I've no strong opinion about it. Personally, I prefer a lowercase directory structure, even for bundles, but it's up to you. I used the plural form for consistency with the `anonymous_template_directory` default config.
+
+>Security point ...
+
+The security point is important, but I believe we should address that discussion in a separate PR.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-08-01T09:55:25Z
+
+Thanks @yceruto for this great PR! This is a solution I really believe in, but to give some more context 6 months ago I made a similar proposal and it was refused for several reasons:
+
+The bundle doesn't have controls over the components imported or not on the user side (everything is imported by default), and this may be something that the maintainer of the bundle doesn't want. Should we think about a way to exclude some components or not?
+
+This is why I ended up with this proposal a few months ago: https://github.com/symfony/ux/pull/1456.
+
+Should we still be concerned about this ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-01T11:14:28Z
+
+> This is why I ended up with this proposal a few months ago: https://github.com/symfony/ux/pull/1456.
+
+The discussion is the foundation of today's work! We agreed on the requirements and acted the "specs" @yceruto filled in this PR :)
+
+> this may be something that the maintainer of the bundle doesn't want.
+
+For class-based components, i would totally understand.
+For anonymous ones, as templates can already be included (every file in the templates directory can) by the user, i don't see a problem here, but i may not think of every case.
+
+Would you have an example scenario ?
+
+---------------------------------------------------------------------------
+
+by yceruto at 2024-08-01T12:44:42Z
+
+Thanks @WebMamba for your input!
+
+> The bundle doesn't have controls over the components imported or not on the user side (everything is imported by default), and this may be something that the maintainer of the bundle doesn't want. Should we think about a way to exclude some components or not?
+
+This is the case for all bundle templates, not just the component ones. Once they're in the templates directory, they become public. Even if some templates are not meant to be extended or used in applications, it's the user's decision and risk. I don't think we can/should prevent that.
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-08-01T14:15:59Z
+
+For me, this is completely fine! Everything is good for me!
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-08-01T18:04:39Z
+
+Yep, I totally agree, the opt-in occurs when an app _uses_ the anon component.
+
+@yceruto could you add the docs? I'm thinking a new _3rd Party Bundle_ section and a sub-section for anon components. We'll add to it once we figure out how to best provide class-based components.
+
+BTW, I think this opt-in strategy works just the same for class-based twig components. For live components, I was concerned about the security concern (someone being able to access the http endpoint for a component that isn't used) but I don't think that'll be an issue either. I forgot about the checksum, unless the end app actually renders a live component in twig, the checksum won't be valid. We'll need to confirm this of course.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-01T18:50:56Z
+
+We just forced a hardcoded namespace, we need to find something similar to register class-based
+
+This probably means not use the tag i guess ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-01T18:52:14Z
+
+Regarding Live component I think checking before would be nice indeed... I am not entirely sure checksum is used for actions for instance (with no changes).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-01T18:53:12Z
+
+Here also the tag must probably be ignore (at least partially) to prevent route or URL override
+
+---------------------------------------------------------------------------
+
+by yceruto at 2024-08-04T21:29:22Z
+
+Only the doc is left to complete, but I'm having trouble finishing it before next weekend. Feel free to take over if you want to move forward
+
+---------------------------------------------------------------------------
+
+by yceruto at 2024-08-10T16:37:39Z
+
+Update:
+ * Doc for 3rd-party Anon Component added
+ * Updated `debug:twig-component` command to display 3rd-party Anon components also. As well as adding support to debug Anon components from custom template paths (not only the default Twig path)
+
+This is ready for review!
