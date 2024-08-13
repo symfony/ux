@@ -5,6 +5,8 @@ image: images/cookbook/component-architecture.png
 tags: 
     - javascript
     - symfony
+author: Mathéo Daninos
+published_at: '2024-08-02'
 ---
 
 ## Introduction

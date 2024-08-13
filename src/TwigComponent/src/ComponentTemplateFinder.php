@@ -66,6 +66,16 @@ final class ComponentTemplateFinder implements ComponentTemplateFinderInterface
             return $template;
         }
 
+        $parts = explode('/', $componentPath, 2);
+        if (\count($parts) < 2) {
+            return null;
+        }
+
+        $template = '@'.$parts[0].'/components/'.$parts[1].'.html.twig';
+        if ($loader->exists($template)) {
+            return $template;
+        }
+
         return null;
     }
 }

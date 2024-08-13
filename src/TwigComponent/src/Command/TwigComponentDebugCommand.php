@@ -27,6 +27,7 @@ use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\Twig\PropsNode;
 use Twig\Environment;
+use Twig\Loader\FilesystemLoader;
 
 #[AsCommand(name: 'debug:twig-component', description: 'Display components and them usages for an application')]
 class TwigComponentDebugCommand extends Command
@@ -148,13 +149,46 @@ EOF
      */
     private function findAnonymousComponents(): array
     {
+        $componentsDir = $this->twigTemplatesPath.'/'.$this->anonymousDirectory;
+        $dirs = [$componentsDir => FilesystemLoader::MAIN_NAMESPACE];
+        $twigLoader = $this->twig->getLoader();
+        if ($twigLoader instanceof FilesystemLoader) {
+            foreach ($twigLoader->getNamespaces() as $namespace) {
+                if (str_starts_with($namespace, '!')) {
+                    continue; // ignore parent convention namespaces
+                }
+
+                foreach ($twigLoader->getPaths($namespace) as $path) {
+                    if (FilesystemLoader::MAIN_NAMESPACE === $namespace) {
+                        $componentsDir = $path.'/'.$this->anonymousDirectory;
+                    } else {
+                        $componentsDir = $path.'/components';
+                    }
+
+                    if (!is_dir($componentsDir)) {
+                        continue;
+                    }
+
+                    $dirs[$componentsDir] = $namespace;
+                }
+            }
+        }
+
         $components = [];
-        $anonymousPath = $this->twigTemplatesPath.'/'.$this->anonymousDirectory;
         $finderTemplates = new Finder();
-        $finderTemplates->files()->in($anonymousPath)->notPath('/_')->name('*.html.twig');
+        $finderTemplates->files()
+            ->in(array_keys($dirs))
+            ->notPath('/_')
+            ->name('*.html.twig')
+        ;
         foreach ($finderTemplates as $template) {
             $component = str_replace('/', ':', $template->getRelativePathname());
-            $component = substr($component, 0, -10);
+            $component = substr($component, 0, -10); // remove file extension ".html.twig"
+
+            if (isset($dirs[$template->getPath()]) && FilesystemLoader::MAIN_NAMESPACE !== $dirs[$template->getPath()]) {
+                $component = $dirs[$template->getPath()].':'.$component;
+            }
+
             $components[$component] = $component;
         }
 
