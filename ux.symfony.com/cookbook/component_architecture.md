@@ -3,20 +3,20 @@ title: Component architecture
 description: Rules and pattern to work with components
 image: images/cookbook/component-architecture.png
 tags: 
-    - javascript
-    - symfony
+    - JavaScript
+    - Symfony
 author: Mathéo Daninos
 published_at: '2024-08-02'
 ---
 
 ## Introduction
 
-In SymfonyUX exist two packages: [TwigComponents](https://symfony.com/bundles/ux-twig-component/current/index.html) and [LiveComponent](https://symfony.com/bundles/ux-live-component/current/index.html).
+In Symfony UX exist two packages: [TwigComponents](https://symfony.com/bundles/ux-twig-component/current/index.html) and [LiveComponent](https://symfony.com/bundles/ux-live-component/current/index.html).
 Those two packages allow you to create reusable components in your Symfony application.
-But the component architecture is not exclusive to Symfony, it is a design pattern that can be applied to any programming language or framework.
-And the js world already implement this architecture for long time, on many different frameworks like React, Vue, or Svelte.
-So, a set of rules and pattern has already be defined to work with components. This is why SymfonyUX try to be as close as possible to those rules.
-So let's see what are those rules!
+But the component architecture is not exclusive to Symfony, it's a design pattern that can be applied to any programming language or framework.
+And the Javascript world already implements this architecture for long time, on many different frameworks like React, Vue, or Svelte.
+So, a set of rules and patterns has already be defined to work with components. This is why Symfony UX tries to be as close as possible to those rules.
+So, let's see what those rules are!
 
 ## 4 Rules
 
@@ -43,27 +43,25 @@ Or you can make composition with the following syntax:
 
 ```twig
 <twig:Card>
-    <twig:CardHeader>
-        <h2>My Card</h2>
-    </twig:CardHeader>
-    <twig:CardBody>
-        <p>This is the content of my card.</p>
-    </twig:CardBody>
+    <twig:Icon name="info"/>
+    <twig:Button>
+        <twig:Icon name="close" />
+    </twig:Button>
 </twig:Card>
 ```
 
-So here we Card component, and we give to the content of this component mutliple other components.
+So here we have a Card component, and we give to the content of this component two other components.
 
 ### Independence
 
-This is a really important rule, and not obvious. But your component should leave on his own context,
-he should not be aware of the rest of the page. You should to talk one component into a page, to another and it should work exactly the same.
-This rule make your component trully reusable.
+This is a really important rule, and not obvious. But your component should live on his own context,
+it should not be aware of the rest of the page. You should be able to take a component into a page, from another and it should work exactly the same.
+This rule makes your component truly reusable.
 
 ***How does it work into Symfony?***
 
-Symfony keep the context of the page into the context of your component. So this your own responsability to follow this rules.
-But notice that if there are conflic between a variable from the context page and your component, your component context override the page context.
+Symfony keeps the context of the page into the context of your component. So this your own responsibility to follow those rules.
+But notice that if there are conflicts between a variable from the context page and your component, your component context overrides the page context.
 
 ### Props
 
@@ -119,7 +117,7 @@ And when the loading is done, the state `loading` can be set to `false` and the 
 
 ***How does it work into Symfony?***
 
-In symfony you 2 different approach to handle state. The first one is to use stimulus directly
+In Symfony you have two different approaches to handle state. The first one is to use stimulus directly
 in to your component. What we recommend to do is to set a controller stimulus at the root of your component.
 
 ```twig
@@ -161,9 +159,11 @@ the following component:
 #[AsLiveComponent]
 class Button
 {
-    #[LiveProp]
+    use DefaultActionTrait;
+    
     public int $clicks = 0;
 
+    #[LiveAction]
     public function increment()
     {
         $this->clicks++;
