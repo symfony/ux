@@ -2,7 +2,7 @@
     "name": "symfony/ux-google-map",
     "type": "symfony-ux-map-bridge",
     "description": "Symfony UX Map GoogleMaps Bridge",
-    "keywords": ["google-maps", "map", "symfony", "ux"],
+    "keywords": ["symfony-ux", "google-maps", "map"],
     "homepage": "https://symfony.com",
     "license": "MIT",
     "authors": [

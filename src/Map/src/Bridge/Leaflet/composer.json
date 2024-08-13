@@ -2,7 +2,7 @@
     "name": "symfony/ux-leaflet-map",
     "type": "symfony-ux-map-bridge",
     "description": "Symfony UX Map Leaflet Bridge",
-    "keywords": ["leaflet", "map", "symfony", "ux"],
+    "keywords": ["symfony-ux", "leaflet", "map"],
     "homepage": "https://symfony.com",
     "license": "MIT",
     "authors": [
