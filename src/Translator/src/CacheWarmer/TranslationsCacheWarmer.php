@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Translator\CacheWarmer;
 
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\CacheWarmer\CacheWarmerInterface;
 use Symfony\Component\Translation\TranslatorBagInterface;
 use Symfony\UX\Translator\TranslationsDumper;
@@ -25,6 +26,7 @@ class TranslationsCacheWarmer implements CacheWarmerInterface
     public function __construct(
         private ?TranslatorBagInterface $translatorBag,
         private TranslationsDumper $translationsDumper,
+        private readonly ?LoggerInterface $logger = null,
     ) {
     }
 
@@ -35,7 +37,8 @@ class TranslationsCacheWarmer implements CacheWarmerInterface
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
-        if ($this->translatorBag === null) {
+        if (null === $this->translatorBag) {
+            $this->logger?->warning('Translator bag not available');
             return [];
         }
         $this->translationsDumper->dump(

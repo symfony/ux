@@ -26,6 +26,7 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 service('translator')->nullOnInvalid(),
                 service('ux.translator.translations_dumper'),
+                service('logger')->ignoreOnInvalid(),
             ])
             ->tag('kernel.cache_warmer')
 

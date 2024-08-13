@@ -12,6 +12,7 @@
 namespace Symfony\UX\Translator\Tests\CacheWarmer;
 
 use PHPUnit\Framework\TestCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\TranslatorBag;
 use Symfony\UX\Translator\CacheWarmer\TranslationsCacheWarmer;
@@ -51,6 +52,28 @@ final class TranslationsCacheWarmerTest extends TestCase
         $translationsCacheWarmer = new TranslationsCacheWarmer(
             $translatorBag,
             $translationsDumperMock
+        );
+
+        $translationsCacheWarmer->warmUp(self::$cacheDir);
+    }
+
+    public function testWithoutTranslator()
+    {
+        $translationsDumperMock = $this->createMock(TranslationsDumper::class);
+        $translationsDumperMock
+            ->expects($this->never())
+            ->method('dump');
+
+        $loggerMock = $this->createMock(LoggerInterface::class);
+        $loggerMock
+            ->expects($this->once())
+            ->method('warning')
+            ->with('Translator bag not available');
+
+        $translationsCacheWarmer = new TranslationsCacheWarmer(
+            null,
+            $translationsDumperMock,
+            $loggerMock,
         );
 
         $translationsCacheWarmer->warmUp(self::$cacheDir);
