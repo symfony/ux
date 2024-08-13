@@ -24,7 +24,7 @@ return static function (ContainerConfigurator $container): void {
     $container->services()
         ->set('ux.translator.cache_warmer.translations_cache_warmer', TranslationsCacheWarmer::class)
             ->args([
-                service('translator'),
+                service('translator')->nullOnInvalid(),
                 service('ux.translator.translations_dumper'),
             ])
             ->tag('kernel.cache_warmer')

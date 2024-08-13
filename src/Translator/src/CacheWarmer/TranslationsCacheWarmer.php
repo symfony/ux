@@ -23,7 +23,7 @@ use Symfony\UX\Translator\TranslationsDumper;
 class TranslationsCacheWarmer implements CacheWarmerInterface
 {
     public function __construct(
-        private TranslatorBagInterface $translatorBag,
+        private ?TranslatorBagInterface $translatorBag,
         private TranslationsDumper $translationsDumper,
     ) {
     }
@@ -35,6 +35,9 @@ class TranslationsCacheWarmer implements CacheWarmerInterface
 
     public function warmUp(string $cacheDir, ?string $buildDir = null): array
     {
+        if ($this->translatorBag === null) {
+            return [];
+        }
         $this->translationsDumper->dump(
             ...$this->translatorBag->getCatalogues()
         );
