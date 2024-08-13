@@ -1,0 +1,44 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-30T20:19:06Z
+
+Cluster is common in design system and modern CSS layout compositions too ;)
+* https://design-system.w3.org/layouts/cluster.html
+* https://every-layout.dev/layouts/cluster/
+* https://chrisburnell.com/article/cluster-composition/
+
+A cluster is a bit more than an horizontal stack (but it would work here so i agree to use stack if you guys prefer)
+
+The idea is to start using some layout / composition utilities on one hand (dealing with spacing and alignments)... and components (dealing with their inside)
+
+Especially if we soon start using container queries..
+
+So for me a BadgeGroup would not really bring something to the table.
+
+(open to debate ofc)
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-07-31T17:48:48Z
+
+@smnandre thanks for sharing these resources. I was **very wrong** and indeed `cluster` is a common word related to CSS layouts. Cheers!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-31T18:18:48Z
+
+I was surprised and -as always- probably did express myself badly ..
+
+My intention was never to say you were _wrong_.. just wanted to bring some sources to illustrate.
+
+Really sorry if i have made you feel any other way.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-03T18:15:13Z
+
+> What do you think about adding the author also on the page metadata ?
+
+We can discuss it in another issue ? Or ill remove the badges from the cookbook for now.
+
+This PR was just about merging badge (and was originally intended for the démos).
