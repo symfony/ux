@@ -1,0 +1,50 @@
+// -----------------------------------------------------------------
+// Badge
+// -----------------------------------------------------------------
+
+.Badge {
+  background: #1D1F23;
+  padding: .2rem .75rem;
+  border-radius: .5rem;
+  display: inline-flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  border: 1px solid #141415;
+  font-size: .8rem;
+  gap: .5rem;
+  position: relative;
+}
+
+.Badge__label {
+  font-stretch: condensed;
+  text-transform: uppercase;
+  color: #fff;
+  font-weight: lighter;
+  font-size: smaller;
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+
+  &:after {
+    content: ":";
+    opacity: .5;
+    margin-left: -.25rem;
+  }
+}
+
+.Badge__icon {
+  width: 1em;
+  height: 1em;
+  margin-block-start: -0.125em;
+}
+
+.Badge__value {
+  color: #81ADB5;
+  font-weight: normal;
+
+  a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
+}

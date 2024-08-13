@@ -61,10 +61,12 @@
 
 // Layouts
 @import "layouts/container";
+@import "layouts/cluster";
 @import "layouts/grid";
 @import "layouts/section";
 
 // Components
+@import "components/Badge";
 @import "components/Banner";
 @import "components/Browser";
 @import "components/Changelog";
