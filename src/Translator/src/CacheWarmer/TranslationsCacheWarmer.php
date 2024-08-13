@@ -39,6 +39,7 @@ class TranslationsCacheWarmer implements CacheWarmerInterface
     {
         if (null === $this->translatorBag) {
             $this->logger?->warning('Translator bag not available');
+
             return [];
         }
         $this->translationsDumper->dump(
