@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-03T18:21:11Z
+
+Some things i noticed while coding the render:
+
+The last code block will not work (wrong data attribute).
+
+Some name with incorrect case (Symfony, UX, JS)
+
+Some these/those i think.
+
+The example with Header/Body to change, as they are slots/blocks and no isolated component (maybe use a button with an Icon inside?)
+
+I'll make another review before monday :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-08-04T09:52:26Z
+
+I believe my comments can be replaced by an automatic tool, do you think we can use https://github.com/get-alex/alex or https://github.com/textlint/textlint or https://github.com/huacnlee/autocorrect or anything better?
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-08-13T10:37:39Z
+
+Thanks a lot, @Kocal! I am so bad at spelling 😭
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-08-13T13:54:53Z
+
+Thanks a lot @smnandre! All fixed!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-13T15:25:29Z
+
+Thanks you !! Let's merge this and we can iterate next to add features, tags, etc etc !!
+
+👏
