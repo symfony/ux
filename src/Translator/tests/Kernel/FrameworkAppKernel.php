@@ -38,10 +38,6 @@ class FrameworkAppKernel extends Kernel
                 'secret' => '$ecret',
                 'test' => true,
                 'translator' => [
-                    'enabled' => match ($this->environment) {
-                        'test_without_translator' => false,
-                        default => true,
-                    },
                     'fallbacks' => ['en'],
                 ],
                 'http_method_override' => false,
