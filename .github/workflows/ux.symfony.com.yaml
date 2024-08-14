@@ -4,9 +4,15 @@ on:
     push:
         paths:
             - 'ux.symfony.com/**'
+            - 'src/*/**'
+            - '!src/*/doc/**'
+            - '.github/**'
     pull_request:
         paths:
             - 'ux.symfony.com/**'
+            - 'src/*/**'
+            - '!src/*/doc/**'
+            - '.github/**'
 
 jobs:
 
@@ -58,10 +64,18 @@ jobs:
             -   uses: shivammathur/setup-php@v2
                 with:
                     php-version: '8.3'
+            -   name: Install root dependencies
+                uses: ramsey/composer-install@v3
+                with:
+                    working-directory: ${{ github.workspace }}
+            -   name: Build root packages
+                run: php .github/build-packages.php
+                working-directory: ${{ github.workspace }}
             -   name: Install dependencies
                 uses: ramsey/composer-install@v3
                 with:
                     working-directory: ux.symfony.com
+                    dependency-versions: 'highest'
             -   name: Importmap dependencies
                 run: php bin/console importmap:install
             -   name: Build Sass assets
