@@ -77,7 +77,7 @@ A map is created by calling ``new Map()``. You can configure the center, zoom, a
         public function __invoke(): Response
         {
             // 1. Create a new map instance
-            $myMap = (new Map());
+            $myMap = (new Map())
                 // Explicitly set the center and zoom
                 ->center(new Point(46.903354, 1.888334))
                 ->zoom(6)
