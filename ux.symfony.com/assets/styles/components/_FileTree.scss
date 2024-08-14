@@ -8,7 +8,8 @@
 .FileTree li > span {
   display: flex;
   flex-direction: row;
-  gap: 1rem;
+  align-items: center;
+  gap: .75rem;
 }
 
 .FileTree-main::before {
@@ -44,4 +45,3 @@
   left: 0;
   z-index: -1;
 }
-
