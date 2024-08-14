@@ -1,7 +1,7 @@
 # Symfony UX Swup
 
 Symfony UX Swup is a Symfony bundle integrating [Swup](https://swup.js.org/) in
-Symfony applications. It is part of [the Symfony UX initiative](https://symfony.com/ux).
+Symfony applications. It is part of [the Symfony UX initiative](https://ux.symfony.com/).
 
 Swup is a complete and easy to use page transition library for Web applications. It creates
 a Single Page Application feel to Web applications without having to change anything on the server

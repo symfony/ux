@@ -257,7 +257,7 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html.
 
 .. _`Chart.js`: https://www.chartjs.org
-.. _`the Symfony UX initiative`: https://symfony.com/ux
+.. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _`Chart.js documentation`: https://www.chartjs.org/docs/latest/
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`a lot of plugins`: https://github.com/chartjs/awesome#plugins

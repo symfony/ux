@@ -150,6 +150,6 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`Cropper.js`: https://fengyuanchen.github.io/cropperjs/
-.. _`the Symfony UX initiative`: https://symfony.com/ux
+.. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _`the Cropper.js options`: https://github.com/fengyuanchen/cropperjs/blob/main/README.md#options
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html

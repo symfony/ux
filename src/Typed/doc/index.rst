@@ -152,6 +152,6 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`Typed`: https://github.com/mattboldt/typed.js/blob/master/README.md
-.. _`the Symfony UX initiative`: https://symfony.com/ux
+.. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _`typed library`: https://github.com/mattboldt/typed.js/blob/master/README.md
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html

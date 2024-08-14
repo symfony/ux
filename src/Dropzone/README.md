@@ -1,7 +1,7 @@
 # Symfony UX Dropzone
 
 Symfony UX Dropzone is a Symfony bundle providing light dropzones for file inputs
-in Symfony Forms. It is part of [the Symfony UX initiative](https://symfony.com/ux).
+in Symfony Forms. It is part of [the Symfony UX initiative](https://ux.symfony.com/).
 
 It allows visitors to drag and drop files into a container instead of having
 to browse their computer for a file.

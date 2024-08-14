@@ -824,7 +824,7 @@ transports::
     {
         public function broadcast(object $entity, string $action): void
         {
-            // This method will be called everytime an object marked with the #[Broadcast] attribute is changed
+            // This method will be called every time an object marked with the #[Broadcast] attribute is changed
             $attribute = (new \ReflectionClass($entity))->getAttributes(Broadcast::class)[0] ?? null;
             // ...
         }
@@ -880,7 +880,7 @@ Symfony UX Turbo has been created by `Kévin Dunglas`_. It has been inspired by
 `hotwired/turbo-rails`_ and `sroze/live-twig`_.
 
 .. _`Hotwire Turbo`: https://turbo.hotwired.dev
-.. _`the Symfony UX initiative`: https://symfony.com/ux
+.. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _`Single Page Applications`: https://en.wikipedia.org/wiki/Single-page_application
 .. _`Symfony Mercure`: https://symfony.com/doc/current/mercure.html
 .. _`Turbo Screencast on SymfonyCasts`: https://symfonycasts.com/screencast/turbo

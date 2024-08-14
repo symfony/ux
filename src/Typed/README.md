@@ -1,7 +1,7 @@
 # Symfony UX Typed
 
 Symfony UX Typed is a Symfony bundle integrating [Typed](https://github.com/mattboldt/typed.js/blob/master/README.md) in
-Symfony applications. It is part of [the Symfony UX initiative](https://symfony.com/ux).
+Symfony applications. It is part of [the Symfony UX initiative](https://ux.symfony.com/).
 
 Typed is a complete and easy to use animated typed texts.
 Just enter the strings you want to see typed, and it goes live without complexity.
