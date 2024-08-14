@@ -71,10 +71,6 @@ For a better developer experience, TypeScript types definitions are also generat
 Then, you will be able to import those JavaScript translations in your assets.
 Don't worry about your final bundle size, only the translations you use will be included in your final bundle, thanks to the `tree shaking <https://webpack.js.org/guides/tree-shaking/>`_.
 
-.. note::
-
-    This package requires the `translator` to be enabled in your Symfony application. If you don't use the `translator` service, the warmup command will not generate any translations.
-
 Configuring the dumped translations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
