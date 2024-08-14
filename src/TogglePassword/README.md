@@ -1,7 +1,7 @@
 # Symfony UX TogglePassword
 
 Symfony UX TogglePassword is a Symfony bundle providing visibility toggle for password inputs
-in Symfony Forms. It is part of [the Symfony UX initiative](https://symfony.com/ux).
+in Symfony Forms. It is part of [the Symfony UX initiative](https://ux.symfony.com/).
 
 It allows visitors to switch the type of password field to text and vice versa.
 

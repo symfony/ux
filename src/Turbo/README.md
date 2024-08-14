@@ -1,7 +1,7 @@
 # Symfony UX Turbo
 
 Symfony UX Turbo is a Symfony bundle integrating the [Hotwire Turbo](https://turbo.hotwired.dev)
-library in Symfony applications. It is part of [the Symfony UX initiative](https://symfony.com/ux).
+library in Symfony applications. It is part of [the Symfony UX initiative](https://ux.symfony.com/).
 
 Symfony UX Turbo allows having the same user experience as with [Single Page Apps](https://en.wikipedia.org/wiki/Single-page_application)
 but without having to write a single line of JavaScript!

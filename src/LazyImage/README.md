@@ -1,7 +1,7 @@
 # Symfony UX LazyImage
 
 Symfony UX LazyImage is a Symfony bundle providing utilities to improve
-image loading performance. It is part of [the Symfony UX initiative](https://symfony.com/ux).
+image loading performance. It is part of [the Symfony UX initiative](https://ux.symfony.com/).
 
 It provides two key features:
 

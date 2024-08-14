@@ -249,7 +249,7 @@ This bundle aims at following the same Backward Compatibility promise as
 the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
-.. _`the Symfony UX initiative`: https://symfony.com/ux
+.. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _`BlurHash implementation`: https://blurha.sh
 .. _`StimulusBundle`: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html

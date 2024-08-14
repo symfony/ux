@@ -188,6 +188,6 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`Vue.js`: https://vuejs.org/
-.. _`the Symfony UX initiative`: https://symfony.com/ux
+.. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _ `the related section of the documentation`: https://symfony.com/doc/current/frontend/encore/vuejs.html
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html

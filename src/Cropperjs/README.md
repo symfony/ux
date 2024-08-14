@@ -1,7 +1,7 @@
 # Symfony UX Cropper.js
 
 Symfony UX Cropper.js is a Symfony bundle integrating the [Cropper.js](https://fengyuanchen.github.io/cropperjs/)
-library in Symfony applications. It is part of [the Symfony UX initiative](https://symfony.com/ux).
+library in Symfony applications. It is part of [the Symfony UX initiative](https://ux.symfony.com/).
 
 **This repository is a READ-ONLY sub-tree split**. See
 https://github.com/symfony/ux to create issues or submit pull requests.
