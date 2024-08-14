@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-14T11:45:25Z
+
+I think we need both (one to check all components with their "current dev version"... but also one like before, to simulate if aa user checks @dev with stable components), no ?
+
+(not for the ux website probably, but the build package is used for all tests right ? )
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-08-14T12:00:04Z
+
+> I think we need both (one to check all components with their "current dev version"... but also one like before, to simulate if aa user checks @dev with stable components), no ?
+
+Nothing changed here, packages tests are still running like before (by using the "local" packages).
+
+This same behaviour has been applied to ux.symfony.com project to take advantage of installing (and testing a bit) our UX packages in a real application.
