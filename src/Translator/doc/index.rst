@@ -73,7 +73,7 @@ Don't worry about your final bundle size, only the translations you use will be 
 
 .. note::
 
-    This package requires the ``translator`` to be enabled in your Symfony application. If you don't use the `translator` package, the warmup command will not generate any translations.
+    This package requires the ``translator`` package to be enabled in your Symfony application. If you don't use the ``translator`` package, the warmup command will not generate any translations.
 
 Configuring the dumped translations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
