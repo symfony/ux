@@ -77,10 +77,6 @@
   justify-content: center;
   flex-shrink: 0;
 
-  [data-bs-theme="dark"] & {
-    background-blend-mode: darken;
-  }
-
   img {
     width: calc(0.4 * var(--logo-size));
     height: auto;

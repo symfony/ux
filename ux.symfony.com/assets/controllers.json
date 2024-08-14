@@ -42,6 +42,12 @@
                 "fetch": "lazy"
             }
         },
+        "@symfony/ux-leaflet-map": {
+            "map": {
+                "enabled": true,
+                "fetch": "lazy"
+            }
+        },
         "@symfony/ux-live-component": {
             "live": {
                 "enabled": true,

@@ -190,4 +190,17 @@ return [
     'chart.js' => [
         'version' => '4.4.3',
     ],
+    '@symfony/ux-map/abstract-map-controller' => [
+        'path' => './vendor/symfony/ux-map/assets/dist/abstract_map_controller.js',
+    ],
+    'leaflet' => [
+        'version' => '1.9.4',
+    ],
+    'leaflet/dist/leaflet.min.css' => [
+        'version' => '1.9.4',
+        'type' => 'css',
+    ],
+    '@symfony/ux-leaflet-map/map-controller' => [
+        'path' => './vendor/symfony/ux-leaflet-map/assets/dist/map_controller.js',
+    ],
 ];

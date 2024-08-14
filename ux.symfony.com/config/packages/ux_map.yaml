@@ -1,0 +1,3 @@
+ux_map:
+    # https://symfony.com/bundles/ux-map/current/index.html#available-renderers
+    renderer: '%env(resolve:default::UX_MAP_DSN)%'

@@ -31,14 +31,16 @@
     {% block package_content %}
         <section class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
             <div class="arrow mb-3 d-none d-md-block"></div>
-            <div class="row mb-5">
-                <div class="col-12 col-md-6">
-                    {% block code_block_left %}{% endblock %}
+            {% block package_code_blocks %}
+                <div class="row mb-5">
+                    <div class="col-12 col-md-6">
+                        {% block code_block_left %}{% endblock %}
+                    </div>
+                    <div class="col-12 col-md-6 mt-3 mt-md-0">
+                        {% block code_block_right %}{% endblock %}
+                    </div>
                 </div>
-                <div class="col-12 col-md-6 mt-3 mt-md-0">
-                    {% block code_block_right %}{% endblock %}
-                </div>
-            </div>
+            {% endblock %}
             {% block package_demo %}
                 {% if block('demo_title') is defined %}
                     {% set demo_title = block('demo_title') %}
