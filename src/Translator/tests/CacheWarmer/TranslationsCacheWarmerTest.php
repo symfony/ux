@@ -14,6 +14,7 @@ namespace Symfony\UX\Translator\Tests\CacheWarmer;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Translation\MessageCatalogue;
+use Symfony\Component\Translation\Translator;
 use Symfony\Component\Translation\TranslatorBag;
 use Symfony\UX\Translator\CacheWarmer\TranslationsCacheWarmer;
 use Symfony\UX\Translator\TranslationsDumper;
