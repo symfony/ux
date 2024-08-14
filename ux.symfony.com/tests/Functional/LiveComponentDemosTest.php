@@ -19,7 +19,7 @@ use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-use function Zenstruck\Foundry\create;
+use function Zenstruck\Foundry\Persistence\persist_proxy;
 
 class LiveComponentDemosTest extends KernelTestCase
 {
@@ -32,7 +32,7 @@ class LiveComponentDemosTest extends KernelTestCase
      */
     public function setupEntities(): void
     {
-        create(Food::class, ['name' => 'Pizza', 'votes' => 10]);
+        persist_proxy(Food::class, ['name' => 'Pizza', 'votes' => 10]);
     }
 
     /**
