@@ -1,0 +1,51 @@
+---------------------------------------------------------------------------
+
+by SanderVerkuil at 2024-08-13T22:48:15Z
+
+Yikes, this use case should've been found I recon. The interesting thing now is, that there are essentially two things (that appear to be conflicting). On the one hand, we have the issue mentioned in #2056 being caused by, what appears to be, people not having the `translator` service defined, and on the other hand #1962 where the `translator` is defined, but is being defined as the Identity translator, which causes the crash mentioned.
+
+Wouldn't it be better to write a separate test-case that reproduces #2056 and fix that, while also still having the test passing for #1962? I'll see whether I can get a MR ready.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-13T23:06:55Z
+
+It appears no one has the `translator` service anymore, as @MatTheCat reported (and we reproduced the same thing with @kbond & @Kocal )
+
+So we need to revert asap (this could impact apps in production)
+
+We also realize we need to improve testing in the CI as we did not saw this coming.
+
+One solution we talked about would be to pass a simple TranslatorInterface to the cachewarmer and exit early if this is not a TranslatorBagInterface
+
+---------------------------------------------------------------------------
+
+by SanderVerkuil at 2024-08-13T23:10:01Z
+
+@smnandre I thought that might work as well, though the `TranslatorBag` does not extend/implement the `TranslatorInterface`. So when injecting the `TranslatorInterface`, it could be that it won't extend the `TranslatorBag`.
+
+I'm currently trying to see whether I can remove the compiler pass, and make the TranslatorBag nullable/optional.
+
+@smnandre But if the `translator` service is not available, how does the `service('translator')` method in the `services.php` find the correct dependency?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-13T23:33:21Z
+
+>  But if the `translator` service is not available, how does the `service('translator')` method in the `services.php` find the correct dependency?
+
+That's what @MatTheCat explained in #2056
+
+> The culprit seems to be #1965: our `translator` service is an alias of `translation.default`, so `TranslatorCompilerPass::hasValidTranslator` returns `false` because `ContainerBuilder::hasDefinition` does not check aliases.
+
+--
+
+> So when injecting the TranslatorInterface, it could be that it won't extend the TranslatorBag.
+
+That would be the point. Warmer would only dump files if given a TranslatorInterface&TranslatorBagInterface
+
+---------------------------------------------------------------------------
+
+by SanderVerkuil at 2024-08-13T23:39:59Z
+
+Ah alright, fair enought. I've created a separate MR that should fix it, by making the `Translator` nullable. See #2061, and please let me know whether this would be an appropriate fix.
