@@ -3,15 +3,18 @@
 {% set package = 'map'|ux_package %}
 
 {% block package_header %}
-    <twig:Hero
-        eyebrows="Assert('Mapper')"
-        title="UX Map"
-        url="{{ url('app_map') }}"
-    >
-        Embed <code>interactive maps</code> in your Symfony application in a breeze!
-        <br />
-        Decouple your code from your map provider: <code>Google Maps</code>, <code>LeaftLet</code>.
-    </twig:Hero>
+    {% component PackageHeader with {
+        package: 'map',
+        eyebrowText: 'Seamless Maps Integration',
+    } %}
+        {% block title_header %}
+            Embed <em>interactive maps</em> in a breeze!
+        {% endblock %}
+
+        {% block sub_content %}
+            Decouple your code from your map provider: <em>Google Maps</em>, <em>LeaftLet</em>.
+        {% endblock %}
+    {% endcomponent %}
 {% endblock %}
 
 {% block code_block_left %}
