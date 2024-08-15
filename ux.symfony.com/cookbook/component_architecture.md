@@ -1,6 +1,6 @@
 ---
-title: Component architecture
-description: Rules and pattern to work with components
+title: Component Architecture
+description: Rules and patterns for working with components
 image: images/cookbook/component-architecture.png
 tags: 
     - JavaScript
@@ -11,25 +11,25 @@ published_at: '2024-08-02'
 
 ## Introduction
 
-In Symfony UX exist two packages: [TwigComponents](https://symfony.com/bundles/ux-twig-component/current/index.html) and [LiveComponent](https://symfony.com/bundles/ux-live-component/current/index.html).
-Those two packages allow you to create reusable components in your Symfony application.
-But the component architecture is not exclusive to Symfony, it's a design pattern that can be applied to any programming language or framework.
-And the Javascript world already implements this architecture for long time, on many different frameworks like React, Vue, or Svelte.
-So, a set of rules and patterns has already be defined to work with components. This is why Symfony UX tries to be as close as possible to those rules.
-So, let's see what those rules are!
+In Symfony UX, there are two packages: [TwigComponents](https://symfony.com/bundles/ux-twig-component/current/index.html) and [LiveComponent](https://symfony.com/bundles/ux-live-component/current/index.html).
+These packages allow you to create reusable components in your Symfony application.
+However, component architecture is not exclusive to Symfony; it's a design pattern that can be applied to any programming language or framework.
+The JavaScript world has implemented this architecture for a long time, across many frameworks like React, Vue, or Svelte.
+A set of rules and patterns has already been defined for working with components. This is why Symfony UX tries to adhere closely to these rules.
+Let's explore what these rules are!
 
 ## 4 Rules
 
 ### Composition
 
-A page is no longer just a page, but rather a collection of small, reusable components. 
-These components can be assembled to form a page. For example, there could be a component for the title and another for the training list. 
-The training list component could even be composed of smaller components, such as a training card component. 
-The goal is to create the most atomic, and reusable components possible.
+A page is no longer just a page but rather a collection of small, reusable components.
+These components can be assembled to form a page. For example, there could be a component for the title and another for the training list.
+The training list component could even be composed of smaller components, such as a training card component.
+The goal is to create the most atomic and reusable components possible.
 
-#### How does it work into Symfony?
+***How does it work in Symfony?***
 
-In Symfony you can have a component Alert for example with the following template:
+In Symfony, you can have an `Alert` component, for example, with the following template:
 
 ```twig
 <div class="alert alert-{{ type }}">
@@ -38,8 +38,8 @@ In Symfony you can have a component Alert for example with the following templat
 </div>
 ```
 
-So here you can see we have an alert component that his himself use an Icon component.
-Or you can make composition with the following syntax:
+So here you can see we have an `Alert` component that itself uses an Icon component.
+Or you can compose with the following syntax:
 
 ```twig
 <twig:Card>
@@ -50,30 +50,29 @@ Or you can make composition with the following syntax:
 </twig:Card>
 ```
 
-So here we have a Card component, and we give to the content of this component two other components.
+So here we have a `Card` component, and we provide the content of this component with two other components.
 
 ### Independence
 
-This is a really important rule, and not obvious. But your component should live on his own context,
-it should not be aware of the rest of the page. You should be able to take a component into a page, from another and it should work exactly the same.
+This is a really important rule and not an obvious one. Your component should live in its own context; it
+should not be aware of the rest of the page. You should be able to take a component from one page to another, and it should work exactly the same.
 This rule makes your component truly reusable.
 
-***How does it work into Symfony?***
+***How does it work in Symfony?***
 
-Symfony keeps the context of the page into the context of your component. So this your own responsibility to follow those rules.
-But notice that if there are conflicts between a variable from the context page and your component, your component context overrides the page context.
+Symfony keeps the context of the page within the context of your component. So it is your own responsibility to follow these rules.
+Note that if there are conflicts between a variable from the context page and your component, your component context overrides the page context.
 
 ### Props
 
-Our component must remain independent, but we can customize it props. 
-Let's take the example of a button component. You have your component that look on every page the same,
-the only change is the label. What you can do is to declare a prop `label` into your button component.
-And so now when you want to use your button component, you can pass the label you want as props. The component gonna take
-this props at his initialization and keep it all his life long.
+Our component must remain independent, but we can customize its props.
+For example, consider a button component. You want your component to look the same on every page, with the only change being the label. 
+To do this, you can declare a `label` prop in your button component.
+When you use your button component, you can pass the label you want as a prop. The component will take this prop at initialization and keep it throughout its lifecycle.
 
-***How does it work into Symfony?***
+***How does it work in Symfony?***
 
-Let's take the example of the Alert component an [anonymous component](https://symfony.com/bundles/ux-twig-component/current/index.html#anonymous-components).
+Let's take the example of the `Alert` component as an [anonymous component](https://symfony.com/bundles/ux-twig-component/current/index.html#anonymous-components).
 We have the following template:
 
 ```twig
@@ -85,16 +84,16 @@ We have the following template:
 </div>
 ```
 
-Just like that we define three props for our Alert component. And know we can use like this:
+Just like that, we define three props for our `Alert` component. We can now use it like this:
 
 ```twig
 <twig:Alert type="success" icon="check" message="Your account has been created." />
 ```
 
-If your component anonymous but a class component, you can simply define props
-by adding property to your class.
+If your component is not anonymous but a class component, you can define props by adding properties to your class.
 
 ```php
+#[AsTwigComponent]
 class Alert
 {
     public string $type;
@@ -103,35 +102,32 @@ class Alert
 }
 ```
 
-There are something really important to notice with props. It's your props
-should only go into one direction from the parent to child. But your props should never
-go up. **If your child need to change something in the parent, you should use events**.
+There is something important to note with props: They should only flow in one direction, from parent to child. Props should never go up. **If your child needs to change something in the parent, you should use events.**
 
 ### State
 
-A state is pretty much like a prop but the main difference is a state can 
+A state is pretty much like a prop, but the main difference is that a state can 
 change during the life of the component. Let's take the example of a button component.
-You can have a state `loading` that can be `true` or `false`. When the button is clicked
-the state `loading` can be set to `true` and the button can display a loader instead of the label.
-And when the loading is done, the state `loading` can be set to `false` and the button can display the label again.
+You can have a `loading` state that can be `true` or `false`. When the button is clicked
+the `loading` state can be set to `true`, and the button can display a loader instead of the label.
+When the loading is done, the `loading` state can be set to `false`, and the button can display the label again.
 
-***How does it work into Symfony?***
+***How does it work in Symfony?***
 
-In Symfony you have two different approaches to handle state. The first one is to use stimulus directly
-in to your component. What we recommend to do is to set a controller stimulus at the root of your component.
+In Symfony, you have two different approaches to handle state. The first is to use Stimulus directly in your component. We recommend setting a Stimulus controller at the root of your component.
 
 ```twig
 {% props label %}
 
-<button data-controller="button" data-button-label="{{ label }}">
+<button data-controller="button" data-button-label-value="{{ label }}">
     {{ label }}
 </button>
 ```
 
-And then you can define your controller like this:
+Then, you can define your controller like this:
 
 ```js
-import { Controller } from 'stimulus';
+import { Controller } from '@hotwired/stimulus';
 
 export default class extends Controller {
     static values = { label: String };
@@ -147,11 +143,11 @@ export default class extends Controller {
 ```
 
 The second approach is to use the [LiveComponent](https://symfony.com/bundles/ux-live-component/current/index.html) package.
-How to choose between the two? If your component don't need any backend logic 
-for his state keep it simple and use stimulus approach. But if you need to handle
+How to choose between the two? If your component doesn't need any backend logic 
+for its state, keep it simple and use the Stimulus approach. But if you need to handle
 backend logic for your state, use LiveComponent.
-With live component a live prop is a state. So if you want store the number of click on a button you can do
-the following component:
+With LiveComponent, a live prop is a state. So if you want to store the number of clicks on a button you can do
+so with the following component:
 
 ```php
 <?php
@@ -161,10 +157,11 @@ class Button
 {
     use DefaultActionTrait;
     
+    #[LiveProp]
     public int $clicks = 0;
 
     #[LiveAction]
-    public function increment()
+    public function increment(): void
     {
         $this->clicks++;
 
@@ -175,6 +172,6 @@ class Button
 
 ## Conclusion
 
-Even in Symfony, you can use the component architecture.
-Follow those rules help your front developers working on codebase
-they are familiar with since those rules are already used in the JS world.
+Even in Symfony, you can use component architecture.
+Following these rules helps your front-end developers work on a codebase they are familiar with since these rules are 
+already widely used in the JavaScript world.
