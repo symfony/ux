@@ -3,13 +3,13 @@ title: Migrating to Turbo
 description: Write your Javascript in a Turbo friendly way
 image: images/cookbook/component-architecture.png
 tags: 
-    - javascript
+    - JavaScript
     - Turbo
 ---
 
 ## Introduction
 
-Turbo Drive is a fantastic tool. With just a few lines of code, you can transform your entire application into a real SPA.
+Turbo Drive is a fantastic tool. With just a few lines of code, you can transform your entire application into a real [Single Page Application (SPA)](https://developer.mozilla.org/docs/Glossary/SPA).
 
 If you are migrating your application to Turbo Drive, everything may already work without any additional effort. However, there is one thing you should pay attention to: your JavaScript.
 
