@@ -120,14 +120,14 @@ A map is created by calling ``new Map()``. You can configure the center, zoom, a
         }
     }
 
-To render a map in your Twig template, use the ``render_map`` Twig function, e.g.:
+To render a map in your Twig template, use the ``ux_map`` Twig function, e.g.:
 
 .. code-block:: twig
 
-    {{ render_map(my_map) }}
+    {{ ux_map(my_map) }}
     
     {# or with custom attributes #}
-    {{ render_map(my_map, { style: 'height: 300px' }) }}
+    {{ ux_map(my_map, { style: 'height: 300px' }) }}
 
 Extend the default behavior
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -207,7 +207,7 @@ Then, you can use this controller in your template:
 
 .. code-block:: twig
     
-    {{ render_map(my_map, { 'data-controller': 'mymap', style: 'height: 300px' }) }}
+    {{ ux_map(my_map, { 'data-controller': 'mymap', style: 'height: 300px' }) }}
 
 Backward Compatibility promise
 ------------------------------

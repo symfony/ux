@@ -90,7 +90,7 @@ A common use case is to customize the marker. You can listen to the `ux:map:mark
 
 Assuming you have a map with a custom controller:
 ```twig
-{{ render_map(map, {'data-controller': 'my-map' }) }}
+{{ ux_map(map, {'data-controller': 'my-map' }) }}
 ```
 
 You can create a Stimulus controller to customize the markers before they are created:
