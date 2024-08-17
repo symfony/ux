@@ -24,7 +24,7 @@ final class AsTwigComponentTest extends TestCase
     public function testPreMountHooksAreOrderedByPriority(): void
     {
         $hooks = AsTwigComponent::preMountMethods(
-            new class() {
+            new class {
                 #[PreMount(priority: -10)]
                 public function hook1()
                 {
@@ -51,7 +51,7 @@ final class AsTwigComponentTest extends TestCase
     public function testPostMountHooksAreOrderedByPriority(): void
     {
         $hooks = AsTwigComponent::postMountMethods(
-            new class() {
+            new class {
                 #[PostMount(priority: -10)]
                 public function hook1()
                 {

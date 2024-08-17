@@ -151,7 +151,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     public static function provideDehydrationHydrationTests(): iterable
     {
         yield 'onUpdated: exception if method not exists' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true, onUpdated: 'onFirstNameUpdated')]
                 public string $firstName;
             })
@@ -161,7 +161,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'onUpdated: with scalar value' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true, onUpdated: 'onFirstNameUpdated')]
                 public string $firstName;
 
@@ -184,7 +184,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 'name' => 'Chicken',
             ])->object();
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: ['name'], onUpdated: ['name' => 'onNameUpdated'])]
                 public ProductFixtureEntity $product;
 
@@ -208,7 +208,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             \assert($entityOriginal instanceof Entity1);
             \assert($entityNext instanceof Entity1);
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: [LiveProp::IDENTITY], onUpdated: [LiveProp::IDENTITY => 'onEntireEntityUpdated'])]
                 public Entity1 $entity1;
 
@@ -235,7 +235,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'string: (de)hydrates correctly' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp()]
                 public string $firstName;
             })
@@ -247,7 +247,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'string: changing non-writable causes checksum fail' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp()]
                 public string $firstName;
             })
@@ -258,7 +258,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'string: changing writable field works' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public string $firstName;
             })
@@ -272,7 +272,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'float: precision change to the frontend works ok' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public float $price;
             })
@@ -293,7 +293,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         yield 'DateTime: (de)hydrates correctly' => [function () {
             $date = new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York'));
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp()]
                 public \DateTime $createdAt;
             })
@@ -312,7 +312,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $entity1 = create(Entity1::class)->object();
             \assert($entity1 instanceof Entity1);
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp()]
                 public Entity1 $entity1;
             })
@@ -333,7 +333,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             \assert($entityOriginal instanceof Entity1);
             \assert($entityNext instanceof Entity1);
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public Entity1 $entity1;
             })
@@ -354,7 +354,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             \assert($entityOriginal instanceof Entity1);
             \assert($entityNext instanceof Entity1);
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: [LiveProp::IDENTITY])]
                 public Entity1 $entity1;
             })
@@ -374,7 +374,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 'name' => 'Rubber Chicken',
             ])->object();
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: ['name'])]
                 public ProductFixtureEntity $product;
             })
@@ -402,7 +402,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         yield 'Persisted entity: deleting entity between dehydration and hydration sets it to null' => [function () {
             $product = create(ProductFixtureEntity::class);
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 // test that event the writable path doesn't cause problems
                 #[LiveProp(writable: ['name'])]
                 public ?ProductFixtureEntity $product;
@@ -422,7 +422,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         yield 'Persisted entity: with custom_normalizer and embeddable (de)hydrates correctly' => [function () {
             $entity2 = create(Entity2::class, ['embedded1' => new Embeddable1('bar'), 'embedded2' => new Embeddable2('baz')])->object();
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(useSerializerForHydration: true)]
                 public Entity2 $entity2;
             })
@@ -445,7 +445,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $product->name = 'original name';
             $product->price = 333;
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 // make a path writable, just to be tricky
                 #[LiveProp(writable: ['price'])]
                 public ProductFixtureEntity $product;
@@ -469,7 +469,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Index array: (de)hydrates correctly' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp()]
                 public array $foods = [];
             })
@@ -485,7 +485,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Index array: writable allows all keys to change' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public array $foods = [];
             })
@@ -503,7 +503,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Associative array: (de)hyrates correctly' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp()]
                 public array $options = [];
             })
@@ -530,7 +530,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Associative array: fully writable allows anything to change' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public array $options = [];
             })
@@ -558,7 +558,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Associative array: fully writable allows partial changes' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public array $options = [];
             })
@@ -583,7 +583,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Associative array: fully writable allows deep partial changes' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true, fieldName: 'invoice')]
                 public array $formData = [];
             })
@@ -625,7 +625,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Associative array: writable paths allow those to change' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: ['character'])]
                 public array $options = [];
             })
@@ -655,7 +655,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Associative array: writable paths do not allow OTHER keys to change' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: ['character'])]
                 public array $options = [];
             })
@@ -678,7 +678,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Associative array: support for multiple levels of writable path' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: ['details.key1'])]
                 public array $stuff = [];
             })
@@ -704,7 +704,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Associative array: a writable path can itself be an array' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: ['details'])]
                 public array $stuff = [];
             })
@@ -732,7 +732,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Empty array: (de)hydrates correctly' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp()]
                 public array $foods = [];
             })
@@ -777,7 +777,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Enum: null remains null' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp()]
                 public ?IntEnum $int = null;
 
@@ -794,7 +794,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }, 80100];
 
         yield 'Enum: (de)hydrates correctly' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp()]
                 public ?IntEnum $int = null;
 
@@ -813,7 +813,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }, 80100];
 
         yield 'Enum: writable enums can be changed' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public ?IntEnum $int = null;
             })
@@ -826,7 +826,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }, 80100];
 
         yield 'Enum: null-like enum values are handled correctly' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public ?ZeroIntEnum $zeroInt = null;
 
@@ -856,7 +856,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }, 80100];
 
         yield 'Enum: nullable enum with invalid value sets to null' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public ?IntEnum $int = null;
             })
@@ -870,7 +870,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }, 80100];
 
         yield 'Object: (de)hydrates DTO correctly' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public ?Address $address = null;
 
@@ -897,7 +897,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Object: (de)hydrates correctly multidementional DTO' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public ?CustomerDetails $customerDetails = null;
 
@@ -930,7 +930,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Object: (de)hydrates correctly array of DTO' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 /**
                  * @var Symfony\UX\LiveComponent\Tests\Fixtures\Dto\CustomerDetails[] $customerDetailsCollection
                  */
@@ -975,7 +975,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $address3 = create(Address::class, ['address' => '124 Conch St.', 'city' => 'Bikini Bottom'])->object();
             $address4 = create(Address::class, ['address' => '32 Windsor Gardens', 'city' => 'London'])->object();
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 /**
                  * @var Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
                  */
@@ -1006,7 +1006,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $address1 = create(Address::class, ['address' => '1600 Pennsylvania Avenue', 'city' => 'Washington DC'])->object();
             $address2 = create(Address::class, ['address' => '221 B Baker St', 'city' => 'Birmingham'])->object();
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 /**
                  * @var Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
                  */
@@ -1034,7 +1034,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Array with DTOs: fully writable allows deep partial changes' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 /**
                  * @var Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsArrayOfDtos[]
                  */
@@ -1091,7 +1091,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Object: (de)hydrates nested objects with phpdoc typehints' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public ?ParentDTO $parent = null;
 
@@ -1120,7 +1120,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Object: using custom normalizer (de)hydrates correctly' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(useSerializerForHydration: true)]
                 public Money $money;
             })
@@ -1136,7 +1136,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Object: dehydrates to array works correctly' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(useSerializerForHydration: true)]
                 public Temperature $temperature;
             })
@@ -1155,7 +1155,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Collection: using serializer (de)hydrates correctly' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 /** @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Temperature[] */
                 #[LiveProp(useSerializerForHydration: true)]
                 public array $temperatures = [];
@@ -1195,7 +1195,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $product->name = 'original name';
             $product->price = 333;
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: ['price'])]
                 public ProductFixtureEntity $product;
             })
@@ -1208,7 +1208,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Updating non-writable property is rejected' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp()]
                 public string $name;
             })
@@ -1221,7 +1221,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Context: Pass (de)normalization context' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(serializationContext: ['groups' => 'foo'])]
                 public string $name;
 
@@ -1257,7 +1257,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'It is valid to dehydrate to a fully-writable array' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true, dehydrateWith: 'dehydrateDate', hydrateWith: 'hydrateDate')]
                 public \DateTime $createdAt;
 
@@ -1300,7 +1300,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Use the format option to control the date format' => [function () {
             return HydrationTest::create(
-                new class() {
+                new class {
                     #[LiveProp(writable: true, format: 'Y. m. d.')]
                     public \DateTime $createdAt;
 
@@ -1326,7 +1326,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Uses LiveProp modifiers on component dehydration' => [function () {
             return HydrationTest::create(
-                new class() {
+                new class {
                     #[LiveProp(writable: true, modifier: 'modifySearchProp')]
                     public ?string $search = null;
 
@@ -1379,7 +1379,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $this->expectExceptionMessage('The model path "createdAt" was sent invalid date data "0" or in an invalid format. Make sure it\'s a valid date and it matches the expected format "Y. m. d.".');
 
         $this->executeHydrationTestCase(function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true, format: 'Y. m. d.')]
                 public \DateTime $createdAt;
 
@@ -1403,7 +1403,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
     public function testPassingArrayToWritablePropForHydrationIsNotAllowed(): void
     {
-        $component = new class() {
+        $component = new class {
             #[LiveProp(writable: true)]
             public \DateTime $createdAt;
 
@@ -1434,7 +1434,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
     public function testInterfaceTypedLivePropCannotBeHydrated(): void
     {
-        $componentClass = new class() {
+        $componentClass = new class {
             #[LiveProp(writable: true)]
             public ?SimpleDtoInterface $prop = null;
         };
@@ -1453,7 +1453,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
     public function testInterfaceTypedLivePropCannotBeDehydrated(): void
     {
-        $componentClass = new class() {
+        $componentClass = new class {
             #[LiveProp(writable: true)]
             public ?SimpleDtoInterface $prop = null;
         };
@@ -1478,7 +1478,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
     public static function provideInvalidHydrationTests(): iterable
     {
         yield 'invalid_types_string_to_number_uses_coerced' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public int $count;
             })
@@ -1491,7 +1491,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'invalid_types_array_to_string_is_rejected' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public string $name;
             })
@@ -1508,7 +1508,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 'price' => 199,
             ])->object();
 
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: ['name', 'price'])]
                 public ProductFixtureEntity $product;
             })
@@ -1525,7 +1525,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'invalid_types_enum_with_an_invalid_value' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: true)]
                 public ?IntEnum $nullableInt = null;
 
@@ -1554,7 +1554,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }, 80100];
 
         yield 'writable_path_with_type_problem_ignored' => [function () {
-            return HydrationTest::create(new class() {
+            return HydrationTest::create(new class {
                 #[LiveProp(writable: ['name'])]
                 public CategoryFixtureEntity $category;
             })
@@ -1587,7 +1587,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
     public function testHydrationTakeUpdatedParentPropsIntoAccount(): void
     {
-        $component = new class() {
+        $component = new class {
             #[LiveProp(writable: true)]
             public string $name = 'Ryan';
 
@@ -1621,7 +1621,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
     public function testHydrationWithUpdatesParentPropsAndBadChecksumFails(): void
     {
-        $component = new class() {
+        $component = new class {
             #[LiveProp(updateFromParent: true)]
             public string $name = 'Ryan';
         };

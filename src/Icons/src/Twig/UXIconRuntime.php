@@ -40,6 +40,7 @@ final class UXIconRuntime implements RuntimeExtensionInterface
         } catch (IconNotFoundException $e) {
             if ($this->ignoreNotFound) {
                 $this->logger?->warning($e->getMessage());
+
                 return '';
             }
 

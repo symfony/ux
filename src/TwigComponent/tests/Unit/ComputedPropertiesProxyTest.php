@@ -21,7 +21,7 @@ final class ComputedPropertiesProxyTest extends TestCase
 {
     public function testProxyCachesGetMethodReturns(): void
     {
-        $proxy = new ComputedPropertiesProxy(new class() {
+        $proxy = new ComputedPropertiesProxy(new class {
             private int $count = 0;
 
             public function getCount(): int
@@ -37,7 +37,7 @@ final class ComputedPropertiesProxyTest extends TestCase
 
     public function testProxyCachesIsMethodReturns(): void
     {
-        $proxy = new ComputedPropertiesProxy(new class() {
+        $proxy = new ComputedPropertiesProxy(new class {
             private int $count = 0;
 
             public function isCount(): int
@@ -53,7 +53,7 @@ final class ComputedPropertiesProxyTest extends TestCase
 
     public function testProxyCachesHasMethodReturns(): void
     {
-        $proxy = new ComputedPropertiesProxy(new class() {
+        $proxy = new ComputedPropertiesProxy(new class {
             private int $count = 0;
 
             public function hasCount(): int
@@ -69,7 +69,7 @@ final class ComputedPropertiesProxyTest extends TestCase
 
     public function testCanProxyPublicProperties(): void
     {
-        $proxy = new ComputedPropertiesProxy(new class() {
+        $proxy = new ComputedPropertiesProxy(new class {
             public $foo = 'bar';
         });
 
@@ -78,7 +78,7 @@ final class ComputedPropertiesProxyTest extends TestCase
 
     public function testCanProxyArrayAccess(): void
     {
-        $proxy = new ComputedPropertiesProxy(new class() implements \ArrayAccess {
+        $proxy = new ComputedPropertiesProxy(new class implements \ArrayAccess {
             private $array = ['foo' => 'bar'];
 
             public function offsetExists(mixed $offset): bool
@@ -105,7 +105,7 @@ final class ComputedPropertiesProxyTest extends TestCase
 
     public function testCannotProxyMethodsThatDoNotExist(): void
     {
-        $proxy = new ComputedPropertiesProxy(new class() {});
+        $proxy = new ComputedPropertiesProxy(new class {});
 
         $this->expectException(\InvalidArgumentException::class);
 
@@ -114,7 +114,7 @@ final class ComputedPropertiesProxyTest extends TestCase
 
     public function testCannotPassArgumentsToProxiedMethods(): void
     {
-        $proxy = new ComputedPropertiesProxy(new class() {});
+        $proxy = new ComputedPropertiesProxy(new class {});
 
         $this->expectException(\InvalidArgumentException::class);
 
@@ -123,7 +123,7 @@ final class ComputedPropertiesProxyTest extends TestCase
 
     public function testCannotProxyMethodsWithRequiredArguments(): void
     {
-        $proxy = new ComputedPropertiesProxy(new class() {
+        $proxy = new ComputedPropertiesProxy(new class {
             public function getValue(int $value): int
             {
                 return $value;
