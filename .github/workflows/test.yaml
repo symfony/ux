@@ -50,7 +50,6 @@ jobs:
               id: changes
               run: |
                 echo "STATUS=$(git status --porcelain)" >> $GITHUB_OUTPUT
-
             - name: No changes found
               if: steps.changes.outputs.STATUS == ''
               run: |
@@ -68,7 +67,6 @@ jobs:
             components: ${{ steps.components.outputs.components }}
         steps:
             - uses: actions/checkout@v4
-
             - id: components
               run: |
                 components=$(find src/ -mindepth 2 -type f -name composer.json -not -path "*/vendor/*" -printf '%h\n' | jq -R -s -c 'split("\n")[:-1] | map(. | sub("^src/";"")) | sort')
@@ -103,27 +101,22 @@ jobs:
 
         steps:
             - uses: actions/checkout@v4
-
             - uses: shivammathur/setup-php@v2
               with:
                 php-version: ${{ matrix.php-version }}
-
             - name: Install root packages
               uses: ramsey/composer-install@v3
               with:
                 working-directory: ${{ github.workspace }}
                 dependency-versions: ${{ matrix.dependency-version }}
-
             - name: Build root packages
               run: php .github/build-packages.php
               working-directory: ${{ github.workspace }}
-
             - name: Install ${{ matrix.component }} packages
               uses: ramsey/composer-install@v3
               with:
                 working-directory: "src/${{ matrix.component }}"
                 dependency-versions: ${{ matrix.dependency-version }}
-
             - name: ${{ matrix.component }} Tests
               working-directory: "src/${{ matrix.component }}"
               run: vendor/bin/simple-phpunit
