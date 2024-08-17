@@ -1,4 +1,3 @@
-/// <reference types="webpack-env" />
 import type { SvelteComponent } from 'svelte';
 declare global {
     function resolveSvelteComponent(name: string): typeof SvelteComponent<any>;

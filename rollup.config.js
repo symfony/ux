@@ -94,9 +94,16 @@ module.exports = {
         resolve(),
         typescript({
             filterRoot: packageRoot,
-            include: ['src/**/*.ts'],
+            include: [
+                'src/**/*.ts', 
+                // TODO: Remove for the next major release
+                // "@rollup/plugin-typescript" v11.0.0 fixed an issue (https://github.com/rollup/plugins/pull/1310) that 
+                // cause a breaking change for UX React users, the dist file requires "react-dom/client" instead of "react-dom"
+                // and it will break for users using the Symfony AssetMapper without Symfony Flex (for automatic "importmap.php" upgrade).
+                '**/node_modules/react-dom/client.js'
+            ],
             compilerOptions: {
-                outDir: 'dist',
+                outDir: '.',
                 declaration: true,
                 emitDeclarationOnly: true,
             }
