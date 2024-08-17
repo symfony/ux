@@ -23,19 +23,20 @@ final class SearchIconCommandTest extends KernelTestCase
 
     public function testSearchWithPrefix(): void
     {
-        $this->consoleCommand('ux:icons:search lucide')
+        $this->consoleCommand('ux:icons:search iconoir')
             ->execute()
             ->assertSuccessful()
             ->assertOutputContains('Icon set')
-            ->assertOutputContains('Lucide')
+            ->assertOutputContains('Iconoir')
             ->assertOutputContains('Icons')
             ->assertOutputContains('License')
-            ->assertOutputContains('ISC')
+            ->assertOutputContains('MIT')
             ->assertOutputContains('Prefix')
-            ->assertOutputContains('lucide')
+            ->assertOutputContains('iconoir')
             ->assertOutputContains('Example')
-            ->assertOutputContains('lucide:')
-            ->assertOutputContains('php bin/console ux:icons:search lucide');
+            ->assertOutputContains('iconoir:')
+            ->assertOutputContains('php bin/console ux:icons:search iconoir')
+            ->assertStatusCode(0);
     }
 
     public function testSearchWithPrefixMatchingMultipleSet(): void

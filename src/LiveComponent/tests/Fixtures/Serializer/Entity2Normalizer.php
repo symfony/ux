@@ -47,7 +47,7 @@ final class Entity2Normalizer implements NormalizerInterface, DenormalizerInterf
         return $data instanceof Entity2;
     }
 
-    public function getSupportedTypes(?string $format): array
+    public function getSupportedTypes(?string $format = null): array
     {
         return [Entity2::class => true];
     }

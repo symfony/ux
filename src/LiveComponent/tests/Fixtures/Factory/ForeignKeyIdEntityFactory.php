@@ -11,41 +11,23 @@
 
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Factory;
 
-use Doctrine\ORM\EntityRepository;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\ForeignKeyIdEntity;
-use Zenstruck\Foundry\ModelFactory;
-use Zenstruck\Foundry\Proxy;
-use Zenstruck\Foundry\RepositoryProxy;
+use Zenstruck\Foundry\Persistence\PersistentProxyObjectFactory;
 
 use function Zenstruck\Foundry\lazy;
 
 /**
- * @extends ModelFactory<ForeignKeyIdEntity>
- *
- * @method static ForeignKeyIdEntity|Proxy         createOne(array $attributes = [])
- * @method static ForeignKeyIdEntity[]|Proxy[]     createMany(int $number, array|callable $attributes = [])
- * @method static ForeignKeyIdEntity|Proxy         find(object|array|mixed $criteria)
- * @method static ForeignKeyIdEntity|Proxy         findOrCreate(array $attributes)
- * @method static ForeignKeyIdEntity|Proxy         first(string $sortedField = 'id')
- * @method static ForeignKeyIdEntity|Proxy         last(string $sortedField = 'id')
- * @method static ForeignKeyIdEntity|Proxy         random(array $attributes = [])
- * @method static ForeignKeyIdEntity|Proxy         randomOrCreate(array $attributes = []))
- * @method static ForeignKeyIdEntity[]|Proxy[]     all()
- * @method static ForeignKeyIdEntity[]|Proxy[]     findBy(array $attributes)
- * @method static ForeignKeyIdEntity[]|Proxy[]     randomSet(int $number, array $attributes = []))
- * @method static ForeignKeyIdEntity[]|Proxy[]     randomRange(int $min, int $max, array $attributes = []))
- * @method static EntityRepository|RepositoryProxy repository()
- * @method        ForeignKeyIdEntity|Proxy         create(array|callable $attributes = [])
+ * @extends PersistentProxyObjectFactory<ForeignKeyIdEntity>
  */
-class ForeignKeyIdEntityFactory extends ModelFactory
+class ForeignKeyIdEntityFactory extends PersistentProxyObjectFactory
 {
-    protected static function getClass(): string
+    public static function class(): string
     {
         return ForeignKeyIdEntity::class;
     }
 
-    protected function getDefaults(): array
+    protected function defaults(): array
     {
         return ['id' => lazy(static fn () => new Entity1())];
     }

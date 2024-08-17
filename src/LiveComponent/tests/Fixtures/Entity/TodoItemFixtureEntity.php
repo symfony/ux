@@ -24,15 +24,12 @@ class TodoItemFixtureEntity
     public $id;
 
     #[ORM\Column(type: 'string')]
-    private ?string $name = null;
+    private ?string $name;
 
     #[ORM\ManyToOne(targetEntity: TodoListFixtureEntity::class, inversedBy: 'todoItems')]
     private TodoListFixtureEntity $todoList;
 
-    /**
-     * @param string $name
-     */
-    public function __construct(string $name = null)
+    public function __construct(?string $name = null)
     {
         $this->name = $name;
     }

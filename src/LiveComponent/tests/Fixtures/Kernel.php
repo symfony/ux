@@ -51,14 +51,14 @@ final class Kernel extends BaseKernel
         return new Response('index');
     }
 
-    public function renderTemplate(string $template, Environment $twig = null): Response
+    public function renderTemplate(string $template, ?Environment $twig = null): Response
     {
         $twig ??= $this->container->get('twig');
 
         return new Response($twig->render("{$template}.html.twig"));
     }
 
-    public function renderNamespacedTemplate(string $template, Environment $twig = null): Response
+    public function renderNamespacedTemplate(string $template, ?Environment $twig = null): Response
     {
         $twig ??= $this->container->get('twig');
 
@@ -171,6 +171,7 @@ final class Kernel extends BaseKernel
                 ],
             ],
         ];
+
         if (null !== $doctrineBundleVersion = InstalledVersions::getVersion('doctrine/doctrine-bundle')) {
             if (version_compare($doctrineBundleVersion, '2.8.0', '>=')) {
                 $doctrineConfig['orm']['enable_lazy_ghost_objects'] = true;
@@ -181,13 +182,12 @@ final class Kernel extends BaseKernel
                 $doctrineConfig['orm']['validate_xml_mapping'] = true;
                 $doctrineConfig['dbal']['schema_manager_factory'] = 'doctrine.dbal.default_schema_manager_factory';
             }
+            if (version_compare($doctrineBundleVersion, '2.12.0', '>=')) {
+                $doctrineConfig['orm']['controller_resolver']['auto_mapping'] = false;
+            }
         }
 
         $c->extension('doctrine', $doctrineConfig);
-
-        $c->extension('zenstruck_foundry', [
-            'auto_refresh_proxies' => false,
-        ]);
 
         $c->services()
             ->defaults()
