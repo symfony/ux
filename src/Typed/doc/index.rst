@@ -109,7 +109,7 @@ Stimulus controller:
             event.detail.options.onBegin = (typed) => {
                 console.log("Typed is ready to type cool messages!");
             };
-            event.detail.options.onStop = (typed) => {
+            event.detail.options.onComplete = (typed) => {
                 console.log("OK. Enough is enough.");
             };
         }
