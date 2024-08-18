@@ -111,12 +111,14 @@ export default abstract class<
     protected createInfoWindow({
         definition,
         marker,
+        onMarkerClick = false,
     }: {
         definition: MarkerDefinition<MarkerOptions, InfoWindowOptions>['infoWindow'];
         marker: Marker;
+        onMarkerClick?: boolean;
     }): InfoWindow {
         this.dispatchEvent('info-window:before-create', { definition, marker });
-        const infoWindow = this.doCreateInfoWindow({ definition, marker });
+        const infoWindow = this.doCreateInfoWindow({ definition, marker, onMarkerClick });
         this.dispatchEvent('info-window:after-create', { infoWindow, marker });
 
         this.infoWindows.push(infoWindow);
@@ -127,9 +129,11 @@ export default abstract class<
     protected abstract doCreateInfoWindow({
         definition,
         marker,
+        onMarkerClick,
     }: {
         definition: MarkerDefinition<MarkerOptions, InfoWindowOptions>['infoWindow'];
         marker: Marker;
+        onMarkerClick: boolean;
     }): InfoWindow;
 
     protected abstract doFitBoundsToMarkers(): void;

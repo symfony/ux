@@ -27,9 +27,9 @@ class default_1 extends Controller {
         this.markers.push(marker);
         return marker;
     }
-    createInfoWindow({ definition, marker, }) {
+    createInfoWindow({ definition, marker, onMarkerClick = false, }) {
         this.dispatchEvent('info-window:before-create', { definition, marker });
-        const infoWindow = this.doCreateInfoWindow({ definition, marker });
+        const infoWindow = this.doCreateInfoWindow({ definition, marker, onMarkerClick });
         this.dispatchEvent('info-window:after-create', { infoWindow, marker });
         this.infoWindows.push(infoWindow);
         return infoWindow;

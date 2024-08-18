@@ -16,9 +16,10 @@ export default class extends AbstractMapController<MapOptions, google.maps.Map, 
         options: MapOptions;
     }): google.maps.Map;
     protected doCreateMarker(definition: MarkerDefinition<google.maps.marker.AdvancedMarkerElementOptions, google.maps.InfoWindowOptions>): google.maps.marker.AdvancedMarkerElement;
-    protected doCreateInfoWindow({ definition, marker, }: {
+    protected doCreateInfoWindow({ definition, marker, onMarkerClick, }: {
         definition: MarkerDefinition<google.maps.marker.AdvancedMarkerElementOptions, google.maps.InfoWindowOptions>['infoWindow'];
         marker: google.maps.marker.AdvancedMarkerElement;
+        onMarkerClick: boolean;
     }): google.maps.InfoWindow;
     private createTextOrElement;
     private closeInfoWindowsExcept;

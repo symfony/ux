@@ -52,11 +52,18 @@ class default_1 extends AbstractMapController {
             map: this.map,
         });
         if (infoWindow) {
-            this.createInfoWindow({ definition: infoWindow, marker });
+            if (infoWindow.opened) {
+                this.createInfoWindow({ definition: infoWindow, marker });
+            }
+            else {
+                marker.addListener('click', () => {
+                    this.createInfoWindow({ definition: infoWindow, marker, onMarkerClick: true });
+                });
+            }
         }
         return marker;
     }
-    doCreateInfoWindow({ definition, marker, }) {
+    doCreateInfoWindow({ definition, marker, onMarkerClick, }) {
         const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
         const infoWindow = new _google.maps.InfoWindow({
             headerContent: this.createTextOrElement(headerContent),
@@ -64,22 +71,18 @@ class default_1 extends AbstractMapController {
             ...otherOptions,
             ...rawOptions,
         });
-        if (definition.opened) {
+        if (definition.opened || onMarkerClick) {
             infoWindow.open({
                 map: this.map,
                 shouldFocus: false,
                 anchor: marker,
             });
         }
-        marker.addListener('click', () => {
+        if (onMarkerClick) {
             if (definition.autoClose) {
                 this.closeInfoWindowsExcept(infoWindow);
             }
-            infoWindow.open({
-                map: this.map,
-                anchor: marker,
-            });
-        });
+        }
         return infoWindow;
     }
     createTextOrElement(content) {

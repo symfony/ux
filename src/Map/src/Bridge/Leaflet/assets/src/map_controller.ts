@@ -63,7 +63,13 @@ export default class extends AbstractMapController<
         const marker = L.marker(position, { title, ...otherOptions, ...rawOptions }).addTo(this.map);
 
         if (infoWindow) {
-            this.createInfoWindow({ definition: infoWindow, marker });
+            if (infoWindow.opened) {
+                this.createInfoWindow({ definition: infoWindow, marker });
+            } else {
+                marker.on('click', () => {
+                    this.createInfoWindow({ definition: infoWindow, marker, onMarkerClick: true });
+                });
+            }
         }
 
         return marker;
@@ -72,14 +78,16 @@ export default class extends AbstractMapController<
     protected doCreateInfoWindow({
         definition,
         marker,
+        onMarkerClick,
     }: {
         definition: MarkerDefinition['infoWindow'];
         marker: L.Marker;
+        onMarkerClick: boolean;
     }): L.Popup {
         const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
 
         marker.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...otherOptions, ...rawOptions });
-        if (definition.opened) {
+        if (definition.opened || onMarkerClick) {
             marker.openPopup();
         }
 
