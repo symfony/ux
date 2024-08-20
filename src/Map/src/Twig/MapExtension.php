@@ -22,14 +22,16 @@ use Twig\TwigFunction;
  */
 final class MapExtension extends AbstractExtension
 {
-    public function getFunctions(): iterable
+    public function getFunctions(): array
     {
-        yield new TwigFunction('render_map', [Renderers::class, 'renderMap'], [
-            'is_safe' => ['html'],
-            'deprecated' => '2.20',
-            'deprecating_package' => 'symfony/ux-map',
-            'alternative' => 'ux_map',
-        ]);
-        yield new TwigFunction('ux_map', [Renderers::class, 'renderMap'], ['is_safe' => ['html']]);
+        return [
+            new TwigFunction('render_map', [Renderers::class, 'renderMap'], [
+                'is_safe' => ['html'],
+                'deprecated' => '2.21',
+                'deprecating_package' => 'symfony/ux-map',
+                'alternative' => 'ux_map',
+            ]),
+            new TwigFunction('ux_map', [Renderers::class, 'renderMap'], ['is_safe' => ['html']]),
+        ];
     }
 }

@@ -27,9 +27,11 @@ final class TwigExtension extends AbstractExtension
     ) {
     }
 
-    public function getFunctions(): iterable
+    public function getFunctions(): array
     {
-        yield new TwigFunction('turbo_stream_listen', $this->turboStreamListen(...), ['needs_environment' => true, 'is_safe' => ['html']]);
+        return [
+            new TwigFunction('turbo_stream_listen', $this->turboStreamListen(...), ['needs_environment' => true, 'is_safe' => ['html']]),
+        ];
     }
 
     /**

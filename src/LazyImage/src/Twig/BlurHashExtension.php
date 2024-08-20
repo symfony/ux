@@ -21,9 +21,11 @@ use Twig\TwigFunction;
  */
 class BlurHashExtension extends AbstractExtension
 {
-    public function getFunctions(): iterable
+    public function getFunctions(): array
     {
-        yield new TwigFunction('data_uri_thumbnail', [BlurHashRuntime::class, 'createDataUriThumbnail']);
-        yield new TwigFunction('blur_hash', [BlurHashRuntime::class, 'blurHash']);
+        return [
+            new TwigFunction('data_uri_thumbnail', [BlurHashRuntime::class, 'createDataUriThumbnail']),
+            new TwigFunction('blur_hash', [BlurHashRuntime::class, 'blurHash']),
+        ];
     }
 }
