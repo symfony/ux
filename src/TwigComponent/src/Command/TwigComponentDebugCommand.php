@@ -184,9 +184,14 @@ EOF
         foreach ($finderTemplates as $template) {
             $component = str_replace('/', ':', $template->getRelativePathname());
             $component = substr($component, 0, -10); // remove file extension ".html.twig"
+            $path = $template->getPath();
 
-            if (isset($dirs[$template->getPath()]) && FilesystemLoader::MAIN_NAMESPACE !== $dirs[$template->getPath()]) {
-                $component = $dirs[$template->getPath()].':'.$component;
+            if ($template->getRelativePath()) {
+                $path = \rtrim(\substr($template->getPath(), 0, -1 * \strlen($template->getRelativePath())), '/');
+            }
+
+            if (isset($dirs[$path]) && FilesystemLoader::MAIN_NAMESPACE !== $dirs[$path]) {
+                $component = $dirs[$path].':'.$component;
             }
 
             $components[$component] = $component;

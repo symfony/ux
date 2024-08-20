@@ -165,6 +165,21 @@ class TwigComponentDebugCommandTest extends KernelTestCase
         $this->assertStringContainsString('Anonymous', $display);
     }
 
+    public function testWithBundleAnonymousComponentSubDir(): void
+    {
+        $commandTester = $this->createCommandTester();
+        $commandTester->execute(['name' => 'Acme:Table:Header']);
+
+        $commandTester->assertCommandIsSuccessful();
+
+        $display = $commandTester->getDisplay();
+
+        $this->tableDisplayCheck($display);
+        $this->assertStringContainsString('Acme:Table:Header', $display);
+        $this->assertStringContainsString('@Acme/components/Table/Header.html.twig', $display);
+        $this->assertStringContainsString('Anonymous', $display);
+    }
+
     public function testWithoutPublicProps(): void
     {
         $commandTester = $this->createCommandTester();

@@ -1634,7 +1634,7 @@ Anonymous Components
 
 .. versionadded:: 2.20
 
-    The bundle convention for Anonymous components was added in TwigComponents 2.18.
+    The bundle convention for Anonymous components was added in TwigComponents 2.20.
 
 Using a component from a third-party bundle is just as straightforward as using
 one from your own application. Once the bundle is installed and configured, you
