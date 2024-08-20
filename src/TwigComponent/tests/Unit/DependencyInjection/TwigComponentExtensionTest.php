@@ -98,7 +98,7 @@ class TwigComponentExtensionTest extends TestCase
             'kernel.debug' => true,
             'kernel.project_dir' => __DIR__,
             'kernel.bundles' => [
-                'TwigBundle' => new class() {},
+                'TwigBundle' => new class {},
                 'TwigComponentBundle' => TwigComponentBundle::class,
             ],
         ]));

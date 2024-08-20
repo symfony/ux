@@ -33,14 +33,14 @@ final class LivePropTest extends TestCase
 
     public function testCanCallCalculateFieldNameAsString(): void
     {
-        $component = new class() {};
+        $component = new class {};
 
         $this->assertSame('field', (new LiveProp(false, null, null, false, [], 'field'))->calculateFieldName($component, 'fallback'));
     }
 
     public function testCanCallCalculateFieldNameAsMethod(): void
     {
-        $component = new class() {
+        $component = new class {
             public function fieldName(): string
             {
                 return 'foo';
@@ -52,7 +52,7 @@ final class LivePropTest extends TestCase
 
     public function testCanCallCalculateFieldNameWhenNotSet(): void
     {
-        $component = new class() {};
+        $component = new class {};
 
         $this->assertSame('fallback', (new LiveProp())->calculateFieldName($component, 'fallback'));
     }

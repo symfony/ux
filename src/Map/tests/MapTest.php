@@ -83,7 +83,7 @@ class MapTest extends TestCase
             ->center(new Point(48.8566, 2.3522))
             ->zoom(6)
             ->fitBoundsToMarkers()
-            ->options(new class() implements MapOptionsInterface {
+            ->options(new class implements MapOptionsInterface {
                 public function toArray(): array
                 {
                     return [

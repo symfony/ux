@@ -78,8 +78,6 @@ class AsTwigComponent
     /**
      * @param object|class-string $component
      *
-     * @return ?\ReflectionMethod
-     *
      * @internal
      */
     public static function mountMethod(object|string $component): ?\ReflectionMethod

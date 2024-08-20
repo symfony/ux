@@ -94,7 +94,7 @@ final class ComponentFactoryTest extends KernelTestCase
 
     public function testStringableObjectCanBePassedToComponent(): void
     {
-        $attributes = $this->factory()->create('component_a', ['propB' => 'B', 'data-item-id-param' => new class() {
+        $attributes = $this->factory()->create('component_a', ['propB' => 'B', 'data-item-id-param' => new class {
             public function __toString(): string
             {
                 return 'test';

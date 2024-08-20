@@ -27,7 +27,7 @@ final class ComponentAttributesTest extends TestCase
     {
         $attributes = new ComponentAttributes([
             'class' => 'foo',
-            'style' => new class() {
+            'style' => new class {
                 public function __toString(): string
                 {
                     return 'color:black;';
@@ -216,7 +216,7 @@ final class ComponentAttributesTest extends TestCase
     public function testRenderingSingleAttributeExcludesFromString(): void
     {
         $attributes = new ComponentAttributes([
-            'attr1' => new class() {
+            'attr1' => new class {
                 public function __toString(): string
                 {
                     return 'value1';
