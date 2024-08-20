@@ -28,17 +28,17 @@ final class LiveComponentRuntimeTest extends KernelTestCase
         $this->assertSame('data-action="live#action" data-live-prop1-param="val1" data-live-some-prop-param="val2" data-live-action-param="action-name"', $props);
 
         $props = $runtime->liveAction('action-name', ['prop1' => 'val1', 'prop2' => 'val2'], ['debounce' => 300]);
-        $this->assertSame('data-action="live#action" data-live-prop1-param="val1" data-live-prop2-param="val2" data-live-action-param="debounce(300)|action-name"', \html_entity_decode($props));
+        $this->assertSame('data-action="live#action" data-live-prop1-param="val1" data-live-prop2-param="val2" data-live-action-param="debounce(300)|action-name"', html_entity_decode($props));
         $this->assertSame('data-action="live#action" data-live-prop1-param="val1" data-live-prop2-param="val2" data-live-action-param="debounce&#x28;300&#x29;&#x7C;action-name"', $props);
 
         $props = $runtime->liveAction('action-name:prevent', ['pro1' => 'val1', 'prop2' => 'val2'], ['debounce' => 300]);
-        $this->assertSame('data-action="live#action:prevent" data-live-pro1-param="val1" data-live-prop2-param="val2" data-live-action-param="debounce(300)|action-name"', \html_entity_decode($props));
+        $this->assertSame('data-action="live#action:prevent" data-live-pro1-param="val1" data-live-prop2-param="val2" data-live-action-param="debounce(300)|action-name"', html_entity_decode($props));
         $this->assertSame('data-action="live#action&#x3A;prevent" data-live-pro1-param="val1" data-live-prop2-param="val2" data-live-action-param="debounce&#x28;300&#x29;&#x7C;action-name"', $props);
 
         $props = $runtime->liveAction('action-name:prevent', [], ['debounce' => 300]);
-        $this->assertSame('data-action="live#action:prevent" data-live-action-param="debounce(300)|action-name"', \html_entity_decode($props));
+        $this->assertSame('data-action="live#action:prevent" data-live-action-param="debounce(300)|action-name"', html_entity_decode($props));
 
         $props = $runtime->liveAction('action-name', [], [], 'keydown.esc');
-        $this->assertSame('data-action="keydown.esc->live#action" data-live-action-param="action-name"', \html_entity_decode($props));
+        $this->assertSame('data-action="keydown.esc->live#action" data-live-action-param="action-name"', html_entity_decode($props));
     }
 }
