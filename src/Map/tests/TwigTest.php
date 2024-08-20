@@ -44,7 +44,7 @@ final class TwigTest extends KernelTestCase
         $twig = self::getContainer()->get('twig');
         $twig->setLoader(new ChainLoader([
             new ArrayLoader([
-                'test' => '{{ render_map(map, attributes) }}',
+                'test' => '{{ ux_map(map, attributes) }}',
             ]),
             $twig->getLoader(),
         ]));
