@@ -1,4 +1,3 @@
-/// <reference types="webpack-env" />
 import type { ComponentClass, FunctionComponent } from 'react';
 type Component = string | FunctionComponent<object> | ComponentClass<object, any>;
 declare global {

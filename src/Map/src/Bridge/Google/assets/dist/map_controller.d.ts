@@ -1,4 +1,3 @@
-/// <reference types="google.maps" />
 import AbstractMapController from '@symfony/ux-map/abstract-map-controller';
 import type { Point, MarkerDefinition } from '@symfony/ux-map/abstract-map-controller';
 import type { LoaderOptions } from '@googlemaps/js-api-loader';

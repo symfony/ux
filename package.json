@@ -10,19 +10,19 @@
         "check-format": "biome format"
     },
     "devDependencies": {
-        "@babel/core": "^7.15.8",
-        "@babel/preset-env": "^7.15.8",
-        "@babel/preset-react": "^7.15.8",
-        "@babel/preset-typescript": "^7.15.8",
+        "@babel/core": "^7.25.2",
+        "@babel/preset-env": "^7.25.3",
+        "@babel/preset-react": "^7.24.7",
+        "@babel/preset-typescript": "^7.24.7",
         "@biomejs/biome": "^1.8.3",
-        "@rollup/plugin-commonjs": "^23.0.0",
-        "@rollup/plugin-node-resolve": "^15.0.0",
-        "@rollup/plugin-typescript": "^10.0.0",
+        "@rollup/plugin-commonjs": "^26.0.1",
+        "@rollup/plugin-node-resolve": "^15.2.3",
+        "@rollup/plugin-typescript": "^11.1.6",
         "@symfony/stimulus-testing": "^2.0.1",
         "clean-css-cli": "^5.6.2",
-        "rollup": "^3.7.0",
-        "tslib": "^2.3.1",
-        "typescript": "^4.4.4",
+        "rollup": "^4.21.0",
+        "tslib": "^2.6.3",
+        "typescript": "^5.5.4",
         "vitest": "^0.34.6"
     }
 }
