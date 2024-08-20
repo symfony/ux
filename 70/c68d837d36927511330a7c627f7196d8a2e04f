@@ -1,0 +1,76 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-12T07:09:05Z
+
+Hi @cuchac
+
+I remember i almost made the same change .... and reverted because other scenarios made it not better... but don't remember precisely why/when.
+
+So... let's solve this :)
+
+Do you have a simple scenario / use case that we can reproduce to play around ?
+I'll check on my side to find why i went back :)
+
+---------------------------------------------------------------------------
+
+by cuchac at 2024-08-15T13:23:13Z
+
+Hello @smnandre
+
+when I for example access undefined variable inside component PHP file, I will get following error page:
+![image](https://github.com/user-attachments/assets/84cc420f-d2f2-4fde-b26d-d0d0dee51b37)
+
+There are two stack traces but the original stack trace that can be used to solve the issue is lost. Without stack trace I can only guess where the problem inside the component is.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-15T16:01:28Z
+
+Just wondering, what if you remove entirely this block (i'm not remembering why it's there is the first place)
+
+```
+if (!($e instanceof \Exception)) {
+    // ...
+}
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-15T16:06:09Z
+
+Found the context / reasons here:
+
+* https://github.com/symfony/ux/pull/1132
+* https://github.com/symfony/ux/pull/804#pullrequestreview-1390839702
+
+---------------------------------------------------------------------------
+
+by cuchac at 2024-08-16T09:02:20Z
+
+> Just wondering, what if you remove entirely this block (i'm not remembering why it's there is the first place)
+>
+> ```
+> if (!($e instanceof \Exception)) {
+>     // ...
+> }
+> ```
+
+If I delete that `if`, it will fix my issue. I believe it can be deleted.
+
+---------------------------------------------------------------------------
+
+by cuchac at 2024-08-16T09:27:20Z
+
+Hello @smnandre, I've changed the PR to remove the problematic `if`.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-17T08:26:07Z
+
+@kbond if you have time to check, i'm not sure if the initial reasons still apply.. but it feels like a good idea :)
+
+---------------------------------------------------------------------------
+
+by cuchac at 2024-08-17T21:37:01Z
+
+@smnandre I've looked at the original commit and I don't see any reason for that `if` statement. I understand why Twig RuntimeException should be thrown, but I don't understand why "repack" non-exceptions. I believe it was mistake from the beginning.
