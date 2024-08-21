@@ -32,7 +32,7 @@ Done! Now render it wherever you want:
 
 .. code-block:: html+twig
 
-    {{ component('Alert', { message: 'Hello Twig Components!' }) }}
+    {{ component('Alert', {message: 'Hello Twig Components!'}) }}
 
     <twig:Alert message="Or use the fun HTML syntax!" />
 
@@ -193,7 +193,7 @@ them as "props" via the a 2nd argument to ``component()``:
 
 .. code-block:: twig
 
-    {{ component('Alert', { message: 'Successfully created!' }) }}
+    {{ component('Alert', {message: 'Successfully created!'}) }}
 
     {{ component('Alert', {
         type: 'danger',
@@ -235,7 +235,7 @@ available in every component template:
 
 .. code-block:: html+twig
 
-    <div {{ attributes.defaults({ class: 'alert alert-'~ type }) }}>
+    <div {{ attributes.defaults({class: 'alert alert-' ~ type}) }}>
         {{ message }}
     </div>
 
@@ -295,17 +295,22 @@ prefix the attribute with ``:`` or use the normal ``{{ }}`` syntax:
     // pass object, array, or anything you imagine
     <twig:Alert :foo="{col: ['foo', 'oof']}" />
 
-Boolean props require using the dynamic syntax:
+Boolean props are converted using PHP's type juggling rules. The 
+string ``"false"`` is converted to the boolean ``true``. 
+
+To pass the boolean ``false``, you can pass a Twig expression 
+``{{ false }}`` or use the dynamic syntax (with the ``:`` prefix):
 
 .. code-block:: html+twig
 
-    {# in this example, the 'false' value is passed as a string
-       (so it's converted automatically to the true boolean value) #}
+    {# ❌ the string 'false' is converted to the boolean 'true' #}   
     <twig:Alert message="..." withCloseButton="false" />
 
-    {# in the following examples, the 'false' value is passed as a boolean property #}
-    <twig:Alert message="..." :withCloseButton="false" />
+    {# ✅ use the 'false' boolean value #}
     <twig:Alert message="..." withCloseButton="{{ false }}" />
+    
+    {# ✅ use the dynamic syntax #}
+    <twig:Alert message="..." :withCloseButton="false" />    
 
 Don't forget that you can mix and match props with attributes that you
 want to render on the root element:
@@ -319,7 +324,7 @@ This requires Twig 3.7.0 or higher:
 
 .. code-block:: html+twig
 
-    <twig:Alert{{ ...myAttributes }} />
+    <twig:Alert {{ ...myAttributes }} />
 
 We'll use the HTML syntax for the rest of the guide.
 
@@ -341,7 +346,7 @@ close tag, it's passed to your component template as the block called
 
 .. code-block:: html+twig
 
-    <div {{ attributes.defaults({ class: 'alert alert-'~ type }) }}">
+    <div {{ attributes.defaults({class: 'alert alert-' ~ type}) }}">
         {% block content %}{% endblock %}
     </div>
 
@@ -450,7 +455,7 @@ passed to ``mount()``.
 .. code-block:: html+twig
 
     <twig:Alert
-        :isSuccess="false"
+        isSuccess="{{ false }}"
         message="Danger Will Robinson!"
     />
 
@@ -592,7 +597,7 @@ name is determined by the location of the template:
 .. code-block:: html+twig
 
     {# templates/components/Button/Primary.html.twig #}
-    <button {{ attributes.defaults({ class: 'primary' }) }}>
+    <button {{ attributes.defaults({class: 'primary'}) }}>
         {% block content %}{% endblock %}
     </button>
 
@@ -641,7 +646,7 @@ To tell the system that ``icon`` and ``type`` are props and not attributes, use 
     {# templates/components/Button.html.twig #}
     {% props icon = null, type = 'primary' %}
 
-    <button {{ attributes.defaults({ class: 'btn btn-'~type }) }}>
+    <button {{ attributes.defaults({class: 'btn btn-'~type}) }}>
         {% block content %}{% endblock %}
         {% if icon %}
             <span class="fa-solid fa-{{ icon }}"></span>
@@ -676,6 +681,17 @@ You can also add more, named blocks:
 
 .. code-block:: html+twig
 
+    <div class="alert alert-{{ type }}">
+        {% block content %}{% endblock %}
+        {% block footer %}
+            <div>Default Footer content</div>
+        {% endblock %}
+     </div>
+
+Render these in the normal way.
+     
+.. code-block:: html+twig
+
     <twig:Alert type="success">
         <div>Congrats on winning a free puppy!</div>
 
@@ -684,17 +700,6 @@ You can also add more, named blocks:
             <button class="btn btn-primary">Claim your prize</button>
         </twig:block>
     </twig:Alert>
-
-Render these in the normal way.
-
-.. code-block:: html+twig
-
-    <div class="alert alert-{{ type }}">
-        {% block content %}{% endblock %}
-        {% block footer %}
-            <div>Default Footer content</div>
-        {% endblock %}
-     </div>
 
 Passing content into your template can also be done with LiveComponents
 though there are some caveats to know related to variable scope.
@@ -784,7 +789,7 @@ access to some properties or functions from higher components, that can be done 
     {# templates/SuccessAlert.html.twig #}
     {% set name = 'Fabien' %}
     {% set message = 'Hello' %}
-    {% component Alert with { type: 'success', name: 'Bart' } %}
+    {% component Alert with {type: 'success', name: 'Bart'} %}
         Hello {{ name }} {# Hello Bart #}
 
         {{ message }} {{ outerScope.name }} {# Hello Fabien #}
@@ -802,7 +807,7 @@ Remember though that the ``outerScope`` reference only starts once you're INSIDE
     {# templates/FancyProfileCard.html.twig #}
     {% component Card %}
         {% block header %}
-            {% component Alert with { message: outerScope.this.someProp } %} {# not yet INSIDE the Alert template #}
+            {% component Alert with {message: outerScope.this.someProp} %} {# not yet INSIDE the Alert template #}
                 {% block content %}
                     {{ message }} {# same value as below, indirectly refers to FancyProfileCard::someProp #}
                     {{ outerScope.outerScope.this.someProp }} {# directly refers to FancyProfileCard::someProp #}
@@ -818,7 +823,7 @@ Inheritance & Forwarding "Outer Blocks"
 
     The ``outerBlocks`` variable was added in 2.10.
 
-The content inside a ``<twig:{Component}>`` tag should be viewed as living in
+The content inside a ``<twig:`` component tag should be viewed as living in
 its own, independent template, which *extends* the component's template. This means that
 any blocks that live in the "outer" template are not available. However, you
 *can* access these via a special ``outerBlocks`` variable:
@@ -831,8 +836,10 @@ any blocks that live in the "outer" template are not available. However, you
 
   {% block body %}
     <twig:Alert>
-        {# block('call_to_action') #} would not work #}
+        {# this would NOT work... #}
+        {{ block('call_to_action') }}
 
+        {# ...but this works! #}
         {{ block(outerBlocks.call_to_action) }}
     </twig:Alert>
   {% endblock %}
@@ -852,7 +859,7 @@ We already have a generic ``Alert`` component, so let's re-use it:
 .. code-block:: html+twig
 
     {# templates/components/Alert.html.twig #}
-    <div {{ attributes.defaults({ class: 'alert alert-'~ type }) }}">
+    <div {{ attributes.defaults({class: 'alert alert-'~type}) }}">
         {% block content %}{% endblock %}
     </div>
 
@@ -863,7 +870,7 @@ that's passed to it via the ``outerBlocks`` variable and forward it into ``Alert
 
     {# templates/components/SuccessAlert.html.twig #}
     <twig:Alert type="success">
-    {% component Alert with { type: 'success' } %}
+    {% component Alert with {type: 'success'} %}
         {{ block(outerBlocks.content) }}
     </twig:Alert>
 
@@ -884,7 +891,7 @@ component's template:
 .. code-block:: html+twig
 
     {# templates/components/MyComponent.html.twig #}
-    <div{{ attributes }}>
+    <div {{ attributes }}>
       My Component!
     </div>
 
@@ -904,7 +911,7 @@ Set an attribute's value to ``true`` to render just the attribute name:
 .. code-block:: html+twig
 
     {# templates/components/Input.html.twig #}
-    <input{{ attributes }}/>
+    <input {{ attributes }}/>
 
     {# render component #}
     <twig:Input type="text" value="" :autofocus="true" />
@@ -917,7 +924,7 @@ Set an attribute's value to ``false`` to exclude the attribute:
 .. code-block:: html+twig
 
     {# templates/components/Input.html.twig #}
-    <input{{ attributes }}/>
+    <input {{ attributes }}/>
 
     {# render component #}
     <twig:Input type="text" value="" :autofocus="false" />
@@ -929,7 +936,7 @@ To add a custom `Stimulus controller`_ to your root component element:
 
 .. code-block:: html+twig
 
-    <div {{ attributes.defaults(stimulus_controller('my-controller', { someValue: 'foo' })) }}>
+    <div {{ attributes.defaults(stimulus_controller('my-controller', {someValue: 'foo'})) }}>
 
 .. versionadded:: 2.9
 
@@ -958,16 +965,16 @@ the exception of *class*. For ``class``, the defaults are prepended:
 .. code-block:: html+twig
 
     {# templates/components/MyComponent.html.twig #}
-    <button{{ attributes.defaults({ class: 'bar', type: 'button' }) }}>Save</button>
+    <button {{ attributes.defaults({class: 'bar', type: 'button'}) }}>Save</button>
 
     {# render component #}
-    {{ component('MyComponent', { style: 'color:red' }) }}
+    {{ component('MyComponent', {style: 'color:red'}) }}
 
     {# renders as: #}
     <button class="bar" type="button" style="color:red">Save</button>
 
     {# render component #}
-    {{ component('MyComponent', { class: 'foo', type: 'submit' }) }}
+    {{ component('MyComponent', {class: 'foo', type: 'submit'}) }}
 
     {# renders as: #}
     <button class="bar foo" type="submit">Save</button>
@@ -993,7 +1000,7 @@ You can take full control over the attributes that are rendered by using the
     </div>
 
     {# render component #}
-    {{ component('MyComponent', { style: 'color:red;' }) }}
+    {{ component('MyComponent', {style: 'color:red;'}) }}
 
     {# renders as: #}
     <div style="color:red; display:block;">
@@ -1018,7 +1025,7 @@ You can take full control over the attributes that are rendered by using the
            </div>
 
            {# render component #}
-           {{ component('MyComponent', { style: 'color:red;' }) }}
+           {{ component('MyComponent', {style: 'color:red;'}) }}
 
            {# renders as: #}
            <div style="color:red;" style="color:red; display:block;"> {# style is rendered twice! #}
@@ -1038,7 +1045,7 @@ You can take full control over the attributes that are rendered by using the
            </div>
 
            {# render component #}
-           {{ component('MyComponent', { style: 'color:red;' }) }}
+           {{ component('MyComponent', {style: 'color:red;'}) }}
 
            {# renders as: #}
            <div style="display:block;" style="color:red;"> {# style is rendered twice! #}
@@ -1053,10 +1060,10 @@ Extract specific attributes and discard the rest:
 .. code-block:: html+twig
 
     {# render component #}
-    {{ component('MyComponent', { class: 'foo', style: 'color:red' }) }}
+    {{ component('MyComponent', {class: 'foo', style: 'color:red'}) }}
 
     {# templates/components/MyComponent.html.twig #}
-    <div{{ attributes.only('class') }}>
+    <div {{ attributes.only('class') }}>
       My Component!
     </div>
 
@@ -1073,10 +1080,10 @@ Exclude specific attributes:
 .. code-block:: html+twig
 
     {# render component #}
-    {{ component('MyComponent', { class: 'foo', style: 'color:red' }) }}
+    {{ component('MyComponent', {class: 'foo', style: 'color:red'}) }}
 
     {# templates/components/MyComponent.html.twig #}
-    <div{{ attributes.without('class') }}>
+    <div {{ attributes.without('class') }}>
       My Component!
     </div>
 
@@ -1100,14 +1107,14 @@ and footer. Here's an example of this:
 .. code-block:: html+twig
 
     {# templates/components/Dialog.html.twig #}
-    <div{{ attributes }}>
-        <div{{ attributes.nested('title') }}>
+    <div {{ attributes }}>
+        <div {{ attributes.nested('title') }}>
             {% block title %}Default Title{% endblock %}
         </div>
-        <div{{ attributes.nested('body') }}>
+        <div {{ attributes.nested('body') }}>
             {% block content %}{% endblock %}
         </div>
-        <div{{ attributes.nested('footer') }}>
+        <div {{ attributes.nested('footer') }}>
             {% block footer %}Default Footer{% endblock %}
         </div>
     </div>
@@ -1162,7 +1169,7 @@ function where you define ``base`` classes that should always be present and the
     {% props color = 'blue', size = 'md' %}
 
      {% set alert = cva({
-        base: 'alert ',
+        base: 'alert',
         variants: {
             color: {
                 blue: 'bg-blue',
@@ -1222,7 +1229,7 @@ with the ``cva()`` function:
        // ...
     }) %}
 
-    <div class="{{ alert.apply({color, size}, attributes.render('class')) | tailwind_merge }}">
+    <div class="{{ alert.apply({color, size}, attributes.render('class'))|tailwind_merge }}">
          {% block content %}{% endblock %}
     </div>
 
@@ -1238,7 +1245,7 @@ when multiple other variant conditions are met.
     {% props color = 'blue', size = 'md' %}
 
     {% set alert = cva({
-        base: 'alert ',
+        base: 'alert',
         variants: {
             color: {
                 blue: 'bg-blue',
@@ -1291,7 +1298,7 @@ If no variants match, you can define a default set of classes to apply:
     {% props color = 'blue', size = 'md' %}
 
     {% set alert = cva({
-        base: 'alert ',
+        base: 'alert',
         variants: {
             color: {
                 blue: 'bg-blue',
