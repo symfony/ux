@@ -1,0 +1,88 @@
+.SupportBox {
+  --space-large: 1.5rem;
+  --bg-color: var(--bs-body-bg);
+
+  border: 1px solid var(--bs-secondary-bg);
+  border-radius: var(--border-radius);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-large);
+  padding: var(--space-large);
+  position: relative;
+  place-self: stretch;
+  background: var(--bg-color);
+  transition: transform 750ms ease-in-out;
+
+  &:hover {
+    transition: transform 200ms ease-in-out;
+    transform: translateY(-.25rem);
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .SupportBox {
+    --space-large: 1rem;
+  }
+}
+
+.SupportBox_logo {
+  --logo-size: 3rem;
+  width: var(--logo-size);
+  height: var(--logo-size);
+  border-radius: 14%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  svg {
+    width: 100%;
+    height: auto;
+  }
+
+  @media screen and (max-width: 740px) {
+    --logo-size: 4rem;
+  }
+}
+
+.SupportBox_badge {
+  position: absolute;
+  top: var(--space-large, 1rem);
+  right: var(--space-large, 1rem);
+  .Badge {
+    background: var(--bs-secondary-bg);
+    border: 1px solid var(--bs-secondary-bg);
+  }
+}
+
+.SupportBox_content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  flex: 1 1 auto;
+  gap: 1rem;
+}
+
+.SupportBox_title {
+  font-weight: 500;
+  font-size: 2rem;
+  color: var(--bs-body-color);
+  text-decoration: none;
+  margin: 0;
+}
+
+.SupportBox_link {
+  &:after {
+    content: '';
+    position: absolute;
+    inset: 0 0;
+    z-index: 40;
+  }
+}
+
+.SupportBox_description {
+  line-height: 1.5;
+  margin-bottom: 0;
+}
+
+

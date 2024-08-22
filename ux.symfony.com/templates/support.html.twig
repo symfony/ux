@@ -1,0 +1,106 @@
+{% extends 'base.html.twig' %}
+
+{% set meta = {
+    title: 'Support',
+    description: 'Symfony UX support - Ask questions about Symfony UX and get answers: Slack channel, Github discussions...',
+    canonical: url('app_support'),
+} %}
+
+{% block content %}
+
+    <div class="hero">
+        <div class="container-fluid container-xxl px-4 pt-4 px-md-5">
+            <h1 class="text-center mt-5"><a href="{{ url('app_support') }}">Support</a></h1>
+            <p class="text-center mt-2 mb-5">Ask questions about Symfony UX and find the answers you need.</p>
+        </div>
+    </div>
+
+    <section style="--padding:0;">
+        <div class="container-fluid container px-4 pt-4 px-md-5" style="max-width: 1000px;">
+            <div style="display: grid; gap: 3rem; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr))">
+
+                <div class="SupportBox">
+                    <div class="SupportBox_logo">
+                        <twig:Icon name="github"  />
+                    </div>
+                    <div class="SupportBox_badge">
+                        <span class="Badge Badge--new">
+                            <twig:ux:icon name="bi:stars" style="width: 1.25em; display: block;" />
+                            New!
+                        </span>
+                    </div>
+                    <div class="SupportBox_content">
+                        <h2 class="SupportBox_title">
+                            <a href="https://github.com/symfony/ux/discussions" class="SupportBox_link" rel="external me">Github Discussions</a>
+                        </h2>
+                        <p class="SupportBox_description">
+                            Engage in our GitHub Discussions to find answers and ask the community for help.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="SupportBox">
+                    <div class="SupportBox_logo">
+                        <twig:ux:icon name="logos:slack-icon" />
+                    </div>
+                    <div class="SupportBox_content">
+                        <h2 class="SupportBox_title">
+                            <a href="https://symfony.com/slack" class="SupportBox_link" rel="external noopener">Symfony Slack</a>
+                        </h2>
+                        <p class="SupportBox_description">
+                            Join the Symfony Slack <code>#UX</code> channel to seek help or offer your expertise.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="SupportBox">
+                    <div class="SupportBox_logo">
+                        <twig:ux:icon name="x-twitter" />
+                    </div>
+                    <div class="SupportBox_content">
+                        <h2 class="SupportBox_title">
+                            <a href="https://x.com/SymfonyUX" class="SupportBox_link" rel="external me"><s>Twitter</s> X</a>
+                        </h2>
+                        <p class="SupportBox_description">
+                            Follow the conversation on X for the latest tips and updates about <code>#SymfonyUX</code>.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="SupportBox">
+                    <div class="SupportBox_logo">
+                        <twig:ux:icon name="symfony" />
+                    </div>
+                    <div class="SupportBox_content">
+                        <h2 class="SupportBox_title">
+                            <a href="https://symfony.com/bundles#symfony-ux-bundles" class="SupportBox_link" rel="external noopener">Symfony Docs</a>
+                        </h2>
+                        <p class="SupportBox_description">
+                            Explore the official Symfony docs on <code>UX bundles</code> and components.
+                        </p>
+                    </div>
+                </div>
+
+                {% if false %}
+                <div class="SupportBox">
+                    <div class="SupportBox_logo">
+                        <twig:ux:icon name="logos:stackoverflow-icon" />
+                    </div>
+                    <div class="SupportBox_content">
+                        <h2 class="SupportBox_title">
+                            <a href="https://stackoverflow.com/questions/tagged/symfonyux" class="SupportBox_link">Stack Overflow</a>
+                        </h2>
+                        <p class="SupportBox_description">Lorem ipsum dolor sit amet, consectetur adipiscing elit.<code>#ux</code> Nullam auctor, nunc nec</p>
+                    </div>
+                </div>
+                {% endif %}
+
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block aside %}
+    {{ include('_aside.html.twig') }}
+{% endblock %}

@@ -50,16 +50,19 @@
     transform: translateY(-20%);
     opacity: 0;
     z-index: -1;
-    transition: transform 250ms ease-out;
+    transition: transform 350ms ease-out;
     width: 100%;
     flex-direction: column;
     padding: 1rem;
     gap: 1rem;
+    height: 0;
   }
   .AppHeader.open .AppNav_menu {
     transform: translateY(0);
+    transition: transform 500ms ease-out, height 500ms ease-out;
     opacity: 1;
     z-index: 1;
+    height: auto;
   }
   .AppNav_menu a {
     font-size: 1.5rem;
@@ -92,6 +95,11 @@
   transition: all 250ms;
   &:hover {
     opacity: 1;
+  }
+}
+.AppNav_item--desktop {
+  @media (min-width: 860px) {
+    display: none;
   }
 }
 

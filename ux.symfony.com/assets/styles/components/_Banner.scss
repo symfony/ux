@@ -5,13 +5,14 @@
 .Banner {
   background: #0A0A0A;
   color: #fff;
+  transition: transform 250ms linear;
 }
 .Banner + .App {
   position: relative;
 }
 
 .Banner:has(+ .App .AppHeader.open) {
-  display: none;
+  transform: translateY(-100%);
 }
 
 .BannerInner {

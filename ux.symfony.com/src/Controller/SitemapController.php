@@ -49,6 +49,7 @@ final class SitemapController extends AbstractController
         yield $this->generateAbsoluteUrl('app_icons');
         yield $this->generateAbsoluteUrl('app_demos');
         yield $this->generateAbsoluteUrl('app_changelog');
+        yield $this->generateAbsoluteUrl('app_support');
 
         // UX Packages
         foreach ($this->uxPackageRepository->findAll() as $package) {
