@@ -1,0 +1,53 @@
+{% extends 'base.html.twig' %}
+
+{% set meta = {
+    title: 'Documentation',
+    description: 'Symfony UX bundle and packages documentation',
+    canonical: url('app_documentation'),
+} %}
+
+{% block content %}
+    <div class="hero">
+        <div class="container-fluid container-xxl px-4 pt-4 px-md-5">
+            <h1 class="text-center mt-5">Documentation</h1>
+            <p class="text-center demo-introduction">
+                    Read full documentation on
+                <a href="https://symfony.com/bundles#symfony-ux-bundles"><code>symfony.com</code></a>
+            </p>
+        </div>
+    </div>
+
+    <section class="container-fluid container-xxl px-4 px-md-5 py-3">
+        <div class="align-items-center text-md-start mb-4">
+            <h2 class="ubuntu pt-2 component-headlines">Packages</h2>
+        </div>
+        <div
+            style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));">
+            {% for package in packages %}
+                <div class="PackageBox" style="--gradient: {{ package.gradient }};--color: {{ package.color }};">
+                    <div class="PackageBox_logo" style="--logo-size: 4rem;">
+                        <img width="36" height="36" src="{{ asset('images/ux_packages/' ~ package.imageFilename) }}"
+                             alt="Image for the {{ package.humanName }} UX package">
+                    </div>
+                    <div class="PackageBox_content">
+                        <h3 class="PackageBox_title" style="font-size: 1.25rem;">
+                            <a href="{{ path(package.route) }}">{{ package.humanName }}</a>
+                        </h3>
+                        <a href="{{ package.officialDocsUrl }}" class="PackageBox_link"
+                           rel="external noopener noreferrer"
+                           title="{{ package.humanName }} documentation on symfony.com"
+                        >
+                            <twig:ux:icon name="lucide:book" width="1em" />
+                            Read Docs
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block aside %}
+    {{ include('_aside.html.twig') }}
+{% endblock %}
