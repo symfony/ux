@@ -14,27 +14,27 @@
                     url="{{ package.screencastLink }}"
                     icon="symfonycast"
                 />
+                <twig:DocsLink
+                    title="Community"
+                    text="Feedback · support · contributions."
+                    url="https://github.com/symfony/ux"
+                    icon="github"
+                />
             {% else %}
                 <twig:DocsLink
-                    title="Screencasts"
-                    text="Watch UX screencasts on SymfonyCasts."
-                    url="https://symfonycasts.com/screencast/stimulus"
-                    icon="symfonycast"
+                    title="Community"
+                    text="Feedback · support · contributions."
+                    url="https://github.com/symfony/ux"
+                    icon="github"
+                />
+                <twig:DocsLink
+                    title="Support"
+                    text="Get help with Symfony UX {{ package.humanName }}"
+                    url="{{ url('app_support') }}"
+                    icon="symfony"
                 />
             {% endif %}
-            {% if package.docsLink %}
-{# <twig:DocsLink #}
-{# url="{{ package.docsLink }}" #}
-{# title="Related Docs" #}
-{# text="{{ package.docsLinkText }}" #}
-{# /> #}
-            {% endif %}
-             <twig:DocsLink
-                title="Community"
-                text="Feedback · support · contributions."
-                url="https://github.com/symfony/ux"
-                icon="github"
-            />
+
         </div>
     </div>
 </aside>
