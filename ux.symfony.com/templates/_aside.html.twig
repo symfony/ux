@@ -5,20 +5,20 @@
                 <twig:DocsLink
                     title="Documentation"
                     text="Get going with the official Symfony UX doc."
-                    url="https://symfony.com/bundles/StimulusBundle/current/index.html"
-                    icon="symfony"
-                />
-                <twig:DocsLink
-                    title="Screencasts"
-                    text="Watch UX screencasts on SymfonyCasts."
-                    url="https://symfonycasts.com/screencast/stimulus"
-                    icon="symfonycast"
+                    url="{{ path('app_documentation') }}"
+                    icon="mdi:book-open-variant-outline"
                 />
                 <twig:DocsLink
                     title="Community"
-                    text="Feedback · support · contributions."
+                    text="Feedback · ideas · contributions."
                     url="https://github.com/symfony/ux"
                     icon="github"
+                />
+                <twig:DocsLink
+                    title="Support"
+                    text="Ask questions about Symfony UX."
+                    url="{{ path('app_support') }}"
+                    icon="raphael:help"
                 />
             {% endblock %}
         </div>
