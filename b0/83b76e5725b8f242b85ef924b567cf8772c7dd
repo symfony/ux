@@ -1,0 +1,33 @@
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-08-21T09:38:12Z
+
+> @WebMamba I don't get the Stimulus button example... how would it work
+
+Sorry, I don't get what you mean. Do you think the example is not relevant?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-21T18:15:46Z
+
+> > @WebMamba I don't get the Stimulus button example... how would it work
+>
+> Sorry, I don't get what you mean. Do you think the example is not relevant?
+
+No sorry, i have (as too often) miss-expressed myself :) To be working, it would need some more code.. i know the goal is to be synthetic and didactic, but i feel it a bit missleading. We speak about state transition when clicked, but we don't show the code to do this.
+
+What do you recon here ? (and i'll follow your vision ;)) :
+* simplified code to give an idea of the component behaviour (but is not _copy-pastable_ as it)
+* exact code (that can be a bit too much to illustrate the article)
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-08-23T14:17:15Z
+
+I think adding a state is not much if you thing that it could be relevant. So lets add this state
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-23T18:43:26Z
+
+Let's merge as it is if you're okay, and we'll see the example if someone ask questions :))
