@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent\Tests\Unit\Hydration;
+namespace Symfony\UX\LiveComponent\Tests\Integration\Hydration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\LiveComponent\Hydration\DoctrineEntityHydrationExtension;
@@ -27,7 +27,7 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
 
     public function testCompositeId(): void
     {
-        $compositeIdEntity = CompositeIdEntityFactory::createOne()->save()->object();
+        $compositeIdEntity = CompositeIdEntityFactory::createOne()->_real();
 
         /** @var DoctrineEntityHydrationExtension $extension */
         $extension = self::getContainer()->get('ux.live_component.doctrine_entity_hydration_extension');
@@ -40,7 +40,7 @@ class DoctrineEntityHydrationExtensionTest extends KernelTestCase
 
     public function testForeignKeyId(): void
     {
-        $foreignKeyIdEntity = ForeignKeyIdEntityFactory::createOne()->save()->object();
+        $foreignKeyIdEntity = ForeignKeyIdEntityFactory::createOne()->_real();
 
         /** @var DoctrineEntityHydrationExtension $extension */
         $extension = self::getContainer()->get('ux.live_component.doctrine_entity_hydration_extension');

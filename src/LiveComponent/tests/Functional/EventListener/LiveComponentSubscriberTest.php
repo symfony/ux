@@ -22,7 +22,7 @@ use Zenstruck\Browser\Test\HasBrowser;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-use function Zenstruck\Foundry\create;
+use function Zenstruck\Foundry\Persistence\persist;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -48,7 +48,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
     public function testCanRenderComponentAsHtml(): void
     {
         $component = $this->mountComponent('component1', [
-            'prop1' => $entity = create(Entity1::class)->object(),
+            'prop1' => $entity = persist(Entity1::class),
             'prop2' => $date = new \DateTime('2021-03-05 9:23'),
             'prop3' => 'value3',
             'prop4' => 'value4',

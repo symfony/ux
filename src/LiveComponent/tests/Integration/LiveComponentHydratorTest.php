@@ -44,7 +44,9 @@ use Symfony\UX\TwigComponent\ComponentMetadata;
 use Zenstruck\Foundry\Test\Factories;
 use Zenstruck\Foundry\Test\ResetDatabase;
 
-use function Zenstruck\Foundry\create;
+use function Zenstruck\Foundry\object;
+use function Zenstruck\Foundry\Persistence\persist;
+use function Zenstruck\Foundry\Persistence\proxy;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -61,7 +63,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $this->markTestSkipped(\sprintf('Test requires PHP version %s or higher.', $minPhpVersion));
         }
 
-        // lazily create the test case so each case can prep its data with an isolated container
+        // lazily persist the test case so each case can prep its data with an isolated container
         $testBuilder = $testFactory();
         if (!$testBuilder instanceof HydrationTest) {
             throw new \InvalidArgumentException('Test case callable must return a HydrationTest instance.');
@@ -77,7 +79,6 @@ final class LiveComponentHydratorTest extends KernelTestCase
         $hydratedComponent2 = clone $testCase->component;
 
         $liveMetadata = $testCase->liveMetadata;
-
         $this->factory()->mountFromObject(
             $originalComponentWithData,
             $testCase->inputProps,
@@ -180,9 +181,9 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'onUpdated: set to an array' => [function () {
-            $product = create(ProductFixtureEntity::class, [
+            $product = persist(ProductFixtureEntity::class, [
                 'name' => 'Chicken',
-            ])->object();
+            ]);
 
             return HydrationTest::create(new class {
                 #[LiveProp(writable: ['name'], onUpdated: ['name' => 'onNameUpdated'])]
@@ -203,8 +204,8 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'onUpdated: with IDENTITY' => [function () {
-            $entityOriginal = create(Entity1::class)->object();
-            $entityNext = create(Entity1::class)->object();
+            $entityOriginal = persist(Entity1::class);
+            $entityNext = persist(Entity1::class);
             \assert($entityOriginal instanceof Entity1);
             \assert($entityNext instanceof Entity1);
 
@@ -236,7 +237,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'string: (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class {
-                #[LiveProp()]
+                #[LiveProp]
                 public string $firstName;
             })
                 ->mountWith(['firstName' => 'Ryan'])
@@ -248,7 +249,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'string: changing non-writable causes checksum fail' => [function () {
             return HydrationTest::create(new class {
-                #[LiveProp()]
+                #[LiveProp]
                 public string $firstName;
             })
                 ->mountWith(['firstName' => 'Ryan'])
@@ -294,7 +295,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
             $date = new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York'));
 
             return HydrationTest::create(new class {
-                #[LiveProp()]
+                #[LiveProp]
                 public \DateTime $createdAt;
             })
                 ->mountWith(['createdAt' => $date])
@@ -309,11 +310,11 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Persisted entity: (de)hydration works correctly to/from id' => [function () {
-            $entity1 = create(Entity1::class)->object();
+            $entity1 = persist(Entity1::class);
             \assert($entity1 instanceof Entity1);
 
             return HydrationTest::create(new class {
-                #[LiveProp()]
+                #[LiveProp]
                 public Entity1 $entity1;
             })
                 ->mountWith(['entity1' => $entity1])
@@ -328,8 +329,8 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Persisted entity: writable CAN be changed via id' => [function () {
-            $entityOriginal = create(Entity1::class)->object();
-            $entityNext = create(Entity1::class)->object();
+            $entityOriginal = persist(Entity1::class);
+            $entityNext = persist(Entity1::class);
             \assert($entityOriginal instanceof Entity1);
             \assert($entityNext instanceof Entity1);
 
@@ -349,8 +350,8 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Persisted entity: writable (via IDENTITY constant) CAN be changed via id' => [function () {
-            $entityOriginal = create(Entity1::class)->object();
-            $entityNext = create(Entity1::class)->object();
+            $entityOriginal = persist(Entity1::class);
+            $entityNext = persist(Entity1::class);
             \assert($entityOriginal instanceof Entity1);
             \assert($entityNext instanceof Entity1);
 
@@ -370,9 +371,9 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Persisted entity: non-writable identity but with writable paths updates correctly' => [function () {
-            $product = create(ProductFixtureEntity::class, [
+            $product = persist(ProductFixtureEntity::class, [
                 'name' => 'Rubber Chicken',
-            ])->object();
+            ]);
 
             return HydrationTest::create(new class {
                 #[LiveProp(writable: ['name'])]
@@ -400,16 +401,16 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Persisted entity: deleting entity between dehydration and hydration sets it to null' => [function () {
-            $product = create(ProductFixtureEntity::class);
+            $product = proxy(persist(ProductFixtureEntity::class));
 
             return HydrationTest::create(new class {
                 // test that event the writable path doesn't cause problems
                 #[LiveProp(writable: ['name'])]
                 public ?ProductFixtureEntity $product;
             })
-                ->mountWith(['product' => $product->object()])
+                ->mountWith(['product' => $product->_real()])
                 ->beforeHydration(function () use ($product) {
-                    $product->remove();
+                    $product->_delete();
                 })
                 ->assertObjectAfterHydration(function (object $object) {
                     self::assertNull(
@@ -420,7 +421,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Persisted entity: with custom_normalizer and embeddable (de)hydrates correctly' => [function () {
-            $entity2 = create(Entity2::class, ['embedded1' => new Embeddable1('bar'), 'embedded2' => new Embeddable2('baz')])->object();
+            $entity2 = persist(Entity2::class, ['embedded1' => new Embeddable1('bar'), 'embedded2' => new Embeddable2('baz')]);
 
             return HydrationTest::create(new class {
                 #[LiveProp(useSerializerForHydration: true)]
@@ -470,7 +471,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Index array: (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class {
-                #[LiveProp()]
+                #[LiveProp]
                 public array $foods = [];
             })
                 ->mountWith(['foods' => ['banana', 'popcorn']])
@@ -504,7 +505,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Associative array: (de)hyrates correctly' => [function () {
             return HydrationTest::create(new class {
-                #[LiveProp()]
+                #[LiveProp]
                 public array $options = [];
             })
                 ->mountWith(['options' => [
@@ -733,7 +734,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Empty array: (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class {
-                #[LiveProp()]
+                #[LiveProp]
                 public array $foods = [];
             })
                 ->mountWith([])
@@ -748,9 +749,9 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Array with objects: (de)hydrates correctly' => [function () {
-            $prod1 = create(ProductFixtureEntity::class, ['name' => 'item1'])->object();
+            $prod1 = persist(ProductFixtureEntity::class, ['name' => 'item1']);
             $prod2 = new ProductFixtureEntity();
-            $prod3 = create(ProductFixtureEntity::class, ['name' => 'item3'])->object();
+            $prod3 = persist(ProductFixtureEntity::class, ['name' => 'item3']);
 
             return HydrationTest::create(new DummyObjectWithObjects())
                 ->mountWith(['products' => [$prod1, $prod2, $prod3]])
@@ -778,10 +779,10 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Enum: null remains null' => [function () {
             return HydrationTest::create(new class {
-                #[LiveProp()]
+                #[LiveProp]
                 public ?IntEnum $int = null;
 
-                #[LiveProp()]
+                #[LiveProp]
                 public ?StringEnum $string = null;
             })
                 ->mountWith([])
@@ -795,10 +796,10 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Enum: (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class {
-                #[LiveProp()]
+                #[LiveProp]
                 public ?IntEnum $int = null;
 
-                #[LiveProp()]
+                #[LiveProp]
                 public ?StringEnum $string = null;
             })
                 ->mountWith(['int' => IntEnum::HIGH, 'string' => StringEnum::ACTIVE])
@@ -970,14 +971,14 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'Array with DTOs: fully writable allows anything to change' => [function () {
-            $address1 = create(Address::class, ['address' => '17 Arcadia Road', 'city' => 'London'])->object();
-            $address2 = create(Address::class, ['address' => '4 Privet Drive', 'city' => 'Little Whinging'])->object();
-            $address3 = create(Address::class, ['address' => '124 Conch St.', 'city' => 'Bikini Bottom'])->object();
-            $address4 = create(Address::class, ['address' => '32 Windsor Gardens', 'city' => 'London'])->object();
+            $address1 = object(Address::class, ['address' => '17 Arcadia Road', 'city' => 'London']);
+            $address2 = object(Address::class, ['address' => '4 Privet Drive', 'city' => 'Little Whinging']);
+            $address3 = object(Address::class, ['address' => '124 Conch St.', 'city' => 'Bikini Bottom']);
+            $address4 = object(Address::class, ['address' => '32 Windsor Gardens', 'city' => 'London']);
 
             return HydrationTest::create(new class {
                 /**
-                 * @var Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
+                 * @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
                  */
                 #[LiveProp(writable: true, useSerializerForHydration: true)]
                 public array $addresses = [];
@@ -996,19 +997,19 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->userUpdatesProps(['addresses' => [$address3, $address4]])
                 ->assertObjectAfterHydration(function (object $object) {
                     self::assertEquals([
-                        create(Address::class, ['address' => '124 Conch St.', 'city' => 'Bikini Bottom'])->object(),
-                        create(Address::class, ['address' => '32 Windsor Gardens', 'city' => 'London'])->object(),
+                        object(Address::class, ['address' => '124 Conch St.', 'city' => 'Bikini Bottom']),
+                        object(Address::class, ['address' => '32 Windsor Gardens', 'city' => 'London']),
                     ], $object->addresses);
                 });
         }];
 
         yield 'Array with DTOs: fully writable allows partial changes' => [function () {
-            $address1 = create(Address::class, ['address' => '1600 Pennsylvania Avenue', 'city' => 'Washington DC'])->object();
-            $address2 = create(Address::class, ['address' => '221 B Baker St', 'city' => 'Birmingham'])->object();
+            $address1 = object(Address::class, ['address' => '1600 Pennsylvania Avenue', 'city' => 'Washington DC']);
+            $address2 = object(Address::class, ['address' => '221 B Baker St', 'city' => 'Birmingham']);
 
             return HydrationTest::create(new class {
                 /**
-                 * @var Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
+                 * @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address[]
                  */
                 #[LiveProp(writable: true, useSerializerForHydration: true)]
                 public array $addresses = [];
@@ -1027,8 +1028,8 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->userUpdatesProps(['addresses.1.city' => 'London'])
                 ->assertObjectAfterHydration(function (object $object) {
                     self::assertEquals([
-                        create(Address::class, ['address' => '1600 Pennsylvania Avenue', 'city' => 'Washington DC'])->object(),
-                        create(Address::class, ['address' => '221 B Baker St', 'city' => 'London'])->object(),
+                        object(Address::class, ['address' => '1600 Pennsylvania Avenue', 'city' => 'Washington DC']),
+                        object(Address::class, ['address' => '221 B Baker St', 'city' => 'London']),
                     ], $object->addresses);
                 });
         }];
@@ -1036,21 +1037,21 @@ final class LiveComponentHydratorTest extends KernelTestCase
         yield 'Array with DTOs: fully writable allows deep partial changes' => [function () {
             return HydrationTest::create(new class {
                 /**
-                 * @var Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsArrayOfDtos[]
+                 * @var \Symfony\UX\LiveComponent\Tests\Fixtures\Dto\HoldsArrayOfDtos[] $dtos
                  */
                 #[LiveProp(writable: true, useSerializerForHydration: true)]
                 public array $dtos = [];
             })
                 ->mountWith(['dtos' => [
-                    create(HoldsArrayOfDtos::class, ['addresses' => [
-                        create(Address::class, ['address' => '742 Evergreen Terrace', 'city' => 'Boston'])->object(),
-                        create(Address::class, ['address' => 'Apartment 5A, 129 West 81st Street', 'city' => 'New York'])->object(),
-                        create(Address::class, ['address' => '52 Festive Road', 'city' => 'London'])->object(),
-                    ]])->object(),
-                    create(HoldsArrayOfDtos::class, ['addresses' => [
-                        create(Address::class, ['address' => '698 Sycamore Road', 'city' => 'San Pueblo'])->object(),
-                        create(Address::class, ['address' => 'Madison Square Garden', 'city' => 'Chicago'])->object(),
-                    ]])->object(),
+                    object(HoldsArrayOfDtos::class, ['addresses' => [
+                        object(Address::class, ['address' => '742 Evergreen Terrace', 'city' => 'Boston']),
+                        object(Address::class, ['address' => 'Apartment 5A, 129 West 81st Street', 'city' => 'New York']),
+                        object(Address::class, ['address' => '52 Festive Road', 'city' => 'London']),
+                    ]]),
+                    object(HoldsArrayOfDtos::class, ['addresses' => [
+                        object(Address::class, ['address' => '698 Sycamore Road', 'city' => 'San Pueblo']),
+                        object(Address::class, ['address' => 'Madison Square Garden', 'city' => 'Chicago']),
+                    ]]),
                 ]])
                 ->assertDehydratesTo(['dtos' => [
                     [
@@ -1070,20 +1071,20 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->userUpdatesProps([
                     'dtos.0.addresses.0.city' => 'Springfield',
                     'dtos.1.addresses.1.address' => '1060 West Addison Street',
-                    'dtos.1.addresses.1' => create(Address::class, ['address' => '10 Downing Street', 'city' => 'London'])->object(),
+                    'dtos.1.addresses.1' => object(Address::class, ['address' => '10 Downing Street', 'city' => 'London']),
                 ])
                 ->assertObjectAfterHydration(function (object $object) {
                     self::assertEquals(
                         [
-                            create(HoldsArrayOfDtos::class, ['addresses' => [
-                                create(Address::class, ['address' => '742 Evergreen Terrace', 'city' => 'Springfield'])->object(),
-                                create(Address::class, ['address' => 'Apartment 5A, 129 West 81st Street', 'city' => 'New York'])->object(),
-                                create(Address::class, ['address' => '52 Festive Road', 'city' => 'London'])->object(),
-                            ]])->object(),
-                            create(HoldsArrayOfDtos::class, ['addresses' => [
-                                create(Address::class, ['address' => '698 Sycamore Road', 'city' => 'San Pueblo'])->object(),
-                                create(Address::class, ['address' => '10 Downing Street', 'city' => 'London'])->object(),
-                            ]])->object(),
+                            object(HoldsArrayOfDtos::class, ['addresses' => [
+                                object(Address::class, ['address' => '742 Evergreen Terrace', 'city' => 'Springfield']),
+                                object(Address::class, ['address' => 'Apartment 5A, 129 West 81st Street', 'city' => 'New York']),
+                                object(Address::class, ['address' => '52 Festive Road', 'city' => 'London']),
+                            ]]),
+                            object(HoldsArrayOfDtos::class, ['addresses' => [
+                                object(Address::class, ['address' => '698 Sycamore Road', 'city' => 'San Pueblo']),
+                                object(Address::class, ['address' => '10 Downing Street', 'city' => 'London']),
+                            ]]),
                         ],
                         $object->dtos
                     );
@@ -1209,7 +1210,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'Updating non-writable property is rejected' => [function () {
             return HydrationTest::create(new class {
-                #[LiveProp()]
+                #[LiveProp]
                 public string $name;
             })
                 ->mountWith(['name' => 'Ryan'])
@@ -1258,7 +1259,7 @@ final class LiveComponentHydratorTest extends KernelTestCase
 
         yield 'It is valid to dehydrate to a fully-writable array' => [function () {
             return HydrationTest::create(new class {
-                #[LiveProp(writable: true, dehydrateWith: 'dehydrateDate', hydrateWith: 'hydrateDate')]
+                #[LiveProp(writable: true, hydrateWith: 'hydrateDate', dehydrateWith: 'dehydrateDate')]
                 public \DateTime $createdAt;
 
                 public function __construct()
@@ -1503,10 +1504,10 @@ final class LiveComponentHydratorTest extends KernelTestCase
         }];
 
         yield 'invalid_types_writable_path_values_not_accepted' => [function () {
-            $product = create(ProductFixtureEntity::class, [
+            $product = persist(ProductFixtureEntity::class, [
                 'name' => 'oranges',
                 'price' => 199,
-            ])->object();
+            ]);
 
             return HydrationTest::create(new class {
                 #[LiveProp(writable: ['name', 'price'])]
@@ -1913,7 +1914,9 @@ class HydrationTestCase
 
 class DummyObjectWithObjects
 {
-    #[LiveProp()]
-    /** @var ProductFixtureEntity[] */
+    /**
+     * @var ProductFixtureEntity[]
+     */
+    #[LiveProp]
     public array $products = [];
 }

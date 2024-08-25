@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent\Tests\Integration;
+namespace Symfony\UX\LiveComponent\Tests\Integration\EventListener;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;

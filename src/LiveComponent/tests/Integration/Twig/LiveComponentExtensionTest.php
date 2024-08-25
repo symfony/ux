@@ -9,7 +9,7 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\LiveComponent\Tests\Integration;
+namespace Symfony\UX\LiveComponent\Tests\Integration\Twig;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 
