@@ -1,0 +1,96 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-17T23:44:00Z
+
+🆘  @kbond  😅
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-08-20T15:27:45Z
+
+Oi! We don't run foundry's CI on PHP 8.4 yet - hopefully these are issues there. I've created an issue to track https://github.com/zenstruck/foundry/issues/687
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-20T19:25:12Z
+
+@kbond sorry i was unclear 😓
+
+I started on PHP 8.4 but there were deprecations on PHP 8.3..
+
+So i decided to un-lock the Foundry version.
+
+This PR failures come from me upgrading Foundry, but are on the current PHP version... and i'm a bit blocked here :/
+
+i must have messed something in the upgrade
+
+---------------------------------------------------------------------------
+
+by nikophil at 2024-08-24T19:06:05Z
+
+Hi @smnandre
+
+I've opened a PR based on yours which fixes the CI
+
+https://github.com/smnandre/ux/pull/2
+
+I'm not really sure where the problem was coming from, though :sweat_smile:
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-24T19:27:12Z
+
+Oh this is no nice, thank you !! 😃
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-24T19:29:01Z
+
+I'll merge it in mine and we'll see from there..  as the CI does not run on my fork :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-24T22:46:04Z
+
+Looks good....  (thank you very much!)) ..
+Except Icon now stuck in something that looks to me related to ConsoleTest /  Foundry  !
+
+I'm sorry 😅
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-24T22:50:19Z
+
+Update: not at all, 100% my fault ....
+
+```
+Runtime:       PHP 8.3.10
+Configuration: /Users/simonandre/Sites/symfony/ux/src/Icons/phpunit.xml.dist
+Warning:       Your XML configuration validates against a deprecated schema.
+Suggestion:    Migrate your XML configuration using "--migrate-configuration"!
+
+Testing
+....."""
+ ------------ ------- --------- ------------ --------------------- \n
+  Icon set     Icons   License   Prefix       Example              \n
+ ------------ ------- --------- ------------ --------------------- \n
+  Lucide        1524   ISC       lucide       lucide:check-circle  \n
+  Lucide Lab     373   ISC       lucide-lab   lucide-lab:venn      \n
+ ------------ ------- --------- ------------ --------------------- \n
+\n
+
+```
+
+Lucide is just no the only result for the query "lucide" ...  deepest apologies 💐
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-08-24T22:53:05Z
+
+Oi, yeah that's a brittle test
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-24T23:00:11Z
+
+Yeah perfect! Thank you @kbond & @nikophil for the help :)
