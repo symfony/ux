@@ -124,10 +124,11 @@ To render a map in your Twig template, use the ``ux_map`` Twig function, e.g.:
 
 .. code-block:: twig
 
-    {{ ux_map(my_map) }}
-    
-    {# or with custom attributes #}
+    {# to be visible, the map must have a defined height #}
     {{ ux_map(my_map, { style: 'height: 300px' }) }}
+
+    {# you can add custom HTML attributes too #}
+    {{ ux_map(my_map, { style: 'height: 300px', id: 'events-map', class: 'mb-3' }) }}
 
 Extend the default behavior
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
