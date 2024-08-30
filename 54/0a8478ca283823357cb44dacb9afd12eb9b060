@@ -1,0 +1,12 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-08-29T16:05:21Z
+
+Hi @javiereguiluz, the function has been renamed to `ux_map` in #2073, but it looks like it has not be released yet.
+That's why you are seeing `ux_map` in the doc, but `render_map` in the code 😕
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-08-29T16:08:11Z
+
+Ah ok! Thanks for checking this. I've reverted the function name change and kept the other doc changes. Thanks.
