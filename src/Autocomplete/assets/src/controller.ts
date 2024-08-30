@@ -1,7 +1,14 @@
 import { Controller } from '@hotwired/stimulus';
 import TomSelect from 'tom-select';
 import type { TPluginHash } from 'tom-select/dist/types/contrib/microplugin';
-import type { RecursivePartial, TomSettings, TomTemplates, TomLoadCallback } from 'tom-select/dist/types/types';
+import type {
+    RecursivePartial,
+    TomSettings,
+    TomTemplates,
+    TomLoadCallback,
+    TomOption,
+} from 'tom-select/dist/types/types';
+import type { escape_html } from 'tom-select/dist/types/utils';
 
 export interface AutocompletePreConnectOptions {
     options: any;
@@ -18,6 +25,7 @@ export default class extends Controller {
         loadingMoreText: String,
         noResultsFoundText: String,
         noMoreResultsText: String,
+        createOptionText: String,
         minCharacters: Number,
         tomSelectOptions: Object,
         preload: String,
@@ -28,6 +36,7 @@ export default class extends Controller {
     declare readonly loadingMoreTextValue: string;
     declare readonly noMoreResultsTextValue: string;
     declare readonly noResultsFoundTextValue: string;
+    declare readonly createOptionTextValue: string;
     declare readonly minCharactersValue: number;
     declare readonly hasMinCharactersValue: boolean;
     declare readonly tomSelectOptionsValue: object;
@@ -136,6 +145,9 @@ export default class extends Controller {
             no_results: () => {
                 return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
             },
+            option_create: (data: TomOption, escapeData: typeof escape_html): string => {
+                return `<div class="create">${this.createOptionTextValue.replace('%placeholder%', `<strong>${escapeData(data.input)}</strong>`)}</div>`;
+            },
         };
 
         const config: RecursivePartial<TomSettings> = {
@@ -239,6 +251,9 @@ export default class extends Controller {
                 },
                 no_results: (): string => {
                     return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
+                },
+                option_create: (data: TomOption, escapeData: typeof escape_html): string => {
+                    return `<div class="create">${this.createOptionTextValue} <strong>${escapeData(data.input)}</strong>&hellip;</div>`;
                 },
             },
             preload: this.preload,

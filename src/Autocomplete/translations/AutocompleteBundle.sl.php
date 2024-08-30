@@ -13,4 +13,5 @@ return [
     'Loading more results...' => 'Nalaganje več rezultatov...',
     'No results found' => 'Ni zadetkov',
     'No more results' => 'Ni več rezultatov',
+    // 'Add %placeholder%...' => 'Add %placeholder%...',
 ];

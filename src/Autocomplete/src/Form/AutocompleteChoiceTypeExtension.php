@@ -91,6 +91,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
         $values['loading-more-text'] = $this->trans($options['loading_more_text']);
         $values['no-results-found-text'] = $this->trans($options['no_results_found_text']);
         $values['no-more-results-text'] = $this->trans($options['no_more_results_text']);
+        $values['create-option-text'] = $this->trans($options['create_option_text']);
         $values['preload'] = $options['preload'];
 
         foreach ($values as $name => $value) {
@@ -147,6 +148,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
             'loading_more_text' => 'Loading more results...',
             'no_results_found_text' => 'No results found',
             'no_more_results_text' => 'No more results',
+            'create_option_text' => 'Add %placeholder%...',
             'min_characters' => null,
             'max_results' => 10,
             'preload' => 'focus',

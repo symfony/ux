@@ -13,4 +13,5 @@ return [
     'Loading more results...' => 'Laddar fler resultat...',
     'No results found' => 'Inga träffar',
     'No more results' => 'Inga fler resultat',
+    // 'Add %placeholder%...' => 'Add %placeholder%...',
 ];

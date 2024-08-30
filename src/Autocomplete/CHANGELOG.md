@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.20.0
+
+-   Translate the `option_create` option from TomSelect #2108
+
 ## 2.17.0
 
 -   Allow `choice_value` option in entity autocomplete fields #1723

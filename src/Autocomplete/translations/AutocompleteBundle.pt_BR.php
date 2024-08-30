@@ -13,4 +13,5 @@ return [
     'Loading more results...' => 'Carregando mais resultados...',
     'No results found' => 'Nenhum resultado encontrado',
     'No more results' => 'Não há mais resultados',
+    // 'Add %placeholder%...' => 'Add %placeholder%...',
 ];
