@@ -1,0 +1,33 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-23T19:03:02Z
+
+Thank you @dotdevio for this PR!
+
+Could you maybe add a test?
+
+Also.. I'd see this more as a feature than a bug, as swoole (or similar runners) compatibility was not something supported before..  what do you think ?
+
+---------------------------------------------------------------------------
+
+by dotdevio at 2024-08-23T20:33:43Z
+
+> Thank you @dotdevio for this PR!
+>
+> Could you maybe add a test?
+>
+> Also.. I'd see this more as a feature than a bug, as swoole (or similar runners) compatibility was not something supported before.. what do you think ?
+
+This is not a feature because Symfony supports multiple runtimes and this bug will be not only in Swoole but any other runtime like FrankenPHP, RoadRunner etc. Service state shoud reset in this case for sure, no BC breaks on PHP-FPM. I would like add a test but i dont see how i can test here and i dont found any tests for WrappedEntityTypeAutocompleter. Actually there is noothing to break the app, just unsetting variable on kernel.reset event.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-24T00:17:34Z
+
+Ok! Thank you for the fix @dotdevio :)
+
+---------------------------------------------------------------------------
+
+by 1ed at 2024-08-26T19:21:00Z
+
+This fixes https://github.com/symfony/ux/issues/1649
