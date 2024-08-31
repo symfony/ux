@@ -23,9 +23,9 @@ use Twig\Node\Node;
 #[YieldReady]
 class PropsNode extends Node
 {
-    public function __construct(array $propsNames, array $values, $lineno = 0, ?string $tag = null)
+    public function __construct(array $propsNames, array $values, $lineno = 0)
     {
-        parent::__construct($values, ['names' => $propsNames], $lineno, $tag);
+        parent::__construct($values, ['names' => $propsNames], $lineno);
     }
 
     public function compile(Compiler $compiler): void
