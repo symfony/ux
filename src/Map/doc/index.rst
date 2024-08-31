@@ -44,14 +44,14 @@ The ``UX_MAP_DSN`` environment variable configure which renderer to use.
 Available renderers
 ~~~~~~~~~~~~~~~~~~~
 
-==========  ===============================================================
+==============  ===============================================================
 Renderer
-==========  ===============================================================
-`Google`_   **Install**: ``composer require symfony/ux-google-map`` \
-            **DSN**: ``UX_MAP_DSN=google://GOOGLE_MAPS_API_KEY@default`` \
-`Leaflet`_  **Install**: ``composer require symfony/ux-leaflet-map`` \
-            **DSN**: ``UX_MAP_DSN=leaflet://default`` \
-==========  ===============================================================
+==============  ===============================================================
+`Google Maps`_  **Install**: ``composer require symfony/ux-google-map`` \
+                **DSN**: ``UX_MAP_DSN=google://GOOGLE_MAPS_API_KEY@default`` \
+`Leaflet`_      **Install**: ``composer require symfony/ux-leaflet-map`` \
+                **DSN**: ``UX_MAP_DSN=leaflet://default`` \
+==============  ===============================================================
 
 Usage
 -----
@@ -102,14 +102,20 @@ A map is created by calling ``new Map()``. You can configure the center, zoom, a
                     )
                 ))
 
-                // You can also pass extra data, that you can later use in your custom Stimulus controller 
-                // when listening to "ux:map:marker:before-create" event:
+                // You can also pass arbitrary data via the `extra` option in both the marker
+                // and the infoWindow; you can later use this data in your custom Stimulus controllers
                 ->addMarker(new Marker(
-                    position: new Point(46.5074666, 6.633729),
-                    title: 'Olympic Parc',
+                    // ...
                     extra: [
                         'icon_mask_url' => 'https://maps.gstatic.com/mapfiles/place_api/icons/v2/tree_pinlet.svg',
-                    ]
+                    ],
+                    infoWindow: new InfoWindow(
+                        // ...
+                        extra: [
+                            'num_items' => 3,
+                            'includes_link' => true,
+                        ],
+                    ),
                 )
             ;
     
@@ -204,6 +210,12 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
         }
     }
 
+.. tip::
+
+    Read the `Symfony UX Map Leaflet bridge docs`_ and the
+    `Symfony UX Map Google Maps brige docs`_ to learn about the exact code
+    needed to customize the markers.
+
 Then, you can use this controller in your template:
 
 .. code-block:: twig
@@ -219,5 +231,7 @@ https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
-.. _`Google`: https://github.com/symfony/symfony-ux/blob/{version}/src/Map/src/Bridge/Google/README.md
-.. _`Leaflet`: https://github.com/symfony/symfony-ux/blob/{version}/src/Map/src/Bridge/Leaflet/README.md
+.. _`Google Maps`: https://github.com/symfony/ux-google-map
+.. _`Leaflet`: https://github.com/symfony/ux-leaflet-map
+.. _`Symfony UX Map Google Maps brige docs`: https://github.com/symfony/symfony-ux/blob/{version}/src/Map/src/Bridge/Google/README.md
+.. _`Symfony UX Map Leaflet bridge docs`: https://github.com/symfony/symfony-ux/blob/{version}/src/Map/src/Bridge/Leaflet/README.md
