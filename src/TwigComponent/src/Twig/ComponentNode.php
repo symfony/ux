@@ -29,14 +29,14 @@ use Twig\Node\NodeOutputInterface;
 #[YieldReady]
 final class ComponentNode extends Node implements NodeOutputInterface
 {
-    public function __construct(string $component, string $embeddedTemplateName, int $embeddedTemplateIndex, ?AbstractExpression $props, bool $only, int $lineno, string $tag)
+    public function __construct(string $component, string $embeddedTemplateName, int $embeddedTemplateIndex, ?AbstractExpression $props, bool $only, int $lineno)
     {
         $nodes = [];
         if (null !== $props) {
             $nodes['props'] = $props;
         }
 
-        parent::__construct($nodes, [], $lineno, $tag);
+        parent::__construct($nodes, [], $lineno);
 
         $this->setAttribute('only', $only);
         $this->setAttribute('embedded_template', $embeddedTemplateName);
