@@ -19,6 +19,7 @@ use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Component\PropertyAccess\PropertyPathInterface;
+use Symfony\Contracts\Service\ResetInterface;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadata;
 use Symfony\UX\Autocomplete\Doctrine\EntityMetadataFactory;
 use Symfony\UX\Autocomplete\Doctrine\EntitySearchUtil;
@@ -29,7 +30,7 @@ use Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface;
  *
  * @internal
  */
-final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocompleterInterface
+final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocompleterInterface, ResetInterface
 {
     private ?FormInterface $form = null;
     private ?EntityMetadata $entityMetadata = null;
@@ -187,5 +188,11 @@ final class WrappedEntityTypeAutocompleter implements OptionsAwareEntityAutocomp
         }
 
         $this->options = $options;
+    }
+
+    public function reset(): void
+    {
+        unset($this->form);
+        $this->form = null;
     }
 }
