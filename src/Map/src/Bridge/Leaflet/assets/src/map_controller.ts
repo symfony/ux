@@ -33,7 +33,7 @@ export default class extends AbstractMapController<
             prefix: 'ux:map',
             detail: {
                 ...payload,
-                leaflet: L,
+                L,
             },
         });
     }
