@@ -103,4 +103,36 @@ final class Map
             'markers' => array_map(static fn (Marker $marker) => $marker->toArray(), $this->markers),
         ];
     }
+
+    /**
+     * @param array{
+     *     center?: array{lat: float, lng: float},
+     *     zoom?: float,
+     *     markers?: list<array>,
+     *     fitBoundsToMarkers?: bool,
+     *     options?: object,
+     * } $map
+     *
+     * @internal
+     */
+    public static function fromArray(array $map): self
+    {
+        $map['fitBoundsToMarkers'] = true;
+
+        if (isset($map['center'])) {
+            $map['center'] = Point::fromArray($map['center']);
+        }
+
+        if (isset($map['zoom']) || isset($map['center'])) {
+            $map['fitBoundsToMarkers'] = false;
+        }
+
+        $map['markers'] ??= [];
+        if (!\is_array($map['markers'])) {
+            throw new InvalidArgumentException('The "markers" parameter must be an array.');
+        }
+        $map['markers'] = array_map(Marker::fromArray(...), $map['markers']);
+
+        return new self(...$map);
+    }
 }

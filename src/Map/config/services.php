@@ -15,6 +15,7 @@ use Symfony\UX\Map\Renderer\AbstractRendererFactory;
 use Symfony\UX\Map\Renderer\Renderer;
 use Symfony\UX\Map\Renderer\Renderers;
 use Symfony\UX\Map\Twig\MapExtension;
+use Symfony\UX\Map\Twig\MapRuntime;
 
 /*
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -26,7 +27,6 @@ return static function (ContainerConfigurator $container): void {
             ->args([
                 abstract_arg('renderers configuration'),
             ])
-            ->tag('twig.runtime')
 
         ->set('ux_map.renderer_factory.abstract', AbstractRendererFactory::class)
             ->abstract()
@@ -41,5 +41,11 @@ return static function (ContainerConfigurator $container): void {
 
         ->set('ux_map.twig_extension', MapExtension::class)
             ->tag('twig.extension')
+
+        ->set('ux_map.twig_runtime', MapRuntime::class)
+            ->args([
+                service('ux_map.renderers'),
+            ])
+            ->tag('twig.runtime')
     ;
 };

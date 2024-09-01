@@ -43,4 +43,16 @@ final readonly class Point
             'lng' => $this->longitude,
         ];
     }
+
+    /**
+     * @param array{lat: float, lng: float}|array{0: float, 1: float} $point
+     */
+    public static function fromArray(array $point): self
+    {
+        if (isset($point['lat'], $point['lng'])) {
+            return new self($point['lat'], $point['lng']);
+        }
+
+        return new self(...$point);
+    }
 }

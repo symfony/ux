@@ -39,7 +39,8 @@
         "symfony/asset-mapper": "^6.4|^7.0",
         "symfony/framework-bundle": "^6.4|^7.0",
         "symfony/phpunit-bridge": "^6.4|^7.0",
-        "symfony/twig-bundle": "^6.4|^7.0"
+        "symfony/twig-bundle": "^6.4|^7.0",
+        "symfony/ux-twig-component": "^2.18"
     },
     "extra": {
         "thanks": {
