@@ -26,12 +26,7 @@
 {% block demo_title %}UX Twig Components{% endblock %}
 
 {% block demo_content %}
-    <div class="row align-items-center">
-        <div class="col-6">
-            {% block alert_success_example %}
-                <twig:Alert message="I am a success alert!" />
-            {% endblock %}
-        </div>
+    <div class="row">
         <div class="col-6">
             <twig:CodeBlock
                 filename="templates/ux_packages/twig_component.html.twig"
@@ -41,17 +36,14 @@
                 height="auto"
             />
         </div>
-    </div>
-
-    <div class="row my-2 align-items-center">
         <div class="col-6">
-            {% block alert_danger_example %}
-                <twig:Alert
-                    type="danger"
-                    message="Oh no! The dinos escaped!"
-                />
+            {% block alert_success_example %}
+                <twig:Alert message="I am a success alert!" />
             {% endblock %}
         </div>
+    </div>
+
+    <div class="row my-2">
         <div class="col-6">
             <twig:CodeBlock
                 filename="templates/ux_packages/twig_component.html.twig"
@@ -60,6 +52,14 @@
                 :showTwigExtends="false"
                 height="auto"
             />
+        </div>
+        <div class="col-6">
+            {% block alert_danger_example %}
+                <twig:Alert
+                    type="danger"
+                    message="Oh no! The dinos escaped!"
+                />
+            {% endblock %}
         </div>
     </div>
 {% endblock %}
