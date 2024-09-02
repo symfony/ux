@@ -194,4 +194,21 @@ final class InteractsWithLiveComponentsTest extends KernelTestCase
 
         $this->assertStringContainsString('Total: 9', $testComponent->render());
     }
+
+    public function testSetLocaleRenderLocalizedComponent(): void
+    {
+        $testComponent = $this->createLiveComponent('localized_route');
+        $testComponent->setRouteLocale('fr');
+        $this->assertStringContainsString('Locale: fr', $testComponent->render());
+
+        $testComponent->refresh();
+        $this->assertStringContainsString('Locale: fr', $testComponent->render());
+
+        $testComponent->setRouteLocale('es');
+        $this->assertStringContainsString('Locale: es', $testComponent->render());
+
+        $testComponent = $this->createLiveComponent('localized_route');
+        $testComponent->setRouteLocale('de');
+        $this->assertStringContainsString('Locale: de', $testComponent->render());
+    }
 }
