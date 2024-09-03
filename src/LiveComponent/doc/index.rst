@@ -474,6 +474,13 @@ can read::
     /** @var Product[] */
     public $products = [];
 
+Collection type extraction from the docblock requires the ``phpdocumentor/reflection-docblock``
+library. Make sure it is installed in you application:
+
+.. code-block:: terminal
+
+    $ composer require phpdocumentor/reflection-docblock
+
 Writable Object Properties or Array Keys
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
