@@ -230,6 +230,25 @@ class IconRendererTest extends TestCase
         ];
     }
 
+    public function testRenderIconWithAliases(): void
+    {
+        $registry = $this->createRegistry([
+            'foo' => '<path d="M0 FOO"/>',
+            'bar' => '<path d="M0 BAR"/>',
+            'baz' => '<path d="M0 BAZ"/>',
+        ]);
+        $iconRenderer = new IconRenderer($registry, [], ['foo' => 'bar']);
+
+        $svg = $iconRenderer->renderIcon('bar');
+        $this->assertSame('<svg aria-hidden="true"><path d="M0 BAR"/></svg>', $svg);
+
+        $svg = $iconRenderer->renderIcon('foo');
+        $this->assertSame('<svg aria-hidden="true"><path d="M0 BAR"/></svg>', $svg);
+
+        $svg = $iconRenderer->renderIcon('baz');
+        $this->assertSame('<svg aria-hidden="true"><path d="M0 BAZ"/></svg>', $svg);
+    }
+
     private function createRegistry(array $icons): IconRegistryInterface
     {
         $registryIcons = [];
