@@ -13,4 +13,5 @@ return [
     'Loading more results...' => 'Daha fazla sonuç yükleniyor...',
     'No results found' => 'Sonuç bulunamadı',
     'No more results' => 'Başka sonuç yok',
+    // 'Add %placeholder%...' => 'Add %placeholder%...',
 ];
