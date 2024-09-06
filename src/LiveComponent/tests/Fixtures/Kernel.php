@@ -214,5 +214,6 @@ final class Kernel extends BaseKernel
         $routes->add('render_namespaced_template', '/render-namespaced-template/{template}')->controller('kernel::renderNamespacedTemplate');
         $routes->add('homepage', '/')->controller('kernel::index');
         $routes->add('alternate_live_route', '/alt/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
+        $routes->add('localized_route', '/locale/{_locale}/{_live_component}/{_live_action}')->defaults(['_live_action' => 'get']);
     }
 }

@@ -3718,6 +3718,9 @@ uses Symfony's test client to render and make requests to your components::
             // authenticate a user ($user is instance of UserInterface)
             $testComponent->actingAs($user);
 
+            // set the '_locale' route parameter (if the component route is localized)  
+            $testComponent->setRouteLocale('fr');
+
             // customize the test client
             $client = self::getContainer()->get('test.client');
 
