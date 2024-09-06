@@ -1,0 +1,44 @@
+---------------------------------------------------------------------------
+
+by jmsche at 2024-08-30T07:39:20Z
+
+UX Website & Live/Twig components workflow failures are unrelated (due to Twig release from yesterday I guess).
+
+Not sure why the Autocomplete workflow fails, the tests are working locally :/
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-31T21:00:11Z
+
+@jmsche Did you check if passing option_create every time to the instance would not be interpreted by TomSelect as "create: true" ?
+
+I believe it worked like that at a time
+
+I would not want we add an unwanted option to every existing user :)
+
+---------------------------------------------------------------------------
+
+by jmsche at 2024-09-01T13:11:22Z
+
+@smnandre Just checked locally, adding autocomplete on an EnumType, create option is not offered so everything seems okay :)
+
+---------------------------------------------------------------------------
+
+by jmsche at 2024-09-02T05:34:26Z
+
+@smnandre Changelog entry added :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-02T17:48:17Z
+
+The Autocomplete test (PHP 8.3) are failing :|
+
+---------------------------------------------------------------------------
+
+by jmsche at 2024-09-03T06:06:36Z
+
+@smnandre TBH I don't know why the `testItReturnsBasicResults` test is failing.
+I've checked the code, and it shouldn't as there's only one fixture using the word "bar".
+
+This test is passing on my local machine, and I guess if you run it again on CI it should pass :sweat_smile:
