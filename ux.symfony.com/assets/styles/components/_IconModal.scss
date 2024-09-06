@@ -187,6 +187,9 @@
 
 .IconModal__code button {
   opacity: .25;
+  position: absolute;
+  right: 0;
+  top: .5rem;
 }
 
 .IconModal__code:hover {
