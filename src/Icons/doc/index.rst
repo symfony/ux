@@ -339,14 +339,14 @@ Now, all icons will have the ``fill`` attribute set to ``currentColor`` by defau
 Icon Aliases
 ~~~~~~~~~~~~
 
-You can define aliases for icons in your configuration, which is helpful if 
-you want to use a different or shorter name for an icon in your templates:
+Aliases are custom names you can define to refer to any icon. They are useful for
+creating shortcuts to icons you frequently use in your templates:
 
 .. code-block:: yaml
 
     # config/packages/ux_icons.yaml
     ux_icons:
-        
+        # ...
         aliases:
             dots: 'clarity:ellipsis-horizontal-line'
 
@@ -355,10 +355,13 @@ Now, you can use the ``dots`` alias in your templates:
 .. code-block:: twig
 
     {{ ux_icon('dots') }}
-    
-    {# same as #}
-    
+    {# with the previous configuration, this is the same as: #}
     {{ ux_icon('clarity:ellipsis-horizontal-line') }}
+
+    {# using the HTML syntax #}
+    <twig:ux:icon name="dots" />
+    {# same as: #}
+    <twig:ux:icon name="clarity:ellipsis-horizontal-line" />
 
 Errors
 ------
