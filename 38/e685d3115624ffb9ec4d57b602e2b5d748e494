@@ -1,0 +1,86 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-04T06:35:18Z
+
+Just asking ... can you use `:` in the alias name? E.g. if someone wants to group all aliases under a common prefix (e.g. `site:...` or `acme:...`)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-04T06:52:39Z
+
+That's for sure the next step!
+
+---------------------------------------------------------------------------
+
+by Xbirdfr at 2024-09-05T09:54:20Z
+
+Hello, thank you for this implementation!
+
+To have thought a little about this functionality, I propose the following modification:
+
+Put an @ before the name of the alias
+
+ This allows you to add an AliasNotFound error which would be easier to debug, and to only check the configuration file when calling an alias.
+Also it increases readability: @dots directly gives us the information that the icon is an alias, and it also allows us to do things like
+@user:login @user:logout @admin:login
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-05T10:07:22Z
+
+@Xbirdfr the problem with that is that it introduces a new convention that all users of UX Icon must learn, which causes friction.
+
+In any case, is `@` forbidden in icon aliases? If it's not, what you are asking it's already possible to do. If it's forbidden, let's double check if we should really forbid it.
+
+---------------------------------------------------------------------------
+
+by Xbirdfr at 2024-09-05T10:19:24Z
+
+@javiereguiluz I understand that, but as Icones Alias will be a new feature, I will cause less friction
+
+Actually, if `@dots` is not referenced in the config, an IconNotFound error will be thrown, and this is not the good error message
+
+With an @ we clearly know if we want an alias or not while using ux icon, and allow a better readability and debugging.
+
+But it's maybe too much and I understand this, but I really think this will be a good way to handle alias
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-05T19:51:49Z
+
+> oblem with that is that it introduces a new convention that all users of UX Icon must learn, which causes friction.
+
+@javiereguiluz yep absolutely!
+
+And we decided to avoid it in the TwigComponent shared by bundles, so it would be a bit strange to introduce it here.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-05T19:52:02Z
+
+>  @user:login @user:logout @admin:login
+
+@Xbirdfr  This is precisely what i did not want to handle _for now_.  We have the ` : ` to identify a namespace/ icon set.
+
+Full disclosure: i will open a PR after this one to implement the long-waiting "configuration per icon sets/directorys" ... so let's talk about namespaces aliases afterwards 😅
+
+I promised the simple aliases long time ago, and we have been poked again recently ... so this is more the context of this PR :)
+
+Personally, I will use the aliases in several projects, to have simple "one-word-domain-icon-names"  for the 10/12 most used icons (which come from different sets -- excluding here any partial mapping). Something like this:
+
+```yaml
+# config/packages/ux_icons.yaml
+ux_icons:
+    aliases:
+
+        # Logos
+        github: 'simple-icons:github'
+        twitter: ' pajamas:x'
+        php: 'bxl:php'
+
+       # Actions
+       delete: 'tdesign:delete'
+       add: 'material-symbols:add'
+
+       # ...
+```
