@@ -27,7 +27,7 @@ final class MapExtension extends AbstractExtension
         return [
             new TwigFunction('render_map', [Renderers::class, 'renderMap'], [
                 'is_safe' => ['html'],
-                'deprecated' => '2.21',
+                'deprecated' => '2.20',
                 'deprecating_package' => 'symfony/ux-map',
                 'alternative' => 'ux_map',
             ]),
