@@ -21,6 +21,7 @@ final class IconRenderer implements IconRendererInterface
     public function __construct(
         private readonly IconRegistryInterface $registry,
         private readonly array $defaultIconAttributes = [],
+        private readonly ?array $iconAliases = [],
     ) {
     }
 
@@ -35,6 +36,8 @@ final class IconRenderer implements IconRendererInterface
      */
     public function renderIcon(string $name, array $attributes = []): string
     {
+        $name = $this->iconAliases[$name] ?? $name;
+
         $icon = $this->registry->get($name)
             ->withAttributes($this->defaultIconAttributes)
             ->withAttributes($attributes);

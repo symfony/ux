@@ -336,6 +336,30 @@ Now, all icons will have the ``fill`` attribute set to ``currentColor`` by defau
     # renders "user-profile.svg" with fill="red"
     {{ ux_icon('user-profile', {fill: 'red'}) }}
 
+Icon Aliases
+~~~~~~~~~~~~
+
+You can define aliases for icons in your configuration, which is helpful if 
+you want to use a different or shorter name for an icon in your templates:
+
+.. code-block:: yaml
+
+    # config/packages/ux_icons.yaml
+    ux_icons:
+        
+        aliases:
+            dots: 'clarity:ellipsis-horizontal-line'
+
+Now, you can use the ``dots`` alias in your templates:
+
+.. code-block:: twig
+
+    {{ ux_icon('dots') }}
+    
+    {# same as #}
+    
+    {{ ux_icon('clarity:ellipsis-horizontal-line') }}
+
 Errors
 ------
 
@@ -517,6 +541,11 @@ Full Configuration
         default_icon_attributes:
             # Default:
             fill: currentColor
+            
+        # Icon aliases (alias => icon name).
+        aliases:
+            # Exemple:
+            dots: 'clarity:ellipsis-horizontal-line'    
 
         # Configuration for the "on demand" icons powered by Iconify.design.
         iconify:

@@ -56,6 +56,8 @@ return static function (ContainerConfigurator $container): void {
         ->set('.ux_icons.icon_renderer', IconRenderer::class)
             ->args([
                 service('.ux_icons.icon_registry'),
+                abstract_arg('default_icon_attributes'),
+                abstract_arg('icon_aliases'),
             ])
 
         ->alias('Symfony\UX\Icons\IconRendererInterface', '.ux_icons.icon_renderer')
