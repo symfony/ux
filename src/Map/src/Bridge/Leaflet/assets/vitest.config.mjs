@@ -1,5 +1,5 @@
 import { defineConfig, mergeConfig } from 'vitest/config';
-import configShared from '../../../../../../vitest.config.js'
+import configShared from '../../../../../../vitest.config.mjs'
 
 export default mergeConfig(
     configShared,
@@ -7,6 +7,7 @@ export default mergeConfig(
         resolve: {
             alias: {
                 '@symfony/ux-map/abstract-map-controller': __dirname + '/../../../../assets/src/abstract_map_controller.ts',
+                'leaflet/dist/leaflet.min.css': 'leaflet/dist/leaflet.css',
             },
         },
         define: {
