@@ -33,7 +33,6 @@
     "devDependencies": {
         "@hotwired/stimulus": "^3.0.0",
         "@types/leaflet": "^1.9.12",
-        "happy-dom": "^14.12.3",
         "leaflet": "^1.9.4"
     }
 }
