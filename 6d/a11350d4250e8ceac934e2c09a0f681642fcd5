@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-10T12:33:00Z
+
+For failing tests in `tests-php`, see https://github.com/symfony/ux/pull/2144#discussion_r1751613174
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-10T13:56:46Z
+
+> Symfony UX / tests-js (pull_request) Successful in 2m
+
+Could you isolate them ? I don't think we need to run all tests in Browser every time we update a README file (i may exagerate a little bit here 👼 )
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-10T20:46:24Z
+
+> > Symfony UX / tests-js (pull_request) Successful in 2m
+>
+> Could you isolate them ? I don't think we need to run all tests in Browser every time we update a README file (i may exagerate a little bit here 👼 )
+
+I don't get what you mean, Playwright/browser tests are ran only for Map's bridges when their **code** change.
+Vitest's Browser mode is explicitly enabled for Map's bridges, and the CI run `tests-js` when code (outside documentation) has been modified. 🤔
+
+Note that, in previous `tests-js` CI jobs, the duration is a bit higher than before but that's fine IMO, see https://github.com/symfony/ux/actions/runs/10644425330/job/29509168600?pr=2113
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-10T21:17:29Z
+
+Well i did not know... i'm sorry for asking, and... thank you very very much for all this :) 💐
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-10T21:26:03Z
+
+![c520963a50d5847453f3395aaa0d4ffb](https://github.com/user-attachments/assets/c5339cfc-72b4-4f66-b46f-8b3541bbd14a)
