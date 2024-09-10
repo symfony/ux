@@ -352,7 +352,7 @@ creating shortcuts to icons you frequently use in your templates:
 
 Now, you can use the ``dots`` alias in your templates:
 
-.. code-block:: twig
+.. code-block:: html+twig
 
     {{ ux_icon('dots') }}
     {# with the previous configuration, this is the same as: #}
