@@ -33,7 +33,6 @@
     "devDependencies": {
         "@googlemaps/js-api-loader": "^1.16.6",
         "@hotwired/stimulus": "^3.0.0",
-        "@types/google.maps": "^3.55.9",
-        "happy-dom": "^14.12.3"
+        "@types/google.maps": "^3.55.9"
     }
 }

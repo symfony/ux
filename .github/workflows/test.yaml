@@ -141,4 +141,5 @@ jobs:
                   restore-keys: |
                       ${{ runner.os }}-yarn-
             - run: yarn --immutable
+            - run: yarn playwright install  
             - run: yarn test
