@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Tests\Integration;
 
+use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\TwigComponent\Tests\Fixtures\User;
 use Twig\Environment;
@@ -21,6 +22,8 @@ use Twig\Error\RuntimeError;
  */
 final class ComponentExtensionTest extends KernelTestCase
 {
+    use ExpectDeprecationTrait;
+
     public function testCanRenderComponent(): void
     {
         $output = $this->renderComponent('component_a', [
@@ -264,8 +267,13 @@ final class ComponentExtensionTest extends KernelTestCase
         ];
     }
 
+    /**
+     * @group legacy
+     */
     public function testComponentWithClassMerge(): void
     {
+        $this->expectDeprecation('Since symfony/ux-twig-component 2.20: Twig Function "cva" is deprecated; use "html_cva" from the "twig/html-extra" package (available since version 3.12) instead.');
+
         $output = self::getContainer()->get(Environment::class)->render('class_merge.html.twig');
 
         $this->assertStringContainsString('class="alert alert-red alert-lg font-semibold rounded-md dark:bg-gray-600 flex p-4"', $output);
@@ -373,8 +381,13 @@ final class ComponentExtensionTest extends KernelTestCase
         $this->assertStringContainsString('I have an empty props tag', $output);
     }
 
+    /**
+     * @group legacy
+     */
     public function testAnonymousComponentWithPropsOverwriteParentsProps(): void
     {
+        $this->expectDeprecation('Since symfony/ux-twig-component 2.20: Twig Function "cva" is deprecated; use "html_cva" from the "twig/html-extra" package (available since version 3.12) instead.');
+
         $output = self::getContainer()->get(Environment::class)->render('anonymous_component_with_props_overwrite_parents_props.html.twig');
 
         $this->assertStringContainsString('I am an icon', $output);

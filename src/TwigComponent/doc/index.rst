@@ -1158,6 +1158,11 @@ Component with Complex Variants (CVA)
 
     The ``cva`` function was added in TwigComponents 2.16.
 
+.. deprecated:: 2.20
+
+    The ``cva`` function was deprecated in TwigComponents 2.20, and will be removed in 3.0.
+    The function is now provided by the ``twig/html-extra:^3.12`` package under the name `html_cva`_.
+
 `CVA (Class Variant Authority)`_ is a concept from the JavaScript world and used
 by the well-known `shadcn/ui`_.
 CVA allows you to display a component with different variants (color, size, etc.),
@@ -1763,6 +1768,7 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Passing Blocks to Live Components`: https://symfony.com/bundles/ux-live-component/current/index.html#passing-blocks
 .. _`Stimulus controller`: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`CVA (Class Variant Authority)`: https://cva.style/docs/getting-started/variants
+.. _`html_cva`: https://twig.symfony.com/doc/3.x/functions/html_cva.html
 .. _`shadcn/ui`: https://ui.shadcn.com
 .. _`tales-from-a-dev/twig-tailwind-extra`: https://github.com/tales-from-a-dev/twig-tailwind-extra
 .. _`ignore not defined options`: https://symfony.com/doc/current/components/options_resolver.html#ignore-not-defined-options

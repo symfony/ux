@@ -3,6 +3,7 @@
 ## 2.20.0
 
 -  Add Anonymous Component support for 3rd-party bundles #2019
+-  Deprecate `cva` Twig function in favor of [`html_cva` from `twig/html-extra`](https://twig.symfony.com/html_cva) #2144
 
 ## 2.17.0
 

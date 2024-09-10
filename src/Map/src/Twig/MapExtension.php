@@ -12,6 +12,7 @@
 namespace Symfony\UX\Map\Twig;
 
 use Symfony\UX\Map\Renderer\Renderers;
+use Twig\DeprecatedCallableInfo;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -27,9 +28,9 @@ final class MapExtension extends AbstractExtension
         return [
             new TwigFunction('render_map', [Renderers::class, 'renderMap'], [
                 'is_safe' => ['html'],
-                'deprecated' => '2.20',
-                'deprecating_package' => 'symfony/ux-map',
-                'alternative' => 'ux_map',
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-map', '2.20', 'ux_map')]
+                    : ['deprecated' => '2.20', 'deprecating_package' => 'symfony/ux-map', 'alternative' => 'ux_map']),
             ]),
             new TwigFunction('ux_map', [Renderers::class, 'renderMap'], ['is_safe' => ['html']]),
         ];

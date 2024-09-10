@@ -15,7 +15,11 @@ use PHPUnit\Framework\TestCase;
 use Symfony\UX\TwigComponent\CVA;
 
 /**
+ * To remove in TwigComponent 3.0.
+ *
  * @author Mathéo Daninos <matheo.daninos@gmail.com>
+ *
+ * @group legacy
  */
 class CVATest extends TestCase
 {

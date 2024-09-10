@@ -16,6 +16,7 @@ use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\CVA;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
+use Twig\DeprecatedCallableInfo;
 use Twig\Error\RuntimeError;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
@@ -42,7 +43,11 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
     {
         return [
             new TwigFunction('component', [$this, 'render'], ['is_safe' => ['all']]),
-            new TwigFunction('cva', [$this, 'cva']),
+            new TwigFunction('cva', [$this, 'cva'], [
+                ...(class_exists(DeprecatedCallableInfo::class)
+                    ? ['deprecation_info' => new DeprecatedCallableInfo('symfony/ux-twig-component', '2.20', 'html_cva', 'twig/html-extra')]
+                    : ['deprecated' => '2.20', 'deprecating_package' => 'symfony/ux-twig-component', 'alternative' => 'html_cva']),
+            ]),
         ];
     }
 
@@ -105,6 +110,8 @@ final class ComponentExtension extends AbstractExtension implements ServiceSubsc
      */
     public function cva(array $cva): CVA
     {
+        trigger_deprecation('symfony/ux-twig-component', '2.20', 'Twig Function "cva" is deprecated; use "html_cva" from the "twig/html-extra" package (available since version 3.12) instead.');
+
         return new CVA(
             $cva['base'] ?? '',
             $cva['variants'] ?? [],
