@@ -16,10 +16,10 @@ use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
-class DataTableExtension extends AbstractExtension
+class DataTablesExtension extends AbstractExtension
 {
     public function __construct(
-        private StimulusHelper $stimulus
+        private StimulusHelper $stimulus,
     ) {
     }
 

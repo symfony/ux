@@ -36,7 +36,7 @@ class DataTablesExtension extends Extension implements PrependExtensionInterface
         ;
 
         $container
-            ->setDefinition('datatables.twig_extension', new Definition(DataTableExtension::class))
+            ->setDefinition('datatables.twig_extension', new Definition(DataTablesExtension::class))
             ->addArgument(new Reference('stimulus.helper'))
             ->addTag('twig.extension')
             ->setPublic(false)
