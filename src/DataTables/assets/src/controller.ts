@@ -10,8 +10,6 @@
 import { Controller } from '@hotwired/stimulus';
 import DataTable from 'datatables.net-dt';
 
-let isDataTableInitialized = false;
-
 export default class extends Controller {
     declare readonly viewValue: any;
 

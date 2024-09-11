@@ -1,7 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import DataTable from 'datatables.net-dt';
 
-let isDataTableInitialized = false;
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
