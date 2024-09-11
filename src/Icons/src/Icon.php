@@ -176,7 +176,7 @@ final class Icon implements \Stringable
     }
 
     /**
-     * @param array<string, string|bool> $attributes
+     * @param array<string, string|bool|int|float> $attributes
      */
     public function withAttributes(array $attributes): self
     {
@@ -189,8 +189,8 @@ final class Icon implements \Stringable
                 throw new \InvalidArgumentException(\sprintf('Invalid attribute name "%s".', $name));
             }
 
-            if (!\is_string($value) && !\is_bool($value)) {
-                throw new \InvalidArgumentException(\sprintf('Invalid value type for attribute "%s". Boolean or string allowed, "%s" provided. ', $name, get_debug_type($value)));
+            if (!\is_string($value) && !\is_bool($value) && !\is_int($value) && !\is_float($value)) {
+                throw new \InvalidArgumentException(\sprintf('Invalid value type for attribute "%s". Boolean, string, int or float allowed, "%s" provided. ', $name, get_debug_type($value)));
             }
         }
 
