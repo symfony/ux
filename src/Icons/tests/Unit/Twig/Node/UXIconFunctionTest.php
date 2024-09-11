@@ -45,7 +45,7 @@ final class UXIconFunctionTest extends TestCase
 
         $arguments = new Node([$iconName, $attributes]);
 
-        $node = new UXIconFunction('ux_icon', $arguments, 1);
+        $node = new UXIconFunction(new TwigFunction('ux_icon', fn () => null), $arguments, 1);
         $node->compile($compiler);
 
         $this->assertSame('"<svg class=\"icon-class\" aria-hidden=\"true\"><svg>icon</svg></svg>"', $compiler->getSource());
