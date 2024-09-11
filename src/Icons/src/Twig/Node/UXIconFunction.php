@@ -11,8 +11,10 @@
 
 namespace Symfony\UX\Icons\Twig\Node;
 
-use Symfony\UX\Icons\IconRenderer;
+use Symfony\UX\Icons\Exception\IconNotFoundException;
+use Symfony\UX\Icons\Twig\UXIconRuntime;
 use Twig\Compiler;
+use Twig\Error\RuntimeError;
 use Twig\Node\Expression\ArrayExpression;
 use Twig\Node\Expression\ConstantExpression;
 use Twig\Node\Expression\FunctionExpression;
@@ -58,11 +60,15 @@ final class UXIconFunction extends FunctionExpression
             }
         }
 
-        $compiler->string(
-            $compiler
-                ->getEnvironment()
-                ->getRuntime(IconRenderer::class)
-                ->renderIcon($iconName->getAttribute('value'), $iconAttributes)
-        );
+        try {
+            $compiler->string(
+                $compiler
+                    ->getEnvironment()
+                    ->getRuntime(UXIconRuntime::class)
+                    ->renderIcon($iconName->getAttribute('value'), $iconAttributes)
+            );
+        } catch (IconNotFoundException|RuntimeError) {
+            parent::compile($compiler);
+        }
     }
 }
