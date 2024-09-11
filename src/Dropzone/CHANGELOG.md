@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.20
+
+-   Enable file replacement via "drag-and-drop"
+
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"
