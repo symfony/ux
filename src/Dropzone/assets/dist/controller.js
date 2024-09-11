@@ -55,7 +55,7 @@ class default_1 extends Controller {
         reader.readAsDataURL(file);
     }
     onDragEnter() {
-        this.inputTarget.style.display = 'flex';
+        this.inputTarget.style.display = 'block';
     }
     dispatchEvent(name, payload = {}) {
         this.dispatch(name, { detail: payload, prefix: 'dropzone' });
