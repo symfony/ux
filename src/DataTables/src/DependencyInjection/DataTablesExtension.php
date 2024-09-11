@@ -19,7 +19,6 @@ use Symfony\Component\DependencyInjection\Extension\PrependExtensionInterface;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\DataTables\Builder\DataTableBuilder;
 use Symfony\UX\DataTables\Builder\DataTableBuilderInterface;
-use Symfony\UX\DataTables\Twig\DataTableExtension;
 
 class DataTablesExtension extends Extension implements PrependExtensionInterface
 {
@@ -36,7 +35,7 @@ class DataTablesExtension extends Extension implements PrependExtensionInterface
         ;
 
         $container
-            ->setDefinition('datatables.twig_extension', new Definition(DataTablesExtension::class))
+            ->setDefinition('datatables.twig_extension', new Definition(\Symfony\UX\DataTables\Twig\DataTablesExtension::class))
             ->addArgument(new Reference('stimulus.helper'))
             ->addTag('twig.extension')
             ->setPublic(false)
