@@ -4,16 +4,19 @@ class default_1 extends Controller {
     initialize() {
         this.clear = this.clear.bind(this);
         this.onInputChange = this.onInputChange.bind(this);
+        this.onDragEnter = this.onDragEnter.bind(this);
     }
     connect() {
         this.clear();
         this.previewClearButtonTarget.addEventListener('click', this.clear);
         this.inputTarget.addEventListener('change', this.onInputChange);
+        this.element.addEventListener('dragenter', this.onDragEnter);
         this.dispatchEvent('connect');
     }
     disconnect() {
         this.previewClearButtonTarget.removeEventListener('click', this.clear);
         this.inputTarget.removeEventListener('change', this.onInputChange);
+        this.element.removeEventListener('dragenter', this.onDragEnter);
     }
     clear() {
         this.inputTarget.value = '';
@@ -50,6 +53,9 @@ class default_1 extends Controller {
             this.previewImageTarget.style.backgroundImage = `url("${event.target.result}")`;
         });
         reader.readAsDataURL(file);
+    }
+    onDragEnter() {
+        this.inputTarget.style.display = 'flex';
     }
     dispatchEvent(name, payload = {}) {
         this.dispatch(name, { detail: payload, prefix: 'dropzone' });
