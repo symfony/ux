@@ -11,7 +11,9 @@ import { Application } from '@hotwired/stimulus';
 import { waitFor } from '@testing-library/dom';
 import DataTableController from '../src/controller';
 
-const startDataTableTest = async (tableHtml: string): Promise<{ table: HTMLTableElement; dataTable: DataTable<any> }> => {
+const startDataTableTest = async (
+    tableHtml: string
+): Promise<{ table: HTMLTableElement; dataTable: DataTable<any> }> => {
     let dataTable: DataTable<any> | null = null;
 
     document.body.addEventListener('datatables:pre-connect', () => {
