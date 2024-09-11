@@ -45,7 +45,7 @@ and create tables in PHP::
         #[Route('/', name: 'app_homepage')]
         public function index(DataTableBuilderInterface $tableBuilder): Response
         {
-            $table= $tableBuilder->('usersTable');
+            $table = $tableBuilder->createDataTable('usersTable');
 
             $table->setData([
                 'columns' => ['First name', 'Last name'],
@@ -57,7 +57,7 @@ and create tables in PHP::
 
             $table->setOptions([
                 'order' => [
-                    ['idx': 1, 'dir': 'asc']
+                    ['idx' => 1, 'dir' => 'asc']
                 ],
             ]);
 

@@ -20,9 +20,10 @@ export default class extends Controller {
     };
 
     private table: DataTable | null = null;
+    private isDataTableInitialized = false;
 
     connect() {
-        if (isDataTableInitialized) {
+        if (this.isDataTableInitialized) {
             return;
         }
 
@@ -36,11 +37,11 @@ export default class extends Controller {
             config: payload,
         });
 
-        new DataTable(this.element as HTMLElement, payload);
+        this.table = new DataTable(this.element as HTMLElement, payload);
 
         this.dispatchEvent('connect', { table: this.table });
 
-        isDataTableInitialized = true;
+        this.isDataTableInitialized = true;
     }
 
     private dispatchEvent(name: string, payload: any) {

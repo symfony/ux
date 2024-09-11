@@ -6,9 +6,10 @@ class default_1 extends Controller {
     constructor() {
         super(...arguments);
         this.table = null;
+        this.isDataTableInitialized = false;
     }
     connect() {
-        if (isDataTableInitialized) {
+        if (this.isDataTableInitialized) {
             return;
         }
         if (!(this.element instanceof HTMLTableElement)) {
@@ -20,7 +21,7 @@ class default_1 extends Controller {
         });
         this.table = new DataTable(this.element, payload);
         this.dispatchEvent('connect', { table: this.table });
-        isDataTableInitialized = true;
+        this.isDataTableInitialized = true;
     }
     dispatchEvent(name, payload) {
         this.dispatch(name, { detail: payload, prefix: 'datatables' });
