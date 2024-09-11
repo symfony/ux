@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\UX\DataTables\Builder\DataTableBuilderInterface;
 use Symfony\UX\DataTables\Tests\Kernel\TwigAppKernel;
 
-class DataTableExtensionTest extends TestCase
+class DataTablesExtensionTest extends TestCase
 {
     public function testRenderDataTable(): void
     {
