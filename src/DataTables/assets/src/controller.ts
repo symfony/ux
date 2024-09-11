@@ -34,7 +34,7 @@ export default class extends Controller {
 
         this.dispatchEvent('pre-connect', {
             config: payload,
-        })
+        });
 
         new DataTable(this.element as HTMLElement, payload);
 
