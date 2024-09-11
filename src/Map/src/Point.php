@@ -34,6 +34,16 @@ final readonly class Point
     }
 
     /**
+     * @param array{0: float, 1: float} $center
+     *
+     * @return self
+     */
+    public static function fromArray(array $center)
+    {
+        return new self($center[0], $center[1]);
+    }
+
+    /**
      * @return array{lat: float, lng: float}
      */
     public function toArray(): array

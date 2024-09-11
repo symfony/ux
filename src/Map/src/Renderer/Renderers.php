@@ -42,8 +42,16 @@ final class Renderers implements RendererInterface
         }
     }
 
-    public function renderMap(Map $map, array $attributes = []): string
-    {
+    public function renderMap(
+        ?Map $map = null,
+        array $attributes = [],
+        ?array $center = null,
+        ?float $zoom = null,
+        bool $fitBoundsToMarkers = false,
+        array $markers = [],
+    ): string {
+        $map ??= Map::fromArray($center, $zoom, $fitBoundsToMarkers, $markers);
+
         $renderer = $this->default;
 
         if ($rendererName = $map->getRendererName()) {

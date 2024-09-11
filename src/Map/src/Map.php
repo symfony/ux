@@ -20,6 +20,28 @@ use Symfony\UX\Map\Exception\InvalidArgumentException;
  */
 final class Map
 {
+    /**
+     * @param array{0: float, 1: float}                       $center
+     * @param array<array{ point: array, title: string|null}> $markers
+     *
+     * @return self
+     */
+    public static function fromArray(
+        array $center,
+        float $zoom,
+        bool $fitBoundsToMarkers,
+        array $markers,
+    ) {
+        return new self(
+            null,
+            null,
+            Point::fromArray($center),
+            $zoom,
+            $fitBoundsToMarkers,
+            array_map(static fn (array $marker) => Marker::fromArray(...$marker), $markers),
+        );
+    }
+
     public function __construct(
         private readonly ?string $rendererName = null,
         private ?MapOptionsInterface $options = null,

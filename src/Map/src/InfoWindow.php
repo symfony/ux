@@ -18,6 +18,24 @@ namespace Symfony\UX\Map;
  */
 final readonly class InfoWindow
 {
+    public static function fromArray(
+        ?string $headerContent = null,
+        ?string $content = null,
+        ?array $position = null,
+        bool $opened = false,
+        bool $autoClose = true,
+        array $extra = [],
+    ): self {
+        return new self(
+            $headerContent,
+            $content,
+            $position ? Point::fromArray($position) : null,
+            $opened,
+            $autoClose,
+            $extra,
+        );
+    }
+
     /**
      * @param array<string, mixed> $extra Extra data, can be used by the developer to store additional information and use them later JavaScript side
      */

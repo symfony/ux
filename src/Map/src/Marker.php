@@ -18,6 +18,20 @@ namespace Symfony\UX\Map;
  */
 final readonly class Marker
 {
+    public static function fromArray(
+        array $position,
+        ?string $title = null,
+        ?array $infoWindow = null,
+        array $extra = [],
+    ): self {
+        return new self(
+            Point::fromArray($position),
+            $title,
+            $infoWindow ? InfoWindow::fromArray(...$infoWindow) : null,
+            $extra,
+        );
+    }
+
     /**
      * @param array<string, mixed> $extra Extra data, can be used by the developer to store additional information and use them later JavaScript side
      */
