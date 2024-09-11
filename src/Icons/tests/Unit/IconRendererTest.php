@@ -82,81 +82,196 @@ class IconRendererTest extends TestCase
     }
 
     /**
-     * @dataProvider provideAttributesWithDefaultAttributesCases
+     * @dataProvider provideRenderIconWithAttributeCascadeCases
      */
-    public function testRenderIconWithAttributesAndDefaultAttributes($iconAttrs, $defaultAttrs, $renderAttr, $expectedTag): void
-    {
+    public function testRenderIconWithAttributeCascade(
+        array $iconAttributes,
+        array $defaultAttributes = [],
+        array $iconSetAttributes = [],
+        array $renderAttributes = [],
+        string $expectedTag = '',
+    ): void {
         $registry = $this->createRegistry([
-            'foo' => ['', $iconAttrs],
+            'ux:icon' => ['', $iconAttributes],
         ]);
-        $iconRenderer = new IconRenderer($registry, $defaultAttrs);
+        $iconRenderer = new IconRenderer($registry, $defaultAttributes, [], ['ux' => $iconSetAttributes]);
 
-        $svg = $iconRenderer->renderIcon('foo', $renderAttr);
+        $svg = $iconRenderer->renderIcon('ux:icon', $renderAttributes);
         $svg = str_replace(' aria-hidden="true"', '', $svg);
         $this->assertStringStartsWith($expectedTag, $svg);
     }
 
-    public static function provideAttributesWithDefaultAttributesCases()
+    /**
+     * @return iterable<array{
+     *     array<string, string|bool>,
+     *     array<string, string|bool>,
+     *     array<string, string|bool>,
+     *     array<string, string|bool>,
+     *     string,
+     * }>
+     */
+    public static function provideRenderIconWithAttributeCascadeCases(): iterable
     {
         yield 'no_attributes' => [
+            [],
             [],
             [],
             [],
             '<svg>',
         ];
         yield 'icon_attributes_are_used' => [
-            ['id' => 'icon'],
+            ['ico' => 'ICO'],
             [],
             [],
-            '<svg id="icon">',
+            [],
+            '<svg ico="ICO">',
         ];
         yield 'default_attributes_are_used' => [
             [],
-            ['id' => 'default'],
+            ['def' => 'DEF'],
             [],
-            '<svg id="default">',
+            [],
+            '<svg def="DEF">',
+        ];
+        yield 'default_attributes_overwrite_icon_attributes' => [
+            ['ico' => 'ICO'],
+            ['ico' => 'DEF'],
+            [],
+            [],
+            '<svg ico="DEF">',
+        ];
+        yield 'default_attributes_removes_icon_attributes' => [
+            ['ico' => 'ICO'],
+            ['ico' => false],
+            [],
+            [],
+            '<svg>',
+        ];
+        yield 'default_attributes_are_merged_with_icon_attributes' => [
+            ['ico' => 'ICO', 'foo' => 'ICO'],
+            ['ico' => 'DEF', 'bar' => 'DEF'],
+            [],
+            [],
+            '<svg ico="DEF" foo="ICO" bar="DEF">',
+        ];
+        yield 'icon_set_attributes_are_used' => [
+            [],
+            [],
+            ['ico' => 'SET'],
+            [],
+            '<svg ico="SET">',
+        ];
+        yield 'icon_set_attributes_overwrite_icon_attributes' => [
+            ['ico' => 'ICO'],
+            [],
+            ['ico' => 'SET'],
+            [],
+            '<svg ico="SET">',
+        ];
+        yield 'icon_set_attributes_overwrite_default_attributes' => [
+            [],
+            ['ico' => 'DEF'],
+            ['ico' => 'SET'],
+            [],
+            '<svg ico="SET">',
+        ];
+        yield 'icon_set_attributes_are_merged_with_icon_attributes' => [
+            ['ico' => 'ICO', 'foo' => 'ICO'],
+            [],
+            ['ico' => 'SET', 'bar' => 'SET'],
+            [],
+            '<svg ico="SET" foo="ICO" bar="SET">',
+        ];
+        yield 'icon_set_attributes_are_merged_with_default_attributes' => [
+            [],
+            ['ico' => 'DEF', 'foo' => 'DEF'],
+            ['ico' => 'SET', 'bar' => 'SET'],
+            [],
+            '<svg ico="SET" foo="DEF" bar="SET">',
+        ];
+        yield 'icon_set_attributes_are_merged_with_default_attributes_and_icon_attributes' => [
+            ['ico' => 'ICO', 'foo' => 'ICO'],
+            ['ico' => 'DEF', 'bar' => 'DEF'],
+            ['ico' => 'SET', 'baz' => 'SET'],
+            [],
+            '<svg ico="SET" foo="ICO" bar="DEF" baz="SET">',
         ];
         yield 'render_attributes_are_used' => [
             [],
             [],
-            ['id' => 'render'],
-            '<svg id="render">',
-        ];
-        yield 'default_attributes_take_precedence_on_icon' => [
-            ['id' => 'icon'],
-            ['id' => 'default'],
             [],
-            '<svg id="default">',
+            ['ren' => 'REN'],
+            '<svg ren="REN">',
         ];
-        yield 'default_attributes_are_merged_with_icon_attributes' => [
-            ['id' => 'icon', 'foo' => 'bar'],
-            ['id' => 'default', 'baz' => 'qux'],
+        yield 'render_attributes_overwrite_icon_attributes' => [
+            ['ico' => 'ICO'],
             [],
-            '<svg id="default" foo="bar" baz="qux">',
+            [],
+            ['ico' => 'REN'],
+            '<svg ico="REN">',
         ];
-        yield 'render_attributes_take_precedence_on_default' => [
+        yield 'render_attributes_overwrite_default_attributes' => [
             [],
-            ['id' => 'default'],
-            ['id' => 'render'],
-            '<svg id="render">',
+            ['ico' => 'DEF'],
+            [],
+            ['ico' => 'REN'],
+            '<svg ico="REN">',
+        ];
+        yield 'render_attributes_overwrite_icon_set_attributes' => [
+            [],
+            [],
+            ['ico' => 'SET'],
+            ['ico' => 'REN'],
+            '<svg ico="REN">',
+        ];
+        yield 'render_attributes_are_merged_with_icon_attributes' => [
+            ['ico' => 'ICO', 'foo' => 'ICO'],
+            [],
+            [],
+            ['ico' => 'REN', 'bar' => 'REN'],
+            '<svg ico="REN" foo="ICO" bar="REN">',
         ];
         yield 'render_attributes_are_merged_with_default_attributes' => [
             [],
-            ['id' => 'default', 'foo' => 'bar'],
-            ['id' => 'render', 'baz' => 'qux'],
-            '<svg id="render" foo="bar" baz="qux">',
-        ];
-        yield 'render_attributes_take_precedence_on_icon' => [
-            ['id' => 'icon'],
+            ['ico' => 'DEF', 'foo' => 'DEF'],
             [],
-            ['id' => 'render'],
-            '<svg id="render">',
+            ['ico' => 'REN', 'bar' => 'REN'],
+            '<svg ico="REN" foo="DEF" bar="REN">',
         ];
-        yield 'render_attributes_are_merged_with_icon_attributes' => [
-            ['id' => 'icon', 'foo' => 'bar'],
+        yield 'render_attributes_are_merged_with_icon_set_attributes' => [
             [],
-            ['id' => 'render', 'baz' => 'qux'],
-            '<svg id="render" foo="bar" baz="qux">',
+            [],
+            ['ico' => 'SET', 'foo' => 'SET'],
+            ['ico' => 'REN', 'bar' => 'REN'],
+            '<svg ico="REN" foo="SET" bar="REN">',
+        ];
+        yield 'render_attributes_are_merged_with_default_attributes_and_icon_attributes' => [
+            ['ico' => 'ICO', 'foo' => 'ICO'],
+            ['ico' => 'DEF', 'bar' => 'DEF'],
+            [],
+            ['ico' => 'REN', 'baz' => 'REN'],
+            '<svg ico="REN" foo="ICO" bar="DEF" baz="REN">',
+        ];
+        yield 'render_attributes_are_merged_with_icon_set_attributes_and_default_attributes' => [
+            [],
+            ['ico' => 'DEF', 'foo' => 'DEF'],
+            ['ico' => 'SET', 'bar' => 'SET'],
+            ['ico' => 'REN', 'baz' => 'REN'],
+            '<svg ico="REN" foo="DEF" bar="SET" baz="REN">',
+        ];
+        yield 'render_attributes_are_merged_with_icon_set_attributes_and_icon_attributes' => [
+            ['ico' => 'ICO', 'foo' => 'ICO'],
+            [],
+            ['ico' => 'SET', 'bar' => 'SET'],
+            ['ico' => 'REN', 'baz' => 'REN'],
+            '<svg ico="REN" foo="ICO" bar="SET" baz="REN">',
+        ];
+        yield 'render_attributes_are_merged_with_icon_set_attributes_and_default_attributes_and_icon_attributes' => [
+            ['ico' => 'ICO', 'foo' => 'ICO'],
+            ['ico' => 'DEF', 'bar' => 'DEF'],
+            ['ico' => 'SET', 'baz' => 'SET'],
+            ['ico' => 'REN', 'qux' => 'REN'],
+            '<svg ico="REN" foo="ICO" bar="DEF" baz="SET" qux="REN">',
         ];
     }
 
@@ -247,6 +362,49 @@ class IconRendererTest extends TestCase
 
         $svg = $iconRenderer->renderIcon('baz');
         $this->assertSame('<svg aria-hidden="true"><path d="M0 BAZ"/></svg>', $svg);
+    }
+
+    /**
+     * @param array<string, string> $attributes
+     *
+     * @dataProvider provideRenderIconWithIconSetAttributes
+     */
+    public function testRenderIconWithIconSetAttributes(string $name, array $attributes, string $expectedSvg): void
+    {
+        $registry = $this->createRegistry([
+            'a' => '<path d="a"/>',
+            'a:b' => '<path d="a:b"/>',
+            'a:b:c' => '<path d="a:b:c"/>',
+        ]);
+        $defaultIconAttributes = ['class' => 'def', 'x' => 'def_x'];
+        $iconSetsAttributes = [
+            'a' => ['class' => 'icons_a', 'x' => 'a'],
+            'a:b' => ['class' => 'icons_ab', 'x' => 'ab'],
+        ];
+
+        $iconRenderer = new IconRenderer($registry, $defaultIconAttributes, [], $iconSetsAttributes);
+
+        $svg = $iconRenderer->renderIcon($name, $attributes);
+        $this->assertSame($expectedSvg, $svg);
+    }
+
+    public static function provideRenderIconWithIconSetAttributes(): iterable
+    {
+        yield 'icon set attributes (a:b)' => [
+            'a:b',
+            [],
+            '<svg class="icons_a" x="a" aria-hidden="true"><path d="a:b"/></svg>',
+        ];
+        yield 'icon set attributes (a:b:c)' => [
+            'a:b:c',
+            [],
+            '<svg class="icons_a" x="a" aria-hidden="true"><path d="a:b:c"/></svg>',
+        ];
+        yield 'icon set attributes and render attributes' => [
+            'a:b',
+            ['class' => 'render', 'y' => 'a'],
+            '<svg class="render" x="a" y="a" aria-hidden="true"><path d="a:b"/></svg>',
+        ];
     }
 
     private function createRegistry(array $icons): IconRegistryInterface
