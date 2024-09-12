@@ -1,0 +1,86 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-12T02:19:34Z
+
+This works already
+
+```twig
+<twig:ux:icon height="48" width="64" />
+```
+
+So the problem is when you want to pass some dynamic value (and i really would love to have an example)
+
+```twig
+<twig:ux:icon height="48" width="{{ 64 / 2 }}" />
+```
+
+But i'm not ok to change it in Icon ... as a SVG tag does not have "float" or "int" values, but only strings.
+
+So maybe we can (string) values in the Renderer :|
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-12T06:36:15Z
+
+> This works already
+>
+> ```
+> <twig:ux:icon height="48" width="64" />
+> ```
+>
+> So the problem is when you want to pass some dynamic value (and i really would love to have an example)
+>
+> ```
+> <twig:ux:icon height="48" width="{{ 64 / 2 }}" />
+> ```
+
+Yes, that's what is described in issue #2148.
+
+> But i'm not ok to change it in Icon ... as a SVG tag does not have "float" or "int" values, but only strings.
+
+In absolute terms, all the values you pass to HTML attributes are strings, but are then interpreted specially.
+For example, `<input type="range">` which accepts two attributes [`min`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#min) and [`max`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#max), you pass strings but they need to be a valid (_stringified_) number.
+
+But here, we do not speak about the SVG tag but the `UX:Icon` component instead. Which IMO should behave like other `TwigComponent` and correctly auto-cast int/string values, ex:
+```php
+#[AsTwigComponent]
+final class AutocastInt
+{
+    public string $min;
+    public int $max;
+}
+```
+```twig
+<twig:AutocastInt min="1" max="10" />
+<twig:AutocastInt :min="1" :max="10" />
+<twig:AutocastInt min="{{ 1 }}" max="{{ 10 }}" />
+```
+which renders as expected:
+<img width="530" alt="image" src="https://github.com/user-attachments/assets/2f044364-5666-44a3-b1c9-35032da8033d">
+
+Like in Vue or React/JSX, the following codes are correctly interpreted:
+```vue
+<input type="range" :min="1" max="120" />
+```
+```jsx
+<input type="range" min="1" max={10} />
+```
+---
+
+Anyway, I don't really understand why do we need such this validation, can't we rely on `ComponentAttributes` and let it deal with attributes rendering?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-12T07:46:50Z
+
+> But here, we do not speak about the SVG tag but the UX:Icon component instead. Which IMO should behave like other TwigComponent and correctly auto-cast int/string values, ex:
+
+This is not directly related to the UX:Icon `component` (that does not really exist, in fact 😓 ) ..  so we can either force the string in the Listener, in the Renderer, or ... in the Icon as you did.
+
+But i don't want to store int as "int", but as strings in Icon attributes property.. so what do you prefer ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-12T07:48:30Z
+
+As i said, I agree to cast it, just not internally :)
