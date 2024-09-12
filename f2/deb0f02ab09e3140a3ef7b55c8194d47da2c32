@@ -1,0 +1,128 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-01T16:43:16Z
+
+Hi @tijnema ! Do you thing you could show me a live example of the problem, or a small reproducer?
+
+I've never had problems with csrf tokens but i often use components without so 😅  ..
+
+---------------------------------------------------------------------------
+
+by tijnema at 2024-08-02T09:20:59Z
+
+We see this in various ways, most common however is that CSRF tokens will reset on login (like issue #1150). After login we rerender live components to refresh the tokens. With this PR applied, the actions work normally.
+
+To reproduce, just use a simple live component with action, set session life time short, wait for session to expire and press action. It will fail with "CSRF token invalid". You could use the following stimulus controller to reload all components every 3 seconds:
+
+```lang=js
+import {Controller} from '@hotwired/stimulus';
+import {getComponent} from '@symfony/ux-live-component';
+
+export default class extends Controller {
+    connect() {
+        setInterval(this.reloadLiveComponents, 3000);
+    }
+
+    async reloadLiveComponents() {
+        const componentElements = document.querySelectorAll('[data-controller~="live"]');
+        for (const componentElement of componentElements) {
+            await getComponent(componentElement).then(component => {
+                component.render();
+            });
+        }
+    }
+}
+```
+
+This makes sure the component gets new CSRF token.
+With this PR, action still works after session expired
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-02T18:48:23Z
+
+> We see this in various ways, most common however is that CSRF tokens will reset on login (like issue https://github.com/symfony/ux/issues/1150). After login we rerender live components to refresh the tokens. With this PR applied, the actions work normally.
+
+If you have two form on a page "Foo" currently, with csrf tokens. You open another page and log in. You come back on the page "Foo" and submit one of the form. What happens ?
+
+>  just use a simple live component with action, set session life time short, wait for session to expire and press action
+
+Is this not the same for a classic Form... or am i missing something here ?
+
+>  With this PR, action still works after session expired
+
+Do we want this ?
+
+---------------------------------------------------------------------------
+
+by tijnema at 2024-08-05T11:33:58Z
+
+> > We see this in various ways, most common however is that CSRF tokens will reset on login (like issue #1150). After login we rerender live components to refresh the tokens. With this PR applied, the actions work normally.
+>
+> If you have two form on a page "Foo" currently, with csrf tokens. You open another page and log in. You come back on the page "Foo" and submit one of the form. What happens ?
+
+It depends. If there's a mechanism which reloads the live component (Like the stimulus controller I posted above), it works. Otherwise it will fail with an invalid CSRF.
+
+>
+> > just use a simple live component with action, set session life time short, wait for session to expire and press action
+>
+> Is this not the same for a classic Form... or am i missing something here ?
+
+Yes and no. With a classic form, CSRF is usually stored in a hidden input `_csrf_token`. Updating CSRF after login with JS is as simple as updating this input field, or rerender the whole form server side and it should work.
+
+>
+> > With this PR, action still works after session expired
+>
+> Do we want this ?
+
+Yes. It's still safe because the CSRF will be bound to the users' session. It will be the new session which has been started, instead of it's previous expired one.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-12T07:21:06Z
+
+> It depends. If there's a mechanism which reloads [..]. Otherwise it will fail with an invalid CSRF.
+
+So currently there is no difference with the behaviour of standard Form, right ?
+
+> Updating CSRF after login with JS is as simple as updating this input field, or rerender the whole form server side and it should work.
+
+Is there something here you cannot do with LiveComponent ? You can re-render the whole component too right ?
+
+> Yes. It's still safe because the CSRF will be bound to the users' session. It will be the new session which has been started, instead of it's previous expired one.
+
+But the form contains checksum and data from another user.
+
+I'm not convinced for now, so let's wait other opinions on this.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-21T18:23:05Z
+
+Hello @tijnema!
+
+So it seems the team agrees with you on the concept "If a component send another CSRF token, it should be updated". So waiting was not a bad idea :)
+
+As you see it, is your PR ready or does it need some changes/updates ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-08-31T21:08:21Z
+
+Friendly @tijnema ? Is this PR ready to merge for you ?  :)
+
+---------------------------------------------------------------------------
+
+by tijnema at 2024-09-02T07:47:02Z
+
+Sorry, I was enjoying holiday. Good to hear the team agrees with me :). As far as I'm concerned, this PR is ready to merge.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-03T20:43:21Z
+
+I'm just waiting for someone else to check/validate and let's merge it !
+
+ .... because we may need soon to adapt things here 😅  cc PR 58095  on symfony/symfony
+
+Thank you @tijnema !
