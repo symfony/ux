@@ -1,12 +1,35 @@
 import { Controller } from '@hotwired/stimulus';
-import { createApp } from 'vue';
+import { shallowReactive, watch, toRaw, createApp, defineComponent, h } from 'vue';
 
 class default_1 extends Controller {
+    propsValueChanged(newProps, oldProps) {
+        if (oldProps) {
+            let removedPropNames = Object.keys(oldProps);
+            if (newProps) {
+                removedPropNames = removedPropNames.filter((propName) => !Object.prototype.hasOwnProperty.call(newProps, propName));
+            }
+            removedPropNames.forEach((propName) => {
+                delete this.props[propName];
+            });
+        }
+        if (newProps) {
+            Object.entries(newProps).forEach(([propName, propValue]) => {
+                this.props[propName] = propValue;
+            });
+        }
+    }
+    initialize() {
+        const props = this.hasPropsValue && this.propsValue ? this.propsValue : {};
+        this.props = shallowReactive({ ...props });
+        watch(this.props, (props) => {
+            this.propsValue = toRaw(props);
+        }, { flush: 'post' });
+    }
     connect() {
-        this.props = this.propsValue ?? null;
         this.dispatchEvent('connect', { componentName: this.componentValue, props: this.props });
         const component = window.resolveVueComponent(this.componentValue);
-        this.app = createApp(component, this.props);
+        const wrappedComponent = this.wrapComponent(component);
+        this.app = createApp(wrappedComponent);
         if (this.element.__vue_app__ !== undefined) {
             this.element.__vue_app__.unmount();
         }
@@ -32,6 +55,22 @@ class default_1 extends Controller {
     }
     dispatchEvent(name, payload) {
         this.dispatch(name, { detail: payload, prefix: 'vue' });
+    }
+    wrapComponent(component) {
+        return defineComponent({
+            setup: () => {
+                const props = this.props;
+                return () => h(component, {
+                    ...props,
+                    ...Object.fromEntries(Object.keys(props).map((propName) => [
+                        `onUpdate:${propName}`,
+                        (value) => {
+                            props[propName] = value;
+                        },
+                    ])),
+                });
+            },
+        });
     }
 }
 default_1.values = {
