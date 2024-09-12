@@ -12,8 +12,10 @@
 namespace Symfony\UX\Icons\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\UX\Icons\AriaHiddenPreRenderer;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Icon;
+use Symfony\UX\Icons\IconPreRendererInterface;
 use Symfony\UX\Icons\IconRegistryInterface;
 use Symfony\UX\Icons\IconRenderer;
 use Symfony\UX\Icons\Tests\Util\InMemoryIconRegistry;
@@ -61,7 +63,7 @@ class IconRendererTest extends TestCase
         $registry = $this->createRegistry([
             'foo' => '<path d="M0 0L12 12"/>',
         ]);
-        $iconRenderer = new IconRenderer($registry);
+        $iconRenderer = new IconRenderer($registry, [], [], [new AriaHiddenPreRenderer()]);
         $attributes = ['viewBox' => '0 0 24 24', 'class' => 'icon', 'id' => 'FooBar'];
 
         $svg = $iconRenderer->renderIcon('foo', $attributes);
@@ -74,7 +76,7 @@ class IconRendererTest extends TestCase
         $registry = $this->createRegistry([
             'foo' => '<path d="M0 0L12 12"/>',
         ]);
-        $iconRenderer = new IconRenderer($registry, ['viewBox' => '0 0 24 24', 'class' => 'icon']);
+        $iconRenderer = new IconRenderer($registry, ['viewBox' => '0 0 24 24', 'class' => 'icon'], [], [new AriaHiddenPreRenderer()]);
 
         $svg = $iconRenderer->renderIcon('foo');
 
@@ -172,7 +174,7 @@ class IconRendererTest extends TestCase
         $registry = $this->createRegistry([
             'foo' => $icon,
         ]);
-        $iconRenderer = new IconRenderer($registry);
+        $iconRenderer = new IconRenderer($registry, [], [], [new AriaHiddenPreRenderer()]);
 
         $svg = $iconRenderer->renderIcon('foo', $attributes);
         $this->assertSame($expectedSvg, $svg);
@@ -237,7 +239,7 @@ class IconRendererTest extends TestCase
             'bar' => '<path d="M0 BAR"/>',
             'baz' => '<path d="M0 BAZ"/>',
         ]);
-        $iconRenderer = new IconRenderer($registry, [], ['foo' => 'bar']);
+        $iconRenderer = new IconRenderer($registry, [], ['foo' => 'bar'], [new AriaHiddenPreRenderer()]);
 
         $svg = $iconRenderer->renderIcon('bar');
         $this->assertSame('<svg aria-hidden="true"><path d="M0 BAR"/></svg>', $svg);
@@ -247,6 +249,25 @@ class IconRendererTest extends TestCase
 
         $svg = $iconRenderer->renderIcon('baz');
         $this->assertSame('<svg aria-hidden="true"><path d="M0 BAZ"/></svg>', $svg);
+    }
+
+    public function testRenderWithMultiplePreRenders(): void
+    {
+        $registry = $this->createRegistry([
+            'foo' => '<path d="M0 0L12 12"/>',
+        ]);
+        $customPreRenderer = new class implements IconPreRendererInterface {
+            public function __invoke(string $name, Icon $icon): Icon
+            {
+                return $icon->withAttributes(['data-test-id' => $name]);
+            }
+        };
+        $iconRenderer = new IconRenderer($registry, [], [], [new AriaHiddenPreRenderer(), $customPreRenderer]);
+        $attributes = ['viewBox' => '0 0 24 24', 'class' => 'icon', 'id' => 'FooBar'];
+
+        $svg = $iconRenderer->renderIcon('foo', $attributes);
+
+        $this->assertSame('<svg viewBox="0 0 24 24" class="icon" id="FooBar" aria-hidden="true" data-test-id="foo"><path d="M0 0L12 12"/></svg>', $svg);
     }
 
     private function createRegistry(array $icons): IconRegistryInterface

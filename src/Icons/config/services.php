@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Symfony\UX\Icons\AriaHiddenPreRenderer;
 use Symfony\UX\Icons\Command\WarmCacheCommand;
 use Symfony\UX\Icons\IconCacheWarmer;
 use Symfony\UX\Icons\IconRenderer;
@@ -58,6 +59,7 @@ return static function (ContainerConfigurator $container): void {
                 service('.ux_icons.icon_registry'),
                 abstract_arg('default_icon_attributes'),
                 abstract_arg('icon_aliases'),
+                tagged_iterator('ux_icons.icon_pre_renderer'),
             ])
 
         ->alias('Symfony\UX\Icons\IconRendererInterface', '.ux_icons.icon_renderer')
@@ -79,5 +81,8 @@ return static function (ContainerConfigurator $container): void {
                 service('.ux_icons.cache_warmer'),
             ])
             ->tag('console.command')
+
+        ->set('.ux_icons.aria_hidden_pre_renderer', AriaHiddenPreRenderer::class)
+            ->tag('ux_icons.icon_pre_renderer')
     ;
 };

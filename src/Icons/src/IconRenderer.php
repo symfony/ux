@@ -18,10 +18,14 @@ namespace Symfony\UX\Icons;
  */
 final class IconRenderer implements IconRendererInterface
 {
+    /**
+     * @param iterable<IconPreRendererInterface> $preRenderers
+     */
     public function __construct(
         private readonly IconRegistryInterface $registry,
         private readonly array $defaultIconAttributes = [],
         private readonly ?array $iconAliases = [],
+        private readonly iterable $preRenderers = [],
     ) {
     }
 
@@ -42,30 +46,10 @@ final class IconRenderer implements IconRendererInterface
             ->withAttributes($this->defaultIconAttributes)
             ->withAttributes($attributes);
 
-        foreach ($this->getPreRenderers() as $preRenderer) {
-            $icon = $preRenderer($icon);
+        foreach ($this->preRenderers as $preRenderer) {
+            $icon = $preRenderer($name, $icon);
         }
 
         return $icon->toHtml();
-    }
-
-    /**
-     * @return iterable<callable(Icon): Icon>
-     */
-    private function getPreRenderers(): iterable
-    {
-        yield self::setAriaHidden(...);
-    }
-
-    /**
-     * Set `aria-hidden=true` if not defined & no textual alternative provided.
-     */
-    private static function setAriaHidden(Icon $icon): Icon
-    {
-        if ([] === array_intersect(['aria-hidden', 'aria-label', 'aria-labelledby', 'title'], array_keys($icon->getAttributes()))) {
-            return $icon->withAttributes(['aria-hidden' => 'true']);
-        }
-
-        return $icon;
     }
 }

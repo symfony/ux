@@ -4,6 +4,7 @@
 
 -   Add `aliases` configuration option to define icon alternative names.
 -   Add support for `int` and `float` attribute values in `<twig:ux:icon />`.
+-   Allow to add custom pre-renderers
 
 ## 2.19.0
 

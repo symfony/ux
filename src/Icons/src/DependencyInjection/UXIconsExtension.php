@@ -20,6 +20,7 @@ use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\UX\Icons\Iconify;
+use Symfony\UX\Icons\IconPreRendererInterface;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -128,5 +129,9 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
         if (!$container->getParameter('kernel.debug')) {
             $container->removeDefinition('.ux_icons.command.import');
         }
+
+        $container
+            ->registerForAutoconfiguration(IconPreRendererInterface::class)
+            ->addTag('ux_icons.icon_pre_renderer');
     }
 }
