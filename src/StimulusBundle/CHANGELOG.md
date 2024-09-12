@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.20.1
+
+-   Normalize Stimulus controller name in event name
+
 ## 2.14.2
 
 -   Fix bug with finding UX Packages with non-standard project structure
