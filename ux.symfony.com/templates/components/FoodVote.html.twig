@@ -6,7 +6,7 @@
     <td style="width: 250px;">
         {% if hasVoted %}
             <div class="alert alert-success">
-                Thanks for voting! <twig:Icon name="circle-check" />
+                Thanks for voting! <twig:ux:icon name="circle-check" />
             </div>
         {% else %}
             <button
@@ -16,7 +16,7 @@
                 data-live-action-param="vote"
                 data-live-direction-param="up"
             >
-                <twig:Icon name="arrow-up" />
+                <twig:ux:icon name="arrow-up" />
             </button>
             <button
                 type="button"
@@ -25,7 +25,7 @@
                 data-live-action-param="vote"
                 data-live-direction-param="down"
             >
-                <twig:Icon name="arrow-down" />
+                <twig:ux:icon name="arrow-down" />
             </button>
         {% endif %}
     </td>

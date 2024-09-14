@@ -6,7 +6,7 @@
     {{ include('ux_packages/turbo/_demo_message.html.twig') }}
 
     <turbo-frame id="daily-todos">
-        <a href="{{ path('app_turbo_todo_list') }}"><twig:Icon name="arrow-left" /> Back to list</a>
+        <a href="{{ path('app_turbo_todo_list') }}"><twig:ux:icon name="arrow-left" /> Back to list</a>
         <form class="mt-4" action="{{ path('app_turbo_add_todo_item') }}" method="POST" novalidate>
             {{ form_row(form.item, {
                 attr: {
