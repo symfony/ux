@@ -6,18 +6,21 @@ let default_1$1 = class default_1 extends Controller {
         super(...arguments);
         this.markers = [];
         this.infoWindows = [];
+        this.polygons = [];
     }
     connect() {
-        const { center, zoom, options, markers, fitBoundsToMarkers } = this.viewValue;
+        const { center, zoom, options, markers, polygons, fitBoundsToMarkers } = this.viewValue;
         this.dispatchEvent('pre-connect', { options });
         this.map = this.doCreateMap({ center, zoom, options });
         markers.forEach((marker) => this.createMarker(marker));
+        polygons.forEach((polygon) => this.createPolygon(polygon));
         if (fitBoundsToMarkers) {
             this.doFitBoundsToMarkers();
         }
         this.dispatchEvent('connect', {
             map: this.map,
             markers: this.markers,
+            polygons: this.polygons,
             infoWindows: this.infoWindows,
         });
     }
@@ -28,10 +31,17 @@ let default_1$1 = class default_1 extends Controller {
         this.markers.push(marker);
         return marker;
     }
-    createInfoWindow({ definition, marker, }) {
-        this.dispatchEvent('info-window:before-create', { definition, marker });
-        const infoWindow = this.doCreateInfoWindow({ definition, marker });
-        this.dispatchEvent('info-window:after-create', { infoWindow, marker });
+    createPolygon(definition) {
+        this.dispatchEvent('polygon:before-create', { definition });
+        const polygon = this.doCreatePolygon(definition);
+        this.dispatchEvent('polygon:after-create', { polygon });
+        this.polygons.push(polygon);
+        return polygon;
+    }
+    createInfoWindow({ definition, element, }) {
+        this.dispatchEvent('info-window:before-create', { definition, element });
+        const infoWindow = this.doCreateInfoWindow({ definition, element });
+        this.dispatchEvent('info-window:after-create', { infoWindow, element });
         this.infoWindows.push(infoWindow);
         return infoWindow;
     }
@@ -92,11 +102,26 @@ class default_1 extends default_1$1 {
             map: this.map,
         });
         if (infoWindow) {
-            this.createInfoWindow({ definition: infoWindow, marker });
+            this.createInfoWindow({ definition: infoWindow, element: marker });
         }
         return marker;
     }
-    doCreateInfoWindow({ definition, marker, }) {
+    doCreatePolygon(definition) {
+        const { points, title, infoWindow, rawOptions = {} } = definition;
+        const polygon = new _google.maps.Polygon({
+            ...rawOptions,
+            paths: points,
+            map: this.map,
+        });
+        if (title) {
+            polygon.set('title', title);
+        }
+        if (infoWindow) {
+            this.createInfoWindow({ definition: infoWindow, element: polygon });
+        }
+        return polygon;
+    }
+    doCreateInfoWindow({ definition, element, }) {
         const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
         const infoWindow = new _google.maps.InfoWindow({
             headerContent: this.createTextOrElement(headerContent),
@@ -104,22 +129,34 @@ class default_1 extends default_1$1 {
             ...otherOptions,
             ...rawOptions,
         });
-        if (definition.opened) {
-            infoWindow.open({
-                map: this.map,
-                shouldFocus: false,
-                anchor: marker,
+        if (element instanceof google.maps.marker.AdvancedMarkerElement) {
+            element.addListener('click', () => {
+                if (definition.autoClose) {
+                    this.closeInfoWindowsExcept(infoWindow);
+                }
+                infoWindow.open({ map: this.map, anchor: element });
             });
-        }
-        marker.addListener('click', () => {
-            if (definition.autoClose) {
-                this.closeInfoWindowsExcept(infoWindow);
+            if (definition.opened) {
+                infoWindow.open({ map: this.map, anchor: element });
             }
-            infoWindow.open({
-                map: this.map,
-                anchor: marker,
+        }
+        else if (element instanceof google.maps.Polygon) {
+            element.addListener('click', (event) => {
+                if (definition.autoClose) {
+                    this.closeInfoWindowsExcept(infoWindow);
+                }
+                infoWindow.setPosition(event.latLng);
+                infoWindow.open(this.map);
             });
-        });
+            if (definition.opened) {
+                const bounds = new google.maps.LatLngBounds();
+                element.getPath().forEach((point) => {
+                    bounds.extend(point);
+                });
+                infoWindow.setPosition(bounds.getCenter());
+                infoWindow.open({ map: this.map, anchor: element });
+            }
+        }
         return infoWindow;
     }
     createTextOrElement(content) {

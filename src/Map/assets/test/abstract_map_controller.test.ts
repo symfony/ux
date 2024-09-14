@@ -20,14 +20,28 @@ class MyMapController extends AbstractMapController {
         const marker = { marker: 'marker', title: definition.title };
 
         if (definition.infoWindow) {
-            this.createInfoWindow({ definition: definition.infoWindow, marker });
+            this.createInfoWindow({ definition: definition.infoWindow, element: marker });
         }
 
         return marker;
     }
 
-    doCreateInfoWindow({ definition, marker }) {
-        return { infoWindow: 'infoWindow', headerContent: definition.headerContent, marker: marker.title };
+    doCreatePolygon(definition) {
+        const polygon = { polygon: 'polygon', title: definition.title };
+
+        if (definition.infoWindow) {
+            this.createInfoWindow({ definition: definition.infoWindow, element: polygon });
+        }
+        return polygon;
+    }
+
+    doCreateInfoWindow({ definition, element }) {
+        if (element.marker) {
+            return { infoWindow: 'infoWindow', headerContent: definition.headerContent, marker: element.title };
+        }
+        if (element.polygon) {
+            return { infoWindow: 'infoWindow', headerContent: definition.headerContent, polygon: element.title };
+        }
     }
 
     doFitBoundsToMarkers() {
@@ -47,12 +61,61 @@ describe('AbstractMapController', () => {
     beforeEach(() => {
         container = mountDOM(`
           <div 
-              data-testid="map" 
-              data-controller="map" 
-              style="height&#x3A;&#x20;700px&#x3B;&#x20;margin&#x3A;&#x20;10px" 
-              data-map-provider-options-value="&#x7B;&#x7D;" 
-              data-map-view-value="&#x7B;&quot;center&quot;&#x3A;&#x7B;&quot;lat&quot;&#x3A;48.8566,&quot;lng&quot;&#x3A;2.3522&#x7D;,&quot;zoom&quot;&#x3A;4,&quot;fitBoundsToMarkers&quot;&#x3A;true,&quot;options&quot;&#x3A;&#x7B;&#x7D;,&quot;markers&quot;&#x3A;&#x5B;&#x7B;&quot;position&quot;&#x3A;&#x7B;&quot;lat&quot;&#x3A;48.8566,&quot;lng&quot;&#x3A;2.3522&#x7D;,&quot;title&quot;&#x3A;&quot;Paris&quot;,&quot;infoWindow&quot;&#x3A;null&#x7D;,&#x7B;&quot;position&quot;&#x3A;&#x7B;&quot;lat&quot;&#x3A;45.764,&quot;lng&quot;&#x3A;4.8357&#x7D;,&quot;title&quot;&#x3A;&quot;Lyon&quot;,&quot;infoWindow&quot;&#x3A;&#x7B;&quot;headerContent&quot;&#x3A;&quot;&lt;b&gt;Lyon&lt;&#x5C;&#x2F;b&gt;&quot;,&quot;content&quot;&#x3A;&quot;The&#x20;French&#x20;town&#x20;in&#x20;the&#x20;historic&#x20;Rh&#x5C;u00f4ne-Alpes&#x20;region,&#x20;located&#x20;at&#x20;the&#x20;junction&#x20;of&#x20;the&#x20;Rh&#x5C;u00f4ne&#x20;and&#x20;Sa&#x5C;u00f4ne&#x20;rivers.&quot;,&quot;position&quot;&#x3A;null,&quot;opened&quot;&#x3A;false,&quot;autoClose&quot;&#x3A;true&#x7D;&#x7D;&#x5D;&#x7D;"
-          ></div>
+            data-testid="map" 
+            data-controller="map" 
+            style="height: 700px; margin: 10px;" 
+            data-map-provider-options-value="{}" 
+            data-map-view-value='{
+                "center": { "lat": 48.8566, "lng": 2.3522 },
+                "zoom": 4,
+                "fitBoundsToMarkers": true,
+                "options": {},
+                "markers": [
+                    {
+                        "position": { "lat": 48.8566, "lng": 2.3522 },
+                        "title": "Paris",
+                        "infoWindow": null
+                    },
+                    {
+                        "position": { "lat": 45.764, "lng": 4.8357 },
+                        "title": "Lyon",
+                        "infoWindow": {
+                            "headerContent": "<b>Lyon</b>",
+                            "content": "The French town in the historic Rhône-Alpes region, located at the junction of the Rhône and Saône rivers.",
+                            "position": null,
+                            "opened": false,
+                            "autoClose": true
+                        }
+                    }
+                ],
+                "polygons": [
+                    {
+                        "coordinates": [
+                            { "lat": 48.858844, "lng": 2.294351 },
+                            { "lat": 48.853, "lng": 2.3499 },
+                            { "lat": 48.8566, "lng": 2.3522 }
+                        ],
+                        "title": "Polygon 1",
+                        "infoWindow": null
+                    },
+                    {
+                        "coordinates": [
+                            { "lat": 45.764043, "lng": 4.835659 },
+                            { "lat": 45.750000, "lng": 4.850000 },
+                            { "lat": 45.770000, "lng": 4.820000 }
+                        ],
+                        "title": "Polygon 2",
+                        "infoWindow": {
+                            "headerContent": "<b>Polygon 2</b>",
+                            "content": "A polygon around Lyon with some additional info.",
+                            "position": null,
+                            "opened": false,
+                            "autoClose": true
+                        }
+                    }
+                ]
+            }'>
+        </div>
         `);
     });
 
@@ -60,7 +123,7 @@ describe('AbstractMapController', () => {
         clearDOM();
     });
 
-    it('connect and create map, marker and info window', async () => {
+    it('connect and create map, marker, polygon and info window', async () => {
         const div = getByTestId(container, 'map');
         expect(div).not.toHaveClass('connected');
 
@@ -73,11 +136,20 @@ describe('AbstractMapController', () => {
             { marker: 'marker', title: 'Paris' },
             { marker: 'marker', title: 'Lyon' },
         ]);
+        expect(controller.polygons).toEqual([
+            { polygon: 'polygon', title: 'Polygon 1' },
+            { polygon: 'polygon', title: 'Polygon 2' },
+        ]);
         expect(controller.infoWindows).toEqual([
             {
                 headerContent: '<b>Lyon</b>',
                 infoWindow: 'infoWindow',
                 marker: 'Lyon',
+            },
+            {
+                headerContent: '<b>Polygon 2</b>',
+                infoWindow: 'infoWindow',
+                polygon: 'Polygon 2',
             },
         ]);
     });

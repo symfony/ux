@@ -32,6 +32,13 @@ class MapFactoryTest extends TestCase
         $this->assertSame($array['markers'][0]['title'], $markers[0]['title']);
         $this->assertSame($array['markers'][0]['infoWindow']['headerContent'], $markers[0]['infoWindow']['headerContent']);
         $this->assertSame($array['markers'][0]['infoWindow']['content'], $markers[0]['infoWindow']['content']);
+
+        $this->assertCount(1, $polygons = $map->toArray()['polygons']);
+        $this->assertEquals($array['polygons'][0]['points'], $polygons[0]['points']);
+        $this->assertEquals($array['polygons'][0]['points'], $polygons[0]['points']);
+        $this->assertSame($array['polygons'][0]['title'], $polygons[0]['title']);
+        $this->assertSame($array['polygons'][0]['infoWindow']['headerContent'], $polygons[0]['infoWindow']['headerContent']);
+        $this->assertSame($array['polygons'][0]['infoWindow']['content'], $polygons[0]['infoWindow']['content']);
     }
 
     public function testFromArrayWithInvalidCenter(): void
@@ -76,6 +83,30 @@ class MapFactoryTest extends TestCase
         Map::fromArray($array);
     }
 
+    public function testFromArrayWithInvalidPolygons(): void
+    {
+        $array = self::createMapArray();
+        $array['polygons'] = 'invalid';
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "polygons" parameter must be an array.');
+        Map::fromArray($array);
+    }
+
+    public function testFromArrayWithInvalidPolygon(): void
+    {
+        $array = self::createMapArray();
+        $array['polygons'] = [
+            [
+                'invalid',
+            ],
+        ];
+
+        $this->expectException(\InvalidArgumentException::class);
+        $this->expectExceptionMessage('The "points" parameter is required.');
+        Map::fromArray($array);
+    }
+
     private static function createMapArray(): array
     {
         return [
@@ -94,6 +125,29 @@ class MapFactoryTest extends TestCase
                     'infoWindow' => [
                         'headerContent' => 'Paris',
                         'content' => 'Paris, the city of lights',
+                    ],
+                ],
+            ],
+            'polygons' => [
+                [
+                    'points' => [
+                        [
+                            'lat' => 48.858844,
+                            'lng' => 2.294351,
+                        ],
+                        [
+                            'lat' => 48.853,
+                            'lng' => 2.3499,
+                        ],
+                        [
+                            'lat' => 48.8566,
+                            'lng' => 2.3522,
+                        ],
+                    ],
+                    'title' => 'Polygon 1',
+                    'infoWindow' => [
+                        'headerContent' => 'Polygon 1',
+                        'content' => 'Polygon 1',
                     ],
                 ],
             ],

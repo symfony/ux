@@ -14,6 +14,7 @@ namespace Symfony\UX\Map\Twig;
 use Symfony\UX\Map\Map;
 use Symfony\UX\Map\Marker;
 use Symfony\UX\Map\Point;
+use Symfony\UX\Map\Polygon;
 use Symfony\UX\Map\Renderer\RendererInterface;
 use Twig\Extension\RuntimeExtensionInterface;
 
@@ -32,11 +33,13 @@ final class MapRuntime implements RuntimeExtensionInterface
     /**
      * @param array<string, mixed> $attributes
      * @param array<string, mixed> $markers
+     * @param array<string, mixed> $polygons
      */
     public function renderMap(
         ?Map $map = null,
         array $attributes = [],
         ?array $markers = null,
+        ?array $polygons = null,
         ?array $center = null,
         ?float $zoom = null,
     ): string {
@@ -51,6 +54,9 @@ final class MapRuntime implements RuntimeExtensionInterface
         $map = new Map();
         foreach ($markers ?? [] as $marker) {
             $map->addMarker(Marker::fromArray($marker));
+        }
+        foreach ($polygons ?? [] as $polygons) {
+            $map->addPolygon(Polygon::fromArray($polygons));
         }
         if (null !== $center) {
             $map->center(Point::fromArray($center));

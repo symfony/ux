@@ -1,8 +1,8 @@
 import AbstractMapController from '@symfony/ux-map';
-import type { Point, MarkerDefinition } from '@symfony/ux-map';
+import type { Point, MarkerDefinition, PolygonDefinition } from '@symfony/ux-map';
 import 'leaflet/dist/leaflet.min.css';
 import * as L from 'leaflet';
-import type { MapOptions as LeafletMapOptions, MarkerOptions, PopupOptions } from 'leaflet';
+import type { MapOptions as LeafletMapOptions, MarkerOptions, PopupOptions, PolygonOptions } from 'leaflet';
 
 type MapOptions = Pick<LeafletMapOptions, 'center' | 'zoom'> & {
     tileLayer: { url: string; attribution: string; options: Record<string, unknown> };
@@ -13,8 +13,10 @@ export default class extends AbstractMapController<
     typeof L.Map,
     MarkerOptions,
     typeof L.Marker,
+    PopupOptions,
     typeof L.Popup,
-    PopupOptions
+    PolygonOptions,
+    typeof L.Polygon
 > {
     connect(): void {
         L.Marker.prototype.options.icon = L.divIcon({
@@ -63,30 +65,48 @@ export default class extends AbstractMapController<
         const marker = L.marker(position, { title, ...otherOptions, ...rawOptions }).addTo(this.map);
 
         if (infoWindow) {
-            this.createInfoWindow({ definition: infoWindow, marker });
+            this.createInfoWindow({ definition: infoWindow, element: marker });
         }
 
         return marker;
     }
 
+    protected doCreatePolygon(definition: PolygonDefinition): L.Polygon {
+        const { points, title, infoWindow, rawOptions = {} } = definition;
+
+        const polygon = L.polygon(points, { ...rawOptions }).addTo(this.map);
+
+        if (title) {
+            polygon.bindPopup(title);
+        }
+
+        if (infoWindow) {
+            this.createInfoWindow({ definition: infoWindow, element: polygon });
+        }
+
+        return polygon;
+    }
+
     protected doCreateInfoWindow({
         definition,
-        marker,
+        element,
     }: {
-        definition: MarkerDefinition['infoWindow'];
-        marker: L.Marker;
+        definition: MarkerDefinition['infoWindow'] | PolygonDefinition['infoWindow'];
+        element: L.Marker | L.Polygon;
     }): L.Popup {
-        const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
+        const { headerContent, content, rawOptions = {}, ...otherOptions } = definition;
 
-        marker.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...otherOptions, ...rawOptions });
+        element.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...otherOptions, ...rawOptions });
+
         if (definition.opened) {
-            marker.openPopup();
+            element.openPopup();
         }
 
-        const popup = marker.getPopup();
+        const popup = element.getPopup();
         if (!popup) {
-            throw new Error('Unable to get the Popup associated to the Marker, this should not happens.');
+            throw new Error('Unable to get the Popup associated with the element.');
         }
+
         return popup;
     }
 
