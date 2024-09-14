@@ -1,7 +1,9 @@
 {% extends 'demos/live_demo.html.twig' %}
 
 {% block code_block_full %}
-    <twig:Code:CodeWithExplanationRow filename="src/Twig/InvoiceCreator.php">
+    <twig:Code:CodeWithExplanationRow filename="src/Twig/InvoiceCreator.php" sticky class="pt-5">
+## Main Component
+
 This main component keeps track of the `Invoice` (which may be new) and
 a list of the "invoice items" - stored on a `LiveProp` called `$lineItems`.
 
@@ -16,7 +18,9 @@ This triggers the `removeLineItem()` method on this component, which
 removes the line item from the `$lineItems` array.
     </twig:Code:CodeWithExplanationRow>
 
-    <twig:Code:CodeWithExplanationRow filename="templates/components/InvoiceCreator.html.twig" reversed>
+    <twig:Code:CodeWithExplanationRow filename="templates/components/InvoiceCreator.html.twig" sticky reversed class="pt-5">
+## Main Template
+
 The template is fairly simple: rendering form fields with `data-model` to
 bind to writable `LiveProp`'s along with their validation errors.
 
@@ -26,7 +30,9 @@ data: `productId`, `quantity`, and `isEditing`. It also passes a `key`,
 which is needed so LiveComponents can track which row is which.
     </twig:Code:CodeWithExplanationRow>
 
-    <twig:Code:CodeWithExplanationRow filename="src/Twig/InvoiceCreatorLineItem.php">
+    <twig:Code:CodeWithExplanationRow filename="src/Twig/InvoiceCreatorLineItem.php" sticky class="pt-5">
+## Child Component
+
 The child component for each "line item". This handles validating, saving,
 and changing the "edit" state of the line item.
 
@@ -41,7 +47,14 @@ by emitting events - e.g. `line_item:save`.
 > "edit" mode.
     </twig:Code:CodeWithExplanationRow>
 
-    <twig:Code:CodeWithExplanationRow filename="templates/components/InvoiceCreatorLineItem.html.twig" reversed>
+    <twig:Code:CodeWithExplanationRow
+        filename="templates/components/InvoiceCreatorLineItem.html.twig"
+        sticky
+        reversed
+        class="pt-5"
+    >
+## Item template
+
 Nothing too fancy here: some `data-model` elements and `data-action="live#action"`
 buttons.
 

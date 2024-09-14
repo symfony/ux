@@ -5,7 +5,9 @@
 {% endblock %}
 
 {% block code_block_full %}
-    <twig:Code:CodeWithExplanationRow filename="src/Twig/NewProductForm.php">
+    <twig:Code:CodeWithExplanationRow filename="src/Twig/NewProductForm.php" sticky>
+## New Product Form
+
 Live component with a form, `ValidatableComponentTrait` and a
 `saveProduct()` LiveAction for instant validation & an AJAX submit.
 
@@ -19,14 +21,20 @@ Then, thanks to the `Category` type-hint + Symfony's standard
 Symfony uses that id to query for the `Category` object.
     </twig:Code:CodeWithExplanationRow>
 
-    <twig:Code:CodeWithExplanationRow filename="templates/components/NewProductForm.html.twig" reversed>
+    <twig:Code:CodeWithExplanationRow filename="templates/components/NewProductForm.html.twig" sticky reversed>
+## New Product Template
+
 Near the bottom, this renders the `BootstrapModal` component with another
 component - `NewCategoryForm` - inside of it. Opening the modal is done entirely
 with normal Bootstrap logic: an `a` tag with `data-bs-toggle="modal"`
 and `data-bs-target="#new-category-modal"`.
     </twig:Code:CodeWithExplanationRow>
 
-    <twig:Code:CodeWithExplanationRow filename="src/Twig/NewCategoryForm.php">
+    <twig:Code:CodeWithExplanationRow
+        filename="src/Twig/NewCategoryForm.php" sticky
+    >
+## New Category Form
+
 This component opens up in the modal! It has a `#[LiveAction]` that saves
 the new `Category` to the database and then does two important things:
 
