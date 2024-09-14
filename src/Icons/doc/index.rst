@@ -339,6 +339,10 @@ Now, all icons will have the ``fill`` attribute set to ``currentColor`` by defau
 Icon Aliases
 ~~~~~~~~~~~~
 
+.. versionadded:: 2.20
+
+    Icon Aliases feature was added in 2.20.
+
 Aliases are custom names you can define to refer to any icon. They are useful for
 creating shortcuts to icons you frequently use in your templates:
 
@@ -544,11 +548,11 @@ Full Configuration
         default_icon_attributes:
             # Default:
             fill: currentColor
-            
+
         # Icon aliases (alias => icon name).
         aliases:
             # Exemple:
-            dots: 'clarity:ellipsis-horizontal-line'    
+            dots: 'clarity:ellipsis-horizontal-line'
 
         # Configuration for the "on demand" icons powered by Iconify.design.
         iconify:
@@ -559,7 +563,7 @@ Full Configuration
 
            # The endpoint for the Iconify API.
            endpoint: 'https://api.iconify.design'
-           
+
         # Whether to ignore errors when an icon is not found.
         ignore_not_found: false
 
