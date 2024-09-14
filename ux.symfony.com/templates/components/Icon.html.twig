@@ -1,7 +1,0 @@
-{% set default_attributes = {
-    class: 'Icon Icon--' ~ name,
-    role: 'img',
-    'aria-hidden': 'true',
-    'aria-label': label ?? name|humanize,
-} %}
-<twig:ux:icon name="{{ name }}" {{ ...attributes.defaults(default_attributes) }} />
