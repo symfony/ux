@@ -21,9 +21,6 @@ return static function (ContainerConfigurator $container) {
     $container->services()
 
         ->set('ux.twig_component.component_logger_listener', TwigComponentLoggerListener::class)
-        ->args([
-            service('debug.stopwatch')->ignoreOnInvalid(),
-        ])
         ->tag('kernel.event_subscriber')
 
         ->set('ux.twig_component.data_collector', TwigComponentDataCollector::class)
