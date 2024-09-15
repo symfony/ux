@@ -348,7 +348,7 @@ close tag, it's passed to your component template as the block called
 
 .. code-block:: html+twig
 
-    <div {{ attributes.defaults({class: 'alert alert-' ~ type}) }}">
+    <div {{ attributes.defaults({class: 'alert alert-' ~ type}) }}>
         {% block content %}{% endblock %}
     </div>
 
