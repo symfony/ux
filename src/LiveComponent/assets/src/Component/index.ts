@@ -329,6 +329,11 @@ export default class Component {
 
             this.processRerender(html, backendResponse);
 
+            // Store updated csrf token
+            if (this.element.dataset.liveCsrfValue) {
+                this.backend.updateCsrfToken(this.element.dataset.liveCsrfValue);
+            }
+
             // finally resolve this promise
             this.backendRequest = null;
             thisPromiseResolve(backendResponse);

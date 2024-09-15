@@ -15,23 +15,23 @@
                 </button>
             </div>
             <div class="Browser__url">
-                <twig:Icon name="lock" />
+                <twig:ux:icon name="lock" />
                 <span>
                     <span hidden>https://</span><em>ux.symfony.com</em><span hidden>{{ url }}</span>
                 </span>
                 <button class="Browser__action">
-                    <twig:Icon name="refresh" />
+                    <twig:ux:icon name="refresh" />
                 </button>
             </div>
             <div class="Browser__actions">
                 {% if false %}
                     <button class="Browser__action" data-bs-toggle="tooltip" title="Feedback">
-                        <twig:Icon name="circle-help" />
+                        <twig:ux:icon name="circle-help" />
                     </button>
                 {% endif %}
                 {% if githubUrl|default %}
                     <a class="Browser__action" data-bs-toggle="tooltip" title="View on Github" href="{{ githubUrl }}">
-                        <twig:Icon name="github" />
+                        <twig:ux:icon name="github" />
                     </a>
                 {% endif %}
             </div>

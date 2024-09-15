@@ -15,6 +15,7 @@ export default class extends Controller {
         loadingMoreText: StringConstructor;
         noResultsFoundText: StringConstructor;
         noMoreResultsText: StringConstructor;
+        createOptionText: StringConstructor;
         minCharacters: NumberConstructor;
         tomSelectOptions: ObjectConstructor;
         preload: StringConstructor;
@@ -24,6 +25,7 @@ export default class extends Controller {
     readonly loadingMoreTextValue: string;
     readonly noMoreResultsTextValue: string;
     readonly noResultsFoundTextValue: string;
+    readonly createOptionTextValue: string;
     readonly minCharactersValue: number;
     readonly hasMinCharactersValue: boolean;
     readonly tomSelectOptionsValue: object;

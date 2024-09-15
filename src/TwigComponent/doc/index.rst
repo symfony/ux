@@ -271,6 +271,8 @@ You can control the template used via the ``AsTwigComponent`` attribute:
 You can also configure the default template directory for an entire
 namespace. See :ref:`Configuration <configuration>`.
 
+.. _component_html_syntax:
+
 Component HTML Syntax
 ~~~~~~~~~~~~~~~~~~~~~
 
@@ -1156,6 +1158,11 @@ Component with Complex Variants (CVA)
 
     The ``cva`` function was added in TwigComponents 2.16.
 
+.. deprecated:: 2.20
+
+    The ``cva`` function was deprecated in TwigComponents 2.20, and will be removed in 3.0.
+    The function is now provided by the ``twig/html-extra:^3.12`` package under the name `html_cva`_.
+
 `CVA (Class Variant Authority)`_ is a concept from the JavaScript world and used
 by the well-known `shadcn/ui`_.
 CVA allows you to display a component with different variants (color, size, etc.),
@@ -1585,11 +1592,44 @@ listen to ``PreMountEvent`` or ``PostMountEvent``.
 Nested Components
 -----------------
 
-It's totally possible to nest one component into another. When you do
-this, there's nothing special to know: both components render
-independently. If you're using `Live Components`_, then there
-*are* some guidelines related to how the re-rendering of parent and
-child components works. Read `Live Nested Components`_.
+It's totally possible to include components as part of the contents of another
+component. When you do this, all components render independently. The only
+caveat is that you cannot mix the Twig syntax and the :ref:`HTML syntax <component_html_syntax>`
+when using nested components:
+
+.. code-block:: html+twig
+
+    {# ❌ this won't work because it mixes different syntaxes #}
+    <twig:Card>
+        {# ... #}
+
+        {% block footer %}
+            <twig:Button:Primary :isBlock="true">Edit</twig:Button:Primary>
+        {% endblock %}
+    </twig:Card>
+
+    {# ✅ this works because it only uses the HTML syntax #}
+    <twig:Card>
+        {# ... #}
+
+        <twig:block name="footer">
+            <twig:Button:Primary :isBlock="true">Edit</twig:Button:Primary>
+        </twig:block>
+    </twig:Card>
+
+    {# ✅ this also works because it only uses the Twig syntax #}
+    <twig:Card>
+        {# ... #}
+
+        <twig:block name="footer">
+            {% component 'Button:Primary' with {isBlock: true} %}
+                {% block content %}Edit{% endblock %}
+            {% endcomponent %}
+        </twig:block>
+    </twig:Card>
+
+If you're using `Live Components`_, then there *are* some guidelines related to
+how the re-rendering of parent and child components works. Read `Live Nested Components`_.
 
 Configuration
 -------------
@@ -1728,6 +1768,7 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Passing Blocks to Live Components`: https://symfony.com/bundles/ux-live-component/current/index.html#passing-blocks
 .. _`Stimulus controller`: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`CVA (Class Variant Authority)`: https://cva.style/docs/getting-started/variants
+.. _`html_cva`: https://twig.symfony.com/doc/3.x/functions/html_cva.html
 .. _`shadcn/ui`: https://ui.shadcn.com
 .. _`tales-from-a-dev/twig-tailwind-extra`: https://github.com/tales-from-a-dev/twig-tailwind-extra
 .. _`ignore not defined options`: https://symfony.com/doc/current/components/options_resolver.html#ignore-not-defined-options

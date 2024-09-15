@@ -13,4 +13,5 @@ return [
     'Loading more results...' => 'Ladataan lisää tuloksia...',
     'No results found' => 'Ei tuloksia',
     'No more results' => 'Ei enempää tuloksia',
+    // 'Add %placeholder%...' => 'Add %placeholder%...',
 ];

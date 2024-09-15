@@ -51,8 +51,6 @@ export default class extends Controller {
     }
 
     onClick(event) {
-        event.preventDefault();
-        event.stopImmediatePropagation();
         const dialogDimensions = this.element.getBoundingClientRect()
         if (
             event.clientX < dialogDimensions.left ||
@@ -60,6 +58,8 @@ export default class extends Controller {
             event.clientY < dialogDimensions.top ||
             event.clientY > dialogDimensions.bottom
         ) {
+            event.preventDefault();
+            event.stopImmediatePropagation();
             this.close()
         }
     }

@@ -43,6 +43,14 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                     ->info('Default attributes to add to all icons.')
                     ->defaultValue(['fill' => 'currentColor'])
                 ->end()
+                ->arrayNode('aliases')
+                    ->info('Icon aliases (alias => icon name).')
+                    ->example(['dots' => 'clarity:ellipsis-horizontal-line'])
+                    ->normalizeKeys(false)
+                    ->scalarPrototype()
+                        ->cannotBeEmpty()
+                    ->end()
+                ->end()
                 ->arrayNode('iconify')
                     ->info('Configuration for the "on demand" icons powered by Iconify.design.')
                     ->{interface_exists(HttpClientInterface::class) ? 'canBeDisabled' : 'canBeEnabled'}()
@@ -98,6 +106,7 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
 
         $container->getDefinition('.ux_icons.icon_renderer')
             ->setArgument(1, $mergedConfig['default_icon_attributes'])
+            ->setArgument(2, $mergedConfig['aliases'])
         ;
 
         $container->getDefinition('.ux_icons.twig_icon_runtime')

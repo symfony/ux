@@ -239,6 +239,9 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
         no_results: () => {
             return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
         },
+        option_create: (data, escapeData) => {
+            return `<div class="create">${this.createOptionTextValue.replace('%placeholder%', `<strong>${escapeData(data.input)}</strong>`)}</div>`;
+        },
     };
     const config = {
         render,
@@ -314,6 +317,9 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             no_results: () => {
                 return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
             },
+            option_create: (data, escapeData) => {
+                return `<div class="create">${this.createOptionTextValue} <strong>${escapeData(data.input)}</strong>&hellip;</div>`;
+            },
         },
         preload: this.preload,
     });
@@ -336,6 +342,7 @@ default_1.values = {
     loadingMoreText: String,
     noResultsFoundText: String,
     noMoreResultsText: String,
+    createOptionText: String,
     minCharacters: Number,
     tomSelectOptions: Object,
     preload: String,

@@ -31,6 +31,8 @@ final class TestLiveComponent
 {
     private bool $performedInitialRequest = false;
 
+    private ?string $locale = null;
+
     /**
      * @internal
      */
@@ -132,6 +134,17 @@ final class TestLiveComponent
         return $this->request(['updated' => $flattenValues, 'validatedFields' => array_keys($flattenValues)], $action);
     }
 
+    /**
+     * @experimental
+     */
+    public function setRouteLocale(string $locale): self
+    {
+        $this->performedInitialRequest = false;
+        $this->locale = $locale;
+
+        return $this;
+    }
+
     private function request(array $content = [], ?string $action = null, array $files = []): self
     {
         $csrfToken = $this->csrfToken();
@@ -143,7 +156,8 @@ final class TestLiveComponent
                 array_filter([
                     '_live_component' => $this->metadata->getName(),
                     '_live_action' => $action,
-                ])
+                    '_locale' => $this->locale,
+                ], static fn (mixed $v): bool => null !== $v),
             ),
             parameters: ['data' => json_encode(array_merge($content, ['props' => $this->props()]))],
             files: $files,
@@ -191,9 +205,10 @@ final class TestLiveComponent
         if ('POST' === strtoupper($this->metadata->get('method'))) {
             $this->client->request(
                 'POST',
-                $this->router->generate($this->metadata->get('route'), [
+                $this->router->generate($this->metadata->get('route'), array_filter([
                     '_live_component' => $this->metadata->getName(),
-                ]),
+                    '_locale' => $this->locale,
+                ], static fn (mixed $v): bool => null !== $v)),
                 [
                     'data' => json_encode(['props' => $props->getProps()], flags: \JSON_THROW_ON_ERROR),
                 ],
@@ -201,10 +216,11 @@ final class TestLiveComponent
         } else {
             $this->client->request('GET', $this->router->generate(
                 $this->metadata->get('route'),
-                [
+                array_filter([
                     '_live_component' => $this->metadata->getName(),
+                    '_locale' => $this->locale,
                     'props' => json_encode($props->getProps(), flags: \JSON_THROW_ON_ERROR),
-                ]
+                ], static fn (mixed $v): bool => null !== $v),
             ));
         }
 

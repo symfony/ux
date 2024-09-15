@@ -13,4 +13,5 @@ return [
     'Loading more results...' => 'Загрузка дополнительных результатов...',
     'No results found' => 'Совпадений не найдено',
     'No more results' => 'Больше результатов нет',
+    // 'Add %placeholder%...' => 'Add %placeholder%...',
 ];

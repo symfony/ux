@@ -14,7 +14,7 @@
         <details {{ isOpen|default ? 'open' }}>
             <summary class="ChangelogItem__Head">
                 <h2 class="ChangelogItem__Title">{{ item.name|default(item.version) }}</h2>
-                <twig:Icon name="arrow-down" class="ChangelogItem__Toggle" />
+                <twig:ux:icon name="arrow-down" class="ChangelogItem__Toggle" />
             </summary>
             <div class="ChangelogItem__Text">
                 {{ this.getContent()|markdown_to_html }}

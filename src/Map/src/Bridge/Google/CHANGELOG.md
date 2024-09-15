@@ -1,5 +1,5 @@
 # CHANGELOG
 
-## Unreleased
+## 2.19
 
 -   Bridge added

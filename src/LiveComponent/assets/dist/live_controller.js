@@ -2052,6 +2052,9 @@ class Component {
                 return response;
             }
             this.processRerender(html, backendResponse);
+            if (this.element.dataset.liveCsrfValue) {
+                this.backend.updateCsrfToken(this.element.dataset.liveCsrfValue);
+            }
             this.backendRequest = null;
             thisPromiseResolve(backendResponse);
             if (this.isRequestPending) {
@@ -2325,6 +2328,9 @@ class RequestBuilder {
         const urlEncodedJsonData = new URLSearchParams(propsJson + updatedJson + childrenJson + propsFromParentJson).toString();
         return (urlEncodedJsonData + params.toString()).length < 1500;
     }
+    updateCsrfToken(csrfToken) {
+        this.csrfToken = csrfToken;
+    }
 }
 
 class Backend {
@@ -2334,6 +2340,9 @@ class Backend {
     makeRequest(props, actions, updated, children, updatedPropsFromParent, files) {
         const { url, fetchOptions } = this.requestBuilder.buildRequest(props, actions, updated, children, updatedPropsFromParent, files);
         return new BackendRequest(fetch(url, fetchOptions), actions.map((backendAction) => backendAction.name), Object.keys(updated));
+    }
+    updateCsrfToken(csrfToken) {
+        this.requestBuilder.updateCsrfToken(csrfToken);
     }
 }
 

@@ -13,4 +13,5 @@ return [
     'Loading more results...' => 'Kraunama daugiau rezultatų...',
     'No results found' => 'Atitikmenų nerasta',
     'No more results' => 'Daugiau rezultatų nėra',
+    // 'Add %placeholder%...' => 'Add %placeholder%...',
 ];
