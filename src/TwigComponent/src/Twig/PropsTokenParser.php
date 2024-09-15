@@ -44,7 +44,7 @@ class PropsTokenParser extends AbstractTokenParser
             }
         }
 
-        return new PropsNode($names, $values, $token->getLine(), $token->getValue());
+        return new PropsNode($names, $values, $token->getLine());
     }
 
     public function getTag(): string

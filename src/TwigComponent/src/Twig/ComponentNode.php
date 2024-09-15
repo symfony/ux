@@ -48,12 +48,21 @@ final class ComponentNode extends Node implements NodeOutputInterface
     {
         $compiler->addDebugInfo($this);
 
+        $useYield = method_exists(Environment::class, 'useYield') && $compiler->getEnvironment()->useYield();
+
         // since twig/twig 3.9.0: Using the internal "twig_to_array" function is deprecated.
         if (method_exists(CoreExtension::class, 'toArray')) {
             $twig_to_array = 'Twig\Extension\CoreExtension::toArray';
         } else {
             $twig_to_array = 'twig_to_array';
         }
+
+        $componentRuntime = $compiler->getVarName();
+
+        $compiler
+               ->write(\sprintf('$%s = $this->env->getRuntime(', $componentRuntime))
+               ->string(ComponentRuntime::class)
+               ->raw(");\n");
 
         /*
          * Block 1) PreCreateForRender handling
@@ -62,9 +71,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
          * a string, we return that string and skip the rest of the rendering process.
          */
         $compiler
-            ->write('$preRendered = $this->extensions[')
-            ->string(ComponentExtension::class)
-            ->raw(']->extensionPreCreateForRender(')
+            ->write(\sprintf('$preRendered = $%s->preRender(', $componentRuntime))
             ->string($this->getAttribute('component'))
             ->raw(', ')
             ->raw($twig_to_array)
@@ -96,9 +103,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
          * the final template, template index & variables.
          */
         $compiler
-            ->write('$preRenderEvent = $this->extensions[')
-            ->string(ComponentExtension::class)
-            ->raw(']->startEmbeddedComponentRender(')
+            ->write(\sprintf('$preRenderEvent = $%s->startEmbedComponent(', $componentRuntime))
             ->string($this->getAttribute('component'))
             ->raw(', ')
             ->raw($twig_to_array)
@@ -111,6 +116,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
             ->raw(', ')
             ->raw($this->getAttribute('embedded_index'))
             ->raw(");\n");
+
         $compiler
             ->write('$embeddedContext = $preRenderEvent->getVariables();')
             ->raw("\n")
@@ -132,18 +138,11 @@ final class ComponentNode extends Node implements NodeOutputInterface
          * We add the outerBlock to the context if it doesn't exist yet.
          * Then add them to the block stack and get the converted embedded blocks.
          */
-        $compiler->write('if (!isset($embeddedContext["outerBlocks"])) {')
-            ->raw("\n")
-            ->indent()
-            ->write(\sprintf('$embeddedContext["outerBlocks"] = new \%s();', BlockStack::class))
-            ->raw("\n")
-            ->outdent()
-            ->write('}')
+        $compiler
+            ->write(\sprintf('$embeddedContext["outerBlocks"] ??= new \%s();', BlockStack::class))
             ->raw("\n");
 
-        $compiler->write('$embeddedBlocks = $embeddedContext[')
-            ->string('outerBlocks')
-            ->raw(']->convert($blocks, ')
+        $compiler->write('$embeddedBlocks = $embeddedContext["outerBlocks"]->convert($blocks, ')
             ->raw($this->getAttribute('embedded_index'))
             ->raw(");\n");
 
@@ -152,9 +151,8 @@ final class ComponentNode extends Node implements NodeOutputInterface
          *
          * This will actually render the child component template.
          */
-        if (method_exists(Environment::class, 'useYield') && $compiler->getEnvironment()->useYield()) {
-            $compiler
-                ->write('yield from ');
+        if ($useYield) {
+            $compiler->write('yield from ');
         }
         $compiler
             ->write('$this->loadTemplate(')
@@ -167,7 +165,7 @@ final class ComponentNode extends Node implements NodeOutputInterface
             ->string($this->getAttribute('embedded_index'))
             ->raw(')');
 
-        if (method_exists(Environment::class, 'useYield') && $compiler->getEnvironment()->useYield()) {
+        if ($useYield) {
             $compiler->raw('->unwrap()->yield(');
         } else {
             $compiler->raw('->display(');
@@ -176,10 +174,8 @@ final class ComponentNode extends Node implements NodeOutputInterface
             ->raw('$embeddedContext, $embeddedBlocks')
             ->raw(");\n");
 
-        $compiler->write('$this->extensions[')
-            ->string(ComponentExtension::class)
-            ->raw(']->finishEmbeddedComponentRender()')
-            ->raw(";\n")
+        $compiler->write(\sprintf('$%s->finishEmbedComponent();', $componentRuntime))
+            ->raw("\n")
         ;
 
         $compiler
