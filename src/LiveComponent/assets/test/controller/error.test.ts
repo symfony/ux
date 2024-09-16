@@ -9,7 +9,7 @@
 
 import { createTest, initComponent, shutdownTests } from '../tools';
 import { getAllByTestId, getByTestId, getByText, waitFor } from '@testing-library/dom';
-import BackendResponse from '../../src/Backend/BackendResponse';
+import type BackendResponse from '../../src/Backend/BackendResponse';
 import userEvent from '@testing-library/user-event';
 
 const getErrorElement = (): Element | null => {
@@ -28,7 +28,7 @@ const removeErrorModal = async () => {
     if (errorElement) {
         userEvent.click(errorElement);
     }
-}
+};
 
 describe('LiveController Error Handling', () => {
     afterEach(() => {
@@ -136,19 +136,24 @@ describe('LiveController Error Handling', () => {
     });
 
     it('handles data-loading elements even if the component is in an error state', async () => {
-        const test = await createTest({}, (data: any) => `
+        const test = await createTest(
+            {},
+            (data: any) => `
             <div ${initComponent(data)}>
                 <button data-action="live#action" data-live-action-param="save" data-loading="addAttribute(disabled)">Save</button>
             </div>
-        `);
+        `
+        );
 
         getByText(test.element, 'Save').click();
 
-
         test.expectsAjaxCall()
-            .serverWillReturnCustomResponse(500, `
+            .serverWillReturnCustomResponse(
+                500,
+                `
                 <html><head><title>Error!</title></head><body><h1>An error occurred</h1></body></html>
-            `)
+            `
+            )
             .expectActionCalled('save')
             // delay so we can check loading
             .delayResponse(50);
@@ -161,7 +166,9 @@ describe('LiveController Error Handling', () => {
     });
 
     it('handles basic data-live-error elements correctly and the component still works', async () => {
-        const test = await createTest({ counter: 0 }, (data: { counter: number }) => `
+        const test = await createTest(
+            { counter: 0 },
+            (data: { counter: number }) => `
             <div ${initComponent(data)}>
                 <p data-testid="visible-element">Current count: ${data.counter}</p>
                 <p data-live-error data-testid="error-element">This element should only be visible on error</p>
@@ -169,7 +176,8 @@ describe('LiveController Error Handling', () => {
                 <button data-action="live#action" data-live-action-param="save">Save</button>
                 <button data-action="live#$render">Render</button>
             </div>
-        `);
+        `
+        );
 
         // non-error elements should be visible by default
         await waitFor(() => expect(getByTestId(test.element, 'visible-element')).toBeVisible());
@@ -179,9 +187,12 @@ describe('LiveController Error Handling', () => {
         });
 
         test.expectsAjaxCall()
-            .serverWillReturnCustomResponse(500, `
+            .serverWillReturnCustomResponse(
+                500,
+                `
                 <html><head><title>Error!</title></head><body><h1>An error occurred</h1></body></html>
-            `)
+            `
+            )
             .expectActionCalled('save');
 
         getByText(test.element, 'Save').click();
@@ -197,10 +208,9 @@ describe('LiveController Error Handling', () => {
         });
 
         // make sure future requests can still be sent
-        test.expectsAjaxCall()
-            .serverWillChangeProps((data: { counter: number }) => {
-                data.counter = 10;
-            });
+        test.expectsAjaxCall().serverWillChangeProps((data: { counter: number }) => {
+            data.counter = 10;
+        });
 
         getByText(test.element, 'Render').click();
 
@@ -209,11 +219,15 @@ describe('LiveController Error Handling', () => {
             expect(element).not.toBeVisible();
         });
         // counter should have been updated
-        await waitFor(() => expect(getByTestId(test.element, 'visible-element')).toHaveTextContent('Current count: 10'));
+        await waitFor(() =>
+            expect(getByTestId(test.element, 'visible-element')).toHaveTextContent('Current count: 10')
+        );
     });
 
     it('handles all actions', async () => {
-        const test = await createTest({}, (data: any) => `
+        const test = await createTest(
+            {},
+            (data: any) => `
             <div ${initComponent(data)}>
                 <p data-live-error="hide" data-testid="hide">This component is fine</p>
                 <p data-live-error="addClass(error)" data-testid="add-class">This text will gain the error class on error</p>
@@ -223,7 +237,8 @@ describe('LiveController Error Handling', () => {
                 <button data-action="live#action" data-live-action-param="save">Save</button>
                 <button data-action="live#$render">Render</button>
             </div>
-        `);
+        `
+        );
 
         // Elements should be in their initial state
         expect(getByTestId(test.element, 'hide')).toBeVisible();
@@ -233,9 +248,12 @@ describe('LiveController Error Handling', () => {
         expect(getByTestId(test.element, 'remove-attribute')).toHaveAttribute('disabled');
 
         test.expectsAjaxCall()
-            .serverWillReturnCustomResponse(500, `
+            .serverWillReturnCustomResponse(
+                500,
+                `
                 <html><head><title>Error!</title></head><body><h1>An error occurred</h1></body></html>
-            `)
+            `
+            )
             .expectActionCalled('save');
 
         getByText(test.element, 'Save').click();

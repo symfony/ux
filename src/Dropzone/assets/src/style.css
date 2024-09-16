@@ -60,7 +60,7 @@
 }
 
 .dropzone-preview-button::before {
-    content: '×';
+    content: "×";
     padding: 3px 7px;
     cursor: pointer;
 }

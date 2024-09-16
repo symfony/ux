@@ -39,11 +39,11 @@ export interface ElementDirectives {
     /**
      * The element attached to the directives (the element always belongs to the current live component)
      */
-    element: HTMLElement|SVGElement,
+    element: HTMLElement | SVGElement;
     /**
      * The directives for the element
      */
-    directives: Directive[]
+    directives: Directive[];
 }
 
 /**

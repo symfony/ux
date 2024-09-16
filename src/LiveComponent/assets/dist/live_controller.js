@@ -3012,7 +3012,7 @@ class ErrorPlugin {
         if (element.hasAttribute(ErrorPlugin.errorAttribute)) {
             matchingElements = [element, ...matchingElements];
         }
-        matchingElements.forEach((element => {
+        matchingElements.forEach((element) => {
             if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
                 throw new Error(`Element "${element.nodeName}" is not supported for ${ErrorPlugin.errorAttribute} directives. Only HTMLElement and SVGElement are supported.`);
             }
@@ -3026,7 +3026,7 @@ class ErrorPlugin {
                 element,
                 directives,
             });
-        }));
+        });
         return errorDirectives;
     }
     parseErrorAction(action, isError) {

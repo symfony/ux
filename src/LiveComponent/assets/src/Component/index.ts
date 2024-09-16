@@ -328,8 +328,8 @@ export default class Component {
                 // If there's another request pending, perform it now
                 // This will also ensure that the error state is cleared
                 if (this.isRequestPending) {
-                  this.isRequestPending = false;
-                  this.performRequest();
+                    this.isRequestPending = false;
+                    this.performRequest();
                 }
 
                 return response;

@@ -1,8 +1,8 @@
 import {
-    Directive,
-    DirectiveModifier,
-    ElementDirectives,
-    parseDirectives
+    type Directive,
+    type DirectiveModifier,
+    type ElementDirectives,
+    parseDirectives,
 } from '../../Directive/directives_parser';
 import { elementBelongsToThisComponent } from '../../dom_utils';
 import { combineSpacedArray } from '../../string_utils';

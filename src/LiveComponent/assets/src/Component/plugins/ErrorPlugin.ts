@@ -43,23 +43,21 @@ export default class ErrorPlugin implements PluginInterface {
     /**
      * Shows the error state of the component.
      */
-    showErrors(component: Component)
-    {
+    showErrors(component: Component) {
         this.handleErrorToggle(component, true, component.element);
     }
 
     /**
      * Hides the error state of the component.
      */
-    hideErrors(component: Component)
-    {
+    hideErrors(component: Component) {
         this.handleErrorToggle(component, false, component.element);
     }
 
     /**
      * Handles the error state of the component.
      */
-    private handleErrorToggle(component: Component, isError: boolean, targetElement: HTMLElement|SVGElement) {
+    private handleErrorToggle(component: Component, isError: boolean, targetElement: HTMLElement | SVGElement) {
         this.getErrorDirectives(component, targetElement).forEach(({ element, directives }) => {
             // the component's root element will receive this attribute is it's in an error state
             if (isError) {
@@ -69,7 +67,7 @@ export default class ErrorPlugin implements PluginInterface {
             }
 
             directives.forEach((directive) => {
-                this.handleErrorDirective(element, isError, directive)
+                this.handleErrorDirective(element, isError, directive);
             });
         });
     }
@@ -77,7 +75,7 @@ export default class ErrorPlugin implements PluginInterface {
     /**
      * Handles an error directive.
      */
-    private handleErrorDirective(element: HTMLElement|SVGElement, isError: boolean, directive: Directive) {
+    private handleErrorDirective(element: HTMLElement | SVGElement, isError: boolean, directive: Directive) {
         const finalAction = this.parseErrorAction(directive.action, isError);
 
         switch (finalAction) {
@@ -112,14 +110,16 @@ export default class ErrorPlugin implements PluginInterface {
                 break;
 
             default:
-                throw new Error(`Unknown ${ErrorPlugin.errorAttribute} action "${finalAction}". Supported actions are: ${Object.values(`"${ErrorPlugin.supportedActions}"`).join(', ')}.`);
+                throw new Error(
+                    `Unknown ${ErrorPlugin.errorAttribute} action "${finalAction}". Supported actions are: ${Object.values(`"${ErrorPlugin.supportedActions}"`).join(', ')}.`
+                );
         }
     }
 
     /**
      * Returns an array of `ElementDirectives` for the given component and element.
      */
-    private getErrorDirectives(component: Component, element: HTMLElement|SVGElement) {
+    private getErrorDirectives(component: Component, element: HTMLElement | SVGElement) {
         const errorDirectives: ElementDirectives[] = [];
         let matchingElements = [...Array.from(element.querySelectorAll(`[${ErrorPlugin.errorAttribute}]`))];
 
@@ -131,9 +131,11 @@ export default class ErrorPlugin implements PluginInterface {
             matchingElements = [element, ...matchingElements];
         }
 
-        matchingElements.forEach((element => {
+        matchingElements.forEach((element) => {
             if (!(element instanceof HTMLElement) && !(element instanceof SVGElement)) {
-                throw new Error(`Element "${element.nodeName}" is not supported for ${ErrorPlugin.errorAttribute} directives. Only HTMLElement and SVGElement are supported.`);
+                throw new Error(
+                    `Element "${element.nodeName}" is not supported for ${ErrorPlugin.errorAttribute} directives. Only HTMLElement and SVGElement are supported.`
+                );
             }
 
             // use "show" if the attribute is empty
@@ -142,7 +144,9 @@ export default class ErrorPlugin implements PluginInterface {
             directives.forEach((directive) => {
                 if (directive.modifiers.length > 0) {
                     // TODO: Use the `modifier.toString()` method once it's implemented
-                    throw new Error(`Modifiers are not supported for ${ErrorPlugin.errorAttribute} directives, but the following were found: "{${directive.modifiers.map((modifier) => `${modifier.name}: ${modifier.value}}`).join(', ')}" for element with tag "${element.nodeName}".`);
+                    throw new Error(
+                        `Modifiers are not supported for ${ErrorPlugin.errorAttribute} directives, but the following were found: "{${directive.modifiers.map((modifier) => `${modifier.name}: ${modifier.value}}`).join(', ')}" for element with tag "${element.nodeName}".`
+                    );
                 }
             });
 
@@ -150,7 +154,7 @@ export default class ErrorPlugin implements PluginInterface {
                 element,
                 directives,
             });
-        }));
+        });
 
         return errorDirectives;
     }
@@ -179,25 +183,26 @@ export default class ErrorPlugin implements PluginInterface {
                 return isError ? 'removeAttribute' : 'addAttribute';
 
             default:
-                throw new Error(`Unknown ${ErrorPlugin.errorAttribute} action "${action}". Supported actions are: ${Object.values(`"${ErrorPlugin.supportedActions}"`).join(', ')}.`);
-
+                throw new Error(
+                    `Unknown ${ErrorPlugin.errorAttribute} action "${action}". Supported actions are: ${Object.values(`"${ErrorPlugin.supportedActions}"`).join(', ')}.`
+                );
         }
     }
 
     // Utils
-    private showElement(element: HTMLElement|SVGElement) {
+    private showElement(element: HTMLElement | SVGElement) {
         element.style.display = 'revert';
     }
 
-    private hideElement(element: HTMLElement|SVGElement) {
+    private hideElement(element: HTMLElement | SVGElement) {
         element.style.display = 'none';
     }
 
-    private addClass(element: HTMLElement|SVGElement, classes: string[]) {
+    private addClass(element: HTMLElement | SVGElement, classes: string[]) {
         element.classList.add(...combineSpacedArray(classes));
     }
 
-    private removeClass(element: HTMLElement|SVGElement, classes: string[]) {
+    private removeClass(element: HTMLElement | SVGElement, classes: string[]) {
         element.classList.remove(...combineSpacedArray(classes));
 
         if (element.classList.length === 0) {
@@ -208,12 +213,12 @@ export default class ErrorPlugin implements PluginInterface {
     private addAttributes(element: Element, attributes: string[]) {
         attributes.forEach((attribute) => {
             element.setAttribute(attribute, '');
-        })
+        });
     }
 
     private removeAttributes(element: Element, attributes: string[]) {
         attributes.forEach((attribute) => {
             element.removeAttribute(attribute);
-        })
+        });
     }
 }

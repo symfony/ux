@@ -13,8 +13,8 @@ export type ComponentHooks = {
     'response:error': (backendResponse: BackendResponse, controls: {
         displayError: boolean;
     }) => MaybePromise;
-    'loading.state.started': (element: HTMLElement, request: BackendRequest) => MaybePromise;
-    'loading.state.finished': (element: HTMLElement) => MaybePromise;
+    'loading.state:started': (element: HTMLElement, request: BackendRequest) => MaybePromise;
+    'loading.state:finished': (element: HTMLElement) => MaybePromise;
     'model:set': (model: string, value: any, component: Component) => MaybePromise;
 };
 export type ComponentHookName = keyof ComponentHooks;
