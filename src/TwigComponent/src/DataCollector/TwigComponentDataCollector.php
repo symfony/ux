@@ -25,8 +25,10 @@ use Twig\Error\LoaderError;
 
 /**
  * @author Simon André <smn.andre@gmail.com>
+ *
+ * @internal
  */
-class TwigComponentDataCollector extends AbstractDataCollector implements LateDataCollectorInterface
+final class TwigComponentDataCollector extends AbstractDataCollector implements LateDataCollectorInterface
 {
     private bool $hasStub;
 
@@ -99,6 +101,9 @@ class TwigComponentDataCollector extends AbstractDataCollector implements LateDa
         $renders = [];
         $ongoingRenders = [];
 
+        $classStubs = [];
+        $templatePaths = [];
+
         foreach ($this->logger->getEvents() as [$event, $profile]) {
             if ($event instanceof PreRenderEvent) {
                 $mountedComponent = $event->getMountedComponent();
@@ -110,9 +115,9 @@ class TwigComponentDataCollector extends AbstractDataCollector implements LateDa
                 $components[$componentName] ??= [
                     'name' => $componentName,
                     'class' => $componentClass,
-                    'class_stub' => $this->hasStub ? new ClassStub($componentClass) : $componentClass,
-                    'template' => $metadata->getTemplate(),
-                    'template_path' => $this->resolveTemplatePath($metadata->getTemplate()), // defer ? lazy ?
+                    'class_stub' => $classStubs[$componentClass] ??= ($this->hasStub ? new ClassStub($componentClass) : $componentClass),
+                    'template' => $template = $metadata->getTemplate(),
+                    'template_path' => $templatePaths[$template] ??= $this->resolveTemplatePath($template),
                     'render_count' => 0,
                     'render_time' => 0,
                 ];
