@@ -30,6 +30,7 @@ class TwigEnvironmentConfigurator
     public function configure(Environment $environment): void
     {
         $this->decorated->configure($environment);
+
         $environment->setLexer(new ComponentLexer($environment));
 
         if (class_exists(EscaperRuntime::class)) {

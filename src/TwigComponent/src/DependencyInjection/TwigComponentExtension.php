@@ -34,6 +34,7 @@ use Symfony\UX\TwigComponent\ComponentTemplateFinder;
 use Symfony\UX\TwigComponent\DependencyInjection\Compiler\TwigComponentPass;
 use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 use Symfony\UX\TwigComponent\Twig\ComponentLexer;
+use Symfony\UX\TwigComponent\Twig\ComponentRuntime;
 use Symfony\UX\TwigComponent\Twig\TwigEnvironmentConfigurator;
 
 /**
@@ -102,7 +103,13 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
 
         $container->register('ux.twig_component.twig.component_extension', ComponentExtension::class)
             ->addTag('twig.extension')
-            ->addTag('container.service_subscriber', ['key' => ComponentRenderer::class, 'id' => 'ux.twig_component.component_renderer'])
+        ;
+
+        $container->register('.ux.twig_component.twig.component_runtime', ComponentRuntime::class)
+            ->setArguments([
+                new Reference('ux.twig_component.component_renderer'),
+            ])
+            ->addTag('twig.runtime')
         ;
 
         $container->register('ux.twig_component.twig.lexer', ComponentLexer::class);
