@@ -11,11 +11,53 @@
 @import "../../vendor/twbs/bootstrap/scss/variables";
 @import "../../vendor/twbs/bootstrap/scss/variables-dark";
 
+// Remove Bootstrap variables/overrides
+$theme-colors: map-remove($theme-colors, "info", "light");
+
 // Boostrap remainder of required parts
 @import "../../vendor/twbs/bootstrap/scss/maps";
 @import "../../vendor/twbs/bootstrap/scss/mixins";
 @import "../../vendor/twbs/bootstrap/scss/utilities";
 @import "../../vendor/twbs/bootstrap/scss/root";
+
+// Remove multiple utilities with a comma-separated list
+// Margin
+$utilities: map-remove(
+    $utilities,
+    // Background
+    "bg-opacity",
+    "subtle-background-color",
+
+    // Negative margin
+    "negative-margin",
+    "negative-margin-x",
+    "negative-margin-y",
+    "negative-margin-top",
+    "negative-margin-end",
+    "negative-margin-bottom",
+    "negative-margin-start",
+    // Link
+    "link-opacity",
+    "link-offset",
+    "link-underline",
+    "link-underline-opacity",
+    // Border
+    "border",
+    "border-top",
+    "border-end",
+    "border-bottom",
+    "border-start",
+    "border-color",
+    "subtle-border-color",
+    "border-width",
+    "border-opacity",
+    // Position
+    "top",
+    "bottom",
+    "start",
+    "end",
+    "translate-middle",
+);
 
 // Layout & components
 @import "../../vendor/twbs/bootstrap/scss/reboot";
@@ -48,8 +90,23 @@
 // @import "../../vendor/twbs/bootstrap/scss/spinners";
 // @import "../../vendor/twbs/bootstrap/scss/offcanvas";
 // @import "../../vendor/twbs/bootstrap/scss/placeholders";
+
 // Helpers
-@import "../../vendor/twbs/bootstrap/scss/helpers";
+@import "../../vendor/twbs/bootstrap/scss/helpers/clearfix";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/color-bg";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/colored-links";
+@import "../../vendor/twbs/bootstrap/scss/helpers/focus-ring";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/icon-link";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/ratio";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/position";
+@import "../../vendor/twbs/bootstrap/scss/helpers/stacks";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/visually-hidden";
+@import "../../vendor/twbs/bootstrap/scss/helpers/stretched-link";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/text-truncation";
+//@import "../../vendor/twbs/bootstrap/scss/helpers/vr";
+
+
+
 // Utilities
 @import "../../vendor/twbs/bootstrap/scss/utilities/api";
 
