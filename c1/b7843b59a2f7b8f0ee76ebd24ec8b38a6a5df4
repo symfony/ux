@@ -1,0 +1,33 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-16T08:38:23Z
+
+Nice! Maybe we can also remove the `symfony/stopwatch` dev dependency here?
+
+https://github.com/symfony/ux/blob/8dd706da2c1ada2174c920c246daa6765b176cef/src/TwigComponent/composer.json#L43
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-16T18:52:06Z
+
+> Nice! Maybe we can also remove the `symfony/stopwatch` dev dependency here?
+>
+> https://github.com/symfony/ux/blob/8dd706da2c1ada2174c920c246daa6765b176cef/src/TwigComponent/composer.json#L43
+
+Absolutely, thank you for catching this!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-16T20:32:28Z
+
+Do... you think we can have some Blackfire profiles to show the performance improvments? 🙏🏻
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-16T21:10:16Z
+
+> Do... you think we can have some Blackfire profiles to show the performance improvments? 🙏🏻
+
+I did not have time yet to configure it 😶‍🌫️
+
+But i will in the next few days (already started a dedicated repo to measure performance of twig/live components)
