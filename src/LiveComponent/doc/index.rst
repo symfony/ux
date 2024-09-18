@@ -1080,10 +1080,10 @@ attribute to show (or hide) an element when the component is in an error state:
 .. code-block:: html+twig
 
     <!-- show only when the component is in an error state -->
-    <span data-live-error>An error occurred ! Please try again.</span>
+    <span data-live-error>An error occurred! Please try again.</span>
 
     <!-- equivalent, longer syntax -->
-    <span data-live-error="show">An error occurred ! Please try again.</span>
+    <span data-live-error="show">An error occurred! Please try again.</span>
 
 This attribute works exactly like :ref:`data-loading <loading>`, with
 a few differences:
@@ -3788,7 +3788,7 @@ uses Symfony's test client to render and make requests to your components::
             // authenticate a user ($user is instance of UserInterface)
             $testComponent->actingAs($user);
 
-            // set the '_locale' route parameter (if the component route is localized)  
+            // set the '_locale' route parameter (if the component route is localized)
             $testComponent->setRouteLocale('fr');
 
             // customize the test client
