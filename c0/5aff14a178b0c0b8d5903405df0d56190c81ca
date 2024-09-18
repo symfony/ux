@@ -1,0 +1,19 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-11T14:16:43Z
+
+See https://github.com/symfony/ux/pull/2152 as a lighter (but not complete yet) alternative
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-11T16:38:28Z
+
+Yeah i'll use the fromArray static from your PR and we'll see... but i hope this will simplify a lot this one.
+
+Thanks !
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-12T00:35:13Z
+
+Integrated the ideas fom #2152
