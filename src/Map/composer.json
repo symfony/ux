@@ -33,6 +33,7 @@
     },
     "require": {
         "php": ">=8.3",
+        "ext-json": "*",
         "symfony/stimulus-bundle": "^2.18.1"
     },
     "require-dev": {

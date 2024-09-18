@@ -45,7 +45,6 @@ abstract readonly class AbstractRenderer implements RendererInterface
         }
         $controllers['@symfony/ux-'.$this->getName().'-map/map'] = [
             'provider-options' => (object) $this->getProviderOptions(),
-            'view' => $map->toArray(),
         ];
 
         $stimulusAttributes = $this->stimulus->createStimulusAttributes();
@@ -65,6 +64,9 @@ abstract readonly class AbstractRenderer implements RendererInterface
             }
         }
 
-        return \sprintf('<div %s></div>', $stimulusAttributes);
+        return \sprintf('<div %s %s></div>',
+            $stimulusAttributes,
+            'data-symfony--ux-'.$this->getName().'-map--map-view-value="'.htmlentities(json_encode($map->toArray(), flags: \JSON_THROW_ON_ERROR)).'"'
+        );
     }
 }
