@@ -17,6 +17,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\LateDataCollectorInterface;
 use Symfony\Component\VarDumper\Caster\ClassStub;
 use Symfony\Component\VarDumper\Cloner\Data;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\TwigComponent\Event\PostRenderEvent;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Symfony\UX\TwigComponent\EventListener\TwigComponentLoggerListener;
@@ -120,6 +121,9 @@ final class TwigComponentDataCollector extends AbstractDataCollector implements 
                     'template_path' => $templatePaths[$template] ??= $this->resolveTemplatePath($template),
                     'render_count' => 0,
                     'render_time' => 0,
+                    'listening' => class_exists(AsLiveComponent::class) ?
+                        array_column(AsLiveComponent::liveListeners($componentClass), 'event') :
+                        [],
                 ];
 
                 $renderId = spl_object_id($mountedComponent);

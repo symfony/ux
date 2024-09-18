@@ -18,9 +18,11 @@ use Symfony\Component\Console\Completion\CompletionSuggestions;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
+use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\ComponentFactory;
@@ -50,6 +52,11 @@ class TwigComponentDebugCommand extends Command
         $this
             ->setDefinition([
                 new InputArgument('name', InputArgument::OPTIONAL, 'A component name or part of the component name'),
+                new InputOption(
+                    name: 'listening',
+                    mode: InputOption::VALUE_REQUIRED,
+                    description: 'Filter components list to display only those listening to the given action'
+                ),
             ])
             ->setHelp(
                 <<<'EOF'
@@ -84,7 +91,7 @@ EOF
             return Command::SUCCESS;
         }
 
-        $components = $this->findComponents();
+        $components = $this->findComponents($input->getOption('listening'));
         $this->displayComponentsTable($io, $components);
 
         return Command::SUCCESS;
@@ -129,14 +136,19 @@ EOF
     /**
      * @return array<string, ComponentMetadata>
      */
-    private function findComponents(): array
+    private function findComponents(?string $listeningFilter): array
     {
         $components = [];
         foreach ($this->componentClassMap as $class => $name) {
-            $components[$name] ??= $this->componentFactory->metadataFor($name);
+            if (null === $listeningFilter || \in_array($listeningFilter, $this->resolveEventsListening($class))) {
+                $components[$name] ??= $this->componentFactory->metadataFor($name);
+            }
         }
-        foreach ($this->findAnonymousComponents() as $name => $template) {
-            $components[$name] ??= $this->componentFactory->metadataFor($name);
+
+        if (null === $listeningFilter) {
+            foreach ($this->findAnonymousComponents() as $name => $template) {
+                $components[$name] ??= $this->componentFactory->metadataFor($name);
+            }
         }
 
         return $components;
@@ -232,6 +244,14 @@ EOF
             ['Public Props', $metadata->get('expose_public_props') ? 'Yes' : 'No'],
             ['Properties', implode("\n", $this->getComponentProperties($metadata))],
         ]);
+
+        $eventsListened = $this->resolveEventsListening($metadata->get('class'));
+        if ($eventsListened) {
+            $table->addRows([
+                new TableSeparator(),
+                ['Listening to', implode("\n", $eventsListened)],
+            ]);
+        }
 
         $logMethod = function (\ReflectionMethod $m) {
             $params = array_map(
@@ -355,5 +375,14 @@ EOF
         }
 
         return $properties;
+    }
+
+    private function resolveEventsListening(string $class): array
+    {
+        if (class_exists(AsLiveComponent::class)) {
+            return array_column(AsLiveComponent::liveListeners($class), 'event');
+        }
+
+        return [];
     }
 }
