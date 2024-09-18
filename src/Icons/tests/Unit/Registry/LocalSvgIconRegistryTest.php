@@ -82,6 +82,68 @@ final class LocalSvgIconRegistryTest extends TestCase
         yield ['invalid4'];
     }
 
+    /**
+     * @dataProvider provideIconSetPathsCases
+     */
+    public function testIconSetPaths(string $name, array $iconSetPaths, ?string $expectedContent): void
+    {
+        $registry = new LocalSvgIconRegistry(
+            iconDir: __DIR__.'/../../Fixtures/icons',
+            iconSetPaths: $iconSetPaths,
+        );
+
+        if (null === $expectedContent) {
+            $this->expectException(\RuntimeException::class);
+            $this->expectExceptionMessageMatches(\sprintf('/The icon "%s" \(.+\) does not exist./', $name));
+            $registry->get($name);
+        } else {
+            $icon = $registry->get($name);
+            $this->assertInstanceOf(Icon::class, $icon);
+            $this->assertSame($expectedContent, $icon->getInnerSvg());
+        }
+    }
+
+    public static function provideIconSetPathsCases(): iterable
+    {
+        yield 'no_iconset_path' => [
+            'icon',
+            [],
+            null,
+        ];
+        yield 'iconset_path' => [
+            'ux:icon',
+            ['ux' => __DIR__.'/../../Fixtures/images'],
+            '<circle aria-label="images/" r="1"></circle>',
+        ];
+        yield 'partial_iconset_path' => [
+            'a:b:icon',
+            [
+                'a' => __DIR__.'/../../Fixtures/images/a/',
+            ],
+            '<circle aria-label="images/a/b/" r="1"></circle>',
+        ];
+        yield 'root_namespace_fallback_on_local' => [
+            'a:icon',
+            [],
+            '<circle aria-label="icons/a/" r="1"></circle>',
+        ];
+        yield 'deep_namespace_refused' => [
+            'a:b:icon',
+            [
+                'a:b' => __DIR__.'/../../Fixtures/images/a/b',
+            ],
+            null,
+        ];
+        yield 'root_namespace_over_nested' => [
+            'a:b:icon',
+            [
+                'a' => __DIR__.'/../../Fixtures/images/a',
+                'a:b' => __DIR__.'/../../Fixtures/images/ab',
+            ],
+            '<circle aria-label="images/a/b/" r="1"></circle>',
+        ];
+    }
+
     private function registry(): LocalSvgIconRegistry
     {
         return new LocalSvgIconRegistry(__DIR__.'/../../Fixtures/svg');

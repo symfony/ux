@@ -18,10 +18,16 @@ namespace Symfony\UX\Icons;
  */
 final class IconRenderer implements IconRendererInterface
 {
+    /**
+     * @param array<string, mixed>                $defaultIconAttributes
+     * @param array<string, string>               $iconAliases
+     * @param array<string, array<string, mixed>> $iconSetsAttributes
+     */
     public function __construct(
         private readonly IconRegistryInterface $registry,
         private readonly array $defaultIconAttributes = [],
-        private readonly ?array $iconAliases = [],
+        private readonly array $iconAliases = [],
+        private readonly array $iconSetsAttributes = [],
     ) {
     }
 
@@ -36,11 +42,16 @@ final class IconRenderer implements IconRendererInterface
      */
     public function renderIcon(string $name, array $attributes = []): string
     {
-        $name = $this->iconAliases[$name] ?? $name;
+        $iconName = $this->iconAliases[$name] ?? $name;
 
-        $icon = $this->registry->get($name)
-            ->withAttributes($this->defaultIconAttributes)
-            ->withAttributes($attributes);
+        $icon = $this->registry->get($iconName);
+
+        if (0 < (int) $pos = strpos($name, ':')) {
+            $setAttributes = $this->iconSetsAttributes[substr($name, 0, $pos)] ?? [];
+        } elseif ($iconName !== $name && 0 < (int) $pos = strpos($iconName, ':')) {
+            $setAttributes = $this->iconSetsAttributes[substr($iconName, 0, $pos)] ?? [];
+        }
+        $icon = $icon->withAttributes([...$this->defaultIconAttributes, ...($setAttributes ?? []), ...$attributes]);
 
         foreach ($this->getPreRenderers() as $preRenderer) {
             $icon = $preRenderer($icon);

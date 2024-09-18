@@ -50,7 +50,7 @@ final class TestKernel extends Kernel
         ]);
 
         $container->extension('twig', [
-            'default_path' => __DIR__ . '/templates',
+            'default_path' => __DIR__.'/templates',
         ]);
 
         $container->extension('twig_component', [
@@ -60,6 +60,14 @@ final class TestKernel extends Kernel
 
         $container->extension('ux_icons', [
             'icon_dir' => '%kernel.project_dir%/tests/Fixtures/icons',
+            'icon_sets' => [
+                'fla' => [
+                    'path' => '%kernel.project_dir%/tests/Fixtures/images/flags',
+                ],
+                'lu' => [
+                    'alias' => 'lucide',
+                ],
+            ],
         ]);
 
         $container->services()->set('logger', NullLogger::class);

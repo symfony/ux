@@ -14,6 +14,7 @@ namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 use Symfony\UX\Icons\Command\WarmCacheCommand;
 use Symfony\UX\Icons\IconCacheWarmer;
 use Symfony\UX\Icons\IconRenderer;
+use Symfony\UX\Icons\IconRendererInterface;
 use Symfony\UX\Icons\Registry\CacheIconRegistry;
 use Symfony\UX\Icons\Registry\ChainIconRegistry;
 use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
@@ -60,7 +61,7 @@ return static function (ContainerConfigurator $container): void {
                 abstract_arg('icon_aliases'),
             ])
 
-        ->alias('Symfony\UX\Icons\IconRendererInterface', '.ux_icons.icon_renderer')
+        ->alias(IconRendererInterface::class, '.ux_icons.icon_renderer')
 
         ->set('.ux_icons.icon_finder', IconFinder::class)
             ->args([

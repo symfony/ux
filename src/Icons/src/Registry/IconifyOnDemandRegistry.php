@@ -23,8 +23,10 @@ use Symfony\UX\Icons\IconRegistryInterface;
  */
 final class IconifyOnDemandRegistry implements IconRegistryInterface
 {
-    public function __construct(private Iconify $iconify)
-    {
+    public function __construct(
+        private Iconify $iconify,
+        private ?array $prefixAliases = [],
+    ) {
     }
 
     public function get(string $name): Icon
@@ -32,7 +34,8 @@ final class IconifyOnDemandRegistry implements IconRegistryInterface
         if (2 !== \count($parts = explode(':', $name))) {
             throw new IconNotFoundException(\sprintf('The icon name "%s" is not valid.', $name));
         }
+        [$prefix, $icon] = $parts;
 
-        return $this->iconify->fetchIcon(...$parts);
+        return $this->iconify->fetchIcon($this->prefixAliases[$prefix] ?? $prefix, $icon);
     }
 }

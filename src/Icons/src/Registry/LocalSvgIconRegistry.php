@@ -23,17 +23,38 @@ use Symfony\UX\Icons\IconRegistryInterface;
  */
 final class LocalSvgIconRegistry implements IconRegistryInterface
 {
-    public function __construct(private string $iconDir)
-    {
+    /**
+     * @param array<string, string> $iconSetPaths
+     */
+    public function __construct(
+        private readonly string $iconDir,
+        private readonly array $iconSetPaths = [],
+    ) {
     }
 
     public function get(string $name): Icon
     {
-        if (!file_exists($filename = \sprintf('%s/%s.svg', $this->iconDir, str_replace(':', '/', $name)))) {
-            throw new IconNotFoundException(\sprintf('The icon "%s" (%s) does not exist.', $name, $filename));
+        if (str_contains($name, ':')) {
+            [$prefix, $icon] = explode(':', $name, 2) + ['', ''];
+            if ('' === $prefix || '' === $icon) {
+                throw new IconNotFoundException(\sprintf('The icon name "%s" is not valid.', $name));
+            }
+
+            if ($prefixPath = $this->iconSetPaths[$prefix] ?? null) {
+                if (!file_exists($filename = $prefixPath.'/'.str_replace(':', '/', $icon).'.svg')) {
+                    throw new IconNotFoundException(\sprintf('The icon "%s" (%s) does not exist.', $name, $filename));
+                }
+
+                return Icon::fromFile($filename);
+            }
         }
 
-        return Icon::fromFile($filename);
+        $filepath = str_replace(':', '/', $name).'.svg';
+        if (file_exists($filename = $this->iconDir.'/'.$filepath)) {
+            return Icon::fromFile($filename);
+        }
+
+        throw new IconNotFoundException(\sprintf('The icon "%s" (%s) does not exist.', $name, $filename));
     }
 
     public function has(string $name): bool
