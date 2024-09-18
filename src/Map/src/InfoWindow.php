@@ -19,7 +19,8 @@ namespace Symfony\UX\Map;
 final readonly class InfoWindow
 {
     /**
-     * @param array<string, mixed> $extra Extra data, can be used by the developer to store additional information and use them later JavaScript side
+     * @param array<string, mixed> $extra Extra data, can be used by the developer to store additional information and
+     *                                    use them later JavaScript side
      */
     public function __construct(
         private ?string $headerContent = null,
@@ -31,6 +32,16 @@ final readonly class InfoWindow
     ) {
     }
 
+    /**
+     * @return array{
+     *     headerContent: string|null,
+     *     content: string|null,
+     *     position: array{lat: float, lng: float}|null,
+     *     opened: bool,
+     *     autoClose: bool,
+     *     extra: object,
+     * }
+     */
     public function toArray(): array
     {
         return [
@@ -41,5 +52,26 @@ final readonly class InfoWindow
             'autoClose' => $this->autoClose,
             'extra' => (object) $this->extra,
         ];
+    }
+
+    /**
+     * @param array{
+     *     headerContent: string|null,
+     *     content: string|null,
+     *     position: array{lat: float, lng: float}|null,
+     *     opened: bool,
+     *     autoClose: bool,
+     *     extra: object,
+     * } $data
+     *
+     * @internal
+     */
+    public static function fromArray(array $data): self
+    {
+        if (isset($data['position'])) {
+            $data['position'] = Point::fromArray($data['position']);
+        }
+
+        return new self(...$data);
     }
 }

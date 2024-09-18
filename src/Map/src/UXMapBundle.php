@@ -19,6 +19,7 @@ use Symfony\Component\HttpKernel\Bundle\AbstractBundle;
 use Symfony\UX\Map\Bridge as MapBridge;
 use Symfony\UX\Map\Renderer\AbstractRendererFactory;
 use Symfony\UX\Map\Renderer\NullRendererFactory;
+use Symfony\UX\TwigComponent\TwigComponentBundle;
 
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
@@ -53,6 +54,10 @@ final class UXMapBundle extends AbstractBundle
 
         if (!isset($config['renderer'])) {
             $config['renderer'] = 'null://null';
+        }
+
+        if (ContainerBuilder::willBeAvailable('symfony/ux-twig-component', TwigComponentBundle::class, ['symfony/ux-map'])) {
+            $container->import('../config/twig_component.php');
         }
 
         if (str_starts_with($config['renderer'], 'null://')) {

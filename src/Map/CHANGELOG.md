@@ -2,8 +2,11 @@
 
 ## 2.20
 
--   Rename `render_map` Twig function `ux_map`
--   Deprecate `render_map` Twig function
+-   Deprecate `render_map` Twig function (will be removed in 2.21). Use 
+    `ux_map` or the `<twig:ux:map />` Twig component instead.
+-   Add `ux_map` Twig function (replaces `render_map` with a more flexible 
+    interface)
+-   Add `<twig:ux:map />` Twig component
 
 ## 2.19
 
