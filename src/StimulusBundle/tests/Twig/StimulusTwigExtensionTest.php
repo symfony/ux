@@ -135,8 +135,8 @@ final class StimulusTwigExtensionTest extends TestCase
         $extension = new StimulusTwigExtension(new StimulusHelper($this->twig));
         $dto = $extension->renderStimulusController('my-controller', ['myValue' => 'scalar-value']);
         $this->assertSame(
-            'data-controller="my-controller another-controller" data-my-controller-my-value-value="scalar-value" data-another-controller-another-value-value="scalar-value&#x20;2"',
-            (string) $extension->appendStimulusController($dto, 'another-controller', ['another-value' => 'scalar-value 2']),
+            'data-controller="my-controller another-controller" data-my-controller-my-value-value="scalar-value" data-another-controller-another-value-value="scalar-value 2" data-another-controller-json-value-value="{&quot;key&quot;:&quot;Value with quotes &#039; and \&quot;.&quot;}"',
+            (string) $extension->appendStimulusController($dto, 'another-controller', ['another-value' => 'scalar-value 2', 'jsonValue' => json_encode(['key' => 'Value with quotes \' and ".'])]),
         );
     }
 

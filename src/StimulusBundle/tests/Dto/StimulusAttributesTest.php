@@ -145,7 +145,7 @@ final class StimulusAttributesTest extends TestCase
     public function testAddAttribute()
     {
         $this->stimulusAttributes->addAttribute('foo', 'bar baz');
-        $this->assertSame('foo="bar&#x20;baz"', (string) $this->stimulusAttributes);
+        $this->assertSame('foo="bar baz"', (string) $this->stimulusAttributes);
         $this->assertSame(['foo' => 'bar baz'], $this->stimulusAttributes->toArray());
     }
 }

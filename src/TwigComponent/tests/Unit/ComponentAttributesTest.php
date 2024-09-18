@@ -147,7 +147,7 @@ final class ComponentAttributesTest extends TestCase
             'data-controller' => 'foo live',
             'data-live-data-value' => '{}',
             'data-foo-name-value' => 'ryan',
-            'data-foo-some-array-value' => '&#x5B;&quot;a&quot;,&quot;b&quot;&#x5D;',
+            'data-foo-some-array-value' => '[&quot;a&quot;,&quot;b&quot;]',
         ], $attributes->all());
     }
 
