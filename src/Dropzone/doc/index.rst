@@ -62,7 +62,7 @@ Symfony UX Dropzone provides a default stylesheet in order to ease
 usage. You can disable it to add your own design if you wish.
 
 In ``assets/controllers.json``, disable the default stylesheet by
-switching the ``@symfony/ux-dropzone/src/style.css`` autoimport to
+switching the ``@symfony/ux-dropzone/dist/style.min.css`` autoimport to
 ``false``:
 
 .. code-block:: json
@@ -74,7 +74,7 @@ switching the ``@symfony/ux-dropzone/src/style.css`` autoimport to
                     "enabled": true,
                     "fetch": "eager",
                     "autoimport": {
-                        "@symfony/ux-dropzone/src/style.css": false
+                        "@symfony/ux-dropzone/dist/style.min.css": false
                     }
                 }
             }
