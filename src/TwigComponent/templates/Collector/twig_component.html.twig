@@ -287,15 +287,15 @@
                 <tbody id="render-{{ loop.index }}--details">
                     <tr class="{{ not render.input_props|default ? 'opacity-50' }}">
                         <th scope="row">Input props</th>
-                        <td colspan="3">{{ profiler_dump(render.input_props) }}</td>
+                        <td colspan="4">{{ profiler_dump(render.input_props) }}</td>
                     </tr>
                     <tr class="{{ not render.attributes|default ? 'opacity-50' }}">
                         <th scope="row">Attributes</th>
-                        <td colspan="3">{{ profiler_dump(render.attributes) }}</td>
+                        <td colspan="4">{{ profiler_dump(render.attributes) }}</td>
                     </tr>
                     <tr>
                         <th scope="row">Component</th>
-                        <td colspan="3">{{ profiler_dump(render.component) }}</td>
+                        <td colspan="4">{{ profiler_dump(render.component) }}</td>
                     </tr>
                 </tbody>
             </table>
