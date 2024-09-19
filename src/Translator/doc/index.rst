@@ -98,6 +98,27 @@ By default, the default locale is ``en`` (English) that you can configure throug
 #. Or with ``<html data-symfony-ux-translator-locale="your-locale">`` attribute
 #. Or with ``<html lang="your-locale">`` attribute
 
+Detecting missing translations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+By default, the translator will return the translation key if the translation is missing.
+
+You can change this behavior by calling ``throwWhenNotFound(true)``:
+
+.. code-block:: diff
+
+      // assets/translator.js
+
+    - import { trans, getLocale, setLocale, setLocaleFallbacks } from '@symfony/ux-translator';
+    + import { trans, getLocale, setLocale, setLocaleFallbacks, throwWhenNotFound } from '@symfony/ux-translator';
+      import { localeFallbacks } from '../var/translations/configuration';
+
+      setLocaleFallbacks(localeFallbacks);
+    + throwWhenNotFound(true)
+
+      export { trans }
+      export * from '../var/translations';
+
 Importing and using translations
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

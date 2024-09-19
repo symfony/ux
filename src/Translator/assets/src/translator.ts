@@ -38,6 +38,7 @@ import { format } from './formatters/formatter';
 
 let _locale: LocaleType | null = null;
 let _localeFallbacks: Record<LocaleType, LocaleType> = {};
+let _throwWhenNotFound = false;
 
 export function setLocale(locale: LocaleType | null) {
     _locale = locale;
@@ -50,6 +51,10 @@ export function getLocale(): LocaleType {
         document.documentElement.lang || // <html lang="en">
         'en'
     );
+}
+
+export function throwWhenNotFound(enabled: boolean): void {
+    _throwWhenNotFound = enabled;
 }
 
 export function setLocaleFallbacks(localeFallbacks: Record<LocaleType, LocaleType>): void {
@@ -160,6 +165,10 @@ export function trans<
         if (locale) {
             return format(translations[locale], parameters, locale);
         }
+    }
+
+    if (_throwWhenNotFound) {
+        throw new Error(`No translation message found with id "${message.id}".`);
     }
 
     return message.id;
