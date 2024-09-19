@@ -2,7 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}{{ meta.title|default }}{{ meta.title_suffix|default(' - Symfony UX') }}{% endblock %}</title>
+        <title>{% block title %}{{ meta.title|default }}{{ meta.title_suffix ?? ' - Symfony UX' }}{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="color-scheme" content="dark light">
         <meta name="view-transition" content="same-origin" />
