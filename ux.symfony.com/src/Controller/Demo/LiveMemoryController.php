@@ -21,6 +21,7 @@ use Symfony\Component\Routing\Attribute\Route;
 class LiveMemoryController extends AbstractController
 {
     #[Route('/', name: 'app_demo_live_memory')]
+    #[Route('/', name: 'app_demo_live_component_live_memory')]
     public function __invoke(LiveDemoRepository $liveDemoRepository): Response
     {
         return $this->render('demos/live_memory/index.html.twig', [
@@ -33,6 +34,7 @@ class LiveMemoryController extends AbstractController
      * from the session. This can be useful when you want to start over.
      */
     #[Route('/reset', name: 'app_demo_live_memory_reset', env: 'dev')]
+    #[Route('/reset', name: 'app_demo_live_component_live_memory_reset', env: 'dev')]
     public function reset(GameStorageInterface $gameStorage): Response
     {
         $gameStorage->saveGame(null);

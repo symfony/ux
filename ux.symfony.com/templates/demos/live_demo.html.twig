@@ -7,7 +7,7 @@
     canonical: url(demo.route),
     social: {
         title: demo.name ~ ' - Symfony UX',
-        description: demo.longDescription|striptags,
+        description: demo.longDescription|markdown_to_html|striptags,
         image: {
             url: absolute_url(asset(demo.screenshotFilename('1280x720'))),
             type: 'image/png',
@@ -71,18 +71,12 @@
         </div>
     {% endblock %}
 
-{# {% block demo_tags %} #}
-{# <div class="container-fluid container-xxl px-4 px-md-5"> #}
-{# <div class="cluster"> #}
-{# <twig:Badge #}
-{# icon="lucide:box" #}
-{# label="Package" #}
-{# value="Live Component" #}
-{# url="{{ url('app_live_component') }}" #}
-{# /> #}
-{# </div> #}
-{# </div> #}
-{# {% endblock %} #}
+    <div class="container container-xl x-4 pt-4 px-md-5 pt-md-5">
+        <div class="cluster">
+            <twig:Badge:Github label="Author" username="{{ demo.author }}" />
+            <twig:Badge:Date label="Published" date="{{ demo.publishedAt }}" />
+        </div>
+    </div>
 
 {% endblock %}
 
