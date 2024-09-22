@@ -1667,7 +1667,7 @@ class ElementChanges {
         element.classList.remove(...this.removedClasses);
         this.styleChanges.getChangedItems().forEach((change) => {
             element.style.setProperty(change.name, change.value);
-            return;
+
         });
         this.styleChanges.getRemovedItems().forEach((styleName) => {
             element.style.removeProperty(styleName);
@@ -2040,7 +2040,8 @@ class Component {
             }
             const headers = backendResponse.response.headers;
             if (!headers.get('Content-Type')?.includes('application/vnd.live-component+html') &&
-                !headers.get('X-Live-Redirect')) {
+                !headers.get('X-Live-Redirect') &&
+                !headers.get('X-Live-Delete')) {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
                 this.hooks.triggerHook('response:error', backendResponse, controls);
@@ -2077,6 +2078,10 @@ class Component {
             else {
                 window.location.href = backendResponse.response.headers.get('Location') || '';
             }
+            return;
+        }
+        if (backendResponse.response.headers.get('X-Live-Delete')) {
+            this.element.remove();
             return;
         }
         this.hooks.triggerHook('loading.state:finished', this.element);
@@ -2994,7 +2999,7 @@ class LiveControllerDefault extends Controller {
             });
             validModifiers.set('self', () => {
                 if (event.target !== event.currentTarget) {
-                    return;
+
                 }
             });
             validModifiers.set('debounce', (modifier) => {
