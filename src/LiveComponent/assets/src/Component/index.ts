@@ -311,7 +311,8 @@ export default class Component {
             const headers = backendResponse.response.headers;
             if (
                 !headers.get('Content-Type')?.includes('application/vnd.live-component+html') &&
-                !headers.get('X-Live-Redirect')
+                !headers.get('X-Live-Redirect') &&
+                !headers.get('X-Live-Delete')
             ) {
                 const controls = { displayError: true };
                 this.valueStore.pushPendingPropsBackToDirty();
@@ -363,6 +364,12 @@ export default class Component {
             } else {
                 window.location.href = backendResponse.response.headers.get('Location') || '';
             }
+
+            return;
+        }
+        if (backendResponse.response.headers.get('X-Live-Delete')) {
+            // action returned a delete element from the DOM
+            this.element.remove();
 
             return;
         }
