@@ -233,5 +233,5 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`Google Maps`: https://github.com/symfony/ux-google-map
 .. _`Leaflet`: https://github.com/symfony/ux-leaflet-map
-.. _`Symfony UX Map Google Maps brige docs`: https://github.com/symfony/symfony-ux/blob/{version}/src/Map/src/Bridge/Google/README.md
-.. _`Symfony UX Map Leaflet bridge docs`: https://github.com/symfony/symfony-ux/blob/{version}/src/Map/src/Bridge/Leaflet/README.md
+.. _`Symfony UX Map Google Maps brige docs`: https://github.com/symfony/ux/blob/{version}/src/Map/src/Bridge/Google/README.md
+.. _`Symfony UX Map Leaflet bridge docs`: https://github.com/symfony/ux/blob/{version}/src/Map/src/Bridge/Leaflet/README.md
