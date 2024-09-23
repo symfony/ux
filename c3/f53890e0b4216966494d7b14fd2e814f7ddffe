@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-23T08:58:41Z
+
+Thanks!
+
+But note that only the `symfony-ux` part was wrong, `blob/{version}` is fine **but** it looks like `version` is not interpreted correctly by the Symfony docs.
+
+I'm merging, and ask to the appropriate persons for `{version}` :)
