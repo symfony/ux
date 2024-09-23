@@ -220,6 +220,7 @@ function getPluralizationRule(number, locale) {
 
 let _locale = null;
 let _localeFallbacks = {};
+let _throwWhenNotFound = false;
 function setLocale(locale) {
     _locale = locale;
 }
@@ -228,6 +229,9 @@ function getLocale() {
         document.documentElement.getAttribute('data-symfony-ux-translator-locale') ||
         document.documentElement.lang ||
         'en');
+}
+function throwWhenNotFound(enabled) {
+    _throwWhenNotFound = enabled;
 }
 function setLocaleFallbacks(localeFallbacks) {
     _localeFallbacks = localeFallbacks;
@@ -270,7 +274,10 @@ function trans(message, parameters = {}, domain = 'messages', locale = null) {
             return format(translations[locale], parameters, locale);
         }
     }
+    if (_throwWhenNotFound) {
+        throw new Error(`No translation message found with id "${message.id}".`);
+    }
     return message.id;
 }
 
-export { getLocale, getLocaleFallbacks, setLocale, setLocaleFallbacks, trans };
+export { getLocale, getLocaleFallbacks, setLocale, setLocaleFallbacks, throwWhenNotFound, trans };

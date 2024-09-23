@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.20.0
+
+-   Add `throwWhenNotFound` function to configure the behavior when a translation is not found.
+
 ## 2.19.0
 
 -   Add configuration to filter dumped translations by domain.

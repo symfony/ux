@@ -4,6 +4,7 @@ import {
     type NoParametersType,
     setLocale,
     setLocaleFallbacks,
+    throwWhenNotFound,
     trans,
 } from '../src/translator';
 
@@ -11,6 +12,7 @@ describe('Translator', () => {
     beforeEach(() => {
         setLocale(null);
         setLocaleFallbacks({});
+        throwWhenNotFound(false);
         document.documentElement.lang = '';
         document.documentElement.removeAttribute('data-symfony-ux-translator-locale');
     });
@@ -385,6 +387,40 @@ describe('Translator', () => {
             expect(trans(MESSAGE_MULTI_DOMAINS_WITH_PARAMETERS, { '%parameter1%': 'foo' }, 'messages', 'fr')).toEqual(
                 'message.multi_domains.different_parameters'
             );
+        });
+
+        test('missing message should return the message id when `throwWhenNotFound` is false', () => {
+            throwWhenNotFound(false);
+            setLocale('fr');
+
+            const MESSAGE_IN_ANOTHER_DOMAIN: Message<{ security: { parameters: NoParametersType } }, 'en'> = {
+                id: 'Invalid credentials.',
+                translations: {
+                    messages: {
+                        en: 'Invalid credentials.',
+                    },
+                },
+            };
+
+            expect(trans(MESSAGE_IN_ANOTHER_DOMAIN)).toEqual('Invalid credentials.');
+        });
+
+        test('missing message should throw an error if `throwWhenNotFound` is true', () => {
+            throwWhenNotFound(true);
+            setLocale('fr');
+
+            const MESSAGE_IN_ANOTHER_DOMAIN: Message<{ security: { parameters: NoParametersType } }, 'en'> = {
+                id: 'Invalid credentials.',
+                translations: {
+                    messages: {
+                        en: 'Invalid credentials.',
+                    },
+                },
+            };
+
+            expect(() => {
+                trans(MESSAGE_IN_ANOTHER_DOMAIN);
+            }).toThrow(`No translation message found with id "Invalid credentials.".`);
         });
 
         test('message from intl domain should be prioritized over its non-intl equivalent', () => {
