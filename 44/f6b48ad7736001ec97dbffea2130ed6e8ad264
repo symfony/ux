@@ -1,0 +1,15 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-19T15:29:01Z
+
+Hum, my bad, in fact, we totally don't need to update the configuration file at all.
+
+The function `throwWhenNotFound()` must be explicitly called by developers if they want to, this can be done in the `assets/translator.js` file.
+
+Also, the documentation `src/Translator/doc/index.rst` must be updated too!
+
+---------------------------------------------------------------------------
+
+by Crovitche-1623 at 2024-09-19T20:26:34Z
+
+Now I consider my PR ready @Kocal. Let me know what you think.
