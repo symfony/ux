@@ -1,8 +1,48 @@
-import AbstractMapController from '@symfony/ux-map/abstract-map-controller';
+import { Controller } from '@hotwired/stimulus';
 import { Loader } from '@googlemaps/js-api-loader';
 
+let default_1$1 = class default_1 extends Controller {
+    constructor() {
+        super(...arguments);
+        this.markers = [];
+        this.infoWindows = [];
+    }
+    connect() {
+        const { center, zoom, options, markers, fitBoundsToMarkers } = this.viewValue;
+        this.dispatchEvent('pre-connect', { options });
+        this.map = this.doCreateMap({ center, zoom, options });
+        markers.forEach((marker) => this.createMarker(marker));
+        if (fitBoundsToMarkers) {
+            this.doFitBoundsToMarkers();
+        }
+        this.dispatchEvent('connect', {
+            map: this.map,
+            markers: this.markers,
+            infoWindows: this.infoWindows,
+        });
+    }
+    createMarker(definition) {
+        this.dispatchEvent('marker:before-create', { definition });
+        const marker = this.doCreateMarker(definition);
+        this.dispatchEvent('marker:after-create', { marker });
+        this.markers.push(marker);
+        return marker;
+    }
+    createInfoWindow({ definition, marker, }) {
+        this.dispatchEvent('info-window:before-create', { definition, marker });
+        const infoWindow = this.doCreateInfoWindow({ definition, marker });
+        this.dispatchEvent('info-window:after-create', { infoWindow, marker });
+        this.infoWindows.push(infoWindow);
+        return infoWindow;
+    }
+};
+default_1$1.values = {
+    providerOptions: Object,
+    view: Object,
+};
+
 let _google;
-class default_1 extends AbstractMapController {
+class default_1 extends default_1$1 {
     async connect() {
         if (!_google) {
             _google = { maps: {} };

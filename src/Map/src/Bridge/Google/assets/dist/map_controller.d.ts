@@ -1,5 +1,5 @@
-import AbstractMapController from '@symfony/ux-map/abstract-map-controller';
-import type { Point, MarkerDefinition } from '@symfony/ux-map/abstract-map-controller';
+import AbstractMapController from '@symfony/ux-map';
+import type { Point, MarkerDefinition } from '@symfony/ux-map';
 import type { LoaderOptions } from '@googlemaps/js-api-loader';
 type MapOptions = Pick<google.maps.MapOptions, 'mapId' | 'gestureHandling' | 'backgroundColor' | 'disableDoubleClickZoom' | 'zoomControl' | 'zoomControlOptions' | 'mapTypeControl' | 'mapTypeControlOptions' | 'streetViewControl' | 'streetViewControlOptions' | 'fullscreenControl' | 'fullscreenControlOptions'>;
 export default class extends AbstractMapController<MapOptions, google.maps.Map, google.maps.marker.AdvancedMarkerElement, google.maps.InfoWindow> {

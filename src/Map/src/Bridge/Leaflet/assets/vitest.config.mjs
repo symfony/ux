@@ -6,7 +6,7 @@ export default mergeConfig(
     defineConfig({
         resolve: {
             alias: {
-                '@symfony/ux-map/abstract-map-controller': __dirname + '/../../../../assets/src/abstract_map_controller.ts',
+                '@symfony/ux-map': __dirname + '/../../../../assets/src/abstract_map_controller.ts',
                 'leaflet/dist/leaflet.min.css': 'leaflet/dist/leaflet.css',
             },
         },

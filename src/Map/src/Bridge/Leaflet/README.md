@@ -90,6 +90,34 @@ export default class extends Controller
 }
 ```
 
+## Known issues
+
+### Unable to find `leaflet/dist/leaflet.min.css` file when using Webpack Encore
+
+When using Webpack Encore with the Leaflet bridge, you may encounter the following error:
+```
+Module build failed: Module not found:
+"./node_modules/.pnpm/file+vendor+symfony+ux-leaflet-map+assets_@hotwired+stimulus@3.0.0_leaflet@1.9.4/node_modules/@symfony/ux-leaflet-map/dist/map_controller.js" contains a reference to the file "leaflet/dist/leaflet.min.css".
+This file can not be found, please check it for typos or update it if the file got moved.
+
+Entrypoint app = runtime.67292354.js 488.0777101a.js app.b75294ae.css app.0975a86d.js
+webpack compiled with 1 error
+ ELIFECYCLE  Command failed with exit code 1.
+```
+
+That's because the Leaflet's Stimulus controller references the `leaflet/dist/leaflet.min.css` file, 
+which exists on [jsDelivr](https://www.jsdelivr.com/package/npm/leaflet) (used by the Symfony AssetMapper component),
+but does not in the [`leaflet` npm package](https://www.npmjs.com/package/leaflet).
+The correct path is `leaflet/dist/leaflet.css`, but it is not possible to fix it because it would break compatibility 
+with the Symfony AssetMapper component.
+
+As a workaround, you can configure Webpack Encore to add an alias for the `leaflet/dist/leaflet.min.css` file:
+```js
+Encore.addAliases({
+  'leaflet/dist/leaflet.min.css': 'leaflet/dist/leaflet.css',
+})
+```
+
 ## Resources
 
 - [Documentation](https://symfony.com/bundles/ux-map/current/index.html)
