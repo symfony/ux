@@ -57,6 +57,11 @@ final class ComponentMetadata
         return $this->get('expose_public_props', false);
     }
 
+    public function isAnonymous(): bool
+    {
+        return !isset($this->config['service_id']);
+    }
+
     public function getAttributesVar(): string
     {
         return $this->get('attributes_var', 'attributes');
