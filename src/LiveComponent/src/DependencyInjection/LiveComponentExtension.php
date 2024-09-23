@@ -233,10 +233,6 @@ final class LiveComponentExtension extends Extension implements PrependExtension
             ->addTag('kernel.event_subscriber');
 
         $container->register('ux.live_component.defer_live_component_subscriber', DeferLiveComponentSubscriber::class)
-            ->setArguments([
-                new Reference('ux.twig_component.component_stack'),
-                new Reference('ux.live_component.live_controller_attributes_creator'),
-            ])
             ->addTag('kernel.event_subscriber')
         ;
 
