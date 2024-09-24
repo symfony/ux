@@ -1,0 +1,121 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-14T15:08:32Z
+
+Thank you very much for this PR @rrr63 👍
+
+I think @Kocal will lead the review here :)
+
+---------------------------------------------------------------------------
+
+by rrr63 at 2024-09-15T16:55:14Z
+
+@Kocal Thank for your comments, i fixed it.
+You are right ! It will not break any apps because of `info-window:before-create` & `info-window:after-create`.
+And it seems more accessible for future additions
+
+---------------------------------------------------------------------------
+
+by rrr63 at 2024-09-15T16:57:51Z
+
+However, I wonder because a test did not pass on the Autocomplete component by just changing the Map's changelog ...
+
+---------------------------------------------------------------------------
+
+by rrr63 at 2024-09-16T07:38:15Z
+
+Weird, it works by adding the changelog : `Polygons added` but didnt work with `Adding polygons` ... :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-18T08:19:35Z
+
+I've just merged #2117, you will need to rebase your PR and add `polygons` support to `ux_map()` and `<twig:ux:map>` aswell, thanks 🙏🏻
+
+Feel free to ask help if needed
+
+---------------------------------------------------------------------------
+
+by rrr63 at 2024-09-18T14:50:22Z
+
+Hello @Kocal
+Any tips on how could i resolved this conflicts ?
+Do i have to do it  locally or on github ?
+
+Thanks
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-18T22:08:29Z
+
+Locally after a rebase on 2.x
+
+You need to rebase / fix the conflcits / force-push here :)
+
+Now it's a bit hard to review 90 files 😅
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-18T22:08:42Z
+
+I'll add then a couple of comments, regarding argument order and default values :)
+
+---------------------------------------------------------------------------
+
+by rrr63 at 2024-09-19T05:11:49Z
+
+Oh so sorry,
+
+Do you think it will be easier for you if I create a new PR?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-19T07:04:43Z
+
+I will see what I can do
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-19T07:11:44Z
+
+It should be fine, the PR is back to ~10 commits and ~20 files
+<img width="1031" alt="image" src="https://github.com/user-attachments/assets/83c148ab-2c99-4557-885c-882d3c6fd7da">
+
+---------------------------------------------------------------------------
+
+by rrr63 at 2024-09-19T15:57:38Z
+
+> It should be fine, the PR is back to ~10 commits and ~20 files
+> <img width="1031" alt="image" src="https://github.com/user-attachments/assets/83c148ab-2c99-4557-885c-882d3c6fd7da">
+>
+
+Thanks!!!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-21T01:25:42Z
+
+I like it very much ! Would you agree, afterwards, to help me prepare a demo using polygons on the website ?
+
+---------------------------------------------------------------------------
+
+by rrr63 at 2024-09-21T07:31:11Z
+
+Yes I could, with pleasure :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-24T05:52:18Z
+
+I'm taking care of the rest, rebasing and fixing conflicts, testing the feature on my side, and merge :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-24T06:09:21Z
+
+Working as expected:
+<img width="792" alt="image" src="https://github.com/user-attachments/assets/f656f348-e974-4852-a829-f8055e0295f5">
+<img width="951" alt="image" src="https://github.com/user-attachments/assets/5b3d9531-0e67-4db9-950f-34cee0a29c1b">
+
+I've also added some documentation and squashed everything.
+I'm merging after CI becomes green
