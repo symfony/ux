@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-import AbstractMapController from '@symfony/ux-map/abstract-map-controller';
-import type { Point, MarkerDefinition } from '@symfony/ux-map/abstract-map-controller';
+import AbstractMapController from '@symfony/ux-map';
+import type { Point, MarkerDefinition } from '@symfony/ux-map';
 import type { LoaderOptions } from '@googlemaps/js-api-loader';
 import { Loader } from '@googlemaps/js-api-loader';
 

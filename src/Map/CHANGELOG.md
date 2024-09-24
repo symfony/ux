@@ -7,6 +7,8 @@
 -   Add `ux_map` Twig function (replaces `render_map` with a more flexible 
     interface)
 -   Add `<twig:ux:map />` Twig component
+-   The importmap entry `@symfony/ux-map/abstract-map-controller` can be removed
+    from your importmap, it is no longer needed. 
 
 ## 2.19
 

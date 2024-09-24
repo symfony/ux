@@ -18,7 +18,7 @@
         "importmap": {
             "@hotwired/stimulus": "^3.0.0",
             "@googlemaps/js-api-loader": "^1.16.6",
-            "@symfony/ux-google-map/map-controller": "path:%PACKAGE%/dist/map_controller.js"
+            "@symfony/ux-google-map": "path:%PACKAGE%/dist/map_controller.js"
         }
     },
     "peerDependencies": {

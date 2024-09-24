@@ -8,8 +8,7 @@
     "types": "dist/abstract_map_controller.d.ts",
     "symfony": {
         "importmap": {
-            "@hotwired/stimulus": "^3.0.0",
-            "@symfony/ux-map/abstract-map-controller": "path:%PACKAGE%/dist/abstract_map_controller.js"
+            "@hotwired/stimulus": "^3.0.0"
         }
     },
     "peerDependencies": {
