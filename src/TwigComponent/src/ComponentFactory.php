@@ -41,20 +41,28 @@ final class ComponentFactory
 
     public function metadataFor(string $name): ComponentMetadata
     {
-        $name = $this->classMap[$name] ?? $name;
-
-        if (!$config = $this->config[$name] ?? null) {
-            if (($template = $this->componentTemplateFinder->findAnonymousComponentTemplate($name)) !== null) {
-                return new ComponentMetadata([
-                    'key' => $name,
-                    'template' => $template,
-                ]);
-            }
-
-            $this->throwUnknownComponentException($name);
+        if ($config = $this->config[$name] ?? null) {
+            return new ComponentMetadata($config);
         }
 
-        return new ComponentMetadata($config);
+        if ($template = $this->componentTemplateFinder->findAnonymousComponentTemplate($name)) {
+            $this->config[$name] = [
+                'key' => $name,
+                'template' => $template,
+            ];
+
+            return new ComponentMetadata($this->config[$name]);
+        }
+
+        if ($mappedName = $this->classMap[$name] ?? null) {
+            if ($config = $this->config[$mappedName] ?? null) {
+                return new ComponentMetadata($config);
+            }
+
+            throw new \InvalidArgumentException(\sprintf('Unknown component "%s".', $name));
+        }
+
+        $this->throwUnknownComponentException($name);
     }
 
     /**
@@ -62,11 +70,13 @@ final class ComponentFactory
      */
     public function create(string $name, array $data = []): MountedComponent
     {
-        return $this->mountFromObject(
-            $this->getComponent($name),
-            $data,
-            $this->metadataFor($name)
-        );
+        $metadata = $this->metadataFor($name);
+
+        if ($metadata->isAnonymous()) {
+            return $this->mountFromObject(new AnonymousComponent(), $data, $metadata);
+        }
+
+        return $this->mountFromObject($this->components->get($metadata->getName()), $data, $metadata);
     }
 
     /**
@@ -101,10 +111,7 @@ final class ComponentFactory
         foreach ($data as $key => $value) {
             if ($value instanceof \Stringable) {
                 $data[$key] = (string) $value;
-                continue;
             }
-
-            $data[$key] = $value;
         }
 
         return new MountedComponent(
@@ -118,10 +125,18 @@ final class ComponentFactory
 
     /**
      * Returns the "unmounted" component.
+     *
+     * @internal
      */
     public function get(string $name): object
     {
-        return $this->getComponent($name);
+        $metadata = $this->metadataFor($name);
+
+        if ($metadata->isAnonymous()) {
+            return new AnonymousComponent();
+        }
+
+        return $this->components->get($metadata->getName());
     }
 
     private function mount(object $component, array &$data): void
@@ -157,21 +172,6 @@ final class ComponentFactory
         }
 
         $component->mount(...$parameters);
-    }
-
-    private function getComponent(string $name): object
-    {
-        $name = $this->classMap[$name] ?? $name;
-
-        if (!$this->components->has($name)) {
-            if ($this->isAnonymousComponent($name)) {
-                return new AnonymousComponent();
-            }
-
-            $this->throwUnknownComponentException($name);
-        }
-
-        return $this->components->get($name);
     }
 
     private function preMount(object $component, array $data, ComponentMetadata $componentMetadata): array
@@ -213,11 +213,6 @@ final class ComponentFactory
             'data' => $data,
             'extraMetadata' => $extraMetadata,
         ];
-    }
-
-    private function isAnonymousComponent(string $name): bool
-    {
-        return null !== $this->componentTemplateFinder->findAnonymousComponentTemplate($name);
     }
 
     /**
