@@ -78,14 +78,21 @@ class map_controller extends default_1 {
         const { position, title, infoWindow, extra, rawOptions = {}, ...otherOptions } = definition;
         const marker = L.marker(position, { title, ...otherOptions, ...rawOptions }).addTo(this.map);
         if (infoWindow) {
-            this.createInfoWindow({ definition: infoWindow, marker });
+            if (infoWindow.opened) {
+                this.createInfoWindow({ definition: infoWindow, marker });
+            }
+            else {
+                marker.on('click', () => {
+                    this.createInfoWindow({ definition: infoWindow, marker, onMarkerClick: true });
+                });
+            }
         }
         return marker;
     }
-    doCreateInfoWindow({ definition, marker, }) {
+    doCreateInfoWindow({ definition, marker, onMarkerClick, }) {
         const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
         marker.bindPopup([headerContent, content].filter((x) => x).join('<br>'), { ...otherOptions, ...rawOptions });
-        if (definition.opened) {
+        if (definition.opened || onMarkerClick) {
             marker.openPopup();
         }
         const popup = marker.getPopup();

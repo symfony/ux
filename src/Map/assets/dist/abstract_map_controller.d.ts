@@ -43,13 +43,15 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
     }): Map;
     createMarker(definition: MarkerDefinition<MarkerOptions, InfoWindowOptions>): Marker;
     protected abstract doCreateMarker(definition: MarkerDefinition<MarkerOptions, InfoWindowOptions>): Marker;
-    protected createInfoWindow({ definition, marker, }: {
+    protected createInfoWindow({ definition, marker, onMarkerClick, }: {
         definition: MarkerDefinition<MarkerOptions, InfoWindowOptions>['infoWindow'];
         marker: Marker;
+        onMarkerClick?: boolean;
     }): InfoWindow;
-    protected abstract doCreateInfoWindow({ definition, marker, }: {
+    protected abstract doCreateInfoWindow({ definition, marker, onMarkerClick, }: {
         definition: MarkerDefinition<MarkerOptions, InfoWindowOptions>['infoWindow'];
         marker: Marker;
+        onMarkerClick: boolean;
     }): InfoWindow;
     protected abstract doFitBoundsToMarkers(): void;
     protected abstract dispatchEvent(name: string, payload: Record<string, unknown>): void;

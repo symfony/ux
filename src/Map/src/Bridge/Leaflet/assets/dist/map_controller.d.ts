@@ -19,9 +19,10 @@ export default class extends AbstractMapController<MapOptions, typeof L.Map, Mar
         options: MapOptions;
     }): L.Map;
     protected doCreateMarker(definition: MarkerDefinition): L.Marker;
-    protected doCreateInfoWindow({ definition, marker, }: {
+    protected doCreateInfoWindow({ definition, marker, onMarkerClick, }: {
         definition: MarkerDefinition['infoWindow'];
         marker: L.Marker;
+        onMarkerClick: boolean;
     }): L.Popup;
     protected doFitBoundsToMarkers(): void;
 }
