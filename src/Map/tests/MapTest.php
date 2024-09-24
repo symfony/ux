@@ -18,6 +18,7 @@ use Symfony\UX\Map\Map;
 use Symfony\UX\Map\MapOptionsInterface;
 use Symfony\UX\Map\Marker;
 use Symfony\UX\Map\Point;
+use Symfony\UX\Map\Polygon;
 
 class MapTest extends TestCase
 {
@@ -55,6 +56,7 @@ class MapTest extends TestCase
             'fitBoundsToMarkers' => true,
             'options' => $array['options'],
             'markers' => [],
+            'polygons' => [],
         ], $array);
     }
 
@@ -73,6 +75,7 @@ class MapTest extends TestCase
             'fitBoundsToMarkers' => false,
             'options' => $array['options'],
             'markers' => [],
+            'polygons' => [],
         ], $array);
     }
 
@@ -105,11 +108,36 @@ class MapTest extends TestCase
                 position: new Point(43.2965, 5.3698),
                 title: 'Marseille',
                 infoWindow: new InfoWindow(headerContent: '<b>Marseille</b>', content: 'Marseille', position: new Point(43.2965, 5.3698), opened: true)
-            ));
+            ))
+            ->addPolygon(new Polygon(
+                points: [
+                    new Point(48.858844, 2.294351),
+                    new Point(48.853, 2.3499),
+                    new Point(48.8566, 2.3522),
+                ],
+                title: 'Polygon 1',
+                infoWindow: null,
+            ))
+            ->addPolygon(new Polygon(
+                points: [
+                    new Point(45.764043, 4.835659),
+                    new Point(45.75, 4.85),
+                    new Point(45.77, 4.82),
+                ],
+                title: 'Polygon 2',
+                infoWindow: new InfoWindow(
+                    headerContent: '<b>Polygon 2</b>',
+                    content: 'A polygon around Lyon with some additional info.',
+                    position: new Point(45.764, 4.8357),
+                    opened: true,
+                    autoClose: true,
+                ),
+            ))
+        ;
 
         $array = $map->toArray();
 
-        self::assertSame([
+        self::assertEquals([
             'center' => ['lat' => 48.8566, 'lng' => 2.3522],
             'zoom' => 6.0,
             'fitBoundsToMarkers' => true,
@@ -153,6 +181,35 @@ class MapTest extends TestCase
                         'extra' => $array['markers'][2]['infoWindow']['extra'],
                     ],
                     'extra' => $array['markers'][2]['extra'],
+                ],
+            ],
+            'polygons' => [
+                [
+                    'points' => [
+                        ['lat' => 48.858844, 'lng' => 2.294351],
+                        ['lat' => 48.853, 'lng' => 2.3499],
+                        ['lat' => 48.8566, 'lng' => 2.3522],
+                    ],
+                    'title' => 'Polygon 1',
+                    'infoWindow' => null,
+                    'extra' => $array['polygons'][0]['extra'],
+                ],
+                [
+                    'points' => [
+                        ['lat' => 45.764043, 'lng' => 4.835659],
+                        ['lat' => 45.75, 'lng' => 4.85],
+                        ['lat' => 45.77, 'lng' => 4.82],
+                    ],
+                    'title' => 'Polygon 2',
+                    'infoWindow' => [
+                        'headerContent' => '<b>Polygon 2</b>',
+                        'content' => 'A polygon around Lyon with some additional info.',
+                        'position' => ['lat' => 45.764, 'lng' => 4.8357],
+                        'opened' => true,
+                        'autoClose' => true,
+                        'extra' => $array['polygons'][1]['infoWindow']['extra'],
+                    ],
+                    'extra' => $array['polygons'][1]['extra'],
                 ],
             ],
         ], $array);

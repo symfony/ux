@@ -32,7 +32,7 @@ final class UXMapComponentListener
         }
 
         $attributes = $event->getInputProps();
-        $map = array_intersect_key($attributes, ['markers' => 0, 'center' => 1, 'zoom' => 2]);
+        $map = array_intersect_key($attributes, ['markers' => 0, 'polygons' => 0, 'center' => 1, 'zoom' => 2]);
         $attributes = array_diff_key($attributes, $map);
 
         $html = $this->mapRuntime->renderMap(...$map, attributes: $attributes);

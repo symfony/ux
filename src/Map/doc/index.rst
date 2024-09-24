@@ -118,8 +118,21 @@ A map is created by calling ``new Map()``. You can configure the center, zoom, a
                     ),
                 )
             ;
-    
-            // 3. And inject the map in your template to render it
+
+            // 3. You can also add Polygons, which represents an area enclosed by a series of `Point` instances
+            $map->addPolygon(new Polygon(
+                points: [
+                    new Point(48.8566, 2.3522),
+                    new Point(45.7640, 4.8357),
+                    new Point(43.2965, 5.3698),
+                    new Point(44.8378, -0.5792),
+                ],
+                infoWindow: new InfoWindow(
+                    content: 'Paris, Lyon, Marseille, Bordeaux',
+                ),
+            ));
+
+            // 4. And inject the map in your template to render it
             return $this->render('contact/index.html.twig', [
                 'my_map' => $myMap,
             ]);

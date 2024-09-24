@@ -8,7 +8,7 @@
  */
 
 import AbstractMapController from '@symfony/ux-map';
-import type { Point, MarkerDefinition } from '@symfony/ux-map';
+import type { Point, MarkerDefinition, PolygonDefinition } from '@symfony/ux-map';
 import type { LoaderOptions } from '@googlemaps/js-api-loader';
 import { Loader } from '@googlemaps/js-api-loader';
 
@@ -33,8 +33,12 @@ let _google: typeof google;
 export default class extends AbstractMapController<
     MapOptions,
     google.maps.Map,
+    google.maps.marker.AdvancedMarkerElementOptions,
     google.maps.marker.AdvancedMarkerElement,
-    google.maps.InfoWindow
+    google.maps.InfoWindowOptions,
+    google.maps.InfoWindow,
+    google.maps.PolygonOptions,
+    google.maps.Polygon
 > {
     static values = {
         providerOptions: Object,
@@ -121,21 +125,45 @@ export default class extends AbstractMapController<
         });
 
         if (infoWindow) {
-            this.createInfoWindow({ definition: infoWindow, marker });
+            this.createInfoWindow({ definition: infoWindow, element: marker });
         }
 
         return marker;
     }
 
+    protected doCreatePolygon(
+        definition: PolygonDefinition<google.maps.Polygon, google.maps.InfoWindowOptions>
+    ): google.maps.Polygon {
+        const { points, title, infoWindow, rawOptions = {} } = definition;
+
+        const polygon = new _google.maps.Polygon({
+            ...rawOptions,
+            paths: points,
+            map: this.map,
+        });
+
+        if (title) {
+            polygon.set('title', title);
+        }
+
+        if (infoWindow) {
+            this.createInfoWindow({ definition: infoWindow, element: polygon });
+        }
+
+        return polygon;
+    }
+
     protected doCreateInfoWindow({
         definition,
-        marker,
+        element,
     }: {
-        definition: MarkerDefinition<
-            google.maps.marker.AdvancedMarkerElementOptions,
-            google.maps.InfoWindowOptions
-        >['infoWindow'];
-        marker: google.maps.marker.AdvancedMarkerElement;
+        definition:
+            | MarkerDefinition<
+                  google.maps.marker.AdvancedMarkerElementOptions,
+                  google.maps.InfoWindowOptions
+              >['infoWindow']
+            | PolygonDefinition<google.maps.Polygon, google.maps.InfoWindowOptions>['infoWindow'];
+        element: google.maps.marker.AdvancedMarkerElement | google.maps.Polygon;
     }): google.maps.InfoWindow {
         const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
 
@@ -146,24 +174,35 @@ export default class extends AbstractMapController<
             ...rawOptions,
         });
 
-        if (definition.opened) {
-            infoWindow.open({
-                map: this.map,
-                shouldFocus: false,
-                anchor: marker,
+        if (element instanceof google.maps.marker.AdvancedMarkerElement) {
+            element.addListener('click', () => {
+                if (definition.autoClose) {
+                    this.closeInfoWindowsExcept(infoWindow);
+                }
+                infoWindow.open({ map: this.map, anchor: element });
             });
-        }
 
-        marker.addListener('click', () => {
-            if (definition.autoClose) {
-                this.closeInfoWindowsExcept(infoWindow);
+            if (definition.opened) {
+                infoWindow.open({ map: this.map, anchor: element });
             }
-
-            infoWindow.open({
-                map: this.map,
-                anchor: marker,
+        } else if (element instanceof google.maps.Polygon) {
+            element.addListener('click', (event: any) => {
+                if (definition.autoClose) {
+                    this.closeInfoWindowsExcept(infoWindow);
+                }
+                infoWindow.setPosition(event.latLng);
+                infoWindow.open(this.map);
             });
-        });
+
+            if (definition.opened) {
+                const bounds = new google.maps.LatLngBounds();
+                element.getPath().forEach((point: google.maps.LatLng) => {
+                    bounds.extend(point);
+                });
+                infoWindow.setPosition(bounds.getCenter());
+                infoWindow.open({ map: this.map, anchor: element });
+            }
+        }
 
         return infoWindow;
     }
