@@ -107,54 +107,36 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
 
     public function __toString(): string
     {
-        $controllers = array_map(function (string $controllerName): string {
-            return $this->escapeAsHtmlAttr($controllerName);
-        }, $this->controllers);
-
-        // done separately so we can escape, but avoid escaping ->
-        $actions = array_map(function (array $actionData): string {
-            $controllerName = $this->escapeAsHtmlAttr($actionData['controllerName']);
-            $actionName = $this->escapeAsHtmlAttr($actionData['actionName']);
-            $eventName = $actionData['eventName'];
-
-            $action = $controllerName.'#'.$actionName;
-            if (null !== $eventName) {
-                $action = $this->escapeAsHtmlAttr($eventName).'->'.$action;
-            }
-
-            return $action;
-        }, $this->actions);
-
-        $targets = [];
-        foreach ($this->targets as $key => $targetNamesString) {
-            $targetNames = explode(' ', $targetNamesString);
-            $targets[$key] = implode(' ', array_map(function (string $targetName): string {
-                return $this->escapeAsHtmlAttr($targetName);
-            }, $targetNames));
-        }
-
         $attributes = [];
 
-        if ($controllers) {
-            $attributes[] = \sprintf('data-controller="%s"', implode(' ', $controllers));
+        if ($this->controllers) {
+            $attributes[] = 'data-controller="'.$this->escape(implode(' ', $this->controllers)).'"';
         }
 
-        if ($actions) {
-            $attributes[] = \sprintf('data-action="%s"', implode(' ', $actions));
+        if ($this->actions) {
+            $actions = [];
+            foreach ($this->actions as ['controllerName' => $controllerName, 'actionName' => $actionName, 'eventName' => $eventName]) {
+                $action = $this->escape($controllerName.'#'.$actionName);
+                if (null !== $eventName) {
+                    // done separately so we can escape, but avoid escaping ->
+                    $action = $this->escape($eventName).'->'.$action;
+                }
+
+                $actions[] = $action;
+            }
+
+            $attributes[] = 'data-action="'.implode(' ', $actions).'"';
         }
 
-        if ($targets) {
-            $attributes[] = implode(' ', array_map(function (string $key, string $value): string {
-                return \sprintf('%s="%s"', $key, $value);
-            }, array_keys($targets), $targets));
+        foreach ($this->targets as $k => $v) {
+            $attributes[] = $this->escape($k, 'html_attr').'="'.$this->escape($v).'"';
         }
 
-        return rtrim(implode(' ', [
-            ...$attributes,
-            ...array_map(function (string $attribute, string $value): string {
-                return $attribute.'="'.$this->escapeAsHtmlAttr($value).'"';
-            }, array_keys($this->attributes), $this->attributes),
-        ]));
+        foreach ($this->attributes as $k => $v) {
+            $attributes[] = $this->escape($k, 'html_attr').'="'.$this->escape($v).'"';
+        }
+
+        return implode(' ', $attributes);
     }
 
     public function toArray(): array
@@ -193,7 +175,7 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
     {
         $escaped = [];
         foreach ($this->toArray() as $key => $value) {
-            $escaped[$key] = $this->escapeAsHtmlAttr($value);
+            $escaped[$key] = $this->escape($value);
         }
 
         return $escaped;
@@ -212,18 +194,18 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
         return (string) $value;
     }
 
-    private function escapeAsHtmlAttr(mixed $value): string
+    private function escape(mixed $value, string $strategy = 'html'): string
     {
         if (class_exists(EscaperRuntime::class)) {
-            return $this->env->getRuntime(EscaperRuntime::class)->escape($value, 'html_attr');
+            return $this->env->getRuntime(EscaperRuntime::class)->escape($value, $strategy);
         }
 
         if (method_exists(EscaperExtension::class, 'escape')) {
-            return EscaperExtension::escape($this->env, $value, 'html_attr');
+            return EscaperExtension::escape($this->env, $value, $strategy);
         }
 
         // since twig/twig 3.9.0: Using the internal "twig_escape_filter" function is deprecated.
-        return (string) twig_escape_filter($this->env, $value, 'html_attr');
+        return (string) twig_escape_filter($this->env, $value, $strategy);
     }
 
     /**

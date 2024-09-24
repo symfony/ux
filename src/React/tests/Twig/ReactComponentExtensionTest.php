@@ -36,7 +36,7 @@ class ReactComponentExtensionTest extends TestCase
         );
 
         $this->assertSame(
-            'data-controller="symfony--ux-react--react" data-symfony--ux-react--react-component-value="SubDir&#x2F;MyComponent" data-symfony--ux-react--react-props-value="&#x7B;&quot;fullName&quot;&#x3A;&quot;Titouan&#x20;Galopin&quot;&#x7D;"',
+            'data-controller="symfony--ux-react--react" data-symfony--ux-react--react-component-value="SubDir/MyComponent" data-symfony--ux-react--react-props-value="{&quot;fullName&quot;:&quot;Titouan Galopin&quot;}"',
             $rendered
         );
     }
@@ -52,7 +52,7 @@ class ReactComponentExtensionTest extends TestCase
         $rendered = $extension->renderReactComponent('SubDir/MyComponent');
 
         $this->assertSame(
-            'data-controller="symfony--ux-react--react" data-symfony--ux-react--react-component-value="SubDir&#x2F;MyComponent"',
+            'data-controller="symfony--ux-react--react" data-symfony--ux-react--react-component-value="SubDir/MyComponent"',
             $rendered
         );
     }

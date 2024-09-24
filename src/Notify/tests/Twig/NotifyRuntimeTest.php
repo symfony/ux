@@ -39,13 +39,13 @@ class NotifyRuntimeTest extends TestCase
 
     public static function streamNotificationsDataProvider(): iterable
     {
-        $publicUrl = 'http&#x3A;&#x2F;&#x2F;localhost&#x3A;9090&#x2F;.well-known&#x2F;mercure';
+        $publicUrl = 'http://localhost:9090/.well-known/mercure';
 
         yield [
             [['/topic/1', '/topic/2']],
             '<div '.
                 'data-controller="symfony--ux-notify--notify" '.
-                'data-symfony--ux-notify--notify-topics-value="&#x5B;&quot;&#x5C;&#x2F;topic&#x5C;&#x2F;1&quot;,&quot;&#x5C;&#x2F;topic&#x5C;&#x2F;2&quot;&#x5D;" '.
+                'data-symfony--ux-notify--notify-topics-value="[&quot;\/topic\/1&quot;,&quot;\/topic\/2&quot;]" '.
                 'data-symfony--ux-notify--notify-hub-value="'.$publicUrl.'"'.
             '></div>',
         ];
@@ -54,7 +54,7 @@ class NotifyRuntimeTest extends TestCase
             ['/topic/1'],
             '<div '.
                 'data-controller="symfony--ux-notify--notify" '.
-                'data-symfony--ux-notify--notify-topics-value="&#x5B;&quot;&#x5C;&#x2F;topic&#x5C;&#x2F;1&quot;&#x5D;" '.
+                'data-symfony--ux-notify--notify-topics-value="[&quot;\/topic\/1&quot;]" '.
                 'data-symfony--ux-notify--notify-hub-value="'.$publicUrl.'"'.
             '></div>',
         ];
@@ -63,7 +63,7 @@ class NotifyRuntimeTest extends TestCase
             [],
             '<div '.
                 'data-controller="symfony--ux-notify--notify" '.
-                'data-symfony--ux-notify--notify-topics-value="&#x5B;&quot;https&#x3A;&#x5C;&#x2F;&#x5C;&#x2F;symfony.com&#x5C;&#x2F;notifier&quot;&#x5D;" '.
+                'data-symfony--ux-notify--notify-topics-value="[&quot;https:\/\/symfony.com\/notifier&quot;]" '.
                 'data-symfony--ux-notify--notify-hub-value="'.$publicUrl.'"'.
             '></div>',
         ];
