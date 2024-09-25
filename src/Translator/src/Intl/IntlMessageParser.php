@@ -22,9 +22,9 @@ use function Symfony\Component\String\s;
  */
 class IntlMessageParser
 {
-    private AbstractString $message;
+    private readonly AbstractString $message;
     // Minor optimization, this avoid a lot of calls to `$this->message->length()`
-    private int $messageLength;
+    private readonly int $messageLength;
 
     private Position $position;
     private bool $ignoreTag;
