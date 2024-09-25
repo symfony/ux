@@ -23,6 +23,9 @@ use function Symfony\Component\String\s;
 class IntlMessageParser
 {
     private AbstractString $message;
+    // Minor optimization, this avoid a lot of calls to `$this->message->length()`
+    private int $messageLength;
+
     private Position $position;
     private bool $ignoreTag;
     private bool $requiresOtherClause;
@@ -31,6 +34,7 @@ class IntlMessageParser
         string $message,
     ) {
         $this->message = s($message);
+        $this->messageLength = $this->message->length();
         $this->position = new Position(0, 1, 1);
         $this->ignoreTag = true;
         $this->requiresOtherClause = true;
@@ -868,7 +872,7 @@ class IntlMessageParser
 
     private function isEOF(): bool
     {
-        return $this->position->offset === $this->message->length();
+        return $this->position->offset === $this->messageLength;
     }
 
     /**
@@ -880,7 +884,7 @@ class IntlMessageParser
     private function char(): int
     {
         $offset = $this->position->offset;
-        if ($offset >= $this->message->length()) {
+        if ($offset >= $this->messageLength) {
             throw new \OutOfBoundsException();
         }
 
@@ -959,7 +963,7 @@ class IntlMessageParser
 
             return true;
         } else {
-            $this->bumpTo($this->message->length());
+            $this->bumpTo($this->messageLength);
 
             return false;
         }
@@ -977,7 +981,7 @@ class IntlMessageParser
             throw new \Exception(\sprintf('targetOffset %s must be greater than or equal to the current offset %d', $targetOffset, $this->position->offset));
         }
 
-        $targetOffset = min($targetOffset, $this->message->length());
+        $targetOffset = min($targetOffset, $this->messageLength);
         while (true) {
             $offset = $this->position->offset;
             if ($offset === $targetOffset) {
