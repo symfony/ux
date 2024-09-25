@@ -17,6 +17,7 @@
     ],
     "require": {
         "php": ">=8.3",
+        "symfony/stimulus-bundle": "^2.18.1",
         "symfony/ux-map": "^2.19"
     },
     "require-dev": {
