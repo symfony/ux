@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\TwigComponent;
 
-use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\Contracts\EventDispatcher\EventDispatcherInterface;
 use Symfony\UX\TwigComponent\Event\PostRenderEvent;
 use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
@@ -25,17 +24,13 @@ use Twig\Environment;
  */
 final class ComponentRenderer implements ComponentRendererInterface
 {
-    // TODO update DI
-    private readonly ComponentProperties $componentProperties;
-
     public function __construct(
         private Environment $twig,
         private EventDispatcherInterface $dispatcher,
         private ComponentFactory $factory,
-        PropertyAccessorInterface $propertyAccessor,
+        private ComponentProperties $componentProperties,
         private ComponentStack $componentStack,
     ) {
-        $this->componentProperties = new ComponentProperties($propertyAccessor);
     }
 
     /**

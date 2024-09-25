@@ -80,6 +80,9 @@ final class TwigComponentPass implements CompilerPassInterface
         $factoryDefinition->setArgument(4, $componentConfig);
         $factoryDefinition->setArgument(5, $componentClassMap);
 
+        $componentPropertiesDefinition = $container->findDefinition('ux.twig_component.component_properties');
+        $componentPropertiesDefinition->setArgument(1, array_fill_keys(array_keys($componentClassMap), null));
+
         $debugCommandDefinition = $container->findDefinition('ux.twig_component.command.debug');
         $debugCommandDefinition->setArgument(3, $componentClassMap);
     }

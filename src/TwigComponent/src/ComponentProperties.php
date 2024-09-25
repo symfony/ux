@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent;
 
+use Symfony\Component\Cache\Adapter\AdapterInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 
@@ -21,11 +22,24 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
  */
 final class ComponentProperties
 {
-    private array $classMetadata = [];
+    private const CACHE_KEY = 'ux.twig_component.component_properties';
+
+    /**
+     * @var array<class-string, array{
+     *     properties: array<class-string, array{string, array{string, string, bool}, bool}>,
+     *     methods: array<class-string, array{string, array{string, bool}}>,
+     *  }|null>
+     */
+    private array $classMetadata;
 
     public function __construct(
         private readonly PropertyAccessorInterface $propertyAccessor,
+        ?array $classMetadata = [],
+        private readonly ?AdapterInterface $cache = null,
     ) {
+        $cacheItem = $this->cache?->getItem(self::CACHE_KEY);
+
+        $this->classMetadata = $cacheItem?->isHit() ? [...$cacheItem->get(), ...$classMetadata] : $classMetadata;
     }
 
     /**
@@ -36,7 +50,25 @@ final class ComponentProperties
         return iterator_to_array($this->extractProperties($component, $publicProps));
     }
 
-    private function extractProperties(object $component, bool $publicProps): iterable
+    public function warmup(): void
+    {
+        if (!$this->cache) {
+            return;
+        }
+
+        foreach ($this->classMetadata as $class => $metadata) {
+            if (null === $metadata) {
+                $this->classMetadata[$class] = $this->loadClassMetadata($class);
+            }
+        }
+
+        $this->cache->save($this->cache->getItem(self::CACHE_KEY)->set($this->classMetadata));
+    }
+
+    /**
+     * @return \Generator<string, mixed>
+     */
+    private function extractProperties(object $component, bool $publicProps): \Generator
     {
         yield from $publicProps ? get_object_vars($component) : [];
 
@@ -85,12 +117,10 @@ final class ComponentProperties
                 continue;
             }
             $attribute = $attributes[0]->newInstance();
-
             $properties[$property->name] = [
                 'name' => $attribute->name ?? $property->name,
                 'getter' => $attribute->getter ? rtrim($attribute->getter, '()') : null,
             ];
-
             if ($attribute->destruct) {
                 unset($properties[$property->name]['name']);
                 $properties[$property->name]['destruct'] = true;
@@ -105,11 +135,8 @@ final class ComponentProperties
             if ($method->getNumberOfRequiredParameters()) {
                 throw new \LogicException(\sprintf('Cannot use "%s" on methods with required parameters (%s::%s).', ExposeInTemplate::class, $class, $method->name));
             }
-
             $attribute = $attributes[0]->newInstance();
-
             $name = $attribute->name ?? (str_starts_with($method->name, 'get') ? lcfirst(substr($method->name, 3)) : $method->name);
-
             $methods[$method->name] = $attribute->destruct ? ['destruct' => true] : ['name' => $name];
         }
 
