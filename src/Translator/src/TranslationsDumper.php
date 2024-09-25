@@ -155,21 +155,18 @@ TS
                 }
 
                 $parametersTypes[$domain] = $this->typeScriptMessageParametersPrinter->print($parameters);
-
                 $locales[] = $locale;
             }
         }
 
+        $typeScriptParametersType = [];
+        foreach ($parametersTypes as $domain => $parametersType) {
+            $typeScriptParametersType[] = \sprintf("'%s': { parameters: %s }", $domain, $parametersType);
+        }
+
         return \sprintf(
             'Message<{ %s }, %s>',
-            implode(', ', array_reduce(
-                array_keys($parametersTypes),
-                fn (array $carry, string $domain) => [
-                    ...$carry,
-                    \sprintf("'%s': { parameters: %s }", $domain, $parametersTypes[$domain]),
-                ],
-                [],
-            )),
+            implode(', ', $typeScriptParametersType),
             implode('|', array_map(fn (string $locale) => "'$locale'", array_unique($locales))),
         );
     }
