@@ -12,6 +12,7 @@
 namespace Symfony\UX\Translator\Intl;
 
 use Symfony\Component\String\AbstractString;
+
 use function Symfony\Component\String\s;
 
 /**
@@ -883,7 +884,7 @@ class IntlMessageParser
             throw new \OutOfBoundsException();
         }
 
-        $code = $this->message->slice($offset, 1)->codePointsAt(0)[0] ?? null;
+        $code = $this->message->codePointsAt($offset)[0] ?? null;
         if (null === $code) {
             throw new \Exception("Offset {$offset} is at invalid UTF-16 code unit boundary");
         }
