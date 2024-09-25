@@ -18,9 +18,9 @@ use function Symfony\Component\String\s;
 /**
  * Adapted from https://github.com/formatjs/formatjs/blob/590f1f81b26934c6dc7a55fff938df5436c6f158/packages/icu-messageformat-parser/parser.ts.
  *
- * @experimental
+ * @internal
  */
-class IntlMessageParser
+final class IntlMessageParser
 {
     private readonly AbstractString $message;
     // Minor optimization, this avoid a lot of calls to `$this->message->length()`
@@ -890,7 +890,7 @@ class IntlMessageParser
 
         $code = $this->message->codePointsAt($offset)[0] ?? null;
         if (null === $code) {
-            throw new \Exception("Offset {$offset} is at invalid UTF-16 code unit boundary");
+            throw new \Exception("Offset {$offset} is at invalid UTF-16 code unit boundary.");
         }
 
         return $code;
@@ -978,7 +978,7 @@ class IntlMessageParser
     private function bumpTo(int $targetOffset)
     {
         if ($this->position->offset > $targetOffset) {
-            throw new \Exception(\sprintf('targetOffset %s must be greater than or equal to the current offset %d', $targetOffset, $this->position->offset));
+            throw new \Exception(\sprintf('targetOffset "%s" must be greater than or equal to the current offset %d', $targetOffset, $this->position->offset));
         }
 
         $targetOffset = min($targetOffset, $this->messageLength);
@@ -988,7 +988,7 @@ class IntlMessageParser
                 break;
             }
             if ($offset > $targetOffset) {
-                throw new \Exception("targetOffset {$targetOffset} is at invalid UTF-16 code unit boundary");
+                throw new \Exception("targetOffset {$targetOffset} is at invalid UTF-16 code unit boundary.");
             }
 
             $this->bump();

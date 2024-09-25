@@ -17,7 +17,7 @@ use Symfony\UX\Translator\Intl\Type;
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
  *
- * @experimental
+ * @internal
  */
 final class IntlMessageParametersExtractor implements ExtractorInterface
 {

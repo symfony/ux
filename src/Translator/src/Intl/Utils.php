@@ -14,7 +14,7 @@ namespace Symfony\UX\Translator\Intl;
 use Symfony\Component\String\AbstractString;
 
 /**
- * @experimental
+ * @internal
  */
 final class Utils
 {
