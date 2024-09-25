@@ -189,13 +189,14 @@ TS
     {
         static $alreadyGenerated = [];
 
+        $translationId = s($translationId)->ascii()->snake()->upper()->replaceMatches('/^(\d)/', '_$1')->toString();
         $prefix = 0;
         do {
-            $constantName = s($translationId)->ascii()->snake()->upper()->replaceMatches('/^(\d)/', '_$1')->toString().($prefix > 0 ? '_'.$prefix : '');
+            $constantName = $translationId.($prefix > 0 ? '_'.$prefix : '');
             ++$prefix;
-        } while (\in_array($constantName, $alreadyGenerated, true));
+        } while ($alreadyGenerated[$constantName] ?? false);
 
-        $alreadyGenerated[] = $constantName;
+        $alreadyGenerated[$constantName] = true;
 
         return $constantName;
     }
