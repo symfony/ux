@@ -14,7 +14,7 @@ namespace Symfony\UX\Translator\MessageParameters\Printer;
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
  *
- * @experimental
+ * @internal
  */
 final class TypeScriptMessageParametersPrinter
 {

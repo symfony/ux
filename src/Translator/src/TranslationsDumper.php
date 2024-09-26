@@ -155,21 +155,18 @@ TS
                 }
 
                 $parametersTypes[$domain] = $this->typeScriptMessageParametersPrinter->print($parameters);
-
                 $locales[] = $locale;
             }
         }
 
+        $typeScriptParametersType = [];
+        foreach ($parametersTypes as $domain => $parametersType) {
+            $typeScriptParametersType[] = \sprintf("'%s': { parameters: %s }", $domain, $parametersType);
+        }
+
         return \sprintf(
             'Message<{ %s }, %s>',
-            implode(', ', array_reduce(
-                array_keys($parametersTypes),
-                fn (array $carry, string $domain) => [
-                    ...$carry,
-                    \sprintf("'%s': { parameters: %s }", $domain, $parametersTypes[$domain]),
-                ],
-                [],
-            )),
+            implode(', ', $typeScriptParametersType),
             implode('|', array_map(fn (string $locale) => "'$locale'", array_unique($locales))),
         );
     }
@@ -189,13 +186,14 @@ TS
     {
         static $alreadyGenerated = [];
 
+        $translationId = s($translationId)->ascii()->snake()->upper()->replaceMatches('/^(\d)/', '_$1')->toString();
         $prefix = 0;
         do {
-            $constantName = s($translationId)->ascii()->snake()->upper()->replaceMatches('/^(\d)/', '_$1')->toString().($prefix > 0 ? '_'.$prefix : '');
+            $constantName = $translationId.($prefix > 0 ? '_'.$prefix : '');
             ++$prefix;
-        } while (\in_array($constantName, $alreadyGenerated, true));
+        } while ($alreadyGenerated[$constantName] ?? false);
 
-        $alreadyGenerated[] = $constantName;
+        $alreadyGenerated[$constantName] = true;
 
         return $constantName;
     }
