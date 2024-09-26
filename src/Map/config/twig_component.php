@@ -17,15 +17,6 @@ use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
 
 return static function (ContainerConfigurator $container): void {
     $container->services()
-        ->set('.ux_map.twig_component_listener', UXMapComponentListener::class)
-            ->args([
-                service('ux_map.twig_runtime'),
-            ])
-            ->tag('kernel.event_listener', [
-                'event' => PreCreateForRenderEvent::class,
-                'method' => 'onPreCreateForRender',
-            ])
-
         ->set('.ux_map.twig_component.map', UXMapComponent::class)
             ->tag('twig.component', ['key' => 'UX:Map'])
     ;

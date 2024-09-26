@@ -52,7 +52,8 @@
         "sort-packages": true
     },
     "conflict": {
-        "symfony/flex": "<1.13"
+        "symfony/flex": "<1.13",
+        "symfony/ux-twig-component": "<2.21"
     },
     "extra": {
         "thanks": {

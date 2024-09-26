@@ -47,4 +47,12 @@ final class UXIconRuntime implements RuntimeExtensionInterface
             throw $e;
         }
     }
+
+    public function render(array $args = []): string
+    {
+        $name = $args['name'];
+        unset($args['name']);
+
+        return $this->renderIcon($name, $args);
+    }
 }
