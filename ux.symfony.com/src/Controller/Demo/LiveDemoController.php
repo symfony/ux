@@ -24,20 +24,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/demos/live-component')]
-class LiveComponentDemoController extends AbstractController
+class LiveDemoController extends AbstractController
 {
     #[Route('/', name: 'app_demo_live_component')]
     public function __invoke(): Response
     {
         return $this->redirectToRoute('app_demos');
-    }
-
-    #[Route('/auto-validating-form', name: 'app_demo_live_component_auto_validating_form')]
-    public function demoAutoValidatingForm(LiveDemoRepository $liveDemoRepository): Response
-    {
-        return $this->render('demos/live_component/auto_validating_form.html.twig', [
-            'demo' => $liveDemoRepository->find('auto-validating-form'),
-        ]);
     }
 
     #[Route('/form-collection-type/{id}', name: 'app_demo_live_component_form_collection_type', defaults: ['id' => null])]
@@ -66,14 +58,6 @@ class LiveComponentDemoController extends AbstractController
         ]);
     }
 
-    #[Route('/dependent-form-fields', name: 'app_demo_live_component_dependent_form_fields')]
-    public function demoDependentFormFields(LiveDemoRepository $liveDemoRepository): Response
-    {
-        return $this->render('demos/live_component/dependent_form_fields.html.twig', [
-            'demo' => $liveDemoRepository->find('dependent-form-fields'),
-        ]);
-    }
-
     #[Route('/voting', name: 'app_demo_live_component_voting')]
     public function demoVoting(LiveDemoRepository $liveDemoRepository, FoodRepository $foodRepository): Response
     {
@@ -97,14 +81,6 @@ class LiveComponentDemoController extends AbstractController
         ]);
     }
 
-    #[Route('/chartjs', name: 'app_demo_live_component_chartjs')]
-    public function chartJs(LiveDemoRepository $liveDemoRepository): Response
-    {
-        return $this->render('demos/live_component/chartjs.html.twig', parameters: [
-            'demo' => $liveDemoRepository->find('chartjs'),
-        ]);
-    }
-
     #[Route('/invoice/{id}', name: 'app_demo_live_component_invoice', defaults: ['id' => null])]
     public function invoice(LiveDemoRepository $liveDemoRepository, ?Invoice $invoice = null): Response
     {
@@ -116,35 +92,20 @@ class LiveComponentDemoController extends AbstractController
         ]);
     }
 
+    #[Route('/{demo}', name: 'app_demo_live_component_demo')]
+    #[Route('/auto-validating-form', name: 'app_demo_live_component_auto_validating_form')]
+    #[Route('/chartjs', name: 'app_demo_live_component_chartjs')]
+    #[Route('/dependent-form-fields', name: 'app_demo_live_component_dependent_form_fields')]
     #[Route('/infinite-scroll', name: 'app_demo_live_component_infinite_scroll')]
-    public function infiniteScroll(LiveDemoRepository $liveDemoRepository): Response
-    {
-        return $this->render('demos/live_component/infinite_scroll.html.twig', parameters: [
-            'demo' => $liveDemoRepository->find('infinite-scroll'),
-        ]);
-    }
-
     #[Route('/infinite-scroll-2', name: 'app_demo_live_component_infinite_scroll_2')]
-    public function infiniteScroll2(LiveDemoRepository $liveDemoRepository): Response
-    {
-        return $this->render('demos/live_component/infinite_scroll_2.html.twig', parameters: [
-            'demo' => $liveDemoRepository->find('infinite-scroll-2'),
-        ]);
-    }
-
     #[Route('/product-form', name: 'app_demo_live_component_product_form')]
-    public function productForm(LiveDemoRepository $liveDemoRepository): Response
-    {
-        return $this->render('demos/live_component/product_form.html.twig', parameters: [
-            'demo' => $liveDemoRepository->find('product-form'),
-        ]);
-    }
-
     #[Route('/upload', name: 'app_demo_live_component_upload')]
-    public function uploadFiles(LiveDemoRepository $liveDemoRepository): Response
-    {
-        return $this->render('demos/live_component/upload.html.twig', parameters: [
-            'demo' => $liveDemoRepository->find('upload'),
-        ]);
+    public function demo(
+        LiveDemoRepository $liveDemoRepository,
+        string $demo,
+    ): Response {
+        $demo = $liveDemoRepository->find($demo);
+
+        return $this->render($demo->getTemplate(), ['demo' => $demo]);
     }
 }
