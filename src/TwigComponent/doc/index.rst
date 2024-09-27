@@ -1618,15 +1618,15 @@ when using nested components:
     </twig:Card>
 
     {# ✅ this also works because it only uses the Twig syntax #}
-    <twig:Card>
+    {% component Card %}
         {# ... #}
 
-        <twig:block name="footer">
+        {% block footer %}
             {% component 'Button:Primary' with {isBlock: true} %}
                 {% block content %}Edit{% endblock %}
             {% endcomponent %}
-        </twig:block>
-    </twig:Card>
+        {% endblock %}
+    {% endcomponent %}
 
 If you're using `Live Components`_, then there *are* some guidelines related to
 how the re-rendering of parent and child components works. Read `Live Nested Components`_.
