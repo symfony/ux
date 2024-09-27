@@ -42,6 +42,9 @@
         "symfony/twig-bundle": "^6.4|^7.0",
         "symfony/ux-twig-component": "^2.18"
     },
+    "conflict": {
+        "symfony/ux-twig-component": "<2.21"
+    },
     "extra": {
         "thanks": {
             "name": "symfony/ux",

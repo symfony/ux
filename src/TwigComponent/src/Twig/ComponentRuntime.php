@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\TwigComponent\Twig;
 
+use Symfony\Component\DependencyInjection\ServiceLocator;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 
@@ -24,15 +25,13 @@ final class ComponentRuntime
 {
     public function __construct(
         private readonly ComponentRenderer $renderer,
+        private readonly ServiceLocator $renderers,
     ) {
     }
 
-    /**
-     * @param array<string, mixed> $props
-     */
-    public function render(string $name, array $props = []): string
+    public function finishEmbedComponent(): void
     {
-        return $this->renderer->createAndRender($name, $props);
+        $this->renderer->finishEmbeddedComponentRender();
     }
 
     /**
@@ -43,6 +42,15 @@ final class ComponentRuntime
         return $this->renderer->preCreateForRender($name, $props);
     }
 
+    public function render(string $name, array $props = []): string
+    {
+        if ($this->renderers->has($normalized = strtolower($name))) {
+            return $this->renderers->get($normalized)->render($props);
+        }
+
+        return $this->renderer->createAndRender($name, $props);
+    }
+
     /**
      * @param array<string, mixed> $props
      * @param array<string, mixed> $context
@@ -50,10 +58,5 @@ final class ComponentRuntime
     public function startEmbedComponent(string $name, array $props, array $context, string $hostTemplateName, int $index): PreRenderEvent
     {
         return $this->renderer->startEmbeddedComponentRender($name, $props, $context, $hostTemplateName, $index);
-    }
-
-    public function finishEmbedComponent(): void
-    {
-        $this->renderer->finishEmbeddedComponentRender();
     }
 }

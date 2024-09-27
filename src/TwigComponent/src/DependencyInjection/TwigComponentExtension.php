@@ -36,6 +36,8 @@ use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 use Symfony\UX\TwigComponent\Twig\ComponentLexer;
 use Symfony\UX\TwigComponent\Twig\ComponentRuntime;
 use Symfony\UX\TwigComponent\Twig\TwigEnvironmentConfigurator;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\service_locator;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -108,6 +110,10 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
         $container->register('.ux.twig_component.twig.component_runtime', ComponentRuntime::class)
             ->setArguments([
                 new Reference('ux.twig_component.component_renderer'),
+                service_locator([
+                    'ux:icon' => service('.ux_icons.twig_icon_runtime')->nullOnInvalid(),
+                    'ux:map' => service('ux_map.twig_runtime')->nullOnInvalid(),
+                ]),
             ])
             ->addTag('twig.runtime')
         ;
