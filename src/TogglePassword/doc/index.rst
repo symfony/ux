@@ -82,6 +82,8 @@ You can disable it by passing ``use_toggle_form_theme`` option to ``false``::
 
    *Note*: If you choose to disable provided package form theme, you will have to handle styling by yourself.
 
+.. _ux-password-customizing-labels-and-icons:
+
 Customizing Labels and Icons
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -264,29 +266,34 @@ Then in your form, add your controller as an HTML attribute::
 Usage without Symfony Forms
 ---------------------------
 
-You can also use the TogglePassword with native HTML inputs:
+You can also use the TogglePassword with native HTML inputs. Inside the ``stimulus_controller()``
+function you can use the same :ref:`options to customize labels and icons <ux-password-customizing-labels-and-icons>`
+shown in previous sections:
 
 .. code-block:: html+twig
 
-    // ...
+    {# ... #}
 
-    <div class="toggle-password-container"> // Add "toggle-password-container" or a class that applies position: relative to this container.
+    {# add "toggle-password-container" or a class that applies "position: relative" to this container #}
+    <div class="toggle-password-container">
         <label for="password">Password</label>
         <input
             id="password"
             name="password"
             type="password"
             {{ stimulus_controller('symfony/ux-toggle-password/toggle-password', {
-                    {# visibleLabel: 'Show password', // If you want to modify this label. #}
-                    {# visibleIcon: 'Some svg icon', // If you want to modify this icon. #}
-                    {# hiddenLabel: 'Hide password', // If you want to modify this label. #}
-                    {# hiddenIcon: 'Some svg icon', // If you want to modify this icon. #}
-                    buttonClasses: ['toggle-password-button'], // Add as many classes as you wish. "toggle-password-button" is needed to activate the default CSS.
+                visibleLabel: 'Show password',
+                visibleIcon: 'Name of some SVG icon',
+                hiddenLabel: 'Hide password',
+                hiddenIcon: 'Name of some SVG icon',
+                # you can add your own CSS classes if needed, but the following
+                # CSS class is required to activate the default styles
+                buttonClasses: ['toggle-password-button'],
             }) }}
         >
     </div>
 
-    // ...
+    {# ... #}
 
 Backward Compatibility promise
 ------------------------------
