@@ -11,7 +11,7 @@ fi
 
 runTestSuite() {
     echo -e "Running tests for $workspace...\n"
-    yarn workspace $workspace run vitest --run || { all_tests_passed=false; }
+    yarn workspace $workspace run -T vitest --run || { all_tests_passed=false; }
 }
 
 processWorkspace() {
@@ -48,19 +48,21 @@ processWorkspace() {
     fi
 }
 
-# Get all workspace names
-workspaces_info=$(yarn -s workspaces info)
-
 # Iterate over each workspace using process substitution
 while IFS= read -r workspace_info; do
     # Split the workspace_info into workspace and location
-    workspace=$(echo "$workspace_info" | awk '{print $1}')
-    location=$(echo "$workspace_info" | awk '{print $2}')
+    workspace=$(echo "$workspace_info" | jq -r '.name')
+    location=$(echo "$workspace_info" | jq -r '.location')
+    
+    # Skip the root workspace
+    if [ $workspace == "null" ]; then
+        continue
+    fi
 
     # Call the function to process the workspace
     processWorkspace "$workspace" "$location"
 
-done < <(echo "$workspaces_info" | jq -r 'to_entries[0:] | .[] | "\(.key) \(.value.location)"')
+done < <(yarn workspaces list --json)
 
 # Check the flag at the end and exit with code 1 if any test failed
 if [ "$all_tests_passed" = false ]; then

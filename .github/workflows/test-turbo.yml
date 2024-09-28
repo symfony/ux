@@ -62,6 +62,8 @@ jobs:
             - name: Checkout
               uses: actions/checkout@v4
 
+            - run: corepack enable
+
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
@@ -75,7 +77,7 @@ jobs:
 
             - name: Get yarn cache directory path
               id: yarn-cache-dir-path
-              run: echo "dir=$(yarn cache dir)" >> $GITHUB_OUTPUT
+              run: echo "dir=$(yarn config get cacheFolder)" >> $GITHUB_OUTPUT
 
             - uses: actions/cache@v4
               id: yarn-cache
@@ -87,7 +89,7 @@ jobs:
 
             - name: Install JavaScript dependencies
               working-directory: src/Turbo/tests/app
-              run: yarn install
+              run: touch yarn.lock && yarn install --mode update-lockfile && yarn install
 
             - name: Build JavaScript
               working-directory: src/Turbo/tests/app

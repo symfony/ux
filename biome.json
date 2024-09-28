@@ -13,7 +13,7 @@
             "src/*/src/Bridge/*/assets/src/**",
             "src/*/src/Bridge/*/assets/test/**"
         ],
-        "ignore": ["**/composer.json", "**/vendor", "**/node_modules"]
+        "ignore": ["**/composer.json", "**/vendor", "**/package.json", "**/node_modules"]
     },
     "linter": {
         "rules": {

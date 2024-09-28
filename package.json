@@ -1,6 +1,10 @@
 {
     "private": true,
-    "workspaces": ["src/*/assets", "src/*/src/Bridge/*/assets"],
+    "packageManager": "yarn@4.5.0",
+    "workspaces": [
+        "src/*/assets",
+        "src/*/src/Bridge/*/assets"
+    ],
     "scripts": {
         "build": "node bin/build_javascript.js && node bin/build_styles.js",
         "test": "bin/run-vitest-all.sh",
@@ -28,12 +32,11 @@
         "vitest": "^2.1.1"
     },
     "resolutions": {
-        "@swup/prettier-config": "link:node_modules/.cache/null",
-        "@swup/browserslist-config": "link:node_modules/.cache/null",
-        "microbundle": "link:node_modules/.cache/null",
-        "prettier": "link:node_modules/.cache/null",
-        "shelljs": "link:node_modules/.cache/null",
-        "shelljs-live": "link:node_modules/.cache/null"
-    },
-    "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+        "@swup/plugin/@swup/prettier-config": "link:node_modules/.cache/null",
+        "@swup/plugin/@swup/browserslist-config": "link:node_modules/.cache/null",
+        "@swup/plugin/microbundle": "link:node_modules/.cache/null",
+        "@swup/plugin/prettier": "link:node_modules/.cache/null",
+        "@swup/plugin/shelljs": "link:node_modules/.cache/null",
+        "@swup/plugin/shelljs-live": "link:node_modules/.cache/null"
+    }
 }
