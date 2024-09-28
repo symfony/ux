@@ -15,16 +15,17 @@
         "@babel/preset-react": "^7.24.7",
         "@babel/preset-typescript": "^7.24.7",
         "@biomejs/biome": "^1.8.3",
-        "@rollup/plugin-commonjs": "^26.0.1",
-        "@rollup/plugin-node-resolve": "^15.2.3",
+        "@rollup/plugin-commonjs": "^28.0.0",
+        "@rollup/plugin-node-resolve": "^15.3.0",
         "@rollup/plugin-typescript": "^11.1.6",
         "@symfony/stimulus-testing": "^2.0.1",
-        "@vitest/browser": "^2.0.5",
+        "@vitest/browser": "^2.1.1",
         "clean-css-cli": "^5.6.2",
         "playwright": "^1.47.0",
-        "rollup": "^4.21.0",
+        "rollup": "^4.22.5",
         "tslib": "^2.6.3",
         "typescript": "^5.5.4",
-        "vitest": "^2.0.5"
-    }
+        "vitest": "^2.1.1"
+    },
+    "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
 }
