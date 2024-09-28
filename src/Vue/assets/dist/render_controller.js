@@ -57,20 +57,16 @@ class default_1 extends Controller {
         this.dispatch(name, { detail: payload, prefix: 'vue' });
     }
     wrapComponent(component) {
-        return defineComponent({
-            setup: () => {
-                const props = this.props;
-                return () => h(component, {
-                    ...props,
-                    ...Object.fromEntries(Object.keys(props).map((propName) => [
-                        `onUpdate:${propName}`,
-                        (value) => {
-                            props[propName] = value;
-                        },
-                    ])),
-                });
-            },
-        });
+        const { props } = this;
+        return defineComponent(() => () => h(component, {
+            ...props,
+            ...Object.fromEntries(Object.keys(props).map((propName) => [
+                `onUpdate:${propName}`,
+                (value) => {
+                    props[propName] = value;
+                },
+            ])),
+        }));
     }
 }
 default_1.values = {

@@ -107,23 +107,21 @@ export default class extends Controller<Element & { __vue_app__?: App<Element> }
     }
 
     private wrapComponent(component: Component): Component {
-        return defineComponent({
-            setup: () => {
-                const props = this.props;
+        const { props } = this;
 
-                return () =>
-                    h(component, {
-                        ...props,
-                        ...Object.fromEntries(
-                            Object.keys(props).map((propName) => [
-                                `onUpdate:${propName}`,
-                                (value: unknown) => {
-                                    props[propName] = value;
-                                },
-                            ])
-                        ),
-                    });
-            },
-        });
+        return defineComponent(
+            () => () =>
+                h(component, {
+                    ...props,
+                    ...Object.fromEntries(
+                        Object.keys(props).map((propName) => [
+                            `onUpdate:${propName}`,
+                            (value: unknown) => {
+                                props[propName] = value;
+                            },
+                        ])
+                    ),
+                })
+        );
     }
 }
