@@ -23,6 +23,11 @@ class default_1 extends Controller {
         this.props = shallowReactive({ ...props });
         watch(this.props, (props) => {
             this.propsValue = toRaw(props);
+            this.dispatchEvent('props-update', {
+                componentName: this.componentValue,
+                props: this.props,
+                app: this.app,
+            });
         }, { flush: 'post' });
     }
     connect() {

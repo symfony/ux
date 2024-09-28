@@ -60,6 +60,11 @@ export default class extends Controller<Element & { __vue_app__?: App<Element> }
             this.props,
             (props) => {
                 this.propsValue = toRaw(props);
+                this.dispatchEvent('props-update', {
+                    componentName: this.componentValue,
+                    props: this.props,
+                    app: this.app,
+                });
             },
             { flush: 'post' }
         );
