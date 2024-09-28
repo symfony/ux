@@ -21,11 +21,11 @@
         }
     },
     "peerDependencies": {
-        "typed.js": "^2.0",
-        "@hotwired/stimulus": "^3.0.0"
+        "@hotwired/stimulus": "^3.0.0",
+        "typed.js": "^2.0"
     },
     "devDependencies": {
-        "typed.js": "^2.0",
-        "@hotwired/stimulus": "^3.0.0"
+        "@hotwired/stimulus": "^3.0.0",
+        "typed.js": "^2.0"
     }
 }

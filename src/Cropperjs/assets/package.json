@@ -27,11 +27,11 @@
         }
     },
     "peerDependencies": {
-        "cropperjs": "^1.5.9",
-        "@hotwired/stimulus": "^3.0.0"
+        "@hotwired/stimulus": "^3.0.0",
+        "cropperjs": "^1.5.9"
     },
     "devDependencies": {
-        "cropperjs": "^1.5.9",
-        "@hotwired/stimulus": "^3.0.0"
+        "@hotwired/stimulus": "^3.0.0",
+        "cropperjs": "^1.5.9"
     }
 }
