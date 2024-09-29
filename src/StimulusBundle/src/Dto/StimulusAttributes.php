@@ -75,7 +75,7 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
         $this->actions[] = [
             'controllerName' => $controllerName,
             'actionName' => $actionName,
-            'eventName' => $eventName,
+            'eventName' => null !== $eventName ? $this->normalizeEventName($eventName) : null,
         ];
 
         foreach ($parameters as $name => $value) {
@@ -216,6 +216,14 @@ class StimulusAttributes implements \Stringable, \IteratorAggregate
     private function normalizeControllerName(string $controllerName): string
     {
         return preg_replace('/^@/', '', str_replace('_', '-', str_replace('/', '--', $controllerName)));
+    }
+
+    /**
+     * @see https://stimulus.hotwired.dev/reference/actions
+     */
+    private function normalizeEventName(string $eventName): string
+    {
+        return preg_replace_callback('/^.+(?=:)/', fn (array $matches): string => $this->normalizeControllerName($matches[0]), $eventName);
     }
 
     /**
