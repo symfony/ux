@@ -112,29 +112,28 @@ final class ComponentRenderer implements ComponentRendererInterface
         $classProps = $isAnonymous ? [] : iterator_to_array($this->exposedVariables($component, $metadata->isPublicPropsExposed()));
 
         // expose public properties and properties marked with ExposeInTemplate attribute
-        $props = array_merge($mounted->getInputProps(), $classProps);
-        $variables = array_merge(
-            // first so values can be overridden
-            $context,
+        $props = [...$mounted->getInputProps(), ...$classProps];
+        $event = new PreRenderEvent($mounted, $metadata, [
+            ...$context,
+            ...$props,
+            $metadata->getAttributesVar() => $mounted->getAttributes(),
+        ]);
+
+        $this->dispatcher->dispatch($event);
+
+        $event->setVariables([
+            ...$event->getVariables(),
+            // add the component as "this"
+            'this' => $component,
+            'computed' => new ComputedPropertiesProxy($component),
+            'outerScope' => $context,
+            // keep this line for BC break reasons
+            '__props' => $classProps,
             // add the context in a separate variable to keep track
             // of what is coming from outside the component, excluding props
             // as they override initial context values
-            ['__context' => array_diff_key($context, $props)],
-            // keep reference to old context
-            ['outerScope' => $context],
-            // add the component as "this"
-            ['this' => $component],
-            // add computed properties proxy
-            ['computed' => new ComputedPropertiesProxy($component)],
-            $props,
-            // keep this line for BC break reasons
-            ['__props' => $classProps],
-            // add attributes
-            [$metadata->getAttributesVar() => $mounted->getAttributes()],
-        );
-        $event = new PreRenderEvent($mounted, $metadata, $variables);
-
-        $this->dispatcher->dispatch($event);
+            '__context' => array_diff_key($context, $props),
+        ]);
 
         return $event;
     }
