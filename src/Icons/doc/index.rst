@@ -541,30 +541,30 @@ Full Configuration
 
     # config/packages/ux_icons.yaml
     ux_icons:
-        # The local directory where icons are stored.
+        # The local directory where icons are stored
         icon_dir: '%kernel.project_dir%/assets/icons'
 
-        # Default attributes to add to all icons.
+        # Default attributes to add to all icons
         default_icon_attributes:
-            # Default:
             fill: currentColor
+            'font-size': '1.25em'
 
-        # Icon aliases (alias => icon name).
+        # Icon aliases (alias => icon name)
         aliases:
-            # Exemple:
             dots: 'clarity:ellipsis-horizontal-line'
+            'tabler:save': 'tabler:device-floppy'
 
-        # Configuration for the "on demand" icons powered by Iconify.design.
+        # Configuration for the "on demand" icons powered by Iconify.design
         iconify:
            enabled: true
 
-           # Whether to use the "on demand" icons powered by Iconify.design.
+           # Whether to use the "on demand" icons powered by Iconify.design
            on_demand: true
 
-           # The endpoint for the Iconify API.
+           # The endpoint for the Iconify API
            endpoint: 'https://api.iconify.design'
 
-        # Whether to ignore errors when an icon is not found.
+        # Whether to ignore errors when an icon is not found
         ignore_not_found: false
 
 Learn more
