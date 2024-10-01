@@ -4,6 +4,7 @@
 
 -   Add `Helper/TurboStream::append()` et al. methods
 -   Add `TurboStreamResponse`
+-   Add `<twig:Turbo:Stream:*>` components
 
 ## 2.19.0
 
