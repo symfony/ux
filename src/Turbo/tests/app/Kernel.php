@@ -38,6 +38,7 @@ use Symfony\Component\Mercure\Update;
 use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\StimulusBundle\StimulusBundle;
 use Symfony\UX\Turbo\TurboBundle;
+use Symfony\UX\TwigComponent\TwigComponentBundle;
 use Symfony\WebpackEncoreBundle\WebpackEncoreBundle;
 use Twig\Environment;
 
@@ -54,6 +55,7 @@ class Kernel extends BaseKernel
         yield new DoctrineBundle();
         yield new TwigBundle();
         yield new MercureBundle();
+        yield new TwigComponentBundle();
         yield new TurboBundle();
         yield new WebpackEncoreBundle();
         yield new StimulusBundle();
@@ -119,6 +121,11 @@ class Kernel extends BaseKernel
                     'jwt' => $_SERVER['MERCURE_JWT_TOKEN'] ?? 'eyJhbGciOiJIUzI1NiJ9.eyJtZXJjdXJlIjp7InB1Ymxpc2giOlsiKiJdfX0.vhMwOaN5K68BTIhWokMLOeOJO4EPfT64brd8euJOA4M',
                 ],
             ],
+        ]);
+
+        $container->extension('twig_component', [
+            'anonymous_template_directory' => 'components/',
+            'defaults' => ['App\Twig\Components\\' => 'components/'],
         ]);
     }
 

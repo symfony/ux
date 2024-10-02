@@ -1,19 +1,15 @@
 {% block create %}
-    <turbo-stream action="append" target="books">
-        <template>
-            <div id="{{ 'book_' ~ id }}">{{ entity.title }} (#{{ id }})</div>
-        </template>
-    </turbo-stream>
+    <twig:Turbo:Stream:Append target="#books">
+        <div id="book_{{ id }}">{{ entity.title }} (#{{ id }})</div>
+    </twig:Turbo:Stream:Append>
 {% endblock %}
 
 {% block update %}
-    <turbo-stream action="update" target="book_{{ id }}">
-        <template>
-            {{ entity.title }} (#{{ id }}, updated)
-        </template>
-    </turbo-stream>
+    <twig:Turbo:Stream:Update target="#book_{{ id }}">
+        {{ entity.title }} (#{{ id }}, updated)
+    </twig:Turbo:Stream:Update>
 {% endblock %}
 
 {% block remove %}
-    <turbo-stream action="remove" target="book_{{ id }}"></turbo-stream>
+    <twig:Turbo:Stream:Remove target="#book_{{ id }}"></twig:Turbo:Stream:Remove>
 {% endblock %}
