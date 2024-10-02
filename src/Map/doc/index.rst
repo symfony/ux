@@ -120,7 +120,7 @@ A map is created by calling ``new Map()``. You can configure the center, zoom, a
             ;
 
             // 3. You can also add Polygons, which represents an area enclosed by a series of `Point` instances
-            $map->addPolygon(new Polygon(
+            $myMap->addPolygon(new Polygon(
                 points: [
                     new Point(48.8566, 2.3522),
                     new Point(45.7640, 4.8357),
