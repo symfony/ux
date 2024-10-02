@@ -220,7 +220,7 @@ class Kernel extends BaseKernel
                     $song->artist = $doctrine->find(Artist::class, $artistId);
                 }
             }
-            if ($remove = $request->get('remove')) {
+            if ($request->get('remove')) {
                 $doctrine->remove($song);
             } else {
                 $doctrine->persist($song);

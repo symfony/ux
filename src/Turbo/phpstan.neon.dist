@@ -45,3 +45,8 @@ parameters:
 			message: "#^Call to an undefined method Doctrine\\\\ORM\\\\Event\\\\PostFlushEventArgs\\:\\:getEntityManager\\(\\)\\.$#"
 			count: 1
 			path: src/Doctrine/BroadcastListener.php
+
+		-
+			message: "#^Method Symfony\\\\UX\\\\Turbo\\\\TurboStreamResponse::__construct\\(\\) has parameter \\$headers with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: src/TurboStreamResponse.php

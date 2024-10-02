@@ -374,7 +374,7 @@ Let's discover how to use Turbo Streams to enhance your `Symfony forms`_::
     {% endblock %}
 
 Supported actions are ``append``, ``prepend``, ``replace``, ``update``,
-``remove``, ``before`` and ``after``.
+``remove``, ``before``, ``after`` and ``refresh``.
 `Read the Turbo Streams documentation for more details`_.
 
 Resetting the Form
