@@ -53,6 +53,7 @@ return static function (ContainerConfigurator $container): void {
                 service('logger')->ignoreOnInvalid(),
             ])
             ->tag('twig.runtime')
+            ->tag('ux.twig_component.twig_renderer', ['key' => 'ux:icon'])
 
         ->set('.ux_icons.icon_renderer', IconRenderer::class)
             ->args([

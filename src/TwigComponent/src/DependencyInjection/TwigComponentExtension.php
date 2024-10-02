@@ -17,6 +17,8 @@ use Symfony\Component\Config\Definition\ConfigurationInterface;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Argument\AbstractArgument;
+use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
+use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
@@ -36,8 +38,6 @@ use Symfony\UX\TwigComponent\Twig\ComponentExtension;
 use Symfony\UX\TwigComponent\Twig\ComponentLexer;
 use Symfony\UX\TwigComponent\Twig\ComponentRuntime;
 use Symfony\UX\TwigComponent\Twig\TwigEnvironmentConfigurator;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\service;
-use function Symfony\Component\DependencyInjection\Loader\Configurator\service_locator;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -110,10 +110,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
         $container->register('.ux.twig_component.twig.component_runtime', ComponentRuntime::class)
             ->setArguments([
                 new Reference('ux.twig_component.component_renderer'),
-                service_locator([
-                    'ux:icon' => service('.ux_icons.twig_icon_runtime')->nullOnInvalid(),
-                    'ux:map' => service('ux_map.twig_runtime')->nullOnInvalid(),
-                ]),
+                new ServiceLocatorArgument(new TaggedIteratorArgument('ux.twig_component.twig_renderer', indexAttribute: 'key', needsIndexes: true)),
             ])
             ->addTag('twig.runtime')
         ;
