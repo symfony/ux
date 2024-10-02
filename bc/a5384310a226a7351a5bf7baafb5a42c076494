@@ -1,0 +1,195 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-09-23T13:04:13Z
+
+Updated
+
+---------------------------------------------------------------------------
+
+by rvmourik at 2024-09-23T14:20:21Z
+
+Great addition imho, but what about multiple streams in a single response? Or is that the Twig solution you are talking about @nicolas-grekas?
+
+```php
+return new TurboResponse(TurboStream::append($target, $html));
+```
+
+Regarding DX it is not optimal to have this I guess:
+
+```php
+return new TurboResponse(TurboStream::append($target, $html) . TurboStream::replace($target2, $html2));
+```
+
+Is this something to consider?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-23T16:21:50Z
+
+Thanks a lot @nicolas-grekas! More comments tomorrow :)
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-09-23T16:28:53Z
+
+@rvmourik concatenation FTW indeed. I don't see a better option. In the end, any alternative would just be a fancy way to do concatenation.
+
+---------------------------------------------------------------------------
+
+by rvmourik at 2024-09-23T16:52:07Z
+
+> @rvmourik concatenation FTW indeed. I don't see a better option. In the end, any alternative would just be a fancy way to do concatenation.
+
+@nicolas-grekas thanks for the quick reply.
+
+I know the TurboResponse is extending the base Response class but if we take a look at the JsonResponse there is also an option to pass an array or a mixed value, when it is mixed in the end is converts it to an ArrayObject. Could the TurboResponse do something similar, always convert the passed stream(s) to be a collection of streams and processing them before passing it to the base Response?
+
+Maybe I am overthinking it? 😇
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-09-24T06:28:09Z
+
+If we decide to add some helpers to make using Turbo more user-friendly, what if we all DX and provide a fluent interface to not deal with any internal details?
+
+```php
+return TurboResponse()
+    ->append($targetId, $html)
+    ->prepend($targetId, $html)
+    ->replace($targetId, $html, $method = 'morph')
+    ->update($targetId, $html, $method = 'morph')
+    ->remove($targetId, $html)
+    ->before($targetId, $html)
+    ->after($targetId, $html)
+    // useful if the action (append, prepend, etc.) is a PHP variable:
+    ->stream($action, $targetId, $html)
+;
+```
+
+@rvmourik your example now would look like this:
+
+```php
+// before
+return new TurboResponse(TurboStream::append($target, $html) . TurboStream::replace($target2, $html2));
+
+// after
+return new TurboResponse()
+    ->append($target, $html)
+    ->append($target2, $html2)
+;
+```
+
+There's a final consideration, which is not covered either in the current proposal of this PR. In addition to `target` (the targetID), you can use `targets` (a CSS selector) to apply the stream to multiple targets (See https://turbo.hotwired.dev/handbook/streams#actions-with-multiple-targets).
+
+Adding an optional `targets` param would look ugly in my opinion:
+
+```php
+return TurboResponse()
+    ->append(string|null $targetId, string|null $targets, string $html)
+    ->prepend(string|null $targetId, string|null $targets, string $html)
+    // ...
+```
+
+We could add a `*All()` series of methods:
+
+```php
+return TurboResponse()
+    ->append(string $targetId, string $html)
+    ->appendAll(string $targets, string $html)
+
+    ->prepend(string $targetId, string $html)
+    ->prependAll(string $targets, string $html)
+    // ...
+```
+
+What do you think?
+
+---------------------------------------------------------------------------
+
+by rvmourik at 2024-09-24T06:35:20Z
+
+> If we decide to add some helpers to make using Turbo more user-friendly, what if we all DX and provide a fluent interface to not deal with any internal details?
+>
+> ```
+> return TurboResponse()
+>     ->append($targetId, $html)
+>     ->prepend($targetId, $html)
+>     ->replace($targetId, $html, $method = 'morph')
+>     ->update($targetId, $html, $method = 'morph')
+>     ->remove($targetId, $html)
+>     ->before($targetId, $html)
+>     ->after($targetId, $html)
+>     // useful if the action (append, prepend, etc.) is a PHP variable:
+>     ->stream($action, $targetId, $html)
+> ;
+> ```
+>
+> @rvmourik your example now would look like this:
+>
+> ```
+> // before
+> return new TurboResponse(TurboStream::append($target, $html) . TurboStream::replace($target2, $html2));
+>
+> // after
+> return new TurboResponse()
+>     ->append($target, $html)
+>     ->append($target2, $html2)
+> ;
+> ```
+>
+> There's a final consideration, which is not covered either in the current proposal of this PR. In addition to `target` (the targetID), you can use `targets` (a CSS selector) to apply the stream to multiple targets (See https://turbo.hotwired.dev/handbook/streams#actions-with-multiple-targets).
+>
+> Adding an optional `targets` param would look ugly in my opinion:
+>
+> ```
+> return TurboResponse()
+>     ->append(string|null $targetId, string|null $targets, $html)
+>     ->prepend(string|null $targetId, string|null $targets, $html)
+>     // ...
+> ```
+>
+> We could add a `*All()` series of methods:
+>
+> ```
+> return TurboResponse()
+>     ->append(string $targetId, $html)
+>     ->appendAll(string $targets, $html)
+>
+>     ->prepend(string $targetId, string $html)
+>     ->prependAll(string $targets, $html)
+>     // ...
+> ```
+>
+> What do you think?
+
+I think this is a good suggestion, maybe in a future PR the same can be done with adding a helper for a regular turbo frame. I find my self often doing one of the following:
+
+a) creating a twig file only with the frame and HTML in it
+b) manually building a response like in the helper in this PR en load the twig file between the <turbo-frame> tag in the response.
+
+Thanks all.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-01T16:18:28Z
+
+> what if we all DX and provide a fluent interface
+
+Works for me, I added the fluent methods to the TurboStreamResponse class.
+Note that I don't know yet if that should be the recommended way to generate turbo stream: the drawback of this approach is that it splits targets from actual HTML, so that it can be easy to forget to update a target after updating a template. Putting the stream tags in the template that they target would improve this by providing locality.
+
+> In addition to target (the targetID), you can use targets (a CSS selector) to apply the stream to multiple targets
+
+You might have missed this in the attached patch: this PR uses only targets, with an "s". That means you have to use `#foo` to target id foo. To me, this is the most empowering and DX-friendly way to express the target. Using target (no "s") provides zero benefits.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-01T16:24:38Z
+
+PR ready IMHO (failure unrelated IIUC)
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-02T16:39:53Z
+
+All green :)
