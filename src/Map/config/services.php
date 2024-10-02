@@ -47,5 +47,6 @@ return static function (ContainerConfigurator $container): void {
                 service('ux_map.renderers'),
             ])
             ->tag('twig.runtime')
+            ->tag('ux.twig_component.twig_renderer', ['key' => 'ux:map'])
     ;
 };
