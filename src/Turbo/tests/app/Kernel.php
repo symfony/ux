@@ -39,7 +39,6 @@ use Symfony\Component\Routing\Loader\Configurator\RoutingConfigurator;
 use Symfony\UX\StimulusBundle\StimulusBundle;
 use Symfony\UX\Turbo\TurboBundle;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
-use Symfony\WebpackEncoreBundle\WebpackEncoreBundle;
 use Twig\Environment;
 
 /**
@@ -57,7 +56,6 @@ class Kernel extends BaseKernel
         yield new MercureBundle();
         yield new TwigComponentBundle();
         yield new TurboBundle();
-        yield new WebpackEncoreBundle();
         yield new StimulusBundle();
         yield new WebProfilerBundle();
         yield new DebugBundle();
@@ -67,9 +65,12 @@ class Kernel extends BaseKernel
     {
         $container->extension('framework', [
             'secret' => 'ChangeMe',
-            'test' => 'test' === ($_SERVER['APP_ENV'] ?? 'dev'),
+            'test' => 'test' === $this->environment,
             'router' => [
                 'utf8' => true,
+            ],
+            'asset_mapper' => [
+                'paths' => ['assets/'],
             ],
             'profiler' => [
                 'only_exceptions' => false,
@@ -108,7 +109,6 @@ class Kernel extends BaseKernel
         $container
             ->extension('doctrine', $doctrineConfig);
 
-        $container->extension('webpack_encore', ['output_path' => 'build']);
         $container->extension('web_profiler', [
             'toolbar' => true,
             'intercept_redirects' => false,

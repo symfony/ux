@@ -26,8 +26,8 @@ class BroadcastTest extends PantherTestCase
 
     protected function setUp(): void
     {
-        if (!file_exists(__DIR__.'/app/public/build')) {
-            throw new \Exception(\sprintf('Move into "%s" and execute Encore before running this test.', realpath(__DIR__.'/app')));
+        if (!file_exists(__DIR__.'/app/assets/vendor/installed.php')) {
+            throw new \Exception(\sprintf('Move into "%s" and execute `php public/index.php importmap:install` before running this test.', realpath(__DIR__.'/app')));
         }
 
         parent::setUp();

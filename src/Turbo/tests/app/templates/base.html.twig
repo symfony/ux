@@ -4,7 +4,9 @@
         <meta charset="UTF-8">
         <title>Symfony UX Turbo</title>
         {% block stylesheets %}{% endblock %}
-        {{ encore_entry_script_tags('app') }}
+        {% block javascripts %}
+            {% block importmap %}{{ importmap('app') }}{% endblock %}
+        {% endblock %}
     </head>
     <body>
         <nav id="navigation">
