@@ -1,6 +1,6 @@
 {% block create %}
     <twig:Turbo:Stream:Append target="#books">
-        <div id="{{ 'book_' ~ id }}">{{ entity.title }} (#{{ id }})</div>
+        <div id="book_{{ id }}">{{ entity.title }} (#{{ id }})</div>
     </twig:Turbo:Stream:Append>
 {% endblock %}
 

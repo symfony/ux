@@ -8,6 +8,9 @@ on:
         paths:
             - 'src/Turbo/**'
 
+env:
+    SYMFONY_REQUIRE: '>=5.4'
+
 jobs:
     phpstan:
         runs-on: ubuntu-latest
@@ -38,11 +41,11 @@ jobs:
         strategy:
            fail-fast: false
            matrix:
-               php-version: ['8.1', '8.3']
+               php-version: ['8.1', '8.4']
                include:
                   - php-version: '8.1'
                     dependency-version: 'lowest'
-                  - php-version: '8.3'
+                  - php-version: '8.4'
                     dependency-version: 'highest'
 
         services:
@@ -68,6 +71,9 @@ jobs:
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php-version }}
+
+            - name: Install symfony/flex
+              run: composer global config allow-plugins.symfony/flex true && composer global require symfony/flex
 
             - name: Install Turbo packages
               uses: ramsey/composer-install@v3
@@ -101,6 +107,8 @@ jobs:
 
             - name: Run tests
               working-directory: src/Turbo
-              run: vendor/bin/simple-phpunit
+              run: |
+                [ 'lowest' = '${{ matrix.dependency-version }}' ] && export SYMFONY_DEPRECATIONS_HELPER=weak
+                vendor/bin/simple-phpunit
               env:
                   SYMFONY_DEPRECATIONS_HELPER: 'max[self]=1'

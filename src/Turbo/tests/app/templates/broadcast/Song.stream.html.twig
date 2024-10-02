@@ -1,6 +1,6 @@
 {% block create %}
     <twig:Turbo:Stream:Append target="#songs">
-        <div id="{{ 'song_' ~ id }}">{{ entity.title }} (#{{ id }}){% if entity.artist %} by {{ entity.artist.name }} (#{{ entity.artist.id }}){% endif %}</div>
+        <div id="song_{{ id }}">{{ entity.title }} (#{{ id }}){% if entity.artist %} by {{ entity.artist.name }} (#{{ entity.artist.id }}){% endif %}</div>
     </twig:Turbo:Stream:Append>
 {% endblock %}
 

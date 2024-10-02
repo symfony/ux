@@ -52,7 +52,7 @@
         "symfony/property-access": "^5.4|^6.0|^7.0",
         "symfony/security-core": "^5.4|^6.0|^7.0",
         "symfony/stopwatch": "^5.4|^6.0|^7.0",
-        "symfony/ux-twig-component": "^2.0",
+        "symfony/ux-twig-component": "^2.21",
         "symfony/twig-bundle": "^5.4|^6.0|^7.0",
         "symfony/web-profiler-bundle": "^5.4|^6.0|^7.0",
         "symfony/webpack-encore-bundle": "^2.1.1",
