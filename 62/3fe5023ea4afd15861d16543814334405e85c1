@@ -1,0 +1,76 @@
+---------------------------------------------------------------------------
+
+by neluba at 2024-10-01T21:28:41Z
+
+I don't know if the symfony phpstorm plugin works with third party components, but it might incorrectly offer autocompletions for all properties on all components, because they're inherited from TurboStreamComponent.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-02T07:13:27Z
+
+I figured out I could use anonymous twig components, so here we are. Tags are now like:
+
+```html
+<twig:Turbo:Stream:Append target="#some-id">
+    <div>Append this</div>
+</twig:Turbo:Stream:Append>
+```
+
+---------------------------------------------------------------------------
+
+by rvmourik at 2024-10-02T07:31:02Z
+
+> I figured out I could use anonymous twig components, so here we are. Tags are now like:
+>
+> ```
+> <twig:Turbo:Stream:Append target="#some-id">
+>     <div>Append this</div>
+> </twig:Turbo:Stream:Append>
+> ```
+
+Is there a specific reason why the attribute is called `target` and in the HTML using `targets`?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-02T07:43:38Z
+
+> Is there a specific reason why the attribute is called target and in the HTML using targets?
+
+Good question. Turbo accepts both target and targets. The former accepts an HTML id, the latter a CSS selector.
+IMHO this is provides bad DX. Using a CSS selector should be the only way: when reading `#id`, it's way clearer that we target an id, and also it's hinting that another CSS selector would work.
+
+I'm for not supporting Turbo's target attribute.
+Then, which name should we give to the CSS-selector attribute on our side? `target` looks the most sensible to me.
+We could name it `targets`, but the "s" feels unnecessary.
+
+---------------------------------------------------------------------------
+
+by rvmourik at 2024-10-02T08:35:12Z
+
+> > Is there a specific reason why the attribute is called target and in the HTML using targets?
+>
+> Good question. Turbo accepts both target and targets. The former accepts an HTML id, the latter a CSS selector. IMHO this is provides bad DX. Using a CSS selector should be the only way: when reading `#id`, it's way clearer that we target an id, and also it's hinting that another CSS selector would work.
+>
+> I'm for not supporting Turbo's target attribute. Then, which name should we give to the CSS-selector attribute on our side? `target` looks the most sensible to me. We could name it `targets`, but the "s" feels unnecessary.
+
+I think `target` is the way to go, but maybe elaborate on the target/targets difference in the docs so people don't mistake the target attribute of the component with the HTML target attribute.
+
+Nevertheless, great DX improvements with the two PR's 👍
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-02T13:11:18Z
+
+#2230 should be fixed for tests to be green.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-02T16:38:33Z
+
+All green :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-10-02T16:56:46Z
+
+PR rebased and conflicts fixed, I merge when the CI is green.
