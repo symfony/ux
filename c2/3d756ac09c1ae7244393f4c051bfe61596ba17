@@ -1,0 +1,40 @@
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-02T18:54:27Z
+
+Curiously, this fails on PHP 8.3 but passes on 8.4 (deps=high).
+It's going to be fun to debug... If anyone is up to having a look, help welcome :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-10-02T21:30:59Z
+
+I will take a look tomorrow!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-10-03T07:06:13Z
+
+Those issues were caused because the assets were not reachable with the webserver/browser ran by Panther:
+<img width="1001" alt="image" src="https://github.com/user-attachments/assets/aad6b9f0-def4-4b3a-b175-507980247a6c">
+
+It was fixed by compiling assets with `asset-map:compile`.
+
+Now all that's left is this issue and we'll be good to go :)
+<img width="1482" alt="image" src="https://github.com/user-attachments/assets/0961f498-fd90-42cc-a772-6d33e9da2b9c">
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-03T07:21:47Z
+
+>It was fixed by compiling assets with asset-map:compile.
+
+Super strange. I opened https://github.com/php/php-src/issues/16194 because this looks like a PHP bug to me.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-03T07:35:34Z
+
+Thanks for the help @Kocal
+
+PR is ready.
