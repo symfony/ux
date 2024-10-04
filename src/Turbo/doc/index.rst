@@ -284,7 +284,7 @@ Symfony.
             $client->request('GET', '/');
 
             $client->clickLink('This block is scoped, the rest of the page will not change if you click here!');
-            $this->assertSelectorTextContains('body', 'This will replace the content of the Turbo Frame!');
+            $this->assertSelectorWillContain('body', 'This will replace the content of the Turbo Frame!');
         }
     }
 
