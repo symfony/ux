@@ -872,7 +872,6 @@ that's passed to it via the ``outerBlocks`` variable and forward it into ``Alert
 
     {# templates/components/SuccessAlert.html.twig #}
     <twig:Alert type="success">
-    {% component Alert with {type: 'success'} %}
         {{ block(outerBlocks.content) }}
     </twig:Alert>
 
