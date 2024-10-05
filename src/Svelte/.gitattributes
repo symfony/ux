@@ -4,5 +4,6 @@
 /assets/src export-ignore
 /assets/test export-ignore
 /assets/vitest.config.js export-ignore
+/doc export-ignore
 /phpunit.xml.dist export-ignore
 /tests export-ignore
