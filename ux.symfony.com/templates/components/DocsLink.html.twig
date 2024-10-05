@@ -5,9 +5,9 @@
                rel="{{ isExternal ? 'external noopened noreferrer' }}"
             >{{ title }}</a>
             {% if icon|default %}
-                <twig:ux:icon name="{{ icon }}" class="DocsLink_arrow"/>
+                <twig:ux:icon name="{{ icon }}" class="Icon DocsLink_arrow"/>
             {% elseif isExternal %}
-                <twig:ux:icon name="arrow-right" style="transform: rotate(-45deg);" class="DocsLink_arrow"/>
+                <twig:ux:icon name="arrow-right" style="transform: rotate(-45deg);" class="Icon DocsLink_arrow"/>
             {% endif %}
         </p>
         <div class="DocsLink_description">

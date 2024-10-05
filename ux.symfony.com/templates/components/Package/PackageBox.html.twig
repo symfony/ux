@@ -8,9 +8,7 @@
     <div class="PackageBox_content">
         <{{ titleTag }} class="PackageBox_title">
             <a href="{{ path(package.route) }}" class="PackageBox_link">{{ package.humanName }}</a>
-            <span class="PackageBox_arrow">
-                <twig:ux:icon name="arrow-right" />
-            </span>
+            <twig:ux:icon name="arrow-right" class="PackageBox_arrow Icon" />
         </{{ titleTag }}>
         <div class="PackageBox_description">
             {{ package.description|markdown_to_html }}

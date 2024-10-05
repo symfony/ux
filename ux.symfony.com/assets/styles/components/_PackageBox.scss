@@ -124,6 +124,9 @@
 }
 
 .PackageBox_link {
+  display: flex;
+  align-items: center;
+  gap: .25rem;
   &:after {
     content: '';
     position: absolute;
@@ -133,13 +136,15 @@
 }
 
 .PackageBox_arrow {
-  color: gray;
-  font-size: 1.5rem;
   opacity: .5;
-  transition: opacity 600ms ease-in-out;
+  filter: saturate(0.25);
+  transition: all 600ms ease-in-out;
   .PackageBox:hover & {
-    transition: opacity 250ms ease-in-out;
+    transition: all 250ms ease-in-out;
     opacity: 1;
+    color: var(--color);
+    filter: saturate(1);
+    transform: translateX(10%) scale(1.04);
   }
 }
 
