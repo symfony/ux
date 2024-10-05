@@ -95,13 +95,13 @@
   justify-content: space-between;
 }
 
-.ChangelogItem__Head svg {
+.ChangelogItem__Toggle {
   transition: 150ms ease-in-out;
   transform: rotate(0deg);
   opacity: .5;
 }
 
-.ChangelogItem [open] .ChangelogItem__Head svg {
+.ChangelogItem [open] .ChangelogItem__Toggle {
   transform: rotate(180deg);
   opacity: .75;
   transition: all 150ms ease-in-out;

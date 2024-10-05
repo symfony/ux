@@ -8,7 +8,7 @@
     {% if file_info.isDirectory %}
         <li class="FileTree-main FileTree-dir">
             <span {{- _self.summaryAttributes(file_info.description) -}}>
-                <twig:ux:icon name="folder-open" class="d-inline-block m-0 mr-2"/>
+                <twig:ux:icon name="folder-open" />
                 {{ file_info.filename }}
             </span>
 
@@ -21,7 +21,7 @@
     {% else %}
         <li class="FileTree-main FileTree-file">
             <span {{- _self.summaryAttributes(file_info.description) -}}>
-                <twig:ux:icon name="file" class="d-inline-block m-0 mr-2" />
+                <twig:ux:icon name="file" />
                 {{ file_info.filename }}
             </span>
         </li>

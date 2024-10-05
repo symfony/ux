@@ -25,6 +25,25 @@ class ChangelogItem
         return $this->formatContent($this->item['body'] ?? '');
     }
 
+    public function getTitle(): string
+    {
+        if (!isset($this->item['name'])) {
+            return $this->item['version'];
+        }
+
+        $name = $this->item['name'];
+        if (false !== $pos = stripos($name, $version = $this->getVersion())) {
+            return ltrim(mb_substr($name, $pos + \strlen($version)), ' -:');
+        }
+
+        return $name;
+    }
+
+    public function getVersion(): string
+    {
+        return ltrim($this->item['version'], 'v');
+    }
+
     private function formatContent(string $content): string
     {
         // Replace "## " with "### "
