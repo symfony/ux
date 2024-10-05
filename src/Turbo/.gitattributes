@@ -6,4 +6,7 @@
 /assets/src export-ignore
 /assets/test export-ignore
 /assets/vitest.config.js export-ignore
+/CONTRIBUTING.md export-ignore
+/docker-compose.yml
+/doc export-ignore
 /tests export-ignore
