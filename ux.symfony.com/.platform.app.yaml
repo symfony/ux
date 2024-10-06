@@ -49,8 +49,8 @@ hooks:
 
         # We don't need to run yarn or npm... 
         # ...let's skip both build steps  
-        NO_YARN=1
-        NO_NPM=1
+        export NO_YARN=1
+        export NO_NPM=1
 
         (>&2 symfony-build)
 
