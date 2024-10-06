@@ -3,3 +3,4 @@
 /.symfony.bundle.yaml export-ignore
 /assets/src export-ignore
 /assets/test export-ignore
+/doc export-ignore

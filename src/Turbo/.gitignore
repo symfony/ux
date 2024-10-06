@@ -1,10 +1,9 @@
-/.php_cs.cache
-/.php_cs
-/.phpunit.result.cache
-/composer.phar
+/assets/node_modules/
+/vendor/
 /composer.lock
 /drivers/
 /phpunit.xml
+/.phpunit.result.cache
 /tests/app/assets/vendor/
 /tests/app/public/assets/
 /tests/app/public/build/

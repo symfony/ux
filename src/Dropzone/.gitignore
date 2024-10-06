@@ -1,3 +1,5 @@
+/assets/node_modules/
 /vendor/
-.phpunit.result.cache
-composer.lock
+/composer.lock
+/phpunit.xml
+/.phpunit.result.cache
