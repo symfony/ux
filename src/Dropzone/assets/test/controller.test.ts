@@ -130,4 +130,27 @@ describe('DropzoneController', () => {
         expect(dispatched).not.toBeNull();
         expect(dispatched.detail).toStrictEqual(file);
     });
+
+    it('on drag', async () => {
+        startStimulus();
+
+        // Simulate dragenter event
+        const dragEnterEvent = new Event('dragenter');
+        getByTestId(container, 'container').dispatchEvent(dragEnterEvent);
+
+        // Check that the input and placeholder are visible, and preview hidden
+        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'block' }));
+        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'block' }));
+        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'none' }));
+
+        // Simulate dragleave event with relatedTarget set to outside the dropzone
+        const dragLeaveEvent = new Event('dragleave', { bubbles: true });
+        Object.defineProperty(dragLeaveEvent, 'relatedTarget', { value: document.body });
+        getByTestId(container, 'container').dispatchEvent(dragLeaveEvent);
+
+        // Check that the input and placeholder are hidden, and preview shown
+        await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
+        await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
+        await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'block' }));
+    });
 });

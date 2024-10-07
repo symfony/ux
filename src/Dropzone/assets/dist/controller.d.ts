@@ -13,5 +13,7 @@ export default class extends Controller {
     clear(): void;
     onInputChange(event: any): void;
     _populateImagePreview(file: Blob): void;
+    onDragEnter(): void;
+    onDragLeave(event: any): void;
     private dispatchEvent;
 }

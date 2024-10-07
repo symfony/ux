@@ -4,16 +4,22 @@ class default_1 extends Controller {
     initialize() {
         this.clear = this.clear.bind(this);
         this.onInputChange = this.onInputChange.bind(this);
+        this.onDragEnter = this.onDragEnter.bind(this);
+        this.onDragLeave = this.onDragLeave.bind(this);
     }
     connect() {
         this.clear();
         this.previewClearButtonTarget.addEventListener('click', this.clear);
         this.inputTarget.addEventListener('change', this.onInputChange);
+        this.element.addEventListener('dragenter', this.onDragEnter);
+        this.element.addEventListener('dragleave', this.onDragLeave);
         this.dispatchEvent('connect');
     }
     disconnect() {
         this.previewClearButtonTarget.removeEventListener('click', this.clear);
         this.inputTarget.removeEventListener('change', this.onInputChange);
+        this.element.removeEventListener('dragenter', this.onDragEnter);
+        this.element.removeEventListener('dragleave', this.onDragLeave);
     }
     clear() {
         this.inputTarget.value = '';
@@ -50,6 +56,19 @@ class default_1 extends Controller {
             this.previewImageTarget.style.backgroundImage = `url("${event.target.result}")`;
         });
         reader.readAsDataURL(file);
+    }
+    onDragEnter() {
+        this.inputTarget.style.display = 'block';
+        this.placeholderTarget.style.display = 'block';
+        this.previewTarget.style.display = 'none';
+    }
+    onDragLeave(event) {
+        event.preventDefault();
+        if (!this.element.contains(event.relatedTarget)) {
+            this.inputTarget.style.display = 'none';
+            this.placeholderTarget.style.display = 'none';
+            this.previewTarget.style.display = 'block';
+        }
     }
     dispatchEvent(name, payload = {}) {
         this.dispatch(name, { detail: payload, prefix: 'dropzone' });

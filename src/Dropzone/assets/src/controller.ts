@@ -22,6 +22,8 @@ export default class extends Controller {
     initialize() {
         this.clear = this.clear.bind(this);
         this.onInputChange = this.onInputChange.bind(this);
+        this.onDragEnter = this.onDragEnter.bind(this);
+        this.onDragLeave = this.onDragLeave.bind(this);
     }
 
     connect() {
@@ -34,12 +36,20 @@ export default class extends Controller {
         // Listen on input change and display preview
         this.inputTarget.addEventListener('change', this.onInputChange);
 
+        // Add dragenter event listener
+        this.element.addEventListener('dragenter', this.onDragEnter);
+
+        // Add dragleave event listener
+        this.element.addEventListener('dragleave', this.onDragLeave);
+
         this.dispatchEvent('connect');
     }
 
     disconnect() {
         this.previewClearButtonTarget.removeEventListener('click', this.clear);
         this.inputTarget.removeEventListener('change', this.onInputChange);
+        this.element.removeEventListener('dragenter', this.onDragEnter);
+        this.element.removeEventListener('dragleave', this.onDragLeave);
     }
 
     clear() {
@@ -91,6 +101,23 @@ export default class extends Controller {
         });
 
         reader.readAsDataURL(file);
+    }
+
+    onDragEnter() {
+        this.inputTarget.style.display = 'block';
+        this.placeholderTarget.style.display = 'block';
+        this.previewTarget.style.display = 'none';
+    }
+
+    onDragLeave(event: any) {
+        event.preventDefault();
+
+        // Check if we really leave the main drag area
+        if (!this.element.contains(event.relatedTarget as Node)) {
+            this.inputTarget.style.display = 'none';
+            this.placeholderTarget.style.display = 'none';
+            this.previewTarget.style.display = 'block';
+        }
     }
 
     private dispatchEvent(name: string, payload: any = {}) {
