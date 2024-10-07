@@ -12,6 +12,7 @@
 namespace Symfony\UX\TwigComponent\Twig;
 
 use Twig\Compiler;
+use Twig\Extension\CoreExtension;
 use Twig\Node\EmbedNode;
 use Twig\Node\Expression\AbstractExpression;
 
@@ -34,13 +35,21 @@ final class ComponentNode extends EmbedNode
     {
         $compiler->addDebugInfo($this);
 
+        // since twig/twig 3.9.0: Using the internal "twig_to_array" function is deprecated.
+        if (method_exists(CoreExtension::class, 'toArray')) {
+            $twig_to_array = 'Twig\Extension\CoreExtension::toArray';
+        } else {
+            $twig_to_array = 'twig_to_array';
+        }
+
         $compiler
             ->raw('$props = $this->extensions[')
             ->string(ComponentExtension::class)
             ->raw(']->embeddedContext(')
             ->string($this->getAttribute('component'))
             ->raw(', ')
-            ->raw('twig_to_array(')
+            ->raw($twig_to_array)
+            ->raw('(')
             ->subcompile($this->getNode('variables'))
             ->raw('), ')
             ->raw($this->getAttribute('only') ? '[]' : '$context')
