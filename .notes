@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-11T21:39:36Z
+
+Hi @rrr63 ! Thank you for this PR
+
+Could you add just a screenshot or two, for other to understand what you're adding ?
+
+I'm wondering, you add on dragEnter, but you don't revert if the drag is canceled  ? 
+
+Also, it would be great to add a test or two :) 
+
+
+
+---------------------------------------------------------------------------
+
+by rrr63 at 2024-09-12T06:34:12Z
+
+Hi @smnandre ,
+
+You're right, i canceled when the drag leaves, and added a test for both, enter and leave.
+Both, enter and leave are in the same test to get the right drag area from enter event.
+
+Demo :
+![dropzone](https://github.com/user-attachments/assets/76143fdd-1dbc-4129-92f2-43e9780eed4b)
+
+
+
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-12T17:27:47Z
+
+Wow, thank you very much! I'll try tonight but this will probably more be this week-end :) 
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-12T17:31:45Z
+
+Could you add a entry in the CHANGELOG (inside the Dropzone folder) ? Next version will be 2.20
+
+---------------------------------------------------------------------------
+
+by rrr63 at 2024-09-12T18:36:43Z
+
+Sure i can, just copied the title  :)
+
