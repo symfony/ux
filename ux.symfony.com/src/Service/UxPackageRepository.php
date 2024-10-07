@@ -80,6 +80,21 @@ class UxPackageRepository
                 ->setDocsLink('https://turbo.hotwired.dev/handbook/introduction', 'Documentation specifically for the Turbo JavaScript library.')
                 ->setScreencastLink('https://symfonycasts.com/screencast/turbo', 'Go deep into all 3 parts of Turbo.'),
 
+            (new UxPackage(
+                'stimulus',
+                'Stimulus',
+                'app_stimulus',
+                '#2EB17B',
+                'linear-gradient(to bottom right, #3D9A89 5%, #2EB17B 80%)',
+                'Central Bridge of Symfony UX',
+                'Integration with Stimulus for HTML-powered controllers',
+                null,
+                'stimulus.svg',
+                'symfony/stimulus-bundle',
+            ))
+            ->setOfficialDocsUrl('https://symfony.com/bundles/StimulusBundle')
+            ->setScreencastLink('https://symfonycasts.com/screencast/stimulus', 'More than 40 videos to master Stimulus.'),
+
             new UxPackage(
                 'autocomplete',
                 'Autocomplete',
@@ -100,7 +115,7 @@ class UxPackageRepository
                 'Symfony Translations in JavaScript',
                 "Use Symfony's translations in JavaScript",
                 'I need to translate strings in JavaScript',
-                'translator.svg'
+                'translator.svg',
             ),
 
             (new UxPackage(
@@ -135,7 +150,7 @@ class UxPackageRepository
                 'linear-gradient(95deg, #35B67C -5%, #8CE3BC 105%)',
                 'Render Vue components from Twig',
                 'Quickly render `<Vue />` components &amp; pass them props.',
-                'I need to render Vue.js components from Twig'
+                null,
             ))
                 ->setDocsLink('https://vuejs.org/', 'Go deeper with the Vue.js docs.'),
 
@@ -147,7 +162,7 @@ class UxPackageRepository
                 'linear-gradient(115deg, #BE3030, #FF3E00)',
                 'Render Svelte components from Twig',
                 'Quickly render `<Svelte />` components &amp; pass them props.',
-                'I need to render Svelte components from Twig',
+                null,
                 'svelte.svg',
             ))
                 ->setDocsLink('https://svelte.dev/', 'Go deeper with the Svelte docs.'),
@@ -160,7 +175,7 @@ class UxPackageRepository
                 'linear-gradient(136deg, #1E8FA8 -7%, #3FC0DC 105%)',
                 'Form Tools for cropping images',
                 'Form Type and tools for cropping images',
-                'I need to add a JavaScript image cropper'
+                null,
             ))
                 ->setDocsLink('https://github.com/fengyuanchen/cropperjs', 'Cropper.js documentation.'),
 
@@ -172,7 +187,6 @@ class UxPackageRepository
                 'linear-gradient(136deg, #AC2777 -8%, #F246AD 105%)',
                 'Delay Loading with Blurhash',
                 'Optimize Image Loading with BlurHash',
-                'I need to delay large image loading'
             ),
 
             new UxPackage(
@@ -194,7 +208,6 @@ class UxPackageRepository
                 'linear-gradient(95deg, #D87036 -5%, #EA9633 105%)',
                 'Stylized Page Transitions',
                 'Integration with the page transition library Swup',
-                'I need stylized page transitions'
             ))
                 ->setDocsLink('https://swup.js.org/', 'Swup documentation'),
 
@@ -206,7 +219,6 @@ class UxPackageRepository
                 'linear-gradient(95deg, #204CA0 -6%, #3D82EA 105%)',
                 'Native Browser Notifications',
                 'Trigger native browser notifications from inside PHP',
-                'I need to send browser notifications',
             ),
 
             new UxPackage(
@@ -217,7 +229,6 @@ class UxPackageRepository
                 'linear-gradient(142deg, #FD963C -15%, #BE0404 95%)',
                 'Password Visibility Switch',
                 'Switch the visibility of a password field',
-                'I need to toggle the visibility of a password field',
             ),
 
             (new UxPackage(
@@ -228,7 +239,6 @@ class UxPackageRepository
                 'linear-gradient(95deg, #20A091 -5%, #4EC9B3 105%)',
                 'Animated Typing with Typed.js',
                 'Animated typing with Typed.js',
-                'I need to type onto the screen... like this'
             ))
                 ->setDocsLink('https://github.com/mattboldt/typed.js/', 'Typed.js documentation'),
         ];
