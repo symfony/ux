@@ -7,8 +7,15 @@
 }
 
 .hero-sub-text {
-  width: 40%;
+  width: 50%;
   text-wrap: balance;
+}
+.hero-sub-text a {
+  border-bottom: 1.5px solid #ffff;
+  text-decoration: none;
+}
+.hero-sub-text a:hover {
+  color: inherit;
 }
 
 @media (max-width: 1114px) {

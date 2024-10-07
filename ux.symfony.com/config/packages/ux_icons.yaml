@@ -1,3 +1,10 @@
 ux_icons:
     default_icon_attributes:
         class: 'Icon'
+
+    icon_sets:
+
+        # FeatureBox icons
+        feature:
+            alias: 'lucide'
+            # icon_attributes:
