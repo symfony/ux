@@ -30,7 +30,7 @@ final class AsLiveComponent extends AsTwigComponent
      * @param string|null $defaultAction     The default action to call when the component is mounted (ie: __invoke)
      * @param bool        $exposePublicProps Whether to expose every public property as a Twig variable
      * @param string      $attributesVar     The name of the special "attributes" variable in the template
-     * @param bool        $csrf              Whether to enable CSRF protection (default: true)
+     * @param bool        $csrf              Whether to enable stateful CSRF protection (default: false - stateless CORS-based CSRF protection is always enabled)
      * @param string      $route             The route used to render the component & handle actions (default: ux_live_component)
      * @param int         $urlReferenceType  Which type of URL should be generated for the given route. Use the constants from UrlGeneratorInterface (default: absolute path, e.g. "/dir/file").
      */
@@ -40,7 +40,7 @@ final class AsLiveComponent extends AsTwigComponent
         private ?string $defaultAction = null,
         bool $exposePublicProps = true,
         string $attributesVar = 'attributes',
-        public bool $csrf = true,
+        public bool $csrf = false,
         public string $route = 'ux_live_component',
         public string $method = 'post',
         public int $urlReferenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
