@@ -36,7 +36,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
         url: String,
         props: { type: Object, default: {} },
         propsUpdatedFromParent: { type: Object, default: {} },
-        csrf: String,
         listeners: { type: Array, default: [] },
         eventsToEmit: { type: Array, default: [] },
         eventsToDispatch: { type: Array, default: [] },
@@ -50,7 +49,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     declare readonly urlValue: string;
     declare readonly propsValue: any;
     declare propsUpdatedFromParentValue: any;
-    declare readonly csrfValue: string;
     declare readonly listenersValue: Array<{ event: string; action: string }>;
     declare readonly eventsToEmitValue: Array<{
         event: string;
@@ -79,7 +77,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     private pendingFiles: { [key: string]: HTMLInputElement } = {};
 
     static backendFactory: (controller: LiveControllerDefault) => BackendInterface = (controller) =>
-        new Backend(controller.urlValue, controller.requestMethodValue, controller.csrfValue);
+        new Backend(controller.urlValue, controller.requestMethodValue);
 
     initialize() {
         this.mutationObserver = new MutationObserver(this.onMutations.bind(this));

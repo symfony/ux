@@ -108,7 +108,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                 ]
             )
         );
-        $token = null;
 
         $this->browser()
             ->throwExceptions()
@@ -122,12 +121,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertSuccessful()
             ->assertHeaderContains('Content-Type', 'html')
             ->assertContains('Count: 1')
-            ->use(function (Crawler $crawler) use (&$token) {
-                // get a valid token to use for actions
-                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
-            })
             ->post('/_components/component2/increase', [
-                'headers' => ['X-CSRF-TOKEN' => $token],
                 'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
@@ -140,7 +134,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
     public function testCanExecuteComponentActionWithAlternateRoute(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('alternate_route'));
-        $token = null;
 
         $this->browser()
             ->throwExceptions()
@@ -153,12 +146,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ])
             ->assertSuccessful()
             ->assertContains('count: 0')
-            ->use(function (Crawler $crawler) use (&$token) {
-                // get a valid token to use for actions
-                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
-            })
             ->post('/alt/alternate_route/increase', [
-                'headers' => ['X-CSRF-TOKEN' => $token],
                 'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
@@ -180,77 +168,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
         $this->browser()
             ->get('/_components/with_method_post/__invoke')
             ->assertStatus(405)
-        ;
-    }
-
-    public function testMissingCsrfTokenForComponentActionFails(): void
-    {
-        $this->browser()
-            ->post('/_components/component2/increase')
-            ->assertStatus(400)
-        ;
-
-        try {
-            $this->browser()
-                ->throwExceptions()
-                ->post('/_components/component2/increase')
-            ;
-        } catch (BadRequestHttpException $e) {
-            $this->assertSame('Invalid CSRF token.', $e->getMessage());
-
-            return;
-        }
-
-        $this->fail('Expected exception not thrown.');
-    }
-
-    public function testInvalidCsrfTokenForComponentActionFails(): void
-    {
-        $this->browser()
-            ->post('/_components/component2/increase', [
-                'headers' => ['X-CSRF-TOKEN' => 'invalid'],
-            ])
-            ->assertStatus(400)
-        ;
-
-        try {
-            $this->browser()
-                ->throwExceptions()
-                ->post('/_components/component2/increase', [
-                    'headers' => ['X-CSRF-TOKEN' => 'invalid'],
-                ])
-            ;
-        } catch (BadRequestHttpException $e) {
-            $this->assertSame('Invalid CSRF token.', $e->getMessage());
-
-            return;
-        }
-
-        $this->fail('Expected exception not thrown.');
-    }
-
-    public function testDisabledCsrfTokenForComponentDoesNotFail(): void
-    {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('disabled_csrf'));
-
-        $this->browser()
-            ->throwExceptions()
-            ->post('/_components/disabled_csrf', [
-                'body' => [
-                    'data' => json_encode([
-                        'props' => $dehydrated->getProps(),
-                    ]),
-                ],
-            ])
-            ->assertSuccessful()
-            ->assertHeaderContains('Content-Type', 'html')
-            ->assertContains('Count: 1')
-            ->post('/_components/disabled_csrf/increase', [
-                'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
-            ])
-            ->assertSuccessful()
-            ->assertHeaderContains('Content-Type', 'html')
-            ->assertContains('Count: 2')
         ;
     }
 
@@ -341,20 +258,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             )
         );
 
-        $token = null;
-
         $this->browser()
             ->visit('/render-template/render_multiple_embedded_with_blocks')
             ->assertSuccessful()
             ->assertSeeIn('#component1', 'Overridden content from component 1')
             ->assertSeeIn('#component2', 'Overridden content from component 2 on same line - count: 1')
             ->assertSeeIn('#component3', 'PreReRenderCalled: No')
-            ->use(function (Crawler $crawler) use (&$token) {
-                // get a valid token to use for actions
-                $token = $crawler->filter('div')->eq(1)->attr('data-live-csrf-value');
-            })
             ->post('/_components/component2/increase', [
-                'headers' => ['X-CSRF-TOKEN' => $token],
                 'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
@@ -380,20 +290,13 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             )
         );
 
-        $token = null;
-
         $this->browser()
             ->visit('/render-namespaced-template/render_multiple_embedded_with_blocks')
             ->assertSuccessful()
             ->assertSeeIn('#component1', 'Overridden content from component 1')
             ->assertSeeIn('#component2', 'Overridden content from component 2 on same line - count: 1')
             ->assertSeeIn('#component3', 'PreReRenderCalled: No')
-            ->use(function (Crawler $crawler) use (&$token) {
-                // get a valid token to use for actions
-                $token = $crawler->filter('div')->eq(1)->attr('data-live-csrf-value');
-            })
             ->post('/_components/component2/increase', [
-                'headers' => ['X-CSRF-TOKEN' => $token],
                 'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertSuccessful()
@@ -405,7 +308,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
     public function testCanRedirectFromComponentAction(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('component2'));
-        $token = null;
 
         $this->browser()
             ->throwExceptions()
@@ -417,14 +319,9 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                 ],
             ])
             ->assertSuccessful()
-            ->use(function (Crawler $crawler) use (&$token) {
-                // get a valid token to use for actions
-                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
-            })
             ->interceptRedirects()
             // with no custom header, it redirects like a normal browser
             ->post('/_components/component2/redirect', [
-                'headers' => ['X-CSRF-TOKEN' => $token],
                 'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertRedirectedTo('/')
@@ -433,7 +330,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->post('/_components/component2/redirect', [
                 'headers' => [
                     'Accept' => 'application/vnd.live-component+html',
-                    'X-CSRF-TOKEN' => $token,
                 ],
                 'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
@@ -447,7 +343,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
     public function testInjectsLiveArgs(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('component6'));
-        $token = null;
 
         $arguments = ['arg1' => 'hello', 'arg2' => 666, 'custom' => '33.3'];
         $this->browser()
@@ -464,12 +359,7 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ->assertContains('Arg1: not provided')
             ->assertContains('Arg2: not provided')
             ->assertContains('Arg3: not provided')
-            ->use(function (Crawler $crawler) use (&$token) {
-                // get a valid token to use for actions
-                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
-            })
             ->post('/_components/component6/inject', [
-                'headers' => ['X-CSRF-TOKEN' => $token],
                 'body' => [
                     'data' => json_encode([
                         'props' => $dehydrated->getProps(),
@@ -524,7 +414,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
     public function testCanInjectSecurityUserIntoAction(): void
     {
         $dehydrated = $this->dehydrateComponent($this->mountComponent('with_security'));
-        $token = null;
 
         $this->browser()
             ->actingAs(new InMemoryUser('kevin', 'pass', ['ROLE_USER']))
@@ -537,13 +426,8 @@ final class LiveComponentSubscriberTest extends KernelTestCase
             ])
             ->assertSuccessful()
             ->assertNotSee('username: kevin')
-            ->use(function (Crawler $crawler) use (&$token) {
-                // get a valid token to use for actions
-                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
-            })
             ->throwExceptions()
             ->post('/_components/with_security/setUsername', [
-                'headers' => ['X-CSRF-TOKEN' => $token],
                 'body' => [
                     'data' => json_encode([
                         'props' => $dehydrated->getProps(),

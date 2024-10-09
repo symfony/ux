@@ -33,5 +33,10 @@ final class OptionalDependencyPass implements CompilerPassInterface
                 ->addTag(LiveComponentBundle::HYDRATION_EXTENSION_TAG)
             ;
         }
+
+        if (!$container->hasDefinition('test.client')) {
+            $container->getDefinition('ux.live_component.event_subscriber')
+                ->setArgument(1, false);
+        }
     }
 }

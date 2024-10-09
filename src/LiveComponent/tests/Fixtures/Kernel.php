@@ -91,6 +91,7 @@ final class Kernel extends BaseKernel
     protected function configureContainer(ContainerConfigurator $c): void
     {
         $frameworkConfig = [
+            'csrf_protection' => ['enabled' => false],
             'secret' => 'S3CRET',
             'test' => true,
             'router' => ['utf8' => true],

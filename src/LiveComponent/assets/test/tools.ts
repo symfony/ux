@@ -98,8 +98,6 @@ class FunctionalTest {
 class MockedBackend implements BackendInterface {
     private expectedMockedAjaxCalls: Array<MockedAjaxCall> = [];
 
-    public csrfToken: string | null = null;
-
     addMockedAjaxCall(mock: MockedAjaxCall) {
         this.expectedMockedAjaxCalls.push(mock);
     }
@@ -139,10 +137,6 @@ class MockedBackend implements BackendInterface {
         this.expectedMockedAjaxCalls.splice(this.expectedMockedAjaxCalls.indexOf(matchedMock), 1);
 
         return matchedMock.createBackendRequest();
-    }
-
-    updateCsrfToken(csrfToken: string) {
-        this.csrfToken = csrfToken;
     }
 
     getExpectedMockedAjaxCalls(): Array<MockedAjaxCall> {
@@ -469,7 +463,6 @@ export function initComponent(props: any = {}, controllerValues: any = {}) {
         data-live-url-value="http://localhost/components/_test_component_${Math.round(Math.random() * 1000)}"
         data-live-props-value="${dataToJsonAttribute(props)}"
         ${controllerValues.debounce ? `data-live-debounce-value="${controllerValues.debounce}"` : ''}
-        ${controllerValues.csrf ? `data-live-csrf-value="${controllerValues.csrf}"` : ''}
         ${controllerValues.id ? `id="${controllerValues.id}"` : ''}
         ${controllerValues.fingerprint ? `data-live-fingerprint-value="${controllerValues.fingerprint}"` : ''}
         ${controllerValues.listeners ? `data-live-listeners-value="${dataToJsonAttribute(controllerValues.listeners)}"` : ''}

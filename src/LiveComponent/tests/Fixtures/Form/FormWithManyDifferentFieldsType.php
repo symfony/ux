@@ -71,11 +71,4 @@ class FormWithManyDifferentFieldsType extends AbstractType
             ->add('complexType', ComplexFieldType::class)
         ;
     }
-
-    public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([
-            'csrf_protection' => false,
-        ]);
-    }
 }
