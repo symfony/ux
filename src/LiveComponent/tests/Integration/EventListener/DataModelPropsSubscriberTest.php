@@ -22,8 +22,6 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
 
     public function testDataModelPropsAreSharedToChild(): void
     {
-        $this->fakeSession();
-
         /** @var ComponentRenderer $renderer */
         $renderer = self::getContainer()->get('ux.twig_component.component_renderer');
 
@@ -43,8 +41,6 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
 
     public function testDataModelPropsAreAvailableInEmbeddedComponents(): void
     {
-        $this->fakeSession();
-
         $templateName = 'components/parent_component_data_model.html.twig';
         $obscuredName = '684c45bf85d3461dbe587407892e59d8';
         $this->addTemplateMap($obscuredName, $templateName);
@@ -58,15 +54,5 @@ final class DataModelPropsSubscriberTest extends KernelTestCase
 
         $this->assertStringContainsString('<textarea data-model="content">default content on mount</textarea>', $html);
         $this->assertStringContainsString('<input data-model="content" value="default content on mount" />', $html);
-    }
-
-    private function fakeSession(): void
-    {
-        // work around so that a session is available so CSRF doesn't fail
-        $session = self::getContainer()->get('session.factory')->createSession();
-        $request = Request::create('/');
-        $request->setSession($session);
-        $requestStack = self::getContainer()->get('request_stack');
-        $requestStack->push($request);
     }
 }

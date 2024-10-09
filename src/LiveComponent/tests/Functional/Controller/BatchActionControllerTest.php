@@ -52,7 +52,6 @@ final class BatchActionControllerTest extends KernelTestCase
                             'args' => ['what' => 'first'],
                         ]),
                     ],
-                    'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
             })
             ->assertSee('initial')
@@ -72,7 +71,6 @@ final class BatchActionControllerTest extends KernelTestCase
                             ],
                         ]),
                     ],
-                    'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
             })
             ->assertSee('initial')
@@ -113,25 +111,11 @@ final class BatchActionControllerTest extends KernelTestCase
                             ],
                         ]),
                     ],
-                    'headers' => ['X-CSRF-TOKEN' => $rootElement->attr('data-live-csrf-value')],
                 ]);
             })
             ->assertOn('/alt/alternate_route/_batch')
             ->assertSuccessful()
             ->assertSee('count: 3')
-        ;
-    }
-
-    public function testCsrfTokenIsChecked(): void
-    {
-        $dehydrated = $this->dehydrateComponent($this->mountComponent('with_actions'));
-
-        $this->browser()
-            ->post('/_components/with_actions/_batch', ['json' => [
-                'props' => $dehydrated->getProps(),
-                'actions' => [],
-            ]])
-            ->assertStatus(400)
         ;
     }
 
@@ -165,7 +149,6 @@ final class BatchActionControllerTest extends KernelTestCase
                             ],
                         ]),
                     ],
-                    'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
             })
             ->assertRedirectedTo('/')
@@ -203,7 +186,6 @@ final class BatchActionControllerTest extends KernelTestCase
                     ],
                     'headers' => [
                         'Accept' => ['application/vnd.live-component+html'],
-                        'X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value'),
                     ],
                 ]);
             })
@@ -241,7 +223,6 @@ final class BatchActionControllerTest extends KernelTestCase
                             ],
                         ]),
                     ],
-                    'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
             })
         ;
@@ -276,7 +257,6 @@ final class BatchActionControllerTest extends KernelTestCase
                             ],
                         ]),
                     ],
-                    'headers' => ['X-CSRF-TOKEN' => $crawler->filter('ul')->first()->attr('data-live-csrf-value')],
                 ]);
             })
         ;

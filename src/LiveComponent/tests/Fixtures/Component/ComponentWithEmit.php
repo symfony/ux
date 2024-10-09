@@ -18,7 +18,7 @@ use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Entity\Entity1;
 
-#[AsLiveComponent('component_with_emit', csrf: false)]
+#[AsLiveComponent('component_with_emit')]
 final class ComponentWithEmit
 {
     use DefaultActionTrait;

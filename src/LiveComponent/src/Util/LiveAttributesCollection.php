@@ -83,11 +83,6 @@ final class LiveAttributesCollection
         $this->attributes['data-live-url-value'] = $url;
     }
 
-    public function setCsrf(string $csrf): void
-    {
-        $this->attributes['data-live-csrf-value'] = $csrf;
-    }
-
     public function setListeners(array $listeners): void
     {
         $this->attributes['data-live-listeners-value'] = $listeners;

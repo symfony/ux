@@ -44,7 +44,6 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
         $this->assertSame('live', $div->attr('data-controller'));
         $this->assertSame('/_components/component_with_writable_props', $div->attr('data-live-url-value'));
-        $this->assertNotNull($div->attr('data-live-csrf-value'));
         $this->assertCount(4, $props);
         $this->assertSame(5, $props['max']);
         $this->assertSame(1, $props['count']);
@@ -66,22 +65,7 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
         $this->assertSame('live', $div->attr('data-controller'));
         $this->assertSame('/_components/custom_attributes', $div->attr('data-live-url-value'));
-        $this->assertNotNull($div->attr('data-live-csrf-value'));
         $this->assertArrayHasKey('@checksum', $props);
-    }
-
-    public function testCanDisableCsrf(): void
-    {
-        $div = $this->browser()
-            ->visit('/render-template/csrf')
-            ->assertSuccessful()
-            ->crawler()
-            ->filter('div')
-        ;
-
-        $this->assertSame('live', $div->attr('data-controller'));
-        $this->assertSame('/_components/disabled_csrf', $div->attr('data-live-url-value'));
-        $this->assertNull($div->attr('data-live-csrf-value'));
     }
 
     public function testItAddsIdAndFingerprintToChildComponent(): void
@@ -174,7 +158,6 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
         $this->assertSame('live', $div->attr('data-controller'));
         $this->assertSame('http://localhost/_components/with_absolute_url', $div->attr('data-live-url-value'));
-        $this->assertNotNull($div->attr('data-live-csrf-value'));
         $this->assertCount(3, $props);
         $this->assertArrayHasKey('@checksum', $props);
         $this->assertArrayHasKey('@attributes', $props);
@@ -185,19 +168,16 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
     public function testAbsoluteUrlWithLiveQueryProp()
     {
-        $token = null;
         $props = [];
         $div = $this->browser()
             ->get('/render-template/render_with_absolute_url?count=1')
             ->assertSuccessful()
             ->assertContains('Count: 1')
-            ->use(function (Crawler $crawler) use (&$token, &$props) {
+            ->use(function (Crawler $crawler) use (&$props) {
                 $div = $crawler->filter('div')->first();
-                $token = $div->attr('data-live-csrf-value');
                 $props = json_decode($div->attr('data-live-props-value'), true);
             })
             ->post('http://localhost/_components/with_absolute_url/increase', [
-                'headers' => ['X-CSRF-TOKEN' => $token],
                 'body' => ['data' => json_encode(['props' => $props])],
             ])
             ->assertContains('Count: 2')
@@ -209,7 +189,6 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
 
         $this->assertSame('live', $div->attr('data-controller'));
         $this->assertSame('http://localhost/_components/with_absolute_url', $div->attr('data-live-url-value'));
-        $this->assertNotNull($div->attr('data-live-csrf-value'));
         $this->assertCount(3, $props);
         $this->assertArrayHasKey('@checksum', $props);
         $this->assertArrayHasKey('@attributes', $props);
