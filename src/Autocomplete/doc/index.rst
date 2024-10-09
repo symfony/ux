@@ -479,7 +479,7 @@ events that the core Stimulus controller dispatches:
         }
 
         _onConnect(event) {
-            // TomSelect has just been intialized and you can access details from the event
+            // TomSelect has just been initialized and you can access details from the event
             console.log(event.detail.tomSelect); // TomSelect instance
             console.log(event.detail.options); // Options used to initialize TomSelect
         }
