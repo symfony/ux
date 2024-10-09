@@ -26,8 +26,9 @@ class UxPackage
         private string $gradient,
         private string $tagLine,
         private string $description,
-        private string $createString,
+        private ?string $createString = null,
         private ?string $imageFileName = null,
+        private ?string $composerName = null,
     ) {
     }
 
@@ -73,7 +74,7 @@ class UxPackage
 
     public function getComposerName(): string
     {
-        return 'symfony/ux-'.$this->getName();
+        return $this->composerName ?? 'symfony/ux-'.$this->getName();
     }
 
     public function getComposerRequireCommand(): string
@@ -117,12 +118,21 @@ class UxPackage
         return $this->screencastLinkText;
     }
 
-    public function getOfficialDocsUrl(): string
+    public function setOfficialDocsUrl(string $officialDocsUrl): self
     {
-        return \sprintf('https://symfony.com/bundles/ux-%s/current/index.html', $this->name);
+        $this->officialDocsUrl = $officialDocsUrl;
+
+        return $this;
     }
 
-    public function getCreateString(): string
+    private string $officialDocsUrl;
+
+    public function getOfficialDocsUrl(): string
+    {
+        return $this->officialDocsUrl ??= \sprintf('https://symfony.com/bundles/ux-%s/current/index.html', $this->name);
+    }
+
+    public function getCreateString(): ?string
     {
         return $this->createString;
     }

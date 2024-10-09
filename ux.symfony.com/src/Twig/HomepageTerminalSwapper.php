@@ -11,6 +11,7 @@
 
 namespace App\Twig;
 
+use App\Model\UxPackage;
 use App\Service\UxPackageRepository;
 use App\Util\SourceCleaner;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
@@ -27,7 +28,8 @@ class HomepageTerminalSwapper
     public function getTypedStrings(): array
     {
         $strings = [];
-        $packages = $this->packageRepository->findAll();
+        $packages = array_filter($this->packageRepository->findAll(), fn (UxPackage $p): bool => null !== $p->getCreateString());
+
         shuffle($packages);
 
         foreach ($packages as $package) {

@@ -1,22 +1,26 @@
-<div class="PackageHeader mb-5" style="background: {{ package.gradient }}, {{ package.color }};">
+<div class="PackageHeader mb-5 {{ not (command ?? true) ? 'pb-5' }}"  style="background: {{ package.gradient }}, {{ package.color }}; --color-accent: {{ package.color }};"
+>
     <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5 position-relative">
 
-        <p class="eyebrows text-center font-white mt-5" style="opacity: 0.8;">{{ eyebrowText|raw }}</p>
+        <p class="eyebrows text-center font-white mt-5" style="opacity: 0.85;">{{ eyebrowText|raw }}</p>
 
-        <h1 class="text-center font-white">{% block title_header %}{% endblock %}</h1>
+        <h1 class="text-center font-white">{% block title_header %}{{ title|default }}{% endblock %}</h1>
 
         <div class="d-flex justify-content-center">
             <p class="text-center font-white mt-3 pb-3 hero-sub-text">
-                {% block sub_content %}{% endblock %}
+                {% block sub_content %}{{ subtitle|default }}{% endblock %}
             </p>
         </div>
 
-        <div class="d-flex justify-content-center ">
-            <twig:TerminalCommand
-                aria-label="Composer command to install {{ package.humanName }}"
-                command="{{ package.composerRequireCommand }}"
-                style="--color-accent: {{ package.color }}; transform: translateY(50%);"
-            />
-        </div>
+        {% if command is not defined or command %}
+            <div class="d-flex justify-content-center">
+                <twig:TerminalCommand
+                    aria-label="Composer command to install {{ package.humanName }}"
+                    command="{{ package.composerRequireCommand }}"
+                    style="--color-accent: {{ package.color }}; transform: translateY(50%);"
+                />
+            </div>
+        {% endif %}
+
     </div>
 </div>

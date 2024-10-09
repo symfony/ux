@@ -1,0 +1,49 @@
+.FeatureBox {
+
+  --bg-color: var(--bs-body-bg);
+  [data-bs-theme="dark"] {
+    --bg-color: #1b1e21;
+  }
+
+  background: var(--bg-color);
+  border: 1px solid var(--bs-secondary-bg-subtle);
+  border-radius: var(--border-radius);
+  display: grid;
+  padding: 1rem;
+  place-content: center;
+  gap: .75rem;
+}
+
+.FeatureBox_icon {
+  height: 2.4rem;
+  display: grid;
+  place-content: center;
+  svg {
+    height: 100%;
+    width: 100%;
+  }
+  path, circle {
+    fill: var(--bs-body-bg);
+    fill-opacity: .1;
+    stroke: currentColor;
+    stroke-width: 1;
+    transition: 400ms;
+  }
+}
+.FeatureBox:hover {
+  path, circle {
+    fill-opacity: .15;
+    stroke-width: 1.25;
+  }
+}
+
+.FeatureBox_title {
+  opacity: .85;
+  font-weight: 400;
+  font-size: 1rem;
+  font-family: var(--font-family-text);
+  color: var(--bs-body-color);
+  text-decoration: none;
+  line-height: 1;
+  text-align: center;
+}
