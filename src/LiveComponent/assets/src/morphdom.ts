@@ -118,11 +118,11 @@ export function executeMorphdom(
 
                 // skip special checking if this is, for example, an SVG
                 if (fromEl instanceof HTMLElement && toEl instanceof HTMLElement) {
-                    // We assume fromEl is an Alpine component if it has `__x` property.
+                    // We assume fromEl is an Alpine component if it has `__x` (Alpine v2) or `_x_dataStack` (Alpine v3) property.
                     // If it's the case, then we should morph `fromEl` to `ToEl` (thanks to https://alpinejs.dev/plugins/morph)
                     // in order to keep the component state and UI in sync.
                     // @ts-ignore
-                    if (typeof fromEl.__x !== 'undefined') {
+                    if (typeof fromEl.__x !== 'undefined' || typeof fromEl._x_dataStack !== 'undefined') {
                         // @ts-ignore
                         if (!window.Alpine) {
                             throw new Error(
@@ -138,7 +138,7 @@ export function executeMorphdom(
                         }
 
                         // @ts-ignore
-                        window.Alpine.morph(fromEl.__x, toEl);
+                        window.Alpine.morph(fromEl.__x || fromEl, toEl);
                     }
 
                     if (externalMutationTracker.wasElementAdded(fromEl)) {
