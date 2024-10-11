@@ -46,6 +46,16 @@ class ProductType extends AbstractType
                 'autocomplete' => true,
                 'mapped' => false,
             ])
+            ->add('colour', ChoiceType::class, [
+                'choices' => [
+                    'red' => 'red',
+                    'blue' => 'blue',
+                    'green' => 'green',
+                ],
+                'autocomplete' => true,
+                'mapped' => false,
+                'required' => false,
+            ])
             ->add('tags', TextType::class, [
                 'mapped' => false,
                 'autocomplete' => true,
