@@ -13,8 +13,6 @@ Install the test app:
 
     $ composer install
     $ cd tests/app
-    $ yarn install
-    $ yarn build
     $ php public/index.php doctrine:schema:create
 
 Start the test app:

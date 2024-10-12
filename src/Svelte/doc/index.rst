@@ -31,10 +31,6 @@ Install the bundle using Composer and Symfony Flex:
     $ npm install --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn install --force
-    $ yarn watch
-
 The Flex recipe will automatically set things up for you, like adding
 ``.enableSvelte()`` to your ``webpack.config.js`` file and adding code
 to load your Svelte components inside ``assets/app.js``.
@@ -44,9 +40,6 @@ Next, install a package to help Svelte:
 .. code-block:: terminal
 
     $ npm install svelte-loader --save-dev
-
-    # or use yarn
-    $ yarn add svelte-loader --dev
 
 That's it! Any files inside ``assets/svelte/controllers/`` can now be rendered as
 Svelte components.

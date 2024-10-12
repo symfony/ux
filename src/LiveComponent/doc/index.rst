@@ -87,10 +87,6 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn install --force
-    $ yarn watch
-
 If your project is localized in different languages (either via the `locale route parameter`_
 or by `setting the locale in the request`_) add the ``{_locale}`` attribute to
 the UX Live Components route definition to keep the locale between re-renders:

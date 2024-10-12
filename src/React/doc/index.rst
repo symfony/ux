@@ -39,10 +39,6 @@ Next, install a package to help React:
     $ npm install -D @babel/preset-react --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn add @babel/preset-react --dev --force
-    $ yarn watch
-
 That's it! Any files inside ``assets/react/controllers/`` can now be rendered as
 React components.
 

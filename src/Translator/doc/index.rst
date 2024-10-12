@@ -35,10 +35,6 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn install --force
-    $ yarn watch
-
 After installing the bundle, the following file should be created, thanks to the Symfony Flex recipe:
 
 .. code-block:: javascript
