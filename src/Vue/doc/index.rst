@@ -39,10 +39,6 @@ Next, install a package to help Vue:
     $ npm install -D vue-loader --force
     $ npm run watch
 
-    # or with yarn
-    $ yarn add vue-loader --dev --force
-    $ yarn watch
-
 That's it! Any files inside ``assets/vue/controllers/`` can now be rendered as
 Vue components.
 
