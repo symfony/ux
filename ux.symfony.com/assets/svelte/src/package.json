@@ -9,7 +9,6 @@
     "private": true,
     "scripts": {
         "build": "yarn build-react && yarn build-svelte",
-        "build-react": "babel assets/react --out-dir assets/build/react --presets=@babel/preset-react",
         "build-svelte": "node bin/compile_svelte.js"
     }
 }

@@ -1,0 +1,8 @@
+<div class="PackageListItem">
+    <div class="PackageListItem__icon" style="--gradient: {{ package.gradient }};">
+        <img src="{{ asset('images/ux_packages/' ~ package.imageFilename) }}" alt="Symfony UX {{ package.humanName }}" />
+    </div>
+    <h4 class="PackageListItem__label">
+        <a href="{{ url(package.route) }}">{{ package.humanName }}</a>
+    </h4>
+</div>

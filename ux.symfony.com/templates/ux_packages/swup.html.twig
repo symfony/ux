@@ -31,9 +31,10 @@
 {% block demo_content %}
     {% block swup_specific_demo_content %}
         <div data-controller="symfony--ux-swup--swup" id="swup" data-turbo="false">
-            <div class="row">
+
+            <div class="PackageList">
                 {% for package in results %}
-                    {{ include('main/_package_in_list.html.twig', {package}) }}
+                    {{ include('components/Package/PackageListItem.html.twig', {package}) }}
                 {% endfor %}
             </div>
 
@@ -50,7 +51,7 @@
         </div>
     {% endblock %}
 
-    <div class="d-flex eyebrows pt-3 align-items-center justify-content-center flex-wrap">
+    <div class="d-flex eyebrows pt-3 gap-2 align-items-center justify-content-center flex-wrap">
         <div>Ajax-powered page navigation</div>
         <twig:ux:icon name="circle-fill" />
         <div>URL in address bar changes</div>

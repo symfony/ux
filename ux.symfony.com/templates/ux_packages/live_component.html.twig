@@ -26,10 +26,10 @@
 {% block demo_title %}
     Live Components
 {% endblock %}
+
 {% block demo_content %}
     <twig:SearchPackages />
-
-    <div class="d-flex eyebrows pt-5 align-items-center justify-content-center">
+    <div class="d-flex eyebrows pt-4 gap-2 align-items-center justify-content-center">
         <div>Automatic <em>debouncing</em></div>
         <twig:ux:icon name="circle-fill" />
         <div>Loading states</div>
@@ -61,6 +61,6 @@
     </div>
 </section>
 
-    {{ parent() }}
+{{ parent() }}
 
 {% endblock %}

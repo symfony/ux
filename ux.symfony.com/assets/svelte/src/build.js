@@ -31,6 +31,6 @@ function compileDirectory(inputDir, outputDir) {
 }
 
 compileDirectory(
-    path.join(__dirname, '..', 'assets', 'svelte'),
-    path.join(__dirname, '..', 'assets', 'build', 'svelte'),
+    path.join(__dirname, '..',  'src' ),
+    path.join(__dirname, '..',  'dist' ),
 );

@@ -17,15 +17,15 @@ return [
         'entrypoint' => true,
     ],
     'app-react' => [
-        'path' => './assets/app-react.js',
+        'path' => './assets/react/app-react.js',
         'entrypoint' => true,
     ],
     'app-svelte' => [
-        'path' => './assets/app-svelte.js',
+        'path' => './assets/svelte/app-svelte.js',
         'entrypoint' => true,
     ],
     'app-vue' => [
-        'path' => './assets/app-vue.js',
+        'path' => './assets/vue/app-vue.js',
         'entrypoint' => true,
     ],
     'demos/live-memory' => [
