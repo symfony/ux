@@ -37,8 +37,6 @@ Configure test environment (working directory: `src/Turbo`):
 composer update
 docker compose up -d
 cd tests/app
-yarn install
-yarn build
 php public/index.php doctrine:schema:create
 ```
 

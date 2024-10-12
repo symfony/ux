@@ -26,10 +26,6 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
-    # or use yarn
-    $ yarn install --force
-    $ yarn watch
-
 Usage
 -----
 
@@ -98,9 +94,6 @@ First, install the plugin:
 .. code-block:: terminal
 
     $ npm install chartjs-plugin-zoom -D
-
-    # or use yarn
-    $ yarn add chartjs-plugin-zoom --dev
 
 Then register the plugin globally. This can be done in your ``app.js`` file:
 
