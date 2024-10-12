@@ -12,6 +12,7 @@
 namespace Symfony\UX\LiveComponent;
 
 use Psr\Container\ContainerInterface;
+use Symfony\Component\Validator\Constraints\GroupSequence;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
@@ -30,9 +31,9 @@ class ComponentValidator implements ComponentValidatorInterface, ServiceSubscrib
     /**
      * @return ConstraintViolation[][]
      */
-    public function validate(object $component): array
+    public function validate(object $component, string|GroupSequence|array $groups = null): array
     {
-        $errors = $this->getValidator()->validate($component);
+        $errors = $this->getValidator()->validate($component, groups: $groups);
 
         $validationErrors = [];
         foreach ($errors as $error) {
@@ -57,12 +58,12 @@ class ComponentValidator implements ComponentValidatorInterface, ServiceSubscrib
      *
      * @return ConstraintViolation[]
      */
-    public function validateField(object $component, string $propertyPath): array
+    public function validateField(object $component, string $propertyPath, string|GroupSequence|array $groups = null): array
     {
         $propertyParts = explode('.', $propertyPath);
         $propertyName = $propertyParts[0];
 
-        $errors = $this->getValidator()->validateProperty($component, $propertyName);
+        $errors = $this->getValidator()->validateProperty($component, $propertyName, groups: $groups);
 
         $errorsForPath = [];
         foreach ($errors as $error) {
