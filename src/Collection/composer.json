@@ -1,0 +1,63 @@
+{
+    "name": "symfony/ux-collection",
+    "type": "symfony-bundle",
+    "description": "Support for collection embedding with Symfony Form",
+    "keywords": [
+        "symfony-ux",
+        "form",
+        "collection"
+    ],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kévin Dunglas",
+            "email": "kevin@dunglas.fr"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Symfony\\UX\\Collection\\": ""
+        },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "App\\": "Tests/app/"
+        }
+    },
+    "require": {
+        "php": ">=8.1",
+        "symfony/webpack-encore-bundle": "^1.14"
+    },
+    "require-dev": {
+        "symfony/debug-bundle": "^5.4|^6.1",
+        "symfony/form": "^5.4|^6.1",
+        "symfony/framework-bundle": "^5.4|^6.1",
+        "symfony/panther": "^2.0",
+        "symfony/phpunit-bridge": "^5.4|^6.1",
+        "symfony/twig-bundle": "^5.4|^6.1",
+        "symfony/web-profiler-bundle": "^5.4|^6.1"
+    },
+    "conflict": {
+        "symfony/flex": "<1.13"
+    },
+    "extra": {
+        "thanks": {
+            "name": "symfony/ux",
+            "url": "https://github.com/symfony/ux"
+        }
+    },
+    "minimum-stability": "dev",
+    "config": {
+        "allow-plugins": {
+            "composer/package-versions-deprecated": true
+        }
+    }
+}
