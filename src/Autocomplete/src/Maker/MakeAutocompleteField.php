@@ -53,7 +53,7 @@ class MakeAutocompleteField extends AbstractMaker
         return 'Generates an Ajax-autocomplete form field class for symfony/ux-autocomplete.';
     }
 
-    public function configureCommand(Command $command, InputConfiguration $inputConfig)
+    public function configureCommand(Command $command, InputConfiguration $inputConfig): void
     {
         $command
              ->setHelp(<<<EOF
@@ -66,12 +66,12 @@ EOF)
         ;
     }
 
-    public function configureDependencies(DependencyBuilder $dependencies)
+    public function configureDependencies(DependencyBuilder $dependencies): void
     {
         $dependencies->addClassDependency(FormInterface::class, 'symfony/form');
     }
 
-    public function interact(InputInterface $input, ConsoleStyle $io, Command $command)
+    public function interact(InputInterface $input, ConsoleStyle $io, Command $command): void
     {
         if (null === $this->doctrineHelper) {
             throw new \LogicException('Somehow the DoctrineHelper service is missing from MakerBundle.');
@@ -94,7 +94,7 @@ EOF)
         );
     }
 
-    public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator)
+    public function generate(InputInterface $input, ConsoleStyle $io, Generator $generator): void
     {
         if (null === $this->doctrineHelper) {
             throw new \LogicException('Somehow the DoctrineHelper service is missing from MakerBundle.');

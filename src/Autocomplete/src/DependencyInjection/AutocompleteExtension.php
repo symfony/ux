@@ -40,7 +40,7 @@ use function Symfony\Component\DependencyInjection\Loader\Configurator\abstract_
  */
 final class AutocompleteExtension extends Extension implements PrependExtensionInterface
 {
-    public function prepend(ContainerBuilder $container)
+    public function prepend(ContainerBuilder $container): void
     {
         $bundles = $container->getParameter('kernel.bundles');
 
@@ -61,7 +61,7 @@ final class AutocompleteExtension extends Extension implements PrependExtensionI
         }
     }
 
-    public function load(array $configs, ContainerBuilder $container)
+    public function load(array $configs, ContainerBuilder $container): void
     {
         $this->registerBasicServices($container);
         if (ContainerBuilder::willBeAvailable('symfony/form', Form::class, ['symfony/framework-bundle'])) {
