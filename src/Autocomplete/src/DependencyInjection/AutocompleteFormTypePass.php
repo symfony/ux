@@ -29,13 +29,13 @@ class AutocompleteFormTypePass implements CompilerPassInterface
     /** @var string Tag applied to EntityAutocompleterInterface classes */
     public const ENTITY_AUTOCOMPLETER_TAG = 'ux.entity_autocompleter';
 
-    public function process(ContainerBuilder $container)
+    public function process(ContainerBuilder $container): void
     {
         $this->processEntityAutocompleteFieldTag($container);
         $this->processEntityAutocompleterTag($container);
     }
 
-    private function processEntityAutocompleteFieldTag(ContainerBuilder $container)
+    private function processEntityAutocompleteFieldTag(ContainerBuilder $container): void
     {
         foreach ($container->findTaggedServiceIds(self::ENTITY_AUTOCOMPLETE_FIELD_TAG, true) as $serviceId => $tag) {
             $serviceDefinition = $container->getDefinition($serviceId);
@@ -68,7 +68,7 @@ class AutocompleteFormTypePass implements CompilerPassInterface
         return $attribute->getAlias() ?: AsEntityAutocompleteField::shortName($class);
     }
 
-    private function processEntityAutocompleterTag(ContainerBuilder $container)
+    private function processEntityAutocompleterTag(ContainerBuilder $container): void
     {
         $servicesMap = [];
         foreach ($container->findTaggedServiceIds(self::ENTITY_AUTOCOMPLETER_TAG, true) as $serviceId => $tag) {
