@@ -1,0 +1,22 @@
+{
+    "name": "@symfony/ux-form-collection",
+    "description": "UX Form Collection for Symfony Forms",
+    "license": "MIT",
+    "version": "1.0.0",
+    "symfony": {
+        "controllers": {
+            "collection": {
+                "main": "dist/controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0"
+    }
+}
