@@ -1,18 +1,13 @@
 <div{{ attributes }}>
-    <input
-        type="text"
-        data-model="query"
-        placeholder="Results update as you type..."
-        class="form-control"
-    >
 
-    {% if computed.packages|length > 0 %}
-        <div data-loading="addClass(opacity-50)" class="mt-3 row">
-            {% for package in computed.packages %}
-                {{ include('main/_package_in_list.html.twig', {package}) }}
-            {% endfor %}
-        </div>
-    {% else %}
-        <div class="pt-3">Ah! No packages found matching "{{ query }}"</div>
-    {% endif %}
+    <input type="text"  data-model="query" placeholder="Results update as you type..." class="form-control" />
+
+    <div class="PackageList pt-3" data-loading="addClass(opacity-50)">
+        {% for package in computed.packages %}
+            {{ include('components/Package/PackageListItem.html.twig', {package}) }}
+         {% else %}
+            No packages found "{{ query }}"
+        {% endfor %}
+    </div>
+
 </div>

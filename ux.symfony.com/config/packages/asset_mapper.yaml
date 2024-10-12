@@ -7,10 +7,12 @@ framework:
             - '*/assets/styles/_*.scss'
             - '*/assets/styles/**/_*.scss'
             - '*/assets/icons/**'
+            - '*/assets/react/src/**'       # Exclude React source + build files
+            - '*/assets/svelte/src/**'      # Exclude Svelte source + build files
         importmap_polyfill: false
 
 react:
-    controllers_path: '%kernel.project_dir%/assets/build/react/controllers'
+    controllers_path: '%kernel.project_dir%/assets/react/dist/controllers'
 
 svelte:
-    controllers_path: '%kernel.project_dir%/assets/build/svelte/controllers'
+    controllers_path: '%kernel.project_dir%/assets/svelte/dist/controllers'

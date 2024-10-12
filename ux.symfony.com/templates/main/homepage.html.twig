@@ -37,13 +37,9 @@
         </div>
 
         <div class="col-12 col-md-6 mt-3 mt-md-0">
-            <div data-controller="tooltips" class="ux-container FileTree flex-grow-1 ms-2 py-3">
+            <div data-controller="tooltips" class="ux-container FileTree  flex-grow-1 ms-2 py-3">
                 <div style="height: 185px; overflow: auto;">
-                    <ul class="list-unstyled FileTree-main">
-                        {{ include('main/_file_tree.html.twig', {
-                            files: recipeFileTree.files
-                        }) }}
-                    </ul>
+                    <twig:FileTree files="{{ recipeFileTree.files }}" />
                 </div>
             </div>
         </div>

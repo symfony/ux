@@ -20,7 +20,7 @@
 {% endblock %}
 
 {% block code_block_left %}
-    <twig:CodeBlock filename="assets/svelte/controllers/PackageSearch.svelte" height="300px" language="html" />
+    <twig:CodeBlock filename="assets/svelte/src/controllers/PackageSearch.svelte" height="300px" language="html" />
 {% endblock %}
 
 {% block code_block_right %}
@@ -34,9 +34,7 @@
 {% block demo_title %}UX Svelte{% endblock %}
 
 {% block demo_content %}
-    <div {{ svelte_component('PackageSearch', {
-        packages: packagesData,
-    }) }}>
-        Loading... <i class="fas fa-cog fa-spin fa-3x"></i>
+    <div {{ svelte_component('PackageSearch', {packages: packagesData}) }}>
+        Loading...
     </div>
 {% endblock %}

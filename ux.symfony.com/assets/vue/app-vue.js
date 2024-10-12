@@ -1,5 +1,5 @@
 import {registerVueControllerComponents} from '@symfony/ux-vue';
 
-import './app.js';
+import '../app.js';
 
 registerVueControllerComponents();

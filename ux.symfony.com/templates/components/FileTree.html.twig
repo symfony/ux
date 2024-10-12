@@ -1,0 +1,22 @@
+<div class="FileTree FileTree-main list-unstyled px-3">
+    {{ _self.fileTree(files) }}
+</div>
+
+{% macro fileTree(files) %}
+    {% for file_info in files %}
+            <li class="FileTree-main {{ file_info.isDirectory ? 'FileTree-dir' : 'FileTree-file' }}">
+                <span
+                    data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="right"
+                    title="{{ file_info.description|e('html_attr') }}"
+                >
+                    <twig:ux:icon name="{{ file_info.isDirectory ? 'folder-open' : 'file' }}" />
+                    {{ file_info.filename }}
+                </span>
+                {% if file_info.files is defined %}
+                    <ul class="list-unstyled">
+                        {{ _self.fileTree(file_info.files) }}
+                    </ul>
+                {% endif %}
+            </li>
+    {% endfor %}
+{% endmacro %}
