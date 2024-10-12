@@ -28,6 +28,9 @@ final class AutocompleterRegistry
         return $this->autocompletersLocator->has($alias) ? $this->autocompletersLocator->get($alias) : null;
     }
 
+    /**
+     * @return list<string>
+     */
     public function getAutocompleterNames(): array
     {
         return array_keys($this->autocompletersLocator->getProvidedServices());
