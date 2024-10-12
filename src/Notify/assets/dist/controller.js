@@ -26,7 +26,7 @@ class default_1 extends Controller {
             return;
         }
         this.eventSources.forEach((eventSource) => {
-            const listener = (event) => this._notify(JSON.parse(event.data).summary);
+            const listener = (event) => this._notify(JSON.parse(event.data).summary, JSON.parse(event.data).content);
             eventSource.addEventListener('message', listener);
             this.listeners.set(eventSource, listener);
         });
@@ -42,17 +42,17 @@ class default_1 extends Controller {
         });
         this.eventSources = [];
     }
-    _notify(content) {
-        if (!content)
+    _notify(title, options) {
+        if (!title)
             return;
         if ('granted' === Notification.permission) {
-            new Notification(content);
+            new Notification(title, options);
             return;
         }
         if ('denied' !== Notification.permission) {
             Notification.requestPermission().then((permission) => {
                 if ('granted' === permission) {
-                    new Notification(content);
+                    new Notification(title, options);
                 }
             });
         }

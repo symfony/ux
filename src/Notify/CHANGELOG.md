@@ -1,5 +1,8 @@
 # CHANGELOG
 
+-   Added options to Notification
+-   Rename content from \_notify to title
+
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"
