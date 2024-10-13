@@ -309,6 +309,21 @@ final class LiveComponentHydratorTest extends KernelTestCase
             ;
         }];
 
+        yield 'empty DateTime hydrates correctly' => [function () {
+            $date = new \DateTime('2023-03-05 9:23', new \DateTimeZone('America/New_York'));
+
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true)]
+                public ?\DateTime $createdAt = null;
+            })
+                ->mountWith(['createdAt' => $date])
+                ->userUpdatesProps(['createdAt' => ''])
+                ->assertObjectAfterHydration(function (object $object) use ($date) {
+                    self::assertNull($object->createdAt);
+                })
+            ;
+        }];
+
         yield 'Persisted entity: (de)hydration works correctly to/from id' => [function () {
             $entity1 = persist(Entity1::class);
             \assert($entity1 instanceof Entity1);
