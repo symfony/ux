@@ -28,6 +28,7 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Security\Csrf\CsrfToken;
 use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
+use Symfony\Component\DependencyInjection\Exception\RuntimeException;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
@@ -272,6 +273,14 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     {
         if (!$this->isLiveComponentRequest($request = $event->getRequest())) {
             return;
+        }
+
+        if ($event->getThrowable() instanceof RuntimeException) {
+            if (str_starts_with($event->getThrowable()->getMessage(), 'Could not resolve argument $key')) {
+                $throwable = new RuntimeException('It look likes you trying to call a LiveAction or a LiveListener without the required arguments. 
+                Please make sure the arguments of your action have a #[LiveArgument] in front of them.', $event->getThrowable()->getCode(), $event->getThrowable()->getPrevious());
+                $event->setThrowable($throwable);
+            }
         }
 
         if (!$event->getThrowable() instanceof UnprocessableEntityHttpException) {
