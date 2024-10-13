@@ -1,0 +1,77 @@
+name: Dist Files Size Diff
+
+on:
+  pull_request:
+    paths:
+      - 'src/*/assets/dist/**'
+      - 'src/*/src/Bridge/*/assets/dist/**'
+
+jobs:
+    dist-files-size-diff:
+        runs-on: ubuntu-latest
+        permissions:
+          pull-requests: write # for marocchino/sticky-pull-request-comment@v2
+        steps:
+          - name: Configure git
+            run: |
+              git config --global user.email ""
+              git config --global user.name "github-action[bot]"
+              
+          - uses: marocchino/sticky-pull-request-comment@v2
+            with:
+              message: |
+                ⏳ The dist files size difference is being calculated...
+
+          - uses: actions/checkout@v4
+            with:
+              ref: ${{ github.base_ref }}
+
+          - name: Get dist files size (from base branch)
+            id: base-dist-files
+            run: |
+              set -e
+              
+              FILES=$(find src -mindepth 2 -path '*/assets/dist/*' \( -name "*.js" -o -name "*.css" \) -not \( -path '*/tests/*' -o -path '*/public/*' -o -path '*/vendor/*' \) | sort | while read -r file; do
+                  echo "{\"$file\": {\"size\": $(wc -c < "$file"), \"size_gz\": $(gzip -c "$file" | wc -c)}}"
+              done | jq -s 'add' -c)
+              
+              echo "files=$FILES" >> $GITHUB_OUTPUT
+
+          - uses: actions/checkout@v4
+              
+          - name: Get dist files size (from pull request)
+            id: pr-dist-files
+            run: |
+              set -e
+              
+              FILES=$(find src -mindepth 2 -path '*/assets/dist/*' \( -name "*.js" -o -name "*.css" \) -not \( -path '*/tests/*' -o -path '*/public/*' -o -path '*/vendor/*' \) | sort | while read -r file; do
+                  echo "{\"$file\": {\"size\": $(wc -c < "$file"), \"size_gz\": $(gzip -c "$file" | wc -c)}}"
+              done | jq -s 'add' -c)
+              
+              echo "files=$FILES" >> $GITHUB_OUTPUT
+
+          - name: Generate the diff
+            id: diff
+            uses: actions/github-script@v7
+            env:
+                BASE_DIST_FILES: ${{ steps.base-dist-files.outputs.files }}
+                PR_DIST_FILES: ${{ steps.pr-dist-files.outputs.files }}
+            with:
+              result-encoding: string
+              script: |
+                const { main } = await import('${{ github.workspace }}/.github/generate-dist-files-size-diff.mjs')
+                
+                return await main()
+                
+          - name: Comment on the pull request (if any failure)
+            if: ${{ failure() }}
+            uses: marocchino/sticky-pull-request-comment@v2
+            with:
+              message: |
+                ❌ The dist files size difference could not be calculated. Please check the logs for more details.
+                
+          - name: Comment on the pull request (if success)
+            if: ${{ always() && steps.diff.conclusion == 'success' }}
+            uses: marocchino/sticky-pull-request-comment@v2
+            with:
+              message: ${{ steps.diff.outputs.result }}
