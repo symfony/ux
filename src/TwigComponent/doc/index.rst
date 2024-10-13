@@ -58,7 +58,29 @@ Let's get this thing installed! Run:
 
     $ composer require symfony/ux-twig-component
 
-That's it! We're ready to go! If you're not using Symfony Flex, add a config
+You can now use the `MakerBundle`_ to get the skeleton of the Twig component made:
+
+.. code-block:: terminal
+
+    $ php bin/console make:twig-component
+     The name of your twig component (ie Notification):
+     > Notification
+
+     Make this a live component? (yes/no) [no]:
+     > no
+
+     created: src/Twig/Components/Notification.php
+     created: templates/components/Notification.html.twig
+
+
+      Success!
+
+This will also setup the config.
+
+Similarly, to make a `live component`_, enter ``yes`` when prompted whether
+to make this a live component.
+
+If you're not using Symfony Flex, add a config
 file to control the template directory for your components:
 
 .. _default_config:
@@ -71,6 +93,8 @@ file to control the template directory for your components:
         defaults:
             # Namespace & directory for components
             App\Twig\Components\: 'components/'
+
+That's it! We're ready to go!
 
 Component Basics
 ----------------
@@ -1761,6 +1785,7 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`Live Components`: https://symfony.com/bundles/ux-live-component/current/index.html
+.. _`MakerBundle`: https://symfony.com/bundles/SymfonyMakerBundle/current/index.html
 .. _`live component`: https://symfony.com/bundles/ux-live-component/current/index.html
 .. _`Vue`: https://v3.vuejs.org/guide/computed.html
 .. _`Live Nested Components`: https://symfony.com/bundles/ux-live-component/current/index.html#nested-components
