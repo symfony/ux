@@ -122,42 +122,7 @@ class default_1 extends default_1$1 {
         return polygon;
     }
     doCreateInfoWindow({ definition, element, }) {
-        const { headerContent, content, extra, rawOptions = {}, ...otherOptions } = definition;
-        const infoWindow = new _google.maps.InfoWindow({
-            headerContent: this.createTextOrElement(headerContent),
-            content: this.createTextOrElement(content),
-            ...otherOptions,
-            ...rawOptions,
-        });
-        if (element instanceof google.maps.marker.AdvancedMarkerElement) {
-            element.addListener('click', () => {
-                if (definition.autoClose) {
-                    this.closeInfoWindowsExcept(infoWindow);
-                }
-                infoWindow.open({ map: this.map, anchor: element });
-            });
-            if (definition.opened) {
-                infoWindow.open({ map: this.map, anchor: element });
-            }
-        }
-        else if (element instanceof google.maps.Polygon) {
-            element.addListener('click', (event) => {
-                if (definition.autoClose) {
-                    this.closeInfoWindowsExcept(infoWindow);
-                }
-                infoWindow.setPosition(event.latLng);
-                infoWindow.open(this.map);
-            });
-            if (definition.opened) {
-                const bounds = new google.maps.LatLngBounds();
-                element.getPath().forEach((point) => {
-                    bounds.extend(point);
-                });
-                infoWindow.setPosition(bounds.getCenter());
-                infoWindow.open({ map: this.map, anchor: element });
-            }
-        }
-        return infoWindow;
+        // :)
     }
     createTextOrElement(content) {
         if (!content) {
