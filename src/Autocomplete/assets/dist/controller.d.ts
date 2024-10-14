@@ -40,6 +40,7 @@ export default class extends Controller {
     connect(): void;
     initializeTomSelect(): void;
     disconnect(): void;
+    urlValueChanged(): void;
     private getMaxOptions;
     get selectElement(): HTMLSelectElement | null;
     get formElement(): HTMLInputElement | HTMLSelectElement;

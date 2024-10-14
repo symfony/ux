@@ -138,6 +138,80 @@ describe('AutocompleteController', () => {
         expect(fetchMock.requests()[1].url).toEqual('/path/to/autocomplete?query=foo');
     });
 
+    it('resets when ajax URL attribute on a select element changes', async () => {
+        const { container, tomSelect} = await startAutocompleteTest(`
+            <label for="the-select">Items</label>
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete"
+            ></select>
+        `);
+
+        const selectElement = getByTestId(container, 'main-element') as HTMLSelectElement;
+
+        // initial Ajax request on focus
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    {
+                        value: 3,
+                        text: 'salad'
+                    },
+                ]
+            }),
+        );
+
+        fetchMock.mockResponseOnce(
+            JSON.stringify({
+                results: [
+                    {
+                        value: 1,
+                        text: 'pizza'
+                    },
+                    {
+                        value: 2,
+                        text: 'popcorn'
+                    }
+                ]
+            }),
+        );
+
+        const controlInput = tomSelect.control_input;
+
+        // wait for the initial Ajax request to finish
+        userEvent.click(controlInput);
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(1);
+        });
+
+        controlInput.value = 'foo';
+        controlInput.dispatchEvent(new Event('input'));
+
+        await waitFor(() => {
+            expect(container.querySelectorAll('.option[data-selectable]')).toHaveLength(2);
+        });
+
+        expect(selectElement.value).toBe('');
+        tomSelect.addItem('2');
+        expect(selectElement.value).toBe('2');
+
+        selectElement.outerHTML = `
+            <select
+                id="the-select"
+                data-testid="main-element"
+                data-controller="autocomplete"
+                data-autocomplete-url-value="/path/to/autocomplete2"
+            ></select>
+        `;
+
+        // wait for the MutationObserver to flush these changes
+        await shortDelay(10);
+
+        expect(selectElement.value).toBe('');
+    });
+
     it('connect with ajax URL on an input element', async () => {
         const { container, tomSelect } = await startAutocompleteTest(`
             <label for="the-input">Items</label>
