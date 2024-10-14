@@ -44,7 +44,6 @@
         "symfony/phpunit-bridge": "^6.3|^7.0",
         "symfony/process": "^6.3|^7.0",
         "symfony/security-bundle": "^6.3|^7.0",
-        "symfony/security-csrf": "^6.3|^7.0",
         "symfony/twig-bundle": "^6.3|^7.0",
         "symfony/uid": "^6.3|^7.0",
         "twig/twig": "^2.14.7|^3.0.4",
