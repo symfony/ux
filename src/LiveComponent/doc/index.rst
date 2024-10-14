@@ -2421,7 +2421,7 @@ the ``loading-template`` option to point to a template:
     <twig:SomeHeavyComponent loading="defer" loading-template="spinning-wheel.html.twig" />
 
     {# With the component function #}
-    {{ component('SomeHeavyComponent', { loading: 'defer', loading-template: 'spinning-wheel.html.twig' }) }}
+    {{ component('SomeHeavyComponent', { loading: 'defer', 'loading-template': 'spinning-wheel.html.twig' }) }}
 
 Or override the ``loadingContent`` block:
 
@@ -2444,7 +2444,7 @@ To change the initial tag from a ``div`` to something else, use the ``loading-ta
 
 .. code-block:: twig
 
-    {{ component('SomeHeavyComponent', { loading: 'defer', loading-tag: 'span' }) }}
+    {{ component('SomeHeavyComponent', { loading: 'defer', 'loading-tag': 'span' }) }}
 
 Polling
 -------
