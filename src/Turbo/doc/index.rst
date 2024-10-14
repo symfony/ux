@@ -19,10 +19,6 @@ Or watch the `Turbo Screencast on SymfonyCasts`_.
 Installation
 ------------
 
-.. caution::
-
-    Before you start, make sure you have `StimulusBundle configured in your app`_.
-
 Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
@@ -900,6 +896,5 @@ Symfony UX Turbo has been created by `Kévin Dunglas`_. It has been inspired by
 .. _`Kévin Dunglas`: https://dunglas.fr
 .. _`hotwired/turbo-rails`: https://github.com/hotwired/turbo-rails
 .. _`sroze/live-twig`: https://github.com/sroze/live-twig
-.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`Moving <script> inside <head> and the "defer" Attribute`: https://symfony.com/blog/moving-script-inside-head-and-the-defer-attribute
 .. _`Expression Language`: https://symfony.com/doc/current/components/expression_language.html
