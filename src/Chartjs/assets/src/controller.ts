@@ -57,6 +57,15 @@ export default class extends Controller {
         this.dispatchEvent('connect', { chart: this.chart });
     }
 
+    disconnect() {
+        if (this.chart) {
+            this.chart.destroy();
+            this.chart = null;
+        }
+
+        this.dispatchEvent('disconnect', { chart: this.chart });
+    }
+
     /**
      * If the underlying data or options change, let's update the chart!
      */

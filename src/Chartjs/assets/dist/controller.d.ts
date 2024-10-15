@@ -6,6 +6,7 @@ export default class extends Controller {
     };
     private chart;
     connect(): void;
+    disconnect(): void;
     viewValueChanged(): void;
     private dispatchEvent;
 }
