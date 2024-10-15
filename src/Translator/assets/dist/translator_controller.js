@@ -118,36 +118,6 @@ function getPluralizationRule(number, locale) {
         case 'mn':
         case 'mr':
         case 'nah':
-        case 'nb':
-        case 'ne':
-        case 'nl':
-        case 'nn':
-        case 'no':
-        case 'oc':
-        case 'om':
-        case 'or':
-        case 'pa':
-        case 'pap':
-        case 'ps':
-        case 'pt':
-        case 'so':
-        case 'sq':
-        case 'sv':
-        case 'sw':
-        case 'ta':
-        case 'te':
-        case 'tk':
-        case 'ur':
-        case 'zu':
-            return 1 === number ? 0 : 1;
-        case 'am':
-        case 'bh':
-        case 'fil':
-        case 'fr':
-        case 'gun':
-        case 'hi':
-        case 'hy':
-        case 'ln':
         case 'mg':
         case 'nso':
         case 'pt_BR':
