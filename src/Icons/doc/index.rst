@@ -80,7 +80,7 @@ define the HTML attributes added to the ``<svg>`` element:
     {{ ux_icon('user-profile', {class: 'w-4 h-4'}) }}
     {# renders <svg class="w-4 h-4"> ... </svg> #}
 
-    {{ ux_icon('user-profile', {height: '16px', width: '16px', aria-hidden: true}) }}
+    {{ ux_icon('user-profile', {height: '16px', width: '16px', 'aria-hidden': true}) }}
     {# renders <svg height="16" width="16" aria-hidden="true"> ... </svg> #}
 
 
