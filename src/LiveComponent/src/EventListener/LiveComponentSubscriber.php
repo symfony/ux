@@ -21,18 +21,14 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
 use Symfony\Component\HttpKernel\Event\ResponseEvent;
 use Symfony\Component\HttpKernel\Event\ViewEvent;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\MethodNotAllowedHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
-use Symfony\Component\Security\Csrf\CsrfToken;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\Contracts\Service\ServiceSubscriberInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
-use Symfony\UX\LiveComponent\Util\LiveControllerAttributesCreator;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
 use Symfony\UX\TwigComponent\ComponentRenderer;
@@ -49,8 +45,10 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
     private const HTML_CONTENT_TYPE = 'application/vnd.live-component+html';
     private const REDIRECT_HEADER = 'X-Live-Redirect';
 
-    public function __construct(private ContainerInterface $container)
-    {
+    public function __construct(
+        private ContainerInterface $container,
+        private bool $testMode = true,
+    ) {
     }
 
     public static function getSubscribedServices(): array
@@ -60,7 +58,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             ComponentFactory::class,
             LiveComponentHydrator::class,
             LiveComponentMetadataFactory::class,
-            '?'.CsrfTokenManagerInterface::class,
         ];
     }
 
@@ -105,13 +102,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
         if (!$request->isMethod('post')) {
             throw new MethodNotAllowedHttpException(['POST']);
-        }
-
-        if (
-            $this->container->has(CsrfTokenManagerInterface::class)
-            && $metadata->get('csrf')
-            && !$this->container->get(CsrfTokenManagerInterface::class)->isTokenValid(new CsrfToken(LiveControllerAttributesCreator::getCsrfTokeName($componentName), $request->headers->get('X-CSRF-TOKEN')))) {
-            throw new BadRequestHttpException('Invalid CSRF token.');
         }
 
         if ('_batch' === $action) {
@@ -299,11 +289,12 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        if (!\in_array(self::HTML_CONTENT_TYPE, $request->getAcceptableContentTypes(), true)) {
+        if (!$response->isRedirection()) {
             return;
         }
 
-        if (!$response->isRedirection()) {
+        if ($this->testMode && !\in_array(self::HTML_CONTENT_TYPE, $request->getAcceptableContentTypes(), true)) {
+            // Make testing redirections easier
             return;
         }
 
@@ -344,7 +335,17 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
 
     private function isLiveComponentRequest(Request $request): bool
     {
-        return $request->attributes->has('_live_component');
+        if (!$request->attributes->has('_live_component')) {
+            return false;
+        }
+
+        if ($this->testMode) {
+            return true;
+        }
+
+        // Except when testing, require the correct content-type in the Accept header.
+        // This also acts as a CSRF protection since this can only be set in accordance with same-origin/CORS policies.
+        return \in_array(self::HTML_CONTENT_TYPE, $request->getAcceptableContentTypes(), true);
     }
 
     private function hydrateComponent(object $component, string $componentName, Request $request): MountedComponent

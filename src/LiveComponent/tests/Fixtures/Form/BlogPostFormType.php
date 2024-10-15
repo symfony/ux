@@ -38,7 +38,6 @@ class BlogPostFormType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => BlogPost::class,
-            'csrf_protection' => false,
         ]);
     }
 }

@@ -2,7 +2,7 @@ import RequestBuilder from '../../src/Backend/RequestBuilder';
 
 describe('buildRequest', () => {
     it('sets basic data on GET request', () => {
-        const builder = new RequestBuilder('/_components?existing_param=1', 'get', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components?existing_param=1', 'get');
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },
             [],
@@ -23,7 +23,7 @@ describe('buildRequest', () => {
     });
 
     it('sets basic data on POST request', () => {
-        const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components', 'post');
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },
             [
@@ -42,7 +42,6 @@ describe('buildRequest', () => {
         expect(fetchOptions.method).toEqual('POST');
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
-            'X-CSRF-TOKEN': '_the_csrf_token',
             'X-Requested-With': 'XMLHttpRequest',
         });
         const body = <FormData>fetchOptions.body;
@@ -58,7 +57,7 @@ describe('buildRequest', () => {
     });
 
     it('sets basic data on POST request with batch actions', () => {
-        const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components', 'post');
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },
             [
@@ -101,7 +100,7 @@ describe('buildRequest', () => {
 
     // when data is too long it makes a post request
     it('makes a POST request when data is too long', () => {
-        const builder = new RequestBuilder('/_components', 'get', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components', 'get');
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan'.repeat(1000) },
             [],
@@ -129,7 +128,7 @@ describe('buildRequest', () => {
     });
 
     it('makes a POST request when method is post', () => {
-        const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components', 'post');
         const { url, fetchOptions } = builder.buildRequest(
             {
                 firstName: 'Ryan',
@@ -161,7 +160,7 @@ describe('buildRequest', () => {
     });
 
     it('sends propsFromParent when specified', () => {
-        const builder = new RequestBuilder('/_components?existing_param=1', 'get', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components?existing_param=1', 'get');
         const { url } = builder.buildRequest({ firstName: 'Ryan' }, [], { firstName: 'Kevin' }, {}, { count: 5 }, {});
 
         expect(url).toEqual(
@@ -216,7 +215,7 @@ describe('buildRequest', () => {
     };
 
     it('Sends file with request', () => {
-        const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components', 'post');
 
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },
@@ -231,7 +230,6 @@ describe('buildRequest', () => {
         expect(fetchOptions.method).toEqual('POST');
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
-            'X-CSRF-TOKEN': '_the_csrf_token',
             'X-Requested-With': 'XMLHttpRequest',
         });
         const body = <FormData>fetchOptions.body;
@@ -241,7 +239,7 @@ describe('buildRequest', () => {
     });
 
     it('Sends multiple files with request', () => {
-        const builder = new RequestBuilder('/_components', 'post', '_the_csrf_token');
+        const builder = new RequestBuilder('/_components', 'post');
 
         const { url, fetchOptions } = builder.buildRequest(
             { firstName: 'Ryan' },
@@ -256,7 +254,6 @@ describe('buildRequest', () => {
         expect(fetchOptions.method).toEqual('POST');
         expect(fetchOptions.headers).toEqual({
             Accept: 'application/vnd.live-component+html',
-            'X-CSRF-TOKEN': '_the_csrf_token',
             'X-Requested-With': 'XMLHttpRequest',
         });
         const body = <FormData>fetchOptions.body;

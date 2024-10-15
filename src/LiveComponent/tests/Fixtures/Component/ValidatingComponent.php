@@ -10,7 +10,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 use Symfony\UX\LiveComponent\ValidatableComponentTrait;
 
-#[AsLiveComponent('validating_component', csrf: false)]
+#[AsLiveComponent('validating_component')]
 final class ValidatingComponent
 {
     use DefaultActionTrait;

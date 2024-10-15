@@ -25,8 +25,6 @@ use Symfony\UX\LiveComponent\Tests\Fixtures\Form\BlogPostFormType;
 #[AsLiveComponent('form_with_collection_type')]
 class FormWithCollectionTypeComponent extends AbstractController
 {
-    public bool $enableCsrf = false;
-
     use ComponentWithFormTrait;
     use DefaultActionTrait;
 
@@ -41,9 +39,7 @@ class FormWithCollectionTypeComponent extends AbstractController
 
     protected function instantiateForm(): FormInterface
     {
-        return $this->createForm(BlogPostFormType::class, $this->post, [
-            'csrf_protection' => $this->enableCsrf,
-        ]);
+        return $this->createForm(BlogPostFormType::class, $this->post);
     }
 
     #[LiveAction]

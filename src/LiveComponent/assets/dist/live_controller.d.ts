@@ -25,7 +25,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
             type: ObjectConstructor;
             default: {};
         };
-        csrf: StringConstructor;
         listeners: {
             type: ArrayConstructor;
             default: never[];
@@ -59,7 +58,6 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
     readonly urlValue: string;
     readonly propsValue: any;
     propsUpdatedFromParentValue: any;
-    readonly csrfValue: string;
     readonly listenersValue: Array<{
         event: string;
         action: string;

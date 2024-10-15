@@ -12,7 +12,6 @@
 namespace Symfony\UX\LiveComponent\Util;
 
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
-use Symfony\Component\Security\Csrf\CsrfTokenManagerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\LiveComponentHydrator;
 use Symfony\UX\LiveComponent\LiveResponder;
@@ -45,7 +44,6 @@ class LiveControllerAttributesCreator
         private FingerprintCalculator $fingerprintCalculator,
         private UrlGeneratorInterface $urlGenerator,
         private LiveResponder $liveResponder,
-        private ?CsrfTokenManagerInterface $csrfTokenManager,
         private TemplateMap $templateMap,
     ) {
     }
@@ -131,18 +129,7 @@ class LiveControllerAttributesCreator
         );
         $attributesCollection->setProps($dehydratedProps->getProps());
 
-        if ($this->csrfTokenManager && $metadata->get('csrf')) {
-            $attributesCollection->setCsrf(
-                $this->csrfTokenManager->getToken(self::getCsrfTokeName($mounted->getName()))->getValue(),
-            );
-        }
-
         return $attributesCollection;
-    }
-
-    public static function getCsrfTokeName(string $componentName): string
-    {
-        return 'live_component_'.$componentName;
     }
 
     private function dehydrateComponent(string $name, object $component, ComponentAttributes $attributes): DehydratedProps

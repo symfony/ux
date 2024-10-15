@@ -147,8 +147,6 @@ final class TestLiveComponent
 
     private function request(array $content = [], ?string $action = null, array $files = []): self
     {
-        $csrfToken = $this->csrfToken();
-
         $this->client()->request(
             'POST',
             $this->router->generate(
@@ -161,7 +159,6 @@ final class TestLiveComponent
             ),
             parameters: ['data' => json_encode(array_merge($content, ['props' => $this->props()]))],
             files: $files,
-            server: $csrfToken ? ['HTTP_X_CSRF_TOKEN' => $csrfToken] : [],
         );
 
         return $this;
@@ -176,17 +173,6 @@ final class TestLiveComponent
         }
 
         return json_decode($node->attr('data-live-props-value'), true, flags: \JSON_THROW_ON_ERROR);
-    }
-
-    private function csrfToken(): ?string
-    {
-        $crawler = $this->client()->getCrawler();
-
-        if (!\count($node = $crawler->filter('[data-live-csrf-value]'))) {
-            return null;
-        }
-
-        return $node->attr('data-live-csrf-value');
     }
 
     private function client(): KernelBrowser

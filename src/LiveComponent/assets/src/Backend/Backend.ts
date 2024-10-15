@@ -15,7 +15,6 @@ export interface BackendInterface {
         updatedPropsFromParent: { [key: string]: any },
         files: { [key: string]: FileList }
     ): BackendRequest;
-    updateCsrfToken(csrfToken: string): void;
 }
 
 export interface BackendAction {
@@ -26,8 +25,8 @@ export interface BackendAction {
 export default class implements BackendInterface {
     private readonly requestBuilder: RequestBuilder;
 
-    constructor(url: string, method: 'get' | 'post' = 'post', csrfToken: string | null = null) {
-        this.requestBuilder = new RequestBuilder(url, method, csrfToken);
+    constructor(url: string, method: 'get' | 'post' = 'post') {
+        this.requestBuilder = new RequestBuilder(url, method);
     }
 
     makeRequest(
@@ -52,9 +51,5 @@ export default class implements BackendInterface {
             actions.map((backendAction) => backendAction.name),
             Object.keys(updated)
         );
-    }
-
-    updateCsrfToken(csrfToken: string) {
-        this.requestBuilder.updateCsrfToken(csrfToken);
     }
 }

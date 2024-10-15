@@ -24,33 +24,62 @@ use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 #[\Attribute(\Attribute::TARGET_CLASS)]
 final class AsLiveComponent extends AsTwigComponent
 {
+    public string $route;
+    public string $method;
+    public int $urlReferenceType;
+
+    private ?string $defaultAction;
+
     /**
-     * @param string|null $name              The component name (ie: TodoList)
-     * @param string|null $template          The template path of the component (ie: components/TodoList.html.twig).
-     * @param string|null $defaultAction     The default action to call when the component is mounted (ie: __invoke)
-     * @param bool        $exposePublicProps Whether to expose every public property as a Twig variable
-     * @param string      $attributesVar     The name of the special "attributes" variable in the template
-     * @param bool        $csrf              Whether to enable CSRF protection (default: true)
-     * @param string      $route             The route used to render the component & handle actions (default: ux_live_component)
-     * @param int         $urlReferenceType  Which type of URL should be generated for the given route. Use the constants from UrlGeneratorInterface (default: absolute path, e.g. "/dir/file").
+     * @param string|null              $name              The component name (ie: TodoList)
+     * @param string|null              $template          The template path of the component (ie: components/TodoList.html.twig).
+     * @param string|null              $defaultAction     The default action to call when the component is mounted (ie: __invoke)
+     * @param bool                     $exposePublicProps Whether to expose every public property as a Twig variable
+     * @param string                   $attributesVar     The name of the special "attributes" variable in the template
+     * @param string                   $route             The route used to render the component & handle actions
+     * @param string                   $method            The HTTP method to use
+     * @param UrlGeneratorInterface::* $urlReferenceType  Which type of URL should be generated for the given route
      */
     public function __construct(
         ?string $name = null,
         ?string $template = null,
-        private ?string $defaultAction = null,
+        ?string $defaultAction = null,
         bool $exposePublicProps = true,
         string $attributesVar = 'attributes',
-        public bool $csrf = true,
-        public string $route = 'ux_live_component',
-        public string $method = 'post',
-        public int $urlReferenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
+        string|bool $route = 'ux_live_component',
+        string $method = 'post',
+        int|string $urlReferenceType = UrlGeneratorInterface::ABSOLUTE_PATH,
+        public bool|int $csrf = true, // @deprecated
     ) {
+        if (8 < \func_num_args() || \is_bool($route)) {
+            trigger_deprecation('symfony/ux-live-component', '2.21', 'Argument "$csrf" of "#[%s]" has no effect anymore and is deprecated.', static::class);
+        }
+        if (\is_bool($route)) {
+            $this->csrf = $route;
+            $route = $method;
+            $method = $urlReferenceType;
+            $urlReferenceType = $csrf;
+
+            switch (\func_num_args()) {
+                case 6: $route = 'ux_live_component';
+                    // no break
+                case 7: $method = 'post';
+                    // no break
+                case 8: $urlReferenceType = UrlGeneratorInterface::ABSOLUTE_PATH;
+                    // no break
+                default:
+            }
+        }
+
         parent::__construct($name, $template, $exposePublicProps, $attributesVar);
 
-        $this->method = strtolower($this->method);
+        $this->defaultAction = $defaultAction;
+        $this->route = $route;
+        $this->method = strtolower($method);
+        $this->urlReferenceType = $urlReferenceType;
 
-        if (!\in_array($this->method, ['get', 'post'])) {
-            throw new \UnexpectedValueException('$method must be either \'get\' or \'post\'');
+        if (!\in_array($method, ['get', 'post'])) {
+            throw new \UnexpectedValueException('$method must be either \'get\' or \'post\'.');
         }
     }
 
