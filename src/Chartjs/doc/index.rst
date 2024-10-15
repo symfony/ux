@@ -8,10 +8,6 @@ It is part of `the Symfony UX initiative`_.
 Installation
 ------------
 
-.. caution::
-
-    Before you start, make sure you have `StimulusBundle configured in your app`_.
-
 Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
@@ -252,7 +248,6 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Chart.js`: https://www.chartjs.org
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _`Chart.js documentation`: https://www.chartjs.org/docs/latest/
-.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`a lot of plugins`: https://github.com/chartjs/awesome#plugins
 .. _`zoom plugin`: https://www.chartjs.org/chartjs-plugin-zoom/latest/
 .. _`zoom plugin documentation`: https://www.chartjs.org/chartjs-plugin-zoom/latest/guide/integration.html

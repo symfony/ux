@@ -10,10 +10,6 @@ Symfony applications. It is part of `the Symfony UX initiative`_.
 Installation
 ------------
 
-.. caution::
-
-    Before you start, make sure you have `StimulusBundle configured in your app`_.
-
 Install the bundle using Composer and Symfony Flex:
 
 .. code-block:: terminal
@@ -243,7 +239,6 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
-.. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`Google Maps`: https://github.com/symfony/ux-google-map
 .. _`Leaflet`: https://github.com/symfony/ux-leaflet-map
 .. _`Symfony UX Map Google Maps brige docs`: https://github.com/symfony/ux/blob/2.x/src/Map/src/Bridge/Google/README.md
