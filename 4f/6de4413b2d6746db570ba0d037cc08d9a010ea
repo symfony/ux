@@ -1,0 +1,24 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-10-14T10:53:04Z
+
+Merci Félix :eyes:
+
+I've double-checked our packages and the LiveComponent is not the only one to have a hard requirement on `symfony/stimulus-bundle` and have a document telling people to install/configure the Stimulus Bundle. The other packages are:
+- Chart
+- Map
+- React
+- Svelte
+- Vue
+- Turbo
+
+Can you remove the documentation from those packages as well please? 🙏🏻
+
+/cc @smnandre we spoke about that some weeks/months ago :)
+
+---------------------------------------------------------------------------
+
+by feymo at 2024-10-15T07:48:44Z
+
+Thank you @Kocal for the double-check 👍🏼
+Packages you've mentioned have also been updated :)
