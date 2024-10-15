@@ -686,13 +686,13 @@ final class LiveComponentHydrator
             }
 
             $key = \sprintf('%s.%s', $frontendName, $propName);
-            if (!$dehydratedUpdatedProps->hasPropValue($key)) {
-                continue;
-            }
+            $fullPaths = $dehydratedUpdatedProps->searchFullPathsForProperty($key);
 
-            $this->ensureOnUpdatedMethodExists($component, $funcName);
-            $propertyOldValue = $dehydratedOriginalProps->getPropValue($key);
-            $component->{$funcName}($propertyOldValue);
+            foreach ($fullPaths as $fullPath) {
+                $this->ensureOnUpdatedMethodExists($component, $funcName);
+                $propertyOldValue = $dehydratedOriginalProps->getPropValue($fullPath);
+                $component->{$funcName}($propertyOldValue);
+            }
         }
     }
 }

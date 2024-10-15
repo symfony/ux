@@ -235,6 +235,27 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 });
         }];
 
+        yield 'onUpdated: with wildcard' => [function () {
+            return HydrationTest::create(new class() {
+                #[LiveProp(writable: true, onUpdated: ['*' => 'onArrayUpdated'])]
+                public array $array = [];
+
+                public function onArrayUpdated($oldValue)
+                {
+                    if ('Kevin' === $this->array['name']) {
+                        $this->array['name'] = 'Simon';
+                    }
+                }
+            })
+                ->mountWith(['array' => ['name' => 'Ryan']])
+                ->userUpdatesProps([
+                    'array.name' => 'Kevin',
+                ])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertSame('Simon', $object->array['name']);
+                });
+        }];
+
         yield 'string: (de)hydrates correctly' => [function () {
             return HydrationTest::create(new class {
                 #[LiveProp]
