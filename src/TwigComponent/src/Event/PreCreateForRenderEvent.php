@@ -49,6 +49,12 @@ final class PreCreateForRenderEvent extends Event
         return $this->inputProps;
     }
 
+	public function setInputProps(array $inputProps): self {
+		$this->inputProps = $inputProps;
+
+		return $this;
+	}
+
     public function setRenderedString(string $renderedString): void
     {
         $this->renderedString = $renderedString;
