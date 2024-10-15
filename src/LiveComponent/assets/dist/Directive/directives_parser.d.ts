@@ -8,4 +8,8 @@ export interface Directive {
     modifiers: DirectiveModifier[];
     getString: () => string;
 }
+export interface ElementDirectives {
+    element: HTMLElement | SVGElement;
+    directives: Directive[];
+}
 export declare function parseDirectives(content: string | null): Directive[];

@@ -1,4 +1,4 @@
-import type { ComponentHookName, ComponentHookCallback } from './Component';
+import type { ComponentHookCallback, ComponentHookName } from './Component';
 export default class {
     private hooks;
     register<T extends string | ComponentHookName = ComponentHookName>(hookName: T, callback: ComponentHookCallback<T>): void;
