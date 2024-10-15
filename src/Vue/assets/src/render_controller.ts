@@ -8,27 +8,75 @@
  */
 
 import { Controller } from '@hotwired/stimulus';
-import { type App, createApp } from 'vue';
+import {
+    type App,
+    type Component,
+    createApp,
+    defineComponent,
+    h,
+    type ShallowReactive,
+    shallowReactive,
+    toRaw,
+    watch,
+} from 'vue';
 
 export default class extends Controller<Element & { __vue_app__?: App<Element> }> {
-    private props: Record<string, unknown> | null;
+    private props: ShallowReactive<Record<string, unknown>>;
     private app: App<Element>;
     declare readonly componentValue: string;
-    declare readonly propsValue: Record<string, unknown> | null | undefined;
+    declare readonly hasPropsValue: boolean;
+    declare propsValue: Record<string, unknown> | null | undefined;
 
     static values = {
         component: String,
         props: Object,
     };
 
-    connect() {
-        this.props = this.propsValue ?? null;
+    propsValueChanged(newProps: typeof this.propsValue, oldProps: typeof this.propsValue) {
+        if (oldProps) {
+            let removedPropNames = Object.keys(oldProps);
 
+            if (newProps) {
+                removedPropNames = removedPropNames.filter(
+                    (propName) => !Object.prototype.hasOwnProperty.call(newProps, propName)
+                );
+            }
+
+            removedPropNames.forEach((propName) => {
+                delete this.props[propName];
+            });
+        }
+        if (newProps) {
+            Object.entries(newProps).forEach(([propName, propValue]) => {
+                this.props[propName] = propValue;
+            });
+        }
+    }
+
+    initialize() {
+        const props = this.hasPropsValue && this.propsValue ? this.propsValue : {};
+        this.props = shallowReactive({ ...props });
+        watch(
+            this.props,
+            (props) => {
+                this.propsValue = toRaw(props);
+                this.dispatchEvent('props-update', {
+                    componentName: this.componentValue,
+                    props: this.props,
+                    app: this.app,
+                });
+            },
+            { flush: 'post' }
+        );
+    }
+
+    connect() {
         this.dispatchEvent('connect', { componentName: this.componentValue, props: this.props });
 
         const component = window.resolveVueComponent(this.componentValue);
+        const wrappedComponent = this.wrapComponent(component);
 
-        this.app = createApp(component, this.props);
+        this.app = createApp(wrappedComponent);
 
         if (this.element.__vue_app__ !== undefined) {
             this.element.__vue_app__.unmount();
@@ -61,5 +109,24 @@ export default class extends Controller<Element & { __vue_app__?: App<Element> }
 
     private dispatchEvent(name: string, payload: any) {
         this.dispatch(name, { detail: payload, prefix: 'vue' });
+    }
+
+    private wrapComponent(component: Component): Component {
+        const { props } = this;
+
+        return defineComponent(
+            () => () =>
+                h(component, {
+                    ...props,
+                    ...Object.fromEntries(
+                        Object.keys(props).map((propName) => [
+                            `onUpdate:${propName}`,
+                            (value: unknown) => {
+                                props[propName] = value;
+                            },
+                        ])
+                    ),
+                })
+        );
     }
 }

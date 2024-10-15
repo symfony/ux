@@ -6,12 +6,16 @@ export default class extends Controller<Element & {
     private props;
     private app;
     readonly componentValue: string;
-    readonly propsValue: Record<string, unknown> | null | undefined;
+    readonly hasPropsValue: boolean;
+    propsValue: Record<string, unknown> | null | undefined;
     static values: {
         component: StringConstructor;
         props: ObjectConstructor;
     };
+    propsValueChanged(newProps: typeof this.propsValue, oldProps: typeof this.propsValue): void;
+    initialize(): void;
     connect(): void;
     disconnect(): void;
     private dispatchEvent;
+    private wrapComponent;
 }
