@@ -17,12 +17,14 @@ export default class extends Controller {
     static values = {
         topic: String,
         hub: String,
+        eventSourceOptions: Object,
     };
     es: EventSource | undefined;
     url: string | undefined;
 
     declare readonly topicValue: string;
     declare readonly hubValue: string;
+    declare readonly eventSourceOptionsValue: object;
     declare readonly hasHubValue: boolean;
     declare readonly hasTopicValue: boolean;
 
@@ -40,7 +42,7 @@ export default class extends Controller {
 
     connect() {
         if (this.url) {
-            this.es = new EventSource(this.url);
+            this.es = new EventSource(this.url, this.eventSourceOptionsValue);
             connectStreamSource(this.es);
         }
     }

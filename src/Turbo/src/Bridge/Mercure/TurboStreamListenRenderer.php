@@ -42,7 +42,11 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
         $this->stimulusHelper = $stimulus;
     }
 
-    public function renderTurboStreamListen(Environment $env, $topic): string
+    /**
+     * @param string|object       $topic
+     * @param array<string,mixed> $eventSourceOptions
+     */
+    public function renderTurboStreamListen(Environment $env, $topic, array $eventSourceOptions = []): string
     {
         if (\is_object($topic)) {
             $class = $topic::class;
@@ -57,11 +61,13 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
             $topic = \sprintf(Broadcaster::TOPIC_PATTERN, rawurlencode($topic), '{id}');
         }
 
+        $params = ['topic' => $topic, 'hub' => $this->hub->getPublicUrl()];
+        if ($eventSourceOptions) {
+            $params['eventSourceOptions'] = $eventSourceOptions;
+        }
+
         $stimulusAttributes = $this->stimulusHelper->createStimulusAttributes();
-        $stimulusAttributes->addController(
-            'symfony/ux-turbo/mercure-turbo-stream',
-            ['topic' => $topic, 'hub' => $this->hub->getPublicUrl()]
-        );
+        $stimulusAttributes->addController('symfony/ux-turbo/mercure-turbo-stream', $params);
 
         return (string) $stimulusAttributes;
     }
