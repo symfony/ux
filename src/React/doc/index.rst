@@ -68,6 +68,10 @@ For example:
         return <div>Hello {props.fullName}</div>;
     }
 
+.. note::
+
+    Ensure your module exports the controller as the ``export default``. The default export is used when resolving components.
+
 .. code-block:: html+twig
 
     {# templates/home.html.twig #}

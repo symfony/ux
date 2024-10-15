@@ -17,6 +17,7 @@ const createFakeFixturesContext = (): RequireContext => {
     const files: any = {
         './MyJsxComponent.jsx': { default: MyJsxComponent },
         './MyTsxComponent.tsx': { default: MyTsxComponent },
+        './NoDefaultExportComponent.jsx': { default: undefined },
     };
 
     const context = (id: string): any => files[id];
@@ -44,5 +45,12 @@ describe('registerReactControllerComponents', () => {
         expect(() => resolveComponent('MyABCComponent')).toThrow(
             'React controller "MyABCComponent" does not exist. Possible values: MyJsxComponent, MyTsxComponent'
         );
+    });
+
+    it('throws when no default export found in imported module', () => {
+        registerReactControllerComponents(createFakeFixturesContext());
+        const resolveComponent = (window as any).resolveReactComponent;
+
+        expect(() => resolveComponent('NoDefaultExportComponent')).toThrow('React controller "NoDefaultExportComponent" could not be resolved. Ensure the module exports the controller as default.');
     });
 });
