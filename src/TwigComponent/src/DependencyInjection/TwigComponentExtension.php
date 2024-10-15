@@ -21,14 +21,17 @@ use Symfony\Component\DependencyInjection\Argument\ServiceLocatorArgument;
 use Symfony\Component\DependencyInjection\Argument\TaggedIteratorArgument;
 use Symfony\Component\DependencyInjection\ChildDefinition;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\DependencyInjection\Exception\LogicException;
 use Symfony\Component\DependencyInjection\Extension\Extension;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\DependencyInjection\Parameter;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
+use Symfony\UX\TwigComponent\CacheWarmer\TwigComponentCacheWarmer;
 use Symfony\UX\TwigComponent\Command\TwigComponentDebugCommand;
 use Symfony\UX\TwigComponent\ComponentFactory;
+use Symfony\UX\TwigComponent\ComponentProperties;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\ComponentStack;
@@ -84,21 +87,29 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
         $container->register('ux.twig_component.component_factory', ComponentFactory::class)
             ->setArguments([
                 new Reference('ux.twig_component.component_template_finder'),
-                class_exists(AbstractArgument::class) ? new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)) : null,
+                new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)),
                 new Reference('property_accessor'),
                 new Reference('event_dispatcher'),
-                class_exists(AbstractArgument::class) ? new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)) : [],
+                new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)),
             ])
         ;
 
         $container->register('ux.twig_component.component_stack', ComponentStack::class);
+
+        $container->register('ux.twig_component.component_properties', ComponentProperties::class)
+            ->setArguments([
+                new Reference('property_accessor'),
+                new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)),
+                new Reference('cache.ux.twig_component', ContainerInterface::IGNORE_ON_INVALID_REFERENCE),
+            ])
+        ;
 
         $container->register('ux.twig_component.component_renderer', ComponentRenderer::class)
             ->setArguments([
                 new Reference('twig'),
                 new Reference('event_dispatcher'),
                 new Reference('ux.twig_component.component_factory'),
-                new Reference('property_accessor'),
+                new Reference('ux.twig_component.component_properties'),
                 new Reference('ux.twig_component.component_stack'),
             ])
         ;
@@ -107,7 +118,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
             ->addTag('twig.extension')
         ;
 
-        $container->register('.ux.twig_component.twig.component_runtime', ComponentRuntime::class)
+        $container->register('ux.twig_component.twig.component_runtime', ComponentRuntime::class)
             ->setArguments([
                 new Reference('ux.twig_component.component_renderer'),
                 new ServiceLocatorArgument(new TaggedIteratorArgument('ux.twig_component.twig_renderer', indexAttribute: 'key', needsIndexes: true)),
@@ -126,7 +137,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                 new Parameter('twig.default_path'),
                 new Reference('ux.twig_component.component_factory'),
                 new Reference('twig'),
-                class_exists(AbstractArgument::class) ? new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)) : [],
+                new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)),
                 $config['anonymous_template_directory'],
             ])
             ->addTag('console.command')
@@ -138,6 +149,14 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
         if ($container->getParameter('kernel.debug') && $config['profiler']) {
             $loader->load('debug.php');
         }
+
+        $loader->load('cache.php');
+
+        $container->register('ux.twig_component.cache_warmer', TwigComponentCacheWarmer::class)
+            ->setArguments([new Reference(\Psr\Container\ContainerInterface::class)])
+            ->addTag('kernel.cache_warmer')
+            ->addTag('container.service_subscriber', ['id' => 'ux.twig_component.component_properties'])
+        ;
     }
 
     public function getConfigTreeBuilder(): TreeBuilder
