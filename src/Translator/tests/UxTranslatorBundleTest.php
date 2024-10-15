@@ -22,6 +22,7 @@ class UxTranslatorBundleTest extends TestCase
     {
         yield 'empty' => [new EmptyAppKernel('test', true)];
         yield 'framework' => [new FrameworkAppKernel('test', true)];
+        yield 'framework without translator' => [new FrameworkAppKernel('test_without_translator', true)];
     }
 
     /**
