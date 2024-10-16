@@ -1,0 +1,11 @@
+.php-cs-fixer.cache
+.phpunit.result.cache
+.php-cs-fixer.php
+yarn-error.log
+
+var/
+vendor/
+.idea
+
+assets/node_modules
+docker-compose.override.yaml

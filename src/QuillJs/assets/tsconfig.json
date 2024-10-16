@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "lib": ["dom", "es2015"],
+        "module": "es2015",
+        "moduleResolution": "node",
+        "noUnusedLocals": true,
+        "rootDir": "src",
+        "strict": true,
+        "strictPropertyInitialization": false,
+        "target": "es2017",
+        "removeComments": true,
+        "outDir": "types",
+        "baseUrl": "..",
+        "noEmit": false,
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "jsx": "react",
+        "isolatedModules": true,
+        "declaration": true,
+        "emitDeclarationOnly": true
+    },
+    "exclude": ["src/*/assets/dist"],
+    "include": ["src/*/assets/src", "src/*/assets/test"]
+}

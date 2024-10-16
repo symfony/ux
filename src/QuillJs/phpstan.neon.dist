@@ -1,0 +1,8 @@
+parameters:
+    inferPrivatePropertyTypeFromConstructor: true
+    checkGenericClassInNonGenericObjectType: false
+    level: 7
+    paths:
+        - src
+    excludePaths:
+        - src/Kernel.php
