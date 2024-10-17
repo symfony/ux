@@ -48,6 +48,7 @@ export default class extends Controller {
     private isObserving = false;
     private hasLoadedChoicesPreviously = false;
     private originalOptions: Array<{ value: string; text: string; group: string | null }> = [];
+    private parentElement: HTMLElement| null = null;
 
     initialize() {
         if (!this.mutationObserver) {
@@ -60,6 +61,12 @@ export default class extends Controller {
     connect() {
         if (this.selectElement) {
             this.originalOptions = this.createOptionsDataStructure(this.selectElement);
+        }
+        // TODO - also listen on `live:before-morph-element`
+        this.parentElement = this.element.parentElement;
+        if (this.parentElement) {
+            this.parentElement.addEventListener('turbo:before-morph-element', this.beforeMorphElement.bind(this));
+            this.parentElement.addEventListener('turbo:before-morph-attribute', this.beforeMorphAttribute.bind(this));
         }
 
         this.initializeTomSelect();
@@ -93,6 +100,12 @@ export default class extends Controller {
 
     disconnect() {
         this.stopMutationObserver();
+
+        if (this.parentElement) {
+            this.parentElement.removeEventListener('turbo:before-morph-element', this.beforeMorphElement.bind(this));
+            this.parentElement.removeEventListener('turbo:before-morph-attribute', this.beforeMorphAttribute.bind(this));
+            this.parentElement = null;
+        }
 
         // TomSelect.destroy() resets the element to its original HTML. This
         // causes the selected value to be lost. We store it.
@@ -376,18 +389,15 @@ export default class extends Controller {
     }
 
     private onMutations(mutations: MutationRecord[]): void {
-        let changeDisabledState = false;
         let requireReset = false;
+
+        if (this.tomSelect.isDisabled !== this.formElement.disabled) {
+            this.changeTomSelectDisabledState(this.formElement.disabled);
+        }
 
         mutations.forEach((mutation) => {
             switch (mutation.type) {
                 case 'attributes':
-                    if (mutation.target === this.element && mutation.attributeName === 'disabled') {
-                        changeDisabledState = true;
-
-                        break;
-                    }
-
                     if (mutation.target === this.element && mutation.attributeName === 'multiple') {
                         const isNowMultiple = this.element.hasAttribute('multiple');
                         const wasMultiple = mutation.oldValue === 'multiple';
@@ -403,14 +413,15 @@ export default class extends Controller {
         });
 
         const newOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
-        const areOptionsEquivalent = this.areOptionsEquivalent(newOptions);
-        if (!areOptionsEquivalent || requireReset) {
+        const areOptionsEquivalent = this.areOptionsEquivalent(this.originalOptions, newOptions);
+
+        // TODO: test this: look for chsrc/Autocomplete/assets/dist/coanges in the "value" of the select element
+        const value = this.selectElement ? Array.from(this.selectElement.options || []).map((option) => option.value) : this.formElement.value;
+        const didValueChange = value !== this.tomSelect.getValue();
+
+        if (!areOptionsEquivalent || requireReset || didValueChange) {
             this.originalOptions = newOptions;
             this.resetTomSelect();
-        }
-
-        if (changeDisabledState) {
-            this.changeTomSelectDisabledState(this.formElement.disabled);
         }
     }
 
@@ -427,10 +438,13 @@ export default class extends Controller {
         });
     }
 
-    private areOptionsEquivalent(newOptions: Array<{ value: string; text: string; group: string | null }>): boolean {
+    private areOptionsEquivalent(currentOptions: Array<{ value: string; text: string; group: string | null }>, newOptions: Array<{ value: string; text: string; group: string | null }>): boolean {
+        const filteredCurrentOptions = currentOptions.filter((option) => option.value !== '');
+
         // remove the empty option, which is added by TomSelect so may be missing from new options
-        const filteredOriginalOptions = this.originalOptions.filter((option) => option.value !== '');
+        //const filteredOriginalOptions = this.originalOptions.filter((option) => option.value !== '');
         const filteredNewOptions = newOptions.filter((option) => option.value !== '');
+        console.log(filteredCurrentOptions, filteredNewOptions);
 
         const originalPlaceholderOption = this.originalOptions.find((option) => option.value === '');
         const newPlaceholderOption = newOptions.find((option) => option.value === '');
@@ -443,18 +457,64 @@ export default class extends Controller {
             return false;
         }
 
-        if (filteredOriginalOptions.length !== filteredNewOptions.length) {
+        if (filteredCurrentOptions.length !== filteredNewOptions.length) {
             return false;
         }
 
         const normalizeOption = (option: { value: string; text: string; group: string | null }) =>
             `${option.value}-${option.text}-${option.group}`;
-        const originalOptionsSet = new Set(filteredOriginalOptions.map(normalizeOption));
+        const originalOptionsSet = new Set(filteredCurrentOptions.map(normalizeOption));
         const newOptionsSet = new Set(filteredNewOptions.map(normalizeOption));
 
         return (
             originalOptionsSet.size === newOptionsSet.size &&
             [...originalOptionsSet].every((option) => newOptionsSet.has(option))
         );
+    }
+
+    private beforeMorphElement(event: any) {
+        // TomSelect adds this element to the DOM. Keep it.
+        if (event.target.classList.contains('ts-wrapper')) {
+            event.preventDefault();
+
+            return;
+        }
+
+        if (event.target === this.element && event.target.tagName === 'SELECT') {
+            const newOptions = this.createOptionsDataStructure(event.detail.newElement);
+            const currentOptions = this.selectElement ? this.createOptionsDataStructure(this.selectElement) : [];
+            // if the options are the same OR this is an Ajax select (where the options
+            // don't represent the actual options), then prevent the morph to avoid
+            // the problem described in the comment below
+            if (this.areOptionsEquivalent(currentOptions, newOptions) || this.urlValue) {
+                // prevent the <option> elements from being mutated, as this will
+                // change their order, which befuddles TomSelect (who changes the
+                // order of the <option> elements when you select them)
+                // this will, unfortunately, prevent any changes attributed on
+                // the select element from being updated.
+                event.preventDefault();
+
+                return;
+            }
+        }
+    }
+
+    private beforeMorphAttribute(event: any) {
+        if (event.target.tagName === 'LABEL') {
+            console.log('before morph attribute', event.detail);
+        }
+        // TomSelect changes the label "for". Keep that change.
+        if (event.target.tagName === 'LABEL' && ['for', 'id'].includes(event.detail.attributeName)) {
+            event.preventDefault();
+
+            return;
+        }
+
+        // TomSelect changes the root element's class. Keep that change.
+        if (event.target === this.element && event.detail.attributeName === 'class') {
+            event.preventDefault();
+
+            return;
+        }
     }
 }
