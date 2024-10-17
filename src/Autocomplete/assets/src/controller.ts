@@ -253,7 +253,7 @@ export default class extends Controller {
                     return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
                 },
                 option_create: (data: TomOption, escapeData: typeof escape_html): string => {
-                    return `<div class="create">${this.createOptionTextValue} <strong>${escapeData(data.input)}</strong>&hellip;</div>`;
+                    return `<div class="create">${this.createOptionTextValue.replace('%placeholder%', `<strong>${escapeData(data.input)}</strong>`)}</div>`;
                 },
             },
             preload: this.preload,

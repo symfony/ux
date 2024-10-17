@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.21.0
+
+-   Translate the `option_create` option from TomSelect with remote data setup #2279
+-   Add one missing Dutch translation #2279
+
 ## 2.20.0
 
 -   Translate the `option_create` option from TomSelect #2108
