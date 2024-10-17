@@ -318,7 +318,7 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
                 return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
             },
             option_create: (data, escapeData) => {
-                return `<div class="create">${this.createOptionTextValue} <strong>${escapeData(data.input)}</strong>&hellip;</div>`;
+                return `<div class="create">${this.createOptionTextValue.replace('%placeholder%', `<strong>${escapeData(data.input)}</strong>`)}</div>`;
             },
         },
         preload: this.preload,
