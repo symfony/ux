@@ -127,10 +127,14 @@ export default class extends Controller {
     #getCommonConfig(): Partial<TomSettings> {
         const plugins: TPluginHash = {};
 
-        // multiple values excepted if this is NOT A select (i.e. input) or a multiple select
+        // Multiple values expected if this is NOT A select (i.e. input) or a multiple select
         const isMultiple = !this.selectElement || this.selectElement.multiple;
         if (!this.formElement.disabled && !isMultiple) {
-            plugins.clear_button = { title: '' };
+            // Only activate clear button plugin when there is a placeholder option
+            const firstOption = this.selectElement.options[0];
+            if (firstOption && firstOption.value === '') {
+                plugins.clear_button = { title: '' };
+            }
         }
 
         if (isMultiple) {
