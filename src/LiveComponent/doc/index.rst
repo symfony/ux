@@ -1259,6 +1259,42 @@ the component now extends ``AbstractController``! That is totally
 allowed, and gives you access to all of your normal controller
 shortcuts. We even added a flash message!
 
+Actions on Model Elements
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+It's possible to trigger an action on a model element:
+
+.. code-block:: html+twig
+
+    <input
+        data-model="name"
+        data-action="live#action"
+        data-live-action-param="saveName"
+    >
+
+However, a better solution may be to use an :ref:`on updated hook <on-updated-hook>`
+where you can run a function when the ``name`` model is updated.
+
+.. caution::
+
+    If you *do* use this solution, make sure your model and action are listening
+    to the same event. For most form fields, Stimulus triggers the ``data-action``
+    on the ``input`` event. And Live Components also updates on the ``input`` event.
+    However, the following would *not* work, as the model is triggered on ``change``,
+    which happens *after* the action is triggered:
+
+    .. code-block:: html+twig
+
+        <input
+            data-model="on(change)|name"
+            data-action="live#action"
+            data-live-action-param="saveName"
+        >
+
+    This is especially important when using the :ref:`Symfony Form integration<symfony-forms>`
+    where the models are updated on the ``change`` event by default. In that case,
+    use ``data-action="change->live#action"`` to also trigger the action on ``change``.
+
 .. _files:
 
 Uploading files
@@ -1337,6 +1373,8 @@ Forms
 A component can also help render a `Symfony form`_, either the entire
 form (useful for automatic validation as you type) or just one or some
 fields (e.g. a markdown preview for a ``textarea`` or `dependent form fields`_.
+
+.. _symfony-forms:
 
 Rendering an Entire Form in a Component
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3534,6 +3572,8 @@ You can also control the type of the generated URL:
       {
           use DefaultActionTrait;
       }
+
+.. _on-updated-hook:
 
 Add a Hook on LiveProp Update
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
