@@ -2,11 +2,13 @@ Symfony UX React
 ================
 
 Symfony UX React is a Symfony bundle integrating `React`_ in
-Symfony applications. It is part of `the Symfony UX initiative`_.
+Symfony applications. It is part of the `Symfony UX initiative`_.
 
 React is a JavaScript library for building user interfaces.
 Symfony UX React provides tools to render React components from Twig,
 handling rendering and data transfers.
+
+You can see a live example of this integration on the `Symfony UX React demo`_.
 
 Symfony UX React supports React 18+.
 
@@ -41,6 +43,9 @@ React components.
 Usage
 -----
 
+Register components
+~~~~~~~~~~~~~~~~~~~
+
 The Flex recipe will have already added the ``registerReactControllerComponents()``
 code to your ``assets/app.js`` file:
 
@@ -55,7 +60,11 @@ This will load all React components located in the ``assets/react/controllers``
 directory. These are known as **React controller components**: top-level
 components that are meant to be rendered from Twig.
 
-You can render any React controller component in Twig using the ``react_component()``.
+Render in Twig
+~~~~~~~~~~~~~~
+
+You can render any React controller component in your Twig templates, using the
+``react_component()`` function.
 
 For example:
 
@@ -81,6 +90,31 @@ For example:
         {# Component living in a subdirectory: "assets/react/controllers/Admin/OtherComponent" #}
         <div {{ react_component('Admin/OtherComponent') }}></div>
     {% endblock %}
+
+Permanent components
+~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.21
+
+    The ability to mark a component ``permanent`` was added in UX React 2.21.
+
+The controller responsible to render the React components can be configured
+to keep the React component mounted when the root element is removed from 
+the DOM, using the ``permanent`` option.
+
+This is particularly useful when the root element of a component is moved around
+in the DOM  or is removed and immediately re-added to the DOM (e.g. when using 
+`Turbo`_ and its `data-turbo-permanent` attribute).
+
+.. code-block:: html+twig
+
+    {# templates/home.html.twig #}
+    {% extends 'base.html.twig' %}
+    
+    {# The React component will stay mounted if the div is moved in the DOM #}
+    <div {{ react_component('Hello', {fullName: 'Fabien'}, {permanent: true}) }}>
+         Loading...  
+    </div>
 
 .. _using-with-asset-mapper:
 
@@ -119,4 +153,6 @@ the Symfony framework:
 https://symfony.com/doc/current/contributing/code/bc.html
 
 .. _`React`: https://reactjs.org/
-.. _`the Symfony UX initiative`: https://ux.symfony.com/
+.. _`Symfony UX initiative`: https://ux.symfony.com/
+.. _`Symfony UX React demo`: https://ux.symfony.com/react
+:: _`Turbo`: https://turbo.hotwire.dev/

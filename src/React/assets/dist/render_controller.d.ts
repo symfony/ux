@@ -3,9 +3,14 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     readonly componentValue?: string;
     readonly propsValue?: object;
+    readonly permanentValue: boolean;
     static values: {
         component: StringConstructor;
         props: ObjectConstructor;
+        permanent: {
+            type: BooleanConstructor;
+            default: boolean;
+        };
     };
     connect(): void;
     disconnect(): void;

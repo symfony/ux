@@ -1,5 +1,10 @@
 # CHANGELOG
 
+## 2.21.0
+
+-   Add `permanent` option to the `react_component` Twig function, to prevent the 
+    _unmounting_ when the component is deconnected and immediately re-connected. 
+
 ## 2.13.2
 
 -   Revert "Change JavaScript package to `type: module`"
