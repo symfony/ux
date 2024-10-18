@@ -127,18 +127,21 @@ export default class extends Controller {
     #getCommonConfig(): Partial<TomSettings> {
         const plugins: TPluginHash = {};
 
-        // multiple values excepted if this is NOT A select (i.e. input) or a multiple select
-        const isMultiple = !this.selectElement || this.selectElement.multiple;
-        if (!this.formElement.disabled && !isMultiple) {
-            plugins.clear_button = { title: '' };
-        }
+        // automaticly add plugins when NOT explicit configured
+        if (!this.tomSelectOptionsValue || !this.tomSelectOptionsValue.plugins !== undefined) {
+            // multiple values excepted if this is NOT A select (i.e. input) or a multiple select
+            const isMultiple = !this.selectElement || this.selectElement.multiple;
+            if (!this.formElement.disabled && !isMultiple) {
+                plugins.clear_button = { title: '' };
+            }
 
-        if (isMultiple) {
-            plugins.remove_button = { title: '' };
-        }
+            if (isMultiple) {
+                plugins.remove_button = { title: '' };
+            }
 
-        if (this.urlValue) {
-            plugins.virtual_scroll = {};
+            if (this.urlValue) {
+                plugins.virtual_scroll = {};
+            }
         }
 
         const render: Partial<TomTemplates> = {
