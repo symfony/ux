@@ -15,7 +15,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
-/* global Reflect, Promise, SuppressedError, Symbol */
+/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
 
 
 function __classPrivateFieldGet(receiver, state, kind, f) {
@@ -227,7 +227,11 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
     const plugins = {};
     const isMultiple = !this.selectElement || this.selectElement.multiple;
     if (!this.formElement.disabled && !isMultiple) {
-        plugins.clear_button = { title: '' };
+        const placeholderOptions = Array.from(this.selectElement.options)
+            .filter((option) => option.value === '');
+        if (placeholderOptions.length) {
+            plugins.clear_button = { title: '' };
+        }
     }
     if (isMultiple) {
         plugins.remove_button = { title: '' };
