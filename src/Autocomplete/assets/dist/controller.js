@@ -227,8 +227,9 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
     const plugins = {};
     const isMultiple = !this.selectElement || this.selectElement.multiple;
     if (!this.formElement.disabled && !isMultiple) {
-        const firstOption = this.selectElement.options[0];
-        if (firstOption && firstOption.value === '') {
+        const placeholderOptions = Array.from(this.selectElement.options)
+            .filter((option) => option.value === '');
+        if (placeholderOptions.length) {
             plugins.clear_button = { title: '' };
         }
     }

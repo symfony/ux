@@ -131,8 +131,9 @@ export default class extends Controller {
         const isMultiple = !this.selectElement || this.selectElement.multiple;
         if (!this.formElement.disabled && !isMultiple) {
             // Only activate clear button plugin when there is a placeholder option
-            const firstOption = this.selectElement.options[0];
-            if (firstOption && firstOption.value === '') {
+            const placeholderOptions = Array.from(this.selectElement.options)
+                .filter((option) => option.value === '');
+            if (placeholderOptions.length) {
                 plugins.clear_button = { title: '' };
             }
         }
