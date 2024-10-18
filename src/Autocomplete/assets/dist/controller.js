@@ -226,7 +226,7 @@ class default_1 extends Controller {
 _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _default_1_getCommonConfig() {
     const plugins = {};
     const isMultiple = !this.selectElement || this.selectElement.multiple;
-    if (!this.formElement.disabled && !isMultiple) {
+    if (!this.formElement.required && !this.formElement.disabled && !isMultiple) {
         plugins.clear_button = { title: '' };
     }
     if (isMultiple) {

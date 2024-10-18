@@ -34,10 +34,21 @@ class AutocompleteFormRenderingTest extends KernelTestCase
             ->assertElementAttributeContains('#product_category', 'data-symfony--ux-autocomplete--autocomplete-url-value', '/test/autocomplete/category_autocomplete_type?extra_options=')
             ->assertElementAttributeContains('#product_category', 'data-symfony--ux-autocomplete--autocomplete-min-characters-value', '2')
             ->assertElementAttributeContains('#product_category', 'data-symfony--ux-autocomplete--autocomplete-max-results-value', '25')
+            ->assertElementAttributeContains('#product_category', 'required', 'required')
+
+            ->assertElementAttributeContains('#product_ingredients', 'required', 'required')
 
             ->assertElementAttributeContains('#product_portionSize', 'data-controller', 'symfony--ux-autocomplete--autocomplete')
+            ->assertElementAttributeContains('#product_portionSize', 'required', 'required')
+
+            ->assertElementAttributeContains('#product_colour', 'data-controller', 'symfony--ux-autocomplete--autocomplete')
+            // not implemented in zenstruck/browser
+            // ->elementAttributeNotExists('#product_colour', 'required')
+            ->assertNotSeeElement('#product_colour[required]')
+
             ->assertElementAttributeContains('#product_tags', 'data-controller', 'symfony--ux-autocomplete--autocomplete')
             ->assertElementAttributeContains('#product_tags', 'data-symfony--ux-autocomplete--autocomplete-tom-select-options-value', 'createOnBlur')
+            ->assertElementAttributeContains('#product_tags', 'required', 'required')
         ;
     }
 
