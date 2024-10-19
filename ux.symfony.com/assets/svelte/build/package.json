@@ -2,11 +2,11 @@
     "devDependencies": {
         "@babel/cli": "^7.25.6",
         "@babel/core": "^7.25.2",
-        "@babel/preset-react": "^7.24.7"
+        "svelte": "^3.59.1"
     },
     "license": "MIT",
     "private": true,
     "scripts": {
-        "build": "../build/node_modules/.bin/babel ../. --out-dir ../../build/react --presets=@babel/preset-react"
+        "build": "node build.js"
     }
 }
