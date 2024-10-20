@@ -7,7 +7,7 @@ class default_1 extends Controller {
         this.intro = this.introValue ?? undefined;
         this.dispatchEvent('connect');
         const Component = window.resolveSvelteComponent(this.componentValue);
-        this._destroyIfExists();
+        await this._destroyIfExists();
         this.app = await this.mountSvelteComponent(Component, {
             target: this.element,
             props: this.props,
@@ -18,13 +18,19 @@ class default_1 extends Controller {
             component: Component,
         });
     }
-    disconnect() {
-        this._destroyIfExists();
+    async disconnect() {
+        await this._destroyIfExists();
         this.dispatchEvent('unmount');
     }
-    _destroyIfExists() {
+    async _destroyIfExists() {
         if (this.element.root !== undefined) {
-            this.element.root.$destroy();
+            const { unmount } = await import('svelte');
+            if (unmount) {
+                unmount(this.element.root);
+            }
+            else {
+                this.element.root.$destroy();
+            }
             delete this.element.root;
         }
     }
