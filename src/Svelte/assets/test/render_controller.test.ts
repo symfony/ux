@@ -84,6 +84,22 @@ describe('SvelteController', () => {
         await waitFor(() => expect(component.innerHTML).toContain('<div><div>Hello without props</div></div>'));
     });
 
+    it('unmount correctly', async () => {
+        const container = mountDOM(`
+          <div data-testid="component" id="container"
+              data-controller="check svelte"
+              data-svelte-component-value="SvelteComponent" />
+        `);
+
+        const component = getByTestId(container, 'component');
+
+        application = startStimulus();
+
+        await waitFor(() => expect(component.innerHTML).toContain('<div><div>Hello without props</div></div>'));
+        component.remove();
+        await waitFor(() => expect(component).not.toBeInTheDocument());
+    });
+
     // Disabled for Svelte 5 : https://github.com/sveltejs/svelte/issues/11280
     it.skipIf(SVELTE_VERSION >= '5')('connect with props and intro', async () => {
         const container = mountDOM(`

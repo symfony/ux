@@ -15,8 +15,8 @@ export default class extends Controller<Element & {
         intro: BooleanConstructor;
     };
     connect(): Promise<void>;
-    disconnect(): void;
-    _destroyIfExists(): void;
+    disconnect(): Promise<void>;
+    _destroyIfExists(): Promise<void>;
     private dispatchEvent;
     private mountSvelteComponent;
 }

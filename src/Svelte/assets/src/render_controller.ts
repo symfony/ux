@@ -27,7 +27,7 @@ export default class extends Controller<Element & { root?: SvelteComponent }> {
 
         const Component = window.resolveSvelteComponent(this.componentValue);
 
-        this._destroyIfExists();
+        await this._destroyIfExists();
 
         this.app = await this.mountSvelteComponent(Component, {
             target: this.element,
@@ -42,14 +42,21 @@ export default class extends Controller<Element & { root?: SvelteComponent }> {
         });
     }
 
-    disconnect() {
-        this._destroyIfExists();
+    async disconnect() {
+        await this._destroyIfExists();
         this.dispatchEvent('unmount');
     }
 
-    _destroyIfExists() {
+    async _destroyIfExists() {
         if (this.element.root !== undefined) {
-            this.element.root.$destroy();
+            // @ts-ignore
+            const { unmount } = await import('svelte');
+            if (unmount) {
+                // `unmount` is only available in Svelte >= 5
+                unmount(this.element.root);
+            } else {
+                this.element.root.$destroy();
+            }
             delete this.element.root;
         }
     }
