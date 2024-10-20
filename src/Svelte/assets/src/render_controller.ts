@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-import type { SvelteComponent } from 'svelte';
+import type { SvelteComponent, ComponentConstructorOptions, ComponentType } from 'svelte';
+import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 
 export default class extends Controller<Element & { root?: SvelteComponent }> {
     private app: SvelteComponent;
@@ -17,7 +18,7 @@ export default class extends Controller<Element & { root?: SvelteComponent }> {
         intro: Boolean,
     };
 
-    connect() {
+    async connect() {
         this.element.innerHTML = '';
 
         this.props = this.propsValue ?? undefined;
@@ -29,8 +30,7 @@ export default class extends Controller<Element & { root?: SvelteComponent }> {
 
         this._destroyIfExists();
 
-        // @see https://svelte.dev/docs#run-time-client-side-component-api-creating-a-component
-        this.app = new Component({
+        this.app = await this.mountSvelteComponent(Component, {
             target: this.element,
             props: this.props,
             intro: this.intro,
@@ -63,5 +63,19 @@ export default class extends Controller<Element & { root?: SvelteComponent }> {
             ...payload,
         };
         this.dispatch(name, { detail, prefix: 'svelte' });
+    }
+
+    // @see https://svelte.dev/docs#run-time-client-side-component-api-creating-a-component
+    private async mountSvelteComponent(
+        Component: ComponentType,
+        options: ComponentConstructorOptions
+    ): Promise<SvelteComponent> {
+        if (SVELTE_VERSION?.startsWith('5')) {
+            // @ts-ignore
+            const { mount } = await import('svelte');
+            return mount(Component, options);
+        }
+
+        return new Component(options);
     }
 }

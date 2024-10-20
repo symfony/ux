@@ -1,14 +1,15 @@
 import { Controller } from '@hotwired/stimulus';
+import { VERSION } from 'svelte/compiler';
 
 class default_1 extends Controller {
-    connect() {
+    async connect() {
         this.element.innerHTML = '';
         this.props = this.propsValue ?? undefined;
         this.intro = this.introValue ?? undefined;
         this.dispatchEvent('connect');
         const Component = window.resolveSvelteComponent(this.componentValue);
         this._destroyIfExists();
-        this.app = new Component({
+        this.app = await this.mountSvelteComponent(Component, {
             target: this.element,
             props: this.props,
             intro: this.intro,
@@ -36,6 +37,13 @@ class default_1 extends Controller {
             ...payload,
         };
         this.dispatch(name, { detail, prefix: 'svelte' });
+    }
+    async mountSvelteComponent(Component, options) {
+        if (VERSION?.startsWith('5')) {
+            const { mount } = await import('svelte');
+            return mount(Component, options);
+        }
+        return new Component(options);
     }
 }
 default_1.values = {

@@ -9,11 +9,13 @@
 
 import { registerSvelteControllerComponents } from '../src/register_controller';
 import MyComponent from './fixtures/MyComponent.svelte';
+import MyComponentSvelte5 from './fixtures/MyComponentSvelte5.svelte';
 import RequireContext = __WebpackModuleApi.RequireContext;
 
 const createFakeFixturesContext = (): RequireContext => {
     const files: any = {
         './MyComponent.svelte': { default: MyComponent },
+        './MyComponentSvelte5.svelte': { default: MyComponentSvelte5 },
     };
 
     const context = (id: string): any => files[id];
@@ -32,5 +34,7 @@ describe('registerSvelteControllerComponents', () => {
         expect(resolveComponent).not.toBeUndefined();
         expect(resolveComponent('MyComponent')).toBe(MyComponent);
         expect(resolveComponent('MyComponent')).not.toBeUndefined();
+        expect(resolveComponent('MyComponentSvelte5')).toBe(MyComponentSvelte5);
+        expect(resolveComponent('MyComponentSvelte5')).not.toBeUndefined();
     });
 });
