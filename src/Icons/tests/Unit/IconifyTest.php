@@ -144,6 +144,25 @@ class IconifyTest extends TestCase
         $iconify->fetchIcon('bi', 'heart');
     }
 
+    public function testFetchIconThrowsWhenStatusCodeNot200(): void
+    {
+        $iconify = new Iconify(
+            cache: new NullAdapter(),
+            endpoint: 'https://example.com',
+            http: new MockHttpClient([
+                new JsonMockResponse([
+                    'bi' => [],
+                ]),
+                new JsonMockResponse([], ['http_code' => 404]),
+            ]),
+        );
+
+        $this->expectException(IconNotFoundException::class);
+        $this->expectExceptionMessage('The icon "bi:heart" does not exist on iconify.design.');
+
+        $iconify->fetchIcon('bi', 'heart');
+    }
+
     public function testGetMetadata(): void
     {
         $responseFile = __DIR__.'/../Fixtures/Iconify/collections.json';
@@ -168,6 +187,21 @@ class IconifyTest extends TestCase
 
         $this->assertIsString($svg);
         $this->stringContains('-.224l.235-.468ZM6.013 2.06c-.649-.1', $svg);
+    }
+
+    public function testFetchSvgThrowIconNotFoundExceptionWhenStatusCodeNot200(): void
+    {
+        $client = new MockHttpClient([
+            new MockResponse(file_get_contents(__DIR__.'/../Fixtures/Iconify/collections.json'), [
+                'response_headers' => ['content-type' => 'application/json'],
+            ]),
+            new MockResponse('', ['http_code' => 404]),
+        ]);
+        $iconify = new Iconify(new NullAdapter(), 'https://localhost', $client);
+
+        $this->expectException(IconNotFoundException::class);
+
+        $iconify->fetchSvg('fa6-regular', 'bar');
     }
 
     private function createHttpClient(mixed $data, int $code = 200): MockHttpClient

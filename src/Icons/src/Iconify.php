@@ -55,6 +55,10 @@ final class Iconify
 
         $response = $this->http->request('GET', \sprintf('/%s.json?icons=%s', $prefix, $name));
 
+        if (200 !== $response->getStatusCode()) {
+            throw new IconNotFoundException(\sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
+        }
+
         try {
             $data = $response->toArray();
         } catch (JsonException) {
@@ -87,16 +91,17 @@ final class Iconify
             throw new IconNotFoundException(\sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
         }
 
-        $content = $this->http
-            ->request('GET', \sprintf('/%s/%s.svg', $prefix, $name))
-            ->getContent()
-        ;
+        $response = $this->http->request('GET', \sprintf('/%s/%s.svg', $prefix, $name));
 
-        if (!str_starts_with($content, '<svg')) {
+        if (200 !== $response->getStatusCode()) {
             throw new IconNotFoundException(\sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
         }
 
-        return $content;
+        if (!str_starts_with($svg = $response->getContent(), '<svg')) {
+            throw new IconNotFoundException(\sprintf('The icon "%s:%s" does not exist on iconify.design.', $prefix, $name));
+        }
+
+        return $svg;
     }
 
     public function getIconSets(): array
