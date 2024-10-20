@@ -8,7 +8,7 @@ Svelte is a JavaScript framework for building user interfaces.
 Symfony UX Svelte provides tools to render Svelte components from Twig,
 handling rendering and data transfers.
 
-Symfony UX Svelte supports Svelte 3 and Svelte 4.
+Symfony UX Svelte supports Svelte 3, 4 and 5.
 
 Installation
 ------------
@@ -51,7 +51,7 @@ Next, install a package to help Svelte:
 That's it! Any files inside ``assets/svelte/controllers/`` can now be rendered as
 Svelte components.
 
-If you are using Svelte 4, you will have to add ``browser``, ``import`` and ``svelte``
+If you are using Svelte 4 or 5, you will have to add ``browser``, ``import`` and ``svelte``
 to the ``conditionNames`` array. This is necessary as per `the Svelte 4 migration guide`_
 for bundlers such as webpack, to ensure that lifecycle callbacks are internally invoked.
 

@@ -12,6 +12,7 @@ import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import SvelteController from '../src/render_controller';
 import MyComponent from './fixtures/MyComponent.svelte';
+import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 
 // Controller used to check the actual controller was properly booted
 class CheckController extends Controller {
@@ -83,7 +84,8 @@ describe('SvelteController', () => {
         await waitFor(() => expect(component.innerHTML).toContain('<div><div>Hello without props</div></div>'));
     });
 
-    it('connect with props and intro', async () => {
+    // Disabled for Svelte 5 : https://github.com/sveltejs/svelte/issues/11280
+    it.skipIf(SVELTE_VERSION >= '5')('connect with props and intro', async () => {
         const container = mountDOM(`
           <div data-testid="component" id="container"
               data-controller="check svelte"
