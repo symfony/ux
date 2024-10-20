@@ -1,5 +1,4 @@
 import { Controller } from '@hotwired/stimulus';
-import { VERSION } from 'svelte/compiler';
 
 class default_1 extends Controller {
     async connect() {
@@ -39,8 +38,8 @@ class default_1 extends Controller {
         this.dispatch(name, { detail, prefix: 'svelte' });
     }
     async mountSvelteComponent(Component, options) {
-        if (VERSION?.startsWith('5')) {
-            const { mount } = await import('svelte');
+        const { mount } = await import('svelte');
+        if (mount) {
             return mount(Component, options);
         }
         return new Component(options);

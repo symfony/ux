@@ -1,6 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
 import type { SvelteComponent, ComponentConstructorOptions, ComponentType } from 'svelte';
-import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 
 export default class extends Controller<Element & { root?: SvelteComponent }> {
     private app: SvelteComponent;
@@ -70,9 +69,10 @@ export default class extends Controller<Element & { root?: SvelteComponent }> {
         Component: ComponentType,
         options: ComponentConstructorOptions
     ): Promise<SvelteComponent> {
-        if (SVELTE_VERSION?.startsWith('5')) {
-            // @ts-ignore
-            const { mount } = await import('svelte');
+        // @ts-ignore
+        const { mount } = await import('svelte');
+        if (mount) {
+            // `mount` is only available in Svelte >= 5
             return mount(Component, options);
         }
 
