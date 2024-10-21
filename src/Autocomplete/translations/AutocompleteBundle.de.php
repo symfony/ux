@@ -13,5 +13,5 @@ return [
     'Loading more results...' => 'Lade weitere Ergebnisse...',
     'No results found' => 'Keine Übereinstimmungen gefunden',
     'No more results' => 'Keine weiteren Ergebnisse',
-    // 'Add %placeholder%...' => 'Add %placeholder%...',
+    'Add %placeholder%...' => '%placeholder% hinzufügen...',
 ];
