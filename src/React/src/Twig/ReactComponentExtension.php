@@ -45,15 +45,24 @@ class ReactComponentExtension extends AbstractExtension
         ];
     }
 
-    public function renderReactComponent(string $componentName, array $props = []): string
+    /**
+     * @param array<string, mixed>    $props
+     * @param array{permanent?: bool} $options
+     */
+    public function renderReactComponent(string $componentName, array $props = [], array $options = []): string
     {
-        $params = ['component' => $componentName];
+        $values = ['component' => $componentName];
         if ($props) {
-            $params['props'] = $props;
+            $values['props'] = $props;
+        }
+        if ($options) {
+            if (\is_bool($permanent = $options['permanent'] ?? null)) {
+                $values['permanent'] = $permanent;
+            }
         }
 
         $stimulusAttributes = $this->stimulusHelper->createStimulusAttributes();
-        $stimulusAttributes->addController('@symfony/ux-react/react', $params);
+        $stimulusAttributes->addController('@symfony/ux-react/react', $values);
 
         return (string) $stimulusAttributes;
     }

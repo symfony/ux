@@ -54,6 +54,9 @@ class default_1 extends Controller {
         });
     }
     disconnect() {
+        if (this.permanentValue) {
+            return;
+        }
         this.element.root.unmount();
         this.dispatchEvent('unmount', {
             component: this.componentValue,
@@ -74,6 +77,7 @@ class default_1 extends Controller {
 default_1.values = {
     component: String,
     props: Object,
+    permanent: { type: Boolean, default: false },
 };
 
 export { default_1 as default };
