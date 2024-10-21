@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by jonasdekeukelaere at 2024-10-17T09:48:05Z
+
+Changelog updated
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-10-19T00:09:43Z
+
+Do you know why the tests are failing ?
+
+---------------------------------------------------------------------------
+
+by jonasdekeukelaere at 2024-10-19T13:01:32Z
+
+No idea, looks like it is the same like in https://github.com/symfony/ux/pull/2108#issuecomment-2325673608
