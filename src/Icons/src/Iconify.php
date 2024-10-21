@@ -104,6 +104,11 @@ final class Iconify
         return $svg;
     }
 
+    public function hasIconSet(string $prefix): bool
+    {
+        return isset($this->sets()[$prefix]);
+    }
+
     public function getIconSets(): array
     {
         return $this->sets()->getArrayCopy();

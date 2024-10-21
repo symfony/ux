@@ -72,10 +72,21 @@ final class LockIconsCommand extends Command
 
             [$prefix, $name] = $parts;
 
+            if (!$this->iconify->hasIconSet($prefix)) {
+                // not an icon set? example: "og:twitter"
+                if ($io->isVeryVerbose()) {
+                    $io->writeln(\sprintf(' <fg=bright-yellow;options=bold>✗</> IconSet Not Found: <fg=bright-white;bg=black>%s:%s</>.', $prefix, $name));
+                }
+                continue;
+            }
+
             try {
                 $svg = $this->iconify->fetchSvg($prefix, $name);
             } catch (IconNotFoundException) {
                 // icon not found on iconify
+                if ($io->isVerbose()) {
+                    $io->writeln(\sprintf(' <fg=bright-red;options=bold>✗</> Icon Not Found: <fg=bright-white;bg=black>%s:%s</>.', $prefix, $name));
+                }
                 continue;
             }
 
@@ -84,7 +95,7 @@ final class LockIconsCommand extends Command
             $license = $this->iconify->metadataFor($prefix)['license'];
             ++$count;
 
-            $io->text(\sprintf(
+            $io->writeln(\sprintf(
                 " <fg=bright-green;options=bold>✓</> Imported <fg=bright-white;bg=black>%s:</><fg=bright-magenta;bg=black;options>%s</> (License: <href=%s>%s</>). Render with: <comment>{{ ux_icon('%s') }}</comment>",
                 $prefix,
                 $name,
