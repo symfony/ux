@@ -1,0 +1,20 @@
+---------------------------------------------------------------------------
+
+by codisart at 2024-10-19T12:27:32Z
+
+Hello @smnandre, I work on a website for a french media company which include a audio player which is implemented using react. We tried to use symfony/ux react component with turbo and a data-turbo-permanent attribute to allow the non stop music playing during navigation.
+
+We discovered that it was not possible with the current code like you said. But it was easily fix moving the connect function to the initialize function and removing the disconnect entierly.
+
+Should we use your implementation instead ? Would we see bugs with our solution ?
+It seems to me that using only initialize lifecycle is more coherent for a permanent component.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-10-20T05:56:08Z
+
+Hi @codisart !
+
+I changed the implementation to avoid playing with timeouts/delays.
+
+(I updated the first message)
