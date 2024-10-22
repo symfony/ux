@@ -1,4 +1,4 @@
-import type { ComponentHookName, ComponentHookCallback } from './Component';
+import type { ComponentHookCallback, ComponentHookName } from './Component';
 
 export default class {
     private hooks: Map<ComponentHookName | string, Array<(...args: any[]) => void>> = new Map();

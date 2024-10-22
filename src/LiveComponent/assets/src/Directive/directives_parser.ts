@@ -33,6 +33,20 @@ export interface Directive {
 }
 
 /**
+ * A set of directives for an element
+ */
+export interface ElementDirectives {
+    /**
+     * The element attached to the directives (the element always belongs to the current live component)
+     */
+    element: HTMLElement | SVGElement;
+    /**
+     * The directives for the element
+     */
+    directives: Directive[];
+}
+
+/**
  * Parses strings like "addClass(foo) removeAttribute(bar)"
  * into an array of directives, with this format:
  *

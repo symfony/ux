@@ -15,6 +15,7 @@ import QueryStringPlugin from './Component/plugins/QueryStringPlugin';
 import ChildComponentPlugin from './Component/plugins/ChildComponentPlugin';
 import getElementAsTagText from './Util/getElementAsTagText';
 import LazyPlugin from './Component/plugins/LazyPlugin';
+import ErrorPlugin from './Component/plugins/ErrorPlugin';
 
 export { Component };
 export { getComponent } from './ComponentRegistry';
@@ -296,6 +297,7 @@ export default class LiveControllerDefault extends Controller<HTMLElement> imple
 
         const plugins: PluginInterface[] = [
             new LoadingPlugin(),
+            new ErrorPlugin(),
             new LazyPlugin(),
             new ValidatedFieldsPlugin(),
             new PageUnloadingPlugin(),

@@ -920,6 +920,8 @@ The following hooks are available (along with the arguments that are passed):
 * ``loading.state:finished`` args ``(element: HTMLElement)``
 * ``model:set`` args ``(model: string, value: any, component: Component)``
 
+.. _loading:
+
 Loading States
 --------------
 
@@ -1030,6 +1032,74 @@ was just changed using the ``model()`` modifier:
 
     <!-- multiple modifiers & child properties -->
     <span data-loading="model(user.email)|delay|addClass(opacity-50)">...</span>
+
+Error Handling
+--------------
+
+When an unexpected error occurs during the rendering of a component, you
+might want to inform your user. Fortunately, live components allow you to
+do just that.
+
+Understanding The Error State
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+When an error occurs, a few things happen:
+
+* The component is **not** re-rendered and restores its "dirty" (pre-error) state.
+* The ``response:error`` hook is dispatched, which in turn triggers the
+  ``data-live-error`` attribute.
+* :ref:`Loading behaviors <loading>` are cleared.
+* If another request is already pending (e.g. user triggered another action while
+  the first request was still pending), then it will proceed as normal, instantly
+  clearing the error state.
+* A debug modal will be shown (unless disabled through the ``response:error``
+  hook, using the ``controls.displayError`` argument).
+
+.. caution::
+
+    The term "Error State" only refers to **server side errors**. Errors
+    that occur on the client side (e.g. an uncaught JavaScript exception on a
+    live component) will not trigger the error state. If an unexpected exception happens
+    in the component, then will most likely stop working. If that's the case, you should
+    probably open `an issue https://github.com/symfony/ux/issues/new`_ to report the problem.
+
+Displaying An Error Message
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+In addition to using the ``response:error`` hook, you can also use the special ``data-live-error``
+attribute to show (or hide) an element when the component is in an error state:
+
+.. code-block:: html+twig
+
+    <!-- show only when the component is in an error state -->
+    <span data-live-error>An error occurred! Please try again.</span>
+
+    <!-- equivalent, longer syntax -->
+    <span data-live-error="show">An error occurred! Please try again.</span>
+
+This attribute works exactly like :ref:`data-loading <loading>`, with
+a few differences:
+
+* It doesn't accept any modifiers.
+* It cannot target specific actions or models.
+
+You could, for example, change the class of a text if an error occurs:
+
+.. code-block:: html+twig
+
+    <!-- this title will turn red if an error occurs -->
+    <h2 data-live-error="addClass(text-red-500)">My awesome component</h2>
+
+Under the hood, ``data-live-error`` attributes are triggered by the ``response:error``
+hook, and cleared by the ``render:started`` hook.
+
+.. note::
+
+    The ``data-live-error`` attribute automatically adds a ``display: none`` style on the
+    element (unless "show" is used) when ``live.autoimport.@symfony/ux-live-component/dist/live.min.css``
+    is set to ``true`` in your ``controllers.json`` file, and as soon as the live controller is connected.
+    However, it's always a good idea to add your own hidden class on the element to ensure the element
+    is hidden from the start.
 
 .. _actions:
 
@@ -3710,7 +3780,7 @@ uses Symfony's test client to render and make requests to your components::
             // authenticate a user ($user is instance of UserInterface)
             $testComponent->actingAs($user);
 
-            // set the '_locale' route parameter (if the component route is localized)  
+            // set the '_locale' route parameter (if the component route is localized)
             $testComponent->setRouteLocale('fr');
 
             // customize the test client
