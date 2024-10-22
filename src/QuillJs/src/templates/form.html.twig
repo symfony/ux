@@ -1,0 +1,39 @@
+{% block quill_widget %}
+    {%- set controller_name = "symfony--ux-quill--quill" -%}
+    {% set data_set = "data-symfony--ux-quill--quill" %}
+    {% set html_sanitizer = attr['sanitizer'] %}
+
+    <div class="quill-container"
+         data-controller="{{ controller_name }}"
+         {{ data_set }}-toolbar-options-value="{{ attr['quill_options'] }}"
+         {{ data_set }}-extra-options-value="{{ attr['quill_extra_options'] }}"
+    >
+        <div>
+            <input type="hidden"
+                   value="{{ value }}"
+                    {{ block('widget_attributes') }}
+                   {{ data_set }}-target="input"
+            >
+        </div>
+
+        <div>
+            <div class="quill-editor"
+                 {{ data_set }}-target="editorContainer"
+            >
+                {% if html_sanitizer is not null %}
+                    {{ value|raw|sanitize_html(html_sanitizer) }}
+                {% else %}
+                    {{ value|raw }}
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    {# include katex only if a formula field is present #}
+    {% set json_string = attr['quill_options']|json_encode %}
+    {% set formula_exists = 'formula' in json_string %}
+    {% if formula_exists %}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+    {% endif %}
+{% endblock %}

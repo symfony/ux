@@ -1,0 +1,110 @@
+{
+    "name": "@symfony/ux-quill",
+    "description": "Symfony bundle to use Quill JS text editor",
+    "version": "2.0.0",
+    "license": "MIT",
+    "main": "dist/controller.js",
+    "symfony": {
+        "controllers": {
+            "quill": {
+                "main": "dist/controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true,
+                "autoimport": {
+                    "quill/dist/quill.snow.css": true,
+                    "quill/dist/quill.bubble.css": false
+                }
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "file-loader": "^6.2.0",
+            "quill": "2.0.0",
+            "quill/dist/quill.snow.css": "2.0.0",
+            "quill/dist/quill.bubble.css": "2.0.0",
+            "axios": "^1.4.0",
+            "quill2-emoji": "^0.1.2",
+            "quill2-emoji/dist/style.css": "^0.1.2",
+            "quill-resize-image": "^1.0.4"
+        }
+    },
+    "scripts": {
+        "dev-server": "encore dev-server",
+        "dev": "encore dev",
+        "watch": "babel src --out-dir dist --source-maps --watch --extensions '.ts,.js'",
+        "build": "babel src --extensions .ts -d dist",
+        "lint": "yarn run eslint src",
+        "lint-fix": "yarn run eslint src --fix",
+        "build:types": "tsc --emitDeclarationOnly"
+    },
+    "devDependencies": {
+        "@babel/cli": "^7.20.7",
+        "@babel/core": "^7.20.12",
+        "@babel/plugin-proposal-class-properties": "^7.18.6",
+        "@babel/plugin-transform-modules-commonjs": "^7.23.3",
+        "@babel/preset-env": "^7.20.2",
+        "@babel/preset-typescript": "^7.18.6",
+        "@hotwired/stimulus": "^3.2.1",
+        "@symfony/webpack-encore": "^4.0.0",
+        "@testing-library/dom": "^9.3.0",
+        "@types/jest": "^29.5.2",
+        "@typescript-eslint/eslint-plugin": "^5.2.0",
+        "@typescript-eslint/parser": "^5.2.0",
+        "core-js": "^3.30.2",
+        "eslint": "^8.1.0",
+        "eslint-config-prettier": "^8.0.0",
+        "eslint-plugin-jest": "^25.2.2",
+        "quill2-emoji": "^0.1.2",
+        "ts-loader": "^9.0.0",
+        "typescript": "^4.9.5",
+        "webpack": "^5.74.0",
+        "webpack-cli": "^4.10.0",
+        "webpack-notifier": "^1.15.0"
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "axios": "^1.4.0",
+        "file-loader": "^6.2.0",
+        "quill": "2.0.0"
+    },
+    "dependencies": {
+        "axios": "^1.4.0",
+        "eventemitter3": "^5.0.1",
+        "file-loader": "^6.2.0",
+        "lodash-es": "^4.17.21",
+        "quill": "2.0.0",
+        "quill-delta": "^5.1.0",
+        "quill-resize-image": "^1.0.4",
+        "quill2-emoji": "^0.1.2"
+    },
+    "eslintConfig": {
+        "root": true,
+        "parser": "@typescript-eslint/parser",
+        "plugins": [
+            "@typescript-eslint"
+        ],
+        "extends": [
+            "eslint:recommended",
+            "prettier",
+            "plugin:@typescript-eslint/eslint-recommended",
+            "plugin:@typescript-eslint/recommended"
+        ],
+        "rules": {
+            "@typescript-eslint/no-explicit-any": "off",
+            "@typescript-eslint/no-empty-function": "off",
+            "@typescript-eslint/ban-ts-comment": "off",
+            "quotes": [
+                "error",
+                "single"
+            ]
+        }
+    },
+    "prettier": {
+        "printWidth": 120,
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "jsxBracketSameLine": true,
+        "singleQuote": true
+    }
+}
