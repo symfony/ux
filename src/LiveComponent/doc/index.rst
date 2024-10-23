@@ -1200,28 +1200,14 @@ Actions and CSRF Protection
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 When you trigger an action, a POST request is sent that contains a
-``X-CSRF-TOKEN`` header. This header is automatically populated and
-validated. In other words… you get CSRF protection without any work.
+custom ``Accept`` header. This header is automatically populated and
+validated. In other words… you get CSRF protection without any work
+thanks to same-origin / CORS policies implemented by browsers.
 
-Your only job is to make sure that the CSRF component is installed:
+If you want this built-in CSRF protection to be effective, mind your
+CORS headers (e.g. *DO NOT* use `Access-Control-Allow-Origin: *`).
 
-.. code-block:: terminal
-
-    $ composer require symfony/security-csrf
-
-If you want to disable CSRF for a single component you can set
-``csrf`` option to ``false``::
-
-    namespace App\Twig\Components;
-
-    use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-    use Symfony\UX\LiveComponent\Attribute\LiveProp;
-
-    #[AsLiveComponent(csrf: false)]
-    class MyLiveComponent
-    {
-        // ...
-    }
+(In test-mode, the CSRF protection is disabled to make testing easier.)
 
 Actions, Redirecting and AbstractController
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

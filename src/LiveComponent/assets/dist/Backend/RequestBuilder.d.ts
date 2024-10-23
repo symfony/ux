@@ -2,8 +2,7 @@ import type { BackendAction, ChildrenFingerprints } from './Backend';
 export default class {
     private url;
     private method;
-    private csrfToken;
-    constructor(url: string, method?: 'get' | 'post', csrfToken?: string | null);
+    constructor(url: string, method?: 'get' | 'post');
     buildRequest(props: any, actions: BackendAction[], updated: {
         [key: string]: any;
     }, children: ChildrenFingerprints, updatedPropsFromParent: {
@@ -15,5 +14,4 @@ export default class {
         fetchOptions: RequestInit;
     };
     private willDataFitInUrl;
-    updateCsrfToken(csrfToken: string): void;
 }

@@ -630,23 +630,4 @@ describe('LiveController rendering Tests', () => {
         // verify the selectedIndex of the select option 2 is 0
         expect(selectOption2.selectedIndex).toBe(0);
     });
-
-    it('backend will have a new csrf token', async () => {
-        const test = await createTest(
-            {},
-            (data: any) => `
-            <div ${initComponent(data)} data-live-csrf-value="${data.csrf}">
-            </div>
-        `
-        );
-
-        test.expectsAjaxCall().serverWillChangeProps((data: any) => {
-            // change csrf token
-            data.csrf = 'Hello';
-        });
-
-        await test.component.render();
-
-        expect(test.mockedBackend.csrfToken).toEqual('Hello');
-    });
 });

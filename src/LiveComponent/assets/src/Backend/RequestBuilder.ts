@@ -3,12 +3,10 @@ import type { BackendAction, ChildrenFingerprints } from './Backend';
 export default class {
     private url: string;
     private method: 'get' | 'post';
-    private csrfToken: string | null;
 
-    constructor(url: string, method: 'get' | 'post' = 'post', csrfToken: string | null = null) {
+    constructor(url: string, method: 'get' | 'post' = 'post') {
         this.url = url;
         this.method = method;
-        this.csrfToken = csrfToken;
     }
 
     buildRequest(
@@ -64,10 +62,6 @@ export default class {
                 requestData.children = children;
             }
 
-            if (this.csrfToken && (actions.length || totalFiles)) {
-                fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
-            }
-
             if (actions.length > 0) {
                 // one or more ACTIONs
 
@@ -116,9 +110,5 @@ export default class {
 
         // if the URL gets remotely close to 2000 chars, it may not fit
         return (urlEncodedJsonData + params.toString()).length < 1500;
-    }
-
-    updateCsrfToken(csrfToken: string) {
-        this.csrfToken = csrfToken;
     }
 }

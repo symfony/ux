@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 2.22.0
+
+-   Remove CSRF tokens - rely on same-origin/CORS instead
+
+## 2.19.0
+
 -   Add `submitForm()` to `TestLiveComponent`.
 -   Add `live_action` Twig function
 

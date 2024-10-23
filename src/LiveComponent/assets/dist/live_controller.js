@@ -2052,9 +2052,6 @@ class Component {
                 return response;
             }
             this.processRerender(html, backendResponse);
-            if (this.element.dataset.liveCsrfValue) {
-                this.backend.updateCsrfToken(this.element.dataset.liveCsrfValue);
-            }
             this.backendRequest = null;
             thisPromiseResolve(backendResponse);
             if (this.isRequestPending) {
@@ -2255,10 +2252,9 @@ class BackendRequest {
 }
 
 class RequestBuilder {
-    constructor(url, method = 'post', csrfToken = null) {
+    constructor(url, method = 'post') {
         this.url = url;
         this.method = method;
-        this.csrfToken = csrfToken;
     }
     buildRequest(props, actions, updated, children, updatedPropsFromParent, files) {
         const splitUrl = this.url.split('?');
@@ -2295,9 +2291,6 @@ class RequestBuilder {
             if (hasFingerprints) {
                 requestData.children = children;
             }
-            if (this.csrfToken && (actions.length || totalFiles)) {
-                fetchOptions.headers['X-CSRF-TOKEN'] = this.csrfToken;
-            }
             if (actions.length > 0) {
                 if (actions.length === 1) {
                     requestData.args = actions[0].args;
@@ -2328,21 +2321,15 @@ class RequestBuilder {
         const urlEncodedJsonData = new URLSearchParams(propsJson + updatedJson + childrenJson + propsFromParentJson).toString();
         return (urlEncodedJsonData + params.toString()).length < 1500;
     }
-    updateCsrfToken(csrfToken) {
-        this.csrfToken = csrfToken;
-    }
 }
 
 class Backend {
-    constructor(url, method = 'post', csrfToken = null) {
-        this.requestBuilder = new RequestBuilder(url, method, csrfToken);
+    constructor(url, method = 'post') {
+        this.requestBuilder = new RequestBuilder(url, method);
     }
     makeRequest(props, actions, updated, children, updatedPropsFromParent, files) {
         const { url, fetchOptions } = this.requestBuilder.buildRequest(props, actions, updated, children, updatedPropsFromParent, files);
         return new BackendRequest(fetch(url, fetchOptions), actions.map((backendAction) => backendAction.name), Object.keys(updated));
-    }
-    updateCsrfToken(csrfToken) {
-        this.requestBuilder.updateCsrfToken(csrfToken);
     }
 }
 
@@ -3203,7 +3190,6 @@ LiveControllerDefault.values = {
     url: String,
     props: { type: Object, default: {} },
     propsUpdatedFromParent: { type: Object, default: {} },
-    csrf: String,
     listeners: { type: Array, default: [] },
     eventsToEmit: { type: Array, default: [] },
     eventsToDispatch: { type: Array, default: [] },
@@ -3212,6 +3198,6 @@ LiveControllerDefault.values = {
     requestMethod: { type: String, default: 'post' },
     queryMapping: { type: Object, default: {} },
 };
-LiveControllerDefault.backendFactory = (controller) => new Backend(controller.urlValue, controller.requestMethodValue, controller.csrfValue);
+LiveControllerDefault.backendFactory = (controller) => new Backend(controller.urlValue, controller.requestMethodValue);
 
 export { Component, LiveControllerDefault as default, getComponent };

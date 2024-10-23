@@ -13,7 +13,6 @@ export interface BackendInterface {
     }, files: {
         [key: string]: FileList;
     }): BackendRequest;
-    updateCsrfToken(csrfToken: string): void;
 }
 export interface BackendAction {
     name: string;
@@ -21,7 +20,7 @@ export interface BackendAction {
 }
 export default class implements BackendInterface {
     private readonly requestBuilder;
-    constructor(url: string, method?: 'get' | 'post', csrfToken?: string | null);
+    constructor(url: string, method?: 'get' | 'post');
     makeRequest(props: any, actions: BackendAction[], updated: {
         [key: string]: any;
     }, children: ChildrenFingerprints, updatedPropsFromParent: {
@@ -29,5 +28,4 @@ export default class implements BackendInterface {
     }, files: {
         [key: string]: FileList;
     }): BackendRequest;
-    updateCsrfToken(csrfToken: string): void;
 }

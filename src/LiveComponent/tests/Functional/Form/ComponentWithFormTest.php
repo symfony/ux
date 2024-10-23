@@ -46,13 +46,11 @@ class ComponentWithFormTest extends KernelTestCase
             'blog_post_form.content' => 'changed description by user',
             'validatedFields' => ['blog_post_form.content'],
         ];
-        $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
 
         $crawler = $browser
             // post to action, which will add a new embedded comment
             ->post('/_components/form_with_collection_type/addComment', [
                 'body' => ['data' => json_encode(['props' => $dehydratedProps, 'updated' => $updatedProps])],
-                'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
             // look for original embedded form
@@ -82,13 +80,11 @@ class ComponentWithFormTest extends KernelTestCase
         // fake that this field was being validated
         $updatedProps = ['validatedFields' => $dehydratedProps['validatedFields']];
         $updatedProps['validatedFields'][] = 'blog_post_form.comments.0.content';
-        $token = $div->attr('data-live-csrf-value');
 
         $crawler = $browser
             // post to action, which will remove the original embedded comment
             ->post('/_components/form_with_collection_type/removeComment', [
                 'body' => ['data' => json_encode(['props' => $dehydratedProps, 'updated' => $updatedProps, 'args' => ['index' => '0']])],
-                'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
             // the original embedded form should be gone
@@ -110,7 +106,6 @@ class ComponentWithFormTest extends KernelTestCase
             // empty the collection
             ->post('/_components/form_with_collection_type/removeComment', [
                 'body' => ['data' => json_encode(['props' => $dehydratedProps, 'args' => ['index' => '1']])],
-                'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
             ->assertNotContains('<textarea id="blog_post_form_comments_')
@@ -328,7 +323,6 @@ class ComponentWithFormTest extends KernelTestCase
 
         $div = $crawler->filter('[data-controller="live"]');
         $dehydratedProps = json_decode($div->attr('data-live-props-value'), true);
-        $token = $div->attr('data-live-csrf-value');
 
         $browser
             ->post('/_components/form_with_many_different_fields_type/submitAndResetForm', [
@@ -336,7 +330,6 @@ class ComponentWithFormTest extends KernelTestCase
                     'props' => $dehydratedProps,
                     'updated' => ['form.textarea' => 'short'],
                 ])],
-                'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(200)
             ->assertContains('<textarea id="form_textarea" name="form[textarea]" required="required"></textarea>')
@@ -346,7 +339,6 @@ class ComponentWithFormTest extends KernelTestCase
         $browser
             ->post('/_components/form_with_many_different_fields_type/resetFormWithoutSubmitting', [
                 'body' => ['data' => json_encode(['props' => $dehydratedProps])],
-                'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(200)
             ->assertNotContains('textarea is too long')
@@ -358,7 +350,6 @@ class ComponentWithFormTest extends KernelTestCase
     {
         $dehydratedProps = $this->dehydrateComponent($this->mountComponent('form_with_live_collection_type'))->getProps();
         $updatedProps = [];
-        $token = null;
 
         $this->browser()
             ->post('/_components/form_with_live_collection_type', [
@@ -368,18 +359,16 @@ class ComponentWithFormTest extends KernelTestCase
                     ]),
                 ],
             ])
-            ->use(function (Crawler $crawler) use (&$dehydratedProps, &$token, &$updatedProps) {
+            ->use(function (Crawler $crawler) use (&$updatedProps) {
                 // mimic user typing
                 $updatedProps = [
                     'blog_post_form.content' => 'changed description by user',
                     'validatedFields' => ['blog_post_form.content'],
                 ];
-                $token = $crawler->filter('div')->first()->attr('data-live-csrf-value');
             })
             // post to action, which will add a new embedded comment
             ->post('/_components/form_with_live_collection_type/addCollectionItem', [
                 'body' => ['data' => json_encode(['props' => $dehydratedProps, 'updated' => $updatedProps, 'args' => ['name' => 'blog_post_form[comments]']])],
-                'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
             // look for original embedded form
@@ -392,7 +381,7 @@ class ComponentWithFormTest extends KernelTestCase
             ->assertContains('The content field is too short')
             // make sure the title field did not suddenly become validated
             ->assertNotContains('The title field should not be blank')
-            ->use(function (Crawler $crawler) use (&$dehydratedProps, &$token, $updatedProps) {
+            ->use(function (Crawler $crawler) use (&$dehydratedProps) {
                 $div = $crawler->filter('[data-controller="live"]');
                 $dehydratedProps = json_decode($div->attr('data-live-props-value'), true);
                 // make sure the 2nd collection type was initialized, that it didn't
@@ -410,13 +399,11 @@ class ComponentWithFormTest extends KernelTestCase
                     $dehydratedProps['validatedFields'],
                     ['blog_post_form.0.comments.content']
                 )];
-                $token = $div->attr('data-live-csrf-value');
             })
 
             // post to action, which will remove the original embedded comment
             ->post('/_components/form_with_live_collection_type/removeCollectionItem', [
                 'body' => ['data' => json_encode(['props' => $dehydratedProps, 'updated' => $updatedProps, 'args' => ['name' => 'blog_post_form[comments]', 'index' => '0']])],
-                'headers' => ['X-CSRF-TOKEN' => $token],
             ])
             ->assertStatus(422)
             // the original embedded form should be gone

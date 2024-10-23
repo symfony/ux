@@ -72,7 +72,6 @@ class ChildComponentPartialRenderer implements ServiceSubscriberInterface
         // optional, but these just aren't needed by the frontend at this point
         unset($attributes['data-controller']);
         unset($attributes['data-live-url-value']);
-        unset($attributes['data-live-csrf-value']);
         unset($attributes['data-live-props-value']);
 
         return $this->createHtml($attributes, $childTag);
