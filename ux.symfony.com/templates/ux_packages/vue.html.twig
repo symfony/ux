@@ -20,14 +20,15 @@
 {% endblock %}
 
 {% block code_block_left %}
-    <twig:CodeBlock filename="templates/ux_packages/vue.html.twig" height="350px"/>
+    <twig:CodeBlock filename="assets/vue/controllers/PackageSearch.js" height="300px" />
 {% endblock %}
 
 {% block code_block_right %}
     <twig:CodeBlock
-        filename="assets/vue/controllers/PackageSearch.js"
-        height="350px"
+        filename="templates/ux_packages/vue.html.twig"
+        height="300px"
         language="html"
+        targetTwigBlock="demo_content"
     />
 {% endblock %}
 

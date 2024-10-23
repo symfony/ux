@@ -7,8 +7,10 @@ framework:
             - '*/assets/styles/_*.scss'
             - '*/assets/styles/**/_*.scss'
             - '*/assets/icons/**'
-            - '*/assets/react/src/**'       # Exclude React source + build files
-            - '*/assets/svelte/src/**'      # Exclude Svelte source + build files
+            - '*/assets/react/build**'     # React build dir
+            - '*/assets/react/src**'       # React sources
+            - '*/assets/svelte/build**'    # ESvelte build dir
+            - '*/assets/svelte/src**'      # Svelte source files
         importmap_polyfill: false
 
 react:
