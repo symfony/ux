@@ -33,8 +33,9 @@ needed if you're using AssetMapper):
 Usage in a Form (without Ajax)
 ------------------------------
 
-Any ``ChoiceType`` or ``EntityType`` can be transformed into a
-Tom Select-powered UI control by adding the ``autocomplete`` option:
+If you're using `Symfony Form`_ any ``ChoiceType`` or ``EntityType`` can be
+transformed into a Tom Select-powered UI control by adding the ``autocomplete``
+option:
 
 .. code-block:: diff
 
@@ -747,3 +748,4 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`controller.ts`: https://github.com/symfony/ux/blob/2.x/src/Autocomplete/assets/src/controller.ts
 .. _`Tom Select Render Templates`: https://tom-select.js.org/docs/#render-templates
 .. _`Tom Select Option Group`: https://tom-select.js.org/examples/optgroups/
+.. _`Symfony Form`: https://symfony.com/doc/current/forms.html
