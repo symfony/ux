@@ -1,0 +1,54 @@
+---------------------------------------------------------------------------
+
+by onEXHovia at 2024-10-11T04:37:30Z
+
+Many developers, for various reasons(anwser stackoverflow), can add `Access-Control-Allow-Origin: * ` header for all requests its loosens Single Origin Policy (SOP) and allows you to execute request using `XMLHttpRequest `  and setting `Accept` header. Classic way with hidden input, seems like more effective or at least an additional layer against CSRF.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-12T07:40:08Z
+
+@onEXHovia thanks for the comment but I'm not sure what you're suggesting for this PR?
+
+---------------------------------------------------------------------------
+
+by onEXHovia at 2024-10-12T10:38:11Z
+
+> @onEXHovia thanks for the comment but I'm not sure what you're suggesting for this PR?
+
+If we consider this implementation and current with hidden token, I see two different scenarios. Without documentation developers may not know that live component depends on SOP in js for protections CSRF and added header Access-Control-Allow-Origin could mean potential CSRF.
+
+On the other hand, implementation with token is more explicit. Developer disable it through the component configuration and understands that could mean potential CSRF.
+
+Discussion in #2250
+> Enabling CSRF by default means enabling the session, making requests stateful.
+
+> CSRF protection is not a "feature", nobody is "using it" in the sense that it's a behavior that shouldn't have any visible effect to any normal workflow.
+
+The same can be said about stateless requests, usually no one tries to make all requests stateless. I don't see any reason to remove the token based implementation, as a solution we could add a global configuration that configures the CSRF behavior for all components.
+
+---------------------------------------------------------------------------
+
+by daFish at 2024-10-23T09:08:24Z
+
+This MR helps with #2177 and fixes the issue. My attempt to fix it in #2254 is no longer needed.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-23T09:41:07Z
+
+I've just added a note about CSRF / CORS in the doc.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-10-23T18:10:02Z
+
+LGTM :)
+
+@nicolas-grekas can you update the CHANGELOG in the src/LiveComponent repository ?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-23T18:28:46Z
+
+CHANGELOG updated
