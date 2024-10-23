@@ -17,6 +17,10 @@ export interface AutocompleteConnectOptions {
     tomSelect: TomSelect;
     options: any;
 }
+interface OptionDataStructure {
+    value: string;
+    text: string;
+}
 
 export default class extends Controller {
     static values = {
@@ -47,7 +51,7 @@ export default class extends Controller {
     private mutationObserver: MutationObserver;
     private isObserving = false;
     private hasLoadedChoicesPreviously = false;
-    private originalOptions: Array<{ value: string; text: string; group: string | null }> = [];
+    private originalOptions: Array<OptionDataStructure> = [];
 
     initialize() {
         if (!this.mutationObserver) {
@@ -158,6 +162,47 @@ export default class extends Controller {
                 this.tomSelect.setTextboxValue('');
             },
             closeAfterSelect: true,
+            // fix positioning (in the dropdown) of options added through addOption()
+            onOptionAdd: (value: string, data: { [key: string]: any }) => {
+                let parentElement = this.tomSelect.input as Element;
+                let optgroupData = null;
+
+                const optgroup = data[this.tomSelect.settings.optgroupField];
+                if (optgroup && this.tomSelect.optgroups) {
+                    optgroupData = this.tomSelect.optgroups[optgroup];
+                    if (optgroupData) {
+                        const optgroupElement = parentElement.querySelector(`optgroup[label="${optgroupData.label}"]`);
+                        if (optgroupElement) {
+                            parentElement = optgroupElement;
+                        }
+                    }
+                }
+
+                const optionElement = document.createElement('option');
+                optionElement.value = value;
+                optionElement.text = data[this.tomSelect.settings.labelField];
+
+                const optionOrder = data['$order'];
+                let orderedOption = null;
+
+                for (const [, tomSelectOption] of Object.entries(this.tomSelect.options)) {
+                    if (tomSelectOption['$order'] === optionOrder) {
+                        orderedOption = parentElement.querySelector(
+                            `:scope > option[value="${tomSelectOption[this.tomSelect.settings.valueField]}"]`
+                        );
+
+                        break;
+                    }
+                }
+
+                if (orderedOption) {
+                    orderedOption.insertAdjacentElement('afterend', optionElement);
+                } else if (optionOrder >= 0) {
+                    parentElement.append(optionElement);
+                } else {
+                    parentElement.prepend(optionElement);
+                }
+            },
         };
 
         // for non-autocompleting input elements, avoid the "No results" message that always shows
@@ -414,20 +459,16 @@ export default class extends Controller {
         }
     }
 
-    private createOptionsDataStructure(
-        selectElement: HTMLSelectElement
-    ): Array<{ value: string; text: string; group: string | null }> {
+    private createOptionsDataStructure(selectElement: HTMLSelectElement): Array<OptionDataStructure> {
         return Array.from(selectElement.options).map((option) => {
-            const optgroup = option.closest('optgroup');
             return {
                 value: option.value,
                 text: option.text,
-                group: optgroup ? optgroup.label : null,
             };
         });
     }
 
-    private areOptionsEquivalent(newOptions: Array<{ value: string; text: string; group: string | null }>): boolean {
+    private areOptionsEquivalent(newOptions: Array<OptionDataStructure>): boolean {
         // remove the empty option, which is added by TomSelect so may be missing from new options
         const filteredOriginalOptions = this.originalOptions.filter((option) => option.value !== '');
         const filteredNewOptions = newOptions.filter((option) => option.value !== '');
@@ -447,8 +488,7 @@ export default class extends Controller {
             return false;
         }
 
-        const normalizeOption = (option: { value: string; text: string; group: string | null }) =>
-            `${option.value}-${option.text}-${option.group}`;
+        const normalizeOption = (option: OptionDataStructure) => `${option.value}-${option.text}`;
         const originalOptionsSet = new Set(filteredOriginalOptions.map(normalizeOption));
         const newOptionsSet = new Set(filteredNewOptions.map(normalizeOption));
 

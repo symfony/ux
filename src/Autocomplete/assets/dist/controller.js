@@ -195,11 +195,9 @@ class default_1 extends Controller {
     }
     createOptionsDataStructure(selectElement) {
         return Array.from(selectElement.options).map((option) => {
-            const optgroup = option.closest('optgroup');
             return {
                 value: option.value,
                 text: option.text,
-                group: optgroup ? optgroup.label : null,
             };
         });
     }
@@ -216,7 +214,7 @@ class default_1 extends Controller {
         if (filteredOriginalOptions.length !== filteredNewOptions.length) {
             return false;
         }
-        const normalizeOption = (option) => `${option.value}-${option.text}-${option.group}`;
+        const normalizeOption = (option) => `${option.value}-${option.text}`;
         const originalOptionsSet = new Set(filteredOriginalOptions.map(normalizeOption));
         const newOptionsSet = new Set(filteredNewOptions.map(normalizeOption));
         return (originalOptionsSet.size === newOptionsSet.size &&
@@ -250,6 +248,40 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             this.tomSelect.setTextboxValue('');
         },
         closeAfterSelect: true,
+        onOptionAdd: (value, data) => {
+            let parentElement = this.tomSelect.input;
+            let optgroupData = null;
+            const optgroup = data[this.tomSelect.settings.optgroupField];
+            if (optgroup && this.tomSelect.optgroups) {
+                optgroupData = this.tomSelect.optgroups[optgroup];
+                if (optgroupData) {
+                    const optgroupElement = parentElement.querySelector(`optgroup[label="${optgroupData.label}"]`);
+                    if (optgroupElement) {
+                        parentElement = optgroupElement;
+                    }
+                }
+            }
+            const optionElement = document.createElement('option');
+            optionElement.value = value;
+            optionElement.text = data[this.tomSelect.settings.labelField];
+            const optionOrder = data['$order'];
+            let orderedOption = null;
+            for (const [, tomSelectOption] of Object.entries(this.tomSelect.options)) {
+                if (tomSelectOption['$order'] === optionOrder) {
+                    orderedOption = parentElement.querySelector(`:scope > option[value="${tomSelectOption[this.tomSelect.settings.valueField]}"]`);
+                    break;
+                }
+            }
+            if (orderedOption) {
+                orderedOption.insertAdjacentElement('afterend', optionElement);
+            }
+            else if (optionOrder >= 0) {
+                parentElement.append(optionElement);
+            }
+            else {
+                parentElement.prepend(optionElement);
+            }
+        },
     };
     if (!this.selectElement && !this.urlValue) {
         config.shouldLoad = () => false;
