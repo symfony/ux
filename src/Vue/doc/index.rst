@@ -161,6 +161,70 @@ used for all the Vue routes:
 
 .. _using-with-asset-mapper:
 
+Keep properties are reactive
+----------------------------
+
+All Vue component properties are reactive up to the Stimulus controller `props` value.
+
+Value changes are two-way:
+
+* Any changes of the Stimulus component `props` value will
+    reactively pass new values to the Vue component without re-creating it,
+    as would be the case when passing props between Vue components.
+
+* Any changes to the properties in the Vue component,
+    if those properties are or replicate the behavior of models,
+    will change the Stimulus controller `props` value.
+
+.. code-block:: javascript
+
+    // assets/vue/controllers/Likes.vue
+    <template>
+        <div>Now is {{ likes }} likes.</div>
+
+        <button type="button" :disabled="likeTogglePending" @click="toggleLike">
+            {{ alreadyLike ? 'Not likes anymore!' : 'Like too!' }}
+        </button>
+    </template>
+
+    <script setup>
+        defineProps({
+            likes: String,
+            alreadyLike: Boolean
+        });
+
+        const likeTogglePending = ref(false);
+
+        const toggleLike = async () => {
+            likeTogglePending.value = true;
+            try {
+                await fetch('/like/toggle', {
+                    method: 'POST'
+                });
+            } finally {
+                likeTogglePending.value = false;
+            }
+        };
+    </script>
+
+.. code-block:: html+twig
+
+    {# templates/likes.html.twig #}
+    <div id="likes-component" {{ vue_component('Likes', { 'likes': likes_count, 'alreadyLike': already_like }) }}></div>
+
+.. code-block:: javascript
+
+    // update likes component props
+    document.getElementById('likes-component').dataset.vuePropsValue = JSON.stringify({
+        likes: newLikesCount,
+        alreadyLike: isAlreadyLike,
+    });
+
+.. code-block:: javascript
+
+    // get likes component actual props
+    const { likes, alreadyLike } = JSON.parse(document.getElementById('likes-component').dataset.vuePropsValue);
+
 Using with AssetMapper
 ----------------------
 
