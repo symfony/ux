@@ -37,7 +37,7 @@ final class TurboStream
      */
     public static function replace(string $target, string $html, bool $morph = false): string
     {
-        return self::wrap('replace', $target, $html, $morph ? ' method="morph"' : '');
+        return self::wrap('replace', $target, $html, $morph ? ['method="morph"'] : []);
     }
 
     /**
@@ -45,7 +45,7 @@ final class TurboStream
      */
     public static function update(string $target, string $html, bool $morph = false): string
     {
-        return self::wrap('update', $target, $html, $morph ? ' method="morph"' : '');
+        return self::wrap('update', $target, $html, $morph ? ['method="morph"'] : []);
     }
 
     /**
@@ -86,12 +86,28 @@ final class TurboStream
         return \sprintf('<turbo-stream action="refresh" request-id="%s"></turbo-stream>', htmlspecialchars($requestId));
     }
 
-    private static function wrap(string $action, string $target, string $html, string $attr = ''): string
+    /**
+     * Custom Action.
+     *
+     * @param array<string> $attr
+     */
+    public static function custom(string $action, string $target, string $html, array $attr = []): string
     {
+        return self::wrap($action, $target, $html, $attr);
+    }
+
+    /**
+     * @param array<string> $attr
+     */
+    private static function wrap(string $action, string $target, string $html, array $attr = []): string
+    {
+        // Join array elements with a space and prepend a leading space
+        $atrrString = empty($attr) ? '' : ' '.implode(' ', $attr);
+
         return \sprintf(<<<EOHTML
             <turbo-stream action="%s" targets="%s"%s>
                 <template>%s</template>
             </turbo-stream>
-            EOHTML, $action, htmlspecialchars($target), $attr, $html);
+            EOHTML, $action, htmlspecialchars($target), $atrrString, $html);
     }
 }
