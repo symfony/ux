@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Icons\Twig;
 
+use Symfony\UX\Icons\Twig\Node\UXIconFunction;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -24,7 +25,7 @@ final class UXIconExtension extends AbstractExtension
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('ux_icon', [UXIconRuntime::class, 'renderIcon'], ['is_safe' => ['html']]),
+            new TwigFunction('ux_icon', [UXIconRuntime::class, 'renderIcon'], ['node_class' => UXIconFunction::class, 'is_safe' => ['html']]),
         ];
     }
 }
