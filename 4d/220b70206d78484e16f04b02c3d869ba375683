@@ -1,0 +1,22 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-10-23T22:23:37Z
+
+Thank you for this PR!
+
+Most users likely already have the Form component installed when they read this documentation, or they’ve just installed Symfony following the installation guide, which includes the component by default. So, I’m not sure it’s necessary to include a "composer require ..." block here.
+
+Instead, we could add a link to the Symfony Form documentation within the text. What do you think?
+
+---------------------------------------------------------------------------
+
+by MrYamous at 2024-10-24T04:57:26Z
+
+> Thank you for this PR!
+>
+> Most users likely already have the Form component installed when they read this documentation, or they’ve just installed Symfony following the installation guide, which includes the component by default. So, I’m not sure it’s necessary to include a "composer require ..." block here.
+>
+> Instead, we could add a link to the Symfony Form documentation within the text. What do you think?
+
+I fully agree with your point, that's probably overkill and adding a bit of noise to the doc.
+I've updated to remove the `composer require` part and insert Symfony Form link to the original sentence
