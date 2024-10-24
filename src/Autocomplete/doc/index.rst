@@ -33,7 +33,7 @@ needed if you're using AssetMapper):
 Usage in a Form (without Ajax)
 ------------------------------
 
-If you're using `Symfony Form`_ any ``ChoiceType`` or ``EntityType`` can be
+If you're using `Symfony Form`_, any ``ChoiceType`` or ``EntityType`` can be
 transformed into a Tom Select-powered UI control by adding the ``autocomplete``
 option:
 
