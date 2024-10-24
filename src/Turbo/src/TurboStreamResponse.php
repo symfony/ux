@@ -104,4 +104,16 @@ class TurboStreamResponse extends Response
 
         return $this;
     }
+
+    /**
+     * @param array<string> $attr
+     *
+     * @return $this
+     */
+    public function custom(string $action, string $target, string $html, array $attr = []): static
+    {
+        $this->setContent($this->getContent().TurboStream::custom($action, $target, $html, $attr));
+
+        return $this;
+    }
 }

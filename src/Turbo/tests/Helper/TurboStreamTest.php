@@ -76,4 +76,15 @@ class TurboStreamTest extends TestCase
             TurboStream::refresh('a"b')
         );
     }
+
+    public function testCustom(): void
+    {
+        $this->assertSame(<<<EOHTML
+            <turbo-stream action="customAction" targets="some[&quot;selector&quot;]" someAttr="someValue" boolAttr>
+                <template><div>content</div></template>
+            </turbo-stream>
+            EOHTML,
+            TurboStream::custom('customAction', 'some["selector"]', '<div>content</div>', ['someAttr="someValue"', 'boolAttr'])
+        );
+    }
 }
