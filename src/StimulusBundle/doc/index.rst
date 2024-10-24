@@ -576,4 +576,4 @@ it will normalize it:
 .. _`stimulus-components`: https://stimulus-components.netlify.app/
 .. _`TypeScript`: https://www.typescriptlang.org/
 .. _`sensiolabs/typescript-bundle`: https://github.com/sensiolabs/AssetMapperTypeScriptBundle
-.. _`Stimulus plugin`: https://plugins.jetbrains.com/plugin/18940-stimulus
+.. _`Stimulus plugin`: https://plugins.jetbrains.com/plugin/24562-stimulus
