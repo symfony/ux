@@ -1,0 +1,66 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-10-27T22:11:09Z
+
+Is there any advantage here (apart from the syntax) ?
+
+Because
+
+```html
+<turbo-frame foo bar>foo bar</turbo-frame>
+```
+
+and
+
+```twig
+<twig:Turbo:Frame foo bar>
+foo bar
+</twig:Turbo:Frame>
+```
+
+have a real difference in term of performance.
+
+But i get the target to cover all bases of turbo with one syntax.
+
+Thinking outloud here.. not sure what to do.
+
+I wonder if we should not make a search/replace here, instead of calling an embedding component 🤷
+But then, it would be difficult to explain the differences in scope
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2024-10-28T08:31:38Z
+
+> Can you also update the CHANGELOG here please? Thanks
+
+Done
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2024-10-28T08:37:35Z
+
+> Is there any advantage here (apart from the syntax) ?
+>
+> Because
+>
+> ```
+> <turbo-frame foo bar>foo bar</turbo-frame>
+> ```
+>
+> and
+>
+> ```
+> <twig:Turbo:Frame foo bar>
+> foo bar
+> </twig:Turbo:Frame>
+> ```
+>
+> have a real difference in term of performance.
+>
+> But i get the target to cover all bases of turbo with one syntax.
+>
+> Thinking outloud here.. not sure what to do.
+>
+> I wonder if we should not make a search/replace here, instead of calling an embedding component 🤷 But then, it would be difficult to explain the differences in scope
+
+This comment is rather related to this PR I think no?: https://github.com/symfony/ux/pull/2303
