@@ -1,0 +1,38 @@
+---------------------------------------------------------------------------
+
+by MatTheCat at 2024-10-26T13:52:36Z
+
+I guess it would break compilers wanting to interact with the StimulusBundle by adding or removing the `/* stimulusFetch: 'lazy' */` comment in controllers. Wouldn't it be better to decorate or replace the `stimulus.asset_mapper.controllers_map_generator` service in that case?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-10-27T21:43:14Z
+
+It feels to me a very internal matter... and a very logical change.
+
+> To make one of your custom controllers lazy, add a special comment on top: [...]
+
+To me it's never an AssetMapper thing, but a source code thing, so..
+
+I'd even call this a feature to be honest , as it would remove the following constraint:
+
+> [!NOTE]
+>  If you write your controllers using TypeScript, make sure removeComments is **not** set to true in your TypeScript config.
+
+https://symfony.com/bundles/StimulusBundle/current/index.html#lazy-stimulus-controllers
+
+So i'm clearly 👍  on this
+
+@MatTheCat  Do you think you could add a test or two ?
+
+---------------------------------------------------------------------------
+
+by MatTheCat at 2024-10-28T11:14:00Z
+
+Test added!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-10-29T17:41:58Z
+
+Thanks!
