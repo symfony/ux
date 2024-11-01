@@ -1,0 +1,42 @@
+---------------------------------------------------------------------------
+
+by onEXHovia at 2024-09-27T07:29:14Z
+
+As an alternative, or even as a follow-up, I think it makes sense to replace/improve class `ComponentMetadata`. We could get all possible meta information PostMount/PreMount/ExposeInTemplate hooks etc, not just about properties.
+
+Structure may look like this:
+`ComponentMetadata` - store metadata
+`ComponentMetadataFactory` - provider metadata with methods getMetadataFor/hasMetadataFor. Factory methods return `ComponentMetadata` instance.
+`ComponentCacheWarmer` - cache warmer call factory `ComponentMetadataFactory`
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-27T22:00:15Z
+
+Hey @onEXHovia ! You read my mind
+
+This is indeed my next move, and i started to extract the props metadata from template too :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-09-27T22:06:59Z
+
+> Are we agree, this is happening only in prod ?
+
+@WebMamba nothing "prod-related"
+
+For all the environments, during a request, there is no need to compute metadata twice, so the values are "kept".
+
+Also, if you use `cache:warm` all the components metadata are cached in the ssytem cache.
+
+What's maybe missing here is something to invalidate the cache locally if you change a file ?
+
+Do you have encountered any trouble ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-09-29T11:33:24Z
+
+<img width="410" alt="image" src="https://github.com/user-attachments/assets/b1ea99f9-fc14-41f1-bfb5-9190a7e823aa">
+
+A small rebase before merging? :) 🙏🏻
