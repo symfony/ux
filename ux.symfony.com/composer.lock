@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a1a1ef4f3aba41044cc0f8c7a74f73f7",
+    "content-hash": "7e3eb8c54bd05eb9c9007ce0f8fb373c",
     "packages": [
         {
             "name": "composer/semver",
@@ -1341,16 +1341,16 @@
         },
         {
             "name": "doctrine/persistence",
-            "version": "3.3.3",
+            "version": "3.4.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/persistence.git",
-                "reference": "b337726451f5d530df338fc7f68dee8781b49779"
+                "reference": "0ea965320cec355dba75031c1b23d4c78362e3ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/persistence/zipball/b337726451f5d530df338fc7f68dee8781b49779",
-                "reference": "b337726451f5d530df338fc7f68dee8781b49779",
+                "url": "https://api.github.com/repos/doctrine/persistence/zipball/0ea965320cec355dba75031c1b23d4c78362e3ff",
+                "reference": "0ea965320cec355dba75031c1b23d4c78362e3ff",
                 "shasum": ""
             },
             "require": {
@@ -1364,12 +1364,11 @@
             "require-dev": {
                 "doctrine/coding-standard": "^12",
                 "doctrine/common": "^3.0",
-                "phpstan/phpstan": "1.11.1",
+                "phpstan/phpstan": "1.12.7",
                 "phpstan/phpstan-phpunit": "^1",
                 "phpstan/phpstan-strict-rules": "^1.1",
-                "phpunit/phpunit": "^8.5 || ^9.5",
-                "symfony/cache": "^4.4 || ^5.4 || ^6.0",
-                "vimeo/psalm": "4.30.0 || 5.24.0"
+                "phpunit/phpunit": "^8.5.38 || ^9.5",
+                "symfony/cache": "^4.4 || ^5.4 || ^6.0 || ^7.0"
             },
             "type": "library",
             "autoload": {
@@ -1418,7 +1417,7 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/persistence/issues",
-                "source": "https://github.com/doctrine/persistence/tree/3.3.3"
+                "source": "https://github.com/doctrine/persistence/tree/3.4.0"
             },
             "funding": [
                 {
@@ -1434,7 +1433,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-06-20T10:14:30+00:00"
+            "time": "2024-10-30T19:48:12+00:00"
         },
         {
             "name": "doctrine/sql-formatter",
@@ -5112,16 +5111,16 @@
         },
         {
             "name": "symfony/monolog-bundle",
-            "version": "dev-master",
+            "version": "v3.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/monolog-bundle.git",
-                "reference": "ed0e4a287282971d110fd8c99d9ac391559a43ce"
+                "reference": "414f951743f4aa1fd0f5bf6a0e9c16af3fe7f181"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/ed0e4a287282971d110fd8c99d9ac391559a43ce",
-                "reference": "ed0e4a287282971d110fd8c99d9ac391559a43ce",
+                "url": "https://api.github.com/repos/symfony/monolog-bundle/zipball/414f951743f4aa1fd0f5bf6a0e9c16af3fe7f181",
+                "reference": "414f951743f4aa1fd0f5bf6a0e9c16af3fe7f181",
                 "shasum": ""
             },
             "require": {
@@ -5134,10 +5133,9 @@
             },
             "require-dev": {
                 "symfony/console": "^5.4 || ^6.0 || ^7.0",
-                "symfony/phpunit-bridge": "^7.1",
+                "symfony/phpunit-bridge": "^6.3 || ^7.0",
                 "symfony/yaml": "^5.4 || ^6.0 || ^7.0"
             },
-            "default-branch": true,
             "type": "symfony-bundle",
             "extra": {
                 "branch-alias": {
@@ -5174,7 +5172,7 @@
             ],
             "support": {
                 "issues": "https://github.com/symfony/monolog-bundle/issues",
-                "source": "https://github.com/symfony/monolog-bundle/tree/master"
+                "source": "https://github.com/symfony/monolog-bundle/tree/v3.10.0"
             },
             "funding": [
                 {
@@ -5190,7 +5188,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-08-06T10:03:39+00:00"
+            "time": "2023-11-06T17:08:13+00:00"
         },
         {
             "name": "symfony/notifier",
@@ -9146,16 +9144,16 @@
         },
         {
             "name": "symfonycasts/sass-bundle",
-            "version": "v0.6.0",
+            "version": "v0.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/SymfonyCasts/sass-bundle.git",
-                "reference": "aa47da8ae43136a21a764eedb1471f2a168359cb"
+                "reference": "4637a176b5adfb03f83c409c3f9f566e30426318"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SymfonyCasts/sass-bundle/zipball/aa47da8ae43136a21a764eedb1471f2a168359cb",
-                "reference": "aa47da8ae43136a21a764eedb1471f2a168359cb",
+                "url": "https://api.github.com/repos/SymfonyCasts/sass-bundle/zipball/4637a176b5adfb03f83c409c3f9f566e30426318",
+                "reference": "4637a176b5adfb03f83c409c3f9f566e30426318",
                 "shasum": ""
             },
             "require": {
@@ -9168,9 +9166,9 @@
             },
             "require-dev": {
                 "matthiasnoback/symfony-config-test": "^5.0",
-                "phpstan/phpstan-symfony": "^1.4",
+                "phpunit/phpunit": "^9.6",
                 "symfony/framework-bundle": "^6.3|^7.0",
-                "symfony/phpunit-bridge": "^6.3|^7.0"
+                "symfony/phpunit-bridge": "^6.3.9|^7.0"
             },
             "type": "library",
             "autoload": {
@@ -9195,22 +9193,22 @@
             ],
             "support": {
                 "issues": "https://github.com/SymfonyCasts/sass-bundle/issues",
-                "source": "https://github.com/SymfonyCasts/sass-bundle/tree/v0.6.0"
+                "source": "https://github.com/SymfonyCasts/sass-bundle/tree/v0.8.1"
             },
-            "time": "2024-02-26T10:09:48+00:00"
+            "time": "2024-10-17T10:46:06+00:00"
         },
         {
             "name": "tempest/highlight",
-            "version": "2.10.5",
+            "version": "2.10.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tempestphp/highlight.git",
-                "reference": "2d119afdac7aa98927dbbcf239e5cff86b74faf0"
+                "reference": "00ef935cc68b1b1ba68ffb09e91a810e42ca4e9d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tempestphp/highlight/zipball/2d119afdac7aa98927dbbcf239e5cff86b74faf0",
-                "reference": "2d119afdac7aa98927dbbcf239e5cff86b74faf0",
+                "url": "https://api.github.com/repos/tempestphp/highlight/zipball/00ef935cc68b1b1ba68ffb09e91a810e42ca4e9d",
+                "reference": "00ef935cc68b1b1ba68ffb09e91a810e42ca4e9d",
                 "shasum": ""
             },
             "require": {
@@ -9247,7 +9245,7 @@
             "description": "Fast, extensible, server-side code highlighting",
             "support": {
                 "issues": "https://github.com/tempestphp/highlight/issues",
-                "source": "https://github.com/tempestphp/highlight/tree/2.10.5"
+                "source": "https://github.com/tempestphp/highlight/tree/2.10.6"
             },
             "funding": [
                 {
@@ -9255,7 +9253,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-10-20T04:44:15+00:00"
+            "time": "2024-10-24T06:44:39+00:00"
         },
         {
             "name": "twbs/bootstrap",
@@ -9735,16 +9733,16 @@
     "packages-dev": [
         {
             "name": "behat/mink",
-            "version": "v1.11.0",
+            "version": "v1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/minkphp/Mink.git",
-                "reference": "d8527fdf8785aad38455fb426af457ab9937aece"
+                "reference": "7e4edec6c335937029cb3569ce7ef81182804d0a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/minkphp/Mink/zipball/d8527fdf8785aad38455fb426af457ab9937aece",
-                "reference": "d8527fdf8785aad38455fb426af457ab9937aece",
+                "url": "https://api.github.com/repos/minkphp/Mink/zipball/7e4edec6c335937029cb3569ce7ef81182804d0a",
+                "reference": "7e4edec6c335937029cb3569ce7ef81182804d0a",
                 "shasum": ""
             },
             "require": {
@@ -9795,9 +9793,9 @@
             ],
             "support": {
                 "issues": "https://github.com/minkphp/Mink/issues",
-                "source": "https://github.com/minkphp/Mink/tree/v1.11.0"
+                "source": "https://github.com/minkphp/Mink/tree/v1.12.0"
             },
-            "time": "2023-12-09T11:23:23+00:00"
+            "time": "2024-10-30T18:48:14+00:00"
         },
         {
             "name": "fakerphp/faker",
@@ -12269,16 +12267,16 @@
         },
         {
             "name": "zenstruck/assert",
-            "version": "v1.5.0",
+            "version": "v1.5.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zenstruck/assert.git",
-                "reference": "60956bb6584a51c6c2ab9fa8707b7c013d770163"
+                "reference": "39554ce3a275fbf8c870b251e620101f644e9277"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zenstruck/assert/zipball/60956bb6584a51c6c2ab9fa8707b7c013d770163",
-                "reference": "60956bb6584a51c6c2ab9fa8707b7c013d770163",
+                "url": "https://api.github.com/repos/zenstruck/assert/zipball/39554ce3a275fbf8c870b251e620101f644e9277",
+                "reference": "39554ce3a275fbf8c870b251e620101f644e9277",
                 "shasum": ""
             },
             "require": {
@@ -12288,8 +12286,8 @@
             },
             "require-dev": {
                 "phpstan/phpstan": "^1.4",
-                "phpunit/phpunit": "^9.5",
-                "symfony/phpunit-bridge": "^6.3"
+                "phpunit/phpunit": "^9.5.21",
+                "symfony/phpunit-bridge": "^6.3|^7.0"
             },
             "type": "library",
             "autoload": {
@@ -12316,7 +12314,7 @@
             ],
             "support": {
                 "issues": "https://github.com/zenstruck/assert/issues",
-                "source": "https://github.com/zenstruck/assert/tree/v1.5.0"
+                "source": "https://github.com/zenstruck/assert/tree/v1.5.1"
             },
             "funding": [
                 {
@@ -12324,7 +12322,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2023-12-02T09:08:04+00:00"
+            "time": "2024-10-28T18:08:12+00:00"
         },
         {
             "name": "zenstruck/browser",
@@ -12458,16 +12456,16 @@
         },
         {
             "name": "zenstruck/foundry",
-            "version": "v2.0.9",
+            "version": "v2.2.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zenstruck/foundry.git",
-                "reference": "b0a5d3d8b43acd4b0f356c6dcfdec6c8ebff1c08"
+                "reference": "4743a9da142b42d484ac7a99c1a7068aa66c7bec"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zenstruck/foundry/zipball/b0a5d3d8b43acd4b0f356c6dcfdec6c8ebff1c08",
-                "reference": "b0a5d3d8b43acd4b0f356c6dcfdec6c8ebff1c08",
+                "url": "https://api.github.com/repos/zenstruck/foundry/zipball/4743a9da142b42d484ac7a99c1a7068aa66c7bec",
+                "reference": "4743a9da142b42d484ac7a99c1a7068aa66c7bec",
                 "shasum": ""
             },
             "require": {
@@ -12504,6 +12502,9 @@
                     "target-directory": "bin/tools",
                     "bin-links": true,
                     "forward-command": false
+                },
+                "psalm": {
+                    "pluginClass": "Zenstruck\\Foundry\\Psalm\\FoundryPlugin"
                 }
             },
             "autoload": {
@@ -12513,7 +12514,8 @@
                     "src/phpunit_helper.php"
                 ],
                 "psr-4": {
-                    "Zenstruck\\Foundry\\": "src/"
+                    "Zenstruck\\Foundry\\": "src/",
+                    "Zenstruck\\Foundry\\Psalm\\": "utils/psalm"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -12543,7 +12545,7 @@
             ],
             "support": {
                 "issues": "https://github.com/zenstruck/foundry/issues",
-                "source": "https://github.com/zenstruck/foundry/tree/v2.0.9"
+                "source": "https://github.com/zenstruck/foundry/tree/v2.2.1"
             },
             "funding": [
                 {
@@ -12551,7 +12553,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2024-09-02T18:20:52+00:00"
+            "time": "2024-10-31T12:10:58+00:00"
         }
     ],
     "aliases": [],
