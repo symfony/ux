@@ -2,3 +2,6 @@ workers:
     docker_compose: ~
     sass:
         cmd: ['symfony', 'console', 'sass:build', '--watch']
+
+http:
+    use_gzip: true
