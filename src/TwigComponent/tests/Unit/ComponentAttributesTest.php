@@ -259,6 +259,20 @@ final class ComponentAttributesTest extends TestCase
         $this->assertSame('', (string) $attributes->nested('invalid'));
     }
 
+    public function testNotNestedAttributes(): void
+    {
+        $attributes = new ComponentAttributes([
+            'class' => 'foo',
+            'x-bind:class!' => 'alpine',
+            ':class!' => 'alpine',
+            'title:span:class' => 'baz',
+        ]);
+
+        $this->assertSame(' class="foo" x-bind:class="alpine" :class="alpine"', (string) $attributes);
+        $this->assertSame(' class="baz"', (string) $attributes->nested('title')->nested('span'));
+        $this->assertSame('', (string) $attributes->nested('invalid'));
+    }
+
     public function testConvertTrueAriaAttributeValue(): void
     {
         $attributes = new ComponentAttributes([

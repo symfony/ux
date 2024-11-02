@@ -316,6 +316,44 @@ final class ComponentExtensionTest extends KernelTestCase
         );
     }
 
+    public function testRenderingComponentWithNestedAndNotNestedAttributes(): void
+    {
+        $output = $this->renderComponent('NestedAttributes');
+
+        $this->assertSame(<<<HTML
+            <main>
+                <div>
+                    <span>
+                        <div/>
+
+                    </span>
+                </div>
+            </main>
+            HTML,
+            trim($output)
+        );
+
+        $output = $this->renderComponent('NestedAttributes', [
+            'class' => 'foo',
+            'x-bind:class!' => 'alpine',
+            ':class!' => 'alpine',
+            'title:span:class' => 'baz',
+        ]);
+
+        $this->assertSame(<<<HTML
+            <main class="foo" x-bind:class="alpine" :class="alpine">
+                <div>
+                    <span class="baz">
+                        <div/>
+
+                    </span>
+                </div>
+            </main>
+            HTML,
+            trim($output)
+        );
+    }
+
     public function testRenderingHtmlSyntaxComponentWithNestedAttributes(): void
     {
         $output = self::getContainer()

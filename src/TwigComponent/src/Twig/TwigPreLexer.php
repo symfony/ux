@@ -200,7 +200,7 @@ class TwigPreLexer
     private function consumeComponentName(?string $customExceptionMessage = null): string
     {
         $start = $this->position;
-        while ($this->position < $this->length && preg_match('/[A-Za-z0-9_:@\-.]/', $this->input[$this->position])) {
+        while ($this->position < $this->length && preg_match('/[A-Za-z0-9_:@!\-.]/', $this->input[$this->position])) {
             ++$this->position;
         }
 
@@ -252,6 +252,10 @@ class TwigPreLexer
             }
 
             $key = $this->consumeAttributeName($componentName);
+
+            if (str_ends_with($key, '!')) {
+                $isAttributeDynamic = false;
+            }
 
             // <twig:component someProp> -> someProp: true
             if (!$this->check('=')) {

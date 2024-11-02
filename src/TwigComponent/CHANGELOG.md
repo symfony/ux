@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.21.0
+
+-  Allow to disable nested attributes with !
+
 ## 2.20.0
 
 -  Add Anonymous Component support for 3rd-party bundles #2019
