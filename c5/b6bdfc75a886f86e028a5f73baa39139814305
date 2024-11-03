@@ -1,0 +1,44 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-11-03T10:37:33Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/test-diff-4/src/Chartjs/assets/dist"><b>Chartjs</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/test-diff-4/src/Chartjs/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>2.23 kB</code>
+                    / <code>771 B</code>
+                </td><td>
+                    <code>2.46 kB</code><sup>+11% 📈</sup>
+                    / <code>914 B</code><sup>+19% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/test-diff-4/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/test-diff-4/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>3 kB</code>
+                    / <code>741 B</code>
+                </td><td><em>Removed</em></td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/test-diff-4/src/Translator/assets/dist"><b>Translator</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/test-diff-4/src/Translator/assets/dist/translator_controller.js"><code>translator_controller.js</code></a></td>
+            <td>
+                    <code>9.17 kB</code>
+                    / <code>2.27 kB</code>
+                </td><td>
+                    <code>8.07 kB</code><sup>-12% 📉</sup>
+                    / <code>2.09 kB</code><sup>-8% 📉</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-03T10:38:16Z
+
+Finally 🥹
+
+But it does not show the `.d.ts` file being removed, gonna investigate. The title is wrong tho
