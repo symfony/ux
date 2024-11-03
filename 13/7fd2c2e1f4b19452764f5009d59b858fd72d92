@@ -1,0 +1,114 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-10-13T11:01:53Z
+
+It looks like there are permissions issues, even after added `permissions.pull-requests: write` like [mentioned in the documentation](https://github.com/marocchino/sticky-pull-request-comment#basic):
+<img width="1521" alt="image" src="https://github.com/user-attachments/assets/fc5d4b1a-192c-4287-836f-e2116dc3444b">
+
+Even if I use `permissions: 'write-all'` it does not work either:
+<img width="374" alt="image" src="https://github.com/user-attachments/assets/5b614fe5-2e10-471c-9c0e-4c8f814eeeb0">
+
+I suspect a configuration at organization-level...?
+
+@kbond do you think you can do something about that please? 🙏🏻
+
+/cc @nicolas-grekas or maybe you Nicolas since you setup the same action on Symfony recipes repositories :)
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-10-14T16:32:02Z
+
+Shouldn't this job only run if a dist file has been changed?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-10-14T21:34:15Z
+
+> Shouldn't this job only run if a dist file has been changed?
+
+Fixed by using the following config:
+```yaml
+on:
+  pull_request:
+    paths:
+      - 'src/*/assets/dist/**'
+      - 'src/*/src/Bridge/*/assets/dist/**'
+
+```
+
+I will push soon, thanks
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-10-15T07:12:21Z
+
+I've changed the table rendering after @javiereguiluz's comment, it now looks like this:
+<img width="878" alt="image" src="https://github.com/user-attachments/assets/671486e6-a4b2-4290-b5e5-9de0445e5de6">
+
+We still need to find out why there is this `Resource not accessible by integration` error, and we are good IMO
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-10-15T07:43:16Z
+
+@Kocal I like a lot what you are doing here. Thanks.
+
+Some additional comments ... but I could be wrong, so feel free to ignore them:
+
+* I'd remove Brotli because it's just "the same as Gzip but a bit better", so it doesn't add any relevant information
+* I'd round percentages and remove decimals to make them easier to understand: `-4%` is better to me than `-3.9%` and `+74%` is better than `+74.3%`
+* I'd put the percentages first, because it's the most relevant info by far. E.g. I don't care that the new file size is `5.56 KB`, I just want to quickly check that it's a `-27%` file size change.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-10-15T10:00:20Z
+
+Thanks Javier, the more we speak about Brotli and the more I think we can remove it (btw [pkg-size-action](https://github.com/marketplace/actions/pkg-size-action) can display Brotli sizes).  Gzip is the most common compression standard for the moment, while Brotli is — I believe —  still a "niche" thing. Brotli users know that their files will be smaller than gzipped files.
+
+I agree for percentage rounding.
+
+When it comes to putting percentages first, I don't really agree with you. Yes, percentage differences are important, but when the browser goes to download a resource, it's the size of the resource that matters, not the percentage difference.
+If a file is reduced from 1 MB to 500 KB, we gain 50%, but more importantly we save 500 KB (and that's a really huge gain). If a file is reduced from 10 Kb to 5 Kb, you also gain 50%, but you only save 5KB (which still has an impact, but a much smaller one).
+But then, your point of view is valid too and I can understand it, I think here it's two different ways of thinking :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-10-15T10:31:33Z
+
+Thanks for your reviews, the diff table now looks like this:
+<img width="692" alt="image" src="https://github.com/user-attachments/assets/0c83c5ed-f333-42e3-add2-93bcae4a5502">
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2024-10-15T11:38:32Z
+
+Looks very nice!! Thanks a lot Hugo.
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-10-16T01:32:12Z
+
+This looks great!
+
+@Kocal:
+1. Can you revert the temporary commit?
+2. The proper permissions are still todo?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-10-16T18:57:41Z
+
+@kbond yes there are still permission issues, and I can revert the temporary commit (when permissions will be fixed, otherwise we won't see the comment)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-03T09:16:44Z
+
+I've reworked the workflow in two dedicated workflows, hoping for permissions issues to be gone.
+We won't have comment before the diff is generated, or if a failure happened.
+
+I reverted the commit that modify dist files for testing purposes. I'm merging ASAP
