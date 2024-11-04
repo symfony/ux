@@ -1,0 +1,9 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-01T18:52:34Z
+
+> Hey Simon! Maybe this is it out of scope of this PR, but what do you think to cache the PreLexer result ? Maybe we can do that in the ComponentLexer
+
+I don't think we need to:
+- in prod all templates are cached
+- in dev, the lexer will be called only when the template changed (so we cannot use cache then)
