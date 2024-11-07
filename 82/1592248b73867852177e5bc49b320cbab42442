@@ -1,0 +1,11 @@
+---------------------------------------------------------------------------
+
+by clussiana at 2024-11-05T21:24:37Z
+
+@smnandre I've submitted the fix in this PR, but I haven’t included a test because I’m not quite sure how to mock or simulate `DIRECTORY_SEPARATOR` effectively. If you have any advice or suggestions on setting up this test, I’d really appreciate it!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-05T21:30:21Z
+
+Thanks for your PR, I don't think you have something to do here, but ideally we should enable Windows builds on the CI
