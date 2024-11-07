@@ -9,13 +9,13 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Icons\Tests\Unit\Twig\Node;
+namespace Symfony\UX\Icons\Tests\Unit\Twig;
 
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Icons\Icon;
 use Symfony\UX\Icons\IconRegistryInterface;
 use Symfony\UX\Icons\IconRenderer;
-use Symfony\UX\Icons\Twig\Node\UXIconFunction;
+use Symfony\UX\Icons\Twig\UXIconFunction;
 use Twig\Compiler;
 use Twig\Environment;
 use Twig\Node\Expression\ArrayExpression;

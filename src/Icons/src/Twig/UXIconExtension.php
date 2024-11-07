@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\Icons\Twig;
 
-use Symfony\UX\Icons\Twig\Node\UXIconFunction;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 

@@ -9,10 +9,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Icons\Twig\Node;
+namespace Symfony\UX\Icons\Twig;
 
 use Symfony\UX\Icons\Exception\IconNotFoundException;
-use Symfony\UX\Icons\Twig\UXIconRuntime;
 use Twig\Compiler;
 use Twig\Error\RuntimeError;
 use Twig\Node\Expression\ArrayExpression;
