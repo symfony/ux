@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.22.0
+
+-   Add support for static icons compilation during Twig warm-up (#2150). 
+
 ## 2.20.0
 
 -   Add `aliases` configuration option to define icon alternative names.
