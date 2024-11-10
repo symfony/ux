@@ -142,7 +142,7 @@ manually:
               // save...
           }
 
-    +     $response = new Response(null, $form->isSubmitted() ? 422 : 200);
+    +     $response = new Response(null, $form->isSubmitted() ? Response::HTTP_UNPROCESSABLE_ENTITY : Response::HTTP_OK);
 
           return $this->render('product/new.html.twig', [
               'form' => $form->createView()
