@@ -1,0 +1,78 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-06T03:33:24Z
+
+false positive for fabbot
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-11-06T05:24:53Z
+
+When running let's say frankenphp, this will always stay in memory?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-06T07:15:10Z
+
+Thanks for this optimization!
+
+However I'm thinking, not now but maybe for a next PR, but do you think things can be more improved if this "find mounts methods" process was done during a cache warmer and persisted in cache?
+I don't speak about storing `ReflectionMethod` in cache (I don't think it is possible), but storing that if `$component::class` **has** `mount` method or not:
+```diff
+    private function mount(object $component, array &$data): void
+    {
+        if ($component instanceof AnonymousComponent) {
+            $component->mount($data);
+
+            return;
+        }
+
++       if (!self::$hasMountMethod[$component::class]) {
++           return;
++       }
+
+        if (!\array_key_exists($component::class, self::$mountMethods)) {
+            try {
+                $mountMethod = self::$mountMethods[$component::class] = (new \ReflectionClass($component))->getMethod('mount');
+            } catch (\ReflectionException) {
+                self::$mountMethods[$component::class] = false;
+
+                return;
+            }
+        }
+```
+WDYT?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-06T07:24:35Z
+
+> However I'm thinking, not now but maybe for a next PR [...]  WDYT?
+
+Absolutely!
+
+I'm moving step by step, a bit in the blind. The biggest change is yet to come (this week hopefully). This is why i'm only doing work on private/internal methods for now.
+
+Once we have the results i'm targetting, a clean will be very welcome (required?)..  We will then see how to name these classes / methods, and how we can rearrange the whole thing
+
+👍
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-06T07:31:20Z
+
+> When running let's say frankenphp, this will always stay in memory?
+
+Would it be a problem ? Genuine question here :)
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-11-06T07:34:01Z
+
+Depends on how much memory it will use. ResetInterface could be used to cleanup after request
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-06T08:11:28Z
+
+Updated!
