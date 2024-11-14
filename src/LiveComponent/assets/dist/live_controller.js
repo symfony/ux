@@ -2671,7 +2671,11 @@ class SetValueOntoModelFieldsPlugin {
         });
     }
     synchronizeValueOfModelFields(component) {
-        component.element.querySelectorAll('[data-model]').forEach((element) => {
+        const modelFields = [
+            ...Array.from(component.element.querySelectorAll('[data-model]')),
+            ...Array.from(component.element.querySelectorAll('form,input,select,textarea')),
+        ];
+        modelFields.forEach((element) => {
             if (!(element instanceof HTMLElement)) {
                 throw new Error('Invalid element using data-model.');
             }

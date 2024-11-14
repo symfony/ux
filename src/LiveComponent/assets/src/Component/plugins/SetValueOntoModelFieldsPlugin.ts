@@ -30,7 +30,12 @@ export default class implements PluginInterface {
      * the "firstName" model.
      */
     private synchronizeValueOfModelFields(component: Component): void {
-        component.element.querySelectorAll('[data-model]').forEach((element: Element) => {
+        const modelFields = [
+            ...Array.from(component.element.querySelectorAll('[data-model]')),
+            ...Array.from(component.element.querySelectorAll('form,input,select,textarea')),
+        ];
+
+        modelFields.forEach((element: Element) => {
             if (!(element instanceof HTMLElement)) {
                 throw new Error('Invalid element using data-model.');
             }
