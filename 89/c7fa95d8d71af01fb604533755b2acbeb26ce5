@@ -1,0 +1,51 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-11T04:51:51Z
+
+Arf.... again LiveComponent hidden contract .. :(
+
+Will fix later
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-11T04:57:36Z
+
+Cannot reproduce locally :(
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-11T14:46:05Z
+
+Weird. I think is it related to property accessor but it’s weird this différence between local and CI.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-11T14:52:05Z
+
+Locally, is your `src/LiveComponent/vendor/symfony/ux-twig-component` points to `src/TwigComponent`?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-11T22:39:38Z
+
+Ok i confirm... the Live test helper does not simulate real conditions. But i think we can deal with it :)
+
+This was the change responsible for failures 🤷
+
+```diff
++       if (!$componentMetadata->isAnonymous()) {
+            // set data that wasn't set in mount on the component directly
+            foreach ($data as $property => $value) {
+                if ($this->propertyAccessor->isWritable($component, $property)) {
+                    $this->propertyAccessor->setValue($component, $property, $value);
+                    unset($data[$property]);
+                }
+            }
++        }
+```
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-11T22:39:57Z
+
+Fabbot wrong, we can move on with this one :)
