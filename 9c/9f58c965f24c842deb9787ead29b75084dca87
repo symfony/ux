@@ -1,0 +1,143 @@
+---------------------------------------------------------------------------
+
+by setineos at 2024-10-24T09:27:28Z
+
+I think it should also work for `<twig:Turbo:Stream:*>` components.
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-10-24T09:44:36Z
+
+> I think it should also work for <twig:Turbo:Stream:*> components.
+
+This can be done by adding a generic `<twig:Turbo:Stream>` component maybe.
+
+---------------------------------------------------------------------------
+
+by DRaichev at 2024-10-25T15:56:12Z
+
+@nicolas-grekas
+I just realised if you pass "action" or "targets" into the attributes array those will conflict with the existing attributes.
+I think we should throw an exception if those are present
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-10-30T00:41:49Z
+
+With the incoming [`<twig:Turbo:Frame>`](https://github.com/symfony/ux/pull/2303) and [`<twig:Turbo:Stream>`](https://github.com/symfony/ux/pull/2302), do you think we still need this features ?
+
+---------------------------------------------------------------------------
+
+by DRaichev at 2024-10-30T22:14:19Z
+
+> With the incoming [`<twig:Turbo:Frame>`](https://github.com/symfony/ux/pull/2303) and [`<twig:Turbo:Stream>`](https://github.com/symfony/ux/pull/2302), do you think we still need this features ?
+
+I think they are complementary. I'd rather use the twig component syntax only in templates and stick to this helper on the php side, plus it's better to have consistent functionality in both, especially for people who dislike the twig component syntax.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-10-30T23:46:22Z
+
+Looks good to me!
+
+Could you check the type of values and throw if not expected (a non-stringable object) ?
+
+---------------------------------------------------------------------------
+
+by DRaichev at 2024-10-30T23:51:51Z
+
+> Looks good to me!
+>
+> Could you check the type of values and throw if not expected (a non-stringable object) ?
+
+I believe this is going to throw:
+```
+foreach ($attr as $key => $value) {
+    $key = htmlspecialchars($key);
+    if (null === $value) {
+        $attrString .= \sprintf(' %s', $key);
+    } elseif (\is_int($value) || \is_float($value)) {
+        $attrString .= \sprintf(' %s="%s"', $key, $value);
+    } else {
+        $attrString .= \sprintf(' %s="%s"', $key, htmlspecialchars($value)); // htmlspecialchars expect string so will throw here
+    }
+}
+```
+
+Or do you mean somewhere else ?
+
+---------------------------------------------------------------------------
+
+by DRaichev at 2024-10-31T12:00:06Z
+
+> > Looks good to me!
+> > Could you check the type of values and throw if not expected (a non-stringable object) ?
+>
+> I believe this is going to throw:
+>
+> ```
+> foreach ($attr as $key => $value) {
+>     $key = htmlspecialchars($key);
+>     if (null === $value) {
+>         $attrString .= \sprintf(' %s', $key);
+>     } elseif (\is_int($value) || \is_float($value)) {
+>         $attrString .= \sprintf(' %s="%s"', $key, $value);
+>     } else {
+>         $attrString .= \sprintf(' %s="%s"', $key, htmlspecialchars($value)); // htmlspecialchars expect string so will throw here
+>     }
+> }
+> ```
+>
+> Or do you mean somewhere else ?
+
+So this is ready for merge then, right
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-10-31T12:13:57Z
+
+After some thinking, why don't we rename the `custom($action)`  method in `action($name, .... ... ... .. )`  ?
+
+---------------------------------------------------------------------------
+
+by DRaichev at 2024-10-31T12:16:30Z
+
+> After some thinking, why don't we rename the `custom($action)` method in `action($name, .... ... ... .. )` ?
+
+Yeah, I was thinking about this when I renamed the one in TurboStreamResponse
+It should be either custom in both or action in both.
+
+I don't really have a preference, both work, so I leave the choice to you
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-10-31T15:52:50Z
+
+Let's use action in both then (sorry for the late comment)
+
+---------------------------------------------------------------------------
+
+by DRaichev at 2024-10-31T21:06:36Z
+
+Ready to merge
+
+---------------------------------------------------------------------------
+
+by DRaichev at 2024-11-01T12:31:15Z
+
+Updated the changelog, now ready to merge
+
+---------------------------------------------------------------------------
+
+by DRaichev at 2024-11-19T12:23:53Z
+
+@smnandre Hey, can we get this merged ?
+
+I am in the process of replacing the usage of the old syntax at work. I've already replaced all basic cases, so
+now I'm waiting for v2.22 to do the `<twig:Turbo:Frame/>` and hopefully we can get this as well so I can do the instances of custom turbo actions.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-19T19:41:31Z
+
+Hey, I rebasing your PR and will merge it in the next minutes.
