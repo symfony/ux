@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-20T10:06:07Z
+
+I don't have access to the read-only repositories, but i had the impresssion recently this configuration has been made on the organization level ?
+
+---------------------------------------------------------------------------
+
+by nicolas-grekas at 2024-11-20T10:09:05Z
+
+> configuration has been made on the organization level ?
+
+it's been removed as github killed that capability
