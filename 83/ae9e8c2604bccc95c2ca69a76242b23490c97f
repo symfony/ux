@@ -1,0 +1,66 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-11-19T13:55:55Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/2.x/src/Translator/assets/dist"><b>Translator</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/2.x/src/Translator/assets/dist/translator_controller.js"><code>translator_controller.js</code></a></td>
+            <td>
+                    <code>9.17 kB</code>
+                    / <code>2.27 kB</code>
+                </td><td>
+                    <code>9.23 kB</code><sup>+1% 📈</sup>
+                    / <code>2.29 kB</code><sup>+1% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by aleho at 2024-11-20T09:31:38Z
+
+> This is a direct BC break for people using `<html lang="{{ app.request.locale }}">` with a `_` inside the locale
+
+Is it? Did I miss something? In my tests it didn't matter whether I used `de`, `de_DE` or `de-DE`, all work with this PR. (See new tests.)
+
+What doesn't work is using `en(-|_)US` if there's no `en_US` configured in Symfony. Neither does `de(-|_)AT` if only `de` and `de_DE` are configured. (But that's unrelated to my PR, it wouldn't fallback to the available primary code before either.)
+
+> However, it miss the CHANGELOG update
+
+If this isn't a BC break, does it still need a changelog entry? Or can this be a bug fix?
+
+Now with tests. Sorry about that, completely forgot to commit them.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-20T10:18:18Z
+
+> If this isn't a BC break, does it still need a changelog entry? Or can this be a bug fix?
+
+Almost a feature here :)
+
+```diff
+# CHANGELOG
+
++ ## 2.22.0
++
++ -  Support both "fr-FR" and "fr_FR" format in html lang attribute
+
+## 2.20.0
+
+```
+
+Something like this maybe ? (wording to illustrate only 😅 )
+
+---------------------------------------------------------------------------
+
+by aleho at 2024-11-20T17:13:42Z
+
+@smnandre @Kocal Thanks!
