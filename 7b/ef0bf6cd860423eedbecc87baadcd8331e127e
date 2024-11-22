@@ -1,0 +1,69 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-11-17T09:44:45Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/imp-map-split-view-attrs/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/imp-map-split-view-attrs/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>3 kB</code>
+                    / <code>741 B</code>
+                </td><td>
+                    <code>3.31 kB</code><sup>+10% 📈</sup>
+                    / <code>821 B</code><sup>+11% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/imp-map-split-view-attrs/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>1.88 kB</code>
+                    / <code>610 B</code>
+                </td><td>
+                    <code>3.23 kB</code><sup>+72% 📈</sup>
+                    / <code>843 B</code><sup>+38% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/imp-map-split-view-attrs/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/imp-map-split-view-attrs/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>2.07 kB</code>
+                    / <code>729 B</code>
+                </td><td>
+                    <code>2.19 kB</code><sup>+6% 📈</sup>
+                    / <code>733 B</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/imp-map-split-view-attrs/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>7.07 kB</code>
+                    / <code>1.67 kB</code>
+                </td><td>
+                    <code>8.7 kB</code><sup>+23% 📈</sup>
+                    / <code>1.95 kB</code><sup>+17% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/imp-map-split-view-attrs/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/imp-map-split-view-attrs/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>1.31 kB</code>
+                    / <code>544 B</code>
+                </td><td>
+                    <code>1.57 kB</code><sup>+20% 📈</sup>
+                    / <code>579 B</code><sup>+6% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/imp-map-split-view-attrs/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>5.52 kB</code>
+                    / <code>1.77 kB</code>
+                </td><td>
+                    <code>7.2 kB</code><sup>+30% 📈</sup>
+                    / <code>2.06 kB</code><sup>+16% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-17T10:26:22Z
+
+Note: Usages and examples can be a bit limited for the moment, but for a next PR I would like to add more methods like `getZoom()` or `removeMarker()` (...)
