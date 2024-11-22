@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-11-15T13:29:53Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/ticket_2375/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/ticket_2375/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>15.04 kB</code>
+                    / <code>3.62 kB</code>
+                </td><td>
+                    <code>15.26 kB</code><sup>+1% 📈</sup>
+                    / <code>3.66 kB</code><sup>+1% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-21T00:23:40Z
+
+@MatTheCat thank you :)
+
+A small changelog update + maybe doc mention ?
+
+And LGTM indeed!
+
+---------------------------------------------------------------------------
+
+by MatTheCat at 2024-11-21T05:35:58Z
+
+Added a changelog entry :ok_hand:
+
+This would be part of `tom_select_options` but the documentation does not provide the list of supported ones so I’m not sure how I could document this.
