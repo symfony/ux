@@ -1,0 +1,27 @@
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-11-04T22:04:12Z
+
+I am sorry but I don't like the solution taken here. I like way more the initial solution taken here: #2325. I think we should not add code specific to another framework, and I don't think that we should ignore nested attributes without making them implicit for the user. I think we should focus on a solution like the initial solution where the user choose to ignore it implicitly.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-04T22:57:24Z
+
+What about https://github.com/symfony/ux/pull/2325#issuecomment-2453408427 then?
+People will have to adapt their code to make it works with Twig Components?
+
+I don't find that super friendly, it not obvious at all, and can be a source of frustration to the user even if it's documented (and document that you need to explicitly use a new syntax to disable nested attributes to makes your code works, feels like a loss to me)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-05T11:20:18Z
+
+Are we _really_ considering there is real scenario where someone
+* has a component
+* has a child component in it named "x-on"
+* uses nested attributes
+
+?
+
+Regarding specific code, we have some for LiveComponent & Alpine already. On the other hand, opening a new char / syntax in the attributes will be a change with many more problems.
