@@ -1,0 +1,143 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-11-04T21:28:09Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/feat/add-polylines/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/feat/add-polylines/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>3.31 kB</code>
+                    / <code>821 B</code>
+                </td><td>
+                    <code>4.45 kB</code><sup>+34% 📈</sup>
+                    / <code>905 B</code><sup>+10% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/feat/add-polylines/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>3.23 kB</code>
+                    / <code>843 B</code>
+                </td><td>
+                    <code>4.31 kB</code><sup>+33% 📈</sup>
+                    / <code>976 B</code><sup>+16% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/feat/add-polylines/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/feat/add-polylines/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>2.19 kB</code>
+                    / <code>733 B</code>
+                </td><td>
+                    <code>2.67 kB</code><sup>+22% 📈</sup>
+                    / <code>794 B</code><sup>+8% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/feat/add-polylines/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>8.7 kB</code>
+                    / <code>1.95 kB</code>
+                </td><td>
+                    <code>10.38 kB</code><sup>+19% 📈</sup>
+                    / <code>2.14 kB</code><sup>+9% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/feat/add-polylines/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/feat/add-polylines/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>1.57 kB</code>
+                    / <code>579 B</code>
+                </td><td>
+                    <code>1.99 kB</code><sup>+27% 📈</sup>
+                    / <code>649 B</code><sup>+12% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/feat/add-polylines/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>7.2 kB</code>
+                    / <code>2.06 kB</code>
+                </td><td>
+                    <code>8.8 kB</code><sup>+22% 📈</sup>
+                    / <code>2.24 kB</code><sup>+9% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by WebMamba at 2024-11-04T21:47:54Z
+
+Hey, thanks a lot for this PR @sblondeau! Could you please add more info about this new feature to your PR description? Some screenshots, details and what you trying to achieve! Thannnnnks 😁
+
+---------------------------------------------------------------------------
+
+by sblondeau at 2024-11-10T07:57:11Z
+
+Hello, I tried a lot of things but some tests (js ans php) failed and I do not understand why :(
+If someone has some time to investigate...
+Thanks :-)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-11T21:20:03Z
+
+Hi @sblondeau, where are stuck?
+
+Please ensure to rebase your branch from the latest `2.x` quite often, but also try to run some yarn scripts to easy your development:
+```shell
+yarn lint
+yarn format
+yarn workspaces foreach -Rp --from '{src/Map/assets,src/Map/src/Bridge/Google/assets,src/Map/src/Bridge/Leaflet/assets}' run build
+yarn workspaces foreach -Rp --from '{src/Map/assets,src/Map/src/Bridge/Google/assets,src/Map/src/Bridge/Leaflet/assets}' run test
+```
+
+Also, please start to squash your commits, we don't want to see commits [`1517fe1` (#2340)](https://github.com/symfony/ux/pull/2340/commits/1517fe1c303cabfe913236b8fe470a37062b0223) like this because it will _spam_ the history for nothing (meaning, harder to blame if necessary).
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by sblondeau at 2024-11-17T13:33:09Z
+
+@Kocal thanks for your help with the yarn command (it is not easy to guess them ;-) )
+My code works loclaly but I do not understand how to correctly launch tests. I have a failing test with GoogleMap. Sorry if my question sounds stupid but I do not understand how to correctly contribute with this part, should I work in ux map repo or in the bridge repo ? It is frustrating to be stuck so close to the end ;-) Thanks for your help
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-19T20:01:21Z
+
+> @Kocal thanks for your help with the yarn command (it is not easy to guess them ;-) )
+
+Well, in fact
+```
+yarn workspaces foreach -Rp --from '{src/Map/assets,src/Map/src/Bridge/Google/assets,src/Map/src/Bridge/Leaflet/assets}' run build
+```
+is simply a shortcut to:
+```
+(cd src/Map/assets && yarn build)
+(cd src/Map/src/Bridge/Google/assets && yarn build)
+(cd src/Map/src/Bridge/Leaflet/assets && yarn build)
+```
+😛
+
+> My code works loclaly but I do not understand how to correctly launch tests. I have a failing test with GoogleMap. Sorry if my question sounds stupid but I do not understand how to correctly contribute with this part, should I work in ux map repo or in the bridge repo ?
+
+Yes! You should work in the UX repository, `symfony/ux-*` are supposed to be read-only, but it looks like it is not the case.
+
+To run JS tests for Google, you can run `cd src/Map/src/Bridge/Google/assets && yarn test`.
+
+Keep up the good work! But... I predict you will have a lot of conflicts when #2385 will be merged :P
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-22T21:47:07Z
+
+With the merge of #2385 , there are now plenty of conflicts 😅
+<img width="558" alt="image" src="https://github.com/user-attachments/assets/8998b70f-fdde-4987-aa1a-98861dea84f3">
+
+I'll take it from here :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-22T23:44:49Z
+
+PR squashed and rebased, I've added compatibility with UX Map inside a LiveComponent (I also fixed some things that I've forgot in #2385 😅), and applied some review comments.
