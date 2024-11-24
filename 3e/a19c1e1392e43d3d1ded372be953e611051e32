@@ -1,0 +1,41 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-11-20T23:06:51Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/fix/element-belong-to-this-component-dom/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/fix/element-belong-to-this-component-dom/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>120.36 kB</code>
+                    / <code>23.38 kB</code>
+                </td><td>
+                    <code>120.15 kB</code><sup>0%</sup>
+                    / <code>23.38 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Pechynho at 2024-11-23T06:54:23Z
+
+I can confirm that this change fixes the issue I reported in #2388. It might be helpful to add a comment about the potential race condition that could occur, so other developers are aware of it when building new plugins. For now, however, this solution seems sufficient to me.
+
+In the future, it might be necessary to address this issue more specifically and deal with the timing problem, but for now, I would say this solution is acceptable.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-23T15:27:11Z
+
+Thank you @Pechynho for your time and for showing me where the bug was happening, how it was happening, and for having again time to check if the solution did work.
+
+You cannot imagine how it eases this kind of situation and how it makes a bug almost.. enjoyable :)
+
+I 100% note your comment about the whole "optimistic timing" issue and we will keep it in mind for the incoming changes.
