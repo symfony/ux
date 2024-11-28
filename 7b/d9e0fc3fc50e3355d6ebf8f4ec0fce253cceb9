@@ -1,0 +1,13 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-23T01:11:13Z
+
+This seems very legit: do you think you could add a test or two ?
+
+---------------------------------------------------------------------------
+
+by HugoSEIGLE at 2024-11-24T18:07:31Z
+
+> This seems very legit: do you think you could add a test or two ?
+
+Thank you for the feedback! I’ve already added tests in "Symfony\UX\Autocomplete\Tests\Functional\FieldAutocompleterTest". Let me know if there are fix to add or additional scenarios you'd like me to cover.
