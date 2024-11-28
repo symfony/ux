@@ -1,0 +1,63 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-11-26T07:38:41Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/imp-map-typescript-and-internals/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/imp-map-typescript-and-internals/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>4.45 kB</code>
+                    / <code>905 B</code>
+                </td><td>
+                    <code>4.22 kB</code><sup>-5% 📉</sup>
+                    / <code>984 B</code><sup>+9% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/imp-map-typescript-and-internals/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>4.31 kB</code>
+                    / <code>976 B</code>
+                </td><td>
+                    <code>3.78 kB</code><sup>-12% 📉</sup>
+                    / <code>1021 B</code><sup>+5% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/imp-map-typescript-and-internals/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/imp-map-typescript-and-internals/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>2.67 kB</code>
+                    / <code>794 B</code>
+                </td><td>
+                    <code>2.55 kB</code><sup>-4% 📉</sup>
+                    / <code>789 B</code><sup>-1% 📉</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/imp-map-typescript-and-internals/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>10.38 kB</code>
+                    / <code>2.14 kB</code>
+                </td><td>
+                    <code>9.88 kB</code><sup>-5% 📉</sup>
+                    / <code>2.19 kB</code><sup>+2% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/imp-map-typescript-and-internals/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/imp-map-typescript-and-internals/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>1.99 kB</code>
+                    / <code>649 B</code>
+                </td><td>
+                    <code>1.9 kB</code><sup>-5% 📉</sup>
+                    / <code>646 B</code><sup>0%</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/imp-map-typescript-and-internals/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>8.8 kB</code>
+                    / <code>2.24 kB</code>
+                </td><td>
+                    <code>8.42 kB</code><sup>-4% 📉</sup>
+                    / <code>2.34 kB</code><sup>+4% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
