@@ -1,0 +1,77 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-11-26T18:27:22Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/turbo-multi-topics/src/Turbo/assets/dist"><b>Turbo</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/turbo-multi-topics/src/Turbo/assets/dist/turbo_stream_controller.d.ts"><code>turbo_stream_controller.d.ts</code></a></td>
+            <td>
+                    <code>454 B</code>
+                    / <code>259 B</code>
+                </td><td>
+                    <code>562 B</code><sup>+24% 📈</sup>
+                    / <code>280 B</code><sup>+8% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/turbo-multi-topics/src/Turbo/assets/dist/turbo_stream_controller.js"><code>turbo_stream_controller.js</code></a></td>
+            <td>
+                    <code>1.02 kB</code>
+                    / <code>466 B</code>
+                </td><td>
+                    <code>1.27 kB</code><sup>+24% 📈</sup>
+                    / <code>535 B</code><sup>+15% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-26T19:06:15Z
+
+Thank you @norkunas 👍
+
+I guess there were no elegant way to avoid the value/values duo in the controller ?
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-11-26T19:07:57Z
+
+> Thank you @norkunas 👍
+>
+> I guess there were no elegant way to avoid the value/values duo in the controller ?
+
+Didn't think of a better way without breaking, later the former one could be deprecated
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-27T01:50:14Z
+
+phpstan can be ignored..  are the failue 8.1 related or are they our usual flakky turbo failures ? 😅
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-11-27T04:34:52Z
+
+> are the failue 8.1 related or are they our usual flakky turbo failures ? 😅
+
+some were related due to changed escape, fixed that with feature detection
+
+---------------------------------------------------------------------------
+
+by norkunas at 2024-11-27T06:17:16Z
+
+> This PR will definitely make several people happy. 😊
+
+Including myself so I can use it in my project :D
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-11-29T15:17:46Z
+
+Thanks @norkunas, I've just pushed a minor modification and rebased, I will merge your PR when checks become green.
