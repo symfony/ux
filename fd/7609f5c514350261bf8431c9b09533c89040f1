@@ -1,0 +1,56 @@
+---------------------------------------------------------------------------
+
+by dsoriano at 2024-11-22T13:28:32Z
+
+If someone knows why ux.symfony.com tests failed... it's gives me headache.. Nothing was changed in the ux.symfony.com directory and in local the tests are ok.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-22T16:53:35Z
+
+It appears this PR changes are indeed responsible...
+
+<img width="1334" alt="Capture d’écran 2024-11-22 à 17 49 54" src="https://github.com/user-attachments/assets/cd67c181-e70e-454f-a9fb-f897e8cf8f65">
+
+The ux.symfony.com tests on the CI use the UX packages of the PR...
+
+Locally to reproduce you should go into the ux.symfony.com repository and then call the link locally command
+
+```
+cd ux.symfony.com
+php bin/link-locally
+```
+
+Then refresh
+
+```
+composer update
+php bin/console c:c
+symfony server:start -d
+
+```
+
+---------------------------------------------------------------------------
+
+by dsoriano at 2024-11-22T16:58:42Z
+
+ok great, thank you ! I will take a look on it.
+Weird that locally the tests for ux.symfony.com are ok, but I probably missed something...
+
+Thanks again
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-22T18:03:07Z
+
+You did not run the php bin/link-locally i suppose ?
+
+I let you look at the suggestion, i found the source of the problem.
+
+I let you check locally and tell me if that seems ok for you ?
+
+---------------------------------------------------------------------------
+
+by dsoriano at 2024-11-22T23:15:14Z
+
+@smnandre indeed I missed the link-locally, thanks for your help. Suggestions was good, all is ok now. Many thanks !
