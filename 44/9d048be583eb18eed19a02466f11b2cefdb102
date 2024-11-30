@@ -1,0 +1,132 @@
+---------------------------------------------------------------------------
+
+by simonsolutions at 2024-06-27T19:35:06Z
+
+Is the PR planned to be released in the near future?
+
+---------------------------------------------------------------------------
+
+by IndraGunawan at 2024-07-14T15:39:23Z
+
+@smnandre @kbond any chance to review this?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-14T18:58:04Z
+
+Oh i'm so sorry @IndraGunawan .. i remember seeing this PR.... and i forgot to come back on it !
+
+For Autocomplete it seems a very smart & efficient fix: thank you _**very much**_ for this!
+
+Just, before we merge i'd like to be sure this does not add problems/side effets when used with LiveComponent
+(to be transparent: i'm 90% certain this will in fact solve/improve things..... but i'd like to be 100%)
+
+So... did you try within a LiveComponent ?
+I'm not talking about coding a test or adding anything more in this PR..  But at least one of us should test manually to check this new behaviour has no impact.
+
+I can help if you want / don't have time, feel free to ask!
+
+A good example would be to add groups to the dependant form fields demo of the ux.website (present in the same repository) and see if everything is still working.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-14T18:59:45Z
+
+⚠️ @kbond
+
+I marked this as reviewed/accepted because the PR in itself is ok !
+
+Let's just wait we check everything is ok with LiveComponent before merging.
+
+---------------------------------------------------------------------------
+
+by zavarock at 2024-07-14T19:16:23Z
+
+@smnandre Really appreciate your feedback because I myself didn't know if it was a good solution. I was waiting for feedback from you.
+Regarding LiveComponent, to be honest, I haven't tested with it yet, but I will later and let you know.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-14T20:29:48Z
+
+If you don't find time, poke me later in the week i'll make a test or two
+
+---------------------------------------------------------------------------
+
+by zavarock at 2024-07-20T17:55:12Z
+
+@smnandre Sorry for the delay.
+As you suggested, I grouped the options from the dependent form on the UX website and everything seems fine.
+
+![ezgif-6-bc9fee1be0](https://github.com/user-attachments/assets/eb5d77d3-bd22-45a0-ae81-c92539f15210)
+
+Would you like me to update this PR with the changes to the dependent form?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-20T18:18:58Z
+
+@zavarock thank you for taking some time to check this!
+
+No need to put it in the PR, and i'd rather keep this particular demo the simplest possible (as it's one of the most seen...)
+
+But after this PR, it could be a good idea to add a couple of demo / code samples for Autcomplete (only if you want and have time of course)
+
+---------------------------------------------------------------------------
+
+by zavarock at 2024-07-20T21:32:45Z
+
+@smnandre Sure, no problems!
+I just have two questions if you don't mind:
+1) You're talking about adding a new demo [on this page](https://ux.symfony.com/autocomplete), right?
+2) Is it better to create a new PR to avoid mixing things? Or can I just update this one?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-20T22:40:16Z
+
+1. More probably a dedicated page. I will post a page during the week to explain how to do this properly (short answer, same thing as the LiveComponent demos... but i'll try to isolate more the demos)
+
+2. I personnaly find better to separate code PRs and website ones.. but that's 100% open to debate :)
+
+---------------------------------------------------------------------------
+
+by simonsolutions at 2024-08-28T15:34:53Z
+
+How about the status to integrate that issue in the next release, as it is important for the application to have a proper grouped dropdown. As i read it the issue is fixed and working, the demo could be a separate thing to update.
+
+---------------------------------------------------------------------------
+
+by simonsolutions at 2024-10-26T20:06:27Z
+
+When can we expect the merge into the next release?
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-11-06T18:13:32Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/autocomplete-fix-grouped-options-order/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/autocomplete-fix-grouped-options-order/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>15.04 kB</code>
+                    / <code>3.62 kB</code>
+                </td><td>
+                    <code>16.47 kB</code><sup>+9% 📈</sup>
+                    / <code>3.93 kB</code><sup>+9% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by IndraGunawan at 2024-11-29T16:19:28Z
+
+@smnandre i'm so sorry for following this up over and over again but can we wrap up this PR in the near future?
