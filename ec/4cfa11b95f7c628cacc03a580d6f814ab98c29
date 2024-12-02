@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-02T06:38:56Z
+
+Thanks for your reactivity Simon, I didn't see anything wrong while merging #2410 😅
+
+It would be really nice to have E2E/smoke tests that will create a new Symfony app, install the component, and see what happens
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-02T06:42:58Z
+
+> Thanks for your reactivity Simon, I didn't see anything wrong while merging #2410 😅
+>
+>
+>
+> It would be really nice to have E2E/smoke tests that will create a new Symfony app, install the component, and see what happens
+
+This one is 100% on me, did not check enough when i updated the extension.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-02T06:45:27Z
+
+> It would be really nice to have E2E/smoke tests that will create a new Symfony app, install the component, and see what happens
+
+This would not have detected the problem here, as you need to disable iconify to trigger it.
+
+But that mean we are far from having enough fonctional test.
