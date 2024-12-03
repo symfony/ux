@@ -1,0 +1,55 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-12-02T18:06:58Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/2417-map/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/2417-map/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>4.22 kB</code>
+                    / <code>984 B</code>
+                </td><td>
+                    <code>4.43 kB</code><sup>+5% 📈</sup>
+                    / <code>1023 B</code><sup>+4% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/2417-map/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>3.78 kB</code>
+                    / <code>1021 B</code>
+                </td><td>
+                    <code>3.88 kB</code><sup>+3% 📈</sup>
+                    / <code>1.02 kB</code><sup>+3% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/2417-map/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/2417-map/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>9.88 kB</code>
+                    / <code>2.19 kB</code>
+                </td><td>
+                    <code>10.02 kB</code><sup>+1% 📈</sup>
+                    / <code>2.22 kB</code><sup>+2% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/2417-map/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/2417-map/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>8.42 kB</code>
+                    / <code>2.34 kB</code>
+                </td><td>
+                    <code>8.58 kB</code><sup>+2% 📈</sup>
+                    / <code>2.37 kB</code><sup>+1% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-02T18:28:37Z
+
+Should be better now, TIL Stimulus values' default value does not behave like Vue props' default value 😅
+
+I reverted my changes and used `this.has...` instead, they correctly switch from `false` or `true` if they absent or not (html attributes are not rendered when their value is `null`).
