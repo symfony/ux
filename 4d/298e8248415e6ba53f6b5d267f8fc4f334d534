@@ -1,0 +1,51 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-12-04T13:34:11Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+ℹ️ No difference in dist packagesFiles.
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by chadyred at 2024-12-05T08:04:16Z
+
+Hey @Kocal,
+
+ I didn't edit the conf (I play with it on my side :p )
+
+ I exposed the fact I discovered the tool, I follow the contributing guideline, and I thinked about the rule to sort import has not been discussed / seen / treated before. So I pointed out the fact if we apply to the code base a global check then fix with actual rules of Biome config, we will apply (like in this PR) a lot of changed. If we keep Biome and its conf as is, ok, the PR is good, and the code base is synchronized with Biome conf...that's it!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-05T09:03:48Z
+
+Yeah configuring how imports are sorted is nice, not doing it is sometimes a waste of time in some projects/teams when reviewing the code, but AFAIK it didn't happen in Symfony UX.
+
+Can you please commit the new Biome.js configuration, so we can merge your PR? :)
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by chadyred at 2024-12-05T10:15:36Z
+
+@Kocal I did not change it, it is the default config, I just call`node_modules/.bin/biome check --fix` simply with the existing conf (https://biomejs.dev/analyzer/import-sorting/ : it is enabled by default, it is implicite)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-05T13:38:34Z
+
+@chadyred Ah!
+> This feature is enabled by default but can be opted-out via configuration:
+
+Alright, I thought it was the opposite, and expected to see Biome configuration (or commands) to be updated to enable imports sortings.
+
+However, you used `check` command, and given https://biomejs.dev/reference/cli/ it looks like only `biome check` and `biome ci` commands sort imports 🤔
+It's a bit unfortunate because we use `biome lint` and `biome format` commands, for... historical reason (ESLint and Prettier).
+
+You know, let's iterate, I'm merging this and will open a new PR for `biome check` and `biome ci`.
+
+Thanks @chadyred :)
