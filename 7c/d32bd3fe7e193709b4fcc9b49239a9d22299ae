@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by chadyred at 2024-12-05T14:08:42Z
+
+@Kocal Re, you are quicker than me I was doing make a PR, so great to see that :)
+
+A little thing about the "--write", it sounds as a low level of details, I found the "--fix" shorter and it is more humanized...but the "--write" is the first accepted option and "--fix" is an alias...(My :brain: swims too much with cs-fixer, maybe :D)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-05T14:23:31Z
+
+> A little thing about the "--write", it sounds as a low level of details, I found the "--fix" shorter and it is more humanized...but the "--write" is the first accepted option and "--fix" is an alias...(My 🧠 swims too much with cs-fixer, maybe :D)
+
+I understand your point, but I believe it can be the same scenario with `--apply` alias which was... deprecated some versions ago (I was not really happy to open https://github.com/Kocal/BiomeJsBundle/pull/9 because of https://github.com/biomejs/biome/blob/main/CHANGELOG.md#180-2024-06-04, only one month after creating the bundle 😅)
+
+Let's keep `--write`!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-05T14:25:49Z
+
+> you are quicker than me I was doing make a PR, so great to see that :)
+
+'just put you as co-author ;)
+
+---------------------------------------------------------------------------
+
+by chadyred at 2024-12-05T14:27:40Z
+
+@Kocal so you are "--write" by XP, it is better ^^
