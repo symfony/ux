@@ -1,0 +1,35 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-10-30T19:50:00Z
+
+I'll open a PR this week-end (ideally sunday afternoon) -- probably loosely based on the stimulus bundle page "menu", with some simplification in markup + CSS, and some things to help us bring the next chapter :)
+
+But I see no problem to make this change in the meantime!
+
+Do you think we could keep the current (flat) icon, with the color theme of the package ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-11-03T18:29:15Z
+
+@javiereguiluz I'm on it and pretty confident i'll open the PR soon... (@kbond can confirm if needed)
+
+But depending on tonight, i may miss the deadline by a day or two...
+... as i have a clear roadmap on mind .. i needed to make some other changes :)
+
+Poke me if you want to have an "[avant-première](https://en.wikipedia.org/wiki/Film_screening)" ;)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-07T10:28:01Z
+
+I'm working on it :eyes:
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-07T11:11:50Z
+
+Since nothing moved since October/November, I still believe this PR is useful until we rewrite packages pages.
+
+But, I've fixed the icon and its size, to be more consistent with the rest of the application:
+<img width="856" alt="image" src="https://github.com/user-attachments/assets/cad70916-b96d-4f44-b46c-09044f90d89f">
