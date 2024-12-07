@@ -1,0 +1,39 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-12-05T16:05:15Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/meta-replace-clean-css-by-lightning-css/src/Dropzone/assets/dist"><b>Dropzone</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/meta-replace-clean-css-by-lightning-css/src/Dropzone/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td>
+                    <code>949 B</code>
+                    / <code>475 B</code>
+                </td><td>
+                    <code>944 B</code><sup>-1% 📉</sup>
+                    / <code>468 B</code><sup>-1% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/meta-replace-clean-css-by-lightning-css/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/meta-replace-clean-css-by-lightning-css/src/LiveComponent/assets/dist/live.min.css"><code>live.min.css</code></a></td>
+            <td>
+                    <code>79 B</code>
+                    / <code>82 B</code>
+                </td><td>
+                    <code>78 B</code><sup>-1% 📉</sup>
+                    / <code>81 B</code><sup>-1% 📉</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/meta-replace-clean-css-by-lightning-css/src/TogglePassword/assets/dist"><b>TogglePassword</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/meta-replace-clean-css-by-lightning-css/src/TogglePassword/assets/dist/style.min.css"><code>style.min.css</code></a></td>
+            <td>
+                    <code>338 B</code>
+                    / <code>228 B</code>
+                </td><td>
+                    <code>311 B</code><sup>-8% 📉</sup>
+                    / <code>216 B</code><sup>-5% 📉</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
