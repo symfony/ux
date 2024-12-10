@@ -55,7 +55,7 @@ final class AutocompleteChoiceTypeExtension extends AbstractTypeExtension
         $attr = $view->vars['attr'] ?? [];
 
         $controllerName = 'symfony--ux-autocomplete--autocomplete';
-        $attr['data-controller'] = $controllerName.' '.trim(($attr['data-controller'] ?? ''));
+        $attr['data-controller'] = $controllerName.' '.trim($attr['data-controller'] ?? '');
 
         $values = [];
         if ($options['autocomplete_url']) {
