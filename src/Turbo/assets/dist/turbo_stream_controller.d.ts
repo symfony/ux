@@ -4,11 +4,13 @@ export default class extends Controller {
         topic: StringConstructor;
         topics: ArrayConstructor;
         hub: StringConstructor;
+        withCredentials: BooleanConstructor;
     };
     es: EventSource | undefined;
     url: string | undefined;
     readonly topicValue: string;
     readonly topicsValue: string[];
+    readonly withCredentialsValue: boolean;
     readonly hubValue: string;
     readonly hasHubValue: boolean;
     readonly hasTopicValue: boolean;

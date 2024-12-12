@@ -12,18 +12,20 @@
 namespace Symfony\UX\Turbo\Bridge\Mercure;
 
 use Symfony\Component\Mercure\HubInterface;
+use Symfony\Component\Mercure\Twig\MercureExtension;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 use Symfony\UX\Turbo\Broadcaster\IdAccessor;
-use Symfony\UX\Turbo\Twig\TurboStreamListenRendererInterface;
+use Symfony\UX\Turbo\Twig\TurboStreamListenRendererWithOptionsInterface;
 use Symfony\WebpackEncoreBundle\Twig\StimulusTwigExtension;
 use Twig\Environment;
+use Twig\Error\RuntimeError;
 
 /**
  * Renders the attributes to load the "mercure-turbo-stream" controller.
  *
  * @author Kévin Dunglas <kevin@dunglas.fr>
  */
-final class TurboStreamListenRenderer implements TurboStreamListenRendererInterface
+final class TurboStreamListenRenderer implements TurboStreamListenRendererWithOptionsInterface
 {
     private StimulusHelper $stimulusHelper;
 
@@ -31,6 +33,7 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
         private HubInterface $hub,
         StimulusHelper|StimulusTwigExtension $stimulus,
         private IdAccessor $idAccessor,
+        private Environment $twig,
     ) {
         if ($stimulus instanceof StimulusTwigExtension) {
             trigger_deprecation('symfony/ux-turbo', '2.9', 'Passing an instance of "%s" as second argument of "%s" is deprecated, pass an instance of "%s" instead.', StimulusTwigExtension::class, __CLASS__, StimulusHelper::class);
@@ -42,8 +45,12 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
         $this->stimulusHelper = $stimulus;
     }
 
-    public function renderTurboStreamListen(Environment $env, $topic): string
+    public function renderTurboStreamListen(Environment $env, $topic /* array $eventSourceOptions = [] */): string
     {
+        if (\func_num_args() > 2) {
+            $eventSourceOptions = func_get_arg(2);
+        }
+
         $topics = $topic instanceof TopicSet
             ? array_map($this->resolveTopic(...), $topic->getTopics())
             : [$this->resolveTopic($topic)];
@@ -53,6 +60,18 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererInterf
             $controllerAttributes['topics'] = $topics;
         } else {
             $controllerAttributes['topic'] = current($topics);
+        }
+
+        if (isset($eventSourceOptions)) {
+            try {
+                $mercure = $this->twig->getExtension(MercureExtension::class);
+                $mercure->mercure($topics, $eventSourceOptions);
+
+                if (isset($eventSourceOptions['withCredentials'])) {
+                    $controllerAttributes['withCredentials'] = $eventSourceOptions['withCredentials'];
+                }
+            } catch (RuntimeError $e) {
+            }
         }
 
         $stimulusAttributes = $this->stimulusHelper->createStimulusAttributes();

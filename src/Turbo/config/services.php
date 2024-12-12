@@ -18,6 +18,7 @@ use Symfony\UX\Turbo\Broadcaster\ImuxBroadcaster;
 use Symfony\UX\Turbo\Broadcaster\TwigBroadcaster;
 use Symfony\UX\Turbo\Doctrine\BroadcastListener;
 use Symfony\UX\Turbo\Request\RequestListener;
+use Symfony\UX\Turbo\Twig\TurboRuntime;
 use Symfony\UX\Turbo\Twig\TwigExtension;
 
 /*
@@ -47,8 +48,14 @@ return static function (ContainerConfigurator $container): void {
             ->decorate('turbo.broadcaster.imux')
 
         ->set('turbo.twig.extension', TwigExtension::class)
-            ->args([tagged_locator('turbo.renderer.stream_listen', 'transport'), abstract_arg('default')])
             ->tag('twig.extension')
+
+        ->set('turbo.twig.runtime', TurboRuntime::class)
+            ->args([
+                tagged_locator('turbo.renderer.stream_listen', 'transport'),
+                abstract_arg('default_transport'),
+            ])
+            ->tag('twig.runtime')
 
         ->set('turbo.doctrine.event_listener', BroadcastListener::class)
             ->args([

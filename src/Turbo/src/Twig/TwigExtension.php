@@ -11,9 +11,6 @@
 
 namespace Symfony\UX\Turbo\Twig;
 
-use Psr\Container\ContainerInterface;
-use Symfony\UX\Turbo\Bridge\Mercure\TopicSet;
-use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\TwigFunction;
 
@@ -28,16 +25,10 @@ final class TwigExtension extends AbstractExtension
     private const REFRESH_SCROLL_RESET = 'reset';
     private const REFRESH_SCROLL_PRESERVE = 'preserve';
 
-    public function __construct(
-        private ContainerInterface $turboStreamListenRenderers,
-        private string $default,
-    ) {
-    }
-
     public function getFunctions(): array
     {
         return [
-            new TwigFunction('turbo_stream_listen', $this->turboStreamListen(...), ['needs_environment' => true, 'is_safe' => ['html']]),
+            new TwigFunction('turbo_stream_listen', [TurboRuntime::class, 'renderTurboStreamListen'], ['needs_environment' => true, 'is_safe' => ['html']]),
             new TwigFunction('turbo_exempts_page_from_cache', $this->turboExemptsPageFromCache(...), ['is_safe' => ['html']]),
             new TwigFunction('turbo_exempts_page_from_preview', $this->turboExemptsPageFromPreview(...), ['is_safe' => ['html']]),
             new TwigFunction('turbo_page_requires_reload', $this->turboPageRequiresReload(...), ['is_safe' => ['html']]),
@@ -45,24 +36,6 @@ final class TwigExtension extends AbstractExtension
             new TwigFunction('turbo_refresh_method', $this->turboRefreshMethod(...), ['is_safe' => ['html']]),
             new TwigFunction('turbo_refresh_scroll', $this->turboRefreshScroll(...), ['is_safe' => ['html']]),
         ];
-    }
-
-    /**
-     * @param object|string|array<object|string> $topic
-     */
-    public function turboStreamListen(Environment $env, $topic, ?string $transport = null): string
-    {
-        $transport ??= $this->default;
-
-        if (!$this->turboStreamListenRenderers->has($transport)) {
-            throw new \InvalidArgumentException(\sprintf('The Turbo stream transport "%s" does not exist.', $transport));
-        }
-
-        if (\is_array($topic)) {
-            $topic = new TopicSet($topic);
-        }
-
-        return $this->turboStreamListenRenderers->get($transport)->renderTurboStreamListen($env, $topic);
     }
 
     /**

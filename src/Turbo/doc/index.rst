@@ -754,6 +754,9 @@ Let's create our chat::
         </turbo-frame>
     {% endblock %}
 
+If you're using a private hub, you can add ``{ withCredentials: true }``
+as ``turbo_stream_listen()`` third argument to authenticate with the hub
+
 .. code-block:: html+twig
 
     {# chat/message.stream.html.twig #}

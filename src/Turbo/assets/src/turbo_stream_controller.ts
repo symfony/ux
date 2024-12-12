@@ -18,12 +18,14 @@ export default class extends Controller {
         topic: String,
         topics: Array,
         hub: String,
+        withCredentials: Boolean,
     };
     es: EventSource | undefined;
     url: string | undefined;
 
     declare readonly topicValue: string;
     declare readonly topicsValue: string[];
+    declare readonly withCredentialsValue: boolean;
     declare readonly hubValue: string;
     declare readonly hasHubValue: boolean;
     declare readonly hasTopicValue: boolean;
@@ -50,7 +52,7 @@ export default class extends Controller {
 
     connect() {
         if (this.url) {
-            this.es = new EventSource(this.url);
+            this.es = new EventSource(this.url, { withCredentials: this.withCredentialsValue });
             connectStreamSource(this.es);
         }
     }

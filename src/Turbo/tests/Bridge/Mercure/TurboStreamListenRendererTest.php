@@ -71,5 +71,13 @@ final class TurboStreamListenRendererTest extends KernelTestCase
                 ? 'data-controller="symfony--ux-turbo--mercure-turbo-stream" data-symfony--ux-turbo--mercure-turbo-stream-hub-value="http://127.0.0.1:3000/.well-known/mercure" data-symfony--ux-turbo--mercure-turbo-stream-topics-value="[&quot;a_topic&quot;,&quot;AppEntityBook&quot;,&quot;https:\/\/symfony.com\/ux-turbo\/App%5CEntity%5CBook\/123&quot;]"'
                 : 'data-controller="symfony--ux-turbo--mercure-turbo-stream" data-symfony--ux-turbo--mercure-turbo-stream-hub-value="http&#x3A;&#x2F;&#x2F;127.0.0.1&#x3A;3000&#x2F;.well-known&#x2F;mercure" data-symfony--ux-turbo--mercure-turbo-stream-topics-value="&#x5B;&quot;a_topic&quot;,&quot;AppEntityBook&quot;,&quot;https&#x3A;&#x5C;&#x2F;&#x5C;&#x2F;symfony.com&#x5C;&#x2F;ux-turbo&#x5C;&#x2F;App&#x25;5CEntity&#x25;5CBook&#x5C;&#x2F;123&quot;&#x5D;"',
         ];
+
+        yield [
+            "{{ turbo_stream_listen('a_topic', 'default', { withCredentials: true }) }}",
+            [],
+            $newEscape
+                ? 'data-controller="symfony--ux-turbo--mercure-turbo-stream" data-symfony--ux-turbo--mercure-turbo-stream-hub-value="http://127.0.0.1:3000/.well-known/mercure" data-symfony--ux-turbo--mercure-turbo-stream-topic-value="a_topic" data-symfony--ux-turbo--mercure-turbo-stream-with-credentials-value="true"'
+                : 'data-controller="symfony--ux-turbo--mercure-turbo-stream" data-symfony--ux-turbo--mercure-turbo-stream-hub-value="http&#x3A;&#x2F;&#x2F;127.0.0.1&#x3A;3000&#x2F;.well-known&#x2F;mercure" data-symfony--ux-turbo--mercure-turbo-stream-topic-value="a_topic" data-symfony--ux-turbo--mercure-turbo-stream-with-credentials-value="true"',
+        ];
     }
 }

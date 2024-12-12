@@ -23,5 +23,5 @@ interface TurboStreamListenRendererInterface
     /**
      * @param string|object $topic
      */
-    public function renderTurboStreamListen(Environment $env, $topic): string;
+    public function renderTurboStreamListen(Environment $env, $topic /* , array $eventSourceOptions = [] */): string;
 }

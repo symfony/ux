@@ -23,7 +23,7 @@ class default_1 extends Controller {
     }
     connect() {
         if (this.url) {
-            this.es = new EventSource(this.url);
+            this.es = new EventSource(this.url, { withCredentials: this.withCredentialsValue });
             connectStreamSource(this.es);
         }
     }
@@ -38,6 +38,7 @@ default_1.values = {
     topic: String,
     topics: Array,
     hub: String,
+    withCredentials: Boolean,
 };
 
 export { default_1 as default };
