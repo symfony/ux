@@ -1,0 +1,68 @@
+---------------------------------------------------------------------------
+
+by momocode-de at 2024-11-20T10:34:26Z
+
+I also need this fix. What is the status here?
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-11-20T13:32:28Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/autocomplete-remote-options/src/Autocomplete/assets/dist"><b>Autocomplete</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/autocomplete-remote-options/src/Autocomplete/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>1.82 kB</code>
+                    / <code>611 B</code>
+                </td><td>
+                    <code>1.84 kB</code><sup>+2% 📈</sup>
+                    / <code>619 B</code><sup>+1% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/autocomplete-remote-options/src/Autocomplete/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>16.69 kB</code>
+                    / <code>3.96 kB</code>
+                </td><td>
+                    <code>16.71 kB</code><sup>0%</sup>
+                    / <code>3.97 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by arrabiata-asanz at 2024-12-06T15:57:08Z
+
+thank you to everyone that participated in the bug fix!
+@weaverryan  Are you merging the branch soon?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-22T23:43:36Z
+
+Hey @pierredup, i'm reviving this PR, hoping it's still something you'd like to merge!
+
+How "ready-to-merge" are these changes? Is there anything i need to check in particular?
+
+Thank you!
+
+---------------------------------------------------------------------------
+
+by pierredup at 2024-12-23T13:40:05Z
+
+Hi @smnandre , there's nothing outstanding on this from my side, so I think it's ready to be merged
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-23T14:27:15Z
+
+@pierredup great, LGTM!
+
+Could you rebase and add an entry in the src/Autocomplete/CHANGELOG.md (2.23) ?
