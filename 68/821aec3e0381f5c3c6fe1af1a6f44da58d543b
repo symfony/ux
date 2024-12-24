@@ -1,0 +1,43 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-22T10:17:54Z
+
+Not at all, why?
+
+---------------------------------------------------------------------------
+
+by kbond at 2024-12-23T14:12:07Z
+
+Is there any considerations we need to make regarding: https://symfony.com/blog/new-in-symfony-7-2-optional-secret ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-23T14:30:27Z
+
+@kbond  I don't think so, if i understand this correctly
+
+> With these changes, if you enable a feature that requires a secret but have not configured one, Symfony will throw an exception with a clear message explaining how to resolve the issue.
+
+But that's one of the reasons this PR checks for empty secrets: https://github.com/symfony/ux/pull/2461)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-23T16:56:10Z
+
+> Not at all, why?
+
+For pure user-DX, I believe creating recipes with commented/default options is nice to have
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-23T17:01:53Z
+
+This would be the only options for the live_component package.. so i'm not sure we want to annoy existing apps with a new file for this only..  it's more a power-user to me and can lead to very bad/insecure choices :|
+
+I guess this is something we will do easier when centralized (at least a bit) in UX Bundle
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-23T17:02:55Z
+
+Makes sense, thanks! :)
