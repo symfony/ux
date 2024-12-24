@@ -1,0 +1,29 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-18T17:05:32Z
+
+Nice if this solution works for everyone!
+
+Depending on the feedback people give, we should probably add some tests to prevent problems in the future.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-18T17:12:32Z
+
+Should we do the same for the FingerprintCalculator / Hydrator ?
+
+(they should only be called on runtime)
+
+---------------------------------------------------------------------------
+
+by dkarlovi at 2024-12-18T18:05:50Z
+
+AFAIK, they are actually using the secret as intended? The secret is required for cryptography there? I might be mistaken, feel free to correct me.
+
+Edit: correct, I've checked it and the secret usage there is indeed cryptographic and correct. I've actually reverse engineered this specific part of code in a Node app (to enable the Node app to render correct live components), it must use the secret too (the secret is shared with the Node app). It would be cool if you could specific a LiveComponent-specific secret (so, not use `kernel.secret`) to improve the security, but that's not something we should do in this PR. @smnandre
+
+---------------------------------------------------------------------------
+
+by dkarlovi at 2024-12-20T08:46:10Z
+
+@smnandre done.
