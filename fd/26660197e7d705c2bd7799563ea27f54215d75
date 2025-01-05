@@ -1,0 +1,192 @@
+---------------------------------------------------------------------------
+
+by Shadow-Devil at 2024-07-02T08:55:55Z
+
+Pipeline `Symfony UX / Check for UnBuilt JS Dist Files (pull_request)` fails with `JS dist files need to be rebuilt`.
+@smnandre can you tell me how I can do that?
+
+---------------------------------------------------------------------------
+
+by Shadow-Devil at 2024-07-16T08:59:04Z
+
+@smnandre will you be able to merge this or is something missing?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-17T19:52:17Z
+
+> @smnandre will you be able to merge this or is something missing?
+
+Hi @Shadow-Devil! Sorry we've all been very busy on our "day lifes"..
+
+II have a doubt here i'd like the opinion on others..
+
+This situation (a chart already initialized on the element) should not happen, right ?
+
+So i _totally_ agree we should add a early exit there, _but_....  should we throw an error ?
+
+@kbond @WebMamba
+
+---------------------------------------------------------------------------
+
+by Shadow-Devil at 2024-07-17T20:04:16Z
+
+@smnandre Sorry, I didn't want to sound rude😅.
+I just thought this issue might have gone under the radar.
+
+> This situation (a chart already initialized on the element) should not happen, right ?
+
+This situation happened for me, because of [Google's Material Design Lite](https://getmdl.io/) which would disconnect and reconnect the chart from the DOM.
+
+A second solution would be to call `this.chart.destroy()` when disconnecting the chart.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-17T20:06:57Z
+
+Hey, either throwing the error or exiting silently won't really fix the initial issue right?
+
+Throwing an error looks better to me, because it will really help the developer to understand that  something wrong is happening.
+
+But, if the Chart is previously initialized and `connect()`  is called a second time, to me it's a not-wanted scenario, the Chart should NOT exists yet when connect() is called. I believe this should be fix at the root, destroying the Chart on controller `disconnect()`.
+
+WDYT?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-17T20:51:04Z
+
+> because of [Google's Material Design Lite](https://getmdl.io/) which would disconnect and reconnect the chart from the DOM.
+
+Everytime, or in particular scenarios ? It feels a bit strange :|
+
+--
+
+> But, if the Chart is previously initialized and connect() is called a second time, to me it's a not-wanted scenario, the Chart should NOT exists yet when connect() is called.
+
+That's my opinion too: in this scenario, throwing an Error after an early exit seems the correct thing to do (this PR + an error)
+
+--
+
+> A second solution would be to call this.chart.destroy() when disconnecting the chart.
+
+> I believe this should be fix at the root, destroying the Chart on controller disconnect().
+
+This feels a good thing to do yes!  (there _**may be**_ a reason why it has not be done before ( 🤷 ))
+
+(thanks @Kocal)
+
+---------------------------------------------------------------------------
+
+by Shadow-Devil at 2024-07-17T20:59:26Z
+
+> Everytime, or in particular scenarios ? It feels a bit strange :|
+
+Once on page reload.
+
+> But, if the Chart is previously initialized and connect() is called a second time, to me it's a not-wanted scenario, the Chart should NOT exists yet when connect() is called.
+
+The connect method can be called multiple times by stimulus. See also the stimulus docs about [lifecycle callbacks](https://stimulus.hotwired.dev/reference/lifecycle-callbacks#reconnection):
+> A disconnected controller may become connected again at a later time.
+> When this happens, such as after removing the controller’s element from the document and then re-attaching it, Stimulus will reuse the element’s previous controller instance, calling its connect() method multiple times.
+
+I will try to update the PR to destroy the chart on disconnect 👍🏻
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-07-17T21:18:06Z
+
+> > A disconnected controller may become connected again at a later time.
+When this happens, such as after removing the controller’s element from the document and then re-attaching it, Stimulus will reuse the element’s previous controller instance, calling its connect() method multiple times.
+
+Didn't know about that, thanks :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-17T21:48:16Z
+
+> The connect method can be called multiple times by stimulus. See also the stimulus docs about [lifecycle callbacks](https://stimulus.hotwired.dev/reference/lifecycle-callbacks#reconnection):
+
+Only after beeing _deconnected_. So if the Chart.js instance is destroyed this would not create problem right ?
+
+---------------------------------------------------------------------------
+
+by Shadow-Devil at 2024-07-17T21:52:52Z
+
+Hm, so calling `destroy` in the `disconnect` works for my scenario, but now it has a little "stutter" since it stops the rendering and rerenders it again.
+I think a better solution would be to not use `connect` but `initialize` and do all of the setup in there. This would only be called once and we don't have this creation/deletion problem. ([Docs](https://stimulus.hotwired.dev/reference/lifecycle-callbacks#methods))
+What do you think?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-07-17T22:36:41Z
+
+In your case i understand this can be not perfect...  (but still don't understand why your framework deconnect then reconnect div on page load)
+
+But to me, it seems logical to use connect there, _because_ it can happen multiple times.
+
+That makes me think.... is this not the reason there is no disconnect: https://ux.symfony.com/demos/live-component/chartjs
+
+Would this demo still work if we did disconnect every time? (genuine question).
+
+Let's continue tomorrow !
+
+---------------------------------------------------------------------------
+
+by Shadow-Devil at 2025-01-03T10:40:45Z
+
+> Would this demo still work if we did disconnect every time? (genuine question).
+
+Pretty sure yes, since otherwise you would run into the same issue as me.
+There is an overall logic error IMO: Stimulus can call the `connect` method multiple times, but the code inside it will throw an error if it is called a second time (without destroying the chartjs instance in between).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-01-04T05:07:57Z
+
+You're right @Shadow-Devil!
+
+I'm very sorry this MR took so long.
+
+Made a minor comment, let's fix this, please rebase + add an entry in the CHANGELOG.md file (next release will be **2.23**)
+... and let's merge this :)
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-01-04T21:55:32Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/2.x/src/Chartjs/assets/dist"><b>Chartjs</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/2.x/src/Chartjs/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>280 B</code>
+                    / <code>211 B</code>
+                </td><td>
+                    <code>304 B</code><sup>+9% 📈</sup>
+                    / <code>218 B</code><sup>+3% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/2.x/src/Chartjs/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>2.23 kB</code>
+                    / <code>771 B</code>
+                </td><td>
+                    <code>2.41 kB</code><sup>+8% 📈</sup>
+                    / <code>799 B</code><sup>+4% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Shadow-Devil at 2025-01-04T21:56:43Z
+
+Hi @smnandre I rebased the PR, added your review suggestion and added an entry in the CHANGELOG file.
+
+Please let me know if there is anything else you need from me :)
