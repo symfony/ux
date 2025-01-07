@@ -30,14 +30,14 @@ class PropsTokenParser extends AbstractTokenParser
         $values = [];
         while (!$stream->nextIf(Token::BLOCK_END_TYPE)) {
             $name = $stream->expect(Token::NAME_TYPE)->getValue();
-            
+
             if ($stream->nextIf(Token::OPERATOR_TYPE, '=') || $stream->nextIf(Token::PUNCTUATION_TYPE, ':')) {
                 $values[$name] = $this->parser->getExpressionParser()->parseExpression();
             }
-            
+
             $names[] = $name;
 
-            if (!$stream->nextIf(Token::PUNCTUATION_TYPE) && !$stream->nextIf(Token::PUNCTUATION_TYPE, ':')) {
+            if (!$stream->nextIf(Token::PUNCTUATION_TYPE, ',')) {
                 $stream->expect(Token::BLOCK_END_TYPE);
                 break;
             }
