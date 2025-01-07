@@ -261,14 +261,13 @@ trait ComponentWithFormTrait
                 continue;
             }
 
-            if (\array_key_exists('choices', $child->vars)
+            if (\array_key_exists('choices', $child->vars) && $child->vars['choices']
                 && $child->vars['required']
                 && !$child->vars['disabled']
                 && !$child->vars['value']
-                && (false === $child->vars['placeholder'] || null === $child->vars['placeholder'])
-                && !$child->vars['multiple']
-                && !$child->vars['expanded']
-                && $child->vars['choices']
+                && \array_key_exists('placeholder', $child->vars) && (false === $child->vars['placeholder'] || null === $child->vars['placeholder'])
+                && \array_key_exists('multiple', $child->vars) && !$child->vars['multiple']
+                && \array_key_exists('expanded', $child->vars) && !$child->vars['expanded']
             ) {
                 if (null !== $firstKey = array_key_first($child->vars['choices'])) {
                     $values[$name] = $child->vars['choices'][$firstKey]->value ?? null;
