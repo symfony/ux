@@ -75,6 +75,13 @@ class ComponentPropsParserTest extends KernelTestCase
             ],
             ' foo ',
         ];
+        yield 'One Prop with value comma using : as value separator' => [
+            '{% props propA:123 %} foo ',
+            [
+                'propA' => 123,
+            ],
+            ' foo ',
+        ];
         yield 'One Prop without value' => [
             '{% props propA %} foo ',
             [
@@ -98,6 +105,14 @@ class ComponentPropsParserTest extends KernelTestCase
             ],
             ' foo ',
         ];
+        yield 'All Props with values comma using : as value separator' => [
+            '{% props propA:1, propB:2 %} foo ',
+            [
+                'propA' => 1,
+                'propB' => 2,
+            ],
+            ' foo ',
+        ];
         yield 'Some Props with values' => [
             '{% props propA, propB=2 %} foo ',
             [
@@ -106,8 +121,23 @@ class ComponentPropsParserTest extends KernelTestCase
             ],
             ' foo ',
         ];
+        yield 'Some Props with values comma using : as value separator' => [
+            '{% props propA, propB:2 %} foo ',
+            [
+                'propA' => null,
+                'propB' => 2,
+            ],
+            ' foo ',
+        ];
         yield 'One Prop with value and trailing comma' => [
             '{% props propA=123, %} foo ',
+            [
+                'propA' => 123,
+            ],
+            ' foo ',
+        ];
+        yield 'One Prop with value and trailing comma using : as value separator' => [
+            '{% props propA:123, %} foo ',
             [
                 'propA' => 123,
             ],
@@ -136,8 +166,24 @@ class ComponentPropsParserTest extends KernelTestCase
             ],
             ' foo ',
         ];
+        yield 'All Props with values and trailing comma using : as value separator' => [
+            '{% props propA:1, propB:2, %} foo ',
+            [
+                'propA' => 1,
+                'propB' => 2,
+            ],
+            ' foo ',
+        ];
         yield 'Some Props with values and trailing comma' => [
             '{% props propA, propB=2, %} foo ',
+            [
+                'propA' => null,
+                'propB' => 2,
+            ],
+            ' foo ',
+        ];
+        yield 'Some Props with values and trailing comma using : as value separator' => [
+            '{% props propA, propB:2, %} foo ',
             [
                 'propA' => null,
                 'propB' => 2,

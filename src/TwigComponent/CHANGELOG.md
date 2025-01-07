@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.23.0
+
+-  Allow to use `:` as value separator in `props` tag
+
 ## 2.20.0
 
 -  Add Anonymous Component support for 3rd-party bundles #2019
