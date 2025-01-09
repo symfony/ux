@@ -300,48 +300,30 @@ export default class Component {
 
         this.backendRequest.promise.then(async (response) => {
             const backendResponse = new BackendResponse(response);
+            const headers = backendResponse.response.headers;
 
             // clear sent files inputs
             for (const input of Object.values(this.pendingFiles)) {
                 input.value = '';
             }
 
-            const headers = backendResponse.response.headers;
-            if (headers.get('X-Live-Download')) {
-                const headerContentDisposition = headers.get('Content-Disposition');
-                if (
-                    !headerContentDisposition
-                    || !(headerContentDisposition?.includes('attachment') || headerContentDisposition?.includes('inline')) 
-                    || !headerContentDisposition?.includes('filename=')
-                ) {
-                    throw new Error('Invalid LiveDownload response');
-                }
-
-                const fileSize = Number.parseInt(headers.get('Content-Length') || '0');
-                if (fileSize > 10000000) {
-                    throw new Error('File is too large to download (10MB limit)');
-                }
-
-                const fileName = headerContentDisposition.split('filename=')[1];
-                if (!fileName) {
-                    throw new Error('No filename found in Content-Disposition header');
-                }
-
+            // File Download
+            const contentDisposition = headers.get('Content-Disposition');
+            const fileResponse = contentDisposition?.match(/^(attachment|inline).*filename="?([^;]+)"?/);
+            if (fileResponse) {
                 const blob = await backendResponse.getBlob();
-                const link = Object.assign(window.document.createElement('a'), {
-                    target: '_blank',
+                const link = Object.assign(document.createElement('a'), {
+                    href: URL.createObjectURL(blob),
+                    download: fileResponse[2],
                     style: 'display: none',
-                    href: window.URL.createObjectURL(blob),
-                    download: fileName,
+                    target: '_blank',
                 });
-                this.element.appendChild(link);
+                document.body.appendChild(link);
                 link.click();
-                this.element.removeChild(link);
+                setTimeout(() => document.body.removeChild(link), 75);
 
                 this.backendRequest = null;
                 thisPromiseResolve(backendResponse);
-
-                // do we already have another request pending?
                 if (this.isRequestPending) {
                     this.isRequestPending = false;
                     this.performRequest();
