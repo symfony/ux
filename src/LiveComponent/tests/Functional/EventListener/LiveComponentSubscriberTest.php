@@ -349,7 +349,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                 'body' => ['data' => json_encode(['props' => $dehydrated->getProps()])],
             ])
             ->assertStatus(200)
-            ->assertHeaderContains('X-Live-Download', '1')
             ->assertHeaderContains('Content-Type', 'application/octet-stream')
             ->assertHeaderContains('Content-Disposition', 'attachment')
             ->assertHeaderEquals('Content-Length', '21')
@@ -379,7 +378,6 @@ final class LiveComponentSubscriberTest extends KernelTestCase
                 ],
             ])
             ->assertStatus(200)
-            ->assertHeaderContains('X-Live-Download', '1')
             ->assertHeaderContains('Content-Type', 'application/octet-stream')
             ->assertHeaderContains('Content-Disposition', 'attachment')
             ->assertHeaderEquals('Content-Length', '21')

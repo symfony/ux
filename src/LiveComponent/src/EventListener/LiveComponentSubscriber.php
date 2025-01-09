@@ -44,9 +44,7 @@ use Symfony\UX\TwigComponent\MountedComponent;
 class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscriberInterface
 {
     private const HTML_CONTENT_TYPE = 'application/vnd.live-component+html';
-
     private const REDIRECT_HEADER = 'X-Live-Redirect';
-    private const DOWNLOAD_HEADER = 'X-Live-Download';
 
     public function __construct(
         private ContainerInterface $container,
@@ -256,13 +254,6 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             $event->setResponse(new Response());
 
             return;
-        }
-
-        if ($event->getControllerResult() instanceof BinaryFileResponse) {
-            if (!$event->getControllerResult()->headers->has(self::DOWNLOAD_HEADER)) {
-
-            }
-            $event->setResponse(new Response());
         }
 
         $event->setResponse($this->createResponse($request->attributes->get('_mounted_component')));
