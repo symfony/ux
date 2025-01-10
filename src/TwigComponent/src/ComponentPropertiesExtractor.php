@@ -23,7 +23,7 @@ final class ComponentPropertiesExtractor
     }
 
     /**
-     * @return array<string, string>
+     * @return array<array{display: string, name: string, type: string, default: mixed}>
      */
     public function getComponentProperties(ComponentMetadata $medata)
     {
@@ -35,7 +35,7 @@ final class ComponentPropertiesExtractor
     }
 
     /**
-     * @return array<string, string>
+     * @return array<array{display: string, name: string, type: string, default: mixed}>
      */
     private function getNonAnonymousComponentProperties(ComponentMetadata $metadata): array
     {
@@ -81,7 +81,7 @@ final class ComponentPropertiesExtractor
     /**
      * Extract properties from {% props %} tag in anonymous template.
      *
-     * @return array<string, string>
+     * @return array<array{display: string, name: string, type: string, default: mixed}>
      */
     private function getAnonymousComponentProperties(ComponentMetadata $metadata): array
     {
