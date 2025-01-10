@@ -32,6 +32,7 @@ use Symfony\UX\TwigComponent\CacheWarmer\TwigComponentCacheWarmer;
 use Symfony\UX\TwigComponent\Command\TwigComponentDebugCommand;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentProperties;
+use Symfony\UX\TwigComponent\ComponentPropertiesExtractor;
 use Symfony\UX\TwigComponent\ComponentRenderer;
 use Symfony\UX\TwigComponent\ComponentRendererInterface;
 use Symfony\UX\TwigComponent\ComponentStack;
@@ -134,6 +135,11 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
             ->setDecoratedService(new Reference('twig.configurator.environment'))
             ->setArguments([new Reference('ux.twig_component.twig.environment_configurator.inner')]);
 
+        $container->register('ux.twig_component.extractor_properties', ComponentPropertiesExtractor::class)
+            ->setArguments([
+                new Reference('twig'),
+            ]);
+
         $container->register('ux.twig_component.command.debug', TwigComponentDebugCommand::class)
             ->setArguments([
                 new Parameter('twig.default_path'),
@@ -141,6 +147,7 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                 new Reference('twig'),
                 new AbstractArgument(\sprintf('Added in %s.', TwigComponentPass::class)),
                 $config['anonymous_template_directory'],
+                new Reference('ux.twig_component.extractor_properties'),
             ])
             ->addTag('console.command')
         ;

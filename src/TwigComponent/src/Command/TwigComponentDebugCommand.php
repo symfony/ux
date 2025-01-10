@@ -21,10 +21,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Finder\Finder;
-use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentMetadata;
-use Symfony\UX\TwigComponent\Twig\PropsNode;
+use Symfony\UX\TwigComponent\ComponentPropertiesExtractor;
 use Twig\Environment;
 use Twig\Loader\FilesystemLoader;
 
@@ -32,6 +31,7 @@ use Twig\Loader\FilesystemLoader;
 class TwigComponentDebugCommand extends Command
 {
     private readonly string $anonymousDirectory;
+    private readonly ComponentPropertiesExtractor $componentPropertiesExtractor;
 
     public function __construct(
         private string $twigTemplatesPath,
@@ -39,9 +39,11 @@ class TwigComponentDebugCommand extends Command
         private Environment $twig,
         private readonly array $componentClassMap,
         ?string $anonymousDirectory = null,
+        ?ComponentPropertiesExtractor $componentPropertiesExtractor = null,
     ) {
         parent::__construct();
         $this->anonymousDirectory = $anonymousDirectory ?? 'components';
+        $this->componentPropertiesExtractor = $componentPropertiesExtractor ?? new ComponentPropertiesExtractor($this->twig);
     }
 
     protected function configure(): void
@@ -212,12 +214,18 @@ EOF
             ['Template', $metadata->getTemplate()],
         ]);
 
+        $properties = $this->componentPropertiesExtractor->getComponentProperties($metadata);
+        $propertiesAsArrayOfStrings = array_filter(array_map(
+            fn (array $property) => $property['display'],
+            $properties,
+        ));
+
         // Anonymous Component
         if ($metadata->isAnonymous()) {
             $table->addRows([
                 ['Type', '<comment>Anonymous</comment>'],
                 new TableSeparator(),
-                ['Properties', implode("\n", $this->getAnonymousComponentProperties($metadata))],
+                ['Properties', implode("\n", $propertiesAsArrayOfStrings)],
             ]);
             $table->render();
 
@@ -229,7 +237,7 @@ EOF
             new TableSeparator(),
             // ['Attributes Var', $metadata->get('attributes_var')],
             ['Public Props', $metadata->isPublicPropsExposed() ? 'Yes' : 'No'],
-            ['Properties', implode("\n", $this->getComponentProperties($metadata))],
+            ['Properties', implode("\n", $propertiesAsArrayOfStrings)],
         ]);
 
         $logMethod = function (\ReflectionMethod $m) {
@@ -279,81 +287,5 @@ EOF
             ]);
         }
         $table->render();
-    }
-
-    /**
-     * @return array<string, string>
-     */
-    private function getComponentProperties(ComponentMetadata $metadata): array
-    {
-        $properties = [];
-        $reflectionClass = new \ReflectionClass($metadata->getClass());
-        foreach ($reflectionClass->getProperties() as $property) {
-            $propertyName = $property->getName();
-
-            if ($metadata->isPublicPropsExposed() && $property->isPublic()) {
-                $type = $property->getType();
-                if ($type instanceof \ReflectionNamedType) {
-                    $typeName = $type->getName();
-                } else {
-                    $typeName = (string) $type;
-                }
-                $value = $property->getDefaultValue();
-                $propertyDisplay = $typeName.' $'.$propertyName.(null !== $value ? ' = '.json_encode($value) : '');
-                $properties[$property->name] = $propertyDisplay;
-            }
-
-            foreach ($property->getAttributes(ExposeInTemplate::class) as $exposeAttribute) {
-                /** @var ExposeInTemplate $attribute */
-                $attribute = $exposeAttribute->newInstance();
-                $properties[$property->name] = $attribute->name ?? $property->name;
-            }
-        }
-
-        return $properties;
-    }
-
-    /**
-     * Extract properties from {% props %} tag in anonymous template.
-     *
-     * @return array<string, string>
-     */
-    private function getAnonymousComponentProperties(ComponentMetadata $metadata): array
-    {
-        $source = $this->twig->load($metadata->getTemplate())->getSourceContext();
-        $tokenStream = $this->twig->tokenize($source);
-        $moduleNode = $this->twig->parse($tokenStream);
-
-        $propsNode = null;
-        foreach ($moduleNode->getNode('body') as $bodyNode) {
-            foreach ($bodyNode as $node) {
-                if (PropsNode::class === $node::class) {
-                    $propsNode = $node;
-                    break 2;
-                }
-            }
-        }
-        if (!$propsNode instanceof PropsNode) {
-            return [];
-        }
-
-        $propertyNames = $propsNode->getAttribute('names');
-        $properties = array_combine($propertyNames, $propertyNames);
-        foreach ($propertyNames as $propName) {
-            if ($propsNode->hasNode($propName)
-                && ($valueNode = $propsNode->getNode($propName))
-                && $valueNode->hasAttribute('value')
-            ) {
-                $value = $valueNode->getAttribute('value');
-                if (\is_bool($value)) {
-                    $value = $value ? 'true' : 'false';
-                } else {
-                    $value = json_encode($value);
-                }
-                $properties[$propName] = $propName.' = '.$value;
-            }
-        }
-
-        return $properties;
     }
 }

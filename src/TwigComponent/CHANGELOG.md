@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.23.0
+
+- Add `ComponentPropertiesExtractor` to extract component properties from a Twig component
+
 ## 2.20.0
 
 -  Add Anonymous Component support for 3rd-party bundles #2019
