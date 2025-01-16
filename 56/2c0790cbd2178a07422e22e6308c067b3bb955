@@ -1,0 +1,76 @@
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2025-01-10T16:40:39Z
+
+You are right. But at the same time, a few years ago it was common to see these image blurs while they were loading. Today, I can't remember the last time I saw one.
+
+Maybe this is my own bubble so I'm asking: do you know any big and/or popular site that still uses this technique? Thanks.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-01-10T16:51:26Z
+
+> Maybe this is my own bubble so I'm asking: do you know any big and/or popular site that still uses this technique? Thanks.
+
+...  not at all! 😅
+
+Apparently, Mastodon used to use it (https://github.com/woltapp/blurhash#users), but I don't see where.
+
+Anyway, to mee BlurHash was always more a "smartphone" thing than a "web" thing.
+
+At least, maybe we can reword your suggestion by telling that using UX LazyImage is not recommended for performances but only for user experience?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-01-10T18:45:35Z
+
+I'm for deprecating the package.
+
+Starting from the documentation here:
+
+> It provides two key features:
+>
+>    a Stimulus controller to load lazily heavy images, with a placeholder
+>   a [BlurHash implementation](https://blurha.sh/) to create data-uri thumbnails for images
+
+## Stimulus controller
+
+This part is obselete today.
+
+The source HTML we suggest is the following
+
+```html
+<img
+        src="[data:image/jpeg;base64,/9j/4AAQSkZJ[...]"
+        data-controller="symfony--ux-lazy-image--lazy-image"
+        data-symfony--ux-lazy-image--lazy-image-src-value="/assets/images/legos-FTSkITj.jpg"
+        alt="A blurhash image that is replaced by the real image on load"
+        width="578"
+        height="275"
+        style="border-radius: 5px;"
+    >
+```
+
+What was a good idea years back is now...  less than good. On many levels (SEO, accessibility) but it's above all very counter-productive, working against the browser and its asset priority algorithms, forcing it to render one image then a second... without using all the srcset / dimension / formats optimizations.
+
+## Blurhash
+
+I can understand the visual impact on specific use cases. But this is not about loading then, it's about visual effect, style, mood.
+
+Technically, a CSS/SVG radial gradient with a blur will give you the same result, without the need for complex image computations, cache, heavy pages. It requires 2 CSS vars per "card" (worst case scenario).
+
+And no activity for a while on the most popular blurhash repository: https://github.com/woltapp/blurhash .. probably a good sign to leave it to the past :)
+
+Personal conclusion: it's **more than time** to deprecate the package (or at least publish a warning on it a suggested by @javiereguiluz  here 👍 )
+
+---
+
+If only we had more hands.... 🙏   There is so much we could do about images, CSS, SVG...  to have a major impact on performances, and UX...
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-01-16T00:32:11Z
+
+Well, this is right on time : https://developer.mozilla.org/en-US/blog/fix-image-lcp/#resource_load_delay
+
+LGTM, but can we discuss then something a bit more ... radical ?
