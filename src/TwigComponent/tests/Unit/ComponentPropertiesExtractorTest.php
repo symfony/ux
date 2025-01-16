@@ -16,6 +16,9 @@ use Symfony\UX\TwigComponent\ComponentFactory;
 use Symfony\UX\TwigComponent\ComponentPropertiesExtractor;
 use Twig\Environment;
 
+/**
+ * @author Jean-François Lépine <lepinejeanfrancois@gmail.com>
+ */
 class ComponentPropertiesExtractorTest extends KernelTestCase
 {
     public function testPropsAreFoundInTwigComponent(): void

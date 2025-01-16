@@ -15,6 +15,9 @@ use Symfony\UX\TwigComponent\Attribute\ExposeInTemplate;
 use Symfony\UX\TwigComponent\Twig\PropsNode;
 use Twig\Environment;
 
+/**
+ * @author Jean-François Lépine <lepinejeanfrancois@gmail.com>
+ */
 final class ComponentPropertiesExtractor
 {
     public function __construct(
