@@ -1,0 +1,63 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-12-22T02:40:41Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/stimulus/lazy-loader/src/StimulusBundle/assets/dist"><b>StimulusBundle</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/stimulus/lazy-loader/src/StimulusBundle/assets/dist/loader.js"><code>loader.js</code></a></td>
+            <td>
+                    <code>3.2 kB</code>
+                    / <code>910 B</code>
+                </td><td>
+                    <code>3.8 kB</code><sup>+19% 📈</sup>
+                    / <code>1.01 kB</code><sup>+14% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-22T10:05:56Z
+
+> I would really like some feedback / tests IRL (especially with Webpack i'm not used to)
+
+I will try to find some time to rebuild a Symfony + Encore app, but by reading your changes it looks fine to me (feel free to reping me if necessary)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-22T20:24:07Z
+
+@MatTheCat  ? 👼
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-22T21:42:00Z
+
+I'm testing
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-22T21:45:17Z
+
+Well... I've just realized, but to use Stimulus in a Symfony App with Webpack Encore, we use the https://github.com/symfony/stimulus-bridge ... which is not in this repository (and so not modified by this PR) 😅
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-22T23:03:42Z
+
+Well.... let me tell you i have no intention of coding in the Bridge hahaha
+
+(i'll have a look but the lazy loading is done differently if i remember correctly)
+
+---------------------------------------------------------------------------
+
+by MatTheCat at 2024-12-23T08:39:03Z
+
+I’ve got nothing to test then? :thinking:
