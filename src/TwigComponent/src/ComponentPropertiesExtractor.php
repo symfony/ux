@@ -40,7 +40,7 @@ final class ComponentPropertiesExtractor
     }
 
     /**
-     * @return array<array{display: string, name: string, type: string, default: mixed}>
+     * @return array<string, array{display: string, name: string, type: string, default: mixed}>
      */
     private function getNonAnonymousComponentProperties(ComponentMetadata $metadata): array
     {
