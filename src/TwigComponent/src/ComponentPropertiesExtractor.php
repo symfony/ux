@@ -28,7 +28,7 @@ final class ComponentPropertiesExtractor
     /**
      * @return array<array{display: string, name: string, type: string, default: mixed}>
      */
-    public function getComponentProperties(ComponentMetadata $medata)
+    public function getComponentProperties(ComponentMetadata $metadata): array
     {
         if ($medata->isAnonymous()) {
             return $this->getAnonymousComponentProperties($medata);
