@@ -17,7 +17,7 @@ use Twig\Environment;
 
 /**
  * @author Jean-François Lépine <lepinejeanfrancois@gmail.com>
- * 
+ *
  * @experimental This class is not covered by the BC promise yet
  */
 final class ComponentPropertiesExtractor
@@ -28,17 +28,19 @@ final class ComponentPropertiesExtractor
     }
 
     /**
-     * Returns a list of properties from a Component. 
+     * Returns a list of properties from a Component.
      *
      * Warning: We do not recommend using this method at runtime, as it is rather slow.
+     *
+     * @return array<string, array{display: string, name: string, type: string, default: mixed}>
      */
     public function getComponentProperties(ComponentMetadata $metadata): array
     {
-        if ($medata->isAnonymous()) {
-            return $this->getAnonymousComponentProperties($medata);
+        if ($metadata->isAnonymous()) {
+            return $this->getAnonymousComponentProperties($metadata);
         }
 
-        return $this->getNonAnonymousComponentProperties($medata);
+        return $this->getNonAnonymousComponentProperties($metadata);
     }
 
     /**
