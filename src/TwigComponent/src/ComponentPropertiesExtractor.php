@@ -17,6 +17,8 @@ use Twig\Environment;
 
 /**
  * @author Jean-François Lépine <lepinejeanfrancois@gmail.com>
+ * 
+ * @experimental This class is not covered by the BC promise yet
  */
 final class ComponentPropertiesExtractor
 {
