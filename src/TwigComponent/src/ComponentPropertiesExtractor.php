@@ -26,7 +26,9 @@ final class ComponentPropertiesExtractor
     }
 
     /**
-     * @return array<array{display: string, name: string, type: string, default: mixed}>
+     * Returns a list of properties from a Component. 
+     *
+     * Warning: We do not recommend using this method at runtime, as it is rather slow.
      */
     public function getComponentProperties(ComponentMetadata $metadata): array
     {
