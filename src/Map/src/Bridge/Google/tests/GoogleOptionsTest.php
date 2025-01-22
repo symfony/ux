@@ -54,6 +54,7 @@ class GoogleOptionsTest extends TestCase
             mapId: 'abcdefgh12345678',
             gestureHandling: GestureHandling::GREEDY,
             backgroundColor: '#f00',
+            maxZoom: 10,
             disableDoubleClickZoom: true,
             zoomControl: false,
             mapTypeControl: false,
@@ -65,6 +66,7 @@ class GoogleOptionsTest extends TestCase
             'mapId' => 'abcdefgh12345678',
             'gestureHandling' => GestureHandling::GREEDY->value,
             'backgroundColor' => '#f00',
+            'maxZoom' => 10,
             'disableDoubleClickZoom' => true,
         ], $options->toArray());
 
