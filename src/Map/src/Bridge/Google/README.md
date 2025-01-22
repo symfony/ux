@@ -54,6 +54,7 @@ $googleOptions = (new GoogleOptions())
     
     ->gestureHandling(GestureHandling::GREEDY)
     ->backgroundColor('#f00')
+    ->maxZoom(10)
     ->doubleClickZoom(true)
     ->zoomControlOptions(new ZoomControlOptions(
         position: ControlPosition::BLOCK_START_INLINE_END,

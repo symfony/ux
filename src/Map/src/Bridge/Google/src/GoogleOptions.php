@@ -27,6 +27,7 @@ final class GoogleOptions implements MapOptionsInterface
         private ?string $mapId = null,
         private GestureHandling $gestureHandling = GestureHandling::AUTO,
         private ?string $backgroundColor = null,
+        private ?int $maxZoom = null,
         private bool $disableDoubleClickZoom = false,
         private bool $zoomControl = true,
         private ZoomControlOptions $zoomControlOptions = new ZoomControlOptions(),
@@ -54,6 +55,13 @@ final class GoogleOptions implements MapOptionsInterface
     public function gestureHandling(GestureHandling $gestureHandling): self
     {
         $this->gestureHandling = $gestureHandling;
+
+        return $this;
+    }
+
+    public function maxZoom(?int $maxZoom): self
+    {
+        $this->maxZoom = $maxZoom;
 
         return $this;
     }
@@ -173,6 +181,7 @@ final class GoogleOptions implements MapOptionsInterface
             'mapId' => $this->mapId,
             'gestureHandling' => $this->gestureHandling->value,
             'backgroundColor' => $this->backgroundColor,
+            'maxZoom' => $this->maxZoom,
             'disableDoubleClickZoom' => $this->disableDoubleClickZoom,
         ];
 

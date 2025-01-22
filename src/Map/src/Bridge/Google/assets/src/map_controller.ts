@@ -23,6 +23,7 @@ type MapOptions = Pick<
     | 'mapId'
     | 'gestureHandling'
     | 'backgroundColor'
+    | 'maxZoom'
     | 'disableDoubleClickZoom'
     | 'zoomControl'
     | 'zoomControlOptions'

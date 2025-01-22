@@ -27,6 +27,7 @@ class GoogleOptionsTest extends TestCase
             'mapId' => null,
             'gestureHandling' => 'auto',
             'backgroundColor' => null,
+            'maxZoom' => null,
             'disableDoubleClickZoom' => false,
             'zoomControlOptions' => [
                 'position' => ControlPosition::INLINE_END_BLOCK_END->value,
