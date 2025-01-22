@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## Unreleased
+
+- Add support for the maxZoom option
+
 ## 2.22
 
 -   Add support for configuring a default Map ID
