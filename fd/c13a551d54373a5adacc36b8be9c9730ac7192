@@ -1,0 +1,119 @@
+---------------------------------------------------------------------------
+
+by zefyx at 2025-01-20T08:27:49Z
+
+I'm not sure to understand the RST Linter failing.
+Executing locally the command ``docker run --rm -it -e DOCS_DIR='/docs' -v ${PWD}:/docs  oskarstark/doctor-rst -vvv
+`` as mentioned in the [CONTRIBUTING.md#working-on-documentation](https://github.com/symfony/ux/blob/2.x/CONTRIBUTING.md#working-on-documentation) didn't trigger any error.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-01-20T22:33:11Z
+
+Hi, here some explanations:
+1. for the error `Please ensure title "Downloading files" and underline length are matching`, it means that the title `Downloading files` and the underline (usually `--------(...)`, or `~~~~~~~(...)`) does not have the same length
+2. for the error `Please add 4 spaces for every indention.`, it looks like there is a space missing for each lines you added in the code blocks.
+
+For the `docker run ...` from the documentation, I believe you must adjust the `DOCS_DIR` env variable to point to `src/LiveComponent/doc`.
+
+---------------------------------------------------------------------------
+
+by zefyx at 2025-01-21T07:16:11Z
+
+Hi @kocal and thanks.
+
+I don't want to pollute this PR with a non related topic but before fixing the `index.rst` file for the errors triggered by the github RST Linter check, here is what the local command was outputting before and after the fix.
+
+`docker run --rm -it -e DOCS_DIR='/symfony-ux' -v ${PWD}:/symfony-ux  oskarstark/doctor-rst -vvv`
+
+```
+> Checking Box requirements:
+  ✔ This application requires a PHP version matching "^8.3".
+  ✔ This application requires the extension "zlib".
+  ✔ This application requires the extension "ctype".
+  ✔ The package "webmozart/assert" requires the extension "ctype".
+  ✔ This application requires the extension "iconv".
+  ✔ The package "symfony/dependency-injection" conflicts with the extension "psr".
+  ✔ The package "symfony/service-contracts" conflicts with the extension "psr".
+
+ [OK] Your system is ready to run the application.
+
+ Analyze *.rst(.inc) files in: /symfony-ux
+ Used config file:             /symfony-ux/.doctor-rst.yaml
+
+Analyze /symfony-ux/src/Autocomplete/doc/index.rst
+Analyze /symfony-ux/src/Chartjs/doc/index.rst
+Analyze /symfony-ux/src/Cropperjs/doc/index.rst
+Analyze /symfony-ux/src/Dropzone/doc/index.rst
+Analyze /symfony-ux/src/Icons/doc/index.rst
+Analyze /symfony-ux/src/LazyImage/doc/index.rst
+Analyze /symfony-ux/src/LiveComponent/doc/index.rst
+Analyze /symfony-ux/src/Map/doc/index.rst
+Analyze /symfony-ux/src/Notify/doc/index.rst
+Analyze /symfony-ux/src/React/doc/index.rst
+Analyze /symfony-ux/src/StimulusBundle/doc/index.rst
+Analyze /symfony-ux/src/Svelte/doc/index.rst
+Analyze /symfony-ux/src/Swup/doc/index.rst
+Analyze /symfony-ux/src/TogglePassword/doc/index.rst
+Analyze /symfony-ux/src/Translator/doc/index.rst
+Analyze /symfony-ux/src/Turbo/doc/index.rst
+Analyze /symfony-ux/src/TwigComponent/doc/index.rst
+Analyze /symfony-ux/src/Typed/doc/index.rst
+Analyze /symfony-ux/src/Vue/doc/index.rst
+src/Autocomplete/doc/index.rst ✔
+
+src/Chartjs/doc/index.rst ✔
+
+src/Cropperjs/doc/index.rst ✔
+
+src/Dropzone/doc/index.rst ✔
+
+src/Icons/doc/index.rst ✔
+
+src/LazyImage/doc/index.rst ✔
+
+src/LiveComponent/doc/index.rst ✔
+
+src/Map/doc/index.rst ✔
+
+src/Notify/doc/index.rst ✔
+
+src/React/doc/index.rst ✔
+
+src/StimulusBundle/doc/index.rst ✔
+
+src/Svelte/doc/index.rst ✔
+
+src/Swup/doc/index.rst ✔
+
+src/TogglePassword/doc/index.rst ✔
+
+src/Translator/doc/index.rst ✔
+
+src/Turbo/doc/index.rst ✔
+
+src/TwigComponent/doc/index.rst ✔
+
+src/Typed/doc/index.rst ✔
+
+src/Vue/doc/index.rst ✔
+
+ [OK] All files are valid!
+```
+
+For testing purpose in order to see if the ``.doctor-rst.yaml`` was correctly loaded and the *.rst file where checked,  when uncommenting some currently commented rules in the  ``.doctor-rst.yaml`` the checks failed "as expected".
+So, i still don't understand why the rules ``underline length are matching`` and ``4 spaces for every indention`` where not triggered locally.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-01-21T10:51:46Z
+
+Status: Needs Work
+
+---------------------------------------------------------------------------
+
+by zefyx at 2025-01-23T11:54:07Z
+
+Sorry for missing the unrelated modification introduced with the commit 99d3d21
+the reStructuredText formatter of the IDE automatically removed the 2 white spaces when saving.
+_(consistent but not related to the current PR)_
