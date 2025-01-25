@@ -3715,6 +3715,11 @@ Debugging Components
 Need to list or debug some component issues.
 The `Twig Component debug command`_ can help you.
 
+To debug your PHP code, you can inject a `private LoggerInterface $logger` in your `__construct`.
+Then you can use `$this->logger->debug('Message', ['var' => $var]);` and see the output in `var/log/dev.log`.
+`dump` won't display anything anywhere (not even the debug toolbar).
+`dd` will display in your browser, but will also deadlock your component - you cannot dismiss it and continue working.
+
 Test Helper
 -----------
 
