@@ -1,0 +1,47 @@
+---------------------------------------------------------------------------
+
+by maciazek at 2025-01-09T10:37:11Z
+
+I can confirm that this patch resolved my specific case with custom form type and "choices" option. Thank you.
+
+---------------------------------------------------------------------------
+
+by norkunas at 2025-01-09T13:34:08Z
+
+Something is more going on here.
+I was getting `An exception has been thrown during the rendering of a template ("Warning: Undefined array key "expanded"").` and so I've tried this patch, then started to get:
+`An exception has been thrown during the rendering of a template ("Warning: Undefined array key """).`
+
+While #2490 works for me
+
+---------------------------------------------------------------------------
+
+by maciazek at 2025-01-09T17:24:59Z
+
+> Something is more going on here. I was getting `An exception has been thrown during the rendering of a template ("Warning: Undefined array key "expanded"").` and so I've tried this patch, then started to get: `An exception has been thrown during the rendering of a template ("Warning: Undefined array key """).`
+>
+> While #2490 works for me
+
+I think it could happen when form has some ChoiceType field, which has 'choices' set as empty array. In that case
+https://github.com/smnandre/ux/blob/cd353fc7a0689b9cee5da252f977acb420176d96/src/LiveComponent/src/ComponentWithFormTrait.php#L269
+returns true, and then the error itself comes from:
+https://github.com/smnandre/ux/blob/cd353fc7a0689b9cee5da252f977acb420176d96/src/LiveComponent/src/ComponentWithFormTrait.php#L284
+
+Seems that some additional check is needed (if 'choices' is array and if it is not empty?)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-01-10T04:26:08Z
+
+Entirely my fault here.
+
+As you can see here i checked for the "choices" existence.
+https://github.com/smnandre/ux/blob/cd353fc7a0689b9cee5da252f977acb420176d96/src/LiveComponent/src/ComponentWithFormTrait.php#L275C33-L275C34
+
+I decided later on to "optimize" and moved the check first, adding an isset in the operation when the key was not defined.... and losing then my original goal: ensure there is one value.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-01-10T04:38:37Z
+
+This should work better now. Thank you very much to both of you.
