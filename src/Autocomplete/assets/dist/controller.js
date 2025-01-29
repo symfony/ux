@@ -344,8 +344,8 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
         optgroupField: 'group_by',
         score: (search) => (item) => 1,
         render: {
-            option: (item) => `<div>${item[labelField]}</div>`,
-            item: (item) => `<div>${item[labelField]}</div>`,
+            option: (item, escapeData) => `<div>${escapeData(item[labelField])}</div>`,
+            item: (item, escapeData) => `<div>${escapeData(item[labelField])}</div>`,
             loading_more: () => {
                 return `<div class="loading-more-results">${this.loadingMoreTextValue}</div>`;
             },

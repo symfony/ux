@@ -296,8 +296,8 @@ export default class extends Controller {
             // avoid extra filtering after results are returned
             score: (search: string) => (item: any) => 1,
             render: {
-                option: (item: any) => `<div>${item[labelField]}</div>`,
-                item: (item: any) => `<div>${item[labelField]}</div>`,
+                option: (item: any, escapeData: typeof escape_html) => `<div>${escapeData(item[labelField])}</div>`,
+                item: (item: any, escapeData: typeof escape_html) => `<div>${escapeData(item[labelField])}</div>`,
                 loading_more: (): string => {
                     return `<div class="loading-more-results">${this.loadingMoreTextValue}</div>`;
                 },
