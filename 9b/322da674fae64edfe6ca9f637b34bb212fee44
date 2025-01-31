@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-01-30T16:44:26Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/symfony/ux/tree/fix-live-component-proxy-attr/src/LiveComponent/assets/dist"><b>LiveComponent</b></a></td></tr><tr>
+                <td><a href="https://github.com/symfony/ux/blob/fix-live-component-proxy-attr/src/LiveComponent/assets/dist/live_controller.js"><code>live_controller.js</code></a></td>
+            <td>
+                    <code>119.92 kB</code>
+                    / <code>23.37 kB</code>
+                </td><td>
+                    <code>120 kB</code><sup>0%</sup>
+                    / <code>23.4 kB</code><sup>0%</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-01-31T00:35:08Z
+
+Thank you @jwage  for the time spent to assist / explain what happened.
+
+@Kocal  🙇  you'be been a legend today
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-01-31T08:30:41Z
+
+(Added missing changelog)
