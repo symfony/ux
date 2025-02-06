@@ -1,0 +1,115 @@
+---------------------------------------------------------------------------
+
+by J-Ben87 at 2025-01-31T08:46:37Z
+
+I'm not sure why I am getting failures related to "direct deprecation notices" on [LiveComponent] (see https://github.com/symfony/ux/actions/runs/13069237861/job/36467092283?pr=2541 and https://github.com/symfony/ux/actions/runs/13069237861/job/36467096825?pr=2541) when I didn't update this component nor anything related to `zenstruck/foundry` 🤔
+
+---------------------------------------------------------------------------
+
+by daFish at 2025-01-31T08:49:29Z
+
+Hey @J-Ben87, this is awesome. This will be very useful in the context of #2534.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-01T15:16:04Z
+
+Thank you for the PR, this feature (and the effort to improve things passing by -- docblocks for static analysis)!
+
+Minor changes to match existing DX / wording in symfony/form, and maybe add one or two tests to check everything work if the method is not implemented, or does not override getValue/getText
+
+On an implementation level, you should probably do something like this in the formatResult method
+
+```php
+
+$attributes = [];
+if (method_exists(.....
+    ....
+}
+
+return [
+   ...$attributes,
+   'value' => $autocompleter->getValue(),
+   'text' => $autocompleter->getText(),
+];
+```
+
+---------------------------------------------------------------------------
+
+by J-Ben87 at 2025-02-01T21:23:07Z
+
+Thanks for your review.
+
+I like your idea of merging extra attributes into an array containing the text and the value.
+
+WDYT of the latest version of my branch?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-01T23:03:27Z
+
+Tiny details, then lets see the CI failures and LGTM :)
+
+Would you be ok (on another PR) to write a paragraph + example about this in the documentation ? I can help if you need / want.
+
+---------------------------------------------------------------------------
+
+by J-Ben87 at 2025-02-02T09:44:44Z
+
+Ok everything should be fine now 👍🏻
+
+Regarding the failing tests however, ~I have no clue why they are failing since they are related to zenstruck/foundry deprecations in another component~...
+It says:
+```
+Since zenstruck/foundry 2.4: In order to use Foundry, you must use the trait "Symfony\Bundle\FrameworkBundle\Test\KernelTestCase" in your "Symfony\UX\LiveComponent\Tests\Unit\Form\ComponentWithFormTest" tests. This will throw an exception in 3.0.
+```
+However there is no `KernelTestCase` trait available in the project. I assume the error message is inaccurate 🤔
+
+---
+
+Edit: I found the failing tests and I fixed them 🥳
+
+---------------------------------------------------------------------------
+
+by J-Ben87 at 2025-02-02T09:59:13Z
+
+No worries for writing a bit of documentation, could you just point me the place and the kind of doc you expect?
+
+---------------------------------------------------------------------------
+
+by J-Ben87 at 2025-02-04T08:12:06Z
+
+@Kocal Is that all good for you too? Your change request is still pending
+
+---------------------------------------------------------------------------
+
+by J-Ben87 at 2025-02-05T22:19:51Z
+
+What is the next step to have this PR merged?
+It says that it needs 2 approving reviews by reviewers with write access. Should I ping someone? Or should I just wait for one of them to notice it's ready?
+
+Sorry if it's obvious, but like I said I'm not used to contribute so I'm confused about the next steps 😕
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-06T00:33:04Z
+
+> What is the next step to have this PR merged? It says that it needs 2 approving reviews by reviewers with write access. Should I ping someone? Or should I just wait for one of them to notice it's ready?
+
+@Kocal gave the second approval today, so we will merge it soon :)
+
+Often, we let some time for all maintainers to see the PR, as we are not all on the same timezone and we all need to find the good balance between day jobs, family life, and open source.
+
+So here, the next steps are:
+
+**Merged:**
+someone will merge the PR (you will then be able to test it if you use the "2.x-dev" branch)
+
+**Released:**
+Then, on the next UX release, it will be available for everyone to enjoy. We are releasing a new version every-ish month (see [the changelog](https://ux.symfony.com/changelog)). The next one will be the `2.23`, and should be released in the next few days. So you should not have to wait much here.
+
+> Sorry if it's obvious, but like I said I'm not used to contribute so I'm confused about the next steps 😕
+
+It's not obvious :)
+
+And welcome aboard!
