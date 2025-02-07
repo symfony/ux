@@ -1,0 +1,25 @@
+---------------------------------------------------------------------------
+
+by aleho at 2025-02-05T10:11:13Z
+
+The failing tests are in LiveComponents and a timeout in webdriver. I hope they're not related to my changes ;).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-06T00:22:32Z
+
+Hi @aleho ! Thank you for this PR :)
+
+Do you think you could add a small test to prevent any future regression?
+
+---------------------------------------------------------------------------
+
+by aleho at 2025-02-06T08:55:27Z
+
+@smnandre I wasn't entirely sure how to test that. Is "simulating" a worker mode by not re-booting the kernel enough?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-06T23:17:57Z
+
+@aleho i think so!  cc @kbond ?
