@@ -727,7 +727,7 @@ property available in ``Map``, ``Marker``, ``InfoWindow``, ``Polygon``, ``Polyli
     ));
 
 On the JavaScript side, you can access these extra data by listening to ``ux:map:pre-connect``,
-``ux:map:connect``, ``ux:map:*:before-create``, ``ux:map:*:after-create`` events::
+``ux:map:connect``, ``ux:map:*:before-create``, ``ux:map:*:after-create`` events:
 
 .. code-block:: javascript
 
@@ -841,6 +841,45 @@ You can retrieve the map instance using the ``getMap()`` method, and change the 
             Do something with the map
         </button>
     </div>
+
+Advanced: Clusters
+------------------
+
+.. versionadded:: 2.29
+
+    Clusters were added in UX Map 2.29.
+
+A cluster is a group of points that are close to each other on a map.
+
+Clustering reduces clutter and improves performance when displaying many points.
+This makes maps easier to read and faster to render.
+
+UX Map supports two algorithms:
+
+- **Grid**: Fast, divides map into cells.
+- **Morton**: Uses Z-order curves for spatial locality.
+
+Create a clustering algorithm, cluster your points, and add cluster markers::
+
+    use Symfony\UX\Map\Cluster\GridClusteringAlgorithm;
+    use Symfony\UX\Map\Cluster\MortonClusteringAlgorithm;
+    use Symfony\UX\Map\Point;
+
+    // Initialize clustering algorithm
+    $clusteringAlgorithm = new GridClusteringAlgorithm();
+    // or
+    // $clusteringAlgorithm = new MortonClusteringAlgorithm();
+
+    // Create clusters of points
+    $points = [new Point(48.8566, 2.3522), new Point(45.7640, 4.8357), /* ... */];
+    $clusters = $clusteringAlgorithm->cluster($points, zoom: 5.0);
+
+    // Iterate over each cluster
+    foreach ($clusters as $cluster) {
+        $cluster->getCenter(); // A Point, representing the cluster center
+        $cluster->getPoints(); // A list of Point
+        $cluster->count(); // The number of points in the cluster
+    }
 
 Backward Compatibility promise
 ------------------------------
