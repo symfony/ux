@@ -1,0 +1,23 @@
+---------------------------------------------------------------------------
+
+by yalit at 2025-01-22T06:35:39Z
+
+Thanks for the review which makes full sense. I'll look at it today.
+
+---------------------------------------------------------------------------
+
+by yalit at 2025-01-22T07:56:39Z
+
+Updates made based on the review and updated proposals
+
+---------------------------------------------------------------------------
+
+by yalit at 2025-01-24T08:05:33Z
+
+> may I propose to use another field name, to not overlap with the
+>
+> `$component->call('addCollectionItem', ['name' => 'children']);`
+>
+> wdyt?
+
+@94noni, for me it's indeed better, nice update. As it doesn't change the information of the doc but improves it (in my opinion), I would assume it's ok for @smnandre (I can do the update today). As already approved, can you confirm from your side?
