@@ -243,14 +243,14 @@ templates. The function accepts the same arguments as the ``Map`` class:
         }
     ) }}
 
-Twig Component ``<twig:ux:map />``
+Twig Component ``<twig:UX:Map />``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-Alternatively, you can use the ``<twig:ux:map />`` component.
+Alternatively, you can use the ``<twig:UX:Map />`` component.
 
 .. code-block:: html+twig
 
-    <twig:ux:map
+    <twig:UX:Map
         center="[51.5074, 0.1278]"
         zoom="3"
         markers='[
@@ -266,7 +266,7 @@ Alternatively, you can use the ``<twig:ux:map />`` component.
         style="height: 800px; width: 100%; border: 4px solid red; margin-block: 10vh;"
     />
 
-The ``<twig:ux:map />`` component requires the `Twig Component`_ package.
+The ``<twig:UX:Map />`` component requires the `Twig Component`_ package.
 
 .. code-block:: terminal
 

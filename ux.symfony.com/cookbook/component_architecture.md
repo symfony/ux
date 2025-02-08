@@ -33,7 +33,7 @@ In Symfony, you can have an `Alert` component, for example, with the following t
 
 ```twig
 <div class="alert alert-{{ type }}">
-    <twig:ux:icon name="{{ icon }}" />
+    <twig:UX:Icon name="{{ icon }}" />
     {{ message }}
 </div>
 ```
@@ -43,9 +43,9 @@ Or you can compose with the following syntax:
 
 ```twig
 <twig:Card>
-    <twig:ux:icon name="info"/>
+    <twig:UX:Icon name="info"/>
     <twig:Button>
-        <twig:ux:icon name="close" />
+        <twig:UX:Icon name="close" />
     </twig:Button>
 </twig:Card>
 ```
@@ -79,7 +79,7 @@ We have the following template:
 {% props type, icon, message %}
 
 <div class="alert alert-{{ type }}">
-    <twig:ux:icon name="{{ icon }}" />
+    <twig:UX:Icon name="{{ icon }}" />
     {{ message }}
 </div>
 ```

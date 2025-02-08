@@ -40,7 +40,7 @@ class MapComponentTest extends KernelTestCase
         self::getContainer()->set('test.ux_map.renderers', $renderer);
 
         $twig = self::getContainer()->get('twig');
-        $template = $twig->createTemplate('<twig:ux:map center="{{ {lat: 5, lng: 10} }}" zoom="4" data-foo="bar" />');
+        $template = $twig->createTemplate('<twig:UX:Map center="{{ {lat: 5, lng: 10} }}" zoom="4" data-foo="bar" />');
 
         $this->assertSame(
             '<div data-controller="@symfony/ux-foobar-map"></div>',

@@ -3,7 +3,7 @@
 ## 2.20.0
 
 -   Add `aliases` configuration option to define icon alternative names.
--   Add support for `int` and `float` attribute values in `<twig:ux:icon />`.
+-   Add support for `int` and `float` attribute values in `<twig:UX:Icon />`.
 
 ## 2.19.0
 
