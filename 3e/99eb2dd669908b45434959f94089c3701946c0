@@ -1,0 +1,30 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-02-11T07:58:35Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/fix-ci-dist-files-urls-2/src/Translator/assets/dist"><b>Translator</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/fix-ci-dist-files-urls-2/src/Translator/assets/dist/translator_controller.js"><code>translator_controller.js</code></a></td>
+            <td>
+                    <code>9.23 kB</code>
+                    / <code>2.29 kB</code>
+                </td><td>
+                    <code>9.04 kB</code><sup>-2% 📉</sup>
+                    / <code>2.27 kB</code><sup>-1% 📉</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-11T08:00:43Z
+
+That's better:
+<img width="1124" alt="image" src="https://github.com/user-attachments/assets/7d830da0-6574-4256-87fb-74c6855f04a9" />
