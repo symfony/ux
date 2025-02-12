@@ -1,0 +1,53 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-02-10T23:34:45Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/fix-ts-types-when-building/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/fix-ts-types-when-building/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>10.02 kB</code>
+                    / <code>2.22 kB</code>
+                </td><td>
+                    <code>10.16 kB</code><sup>+1% 📈</sup>
+                    / <code>2.25 kB</code><sup>+1% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/Kocal/symfony-ux/tree/fix-ts-types-when-building/src/Translator/assets/dist"><b>Translator</b></a></td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/fix-ts-types-when-building/src/Translator/assets/dist/formatters/formatter.d.ts"><code>formatters/formatter.d.ts</code></a></td>
+            <td>
+                    <code>113 B</code>
+                    / <code>122 B</code>
+                </td><td>
+                    <code>120 B</code><sup>+6% 📈</sup>
+                    / <code>129 B</code><sup>+6% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/fix-ts-types-when-building/src/Translator/assets/dist/formatters/intl-formatter.d.ts"><code>formatters/intl-formatter.d.ts</code></a></td>
+            <td>
+                    <code>117 B</code>
+                    / <code>129 B</code>
+                </td><td>
+                    <code>124 B</code><sup>+6% 📈</sup>
+                    / <code>137 B</code><sup>+6% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Kocal/symfony-ux/blob/fix-ts-types-when-building/src/Translator/assets/dist/utils.d.ts"><code>utils.d.ts</code></a></td>
+            <td>
+                    <code>102 B</code>
+                    / <code>110 B</code>
+                </td><td>
+                    <code>109 B</code><sup>+7% 📈</sup>
+                    / <code>116 B</code><sup>+5% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-12T00:57:25Z
+
+Reaction in one word: thank-you-Kocal-this-is-very-very-nice-and-yes-i-cheated-a-bit 😎
