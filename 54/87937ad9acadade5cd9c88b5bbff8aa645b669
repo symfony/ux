@@ -1,0 +1,45 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-08T00:52:28Z
+
+Do you need some help here @sblondeau ?
+
+---------------------------------------------------------------------------
+
+by sblondeau at 2025-02-08T14:00:17Z
+
+> Do you need some help here @sblondeau ?
+
+No time at all last week, but I will try to work on it in the next day :-) Thanks for your comments
+
+---------------------------------------------------------------------------
+
+by sblondeau at 2025-02-08T14:07:49Z
+
+>     2. `Map::get*()` methods do not really make sense to me, since there is no modifiers on `Marker`/`Polygon`/`Polyline`. Once you construct them, you can't alter them, so not point for `Map::get*()`.
+
+Thanks for your comments @Kocal. One question, that's true that a Marker is readonly... but can we imagine that we getMarker() to modify its position, title or infoWindow ? so we should remove and recreate it ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-08T16:54:18Z
+
+> > ```
+> > 2. `Map::get*()` methods do not really make sense to me, since there is no modifiers on `Marker`/`Polygon`/`Polyline`. Once you construct them, you can't alter them, so not point for `Map::get*()`.
+> > ```
+>
+> Thanks for your comments @Kocal. One question, that's true that a Marker is readonly... but can we imagine that we getMarker() to modify its position, title or infoWindow ? so we should remove and recreate it ?
+
+For the moment, yes, we can implement `Marker`, `Polygon` and `Polyline` removal without the need of `Map::get*()`.
+
+If really necessary, let's open a separate PR to make them non-readonly and implement `Map::get*()`.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-15T16:17:04Z
+
+I've tested your PR and it works well:
+
+https://github.com/user-attachments/assets/9059e877-4a9d-449c-8d7d-f183f7695ce4
+
+I did some minor adjustments to mark those classes as internal.
