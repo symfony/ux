@@ -17,6 +17,7 @@ use Symfony\UX\TwigComponent\Event\PostRenderEvent;
 use Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent;
 use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 use Twig\Environment;
+use Twig\Template;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -70,11 +71,14 @@ final class ComponentRenderer implements ComponentRendererInterface, ResetInterf
         }
 
         try {
-            return $this->twig->loadTemplate(
-                $this->templateClasses[$template = $event->getTemplate()] ??= $this->twig->getTemplateClass($template),
-                $template,
-                $templateIndex,
-            )->render($variables);
+            if (method_exists(Template::class, 'load')) {
+                return $this->twig->load($event->getTemplate())->render($variables);
+            }
+
+            // Environment::loadTemplate is deprecated since Twig 3.21
+            $templateClass = $this->templateClasses[$template = $event->getTemplate()] ??= $this->twig->getTemplateClass($template, $templateIndex);
+
+            return $this->twig->loadTemplate($templateClass, $template, $templateIndex)->render($variables);
         } finally {
             $mounted = $this->componentStack->pop();
 
