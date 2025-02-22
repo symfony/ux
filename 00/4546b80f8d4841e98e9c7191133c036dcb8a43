@@ -1,0 +1,17 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-20T12:35:28Z
+
+> Hi @smnandre, I tested the patch on a 32-bit system. Unfortunately, `console clear:cache` failed again with:
+>
+> > syntax error, unexpected token "-", expecting "{"
+>
+> That’s due to a compiled template component class with a `-` in the class name. My suggestion solves this problem.
+
+Thanks a lot! I've commited your suggested code. Tell me if this is ok for you and LGTM :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-20T13:46:38Z
+
+Note: test failures are related to deprecations in Twig, that will require a dedicated PR
