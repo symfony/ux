@@ -1,0 +1,37 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-23T17:47:39Z
+
+Not at all, they already are compatible. I'm just following Twig syntax here, not adding anything new. But that means adapting the PreLexer we use to convert HTML Syntax into regular Twig code :)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2024-12-23T18:46:38Z
+
+I mean, for tools that does not use our `PreLexer`.
+
+I've tested with Twig-CS-Fixer and no issues so far, but I think it does not support Twig Component at all.
+I don't know about TwigStan (which I believe indirectly use our `PreLexer`).
+
+But, for syntax coloration it does not work, and I don't know who/when this new syntax will be added to IDE and other syntax coloration libraries:
+<img width="220" alt="image" src="https://github.com/user-attachments/assets/9a4e8cc2-af0d-4e3c-a5c6-89ef7780a219" />
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-23T20:18:30Z
+
+> I've tested with Twig-CS-Fixer and no issues so far, but I think it does not support Twig Component at all.
+
+They do, and they integrated inline comments right after Twig release :)
+
+> But, for syntax coloration it does not work, and I don't know who/when this new syntax will be added
+
+Me neither but... how is this related to this PR ? :) I'm genuinely not sure to get the questions here.
+
+Twig syntax changes are generally pretty quickly integrated into PhpStorm Twig integration (or in the Symfony plugin).
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-22T04:54:06Z
+
+cc @Kocal @kbond @WebMamba ?
