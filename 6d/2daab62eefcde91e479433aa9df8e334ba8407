@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-02-22T00:21:41Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/smnandre/ux/tree/fix/stimulus-loader-turbo/src/StimulusBundle/assets/dist"><b>StimulusBundle</b></a></td></tr><tr>
+                <td><a href="https://github.com/smnandre/ux/blob/fix/stimulus-loader-turbo/src/StimulusBundle/assets/dist/loader.js"><code>loader.js</code></a></td>
+            <td>
+                    <code>3.8 kB</code>
+                    / <code>1.01 kB</code>
+                </td><td>
+                    <code>3.55 kB</code><sup>-7% 📉</sup>
+                    / <code>1004 B</code><sup>-3% 📉</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-24T22:30:17Z
+
+I was able to reproduce the issue locally, and using your PR fixed the issue:
+
+https://github.com/user-attachments/assets/0cc7cc82-af18-4694-8f11-c5c154d5d027
