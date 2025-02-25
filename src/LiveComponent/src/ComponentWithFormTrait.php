@@ -111,11 +111,16 @@ trait ComponentWithFormTrait
         if ($this->shouldAutoSubmitForm) {
             $this->submitForm($this->isValidated);
         }
+
+        // Recreate the FormView because it has been created by the submitForm() with a FormInterface whose values may
+        // have changed. Basically synchronizes FormView and FormInstance to reflect all manual changes made to the
+        // latter between form submit and the components re-render.
+        $this->getFormView(true);
     }
 
-    public function getFormView(): FormView
+    public function getFormView(bool $forceCreate = false): FormView
     {
-        if (null === $this->formView) {
+        if ($forceCreate || null === $this->formView) {
             $this->formView = $this->getForm()->createView();
             $this->useNameAttributesAsModelName();
         }
