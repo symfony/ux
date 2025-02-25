@@ -12,7 +12,9 @@
 namespace Symfony\UX\LiveComponent\Tests\Fixtures\Component;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\Form\FormInterface;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -40,6 +42,14 @@ class FormWithCollectionTypeComponent extends AbstractController
     protected function instantiateForm(): FormInterface
     {
         return $this->createForm(BlogPostFormType::class, $this->post);
+    }
+
+    #[LiveAction]
+    public function submitAndAddErrorToForm(): void
+    {
+        $this->submitForm();
+        $this->getForm()->addError(new FormError("manually added form error"));
+        throw new UnprocessableEntityHttpException();
     }
 
     #[LiveAction]

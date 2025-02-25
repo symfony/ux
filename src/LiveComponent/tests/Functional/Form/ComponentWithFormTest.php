@@ -156,6 +156,33 @@ class ComponentWithFormTest extends KernelTestCase
         ;
     }
 
+    public function testFormViewSynchronizesWithFormInstance(): void
+    {
+        /** @var FormFactoryInterface $formFactory */
+        $formFactory = self::getContainer()->get('form.factory');
+
+        $form = $formFactory->create(BlogPostFormType::class);
+        // make sure validation does not fail on content constraint (min 100 characters)
+        $validContent = implode('a', range(0, 100));
+        $form->submit(['title' => 'Title', 'content' => $validContent]);
+
+        $mounted = $this->mountComponent('form_with_collection_type', [
+            'form' => $form->createView(),
+        ]);
+        $dehydratedProps = $this->dehydrateComponent($mounted)->getProps();
+
+        $this->browser()
+            // post to action, which will manually add a FormError to the FormInstance after submit
+            ->post('/_components/form_with_collection_type/submitAndAddErrorToForm', [
+                'body' => ['data' => json_encode(['props' => $dehydratedProps])],
+            ])
+            // action always throws 422
+            ->assertStatus(422)
+            // assert manually added error within LiveAction after submit is rendered in template
+            ->assertContains('manually added form error')
+        ;
+    }
+
     public function testHandleCheckboxChanges(): void
     {
         $category = CategoryFixtureEntityFactory::createMany(5);
