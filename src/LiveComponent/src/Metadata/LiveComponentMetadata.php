@@ -22,12 +22,12 @@ class LiveComponentMetadata
 {
     public function __construct(
         private ComponentMetadata $componentMetadata,
-        /** @var LivePropMetadata[] */
+        /** @var list<LivePropMetadata|LegacyLivePropMetadata> */
         private array $livePropsMetadata,
     ) {
         uasort(
             $this->livePropsMetadata,
-            static fn (LivePropMetadata $a, LivePropMetadata $b) => $a->hasModifier() <=> $b->hasModifier()
+            static fn (LivePropMetadata|LegacyLivePropMetadata $a, LivePropMetadata|LegacyLivePropMetadata $b) => $a->hasModifier() <=> $b->hasModifier()
         );
     }
 
@@ -37,7 +37,7 @@ class LiveComponentMetadata
     }
 
     /**
-     * @return LivePropMetadata[]
+     * @return list<LivePropMetadata|LegacyLivePropMetadata>
      */
     public function getAllLivePropsMetadata(object $component): iterable
     {
@@ -55,7 +55,7 @@ class LiveComponentMetadata
      */
     public function getOnlyPropsThatAcceptUpdatesFromParent(array $inputProps): array
     {
-        $writableProps = array_filter($this->livePropsMetadata, function (LivePropMetadata $livePropMetadata) {
+        $writableProps = array_filter($this->livePropsMetadata, function (LivePropMetadata|LegacyLivePropMetadata $livePropMetadata) {
             return $livePropMetadata->acceptUpdatesFromParent();
         });
 

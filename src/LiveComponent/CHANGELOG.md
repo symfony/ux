@@ -3,6 +3,8 @@
 ## 2.26.0
 
 -   `LiveProp`: Pass the property name as second parameter of the `modifier` callable
+-   Add compatibility layer to fix deprecation with `Symfony\Component\PropertyInfo\PropertyInfoExtractor::getTypes()`.
+    If you use PHP 8.2 or higher, we recommend you to update dependency `symfony/property-info` to at least 7.1.0
 
 ## 2.25.0
 

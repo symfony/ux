@@ -19,3 +19,19 @@ _run_task() {
     exit $ok
 }
 export -f _run_task
+
+install_property_info_for_version() {
+  local php_version="$1"
+  local min_stability="$2"
+
+  if [ "$php_version" = "8.2" ]; then
+    composer require symfony/property-info:7.1.* symfony/type-info:7.2.*
+  elif [ "$php_version" = "8.3" ]; then
+    composer require symfony/property-info:7.2.* symfony/type-info:7.2.*
+  elif [ "$php_version" = "8.4" ] && [ "$min_stability" = "stable" ]; then
+    composer require symfony/property-info:7.3.* symfony/type-info:7.3.*
+  elif [ "$php_version" = "8.4" ] && [ "$min_stability" = "dev" ]; then
+    composer require symfony/property-info:>=7.3 symfony/type-info:>=7.3
+  fi
+}
+export -f install_property_info_for_version
