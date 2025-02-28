@@ -1,0 +1,46 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-27T02:45:05Z
+
+Ho yes one thing. Would the LICENCE be published with these settings? Or do we need to duplicate the repository one in the assets directory ?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-27T07:20:28Z
+
+We already have [`"license": "MIT"`](https://docs.npmjs.com/cli/v11/configuring-npm/package-json#license) defined in `package.json` files, but it's true that's make sense to ship the LICENSE file in javascript packages.
+
+I'm on it
+
+**EDIT:** it means that we also need a `README.md` file for each packages aswell
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-27T08:30:57Z
+
+Files `README.md` and `LICENSE` added!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-28T19:54:46Z
+
+`@symfony/ux-map` will need a special treatment, since bridges dist files already include the `dist/abstract_map_controller.js` from `@symfony/ux-map`, it means that there is no need to publish it as a npm package.
+
+For the same reasons, installing `symfony/ux-map` with composer should not update the `package.json`, which is the case today:
+```json
+        "@symfony/ux-leaflet-map": "file:vendor/symfony/ux-leaflet-map/assets",
+        "@symfony/ux-map": "file:vendor/symfony/ux-map/assets",
+```
+**EDIT:** see #2611
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-28T23:05:01Z
+
+Added `"private": true` to `src/Map/assets/package.json`, this way we can easily exclude Map package from `yarn workspaces ...` commands with the help of `--no-private`.
+
+Next steps:
+1. Ensure all packages can be installed correctly from npm (`@symfony/ux-leaflet-map` works fine), manually and automatically with a CI workflow
+2. Deploy the packages on npm
+3. Ensure all pacakges can be installed correctly from jsdelivr
+4. Write a CI workflow to automatically bump versions (of all packages) and publish packages (except private ones)
