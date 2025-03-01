@@ -10,9 +10,9 @@
 import { Application, Controller } from '@hotwired/stimulus';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
 import { getByTestId, waitFor } from '@testing-library/dom';
+import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 import SvelteController from '../src/render_controller';
 import MyComponent from './fixtures/MyComponent.svelte';
-import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 
 // Controller used to check the actual controller was properly booted
 class CheckController extends Controller {

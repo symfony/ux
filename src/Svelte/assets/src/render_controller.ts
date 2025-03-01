@@ -1,5 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
-import type { SvelteComponent, ComponentConstructorOptions, ComponentType } from 'svelte';
+import type { ComponentConstructorOptions, ComponentType, SvelteComponent } from 'svelte';
 
 export default class extends Controller<Element & { root?: SvelteComponent }> {
     private app: SvelteComponent;

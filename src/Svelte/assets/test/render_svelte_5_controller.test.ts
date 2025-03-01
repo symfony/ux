@@ -8,11 +8,11 @@
  */
 
 import { Application } from '@hotwired/stimulus';
-import { getByTestId, waitFor } from '@testing-library/dom';
 import { clearDOM, mountDOM } from '@symfony/stimulus-testing';
+import { getByTestId, waitFor } from '@testing-library/dom';
+import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 import SvelteController from '../src/render_controller';
 import MyComponentSvelte5 from './fixtures/MyComponentSvelte5.svelte';
-import { VERSION as SVELTE_VERSION } from 'svelte/compiler';
 
 const startStimulus = () => {
     const application = Application.start();
