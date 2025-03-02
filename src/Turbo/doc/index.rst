@@ -1050,6 +1050,74 @@ because these classes implement the ``BroadcasterInterface`` and
 ``TurboStreamListenRendererInterface`` interfaces, the related services
 will be.
 
+Meta Tags
+~~~~~~~~~
+
+turbo_exempts_page_from_cache
+.............................
+
+.. code-block:: twig
+
+    {{ turbo_exempts_page_from_cache() }}
+
+Generates a <meta> tag to disable caching of a page.
+
+turbo_exempts_page_from_preview
+...............................
+
+.. code-block:: twig
+
+    {{ turbo_exempts_page_from_preview() }}
+
+Generates a <meta> tag to specify cached version of the page should not be shown as a preview on regular navigation visits.
+
+turbo_page_requires_reload
+..........................
+
+.. code-block:: twig
+
+    {{ turbo_page_requires_reload() }}
+
+Generates a <meta> tag to force a full page reload.
+
+turbo_refreshes_with
+....................
+
+.. code-block:: twig
+
+    {{ turbo_refreshes_with(method: 'replace', scroll: 'reset') }}
+
+``method`` *(optional)*
+    **type**: ``string`` **default**: ``replace`` **allowed values**: ``replace`` or ``morph``
+``scroll`` *(optional)*
+    **type**: ``string`` **default**: ``reset`` **allowed values**: ``reset`` or ``preserve``
+
+Generates <meta> tags to configure both the refresh method and scroll behavior for page refreshes.
+
+turbo_refresh_method
+....................
+
+.. code-block:: twig
+
+    {{ turbo_refresh_method(method: 'replace') }}
+
+``method`` *(optional)*
+    **type**: ``string`` **default**: ``replace`` **allowed values**: ``replace`` or ``morph``
+
+Generates a <meta> tag to configure the refresh method for page refreshes.
+
+turbo_refresh_scroll
+....................
+
+.. code-block:: twig
+
+    {{ turbo_refresh_scroll(scroll: 'reset') }}
+
+``scroll`` *(optional)*
+    **type**: ``string`` **default**: ``reset`` **allowed values**: ``reset`` or ``preserve``
+
+Generates a <meta> tag to configure the scroll behavior for page refreshes.
+
 Backward Compatibility promise
 ------------------------------
 
