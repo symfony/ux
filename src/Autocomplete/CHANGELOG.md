@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.25.0
+
+-   Escape `querySelector` dynamic selector with `CSS.escape()` #2663
+
 ## 2.23.0
 
 -   Deprecate `ExtraLazyChoiceLoader` in favor of `Symfony\Component\Form\ChoiceList\Loader\LazyChoiceLoader`

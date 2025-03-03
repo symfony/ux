@@ -192,7 +192,7 @@ export default class extends Controller {
                 for (const [, tomSelectOption] of Object.entries(this.tomSelect.options)) {
                     if (tomSelectOption.$order === optionOrder) {
                         orderedOption = parentElement.querySelector(
-                            `:scope > option[value="${tomSelectOption[this.tomSelect.settings.valueField]}"]`
+                            `:scope > option[value="${CSS.escape(tomSelectOption[this.tomSelect.settings.valueField])}"]`
                         );
 
                         break;
