@@ -1,0 +1,31 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-22T00:35:35Z
+
+Thank you @1ed !
+
+---
+
+Thinking out loud here... I'm less and less enjoying this whole mecanism.
+
+I'm starting to wonder if we should not revert it..  instead of trying to decide PHP-side how the browsers behave 🤷‍♂️
+
+---------------------------------------------------------------------------
+
+by 1ed at 2025-02-22T23:37:39Z
+
+> Thank you @1ed !
+>
+> Thinking out loud here... I'm less and less enjoying this whole mecanism.
+>
+> I'm starting to wonder if we should not revert it.. instead of trying to decide PHP-side how the browsers behave 🤷‍♂️
+
+Probably would be better yes, but I don't know the internals, why was this necessary originally, just wanted to fix the bug.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-23T00:14:58Z
+
+Of course, and thank you again for that !
+
+It was really thinking outloud :))
