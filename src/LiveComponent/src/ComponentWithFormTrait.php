@@ -16,6 +16,7 @@ use Symfony\Component\Form\ClearableErrorsInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\Form\FormView;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use Symfony\Contracts\Translation\TranslatableInterface;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Attribute\PreReRender;
 use Symfony\UX\LiveComponent\Util\LiveFormUtility;
@@ -286,7 +287,8 @@ trait ComponentWithFormTrait
                 )
                 && !$child->vars['expanded']                // is a <select>     (not a radio/checkbox)
                 && !$child->vars['multiple']                // is not multiple
-                && !\is_string($child->vars['placeholder'])  // has no placeholder (empty string is valid)
+                && !\is_string($child->vars['placeholder']) // has no placeholder (empty string is valid)
+                && !$child->vars['placeholder'] instanceof TranslatableInterface // has no placeholder (translatable interface is valid)
             ) {
                 $choices = $child->vars['preferred_choices'] ?: $child->vars['choices']; // preferred_choices has precedence, as they rendered before regular choices
                 do {

@@ -3,6 +3,7 @@
 ## 2.25.0
 
 -   Add support for [Symfony UID](https://symfony.com/doc/current/components/uid.html) hydration/dehydration
+-   `ComponentWithFormTrait` now correctly checks for a `TranslatableInterface` placeholder for `<select>` elements
 -   Add property name as second paramter to LiveProp modifier callback
 
 ## 2.23.0
