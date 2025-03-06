@@ -302,11 +302,6 @@ export default class Component {
             const backendResponse = new BackendResponse(response);
             const html = await backendResponse.getBody();
 
-            // clear sent files inputs
-            for (const input of Object.values(this.pendingFiles)) {
-                input.value = '';
-            }
-
             // if the response does not contain a component, render as an error
             const headers = backendResponse.response.headers;
             if (

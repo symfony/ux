@@ -2120,9 +2120,6 @@ class Component {
         this.backendRequest.promise.then(async (response) => {
             const backendResponse = new BackendResponse(response);
             const html = await backendResponse.getBody();
-            for (const input of Object.values(this.pendingFiles)) {
-                input.value = '';
-            }
             const headers = backendResponse.response.headers;
             if (!headers.get('Content-Type')?.includes('application/vnd.live-component+html') &&
                 !headers.get('X-Live-Redirect')) {

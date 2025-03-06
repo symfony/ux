@@ -109,6 +109,45 @@ describe('LiveController rendering Tests', () => {
         expect((test.queryByDataModel('comment') as HTMLTextAreaElement).value).toEqual('I HAD A GREAT TIME');
     });
 
+    it('keeps file input value after a render request', async () => {
+        const test = await createTest(
+            {},
+            () => `
+        <div ${initComponent({}, { debounce: 1 })}>
+            <input type="file" data-model="file">
+            <button data-action="live#$render">Reload</button>
+        </div>
+    `
+        );
+
+        const fileInput = test.element.querySelector('input[type="file"]') as HTMLInputElement;
+        const file = new File(['content'], 'test.txt', { type: 'text/plain' });
+
+        Object.defineProperty(fileInput, 'files', {
+            value: [file],
+            writable: false,
+        });
+
+        // Checks that the file is correctly assigned before rendering
+        expect(fileInput.files).not.toBeNull();
+        expect(fileInput.files?.length).toBe(1);
+        expect(fileInput.files?.[0].name).toBe('test.txt');
+
+        // Simulates an AJAX request triggered by Live rendering
+        test.expectsAjaxCall()
+            .expectUpdatedData({})
+            .delayResponse(100);
+
+        getByText(test.element, 'Reload').click();
+
+        // Checks that the file is still present after rendering
+        await waitFor(() => {
+            expect(fileInput.files).not.toBeNull();
+            expect(fileInput.files?.length).toBe(1);
+            expect(fileInput.files?.[0].name).toBe('test.txt');
+        });
+    });
+
     it('conserves the value of an unmapped field that was modified after a render request', async () => {
         const test = await createTest(
             { title: 'greetings' },
