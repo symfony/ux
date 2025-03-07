@@ -1,0 +1,10 @@
+{
+    "name": "TableFooter",
+    "manifest": "components/Table/TableFooter.json",
+    "theme": "",
+    "type": "component",
+    "code": "{%- props -%}\n{%- set style = html_cva(\n    base: 'bg-muted/50 border-t font-medium [&>tr]:last:border-b-0',\n    variants: {},\n    compoundVariants: []\n) -%}\n\n<tfoot\n        class=\"{{ style.apply({}, attributes.render('class'))|tailwind_merge }}\"\n        {{ attributes.defaults({}).without('class') }}\n>\n    {% block content %}{% endblock %}\n</tfoot>\n",
+    "fingerprint": "cad323f00c8108b98851df8aac2819ad",
+    "dependencies": [],
+    "parentName": "Table"
+}

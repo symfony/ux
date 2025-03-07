@@ -1,0 +1,17 @@
+{
+    "name": "Table",
+    "manifest": "components/Table.json",
+    "theme": "",
+    "type": "component",
+    "code": "{%- props -%}\n{%- set style = html_cva(\n    base: 'relative w-full overflow-auto',\n    variants: {},\n    compoundVariants: []\n) -%}\n\n<table\n    class=\"{{ style.apply({}, attributes.render('class'))|tailwind_merge }}\"\n    {{ attributes.defaults({}).without('class') }}\n>\n    {% block content %}{% endblock %}\n</table>\n",
+    "fingerprint": "1ecd968d9670e2176356b851d86f3b26",
+    "dependencies": [
+        "TableBody",
+        "TableCaption",
+        "TableCell",
+        "TableFooter",
+        "TableHead",
+        "TableHeader",
+        "TableRow"
+    ]
+}

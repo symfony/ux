@@ -1,0 +1,10 @@
+{
+    "name": "BreadcrumbEllipsis",
+    "manifest": "components/Breadcrumb/BreadcrumbEllipsis.json",
+    "theme": "",
+    "type": "component",
+    "code": "{%- props -%}\n{%- set style = html_cva(\n    base: 'flex h-9 w-9 items-center justify-center',\n    variants: {},\n    compoundVariants: []\n) -%}\n\n<span\n    class=\"{{ style.apply({}, attributes.render('class'))|tailwind_merge }}\"\n    {{ attributes.defaults({}).without('class') }}\n    role=\"presentation\"\n    aria-hidden=\"true\"\n>\n    {% set _block = block('content') %}\n    {% if content is defined and content is not empty %}\n        {% block content %}{% endblock %}\n    {% else %}\n        <span class=\"h-4 w-4\">...</span>\n    {% endif %}\n</span>\n",
+    "fingerprint": "c1725f1ef14bef095bdc4db7ab29d75f",
+    "dependencies": [],
+    "parentName": "Breadcrumb"
+}

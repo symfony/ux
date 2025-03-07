@@ -1,0 +1,10 @@
+{
+    "name": "TableBody",
+    "manifest": "components/Table/TableBody.json",
+    "theme": "",
+    "type": "component",
+    "code": "{%- props -%}\n{%- set style = html_cva(\n    base: '[&_tr:last-child]:border-0',\n    variants: {},\n    compoundVariants: []\n) -%}\n\n<tbody\n        class=\"{{ style.apply({}, attributes.render('class'))|tailwind_merge }}\"\n        {{ attributes.defaults({}).without('class') }}\n>\n    {% block content %}{% endblock %}\n</tbody>\n",
+    "fingerprint": "cc7177549ce5e93b4e5588c1ae01e0f7",
+    "dependencies": [],
+    "parentName": "Table"
+}

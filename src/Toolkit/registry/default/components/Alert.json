@@ -1,0 +1,11 @@
+{
+    "name": "Alert",
+    "manifest": "components/Alert.json",
+    "theme": "",
+    "type": "component",
+    "code": "<div {{ attributes.without('class') }}\n    class=\"{{ (' ' ~ attributes.render('class'))|tailwind_merge }}\"\n>\n    <twig:Button>Dependency test</twig:Button>\n    {% block content %}Alert{% endblock %}\n</div>\n",
+    "fingerprint": "9d173046a7c64cfc696f1a89aaac82a6",
+    "dependencies": [
+        "Button"
+    ]
+}

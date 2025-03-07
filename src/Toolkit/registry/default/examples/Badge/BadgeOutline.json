@@ -1,0 +1,10 @@
+{
+    "name": "BadgeOutline",
+    "manifest": "examples/Badge/BadgeOutline.json",
+    "theme": "",
+    "type": "example",
+    "code": "<twig:Badge outline>\n    Badge\n</twig:Badge>\n",
+    "fingerprint": "420f08450b190596a1ae25c0e58f4a5b",
+    "dependencies": [],
+    "parentName": "Badge"
+}

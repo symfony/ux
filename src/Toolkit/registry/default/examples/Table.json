@@ -1,0 +1,9 @@
+{
+    "name": "Table",
+    "manifest": "examples/Table.json",
+    "theme": "",
+    "type": "example",
+    "code": "<twig:Table>\n    <twig:TableCaption>A list of your recent invoices.</twig:TableCaption>\n    <twig:TableHeader>\n        <twig:TableRow>\n            <twig:TableHead className=\"w-[100px]\">Invoice</twig:TableHead>\n            <twig:TableHead>Status</twig:TableHead>\n            <twig:TableHead>Method</twig:TableHead>\n            <twig:TableHead className=\"text-right\">Amount</twig:TableHead>\n        </twig:TableRow>\n    </twig:TableHeader>\n    <twig:TableBody>\n        <twig:TableRow>\n            <twig:TableCell className=\"font-medium\">INV001</twig:TableCell>\n            <twig:TableCell>Paid</twig:TableCell>\n            <twig:TableCell>Credit Card</twig:TableCell>\n            <twig:TableCell className=\"text-right\">$250.00</twig:TableCell>\n        </twig:TableRow>\n    </twig:TableBody>\n</twig:Table>",
+    "fingerprint": "5a751e10ced1ea31673c87632f1b88c8",
+    "dependencies": []
+}

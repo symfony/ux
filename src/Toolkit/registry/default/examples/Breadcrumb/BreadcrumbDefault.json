@@ -1,0 +1,10 @@
+{
+    "name": "BreadcrumbDefault",
+    "manifest": "examples/Breadcrumb/BreadcrumbDefault.json",
+    "theme": "",
+    "type": "example",
+    "code": "<twig:Breadcrumb>\n    <twig:BreadcrumbList>\n    <twig:BreadcrumbItem>\n        <twig:BreadcrumbLink href=\"/\">Home</twig:BreadcrumbLink>\n    </twig:BreadcrumbItem>\n    <twig:BreadcrumbSeparator />\n    <twig:BreadcrumbItem>\n        <twig:BreadcrumbLink href=\"/docs\">Docs</twig:BreadcrumbLink>\n    </twig:BreadcrumbItem>\n    <twig:BreadcrumbSeparator />\n    <twig:BreadcrumbItem>\n        <twig:BreadcrumbLink href=\"/docs/components\">Components</twig:BreadcrumbLink>\n    </twig:BreadcrumbItem>\n    <twig:BreadcrumbSeparator />\n    <twig:BreadcrumbItem>\n        <twig:BreadcrumbPage>Breadcrumb</twig:BreadcrumbPage>\n    </twig:BreadcrumbItem>\n    </twig:BreadcrumbList>\n</twig:Breadcrumb>",
+    "fingerprint": "189cc730241ee5755e0766511a619062",
+    "dependencies": [],
+    "parentName": "Breadcrumb"
+}

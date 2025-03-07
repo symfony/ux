@@ -1,0 +1,9 @@
+{
+    "name": "Grid",
+    "manifest": "examples/Grid.json",
+    "theme": "",
+    "type": "example",
+    "code": "<twig:Grid xs=\"1\" md=\"2\" lg=\"3\">\n    <twig:Col>col</twig:Col>\n    <twig:Col>col</twig:Col>\n    <twig:Col>col</twig:Col>\n    <twig:Col md=\"3\" class=\"bg-red-200\">large column</twig:Col>\n    <twig:Col>col</twig:Col>\n    <twig:Col>col</twig:Col>\n</twig:Grid>",
+    "fingerprint": "3e1220930059e0cb7a9571228628eeb9",
+    "dependencies": []
+}

@@ -1,0 +1,10 @@
+{
+    "name": "GridDefault",
+    "manifest": "examples/Grid/GridDefault.json",
+    "theme": "",
+    "type": "example",
+    "code": "<twig:Grid xs=\"1\" md=\"2\" lg=\"3\">\n    <twig:Grid:Col>col</twig:Grid:Col>\n    <twig:Grid:Col>col</twig:Grid:Col>\n    <twig:Grid:Col>col</twig:Grid:Col>\n    <twig:Grid:Col md=\"3\" class=\"bg-red-200\">large column</twig:Grid:Col>\n    <twig:Grid:Col>col</twig:Grid:Col>\n    <twig:Grid:Col>col</twig:Grid:Col>\n</twig:Grid>",
+    "fingerprint": "541ce84a4f1f47b4328a2ff9c98e8c49",
+    "dependencies": [],
+    "parentName": "Grid"
+}

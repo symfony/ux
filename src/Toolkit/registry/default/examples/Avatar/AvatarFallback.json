@@ -1,0 +1,10 @@
+{
+    "name": "AvatarFallback",
+    "manifest": "examples/Avatar/AvatarFallback.json",
+    "theme": "",
+    "type": "example",
+    "code": "<twig:Avatar>\n    <twig:AvatarFallback>JF</twig:AvatarFallback>\n</twig:Avatar>",
+    "fingerprint": "365cc9da891643d56a68d587ce56c686",
+    "dependencies": [],
+    "parentName": "Avatar"
+}

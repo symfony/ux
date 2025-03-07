@@ -1,0 +1,10 @@
+{
+    "name": "CardBasic",
+    "manifest": "examples/Card/CardBasic.json",
+    "theme": "",
+    "type": "example",
+    "code": "<twig:Card>\n    <twig:CardHeader>\n        <twig:CardTitle>Card Title</twig:CardTitle>\n        <twig:CardDescription>Card Description</twig:CardDescription>\n    </twig:CardHeader>\n    <twig:CardContent>\n        <p>Card Content</p>\n    </twig:CardContent>\n    <twig:CardFooter>\n        <twig:Button primary class=\"w-full\">Go</twig:Button>\n    </twig:CardFooter>\n</twig:Card>",
+    "fingerprint": "ae40fa65fc2d9367b88b6f07ff7a35e6",
+    "dependencies": [],
+    "parentName": "Card"
+}

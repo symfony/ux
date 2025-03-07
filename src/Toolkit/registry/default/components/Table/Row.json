@@ -1,0 +1,9 @@
+{
+    "name": "Row",
+    "manifest": "components/Table/Row.json",
+    "theme": "",
+    "type": "component",
+    "code": "<tr {{ attributes.without('class') }}\n    class=\"{{ (' ' ~ attributes.render('class'))|tailwind_merge }}\"\n>\n    {% block content %}Row{% endblock %}\n</tr>\n",
+    "fingerprint": "0fded51fb960081206bbb62d932951a0",
+    "dependencies": []
+}

@@ -1,0 +1,20 @@
+{%- props -%}
+{%- set style = html_cva(
+    base: 'flex h-9 w-9 items-center justify-center',
+    variants: {},
+    compoundVariants: []
+) -%}
+
+<span
+    class="{{ style.apply({}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({}).without('class') }}
+    role="presentation"
+    aria-hidden="true"
+>
+    {% set _block = block('content') %}
+    {% if content is defined and content is not empty %}
+        {% block content %}{% endblock %}
+    {% else %}
+        <span class="h-4 w-4">...</span>
+    {% endif %}
+</span>

@@ -1,0 +1,12 @@
+{
+    "name": "Grid",
+    "manifest": "components/Grid.json",
+    "theme": "",
+    "type": "component",
+    "code": "{%- props\n    xs = 0,\n    sm = 0,\n    md = 0,\n    lg = 0,\n    xl = 0,\n    align = '',\n    justify = '',\n    direction = '',\n    gap = 0,\n-%}\n\n{% set xsSize = false %}{%  if xs > 0 %}{% set xsSize = \"true\" %}{% endif %}\n{% set smSize = false %}{%  if sm > 0 %}{% set smSize = \"true\" %}{% endif %}\n{% set mdSize = false %}{%  if md > 0 %}{% set mdSize = \"true\" %}{% endif %}\n{% set lgSize = false %}{%  if lg > 0 %}{% set lgSize = \"true\" %}{% endif %}\n{% set xlSize = false %}{%  if xl > 0 %}{% set xlSize = \"true\" %}{% endif %}\n\n{% set alignClass = '' %}\n{% if align == 'start' %}{% set alignClass = 'items-start' %}\n{% elseif align == 'center' %}{% set alignClass = 'items-center' %}\n{% elseif align == 'end' %}{% set alignClass = 'items-end' %}\n{% endif %}\n\n{% set justifyClass = '' %}\n{% if justify == 'start' %}{% set justifyClass = 'justify-start' %}\n{% elseif justify == 'center' %}{% set justifyClass = 'justify-center' %}\n{% elseif justify == 'end' %}{% set justifyClass = 'justify-end' %}\n{% elseif justify == 'between' %}{% set justifyClass = 'justify-between' %}\n{% elseif justify == 'around' %}{% set justifyClass = 'justify-around' %}\n{% elseif justify == 'evenly' %}{% set justifyClass = 'justify-evenly' %}\n{% endif %}\n\n{% set directionClass = '' %}\n{% if direction == 'row' %}{% set directionClass = 'flex-row' %}\n{% elseif direction == 'column' %}{% set directionClass = 'flex-col' %}\n{% endif %}\n\n{% set gapClass = '' %}\n{% if gap > 0 %}\n    {% set gapClass = 'gap-' ~ gap %}\n{% endif %}\n{%- set style = html_cva(\n    base: 'grid',\n    variants: {\n        xsSize: {\n            \"true\": 'grid-cols-' ~ xs,\n        },\n        smSize: {\n            \"true\": 'sm:grid-cols-' ~ sm,\n        },\n        mdSize: {\n            \"true\": 'md:grid-cols-' ~ md,\n        },\n        lgSize: {\n            \"true\": 'lg:grid-cols-' ~ lg,\n        },\n        xlSize: {\n            \"true\": 'xl:grid-cols-' ~ xl,\n        },\n    },\n) -%}\n<div\n        class=\"{{ style.apply({xsSize, smSize, mdSize, lgSize, xlSize}, attributes.render('class'))|tailwind_merge }} {{ alignClass }} {{ justifyClass }} {{ directionClass }} {{ gapClass }}\"\n        {{ attributes.defaults({}).without('class') }}\n>\n    {% block content %}{% endblock %}\n</div>",
+    "fingerprint": "ddc1e8a66b02354dceb8301d389f1abd",
+    "dependencies": [
+        "Col",
+        "Row"
+    ]
+}

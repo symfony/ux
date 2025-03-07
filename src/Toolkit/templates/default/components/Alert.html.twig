@@ -1,0 +1,6 @@
+<div {{ attributes.without('class') }}
+    class="{{ (' ' ~ attributes.render('class'))|tailwind_merge }}"
+>
+    <twig:Button>Dependency test</twig:Button>
+    {% block content %}Alert{% endblock %}
+</div>

@@ -1,0 +1,10 @@
+{
+    "name": "CardFooter",
+    "manifest": "components/Card/CardFooter.json",
+    "theme": "",
+    "type": "component",
+    "code": "{%- props -%}\n{%- set style = html_cva(\n    base: 'flex items-center p-6 pt-0',\n    variants: {},\n    compoundVariants: []\n) -%}\n\n<div\n        class=\"{{ style.apply({}, attributes.render('class'))|tailwind_merge }}\"\n        {{ attributes.defaults({}).without('class') }}\n>\n    {% block content %}{% endblock %}\n</div>\n",
+    "fingerprint": "e832021c9cf976ced3995fd270e7ff70",
+    "dependencies": [],
+    "parentName": "Card"
+}

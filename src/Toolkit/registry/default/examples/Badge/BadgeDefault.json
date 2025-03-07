@@ -1,0 +1,10 @@
+{
+    "name": "BadgeDefault",
+    "manifest": "examples/Badge/BadgeDefault.json",
+    "theme": "",
+    "type": "example",
+    "code": "<twig:Badge>Badge</twig:Badge>\n",
+    "fingerprint": "6eeb538fce2bda2152dd7af729d01253",
+    "dependencies": [],
+    "parentName": "Badge"
+}

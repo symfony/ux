@@ -1,0 +1,13 @@
+{%- props -%}
+{%- set style = html_cva(
+    base: 'transition-colors hover:text-foreground',
+    variants: {},
+    compoundVariants: []
+) -%}
+
+<a
+    class="{{ style.apply({}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({}).without('class') }}
+>
+    {% block content %}{% endblock %}
+</a>

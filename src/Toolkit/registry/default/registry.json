@@ -1,0 +1,379 @@
+{
+    "name": "Symfony",
+    "licenses": [
+        "MIT"
+    ],
+    "homepage": "https://www.symfony.com",
+    "items": [
+        {
+            "name": "Alert",
+            "manifest": "components/Alert.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [
+                "Button"
+            ]
+        },
+        {
+            "name": "AspectRatio",
+            "manifest": "components/AspectRatio.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": []
+        },
+        {
+            "name": "Avatar",
+            "manifest": "components/Avatar.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [
+                "AvatarFallback",
+                "AvatarImage"
+            ]
+        },
+        {
+            "name": "AvatarFallback",
+            "manifest": "components/Avatar/AvatarFallback.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Avatar"
+        },
+        {
+            "name": "AvatarImage",
+            "manifest": "components/Avatar/AvatarImage.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Avatar"
+        },
+        {
+            "name": "Badge",
+            "manifest": "components/Badge.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": []
+        },
+        {
+            "name": "Blank",
+            "manifest": "components/Blank.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": []
+        },
+        {
+            "name": "Breadcrumb",
+            "manifest": "components/Breadcrumb.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [
+                "BreadcrumbEllipsis",
+                "BreadcrumbItem",
+                "BreadcrumbLink",
+                "BreadcrumbList",
+                "BreadcrumbPage",
+                "BreadcrumbSeparator"
+            ]
+        },
+        {
+            "name": "BreadcrumbEllipsis",
+            "manifest": "components/Breadcrumb/BreadcrumbEllipsis.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Breadcrumb"
+        },
+        {
+            "name": "BreadcrumbItem",
+            "manifest": "components/Breadcrumb/BreadcrumbItem.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Breadcrumb"
+        },
+        {
+            "name": "BreadcrumbLink",
+            "manifest": "components/Breadcrumb/BreadcrumbLink.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Breadcrumb"
+        },
+        {
+            "name": "BreadcrumbList",
+            "manifest": "components/Breadcrumb/BreadcrumbList.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Breadcrumb"
+        },
+        {
+            "name": "BreadcrumbPage",
+            "manifest": "components/Breadcrumb/BreadcrumbPage.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Breadcrumb"
+        },
+        {
+            "name": "BreadcrumbSeparator",
+            "manifest": "components/Breadcrumb/BreadcrumbSeparator.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Breadcrumb"
+        },
+        {
+            "name": "Button",
+            "manifest": "components/Button.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": []
+        },
+        {
+            "name": "Card",
+            "manifest": "components/Card.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [
+                "CardContent",
+                "CardDescription",
+                "CardFooter",
+                "CardHeader",
+                "CardTitle"
+            ]
+        },
+        {
+            "name": "CardContent",
+            "manifest": "components/Card/CardContent.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Card"
+        },
+        {
+            "name": "CardDescription",
+            "manifest": "components/Card/CardDescription.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Card"
+        },
+        {
+            "name": "CardFooter",
+            "manifest": "components/Card/CardFooter.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Card"
+        },
+        {
+            "name": "CardHeader",
+            "manifest": "components/Card/CardHeader.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Card"
+        },
+        {
+            "name": "CardTitle",
+            "manifest": "components/Card/CardTitle.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Card"
+        },
+        {
+            "name": "Grid",
+            "manifest": "components/Grid.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [
+                "Col",
+                "Row"
+            ]
+        },
+        {
+            "name": "Col",
+            "manifest": "components/Grid/Col.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Grid"
+        },
+        {
+            "name": "Row",
+            "manifest": "components/Grid/Row.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Grid"
+        },
+        {
+            "name": "Navbar",
+            "manifest": "components/Navbar.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": []
+        },
+        {
+            "name": "Table",
+            "manifest": "components/Table.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [
+                "TableBody",
+                "TableCaption",
+                "TableCell",
+                "TableFooter",
+                "TableHead",
+                "TableHeader",
+                "TableRow"
+            ]
+        },
+        {
+            "name": "TableBody",
+            "manifest": "components/Table/TableBody.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Table"
+        },
+        {
+            "name": "TableCaption",
+            "manifest": "components/Table/TableCaption.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Table"
+        },
+        {
+            "name": "TableCell",
+            "manifest": "components/Table/TableCell.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Table"
+        },
+        {
+            "name": "TableFooter",
+            "manifest": "components/Table/TableFooter.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Table"
+        },
+        {
+            "name": "TableHead",
+            "manifest": "components/Table/TableHead.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Table"
+        },
+        {
+            "name": "TableHeader",
+            "manifest": "components/Table/TableHeader.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Table"
+        },
+        {
+            "name": "TableRow",
+            "manifest": "components/Table/TableRow.json",
+            "theme": "",
+            "type": "component",
+            "dependencies": [],
+            "parentName": "Table"
+        },
+        {
+            "name": "AspectRatioDefault",
+            "manifest": "examples/AspectRatio/AspectRatioDefault.json",
+            "theme": "",
+            "type": "example",
+            "dependencies": [],
+            "parentName": "AspectRatio"
+        },
+        {
+            "name": "AspectRatioTiers",
+            "manifest": "examples/AspectRatio/AspectRatioTiers.json",
+            "theme": "",
+            "type": "example",
+            "dependencies": [],
+            "parentName": "AspectRatio"
+        },
+        {
+            "name": "AvatarFallback",
+            "manifest": "examples/Avatar/AvatarFallback.json",
+            "theme": "",
+            "type": "example",
+            "dependencies": [],
+            "parentName": "Avatar"
+        },
+        {
+            "name": "AvatarImage",
+            "manifest": "examples/Avatar/AvatarImage.json",
+            "theme": "",
+            "type": "example",
+            "dependencies": [],
+            "parentName": "Avatar"
+        },
+        {
+            "name": "BadgeDefault",
+            "manifest": "examples/Badge/BadgeDefault.json",
+            "theme": "",
+            "type": "example",
+            "dependencies": [],
+            "parentName": "Badge"
+        },
+        {
+            "name": "BadgeOutline",
+            "manifest": "examples/Badge/BadgeOutline.json",
+            "theme": "",
+            "type": "example",
+            "dependencies": [],
+            "parentName": "Badge"
+        },
+        {
+            "name": "BreadcrumbDefault",
+            "manifest": "examples/Breadcrumb/BreadcrumbDefault.json",
+            "theme": "",
+            "type": "example",
+            "dependencies": [],
+            "parentName": "Breadcrumb"
+        },
+        {
+            "name": "ButtonDefault",
+            "manifest": "examples/Button/ButtonDefault.json",
+            "theme": "",
+            "type": "example",
+            "dependencies": [],
+            "parentName": "Button"
+        },
+        {
+            "name": "CardBasic",
+            "manifest": "examples/Card/CardBasic.json",
+            "theme": "",
+            "type": "example",
+            "dependencies": [],
+            "parentName": "Card"
+        },
+        {
+            "name": "GridDefault",
+            "manifest": "examples/Grid/GridDefault.json",
+            "theme": "",
+            "type": "example",
+            "dependencies": [],
+            "parentName": "Grid"
+        },
+        {
+            "name": "TableDefault",
+            "manifest": "examples/Table/TableDefault.json",
+            "theme": "",
+            "type": "example",
+            "dependencies": [],
+            "parentName": "Table"
+        }
+    ]
+}

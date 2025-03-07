@@ -1,0 +1,13 @@
+{%- props -%}
+{%- set style = html_cva(
+    base: 'inline-flex items-center gap-1.5',
+    variants: {},
+    compoundVariants: []
+) -%}
+
+<li
+    class="{{ style.apply({}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({}).without('class') }}
+>
+    {% block content %}{% endblock %}
+</li>

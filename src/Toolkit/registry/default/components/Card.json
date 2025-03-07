@@ -1,0 +1,15 @@
+{
+    "name": "Card",
+    "manifest": "components/Card.json",
+    "theme": "",
+    "type": "component",
+    "code": "{%- props -%}\n{%- set style = html_cva(\n    base: 'rounded-xl border bg-card text-card-foreground shadow',\n    variants: {},\n    compoundVariants: []\n) -%}\n\n<div\n        class=\"{{ style.apply({}, attributes.render('class'))|tailwind_merge }}\"\n        {{ attributes.defaults({}).without('class') }}\n>\n    {% block content %}{% endblock %}\n</div>\n",
+    "fingerprint": "3dbab35abce06e5c4480927c0262c887",
+    "dependencies": [
+        "CardContent",
+        "CardDescription",
+        "CardFooter",
+        "CardHeader",
+        "CardTitle"
+    ]
+}

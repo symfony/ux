@@ -1,0 +1,10 @@
+{
+    "name": "ButtonDefault",
+    "manifest": "examples/Button/ButtonDefault.json",
+    "theme": "",
+    "type": "example",
+    "code": "<twig:Button>\n    Click me\n</twig:Button>\n",
+    "fingerprint": "3eb526db2fead527e523612e7af16ac0",
+    "dependencies": [],
+    "parentName": "Button"
+}

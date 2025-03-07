@@ -1,0 +1,9 @@
+{
+    "name": "Navbar",
+    "manifest": "components/Navbar.json",
+    "theme": "",
+    "type": "component",
+    "code": "<nav {{ attributes.without('class') }}\n    class=\"{{ (' ' ~ attributes.render('class'))|tailwind_merge }}\"\n>\n    {% block content %}{% endblock %}\n</nav>\n",
+    "fingerprint": "213add68cdffa8aa3a270d7629bb489b",
+    "dependencies": []
+}

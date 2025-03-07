@@ -1,0 +1,10 @@
+{
+    "name": "BreadcrumbSeparator",
+    "manifest": "components/Breadcrumb/BreadcrumbSeparator.json",
+    "theme": "",
+    "type": "component",
+    "code": "{%- props -%}\n{%- set style = html_cva(\n    base: '[&>svg]:w-3.5 [&>svg]:h-3.5',\n    variants: {},\n    compoundVariants: []\n) -%}\n\n<li\n    class=\"{{ style.apply({}, attributes.render('class'))|tailwind_merge }}\"\n    {{ attributes.defaults({}).without('class') }}\n    role=\"presentation\"\n    aria-hidden=\"true\"\n>\n    {% set _block = block('content') %}\n    {% if content is defined and content is not empty %}\n        {% block content %}{% endblock %}\n    {% else %}\n        <twig:ux:Icon name=\"mdi:chevron-right\" />\n    {% endif %}\n</li>\n",
+    "fingerprint": "968a5bd3d8061b5611acfa662499d109",
+    "dependencies": [],
+    "parentName": "Breadcrumb"
+}
