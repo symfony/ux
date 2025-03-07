@@ -1,0 +1,5 @@
+/.git* export-ignore
+/.symfony.bundle.yaml export-ignore
+/phpunit.xml.dist export-ignore
+/doc export-ignore
+/tests export-ignore
