@@ -60,5 +60,8 @@ return static function (ContainerConfigurator $container): void {
 
         ->set('turbo.kernel.request_listener', RequestListener::class)
             ->tag('kernel.event_listener', ['event' => KernelEvents::REQUEST, 'priority' => 256])
+
+        ->set('turbo.web_debug_toolbar_turbo_drive_fix_subscriber', WebDebugToolbarTurboDriveFixSubscriber::class)
+            ->tag('kernel.event_subscriber');
     ;
 };
