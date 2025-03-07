@@ -1,0 +1,91 @@
+{% extends 'base.html.twig' %}
+
+{% block content %}
+    {% block body %}{% endblock %}
+{% endblock %}
+
+{% block javascripts %}
+    {% if cssFramework|default('tailwindcss') == 'tailwindcss' %}
+        <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    {% endif %}
+{% endblock %}
+
+{% block stylesheets %}
+    {% if cssFramework|default('tailwindcss') == 'tailwindcss' %}
+        <style>
+        @layer base {
+            :root {
+                --background: 0 0% 100%;
+                --foreground: 222.2 47.4% 11.2%;
+                --muted: 210 40% 96.1%;
+                --muted-foreground: 215.4 16.3% 46.9%;
+                --popover: 0 0% 100%;
+                --popover-foreground: 222.2 47.4% 11.2%;
+                --border: 214.3 31.8% 91.4%;
+                --input: 214.3 31.8% 91.4%;
+                --card: 0 0% 100%;
+                --card-foreground: 222.2 47.4% 11.2%;
+                --primary: 222.2 47.4% 11.2%;
+                --primary-foreground: 210 40% 98%;
+                --secondary: 210 40% 96.1%;
+                --secondary-foreground: 222.2 47.4% 11.2%;
+                --accent: 210 40% 96.1%;
+                --accent-foreground: 222.2 47.4% 11.2%;
+                --destructive: 0 100% 50%;
+                --destructive-foreground: 210 40% 98%;
+                --ring: 215 20.2% 65.1%;
+                --radius: 0.5rem;
+            }
+        }
+
+        {# we use CDN for the moment. We compile the syles manually #}
+        {% set classesToUses = [
+            'background',
+            'foreground',
+            'muted',
+            'muted-foreground',
+            'popover',
+            'popover-foreground',
+            'border',
+            'input',
+            'card',
+            'card-foreground',
+            'primary',
+            'primary-foreground',
+            'secondary',
+            'secondary-foreground',
+            'accent',
+            'accent-foreground',
+            'destructive',
+            'destructive-foreground',
+            'ring', 
+        ] %}
+        {% for class in classesToUses %}
+            .{{ class }} { background-color: hsl(var(--{{ class }})); }
+            .bg-{{ class }} { background-color: hsl(var(--{{ class }})); }
+            .text-{{ class }} { color: hsl(var(--{{ class }})); }
+
+            .hover:{{ class }} { background-color: hsl(var(--{{ class }})); }
+            .focus:{{ class }} { background-color: hsl(var(--{{ class }})); }
+            .active:{{ class }} { background-color: hsl(var(--{{ class }})); }
+
+            .hover:bg-{{ class }} { background-color: hsl(var(--{{ class }})); }
+            .focus:bg-{{ class }} { background-color: hsl(var(--{{ class }})); }
+            .active:bg-{{ class }} { background-color: hsl(var(--{{ class }})); }
+
+            .hover:text-{{ class }} { color: hsl(var(--{{ class }})); }
+            .focus:text-{{ class }} { color: hsl(var(--{{ class }})); }
+            .active:text-{{ class }} { color: hsl(var(--{{ class }})); }
+        {% endfor %}
+        </style>
+    {% endif %}
+{% endblock %}
+
+{% block aside %}
+{% endblock %}
+
+{% block meta %}
+{% endblock %}
+
+{% block banner %}
+{% endblock %}

@@ -2,7 +2,7 @@
     <div class="DocsLink_content">
         {% if isSmall %}
             <p class="d-flex align-items-center">
-                <twig:ux:icon name="mdi:book-open-variant-outline" class="Icon me-2" />
+                <twig:ux:icon name="{{ icon|default('mdi:book-open-variant-outline') }}" class="Icon me-2" />
 
                 <a href="{{ url }}" class="DocsLink_link"
                    rel="{{ isExternal ? 'external noopened noreferrer' }}"

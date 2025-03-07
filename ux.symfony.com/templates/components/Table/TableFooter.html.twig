@@ -1,13 +1,13 @@
 {%- props -%}
 {%- set style = html_cva(
-    base: 'rounded-xl border bg-card text-card-foreground shadow',
+    base: 'bg-muted/50 border-t font-medium [&>tr]:last:border-b-0',
     variants: {},
     compoundVariants: []
 ) -%}
 
-<div
+<tfoot
         class="{{ style.apply({}, attributes.render('class'))|tailwind_merge }}"
         {{ attributes.defaults({}).without('class') }}
 >
     {% block content %}{% endblock %}
-</div>
+</tfoot>

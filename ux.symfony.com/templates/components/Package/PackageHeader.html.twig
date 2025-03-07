@@ -27,6 +27,16 @@
                 title="Read the docs"
                 url="{{ package.officialDocsUrl }}"
             />
+
+            {% if packageBrowseUrl is defined %}
+                <twig:DocsLink
+                    icon="mdi:package-variant-closed"
+                    class="ms-3"
+                    size="sm"
+                    title="{{ packageBrowseText|default('Explore') }}"
+                    url="{{ packageBrowseUrl }}"
+                />
+            {% endif %}
         </div>
     </div>
 </div>

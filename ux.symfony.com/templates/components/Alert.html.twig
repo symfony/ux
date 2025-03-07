@@ -1,4 +1,6 @@
-<div class="alert alert-{{ type }} alert-dismissible" role="alert">
-    <twig:ux:icon name="{{ this.icon }}" class="Icon bi" />
-    {{ message }}
+<div {{ attributes.without('class') }}
+    class="{{ (' ' ~ attributes.render('class'))|tailwind_merge }}"
+>
+    <twig:Button>Dependency test</twig:Button>
+    {% block content %}Alert{% endblock %}
 </div>

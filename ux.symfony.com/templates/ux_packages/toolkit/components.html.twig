@@ -1,0 +1,107 @@
+{% extends 'base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <meta name="turbo-prefetch" content="false">
+{% endblock %}
+
+{% set meta = {
+    title: 'UX Toolkit - Build your Design System.',
+    description: 'Collection of components and templates that you can use to build your pages.',
+    canonical: url('app_toolkit_components'),
+    social: {
+        title: 'UX Toolkit - Build your Design System.',
+        description: 'Collection of components and templates that you can use to build your pages.',
+        image: {
+            url: absolute_url(asset(package.getSocialImage('1200x675'))),
+            type: 'image/png',
+            width: 1200,
+            height: 675,
+            alt: package.humanName ~ ' - Component Toolkit',
+        },
+    }
+} %}
+
+{% block header %}
+    {{ include('_header.html.twig', {
+        theme: 'white'
+    }) }}
+{% endblock %}
+
+
+{% block content %}
+
+    {% component PackageHeader with {
+        package: package.name,
+        eyebrowText: "Build your Design System.",
+        installOnlyInDevMode: true
+    } %}
+        {% block title_header %}
+            Build your Design System.
+        {% endblock %}
+
+        {% block sub_content %}
+            Collection of components and templates that you can use to build your pages.
+        {% endblock %}
+    {% endcomponent %}
+
+    <section class="container-fluid container-xxl px-4 px-md-5 py-3">
+       <div class="row">
+            <div class="col-4">
+                <h3>Components</h2>
+                <div>
+                    {% for component in components %}
+                        {% if component.type.value == 'component' and component.parentName is null %}
+                        <a  href="{{ url('app_toolkit_components', {currentComponent: component.name}) }}" 
+                            class="d-block py-2 px-3 mb-2 rounded-3 text-decoration-none {% if currentComponent.name == component.name %}bg-primary text-white{% else %}text-dark{% endif %}">
+                            {{ component.name }}
+                        </a>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+
+
+            <div class="col-8">
+                <h3>{{ currentComponent.name }}</h3>
+                <div class="pt-3">
+                    <h4>Installation</h4>
+                    <p>
+                        Run this command once to generate the <code>templates/components/{{ currentComponent.name|lower }}.html.twig</code> file in your project.
+                    </p>
+                    {% component Terminal with {bottomPadding: 20} %}
+                        {% block content %}
+                            php bin/console ux:toolkit:install  {{ currentComponent.name }}
+                        {% endblock %}
+                    {% endcomponent %}
+                </div>  
+
+                {% if examples is not empty %}
+                    <div class="pt-5">
+                        <h4>Examples</h4>
+                        <p>
+                            Now you can directly use the following examples in your twig templates.
+                        </p>
+
+                        {% for example in examples %}
+                            <div class="mt-4 mb-3">
+                                <h5>{{ example.name }}</h5>
+                                <iframe src="{{ url('app_toolkit_component_preview', {currentComponent: example.name}) }}" 
+                                    class="w-100 border-0 rounded-3 shadow-sm p-4" 
+                                    style="height: 400px;"></iframe>
+
+                                <div class="mt-3">Your code:</div>
+                                <div class="pt-3">
+                                    <twig:Code:CodeBlockEmbed code="{{ example.code|trim }}" language="html" highlight="true" />
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>  
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+
+{% endblock %}

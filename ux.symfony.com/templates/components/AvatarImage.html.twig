@@ -1,0 +1,11 @@
+{%- props -%}
+{%- set style = html_cva(
+    base: 'aspect-square h-full w-full',
+    variants: {},
+    compoundVariants: []
+) -%}
+
+<img
+    class="{{ style.apply({}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({}).without('class') }}
+/>

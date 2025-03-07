@@ -4,7 +4,7 @@
         <div class="col-12 col-md-6">
             {% component Terminal with {bottomPadding: 20} %}
                 {% block content %}
-                    composer require {{ package.composerName }}
+                    composer require {% if installOnlyInDevMode|default(false) == true%} --dev {% endif %}{{ package.composerName }}
                 {% endblock %}
             {% endcomponent %}
         </div>

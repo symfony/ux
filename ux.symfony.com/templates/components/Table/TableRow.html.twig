@@ -1,13 +1,13 @@
 {%- props -%}
 {%- set style = html_cva(
-    base: 'rounded-xl border bg-card text-card-foreground shadow',
+    base: 'hover:bg-muted/50 data-[state=selected]:bg-muted border-b transition-colors',
     variants: {},
     compoundVariants: []
 ) -%}
 
-<div
+<tr
         class="{{ style.apply({}, attributes.render('class'))|tailwind_merge }}"
         {{ attributes.defaults({}).without('class') }}
 >
     {% block content %}{% endblock %}
-</div>
+</tr>

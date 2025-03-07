@@ -1,0 +1,34 @@
+{% props 
+    code = '', 
+    language = 'twig',
+    highlight = true,
+%}
+
+<div
+    class="IconModal__code"
+    data-controller="clipboarder"
+>
+    {% set _code -%}
+        {% block content -%}
+            {{ code ? code|trim|raw }}
+        {%- endblock -%}
+    {%- endset %}
+
+    {% if highlight %}
+        <pre
+            class="language-{{ language }}"
+            style="--height: auto"
+            data-clipboarder-target="source"
+            ><code>{{ _code ? _code|trim|raw|highlight(language) : code|highlight(language) }}</code>
+        </pre>
+    {% else %}
+        <pre
+            style="--height: auto"
+            data-clipboarder-target="source"
+        ><code>{{ _code ? _code|trim|raw : code }}</code></pre>
+    {% endif %}
+
+    <button class="btn btn-sm IconModalcopy" data-action="clipboarder#copy" data-clipboarder-target="button">
+        <twig:ux:icon name="copy" />
+    </button>
+</div>

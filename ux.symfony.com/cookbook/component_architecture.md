@@ -42,15 +42,15 @@ So here you can see we have an `Alert` component that itself uses an Icon compon
 Or you can compose with the following syntax:
 
 ```twig
-<twig:Card>
+<twig:Alert>
     <twig:ux:icon name="info"/>
     <twig:Button>
         <twig:ux:icon name="close" />
     </twig:Button>
-</twig:Card>
+</twig:Alert>
 ```
 
-So here we have a `Card` component, and we provide the content of this component with two other components.
+So here we have a `Alert` component, and we provide the content of this component with two other components.
 
 ### Independence
 

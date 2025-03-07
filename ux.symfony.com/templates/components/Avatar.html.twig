@@ -1,13 +1,13 @@
 {%- props -%}
 {%- set style = html_cva(
-    base: 'rounded-xl border bg-card text-card-foreground shadow',
+    base: 'relative flex h-10 w-10 shrink-0 overflow-hidden rounded-full',
     variants: {},
     compoundVariants: []
 ) -%}
 
-<div
+<span
         class="{{ style.apply({}, attributes.render('class'))|tailwind_merge }}"
         {{ attributes.defaults({}).without('class') }}
 >
     {% block content %}{% endblock %}
-</div>
+</span>

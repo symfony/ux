@@ -32,4 +32,6 @@ return [
     Symfonycasts\SassBundle\SymfonycastsSassBundle::class => ['all' => true],
     Symfony\UX\Icons\UXIconsBundle::class => ['all' => true],
     Symfony\UX\Map\UXMapBundle::class => ['all' => true],
+    Symfony\UX\Toolkit\UxToolkitBundle::class => ['all' => true],
+    TalesFromADev\Twig\Extra\Tailwind\Bridge\Symfony\Bundle\TalesFromADevTwigExtraTailwindBundle::class => ['all' => true],
 ];

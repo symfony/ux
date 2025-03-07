@@ -23,7 +23,7 @@
     <div class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
         <div style="display: grid; gap: 3rem; grid-template-columns: 1fr 1fr 1fr;">
             {% for cookbook in cookbooks %}
-                <twig:Card
+                <twig:CookbookCard
                     name="{{ cookbook.title }}"
                     description="{{ cookbook.description }}"
                     image="{{ asset('images/cookbook/%s-1280x720.png'|format(cookbook.slug)) }}"

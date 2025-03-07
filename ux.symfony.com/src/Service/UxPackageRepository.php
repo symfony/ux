@@ -231,6 +231,20 @@ class UxPackageRepository
                 'Switch the visibility of a password field',
             ),
 
+            new UxPackage(
+                'toolkit',
+                'Toolkit',
+                'app_toolkit',
+                '#BE0404',
+                'linear-gradient(142deg,rgb(60, 230, 236) -15%,rgb(77, 97, 214) 95%)',
+                'Build your Design System.',
+                'Collection of components and templates that you can use to build your pages.',
+                null,
+                null,
+                null,
+                true
+            ),
+
             (new UxPackage(
                 'typed',
                 'Typed',
