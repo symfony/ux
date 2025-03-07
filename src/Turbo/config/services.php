@@ -63,5 +63,4 @@ return static function (ContainerConfigurator $container): void {
 
         ->set('turbo.web_debug_toolbar_turbo_drive_fix_subscriber', WebDebugToolbarTurboDriveFixSubscriber::class)
             ->tag('kernel.event_subscriber');
-    ;
 };
