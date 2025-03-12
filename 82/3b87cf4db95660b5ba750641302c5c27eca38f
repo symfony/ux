@@ -1,0 +1,136 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-03T13:03:02Z
+
+(3) alone is not possible, each UX packages on npm (e.g.: https://www.npmjs.com/package/@symfony/ux-chartjs, https://www.npmjs.com/package/@symfony/ux-translator, ...) mention that the npm package **must** also install the php package.
+
+See #2575 an #691 for more information, but to resume, having standalone JavaScript packages would allow users to install their JavaScript dependencies without needing PHP/Composer, which can be pretty useful in a CI (building Docker images, deploying an app, running JS tests, ...).
+
+---
+
+I would adapt your examples like this:
+
+**(1)** PHP-based and uses AssetMapper
+
+```shell
+$ composer require symfony/ux-cropperjs
+```
+
+**(2)** PHP-based and uses WebpackEncore
+
+```shell
+$ composer require symfony/ux-cropperjs
+$ # if user prefers to keep things separated: npm add -D @symfony/ux-cropperjs
+$ npm install --force
+$ npm run watch
+```
+---
+
+What do you think about that?
+
+> Based on the answers to these questions, let's think about the best possible way of showing this information. Thanks.
+
+This is exactly why I added you as a reviewer 🤗
+
+---------------------------------------------------------------------------
+
+by javiereguiluz at 2025-03-03T15:07:22Z
+
+Thanks for the insights. I would expand each installation section as follows:
+
+```rst
+Installation
+------------
+
+.. caution::
+
+    Before you start, make sure you have `StimulusBundle configured in your app`_.
+
+Run the following command to install this package:
+
+.. code-block:: terminal
+
+    $ composer require symfony/ux-cropperjs
+
+If your Symfony application uses `AssetMapper`_, you don't have to do anything else
+and can move on to the next section.
+
+If your Symfony application uses `Webpack Encore`_, run the following commands
+to install the assets and restart Encore:
+
+.. code-block:: terminal
+
+    $ npm install --force
+    $ npm run watch
+
+.. tip::
+
+    The assets of this package are also provided as the standalone `@symfony/ux-cropperjs`_
+    JavaScript package. This is useful, for example, on continuous integration servers
+    to build Docker images, run JavaScript tests, etc. without using PHP/Composer.
+
+Usage
+-----
+
+[...]
+
+.. _`AssetMapper`: https://symfony.com/doc/current/frontend/asset_mapper.html
+.. _`Webpack Encore`: https://symfony.com/doc/current/frontend/encore/index.html
+```
+
+Although docs should be concise, I think it's fine to be a bit verbose/detailed in the `Install` section because any error here is very frustrating for readers.
+
+I'd mention the scenarios where the JS package is useful. Experts won't need it, but the rest of folks would need this to decide if this is something for them or not.
+
+----
+
+I have a pending question. In the original text, we say things like:
+
+> _Install the bundle using Composer and Symfony Flex:_
+
+What happens if the reader doesn't have Flex installed? Which steps should be done manually? Thanks
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-03T17:52:56Z
+
+I really like your suggestion, thanks Javier!
+
+---
+
+> > _Install the bundle using Composer and Symfony Flex:_
+>
+> What happens if the reader doesn't have Flex installed? Which steps should be done manually? Thanks
+
+If Flex is not installed, then the reader must do (unknown) operations manually:
+1. Add the bundle in `bundles.php`
+2. Do what the recipe does (e.g. with https://github.com/symfony/recipes/blob/main/symfony/ux-vue/2.9/manifest.json (add some lines, copy files, ...)
+3. Modify its `package.json` and add the dependency `file:vendor/symfony/ux-<pkg>/assets`
+4. and maybe more..
+
+Which is far from being ideal.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-03-05T03:34:17Z
+
+> Experts won't need it, but the rest of folks would need this to decide if this is something for them or not.
+
+I would not expose non-experts to manual JS installation for now, as we have not solved the update question as far as I know (@Kocal correct me)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-05T08:33:38Z
+
+@javiereguiluz after some discussions after Simon, I think we will go for the following changes:
+
+1. On `index.rst` documentation files, revert what's been done and add somewhere `for more complex installation scenarios, you can install the assets of symfony/ux-autocomplete from npm` (with a link to https://www.npmjs.com/package/@symfony/ux-autocomplete)
+2. On `src/**/assets/README.md` files, the one shown on https://www.npmjs.com/package/@symfony/ux-autocomplete, add more documentation about _when_ you can install this package, how, and with an example about exact versions
+
+Thus, we add documentation where it's necessary, without adding a lot of documentation to already long documents.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-09T09:11:05Z
+
+After many iterations, I think we are on something really good.
