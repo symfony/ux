@@ -65,8 +65,8 @@ export default class extends Controller {
     }
 
     onInputChange(event: any) {
-        const file = event.target.files[0];
-        if (typeof file === 'undefined') {
+        const files = event.target.files;
+        if (!files.length) {
             return;
         }
 
@@ -74,17 +74,23 @@ export default class extends Controller {
         this.inputTarget.style.display = 'none';
         this.placeholderTarget.style.display = 'none';
 
-        // Show the filename in preview
-        this.previewFilenameTarget.textContent = file.name;
+        // Show the filename in preview with additional files count if needed
+        const firstFile = files[0];
+        let displayText = firstFile.name;
+        if (files.length > 1) {
+            const additionalFiles = files.length - 1;
+            displayText += ` +${additionalFiles} ${additionalFiles === 1 ? 'file' : 'files'}`;
+        }
+        this.previewFilenameTarget.textContent = displayText;
         this.previewTarget.style.display = 'flex';
 
-        // If the file is an image, load it and display it as preview
+        // If the first file is an image, load it and display it as preview
         this.previewImageTarget.style.display = 'none';
-        if (file.type && file.type.indexOf('image') !== -1) {
-            this._populateImagePreview(file);
+        if (firstFile.type && firstFile.type.indexOf('image') !== -1) {
+            this._populateImagePreview(firstFile);
         }
 
-        this.dispatchEvent('change', file);
+        this.dispatchEvent('change', files);
     }
 
     _populateImagePreview(file: Blob) {

@@ -65,6 +65,39 @@ describe('DropzoneController', () => {
                          data-testid="preview-filename"></div>
                 </div>
             </div>
+            <div class="dropzone-container" data-controller="check dropzone" data-testid="container-multiple"> 
+                <input type="file"
+                       style="display: none"
+                       multiple="multiple"
+                       data-dropzone-target="input"
+                       data-testid="input-multiple" />
+        
+                <div class="dropzone-placeholder" 
+                     data-dropzone-target="placeholder" 
+                     data-testid="placeholder-multiple">
+                    Placeholder
+                </div>
+        
+                <div class="dropzone-preview"
+                     data-dropzone-target="preview"
+                     data-testid="preview-multiple"
+                     style="display: none">
+                     
+                    <button type="button"
+                            class="dropzone-preview-button"
+                            data-dropzone-target="previewClearButton"
+                            data-testid="button-multiple"></button>
+        
+                    <div class="dropzone-preview-image"
+                         data-dropzone-target="previewImage"
+                         data-testid="preview-image-multiple"
+                         style="display: none"></div>
+        
+                    <div class="dropzone-preview-filename"
+                         data-dropzone-target="previewFilename" 
+                         data-testid="preview-filename-multiple"></div>
+                </div>
+            </div>
         `);
     });
 
@@ -120,7 +153,7 @@ describe('DropzoneController', () => {
         const file = new File(['hello'], 'hello.png', { type: 'image/png' });
 
         user.upload(input, file);
-        expect(input.files[0]).toStrictEqual(file);
+        await waitFor(() => expect(input.files[0]).toStrictEqual(file));
 
         // The dropzone should be in preview mode
         await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
@@ -128,7 +161,7 @@ describe('DropzoneController', () => {
 
         // The event should have been dispatched
         expect(dispatched).not.toBeNull();
-        expect(dispatched.detail).toStrictEqual(file);
+        expect(dispatched.detail[0]).toStrictEqual(file);
     });
 
     it('on drag', async () => {
@@ -152,5 +185,42 @@ describe('DropzoneController', () => {
         await waitFor(() => expect(getByTestId(container, 'input')).toHaveStyle({ display: 'none' }));
         await waitFor(() => expect(getByTestId(container, 'placeholder')).toHaveStyle({ display: 'none' }));
         await waitFor(() => expect(getByTestId(container, 'preview')).toHaveStyle({ display: 'block' }));
+    });
+
+    it('multiple files chosen', async () => {
+        startStimulus();
+        await waitFor(() => expect(getByTestId(container, 'container-multiple')).toHaveClass('connected'));
+
+        // Attach a listener to ensure the event is dispatched
+        let dispatched = null;
+        getByTestId(container, 'container-multiple').addEventListener('dropzone:change', (event) => {
+            dispatched = event;
+        });
+
+        // Select multiple files
+        const input = getByTestId(container, 'input-multiple');
+        const file1 = new File(['hello1'], 'hello1.png', { type: 'image/png' });
+        const file2 = new File(['hello2'], 'hello2.txt', { type: 'text/plain' });
+        const files = [file1, file2];
+
+        user.upload(input, files);
+
+        // The dropzone should be in preview mode
+        await waitFor(() => expect(getByTestId(container, 'input-multiple')).toHaveStyle({ display: 'none' }));
+        await waitFor(() => expect(getByTestId(container, 'placeholder-multiple')).toHaveStyle({ display: 'none' }));
+        await waitFor(() => expect(getByTestId(container, 'preview-multiple')).toHaveStyle({ display: 'flex' }));
+
+        // The event should have been dispatched with both files
+        expect(dispatched).not.toBeNull();
+        expect(dispatched.detail[0]).toStrictEqual(file1);
+        expect(dispatched.detail[1]).toStrictEqual(file2);
+
+        // Check preview content shows first file name plus count
+        const previewFilename = getByTestId(container, 'preview-filename-multiple');
+        expect(previewFilename.textContent).toBe('hello1.png +1 file');
+
+        // Only the first file (image) should show preview
+        const previewImage = getByTestId(container, 'preview-image-multiple');
+        await waitFor(() => expect(previewImage).toHaveStyle({ display: 'block' }));
     });
 });

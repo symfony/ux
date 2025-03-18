@@ -32,19 +32,25 @@ class default_1 extends Controller {
         this.dispatchEvent('clear');
     }
     onInputChange(event) {
-        const file = event.target.files[0];
-        if (typeof file === 'undefined') {
+        const files = event.target.files;
+        if (!files.length) {
             return;
         }
         this.inputTarget.style.display = 'none';
         this.placeholderTarget.style.display = 'none';
-        this.previewFilenameTarget.textContent = file.name;
+        const firstFile = files[0];
+        let displayText = firstFile.name;
+        if (files.length > 1) {
+            const additionalFiles = files.length - 1;
+            displayText += ` +${additionalFiles} ${additionalFiles === 1 ? 'file' : 'files'}`;
+        }
+        this.previewFilenameTarget.textContent = displayText;
         this.previewTarget.style.display = 'flex';
         this.previewImageTarget.style.display = 'none';
-        if (file.type && file.type.indexOf('image') !== -1) {
-            this._populateImagePreview(file);
+        if (firstFile.type && firstFile.type.indexOf('image') !== -1) {
+            this._populateImagePreview(firstFile);
         }
-        this.dispatchEvent('change', file);
+        this.dispatchEvent('change', files);
     }
     _populateImagePreview(file) {
         if (typeof FileReader === 'undefined') {
