@@ -1,0 +1,152 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-02-25T22:24:01Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/sblondeau/ux/tree/feat/add-marker-icon/src/Map/assets/dist"><b>Map</b></a></td></tr><tr>
+                <td><a href="https://github.com/sblondeau/ux/blob/feat/add-marker-icon/src/Map/assets/dist/abstract_map_controller.d.ts"><code>abstract_map_controller.d.ts</code></a></td>
+            <td>
+                    <code>4.43 kB</code>
+                    / <code>1023 B</code>
+                </td><td>
+                    <code>4.95 kB</code><sup>+12% 📈</sup>
+                    / <code>1.15 kB</code><sup>+15% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/sblondeau/ux/blob/feat/add-marker-icon/src/Map/assets/dist/abstract_map_controller.js"><code>abstract_map_controller.js</code></a></td>
+            <td>
+                    <code>3.88 kB</code>
+                    / <code>1.02 kB</code>
+                </td><td>
+                    <code>3.97 kB</code><sup>+2% 📈</sup>
+                    / <code>1.07 kB</code><sup>+4% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/sblondeau/ux/tree/feat/add-marker-icon/src/Map/src/Bridge/Google/assets/dist"><b>Map (Bridge Google)</b></a></td></tr><tr>
+                <td><a href="https://github.com/sblondeau/ux/blob/feat/add-marker-icon/src/Map/src/Bridge/Google/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>2.55 kB</code>
+                    / <code>794 B</code>
+                </td><td>
+                    <code>2.73 kB</code><sup>+7% 📈</sup>
+                    / <code>828 B</code><sup>+4% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/sblondeau/ux/blob/feat/add-marker-icon/src/Map/src/Bridge/Google/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>10.16 kB</code>
+                    / <code>2.25 kB</code>
+                </td><td>
+                    <code>11.16 kB</code><sup>+10% 📈</sup>
+                    / <code>2.52 kB</code><sup>+12% 📈</sup>
+                </td></tr><tr><td colspan="3"><a href="https://github.com/sblondeau/ux/tree/feat/add-marker-icon/src/Map/src/Bridge/Leaflet/assets/dist"><b>Map (Bridge Leaflet)</b></a></td></tr><tr>
+                <td><a href="https://github.com/sblondeau/ux/blob/feat/add-marker-icon/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.d.ts"><code>map_controller.d.ts</code></a></td>
+            <td>
+                    <code>1.9 kB</code>
+                    / <code>647 B</code>
+                </td><td>
+                    <code>2.03 kB</code><sup>+7% 📈</sup>
+                    / <code>667 B</code><sup>+3% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/sblondeau/ux/blob/feat/add-marker-icon/src/Map/src/Bridge/Leaflet/assets/dist/map_controller.js"><code>map_controller.js</code></a></td>
+            <td>
+                    <code>8.58 kB</code>
+                    / <code>2.37 kB</code>
+                </td><td>
+                    <code>9.63 kB</code><sup>+12% 📈</sup>
+                    / <code>2.58 kB</code><sup>+9% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-02-25T22:41:57Z
+
+Hey, and thanks for the PR!
+I didn't look at the code yet, but by any chance did you see https://github.com/symfony/ux/issues/2109? we had discussed a lot about what we wanted and how.
+
+Thanks!
+
+---------------------------------------------------------------------------
+
+by sblondeau at 2025-02-26T09:57:49Z
+
+> Hey, and thanks for the PR! I didn't look at the code yet, but by any chance did you see #2109? we had discussed a lot about what we wanted and how.
+>
+> Thanks!
+
+I have read it some time ago. I have kept in mind that we should be able to use image url OR svg (OR directly Ux-icon). It was the goal, but maybe I only did a small first step ;-)
+
+---------------------------------------------------------------------------
+
+by sblondeau at 2025-03-12T21:38:03Z
+
+@Kocal thanks for the review, I've just send an update. Let me know if you have other remarks.
+A test is still failing, but it's in TwigComponent, I do not understand why, if you have any idea...
+Thanks :-)
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-15T11:04:53Z
+
+Don't worry for the failing check on TwigComponent, that's not related
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-17T15:30:19Z
+
+I've pull your PR locally and played a bit with what you've done, but unfortunately some things are broken:
+- on Leaflet, there is a white square around SVG icons, IIRC that's because it uses a default CSS class that we should override:
+<img width="830" alt="image" src="https://github.com/user-attachments/assets/1438ca33-f8b9-4475-a40e-29003dfa1b77" />
+
+- it does not render anything on Google Maps, due to an error `Cannot read properties of undefined (reading 'parseFromString')`:
+<img width="818" alt="Capture d’écran 2025-03-17 à 11 35 46" src="https://github.com/user-attachments/assets/88c1888c-e380-4b3c-9551-91fd94997173" />
+
+There are also some changes that were not totally applied, don't worry I'm on it!
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-17T20:13:12Z
+
+PR's description updated
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-18T04:33:35Z
+
+I reworked many minor things (see commits), here is what the following code renders:
+```php
+$map = (new Map())
+    ->center(new Point(48.8566, 2.3522))
+    ->zoom(6)
+;
+
+$cities = require_once __DIR__.'/../../config/cities.php';
+foreach (array_slice($cities, 0, 500) as $i => $city) {
+    $map->addMarker(new Marker(
+        position: new Point($city['latitude'], $city['longitude']),
+        title: $city['label'],
+        icon: match(true) {
+            $i < 150 => Icon::ux('fa:map-marker'),
+            $i < 325 => Icon::url('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/icons/geo-alt.svg'),
+            default => Icon::svg(file_get_contents(__DIR__.'/../../assets/icons/el/map-marker.svg')),
+        }
+
+    ));
+}
+```
+
+For Google <img width="813" alt="Capture d’écran 2025-03-17 à 23 30 17" src="https://github.com/user-attachments/assets/fbba6824-3b79-4d9b-8fd2-ddc5332233b9" />
+and Leaflet<img width="824" alt="Capture d’écran 2025-03-17 à 23 30 02" src="https://github.com/user-attachments/assets/d7b5f803-22f8-4ae0-942e-ef2d5919af2a" />
+
+I will merge tomorrow I think
+
+---------------------------------------------------------------------------
+
+by sblondeau at 2025-03-18T07:52:27Z
+
+Great job @Kocal ! Thanks for this final touch :)
