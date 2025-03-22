@@ -1,0 +1,49 @@
+{
+    "name": "@symfony/ux-threejs",
+    "description": "three integration for Symfony",
+    "license": "MIT",
+    "version": "2.23.0",
+    "keywords": [
+        "symfony-ux"
+    ],
+    "homepage": "https://ux.symfony.com/threejs",
+    "repository": "https://github.com/symfony/ux-threejs",
+    "type": "module",
+    "files": [
+        "dist"
+    ],
+    "main": "dist/controller.js",
+    "types": "dist/controller.d.ts",
+    "scripts": {
+        "build": "node ../../../bin/build_package.js .",
+        "watch": "node ../../../bin/build_package.js . --watch",
+        "test": "../../../bin/test_package.sh .",
+        "check": "biome check",
+        "ci": "biome ci"
+    },
+    "symfony": {
+        "controllers": {
+            "three": {
+                "main": "dist/controller.js",
+                "webpackMode": "eager",
+                "fetch": "eager",
+                "enabled": true
+            }
+        },
+        "importmap": {
+            "@hotwired/stimulus": "^3.0.0",
+            "three": "^0.174.0"
+        }
+    },
+    "peerDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "three": "^0.174.0"
+    },
+    "devDependencies": {
+        "@hotwired/stimulus": "^3.0.0",
+        "happy-dom": "^17.4.4",
+        "resize-observer-polyfill": "^1.5.1",
+        "three": "^0.174.0",
+        "vitest-canvas-mock": "^0.3.3"
+    }
+}
