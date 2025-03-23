@@ -29,7 +29,7 @@ class LivePropMetadataTest extends TestCase
         $component
             ->expects($this->once())
             ->method('modifyProp')
-            ->with($liveProp)
+            ->with($liveProp, 'propWithModifier')
             ->willReturn($liveProp->withFieldName('customField'));
 
         $livePropMetadata = $livePropMetadata->withModifier($component);

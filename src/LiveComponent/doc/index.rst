@@ -2651,6 +2651,47 @@ This way you can also use the component multiple times in the same page and avoi
     <twig:SearchModule alias="q1" />
     <twig:SearchModule alias="q2" />
 
+.. versionadded:: 2.25
+
+   The property name is passed into the modifier function since LiveComponents 2.25.
+
+The ``modifier`` function can also take the name of the property as a secondary parameter.
+It can be used to perform more generic operations inside of the modifier that can be re-used for multiple props::
+
+    abstract class AbstractSearchModule
+    {
+        #[LiveProp(writable: true, url: true, modifier: 'modifyQueryProp')]
+        public string $query = '';
+
+        protected string $urlPrefix = '';
+
+        public function modifyQueryProp(LiveProp $liveProp, string $propName): LiveProp
+        {
+            if ($this->urlPrefix) {
+                return $liveProp->withUrl(new UrlMapping(as: $this->urlPrefix.'-'.$propName));
+            }
+            return $liveProp;
+        }
+    }
+
+    #[AsLiveComponent]
+    class ImportantSearchModule extends AbstractSearchModule
+    {
+    }
+
+    #[AsLiveComponent]
+    class SecondarySearchModule extends AbstractSearchModule
+    {
+        protected string $urlPrefix = 'secondary';
+    }
+
+.. code-block:: html+twig
+
+    <twig:ImportantSearchModule />
+    <twig:SecondarySearchModule />
+
+The ``query`` value will appear in the URL like ``/search?query=my+important+query&secondary-query=my+secondary+query``.
+
 Validating the Query Parameter Values
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

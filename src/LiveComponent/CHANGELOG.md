@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.25.0
+
+- Add property name as second paramter to LiveProp modifier callback
+
 ## 2.23.0
 
 -   Allow configuring the secret used to compute fingerprints and checksums.

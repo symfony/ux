@@ -135,7 +135,7 @@ final class LivePropMetadata
             throw new \LogicException(\sprintf('Method "%s::%s()" given in LiveProp "modifier" does not exist.', $component::class, $modifier));
         }
 
-        $modifiedLiveProp = $component->{$modifier}($this->liveProp);
+        $modifiedLiveProp = $component->{$modifier}($this->liveProp, $this->getName());
         if (!$modifiedLiveProp instanceof LiveProp) {
             throw new \LogicException(\sprintf('Method "%s::%s()" should return an instance of "%s" (given: "%s").', $component::class, $modifier, LiveProp::class, get_debug_type($modifiedLiveProp)));
         }
