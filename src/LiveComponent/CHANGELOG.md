@@ -2,7 +2,8 @@
 
 ## 2.25.0
 
-- Add property name as second paramter to LiveProp modifier callback
+-   Add support for [Symfony UID](https://symfony.com/doc/current/components/uid.html) hydration/dehydration
+-   Add property name as second paramter to LiveProp modifier callback
 
 ## 2.23.0
 

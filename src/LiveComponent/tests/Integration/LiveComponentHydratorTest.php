@@ -13,6 +13,9 @@ namespace Symfony\UX\LiveComponent\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Symfony\Component\Uid\Ulid;
+use Symfony\Component\Uid\Uuid;
+use Symfony\Component\Uid\UuidV4;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Exception\HydrationException;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadata;
@@ -1369,6 +1372,36 @@ final class LiveComponentHydratorTest extends KernelTestCase
                 ->assertObjectAfterHydration(function (object $object) {
                     self::assertEquals('bar', $object->search);
                     self::assertEquals('2024-02-25', $object->date->format('Y-m-d'));
+                })
+            ;
+        }];
+
+        yield 'Uuid: (de)hydrates correctly' => [function () {
+            $uuid = new UuidV4('ffdb229c-13e6-4bc4-939e-c8e73958104c');
+
+            return HydrationTest::create(new class {
+                #[LiveProp]
+                public Uuid $id;
+            })
+                ->mountWith(['id' => $uuid])
+                ->assertDehydratesTo(['id' => 'ffdb229c-13e6-4bc4-939e-c8e73958104c'])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertEquals(new UuidV4('ffdb229c-13e6-4bc4-939e-c8e73958104c'), $object->id);
+                })
+            ;
+        }];
+
+        yield 'Ulid: (de)hydrates correctly' => [function () {
+            $uuid = new Ulid('01AN4Z07BY79KA1307SR9X4MV3');
+
+            return HydrationTest::create(new class {
+                #[LiveProp]
+                public Ulid $id;
+            })
+                ->mountWith(['id' => $uuid])
+                ->assertDehydratesTo(['id' => '01AN4Z07BY79KA1307SR9X4MV3'])
+                ->assertObjectAfterHydration(function (object $object) {
+                    self::assertEquals(new Ulid('01AN4Z07BY79KA1307SR9X4MV3'), $object->id);
                 })
             ;
         }];

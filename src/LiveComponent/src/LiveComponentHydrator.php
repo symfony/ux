@@ -22,6 +22,7 @@ use Symfony\Component\PropertyInfo\Type;
 use Symfony\Component\Serializer\Exception\ExceptionInterface as SerializerExceptionInterface;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
+use Symfony\Component\Uid\AbstractUid;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\Exception\HydrationException;
@@ -505,6 +506,10 @@ final class LiveComponentHydrator
             return $value->value;
         }
 
+        if ($value instanceof AbstractUid) {
+            return (string) $value;
+        }
+
         foreach ($this->hydrationExtensions as $extension) {
             if ($extension->supports($classType)) {
                 return $extension->dehydrate($value);
@@ -551,6 +556,14 @@ final class LiveComponentHydrator
             }
 
             return new $className($value);
+        }
+
+        if (is_a($className, AbstractUid::class, true)) {
+            if (!\is_string($value)) {
+                throw new BadRequestHttpException(\sprintf('The model path "%s" was sent an invalid data type "%s" for a uuid.', $propertyPathForError, get_debug_type($value)));
+            }
+
+            return $className::fromString($value);
         }
 
         foreach ($this->hydrationExtensions as $extension) {
