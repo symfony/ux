@@ -11,7 +11,6 @@
 
 namespace Symfony\UX\Map\Tests\Twig;
 
-use Symfony\Bridge\PhpUnit\ExpectDeprecationTrait;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\UX\Map\Map;
 use Symfony\UX\Map\Point;
@@ -26,8 +25,6 @@ use Twig\Loader\ChainLoader;
 
 class MapExtensionTest extends KernelTestCase
 {
-    use ExpectDeprecationTrait;
-
     protected static function getKernelClass(): string
     {
         return TwigAppKernel::class;
@@ -78,9 +75,9 @@ class MapExtensionTest extends KernelTestCase
         ]));
 
         if (class_exists(DeprecatedCallableInfo::class)) {
-            $this->expectDeprecation('Since symfony/ux-map 2.20: Twig Function "render_map" is deprecated; use "ux_map" instead in test at line 1.');
+            $this->expectUserDeprecationMessage('Since symfony/ux-map 2.20: Twig Function "render_map" is deprecated; use "ux_map" instead in test at line 1');
         } else {
-            $this->expectDeprecation('Since symfony/ux-map 2.20: Twig Function "render_map" is deprecated. Use "ux_map" instead in test at line 1.');
+            $this->expectUserDeprecationMessage('Since symfony/ux-map 2.20: Twig Function "render_map" is deprecated. Use "ux_map" instead in test at line 1');
         }
         $html = $twig->render('test', ['map' => $map]);
         $this->assertSame('<map/>', $html);

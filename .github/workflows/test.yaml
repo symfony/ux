@@ -124,7 +124,13 @@ jobs:
 
             - name: ${{ matrix.component }} Tests
               working-directory: "src/${{ matrix.component }}"
-              run: vendor/bin/simple-phpunit
+              run: |
+                # For packages that use the simple-phpunit runner
+                if [[ -f vendor/bin/simple-phpunit ]]; then
+                  vendor/bin/simple-phpunit
+                else
+                  vendor/bin/phpunit
+                fi
 
     tests-js:
         runs-on: ubuntu-latest

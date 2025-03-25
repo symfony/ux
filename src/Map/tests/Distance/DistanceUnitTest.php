@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Map\Tests\Distance;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Map\Distance\DistanceUnit;
 
@@ -30,9 +31,7 @@ class DistanceUnitTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider provideConvertedUnits
-     */
+    #[DataProvider('provideConvertedUnits')]
     public function testConversionFactorFrom(DistanceUnit $unit, DistanceUnit $otherUnit, float $expected): void
     {
         $this->assertEqualsWithDelta($expected, $unit->getConversionFactorFrom($otherUnit), 0.001);

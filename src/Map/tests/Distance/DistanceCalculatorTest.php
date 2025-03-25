@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Map\Tests\Distance;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Map\Distance\DistanceCalculator;
 use Symfony\UX\Map\Distance\DistanceCalculatorInterface;
@@ -38,9 +39,8 @@ class DistanceCalculatorTest extends TestCase
     /**
      * Test that the non-reference calculators (Haversine and Spherical Cosine)
      * produce results close to the reference (Vincenty) within an acceptable margin.
-     *
-     * @dataProvider distanceAccuracyProvider
      */
+    #[DataProvider('distanceAccuracyProvider')]
     public function testAccuracyAgainstVincenty(Point $point1, Point $point2, float $tolerance): void
     {
         $vincenty = new VincentyDistanceCalculator();

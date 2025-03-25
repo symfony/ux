@@ -21,7 +21,7 @@
         "symfony/ux-map": "^2.19"
     },
     "require-dev": {
-        "symfony/phpunit-bridge": "^6.4|^7.0",
+        "phpunit/phpunit": "^12.0",
         "symfony/ux-icons": "^2.18"
     },
     "autoload": {

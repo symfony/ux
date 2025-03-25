@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Map\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Map\Map;
 use Symfony\UX\Map\Renderer\RendererInterface;
@@ -23,11 +24,9 @@ abstract class RendererTestCase extends TestCase
     /**
      * @return iterable<array{expected_render: string, renderer: RendererInterface, map: Map, attributes: array<mixed>}>
      */
-    abstract public function provideTestRenderMap(): iterable;
+    abstract public static function provideTestRenderMap(): iterable;
 
-    /**
-     * @dataProvider provideTestRenderMap
-     */
+    #[DataProvider('provideTestRenderMap')]
     public function testRenderMap(string $expectedRender, RendererInterface $renderer, Map $map, array $attributes = []): void
     {
         self::assertSame($expectedRender, $renderer->renderMap($map, $attributes));

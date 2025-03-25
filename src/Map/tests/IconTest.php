@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Map\Tests;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Map\Icon\Icon;
 use Symfony\UX\Map\Icon\SvgIcon;
@@ -39,26 +40,21 @@ class IconTest extends TestCase
     }
 
     /**
-     * @dataProvider provideIcons
-     *
      * @param class-string<Icon> $expectedInstance
      */
+    #[DataProvider('provideIcons')]
     public function testIconConstruction(Icon $icon, string $expectedInstance, array $expectedToArray): void
     {
         self::assertInstanceOf($expectedInstance, $icon);
     }
 
-    /**
-     * @dataProvider provideIcons
-     */
+    #[DataProvider('provideIcons')]
     public function testToArray(Icon $icon, string $expectedInstance, array $expectedToArray): void
     {
         self::assertSame($expectedToArray, $icon->toArray());
     }
 
-    /**
-     * @dataProvider provideIcons
-     */
+    #[DataProvider('provideIcons')]
     public function testFromArray(Icon $icon, string $expectedInstance, array $expectedToArray): void
     {
         self::assertEquals($icon, Icon::fromArray($expectedToArray));
@@ -77,17 +73,15 @@ class IconTest extends TestCase
 
         foreach ($customizationMethods as $method) {
             if (\in_array($method, ['width', 'height'], true)) {
-                yield $method => [$method, 12];
+                yield $method => ['method' => $method, 'args' => [12]];
             } elseif (\in_array($method, $customizationMethods, true)) {
                 throw new \LogicException(\sprintf('The "%s" method is not supposed to be called on the SvgIcon, please modify the test provider.', $method));
             }
         }
     }
 
-    /**
-     * @dataProvider dataProviderForTestSvgIconCustomizationMethodsCanNotBeCalled
-     */
-    public function testSvgIconCustomizationMethodsCanNotBeCalled(string $method, mixed ...$args): void
+    #[DataProvider('dataProviderForTestSvgIconCustomizationMethodsCanNotBeCalled')]
+    public function testSvgIconCustomizationMethodsCanNotBeCalled(string $method, array $args): void
     {
         $this->expectException(\LogicException::class);
         if (\in_array($method, ['width', 'height'], true)) {
