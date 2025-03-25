@@ -236,7 +236,7 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
         plugins.virtual_scroll = {};
     }
     if ('plugins' in this.tomSelectOptionsValue && Array.isArray(this.tomSelectOptionsValue.plugins)) {
-        this.tomSelectOptionsValue.plugins.forEach(pluginName => {
+        this.tomSelectOptionsValue.plugins.forEach((pluginName) => {
             plugins[pluginName] = {};
         });
     }
