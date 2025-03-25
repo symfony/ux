@@ -235,6 +235,11 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
     if (this.urlValue) {
         plugins.virtual_scroll = {};
     }
+    if ('plugins' in this.tomSelectOptionsValue && Array.isArray(this.tomSelectOptionsValue.plugins)) {
+        this.tomSelectOptionsValue.plugins.forEach(pluginName => {
+            plugins[pluginName] = {};
+        });
+    }
     const render = {
         no_results: () => {
             return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
@@ -288,7 +293,7 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
     if (!this.selectElement && !this.urlValue) {
         config.shouldLoad = () => false;
     }
-    return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, config, this.tomSelectOptionsValue);
+    return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, this.tomSelectOptionsValue, config);
 }, _default_1_createAutocomplete = function _default_1_createAutocomplete() {
     const config = __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_mergeObjects).call(this, __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_getCommonConfig).call(this), {
         maxOptions: this.getMaxOptions(),

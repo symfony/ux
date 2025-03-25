@@ -149,6 +149,12 @@ export default class extends Controller {
             plugins.virtual_scroll = {};
         }
 
+        if('plugins' in this.tomSelectOptionsValue && Array.isArray(this.tomSelectOptionsValue.plugins)) {
+            this.tomSelectOptionsValue.plugins.forEach(pluginName => {
+                plugins[pluginName] = {};
+            });
+        }
+
         const render: Partial<TomTemplates> = {
             no_results: () => {
                 return `<div class="no-results">${this.noResultsFoundTextValue}</div>`;
@@ -214,7 +220,7 @@ export default class extends Controller {
             config.shouldLoad = () => false;
         }
 
-        return this.#mergeObjects(config, this.tomSelectOptionsValue);
+        return this.#mergeObjects(this.tomSelectOptionsValue, config);
     }
 
     #createAutocomplete(): TomSelect {
