@@ -150,7 +150,7 @@ export default class extends Controller {
         }
 
         if ('plugins' in this.tomSelectOptionsValue && Array.isArray(this.tomSelectOptionsValue.plugins)) {
-            this.tomSelectOptionsValue.plugins.forEach(pluginName => {
+            this.tomSelectOptionsValue.plugins.forEach((pluginName) => {
                 plugins[pluginName] = {};
             });
         }
