@@ -1,0 +1,13 @@
+<!-- This HTML has been prettified for testing purposes, and may not represent the actual HTML output.
+     Run "php vendor/bin/phpunit -d --update-snapshots" to update the snapshot. -->
+<div
+  data-controller="symfony--ux-google-map--map"
+  data-symfony--ux-google-map--map-provider-options-value="{&quot;apiKey&quot;:&quot;api_key&quot;}"
+  data-symfony--ux-google-map--map-center-value="{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522}"
+  data-symfony--ux-google-map--map-zoom-value="12"
+  data-symfony--ux-google-map--map-fit-bounds-to-markers-value="false"
+  data-symfony--ux-google-map--map-options-value="{&quot;mapId&quot;:null,&quot;gestureHandling&quot;:&quot;auto&quot;,&quot;backgroundColor&quot;:null,&quot;disableDoubleClickZoom&quot;:false,&quot;@provider&quot;:&quot;google&quot;}"
+  data-symfony--ux-google-map--map-markers-value="[]"
+  data-symfony--ux-google-map--map-polygons-value="[]"
+  data-symfony--ux-google-map--map-polylines-value="[]"
+></div>

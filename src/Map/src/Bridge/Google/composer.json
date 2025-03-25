@@ -22,7 +22,8 @@
     },
     "require-dev": {
         "symfony/phpunit-bridge": "^6.4|^7.0",
-        "symfony/ux-icons": "^2.18"
+        "symfony/ux-icons": "^2.18",
+        "spatie/phpunit-snapshot-assertions": "^5.1.8"
     },
     "autoload": {
         "psr-4": { "Symfony\\UX\\Map\\Bridge\\Google\\": "src/" },

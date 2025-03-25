@@ -1,0 +1,13 @@
+<!-- This HTML has been prettified for testing purposes, and may not represent the actual HTML output.
+     Run "php vendor/bin/phpunit -d --update-snapshots" to update the snapshot. -->
+<div
+  data-controller="symfony--ux-google-map--map"
+  data-symfony--ux-google-map--map-provider-options-value="{&quot;apiKey&quot;:&quot;my_api_key&quot;}"
+  data-symfony--ux-google-map--map-center-value="{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522}"
+  data-symfony--ux-google-map--map-zoom-value="12"
+  data-symfony--ux-google-map--map-fit-bounds-to-markers-value="false"
+  data-symfony--ux-google-map--map-options-value="{&quot;mapId&quot;:null,&quot;gestureHandling&quot;:&quot;auto&quot;,&quot;backgroundColor&quot;:null,&quot;disableDoubleClickZoom&quot;:false,&quot;zoomControlOptions&quot;:{&quot;position&quot;:22},&quot;mapTypeControlOptions&quot;:{&quot;mapTypeIds&quot;:[],&quot;position&quot;:14,&quot;style&quot;:0},&quot;streetViewControlOptions&quot;:{&quot;position&quot;:22},&quot;fullscreenControlOptions&quot;:{&quot;position&quot;:20},&quot;@provider&quot;:&quot;google&quot;}"
+  data-symfony--ux-google-map--map-markers-value="[{&quot;position&quot;:{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},&quot;title&quot;:&quot;Paris&quot;,&quot;infoWindow&quot;:null,&quot;icon&quot;:{&quot;type&quot;:&quot;url&quot;,&quot;width&quot;:32,&quot;height&quot;:32,&quot;url&quot;:&quot;https:\/\/cdn.jsdelivr.net\/npm\/bootstrap-icons@1.11.3\/icons\/geo-alt.svg&quot;},&quot;extra&quot;:[],&quot;id&quot;:null,&quot;@id&quot;:&quot;217fa57668ad8e64&quot;},{&quot;position&quot;:{&quot;lat&quot;:45.764,&quot;lng&quot;:4.8357},&quot;title&quot;:&quot;Lyon&quot;,&quot;infoWindow&quot;:null,&quot;icon&quot;:{&quot;type&quot;:&quot;ux-icon&quot;,&quot;width&quot;:32,&quot;height&quot;:32,&quot;name&quot;:&quot;fa:map-marker&quot;,&quot;_generated_html&quot;:&quot;&lt;svg xmlns=\&quot;http:\/\/www.w3.org\/2000\/svg\&quot; width=\&quot;24\&quot; height=\&quot;24\&quot;&gt;...&lt;\/svg&gt;&quot;},&quot;extra&quot;:[],&quot;id&quot;:null,&quot;@id&quot;:&quot;255b208136900fc0&quot;},{&quot;position&quot;:{&quot;lat&quot;:45.8566,&quot;lng&quot;:2.3522},&quot;title&quot;:&quot;Dijon&quot;,&quot;infoWindow&quot;:null,&quot;icon&quot;:{&quot;type&quot;:&quot;svg&quot;,&quot;width&quot;:24,&quot;height&quot;:24,&quot;html&quot;:&quot;&lt;svg xmlns=\&quot;http:\/\/www.w3.org\/2000\/svg\&quot; width=\&quot;24\&quot; height=\&quot;24\&quot;&gt;...&lt;\/svg&gt;&quot;},&quot;extra&quot;:[],&quot;id&quot;:null,&quot;@id&quot;:&quot;1a410e92214f770c&quot;}]"
+  data-symfony--ux-google-map--map-polygons-value="[]"
+  data-symfony--ux-google-map--map-polylines-value="[]"
+></div>
