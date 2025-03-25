@@ -149,7 +149,7 @@ export default class extends Controller {
             plugins.virtual_scroll = {};
         }
 
-        if('plugins' in this.tomSelectOptionsValue && Array.isArray(this.tomSelectOptionsValue.plugins)) {
+        if ('plugins' in this.tomSelectOptionsValue && Array.isArray(this.tomSelectOptionsValue.plugins)) {
             this.tomSelectOptionsValue.plugins.forEach(pluginName => {
                 plugins[pluginName] = {};
             });
