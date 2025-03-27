@@ -47,7 +47,7 @@ class IconifyTest extends TestCase
         $icon = $iconify->fetchIcon('bi', 'heart');
 
         $this->assertEquals($icon->getInnerSvg(), '<path d="M0 0h24v24H0z" fill="none"/>');
-        $this->assertEquals($icon->getAttributes(), ['viewBox' => '0 0 24 24']);
+        $this->assertEquals($icon->getAttributes(), ['viewBox' => '0 0 24 24', 'xmlns' => 'https://www.w3.org/2000/svg']);
     }
 
     public function testFetchIconByAlias(): void
@@ -78,7 +78,7 @@ class IconifyTest extends TestCase
         $icon = $iconify->fetchIcon('bi', 'foo');
 
         $this->assertEquals($icon->getInnerSvg(), '<path d="M0 0h24v24H0z" fill="none"/>');
-        $this->assertEquals($icon->getAttributes(), ['viewBox' => '0 0 24 24']);
+        $this->assertEquals($icon->getAttributes(), ['viewBox' => '0 0 24 24', 'xmlns' => 'https://www.w3.org/2000/svg']);
     }
 
     public function testFetchIconThrowsWhenIconSetDoesNotExists(): void
