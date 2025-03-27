@@ -1,0 +1,94 @@
+---------------------------------------------------------------------------
+
+by smnandre at 2025-03-05T03:14:01Z
+
+I don't think we need to have 3 methods here. What about keeping just the first two ?
+
+Also i would not set the default values in the methods and force users to be explicit (they do not need this function to set default value... and the day Turbo changes its default value it would be a real mess).
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2025-03-16T18:08:03Z
+
+Hi to you both :),
+
+Thank you for your feedback.
+
+I added the PHPDocs. and updated CHANGELOG.
+I will add the documentation later :).
+
+> I don't think we need to have 3 methods here. What about keeping just the first two ?
+
+These <meta> tags are generally used together. [Turbo Rails](https://github.com/hotwired/turbo-rails/blob/main/app/helpers/turbo/drive_helper.rb#L70) and [Turbo Laravel](https://turbo-laravel.com/docs/helpers/) also use this third function.
+
+```rb
+# https://github.com/hotwired/turbo-rails/blob/main/app/helpers/turbo/drive_helper.rb
+
+#   turbo_refreshes_with(method: :morph, scroll: :preserve)
+def turbo_refreshes_with(method: :replace, scroll: :reset)
+  provide :head, turbo_refresh_method_tag(method)
+  provide :head, turbo_refresh_scroll_tag(scroll)
+end
+```
+
+> Also i would not set the default values in the methods and force users to be explicit (they do not need this function to set default value... and the day Turbo changes its default value it would be a real mess).
+
+For [Morphing](https://turbo.hotwired.dev/handbook/page_refreshes#morphing), Turbo says the default is `replace`. Similarly, for [Scroll preservation](https://turbo.hotwired.dev/handbook/page_refreshes#scroll-preservation), Turbo indicates that the default value is `reset`.
+
+These default values ​​are also found in Turbo Rails:
+
+- Method : https://github.com/hotwired/turbo-rails/blob/main/app/helpers/turbo/drive_helper.rb#L76
+- Scroll : https://github.com/hotwired/turbo-rails/blob/main/app/helpers/turbo/drive_helper.rb#L82
+
+```rb
+# https://github.com/hotwired/turbo-rails/blob/main/app/helpers/turbo/drive_helper.rb
+
+# Configure method to perform page refreshes. See +turbo_refreshes_with+.
+def turbo_refresh_method_tag(method = :replace)
+  raise ArgumentError, "Invalid refresh option '#{method}'" unless method.in?(%i[ replace morph ])
+  tag.meta(name: "turbo-refresh-method", content: method)
+end
+
+# Configure scroll strategy for page refreshes. See +turbo_refreshes_with+.
+def turbo_refresh_scroll_tag(scroll = :reset)
+  raise ArgumentError, "Invalid scroll option '#{scroll}'" unless scroll.in?(%i[ reset preserve ])
+  tag.meta(name: "turbo-refresh-scroll", content: scroll)
+end
+```
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-18T00:41:16Z
+
+Works for me then, thanks!
+Maybe it could be a good idea to document (in the PHPDoc) that these new methods are "copied" from Turbo Rails?
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2025-03-19T13:24:34Z
+
+I put a few words (`Inspired by Turbo Rails ...`) per function. Is it better if I put those few words at the class level instead?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-19T16:57:50Z
+
+That's perfect, thanks!
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2025-03-23T17:20:40Z
+
+I added 3 new `meta` tags and some documentation.
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-25T13:43:47Z
+
+Status: Needs work
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2025-03-26T09:55:19Z
+
+I have squash and fix issues found by DoctorRST.
