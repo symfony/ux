@@ -1,0 +1,18 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-25T22:29:08Z
+
+> PHP Fatal error:  Declaration of PHPUnit\Framework\TestSuite::run(): void must be compatible with PHPUnit\Framework\Test::run(?PHPUnit\Framework\TestResult $result = null): PHPUnit\Framework\TestResult in /home/runner/work/ux/ux/src/Map/src/Bridge/Google/vendor/phpunit/phpunit/src/Framework/TestSuite.php on line 327
+
+Well, let's move from Symfony's PHPUnit bridge, see #2659
+
+**EDIT:** let's upgrade Map's Bridges PHPUnit to 11.5.0, that's more simple :D
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-27T11:30:29Z
+
+> Cool, I've never used snapshots before.
+
+I think it's something that was made popular years ago with JavaScript, especially with Jest.
+Snapshots should be used cautiously, but in this case where we want to quickly assert that outputs didn't change whatever changes we do, that's fine 💯
