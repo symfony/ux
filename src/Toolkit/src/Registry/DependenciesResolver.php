@@ -16,7 +16,7 @@ namespace Symfony\UX\Toolkit\Registry;
  *
  * @internal
  */
-class DependenciesResolver
+final readonly class DependenciesResolver
 {
     public function resolve(Registry $registry): array
     {

@@ -23,11 +23,12 @@ use Symfony\UX\Toolkit\Registry\RegistryItemType;
  *
  * @internal
  */
-final class TwigComponentCompiler
+final readonly class TwigComponentCompiler
 {
     public function __construct(
-        private readonly ?string $prefix,
-        private readonly DependenciesResolver $dependenciesResolver,
+        private ?string $prefix,
+        private DependenciesResolver $dependenciesResolver,
+        private Filesystem $filesystem,
     ) {
     }
 
@@ -40,9 +41,8 @@ final class TwigComponentCompiler
         // resolve dependencies (avoid circular dependencies)
         $this->dependenciesResolver->resolve($registry);
 
-        $filesystem = new Filesystem();
-        if (!$filesystem->exists($directory)) {
-            $filesystem->mkdir($directory);
+        if (!$this->filesystem->exists($directory)) {
+            $this->filesystem->mkdir($directory);
         }
 
         // We need to install all children components of each parent component
@@ -59,11 +59,11 @@ final class TwigComponentCompiler
         $componentsToInstall = array_merge([$item->name], $componentsToInstall);
 
         foreach ($componentsToInstall as $componentName) {
-            $this->installComponent($registry->get($componentName), $directory, $filesystem, $overwrite);
+            $this->installComponent($registry->get($componentName), $directory, $overwrite);
         }
     }
 
-    private function installComponent(RegistryItem $item, string $directory, Filesystem $filesystem, bool $overwrite): void
+    private function installComponent(RegistryItem $item, string $directory, bool $overwrite): void
     {
         if (RegistryItemType::Component !== $item->type) {
             return;
@@ -75,10 +75,10 @@ final class TwigComponentCompiler
             $item->name.'.html.twig',
         ]);
 
-        if ($filesystem->exists($filename) && !$overwrite) {
+        if ($this->filesystem->exists($filename) && !$overwrite) {
             throw new TwigComponentAlreadyExist("The component '{$item->name}' already exists.", 0, null);
         }
 
-        $filesystem->dumpFile($filename, $item->code);
+        $this->filesystem->dumpFile($filename, $item->code);
     }
 }

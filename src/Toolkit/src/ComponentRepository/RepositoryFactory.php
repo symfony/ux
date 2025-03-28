@@ -16,11 +16,11 @@ namespace Symfony\UX\Toolkit\ComponentRepository;
  *
  * @internal
  */
-final class RepositoryFactory
+readonly final class RepositoryFactory
 {
     public function __construct(
-        private readonly OfficialRepository $officialRepository,
-        private readonly GithubRepository $githubRepository,
+        private OfficialRepository $officialRepository,
+        private GithubRepository $githubRepository,
     ) {
     }
 

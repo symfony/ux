@@ -21,18 +21,18 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
  *
  * @internal
  */
-class GithubRepository implements ComponentRepository
+final readonly class GithubRepository implements ComponentRepository
 {
     public function __construct(
-        private readonly Filesystem $filesystem,
-        private readonly ?HttpClientInterface $httpClient = null,
+        private Filesystem $filesystem,
+        private ?HttpClientInterface $httpClient = null,
     ) {
         if (!class_exists(HttpClient::class)) {
-            throw new \LogicException('You must install "symfony/http-client" to use ux-toolkit with remote component. Try running "composer require symfony/http-client".');
+            throw new \LogicException('You must install "symfony/http-client" to use the UX Toolkit with remote components. Try running "composer require symfony/http-client".');
         }
 
         if (!class_exists(\ZipArchive::class)) {
-            throw new \LogicException('You must have the Zip extension installed to use ux-toolkit with remote components.');
+            throw new \LogicException('You must have the Zip extension installed to use UX Toolit with remote components.');
         }
     }
 

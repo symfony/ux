@@ -23,10 +23,10 @@ use Symfony\UX\Toolkit\Registry\RegistryItemType;
  *
  * @internal
  */
-final class RegistryCompiler
+final readonly class RegistryCompiler
 {
     public function __construct(
-        private readonly Filesystem $filesystem,
+        private Filesystem $filesystem,
     ) {
     }
 

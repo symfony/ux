@@ -13,7 +13,6 @@ declare(strict_types=1);
 
 namespace Symfony\UX\Toolkit\Registry;
 
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -21,13 +20,8 @@ use Symfony\Component\Finder\Finder;
  *
  * @internal
  */
-final class RegistryFactory
+final readonly class RegistryFactory
 {
-    public function __construct(
-        private readonly Filesystem $filesystem,
-    ) {
-    }
-
     public function create(Finder $finder): Registry
     {
         $finderManifest = clone $finder;

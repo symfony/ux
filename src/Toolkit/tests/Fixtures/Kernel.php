@@ -16,7 +16,7 @@ use Symfony\Bundle\FrameworkBundle\Kernel\MicroKernelTrait;
 use Symfony\Bundle\TwigBundle\TwigBundle;
 use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigurator;
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
-use Symfony\UX\Toolkit\UxToolkitBundle;
+use Symfony\UX\Toolkit\UXToolkitBundle;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use TalesFromADev\Twig\Extra\Tailwind\Bridge\Symfony\Bundle\TalesFromADevTwigExtraTailwindBundle;
 
@@ -33,7 +33,7 @@ final class Kernel extends BaseKernel
             new FrameworkBundle(),
             new TwigBundle(),
             new TwigComponentBundle(),
-            new UxToolkitBundle(),
+            new UXToolkitBundle(),
             new TalesFromADevTwigExtraTailwindBundle(),
         ];
     }

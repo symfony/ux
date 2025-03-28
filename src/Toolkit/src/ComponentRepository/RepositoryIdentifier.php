@@ -16,7 +16,7 @@ namespace Symfony\UX\Toolkit\ComponentRepository;
  *
  * @internal
  */
-final class RepositoryIdentifier
+final readonly class RepositoryIdentifier
 {
     public function identify(string $name): RepositoryIdentity
     {

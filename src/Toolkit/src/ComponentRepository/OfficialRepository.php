@@ -19,14 +19,18 @@ use Symfony\Component\Finder\Finder;
  *
  * @internal
  */
-class OfficialRepository implements ComponentRepository
+final class OfficialRepository implements ComponentRepository
 {
+    public function __construct(
+        private Filesystem $filesystem,
+    ) {
+    }
+
     public function fetch(RepositoryIdentity $repository): Finder
     {
         $finder = new Finder();
-        $fileystem = new Filesystem();
 
-        if (! $fileystem->exists(__DIR__.'/../../registry/'.$repository->getPackage())) {
+        if (!$this->filesystem->exists(__DIR__.'/../../registry/'.$repository->getPackage())) {
             throw new \InvalidArgumentException('This theme does not exist.');
         }
 

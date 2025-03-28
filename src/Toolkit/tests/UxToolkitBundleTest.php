@@ -15,7 +15,7 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\UX\Toolkit\DependencyInjection\ToolkitExtension;
-use Symfony\UX\Toolkit\UxToolkitBundle;
+use Symfony\UX\Toolkit\UXToolkitBundle;
 
 /**
  * @author Jean-François Lépine
@@ -27,6 +27,6 @@ class UxToolkitBundleTest extends KernelTestCase
         self::bootKernel();
         $container = self::$kernel->getContainer();
 
-        $this->assertInstanceOf(UxToolkitBundle::class, $container->get('kernel')->getBundles()['UxToolkitBundle']);
+        $this->assertInstanceOf(UXToolkitBundle::class, $container->get('kernel')->getBundles()['UxToolkitBundle']);
     }
 }
