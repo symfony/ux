@@ -192,7 +192,7 @@ export default class extends Controller {
                 for (const [, tomSelectOption] of Object.entries(this.tomSelect.options)) {
                     if (tomSelectOption.$order === optionOrder) {
                         orderedOption = parentElement.querySelector(
-                            `:scope > option[value="${tomSelectOption[this.tomSelect.settings.valueField].replace(/["\\]/g, '\\$&')}"]`
+                            `:scope > option[value="${[this.#addSlashes(this.tomSelect.settings.valueField)]}"]`
                         );
 
                         break;
@@ -323,6 +323,10 @@ export default class extends Controller {
 
     #stripTags(string: string): string {
         return string.replace(/(<([^>]+)>)/gi, '');
+    }
+
+    #addSlashes(string: string): string {
+        return string.replace(/["\\]/g, '\\$&');
     }
 
     #mergeObjects(object1: any, object2: any): any {

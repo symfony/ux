@@ -15,7 +15,7 @@ LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
 OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 ***************************************************************************** */
-/* global Reflect, Promise, SuppressedError, Symbol */
+/* global Reflect, Promise, SuppressedError, Symbol, Iterator */
 
 
 function __classPrivateFieldGet(receiver, state, kind, f) {
@@ -29,7 +29,7 @@ typeof SuppressedError === "function" ? SuppressedError : function (error, suppr
     return e.name = "SuppressedError", e.error = error, e.suppressed = suppressed, e;
 };
 
-var _default_1_instances, _default_1_getCommonConfig, _default_1_createAutocomplete, _default_1_createAutocompleteWithHtmlContents, _default_1_createAutocompleteWithRemoteData, _default_1_stripTags, _default_1_mergeObjects, _default_1_createTomSelect;
+var _default_1_instances, _default_1_getCommonConfig, _default_1_createAutocomplete, _default_1_createAutocompleteWithHtmlContents, _default_1_createAutocompleteWithRemoteData, _default_1_stripTags, _default_1_addSlashes, _default_1_mergeObjects, _default_1_createTomSelect;
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
@@ -270,7 +270,7 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
             let orderedOption = null;
             for (const [, tomSelectOption] of Object.entries(this.tomSelect.options)) {
                 if (tomSelectOption.$order === optionOrder) {
-                    orderedOption = parentElement.querySelector(`:scope > option[value="${tomSelectOption[this.tomSelect.settings.valueField]}"]`);
+                    orderedOption = parentElement.querySelector(`:scope > option[value="${[__classPrivateFieldGet(this, _default_1_instances, "m", _default_1_addSlashes).call(this, this.tomSelect.settings.valueField)]}"]`);
                     break;
                 }
             }
@@ -364,6 +364,8 @@ _default_1_instances = new WeakSet(), _default_1_getCommonConfig = function _def
     return __classPrivateFieldGet(this, _default_1_instances, "m", _default_1_createTomSelect).call(this, config);
 }, _default_1_stripTags = function _default_1_stripTags(string) {
     return string.replace(/(<([^>]+)>)/gi, '');
+}, _default_1_addSlashes = function _default_1_addSlashes(string) {
+    return string.replace(/["\\]/g, '\\$&');
 }, _default_1_mergeObjects = function _default_1_mergeObjects(object1, object2) {
     return { ...object1, ...object2 };
 }, _default_1_createTomSelect = function _default_1_createTomSelect(options) {
