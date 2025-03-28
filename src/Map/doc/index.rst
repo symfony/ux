@@ -16,14 +16,6 @@ Install the bundle using Composer and Symfony Flex:
 
     $ composer require symfony/ux-map
 
-If you're using WebpackEncore, install your assets and restart Encore (not
-needed if you're using AssetMapper):
-
-.. code-block:: terminal
-
-    $ npm install --force
-    $ npm run watch
-
 Configuration
 -------------
 
@@ -116,6 +108,10 @@ You can add markers to a map using the ``addMarker()`` method::
             infoWindow: new InfoWindow(
                 headerContent: '<b>Lyon</b>',
                 content: 'The French town in the historic Rhône-Alpes region, located at the junction of the Rhône and Saône rivers.'
+            ),
+            icon: new Icon(
+                content: '<svg>....</svg>'
+                icontType: 'html'
             )
         ))
 
@@ -136,33 +132,26 @@ You can add markers to a map using the ``addMarker()`` method::
         ))
     ;
 
-Remove elements from Map
-~~~~~~~~~~~~~~~~~~~~~~~~
+Add Marker icons
+~~~~~~~~~~~~~~~~
 
-It is possible to remove elements like ``Marker``, ``Polygon`` and ``Polyline`` instances by using ``Map::remove*()`` methods::
-    
-    // Add elements
-    $map->addMarker($marker = new Marker(/* ... */));
-    $map->addPolygon($polygon = new Polygon(/* ... */));
-    $map->addPolyline($polyline = new Polyline(/* ... */));
-    
-    // And later, remove those elements
-    $map->removeMarker($marker);
-    $map->removePolygon($polygon);
-    $map->removePolyline($polyline);
-    
-If unfortunately you were unable to store an element instance, you can still remove them by passing the identifier string::
- 
-    $map = new Map(/* ... */);
-    // Add elements
-    $map->addMarker(new Marker(id: 'my-marker', /* ... */));
-    $map->addPolygon(new Polygon(id: 'my-polygon', /* ... */));
-    $map->addPolyline(new Polyline(id: 'my-marker', /* ... */));
-    
-    // And later, remove those elements
-    $map->removeMarker('my-marker');
-    $map->removePolygon('my-polygon');
-    $map->removePolyline('my-marker');
+.. versionadded:: 2.24
+
+    ``Marker`` icon customization is available since UX Map 2.24.
+
+A ``Marker`` can be customized with an ``Icon`` instance, which can either be an UX Icon, an URL, or a SVG content::
+
+        // It can be a UX Icon (requires `symfony/ux-icons` package)...
+        $icon = Icon::ux('fa:map-marker')->width(24)->height(24);
+        // ... or an URL pointing to an image
+        $icon = Icon::url('https://example.com/marker.png')->width(24)->height(24);
+        // ... or a plain SVG string
+        $icon = Icon::svg('<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24">...</svg>');
+
+        $map->addMarker(new Marker(
+            // ...
+            icon: $icon
+        ));
 
 Add Polygons
 ~~~~~~~~~~~~
@@ -198,6 +187,34 @@ You can add Polylines, which represents a path made by a series of ``Point`` ins
         ),
     ));
 
+Remove elements from Map
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+It is possible to remove elements like ``Marker``, ``Polygon`` and ``Polyline`` instances by using ``Map::remove*()`` methods.
+It's useful when :ref:`using a Map inside a Live Component <map-live-component>`::
+
+    // Add elements
+    $map->addMarker($marker = new Marker(/* ... */));
+    $map->addPolygon($polygon = new Polygon(/* ... */));
+    $map->addPolyline($polyline = new Polyline(/* ... */));
+
+    // And later, remove those elements
+    $map->removeMarker($marker);
+    $map->removePolygon($polygon);
+    $map->removePolyline($polyline);
+
+If you haven't stored the element instance, you can still remove them by passing the identifier string::
+
+    $map = new Map(/* ... */);
+    // Add elements
+    $map->addMarker(new Marker(id: 'my-marker', /* ... */));
+    $map->addPolygon(new Polygon(id: 'my-polygon', /* ... */));
+    $map->addPolyline(new Polyline(id: 'my-marker', /* ... */));
+
+    // And later, remove those elements
+    $map->removeMarker('my-marker');
+    $map->removePolygon('my-polygon');
+    $map->removePolyline('my-marker');
 
 Render a map
 ------------
@@ -215,7 +232,6 @@ You can add custom HTML attributes too:
 .. code-block:: twig
 
     {{ ux_map(my_map, { style: 'height: 300px', id: 'events-map', class: 'mb-3' }) }}
-
 
 Twig Function ``ux_map()``
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -291,6 +307,10 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
             this.element.addEventListener('ux:map:marker:after-create', this._onMarkerAfterCreate);
             this.element.addEventListener('ux:map:info-window:before-create', this._onInfoWindowBeforeCreate);
             this.element.addEventListener('ux:map:info-window:after-create', this._onInfoWindowAfterCreate);
+            this.element.addEventListener('ux:map:polygon:before-create', this._onPolygonBeforeCreate);
+            this.element.addEventListener('ux:map:polygon:after-create', this._onPolygonAfterCreate);
+            this.element.addEventListener('ux:map:polyline:before-create', this._onPolylineBeforeCreate);
+            this.element.addEventListener('ux:map:polyline:after-create', this._onPolylineAfterCreate);
         }
 
         disconnect() {
@@ -301,51 +321,114 @@ Symfony UX Map allows you to extend its default behavior using a custom Stimulus
             this.element.removeEventListener('ux:map:marker:after-create', this._onMarkerAfterCreate);
             this.element.removeEventListener('ux:map:info-window:before-create', this._onInfoWindowBeforeCreate);
             this.element.removeEventListener('ux:map:info-window:after-create', this._onInfoWindowAfterCreate);
+            this.element.removeEventListener('ux:map:polygon:before-create', this._onPolygonBeforeCreate);
+            this.element.removeEventListener('ux:map:polygon:after-create', this._onPolygonAfterCreate);
+            this.element.removeEventListener('ux:map:polyline:before-create', this._onPolylineBeforeCreate);
+            this.element.removeEventListener('ux:map:polyline:after-create', this._onPolylineAfterCreate);
         }
 
+        /**
+         * This event is triggered when the map is not created yet
+         * You can use this event to configure the map before it is created
+         */
         _onPreConnect(event) {
-            // The map is not created yet
-            // You can use this event to configure the map before it is created
             console.log(event.detail.options);
         }
 
+        /**
+         * This event is triggered when the map and all its elements (markers, info windows, ...) are created.
+         * The instances depend on the renderer you are using.
+         */
         _onConnect(event) {
-            // The map, markers and infoWindows are created
-            // The instances depend on the renderer you are using
             console.log(event.detail.map);
             console.log(event.detail.markers);
             console.log(event.detail.infoWindows);
+            console.log(event.detail.polygons);
+            console.log(event.detail.polylines);
         }
 
+        /**
+         * This event is triggered before creating a marker.
+         * You can use this event to fine-tune it before its creation.
+         */
         _onMarkerBeforeCreate(event) {
-            // The marker is not created yet
-            // You can use this event to configure the marker before it is created
             console.log(event.detail.definition);
+            // { title: 'Paris', position: { lat: 48.8566, lng: 2.3522 }, ... }
+
+            // Example: uppercase the marker title
+            event.detail.definition.title = event.detail.definition.title.toUpperCase();
         }
 
+        /**
+         * This event is triggered after creating a marker.
+         * You can access the created marker instance, which depends on the renderer you are using.
+         */
         _onMarkerAfterCreate(event) {
-            // The marker is created
-            // The instance depends on the renderer you are using
+            // The marker instance
             console.log(event.detail.marker);
         }
 
+        /**
+         * This event is triggered before creating an info window.
+         * You can use this event to fine-tune the info window before its creation.
+         */
         _onInfoWindowBeforeCreate(event) {
-            // The infoWindow is not created yet
-            // You can use this event to configure the infoWindow before it is created
             console.log(event.detail.definition);
-            // The associated marker instance is also available
-            console.log(event.detail.marker);
+            // { headerContent: 'Paris', content: 'The capital of France', ... }
         }
 
+        /**
+         * This event is triggered after creating an info window.
+         * You can access the created info window instance, which depends on the renderer you are using.
+         */
         _onInfoWindowAfterCreate(event) {
-            // The infoWindow is created
-            // The instance depends on the renderer you are using
+            // The info window instance
             console.log(event.detail.infoWindow);
-            // The associated marker instance is also available
+
+            // The associated element instance is also available, e.g. a marker...
             console.log(event.detail.marker);
+            // ... or a polygon
+            console.log(event.detail.polygon);
+            // ... or a polyline
+            console.log(event.detail.polyline);
+        }
+
+        /**
+         * This event is triggered before creating a polygon.
+         * You can use this event to fine-tune it before its creation.
+         */
+        _onPolygonBeforeCreate(event) {
+            console.log(event.detail.definition);
+            // { title: 'My polygon', points: [ { lat: 48.8566, lng: 2.3522 }, { lat: 45.7640, lng: 4.8357 }, { lat: 43.2965, lng: 5.3698 }, ... ], ... }
+        }
+
+        /**
+         * This event is triggered after creating a polygon.
+         * You can access the created polygon instance, which depends on the renderer you are using.
+         */
+        _onPolygonAfterCreate(event) {
+            // The polygon instance
+            console.log(event.detail.polygon);
+        }
+
+        /**
+         * This event is triggered before creating a polyline.
+         * You can use this event to fine-tune it before its creation.
+         */
+        _onPolylineBeforeCreate(event) {
+            console.log(event.detail.definition);
+            // { title: 'My polyline', points: [ { lat: 48.8566, lng: 2.3522 }, { lat: 45.7640, lng: 4.8357 }, { lat: 43.2965, lng: 5.3698 }, ... ], ... }
+        }
+
+        /**
+         * This event is triggered after creating a polyline.
+         * You can access the created polyline instance, which depends on the renderer you are using.
+         */
+        _onPolylineAfterCreate(event) {
+            // The polyline instance
+            console.log(event.detail.polyline);
         }
     }
-
 
 Then, you can use this controller in your template:
 
@@ -358,6 +441,138 @@ Then, you can use this controller in your template:
     Read the `Symfony UX Map Leaflet bridge docs`_ and the
     `Symfony UX Map Google Maps brige docs`_ to learn about the exact code
     needed to customize the markers.
+
+Advanced: Low-level options
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+UX Map is renderer-agnostic and provides a high-level API to configure
+maps and their elements. However, you might occasionally find this
+abstraction limiting and need to configure low-level options directly.
+
+Fortunately, you can customize these low-level options through the UX Map
+events ``ux:map:*:before-create`` using the special ``rawOptions`` property:
+
+.. code-block:: javascript
+
+    // assets/controllers/mymap_controller.js
+
+    import { Controller } from '@hotwired/stimulus';
+
+    export default class extends Controller {
+        connect() {
+            this.element.addEventListener('ux:map:marker:before-create', this._onMarkerBeforeCreate);
+            this.element.addEventListener('ux:map:info-window:before-create', this._onInfoWindowBeforeCreate);
+            this.element.addEventListener('ux:map:polygon:before-create', this._onPolygonBeforeCreate);
+            this.element.addEventListener('ux:map:polyline:before-create', this._onPolylineBeforeCreate);
+        }
+
+        _onMarkerBeforeCreate(event) {
+            // When using Google Maps, to configure a `google.maps.AdvancedMarkerElement`
+            event.detail.definition.rawOptions = {
+                gmpDraggable: true,
+                // ...
+            };
+
+            // When using Leaflet, to configure a `L.Marker` instance
+            event.detail.definition.rawOptions = {
+                riseOnHover: true,
+                // ...
+            };
+        }
+
+        _onInfoWindowBeforeCreate(event) {
+            // When using Google Maps, to configure a `google.maps.InfoWindow` instance
+            event.detail.definition.rawOptions = {
+                maxWidth: 200,
+                // ...
+            };
+
+            // When using Leaflet, to configure a `L.Popup` instance
+            event.detail.definition.rawOptions = {
+                direction: 'left',
+                // ...
+            };
+        }
+
+        _onPolygonBeforeCreate(event) {
+            // When using Google Maps, to configure a `google.maps.Polygon`
+            event.detail.definition.rawOptions = {
+                strokeColor: 'red',
+                // ...
+            };
+
+            // When using Leaflet, to configure a `L.Polygon`
+            event.detail.definition.rawOptions = {
+                color: 'red',
+                // ...
+            };
+        }
+
+        _onPolylineBeforeCreate(event) {
+            // When using Google Maps, to configure a `google.maps.Polyline`
+            event.detail.definition.rawOptions = {
+                strokeColor: 'red',
+                // ...
+            };
+
+            // When using Leaflet, to configure a `L.Polyline`
+            event.detail.definition.rawOptions = {
+                color: 'red',
+                // ...
+            };
+        }
+    }
+
+Advanced: Passing extra data from PHP to the Stimulus controller
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+For greater customization and extensibility, you can pass additional data from PHP
+to the Stimulus controller. This can be useful when associating extra information
+with a specific marker; for example, indicating the type of location it represents.
+
+These additional data points are defined and used exclusively by you; UX Map
+only forwards them to the Stimulus controller.
+
+To pass extra data from PHP to the Stimulus controller, you must use the ``extra`` property
+available in ``Marker``, ``InfoWindow``, ``Polygon`` and ``Polyline`` instances::
+
+    $map->addMarker(new Marker(
+        position: new Point(48.822248, 2.337338),
+        title: 'Paris - Parc Montsouris',
+        extra: [
+            'type' => 'Park',
+            // ...
+        ],
+    ));
+
+On the JavaScript side, you can access your extra data via the
+``event.detail.definition.extra`` object, available in the
+``ux:map:*:before-create`` and ``ux:map:*:after-create`` events:
+
+.. code-block:: javascript
+
+    // assets/controllers/mymap_controller.js
+
+    import { Controller } from '@hotwired/stimulus';
+
+    export default class extends Controller {
+
+        // ...
+
+        _onMarkerBeforeCreate(event) {
+            console.log(event.detail.definition.extra);
+            // { type: 'Park', ...}
+        }
+
+        _onMarkerAfterCreate(event) {
+            console.log(event.detail.definition.extra);
+            // { type: 'Park', ...}
+        }
+
+        // ...
+    }
+
+.. _map-live-component:
 
 Usage with Live Components
 --------------------------

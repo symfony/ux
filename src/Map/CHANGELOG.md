@@ -3,6 +3,7 @@
 ## 2.24
 
 -  Installing the package in a Symfony app using Flex won't add the `@symfony/ux-map` dependency to the `package.json` file anymore.
+-  Add `Icon` to customize a `Marker` icon (URL or SVG content)
 
 ## 2.23
 

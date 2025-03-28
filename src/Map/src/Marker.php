@@ -12,6 +12,8 @@
 namespace Symfony\UX\Map;
 
 use Symfony\UX\Map\Exception\InvalidArgumentException;
+use Symfony\UX\Map\Icon\Icon;
+use Symfony\UX\Map\Icon\IconType;
 
 /**
  * Represents a marker on a map.
@@ -30,6 +32,7 @@ final readonly class Marker implements Element
         public ?InfoWindow $infoWindow = null,
         public array $extra = [],
         public ?string $id = null,
+        public ?Icon $icon = null,
     ) {
     }
 
@@ -38,6 +41,7 @@ final readonly class Marker implements Element
      *     position: array{lat: float, lng: float},
      *     title: string|null,
      *     infoWindow: array<string, mixed>|null,
+     *     icon: array{type: value-of<IconType>, width: positive-int, height: positive-int, ...}|null,
      *     extra: array,
      *     id: string|null
      * }
@@ -48,6 +52,7 @@ final readonly class Marker implements Element
             'position' => $this->position->toArray(),
             'title' => $this->title,
             'infoWindow' => $this->infoWindow?->toArray(),
+            'icon' => $this->icon?->toArray(),
             'extra' => $this->extra,
             'id' => $this->id,
         ];
@@ -58,6 +63,7 @@ final readonly class Marker implements Element
      *     position: array{lat: float, lng: float},
      *     title: string|null,
      *     infoWindow: array<string, mixed>|null,
+     *     icon: array{type: value-of<IconType>, width: positive-int, height: positive-int, ...}|null,
      *     extra: array,
      *     id: string|null
      * } $marker
@@ -73,6 +79,9 @@ final readonly class Marker implements Element
 
         if (isset($marker['infoWindow'])) {
             $marker['infoWindow'] = InfoWindow::fromArray($marker['infoWindow']);
+        }
+        if (isset($marker['icon'])) {
+            $marker['icon'] = Icon::fromArray($marker['icon']);
         }
 
         return new self(...$marker);

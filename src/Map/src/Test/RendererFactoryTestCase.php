@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Map\Test;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\UX\Map\Exception\UnsupportedSchemeException;
 use Symfony\UX\Map\Renderer\Dsn;
@@ -55,6 +56,7 @@ abstract class RendererFactoryTestCase extends TestCase
     /**
      * @dataProvider supportsRenderer
      */
+    #[DataProvider('supportsRenderer')]
     public function testSupports(bool $expected, string $dsn): void
     {
         $factory = $this->createRendererFactory();
@@ -65,6 +67,7 @@ abstract class RendererFactoryTestCase extends TestCase
     /**
      * @dataProvider createRenderer
      */
+    #[DataProvider('createRenderer')]
     public function testCreate(string $expected, string $dsn): void
     {
         $factory = $this->createRendererFactory();
@@ -76,6 +79,7 @@ abstract class RendererFactoryTestCase extends TestCase
     /**
      * @dataProvider unsupportedSchemeRenderer
      */
+    #[DataProvider('unsupportedSchemeRenderer')]
     public function testUnsupportedSchemeException(string $dsn, ?string $message = null): void
     {
         $factory = $this->createRendererFactory();

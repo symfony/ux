@@ -25,6 +25,10 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-notify npm package`_
+
 Usage
 -----
 
@@ -154,3 +158,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Mercure`: https://mercure.rocks
 .. _`running Mercure server`: https://symfony.com/doc/current/mercure.html#running-a-mercure-hub
 .. _`native notifications`: https://developer.mozilla.org/en-US/docs/Web/API/Notifications_API/Using_the_Notifications_API
+.. _`@symfony/ux-notify npm package`: https://www.npmjs.com/package/@symfony/ux-notify

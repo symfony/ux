@@ -12,6 +12,7 @@
 namespace Symfony\UX\Map\Bridge\Leaflet\Tests;
 
 use Symfony\UX\Map\Bridge\Leaflet\Renderer\LeafletRendererFactory;
+use Symfony\UX\Map\Icon\UxIconRenderer;
 use Symfony\UX\Map\Renderer\RendererFactoryInterface;
 use Symfony\UX\Map\Test\RendererFactoryTestCase;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
@@ -20,7 +21,7 @@ final class LeafletRendererFactoryTest extends RendererFactoryTestCase
 {
     public function createRendererFactory(): RendererFactoryInterface
     {
-        return new LeafletRendererFactory(new StimulusHelper(null));
+        return new LeafletRendererFactory(new StimulusHelper(null), new UxIconRenderer(null));
     }
 
     public static function supportsRenderer(): iterable

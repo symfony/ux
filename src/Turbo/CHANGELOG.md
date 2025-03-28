@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.24.0
+
+-   Add Twig Extensions for `meta` tags
+
 ## 2.22.0
 
 -   Add `<twig:Turbo:Stream>` component

@@ -498,6 +498,7 @@ If you need to modify/validate data before it's *mounted* on the
 component use a ``PreMount`` hook::
 
     // src/Twig/Components/Alert.php
+    use Symfony\Component\OptionsResolver\OptionsResolver;
     use Symfony\UX\TwigComponent\Attribute\PreMount;
     // ...
 
@@ -1175,7 +1176,7 @@ Component with Complex Variants (CVA)
 
 .. deprecated:: 2.20
 
-    The ``cva`` function was deprecated in TwigComponents 2.20, and will be 
+    The ``cva`` function was deprecated in TwigComponents 2.20, and will be
     removed in 3.0. The function is now provided by the ``twig/html-extra:^3.12``
     package under the name `html_cva`_.
 
@@ -1216,18 +1217,18 @@ Then use the ``color`` and ``size`` variants to select the classes needed:
     <twig:Alert color="green" size="sm">
         ...
     </twig:Alert>
-    
+
     {# will render as: #}
-    
+
      <div class="alert bg-green text-sm">
         ...
     </div>
-    
+
 CVA and Tailwind CSS
 ~~~~~~~~~~~~~~~~~~~~
 
 CVA integrates seamlessly with Tailwind CSS, though class conflicts may occur.
-Use the ``tailwind_merge()`` function from `tales-from-a-dev/twig-tailwind-extra`_ 
+Use the ``tailwind_merge()`` function from `tales-from-a-dev/twig-tailwind-extra`_
 to resolve conflicts:
 
 .. code-block:: html+twig
@@ -1268,9 +1269,9 @@ Define compound variants for conditions involving multiple variants:
     <twig:Alert color="red" size="lg">
         ...
     </twig:Alert>
-    
+
     {# will render as: #}
-    
+
     <div class="alert bg-red text-lg font-bold">
         ...
     </div>
@@ -1309,7 +1310,7 @@ If no variants match, you can define a default set of classes to apply:
 
     <div class="alert bg-red rounded-md">
         ...
-    </div> 
+    </div>
 
 Test Helpers
 ------------

@@ -27,6 +27,10 @@ Install the bundle using Composer and Symfony Flex:
     $ npm install --force
     $ npm run watch
 
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-svelte npm package`_
+
 The Flex recipe will automatically set things up for you, like adding
 ``.enableSvelte()`` to your ``webpack.config.js`` file and adding code
 to load your Svelte components inside ``assets/app.js``.
@@ -150,3 +154,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Svelte`: https://svelte.dev/
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _the Svelte 4 migration guide: https://svelte.dev/docs/v4-migration-guide#browser-conditions-for-bundlers
+.. _`@symfony/ux-svelte npm package`: https://www.npmjs.com/package/@symfony/ux-svelte

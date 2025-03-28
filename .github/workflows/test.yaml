@@ -18,7 +18,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: corepack enable
+            - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@v4
               with:
                 cache: 'yarn'
@@ -30,7 +30,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: corepack enable
+            - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@v4
               with:
                 cache: 'yarn'
@@ -130,7 +130,7 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - run: corepack enable
+            - run: npm i -g corepack && corepack enable
             - uses: actions/setup-node@v4
               with:
                 cache: 'yarn'
@@ -156,7 +156,7 @@ jobs:
       steps:
         - uses: actions/checkout@v4
 
-        - run: corepack enable
+        - run: npm i -g corepack && corepack enable
 
         - uses: actions/setup-node@v4
           with:

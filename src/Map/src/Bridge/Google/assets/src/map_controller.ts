@@ -9,8 +9,9 @@
 
 import type { LoaderOptions } from '@googlemaps/js-api-loader';
 import { Loader } from '@googlemaps/js-api-loader';
-import AbstractMapController from '@symfony/ux-map';
+import AbstractMapController, { IconTypes } from '@symfony/ux-map';
 import type {
+    Icon,
     InfoWindowWithoutPositionDefinition,
     MarkerDefinition,
     Point,
@@ -36,6 +37,8 @@ type MapOptions = Pick<
 
 let _google: typeof google;
 
+const parser = new DOMParser();
+
 export default class extends AbstractMapController<
     MapOptions,
     google.maps.Map,
@@ -54,6 +57,8 @@ export default class extends AbstractMapController<
     >;
 
     declare map: google.maps.Map;
+
+    public parser: DOMParser;
 
     async connect() {
         if (!_google) {
@@ -88,6 +93,7 @@ export default class extends AbstractMapController<
         }
 
         super.connect();
+        this.parser = new DOMParser();
     }
 
     public centerValueChanged(): void {
@@ -139,7 +145,7 @@ export default class extends AbstractMapController<
     }: {
         definition: MarkerDefinition<google.maps.marker.AdvancedMarkerElementOptions, google.maps.InfoWindowOptions>;
     }): google.maps.marker.AdvancedMarkerElement {
-        const { '@id': _id, position, title, infoWindow, extra, rawOptions = {}, ...otherOptions } = definition;
+        const { '@id': _id, position, title, infoWindow, icon, extra, rawOptions = {}, ...otherOptions } = definition;
 
         const marker = new _google.maps.marker.AdvancedMarkerElement({
             position,
@@ -151,6 +157,10 @@ export default class extends AbstractMapController<
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: marker });
+        }
+
+        if (icon) {
+            this.doCreateIcon({ definition: icon, element: marker });
         }
 
         return marker;
@@ -295,6 +305,30 @@ export default class extends AbstractMapController<
         }
 
         return content;
+    }
+
+    protected doCreateIcon({
+        definition,
+        element,
+    }: {
+        definition: Icon;
+        element: google.maps.marker.AdvancedMarkerElement;
+    }): void {
+        const { type, width, height } = definition;
+
+        if (type === IconTypes.Svg) {
+            element.content = parser.parseFromString(definition.html, 'image/svg+xml').documentElement;
+        } else if (type === IconTypes.UxIcon) {
+            element.content = parser.parseFromString(definition._generated_html, 'image/svg+xml').documentElement;
+        } else if (type === IconTypes.Url) {
+            const icon = document.createElement('img');
+            icon.width = width;
+            icon.height = height;
+            icon.src = definition.url;
+            element.content = icon;
+        } else {
+            throw new Error(`Unsupported icon type: ${type}.`);
+        }
     }
 
     private closeInfoWindowsExcept(infoWindow: google.maps.InfoWindow) {

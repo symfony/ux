@@ -30,6 +30,10 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-swup npm package`_
+
 Usage
 -----
 
@@ -202,3 +206,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`StimulusBundle`: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`Swup Options`: https://swup.js.org/options
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
+.. _`@symfony/ux-swup npm package`: https://www.npmjs.com/package/@symfony/ux-swup

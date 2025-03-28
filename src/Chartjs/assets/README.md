@@ -1,10 +1,18 @@
 # @symfony/ux-chartjs
 
-Chart.js integration for Symfony.
+JavaScript assets of the [symfony/ux-chartjs](https://packagist.org/packages/symfony/ux-chartjs) PHP package.
 
-**ℹ️ Direct installation of this package is for advanced users only.** We strongly recommend installing it through the PHP package [symfony/ux-chartjs](https://packagist.org/packages/symfony/ux-chartjs) in a Symfony application with Flex enabled.
+## Installation
 
-If you still want to install this package directly, **make sure its version exactly matches [symfony/ux-chartjs](https://packagist.org/packages/symfony/ux-chartjs) PHP package version.**
+This npm package is **reserved for advanced users** who want to decouple their JavaScript dependencies from their PHP dependencies (e.g., when building Docker images, running JavaScript-only pipelines, etc.).
+
+We **strongly recommend not installing this package directly**, but instead  install the PHP package [symfony/ux-chartjs](https://packagist.org/packages/symfony/ux-chartjs) in your Symfony application with [Flex](https://github.com/symfony/flex) enabled.
+
+If you still want to install this package directly, please make sure its version exactly matches [symfony/ux-chartjs](https://packagist.org/packages/symfony/ux-chartjs) PHP package version:
+```shell
+composer require symfony/ux-chartjs:2.23.0
+npm add @symfony/ux-chartjs@2.23.0
+```
 
 ## Resources
 

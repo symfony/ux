@@ -35,6 +35,10 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-translator npm package`_
+
 After installing the bundle, the following file should be created, thanks to the Symfony Flex recipe:
 
 .. code-block:: javascript
@@ -192,3 +196,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _StimulusBundle configured in your app: https://symfony.com/bundles/StimulusBundle/current/index.html
 .. _`ICU Message Format`: https://symfony.com/doc/current/reference/formats/message_format.html
 .. _`W3C specification on language codes`: https://www.w3.org/TR/html401/struct/dirlang.html#h-8.1.1
+.. _`@symfony/ux-translator npm package`: https://www.npmjs.com/package/@symfony/ux-translator

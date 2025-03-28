@@ -1,5 +1,10 @@
 import { Controller } from '@hotwired/stimulus';
 
+const IconTypes = {
+    Url: 'url',
+    Svg: 'svg',
+    UxIcon: 'ux-icon',
+};
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
@@ -102,4 +107,4 @@ default_1.values = {
     options: Object,
 };
 
-export { default_1 as default };
+export { IconTypes, default_1 as default };

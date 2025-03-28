@@ -1,6 +1,8 @@
 # @symfony/ux-map
 
-Easily embed interactive maps in your Symfony application.
+JavaScript assets of the [symfony/ux-map](https://packagist.org/packages/symfony/ux-map) PHP package.
+
+This package is private and is not intended to be published on npm or installed.
 
 ## Resources
 

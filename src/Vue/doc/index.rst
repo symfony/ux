@@ -35,6 +35,10 @@ Next, install a package to help Vue:
     $ npm install -D vue-loader --force
     $ npm run watch
 
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-vue npm package`_
+
 That's it! Any files inside ``assets/vue/controllers/`` can now be rendered as
 Vue components.
 
@@ -182,3 +186,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Vue.js`: https://vuejs.org/
 .. _`the Symfony UX initiative`: https://ux.symfony.com/
 .. _ `the related section of the documentation`: https://symfony.com/doc/current/frontend/encore/vuejs.html
+.. _`@symfony/ux-vue npm package`: https://www.npmjs.com/package/@symfony/ux-vue

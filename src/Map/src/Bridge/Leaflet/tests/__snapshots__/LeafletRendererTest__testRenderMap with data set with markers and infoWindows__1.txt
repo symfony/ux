@@ -1,0 +1,13 @@
+<!-- This HTML has been prettified for testing purposes, and may not represent the actual HTML output.
+     Run "php vendor/bin/phpunit -d --update-snapshots" to update the snapshot. -->
+<div
+  data-controller="symfony--ux-leaflet-map--map"
+  data-symfony--ux-leaflet-map--map-provider-options-value="{}"
+  data-symfony--ux-leaflet-map--map-center-value="{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522}"
+  data-symfony--ux-leaflet-map--map-zoom-value="12"
+  data-symfony--ux-leaflet-map--map-fit-bounds-to-markers-value="false"
+  data-symfony--ux-leaflet-map--map-options-value="{&quot;tileLayer&quot;:{&quot;url&quot;:&quot;https:\/\/tile.openstreetmap.org\/{z}\/{x}\/{y}.png&quot;,&quot;attribution&quot;:&quot;\u00a9 &lt;a href=\&quot;https:\/\/www.openstreetmap.org\/copyright\&quot;&gt;OpenStreetMap&lt;\/a&gt;&quot;,&quot;options&quot;:[]},&quot;@provider&quot;:&quot;leaflet&quot;}"
+  data-symfony--ux-leaflet-map--map-markers-value="[{&quot;position&quot;:{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},&quot;title&quot;:&quot;Paris&quot;,&quot;infoWindow&quot;:null,&quot;icon&quot;:null,&quot;extra&quot;:[],&quot;id&quot;:&quot;marker1&quot;,&quot;@id&quot;:&quot;872feba9ebf3905d&quot;},{&quot;position&quot;:{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},&quot;title&quot;:&quot;Lyon&quot;,&quot;infoWindow&quot;:{&quot;headerContent&quot;:null,&quot;content&quot;:&quot;Lyon&quot;,&quot;position&quot;:null,&quot;opened&quot;:false,&quot;autoClose&quot;:true,&quot;extra&quot;:[]},&quot;icon&quot;:null,&quot;extra&quot;:[],&quot;id&quot;:null,&quot;@id&quot;:&quot;bce206d73dc5c164&quot;}]"
+  data-symfony--ux-leaflet-map--map-polygons-value="[]"
+  data-symfony--ux-leaflet-map--map-polylines-value="[]"
+></div>

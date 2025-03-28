@@ -1,11 +1,18 @@
 # @symfony/ux-typed
 
-Typed integration for Symfony.
+JavaScript assets of the [symfony/ux-typed](https://packagist.org/packages/symfony/ux-typed) PHP package.
 
-**This package can't be used on its own, and requires the PHP package [symfony/ux-typed](https://github.com/symfony/ux/tree/2.x/src/Typed).**
-**ℹ️ Direct installation of this package is for advanced users only.** We strongly recommend installing it through the PHP package [symfony/ux-typed](https://packagist.org/packages/symfony/ux-typed) in a Symfony application with Flex enabled.
+## Installation
 
-If you still want to install this package directly, **make sure its version exactly matches [symfony/ux-typed](https://packagist.org/packages/symfony/ux-typed) PHP package version.**
+This npm package is **reserved for advanced users** who want to decouple their JavaScript dependencies from their PHP dependencies (e.g., when building Docker images, running JavaScript-only pipelines, etc.).
+
+We **strongly recommend not installing this package directly**, but instead  install the PHP package [symfony/ux-typed](https://packagist.org/packages/symfony/ux-typed) in your Symfony application with [Flex](https://github.com/symfony/flex) enabled.
+
+If you still want to install this package directly, please make sure its version exactly matches [symfony/ux-typed](https://packagist.org/packages/symfony/ux-typed) PHP package version:
+```shell
+composer require symfony/ux-typed:2.23.0
+npm add @symfony/ux-typed@2.23.0
+```
 
 ## Resources
 

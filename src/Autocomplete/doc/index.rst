@@ -1,7 +1,7 @@
 Autocomplete <select>
 =====================
 
-Transform your ``EntityType``, ``ChoiceType`` or *any* ``<select>`` element
+Transform your ``EntityType``, ``ChoiceType``, ``EnumType`` or *any* ``<select>`` element
 into an Ajax-powered autocomplete smart UI control (leveraging `Tom Select`_):
 
 .. image:: ux-autocomplete-animation.gif
@@ -29,6 +29,10 @@ needed if you're using AssetMapper):
 
     $ npm install --force
     $ npm run watch
+
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-autocomplete npm package`_
 
 Usage in a Form (without Ajax)
 ------------------------------
@@ -288,7 +292,7 @@ Passing Extra Options to the Ajax-powered Autocomplete
 
 Autocomplete field options are **not preserved** when the field is rendered
 on an Ajax call. So, features like exclude some options based on the current
-form data are not possible by default. 
+form data are not possible by default.
 
 To partially avoid this limitation, the ``extra_options`` option was added.
 
@@ -299,7 +303,7 @@ To partially avoid this limitation, the ``extra_options`` option was added.
     can be passed as extra options.
 
 Considering the following example, when the form type is rendered for the first
-time, it will use the ``query_builder`` defined while adding a ``food`` field 
+time, it will use the ``query_builder`` defined while adding a ``food`` field
 to the ``FoodForm``. However, when the Ajax is used to fetch the results, on
 the consequent renders, the default ``query_builder`` will be used::
 
@@ -324,8 +328,8 @@ the consequent renders, the default ``query_builder`` will be used::
         }
     }
 
-If some food can be consisted of other foods, we might want to exclude the 
-"root" food from the list of available foods. To achieve this, we can remove 
+If some food can be consisted of other foods, we might want to exclude the
+"root" food from the list of available foods. To achieve this, we can remove
 the ``query_builder`` option from the above example and pass the ``excluded_foods``
 extra option to the ``FoodAutocompleteField``::
 
@@ -600,13 +604,13 @@ Passing Extra Options to the Autocompleter
 
     The ability to pass extra options was added in Autocomplete 2.14.
 
-If you need to pass extra options to the autocompleter, you can do so by 
-implementing the ``\Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface`` 
+If you need to pass extra options to the autocompleter, you can do so by
+implementing the ``\Symfony\UX\Autocomplete\OptionsAwareEntityAutocompleterInterface``
 interface.
 
 .. tip::
 
-    If you want to know **why** you might need to use the ``extra_options`` 
+    If you want to know **why** you might need to use the ``extra_options``
     feature, see :ref:`passing-extra-options-to-the-ajax-powered-autocomplete`.
 
 .. code-block:: diff
@@ -757,3 +761,4 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Tom Select Render Templates`: https://tom-select.js.org/docs/#render-templates
 .. _`Tom Select Option Group`: https://tom-select.js.org/examples/optgroups/
 .. _`Symfony Form`: https://symfony.com/doc/current/forms.html
+.. _`@symfony/ux-autocomplete npm package`: https://www.npmjs.com/package/@symfony/ux-autocomplete

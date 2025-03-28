@@ -37,6 +37,10 @@ Next, install a package to help React:
     $ npm install -D @babel/preset-react --force
     $ npm run watch
 
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-react npm package`_
+
 That's it! Any files inside ``assets/react/controllers/`` can now be rendered as
 React components.
 
@@ -99,21 +103,21 @@ Permanent components
     The ability to mark a component ``permanent`` was added in UX React 2.21.
 
 The controller responsible to render the React components can be configured
-to keep the React component mounted when the root element is removed from 
+to keep the React component mounted when the root element is removed from
 the DOM, using the ``permanent`` option.
 
 This is particularly useful when the root element of a component is moved around
-in the DOM  or is removed and immediately re-added to the DOM (e.g. when using 
+in the DOM  or is removed and immediately re-added to the DOM (e.g. when using
 `Turbo`_ and its `data-turbo-permanent` attribute).
 
 .. code-block:: html+twig
 
     {# templates/home.html.twig #}
     {% extends 'base.html.twig' %}
-    
+
     {# The React component will stay mounted if the div is moved in the DOM #}
     <div {{ react_component('Hello', {fullName: 'Fabien'}, {permanent: true}) }}>
-         Loading...  
+         Loading...
     </div>
 
 .. _using-with-asset-mapper:
@@ -156,3 +160,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Symfony UX initiative`: https://ux.symfony.com/
 .. _`Symfony UX React demo`: https://ux.symfony.com/react
 .. _`Turbo`: https://turbo.hotwire.dev/
+.. _`@symfony/ux-react npm package`: https://www.npmjs.com/package/@symfony/ux-react

@@ -2,6 +2,25 @@
 
 [Leaflet](https://leafletjs.com/) integration for Symfony UX Map.
 
+## Installation
+
+Install the bridge using Composer and Symfony Flex:
+
+```shell
+composer require symfony/ux-leaflet-map
+```
+
+If you're using WebpackEncore, install your assets and restart Encore (not
+needed if you're using AssetMapper):
+
+```shell
+npm install --force
+npm run watch
+```
+
+> [!NOTE]
+> Alternatively, [@symfony/ux-leaflet-map package](https://www.npmjs.com/package/@symfony/ux-leaflet-map) can be used to install the JavaScript assets without requiring PHP.
+
 ## DSN example
 
 ```dotenv

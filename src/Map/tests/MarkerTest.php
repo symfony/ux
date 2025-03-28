@@ -12,6 +12,7 @@
 namespace Symfony\UX\Map\Tests;
 
 use PHPUnit\Framework\TestCase;
+use Symfony\UX\Map\Icon\Icon;
 use Symfony\UX\Map\InfoWindow;
 use Symfony\UX\Map\Marker;
 use Symfony\UX\Map\Point;
@@ -30,6 +31,7 @@ class MarkerTest extends TestCase
             'position' => ['lat' => 48.8566, 'lng' => 2.3522],
             'title' => null,
             'infoWindow' => null,
+            'icon' => null,
             'extra' => $array['extra'],
             'id' => null,
         ], $array);
@@ -42,6 +44,7 @@ class MarkerTest extends TestCase
                 content: "Capitale de la France, est une grande ville européenne et un centre mondial de l'art, de la mode, de la gastronomie et de la culture.",
                 opened: true,
             ),
+            icon: Icon::url('https://example.com/image.png'),
         );
 
         $array = $marker->toArray();
@@ -56,6 +59,12 @@ class MarkerTest extends TestCase
                 'opened' => true,
                 'autoClose' => true,
                 'extra' => $array['infoWindow']['extra'],
+            ],
+            'icon' => [
+                'type' => 'url',
+                'width' => 24,
+                'height' => 24,
+                'url' => 'https://example.com/image.png',
             ],
             'extra' => $array['extra'],
             'id' => null,

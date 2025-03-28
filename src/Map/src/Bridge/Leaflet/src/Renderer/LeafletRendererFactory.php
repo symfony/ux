@@ -28,7 +28,7 @@ final class LeafletRendererFactory extends AbstractRendererFactory implements Re
             throw new UnsupportedSchemeException($dsn);
         }
 
-        return new LeafletRenderer($this->stimulus);
+        return new LeafletRenderer($this->stimulus, $this->uxIconRenderer);
     }
 
     protected function getSupportedSchemes(): array

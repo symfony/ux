@@ -12,6 +12,7 @@
 namespace Symfony\UX\Map\Renderer;
 
 use Symfony\UX\Map\Exception\IncompleteDsnException;
+use Symfony\UX\Map\Icon\UxIconRenderer;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 
 /**
@@ -21,6 +22,7 @@ abstract class AbstractRendererFactory
 {
     public function __construct(
         protected StimulusHelper $stimulus,
+        protected UxIconRenderer $uxIconRenderer,
     ) {
     }
 

@@ -22,6 +22,10 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-chartjs npm package`_
+
 Usage
 -----
 
@@ -253,3 +257,4 @@ the Symfony framework: https://symfony.com/doc/current/contributing/code/bc.html
 .. _`zoom plugin documentation`: https://www.chartjs.org/chartjs-plugin-zoom/latest/guide/integration.html
 .. _`register Chart.js plugins globally`: https://www.chartjs.org/docs/latest/developers/plugins.html
 .. _`Tooltip positioner`: https://www.chartjs.org/docs/latest/samples/tooltip/position.html
+.. _`@symfony/ux-chartjs npm package`: https://www.npmjs.com/package/@symfony/ux-chartjs

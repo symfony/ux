@@ -12,6 +12,7 @@
 namespace Symfony\UX\Map\Bridge\Google\Renderer;
 
 use Symfony\UX\Map\Bridge\Google\GoogleOptions;
+use Symfony\UX\Map\Icon\UxIconRenderer;
 use Symfony\UX\Map\MapOptionsInterface;
 use Symfony\UX\Map\Renderer\AbstractRenderer;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
@@ -28,6 +29,7 @@ final readonly class GoogleRenderer extends AbstractRenderer
      */
     public function __construct(
         StimulusHelper $stimulusHelper,
+        UxIconRenderer $uxIconRenderer,
         #[\SensitiveParameter]
         private string $apiKey,
         private ?string $id = null,
@@ -43,7 +45,7 @@ final readonly class GoogleRenderer extends AbstractRenderer
         private array $libraries = [],
         private ?string $defaultMapId = null,
     ) {
-        parent::__construct($stimulusHelper);
+        parent::__construct($stimulusHelper, $uxIconRenderer);
     }
 
     protected function getName(): string

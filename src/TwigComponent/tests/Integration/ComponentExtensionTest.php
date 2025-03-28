@@ -425,7 +425,7 @@ final class ComponentExtensionTest extends KernelTestCase
     public function testComponentWithConflictBetweenPropsFromTemplateAndClass(): void
     {
         $this->expectException(RuntimeError::class);
-        $this->expectExceptionMessage('Cannot define prop "name" in template "components/Conflict.html.twig". Property already defined in component class "Symfony\UX\TwigComponent\Tests\Fixtures\Component\Conflict".');
+        $this->expectExceptionMessage('Cannot define prop "name" in template "components/Conflict.html.twig". Property already defined in component class "Symfony\UX\TwigComponent\Tests\Fixtures\Component\Conflict"');
 
         self::getContainer()->get(Environment::class)->render('component_with_conflict_between_props_from_template_and_class.html.twig');
     }

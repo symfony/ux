@@ -11,6 +11,8 @@
 
 namespace Symfony\UX\Map\Renderer;
 
+use Symfony\UX\Map\Icon\IconType;
+use Symfony\UX\Map\Icon\UxIconRenderer;
 use Symfony\UX\Map\Map;
 use Symfony\UX\Map\MapOptionsInterface;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
@@ -22,6 +24,7 @@ abstract readonly class AbstractRenderer implements RendererInterface
 {
     public function __construct(
         private StimulusHelper $stimulus,
+        private UxIconRenderer $uxIconRenderer,
     ) {
     }
 
@@ -89,9 +92,14 @@ abstract readonly class AbstractRenderer implements RendererInterface
         $attrs = $map->toArray();
 
         foreach ($attrs['markers'] as $key => $marker) {
+            if (isset($marker['icon']['type']) && IconType::UxIcon->value === $marker['icon']['type']) {
+                $attrs['markers'][$key]['icon']['_generated_html'] = $this->uxIconRenderer->render($marker['icon']['name'], [
+                    'width' => $marker['icon']['width'],
+                    'height' => $marker['icon']['height'],
+                ]);
+            }
             $attrs['markers'][$key]['@id'] = $computeId($marker);
         }
-
         foreach ($attrs['polygons'] as $key => $polygon) {
             $attrs['polygons'][$key]['@id'] = $computeId($polygon);
         }

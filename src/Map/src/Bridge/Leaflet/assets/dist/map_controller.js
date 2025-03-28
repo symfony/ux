@@ -2,6 +2,11 @@ import { Controller } from '@hotwired/stimulus';
 import 'leaflet/dist/leaflet.min.css';
 import * as L from 'leaflet';
 
+const IconTypes = {
+    Url: 'url',
+    Svg: 'svg',
+    UxIcon: 'ux-icon',
+};
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
@@ -147,10 +152,13 @@ class map_controller extends default_1 {
         return map;
     }
     doCreateMarker({ definition }) {
-        const { '@id': _id, position, title, infoWindow, extra, rawOptions = {}, ...otherOptions } = definition;
+        const { '@id': _id, position, title, infoWindow, icon, extra, rawOptions = {}, ...otherOptions } = definition;
         const marker = L.marker(position, { title: title || undefined, ...otherOptions, ...rawOptions }).addTo(this.map);
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: marker });
+        }
+        if (icon) {
+            this.doCreateIcon({ definition: icon, element: marker });
         }
         return marker;
     }
@@ -196,6 +204,35 @@ class map_controller extends default_1 {
             throw new Error('Unable to get the Popup associated with the element.');
         }
         return popup;
+    }
+    doCreateIcon({ definition, element, }) {
+        const { type, width, height } = definition;
+        let icon;
+        if (type === IconTypes.Svg) {
+            icon = L.divIcon({
+                html: definition.html,
+                iconSize: [width, height],
+                className: '',
+            });
+        }
+        else if (type === IconTypes.UxIcon) {
+            icon = L.divIcon({
+                html: definition._generated_html,
+                iconSize: [width, height],
+                className: '',
+            });
+        }
+        else if (type === IconTypes.Url) {
+            icon = L.icon({
+                iconUrl: definition.url,
+                iconSize: [width, height],
+                className: '',
+            });
+        }
+        else {
+            throw new Error(`Unsupported icon type: ${type}.`);
+        }
+        element.setIcon(icon);
     }
     doFitBoundsToMarkers() {
         if (this.markers.size === 0) {

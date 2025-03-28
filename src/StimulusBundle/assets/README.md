@@ -1,10 +1,10 @@
 # @symfony/stimulus-bundle
 
-Integration of @hotwired/stimulus into Symfony.
+JavaScript assets of the [symfony/stimulus-bundle](https://packagist.org/packages/symfony/stimulus-bundle) PHP package.
 
-**ℹ️ Direct installation of this package is for advanced users only.** We strongly recommend installing it through the PHP package [symfony/stimulus-bundle](https://packagist.org/packages/symfony/stimulus-bundle) in a Symfony application with Flex enabled.
+This package is private and is not intended to be published on npm or installed.
 
-If you still want to install this package directly, **make sure its version exactly matches [symfony/stimulus-bundle](https://packagist.org/packages/symfony/stimulus-bundle) PHP package version.**
+If you're looking for a npm package to integrate Stimulus in your Symfony application, you may be looking for the [`@symfony/stimulus-bridge`](https://www.npmjs.com/package/@symfony/stimulus-bridge) package.
 
 ## Resources
 

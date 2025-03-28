@@ -12,6 +12,7 @@
 namespace Symfony\UX\Map\Bridge\Google\Tests;
 
 use Symfony\UX\Map\Bridge\Google\Renderer\GoogleRendererFactory;
+use Symfony\UX\Map\Icon\UxIconRenderer;
 use Symfony\UX\Map\Renderer\RendererFactoryInterface;
 use Symfony\UX\Map\Test\RendererFactoryTestCase;
 use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
@@ -20,7 +21,7 @@ final class GoogleRendererFactoryTest extends RendererFactoryTestCase
 {
     public function createRendererFactory(): RendererFactoryInterface
     {
-        return new GoogleRendererFactory(new StimulusHelper(null));
+        return new GoogleRendererFactory(new StimulusHelper(null), new UxIconRenderer(null));
     }
 
     public static function supportsRenderer(): iterable

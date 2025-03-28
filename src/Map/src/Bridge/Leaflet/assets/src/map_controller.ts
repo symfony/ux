@@ -1,5 +1,6 @@
-import AbstractMapController from '@symfony/ux-map';
+import AbstractMapController, { IconTypes } from '@symfony/ux-map';
 import type {
+    Icon,
     InfoWindowWithoutPositionDefinition,
     MarkerDefinition,
     Point,
@@ -41,7 +42,7 @@ export default class extends AbstractMapController<
             iconSize: [25, 41],
             iconAnchor: [12.5, 41],
             popupAnchor: [0, -41],
-            className: '',
+            className: '', // Adding an empty class to the icon to avoid the default Leaflet styles
         });
 
         super.connect();
@@ -89,7 +90,7 @@ export default class extends AbstractMapController<
     }
 
     protected doCreateMarker({ definition }: { definition: MarkerDefinition<MarkerOptions, PopupOptions> }): L.Marker {
-        const { '@id': _id, position, title, infoWindow, extra, rawOptions = {}, ...otherOptions } = definition;
+        const { '@id': _id, position, title, infoWindow, icon, extra, rawOptions = {}, ...otherOptions } = definition;
 
         const marker = L.marker(position, { title: title || undefined, ...otherOptions, ...rawOptions }).addTo(
             this.map
@@ -97,6 +98,10 @@ export default class extends AbstractMapController<
 
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: marker });
+        }
+
+        if (icon) {
+            this.doCreateIcon({ definition: icon, element: marker });
         }
 
         return marker;
@@ -171,6 +176,40 @@ export default class extends AbstractMapController<
         }
 
         return popup;
+    }
+
+    protected doCreateIcon({
+        definition,
+        element,
+    }: {
+        definition: Icon;
+        element: L.Marker;
+    }): void {
+        const { type, width, height } = definition;
+
+        let icon: L.DivIcon | L.Icon;
+        if (type === IconTypes.Svg) {
+            icon = L.divIcon({
+                html: definition.html,
+                iconSize: [width, height],
+                className: '', // Adding an empty class to the icon to avoid the default Leaflet styles
+            });
+        } else if (type === IconTypes.UxIcon) {
+            icon = L.divIcon({
+                html: definition._generated_html,
+                iconSize: [width, height],
+                className: '', // Adding an empty class to the icon to avoid the default Leaflet styles
+            });
+        } else if (type === IconTypes.Url) {
+            icon = L.icon({
+                iconUrl: definition.url,
+                iconSize: [width, height],
+                className: '', // Adding an empty class to the icon to avoid the default Leaflet styles
+            });
+        } else {
+            throw new Error(`Unsupported icon type: ${type}.`);
+        }
+        element.setIcon(icon);
     }
 
     protected doFitBoundsToMarkers(): void {

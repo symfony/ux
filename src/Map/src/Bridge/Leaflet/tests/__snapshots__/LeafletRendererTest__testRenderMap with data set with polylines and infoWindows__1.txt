@@ -1,0 +1,13 @@
+<!-- This HTML has been prettified for testing purposes, and may not represent the actual HTML output.
+     Run "php vendor/bin/phpunit -d --update-snapshots" to update the snapshot. -->
+<div
+  data-controller="symfony--ux-leaflet-map--map"
+  data-symfony--ux-leaflet-map--map-provider-options-value="{}"
+  data-symfony--ux-leaflet-map--map-center-value="{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522}"
+  data-symfony--ux-leaflet-map--map-zoom-value="12"
+  data-symfony--ux-leaflet-map--map-fit-bounds-to-markers-value="false"
+  data-symfony--ux-leaflet-map--map-options-value="{&quot;tileLayer&quot;:{&quot;url&quot;:&quot;https:\/\/tile.openstreetmap.org\/{z}\/{x}\/{y}.png&quot;,&quot;attribution&quot;:&quot;\u00a9 &lt;a href=\&quot;https:\/\/www.openstreetmap.org\/copyright\&quot;&gt;OpenStreetMap&lt;\/a&gt;&quot;,&quot;options&quot;:[]},&quot;@provider&quot;:&quot;leaflet&quot;}"
+  data-symfony--ux-leaflet-map--map-markers-value="[]"
+  data-symfony--ux-leaflet-map--map-polygons-value="[]"
+  data-symfony--ux-leaflet-map--map-polylines-value="[{&quot;points&quot;:[{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522},{&quot;lat&quot;:48.8566,&quot;lng&quot;:2.3522}],&quot;title&quot;:null,&quot;infoWindow&quot;:null,&quot;extra&quot;:[],&quot;id&quot;:&quot;polyline1&quot;,&quot;@id&quot;:&quot;823f6ee5acdb5db3&quot;},{&quot;points&quot;:[{&quot;lat&quot;:1.1,&quot;lng&quot;:2.2},{&quot;lat&quot;:3.3,&quot;lng&quot;:4.4},{&quot;lat&quot;:5.5,&quot;lng&quot;:6.6}],&quot;title&quot;:null,&quot;infoWindow&quot;:{&quot;headerContent&quot;:null,&quot;content&quot;:&quot;Polyline&quot;,&quot;position&quot;:null,&quot;opened&quot;:false,&quot;autoClose&quot;:true,&quot;extra&quot;:[]},&quot;extra&quot;:[],&quot;id&quot;:&quot;polyline2&quot;,&quot;@id&quot;:&quot;77fb0e390b5e91f1&quot;}]"
+></div>

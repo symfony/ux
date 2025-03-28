@@ -11,6 +11,7 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Symfony\UX\Map\Icon\UxIconRenderer;
 use Symfony\UX\Map\Renderer\AbstractRendererFactory;
 use Symfony\UX\Map\Renderer\Renderer;
 use Symfony\UX\Map\Renderer\Renderers;
@@ -20,6 +21,7 @@ use Symfony\UX\Map\Twig\MapRuntime;
 /*
  * @author Hugo Alliaume <hugo@alliau.me>
  */
+
 return static function (ContainerConfigurator $container): void {
     $container->services()
         ->set('ux_map.renderers', Renderers::class)
@@ -28,10 +30,16 @@ return static function (ContainerConfigurator $container): void {
                 abstract_arg('renderers configuration'),
             ])
 
+        ->set('.ux_map.ux_icons.renderer', UxIconRenderer::class)
+            ->args([
+                service('.ux_icons.icon_renderer')->nullOnInvalid(),
+            ])
+
         ->set('ux_map.renderer_factory.abstract', AbstractRendererFactory::class)
             ->abstract()
             ->args([
                 service('stimulus.helper'),
+                service('.ux_map.ux_icons.renderer'),
             ])
 
         ->set('ux_map.renderer_factory', Renderer::class)

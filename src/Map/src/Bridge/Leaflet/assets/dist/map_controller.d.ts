@@ -1,5 +1,5 @@
 import AbstractMapController from '@symfony/ux-map';
-import type { InfoWindowWithoutPositionDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition } from '@symfony/ux-map';
+import type { Icon, InfoWindowWithoutPositionDefinition, MarkerDefinition, Point, PolygonDefinition, PolylineDefinition } from '@symfony/ux-map';
 import 'leaflet/dist/leaflet.min.css';
 import * as L from 'leaflet';
 import type { MapOptions as LeafletMapOptions, MarkerOptions, PolylineOptions as PolygonOptions, PolylineOptions, PopupOptions } from 'leaflet';
@@ -37,6 +37,10 @@ export default class extends AbstractMapController<MapOptions, L.Map, MarkerOpti
         definition: InfoWindowWithoutPositionDefinition<PopupOptions>;
         element: L.Marker | L.Polygon | L.Polyline;
     }): L.Popup;
+    protected doCreateIcon({ definition, element, }: {
+        definition: Icon;
+        element: L.Marker;
+    }): void;
     protected doFitBoundsToMarkers(): void;
 }
 export {};

@@ -7,10 +7,30 @@ export type Identifier = string;
 export type WithIdentifier<T extends Record<string, unknown>> = T & {
     '@id': Identifier;
 };
+export declare const IconTypes: {
+    readonly Url: "url";
+    readonly Svg: "svg";
+    readonly UxIcon: "ux-icon";
+};
+export type Icon = {
+    width: number;
+    height: number;
+} & ({
+    type: typeof IconTypes.UxIcon;
+    name: string;
+    _generated_html: string;
+} | {
+    type: typeof IconTypes.Url;
+    url: string;
+} | {
+    type: typeof IconTypes.Svg;
+    html: string;
+});
 export type MarkerDefinition<MarkerOptions, InfoWindowOptions> = WithIdentifier<{
     position: Point;
     title: string | null;
     infoWindow?: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
+    icon?: Icon;
     rawOptions?: MarkerOptions;
     extra: Record<string, unknown>;
 }>;
@@ -105,6 +125,10 @@ export default abstract class<MapOptions, Map, MarkerOptions, Marker, InfoWindow
         definition: InfoWindowWithoutPositionDefinition<InfoWindowOptions>;
         element: Marker | Polygon | Polyline;
     }): InfoWindow;
+    protected abstract doCreateIcon({ definition, element, }: {
+        definition: Icon;
+        element: Marker;
+    }): void;
     private createDrawingFactory;
     private onDrawChanged;
 }

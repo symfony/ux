@@ -1,6 +1,11 @@
 import { Loader } from '@googlemaps/js-api-loader';
 import { Controller } from '@hotwired/stimulus';
 
+const IconTypes = {
+    Url: 'url',
+    Svg: 'svg',
+    UxIcon: 'ux-icon',
+};
 class default_1 extends Controller {
     constructor() {
         super(...arguments);
@@ -104,6 +109,7 @@ default_1.values = {
 };
 
 let _google;
+const parser = new DOMParser();
 class map_controller extends default_1 {
     async connect() {
         if (!_google) {
@@ -126,6 +132,7 @@ class map_controller extends default_1 {
             });
         }
         super.connect();
+        this.parser = new DOMParser();
     }
     centerValueChanged() {
         if (this.map && this.hasCenterValue && this.centerValue) {
@@ -158,7 +165,7 @@ class map_controller extends default_1 {
         });
     }
     doCreateMarker({ definition, }) {
-        const { '@id': _id, position, title, infoWindow, extra, rawOptions = {}, ...otherOptions } = definition;
+        const { '@id': _id, position, title, infoWindow, icon, extra, rawOptions = {}, ...otherOptions } = definition;
         const marker = new _google.maps.marker.AdvancedMarkerElement({
             position,
             title,
@@ -168,6 +175,9 @@ class map_controller extends default_1 {
         });
         if (infoWindow) {
             this.createInfoWindow({ definition: infoWindow, element: marker });
+        }
+        if (icon) {
+            this.doCreateIcon({ definition: icon, element: marker });
         }
         return marker;
     }
@@ -271,6 +281,25 @@ class map_controller extends default_1 {
             return div;
         }
         return content;
+    }
+    doCreateIcon({ definition, element, }) {
+        const { type, width, height } = definition;
+        if (type === IconTypes.Svg) {
+            element.content = parser.parseFromString(definition.html, 'image/svg+xml').documentElement;
+        }
+        else if (type === IconTypes.UxIcon) {
+            element.content = parser.parseFromString(definition._generated_html, 'image/svg+xml').documentElement;
+        }
+        else if (type === IconTypes.Url) {
+            const icon = document.createElement('img');
+            icon.width = width;
+            icon.height = height;
+            icon.src = definition.url;
+            element.content = icon;
+        }
+        else {
+            throw new Error(`Unsupported icon type: ${type}.`);
+        }
     }
     closeInfoWindowsExcept(infoWindow) {
         this.infoWindows.forEach((otherInfoWindow) => {

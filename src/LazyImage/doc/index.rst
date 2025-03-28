@@ -36,6 +36,10 @@ needed if you're using AssetMapper):
     $ npm install --force
     $ npm run watch
 
+.. note::
+
+    For more complex installation scenarios, you can install the JavaScript assets through the `@symfony/ux-lazy-image npm package`_
+
 Usage
 -----
 
@@ -216,7 +220,7 @@ on the page and should be less than 2.5 seconds. It's part of the `Core Web Vita
 and is used by Google to evaluate the user experience of a website, impacting
 the Search ranking.
 
-Using the Symfony UX LazyImage for your LCP image can be a good idea at first, 
+Using the Symfony UX LazyImage for your LCP image can be a good idea at first,
 but in reality, it will lower the LCP score because:
 
 - `The progressive loading (through blurhash) is not taken into account in the LCP calculation`_;
@@ -239,7 +243,7 @@ A solution is to not use the Stimulus controller for the LCP image but to use
         width="200"
         height="150"
     />
-    
+
 This way, the browser will display the BlurHash image as soon as possible, and
 will load the high-definition image at the same time, without waiting for the
 Stimulus controller to be loaded.
@@ -262,3 +266,4 @@ https://symfony.com/doc/current/contributing/code/bc.html
 .. _`Core Web Vitals`: https://web.dev/vitals/
 .. _`The progressive loading (through blurhash) is not taken into account in the LCP calculation`: https://github.com/w3c/largest-contentful-paint/issues/71_
 .. _`didn't preload the image`: https://symfony.com/doc/current/web_link.html
+.. _`@symfony/ux-lazy-image npm package`: https://www.npmjs.com/package/@symfony/ux-lazy-image

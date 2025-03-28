@@ -40,6 +40,7 @@ To set up the development environment, you need the following tools:
 - [PHP](https://www.php.net/downloads.php) 8.1 or higher
 - [Composer](https://getcomposer.org/download/)
 - [Node.js](https://nodejs.org/en/download/package-manager) 22 or higher
+- [Corepack](https://github.com/nodejs/corepack)
 - [Yarn](https://yarnpkg.com/) 4 or higher
 
 With these tools installed, you can install the project dependencies:
