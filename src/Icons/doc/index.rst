@@ -16,6 +16,15 @@ Installation
 
     $ composer require symfony/ux-icons
 
+HTTP Client for On-Demand Icons
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+If you plan to use provided icon sets, make sure that you have the HTTP client installed:
+
+.. code-block:: terminal
+
+    $ composer require symfony/http-client
+
 SVG Icons
 ---------
 
@@ -63,15 +72,6 @@ Loading Icons
        and embeds the downloaded SVG contents in the template #}
     {{ ux_icon('flowbite:user-solid') }}
 
-.. note::
-
-    To search and download icons via `ux.symfony.com/icons`_, the ``symfony/http-client``
-    package must be installed in your application:
-
-    .. code-block:: terminal
-
-        $ composer require symfony/http-client
-
 The ``ux_icon()`` function defines a second optional argument where you can
 define the HTML attributes added to the ``<svg>`` element:
 
@@ -86,6 +86,15 @@ define the HTML attributes added to the ``<svg>`` element:
 
 Icon Sets
 ~~~~~~~~~
+
+.. note::
+
+    To use icons from icon sets via `ux.symfony.com/icons`_, the ``symfony/http-client``
+    package must be installed in your application:
+
+    .. code-block:: terminal
+
+        $ composer require symfony/http-client
 
 There are many icon sets available, each with their own unique style and set of
 icons, providing a wide range of icons for different purposes, while maintaining
@@ -166,7 +175,7 @@ HTML Syntax
 
 In addition to the ``ux_icon()`` function explained in the previous sections,
 this package also supports an alternative HTML syntax based on the ``<twig:ux:icon>``
-tag:
+tag if the ``symfony/ux-twig-component`` package is installed:
 
 .. code-block:: html
 
