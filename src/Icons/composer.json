@@ -48,6 +48,10 @@
         "zenstruck/console-test": "^1.5",
         "psr/log": "^2|^3"
     },
+    "suggest": {
+        "symfony/http-client": "To load icons from icon sets",
+        "symfony/ux-twig-component": "To use the <twig:ux:icon> syntax for icons"
+    },
     "config": {
         "sort-packages": true
     },
