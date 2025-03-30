@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Icons\Registry;
 
+use Symfony\Component\HttpClient\HttpClient;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Icon;
 use Symfony\UX\Icons\IconRegistryInterface;
@@ -38,6 +39,11 @@ final class ChainIconRegistry implements IconRegistryInterface
             }
         }
 
-        throw new IconNotFoundException(\sprintf('Icon "%s" not found.', $name));
+        $exceptionExtra = '';
+        if (str_contains($name, ':') && !class_exists(HttpClient::class)) {
+            $exceptionExtra = ' If you want the on-demand registry to fetch the icon from iconfiy, you need to install "symfony/http-client".';
+        }
+
+        throw new IconNotFoundException(\sprintf('Icon "%s" not found.%s', $name, $exceptionExtra));
     }
 }
