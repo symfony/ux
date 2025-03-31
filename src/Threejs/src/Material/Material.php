@@ -25,6 +25,7 @@ abstract class Material
       public float $opacity = 1,
       public string $map = '',
       public bool $doubleSide = false,
+      public bool $skybox = false,
 
    ) {
       $this->transparent = $this->opacity < 1;

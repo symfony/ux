@@ -10,6 +10,7 @@ export type Material = {
     transparent: boolean;
     type: string;
     doubleSide: boolean;
+    skybox: boolean;
 }
 
 export type Mesh = {
@@ -61,12 +62,18 @@ export default class extends Controller {
         let scene = new THREE.Scene();
         const light = new THREE.AmbientLight(0x404040); // Lumière ambiante
         scene.add(light);
+
         if (sceneValue.material.color) {
             scene.background = new THREE.Color(sceneValue.material.color);
         }
         if (sceneValue.material.map) {
-            scene.background = new THREE.TextureLoader().load(sceneValue.material.map);
-        }
+            const texture = new THREE.TextureLoader().load(sceneValue.material.map);
+            if(sceneValue.material.skybox)
+            texture.mapping = THREE.EquirectangularReflectionMapping;
+            scene.background = texture;
+        
+        } 
+        
 
         /** cameras */
         const cameras: THREE.Camera[] = [];

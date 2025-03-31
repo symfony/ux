@@ -7,6 +7,7 @@ export type Material = {
     transparent: boolean;
     type: string;
     doubleSide: boolean;
+    skybox: boolean;
 };
 export type Mesh = {
     geometry: any;

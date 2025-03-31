@@ -20,7 +20,10 @@ class default_1 extends Controller {
             scene.background = new THREE.Color(sceneValue.material.color);
         }
         if (sceneValue.material.map) {
-            scene.background = new THREE.TextureLoader().load(sceneValue.material.map);
+            const texture = new THREE.TextureLoader().load(sceneValue.material.map);
+            if (sceneValue.material.skybox)
+                texture.mapping = THREE.EquirectangularReflectionMapping;
+            scene.background = texture;
         }
         const cameras = [];
         for (let cameraData of rendererValue.cameras) {

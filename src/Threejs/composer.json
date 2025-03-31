@@ -28,20 +28,18 @@
         }
     },
     "require": {
-        "php": ">=8.1",
-        "symfony/config": "^5.4|^6.0|^7.0",
-        "symfony/dependency-injection": "^5.4|^6.0|^7.0",
-        "symfony/http-kernel": "^5.4|^6.0|^7.0",
-        "symfony/stimulus-bundle": "^2.9.1"
+        "php": ">=8.3",
+        "symfony/stimulus-bundle": "^2.18.1"
     },
     "require-dev": {
-        "symfony/framework-bundle": "^5.4|^6.0|^7.0",
-        "symfony/phpunit-bridge": "^5.4|^6.0|^7.0",
-        "symfony/twig-bundle": "^5.4|^6.0|^7.0",
-        "symfony/var-dumper": "^5.4|^6.0|^7.0"
+        "symfony/asset-mapper": "^6.4|^7.0",
+        "symfony/framework-bundle": "^6.4|^7.0",
+        "symfony/phpunit-bridge": "^6.4|^7.0",
+        "symfony/twig-bundle": "^6.4|^7.0",
+        "symfony/ux-twig-component": "^2.18"
     },
     "conflict": {
-        "symfony/flex": "<1.13"
+        "symfony/ux-twig-component": "<2.21"
     },
     "extra": {
         "thanks": {
