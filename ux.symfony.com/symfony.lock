@@ -611,6 +611,9 @@
     "symfony/ux-toggle-password": {
         "version": "2.x-dev"
     },
+    "symfony/ux-toolkit": {
+        "version": "2.x-dev"
+    },
     "symfony/ux-translator": {
         "version": "2.9999999",
         "recipe": {
@@ -677,6 +680,18 @@
     },
     "symfonycasts/sass-bundle": {
         "version": "v0.1.0"
+    },
+    "symfonycasts/tailwind-bundle": {
+        "version": "0.9",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "0.8",
+            "ref": "4ea7c9488fdce8943520daf3fdc31e93e5b59c64"
+        },
+        "files": [
+            "config/packages/symfonycasts_tailwind.yaml"
+        ]
     },
     "tales-from-a-dev/twig-tailwind-extra": {
         "version": "0.3",

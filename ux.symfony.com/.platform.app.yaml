@@ -53,6 +53,8 @@ hooks:
         export NO_NPM=1
 
         (>&2 symfony-build)
+        php bin/console tailwind:build --minify
+        php bin/console asset-map:compile
 
     deploy: |
         set -x -e

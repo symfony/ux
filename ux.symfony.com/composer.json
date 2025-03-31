@@ -56,6 +56,7 @@
         "symfony/yaml": "7.2.*",
         "symfonycasts/dynamic-forms": "^0.1.2",
         "symfonycasts/sass-bundle": "0.8.*",
+        "symfonycasts/tailwind-bundle": "^0.9.0",
         "tales-from-a-dev/twig-tailwind-extra": "^0.3.0",
         "tempest/highlight": "^2.11.2",
         "twbs/bootstrap": "^5.3.3",
@@ -135,7 +136,8 @@
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd",
-            "importmap:install": "symfony-cmd"
+            "importmap:install": "symfony-cmd",
+            "tailwind:build": "symfony-cmd"
         }
     }
 }

@@ -68,7 +68,7 @@ final class KitFactoryTest extends KernelTestCase
 
 A component for displaying structured data in rows and columns with support for headers, captions, and customizable styling.
 EOF
-        , $table->doc->markdownContent);
+            , $table->doc->markdownContent);
     }
 
     private function createKitFactory(): KitFactory

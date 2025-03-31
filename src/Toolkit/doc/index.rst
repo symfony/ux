@@ -7,7 +7,7 @@ to change, or even change drastically.
 Symfony UX Toolkit provides a set of ready-to-use kits for Symfony applications.
 It is part of `the Symfony UX initiative`_.
 
-Kits are a nice way to begin a new Symfony application, by providing a set 
+Kits are a nice way to begin a new Symfony application, by providing a set
 of `Twig components`_ (based on Tailwind CSS, but fully customizable depending
 on your needs).
 
@@ -24,8 +24,8 @@ Additionally, some `Twig components`_ use ``html_cva`` and ``tailwind_merge``,
 you can either remove them from your project or install ``twig/html-extra``
 and ``tales-from-a-dev/twig-tailwind-extra`` to use them.
 
-Also, we do not force you to use Tailwind CSS at all. If you want to use
-another CSS framework, you can, but you will need to adapt the UI components to it.
+Also, we do not force you to use Tailwind CSS at all. You can use whatever
+CSS framework you want, but you will need to adapt the UI components to it.
 
 Installation
 ------------
@@ -37,7 +37,7 @@ Install the UX Toolkit using Composer and Symfony Flex:
     # The UX Toolkit is a development dependency:
     $ composer require --dev symfony/ux-toolkit
 
-    # If you want to keep `html_cva` and `tailwind_merge` in your UI components:
+    # If you want to keep `html_cva` and `tailwind_merge` in your Twig components:
     $ composer require twig/extra-bundle twig/html-extra:^3.12.0 tales-from-a-dev/twig-tailwind-extra
 
 Configuration
@@ -71,7 +71,7 @@ It will create the ``templates/components/Button.html.twig`` file, and you will 
 Create your own kit
 -------------------
 
-You have the ability to create and share your own kit with the community, 
+You have the ability to create and share your own kit with the community,
 by using the ``php vendor/bin/ux-toolkit-kit-create`` command in a new GitHub repository:
 
 .. code-block:: terminal
@@ -89,7 +89,7 @@ by using the ``php vendor/bin/ux-toolkit-kit-create`` command in a new GitHub re
 
     # Create your kit
     $ php vendor/bin/ux-toolkit-kit-create
-    
+
     # ... edit the files, add your components, examples, etc.
 
     # Share your kit
@@ -124,7 +124,7 @@ A kit is composed of:
 Use your kit in a Symfony application
 -------------------------------------
 
-You can globally configure the kit to use in your application by setting the ``ux_toolkit.kit`` parameter:
+You can globally configure the kit to use in your application by setting the ``ux_toolkit.kit`` configuration:
 
 .. code-block:: yaml
 

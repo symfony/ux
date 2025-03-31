@@ -1,7 +1,7 @@
 twig_component:
     defaults:
         App\Twig\Components\: 'components/'
-        
+
         # Custom namespace for MemoryDemo
         App\LiveMemory\Component\:
             template_directory: 'demos/live_memory/components/LiveMemory/'

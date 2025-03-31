@@ -88,6 +88,8 @@ class CodeBlock
         $content = $this->getRawSource();
         if ('php' === $this->getLanguage()) {
             $content = SourceCleaner::cleanupPhpFile($content);
+        } elseif ('twig' === $this->getLanguage()) {
+            $content = SourceCleaner::cleanupTwigFile($content);
         }
 
         return $this->splitAndProcessSource($content);
@@ -220,7 +222,7 @@ class CodeBlock
 
             // the use statements + surrounding span
             $parts[] = [
-                'content' => '<span class="hljs-comment" role="button" title="Expand use statements" data-action="click->code-expander#expandUseStatements">
+                'content' => '<span class="hl-comment" role="button" title="Expand use statements" data-action="click->code-expander#expandUseStatements">
 <pre><code class="nohighlight">// ... use statements hidden - click to show</code></pre></span>',
                 'highlight' => false,
             ];

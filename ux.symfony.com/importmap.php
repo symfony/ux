@@ -32,6 +32,10 @@ return [
         'path' => './assets/demos/live-memory.js',
         'entrypoint' => true,
     ],
+    'toolkit-shadcn' => [
+        'path' => './assets/toolkit-shadcn.js',
+        'entrypoint' => true,
+    ],
     '@symfony/stimulus-bundle' => [
         'path' => '@symfony/stimulus-bundle/loader.js',
     ],

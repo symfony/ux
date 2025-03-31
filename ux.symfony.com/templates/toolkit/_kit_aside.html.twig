@@ -1,0 +1,23 @@
+<aside>
+    <nav class="SidebarNav">
+        <div class="SidebarNav_Heading">
+            Kit
+        </div>
+        <ul class="list-unstyled">
+            <li class="SidebarNav_Item {{ app.current_route == 'app_toolkit_kit' ? 'active' : '' }}">
+                <a class="SidebarNav_Link" href="{{ path('app_toolkit_kit', {kit: kit.value}) }}">Getting started</a>
+            </li>
+        </ul>
+
+        <div class="SidebarNav_Heading">Components</div>
+        <ul class="list-unstyled">
+            {% for component in components %}
+                <li class="SidebarNav_Item {{ app.current_route == 'app_toolkit_component' and app.current_route_parameters.componentName == component.name ? 'active' : '' }}">
+                    <a class="SidebarNav_Link" href="{{ path('app_toolkit_component', {kit: kit.value, componentName: component.name}) }}">
+                        {{ component.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </nav>
+</aside>

@@ -46,16 +46,17 @@
             </div>
 
             <div class="AppNav_menu">
+                <a href="{{ path('app_toolkit') }}" class="AppNav_item AppNav_item--cs">
+                    <span class="AppNav_badge" data-content="New"></span>
+                    Toolkit
+                </a>
                 <a href="{{ path('app_turbo') }}" class="AppNav_item">Turbo</a>
                 <a href="{{ path('app_live_component') }}" class="AppNav_item">Live <span>Components</span></a>
                 <a href="{{ path('app_icons') }}" class="AppNav_item">Icons</a>
                 <a href="{{ path('app_packages') }}" class="AppNav_item">Packages</a>
                 <a href="{{ path('app_demos') }}" class="AppNav_item">Demos</a>
-                <a href="{{ path('app_cookbook') }}" class="AppNav_item AppNav_item--cs">Cookbook</a>
-                <a href="{{ path('app_support') }}" class="AppNav_item AppNav_item--cs" rel="help">
-                    <span class="AppNav_badge" data-content="New"></span>
-                    Support
-                </a>
+                {# <a href="{{ path('app_cookbook') }}" class="AppNav_item AppNav_item--cs">Cookbook</a> #}
+                <a href="{{ path('app_support') }}" class="AppNav_item AppNav_item--cs" rel="help">Support</a>
             </div>
 
         </nav>

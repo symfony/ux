@@ -1,9 +1,0 @@
-{%- props ratio = (4/3) -%}
-<div 
-    style="width:100%; position: relative; padding-bottom: calc((1/({{ ratio }})) * 100%);"
-    {{ attributes.defaults({}).without('style') }}
->
-    <div style="position: absolute; left:0; right:0; top:0; bottom: 0">
-        {% block content %}{% endblock %}
-    </div>
-</div>

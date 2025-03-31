@@ -1,4 +1,2 @@
-when@dev:
-  ux_toolkit:
-    theme: default
-    prefix: null
+ux_toolkit:
+  kit: shadcn

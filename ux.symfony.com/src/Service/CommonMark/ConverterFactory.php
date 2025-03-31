@@ -11,12 +11,15 @@
 
 namespace App\Service\CommonMark;
 
+use App\Service\CommonMark\Extension\CodeBlockRenderer\CodeBlockRenderer;
 use League\CommonMark\CommonMarkConverter;
+use League\CommonMark\Extension\CommonMark\Node\Block\FencedCode;
 use League\CommonMark\Extension\ExternalLink\ExternalLinkExtension;
 use League\CommonMark\Extension\FrontMatter\FrontMatterExtension;
 use League\CommonMark\Extension\Mention\MentionExtension;
 use Symfony\Component\DependencyInjection\Attribute\AsDecorator;
-use Tempest\Highlight\CommonMark\HighlightExtension;
+use Symfony\Component\HttpFoundation\UriSigner;
+use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 
 /**
  * @author Kevin Bond <kevinbond@gmail.com>
@@ -24,6 +27,12 @@ use Tempest\Highlight\CommonMark\HighlightExtension;
 #[AsDecorator('twig.markdown.league_common_mark_converter_factory')]
 final class ConverterFactory
 {
+    public function __construct(
+        private readonly UrlGeneratorInterface $urlGenerator,
+        private readonly UriSigner $uriSigner,
+    ) {
+    }
+
     public function __invoke(): CommonMarkConverter
     {
         $converter = new CommonMarkConverter([
@@ -47,8 +56,8 @@ final class ConverterFactory
         $converter->getEnvironment()
             ->addExtension(new ExternalLinkExtension())
             ->addExtension(new MentionExtension())
-            ->addExtension(new HighlightExtension())
             ->addExtension(new FrontMatterExtension())
+            ->addRenderer(FencedCode::class, new CodeBlockRenderer($this->urlGenerator, $this->uriSigner))
         ;
 
         return $converter;

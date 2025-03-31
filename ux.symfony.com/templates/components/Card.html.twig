@@ -1,13 +1,33 @@
-{%- props -%}
-{%- set style = html_cva(
-    base: 'rounded-xl border bg-card text-card-foreground shadow',
-    variants: {},
-    compoundVariants: []
-) -%}
+{% props name, image, url, description, tags, lazyload = true %}
 
-<div
-        class="{{ style.apply({}, attributes.render('class'))|tailwind_merge }}"
-        {{ attributes.defaults({}).without('class') }}
->
-    {% block content %}{% endblock %}
-</div>
+<article class="DemoCard">
+
+    <div class="DemoCard__media">
+        <img class="DemoCard__image"
+             src="{{ image }}"
+             width="640"
+             height="360"
+             alt="{{ name }}"
+                {% if lazyload %}
+                    loading="lazy"
+                {% endif %}
+        >
+    </div>
+
+    <div class="DemoCard__content">
+        <h4 class="DemoCard__title">
+            <a href="{{ url }}" class="stretched-link">
+                {{- name -}}
+            </a>
+        </h4>
+        <p class="DemoCard__description">
+            {{- description -}}
+        </p>
+        <p class="DemoCard__tags">
+            {% for tag in tags %}
+                <span class="Tag">{{ tag }}</span>
+            {% endfor %}
+        </p>
+    </div>
+
+</article>

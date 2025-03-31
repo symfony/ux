@@ -1,185 +1,103 @@
 {% extends 'ux_packages/package.html.twig' %}
 
 {% block banner %}
-    {{ include('_banner.html.twig', {color_back: '#4a5d20'}) }}
+    {{ include('_banner.html.twig', {color_back: '#4d61d6'}) }}
 {% endblock %}
 
 {% block package_header %}
     {% component PackageHeader with {
         package: 'toolkit',
-        eyebrowText: 'Toolkit for your pages and templates',
-        packageBrowseText: 'Components',
-        packageBrowseUrl: path('app_toolkit_components'),
+        eyebrowText: 'Quickly build your Design System',
     } %}
         {% block title_header %}
             Build your Design System.
         {% endblock %}
 
         {% block sub_content %}
-            The UX Toolkit is a collection of components and templates that you can use to build your pages.
+            With Toolkit comes “Kits”, a set of ready-to-use and fully-customizable UI Twig components and more, to help you to build your Design System.
         {% endblock %}
     {% endcomponent %}
 {% endblock %}
 
+{% block code_block_left %}
+<twig:Terminal>
+# Install the components you need...
+php bin/console ux:toolkit:install-component Card
+php bin/console ux:toolkit:install-component Button
+
+# ... and find them in your <code>templates/components</code> folder!
+tree templates/components
+> templates/components
+> ├── Button.html.twig
+> ├── Card
+> │   ├── Content.html.twig
+> │   ├── Description.html.twig
+> │   ├── Footer.html.twig
+> │   ├── Header.html.twig
+> │   └── Title.html.twig
+> └── Card.html.twig
+</twig:Terminal>
+{% endblock %}
+
+{% block code_block_right %}
+    <twig:CodeBlock
+        filename="templates/toolkit/_code_block_right.html.twig"
+        :showFilename="false"
+        height="auto"
+    />
+{% endblock %}
 
 {% block demo_title %}UX Toolkit{% endblock %}
 
 {% block demo_content %}
-
-    <div class="row">
-        <div class="col-6">
-            <twig:CodeBlock
-                filename="templates/ux_packages/toolkit.html.twig"
-                :showFilename="false"
-                targetTwigBlock="card_example"
-                :showTwigExtends="false"
-                height="auto"
-            />
-        </div>
-        <div class="col-6">
-            {% block card_example %}
-                <twig:Card>
-                    <twig:CardHeader>
-                        <twig:CardTitle>Symfony is cool</twig:CardTitle>
-                        <twig:CardDescription>Symfony is a set of reusable PHP components...</twig:CardDescription>
-                    </twig:CardHeader>
-                    <twig:CardContent>
-                        ... and a PHP framework for web projects
-                    </twig:CardContent>
-                    <twig:CardFooter>
-                        <twig:Button primary class="w-full">Visit symfony.com</twig:Button>
-                    </twig:CardFooter>
-                </twig:Card>
-            {% endblock %}
-        </div>
-    </div>
-
-    <div class="row my-3">
-        <div class="col-6">
-            <twig:CodeBlock
-                filename="templates/ux_packages/toolkit.html.twig"
-                :showFilename="false"
-                targetTwigBlock="avatar_example"
-                :showTwigExtends="false"
-                height="auto"
-            />
-        </div>
-        <div class="col-6">
-            {% block avatar_example %}
-                <twig:Avatar class="inline-block">
-                    <twig:AvatarImage src="https://github.com/symfony.png" alt="@symfony" />
-                    <twig:AvatarFallback>SF</twig:AvatarFallback>
-                </twig:Avatar>
-
-                <twig:Avatar class="inline-block">
-                    <twig:AvatarFallback class="bg-blue-400">SF</twig:AvatarFallback>
-                </twig:Avatar>
-            {% endblock %}
-        </div>
-    </div>
+    <iframe src="{{ demoPreviewUrl }}" style="width:100%; height:{{ demoPreviewHeight }};"></iframe>
 {% endblock %}
-
 
 {% block package_install %}
-    {% set installOnlyInDevMode = true %}
-    {{ parent() }}
-    <section class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
-        <p>
-            Then install your components with the following command:
+    <div class="container-fluid container-xxl px-4 pt-4 px-md-5">
+        <h2 class="ubuntu text-center mt-5" id="kits">Kits</h2>
+        <p class="text-center">
+            Kits are a set of ready-to-use and fully-customizable UI Twig components and more, to help you to build your Design System.<br>
+            We provide a few official kits, but you can also <a href="https://symfony.com/bundles/ux-toolkit/current/index.html" rel="external" style="font-weight: 700;">create your own</a> and share it with the community!
         </p>
 
-        {% component Terminal with {bottomPadding: 20} %}
-            {% block content %}
-                php bin/console ux:toolkit:install badge
-                php bin/console ux:toolkit:install button
-                php bin/console ux:toolkit:install card
-                php bin/console ux:toolkit:install ...
-            {% endblock %}
-        {% endcomponent %}
+        <div class="mt-5 shadow-blur shadow-blur--rainbow shadow-blur--opacity-20" style="display: grid; gap: 2rem; grid-template-columns: repeat(auto-fill, minmax(min(100%, 420px), 1fr));">
+            {% for kit in kits %}
+                <div class="PackageBox">
+                    <div class="PackageBox_logo">
+                        <twig:ux:icon name="{{ kit.icon }}" alt="{{ kit.humanName }}" style="color: #fff; width: 50%; height: 50%;" />
+                    </div>
+                    <div class="PackageBox_content">
+                        <h2 class="PackageBox_title">
+                            <a href="{{ path('app_toolkit_kit', {kit: kit.value}) }}" class="PackageBox_link">{{ kit.humanName }}</a>
+                        </h2>
 
-        <p class="mt-4">
-            Official components require tailwindcss to be installed in your project. Visit the <a class="text-underline" target="_blank" href="https://tailwindcss.com/docs/installation" target="_blank">Tailwind CSS documentation</a> for more information.
-            Components are based on <a class="text-underline" target="_blank" href="https://ui.shadcn.com/" >shadcdn/ui</a> design system.
-        </p>
+                        <div class="PackageBox_description">
+                            <p>{{ kit.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
 
-        <p class="mt-4">
-            If you use component library using <code>html_cva()</code> or <code>tailwind_merge()</code> functions, remember to install them with:
-        </p>
+            <div class="PackageBox">
+                <div class="PackageBox_logo" style="--color: #24292f;">
+                    <twig:ux:icon name="flowbite:users-group-solid" style="color: #fff; width: 50%; height: 50%;" />
+                </div>
+                <div class="PackageBox_content">
+                    <h2 class="PackageBox_title">
+                        <a href="https://github.com/search?q=topic%3Aux-toolkit&type=repositories" rel="external" class="PackageBox_link">
+                            Community Kits
+                        </a>
+                    </h2>
 
-        {% component Terminal with {bottomPadding: 20} %}
-            {% block content %}
-                composer require twig/extra-bundle twig/html-extra:^3.12.0 tales-from-a-dev/twig-tailwind-extra
-            {% endblock %}
-        {% endcomponent %}
-
-
-    </section>
-    <section class="container-fluid container-xxl px-4 pt-4 px-md-5 pt-md-5">
-        <h2 class="ubuntu text-center mt-5">Philosophy</h2>
-        <div class=" justify-content-center mt-5">
-            <div class="col-12">
-                <p>
-                    Toolkit provides ready-to-use components, but freely customizable.
-                </p>
-                <p>
-                    Official components are copied into your project in the <code>templates/components</code> folder, like classic TwigComponent.
-                    Feel free to modify the code to suit your needs.
-                </p>
-            </div>
-            <div class="col-12 mt-4">
-                <p>
-                    It is quite possible to install other component libraries, or even redistribute your own components
-                    (for example, if you want to provide your internal Design System).
-                </p>
-                <p>
-                    The choice of the component library is made in the configuration of your project:
-                </p>
-
-                <twig:CodeBlock
-                    filename="config/packages/ux_toolkit.yaml"
-                    :showTwigExtends="false"
-                    language="yaml"
-                    showFilename="false"
-                    :copyButton="true"
-                    :stripExcessHtml="false"
-                    height="{{ height|default('auto') }}"
-                    style="--bg-header: rgba(13, 13, 13, 0.729); --header-opacity: .5;"
-                />
-
-                <p class="mt-4">
-                    The <code>theme</code> key allows you to choose the component library to use, and can be any GitHub repository.
-                </p>
-            </div>
-            </div>
-            <div class="col-12 mt-4">
-                <p>
-                    If you want to distribute your own theme, please <a class="text-underline" target="_blank" href="https://docs.github.com/fr/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/classifying-your-repository-with-topics">
-                    classify your repository</a> with the <code>ux-toolkit</code> topic to be referenced easily.
-                </p>
-                <p>
-                    Your repository will be automatically detected by the <a class="text-underline" target="_blank" href="https://github.com/search?q=topic%3Aux-toolkit&type=repositories">GitHub search engine</a>.
+                    <div class="PackageBox_description">
+                        <p>
+                            Crafted by the community, for the community.<br>
+                            You can find them on GitHub with the <code>ux-toolkit</code> topic.
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
-{% endblock %}
-
-
-{% block javascripts %}
-{{ parent() }}
-<script src="https://unpkg.com/@tailwindcss/browser@4"></script>
-{% endblock %}
-
-{% block stylesheets %}
-{# some tailwind classes are overrided by current theme #}
-<style type="text/css">
-    .bg-card {
-        background-color: var(--color-white);
-    }
-    .text-primary-foreground {
-        color: var(--color-white);
-    }
-    button.rounded-md {
-        border-radius: var(--radius-md);
-    }
-</style>
+    </div>
 {% endblock %}

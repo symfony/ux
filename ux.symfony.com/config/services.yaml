@@ -24,3 +24,6 @@ services:
     # please note that last definitions always *replace* previous ones
     Tempest\Highlight\Highlighter:
         tags: ['twig.runtime']
+
+    ux_toolkit.registry.factory:
+        alias: '.ux_toolkit.registry.factory'

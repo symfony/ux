@@ -14,7 +14,6 @@ namespace Symfony\UX\Toolkit\Kit;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Filesystem\Path;
 use Symfony\Component\Finder\Finder;
-use Symfony\Component\Yaml\Yaml;
 use Symfony\UX\Toolkit\Component\Component;
 use Symfony\UX\Toolkit\Dependency\DependenciesResolver;
 use Symfony\UX\Toolkit\File\Doc;

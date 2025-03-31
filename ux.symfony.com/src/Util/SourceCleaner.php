@@ -46,6 +46,14 @@ class SourceCleaner
         return $contents->trim()->toString();
     }
 
+    public static function cleanupTwigFile(string $contents): string
+    {
+        // Remove "Toolkit:$themeName:" prefix
+        $contents = u($contents)->replaceMatches('/Toolkit:.+?:/', '');
+
+        return $contents->trim()->toString();
+    }
+
     public static function processTerminalLines(string $content): string
     {
         $lines = explode("\n", $content);
@@ -57,12 +65,17 @@ class SourceCleaner
                 return '';
             }
 
-            // comment lines
-            if (str_starts_with($line, '//')) {
-                return \sprintf('<span class="hljs-comment">%s</span>', $line);
+            // command output
+            if (str_starts_with($line, '>')) {
+                return preg_replace('/^>\s+/m', '', $line);
             }
 
-            return '<span class="hljs-prompt">$ </span>'.$line;
+            // comment lines
+            if (str_starts_with($line, '//') || str_starts_with($line, '#')) {
+                return \sprintf('<span class="hl-comment">%s</span>', $line);
+            }
+
+            return '<span>$ </span>'.$line;
         }, $lines);
 
         return trim(implode("\n", $lines));

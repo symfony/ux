@@ -29,7 +29,7 @@ class UxPackage
         private ?string $createString = null,
         private ?string $imageFileName = null,
         private ?string $composerName = null,
-        private bool $onlyInDevMode = false,
+        private bool $isDevDependency = false,
     ) {
     }
 
@@ -80,10 +80,10 @@ class UxPackage
 
     public function getComposerRequireCommand(): string
     {
-        if ($this->onlyInDevMode) {
+        if ($this->isDevDependency) {
             return 'composer require --dev '.$this->getComposerName();
         }
-        
+
         return 'composer require '.$this->getComposerName();
     }
 

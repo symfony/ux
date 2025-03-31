@@ -1,0 +1,22 @@
+.SidebarNav {}
+
+.SidebarNav_Heading {
+    font-weight: 600;
+    padding: 0 .5rem;
+}
+
+.SidebarNav_Item {
+    border-radius: .5rem;
+    transition: background-color 100ms ease-in-out;
+}
+.SidebarNav_Item.active,
+.SidebarNav_Item:hover {
+    background-color: var(--bs-secondary-bg);
+}
+
+
+.SidebarNav_Link {
+    display: block;
+    font-size: .9rem;
+    padding: .1rem .5rem;
+}

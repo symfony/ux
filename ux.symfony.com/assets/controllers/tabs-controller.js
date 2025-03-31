@@ -1,16 +1,16 @@
-import {Controller} from '@hotwired/stimulus';
-import {getComponent} from '@symfony/ux-live-component';
+import { Controller } from '@hotwired/stimulus';
+import { getComponent } from '@symfony/ux-live-component';
 
 export default class extends Controller {
     static targets = ["tab", "control"]
-    static values = {tab: String}
-    static classes = [ "active" ]
+    static values = { tab: String }
+    static classes = ["active"]
 
     initialize() {
         this.showTab(this.tabValue);
     }
 
-    show({ params: { tab }}) {
+    show({ params: { tab } }) {
         this.tabValue = tab;
     }
 
@@ -20,6 +20,7 @@ export default class extends Controller {
 
         const controlTarget = this.getControlTarget(tab);
         controlTarget.classList.add(this.activeClass);
+        controlTarget.setAttribute("aria-selected", "true");
     }
 
     hideTab(tab) {
@@ -28,6 +29,7 @@ export default class extends Controller {
 
         const controlTarget = this.getControlTarget(tab);
         controlTarget.classList.remove(this.activeClass);
+        controlTarget.setAttribute("aria-selected", "false");
     }
 
     tabValueChanged(value, previousValue) {
