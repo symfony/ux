@@ -1,9 +1,0 @@
-{
-    "name": "AspectRatio",
-    "manifest": "components/AspectRatio.json",
-    "theme": "",
-    "type": "component",
-    "code": "{%- props ratio = (4/3) -%}\n<div \n    style=\"width:100%; position: relative; padding-bottom: calc((1/({{ ratio }})) * 100%);\"\n    {{ attributes.defaults({}).without('style') }}\n>\n    <div style=\"position: absolute; left:0; right:0; top:0; bottom: 0\">\n        {% block content %}{% endblock %}\n    </div>\n</div>\n",
-    "fingerprint": "3241c112cedbdd34c8e60f79c955c097",
-    "dependencies": []
-}

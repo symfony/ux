@@ -1,7 +1,7 @@
 {
   "name": "symfony/ux-toolkit",
   "type": "symfony-bundle",
-  "description": "Twig Toolkit for Symfony",
+  "description": "A tool to easily create a design system in your Symfony app with customizable, well-crafted Twig components",
   "keywords": [
     "symfony-ux",
     "twig",
@@ -28,13 +28,14 @@
     }
   ],
   "require": {
-    "php": ">=8.3",
-    "twig/twig": "^2.12|^3.0",
+    "php": ">=8.2",
+    "twig/twig": "^3.0",
     "symfony/console": "^6.4|^7.0",
+    "symfony/filesystem": "^6.4|^7.0",
     "symfony/framework-bundle": "^6.4|^7.0",
     "symfony/twig-bundle": "^6.4|^7.0",
     "symfony/ux-twig-component": "^2.23",
-    "symfony/filesystem": "^6.4|^7.0"
+    "symfony/yaml": "^6.4|^7.0"
   },
   "require-dev": {
     "symfony/finder": "6.4|^7.0",
@@ -46,6 +47,11 @@
     "symfony/stopwatch": "^6.4|^7.0",
     "symfony/phpunit-bridge": "^6.4|^7.0"
   },
+  "bin": [
+    "bin/ux-toolkit-kit-create",
+    "bin/ux-toolkit-kit-lint",
+    "bin/ux-toolkit-kit-debug"
+  ],
   "autoload": {
     "psr-4": {
       "Symfony\\UX\\Toolkit\\": "src"

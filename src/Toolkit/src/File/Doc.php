@@ -9,22 +9,20 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Toolkit\Registry;
-
-use Symfony\UX\Toolkit\Kit\Kit;
+namespace Symfony\UX\Toolkit\File;
 
 /**
  * @internal
  *
- * @author Jean-François Lépine
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-interface Registry
+final readonly class Doc
 {
-    public static function supports(string $kitName): bool;
-
     /**
-     * @throws \RuntimeException if the kit does not exist
+     * @param non-empty-string $markdownContent
      */
-    public function getKit(string $kitName): Kit;
+    public function __construct(
+        public string $markdownContent,
+    ) {
+    }
 }

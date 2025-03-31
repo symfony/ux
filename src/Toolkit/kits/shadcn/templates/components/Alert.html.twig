@@ -1,0 +1,5 @@
+<div {{ attributes.defaults({ role: 'alert' }).without('class') }}
+    class="{{ (' ' ~ attributes.render('class'))|tailwind_merge }}"
+>
+    {% block content %}Alert{% endblock %}
+</div>

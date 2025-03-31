@@ -1,5 +1,5 @@
 # CHANGELOG
  
-## 2.23
+## 2.25
 
--   Component added
+-   Package added

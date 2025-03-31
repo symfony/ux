@@ -11,20 +11,14 @@
 
 namespace Symfony\UX\Toolkit\Registry;
 
-use Symfony\UX\Toolkit\Kit\Kit;
-
 /**
  * @internal
  *
  * @author Jean-François Lépine
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-interface Registry
+enum Type: string
 {
-    public static function supports(string $kitName): bool;
-
-    /**
-     * @throws \RuntimeException if the kit does not exist
-     */
-    public function getKit(string $kitName): Kit;
+    case Local = 'local';
+    case GitHub = 'github';
 }

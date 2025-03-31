@@ -9,22 +9,21 @@
  * file that was distributed with this source code.
  */
 
-namespace Symfony\UX\Toolkit\Registry;
-
-use Symfony\UX\Toolkit\Kit\Kit;
+namespace Symfony\UX\Toolkit\File;
 
 /**
  * @internal
  *
- * @author Jean-François Lépine
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-interface Registry
+enum FileType: string
 {
-    public static function supports(string $kitName): bool;
+    case Twig = 'twig';
 
-    /**
-     * @throws \RuntimeException if the kit does not exist
-     */
-    public function getKit(string $kitName): Kit;
+    public function getLabel(): string
+    {
+        return match ($this) {
+            self::Twig => 'Twig',
+        };
+    }
 }

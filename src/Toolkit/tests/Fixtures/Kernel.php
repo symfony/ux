@@ -20,9 +20,6 @@ use Symfony\UX\Toolkit\UXToolkitBundle;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
 use TalesFromADev\Twig\Extra\Tailwind\Bridge\Symfony\Bundle\TalesFromADevTwigExtraTailwindBundle;
 
-/**
- * @author Jean-François Lépine
- */
 final class Kernel extends BaseKernel
 {
     use MicroKernelTrait;
@@ -38,23 +35,38 @@ final class Kernel extends BaseKernel
         ];
     }
 
-    protected function configureContainer(ContainerConfigurator $containerConfigurator): void
+    protected function configureContainer(ContainerConfigurator $container): void
     {
-        $config = [
-            'secret' => 'SECRET',
+        $container->extension('framework', [
+            'secret' => 'S3CRET',
             'test' => true,
-        ];
-
-        $containerConfigurator->extension('framework', $config);
-        $containerConfigurator->extension('twig', [
-            'default_path' => __DIR__.'/../../templates/default',
+            'router' => ['utf8' => true],
+            'secrets' => false,
+            'http_method_override' => false,
+            'php_errors' => ['log' => true],
+            'property_access' => true,
+            'http_client' => true,
+            'handle_all_throwables' => true,
         ]);
 
-        $config = [
+        $container->extension('twig', [
+            'default_path' => __DIR__.'/../../kits',
+        ]);
+
+        $container->extension('twig_component', [
             'anonymous_template_directory' => 'components/',
             'defaults' => [],
-        ];
+        ]);
 
-        $containerConfigurator->extension('twig_component', $config);
+        $container->services()
+            ->alias('ux_toolkit.kit.factory', '.ux_toolkit.kit.factory')
+                ->public()
+
+            ->alias('ux_toolkit.kit.dependencies_resolver', '.ux_toolkit.dependency.dependencies_resolver')
+                ->public()
+
+            ->alias('ux_toolkit.registry.factory', '.ux_toolkit.registry.factory')
+                ->public()
+        ;
     }
 }

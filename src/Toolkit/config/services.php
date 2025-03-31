@@ -11,86 +11,103 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Symfony\UX\Toolkit\Command\DebugKitCommand;
+use Symfony\UX\Toolkit\Command\InstallComponentCommand;
+use Symfony\UX\Toolkit\Command\InstallKitCommand;
+use Symfony\UX\Toolkit\Command\LintKitCommand;
+use Symfony\UX\Toolkit\Component\ComponentInstaller;
+use Symfony\UX\Toolkit\Dependency\DependenciesResolver;
+use Symfony\UX\Toolkit\Kit\KitFactory;
+use Symfony\UX\Toolkit\Registry\GitHubRegistry;
+use Symfony\UX\Toolkit\Registry\LocalRegistry;
+use Symfony\UX\Toolkit\Registry\RegistryFactory;
+use Symfony\UX\Toolkit\Registry\Type;
+
 /*
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-
-use Symfony\UX\Toolkit\Command\BuildRegistryCommand;
-use Symfony\UX\Toolkit\Command\DebugUxToolkitCommand;
-use Symfony\UX\Toolkit\Command\UxToolkitInstallCommand;
-use Symfony\UX\Toolkit\Compiler\RegistryCompiler;
-use Symfony\UX\Toolkit\Compiler\TwigComponentCompiler;
-use Symfony\UX\Toolkit\ComponentRepository\CurrentTheme;
-use Symfony\UX\Toolkit\ComponentRepository\GithubRepository;
-use Symfony\UX\Toolkit\ComponentRepository\OfficialRepository;
-use Symfony\UX\Toolkit\ComponentRepository\RepositoryFactory;
-use Symfony\UX\Toolkit\ComponentRepository\RepositoryIdentifier;
-use Symfony\UX\Toolkit\Registry\DependenciesResolver;
-use Symfony\UX\Toolkit\Registry\RegistryFactory;
-
 return static function (ContainerConfigurator $container): void {
     $container->services()
-        ->set('.ux_toolkit.compiler.registry_compiler', RegistryCompiler::class)
+        // Commands
+
+        ->set('.ux_toolkit.command.debug_kit', DebugKitCommand::class)
             ->args([
-                service('filesystem')
+                service('.ux_toolkit.registry.factory'),
+            ])
+            ->tag('console.command')
+
+        ->set('.ux_toolkit.command.install', InstallComponentCommand::class)
+            ->args([
+                param('ux_toolkit.kit'),
+                service('.ux_toolkit.registry.factory'),
+                service('.ux_toolkit.component.component_installer'),
+            ])
+            ->tag('console.command')
+
+        ->set('.ux_toolkit.command.install_kit', InstallKitCommand::class)
+            ->args([
+                param('ux_toolkit.kit'),
+                service('.ux_toolkit.registry.factory'),
+                service('.ux_toolkit.component.component_installer'),
+            ])
+            ->tag('console.command')
+
+        ->set('.ux_toolkit.command.lint_kit', LintKitCommand::class)
+            ->args([
+                service('.ux_toolkit.registry.factory'),
+            ])
+            ->tag('console.command')
+
+        // Registry
+
+        ->set('.ux_toolkit.registry.factory', RegistryFactory::class)
+            ->args([
+                service_locator([
+                    Type::Local->value => service('.ux_toolkit.registry.local'),
+                    Type::GitHub->value => service('.ux_toolkit.registry.github'),
+                ]),
             ])
 
-        ->set('.ux_toolkit.compiler.twig_component_compiler', TwigComponentCompiler::class)
+        ->set('.ux_toolkit.registry.local', LocalRegistry::class)
             ->args([
-                param('ux_toolkit.prefix'),
-                service('.ux_toolkit.registry.dependencies_resolver'),
+                service('.ux_toolkit.kit.kit_factory'),
                 service('filesystem'),
+                param('kernel.project_dir'),
             ])
 
-        ->set('.ux_toolkit.component_repository.official_repository', OfficialRepository::class)
+        ->set('.ux_toolkit.registry.github', GitHubRegistry::class)
             ->args([
-                service('filesystem')
-            ])
-
-        ->set('.ux_toolkit.component_repository.github_repository', GithubRepository::class)
-            ->args([
+                service('.ux_toolkit.kit.kit_factory'),
                 service('filesystem'),
                 service('http_client')->nullOnInvalid(),
             ])
 
-        ->set('.ux_toolkit.component_repository.repository_factory', RepositoryFactory::class)
+        // Kit
+
+        ->set('.ux_toolkit.kit.factory', KitFactory::class)
             ->args([
-                service('.ux_toolkit.component_repository.official_repository'),
-                service('.ux_toolkit.component_repository.github_repository'),
+                service('filesystem'),
+                service('.ux_toolkit.dependency.dependencies_resolver'),
             ])
 
-        ->set('.ux_toolkit.component_repository.current_theme', CurrentTheme::class)
+        ->set('.ux_toolkit.kit.kit_factory', KitFactory::class)
             ->args([
-                param('ux_toolkit.theme'),
-                service('.ux_toolkit.component_repository.repository_factory'),
-                service('.ux_toolkit.component_repository.repository_identifier'),
+                service('filesystem'),
+                service('.ux_toolkit.dependency.dependencies_resolver'),
             ])
 
-        ->set('.ux_toolkit.component_repository.repository_identifier', RepositoryIdentifier::class)
-
-        ->set('.ux_toolkit.registry.dependencies_resolver', DependenciesResolver::class)
-
-        ->set('.ux_toolkit.registry.registry_factory', RegistryFactory::class)
-
-        ->set('.ux_toolkit.command.build_registry', BuildRegistryCommand::class)
+        // Component
+        ->set('.ux_toolkit.component.component_installer', ComponentInstaller::class)
             ->args([
-                service('.ux_toolkit.compiler.registry_compiler')
+                service('filesystem'),
             ])
-            ->tag('console.command')
 
-        ->set('.ux_toolkit.command.install', UxToolkitInstallCommand::class)
-            ->args([
-                service('.ux_toolkit.component_repository.current_theme'),
-                service('.ux_toolkit.registry.registry_factory'),
-                service('.ux_toolkit.compiler.twig_component_compiler'),
-            ])
-            ->tag('console.command')
+        // Dependency
 
-        ->set('.ux_toolkit.command.debug', DebugUxToolkitCommand::class)
+        ->set('.ux_toolkit.dependency.dependencies_resolver', DependenciesResolver::class)
             ->args([
-                service('.ux_toolkit.component_repository.current_theme'),
-                service('.ux_toolkit.registry.registry_factory'),
+                service('filesystem'),
             ])
-            ->tag('console.command')
+
     ;
 };

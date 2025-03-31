@@ -15,14 +15,7 @@
             "src/*/src/Bridge/*/assets/src/**",
             "src/*/src/Bridge/*/assets/test/**"
         ],
-        "ignore": [
-            "**/composer.json",
-            "**/vendor",
-            "**/package.json",
-            "**/node_modules",
-            "**/var",
-            "**/registry/default/**"
-        ]
+        "ignore": ["**/composer.json", "**/vendor", "**/package.json", "**/node_modules", "**/var"]
     },
     "linter": {
         "rules": {

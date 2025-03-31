@@ -29,11 +29,15 @@ class UXToolkitBundle extends AbstractBundle
         $rootNode = $definition->rootNode();
         $rootNode
             ->children()
-                ->scalarNode('theme')
-                    ->defaultValue('default')
-                ->end()
-                ->scalarNode('prefix')
-                    ->defaultNull()
+                ->scalarNode('kit')
+                    ->info('The kit to use, it can be from the official UX Toolkit repository, or an external GitHub repository')
+                    ->defaultValue('shadcn')
+                    ->example([
+                        'shadcn',
+                        'github.com/user/repository@my-kit',
+                        'github.com/user/repository@my-kit:main',
+                        'https://github.com/user/repository@my-kit',
+                    ])
                 ->end()
             ->end();
     }
@@ -41,8 +45,7 @@ class UXToolkitBundle extends AbstractBundle
     public function loadExtension(array $config, ContainerConfigurator $container, ContainerBuilder $builder): void
     {
         $container->parameters()
-            ->set('ux_toolkit.theme', $config['theme'])
-            ->set('ux_toolkit.prefix', $config['prefix'])
+            ->set('ux_toolkit.kit', $config['kit'])
         ;
 
         $container->import('../config/services.php');

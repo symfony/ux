@@ -1,9 +1,0 @@
-{
-    "name": "Avatar",
-    "manifest": "examples/Avatar.json",
-    "theme": "",
-    "type": "example",
-    "code": "<twig:Avatar>\n    <twig:AvatarImage src=\"https://github.com/symfony.png\" alt=\"@symfony\" />\n    <twig:AvatarFallback>JF</twig:AvatarFallback>\n</twig:Avatar>",
-    "fingerprint": "b9576a44da59fd116793fdcfd0cf9502",
-    "dependencies": []
-}

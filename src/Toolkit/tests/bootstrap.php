@@ -9,8 +9,8 @@
  * file that was distributed with this source code.
  */
 
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\ErrorHandler\ErrorHandler;
+use Symfony\Component\Filesystem\Filesystem;
 
 require __DIR__.'/../vendor/autoload.php';
 

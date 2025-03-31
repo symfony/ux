@@ -1,7 +1,5 @@
 <?php
 
-declare(strict_types=1);
-
 /*
  * This file is part of the Symfony package.
  *
@@ -13,54 +11,36 @@ declare(strict_types=1);
 
 namespace Symfony\UX\Toolkit\Registry;
 
-use Symfony\Component\Finder\Finder;
+use Psr\Container\ContainerInterface;
 
 /**
- * @author Jean-François Lépine
- *
  * @internal
+ *
+ * @author Jean-François Lépine
+ * @author Hugo Alliaume <hugo@alliau.me>
  */
 final readonly class RegistryFactory
 {
-    public function create(Finder $finder): Registry
+    public function __construct(
+        private ContainerInterface $registries,
+    ) {
+    }
+
+    /**
+     * @throws \InvalidArgumentException
+     */
+    public function getForKit(string $kit): Registry
     {
-        $finderManifest = clone $finder;
-        $files = $finderManifest->files()->name('registry.json')->getIterator();
-        $files->rewind();
-        $manifestFile = $files->current();
-        if (!$manifestFile) {
-            throw new \RuntimeException('The manifest file is missing.');
+        $type = match (true) {
+            GitHubRegistry::supports($kit) => Type::GitHub,
+            LocalRegistry::supports($kit) => Type::Local,
+            default => throw new \InvalidArgumentException(\sprintf('The kit "%s" is not valid.', $kit)),
+        };
+
+        if (!$this->registries->has($type->value)) {
+            throw new \LogicException(\sprintf('The registry for the kit "%s" is not registered.', $kit));
         }
 
-        $registry = Registry::empty();
-        $manifest = json_decode($manifestFile->getContents(), true);
-
-        foreach ($manifest['items'] ?? [] as $item) {
-            $filename = $item['manifest'];
-            $localFinder = clone $finder;
-            $files = iterator_to_array($localFinder->path($item['manifest']));
-
-            if (1 !== \count($files)) {
-                throw new \RuntimeException(\sprintf('The file "%s" declared in the manifest is missing.', $filename));
-            }
-            $file = reset($files);
-
-            if (!isset($item['fingerprint']) && isset($item['code'])) {
-                throw new \RuntimeException(\sprintf('The file "%s" declared in the manifest must have a fingerprint.', $filename));
-            }
-
-            $itemObject = RegistryItemFactory::fromJsonFile($file);
-
-            if (isset($item['fingerprint'])) {
-                $hash = md5($itemObject->code);
-                if ($hash !== $item['fingerprint']) {
-                    throw new \RuntimeException(\sprintf('The file "%s" declared in the manifest has an invalid hash.', $filename));
-                }
-            }
-
-            $registry->add($itemObject);
-        }
-
-        return $registry;
+        return $this->registries->get($type->value);
     }
 }
