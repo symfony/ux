@@ -68,6 +68,12 @@ class ComponentWithUrlBoundProps
     #[LiveProp]
     public ?string $customAlias = null;
 
+    #[LiveProp(writable: true, url: new UrlMapping(mapPath: true))]
+    public ?string $pathProp = null;
+
+    #[LiveProp(writable: true, url: new UrlMapping(as: 'pathAlias', mapPath: true))]
+    public ?string $pathPropWithAlias = null;
+
     public function modifyBoundPropWithCustomAlias(LiveProp $liveProp): LiveProp
     {
         if ($this->customAlias) {

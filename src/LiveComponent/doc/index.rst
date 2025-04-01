@@ -2737,6 +2737,46 @@ It can be used to perform more generic operations inside of the modifier that ca
 
 The ``query`` value will appear in the URL like ``/search?query=my+important+query&secondary-query=my+secondary+query``.
 
+Map the parameter to path instead of query
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. versionadded:: 2.28
+
+    The ``mapPath`` option was added in LiveComponents 2.28.
+
+Instead of setting the ``LiveProp`` as a query parameter, it can be set as route parameter
+by passing the ``mapPath`` option to the ``UrlMapping`` defined for the ``LiveProp``::
+
+    // ...
+    use Symfony\UX\LiveComponent\Metadata\UrlMapping;
+
+    #[AsLiveComponent]
+    class SearchModule
+    {
+        #[LiveProp(writable: true, url: new UrlMapping(mapPath: true))]
+        public string $query = '';
+
+        // ...
+    }
+
+
+If the current route is defined like this::
+
+    // src/Controller/SearchController.php
+    // ...
+
+    #[Route('/search/{query}')]
+    public function __invoke(string $query): Response
+    {
+        // ... render template that uses SearchModule component ...
+    }
+
+Then the ``query`` value will appear in the URL like ``https://my.domain/search/my+query+string``.
+
+If the route parameter name is different from the LiveProp name, the ``as`` option can be used to map the ``LiveProp``.
+
+If the route parameter is not defined, the ``mapPath`` option will be ignored and the LiveProp value will fallback to a query parameter.
+
 Validating the Query Parameter Values
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 

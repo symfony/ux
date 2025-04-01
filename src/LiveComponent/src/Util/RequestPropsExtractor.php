@@ -26,20 +26,20 @@ use Symfony\UX\LiveComponent\Metadata\LivePropMetadata;
  *
  * @internal
  */
-final class QueryStringPropsExtractor
+final class RequestPropsExtractor
 {
     public function __construct(private readonly LiveComponentHydrator $hydrator)
     {
     }
 
     /**
-     * Extracts relevant query parameters from the current URL and hydrates them.
+     * Extracts relevant props parameters from the current URL and hydrates them.
      */
     public function extract(Request $request, LiveComponentMetadata $metadata, object $component): array
     {
-        $query = $request->query->all();
+        $parameters = array_merge($request->attributes->all(), $request->query->all());
 
-        if (empty($query)) {
+        if (empty($parameters)) {
             return [];
         }
         $data = [];
@@ -47,7 +47,7 @@ final class QueryStringPropsExtractor
         foreach ($metadata->getAllLivePropsMetadata($component) as $livePropMetadata) {
             if ($queryMapping = $livePropMetadata->urlMapping()) {
                 $frontendName = $livePropMetadata->calculateFieldName($component, $livePropMetadata->getName());
-                if (null !== ($value = $query[$queryMapping->as ?? $frontendName] ?? null)) {
+                if (null !== ($value = $parameters[$queryMapping->as ?? $frontendName] ?? null)) {
                     if ('' === $value) {
                         // BC layer when "symfony/type-info" is not available
                         if ($livePropMetadata instanceof LegacyLivePropMetadata) {

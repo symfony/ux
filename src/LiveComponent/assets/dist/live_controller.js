@@ -33,6 +33,7 @@ class RequestBuilder {
         fetchOptions.headers = {
             Accept: 'application/vnd.live-component+html',
             'X-Requested-With': 'XMLHttpRequest',
+            'X-Live-Url': window.location.pathname + window.location.search,
         };
         const totalFiles = Object.entries(files).reduce((total, current) => total + current.length, 0);
         const hasFingerprints = Object.keys(children).length > 0;
@@ -110,6 +111,12 @@ class BackendResponse {
             this.body = await this.response.text();
         }
         return this.body;
+    }
+    getLiveUrl() {
+        if (undefined === this.liveUrl) {
+            this.liveUrl = this.response.headers.get('X-Live-Url');
+        }
+        return this.liveUrl;
     }
 }
 
@@ -2146,6 +2153,10 @@ class Component {
                 return response;
             }
             this.processRerender(html, backendResponse);
+            const liveUrl = backendResponse.getLiveUrl();
+            if (liveUrl) {
+                history.replaceState(history.state, '', new URL(liveUrl + window.location.hash, window.location.origin));
+            }
             this.backendRequest = null;
             thisPromiseResolve(backendResponse);
             if (this.isRequestPending) {
@@ -2770,129 +2781,6 @@ class PollingPlugin {
     }
 }
 
-function isValueEmpty(value) {
-    if (null === value || value === '' || undefined === value || (Array.isArray(value) && value.length === 0)) {
-        return true;
-    }
-    if (typeof value !== 'object') {
-        return false;
-    }
-    for (const key of Object.keys(value)) {
-        if (!isValueEmpty(value[key])) {
-            return false;
-        }
-    }
-    return true;
-}
-function toQueryString(data) {
-    const buildQueryStringEntries = (data, entries = {}, baseKey = '') => {
-        Object.entries(data).forEach(([iKey, iValue]) => {
-            const key = baseKey === '' ? iKey : `${baseKey}[${iKey}]`;
-            if ('' === baseKey && isValueEmpty(iValue)) {
-                entries[key] = '';
-            }
-            else if (null !== iValue) {
-                if (typeof iValue === 'object') {
-                    entries = { ...entries, ...buildQueryStringEntries(iValue, entries, key) };
-                }
-                else {
-                    entries[key] = encodeURIComponent(iValue)
-                        .replace(/%20/g, '+')
-                        .replace(/%2C/g, ',');
-                }
-            }
-        });
-        return entries;
-    };
-    const entries = buildQueryStringEntries(data);
-    return Object.entries(entries)
-        .map(([key, value]) => `${key}=${value}`)
-        .join('&');
-}
-function fromQueryString(search) {
-    search = search.replace('?', '');
-    if (search === '')
-        return {};
-    const insertDotNotatedValueIntoData = (key, value, data) => {
-        const [first, second, ...rest] = key.split('.');
-        if (!second) {
-            data[key] = value;
-            return value;
-        }
-        if (data[first] === undefined) {
-            data[first] = Number.isNaN(Number.parseInt(second)) ? {} : [];
-        }
-        insertDotNotatedValueIntoData([second, ...rest].join('.'), value, data[first]);
-    };
-    const entries = search.split('&').map((i) => i.split('='));
-    const data = {};
-    entries.forEach(([key, value]) => {
-        value = decodeURIComponent(String(value || '').replace(/\+/g, '%20'));
-        if (!key.includes('[')) {
-            data[key] = value;
-        }
-        else {
-            if ('' === value)
-                return;
-            const dotNotatedKey = key.replace(/\[/g, '.').replace(/]/g, '');
-            insertDotNotatedValueIntoData(dotNotatedKey, value, data);
-        }
-    });
-    return data;
-}
-class UrlUtils extends URL {
-    has(key) {
-        const data = this.getData();
-        return Object.keys(data).includes(key);
-    }
-    set(key, value) {
-        const data = this.getData();
-        data[key] = value;
-        this.setData(data);
-    }
-    get(key) {
-        return this.getData()[key];
-    }
-    remove(key) {
-        const data = this.getData();
-        delete data[key];
-        this.setData(data);
-    }
-    getData() {
-        if (!this.search) {
-            return {};
-        }
-        return fromQueryString(this.search);
-    }
-    setData(data) {
-        this.search = toQueryString(data);
-    }
-}
-class HistoryStrategy {
-    static replace(url) {
-        history.replaceState(history.state, '', url);
-    }
-}
-
-class QueryStringPlugin {
-    constructor(mapping) {
-        this.mapping = mapping;
-    }
-    attachToComponent(component) {
-        component.on('render:finished', (component) => {
-            const urlUtils = new UrlUtils(window.location.href);
-            const currentUrl = urlUtils.toString();
-            Object.entries(this.mapping).forEach(([prop, mapping]) => {
-                const value = component.valueStore.get(prop);
-                urlUtils.set(mapping.name, value);
-            });
-            if (currentUrl !== urlUtils.toString()) {
-                HistoryStrategy.replace(urlUtils);
-            }
-        });
-    }
-}
-
 class SetValueOntoModelFieldsPlugin {
     attachToComponent(component) {
         this.synchronizeValueOfModelFields(component);
@@ -3102,7 +2990,6 @@ class LiveControllerDefault extends Controller {
             new PageUnloadingPlugin(),
             new PollingPlugin(),
             new SetValueOntoModelFieldsPlugin(),
-            new QueryStringPlugin(this.queryMappingValue),
             new ChildComponentPlugin(this.component),
         ];
         plugins.forEach((plugin) => {
@@ -3233,7 +3120,6 @@ LiveControllerDefault.values = {
     debounce: { type: Number, default: 150 },
     fingerprint: { type: String, default: '' },
     requestMethod: { type: String, default: 'post' },
-    queryMapping: { type: Object, default: {} },
 };
 LiveControllerDefault.backendFactory = (controller) => new Backend(controller.urlValue, controller.requestMethodValue);
 

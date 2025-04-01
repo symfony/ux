@@ -16,20 +16,21 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
 use Symfony\UX\LiveComponent\Tests\Fixtures\Dto\Address;
 use Symfony\UX\LiveComponent\Tests\LiveComponentTestHelper;
-use Symfony\UX\LiveComponent\Util\QueryStringPropsExtractor;
+use Symfony\UX\LiveComponent\Util\RequestPropsExtractor;
 
-class QueryStringPropsExtractorTest extends KernelTestCase
+class RequestPropsExtractorTest extends KernelTestCase
 {
     use LiveComponentTestHelper;
 
     /**
      * @dataProvider getQueryStringTests
      */
-    public function testExtract(string $queryString, array $expected)
+    public function testExtractFromQueryString(string $queryString, array $expected, array $attributes = []): void
     {
-        $extractor = new QueryStringPropsExtractor($this->hydrator());
+        $extractor = new RequestPropsExtractor($this->hydrator());
 
         $request = Request::create('/'.!empty($queryString) ? '?'.$queryString : '');
+        $request->attributes->add($attributes);
 
         /** @var LiveComponentMetadataFactory $metadataFactory */
         $metadataFactory = self::getContainer()->get('ux.live_component.metadata_factory');
@@ -65,6 +66,10 @@ class QueryStringPropsExtractorTest extends KernelTestCase
             'invalid array value' => ['arrayProp=foo', []],
             'invalid object value' => ['objectProp=foo', []],
             'aliased prop' => ['q=foo', ['boundPropWithAlias' => 'foo']],
+            'attribute prop' => ['', ['stringProp' => 'foo'], ['stringProp' => 'foo']],
+            'attribute aliased prop' => ['', ['boundPropWithAlias' => 'foo'], ['q' => 'foo']],
+            'attribute not bound prop' => ['', [], ['unboundProp' => 'foo']],
+            'query priority' => ['stringProp=foo', ['stringProp' => 'foo'], ['stringProp' => 'bar']],
         ];
     }
 }

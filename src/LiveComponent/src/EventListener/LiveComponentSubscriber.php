@@ -255,7 +255,15 @@ class LiveComponentSubscriber implements EventSubscriberInterface, ServiceSubscr
             return;
         }
 
-        $event->setResponse($this->createResponse($request->attributes->get('_mounted_component')));
+        $mountedComponent = $request->attributes->get('_mounted_component');
+        if (!$request->attributes->get('_component_default_action', false)) {
+            // On custom action, props may be updated by the server side
+            $liveRequestData = $request->attributes->get('_live_request_data');
+            $liveRequestData['responseProps'] = (array) $mountedComponent->getComponent();
+            $request->attributes->set('_live_request_data', $liveRequestData);
+        }
+
+        $event->setResponse($this->createResponse($mountedComponent));
     }
 
     public function onKernelException(ExceptionEvent $event): void

@@ -139,6 +139,8 @@ final class AddLiveAttributesSubscriberTest extends KernelTestCase
             'maybeBoundProp' => ['name' => 'maybeBoundProp'],
             'boundPropWithAlias' => ['name' => 'q'],
             'boundPropWithCustomAlias' => ['name' => 'customAlias'],
+            'pathProp' => ['name' => 'pathProp'],
+            'pathPropWithAlias' => ['name' => 'pathAlias'],
         ];
 
         $this->assertEquals($expected, $queryMapping);

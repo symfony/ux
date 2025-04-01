@@ -16,7 +16,7 @@ use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\PropertyAccess\Exception\ExceptionInterface as PropertyAccessExceptionInterface;
 use Symfony\Component\PropertyAccess\PropertyAccessorInterface;
 use Symfony\UX\LiveComponent\Metadata\LiveComponentMetadataFactory;
-use Symfony\UX\LiveComponent\Util\QueryStringPropsExtractor;
+use Symfony\UX\LiveComponent\Util\RequestPropsExtractor;
 use Symfony\UX\TwigComponent\Event\PostMountEvent;
 
 /**
@@ -24,12 +24,12 @@ use Symfony\UX\TwigComponent\Event\PostMountEvent;
  *
  * @internal
  */
-class QueryStringInitializeSubscriber implements EventSubscriberInterface
+class RequestInitializeSubscriber implements EventSubscriberInterface
 {
     public function __construct(
         private readonly RequestStack $requestStack,
         private readonly LiveComponentMetadataFactory $metadataFactory,
-        private readonly QueryStringPropsExtractor $queryStringPropsExtractor,
+        private readonly RequestPropsExtractor $requestPropsExtractor,
         private readonly PropertyAccessorInterface $propertyAccessor,
     ) {
     }
@@ -60,11 +60,11 @@ class QueryStringInitializeSubscriber implements EventSubscriberInterface
             return;
         }
 
-        $queryStringData = $this->queryStringPropsExtractor->extract($request, $metadata, $event->getComponent());
+        $requestData = $this->requestPropsExtractor->extract($request, $metadata, $event->getComponent());
 
         $component = $event->getComponent();
 
-        foreach ($queryStringData as $name => $value) {
+        foreach ($requestData as $name => $value) {
             try {
                 $this->propertyAccessor->setValue($component, $name, $value);
             } catch (PropertyAccessExceptionInterface $exception) {
