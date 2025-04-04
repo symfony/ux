@@ -1,0 +1,251 @@
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2024-12-12T22:19:55Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/Fan2Shrek/ux/tree/add-option-to-turbo-stream/src/Turbo/assets/dist"><b>Turbo</b></a></td></tr><tr>
+                <td><a href="https://github.com/Fan2Shrek/ux/blob/add-option-to-turbo-stream/src/Turbo/assets/dist/turbo_stream_controller.d.ts"><code>turbo_stream_controller.d.ts</code></a></td>
+            <td>
+                    <code>562 B</code>
+                    / <code>280 B</code>
+                </td><td>
+                    <code>651 B</code><sup>+16% 📈</sup>
+                    / <code>303 B</code><sup>+8% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/Fan2Shrek/ux/blob/add-option-to-turbo-stream/src/Turbo/assets/dist/turbo_stream_controller.js"><code>turbo_stream_controller.js</code></a></td>
+            <td>
+                    <code>1.27 kB</code>
+                    / <code>535 B</code>
+                </td><td>
+                    <code>1.35 kB</code><sup>+6% 📈</sup>
+                    / <code>565 B</code><sup>+6% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by Fan2Shrek at 2024-12-14T22:58:06Z
+
+Hey @smnandre,
+Thanks for taking the time to explain this to me ! 😊
+
+However, the last commit seems a bit off to me. Could you confirm if that's what you had in mind ?
+Also, since the cookie logic was moved to the Mercure TurboStreamListenRenderer, is the Twig runtime still relevant ?
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-18T00:24:44Z
+
+Hi [seb-jean](https://github.com/seb-jean) [Guervyl](https://github.com/Guervyl) [gremo](https://github.com/gremo) [DRaichev](https://github.com/DRaichev)  and anyone who want to :)
+
+Well.... It’s time to lay all this out clearly! 😊
+
+**Could you share your ideal Developer Experience (DX) suggestions?**
+As much in PHP code than in Twig // Give examples of code usage
+Once we have a solid understanding of what you’re aiming for, we can figure out the best way to make it happen together.
+
+**Please clarify where and how you’d use this feature:**
+For example, in a page template, a component, a full-page view, multiple times, or other contexts. This will help us better target the needs and define responsibilities.
+
+Looking forward to your insights!
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-21T14:59:25Z
+
+@norkunas as i think you are one of the (if not the) person knowing this most, and having experience with this BC problematic... i'd love to have your input on this.
+
+@Fan2Shrek  I've opened a meta-issue to see how we can make changes in a more generic way first, to ease the development of this specific need, but also others after.
+
+--> https://github.com/symfony/ux/issues/2460
+
+---------------------------------------------------------------------------
+
+by seb-jean at 2024-12-21T19:11:35Z
+
+Hi,
+
+This feature would be interesting for me: I would use it with https://github.com/symfony/ux/pull/327.
+
+Let's take the example of GitHub notifications.
+
+I have a `Notification` entity:
+
+```php
+// src/Entity/Notification.php
+namespace App\Entity;
+
+use Symfony\UX\Turbo\Attribute\Broadcast;
+
+#[Broadcast(topics: ['@="notifications_list_" ~ entity.getUser().getId()'], private: true)]
+class Notification
+{
+    // ...
+}
+```
+
+With each creation, a notification will be automatically added with the [Broadcast system](https://symfony.com/bundles/ux-turbo/current/index.html#broadcast-options).
+
+A user can then view their own notifications with `{{ turbo_stream_listen('notifications_list_' ~ app.user.id) }}`.
+
+The generated code will be as follows:
+
+```html
+<div data-controller="symfony--ux-turbo--mercure-turbo-stream" data-symfony--ux-turbo--mercure-turbo-stream-hub-value="https://symfony.com/.well-known/mercure" data-symfony--ux-turbo--mercure-turbo-stream-topic-value="notifications_list_1"></div>
+```
+
+Unfortunately, this is not secure because a malicious person will be able to change the value of the `data-symfony--ux-turbo--mercure-turbo-stream-topic-value` attribute to have notifications from another user.
+
+Here I talked about notifications, but it could also be valid for instant messaging for example.
+
+The idea would then be to secure the `turbo_stream_listen()`.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2024-12-21T21:50:16Z
+
+Let's add this to the conversatioon about stream sources : https://github.com/symfony/ux/issues/2460
+
+I'd like to keep talking about generic implementation first (but based on _your_ specific need, it's a rich source of feedback / irl usage!)
+
+---------------------------------------------------------------------------
+
+by tibobaldwin at 2025-02-22T20:55:01Z
+
+What is blocking this PR? :blush:
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-22T21:39:02Z
+
+Well, sometimes it feels like I'm talking to the void, but yeah, let's merge this PR! 😅
+
+So, we need to:
+
+    Rebase it
+    Add a test or two
+    Fix a few minor issues
+
+Then, we just need to prepare a short paragraph of documentation.
+
+And finally, let's hope there will be as many people to help, debug, and test when things change on the Mercure or Turbo side! 👼
+
+Good for you, @Fan2Shrek? If you'd like to help, @tibobaldwin, feel free to jump in! 😊
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-22T22:50:22Z
+
+TwigComponent errors are unrelated
+
+---------------------------------------------------------------------------
+
+by Fan2Shrek at 2025-02-22T23:12:20Z
+
+Hey @smnandre, thanks for the help! Unfortunately, there's still a problem with the `TurboStreamListenRenderer`. It doesn't create the cookie—I think it's because the class dependencies aren't resolved, but I have no clue why.
+
+---------------------------------------------------------------------------
+
+by Fan2Shrek at 2025-02-22T23:25:29Z
+
+I found that `TurboStreamListenRenderer` is configured by the [Mercure bundle here](https://github.com/symfony/mercure-bundle/blob/77435d740b228e9f5f3f065b6db564f85f2cdb64/src/DependencyInjection/MercureExtension.php#L211C17-L211C19). Should we open a PR there as well?
+
+Using Mercure to create the cookies causes the tests to fail.
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-22T23:34:12Z
+
+I promise you I did not remember this... but now it happens it feels a bit ironic 😆
+
+Well, let's move on :)
+
+You can try this: https://github.com/symfony/ux/pull/2447#discussion_r1966598308
+
+The only think you cannot is "configure" a service from another bundle/bridge/etc.
+
+So if you find a way to inject the service directly it's perfect (just use ignoreOnInvalid to not pollute our code if there were a problem one day)
+
+If you don't, I'll have a look later during the night 🦇   or tomorrow
+
+---------------------------------------------------------------------------
+
+by Fan2Shrek at 2025-02-22T23:50:27Z
+
+I adapted the code to use the Twig Mercure extension.
+For the injection part, I'm not good enough to find a proper solution. 😅
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-23T00:26:42Z
+
+## Well well well ... 👼  (1/1)
+
+<img width="1065" alt="Capture d’écran 2025-02-23 à 01 21 57" src="https://github.com/user-attachments/assets/8e9183e7-be76-49d4-b816-f93b1669d26f" />
+
+https://github.com/symfony/ux/issues/2460
+
+## Well well well .... 👼  (2/2)
+
+```php
+     *
+     * @return string The URL of the hub with the appropriate "topic" query parameters (if any)
+     */
+    public function mercure($topics = null, array $options = []): string
+```
+[https://github.com/symfony/mercure[•••]src/Twig/MercureExtension.php](https://github.com/symfony/mercure/blob/304cf84609ef645d63adc65fc6250292909a461b/src/Twig/MercureExtension.php#L48-L51)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-02-23T00:27:12Z
+
+>  For the injection part, I'm not good enough to find a proper solution. 😅
+
+Does it work ? If not, what is missing here ? How do you test?
+
+---------------------------------------------------------------------------
+
+by Fan2Shrek at 2025-02-23T09:45:46Z
+
+I tested it on a small app with Mercure already set up. The only problem I’m facing is how to inject `TwigEnvironment` to get `MercureExtension`. Since `TurboStreamRenderer` is configured by the `MercureBundle`, it doesn't inject the new dependencies.
+
+I’m not sure what the 'proper' way to solve this problem is.
+
+---------------------------------------------------------------------------
+
+by Fan2Shrek at 2025-02-28T23:06:52Z
+
+Hey @smnandre, this finally looks good to me :)
+Let me know if there are any details to adjust .
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-03-05T02:56:43Z
+
+@Fan2Shrek sorry I was off ! Looks good to me, some minor (last) fixes and LGTM :)
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-03-07T01:36:02Z
+
+Thank you very much for your work on this @Fan2Shrek !
+
+---------------------------------------------------------------------------
+
+by tibobaldwin at 2025-04-03T15:10:51Z
+
+Can this feature be merged?
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-04-04T17:19:33Z
+
+There are some conflicts, I'm taking care of them
