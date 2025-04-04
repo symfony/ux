@@ -1,0 +1,30 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-03-30T13:00:47Z
+
+Following https://symfony-devs.slack.com/archives/C01FN4EQNLX/p1743272426739939, I don't remember if this topic was already evoked, but maybe we can improve the DX and always register the commands `ux:icons:search` and `ux:icons:import`, but throw at runtime if `symfony/http-client` is not installed?
+
+---------------------------------------------------------------------------
+
+by kbond at 2025-03-30T13:06:00Z
+
+> maybe we can improve the DX and always register the commands ux:icons:search and ux:icons:import, but throw at runtime if symfony/http-client is not installed?
+
+That's a great idea!
+
+---------------------------------------------------------------------------
+
+by dbu at 2025-03-30T14:20:21Z
+
+i try to improve the exception when no icon is found and the http client is not available in https://github.com/symfony/ux/pull/2667
+
+with that we could consider leaving the setup instructions as is - although imho its not the greatest DX to install something and then get an error telling i need to install something more.
+
+---------------------------------------------------------------------------
+
+by dbu at 2025-03-31T06:53:00Z
+
+> the two times HTML syntax is introduced
+
+made me realize: the first parts of the section `Rendering Icons` are repetitions without added information of `Loading Icons` and the rather randomly appearing `HTML Syntax` section. i think that is confusing. i suggest to supress the first `HTML Syntax` section.
+`Rendering Icons` also does not mention attributes anymore, which seems odd to me as it is the "reference" part about rendering.
