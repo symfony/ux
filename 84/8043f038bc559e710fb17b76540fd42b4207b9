@@ -1,0 +1,49 @@
+---------------------------------------------------------------------------
+
+by ernie76 at 2024-05-17T10:02:58Z
+
+this PR connected to this PR [https://github.com/symfony/symfony/pull/54961](https://github.com/symfony/symfony/pull/54961)
+
+---------------------------------------------------------------------------
+
+by fabpot at 2025-04-04T09:30:32Z
+
+PR on the Symfony side has been merged now.
+
+---------------------------------------------------------------------------
+
+by github-actions[bot] at 2025-04-04T09:49:59Z
+
+<h1>📊 Packages dist files size difference</h1>
+
+Thanks for the PR! Here is the difference in size of the packages dist files between the base branch and the PR.
+Please review the changes and make sure they are expected.
+
+<table>
+    <thead><tr><th>File</th><th>Before (Size / Gzip)</th><th>After (Size / Gzip)</th></tr></thead>
+    <tbody><tr><td colspan="3"><a href="https://github.com/ernie76/ux/tree/NotifierMercure/src/Notify/assets/dist"><b>Notify</b></a></td></tr><tr>
+                <td><a href="https://github.com/ernie76/ux/blob/NotifierMercure/src/Notify/assets/dist/controller.d.ts"><code>controller.d.ts</code></a></td>
+            <td>
+                    <code>564 B</code>
+                    / <code>320 B</code>
+                </td><td>
+                    <code>604 B</code><sup>+7% 📈</sup>
+                    / <code>338 B</code><sup>+6% 📈</sup>
+                </td></tr><tr>
+                <td><a href="https://github.com/ernie76/ux/blob/NotifierMercure/src/Notify/assets/dist/controller.js"><code>controller.js</code></a></td>
+            <td>
+                    <code>2.25 kB</code>
+                    / <code>798 B</code>
+                </td><td>
+                    <code>2.36 kB</code><sup>+5% 📈</sup>
+                    / <code>824 B</code><sup>+3% 📈</sup>
+                </td></tr></tbody>
+</table>
+
+<!-- Sticky Pull Request Comment -->
+
+---------------------------------------------------------------------------
+
+by ernie76 at 2025-04-04T09:51:09Z
+
+PR on the symfony side https://github.com/symfony/symfony/pull/60140
