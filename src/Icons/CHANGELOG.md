@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.25.0
+
+-   Improve DX when `symfony/http-client` is not installed.
+
 ## 2.24.0
 
 -    Add `xmlns` attribute to icons downloaded with Iconify, to correctly render icons browser as an external file, in SVG editors, and in files explorers or text editors previews.

@@ -286,6 +286,18 @@ the report to overwrite existing icons by using the ``--force`` option:
 
     $ php bin/console ux:icons:lock --force
 
+.. caution::
+
+    The process to find icons to lock in your Twig templates is imperfect. It
+    looks for any string that matches the pattern ``something:something`` so
+    it's probable there will be false positives. This command should not be used
+    to audit the icons in your templates in an automated way. Add ``-v`` see
+    *potential* invalid icons:
+
+    .. code-block:: terminal
+
+        $ php bin/console ux:icons:lock -v
+
 Rendering Icons
 ---------------
 
@@ -471,6 +483,18 @@ In production, you can pre-warm the cache by running the following command:
 
 This command looks in all your Twig templates for ``ux_icon()`` calls and
 ``<twig:ux:icon>`` tags and caches the icons it finds.
+
+.. caution::
+
+    The process to find icons to cache in your Twig templates is imperfect. It
+    looks for any string that matches the pattern ``something:something`` so
+    it's probable there will be false positives. This command should not be used
+    to audit the icons in your templates in an automated way. Add ``-v`` see
+    *potential* invalid icons:
+
+    .. code-block:: terminal
+
+        $ php bin/console ux:icons:warm-cache -v
 
 .. caution::
 

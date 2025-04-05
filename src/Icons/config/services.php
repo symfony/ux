@@ -11,12 +11,17 @@
 
 namespace Symfony\Component\DependencyInjection\Loader\Configurator;
 
+use Symfony\UX\Icons\Command\ImportIconCommand;
+use Symfony\UX\Icons\Command\LockIconsCommand;
+use Symfony\UX\Icons\Command\SearchIconCommand;
 use Symfony\UX\Icons\Command\WarmCacheCommand;
 use Symfony\UX\Icons\IconCacheWarmer;
+use Symfony\UX\Icons\Iconify;
 use Symfony\UX\Icons\IconRenderer;
 use Symfony\UX\Icons\IconRendererInterface;
 use Symfony\UX\Icons\Registry\CacheIconRegistry;
 use Symfony\UX\Icons\Registry\ChainIconRegistry;
+use Symfony\UX\Icons\Registry\IconifyOnDemandRegistry;
 use Symfony\UX\Icons\Registry\LocalSvgIconRegistry;
 use Symfony\UX\Icons\Twig\IconFinder;
 use Symfony\UX\Icons\Twig\UXIconExtension;
@@ -84,6 +89,40 @@ return static function (ContainerConfigurator $container): void {
         ->set('.ux_icons.command.warm_cache', WarmCacheCommand::class)
             ->args([
                 service('.ux_icons.cache_warmer'),
+            ])
+            ->tag('console.command')
+
+        ->set('.ux_icons.iconify', Iconify::class)
+            ->args([
+                service('.ux_icons.cache'),
+                abstract_arg('endpoint'),
+                service('http_client')->nullOnInvalid(),
+            ])
+
+        ->set('.ux_icons.iconify_on_demand_registry', IconifyOnDemandRegistry::class)
+            ->args([
+                service('.ux_icons.iconify'),
+            ])
+            ->tag('ux_icons.registry', ['priority' => -10])
+
+        ->set('.ux_icons.command.import', ImportIconCommand::class)
+            ->args([
+                service('.ux_icons.iconify'),
+                service('.ux_icons.local_svg_icon_registry'),
+            ])
+            ->tag('console.command')
+
+        ->set('.ux_icons.command.lock', LockIconsCommand::class)
+            ->args([
+                service('.ux_icons.iconify'),
+                service('.ux_icons.local_svg_icon_registry'),
+                service('.ux_icons.icon_finder'),
+            ])
+            ->tag('console.command')
+
+        ->set('.ux_icons.command.search', SearchIconCommand::class)
+            ->args([
+                service('.ux_icons.iconify'),
             ])
             ->tag('console.command')
     ;

@@ -34,10 +34,16 @@ final class ChainIconRegistry implements IconRegistryInterface
         foreach ($this->registries as $registry) {
             try {
                 return $registry->get($name);
-            } catch (IconNotFoundException) {
+            } catch (IconNotFoundException $e) {
             }
         }
 
-        throw new IconNotFoundException(\sprintf('Icon "%s" not found.', $name));
+        $message = \sprintf('Icon "%s" not found.', $name);
+
+        if (isset($e)) {
+            $message .= " {$e->getMessage()}";
+        }
+
+        throw new IconNotFoundException($message, previous: $e ?? null);
     }
 }

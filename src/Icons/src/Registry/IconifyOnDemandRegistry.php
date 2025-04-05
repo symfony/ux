@@ -11,6 +11,7 @@
 
 namespace Symfony\UX\Icons\Registry;
 
+use Symfony\UX\Icons\Exception\HttpClientNotInstalledException;
 use Symfony\UX\Icons\Exception\IconNotFoundException;
 use Symfony\UX\Icons\Icon;
 use Symfony\UX\Icons\Iconify;
@@ -36,6 +37,10 @@ final class IconifyOnDemandRegistry implements IconRegistryInterface
         }
         [$prefix, $icon] = $parts;
 
-        return $this->iconify->fetchIcon($this->prefixAliases[$prefix] ?? $prefix, $icon);
+        try {
+            return $this->iconify->fetchIcon($this->prefixAliases[$prefix] ?? $prefix, $icon);
+        } catch (HttpClientNotInstalledException $e) {
+            throw new IconNotFoundException($e->getMessage());
+        }
     }
 }

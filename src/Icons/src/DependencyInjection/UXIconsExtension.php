@@ -18,7 +18,6 @@ use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader\PhpFileLoader;
 use Symfony\Component\HttpKernel\DependencyInjection\ConfigurableExtension;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\UX\Icons\Iconify;
 
 /**
@@ -87,7 +86,7 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
                 ->end()
                 ->arrayNode('iconify')
                     ->info('Configuration for the remote icon service.')
-                    ->{interface_exists(HttpClientInterface::class) ? 'canBeDisabled' : 'canBeEnabled'}()
+                    ->canBeDisabled()
                     ->children()
                         ->booleanNode('on_demand')
                             ->info('Whether to download icons "on demand".')
@@ -164,26 +163,24 @@ final class UXIconsExtension extends ConfigurableExtension implements Configurat
             ->setArgument(1, $mergedConfig['ignore_not_found'])
         ;
 
-        if ($mergedConfig['iconify']['enabled']) {
-            $loader->load('iconify.php');
+        $container->getDefinition('.ux_icons.iconify')
+            ->setArgument(1, $mergedConfig['iconify']['endpoint']);
 
-            $container->getDefinition('.ux_icons.iconify')
-                ->setArgument(1, $mergedConfig['iconify']['endpoint']);
+        $container->getDefinition('.ux_icons.iconify_on_demand_registry')
+            ->setArgument(1, $iconSetAliases);
 
-            $container->getDefinition('.ux_icons.iconify_on_demand_registry')
-                ->setArgument(1, $iconSetAliases);
+        $container->getDefinition('.ux_icons.command.lock')
+            ->setArgument(3, $mergedConfig['aliases'])
+            ->setArgument(4, $iconSetAliases);
 
-            $container->getDefinition('.ux_icons.command.lock')
-                ->setArgument(3, $mergedConfig['aliases'])
-                ->setArgument(4, $iconSetAliases);
-
-            if (!$mergedConfig['iconify']['on_demand']) {
-                $container->removeDefinition('.ux_icons.iconify_on_demand_registry');
-            }
+        if (!$mergedConfig['iconify']['on_demand'] || !$mergedConfig['iconify']['enabled']) {
+            $container->removeDefinition('.ux_icons.iconify_on_demand_registry');
         }
 
         if (!$container->getParameter('kernel.debug')) {
             $container->removeDefinition('.ux_icons.command.import');
+            $container->removeDefinition('.ux_icons.command.search');
+            $container->removeDefinition('.ux_icons.command.lock');
         }
     }
 }

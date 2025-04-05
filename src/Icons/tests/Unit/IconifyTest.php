@@ -29,7 +29,7 @@ class IconifyTest extends TestCase
         $iconify = new Iconify(
             cache: new NullAdapter(),
             endpoint: 'https://example.com',
-            http: new MockHttpClient([
+            httpClient: new MockHttpClient([
                 new JsonMockResponse([
                     'bi' => [],
                 ]),
@@ -55,7 +55,7 @@ class IconifyTest extends TestCase
         $iconify = new Iconify(
             cache: new NullAdapter(),
             endpoint: 'https://example.com',
-            http: new MockHttpClient([
+            httpClient: new MockHttpClient([
                 new JsonMockResponse([
                     'bi' => [],
                 ]),
@@ -96,7 +96,7 @@ class IconifyTest extends TestCase
         $iconify = new Iconify(
             cache: new NullAdapter(),
             endpoint: 'https://example.com',
-            http: new MockHttpClient([
+            httpClient: new MockHttpClient([
                 new JsonMockResponse([
                     'bi' => [
                         'height' => 17,
@@ -124,7 +124,7 @@ class IconifyTest extends TestCase
         $iconify = new Iconify(
             cache: new NullAdapter(),
             endpoint: 'https://example.com',
-            http: new MockHttpClient([
+            httpClient: new MockHttpClient([
                 new JsonMockResponse([
                     'bi' => [],
                 ]),
@@ -149,7 +149,7 @@ class IconifyTest extends TestCase
         $iconify = new Iconify(
             cache: new NullAdapter(),
             endpoint: 'https://example.com',
-            http: new MockHttpClient([
+            httpClient: new MockHttpClient([
                 new JsonMockResponse([
                     'bi' => [],
                 ]),
@@ -168,7 +168,7 @@ class IconifyTest extends TestCase
         $iconify = new Iconify(
             cache: new NullAdapter(),
             endpoint: 'https://example.com',
-            http: new MockHttpClient([
+            httpClient: new MockHttpClient([
                 new JsonMockResponse([
                     'bi' => [],
                 ]),
@@ -199,7 +199,7 @@ class IconifyTest extends TestCase
         $iconify = new Iconify(
             cache: new NullAdapter(),
             endpoint: 'https://example.com',
-            http: new MockHttpClient([
+            httpClient: new MockHttpClient([
                 new JsonMockResponse([
                     'mdi' => [],
                 ]),
@@ -239,7 +239,7 @@ class IconifyTest extends TestCase
         $iconify = new Iconify(
             cache: new NullAdapter(),
             endpoint: 'https://example.com',
-            http: new MockHttpClient([
+            httpClient: new MockHttpClient([
                 new JsonMockResponse([
                     'bi' => [],
                 ]),
@@ -256,7 +256,7 @@ class IconifyTest extends TestCase
         $iconify = new Iconify(
             cache: new NullAdapter(),
             endpoint: 'https://example.com',
-            http: new MockHttpClient([
+            httpClient: new MockHttpClient([
                 new JsonMockResponse([
                     'bi' => [],
                 ]),

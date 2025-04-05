@@ -27,8 +27,8 @@ final class IconCacheWarmer
     }
 
     /**
-     * @param callable(string,Icon):void|null $onSuccess
-     * @param callable(string):void|null      $onFailure
+     * @param callable(string,Icon):void|null       $onSuccess
+     * @param callable(string,\Exception):void|null $onFailure
      */
     public function warm(?callable $onSuccess = null, ?callable $onFailure = null): void
     {
@@ -40,8 +40,8 @@ final class IconCacheWarmer
                 $icon = $this->registry->get($name, refresh: true);
 
                 $onSuccess($name, $icon);
-            } catch (IconNotFoundException) {
-                $onFailure($name);
+            } catch (IconNotFoundException $e) {
+                $onFailure($name, $e);
             }
         }
     }
