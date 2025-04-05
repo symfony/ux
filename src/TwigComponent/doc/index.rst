@@ -1719,6 +1719,36 @@ Pass the name of some component as an argument to print its details:
     |                                                   | int $min = 10                     |
     +---------------------------------------------------+-----------------------------------+
 
+Short Tags
+----------
+
+An experimental new short tag system, allowing the omission of the 'twig:' prefix in HTML tags, was introduced in version 2.24.
+
+This mode allows you to omit the `twig:` prefix and reference components directly by their name,
+with the first letter capitalized.
+
+.. code-block:: html+twig
+
+    <Acme:Button type="primary">
+        Click me
+    </Acme:Button>
+
+This is equivalent to:
+
+.. code-block:: html+twig
+
+    <twig:Acme:Button type="primary">
+        Click me
+    </twig:Acme:Button>
+
+To enable this feature, add the following configuration:
+
+.. code-block:: yaml
+
+    # config/packages/twig_component.yaml
+    twig_component:
+        short_tags: true
+
 Contributing
 ------------
 

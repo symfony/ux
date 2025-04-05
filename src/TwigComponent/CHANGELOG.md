@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.24.0
+
+-  Introduce an experimental Short tags system for TwigComponents, making `twig:` prefix optional #2662
+
 ## 2.20.0
 
 -  Add Anonymous Component support for 3rd-party bundles #2019

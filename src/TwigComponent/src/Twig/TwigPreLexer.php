@@ -15,7 +15,7 @@ use Twig\Error\SyntaxError;
 use Twig\Lexer;
 
 /**
- * Rewrites <twig:component> syntaxes to {% component %} syntaxes.
+ * Rewrites <twig:component> or <Component> syntaxes to {% component %} syntaxes.
  */
 class TwigPreLexer
 {
@@ -28,15 +28,32 @@ class TwigPreLexer
      */
     private array $currentComponents = [];
 
-    public function __construct(int $startingLine = 1)
+    public function __construct(int $startingLine = 1, private readonly bool $withShortTags = false)
     {
         $this->line = $startingLine;
     }
 
     public function preLexComponents(string $input): string
     {
-        if (!str_contains($input, '<twig:')) {
+        // tag may be:
+        // - prefixed: <twig:componentName>
+        // - short (jsx like): <ComponentName> (with a capital letter)
+
+        $isPrefixedTags = str_contains($input, '<twig:');
+        $isShortTags = $this->withShortTags && preg_match_all('/<([A-Z][a-zA-Z0-9_:-]+)([^>]*)>/', $input, $matches, \PREG_SET_ORDER);
+
+        if (!$isPrefixedTags && !$isShortTags) {
             return $input;
+        }
+
+        if ($isShortTags) {
+            $componentNames = array_map(fn ($match) => $match[1], $matches);
+            $componentNames = array_unique(array_filter($componentNames));
+
+            // To simplify things in the rest of the class, we replace the component name with twig:<componentName>
+            foreach ($componentNames as $componentName) {
+                $input = preg_replace('!<(/?)'.preg_quote($componentName).'!', '<$1twig:'.lcfirst($componentName), $input);
+            }
         }
 
         $this->input = $input = str_replace(["\r\n", "\r"], "\n", $input);
@@ -394,7 +411,7 @@ class TwigPreLexer
         }
         $blockContents = $this->consumeUntilEndBlock();
 
-        $subLexer = new self($this->line);
+        $subLexer = new self($this->line, $this->withShortTags);
         $output .= $subLexer->preLexComponents($blockContents);
 
         $this->consume($closingTag);

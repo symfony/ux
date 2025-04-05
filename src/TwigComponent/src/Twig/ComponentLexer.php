@@ -26,9 +26,11 @@ use Twig\TokenStream;
  */
 class ComponentLexer extends Lexer
 {
+    private bool $withShortTags = false;
+
     public function tokenize(Source $source): TokenStream
     {
-        $preLexer = new TwigPreLexer();
+        $preLexer = new TwigPreLexer(withShortTags: $this->withShortTags);
         $preparsed = $preLexer->preLexComponents($source->getCode());
 
         return parent::tokenize(
@@ -38,5 +40,10 @@ class ComponentLexer extends Lexer
                 $source->getPath()
             )
         );
+    }
+
+    public function enabledShortTags(): void
+    {
+        $this->withShortTags = true;
     }
 }

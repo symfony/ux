@@ -27,6 +27,15 @@ final class TwigPreLexerTest extends TestCase
     }
 
     /**
+     * @dataProvider getLexTestsWhithShortOptions
+     */
+    public function testPreLexWithShortTags(string $input, string $expectedOutput): void
+    {
+        $lexer = new TwigPreLexer(withShortTags: true);
+        $this->assertSame($expectedOutput, $lexer->preLexComponents($input));
+    }
+
+    /**
      * @dataProvider getInvalidSyntaxTests
      */
     public function testPreLexThrowsExceptionOnInvalidSyntax(string $input, string $expectedMessage): void
@@ -376,6 +385,12 @@ final class TwigPreLexerTest extends TestCase
             '<twig:foobar bar="baz" {{ ...attr }}>content</twig:foobar>',
             '{% component \'foobar\' with { bar: \'baz\', ...attr } %}{% block content %}content{% endblock %}{% endcomponent %}',
         ];
+
+        yield 'jsx_component_simple_component_not_enabled_by_default' => [
+            '<Foo />',
+            '<Foo />',
+        ];
+
         yield 'component_with_comment_line' => [
             "<twig:foo \n   # bar  \n />",
             '{{ component(\'foo\') }}',
@@ -435,6 +450,273 @@ final class TwigPreLexerTest extends TestCase
                     c: 'd'
                 }) }) }}
             TWIG,
+        ];
+    }
+
+    public static function getLexTestsWhithShortOptions()
+    {
+        yield 'not_a_component' => [
+            '<foo />',
+            '<foo />',
+        ];
+
+        yield 'jsx_component_simple_component' => [
+            '<Foo />',
+            '{{ component(\'foo\') }}',
+        ];
+
+        yield 'jsx_component_attribute_with_no_value_and_no_attributes' => [
+            '<Foo/>',
+            '{{ component(\'foo\') }}',
+        ];
+
+        yield 'jsx_component_with_default_block_content' => [
+            '<Foo>Foo</Foo>',
+            '{% component \'foo\' %}{% block content %}Foo{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_default_block_that_holds_a_component_and_multi_blocks' => [
+            '<Foo>Foo <twig:bar /><twig:block name="other_block">Other block</twig:block></Foo>',
+            '{% component \'foo\' %}{% block content %}Foo {{ component(\'bar\') }}{% endblock %}{% block other_block %}Other block{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_character_:_on_his_name' => [
+            '<Foo:bar></Foo:bar>',
+            '{% component \'foo:bar\' %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_character_-_on_his_name' => [
+            '<Foo-bar></Foo-bar>',
+            '{% component \'foo-bar\' %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_character_._on_his_name' => [
+            '<Foo.bar></Foo.bar>',
+            '{% component \'foo.bar\' %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_block' => [
+            '<SuccessAlert>
+                <Block name="alert_message">
+                    xxxx
+                </Block>
+            </SuccessAlert>',
+            '{% component \'successAlert\' %}
+                {% block alert_message %}
+                    xxxx
+                {% endblock %}
+            {% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_sub_blocks' => [
+            '<SuccessAlert>
+                <Message name="alert_message">
+                    <Icon name="success" />
+                </Message>
+                <Message name="alert_message">
+                    <Icon name="success" />
+                </Message>
+            </SuccessAlert>',
+            '{% component \'successAlert\' %}
+                {% block content %}{% component \'message\' with { name: \'alert_message\' } %}
+                    {% block content %}{{ component(\'icon\', { name: \'success\' }) }}
+                {% endblock %}{% endcomponent %}
+                {% component \'message\' with { name: \'alert_message\' } %}
+                    {% block content %}{{ component(\'icon\', { name: \'success\' }) }}
+                {% endblock %}{% endcomponent %}
+            {% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_multiple_nested_namespaces' => [
+            '<Foo:Bar:Baz></Foo:Bar:Baz>',
+            '{% component \'foo:Bar:Baz\' %}{% endcomponent %}',
+        ];
+
+        yield 'mixing_standard_and_jsx_components' => [
+            '<Alert><twig:Button>Click me</twig:Button></Alert>',
+            "{% component 'alert' %}{% block content %}{% component 'Button' %}{% block content %}Click me{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}",
+        ];
+
+        yield 'jsx_component_with_dynamic_attributes' => [
+            '<Alert :level="alertLevel" title="{{ title }}"></Alert>',
+            '{% component \'alert\' with { level: alertLevel, title: (title) } %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_spreading' => [
+            '<Button {{ ...buttonAttrs }}>Click me</Button>',
+            '{% component \'button\' with { ...buttonAttrs } %}{% block content %}Click me{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_named_blocks' => [
+            '<Card><Block name="header">Title</Block><Block name="body">Content</Block></Card>',
+            '{% component \'card\' %}{% block header %}Title{% endblock %}{% block body %}Content{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'nested_jsx_components_with_namespaces' => [
+            '<UI:Layout><UI:Sidebar>Menu</UI:Sidebar><UI:Content>Page</UI:Content></UI:Layout>',
+            "{% component 'uI:Layout' %}{% block content %}{% component 'uI:Sidebar' %}{% block content %}Menu{% endblock %}{% endcomponent %}{% component 'uI:Content' %}{% block content %}Page{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}",
+        ];
+
+        yield 'normal_html_tags_not_transformed' => [
+            '<div><span>Text</span><input type="text" /></div>',
+            '<div><span>Text</span><input type="text" /></div>',
+        ];
+
+        yield 'lowercase_component_name_not_transformed' => [
+            '<foo>Content</foo>',
+            '<foo>Content</foo>',
+        ];
+
+        yield 'jsx_component_with_special_characters_in_attributes' => [
+            '<Button data-testid="test-btn" aria-label="Click me"></Button>',
+            '{% component \'button\' with { \'data-testid\': \'test-btn\', \'aria-label\': \'Click me\' } %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_html_comments' => [
+            '<Alert><!-- This is a comment --><Block name="title">Alert title</Block></Alert>',
+            '{% component \'alert\' %}{% block content %}<!-- This is a comment -->{% endblock %}{% block title %}Alert title{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_boolean_attributes' => [
+            '<Button disabled primary>Click me</Button>',
+            '{% component \'button\' with { disabled: true, primary: true } %}{% block content %}Click me{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_whitespace' => [
+            '<Button
+                    type="primary"
+                    size="large"
+                >
+                    Submit
+                </Button>',
+            '{% component \'button\' with { type: \'primary\', size: \'large\' } %}
+                    {% block content %}Submit
+                {% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_numbers_in_name' => [
+            '<Grid3x3>Content</Grid3x3>',
+            '{% component \'grid3x3\' %}{% block content %}Content{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_complex_expressions' => [
+            '<DataTable :items="items|filter(item => item.active)|sort((a, b) => a.name <=> b.name)" />',
+            '{{ component(\'dataTable\', { items: items|filter(item => item.active)|sort((a, b) => a.name <=> b.name) }) }}',
+        ];
+
+        // Looks like HTML 5 custom elements
+        yield 'jsx_component_similar_to_custom_element' => [
+            '<Custom-Element data-value="test">Content</Custom-Element>',
+            "{% component 'custom-Element' with { 'data-value': 'test' } %}{% block content %}Content{% endblock %}{% endcomponent %}",
+        ];
+
+        yield 'nested_jsx_components_with_same_name' => [
+            '<Section><Section>Nested</Section></Section>',
+            '{% component \'section\' %}{% block content %}{% component \'section\' %}{% block content %}Nested{% endblock %}{% endcomponent %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_embedded_twig_conditions' => [
+            '<Card>{% if showTitle %}<Block name="title">Title</Block>{% endif %}</Card>',
+            "{% component 'card' %}{% block content %}{% if showTitle %}{% endblock %}{% block title %}Title{% endblock %}{% block content %}{% endif %}{% endblock %}{% endcomponent %}",
+        ];
+
+        yield 'jsx_component_with_embedded_twig_loops' => [
+            '<List>{% for item in items %}<Item :value="item">{{ item.name }}</Item>{% endfor %}</List>',
+            '{% component \'list\' %}{% block content %}{% for item in items %}{% component \'item\' with { value: item } %}{% block content %}{{ item.name }}{% endblock %}{% endcomponent %}{% endfor %}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_escaped_attribute_values' => [
+            '<Alert message="This is a \'quoted\' message" />',
+            "{{ component('alert', { message: 'This is a \'quoted\' message' }) }}",
+        ];
+
+        yield 'jsx_component_with_self_closing_html_in_content' => [
+            '<Card><img src="image.jpg" /><hr/></Card>',
+            '{% component \'card\' %}{% block content %}<img src="image.jpg" /><hr/>{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_array_and_object_attributes' => [
+            '<Select :options="[\'option1\', \'option2\']" :config="{ multiselect: true }" />',
+            '{{ component(\'select\', { options: [\'option1\', \'option2\'], config: { multiselect: true } }) }}',
+        ];
+
+        yield 'jsx_component_interpolation_inside_dynamic_attribute' => [
+            '<Button :class="isActive ? \'active-{{ theme }}\' : \'inactive\'" />',
+            "{{ component('button', { class: isActive ? 'active-{{ theme }}' : 'inactive' }) }}",
+        ];
+
+        yield 'jsx_component_with_mixed_case_name' => [
+            '<DataTable sorting="asc">Content</DataTable>',
+            '{% component \'dataTable\' with { sorting: \'asc\' } %}{% block content %}Content{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_namespace_and_mixed_case' => [
+            '<App:UserProfile:Avatar size="medium" />',
+            '{{ component(\'app:UserProfile:Avatar\', { size: \'medium\' }) }}',
+        ];
+
+        yield 'jsx_component_with_complex_twig_in_attributes' => [
+            '<Form :errors="form.errors is defined ? form.errors : {}" :disabled="form.isSubmitting ?? false" />',
+            '{{ component(\'form\', { errors: form.errors is defined ? form.errors : {}, disabled: form.isSubmitting ?? false }) }}',
+        ];
+
+        yield 'jsx_component_with_path_expression_in_attributes' => [
+            '<Field :value="user.address.street" :error="errors.address.street|default(null)" />',
+            '{{ component(\'field\', { value: user.address.street, error: errors.address.street|default(null) }) }}',
+        ];
+
+        yield 'nested_jsx_components_with_complex_blocks' => [
+            '<Tabs>
+                <Tab title="First">
+                    <Panel>
+                        <Block name="header">Title</Block>
+                        <Block name="body">Content</Block>
+                    </Panel>
+                </Tab>
+            </Tabs>',
+            "{% component 'tabs' %}
+                {% block content %}{% component 'tab' with { title: 'First' } %}
+                    {% block content %}{% component 'panel' %}
+                        {% block header %}Title{% endblock %}
+                        {% block body %}Content{% endblock %}
+                    {% endcomponent %}
+                {% endblock %}{% endcomponent %}
+            {% endblock %}{% endcomponent %}",
+        ];
+
+        yield 'jsx_component_with_aria_and_data_attributes' => [
+            '<Button aria-pressed="false" data-analytics-id="login-btn">Login</Button>',
+            '{% component \'button\' with { \'aria-pressed\': \'false\', \'data-analytics-id\': \'login-btn\' } %}{% block content %}Login{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_twig_filters' => [
+            '<Alert :message="error|trans|capitalize" />',
+            '{{ component(\'alert\', { message: error|trans|capitalize }) }}',
+        ];
+
+        yield 'jsx_component_with_twig_macros' => [
+            '<Card>{% import "macros.twig" as forms %}<Block name="body">{{ forms.input("username") }}</Block></Card>',
+            '{% component \'card\' %}{% block content %}{% import "macros.twig" as forms %}{% endblock %}{% block body %}{{ forms.input("username") }}{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_mixed_content' => [
+            '<Notice>This is <strong>important</strong> and <em>urgent</em>.</Notice>',
+            '{% component \'notice\' %}{% block content %}This is <strong>important</strong> and <em>urgent</em>.{% endblock %}{% endcomponent %}',
+        ];
+
+        yield 'jsx_component_with_short_namespace' => [
+            '<X:Y />',
+            '{{ component(\'x:Y\') }}',
+        ];
+
+        yield 'jsx_component_with_namespaced_attributes' => [
+            '<Svg xmlns:xlink="http://www.w3.org/1999/xlink" />',
+            '{{ component(\'svg\', { \'xmlns:xlink\': \'http://www.w3.org/1999/xlink\' }) }}',
+        ];
+
+        yield 'jsx_component_with_block_expression' => [
+            '<Card><Block name="{{ showHeader ? \'header\' : \'footer\' }}">Content</Block></Card>',
+            "{% component 'card' %}{% block (showHeader ? 'header'  %}Content{% endblock %}{% endcomponent %}",
         ];
     }
 }

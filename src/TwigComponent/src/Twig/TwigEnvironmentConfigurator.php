@@ -22,6 +22,8 @@ use Twig\Runtime\EscaperRuntime;
  */
 class TwigEnvironmentConfigurator
 {
+    private bool $withShortTags = false;
+
     public function __construct(
         private readonly EnvironmentConfigurator $decorated,
     ) {
@@ -31,12 +33,26 @@ class TwigEnvironmentConfigurator
     {
         $this->decorated->configure($environment);
 
-        $environment->setLexer(new ComponentLexer($environment));
+        $componentLexer = new ComponentLexer($environment);
+
+        if ($this->withShortTags) {
+            $componentLexer->enabledShortTags();
+        }
+
+        $environment->setLexer($componentLexer);
 
         if (class_exists(EscaperRuntime::class)) {
             $environment->getRuntime(EscaperRuntime::class)->addSafeClass(ComponentAttributes::class, ['html']);
         } elseif ($environment->hasExtension(EscaperExtension::class)) {
             $environment->getExtension(EscaperExtension::class)->addSafeClass(ComponentAttributes::class, ['html']);
         }
+    }
+
+    /**
+     * This method should be replaced by a proper autowiring configuration.
+     */
+    public function enabledShortTags(): void
+    {
+        $this->withShortTags = true;
     }
 }

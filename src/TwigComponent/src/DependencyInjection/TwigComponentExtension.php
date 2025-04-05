@@ -129,10 +129,24 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
         ;
 
         $container->register('ux.twig_component.twig.lexer', ComponentLexer::class);
+        if (true === $config['short_tags']) {
+            $container->getDefinition('ux.twig_component.twig.lexer')
+                ->addMethodCall('enableShortTags');
+        }
 
         $container->register('ux.twig_component.twig.environment_configurator', TwigEnvironmentConfigurator::class)
             ->setDecoratedService(new Reference('twig.configurator.environment'))
             ->setArguments([new Reference('ux.twig_component.twig.environment_configurator.inner')]);
+
+        // Currently, the ComponentLexer is not injected into the TwigEnvironmentConfigurator, but built directly in the
+        // code (with a new ComponentLexer($environment)).
+        // We cannot change this behavior without a major refactoring : environment is currently configured at runtime.
+        // So we add setters for our required options
+        // This should be improved in the future: currently, parameters of the ComponentLexer are not injectables.
+        if (true === $config['short_tags']) {
+            $container->getDefinition('ux.twig_component.twig.environment_configurator')
+                ->addMethodCall('enabledShortTags');
+        }
 
         $container->register('ux.twig_component.command.debug', TwigComponentDebugCommand::class)
             ->setArguments([
@@ -216,6 +230,10 @@ final class TwigComponentExtension extends Extension implements ConfigurationInt
                 ->booleanNode('profiler')
                     ->info('Enables the profiler for Twig Component (in debug mode)')
                     ->defaultValue('%kernel.debug%')
+                ->end()
+                ->booleanNode('short_tags')
+                    ->info('Enables the short syntax for Twig Components (the <twig: prefix is optional)')
+                    ->defaultValue(false)
                 ->end()
                 ->scalarNode('controllers_json')
                     ->setDeprecated('symfony/ux-twig-component', '2.18', 'The "twig_component.controllers_json" config option is deprecated, and will be removed in 3.0.')
