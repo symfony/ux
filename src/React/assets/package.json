@@ -2,7 +2,7 @@
     "name": "@symfony/ux-react",
     "description": "Integration of React in Symfony",
     "license": "MIT",
-    "version": "2.23.0",
+    "version": "2.24.0",
     "keywords": [
         "symfony-ux"
     ],

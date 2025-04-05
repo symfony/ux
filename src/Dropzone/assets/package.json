@@ -2,7 +2,7 @@
     "name": "@symfony/ux-dropzone",
     "description": "File input dropzones for Symfony Forms",
     "license": "MIT",
-    "version": "2.23.0",
+    "version": "2.24.0",
     "keywords": [
         "symfony-ux"
     ],

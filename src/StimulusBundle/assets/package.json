@@ -2,7 +2,7 @@
     "name": "@symfony/stimulus-bundle",
     "description": "Integration of @hotwired/stimulus into Symfony",
     "license": "MIT",
-    "version": "2.23.0",
+    "version": "2.24.0",
     "keywords": [
         "symfony-ux"
     ],
