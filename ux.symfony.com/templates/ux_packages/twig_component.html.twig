@@ -1,9 +1,5 @@
 {% extends 'ux_packages/package.html.twig' %}
 
-{% block banner %}
-    {{ include('_banner.html.twig', {color_back: '#4a5d20'}) }}
-{% endblock %}
-
 {% block package_header %}
     {% component PackageHeader with {
         package: 'twig-component',

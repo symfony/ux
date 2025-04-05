@@ -1,9 +1,5 @@
 {% extends 'ux_packages/package.html.twig' %}
 
-{% block banner %}
-    {{ include('_banner.html.twig', {color_back: '#331C50'}) }}
-{% endblock %}
-
 {% block package_header %}
     {% component PackageHeader with {
         package: 'turbo',

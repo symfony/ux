@@ -1,9 +1,5 @@
 {% extends 'ux_packages/package.html.twig' %}
 
-{% block banner %}
-    {{ include('_banner.html.twig', {color_back: '#18543e'}) }}
-{% endblock %}
-
 {% block package_header %}
     <twig:Package:PackageHeader
         package="{{ 'stimulus'|ux_package }}"
