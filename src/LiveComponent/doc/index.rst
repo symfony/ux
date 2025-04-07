@@ -1552,7 +1552,8 @@ Next, tell the ``form`` element to use this action:
         }
     }) }}
 
-Now, when the form is submitted, it will execute the ``save()`` method
+Now, when the form is submitted, the ``live#action:prevent`` catches the form submission event and prevents the regular HTTP form submission.
+it will execute the ``save()`` method
 via Ajax. If the form fails validation, it will re-render with the
 errors. And if it's successful, it will redirect.
 
