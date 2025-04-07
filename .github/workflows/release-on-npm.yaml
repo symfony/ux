@@ -3,7 +3,7 @@ name: Release on NPM
 on:
   push:
     tags:
-        - 'v*.*.*'
+        - 'v2.*.*'
 
 jobs:
     release:
