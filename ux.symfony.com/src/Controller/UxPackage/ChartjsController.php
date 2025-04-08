@@ -11,7 +11,6 @@
 
 namespace App\Controller\UxPackage;
 
-use App\Service\UxPackageRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -21,10 +20,8 @@ use Symfony\UX\Chartjs\Model\Chart;
 class ChartjsController extends AbstractController
 {
     #[Route('/chartjs', name: 'app_chartjs')]
-    public function __invoke(UxPackageRepository $packageRepository, ChartBuilderInterface $chartBuilder): Response
+    public function __invoke(ChartBuilderInterface $chartBuilder): Response
     {
-        $package = $packageRepository->find('chartjs');
-
         $chart = $chartBuilder->createChart(Chart::TYPE_LINE);
         $chart->setData([
             'labels' => ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
@@ -50,7 +47,6 @@ class ChartjsController extends AbstractController
         ]);
 
         return $this->render('ux_packages/chartjs.html.twig', [
-            'package' => $package,
             'chart' => $chart,
         ]);
     }
