@@ -41,7 +41,7 @@ jobs:
 
             - name: Check if JS dist files are current
               run: |
-                if [[ -n $(git status --porcelain) ]]; then
+                if ! git diff --quiet; then
                   echo "The Git workspace is unclean! Changes detected:"
                   git status --porcelain
                   git diff
