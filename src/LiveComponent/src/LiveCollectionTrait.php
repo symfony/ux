@@ -46,6 +46,46 @@ trait LiveCollectionTrait
         $propertyAccessor->setValue($this->formValues, $propertyPath, $data);
     }
 
+    #[LiveAction]
+    public function moveCollectionItemUp(PropertyAccessorInterface $propertyAccessor, #[LiveArg] string $name, #[LiveArg] int $index): void
+    {
+        if ($index <= 0) {
+            return;
+        }
+        
+        $propertyPath = $this->fieldNameToPropertyPath($name, $this->formName);
+        $data = $propertyAccessor->getValue($this->formValues, $propertyPath);
+        
+        if (!\is_array($data) || !isset($data[$index]) || !isset($data[$index - 1])) {
+            return;
+        }
+        
+        // Swap the current item with the one above it
+        $temp = $data[$index - 1];
+        $data[$index - 1] = $data[$index];
+        $data[$index] = $temp;
+        
+        $propertyAccessor->setValue($this->formValues, $propertyPath, $data);
+    }
+
+    #[LiveAction]
+    public function moveCollectionItemDown(PropertyAccessorInterface $propertyAccessor, #[LiveArg] string $name, #[LiveArg] int $index): void
+    {
+        $propertyPath = $this->fieldNameToPropertyPath($name, $this->formName);
+        $data = $propertyAccessor->getValue($this->formValues, $propertyPath);
+        
+        if (!\is_array($data) || !isset($data[$index]) || !isset($data[$index + 1])) {
+            return;
+        }
+        
+        // Swap the current item with the one below it
+        $temp = $data[$index + 1];
+        $data[$index + 1] = $data[$index];
+        $data[$index] = $temp;
+        
+        $propertyAccessor->setValue($this->formValues, $propertyPath, $data);
+    }
+
     private function fieldNameToPropertyPath(string $collectionFieldName, string $rootFormName): string
     {
         $propertyPath = $collectionFieldName;

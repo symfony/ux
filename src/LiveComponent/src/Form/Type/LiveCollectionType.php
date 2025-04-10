@@ -35,6 +35,14 @@ final class LiveCollectionType extends AbstractType
             $prototype = $builder->create('delete', $options['button_delete_type'], $options['button_delete_options']);
             $builder->setAttribute('button_delete_prototype', $prototype->getForm());
         }
+        
+        if ($options['allow_sort']) {
+            $moveUpPrototype = $builder->create('move_up', $options['button_move_up_type'], $options['button_move_up_options']);
+            $builder->setAttribute('button_move_up_prototype', $moveUpPrototype->getForm());
+            
+            $moveDownPrototype = $builder->create('move_down', $options['button_move_down_type'], $options['button_move_down_options']);
+            $builder->setAttribute('button_move_down_prototype', $moveDownPrototype->getForm());
+        }
     }
 
     public function buildView(FormView $view, FormInterface $form, array $options): void
@@ -92,6 +100,53 @@ final class LiveCollectionType extends AbstractType
                 array_splice($entryView->vars['button_delete']->vars['block_prefixes'], 1, 0, 'live_collection_button_delete');
             }
         }
+        
+        // Add move up and move down buttons
+        if ($form->getConfig()->hasAttribute('button_move_up_prototype')) {
+            $prototype = $form->getConfig()->getAttribute('button_move_up_prototype');
+
+            $prototypes = [];
+            foreach ($form as $k => $entry) {
+                $prototypes[$k] = clone $prototype;
+                $prototypes[$k]->setParent($entry);
+            }
+
+            foreach ($view as $k => $entryView) {
+                $entryView->vars['button_move_up'] = $prototypes[$k]->createView($entryView);
+
+                $attr = $entryView->vars['button_move_up']->vars['attr'];
+                $attr['data-action'] ??= 'live#action';
+                $attr['data-live-action-param'] ??= 'moveCollectionItemUp';
+                $attr['data-live-name-param'] ??= $view->vars['full_name'];
+                $attr['data-live-index-param'] ??= $k;
+                $entryView->vars['button_move_up']->vars['attr'] = $attr;
+
+                array_splice($entryView->vars['button_move_up']->vars['block_prefixes'], 1, 0, 'live_collection_button_move_up');
+            }
+        }
+        
+        if ($form->getConfig()->hasAttribute('button_move_down_prototype')) {
+            $prototype = $form->getConfig()->getAttribute('button_move_down_prototype');
+
+            $prototypes = [];
+            foreach ($form as $k => $entry) {
+                $prototypes[$k] = clone $prototype;
+                $prototypes[$k]->setParent($entry);
+            }
+
+            foreach ($view as $k => $entryView) {
+                $entryView->vars['button_move_down'] = $prototypes[$k]->createView($entryView);
+
+                $attr = $entryView->vars['button_move_down']->vars['attr'];
+                $attr['data-action'] ??= 'live#action';
+                $attr['data-live-action-param'] ??= 'moveCollectionItemDown';
+                $attr['data-live-name-param'] ??= $view->vars['full_name'];
+                $attr['data-live-index-param'] ??= $k;
+                $entryView->vars['button_move_down']->vars['attr'] = $attr;
+
+                array_splice($entryView->vars['button_move_down']->vars['block_prefixes'], 1, 0, 'live_collection_button_move_down');
+            }
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -105,8 +160,13 @@ final class LiveCollectionType extends AbstractType
             'button_add_options' => [],
             'button_delete_type' => ButtonType::class,
             'button_delete_options' => [],
+            'button_move_up_type' => ButtonType::class,
+            'button_move_up_options' => [],
+            'button_move_down_type' => ButtonType::class,
+            'button_move_down_options' => [],
             'allow_add' => true,
             'allow_delete' => true,
+            'allow_sort' => true,
             'by_reference' => false,
         ]);
     }

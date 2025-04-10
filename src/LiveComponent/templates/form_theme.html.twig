@@ -10,4 +10,10 @@
     {%- if button_delete is defined and not button_delete.rendered -%}
         {{ form_row(button_delete) }}
     {%- endif -%}
+    {%- if button_move_up is defined and not button_move_up.rendered -%}
+        {{ form_row(button_move_up) }}
+    {%- endif -%}
+    {%- if button_move_down is defined and not button_move_down.rendered -%}
+        {{ form_row(button_move_down) }}
+    {%- endif -%}
 {%- endblock live_collection_entry_row -%}
