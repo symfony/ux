@@ -52,19 +52,19 @@ trait LiveCollectionTrait
         if ($index <= 0) {
             return;
         }
-        
+
         $propertyPath = $this->fieldNameToPropertyPath($name, $this->formName);
         $data = $propertyAccessor->getValue($this->formValues, $propertyPath);
-        
+
         if (!\is_array($data) || !isset($data[$index]) || !isset($data[$index - 1])) {
             return;
         }
-        
+
         // Swap the current item with the one above it
         $temp = $data[$index - 1];
         $data[$index - 1] = $data[$index];
         $data[$index] = $temp;
-        
+
         $propertyAccessor->setValue($this->formValues, $propertyPath, $data);
     }
 
@@ -73,16 +73,16 @@ trait LiveCollectionTrait
     {
         $propertyPath = $this->fieldNameToPropertyPath($name, $this->formName);
         $data = $propertyAccessor->getValue($this->formValues, $propertyPath);
-        
+
         if (!\is_array($data) || !isset($data[$index]) || !isset($data[$index + 1])) {
             return;
         }
-        
+
         // Swap the current item with the one below it
         $temp = $data[$index + 1];
         $data[$index + 1] = $data[$index];
         $data[$index] = $temp;
-        
+
         $propertyAccessor->setValue($this->formValues, $propertyPath, $data);
     }
 
