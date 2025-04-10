@@ -359,6 +359,11 @@ export default class Component {
             return;
         }
 
+        // remove the loading behavior now so that when we morphdom
+        // "diffs" the elements, any loading differences will not cause
+        // elements to appear different unnecessarily
+        this.hooks.triggerHook('loading.state:finished', this.element);
+
         if (backendResponse.response.headers.get('Location')) {
             // action returned a redirect
             if (this.isTurboEnabled()) {
@@ -369,11 +374,6 @@ export default class Component {
 
             return;
         }
-
-        // remove the loading behavior now so that when we morphdom
-        // "diffs" the elements, any loading differences will not cause
-        // elements to appear different unnecessarily
-        this.hooks.triggerHook('loading.state:finished', this.element);
 
         /**
          * For any models modified since the last request started, grab

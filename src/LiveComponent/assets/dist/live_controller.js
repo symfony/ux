@@ -549,8 +549,8 @@ var HookManager_default = class {
   }
 };
 
-// ../../../node_modules/.pnpm/idiomorph@0.3.0/node_modules/idiomorph/dist/idiomorph.esm.js
-var Idiomorph = function() {
+// ../../../node_modules/idiomorph/dist/idiomorph.esm.js
+var Idiomorph = (function() {
   "use strict";
   let EMPTY_SET = /* @__PURE__ */ new Set();
   let defaults = {
@@ -1093,7 +1093,7 @@ var Idiomorph = function() {
     morph,
     defaults
   };
-}();
+})();
 
 // src/normalize_attributes_for_comparison.ts
 function normalizeAttributesForComparison(element) {
@@ -2045,6 +2045,7 @@ var Component = class {
     if (!controls.shouldRender) {
       return;
     }
+    this.hooks.triggerHook("loading.state:finished", this.element);
     if (backendResponse.response.headers.get("Location")) {
       if (this.isTurboEnabled()) {
         Turbo.visit(backendResponse.response.headers.get("Location"));
@@ -2053,7 +2054,6 @@ var Component = class {
       }
       return;
     }
-    this.hooks.triggerHook("loading.state:finished", this.element);
     const modifiedModelValues = {};
     Object.keys(this.valueStore.getDirtyProps()).forEach((modelName) => {
       modifiedModelValues[modelName] = this.valueStore.get(modelName);
