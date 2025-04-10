@@ -1,35 +1,56 @@
 # Badge
 
-The Badge component is used to highlight and display short pieces of information, such as counts or labels.
+A component for displaying short pieces of information, such as counts, labels, or status indicators.
 
-## Examples
-
-### Basic Badge
-
-```twig
+```twig {"preview":true}
 <twig:Badge>Badge</twig:Badge>
 ```
 
-### Primary Badge
+## Installation
 
-```twig
-<twig:Badge variant="primary">
+<!-- Placeholder: Installation -->
+
+## Usage
+
+<!-- Placeholder: Usage -->
+
+## Examples
+
+### Default
+
+```twig {"preview":true}
+<twig:Badge>Badge</twig:Badge>
+```
+
+### Secondary
+
+```twig {"preview":true}
+<twig:Badge variant="secondary">
     Badge
 </twig:Badge>
 ```
 
-### Outline Badge
+### Outline
 
-```twig
-<twig:Badge outline>
+```twig {"preview":true}
+<twig:Badge variant="outline">
     Badge
 </twig:Badge>
 ```
 
-### Secondary Outline Badge
+### Destructive
 
-```twig
-<twig:Badge variant="secondary" outline>
+```twig {"preview":true}
+<twig:Badge variant="destructive">
     Badge
+</twig:Badge>
+```
+
+### With Icon
+
+```twig {"preview":true}
+<twig:Badge>
+    <twig:ux:icon name="lucide:check" class="mr-1 h-3 w-3" />
+    Verified
 </twig:Badge>
 ``` 

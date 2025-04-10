@@ -1,5 +1,0 @@
-<nav {{ attributes.without('class') }}
-    class="{{ (' ' ~ attributes.render('class'))|tailwind_merge }}"
->
-    {% block content %}{% endblock %}
-</nav>

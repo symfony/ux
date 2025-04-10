@@ -1,13 +1,6 @@
-{%- props -%}
-{%- set style = html_cva(
-    base: '[&_tr]:border-b',
-    variants: {},
-    compoundVariants: []
-) -%}
-
-<div
-        class="{{ style.apply({}, attributes.render('class'))|tailwind_merge }}"
-        {{ attributes.defaults({}).without('class') }}
+<thead
+    class="{{ '[&_tr]:border-b ' ~ attributes.render('class')|tailwind_merge }}"
+    {{ attributes.defaults({}).without('class') }}
 >
-    {% block content %}{% endblock %}
-</div>
+    {%- block content %}{% endblock -%}
+</thead>

@@ -1,13 +1,3 @@
-{%- props -%}
-{%- set style = html_cva(
-    base: '',
-    variants: {},
-    compoundVariants: []
-) -%}
-
-<span
-    class="{{ style.apply({}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.defaults({}).without('class') }}
->
-    {% block content %}{% endblock %}
-</span>
+<nav{{ attributes }} aria-label="Breadcrumb">
+    {%- block content %}{% endblock -%}
+</nav>

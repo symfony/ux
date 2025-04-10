@@ -1,13 +1,8 @@
-{%- props -%}
-{%- set style = html_cva(
-    base: 'relative w-full overflow-auto',
-    variants: {},
-    compoundVariants: []
-) -%}
-
-<table
-    class="{{ style.apply({}, attributes.render('class'))|tailwind_merge }}"
-    {{ attributes.defaults({}).without('class') }}
->
-    {% block content %}{% endblock %}
-</table>
+<div class="relative w-full overflow-auto">
+    <table
+        class="{{ 'w-full caption-bottom text-sm ' ~ attributes.render('class')|tailwind_merge }}"
+        {{ attributes.defaults({}).without('class') }}
+    >
+        {%- block content %}{% endblock -%}
+    </table>
+</div>

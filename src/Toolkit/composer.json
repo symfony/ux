@@ -45,7 +45,8 @@
     "zenstruck/console-test": "^1.7",
     "symfony/http-client": "6.4|^7.0",
     "symfony/stopwatch": "^6.4|^7.0",
-    "symfony/phpunit-bridge": "^6.4|^7.0"
+    "symfony/phpunit-bridge": "^6.4|^7.0",
+    "vincentlanglet/twig-cs-fixer": "^3.5"
   },
   "bin": [
     "bin/ux-toolkit-kit-create",

@@ -1,21 +1,56 @@
 # Avatar
 
-The Avatar component displays a user's profile picture or a fallback representation when no image is available.
+A component for displaying user profile images with a fallback for when the image is not available.
 
-## Examples
-
-### Avatar with Image
-
-```twig
+```twig {"preview":true}
 <twig:Avatar>
     <twig:Avatar:Image src="https://github.com/symfony.png" alt="@symfony" />
 </twig:Avatar>
 ```
 
-### Avatar with Fallback
+## Installation
 
-```twig
+<!-- Placeholder: Installation -->
+
+## Usage
+
+<!-- Placeholder: Usage -->
+
+## Examples
+
+### Avatar with Image
+
+```twig {"preview":true}
 <twig:Avatar>
-    <twig:Avatar:Fallback>JF</twig:Avatar:Fallback>
+    <twig:Avatar:Image src="https://github.com/symfony.png" alt="@symfony" />
 </twig:Avatar>
+```
+
+### Avatar with Text
+
+```twig {"preview":true}
+<div class="flex gap-1">
+    <twig:Avatar>
+        <twig:Avatar:Text>FP</twig:Avatar:Text>
+    </twig:Avatar>
+    <twig:Avatar>
+        <twig:Avatar:Text class="bg-red-500 text-red-50">FP</twig:Avatar:Text>
+    </twig:Avatar>
+</div>
+```
+
+### Avatar Group
+
+```twig {"preview":true}
+<div class="flex -space-x-2">
+    <twig:Avatar>
+        <twig:Avatar:Image src="https://github.com/symfony.png" alt="@symfony" />
+    </twig:Avatar>
+    <twig:Avatar>
+        <twig:Avatar:Text>FP</twig:Avatar:Text>
+    </twig:Avatar>
+    <twig:Avatar>
+        <twig:Avatar:Text class="bg-red-500 text-red-50">FP</twig:Avatar:Text>
+    </twig:Avatar>
+</div>
 ``` 

@@ -1,0 +1,6 @@
+<h5
+    class="{{ 'mb-1 font-medium leading-none tracking-tight ' ~ attributes.render('class')|tailwind_merge }}"
+    {{ attributes.defaults({}).without('class') }}
+>
+    {%- block content %}{% endblock -%}
+</h5>

@@ -1,0 +1,7 @@
+<nav
+    class="{{ 'mx-auto flex w-full justify-center ' ~ attributes.render('class')|tailwind_merge }}"
+    role="navigation"
+    {{ attributes.defaults({}).without('class') }}
+>
+    {%- block content %}{% endblock -%}
+</nav>

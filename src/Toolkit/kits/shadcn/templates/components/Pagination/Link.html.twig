@@ -1,0 +1,10 @@
+{%- props isActive = false, size = 'icon' -%}
+<twig:Button
+    as="a"
+    variant="{{ isActive ? 'outline' : 'ghost' }}"
+    size="{{ size }}"
+    aria-current="{{ isActive ? 'page' : false }}"
+    {{ ...attributes.without('class') }}
+>
+    {{- block(outerBlocks.content) -}}
+</twig:Button>

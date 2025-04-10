@@ -1,13 +1,6 @@
-{%- props -%}
-{%- set style = html_cva(
-    base: 'bg-muted/50 border-t font-medium [&>tr]:last:border-b-0',
-    variants: {},
-    compoundVariants: []
-) -%}
-
 <tfoot
-        class="{{ style.apply({}, attributes.render('class'))|tailwind_merge }}"
-        {{ attributes.defaults({}).without('class') }}
+    class="{{ 'border-t bg-muted/50 font-medium [&>tr]:last:border-b-0 ' ~ attributes.render('class')|tailwind_merge }}"
+    {{ attributes.defaults({}).without('class') }}
 >
-    {% block content %}{% endblock %}
+    {%- block content %}{% endblock -%}
 </tfoot>

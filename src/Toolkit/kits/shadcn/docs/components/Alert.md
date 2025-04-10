@@ -1,21 +1,47 @@
 # Alert
 
-The Alert component is used to display important messages or notifications to users, with support for different styles and variants.
+Displays a callout for user attention.
 
-## Examples
-
-### Basic Alert
-
-```twig
-<twig:Alert>
-    This is an alert message.
+```twig {"preview":true}
+<twig:Alert class="max-w-lg">
+    <twig:ux:icon name="tabler:terminal" class="h-4 w-4" />
+    <twig:Alert:Title>Heads up!</twig:Alert:Title>
+    <twig:Alert:Description>
+        You can add components to your app using the cli.
+    </twig:Alert:Description>
 </twig:Alert>
 ```
 
-### Alert with Custom Class
+## Installation
 
-```twig
-<twig:Alert class="bg-red-100 text-red-800">
-    This is a custom styled alert.
+<!-- Placeholder: Installation -->
+
+## Usage
+
+<!-- Placeholder: Usage -->
+
+## Examples
+
+### Default
+
+```twig {"preview":true}
+<twig:Alert class="max-w-lg">
+    <twig:ux:icon name="tabler:terminal" class="h-4 w-4" />
+    <twig:Alert:Title>Heads up!</twig:Alert:Title>
+    <twig:Alert:Description>
+        You can add components to your app using the cli.
+    </twig:Alert:Description>
+</twig:Alert>
+```
+
+### Destructive
+
+```twig {"preview":true}
+<twig:Alert variant="destructive" class="max-w-lg">
+    <twig:ux:icon name="tabler:alert-circle" class="h-4 w-4" />
+    <twig:Alert:Title>Error</twig:Alert:Title>
+    <twig:Alert:Description>
+        Your session has expired. Please log in again.
+    </twig:Alert:Description>
 </twig:Alert>
 ``` 

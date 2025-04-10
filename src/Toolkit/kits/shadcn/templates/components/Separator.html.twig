@@ -1,0 +1,18 @@
+{%- props orientation = 'horizontal', decorative = true -%}
+{%- set style = html_cva(
+    base: 'shrink-0 bg-border',
+    variants: {
+        orientation: {
+            horizontal: 'h-[1px] w-full',
+            vertical: 'h-full w-[1px]',
+        },
+    },
+) -%}
+<div
+    class="{{ style.apply({orientation, decorative}, attributes.render('class'))|tailwind_merge }}"
+    {{ attributes.defaults({
+        role: decorative ? 'none' : 'separator',
+        'aria-orientation': decorative ? false : orientation,
+    }).without('class') }}
+>
+</div>

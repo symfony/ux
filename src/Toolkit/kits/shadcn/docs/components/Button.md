@@ -1,24 +1,87 @@
 # Button
 
-The Button component is a versatile component that allows you to create clickable buttons with various styles and states.
+A button component that can be used to trigger actions or events.
 
-## Examples
-
-### Basic Button
-
-```twig
+```twig {"preview":true}
 <twig:Button>
     Click me
 </twig:Button>
 ```
 
-### Button with Variants
+## Installation
 
-```twig
-<twig:Button variant="default">Default</twig:Button>
-<twig:Button variant="destructive">Destructive</twig:Button>
+<!-- Placeholder: Installation -->
+
+## Usage
+
+<!-- Placeholder: Usage -->
+
+## Examples
+
+### Default
+
+```twig {"preview":true}
+<twig:Button>
+    Click me
+</twig:Button>
+```
+
+### Primary
+
+```twig {"preview":true}
+<twig:Button>Button</twig:Button>
+``` 
+
+### Secondary
+
+```twig {"preview":true}
 <twig:Button variant="outline">Outline</twig:Button>
-<twig:Button variant="secondary">Secondary</twig:Button>
+``` 
+
+### Destructive
+
+```twig {"preview":true}
+<twig:Button variant="destructive">Destructive</twig:Button>
+``` 
+
+### Outline
+
+```twig {"preview":true}
+<twig:Button variant="outline">Outline</twig:Button>
+``` 
+
+### Ghost
+
+```twig {"preview":true}
 <twig:Button variant="ghost">Ghost</twig:Button>
+``` 
+
+### Link
+
+```twig {"preview":true}
 <twig:Button variant="link">Link</twig:Button>
+``` 
+
+### Icon
+
+```twig {"preview":true}
+<twig:Button variant="outline" size="icon">
+    <twig:ux:icon name="lucide:chevron-right" />
+</twig:Button>
+``` 
+
+### With Icon
+
+```twig {"preview":true}
+<twig:Button>
+    <twig:ux:icon name="lucide:mail" /> Login with Email
+</twig:Button>
+``` 
+
+### Loading
+
+```twig {"preview":true}
+<twig:Button disabled>
+    <twig:ux:icon name="lucide:loader-2" class="animate-spin" /> Please wait
+</twig:Button>
 ``` 

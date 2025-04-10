@@ -1,0 +1,8 @@
+<span
+    aria-hidden="true"
+    class="{{ 'flex h-9 w-9 items-center justify-center ' ~ attributes.render('class')|tailwind_merge }}"
+    {{ attributes.without('class') }}
+>
+    <twig:UX:Icon name="lucide:more-horizontal" class="size-4" />
+    <span class="sr-only">More pages</span>
+</span>
