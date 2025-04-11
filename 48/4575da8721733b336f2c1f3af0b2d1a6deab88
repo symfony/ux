@@ -1,0 +1,21 @@
+---------------------------------------------------------------------------
+
+by Kocal at 2025-04-10T20:56:44Z
+
+> The CI often fails on the "check dist files" script because some dist file changed .. with no real content change
+
+Do you have a link to a failed job? I would like to understand what you call "with no real content change", thanks 🙏🏻
+
+---------------------------------------------------------------------------
+
+by smnandre at 2025-04-10T21:55:50Z
+
+https://github.com/symfony/ux/actions/runs/14356670896/job/40247624603?pr=2663
+
+---------------------------------------------------------------------------
+
+by Kocal at 2025-04-11T08:07:18Z
+
+Mmmh, why not, in #2663 it happens because lines 4 to 29 have CRLF instead of LF chars we expect.
+
+Let's merge it, but I will open a new PR to enforce LF chars for text files
