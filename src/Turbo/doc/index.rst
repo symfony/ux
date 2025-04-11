@@ -901,7 +901,7 @@ The ``Broadcast`` attribute comes with a set of handy options:
 -  ``template`` (``string``): Twig template to render (see above)
 
 The ``Broadcast`` attribute can be repeated (e.g. you can have multiple
-`#[Broadcast]`. This is convenient to render several templates associated with
+``#[Broadcast]``. This is convenient to render several templates associated with
 their own topics for the same change (e.g. the same data is rendered in different
 way in the list and in the detail pages).
 
@@ -914,7 +914,7 @@ are supported:
 -  ``sse_retry`` (``int``): ``retry`` field of the SSE
 
 The Mercure broadcaster also supports `Expression Language`_ in topics
-by starting with `@=`.
+by starting with ``@=``.
 
 Example::
 
