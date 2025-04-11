@@ -1,3 +1,4 @@
+* text=auto eol=lf
 /.yarn/**            linguist-vendored
 /.yarn/releases/*    binary
 /.yarn/plugins/**/*  binary
