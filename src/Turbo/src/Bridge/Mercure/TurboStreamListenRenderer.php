@@ -65,11 +65,13 @@ final class TurboStreamListenRenderer implements TurboStreamListenRendererWithOp
         if (isset($eventSourceOptions)) {
             try {
                 $mercure = $this->twig->getExtension(MercureExtension::class);
-                $mercure->mercure($topics, $eventSourceOptions);
 
-                if (isset($eventSourceOptions['withCredentials'])) {
-                    $controllerAttributes['withCredentials'] = $eventSourceOptions['withCredentials'];
+                if ($eventSourceOptions['withCredentials'] ?? false) {
+                    $eventSourceOptions['subscribe'] ??= $topics;
+                    $controllerAttributes['withCredentials'] = true;
                 }
+
+                $mercure->mercure($topics, $eventSourceOptions);
             } catch (RuntimeError $e) {
             }
         }
