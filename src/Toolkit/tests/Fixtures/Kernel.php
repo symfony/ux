@@ -18,7 +18,6 @@ use Symfony\Component\DependencyInjection\Loader\Configurator\ContainerConfigura
 use Symfony\Component\HttpKernel\Kernel as BaseKernel;
 use Symfony\UX\Toolkit\UXToolkitBundle;
 use Symfony\UX\TwigComponent\TwigComponentBundle;
-use TalesFromADev\Twig\Extra\Tailwind\Bridge\Symfony\Bundle\TalesFromADevTwigExtraTailwindBundle;
 
 final class Kernel extends BaseKernel
 {
@@ -31,7 +30,6 @@ final class Kernel extends BaseKernel
             new TwigBundle(),
             new TwigComponentBundle(),
             new UXToolkitBundle(),
-            new TalesFromADevTwigExtraTailwindBundle(),
         ];
     }
 
