@@ -1490,6 +1490,10 @@ How this works:
 #. During that Ajax call, the form is submitted using ``$formValues``, the
    form re-renders, and the page is updated.
 
+To render validation errors for fields using the ``data-model`` attribute,
+you must set ``$this->isValidated = true;`` in the constructor of the live
+component using the ``ComponentWithFormTrait``.
+
 Build the "New Post" Form Component
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
