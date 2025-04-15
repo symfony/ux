@@ -4,14 +4,25 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 class default_1 extends Controller {
+    constructor() {
+        super(...arguments);
+        this.renderer = null;
+    }
     connect() {
         this.dispatchEvent('pre-connect', {
             options: this.threeValue,
         });
-        const renderer = new THREE.WebGLRenderer();
-        const rendererValue = this.threeValue.renderer;
-        renderer.setSize(rendererValue.width ?? window.innerWidth, rendererValue.height ?? window.innerHeight);
-        this.element.appendChild(renderer.domElement);
+        const threeValue = this.threeValue;
+        this.renderer = new THREE.WebGLRenderer();
+        this.createScene(threeValue);
+    }
+    createScene(data) {
+        if (this.renderer === null) {
+            return;
+        }
+        const rendererValue = data.renderer;
+        this.renderer?.setSize(rendererValue.width ?? window.innerWidth, rendererValue.height ?? window.innerHeight);
+        this.element.appendChild(this.renderer.domElement);
         const sceneValue = rendererValue.scene;
         let scene = new THREE.Scene();
         const light = new THREE.AmbientLight(0x404040);
@@ -27,16 +38,15 @@ class default_1 extends Controller {
         }
         const cameras = [];
         for (let cameraData of rendererValue.cameras) {
-            cameras.push(this.createCamera(cameraData, renderer));
+            cameras.push(this.createCamera(cameraData, this.renderer));
         }
         for (let lightData of sceneValue.lights) {
             this.createLight(lightData, scene);
         }
         if (rendererValue.controls) {
-            this.setControls(cameras[0], renderer);
+            this.setControls(cameras[0], this.renderer);
         }
         for (let modelData of this.threeValue.renderer.scene.models) {
-            console.log(modelData);
             this.createModel(modelData, scene);
         }
         let animatedObjects = [];
@@ -56,12 +66,12 @@ class default_1 extends Controller {
                 mesh.position.y += animation.translation.y;
                 mesh.position.z = animation.translation.z;
             }
-            renderer.render(scene, cameras[0]);
+            this.renderer?.render(scene, cameras[0]);
             requestAnimationFrame(animate);
         };
         animate();
         this.dispatchEvent('connect', {
-            renderer: renderer,
+            renderer: this.renderer,
             scene: scene,
         });
     }
@@ -156,6 +166,8 @@ class default_1 extends Controller {
         loader.load(path, (model) => {
             this.transform(model.scene, modelData);
             scene.add(model.scene);
+            model.scene.traverse(function (object) {
+            });
             const mixer = new THREE.AnimationMixer(model.scene);
             const clock = new THREE.Clock();
             if (animation.playClip) {
@@ -183,6 +195,10 @@ class default_1 extends Controller {
     }
     dispatchEvent(name, payload) {
         this.dispatch(name, { detail: payload, prefix: 'ux:threejs' });
+    }
+    threeValueChanged() {
+        const threeValue = this.threeValue;
+        this.createScene(threeValue);
     }
 }
 default_1.values = {

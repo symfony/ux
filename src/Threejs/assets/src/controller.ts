@@ -46,21 +46,32 @@ export default class extends Controller {
     static values = {
         three: Object,
     }
+    private renderer: THREE.WebGLRenderer | null = null;
 
     connect() {
         this.dispatchEvent('pre-connect', {
             options: this.threeValue,
         });
 
+        const threeValue = this.threeValue;
+        this.renderer = new THREE.WebGLRenderer();
+        
+        this.createScene(threeValue);
+    }
+    
+
+    createScene(data: any) {
+        if(this.renderer === null) {
+            return;
+        }
         /** init renderer */
-        const renderer = new THREE.WebGLRenderer();
-        const rendererValue = this.threeValue.renderer;
-        renderer.setSize(rendererValue.width ?? window.innerWidth, rendererValue.height ?? window.innerHeight);
-        this.element.appendChild(renderer.domElement);
+        const rendererValue = data.renderer;
+        this.renderer?.setSize(rendererValue.width ?? window.innerWidth, rendererValue.height ?? window.innerHeight);
+        this.element.appendChild(this.renderer.domElement);
         // /** init scene */
         const sceneValue = rendererValue.scene;
         let scene = new THREE.Scene();
-        const light = new THREE.AmbientLight(0x404040); // Lumière ambiante
+        const light = new THREE.AmbientLight(0x404040);
         scene.add(light);
 
         if (sceneValue.material.color) {
@@ -68,17 +79,17 @@ export default class extends Controller {
         }
         if (sceneValue.material.map) {
             const texture = new THREE.TextureLoader().load(sceneValue.material.map);
-            if(sceneValue.material.skybox)
-            texture.mapping = THREE.EquirectangularReflectionMapping;
+            if (sceneValue.material.skybox)
+                texture.mapping = THREE.EquirectangularReflectionMapping;
             scene.background = texture;
-        
-        } 
-        
+
+        }
+
 
         /** cameras */
         const cameras: THREE.Camera[] = [];
         for (let cameraData of rendererValue.cameras) {
-            cameras.push(this.createCamera(cameraData, renderer));
+            cameras.push(this.createCamera(cameraData, this.renderer));
         }
 
         /** lights */
@@ -88,12 +99,11 @@ export default class extends Controller {
 
         /** controls */
         if (rendererValue.controls) {
-            this.setControls(cameras[0], renderer);
+            this.setControls(cameras[0], this.renderer);
         }
 
         /** load 3d models */
         for (let modelData of this.threeValue.renderer.scene.models) {
-            console.log(modelData);
             this.createModel(modelData, scene);
         }
 
@@ -117,7 +127,7 @@ export default class extends Controller {
                 mesh.position.y += animation.translation.y;
                 mesh.position.z = animation.translation.z;
             }
-            renderer.render(scene, cameras[0]);
+            this.renderer?.render(scene, cameras[0]);
 
             requestAnimationFrame(animate);
         };
@@ -125,7 +135,7 @@ export default class extends Controller {
         animate();
 
         this.dispatchEvent('connect', {
-            renderer: renderer,
+            renderer: this.renderer,
             scene: scene,
         });
     }
@@ -242,6 +252,28 @@ export default class extends Controller {
             this.transform(model.scene, modelData);
             scene.add(model.scene);
 
+            model.scene.traverse(function(object) {
+                if (object instanceof THREE.Mesh) {
+                   // const material = object.material; 
+                    // if(material.isMaterial && material.type=='MeshStandardMaterial') {
+                    //     material.dispose();
+                    //     object.material = new THREE.MeshBasicMaterial();
+                    //     object.material.color = 'green';
+                    // }
+                }
+                //     // Supposons que vous voulez changer la texture du premier matériau trouvé
+                //     const material = child.material;
+        
+                //     // Charger une nouvelle texture
+                //     const textureLoader = new THREE.TextureLoader();
+                //     textureLoader.load('path/to/your/new-texture.jpg', function(texture) {
+                //         // Mettre à jour la texture du matériau
+                //         material.map = texture;
+                //         material.needsUpdate = true; // Indiquer que le matériau doit être mis à jour
+                //     });
+                // }
+            });
+
             const mixer = new THREE.AnimationMixer(model.scene);
             const clock = new THREE.Clock();
             if (animation.playClip) {
@@ -272,6 +304,13 @@ export default class extends Controller {
 
     private dispatchEvent(name: string, payload: any) {
         this.dispatch(name, { detail: payload, prefix: 'ux:threejs' });
+    }
+
+    threeValueChanged(): void {
+        const threeValue = this.threeValue;
+
+        this.createScene(threeValue);
+
     }
 }
 

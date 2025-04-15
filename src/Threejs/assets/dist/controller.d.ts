@@ -38,7 +38,9 @@ export default class extends Controller {
     static values: {
         three: ObjectConstructor;
     };
+    private renderer;
     connect(): void;
+    createScene(data: any): void;
     transform(object3D: THREE.Object3D, transformationData: any): any;
     createMesh(meshData: Mesh, scene: THREE.Scene): THREE.Mesh;
     createGeometry(geometryData: any): THREE.BufferGeometry;
@@ -48,4 +50,5 @@ export default class extends Controller {
     setControls(controlCamera: THREE.Camera, renderer: THREE.WebGLRenderer): void;
     createModel(modelData: any, scene: THREE.Scene): any;
     private dispatchEvent;
+    threeValueChanged(): void;
 }
