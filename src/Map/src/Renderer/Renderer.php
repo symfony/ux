@@ -18,13 +18,13 @@ use Symfony\UX\Map\Exception\UnsupportedSchemeException;
  *
  * @internal
  */
-final readonly class Renderer
+final class Renderer
 {
     public function __construct(
         /**
          * @param iterable<RendererFactoryInterface> $factories
          */
-        private iterable $factories,
+        private readonly iterable $factories,
     ) {
     }
 

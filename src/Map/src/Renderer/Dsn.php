@@ -16,13 +16,13 @@ use Symfony\UX\Map\Exception\InvalidArgumentException;
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class Dsn
+final class Dsn
 {
-    private string $scheme;
-    private string $host;
-    private ?string $user;
-    private array $options;
-    private string $originalDsn;
+    private readonly string $scheme;
+    private readonly string $host;
+    private readonly ?string $user;
+    private readonly array $options;
+    private readonly string $originalDsn;
 
     public function __construct(#[\SensitiveParameter] string $dsn)
     {

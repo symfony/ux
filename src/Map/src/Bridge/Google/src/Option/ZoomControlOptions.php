@@ -18,10 +18,10 @@ namespace Symfony\UX\Map\Bridge\Google\Option;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class ZoomControlOptions
+final class ZoomControlOptions
 {
     public function __construct(
-        private ControlPosition $position = ControlPosition::INLINE_END_BLOCK_END,
+        private readonly ControlPosition $position = ControlPosition::INLINE_END_BLOCK_END,
     ) {
     }
 

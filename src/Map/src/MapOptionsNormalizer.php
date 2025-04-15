@@ -26,7 +26,10 @@ use Symfony\UX\Map\Exception\UnableToNormalizeOptionsException;
  */
 final class MapOptionsNormalizer
 {
-    private const string KEY_PROVIDER = '@provider';
+    /**
+     * @var string
+     */
+    private const KEY_PROVIDER = '@provider';
 
     /**
      * @var array<string, class-string<MapOptionsInterface>>

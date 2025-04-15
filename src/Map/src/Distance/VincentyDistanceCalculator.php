@@ -20,7 +20,7 @@ use Symfony\UX\Map\Point;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class VincentyDistanceCalculator implements DistanceCalculatorInterface
+final class VincentyDistanceCalculator implements DistanceCalculatorInterface
 {
     /**
      * WS-84 ellipsoid parameters.

@@ -16,11 +16,11 @@ namespace Symfony\UX\Map\Tests;
 use Symfony\UX\Map\MapOptionsInterface;
 use Symfony\UX\Map\MapOptionsNormalizer;
 
-final readonly class DummyOptions implements MapOptionsInterface
+final class DummyOptions implements MapOptionsInterface
 {
     public function __construct(
-        private string $mapId,
-        private string $mapType,
+        private readonly string $mapId,
+        private readonly string $mapType,
     ) {
     }
 

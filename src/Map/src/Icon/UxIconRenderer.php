@@ -18,10 +18,10 @@ use Symfony\UX\Icons\IconRendererInterface;
  *
  * @internal
  */
-readonly class UxIconRenderer
+class UxIconRenderer
 {
     public function __construct(
-        private ?IconRendererInterface $renderer,
+        private readonly ?IconRendererInterface $renderer,
     ) {
     }
 

@@ -80,8 +80,9 @@ class MapExtensionTest extends KernelTestCase
         if (class_exists(DeprecatedCallableInfo::class)) {
             $this->expectDeprecation('Since symfony/ux-map 2.20: Twig Function "render_map" is deprecated; use "ux_map" instead in test at line 1.');
         } else {
-            $this->expectDeprecation('Since symfony/ux-map 2.20: Twig Function "render_map" is deprecated. Use "ux_map" instead in test at line 1.');
+            $this->expectDeprecation('Twig Function "render_map" is deprecated since version 2.20. Use "ux_map" instead in test at line 1.');
         }
+
         $html = $twig->render('test', ['map' => $map]);
         $this->assertSame('<map/>', $html);
     }
@@ -103,7 +104,7 @@ class MapExtensionTest extends KernelTestCase
         self::getContainer()->set('test.ux_map.renderers', $renderer);
 
         $twig = self::getContainer()->get('twig');
-        $template = $twig->createTemplate('{{ ux_map(center: {lat: 5, lng: 10}, zoom: 4, attributes: attributes) }}');
+        $template = $twig->createTemplate('{{ ux_map(center={lat: 5, lng: 10}, zoom=4, attributes=attributes) }}');
 
         $this->assertSame(
             '<div data-controller="@symfony/ux-foobar-map"></div>',

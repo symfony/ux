@@ -13,13 +13,13 @@ namespace Symfony\UX\Map\Renderer;
 
 use Symfony\UX\Map\Exception\UnsupportedSchemeException;
 
-final readonly class NullRendererFactory implements RendererFactoryInterface
+final class NullRendererFactory implements RendererFactoryInterface
 {
     /**
      * @param array<string> $availableBridges
      */
     public function __construct(
-        private array $availableBridges = [],
+        private readonly array $availableBridges = [],
     ) {
     }
 

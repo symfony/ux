@@ -18,11 +18,11 @@ use Symfony\UX\Map\Exception\InvalidArgumentException;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class Point
+final class Point
 {
     public function __construct(
-        public float $latitude,
-        public float $longitude,
+        public readonly float $latitude,
+        public readonly float $longitude,
     ) {
         if ($latitude < -90 || $latitude > 90) {
             throw new InvalidArgumentException(\sprintf('Latitude must be between -90 and 90 degrees, "%s" given.', $latitude));

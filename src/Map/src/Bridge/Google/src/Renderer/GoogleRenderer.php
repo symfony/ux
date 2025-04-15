@@ -22,7 +22,7 @@ use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
  *
  * @internal
  */
-final readonly class GoogleRenderer extends AbstractRenderer
+final class GoogleRenderer extends AbstractRenderer
 {
     /**
      * Parameters are based from https://googlemaps.github.io/js-api-loader/interfaces/LoaderOptions.html documentation.
@@ -30,20 +30,19 @@ final readonly class GoogleRenderer extends AbstractRenderer
     public function __construct(
         StimulusHelper $stimulusHelper,
         UxIconRenderer $uxIconRenderer,
-        #[\SensitiveParameter]
-        private string $apiKey,
-        private ?string $id = null,
-        private ?string $language = null,
-        private ?string $region = null,
-        private ?string $nonce = null,
-        private ?int $retries = null,
-        private ?string $url = null,
-        private ?string $version = null,
+        #[\SensitiveParameter] private readonly string $apiKey,
+        private readonly ?string $id = null,
+        private readonly ?string $language = null,
+        private readonly ?string $region = null,
+        private readonly ?string $nonce = null,
+        private readonly ?int $retries = null,
+        private readonly ?string $url = null,
+        private readonly ?string $version = null,
         /**
          * @var array<'core'|'maps'|'places'|'geocoding'|'routes'|'marker'|'geometry'|'elevation'|'streetView'|'journeySharing'|'drawing'|'visualization'>
          */
-        private array $libraries = [],
-        private ?string $defaultMapId = null,
+        private readonly array $libraries = [],
+        private readonly ?string $defaultMapId = null,
     ) {
         parent::__construct($stimulusHelper, $uxIconRenderer);
     }

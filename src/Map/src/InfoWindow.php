@@ -16,19 +16,19 @@ namespace Symfony\UX\Map;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class InfoWindow
+final class InfoWindow
 {
     /**
      * @param array<string, mixed> $extra Extra data, can be used by the developer to store additional information and
      *                                    use them later JavaScript side
      */
     public function __construct(
-        private ?string $headerContent = null,
-        private ?string $content = null,
-        private ?Point $position = null,
-        private bool $opened = false,
-        private bool $autoClose = true,
-        private array $extra = [],
+        private readonly ?string $headerContent = null,
+        private readonly ?string $content = null,
+        private readonly ?Point $position = null,
+        private readonly bool $opened = false,
+        private readonly bool $autoClose = true,
+        private readonly array $extra = [],
     ) {
     }
 

@@ -20,7 +20,7 @@ use Symfony\UX\Map\Renderer\AbstractRenderer;
  *
  * @internal
  */
-final readonly class LeafletRenderer extends AbstractRenderer
+final class LeafletRenderer extends AbstractRenderer
 {
     protected function getName(): string
     {

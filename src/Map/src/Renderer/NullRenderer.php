@@ -19,10 +19,10 @@ use Symfony\UX\Map\Map;
  *
  * @internal
  */
-final readonly class NullRenderer implements RendererInterface
+final class NullRenderer implements RendererInterface
 {
     public function __construct(
-        private array $availableBridges = [],
+        private readonly array $availableBridges = [],
     ) {
     }
 

@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 2.25
+
+-  Downgrade PHP requirement from 8.3 to 8.1
+
 ## 2.22
 
 -   Add support for configuring a default Map ID
@@ -10,7 +14,7 @@
 
 ### BC Breaks
 
--   Renamed importmap entry `@symfony/ux-google-map/map-controller` to `@symfony/ux-google-map`, 
+-   Renamed importmap entry `@symfony/ux-google-map/map-controller` to `@symfony/ux-google-map`,
     you will need to update your importmap.
 
 ## 2.19

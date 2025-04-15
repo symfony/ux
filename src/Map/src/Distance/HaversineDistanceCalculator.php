@@ -20,7 +20,7 @@ use Symfony\UX\Map\Point;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class HaversineDistanceCalculator implements DistanceCalculatorInterface
+final class HaversineDistanceCalculator implements DistanceCalculatorInterface
 {
     /**
      * @const float The Earth's radius in meters.

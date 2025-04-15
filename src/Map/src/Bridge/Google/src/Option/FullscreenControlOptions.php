@@ -18,10 +18,10 @@ namespace Symfony\UX\Map\Bridge\Google\Option;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class FullscreenControlOptions
+final class FullscreenControlOptions
 {
     public function __construct(
-        private ControlPosition $position = ControlPosition::INLINE_END_BLOCK_START,
+        private readonly ControlPosition $position = ControlPosition::INLINE_END_BLOCK_START,
     ) {
     }
 

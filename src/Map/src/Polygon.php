@@ -18,17 +18,17 @@ use Symfony\UX\Map\Exception\InvalidArgumentException;
  *
  * @author [Pierre Svgnt]
  */
-final readonly class Polygon implements Element
+final class Polygon implements Element
 {
     /**
      * @param array<string, mixed> $extra Extra data, can be used by the developer to store additional information and use them later JavaScript side
      */
     public function __construct(
-        private array $points,
-        private ?string $title = null,
-        private ?InfoWindow $infoWindow = null,
-        private array $extra = [],
-        public ?string $id = null,
+        private readonly array $points,
+        private readonly ?string $title = null,
+        private readonly ?InfoWindow $infoWindow = null,
+        private readonly array $extra = [],
+        public readonly ?string $id = null,
     ) {
     }
 

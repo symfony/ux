@@ -18,15 +18,15 @@ namespace Symfony\UX\Map\Bridge\Leaflet\Option;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class TileLayer
+final class TileLayer
 {
     /**
      * @param array<mixed> $options
      */
     public function __construct(
-        private string $url,
-        private string $attribution,
-        private array $options = [],
+        private readonly string $url,
+        private readonly string $attribution,
+        private readonly array $options = [],
     ) {
     }
 

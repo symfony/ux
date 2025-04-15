@@ -20,19 +20,19 @@ use Symfony\UX\Map\Icon\IconType;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class Marker implements Element
+final class Marker implements Element
 {
     /**
      * @param array<string, mixed> $extra Extra data, can be used by the developer to store additional information and
      *                                    use them later JavaScript side
      */
     public function __construct(
-        public Point $position,
-        public ?string $title = null,
-        public ?InfoWindow $infoWindow = null,
-        public array $extra = [],
-        public ?string $id = null,
-        public ?Icon $icon = null,
+        public readonly Point $position,
+        public readonly ?string $title = null,
+        public readonly ?InfoWindow $infoWindow = null,
+        public readonly array $extra = [],
+        public readonly ?string $id = null,
+        public readonly ?Icon $icon = null,
     ) {
     }
 

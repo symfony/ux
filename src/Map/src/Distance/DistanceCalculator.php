@@ -16,11 +16,11 @@ use Symfony\UX\Map\Point;
 /**
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class DistanceCalculator implements DistanceCalculatorInterface
+final class DistanceCalculator implements DistanceCalculatorInterface
 {
     public function __construct(
-        private DistanceCalculatorInterface $calculator = new VincentyDistanceCalculator(),
-        private DistanceUnit $unit = DistanceUnit::Meter,
+        private readonly DistanceCalculatorInterface $calculator = new VincentyDistanceCalculator(),
+        private readonly DistanceUnit $unit = DistanceUnit::Meter,
     ) {
     }
 

@@ -18,15 +18,15 @@ namespace Symfony\UX\Map\Bridge\Google\Option;
  *
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-final readonly class MapTypeControlOptions
+final class MapTypeControlOptions
 {
     /**
      * @param array<'hybrid'|'roadmap'|'satellite'|'terrain'|string> $mapTypeIds
      */
     public function __construct(
-        private array $mapTypeIds = [],
-        private ControlPosition $position = ControlPosition::BLOCK_START_INLINE_START,
-        private MapTypeControlStyle $style = MapTypeControlStyle::DEFAULT,
+        private readonly array $mapTypeIds = [],
+        private readonly ControlPosition $position = ControlPosition::BLOCK_START_INLINE_START,
+        private readonly MapTypeControlStyle $style = MapTypeControlStyle::DEFAULT,
     ) {
     }
 

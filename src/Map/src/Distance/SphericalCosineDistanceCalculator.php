@@ -20,7 +20,7 @@ use Symfony\UX\Map\Point;
  *
  * @author Simon André <smn.andre@gmail.com>
  */
-final readonly class SphericalCosineDistanceCalculator implements DistanceCalculatorInterface
+final class SphericalCosineDistanceCalculator implements DistanceCalculatorInterface
 {
     /**
      * @const float The Earth's radius in meters.

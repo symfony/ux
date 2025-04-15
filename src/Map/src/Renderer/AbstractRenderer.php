@@ -20,11 +20,11 @@ use Symfony\UX\StimulusBundle\Helper\StimulusHelper;
 /**
  * @author Hugo Alliaume <hugo@alliau.me>
  */
-abstract readonly class AbstractRenderer implements RendererInterface
+abstract class AbstractRenderer implements RendererInterface
 {
     public function __construct(
-        private StimulusHelper $stimulus,
-        private UxIconRenderer $uxIconRenderer,
+        private readonly StimulusHelper $stimulus,
+        private readonly UxIconRenderer $uxIconRenderer,
     ) {
     }
 

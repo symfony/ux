@@ -12,11 +12,10 @@
             <directory suffix=".php">./src</directory>
         </include>
     </coverage>
-    
+
     <php>
         <ini name="error_reporting" value="-1"/>
         <server name="SYMFONY_DEPRECATIONS_HELPER" value="max[self]=0&amp;max[direct]=0"/>
-        <server name="SYMFONY_PHPUNIT_VERSION" value="11.5.0"/>
     </php>
 
     <testsuites>
