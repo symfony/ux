@@ -16,7 +16,7 @@ namespace Symfony\UX\Threejs\Model;
  * @author Sylvain Blondeau <contact@sylvainblondeau.dev>
  *
  */
-final class GLTFModel extends Model
+final class GLTF extends Model
 {
    public const string TYPE = 'GLTF';
 

@@ -53,4 +53,27 @@ final class Animation
 
       return $this;
    }
+
+   public static function fromArray(array $animation): self
+   {
+      $animation['rotation'] = Vector3::fromArray($animation['rotation']);
+      $animation['translation'] = Vector3::fromArray($animation['translation']);
+      $animation['scale'] = Vector3::fromArray($animation['scale']);
+      $animationObject = new self($animation['playClip']);
+      $animationObject->rotate($animation['rotation']->x, $animation['rotation']->y, $animation['rotation']->z);
+      $animationObject->translate($animation['translation']->x, $animation['translation']->y, $animation['translation']->z);
+      $animationObject->scale($animation['scale']->x, $animation['scale']->y, $animation['scale']->z);
+
+      return $animationObject;
+   }
+
+   public function toArray(): array
+   {
+       return [
+           'playClip' => $this->playClip,
+           'rotation' => $this->rotation->toArray(),
+           'translation' => $this->translation->toArray(),
+           'scale' => $this->scale->toArray(),
+       ];
+   }
 }

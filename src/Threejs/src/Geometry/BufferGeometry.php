@@ -23,5 +23,16 @@ abstract class BufferGeometry
    {
    }
 
+   public static function fromArray(array $geometry): self
+   {
+      $type = $geometry['type'];
+      unset($geometry['type']);
+      $geometryObject = new static(...$geometry);
+      $geometryObject->type = $type;
+
+      return $geometryObject;
+   }
+
+   abstract public function toArray(): array;
 
 }

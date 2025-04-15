@@ -20,5 +20,4 @@ final class MeshBasic extends Material
     public const string TYPE = 'MeshBasic';
 
     public string $type = self::TYPE;
- 
 }

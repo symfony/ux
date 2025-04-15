@@ -33,6 +33,20 @@ final class Cylinder extends BufferGeometry
       parent::__construct();
       $this->type = self::TYPE;
    }
+
+   public function toArray(): array
+   {
+        return [
+          'radiusTop' => $this->radiusTop,
+          'radiusBottom' => $this->radiusBottom,
+          'height' => $this->height,
+          'radialSegments' => $this->radialSegments,
+          'heightSegments' => $this->heightSegments,
+          'openEnded' => $this->openEnded,
+          'thetaStart' => $this->thetaStart,
+          'thetaLength' => $this->thetaLength,
+      ]; 
+   }
 }
 
 

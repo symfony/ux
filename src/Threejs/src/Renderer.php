@@ -12,7 +12,7 @@
 namespace Symfony\UX\Threejs;
 
 use Symfony\UX\Threejs\Camera\Camera;
-use Symfony\UX\Threejs\Camera\PerspectiveCamera;
+use Symfony\UX\Threejs\Camera\Perspective;
 
 /**
  * @author Sylvain Blondeau <contact@sylvainblondeau.dev>
@@ -24,7 +24,7 @@ final class Renderer
    public function __construct(
       public Scene $scene = new Scene(),
       public bool $controls = true,
-      public array $cameras = [new PerspectiveCamera()],
+      public array $cameras = [new Perspective()],
       public ?int $width = 300,
       public ?int $height = 300,
    ) {}
@@ -42,4 +42,24 @@ final class Renderer
 
       return $this;
    }
+
+   public static function fromArray(array $renderer): self
+   {
+       $renderer['scene'] = Scene::fromArray($renderer['scene']);
+       $renderer['cameras'] = array_map((fn($camera) => ('Symfony\\UX\\Threejs\\Camera\\'.$camera['type'])::fromArray($camera)), $renderer['cameras']);
+
+       return new self(...$renderer);
+   }
+
+   public function toArray(): array
+   {
+       return [
+           'width' => $this->width,
+           'height' => $this->height,
+           'controls' => $this->controls,
+           'cameras' => array_map(fn($camera) => $camera->toArray(), $this->cameras),
+           'scene' => $this->scene->toArray(),
+       ];
+   }
+
 }

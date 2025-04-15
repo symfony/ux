@@ -32,25 +32,26 @@ final class Mesh
       public ?Animation $animation = new Animation(),
       public Vector3 $position = new Vector3(),
       public Vector3 $angle = new Vector3(),
-   )
+   ) {}
+
+   public function setGeometry(BufferGeometry $geometry): self
    {
-   }
-
-   public function setGeometry(BufferGeometry $geometry): self {
       $this->geometry = $geometry;
-      
+
       return $this;
    }
 
-   public function setAnimation(Animation $animation): self {
+   public function setAnimation(Animation $animation): self
+   {
       $this->animation = $animation;
-      
+
       return $this;
    }
 
-   public function setMaterial(Material $material): self {
+   public function setMaterial(Material $material): self
+   {
       $this->material = $material;
-      
+
       return $this;
    }
 
@@ -63,11 +64,34 @@ final class Mesh
       return $this;
    }
 
-   public function setPosition(float $x = 0, float $y = 0, float $z = 0): self {
+   public function setPosition(float $x = 0, float $y = 0, float $z = 0): self
+   {
       $this->position->x = $x;
       $this->position->y = $y;
       $this->position->z = $z;
 
       return $this;
+   }
+
+   public static function fromArray(array $mesh): self
+   {
+      $mesh['material'] = ('Symfony\\UX\\Threejs\\Material\\'.$mesh['material']['type'])::fromArray($mesh['material']);
+      $mesh['geometry'] = ('Symfony\\UX\\Threejs\\Geometry\\'.$mesh['geometry']['type'])::fromArray($mesh['geometry']);
+      $mesh['animation'] = Animation::fromArray($mesh['animation']);
+      $mesh['position'] = Vector3::fromArray($mesh['position']);
+      $mesh['angle'] = Vector3::fromArray($mesh['angle']);
+
+      return new static(...$mesh);
+   }
+
+   public function toArray(): array
+   {
+      return [
+         'material' => $this->material->toArray(),
+         'geometry' => $this->geometry->toArray(),
+         'animation' => $this->animation->toArray(),
+         'position' => $this->position->toArray(),
+         'angle' => $this->angle->toArray(),
+      ];
    }
 }

@@ -29,4 +29,29 @@ abstract class Model
       public Animation $animation = new Animation(),  
    ) {
    }
+
+   public static function fromArray(array $model): self
+   {
+      $model['position'] = Vector3::fromArray($model['position']);
+      $model['angle'] = Vector3::fromArray($model['angle']);
+      $model['animation'] = Animation::fromArray($model['animation']);
+
+      $type = $model['type'];
+      unset($model['type']);
+      $modelObject = new static(...$model);
+      $modelObject->type = $type;
+
+      return $modelObject;
+   }
+
+   public function toArray(): array
+   {
+       return [
+           'path' => $this->path,
+           'position' => $this->position,
+           'angle' => $this->angle,
+           'type' => $this->type,
+           'animation' => $this->animation->toArray(),
+       ];
+   }
 }

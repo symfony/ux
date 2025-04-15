@@ -23,17 +23,16 @@ use Symfony\UX\Threejs\Camera\Camera;
  */
 class Three
 {
-    public Renderer $renderer;
 
     public function __construct( 
-        private int $width = 300,
-        private int $height = 300,
+        public int $width = 300,
+        public int $height = 300,
+        public Renderer $renderer = new Renderer(),
         ) {
-        $this->renderer = new Renderer(
-            scene: new Scene(), 
-            width: $this->width, 
-            height: $this->height
-        );
+        $this->renderer->scene ??= new Scene();
+        $this->renderer->width ??= $this->width;
+        $this->renderer->height ??= $this->height;
+
     }
 
     public function addCamera(Camera $camera): self {
@@ -83,4 +82,22 @@ class Three
     {
         return $this;
     }
+
+    public static function fromArray(array $three): self
+    {
+        $three['renderer'] = Renderer::fromArray($three['renderer']);
+
+        return new self(...$three);
+    }
+
+    public function toArray(): array
+    {
+
+        return [
+            'width' => $this->width,
+            'height' => $this->height,
+            'renderer' => $this->renderer->toArray(),
+        ];
+    }
+
 }

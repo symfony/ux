@@ -18,5 +18,7 @@ namespace Symfony\UX\Threejs\Material;
 final class MeshPhong extends Material
 {
     public const string TYPE = 'MeshPhong';
+    
     public string $type = self::TYPE;
+    
 }

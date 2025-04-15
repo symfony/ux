@@ -28,4 +28,15 @@ final class Plane extends BufferGeometry
       parent::__construct();
       $this->type = self::TYPE;
    }
+
+   public function toArray(): array
+   {
+        return [
+          'width' => $this->width,
+          'height' => $this->height,
+          'widthSegments' => $this->widthSegments,
+          'heightSegments' => $this->heightSegments,
+          'type' => $this->type,
+      ]; 
+   }
 }

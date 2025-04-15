@@ -22,4 +22,19 @@ final class Vector3
       public float $y = 0,
       public float $z = 0,
    ) {}
+
+
+   public static function fromArray(array $vector3): self
+   {
+       return new self(...$vector3);
+   }
+
+   public function toArray(): array
+   {
+       return [
+           'x' => $this->x,
+           'y' => $this->y,
+           'z' => $this->z,
+       ];
+   }
 }

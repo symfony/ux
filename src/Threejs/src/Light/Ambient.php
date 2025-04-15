@@ -11,24 +11,13 @@
 
 namespace Symfony\UX\Threejs\Light;
 
-use Symfony\UX\Threejs\Utils\Vector3;
-
 /**
  * @author Sylvain Blondeau <contact@sylvainblondeau.dev>
  */
-final class DirectionalLight extends Light
+final class Ambient extends Light
 {
-   public const string TYPE = 'Directional';
+   public const string TYPE = 'Ambient';
 
    public string $type = self::TYPE;
 
-   public function __construct(
-      public string $color, 
-      public float $intensity,
-      public Vector3 $position = new Vector3(),
-      public Vector3 $target = new Vector3(),
-   
-   ) {
-      parent::__construct($color, $intensity);
-   }
 }

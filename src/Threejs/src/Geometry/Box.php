@@ -28,4 +28,16 @@ final class Box extends BufferGeometry
       parent::__construct();
       $this->type = self::TYPE;
    }
+
+
+
+   public function toArray(): array
+   {
+        return [
+          'width' => $this->width,
+          'height' => $this->height,
+          'depth' => $this->depth,
+          'type' => $this->type,
+      ]; 
+   }
 }

@@ -14,7 +14,7 @@ namespace Symfony\UX\Threejs;
 use Symfony\UX\Threejs\Light\Light;
 use Symfony\UX\Threejs\Model\Model;
 use Symfony\UX\Threejs\Material\Material;
-use Symfony\UX\Threejs\Light\AmbientLight;
+use Symfony\UX\Threejs\Light\Ambient;
 use Symfony\UX\Threejs\Material\MeshBasic;
 
 /**
@@ -26,7 +26,7 @@ final class Scene
 {
    public function __construct(
       public ?Material $material = new MeshBasic(),
-      public array $lights = [new AmbientLight()],
+      public array $lights = [new Ambient()],
       public array $meshes = [],
       public array $models = [],
    )
@@ -40,7 +40,7 @@ final class Scene
       return $this;
    }
 
-   public function addLight(Light $light = new AmbientLight()): self
+   public function addLight(Light $light = new Ambient()): self
    {
       $this->lights[] = $light;
 
@@ -57,5 +57,26 @@ final class Scene
       $this->models[] = $model;
 
       return $this;
+   }
+
+   
+   public static function fromArray(array $scene): self
+   {
+       $scene['material'] = ('Symfony\\UX\\Threejs\\Material\\'.$scene['material']['type'])::fromArray($scene['material']) ;
+       $scene['lights'] = array_map(fn($light) => ('Symfony\\UX\\Threejs\\Light\\'.$light['type'])::fromArray($light), $scene['lights']);
+       $scene['meshes'] = array_map(fn($mesh) => Mesh::fromArray($mesh), $scene['meshes']);
+       $scene['models'] = array_map(fn($model) => ('Symfony\\UX\\Threejs\\Model\\'.$model['type'])::fromArray($model), $scene['models']);
+
+       return new self(...$scene);
+   }
+
+   public function toArray(): array
+   {
+       return [
+           'material' => $this->material->toArray(),
+           'lights' => array_map(fn($light) => $light->toArray(), $this->lights),
+           'meshes' => array_map(fn($mesh) => $mesh->toArray(), $this->meshes),
+           'models' => array_map(fn($model) => $model->toArray(), $this->models),
+       ];
    }
 }

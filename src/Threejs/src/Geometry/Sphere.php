@@ -27,4 +27,14 @@ final class Sphere extends BufferGeometry
       parent::__construct();
       $this->type = self::TYPE;
    }
+
+   public function toArray(): array
+   {
+        return [
+          'radius' => $this->radius,
+          'widthSegments' => $this->widthSegments,
+          'heightSegments' => $this->heightSegments,
+          'type' => $this->type,
+      ]; 
+   }
 }

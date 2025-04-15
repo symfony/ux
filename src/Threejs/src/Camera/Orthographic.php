@@ -16,14 +16,17 @@ use Symfony\UX\Threejs\Utils\Vector3;
 /**
  * @author Sylvain Blondeau <contact@sylvainblondeau.dev>
  */
-final class PerspectiveCamera extends Camera
+final class Orthographic extends Camera
 {
-   public string $type = 'Perspective';
+   public string $type = 'Orthographic';
 
    public function __construct(
-      public float $fov = 75,
+      public float $left = -1,
+      public float $right = 1,
+      public float $top = 1,
+      public float $bottom = -1,
       public float $near = 0.1,
-      public float $far = 1000,
+      public float $far = 10,
       ?Vector3 $position = null,
    ) {
       parent::__construct($position);
